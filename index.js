@@ -7,7 +7,7 @@ function createComponent(pkg) {
 		version : pkg.version,
 		hashes  : [],
 		licenses: [
-			{ license : { id: pkg.license } }
+			{ license : { id: pkg.license && (pkg.license.type || pkg.license) || "" } }
 		],
 		purl    : `pkg:npm/${pkg.name}@${pkg.version}`,
 		modified: false
@@ -26,6 +26,7 @@ function createChild(name, value, depth) {
 	if (name == "value") return value;
 	if (Array.isArray(value)) return `<${name}>${value.map(v => js2Xml(v, depth + 1)).join('')}</${name}>`;
 	if (['boolean', 'string', 'number'].includes(typeof value)) return `<${name}>${value}</${name}>`;
+	console.log(name, value);
 	throw new Error("Unexpected child");
 }
 
@@ -46,13 +47,13 @@ function js2Xml(obj, depth) {
 
 
 
-exports.createbom = path => readInstalled(path, (err, pkgInfo) => {
+exports.createbom = (path, callback) => readInstalled(path, (err, pkgInfo) => {
 	let result = { bom: { 
 		"@xmlns"  :"http://cyclonedx.org/schema/bom/1.0",
 		"@version": 1,
 		components: [ createComponent(pkgInfo) ]
 	}};
-	console.log(`<?xml version="1.0"?>\n${js2Xml(result,0)}`);
+	callback(null, `<?xml version="1.0"?>\n${js2Xml(result,0)}`);
 });
 
 
