@@ -11,8 +11,8 @@
     "type": "git",
     "url": "git+https://github.com/CycloneDX/cyclonedx-node-module.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Erlend Oftedal",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
