@@ -1,0 +1,23 @@
+{
+  "name": "cyclonedx-bom",
+  "version": "1.0.0",
+  "description": "Creates CycloneDX BOMs from Node.js projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin" : "./bin/cyclonedx-bom",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CycloneDX/cyclonedx-node-module.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
+  },
+  "homepage": "https://github.com/CycloneDX/cyclonedx-node-module#readme",
+  "dependencies": {
+    "read-installed": "^4.0.3"
+  }
+}

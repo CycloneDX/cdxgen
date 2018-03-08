@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+const bom = require('../index.js');
+
+var path = process.argv[2] || '.'
+
+return bom.createbom(path);
