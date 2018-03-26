@@ -1,13 +1,28 @@
 const readInstalled = require("read-installed");
+const spdxLicenses = require("./spdx-licenses.json");
+
+
+function getLicense(pkg) {
+	var license = pkg.license && (pkg.license.type || pkg.license); 
+	if (license) {
+	 	if (spdxLicenses.includes(license)) {
+			return { id : license };
+		} else {
+			return { name : license };
+		}
+	}
+	return {};
+}
+
 
 function createComponent(pkg) {
 	let component = { 
-		"@type" : "framework",
+		"@type" : "library",
 		name    : pkg.name,
 		version : pkg.version,
 		hashes  : [],
 		licenses: [
-			{ license : { id: pkg.license && (pkg.license.type || pkg.license) || "" } }
+			{ license : getLicense(pkg) }
 		],
 		purl    : `pkg:npm/${pkg.name}@${pkg.version}`,
 		modified: false
@@ -26,7 +41,7 @@ function createChild(name, value, depth) {
 	if (name == "value") return value;
 	if (Array.isArray(value)) return `<${name}>${value.map(v => js2Xml(v, depth + 1)).join('')}</${name}>`;
 	if (['boolean', 'string', 'number'].includes(typeof value)) return `<${name}>${value}</${name}>`;
-	console.log(name, value);
+	//console.log(name, value);
 	throw new Error("Unexpected child");
 }
 
