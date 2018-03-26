@@ -15,7 +15,12 @@ function getLicense(pkg) {
 }
 
 
-function createComponent(pkg) {
+function listComponents(pkg) {
+	var list = {};
+	addComponent(pkg, list);
+	return Object.keys(list).map(k => ({ component: list[k] }));
+}
+function addComponent(pkg, list) {
 	let component = { 
 		"@type" : "library",
 		name    : pkg.name,
@@ -30,10 +35,10 @@ function createComponent(pkg) {
 	if (pkg._shasum) {
 			component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
 	}
+	list[component.purl] = component;
 	if (pkg.dependencies) {
-		component.components = Object.keys(pkg.dependencies).map(k => createComponent(pkg.dependencies[k]));
+		Object.keys(pkg.dependencies).map(x => addComponent(pkg.dependencies[x], list));
 	}
-	return { component: component };
 }
 
 
@@ -66,7 +71,7 @@ exports.createbom = (path, callback) => readInstalled(path, (err, pkgInfo) => {
 	let result = { bom: { 
 		"@xmlns"  :"http://cyclonedx.org/schema/bom/1.0",
 		"@version": 1,
-		components: [ createComponent(pkgInfo) ]
+		components: listComponents(pkgInfo)
 	}};
 	callback(null, `<?xml version="1.0"?>\n${js2Xml(result,0)}`);
 });
