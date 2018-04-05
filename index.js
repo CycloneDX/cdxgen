@@ -2,16 +2,21 @@ const readInstalled = require("read-installed");
 const spdxLicenses = require("./spdx-licenses.json");
 
 
-function getLicense(pkg) {
+function getLicenses(pkg) {
 	var license = pkg.license && (pkg.license.type || pkg.license); 
 	if (license) {
-	 	if (spdxLicenses.includes(license)) {
-			return { id : license };
-		} else {
-			return { name : license };
+		if (!Array.isArray(license)) {
+			license = [license];
 		}
+		return license.map(l => {
+			if (spdxLicenses.includes(license)) {
+				return { id : l };
+			} else {
+				return { name : l };
+			}
+		}).map(l => ({license: l}));
 	}
-	return {};
+	return [ { license: {} }];
 }
 
 
@@ -26,15 +31,14 @@ function addComponent(pkg, list) {
 		name    : pkg.name,
 		version : pkg.version,
 		hashes  : [],
-		licenses: [
-			{ license : getLicense(pkg) }
-		],
+		licenses: getLicenses(pkg),
 		purl    : `pkg:npm/${pkg.name}@${pkg.version}`,
 		modified: false
 	};
 	if (pkg._shasum) {
 			component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
 	}
+	if (list[component.purl]) return;
 	list[component.purl] = component;
 	if (pkg.dependencies) {
 		Object.keys(pkg.dependencies).map(x => addComponent(pkg.dependencies[x], list));
