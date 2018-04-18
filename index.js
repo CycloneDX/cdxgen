@@ -38,10 +38,13 @@ function addComponent(pkg, list) {
 	if (pkg._shasum) {
 			component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
 	}
-	if (list[component.purl]) return;
+	if (list[component.purl]) return; //remove cycles
 	list[component.purl] = component;
 	if (pkg.dependencies) {
-		Object.keys(pkg.dependencies).map(x => addComponent(pkg.dependencies[x], list));
+		Object.keys(pkg.dependencies)
+			.map(x => pkg.dependencies[x])
+			.filter(x => typeof(x) !== "string") //remove cycles
+			.map(x => addComponent(x, list));
 	}
 }
 
