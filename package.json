@@ -1,6 +1,6 @@
 {
   "name": "cyclonedx-bom",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Creates CycloneDX BOMs from Node.js projects",
   "main": "index.js",
   "scripts": {
