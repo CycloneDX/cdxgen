@@ -10,12 +10,27 @@ The CycloneDX module for Node.js creates a valid CycloneDX bill-of-material docu
 Usage
 -------------------
 
+#### Installing
+
 ```bash
 npm install -g cyclonedx-bom
-cyclone-dx [path]
 ```
 
-The BOM is printed to stdout. If no path is given, it defaults to the current directory.
+#### Getting Help
+```bash
+$ cyclone-dx -h
+Usage:  cyclonedx-bom [OPTIONS] [path]
+Options:
+  -h        - this help
+  -a <path> - merge in additional modules from other scanner
+  -o <path> - write to file instead of stdout
+
+```
+
+#### Example
+```bash
+cyclone-dx -o bom.xml
+```
 
 License
 -------------------
