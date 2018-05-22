@@ -1,7 +1,12 @@
 const readInstalled = require("read-installed");
 const spdxLicenses = require("./spdx-licenses.json");
 
-
+/**
+ * Performs a lookup + validation of the license specified in the
+ * package. If the license is a valid SPDX license ID, set the 'id'
+ * of the license object, otherwise, set the 'name' of the license
+ * object.
+ */
 function getLicenses(pkg) {
     let license = pkg.license && (pkg.license.type || pkg.license);
     if (license) {
@@ -25,10 +30,13 @@ function listComponents(pkg) {
     return Object.keys(list).map(k => ({ component: list[k] }));
 }
 
+/**
+ * Given the specified package, create a CycloneDX component and add it to the list.
+ */
 function addComponent(pkg, list) {
     let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
     let component = {
-        "@type"     : "library",
+        "@type"     : determinePackageType(pkg),
         name        : pkg.name,
         version     : pkg.version,
         description : `<![CDATA[${pkg.description}]]>`,
@@ -53,6 +61,9 @@ function addComponent(pkg, list) {
     }
 }
 
+/**
+ * Creates a child XML node.
+ */
 function createChild(name, value, depth) {
     if (name === "value") return value;
     if (Array.isArray(value)) return `<${name}>${value.map(v => js2Xml(v, depth + 1)).join('')}</${name}>`;
@@ -61,6 +72,9 @@ function createChild(name, value, depth) {
     throw new Error("Unexpected child: " + name + " " + (typeof value) );
 }
 
+/**
+ * Converts the Javascript object to XML.
+ */
 function js2Xml(obj, depth) {
     return Object.keys(obj).map(key => {
         let attrs = Object.keys(obj[key])
@@ -73,6 +87,21 @@ function js2Xml(obj, depth) {
             .join('');
         return `<${key}${attrs}>${children}</${key}>`
     }).join("\n");
+}
+
+/**
+ * If the author has described the module as a 'framework', the take their
+ * word for it, otherwise, identify the module as a 'library'.
+ */
+function determinePackageType(pkg) {
+    if (pkg.hasOwnProperty("keywords")) {
+        for (keyword of pkg.keywords) {
+            if (keyword.toLowerCase() === "framework") {
+                return "framework";
+            }
+        }
+    }
+    return "library";
 }
 
 exports.createbom = (path, callback) => readInstalled(path, (err, pkgInfo) => {
