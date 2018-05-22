@@ -24,6 +24,10 @@ function getLicenses(pkg) {
     return [ { license: {} }];
 }
 
+/**
+ * For all modules in the specified package, creates a list of
+ * component objects from each one.
+ */
 function listComponents(pkg) {
     let list = {};
     addComponent(pkg, list);
