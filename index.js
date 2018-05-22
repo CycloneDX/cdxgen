@@ -81,5 +81,5 @@ exports.createbom = (path, callback) => readInstalled(path, (err, pkgInfo) => {
 		"@version": 1,
 		components: listComponents(pkgInfo)
 	}};
-	callback(null, `<?xml version="1.0"?>\n${js2Xml(result,0)}`);
+	callback(null, `<?xml version="1.0" encoding="UTF-8"?>\n${js2Xml(result,0)}`);
 });
