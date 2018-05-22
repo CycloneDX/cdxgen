@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/CycloneDX/cyclonedx-node-module.svg?branch=master)](https://travis-ci.org/CycloneDX/cyclonedx-node-module)
-[![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][Apache 2.0]
+[![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
 
 
 CycloneDX Node.js Module
@@ -20,6 +20,6 @@ The BOM is printed to stdout. If no path is given, it defaults to the current di
 License
 -------------------
 
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] [Apache 2.0] file for the full license.
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] file for the full license.
 
-[LICENSE]: https://github.com/CycloneDX/cyclonedx-node-module/blob/master/LICENSE
+[License]: https://github.com/CycloneDX/cyclonedx-node-module/blob/master/LICENSE
