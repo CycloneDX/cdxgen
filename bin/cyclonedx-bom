@@ -1,43 +1,46 @@
 #!/usr/bin/env node
 
-const bom = require('../index.js');
-const fs = require('fs');
+const bom = require("../index.js");
+const fs = require("fs");
+const xmlFormat = require("prettify-xml");
+const xmlOptions = {indent: 4, newline: "\n"};
 
-var arguments = process.argv.slice(2);
-var unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o"].includes(x));
+let arguments = process.argv.slice(2);
+let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o"].includes(x));
 if (arguments.includes("-h") || unknownOptions.length > 0) {
-	if (unknownOptions.length > 0) console.warn("ERROR: Unkonwn option(s) " + unknownOptions.join(" ") )
-	console.log("Usage:  cyclonedx-bom [OPTIONS] [path]");
-	console.log("Options:");
-	console.log("  -h        - this help");
-	console.log("  -a <path> - merge in additional modules from other scanner");
-	console.log("  -o <path> - write to file instead of stdout");
-	process.exit(0);
+    if (unknownOptions.length > 0) {
+        console.warn("ERROR: Unknown option(s) " + unknownOptions.join(" ") );
+    }
+    console.log("Usage:  cyclonedx-bom [OPTIONS] [path]");
+    console.log("Options:");
+    console.log("  -h        - this help");
+    console.log("  -a <path> - merge in additional modules from other scanner");
+    console.log("  -o <path> - write to file instead of stdout");
+    process.exit(0);
 }
 
-
-var a = arguments.indexOf("-a");
-var additional = "";
+let a = arguments.indexOf("-a");
+let additional = "";
 if (a > -1) {
-	additional = fs.readFileSync(arguments[a+1], "utf-8")
-		.replace(/^[\s\S]*?<components>/, "")
-		.replace(/<.components>[\s]*?<\/bom>[\s]*?$/, "")
-	arguments = arguments.slice(0,a).concat(arguments.slice(a+2));
+    additional = fs.readFileSync(arguments[a+1], "utf-8")
+        .replace(/^[\s\S]*?<components>/, "")
+        .replace(/<.components>[\s]*?<\/bom>[\s]*?$/, "");
+    arguments = arguments.slice(0,a).concat(arguments.slice(a+2));
 }
 
-var o = arguments.indexOf("-o");
-var out = null
-if (o > -1){
-	out = arguments[o+1];
-	arguments = arguments.slice(0,o).concat(arguments.slice(o+2));
-} 
-var path = arguments[0] || '.'
+let o = arguments.indexOf("-o");
+let out = null;
+if (o > -1) {
+    out = arguments[o+1];
+    arguments = arguments.slice(0,o).concat(arguments.slice(o+2));
+}
+let path = arguments[0] || '.';
 
 bom.createbom(path, (err, bom) => {
-	bom = bom.replace("</components></bom>", additional + "</components></bom>");
-	if (out) {
-		fs.writeFile(out, bom, () => {});
-	} else {
-		console.log(bom);
-	}
+    bom = xmlFormat(bom.replace("</components></bom>", additional + "</components></bom>"), xmlOptions);
+    if (out) {
+        fs.writeFile(out, bom, () => {});
+    } else {
+        console.log(bom);
+    }
 });

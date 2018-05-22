@@ -1,6 +1,6 @@
 {
   "name": "cyclonedx-bom",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Creates CycloneDX BOMs from Node.js projects",
   "main": "index.js",
   "scripts": {
@@ -9,15 +9,16 @@
   "bin": "./bin/cyclonedx-bom",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eoftedal/cyclonedx-node-module.git"
+    "url": "git+https://github.com/CycloneDX/cyclonedx-node-module.git"
   },
   "author": "Erlend Oftedal",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/eoftedal/cyclonedx-node-module/issues"
+    "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
-  "homepage": "https://github.com/eoftedal/cyclonedx-node-module#readme",
+  "homepage": "https://github.com/CycloneDX/cyclonedx-node-module#readme",
   "dependencies": {
+    "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3"
   }
 }
