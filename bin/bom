@@ -11,7 +11,7 @@ if (arguments.includes("-h") || unknownOptions.length > 0) {
     if (unknownOptions.length > 0) {
         console.warn("ERROR: Unknown option(s) " + unknownOptions.join(" ") );
     }
-    console.log("Usage:  cyclonedx-bom [OPTIONS] [path]");
+    console.log("Usage:  bom [OPTIONS] [path]");
     console.log("Options:");
     console.log("  -h        - this help");
     console.log("  -a <path> - merge in additional modules from other scanner");

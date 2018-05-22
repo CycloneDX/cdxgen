@@ -13,13 +13,13 @@ Usage
 #### Installing
 
 ```bash
-npm install -g cyclonedx-bom
+npm install -g @cyclonedx/bom
 ```
 
 #### Getting Help
 ```bash
-$ cyclone-dx -h
-Usage:  cyclonedx-bom [OPTIONS] [path]
+$ bom -h
+Usage:  bom [OPTIONS] [path]
 Options:
   -h        - this help
   -a <path> - merge in additional modules from other scanner
@@ -29,7 +29,7 @@ Options:
 
 #### Example
 ```bash
-cyclone-dx -o bom.xml
+bom -o bom.xml
 ```
 
 License
