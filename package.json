@@ -1,22 +1,42 @@
 {
-  "name": "cyclonedx-bom",
+  "name": "@cyclonedx/bom",
   "version": "0.1.0",
-  "description": "Creates CycloneDX BOMs from Node.js projects",
+  "description": "Creates CycloneDX bill-of-material (BoM) files from Node.js projects",
+  "homepage": "http://github.com/CycloneDX/cyclonedx-node-module",
+  "author": "Erlend Oftedal",
+  "license": "Apache-2.0",
+  "keywords": [
+    "bom",
+    "spdx",
+    "package-url",
+    "purl",
+    "owasp",
+    "dependency",
+    "appsec",
+    "scrm"
+  ],
+  "contributors": [
+    {
+      "name": "Erlend Oftedal"
+    },
+    {
+      "name": "Steve Springett",
+      "email": "steve.springett@owasp.org",
+      "url": "https://about.me/stevespringett"
+    }
+  ],
   "main": "index.js",
+  "bin": "./bin/cyclonedx-bom",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0"
   },
-  "bin": "./bin/cyclonedx-bom",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CycloneDX/cyclonedx-node-module.git"
   },
-  "author": "Erlend Oftedal",
-  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
-  "homepage": "https://github.com/CycloneDX/cyclonedx-node-module#readme",
   "dependencies": {
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3"

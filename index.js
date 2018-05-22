@@ -26,17 +26,22 @@ function listComponents(pkg) {
 }
 
 function addComponent(pkg, list) {
+    let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
     let component = {
-        "@type" : "library",
-        name    : pkg.name,
-        version : pkg.version,
-        hashes  : [],
-        licenses: getLicenses(pkg),
-        purl    : `pkg:npm/${pkg.name}@${pkg.version}`,
-        modified: false
+        "@type"     : "library",
+        name        : pkg.name,
+        version     : pkg.version,
+        description : `<![CDATA[${pkg.description}]]>`,
+        hashes      : [],
+        licenses    : getLicenses(pkg),
+        purl        : `pkg:npm/${purlName}@${pkg.version}`,
+        modified    : false
     };
+
     if (pkg._shasum) {
         component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
+    } else {
+        delete component.hashes; // If no hashes exist, delete the hashes node (it's optional)
     }
     if (list[component.purl]) return; //remove cycles
     list[component.purl] = component;
