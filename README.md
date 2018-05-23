@@ -18,8 +18,8 @@ npm install -g @cyclonedx/bom
 
 #### Getting Help
 ```bash
-$ bom -h
-Usage:  bom [OPTIONS] [path]
+$ cyclonedx-bom -h
+Usage:  cyclonedx-bom [OPTIONS] [path]
 Options:
   -h        - this help
   -a <path> - merge in additional modules from other scanner
@@ -29,7 +29,7 @@ Options:
 
 #### Example
 ```bash
-bom -o bom.xml
+cyclonedx-bom -o bom.xml
 ```
 
 License
