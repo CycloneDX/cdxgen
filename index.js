@@ -1,4 +1,5 @@
 const readInstalled = require("read-installed");
+const parsePackageJsonName = require("parse-packagejson-name");
 const spdxLicenses = require("./spdx-licenses.json");
 
 /**
@@ -38,10 +39,14 @@ function listComponents(pkg) {
  * Given the specified package, create a CycloneDX component and add it to the list.
  */
 function addComponent(pkg, list) {
+    let pkgIdentifier = parsePackageJsonName(pkg.name);
+    let group = pkgIdentifier.scope;
+    let name = pkgIdentifier.fullName;
     let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
     let component = {
         "@type"     : determinePackageType(pkg),
-        name        : pkg.name,
+        group       : group,
+        name        : name,
         version     : pkg.version,
         description : `<![CDATA[${pkg.description}]]>`,
         hashes      : [],
@@ -50,6 +55,9 @@ function addComponent(pkg, list) {
         modified    : false
     };
 
+    if (group === null) {
+        delete component.group; // If no group exist, delete it (it's optional)
+    }
     if (pkg._shasum) {
         component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
     } else {
