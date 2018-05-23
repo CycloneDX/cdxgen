@@ -1,5 +1,6 @@
 const readInstalled = require("read-installed");
 const parsePackageJsonName = require("parse-packagejson-name");
+const ssri = require("ssri");
 const spdxLicenses = require("./spdx-licenses.json");
 
 /**
@@ -58,11 +59,9 @@ function addComponent(pkg, list) {
     if (group === null) {
         delete component.group; // If no group exist, delete it (it's optional)
     }
-    if (pkg._shasum) {
-        component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
-    } else {
-        delete component.hashes; // If no hashes exist, delete the hashes node (it's optional)
-    }
+
+    processHashes(pkg, component);
+
     if (list[component.purl]) return; //remove cycles
     list[component.purl] = component;
     if (pkg.dependencies) {
@@ -114,6 +113,33 @@ function determinePackageType(pkg) {
         }
     }
     return "library";
+}
+
+/**
+ * Uses the SHA1 shasum (if present) otherwise utilizes Subresource Integrity
+ * of the package with support for multiple hashing algorithms.
+ */
+function processHashes(pkg, component) {
+    if (pkg._shasum) {
+        component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
+    } else if (pkg._integrity) {
+        let integrity = ssri.parse(pkg._integrity);
+        let hash = Buffer.from(integrity.hexDigest(), "base64").toString("hex");
+        let alg = null;
+        if (integrity.hasOwnProperty("sha512")) {
+            alg = "SHA-512";
+        } else if (integrity.hasOwnProperty("sha256")) {
+            alg = "SHA-256";
+        } else if (integrity.hasOwnProperty("sha1")) {
+            alg = "SHA-1";
+        }
+        if (alg != null) {
+            component.hashes.push({hash: {"@alg": alg, value: hash}});
+        }
+    }
+    if (component.hashes.length === 0) {
+        delete component.hashes; // If no hashes exist, delete the hashes node (it's optional)
+    }
 }
 
 exports.createbom = (path, callback) => readInstalled(path, (err, pkgInfo) => {
