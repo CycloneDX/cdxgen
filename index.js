@@ -124,22 +124,32 @@ function processHashes(pkg, component) {
         component.hashes.push({ hash: { "@alg":"SHA-1", value: pkg._shasum} });
     } else if (pkg._integrity) {
         let integrity = ssri.parse(pkg._integrity);
-        let hash = Buffer.from(integrity.hexDigest(), "base64").toString("hex");
-        let alg = null;
+        // Components may have multiple hashes with various lengths. Check each one
+        // that is supported by the CycloneDX specification.
         if (integrity.hasOwnProperty("sha512")) {
-            alg = "SHA-512";
-        } else if (integrity.hasOwnProperty("sha256")) {
-            alg = "SHA-256";
-        } else if (integrity.hasOwnProperty("sha1")) {
-            alg = "SHA-1";
+            addComponentHash("SHA-512", integrity.sha512[0].digest, component);
         }
-        if (alg != null) {
-            component.hashes.push({hash: {"@alg": alg, value: hash}});
+        if (integrity.hasOwnProperty("sha384")) {
+            addComponentHash("SHA-384", integrity.sha384[0].digest, component);
+        }
+        if (integrity.hasOwnProperty("sha256")) {
+            addComponentHash("SHA-256", integrity.sha256[0].digest, component);
+        }
+        if (integrity.hasOwnProperty("sha1")) {
+            addComponentHash("SHA-1", integrity.sha1[0].digest, component);
         }
     }
     if (component.hashes.length === 0) {
         delete component.hashes; // If no hashes exist, delete the hashes node (it's optional)
     }
+}
+
+/**
+ * Adds a hash to component.
+ */
+function addComponentHash(alg, digest, component) {
+    let hash = Buffer.from(digest, "base64").toString("hex");
+    component.hashes.push({hash: {"@alg": alg, value: hash}});
 }
 
 exports.createbom = (path, callback) => readInstalled(path, (err, pkgInfo) => {
