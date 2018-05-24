@@ -32,6 +32,9 @@
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0"
   },
+  "engines" : { 
+    "node" : ">=8.0.0" 
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CycloneDX/cyclonedx-node-module.git"
