@@ -16,7 +16,7 @@ function getLicenses(pkg) {
             license = [license];
         }
         return license.map(l => {
-            if (spdxLicenses.some(v => license.includes(v))) {
+            if (spdxLicenses.some(v => { return l === v; })) {
                 return { id : l };
             } else {
                 return { name : l };
