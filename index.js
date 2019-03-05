@@ -32,38 +32,41 @@ function getLicenses(pkg) {
  */
 function listComponents(pkg) {
     let list = {};
-    addComponent(pkg, list);
+    let isRootPkg = true;
+    addComponent(pkg, list, isRootPkg);
     return Object.keys(list).map(k => ({ component: list[k] }));
 }
 
 /**
  * Given the specified package, create a CycloneDX component and add it to the list.
  */
-function addComponent(pkg, list) {
-    let pkgIdentifier = parsePackageJsonName(pkg.name);
-    let group = pkgIdentifier.scope;
-    let name = pkgIdentifier.fullName;
-    let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
-    let component = {
-        "@type"     : determinePackageType(pkg),
-        group       : group,
-        name        : name,
-        version     : pkg.version,
-        description : `<![CDATA[${pkg.description}]]>`,
-        hashes      : [],
-        licenses    : getLicenses(pkg),
-        purl        : `pkg:npm/${purlName}@${pkg.version}`,
-        modified    : false
-    };
+function addComponent(pkg, list, isRootPkg = false) {
+    if(!isRootPkg) {
+        let pkgIdentifier = parsePackageJsonName(pkg.name);
+        let group = pkgIdentifier.scope;
+        let name = pkgIdentifier.fullName;
+        let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
+        let component = {
+            "@type"     : determinePackageType(pkg),
+            group       : group,
+            name        : name,
+            version     : pkg.version,
+            description : `<![CDATA[${pkg.description}]]>`,
+            hashes      : [],
+            licenses    : getLicenses(pkg),
+            purl        : `pkg:npm/${purlName}@${pkg.version}`,
+            modified    : false
+        };
 
-    if (group === null) {
-        delete component.group; // If no group exist, delete it (it's optional)
+        if (group === null) {
+            delete component.group; // If no group exist, delete it (it's optional)
+        }
+
+        processHashes(pkg, component);
+
+        if (list[component.purl]) return; //remove cycles
+        list[component.purl] = component;
     }
-
-    processHashes(pkg, component);
-
-    if (list[component.purl]) return; //remove cycles
-    list[component.purl] = component;
     if (pkg.dependencies) {
         Object.keys(pkg.dependencies)
             .map(x => pkg.dependencies[x])
