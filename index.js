@@ -41,6 +41,9 @@ function listComponents(pkg) {
  * Given the specified package, create a CycloneDX component and add it to the list.
  */
 function addComponent(pkg, list, isRootPkg = false) {
+    //read-installed with default options marks devDependencies as extraneous
+    //if a package is marked as extraneous, do not include it as a component
+    if(pkg.extraneous) return;
     if(!isRootPkg) {
         let pkgIdentifier = parsePackageJsonName(pkg.name);
         let group = pkgIdentifier.scope;
