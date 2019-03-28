@@ -79,6 +79,7 @@ function createChild(name, value, depth) {
     if (name === "value") return value;
     if (Array.isArray(value)) return `<${name}>${value.map(v => js2Xml(v, depth + 1)).join('')}</${name}>`;
     if (['boolean', 'string', 'number'].includes(typeof value)) return `<${name}>${value}</${name}>`;
+    if (['object'].includes(typeof value)) return `<${name}>${value.type}</${name}>`;    
     //console.log(name, value);
     throw new Error("Unexpected child: " + name + " " + (typeof value) );
 }
