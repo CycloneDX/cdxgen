@@ -61,7 +61,7 @@ function addLicenseText(pkg, l, licenseContent) {
  * content-type attribute, if not default. Returns the license text object.
  */
 function readLicenseText(licenseFilepath, licenseContentType) {
-    let licenseContentText = { value : fs.readFileSync(licenseFilepath) };
+    let licenseContentText = { value : "\n" + fs.readFileSync(licenseFilepath) };
     if (licenseContentType !== "text/plain") {
         licenseContentText["@content-type"] = licenseContentType;
     }
