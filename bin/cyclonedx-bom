@@ -6,7 +6,7 @@ const xmlFormat = require("prettify-xml");
 const xmlOptions = {indent: 4, newline: "\n"};
 
 let arguments = process.argv.slice(2);
-let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o"].includes(x));
+let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o", "-d"].includes(x));
 if (arguments.includes("-h") || unknownOptions.length > 0) {
     if (unknownOptions.length > 0) {
         console.warn("ERROR: Unknown option(s) " + unknownOptions.join(" ") );
@@ -16,6 +16,7 @@ if (arguments.includes("-h") || unknownOptions.length > 0) {
     console.log("  -h        - this help");
     console.log("  -a <path> - merge in additional modules from other scanner");
     console.log("  -o <path> - write to file instead of stdout");
+    console.log("  -d        - include devDependencies")
     process.exit(0);
 }
 
@@ -34,9 +35,18 @@ if (o > -1) {
     out = arguments[o+1];
     arguments = arguments.slice(0,o).concat(arguments.slice(o+2));
 }
+
+let d = arguments.indexOf("-d");
+let options = {};
+if (d > -1) {
+  options.dev = true;
+  arguments = arguments.slice(0,d).concat(arguments.slice(d+2));
+}
+
+
 let path = arguments[0] || '.';
 
-bom.createbom(path, (err, bom) => {
+bom.createbom(path, options, (err, bom) => {
     bom = xmlFormat(bom.replace("</components></bom>", additional + "</components></bom>"), xmlOptions);
     if (out) {
         fs.writeFile(out, bom, () => {});
