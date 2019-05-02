@@ -26,6 +26,7 @@ Options:
   -h        - this help
   -a <path> - merge in additional modules from other scanner
   -o <path> - write to file instead of stdout
+  -d        - include devDependencies
 
 ```
 
