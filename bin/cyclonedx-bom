@@ -22,11 +22,12 @@ if (arguments.includes("-h") || unknownOptions.length > 0) {
 
 let a = arguments.indexOf("-a");
 let additional = "";
-if (a > -1) {
-    additional = fs.readFileSync(arguments[a+1], "utf-8")
+while (a > -1) {
+    additional += fs.readFileSync(arguments[a+1], "utf-8")
         .replace(/^[\s\S]*?<components>/, "")
-        .replace(/<.components>[\s]*?<\/bom>[\s]*?$/, "");
+        .replace(/[\s]*?<.components>[\s]*?<\/bom>[\s]*?$/, "");
     arguments = arguments.slice(0,a).concat(arguments.slice(a+2));
+    a = arguments.indexOf("-a");
 }
 
 let o = arguments.indexOf("-o");
