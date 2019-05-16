@@ -30,6 +30,7 @@ function getLicenses(pkg) {
  * For all modules in the specified package, creates a list of
  * component objects from each one.
  */
+exports.listComponents = listComponents;
 function listComponents(pkg) {
     let list = {};
     let isRootPkg = true;
@@ -85,8 +86,7 @@ function createChild(name, value, depth) {
     if (name === "value") return value;
     if (Array.isArray(value)) return `<${name}>${value.map(v => js2Xml(v, depth + 1)).join('')}</${name}>`;
     if (['boolean', 'string', 'number'].includes(typeof value)) return `<${name}>${value}</${name}>`;
-    if (['object'].includes(typeof value)) return `<${name}>${value.type}</${name}>`;    
-    //console.log(name, value);
+    if (['object'].includes(typeof value)) return `<${name}>${value.type}</${name}>`;
     throw new Error("Unexpected child: " + name + " " + (typeof value) );
 }
 
