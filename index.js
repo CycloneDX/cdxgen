@@ -2,6 +2,7 @@ const readInstalled = require("read-installed");
 const parsePackageJsonName = require("parse-packagejson-name");
 const ssri = require("ssri");
 const spdxLicenses = require("./spdx-licenses.json");
+const fs = require('fs');
 
 /**
  * Performs a lookup + validation of the license specified in the
@@ -16,14 +17,55 @@ function getLicenses(pkg) {
             license = [license];
         }
         return license.map(l => {
+            let licenseContent = {};
             if (spdxLicenses.some(v => { return l === v; })) {
-                return { id : l };
+                licenseContent.id = l;
             } else {
-                return { name : l };
+                licenseContent.name = l;
             }
+            addLicenseText(pkg, l, licenseContent);
+            return licenseContent;
         }).map(l => ({license: l}));
     }
     return [ { license: {} }];
+}
+
+/**
+ * Tries to find a file containing the license text based on commonly
+ * used naming and content types. If a candidate file is found, add
+ * the text to the license text object and stop.
+ */
+function addLicenseText(pkg, l, licenseContent) {
+    let licenseFilenames = [ 'LICENSE', 'LICENCE', 'License', 'Licence', 'NOTICE', 'Notice' ];
+    let licenseContentTypes = { "text/plain": '', "text/txt": '.txt', "text/markdown": '.md', "text/xml": '.xml' };
+
+    /* Loops over different name combinations starting from the license specified
+       naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
+    for (const licenseName of [`.${l}`, '']) {
+        for (const licenseFilename of licenseFilenames) {
+            for (const [licenseContentType, fileExtension] of Object.entries(licenseContentTypes)) {
+                let licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
+
+                if (fs.existsSync(licenseFilepath)) {
+                    licenseContent.text = readLicenseText(licenseFilepath, licenseContentType);
+                    return;
+                }
+            }
+        }
+    }
+
+}
+
+/**
+ * Read the file from the given path to the license text object and includes
+ * content-type attribute, if not default. Returns the license text object.
+ */
+function readLicenseText(licenseFilepath, licenseContentType) {
+    let licenseContentText = { value : "\n" + fs.readFileSync(licenseFilepath) };
+    if (licenseContentType !== "text/plain") {
+        licenseContentText["@content-type"] = licenseContentType;
+    }
+    return licenseContentText;
 }
 
 /**
@@ -86,7 +128,9 @@ function createChild(name, value, depth) {
     if (name === "value") return value;
     if (Array.isArray(value)) return `<${name}>${value.map(v => js2Xml(v, depth + 1)).join('')}</${name}>`;
     if (['boolean', 'string', 'number'].includes(typeof value)) return `<${name}>${value}</${name}>`;
-    if (['object'].includes(typeof value)) return `<${name}>${value.type}</${name}>`;
+    if (['object'].includes(typeof value) && typeof value.type !== "undefined") return `<${name}>${value.type}</${name}>`;    
+    if (name === "text" && typeof value === "object") return js2Xml({ [name] : value }, depth);
+    //console.log(name, value);
     throw new Error("Unexpected child: " + name + " " + (typeof value) );
 }
 
