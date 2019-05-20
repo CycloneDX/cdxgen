@@ -72,6 +72,7 @@ function readLicenseText(licenseFilepath, licenseContentType) {
  * For all modules in the specified package, creates a list of
  * component objects from each one.
  */
+exports.listComponents = listComponents;
 function listComponents(pkg) {
     let list = {};
     let isRootPkg = true;
@@ -202,8 +203,8 @@ function addComponentHash(alg, digest, component) {
     component.hashes.push({hash: {"@alg": alg, value: hash}});
 }
 
-exports.createbom = (path, callback) => readInstalled(path, (err, pkgInfo) => {
-	let result = { bom: { 
+exports.createbom = (path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
+	let result = { bom: {
 		"@xmlns"  :"http://cyclonedx.org/schema/bom/1.0",
 		"@version": 1,
 		components: listComponents(pkgInfo)
