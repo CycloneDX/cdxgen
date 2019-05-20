@@ -6,7 +6,7 @@ const xmlFormat = require("prettify-xml");
 const xmlOptions = {indent: 4, newline: "\n"};
 
 let arguments = process.argv.slice(2);
-let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o", "-d"].includes(x));
+let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o", "-v10", "-v11", "-ns", "-d"].includes(x));
 if (arguments.includes("-h") || unknownOptions.length > 0) {
     if (unknownOptions.length > 0) {
         console.warn("ERROR: Unknown option(s) " + unknownOptions.join(" ") );
@@ -16,8 +16,33 @@ if (arguments.includes("-h") || unknownOptions.length > 0) {
     console.log("  -h        - this help");
     console.log("  -a <path> - merge in additional modules from other scanner");
     console.log("  -o <path> - write to file instead of stdout");
-    console.log("  -d        - include devDependencies")
+    console.log("  -v10      - generate CycloneDX v1.0");
+    console.log("  -v11      - generate CycloneDX v1.1 (default)");
+    console.log("  -ns       - do not generate bom serial number (schema v1.1 or higher)");
+    console.log("  -d        - include devDependencies");
     process.exit(0);
+}
+
+let schemaVersion = "1.1"; // The default
+let includeBomSerialNumber = true; // The default
+
+let v10 = arguments.indexOf("-v10");
+if (v10 > -1) {
+    schemaVersion = "1.0";
+    includeBomSerialNumber = false;
+    arguments = arguments.slice(0,v10).concat(arguments.slice(v10+1));
+}
+
+let v11 = arguments.indexOf("-v11");
+if (v11 > -1) {
+    schemaVersion = "1.1";
+    arguments = arguments.slice(0,v11).concat(arguments.slice(v11+1));
+}
+
+let ns = arguments.indexOf("-ns");
+if (ns > -1) {
+    includeBomSerialNumber = false;
+    arguments = arguments.slice(0,ns).concat(arguments.slice(ns+1));
 }
 
 let a = arguments.indexOf("-a");
@@ -39,14 +64,14 @@ if (o > -1) {
 let d = arguments.indexOf("-d");
 let options = {};
 if (d > -1) {
-  options.dev = true;
-  arguments = arguments.slice(0,d).concat(arguments.slice(d+2));
+    options.dev = true;
+    arguments = arguments.slice(0,d).concat(arguments.slice(d+1));
 }
 
 
 let path = arguments[0] || '.';
 
-bom.createbom(path, options, (err, bom) => {
+bom.createbom(schemaVersion, includeBomSerialNumber, path, options, (err, bom) => {
     bom = xmlFormat(bom.replace("</components></bom>", additional + "</components></bom>"), xmlOptions);
     if (out) {
         fs.writeFile(out, bom, () => {});
