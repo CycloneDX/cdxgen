@@ -30,7 +30,7 @@ Options:
   -v11      - generate CycloneDX v1.1 (default)
   -ns       - do not generate bom serial number (schema v1.1 or higher)
   -d        - include devDependencies
-
+  --version - print version number
 ```
 
 #### Example
