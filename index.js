@@ -30,7 +30,7 @@ function getLicenses(schemaVersion, pkg) {
             return licenseContent;
         }).map(l => ({license: l}));
     }
-    return [ { license: {} }];
+    return null;
 }
 
 /**
@@ -91,6 +91,7 @@ function addComponent(schemaVersion, pkg, list, isRootPkg = false) {
         let pkgIdentifier = parsePackageJsonName(pkg.name);
         let group = pkgIdentifier.scope;
         let name = pkgIdentifier.fullName;
+        let licenses = getLicenses(schemaVersion, pkg);
         let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
         let component = {
             "@type"     : determinePackageType(pkg),
@@ -99,13 +100,17 @@ function addComponent(schemaVersion, pkg, list, isRootPkg = false) {
             version     : pkg.version,
             description : `<![CDATA[${pkg.description}]]>`,
             hashes      : [],
-            licenses    : getLicenses(schemaVersion, pkg),
+            licenses    : licenses,
             purl        : `pkg:npm/${purlName}@${pkg.version}`,
             modified    : false
         };
 
         if (group === null) {
             delete component.group; // If no group exist, delete it (it's optional)
+        }
+
+        if (component.licenses == null) {
+            delete component.licenses;
         }
 
         if (schemaVersion !== "1.0") {
