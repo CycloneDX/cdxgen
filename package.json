@@ -51,5 +51,10 @@
     "read-installed": "^4.0.3",
     "ssri": "^6.0.0",
     "uuid": "^3.3.2"
-  }
+  },
+  "files": [
+    "index.js",
+    "bin/",
+    "spdx-licenses.json"
+  ]
 }
