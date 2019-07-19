@@ -69,6 +69,25 @@ function readLicenseText(licenseFilepath, licenseContentType) {
 }
 
 /**
+ * Adds
+ * @param pkg
+ * @returns {Array}
+ */
+function addExternalReferences(pkg) {
+    let externalReferences = [];
+    if (pkg.homepage) {
+        externalReferences.push({"reference": {"@type": "website", url: pkg.homepage}});
+    }
+    if (pkg.bugs && pkg.bugs.url) {
+        externalReferences.push({"reference": {"@type": "issue-tracker", url: pkg.bugs.url}});
+    }
+    if (pkg.repository && pkg.repository.url) {
+        externalReferences.push({"reference": {"@type": "vcs", url: pkg.repository.url}});
+    }
+    return externalReferences;
+}
+
+/**
  * For all modules in the specified package, creates a list of
  * component objects from each one.
  */
@@ -94,15 +113,16 @@ function addComponent(schemaVersion, pkg, list, isRootPkg = false) {
         let licenses = getLicenses(schemaVersion, pkg);
         let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
         let component = {
-            "@type"     : determinePackageType(pkg),
-            group       : group,
-            name        : name,
-            version     : pkg.version,
-            description : `<![CDATA[${pkg.description}]]>`,
-            hashes      : [],
-            licenses    : licenses,
-            purl        : `pkg:npm/${purlName}@${pkg.version}`,
-            modified    : false
+            "@type"            : determinePackageType(pkg),
+            group              : group,
+            name               : name,
+            version            : pkg.version,
+            description        : `<![CDATA[${pkg.description}]]>`,
+            hashes             : [],
+            licenses           : licenses,
+            purl               : `pkg:npm/${purlName}@${pkg.version}`,
+            modified           : false,
+            externalReferences : addExternalReferences(pkg)
         };
 
         if (group === null) {
@@ -117,6 +137,10 @@ function addComponent(schemaVersion, pkg, list, isRootPkg = false) {
             // Delete this as it's required in v1.0 and optional in newer versions.
             // Pedigree is the suggested way to specify modifications in schema 1.1 and higher.
             delete component.modified;
+        }
+
+        if (schemaVersion === "1.0" || component.externalReferences === undefined || component.externalReferences.length === 0) {
+            delete component.externalReferences;
         }
 
         processHashes(pkg, component);
