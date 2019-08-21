@@ -22,7 +22,7 @@ function getLicenses(schemaVersion, pkg) {
             if (spdxLicenses.some(v => { return l === v; })) {
                 licenseContent.id = l;
             } else {
-                licenseContent.name = l;
+                licenseContent.name = escapeXml(l);
             }
             if (schemaVersion !== "1.0") {
                 addLicenseText(pkg, l, licenseContent);
@@ -76,13 +76,13 @@ function readLicenseText(licenseFilepath, licenseContentType) {
 function addExternalReferences(pkg) {
     let externalReferences = [];
     if (pkg.homepage) {
-        externalReferences.push({"reference": {"@type": "website", url: pkg.homepage}});
+        externalReferences.push({"reference": {"@type": "website", url: escapeXml(pkg.homepage)}});
     }
     if (pkg.bugs && pkg.bugs.url) {
-        externalReferences.push({"reference": {"@type": "issue-tracker", url: pkg.bugs.url}});
+        externalReferences.push({"reference": {"@type": "issue-tracker", url: escapeXml(pkg.bugs.url)}});
     }
     if (pkg.repository && pkg.repository.url) {
-        externalReferences.push({"reference": {"@type": "vcs", url: pkg.repository.url}});
+        externalReferences.push({"reference": {"@type": "vcs", url: escapeXml(pkg.repository.url)}});
     }
     return externalReferences;
 }
@@ -108,15 +108,16 @@ function addComponent(schemaVersion, pkg, list, isRootPkg = false) {
     if(pkg.extraneous) return;
     if(!isRootPkg) {
         let pkgIdentifier = parsePackageJsonName(pkg.name);
-        let group = pkgIdentifier.scope;
-        let name = pkgIdentifier.fullName;
+        let group = escapeXml(pkgIdentifier.scope);
+        let name = escapeXml(pkgIdentifier.fullName);
+        let version = escapeXml(pkg.version);
         let licenses = getLicenses(schemaVersion, pkg);
         let purlName = pkg.name.replace("@", "%40"); // Encode 'scoped' npm packages in purl
         let component = {
             "@type"            : determinePackageType(pkg),
             group              : group,
             name               : name,
-            version            : pkg.version,
+            version            : version,
             description        : `<![CDATA[${pkg.description}]]>`,
             hashes             : [],
             licenses           : licenses,
@@ -236,6 +237,25 @@ function processHashes(pkg, component) {
 function addComponentHash(alg, digest, component) {
     let hash = Buffer.from(digest, "base64").toString("hex");
     component.hashes.push({hash: {"@alg": alg, value: hash}});
+}
+
+/**
+ * Performs XML escaping from strings which could potentially contain
+ * characters that would otherwise create an invalid XML document.
+ */
+function escapeXml(unsafe) {
+    if (unsafe == null) {
+        return null;
+    }
+    return unsafe.replace(/[<>&'"]/g, function (c) {
+        switch (c) {
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '&': return '&amp;';
+            case '\'': return '&apos;';
+            case '"': return '&quot;';
+        }
+    });
 }
 
 exports.createbom = (schemaVersion, includeBomSerialNumber, path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
