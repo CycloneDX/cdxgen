@@ -39,7 +39,7 @@ function getLicenses(schemaVersion, pkg) {
  * the text to the license text object and stop.
  */
 function addLicenseText(pkg, l, licenseContent) {
-    let licenseFilenames = [ 'LICENSE', 'LICENCE', 'License', 'Licence', 'NOTICE', 'Notice' ];
+    let licenseFilenames = [ 'LICENSE', 'License', 'license', 'LICENCE', 'Licence', 'licence', 'NOTICE', 'Notice', 'notice' ];
     let licenseContentTypes = { "text/plain": '', "text/txt": '.txt', "text/markdown": '.md', "text/xml": '.xml' };
     /* Loops over different name combinations starting from the license specified
        naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
