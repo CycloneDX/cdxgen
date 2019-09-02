@@ -9,7 +9,7 @@ https://img.shields.io/npm/v/@cyclonedx/bom)](https://www.npmjs.com/package/@cyc
 CycloneDX Node.js Module
 =========
 
-The CycloneDX module for Node.js creates a valid CycloneDX Softare Bill-of-Material (SBoM) containing an aggregate of all project dependencies. CycloneDX is a lightweight SBoM specification that is easily created, human and machine readable, and simple to parse. The resulting bom.xml can be used with tools such as [OWASP Dependency-Track](https://dependencytrack.org/) for the continuous analysis of components.
+The CycloneDX module for Node.js creates a valid CycloneDX Software Bill-of-Material (SBOM) containing an aggregate of all project dependencies. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 Usage
 -------------------
