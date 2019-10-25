@@ -50,7 +50,7 @@
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
-    "ssri": "^6.0.0",
+    "ssri": "^7.1.0",
     "uuid": "^3.3.2",
     "xmlbuilder": "^13.0.2"
   },
