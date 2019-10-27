@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CycloneDX/cyclonedx-node-module.svg?branch=master)](https://travis-ci.org/CycloneDX/cyclonedx-node-module)
+[![Build Status](https://github.com/CycloneDX/cyclonedx-node-module/workflows/Node%20CI/badge.svg)](https://github.com/CycloneDX/cyclonedx-node-module/actions?workflow=Node+CI)
 [![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
 [![Latest](
 https://img.shields.io/npm/v/@cyclonedx/bom)](https://www.npmjs.com/package/@cyclonedx/bom)
@@ -28,9 +28,7 @@ Options:
   -h        - this help
   -a <path> - merge in additional modules from other scanner
   -o <path> - write to file instead of stdout
-  -v10      - generate CycloneDX v1.0
-  -v11      - generate CycloneDX v1.1 (default)
-  -ns       - do not generate bom serial number (schema v1.1 or higher)
+  -ns       - do not generate bom serial number
   -d        - include devDependencies
   --version - print version number
 ```
