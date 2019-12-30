@@ -319,14 +319,18 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
     if (fs.existsSync(pathLib.join(path, "gradlew"))) {
       GRADLE_CMD = "gradlew";
     }
+    let pkgList = [];
     for (let i in gradleFiles) {
       const f = gradleFiles[i];
       const basePath = pathLib.dirname(f);
       console.log("Executing 'gradle dependencies' in", basePath);
       const result = spawnSync(GRADLE_CMD, ["dependencies", "-q", "--configuration", "default", "--console", "plain"], {cwd: basePath});
       const cmdOutput = Buffer.from(result.stdout).toString();
-      const pkgList = utils.parseGradleDep(cmdOutput);
-      buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
+      const dlist = utils.parseGradleDep(cmdOutput);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
     }
+    buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
   }
 };
