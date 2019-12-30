@@ -1,9 +1,9 @@
 {
-  "name": "@cyclonedx/bom",
-  "version": "1.1.0-SNAPSHOT",
-  "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects",
-  "homepage": "http://github.com/CycloneDX/cyclonedx-node-module",
-  "author": "Erlend Oftedal",
+  "name": "@appthreat/cdxgen",
+  "version": "1.0.0",
+  "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) for node.js, python and java projects",
+  "homepage": "http://github.com/AppThreat/cdxgen",
+  "author": "Team AppThreat",
   "license": "Apache-2.0",
   "keywords": [
     "sbom",
@@ -20,6 +20,11 @@
   ],
   "contributors": [
     {
+      "name": "Team AppThreat",
+      "email": "cloud@appthreat.com",
+      "url": "https://appthreat.io"
+    },
+    {
       "name": "Erlend Oftedal"
     },
     {
@@ -30,7 +35,7 @@
   ],
   "main": "index.js",
   "bin": {
-    "cyclonedx-bom": "./bin/cyclonedx-bom"
+    "cdxgen": "./bin/cdxgen"
   },
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0"
@@ -40,18 +45,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CycloneDX/cyclonedx-node-module.git"
+    "url": "git+https://github.com/AppThreat/cdxgen.git"
   },
   "bugs": {
-    "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
+    "url": "https://github.com/AppThreat/cdxgen/issues"
   },
   "dependencies": {
+    "glob": "^7.1.6",
     "packageurl-js": "^0.0.1",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
-    "ssri": "^6.0.0",
-    "uuid": "^3.3.2",
+    "ssri": "^7.1.0",
+    "uuid": "^3.3.3",
     "xmlbuilder": "^13.0.2"
   },
   "files": [
