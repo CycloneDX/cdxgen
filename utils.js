@@ -22,13 +22,17 @@ const parseGradleDep = function(rawOutput) {
     tmpA.forEach(l => {
       if (l.indexOf("---") >= 0) {
         l = l.substr(l.indexOf('---') + 4, l.length).trim();
-        l = l.replace("(*)", "");
+        l = l.replace(" (*)", "");
         const verArr = l.split(":");
         if (verArr && verArr.length === 3) {
+          let versionStr = verArr[2];
+          if (versionStr.indexOf("->") >= 0) {
+            versionStr = versionStr.substr(versionStr.indexOf("->") + 3, versionStr.length).trim();
+          }
           deps.push({
             group: verArr[0].toLowerCase(),
             name: verArr[1].toLowerCase(),
-            version: verArr[2],
+            version: versionStr,
             qualifiers: {type: 'jar'}
           })
         }
