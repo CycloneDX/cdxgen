@@ -62,6 +62,7 @@
     "uuid": "^3.3.3",
     "xmlbuilder": "^13.0.2"
   },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "files": [
     "index.js",
     "bin/",

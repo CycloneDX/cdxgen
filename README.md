@@ -20,9 +20,7 @@ $ cdxgen -h
 Usage:  cdxgen [OPTIONS] [path]
 Options:
   -h        - this help
-  -a <path> - merge in additional modules from other scanner
   -o <path> - write to file instead of stdout
-  -ns       - do not generate bom serial number
   -d        - include devDependencies
   --version - print version number
 ```
