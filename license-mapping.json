@@ -1,0 +1,212 @@
+[
+  {
+    "exp": "Apache-2.0",
+    "names": [
+      "Apache 2",
+      "Apache 2.0",
+      "Apache 2.0 License",
+      "Apache Software License, Version 2.0",
+      "The Apache Software License, Version 2.0",
+      "Apache License (v2.0)",
+      "Apache License 2.0",
+      "Apache License Version 2.0",
+      "Apache License, Version 2.0",
+      "Apache Public License 2.0",
+      "Apache Software License - Version 2.0",
+      "The Apache License, Version 2.0"
+    ]
+  },
+  {
+    "exp": "BSD-2-Clause",
+    "names": [
+      "BSD 2 Clause",
+      "BSD 2-Clause",
+      "BSD-2-Clause",
+      "BSD 2-Clause License",
+      "The BSD 2-Clause License",
+      "The 2-Clause BSD License"
+    ]
+  },
+  {
+    "exp": "BSD-3-Clause",
+    "names": [
+      "BSD 3 Clause",
+      "BSD 3-Clause",
+      "BSD-3-Clause",
+      "BSD 3-Clause License",
+      "The BSD 3-Clause License",
+      "BSD 3-Clause \"New\" or \"Revised\" License (BSD-3-Clause)",
+      "Eclipse Distribution License (New BSD License)",
+      "New BSD License",
+      "Modified BSD License",
+      "Revised BSD",
+      "Revised BSD License",
+      "The New BSD License"
+    ]
+  },
+  {
+    "exp": "CDDL-1.0",
+    "names": [
+      "CDDL 1.0",
+      "CDDL License"
+    ]
+  },
+  {
+    "exp": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
+    "names": [
+      "CDDL + GPLv2 with classpath exception",
+      "CDDL/GPLv2+CE"
+    ]
+  },
+  {
+    "exp": "CDDL-1.1",
+    "names": [
+      "CDDL 1.1"
+    ]
+  },
+  {
+    "exp": "(CDDL-1.1 OR GPL-2.0-only)",
+    "names": [
+      "Dual license consisting of the CDDL v1.1 and GPL v2"
+    ]
+  },
+  {
+    "exp": "EPL-1.0",
+    "names": [
+      "Eclipse Public License - Version 1.0",
+      "Eclipse Public License (EPL) 1.0",
+      "Eclipse Public License v1.0",
+      "Eclipse Public License, Version 1.0",
+      "Eclipse Public License - v 1.0",
+      "Eclipse Public License - v1.0"
+    ]
+  },
+  {
+    "exp": "EPL-2.0",
+    "names": [
+      "Eclipse Public License - Version 2.0",
+      "EPL 2.0"
+    ]
+  },
+  {
+    "exp": "ECL-1.0",
+    "names": [
+      "Educational Community License, Version 1.0"
+    ]
+  },
+  {
+    "exp": "ECL-2.0",
+    "names": [
+      "Educational Community License, Version 2.0"
+    ]
+  },
+  {
+    "exp": "GPL-2.0-only",
+    "names": [
+      "GNU General Public License (GPL) version 2",
+      "GNU General Public License (GPL) version 2.0",
+      "GNU General Public License v2",
+      "GNU General Public License v2.0"
+    ]
+  },
+  {
+    "exp": "GPL-2.0-or-later",
+    "names": [
+      "GNU General Public License (GPL) version 2, or any later version",
+      "GNU General Public License (GPL) version 2.0, or any later version",
+      "GNU General Public License v2 or later",
+      "GNU General Public License v2.0 or later"
+    ]
+  },
+  {
+    "exp": "GPL-2.0-with-classpath-exception",
+    "names": [
+      "GPL2 w/ CPE",
+      "GPLv2+CE",
+      "GPLv2 with classpath exception"
+    ]
+  },
+  {
+    "exp": "LGPL-2.0-only",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 2",
+      "GNU Lesser General Public License (LGPL), version 2.0",
+      "GNU Lesser General Public License v2",
+      "GNU Lesser General Public License v2.0"
+    ]
+  },
+  {
+    "exp": "LGPL-2.0-or-later",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 2 or later",
+      "GNU Lesser General Public License (LGPL), version 2.0 or later",
+      "GNU Lesser General Public License v2 or later",
+      "GNU Lesser General Public License v2.0 or later"
+    ]
+  },
+  {
+    "exp": "LGPL-2.1-only",
+    "names": [
+      "LGPL 2.1",
+      "LGPL v2.1",
+      "LGPL-2.1",
+      "LGPL2.1",
+      "GNU Lesser General Public License Version 2.1, February 1999",
+      "GNU Library or Lesser General Public License (LGPL) V2.1"
+    ]
+  },
+  {
+    "exp": "LGPL-2.1-or-later",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 2.1 or later",
+      "GNU Lesser General Public License v2.1 or later",
+      "LGPL, v2.1 or later"
+    ]
+  },
+  {
+    "exp": "LGPL-3.0-only",
+    "names": [
+      "LGPL 3.0",
+      "LGPL v3.0",
+      "LGPL-3.0",
+      "LGPL3.0",
+      "GNU Lesser General Public License (LGPL), version 3",
+      "GNU Lesser General Public License (LGPL), version 3.0",
+      "GNU Lesser General Public License v3.0"
+    ]
+  },
+  {
+    "exp": "LGPL-3.0-or-later",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 3 or later",
+      "GNU Lesser General Public License (LGPL), version 3.0 or later",
+      "GNU Lesser General Public License v3.0 or later"
+    ]
+  },
+  {
+    "exp": "MIT",
+    "names": [
+      "MIT License",
+      "The MIT License"
+    ]
+  },
+  {
+    "exp": "MPL-1.1",
+    "names": [
+      "MPL 1.1"
+    ]
+  },
+  {
+    "exp": "NetCDF",
+    "names": [
+      "(MIT-style) netCDF C library license"
+    ]
+  },
+  {
+    "exp": "JSON",
+    "names": [
+      "The JSON License",
+      "JSON License"
+    ]
+  }
+]

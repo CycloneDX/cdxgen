@@ -1,6 +1,7 @@
 const glob = require("glob");
 const request = require("sync-request");
 const xml2json = require("simple-xml2json");
+const licenseMapping = require("./license-mapping.json");
 
 /**
  * Method to get files matching a pattern
@@ -48,6 +49,16 @@ const parseGradleDep = function(rawOutput) {
 };
 exports.parseGradleDep = parseGradleDep;
 
+const findLicenseId = function(name) {
+  for (var i in licenseMapping) {
+    const l = licenseMapping[i];
+    if (l.names.includes(name)) {
+      return l.exp;
+    }
+  }
+  return name;
+};
+
 /**
  * Method to retrieve metadata for maven packages by querying maven central
  *
@@ -75,7 +86,7 @@ const getMvnMetadata = function(pkgList) {
       const body = res.getBody("utf8");
       const bodyJson = xml2json.parser(body).project;
       if (bodyJson && bodyJson.licenses && bodyJson.licenses.license) {
-        p.license = bodyJson.licenses.license.name;
+        p.license = findLicenseId(bodyJson.licenses.license.name);
       }
       p.description = bodyJson.description;
       if (bodyJson.scm && bodyJson.scm.url) {
