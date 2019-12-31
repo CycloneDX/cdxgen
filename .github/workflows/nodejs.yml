@@ -20,16 +20,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: npm install, build, test and publish
       run: |
+        npm login --registry=https://npm.pkg.github.com
         npm install
         npm run build --if-present
         npm test
-      env:
-        CI: true
-    - name: npm publish to github
-      run: |
-        npm login --registry=https://npm.pkg.github.com
         npm publish
       env:
         CI: true
