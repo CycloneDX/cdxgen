@@ -8,7 +8,7 @@ const uuidv4 = require("uuid/v4");
 const PackageURL = require("packageurl-js");
 const builder = require("xmlbuilder");
 const utils = require("./utils");
-const { spawnSync } = require('child_process');
+const { spawnSync } = require("child_process");
 
 /**
  * Performs a lookup + validation of the license specified in the
@@ -133,7 +133,7 @@ function addExternalReferences(pkg) {
 exports.listComponents = listComponents;
 function listComponents(pkg, ptype = "npm") {
   let list = {};
-  let isRootPkg = ptype === 'npm';
+  let isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach(p => {
       addComponent(p, ptype, list, isRootPkg);
@@ -289,23 +289,38 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
   }
   const { projectType } = options;
   // node.js - package.json
-  if (projectType === 'nodejs' || fs.existsSync(pathLib.join(path, "package.json"))) {
+  if (
+    projectType === "nodejs" ||
+    fs.existsSync(pathLib.join(path, "package.json"))
+  ) {
     readInstalled(path, options, (err, pkgInfo) => {
       buildBomString(includeBomSerialNumber, pkgInfo, "npm", callback);
     });
   }
   // maven - pom.xml
-  const pomFiles = utils.getAllFiles(path, (options.multiProject ? "**/" :"") + "pom.xml");
+  const pomFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pom.xml"
+  );
   if (pomFiles && pomFiles.length) {
     for (let i in pomFiles) {
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
-      console.log("Executing 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom' in", basePath);
-      spawnSync("mvn", ["org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"], {cwd: basePath});
+      console.log(
+        "Executing 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom' in",
+        basePath
+      );
+      spawnSync(
+        "mvn",
+        ["org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
+        { cwd: basePath }
+      );
     }
     const firstPath = pathLib.dirname(pomFiles[0]);
     if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
-      const bomString = fs.readFileSync(pathLib.join(firstPath, "target", "bom.xml"));
+      const bomString = fs.readFileSync(
+        pathLib.join(firstPath, "target", "bom.xml")
+      );
       callback(null, bomString);
     } else {
       const bomFiles = utils.getAllFiles(path, "bom.xml");
@@ -313,7 +328,10 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
     }
   }
   // gradle
-  const gradleFiles = utils.getAllFiles(path, (options.multiProject ? "**/" :"") + "build.gradle");
+  const gradleFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "build.gradle"
+  );
   if (gradleFiles && gradleFiles.length) {
     let GRADLE_CMD = "gradle";
     if (fs.existsSync(pathLib.join(path, "gradlew"))) {
@@ -324,13 +342,25 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       const f = gradleFiles[i];
       const basePath = pathLib.dirname(f);
       console.log("Executing 'gradle dependencies' in", basePath);
-      const result = spawnSync(GRADLE_CMD, ["dependencies", "-q", "--configuration", "default", "--console", "plain"], {cwd: basePath});
+      const result = spawnSync(
+        GRADLE_CMD,
+        [
+          "dependencies",
+          "-q",
+          "--configuration",
+          "default",
+          "--console",
+          "plain"
+        ],
+        { cwd: basePath }
+      );
       const cmdOutput = Buffer.from(result.stdout).toString();
       const dlist = utils.parseGradleDep(cmdOutput);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
+    pkgList = utils.getMvnMetadata(pkgList);
     buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
   }
 };

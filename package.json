@@ -56,7 +56,9 @@
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
+    "simple-xml2json": "^1.2.3",
     "ssri": "^7.1.0",
+    "sync-request": "^6.1.0",
     "uuid": "^3.3.3",
     "xmlbuilder": "^13.0.2"
   },
