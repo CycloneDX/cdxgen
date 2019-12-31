@@ -1,6 +1,9 @@
 name: Node CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -9,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [8.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -17,10 +20,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
+    - name: npm install, build, test and publish
+      run: |        
         npm install
         npm run build --if-present
         npm test
+        npm login --registry=https://npm.pkg.github.com
+        npm publish
       env:
         CI: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
