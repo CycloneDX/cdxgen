@@ -49,6 +49,11 @@ const parseGradleDep = function(rawOutput) {
 };
 exports.parseGradleDep = parseGradleDep;
 
+/**
+ * Method to find the spdx license id from name
+ *
+ * @param {string} name License full name
+ */
 const findLicenseId = function(name) {
   for (var i in licenseMapping) {
     const l = licenseMapping[i];
@@ -136,6 +141,11 @@ const getPyMetadata = function(pkgList) {
 };
 exports.getMvnMetadata = getMvnMetadata;
 
+/**
+ * Method to parse pipfile.lock data
+ *
+ * @param {Object} lockData JSON data from Pipfile.lock
+ */
 const parsePiplockData = function(lockData) {
   const pkgList = [];
   Object.keys(lockData)
@@ -152,6 +162,11 @@ const parsePiplockData = function(lockData) {
 };
 exports.parsePiplockData = parsePiplockData;
 
+/**
+ * Method to parse requirements.txt data
+ * 
+ * @param {Object} reqData Requirements.txt data
+ */
 const parseReqFile = function(reqData) {
   const pkgList = [];
   reqData.split("\n").forEach(l => {

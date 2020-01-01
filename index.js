@@ -102,7 +102,8 @@ function readLicenseText(licenseFilepath, licenseContentType) {
 }
 
 /**
- * Adds
+ * Method to create external references
+ *
  * @param pkg
  * @returns {Array}
  */
@@ -273,7 +274,7 @@ const buildBomString = (includeBomSerialNumber, pkgInfo, ptype, callback) => {
 };
 
 /**
- * Function to create bom string
+ * Function to create bom string for various languages
  *
  * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
