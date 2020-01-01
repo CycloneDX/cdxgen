@@ -57,12 +57,12 @@ let filePath = args[0] || ".";
 
 bom.createBom(includeBomSerialNumber, filePath, options, (err, bom) => {
   if (out) {
-    if (typeof bom === 'string' || bom instanceof String) {
-      fs.writeFile(out, bom, () => {});
+    if (Array.isArray(bom)) {
+      console.log("BOM files produced:", bom);
     } else {
-      console.log("Bom files produced:", bom);
+      fs.writeFile(out, bom, () => {});
     }
   } else {
-    console.log(bom);
+    console.log(Buffer.from(bom).toString());
   }
 });

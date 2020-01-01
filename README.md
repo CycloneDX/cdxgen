@@ -21,7 +21,6 @@ Usage:  cdxgen [OPTIONS] [path]
 Options:
   -h        - this help
   -o <path> - write to file instead of stdout
-  -d        - include devDependencies
   --version - print version number
 ```
 
