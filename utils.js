@@ -111,7 +111,10 @@ const getPyMetadata = function(pkgList) {
   const cdepList = [];
   pkgList.forEach(p => {
     try {
-      const res = request("GET", PYPI_URL + p.name + "/" + p.version + "/json");
+      const res = request(
+        "GET",
+        PYPI_URL + p.name + (p.version ? "/" + p.version : "") + "/json"
+      );
       const body = JSON.parse(res.getBody("utf8"));
       p.description = body.info.summary;
       p.license = findLicenseId(body.info.license);
@@ -119,6 +122,10 @@ const getPyMetadata = function(pkgList) {
         p.repository = { url: body.info.home_page };
       } else {
         p.homepage = { url: body.info.home_page };
+      }
+      // Use the latest version if none specified
+      if (!p.version) {
+        p.version = body.info.version;
       }
       cdepList.push(p);
     } catch (err) {
@@ -137,10 +144,35 @@ const parsePiplockData = function(lockData) {
       const depBlock = lockData[k];
       Object.keys(depBlock).forEach(p => {
         const pkg = depBlock[p];
-        const versionStr = pkg.version.replace("==", "");
+        let versionStr = pkg.version.replace("==", "");
         pkgList.push({ name: p, version: versionStr });
       });
     });
   return getPyMetadata(pkgList);
 };
 exports.parsePiplockData = parsePiplockData;
+
+const parseReqFile = function(reqData) {
+  const pkgList = [];
+  reqData.split("\n").forEach(l => {
+    if (l.indexOf("=") > -1) {
+      const tmpA = l.split(/(==|<=|~=)/);
+      let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
+      if (versionStr === "0") {
+        versionStr = null;
+      }
+      pkgList.push({
+        name: tmpA[0].trim(),
+        version: versionStr
+      });
+    } else if (/[>|\[|@]/.test(l)) {
+      const tmpA = l.split(/(>|\[|@)/);
+      pkgList.push({
+        name: tmpA[0].trim(),
+        version: null
+      });
+    }
+  });
+  return getPyMetadata(pkgList);
+};
+exports.parseReqFile = parseReqFile;

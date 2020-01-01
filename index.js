@@ -368,9 +368,8 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
   }
   // python
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
-  const requirementsMode = fs.existsSync(
-    pathLib.join(path, "requirements.txt")
-  );
+  const reqFile = pathLib.join(path, "requirements.txt");
+  const requirementsMode = fs.existsSync(reqFile);
   if (projectType === "python" || requirementsMode || pipenvMode) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path });
@@ -383,11 +382,9 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
         console.error("Pipfile.lock not found at", path);
       }
     } else if (requirementsMode) {
-      spawnSync(
-        "pip",
-        ["install", "-r", pathLib.join(path, "requirements.txt")],
-        { cwd: path }
-      );
+      const reqData = fs.readFileSync(reqFile, { encoding: "utf-8" });
+      const pkgList = utils.parseReqFile(reqData);
+      buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
     }
   }
 };
