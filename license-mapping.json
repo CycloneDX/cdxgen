@@ -13,7 +13,9 @@
       "Apache License, Version 2.0",
       "Apache Public License 2.0",
       "Apache Software License - Version 2.0",
-      "The Apache License, Version 2.0"
+      "The Apache License, Version 2.0",
+      "BSD or Apache License, Version 2.0",
+      "Apache Software License"
     ]
   },
   {
@@ -41,7 +43,8 @@
       "Modified BSD License",
       "Revised BSD",
       "Revised BSD License",
-      "The New BSD License"
+      "The New BSD License",
+      "BSD (3-clause)"
     ]
   },
   {
@@ -187,7 +190,8 @@
     "exp": "MIT",
     "names": [
       "MIT License",
-      "The MIT License"
+      "The MIT License",
+      "MIT license"
     ]
   },
   {

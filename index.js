@@ -293,6 +293,7 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
     projectType === "nodejs" ||
     fs.existsSync(pathLib.join(path, "package.json"))
   ) {
+    spawnSync("npm", ["install"], { cwd: path, env: { CI: true } });
     readInstalled(path, options, (err, pkgInfo) => {
       buildBomString(includeBomSerialNumber, pkgInfo, "npm", callback);
     });
@@ -312,14 +313,15 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       );
       spawnSync(
         "mvn",
-        ["org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
+        ["compile", "org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
         { cwd: basePath }
       );
     }
     const firstPath = pathLib.dirname(pomFiles[0]);
     if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
       const bomString = fs.readFileSync(
-        pathLib.join(firstPath, "target", "bom.xml")
+        pathLib.join(firstPath, "target", "bom.xml"),
+        { encoding: "utf-8" }
       );
       callback(null, bomString);
     } else {
@@ -345,6 +347,7 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       const result = spawnSync(
         GRADLE_CMD,
         [
+          "classes",
           "dependencies",
           "-q",
           "--configuration",
@@ -362,5 +365,29 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
     }
     pkgList = utils.getMvnMetadata(pkgList);
     buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
+  }
+  // python
+  const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
+  const requirementsMode = fs.existsSync(
+    pathLib.join(path, "requirements.txt")
+  );
+  if (projectType === "python" || requirementsMode || pipenvMode) {
+    if (pipenvMode) {
+      spawnSync("pipenv", ["install"], { cwd: path });
+      const piplockFile = pathLib.join(path, "Pipfile.lock");
+      if (fs.existsSync(piplockFile)) {
+        const lockData = JSON.parse(fs.readFileSync(piplockFile));
+        const pkgList = utils.parsePiplockData(lockData);
+        buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
+      } else {
+        console.error("Pipfile.lock not found at", path);
+      }
+    } else if (requirementsMode) {
+      spawnSync(
+        "pip",
+        ["install", "-r", pathLib.join(path, "requirements.txt")],
+        { cwd: path }
+      );
+    }
   }
 };

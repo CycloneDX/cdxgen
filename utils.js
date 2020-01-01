@@ -100,3 +100,47 @@ const getMvnMetadata = function(pkgList) {
   return cdepList;
 };
 exports.getMvnMetadata = getMvnMetadata;
+
+/**
+ * Method to retrieve metadata for python packages by querying pypi
+ *
+ * @param {Array} pkgList Package list
+ */
+const getPyMetadata = function(pkgList) {
+  const PYPI_URL = "https://pypi.org/pypi/";
+  const cdepList = [];
+  pkgList.forEach(p => {
+    try {
+      const res = request("GET", PYPI_URL + p.name + "/" + p.version + "/json");
+      const body = JSON.parse(res.getBody("utf8"));
+      p.description = body.info.summary;
+      p.license = findLicenseId(body.info.license);
+      if (body.info.home_page.indexOf("git") > -1) {
+        p.repository = { url: body.info.home_page };
+      } else {
+        p.homepage = { url: body.info.home_page };
+      }
+      cdepList.push(p);
+    } catch (err) {
+      cdepList.push(p);
+    }
+  });
+  return cdepList;
+};
+exports.getMvnMetadata = getMvnMetadata;
+
+const parsePiplockData = function(lockData) {
+  const pkgList = [];
+  Object.keys(lockData)
+    .filter(i => i !== "_meta")
+    .forEach(k => {
+      const depBlock = lockData[k];
+      Object.keys(depBlock).forEach(p => {
+        const pkg = depBlock[p];
+        const versionStr = pkg.version.replace("==", "");
+        pkgList.push({ name: p, version: versionStr });
+      });
+    });
+  return getPyMetadata(pkgList);
+};
+exports.parsePiplockData = parsePiplockData;
