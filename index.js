@@ -348,7 +348,6 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       const result = spawnSync(
         GRADLE_CMD,
         [
-          "classes",
           "dependencies",
           "-q",
           "--configuration",

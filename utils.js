@@ -23,8 +23,8 @@ const parseGradleDep = function(rawOutput) {
     const deps = [];
     const tmpA = rawOutput.split("\n");
     tmpA.forEach(l => {
-      if (l.indexOf("---") >= 0) {
-        l = l.substr(l.indexOf("---") + 4, l.length).trim();
+      if (l.indexOf("--- ") >= 0) {
+        l = l.substr(l.indexOf("--- ") + 4, l.length).trim();
         l = l.replace(" (*)", "");
         const verArr = l.split(":");
         if (verArr && verArr.length === 3) {
@@ -164,7 +164,7 @@ exports.parsePiplockData = parsePiplockData;
 
 /**
  * Method to parse requirements.txt data
- * 
+ *
  * @param {Object} reqData Requirements.txt data
  */
 const parseReqFile = function(reqData) {
