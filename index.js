@@ -73,9 +73,7 @@ function readLicenseText(licenseFilepath, licenseContentType) {
 }
 
 /**
- * Adds
- * @param pkg
- * @returns {Array}
+ * Adds external references supported by the package format.
  */
 function addExternalReferences(pkg) {
     let externalReferences = [];
