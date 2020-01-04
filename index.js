@@ -261,16 +261,20 @@ const buildBomString = (includeBomSerialNumber, pkgInfo, ptype, callback) => {
   }
   bom.att("version", 1);
   const components = listComponents(pkgInfo, ptype);
-  bom.ele("components").ele(components);
-  let bomString = bom.end({
-    pretty: true,
-    indent: "  ",
-    newline: "\n",
-    width: 0,
-    allowEmpty: false,
-    spacebeforeslash: ""
-  });
-  callback(null, bomString);
+  if (components && components.length) {
+    bom.ele("components").ele(components);
+    let bomString = bom.end({
+      pretty: true,
+      indent: "  ",
+      newline: "\n",
+      width: 0,
+      allowEmpty: false,
+      spacebeforeslash: ""
+    });
+    callback(null, bomString);
+  } else {
+    callback();
+  }
 };
 
 /**
@@ -385,6 +389,34 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       const reqData = fs.readFileSync(reqFile, { encoding: "utf-8" });
       const pkgList = utils.parseReqFile(reqData);
       buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
+    } else {
+      console.error(
+        "Unable to find requirements.txt or Pipfile.lock for the python project at",
+        path
+      );
+      callback();
+    }
+  }
+  // golang
+  const gosumFile = pathLib.join(path, "go.sum");
+  const gopkgLockFile = pathLib.join(path, "Gopkg.lock");
+  const gosumMode = fs.existsSync(gosumFile);
+  const gopkgMode = fs.existsSync(gopkgLockFile);
+  if (projectType === "golang" || gosumMode || gopkgMode) {
+    if (gosumMode) {
+      const gosumData = fs.readFileSync(gosumFile, { encoding: "utf-8" });
+      const pkgList = utils.parseGosumData(gosumData);
+      buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
+    } else if (gopkgMode) {
+      const gopkgData = fs.readFileSync(gopkgLockFile, { encoding: "utf-8" });
+      const pkgList = utils.parseGopkgData(gopkgData);
+      buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
+    } else {
+      console.error(
+        "Unable to find go.sum or Gopkg.lock for the python project at",
+        path
+      );
+      callback();
     }
   }
 };

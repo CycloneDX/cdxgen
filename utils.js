@@ -1,4 +1,5 @@
 const glob = require("glob");
+const path = require("path");
 const request = require("sync-request");
 const xml2json = require("simple-xml2json");
 const licenseMapping = require("./license-mapping.json");
@@ -132,6 +133,14 @@ const getPyMetadata = function(pkgList) {
       if (!p.version) {
         p.version = body.info.version;
       }
+      if (body.releases && body.releases[p.version]) {
+        const digest = body.releases[p.version][0].digests;
+        if (digest["sha256"]) {
+          p._integrity = "sha256-" + digest["sha256"];
+        } else if (digest["md5"]) {
+          p._integrity = "md5-" + digest["md5"];
+        }
+      }
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
@@ -191,3 +200,63 @@ const parseReqFile = function(reqData) {
   return getPyMetadata(pkgList);
 };
 exports.parseReqFile = parseReqFile;
+
+const parseGosumData = function(gosumData) {
+  const pkgList = [];
+  gosumData.split("\n").forEach(l => {
+    // look for lines containing go.mod
+    if (l.indexOf("go.mod") > -1) {
+      const tmpA = l.split(" ");
+      const group = path.dirname(tmpA[0]);
+      const name = path.basename(tmpA[0]);
+      const version = tmpA[1].replace("/go.mod", "");
+      const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
+      pkgList.push({
+        group: group,
+        name: name,
+        version: version,
+        _integrity: hash
+      });
+    }
+  });
+  return pkgList;
+};
+exports.parseGosumData = parseGosumData;
+
+const parseGopkgData = function(gopkgData) {
+  const pkgList = [];
+  let pkg = null;
+  gopkgData.split("\n").forEach(l => {
+    let key = null;
+    let value = null;
+    if (l.indexOf("[[projects]]") > -1) {
+      if (pkg) {
+        pkgList.push(pkg);
+      }
+      pkg = {};
+    }
+    if (l.indexOf("=") > -1) {
+      const tmpA = l.split("=");
+      key = tmpA[0].trim();
+      value = tmpA[1].trim().replace(/\"/g, "");
+      switch (key) {
+        case "digest":
+          pkg._integrity = value.replace("1:", "sha256-");
+          break;
+        case "name":
+          pkg.group = path.dirname(value);
+          pkg.name = path.basename(value);
+          break;
+        case "version":
+          pkg.version = value;
+          break;
+        case "revision":
+          if (!pkg.version) {
+            pkg.version = value;
+          }
+      }
+    }
+  });
+  return pkgList;
+};
+exports.parseGopkgData = parseGopkgData;

@@ -64,6 +64,10 @@ bom.createBom(includeBomSerialNumber, filePath, options, (err, bom) => {
       console.log("BOM file written to", out);
     }
   } else {
-    console.log(Buffer.from(bom).toString());
+    if (bom) {
+      console.log(Buffer.from(bom).toString());
+    } else {
+      console.log("Unable to produce BOM for", filePath);
+    }
   }
 });
