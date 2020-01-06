@@ -1,6 +1,6 @@
 # CycloneDX Generator
 
-This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, python and java projects. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, python, java and golang projects. Optionally, it can submit the generated BOM to dependency track or AppThreat server for analysis. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 ## Supported languages and package format
 
@@ -31,11 +31,20 @@ npm install -g @appthreat/cdxgen
 
 ```bash
 $ cdxgen -h
-Usage:  cdxgen [OPTIONS] [path]
 Options:
-  -h        - this help
-  -o <path> - write to file instead of stdout
-  --version - print version number
+  --version, -v      Print version number                              [boolean]
+  --output, -o       Output file for bom.xml. Default console
+  --type, -t         Project type
+  --server-url       Dependency track or AppThreat server url. Eg:
+                     https://deptrack.appthreat.io
+  --api-key          Dependency track or AppThreat server api key
+  --project-name     Dependency track or AppThreat project name. Default use the
+                     directory name
+  --project-version  Dependency track or AppThreat project version. Default
+                     master                                  [default: "master"]
+  --project-id       Dependency track or AppThreat project id. Either provide
+                     the id or the project name and version together
+  -h                 Show help                                         [boolean]
 ```
 
 ## Example

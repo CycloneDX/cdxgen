@@ -24,6 +24,16 @@ function getLicenses(pkg) {
     }
     return license
       .map(l => {
+        if (!(typeof l === "string" || l instanceof String)) {
+          console.error(
+            "Invalid license definition in package: " +
+              pkg.name +
+              ":" +
+              pkg.version +
+              ". Skipping"
+          );
+          return null;
+        }
         let licenseContent = {};
         if (
           spdxLicenses.some(v => {
