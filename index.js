@@ -205,7 +205,11 @@ exports.createbom = (includeBomSerialNumber, path, options, callback) => readIns
         bom.att('serialNumber', 'urn:uuid:' + uuidv4());
     }
     bom.att('version', 1);
-    bom.ele('components').ele(listComponents(pkgInfo));
+    let componentsNode = bom.ele('components');
+    let components = listComponents(pkgInfo);
+    if (components.length > 0) {
+        componentsNode.ele(components);
+    }
     let bomString = bom.end({
         pretty: true,
         indent: '  ',

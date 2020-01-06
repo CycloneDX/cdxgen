@@ -1,0 +1,6 @@
+{
+  "name": "@cyclonedx/bom-tests-no-packages",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {}
+}
