@@ -3,7 +3,6 @@
 const bom = require("../index.js");
 const fs = require("fs");
 const path = require("path");
-const request = require("request");
 
 const args = require("yargs")
   .option("output", {
@@ -60,51 +59,14 @@ let options = { dev: true, projectType: args.type, multiProject: false };
 let filePath = args._[0] || ".";
 
 /**
- * Method to submit the generated bom to dependency-track or AppThreat server
- *
- * @param args CLI args
- */
-const submitBom = function(args, bom, callback) {
-  let serverUrl = args.serverUrl + "/api/v1/bom";
-
-  const formData = {
-    bom: {
-      value: bom,
-      options: {
-        filename: args.output ? path.basename(args.output) : "bom.xml",
-        contentType: "text/xml"
-      }
-    }
-  };
-  if (args.projectId) {
-    formData.project = args.projectId;
-  } else if (args.projectName) {
-    formData.projectName = args.projectName;
-    formData.projectVersion = args.projectVersion;
-    formData.autoCreate = "true";
-  }
-  const options = {
-    method: "POST",
-    url: serverUrl,
-    port: 443,
-    json: true,
-    headers: {
-      "X-Api-Key": args.apiKey,
-      "Content-Type": "multipart/form-data"
-    },
-    formData
-  };
-  request(options, callback);
-};
-
-/**
  * Method to start the bom creation process
  *
  * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
+ * @param callback Callback function accepting err, bomData
  */
-bom.createBom(true, filePath, options, (err, bom) => {
+bom.createBom(true, filePath, options, (err, bomData) => {
   if (!args.projectName) {
     if (filePath !== ".") {
       args.projectName = path.basename(filePath);
@@ -113,15 +75,15 @@ bom.createBom(true, filePath, options, (err, bom) => {
     }
   }
   if (args.output) {
-    if (Array.isArray(bom)) {
-      console.log("BOM files produced:", bom);
+    if (Array.isArray(bomData)) {
+      console.log("BOM files produced:", bomData);
     } else {
-      fs.writeFile(args.output, bom, () => {});
+      fs.writeFile(args.output, bomData, () => {});
       console.log("BOM file written to", args.output);
     }
   } else {
-    if (bom) {
-      console.log(Buffer.from(bom).toString());
+    if (bomData) {
+      console.log(Buffer.from(bomData).toString());
     } else {
       console.log("Unable to produce BOM for", filePath);
     }
@@ -129,7 +91,7 @@ bom.createBom(true, filePath, options, (err, bom) => {
 
   // Automatically submit the bom data
   if (args.serverUrl && args.apiKey) {
-    submitBom(args, bom, function(err, res, body) {
+    bom.submitBom(args, bomData, function(err, res, body) {
       if (err) console.log(err);
       console.log("Response from server", body);
     });
