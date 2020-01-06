@@ -3,40 +3,44 @@
 const bom = require("../index.js");
 const fs = require("fs");
 const path = require("path");
+const request = require("request");
 
-let args = process.argv.slice(2);
-let unknownOptions = args
-  .filter(x => x.startsWith("-"))
-  .filter(x => !["-h", "-o", "-t", "--version"].includes(x));
-if (args.includes("-h") || unknownOptions.length > 0) {
-  if (unknownOptions.length > 0) {
-    console.warn("ERROR: Unknown option(s) " + unknownOptions.join(" "));
-  }
-  console.log("Usage: cdxgen [OPTIONS] [path]");
-  console.log("Options:");
-  console.log("  -h        - this help");
-  console.log("  -o <path> - write to file instead of stdout");
-  console.log("  --version - print version number");
-  process.exit(0);
-}
+const args = require("yargs")
+  .option("output", {
+    alias: "o",
+    description: "Output file for bom.xml. Default console"
+  })
+  .option("type", {
+    alias: "t",
+    description: "Project type"
+  })
+  .option("version", {
+    alias: "v",
+    description: "Print version number"
+  })
+  .option("server-url", {
+    description:
+      "Dependency track or AppThreat server url. Eg: https://deptrack.appthreat.io"
+  })
+  .option("api-key", {
+    description: "Dependency track or AppThreat server api key"
+  })
+  .option("project-name", {
+    description:
+      "Dependency track or AppThreat project name. Default use the directory name"
+  })
+  .option("project-version", {
+    description:
+      "Dependency track or AppThreat project version. Default master",
+    default: "master"
+  })
+  .option("project-id", {
+    description:
+      "Dependency track or AppThreat project id. Either provide the id or the project name and version together"
+  })
+  .help("h").argv;
 
-let o = args.indexOf("-o");
-let out = null;
-if (o > -1) {
-  out = args[o + 1];
-  args = args.slice(0, o).concat(args.slice(o + 2));
-}
-let t = args.indexOf("-t");
-let projectType = null;
-if (t > -1) {
-  projectType = args[t + 1];
-  args = args.slice(0, t).concat(args.slice(t + 2));
-}
-
-let includeBomSerialNumber = true; // The default
-
-let printVersion = args.indexOf("--version");
-if (printVersion > -1) {
+if (args.version) {
   const packageJsonAsString = fs.readFileSync(
     path.join(__dirname, "../", "package.json"),
     "utf-8"
@@ -51,17 +55,69 @@ if (printVersion > -1) {
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
  */
-let options = { dev: true, projectType, multiProject: false };
+let options = { dev: true, projectType: args.type, multiProject: false };
 
-let filePath = args[0] || ".";
+let filePath = args._[0] || ".";
 
-bom.createBom(includeBomSerialNumber, filePath, options, (err, bom) => {
-  if (out) {
+/**
+ * Method to submit the generated bom to dependency-track or AppThreat server
+ *
+ * @param args CLI args
+ */
+const submitBom = function(args, bom, callback) {
+  let serverUrl = args.serverUrl + "/api/v1/bom";
+
+  const formData = {
+    bom: {
+      value: bom,
+      options: {
+        filename: args.output ? path.basename(args.output) : "bom.xml",
+        contentType: "text/xml"
+      }
+    }
+  };
+  if (args.projectId) {
+    formData.project = args.projectId;
+  } else if (args.projectName) {
+    formData.projectName = args.projectName;
+    formData.projectVersion = args.projectVersion;
+    formData.autoCreate = "true";
+  }
+  const options = {
+    method: "POST",
+    url: serverUrl,
+    port: 443,
+    json: true,
+    headers: {
+      "X-Api-Key": args.apiKey,
+      "Content-Type": "multipart/form-data"
+    },
+    formData
+  };
+  request(options, callback);
+};
+
+/**
+ * Method to start the bom creation process
+ *
+ * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+bom.createBom(true, filePath, options, (err, bom) => {
+  if (!args.projectName) {
+    if (filePath !== ".") {
+      args.projectName = path.basename(filePath);
+    } else {
+      args.projectName = path.basename(path.resolve(filePath));
+    }
+  }
+  if (args.output) {
     if (Array.isArray(bom)) {
       console.log("BOM files produced:", bom);
     } else {
-      fs.writeFile(out, bom, () => {});
-      console.log("BOM file written to", out);
+      fs.writeFile(args.output, bom, () => {});
+      console.log("BOM file written to", args.output);
     }
   } else {
     if (bom) {
@@ -69,5 +125,13 @@ bom.createBom(includeBomSerialNumber, filePath, options, (err, bom) => {
     } else {
       console.log("Unable to produce BOM for", filePath);
     }
+  }
+
+  // Automatically submit the bom data
+  if (args.serverUrl && args.apiKey) {
+    submitBom(args, bom, function(err, res, body) {
+      if (err) console.log(err);
+      console.log("Response from server", body);
+    });
   }
 });

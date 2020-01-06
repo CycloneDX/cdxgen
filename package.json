@@ -1,6 +1,6 @@
 {
   "name": "@appthreat/cdxgen",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) for node.js, python and java projects",
   "homepage": "http://github.com/AppThreat/cdxgen",
   "author": "Team AppThreat",
@@ -56,11 +56,13 @@
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
+    "request": "^2.88.0",
     "simple-xml2json": "^1.2.3",
     "ssri": "^7.1.0",
     "sync-request": "^6.1.0",
     "uuid": "^3.3.3",
-    "xmlbuilder": "^13.0.2"
+    "xmlbuilder": "^13.0.2",
+    "yargs": "^15.1.0"
   },
   "files": [
     "*.js",
