@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - feature/*
+      - release/*
 
 jobs:
   build:
@@ -27,4 +29,5 @@ jobs:
         npm test
       env:
         CI: true
+    - uses: appthreat/cdxgen-action@v1  
 
