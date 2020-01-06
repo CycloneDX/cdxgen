@@ -53,6 +53,10 @@ Options:
 cdxgen -o bom.xml
 ```
 
+## Integration with GitHub action
+
+Use the GitHub [action](https://github.com/AppThreat/cdxgen-action) to automatically generate and upload bom to the server. Refer to `nodejs.yml` in this repo for a working example.
+
 ## License
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] file for the full license.
