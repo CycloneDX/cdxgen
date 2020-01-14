@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const xmlFormat = require("prettify-xml");
 const xmlOptions = {indent: 4, newline: "\n"};
+const DomParser = require('xmldom').DOMParser;
 
 let arguments = process.argv.slice(2);
 let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o", "-ns", "-d", "--version"].includes(x));
@@ -41,11 +42,9 @@ if (ns > -1) {
 }
 
 let a = arguments.indexOf("-a");
-let additional = "";
+let additionalBoms = [];
 while (a > -1) {
-    additional += fs.readFileSync(arguments[a+1], "utf-8")
-        .replace(/^[\s\S]*?<components>/, "")
-        .replace(/[\s]*?<.components>[\s]*?<\/bom>[\s]*?$/, "");
+    additionalBoms.push(arguments[a+1]);
     arguments = arguments.slice(0,a).concat(arguments.slice(a+2));
     a = arguments.indexOf("-a");
 }
@@ -68,7 +67,15 @@ if (d > -1) {
 let filePath = arguments[0] || '.';
 
 bom.createbom(includeBomSerialNumber, filePath, options, (err, bom) => {
-    bom = xmlFormat(bom.replace("</components></bom>", additional + "</components></bom>"), xmlOptions);
+    let doc = new DomParser().parseFromString(bom);
+    for (let index = 0; index < additionalBoms.length; index++) {
+        let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
+        let additionalDoc = new DomParser().parseFromString(additionalBom);
+        doc.getElementsByTagName("components")[0].appendChild(
+            additionalDoc.getElementsByTagName("components")[0]
+        );
+    }
+    bom = xmlFormat(doc.toString(), xmlOptions);
     if (out) {
         fs.writeFile(out, bom, () => {});
     } else {
