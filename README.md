@@ -11,6 +11,10 @@ CycloneDX Node.js Module
 
 The CycloneDX module for Node.js creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
+Requirements
+-------------------
+Node.js v8.0.0 or higher
+
 Usage
 -------------------
 
