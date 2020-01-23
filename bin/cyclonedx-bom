@@ -71,9 +71,12 @@ bom.createbom(includeBomSerialNumber, filePath, options, (err, bom) => {
     for (let index = 0; index < additionalBoms.length; index++) {
         let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
         let additionalDoc = new DomParser().parseFromString(additionalBom);
-        doc.getElementsByTagName("components")[0].appendChild(
-            additionalDoc.getElementsByTagName("components")[0]
-        );
+        let additionalDocComponents = additionalDoc.getElementsByTagName("component");
+        for (let i=0; i<additionalDocComponents.length; i++) {
+            doc.getElementsByTagName("components")[0].appendChild(
+              additionalDocComponents[i]
+            );
+        }
     }
     bom = xmlFormat(doc.toString(), xmlOptions);
     if (out) {
