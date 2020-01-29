@@ -4,12 +4,12 @@ This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containi
 
 ## Supported languages and package format
 
-| Language | Package format                         |
-| -------- | -------------------------------------- |
-| node.js  | package-lock.json                      |
-| java     | maven (pom.xml), gradle (build.gradle) |
-| python   | requirements.txt, Pipfile.lock         |
-| golang   | go.sum, Gopkg.lock                     |
+| Language | Package format                              |
+| -------- | ------------------------------------------- |
+| node.js  | package-lock.json                           |
+| java     | maven (pom.xml), gradle (build.gradle)      |
+| python   | requirements.txt, Pipfile.lock, poetry.lock |
+| golang   | go.sum, Gopkg.lock                          |
 
 NOTE:
 
