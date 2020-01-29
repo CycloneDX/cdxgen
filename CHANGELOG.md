@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.2.3 (29 January 2020)
+
+### Features:
+
+- Support for poetry.lock format for `python` projects
+
 ## Version 1.2.1 (6 January 2020)
 
 ### Features:

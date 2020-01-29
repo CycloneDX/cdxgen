@@ -383,9 +383,10 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
   }
   // python
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
+  const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFile = pathLib.join(path, "requirements.txt");
   const requirementsMode = fs.existsSync(reqFile);
-  if (projectType === "python" || requirementsMode || pipenvMode) {
+  if (projectType === "python" || requirementsMode || pipenvMode || poetryMode) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
@@ -396,6 +397,11 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       } else {
         console.error("Pipfile.lock not found at", path);
       }
+    } else if (poetryMode) {
+      const poetrylockFile = pathLib.join(path, "poetry.lock");
+      const lockData = fs.readFileSync(poetrylockFile, { encoding: "utf-8" });
+      const pkgList = utils.parsePoetrylockData(lockData);
+      buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
     } else if (requirementsMode) {
       const reqData = fs.readFileSync(reqFile, { encoding: "utf-8" });
       const pkgList = utils.parseReqFile(reqData);

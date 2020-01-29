@@ -172,6 +172,45 @@ const parsePiplockData = function(lockData) {
 exports.parsePiplockData = parsePiplockData;
 
 /**
+ * Method to parse poetry.lock data
+ *
+ * @param {Object} lockData JSON data from poetry.lock
+ */
+const parsePoetrylockData = function(lockData) {
+  const pkgList = [];
+  let pkg = null;
+  lockData.split("\n").forEach(l => {
+    let key = null;
+    let value = null;
+    // Package section starts with this marker
+    if (l.indexOf("[[package]]") > -1) {
+      if (pkg && pkg.name && pkg.version) {
+        pkgList.push(pkg);
+      }
+      pkg = {};
+    }
+    if (l.indexOf("=") > -1) {
+      const tmpA = l.split("=");
+      key = tmpA[0].trim();
+      value = tmpA[1].trim().replace(/\"/g, "");
+      switch (key) {
+        case "description":
+          pkg.description = value;
+          break;
+        case "name":
+          pkg.name = value;
+          break;
+        case "version":
+          pkg.version = value;
+          break;
+      }
+    }
+  });
+  return getPyMetadata(pkgList);
+};
+exports.parsePoetrylockData = parsePoetrylockData;
+
+/**
  * Method to parse requirements.txt data
  *
  * @param {Object} reqData Requirements.txt data
