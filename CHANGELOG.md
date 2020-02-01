@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.2.4 (1 February 2020)
+
+### Bugfixes:
+
+- requirements.txt without version numbers was not working
+
 ## Version 1.2.3 (29 January 2020)
 
 ### Features:

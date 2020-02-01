@@ -234,6 +234,11 @@ const parseReqFile = function(reqData) {
         name: tmpA[0].trim(),
         version: null
       });
+    } else if (l) {
+      pkgList.push({
+        name: l,
+        version: null
+      });
     }
   });
   return getPyMetadata(pkgList);
