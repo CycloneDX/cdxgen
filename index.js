@@ -232,7 +232,9 @@ function determinePackageType(pkg) {
  */
 function processHashes(pkg, component) {
   if (pkg._shasum) {
-    component.hashes.push({ hash: { "@alg": "SHA-1", "#text": pkg._shasum } });
+    component.hashes.push({
+      hash: { "@alg": "SHA-1", "#text": pkg._shasum }
+    });
   } else if (pkg._integrity) {
     let integrity = ssri.parse(pkg._integrity);
     // Components may have multiple hashes with various lengths. Check each one
@@ -296,7 +298,7 @@ const buildBomString = (includeBomSerialNumber, pkgInfo, ptype, callback) => {
  * @param options Parse options from the cli
  * @param callback Function callback
  */
-exports.createBom = (includeBomSerialNumber, path, options, callback) => {
+exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   try {
     fs.accessSync(path, fs.constants.R_OK);
   } catch (err) {
@@ -309,7 +311,7 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
     projectType === "nodejs" ||
     fs.existsSync(pathLib.join(path, "package.json"))
   ) {
-    spawnSync("npm", ["install"], { cwd: path, env: { CI: true } });
+    spawnSync("npm", ["install"], { cwd: path });
     readInstalled(path, options, (err, pkgInfo) => {
       buildBomString(includeBomSerialNumber, pkgInfo, "npm", callback);
     });
@@ -378,7 +380,7 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    pkgList = utils.getMvnMetadata(pkgList);
+    pkgList = await utils.getMvnMetadata(pkgList);
     buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
   }
   // python
@@ -386,7 +388,12 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFile = pathLib.join(path, "requirements.txt");
   const requirementsMode = fs.existsSync(reqFile);
-  if (projectType === "python" || requirementsMode || pipenvMode || poetryMode) {
+  if (
+    projectType === "python" ||
+    requirementsMode ||
+    pipenvMode ||
+    poetryMode
+  ) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
@@ -399,12 +406,14 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       }
     } else if (poetryMode) {
       const poetrylockFile = pathLib.join(path, "poetry.lock");
-      const lockData = fs.readFileSync(poetrylockFile, { encoding: "utf-8" });
+      const lockData = fs.readFileSync(poetrylockFile, {
+        encoding: "utf-8"
+      });
       const pkgList = utils.parsePoetrylockData(lockData);
       buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
     } else if (requirementsMode) {
       const reqData = fs.readFileSync(reqFile, { encoding: "utf-8" });
-      const pkgList = utils.parseReqFile(reqData);
+      const pkgList = await utils.parseReqFile(reqData);
       buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
     } else {
       console.error(
@@ -425,7 +434,9 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       const pkgList = utils.parseGosumData(gosumData);
       buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
     } else if (gopkgMode) {
-      const gopkgData = fs.readFileSync(gopkgLockFile, { encoding: "utf-8" });
+      const gopkgData = fs.readFileSync(gopkgLockFile, {
+        encoding: "utf-8"
+      });
       const pkgList = utils.parseGopkgData(gopkgData);
       buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
     } else {
@@ -433,6 +444,20 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
         "Unable to find go.sum or Gopkg.lock for the python project at",
         path
       );
+      callback();
+    }
+  }
+
+  // rust
+  const cargoFile = pathLib.join(path, "Cargo.lock");
+  const cargoMode = fs.existsSync(cargoFile);
+  if (projectType === "rust" || projectType === "rust-lang" || cargoMode) {
+    if (cargoMode) {
+      const cargoData = fs.readFileSync(cargoFile, { encoding: "utf-8" });
+      const pkgList = await utils.parseCargoData(cargoData);
+      buildBomString(includeBomSerialNumber, pkgList, "crates", callback);
+    } else {
+      console.error("Unable to find Cargo.lock for the rust project at", path);
       callback();
     }
   }

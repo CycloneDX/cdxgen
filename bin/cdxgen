@@ -13,6 +13,11 @@ const args = require("yargs")
     alias: "t",
     description: "Project type"
   })
+  .option("recurse", {
+    alias: "r",
+    type: 'boolean',
+    description: "Recurse mode suitable for mono-repos"
+  })
   .option("version", {
     alias: "v",
     description: "Print version number"
@@ -54,7 +59,7 @@ if (args.version) {
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
  */
-let options = { dev: true, projectType: args.type, multiProject: false };
+let options = { dev: true, projectType: args.type, multiProject: args.recurse };
 
 let filePath = args._[0] || ".";
 
@@ -78,7 +83,7 @@ bom.createBom(true, filePath, options, (err, bomData) => {
     if (Array.isArray(bomData)) {
       console.log("BOM files produced:", bomData);
     } else {
-      fs.writeFile(args.output, bomData, () => {});
+      fs.writeFile(args.output, bomData, () => { });
       console.log("BOM file written to", args.output);
     }
   } else {
@@ -91,7 +96,7 @@ bom.createBom(true, filePath, options, (err, bomData) => {
 
   // Automatically submit the bom data
   if (args.serverUrl && args.apiKey) {
-    bom.submitBom(args, bomData, function(err, res, body) {
+    bom.submitBom(args, bomData, function (err, res, body) {
       if (err) console.log(err);
       console.log("Response from server", body);
     });

@@ -1,6 +1,6 @@
 const glob = require("glob");
 const path = require("path");
-const request = require("sync-request");
+const got = require("got");
 const xml2json = require("simple-xml2json");
 const licenseMapping = require("./license-mapping.json");
 
@@ -36,8 +36,8 @@ const parseGradleDep = function(rawOutput) {
               .trim();
           }
           deps.push({
-            group: verArr[0].toLowerCase(),
-            name: verArr[1].toLowerCase(),
+            group: verArr[0],
+            name: verArr[1],
             version: versionStr,
             qualifiers: { type: "jar" }
           });
@@ -46,7 +46,7 @@ const parseGradleDep = function(rawOutput) {
     });
     return deps;
   }
-  return undefined;
+  return [];
 };
 exports.parseGradleDep = parseGradleDep;
 
@@ -56,7 +56,7 @@ exports.parseGradleDep = parseGradleDep;
  * @param {string} name License full name
  */
 const findLicenseId = function(name) {
-  for (var i in licenseMapping) {
+  for (let i in licenseMapping) {
     const l = licenseMapping[i];
     if (l.names.includes(name)) {
       return l.exp;
@@ -64,19 +64,19 @@ const findLicenseId = function(name) {
   }
   return name;
 };
+exports.findLicenseId = findLicenseId;
 
 /**
  * Method to retrieve metadata for maven packages by querying maven central
  *
  * @param {Array} pkgList Package list
  */
-const getMvnMetadata = function(pkgList) {
+const getMvnMetadata = async function(pkgList) {
   const MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
   const cdepList = [];
-  pkgList.forEach(p => {
+  for (const p of pkgList) {
     try {
-      const res = request(
-        "GET",
+      const res = await got.get(
         MAVEN_CENTRAL_URL +
           p.group.replace(/\./g, "/") +
           "/" +
@@ -89,20 +89,20 @@ const getMvnMetadata = function(pkgList) {
           p.version +
           ".pom"
       );
-      const body = res.getBody("utf8");
-      const bodyJson = xml2json.parser(body).project;
+      const bodyJson = xml2json.parser(res.body).project;
       if (bodyJson && bodyJson.licenses && bodyJson.licenses.license) {
         p.license = findLicenseId(bodyJson.licenses.license.name);
       }
-      p.description = bodyJson.description;
+      p.description = bodyJson.description || "";
       if (bodyJson.scm && bodyJson.scm.url) {
         p.repository = { url: bodyJson.scm.url };
       }
       cdepList.push(p);
     } catch (err) {
+      console.warn("Unable to find metadata for", p.group, p.name);
       cdepList.push(p);
     }
-  });
+  }
   return cdepList;
 };
 exports.getMvnMetadata = getMvnMetadata;
@@ -112,16 +112,16 @@ exports.getMvnMetadata = getMvnMetadata;
  *
  * @param {Array} pkgList Package list
  */
-const getPyMetadata = function(pkgList) {
+const getPyMetadata = async function(pkgList) {
   const PYPI_URL = "https://pypi.org/pypi/";
   const cdepList = [];
-  pkgList.forEach(p => {
+  for (const p of pkgList) {
     try {
-      const res = request(
-        "GET",
-        PYPI_URL + p.name + (p.version ? "/" + p.version : "") + "/json"
+      const res = await got.get(
+        PYPI_URL + p.name + (p.version ? "/" + p.version : "") + "/json",
+        { responseType: "json" }
       );
-      const body = JSON.parse(res.getBody("utf8"));
+      const body = res.body;
       p.description = body.info.summary;
       p.license = findLicenseId(body.info.license);
       if (body.info.home_page.indexOf("git") > -1) {
@@ -144,18 +144,19 @@ const getPyMetadata = function(pkgList) {
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
+      console.error(err);
     }
-  });
+  }
   return cdepList;
 };
-exports.getMvnMetadata = getMvnMetadata;
+exports.getPyMetadata = getPyMetadata;
 
 /**
  * Method to parse pipfile.lock data
  *
  * @param {Object} lockData JSON data from Pipfile.lock
  */
-const parsePiplockData = function(lockData) {
+const parsePiplockData = async function(lockData) {
   const pkgList = [];
   Object.keys(lockData)
     .filter(i => i !== "_meta")
@@ -167,7 +168,7 @@ const parsePiplockData = function(lockData) {
         pkgList.push({ name: p, version: versionStr });
       });
     });
-  return getPyMetadata(pkgList);
+  return await getPyMetadata(pkgList);
 };
 exports.parsePiplockData = parsePiplockData;
 
@@ -176,9 +177,12 @@ exports.parsePiplockData = parsePiplockData;
  *
  * @param {Object} lockData JSON data from poetry.lock
  */
-const parsePoetrylockData = function(lockData) {
+const parsePoetrylockData = async function(lockData) {
   const pkgList = [];
   let pkg = null;
+  if (!lockData) {
+    return pkgList;
+  }
   lockData.split("\n").forEach(l => {
     let key = null;
     let value = null;
@@ -206,7 +210,7 @@ const parsePoetrylockData = function(lockData) {
       }
     }
   });
-  return getPyMetadata(pkgList);
+  return await getPyMetadata(pkgList);
 };
 exports.parsePoetrylockData = parsePoetrylockData;
 
@@ -215,7 +219,7 @@ exports.parsePoetrylockData = parsePoetrylockData;
  *
  * @param {Object} reqData Requirements.txt data
  */
-const parseReqFile = function(reqData) {
+const parseReqFile = async function(reqData) {
   const pkgList = [];
   reqData.split("\n").forEach(l => {
     if (l.indexOf("=") > -1) {
@@ -241,12 +245,15 @@ const parseReqFile = function(reqData) {
       });
     }
   });
-  return getPyMetadata(pkgList);
+  return await getPyMetadata(pkgList);
 };
 exports.parseReqFile = parseReqFile;
 
 const parseGosumData = function(gosumData) {
   const pkgList = [];
+  if (!gosumData) {
+    return pkgList;
+  }
   gosumData.split("\n").forEach(l => {
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
@@ -270,6 +277,9 @@ exports.parseGosumData = parseGosumData;
 const parseGopkgData = function(gopkgData) {
   const pkgList = [];
   let pkg = null;
+  if (!gopkgData) {
+    return pkgList;
+  }
   gopkgData.split("\n").forEach(l => {
     let key = null;
     let value = null;
@@ -304,3 +314,79 @@ const parseGopkgData = function(gopkgData) {
   return pkgList;
 };
 exports.parseGopkgData = parseGopkgData;
+
+/**
+ * Method to retrieve metadata for rust packages by querying crates
+ *
+ * @param {Array} pkgList Package list
+ */
+const getCratesMetadata = async function(pkgList) {
+  const CRATES_URL = "https://crates.io/api/v1/crates/";
+  const cdepList = [];
+  for (const p of pkgList) {
+    try {
+      const res = await got.get(CRATES_URL + p.name, { responseType: "json" });
+      const body = res.body.crate;
+      p.description = body.description;
+      if (res.body.versions) {
+        p.license = findLicenseId(res.body.versions[0].license);
+      }
+      if (body.repository) {
+        p.repository = { url: body.repository };
+      }
+      if (body.homepage) {
+        p.homepage = { url: body.homepage };
+      }
+      // Use the latest version if none specified
+      if (!p.version) {
+        p.version = body.newest_version;
+      }
+      cdepList.push(p);
+    } catch (err) {
+      cdepList.push(p);
+      console.error(err);
+    }
+  }
+  return cdepList;
+};
+exports.getCratesMetadata = getCratesMetadata;
+
+const parseCargoData = async function(cargoData) {
+  const pkgList = [];
+  let pkg = null;
+  if (!cargoData) {
+    return pkgList;
+  }
+  cargoData.split("\n").forEach(l => {
+    let key = null;
+    let value = null;
+    if (l.indexOf("[[package]]") > -1) {
+      if (pkg) {
+        pkgList.push(pkg);
+      }
+      pkg = {};
+    }
+    if (l.indexOf("=") > -1) {
+      const tmpA = l.split("=");
+      key = tmpA[0].trim();
+      value = tmpA[1].trim().replace(/\"/g, "");
+      switch (key) {
+        case "checksum":
+          pkg._integrity = "sha256-" + value;
+          break;
+        case "name":
+          pkg.group = path.dirname(value);
+          if (pkg.group === ".") {
+            pkg.group = "";
+          }
+          pkg.name = path.basename(value);
+          break;
+        case "version":
+          pkg.version = value;
+          break;
+      }
+    }
+  });
+  return await getCratesMetadata(pkgList);
+};
+exports.parseCargoData = parseCargoData;

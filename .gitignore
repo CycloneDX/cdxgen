@@ -107,3 +107,4 @@ dist
 .vscode-test
 
 .tool-versions
+.idea/

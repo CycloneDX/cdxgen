@@ -4,6 +4,7 @@
     "names": [
       "Apache 2",
       "Apache 2.0",
+      "Apache Version 2.0",
       "Apache 2.0 License",
       "Apache Software License, Version 2.0",
       "The Apache Software License, Version 2.0",
@@ -130,6 +131,24 @@
     ]
   },
   {
+    "exp": "GPL-3.0",
+    "names": [
+      "GNU General Public License (GPL) version 3",
+      "GNU General Public License (GPL) version 3.0",
+      "GNU General Public License v3",
+      "GNU General Public License v3.0"
+    ]
+  },
+  {
+    "exp": "AGPL-3.0",
+    "names": [
+      "GNU Affero General Public License (GPL) version 3",
+      "GNU Affero General Public License (GPL) version 3.0",
+      "GNU Affero General Public License v3",
+      "GNU Affero General Public License v3.0"
+    ]
+  },
+  {
     "exp": "LGPL-2.0-only",
     "names": [
       "GNU Lesser General Public License (LGPL), version 2",
@@ -198,6 +217,13 @@
     "exp": "MPL-1.1",
     "names": [
       "MPL 1.1"
+    ]
+  },
+  {
+    "exp": "MPL-2.0",
+    "names": [
+      "MPL 2.0",
+      "Mozilla Public License 2.0"
     ]
   },
   {
