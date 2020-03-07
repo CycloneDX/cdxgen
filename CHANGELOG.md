@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.3.0 (7 March 2020)
+
+### Features:
+
+- Rewrite parts of code to use `got` instead of `sync-request`
+- More unit tests got added
+
 ## Version 1.2.4 (1 February 2020)
 
 ### Bugfixes:

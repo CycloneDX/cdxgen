@@ -296,7 +296,7 @@ const buildBomString = (includeBomSerialNumber, pkgInfo, ptype, callback) => {
  * @param options Parse options from the cli
  * @param callback Function callback
  */
-exports.createBom = (includeBomSerialNumber, path, options, callback) => {
+exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   try {
     fs.accessSync(path, fs.constants.R_OK);
   } catch (err) {
@@ -309,7 +309,7 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
     projectType === "nodejs" ||
     fs.existsSync(pathLib.join(path, "package.json"))
   ) {
-    spawnSync("npm", ["install"], { cwd: path, env: { CI: true } });
+    spawnSync("npm", ["install"], { cwd: path });
     readInstalled(path, options, (err, pkgInfo) => {
       buildBomString(includeBomSerialNumber, pkgInfo, "npm", callback);
     });
@@ -378,7 +378,7 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    pkgList = utils.getMvnMetadata(pkgList);
+    pkgList = await utils.getMvnMetadata(pkgList);
     buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
   }
   // python
@@ -386,7 +386,12 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFile = pathLib.join(path, "requirements.txt");
   const requirementsMode = fs.existsSync(reqFile);
-  if (projectType === "python" || requirementsMode || pipenvMode || poetryMode) {
+  if (
+    projectType === "python" ||
+    requirementsMode ||
+    pipenvMode ||
+    poetryMode
+  ) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
@@ -404,7 +409,7 @@ exports.createBom = (includeBomSerialNumber, path, options, callback) => {
       buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
     } else if (requirementsMode) {
       const reqData = fs.readFileSync(reqFile, { encoding: "utf-8" });
-      const pkgList = utils.parseReqFile(reqData);
+      const pkgList = await utils.parseReqFile(reqData);
       buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
     } else {
       console.error(

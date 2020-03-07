@@ -1,7 +1,7 @@
 {
   "name": "@appthreat/cdxgen",
-  "version": "1.2.4",
-  "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) for node.js, python and java projects",
+  "version": "1.3.0",
+  "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) for node.js, python, java and golang projects",
   "homepage": "http://github.com/AppThreat/cdxgen",
   "author": "Team AppThreat",
   "license": "Apache-2.0",
@@ -38,7 +38,7 @@
     "cdxgen": "./bin/cdxgen"
   },
   "scripts": {
-    "test": "echo \"Warning: no test specified\" && exit 0"
+    "test": "jest"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "glob": "^7.1.6",
+    "got": "^10.4.0",
     "packageurl-js": "^0.0.1",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
@@ -59,7 +60,6 @@
     "request": "^2.88.0",
     "simple-xml2json": "^1.2.3",
     "ssri": "^7.1.0",
-    "sync-request": "^6.1.0",
     "uuid": "^3.3.3",
     "xmlbuilder": "^13.0.2",
     "yargs": "^15.1.0"
@@ -69,5 +69,8 @@
     "bin/",
     "spdx-licenses.json",
     "license-mapping.json"
-  ]
+  ],
+  "devDependencies": {
+    "jest": "^25.1.0"
+  }
 }
