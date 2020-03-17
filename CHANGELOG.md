@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.4.0 (17 March 2020)
+
+### Features:
+
+- Support for rust-lang (Cargo.lock)
+
 ## Version 1.3.0 (7 March 2020)
 
 ### Features:

@@ -232,7 +232,9 @@ function determinePackageType(pkg) {
  */
 function processHashes(pkg, component) {
   if (pkg._shasum) {
-    component.hashes.push({ hash: { "@alg": "SHA-1", "#text": pkg._shasum } });
+    component.hashes.push({
+      hash: { "@alg": "SHA-1", "#text": pkg._shasum }
+    });
   } else if (pkg._integrity) {
     let integrity = ssri.parse(pkg._integrity);
     // Components may have multiple hashes with various lengths. Check each one
@@ -404,7 +406,9 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       }
     } else if (poetryMode) {
       const poetrylockFile = pathLib.join(path, "poetry.lock");
-      const lockData = fs.readFileSync(poetrylockFile, { encoding: "utf-8" });
+      const lockData = fs.readFileSync(poetrylockFile, {
+        encoding: "utf-8"
+      });
       const pkgList = utils.parsePoetrylockData(lockData);
       buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
     } else if (requirementsMode) {
@@ -430,7 +434,9 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       const pkgList = utils.parseGosumData(gosumData);
       buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
     } else if (gopkgMode) {
-      const gopkgData = fs.readFileSync(gopkgLockFile, { encoding: "utf-8" });
+      const gopkgData = fs.readFileSync(gopkgLockFile, {
+        encoding: "utf-8"
+      });
       const pkgList = utils.parseGopkgData(gopkgData);
       buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
     } else {
@@ -438,6 +444,20 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         "Unable to find go.sum or Gopkg.lock for the python project at",
         path
       );
+      callback();
+    }
+  }
+
+  // rust
+  const cargoFile = pathLib.join(path, "Cargo.lock");
+  const cargoMode = fs.existsSync(cargoFile);
+  if (projectType === "rust" || projectType === "rust-lang" || cargoMode) {
+    if (cargoMode) {
+      const cargoData = fs.readFileSync(cargoFile, { encoding: "utf-8" });
+      const pkgList = await utils.parseCargoData(cargoData);
+      buildBomString(includeBomSerialNumber, pkgList, "crates", callback);
+    } else {
+      console.error("Unable to find Cargo.lock for the rust project at", path);
       callback();
     }
   }

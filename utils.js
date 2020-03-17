@@ -180,6 +180,9 @@ exports.parsePiplockData = parsePiplockData;
 const parsePoetrylockData = async function(lockData) {
   const pkgList = [];
   let pkg = null;
+  if (!lockData) {
+    return pkgList;
+  }
   lockData.split("\n").forEach(l => {
     let key = null;
     let value = null;
@@ -248,6 +251,9 @@ exports.parseReqFile = parseReqFile;
 
 const parseGosumData = function(gosumData) {
   const pkgList = [];
+  if (!gosumData) {
+    return pkgList;
+  }
   gosumData.split("\n").forEach(l => {
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
@@ -271,6 +277,9 @@ exports.parseGosumData = parseGosumData;
 const parseGopkgData = function(gopkgData) {
   const pkgList = [];
   let pkg = null;
+  if (!gopkgData) {
+    return pkgList;
+  }
   gopkgData.split("\n").forEach(l => {
     let key = null;
     let value = null;
@@ -305,3 +314,79 @@ const parseGopkgData = function(gopkgData) {
   return pkgList;
 };
 exports.parseGopkgData = parseGopkgData;
+
+/**
+ * Method to retrieve metadata for rust packages by querying crates
+ *
+ * @param {Array} pkgList Package list
+ */
+const getCratesMetadata = async function(pkgList) {
+  const CRATES_URL = "https://crates.io/api/v1/crates/";
+  const cdepList = [];
+  for (const p of pkgList) {
+    try {
+      const res = await got.get(CRATES_URL + p.name, { responseType: "json" });
+      const body = res.body.crate;
+      p.description = body.description;
+      if (res.body.versions) {
+        p.license = findLicenseId(res.body.versions[0].license);
+      }
+      if (body.repository) {
+        p.repository = { url: body.repository };
+      }
+      if (body.homepage) {
+        p.homepage = { url: body.homepage };
+      }
+      // Use the latest version if none specified
+      if (!p.version) {
+        p.version = body.newest_version;
+      }
+      cdepList.push(p);
+    } catch (err) {
+      cdepList.push(p);
+      console.error(err);
+    }
+  }
+  return cdepList;
+};
+exports.getCratesMetadata = getCratesMetadata;
+
+const parseCargoData = async function(cargoData) {
+  const pkgList = [];
+  let pkg = null;
+  if (!cargoData) {
+    return pkgList;
+  }
+  cargoData.split("\n").forEach(l => {
+    let key = null;
+    let value = null;
+    if (l.indexOf("[[package]]") > -1) {
+      if (pkg) {
+        pkgList.push(pkg);
+      }
+      pkg = {};
+    }
+    if (l.indexOf("=") > -1) {
+      const tmpA = l.split("=");
+      key = tmpA[0].trim();
+      value = tmpA[1].trim().replace(/\"/g, "");
+      switch (key) {
+        case "checksum":
+          pkg._integrity = "sha256-" + value;
+          break;
+        case "name":
+          pkg.group = path.dirname(value);
+          if (pkg.group === ".") {
+            pkg.group = "";
+          }
+          pkg.name = path.basename(value);
+          break;
+        case "version":
+          pkg.version = value;
+          break;
+      }
+    }
+  });
+  return await getCratesMetadata(pkgList);
+};
+exports.parseCargoData = parseCargoData;

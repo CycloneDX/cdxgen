@@ -87,3 +87,76 @@ test("get py metadata", async () => {
     }
   ]);
 });
+
+test("parseGosumData", () => {
+  expect(utils.parseGosumData(null)).toEqual([]);
+  dep_list = utils.parseGosumData(
+    fs.readFileSync("./test/gosum/go.sum", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(310);
+  expect(dep_list[0]).toEqual({
+    group: "cloud.google.com",
+    name: "go",
+    version: "v0.38.0",
+    _integrity: "sha256-990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU="
+  });
+});
+
+test("parseGopkgData", () => {
+  expect(utils.parseGopkgData(null)).toEqual([]);
+  dep_list = utils.parseGopkgData(
+    fs.readFileSync("./test/gopkg/Gopkg.lock", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(36);
+  expect(dep_list[0]).toEqual({
+    group: "cloud.google.com",
+    name: "go",
+    version: "v0.39.0",
+    _integrity:
+      "sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf"
+  });
+});
+
+/*
+test("parse cargo lock", async () => {
+    expect(await utils.parseCargoData(null)).toEqual([]);
+    dep_list = await utils.parseCargoData(
+        fs.readFileSync("./test/Cargo.lock", (encoding = "utf-8"))
+    );
+    expect(dep_list.length).toEqual(224);
+    expect(dep_list[0]).toEqual({
+        group: "",
+        name: "abscissa_core",
+        version: "0.5.2",
+        _integrity:
+            "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a"
+    });
+});
+*/
+
+test("get crates metadata", async () => {
+  dep_list = await utils.getCratesMetadata([
+    {
+      group: "",
+      name: "abscissa_core",
+      version: "0.5.2",
+      _integrity:
+        "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a"
+    }
+  ]);
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "abscissa_core",
+    version: "0.5.2",
+    _integrity:
+      "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
+    description:
+      "Application microframework with support for command-line option parsing,\nconfiguration, error handling, logging, and terminal interactions.\nThis crate contains the framework's core functionality.\n",
+    license: "Apache-2.0",
+    repository: {
+      url: "https://github.com/iqlusioninc/abscissa/tree/develop/"
+    },
+    homepage: { url: "https://github.com/iqlusioninc/abscissa/" }
+  });
+});

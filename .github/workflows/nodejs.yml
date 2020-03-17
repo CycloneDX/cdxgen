@@ -32,8 +32,6 @@ jobs:
         uses: appthreat/cdxgen-action@v1
         with:
           output: "./reports/bom.xml"
-          serverUrl: "https://deptrack.appthreat.io"
-          apiKey: ${{ secrets.apiKey }}
       - uses: actions/upload-artifact@v1
         with:
           name: reports
