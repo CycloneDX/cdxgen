@@ -475,7 +475,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const dlist = utils.parseCsProjData(csProjData);
+      const dlist = await utils.parseCsProjData(csProjData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
