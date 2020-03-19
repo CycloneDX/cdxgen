@@ -399,7 +399,7 @@ const parseCargoData = async function(cargoData) {
 };
 exports.parseCargoData = parseCargoData;
 
-const parseCsProjData = function(csProjData) {
+const parseCsProjData = async function(csProjData) {
   const pkgList = [];
   let pkg = null;
   if (!csProjData) {
@@ -423,12 +423,71 @@ const parseCsProjData = function(csProjData) {
         }
         const pname = pref.Include.replace(/\./g, "/");
         pkg.group = path.dirname(pname).replace(/\//g, ".");
+        if (pkg.group == ".") {
+          pkg.group = "";
+        }
         pkg.name = path.basename(pname);
         pkg.version = pref.Version;
         pkgList.push(pkg);
       }
     }
   }
-  return pkgList;
+  return await getNugetMetadata(pkgList);
 };
 exports.parseCsProjData = parseCsProjData;
+
+/**
+ * Method to retrieve metadata for nuget packages
+ *
+ * @param {Array} pkgList Package list
+ */
+const getNugetMetadata = async function(pkgList) {
+  const NUGET_URL = "https://api.nuget.org/v3/registration3/";
+  const cdepList = [];
+  for (const p of pkgList) {
+    try {
+      const res = await got.get(
+        NUGET_URL +
+          p.group.toLowerCase() +
+          (p.group !== "" ? "." : "") +
+          p.name.toLowerCase() +
+          "/index.json",
+        { responseType: "json" }
+      );
+      const items = res.body.items;
+      if (!items || !items[0] || !items[0].items) {
+        continue;
+      }
+      const firstItem = items[0];
+      const body = firstItem.items[firstItem.items.length - 1];
+      p.description = body.catalogEntry.description;
+      if (
+        body.catalogEntry.licenseExpression &&
+        body.catalogEntry.licenseExpression !== ""
+      ) {
+        p.license = findLicenseId(body.catalogEntry.licenseExpression);
+      } else if (body.catalogEntry.licenseUrl) {
+        p.license = body.catalogEntry.licenseUrl;
+      }
+      if (body.catalogEntry.projectUrl) {
+        p.repository = { url: body.catalogEntry.projectUrl };
+        p.homepage = {
+          url:
+            "https://www.nuget.org/packages/" +
+            p.group +
+            (p.group !== "" ? "." : "") +
+            p.name +
+            "/" +
+            p.version +
+            "/"
+        };
+      }
+      cdepList.push(p);
+    } catch (err) {
+      cdepList.push(p);
+      console.error(p, err);
+    }
+  }
+  return cdepList;
+};
+exports.getNugetMetadata = getNugetMetadata;

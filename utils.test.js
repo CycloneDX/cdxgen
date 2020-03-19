@@ -186,14 +186,43 @@ test("get crates metadata", async () => {
 });
 
 test("parse cs proj", async () => {
-  expect(utils.parseCsProjData(null)).toEqual([]);
-  dep_list = utils.parseCsProjData(
+  expect(await utils.parseCsProjData(null)).toEqual([]);
+  dep_list = await utils.parseCsProjData(
     fs.readFileSync("./test/sample.csproj", (encoding = "utf-8"))
   );
   expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
     group: "Microsoft.AspNetCore.Mvc",
     name: "NewtonsoftJson",
-    version: "3.1.1"
+    version: "3.1.1",
+    license: "Apache-2.0",
+    description:
+      "ASP.NET Core MVC features that use Newtonsoft.Json. Includes input and output formatters for JSON and JSON PATCH.\n\nThis package was built from the source code at https://github.com/aspnet/AspNetCore/tree/e276c8174b8bfdeb70efceafa81c75f8badbc8db",
+    repository: { url: "https://asp.net/" },
+    homepage: {
+      url:
+        "https://www.nuget.org/packages/Microsoft.AspNetCore.Mvc.NewtonsoftJson/3.1.1/"
+    }
+  });
+});
+
+test("get nget metadata", async () => {
+  dep_list = await utils.getNugetMetadata([
+    {
+      group: "Castle",
+      name: "Core",
+      version: "4.4.0"
+    }
+  ]);
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    group: "Castle",
+    name: "Core",
+    version: "4.4.0",
+    description:
+      "Castle Core, including DynamicProxy, Logging Abstractions and DictionaryAdapter",
+    license: "http://www.apache.org/licenses/LICENSE-2.0.html",
+    repository: { url: "http://www.castleproject.org/" },
+    homepage: { url: "https://www.nuget.org/packages/Castle.Core/4.4.0/" }
   });
 });
