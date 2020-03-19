@@ -89,6 +89,7 @@
     "exp": "EPL-2.0",
     "names": [
       "Eclipse Public License - Version 2.0",
+      "Eclipse Public License - v 2.0",
       "EPL 2.0"
     ]
   },
@@ -110,7 +111,8 @@
       "GNU General Public License (GPL) version 2",
       "GNU General Public License (GPL) version 2.0",
       "GNU General Public License v2",
-      "GNU General Public License v2.0"
+      "GNU General Public License v2.0",
+      "GNU General Public License Version 2"
     ]
   },
   {
@@ -173,6 +175,7 @@
       "LGPL v2.1",
       "LGPL-2.1",
       "LGPL2.1",
+      "GNU Lesser General Public License Version 2.1",
       "GNU Lesser General Public License Version 2.1, February 1999",
       "GNU Library or Lesser General Public License (LGPL) V2.1"
     ]

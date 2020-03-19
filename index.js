@@ -461,6 +461,32 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       callback();
     }
   }
+
+  // .Net
+  const csProjFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.csproj"
+  );
+  if (projectType === "netcore" || csProjFiles.length) {
+    let pkgList = [];
+    for (let i in csProjFiles) {
+      const f = csProjFiles[i];
+      let csProjData = fs.readFileSync(f, { encoding: "utf-8" });
+      if (csProjData.charCodeAt(0) === 0xfeff) {
+        csProjData = csProjData.slice(1);
+      }
+      const dlist = utils.parseCsProjData(csProjData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    if (pkgList.length) {
+      buildBomString(includeBomSerialNumber, pkgList, "nuget", callback);
+    } else {
+      console.error("Unable to find .Net core dependencies at", path);
+      callback();
+    }
+  }
 };
 
 /**

@@ -15,7 +15,7 @@ const args = require("yargs")
   })
   .option("recurse", {
     alias: "r",
-    type: 'boolean',
+    type: "boolean",
     description: "Recurse mode suitable for mono-repos"
   })
   .option("version", {
@@ -83,7 +83,7 @@ bom.createBom(true, filePath, options, (err, bomData) => {
     if (Array.isArray(bomData)) {
       console.log("BOM files produced:", bomData);
     } else {
-      fs.writeFile(args.output, bomData, () => { });
+      fs.writeFile(args.output, bomData, () => {});
       console.log("BOM file written to", args.output);
     }
   } else {
@@ -96,7 +96,7 @@ bom.createBom(true, filePath, options, (err, bomData) => {
 
   // Automatically submit the bom data
   if (args.serverUrl && args.apiKey) {
-    bom.submitBom(args, bomData, function (err, res, body) {
+    bom.submitBom(args, bomData, function(err, res, body) {
       if (err) console.log(err);
       console.log("Response from server", body);
     });

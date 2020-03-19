@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.4.1 (18 March 2020)
+
+### Features:
+
+- Support for .Net core
+- Use xml-js instead of simple-xml2json (State of xml parsing in node.js is pathetic!)
+
 ## Version 1.4.0 (17 March 2020)
 
 ### Features:

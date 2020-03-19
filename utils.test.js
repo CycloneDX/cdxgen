@@ -48,18 +48,42 @@ test("get maven metadata", async () => {
       group: "com.fasterxml.jackson.core",
       name: "jackson-databind",
       version: "2.8.5"
+    },
+    {
+      group: "com.github.jnr",
+      name: "jnr-posix",
+      version: "3.0.47"
     }
   ]);
   expect(data).toEqual([
     {
-      description:
-        "General data-binding functionality for Jackson: works on core streaming API",
       group: "com.fasterxml.jackson.core",
       name: "jackson-databind",
       version: "2.8.5",
-      repository: {
-        url: "http://github.com/FasterXML/jackson-databind"
-      }
+      description:
+        "General data-binding functionality for Jackson: works on core streaming API",
+      repository: { url: "http://github.com/FasterXML/jackson-databind" }
+    },
+    {
+      group: "com.github.jnr",
+      name: "jnr-posix",
+      version: "3.0.47",
+      license: [
+        {
+          id: "EPL-2.0",
+          name: "Eclipse Public License - v 2.0"
+        },
+        {
+          id: "GPL-2.0-only",
+          name: "GNU General Public License Version 2"
+        },
+        {
+          id: "LGPL-2.1-only",
+          name: "GNU Lesser General Public License Version 2.1"
+        }
+      ],
+      description: "\n    Common cross-project/cross-platform POSIX APIs\n  ",
+      repository: { url: "git@github.com:jnr/jnr-posix.git" }
     }
   ]);
 });
@@ -158,5 +182,18 @@ test("get crates metadata", async () => {
       url: "https://github.com/iqlusioninc/abscissa/tree/develop/"
     },
     homepage: { url: "https://github.com/iqlusioninc/abscissa/" }
+  });
+});
+
+test("parse cs proj", async () => {
+  expect(utils.parseCsProjData(null)).toEqual([]);
+  dep_list = utils.parseCsProjData(
+    fs.readFileSync("./test/sample.csproj", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(5);
+  expect(dep_list[0]).toEqual({
+    group: "Microsoft.AspNetCore.Mvc",
+    name: "NewtonsoftJson",
+    version: "3.1.1"
   });
 });

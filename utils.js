@@ -1,7 +1,7 @@
 const glob = require("glob");
 const path = require("path");
 const got = require("got");
-const xml2json = require("simple-xml2json");
+const convert = require("xml-js");
 const licenseMapping = require("./license-mapping.json");
 
 /**
@@ -89,13 +89,21 @@ const getMvnMetadata = async function(pkgList) {
           p.version +
           ".pom"
       );
-      const bodyJson = xml2json.parser(res.body).project;
+      const bodyJson = convert.xml2js(res.body, {
+        compact: true,
+        spaces: 4,
+        textKey: "_",
+        attributesKey: "$",
+        commentKey: "value"
+      }).project;
       if (bodyJson && bodyJson.licenses && bodyJson.licenses.license) {
-        p.license = findLicenseId(bodyJson.licenses.license.name);
+        p.license = bodyJson.licenses.license.map(l => {
+          return { id: findLicenseId(l.name._), name: l.name._ };
+        });
       }
-      p.description = bodyJson.description || "";
+      p.description = bodyJson.description ? bodyJson.description._ : "";
       if (bodyJson.scm && bodyJson.scm.url) {
-        p.repository = { url: bodyJson.scm.url };
+        p.repository = { url: bodyJson.scm.url._ };
       }
       cdepList.push(p);
     } catch (err) {
@@ -276,10 +284,10 @@ exports.parseGosumData = parseGosumData;
 
 const parseGopkgData = function(gopkgData) {
   const pkgList = [];
-  let pkg = null;
   if (!gopkgData) {
     return pkgList;
   }
+  let pkg = null;
   gopkgData.split("\n").forEach(l => {
     let key = null;
     let value = null;
@@ -353,10 +361,10 @@ exports.getCratesMetadata = getCratesMetadata;
 
 const parseCargoData = async function(cargoData) {
   const pkgList = [];
-  let pkg = null;
   if (!cargoData) {
     return pkgList;
   }
+  let pkg = null;
   cargoData.split("\n").forEach(l => {
     let key = null;
     let value = null;
@@ -390,3 +398,37 @@ const parseCargoData = async function(cargoData) {
   return await getCratesMetadata(pkgList);
 };
 exports.parseCargoData = parseCargoData;
+
+const parseCsProjData = function(csProjData) {
+  const pkgList = [];
+  let pkg = null;
+  if (!csProjData) {
+    return pkgList;
+  }
+  const project = convert.xml2js(csProjData, {
+    compact: true,
+    spaces: 4,
+    textKey: "_",
+    attributesKey: "$",
+    commentKey: "value"
+  }).Project;
+  if (project.ItemGroup && project.ItemGroup.length) {
+    for (let i in project.ItemGroup) {
+      const item = project.ItemGroup[i];
+      for (let j in item.PackageReference) {
+        const pref = item.PackageReference[j].$;
+        let pkg = {};
+        if (pref.Include.includes(".csproj")) {
+          continue;
+        }
+        const pname = pref.Include.replace(/\./g, "/");
+        pkg.group = path.dirname(pname).replace(/\//g, ".");
+        pkg.name = path.basename(pname);
+        pkg.version = pref.Version;
+        pkgList.push(pkg);
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseCsProjData = parseCsProjData;
