@@ -126,7 +126,7 @@ const getPyMetadata = async function(pkgList) {
   for (const p of pkgList) {
     try {
       const res = await got.get(
-        PYPI_URL + p.name + (p.version ? "/" + p.version : "") + "/json",
+        PYPI_URL + p.name + "/json",
         { responseType: "json" }
       );
       const body = res.body;
@@ -152,7 +152,7 @@ const getPyMetadata = async function(pkgList) {
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
-      console.error(err);
+      console.error(err, p);
     }
   }
   return cdepList;

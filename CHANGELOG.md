@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.4.3 (26 March 2020)
+
+### Features:
+
+- Refer to mvn and gradle command from environment variable
+
 ## Version 1.4.1 (18 March 2020)
 
 ### Features:

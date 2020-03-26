@@ -11,6 +11,13 @@ const builder = require("xmlbuilder");
 const utils = require("./utils");
 const { spawnSync } = require("child_process");
 
+let MVN_CMD = "mvn";
+if (process.env.MVN_CMD) {
+  MVN_CMD = process.env.MVN_CMD
+} else if (process.env.MAVEN_HOME) {
+  MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn")
+}
+
 /**
  * Performs a lookup + validation of the license specified in the
  * package. If the license is a valid SPDX license ID, set the 'id'
@@ -330,7 +337,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         basePath
       );
       spawnSync(
-        "mvn",
+        MVN_CMD,
         ["compile", "org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
         { cwd: basePath }
       );
@@ -354,6 +361,9 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   );
   if (gradleFiles && gradleFiles.length) {
     let GRADLE_CMD = "gradle";
+    if (process.env.GRADLE_HOME) {
+      GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle")
+    }
     if (fs.existsSync(pathLib.join(path, "gradlew"))) {
       GRADLE_CMD = "gradlew";
     }
@@ -467,7 +477,11 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     path,
     (options.multiProject ? "**/" : "") + "*.csproj"
   );
-  if (projectType === "netcore" || csProjFiles.length) {
+  if (
+    projectType === "netcore" ||
+    projectType === "dotnet" ||
+    csProjFiles.length
+  ) {
     let pkgList = [];
     for (let i in csProjFiles) {
       const f = csProjFiles[i];

@@ -19,8 +19,6 @@ NOTE:
 - gradle or gradlew is required to parse gradle projects
 - License information is not available for golang projects as of now. It might be possible to build this information by parsing all folders in the GOPATH and extracting license files. Any PR welcome :)
 
-This is a fork of [cyclonedx-node-module](https://github.com/CycloneDX/cyclonedx-node-module)
-
 ## Usage
 
 ## Installing
