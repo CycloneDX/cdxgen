@@ -433,12 +433,12 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       callback();
     }
   }
-  // golang
+  // go
   const gosumFile = pathLib.join(path, "go.sum");
   const gopkgLockFile = pathLib.join(path, "Gopkg.lock");
   const gosumMode = fs.existsSync(gosumFile);
   const gopkgMode = fs.existsSync(gopkgLockFile);
-  if (projectType === "golang" || gosumMode || gopkgMode) {
+  if (projectType === "go" || projectType === "golang" || gosumMode || gopkgMode) {
     if (gosumMode) {
       const gosumData = fs.readFileSync(gosumFile, { encoding: "utf-8" });
       const pkgList = utils.parseGosumData(gosumData);
