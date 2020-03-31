@@ -326,7 +326,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   // maven - pom.xml
   const pomFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pom.xml"
+    "pom.xml"
   );
   if (pomFiles && pomFiles.length) {
     for (let i in pomFiles) {

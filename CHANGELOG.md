@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.4.4 (31 March 2020)
+
+### Features:
+
+- Fix for repeated invocation of makeAggregateBom from each directory
+
 ## Version 1.4.3 (26 March 2020)
 
 ### Features:
