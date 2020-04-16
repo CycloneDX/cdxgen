@@ -52,17 +52,17 @@
   },
   "dependencies": {
     "glob": "^7.1.6",
-    "got": "^10.4.0",
+    "got": "^10.7.0",
     "packageurl-js": "^0.0.1",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "ssri": "^7.1.0",
     "uuid": "^3.3.3",
     "xml-js": "^1.6.11",
     "xmlbuilder": "^13.0.2",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.1"
   },
   "files": [
     "*.js",

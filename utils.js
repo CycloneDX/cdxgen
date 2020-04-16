@@ -1,5 +1,6 @@
 const glob = require("glob");
 const path = require("path");
+const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
 const licenseMapping = require("./license-mapping.json");
@@ -10,20 +11,51 @@ const licenseMapping = require("./license-mapping.json");
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
  */
-const getAllFiles = function(dirPath, pattern) {
+const getAllFiles = function (dirPath, pattern) {
   return glob.sync(pattern, { cwd: dirPath, silent: false, absolute: true });
 };
 exports.getAllFiles = getAllFiles;
 
 /**
+ * Parse pom file
+ *
+ * @param {string} pom file to parse
+ */
+const parsePom = function (pomFile) {
+  const deps = [];
+  xmlData = fs.readFileSync(pomFile);
+  const project = convert.xml2js(xmlData, {
+    compact: true,
+    spaces: 4,
+    textKey: "_",
+    attributesKey: "$",
+    commentKey: "value",
+  }).project;
+  if (project && project.dependencies) {
+    dependencies = project.dependencies.dependency;
+    for (var i in dependencies) {
+      adep = dependencies[i];
+      deps.push({
+        group: adep.groupId._,
+        name: adep.artifactId._,
+        version: adep.version._,
+        qualifiers: { type: "jar" },
+      });
+    }
+  }
+  return deps;
+};
+exports.parsePom = parsePom;
+
+/**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
  */
-const parseGradleDep = function(rawOutput) {
+const parseGradleDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const tmpA = rawOutput.split("\n");
-    tmpA.forEach(l => {
+    tmpA.forEach((l) => {
       if (l.indexOf("--- ") >= 0) {
         l = l.substr(l.indexOf("--- ") + 4, l.length).trim();
         l = l.replace(" (*)", "");
@@ -39,7 +71,7 @@ const parseGradleDep = function(rawOutput) {
             group: verArr[0],
             name: verArr[1],
             version: versionStr,
-            qualifiers: { type: "jar" }
+            qualifiers: { type: "jar" },
           });
         }
       }
@@ -55,7 +87,7 @@ exports.parseGradleDep = parseGradleDep;
  *
  * @param {string} name License full name
  */
-const findLicenseId = function(name) {
+const findLicenseId = function (name) {
   for (let i in licenseMapping) {
     const l = licenseMapping[i];
     if (l.names.includes(name)) {
@@ -71,35 +103,41 @@ exports.findLicenseId = findLicenseId;
  *
  * @param {Array} pkgList Package list
  */
-const getMvnMetadata = async function(pkgList) {
+const getMvnMetadata = async function (pkgList) {
   const MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
   const cdepList = [];
   for (const p of pkgList) {
+    const fullUrl =
+      MAVEN_CENTRAL_URL +
+      p.group.replace(/\./g, "/") +
+      "/" +
+      p.name +
+      "/" +
+      p.version +
+      "/" +
+      p.name +
+      "-" +
+      p.version +
+      ".pom";
     try {
-      const res = await got.get(
-        MAVEN_CENTRAL_URL +
-          p.group.replace(/\./g, "/") +
-          "/" +
-          p.name +
-          "/" +
-          p.version +
-          "/" +
-          p.name +
-          "-" +
-          p.version +
-          ".pom"
-      );
+      const res = await got.get(fullUrl);
       const bodyJson = convert.xml2js(res.body, {
         compact: true,
         spaces: 4,
         textKey: "_",
         attributesKey: "$",
-        commentKey: "value"
+        commentKey: "value",
       }).project;
       if (bodyJson && bodyJson.licenses && bodyJson.licenses.license) {
-        p.license = bodyJson.licenses.license.map(l => {
-          return { id: findLicenseId(l.name._), name: l.name._ };
-        });
+        if (Array.isArray(bodyJson.licenses.license)) {
+          p.license = bodyJson.licenses.license.map((l) => {
+            return findLicenseId(l.name._);
+          });
+        } else if (Object.keys(bodyJson.licenses.license).length) {
+          l = bodyJson.licenses.license;
+          p.license = [findLicenseId(l.name._)];
+        } else {
+        }
       }
       p.description = bodyJson.description ? bodyJson.description._ : "";
       if (bodyJson.scm && bodyJson.scm.url) {
@@ -120,15 +158,14 @@ exports.getMvnMetadata = getMvnMetadata;
  *
  * @param {Array} pkgList Package list
  */
-const getPyMetadata = async function(pkgList) {
+const getPyMetadata = async function (pkgList) {
   const PYPI_URL = "https://pypi.org/pypi/";
   const cdepList = [];
   for (const p of pkgList) {
     try {
-      const res = await got.get(
-        PYPI_URL + p.name + "/json",
-        { responseType: "json" }
-      );
+      const res = await got.get(PYPI_URL + p.name + "/json", {
+        responseType: "json",
+      });
       const body = res.body;
       p.description = body.info.summary;
       p.license = findLicenseId(body.info.license);
@@ -164,13 +201,13 @@ exports.getPyMetadata = getPyMetadata;
  *
  * @param {Object} lockData JSON data from Pipfile.lock
  */
-const parsePiplockData = async function(lockData) {
+const parsePiplockData = async function (lockData) {
   const pkgList = [];
   Object.keys(lockData)
-    .filter(i => i !== "_meta")
-    .forEach(k => {
+    .filter((i) => i !== "_meta")
+    .forEach((k) => {
       const depBlock = lockData[k];
-      Object.keys(depBlock).forEach(p => {
+      Object.keys(depBlock).forEach((p) => {
         const pkg = depBlock[p];
         let versionStr = pkg.version.replace("==", "");
         pkgList.push({ name: p, version: versionStr });
@@ -185,13 +222,13 @@ exports.parsePiplockData = parsePiplockData;
  *
  * @param {Object} lockData JSON data from poetry.lock
  */
-const parsePoetrylockData = async function(lockData) {
+const parsePoetrylockData = async function (lockData) {
   const pkgList = [];
   let pkg = null;
   if (!lockData) {
     return pkgList;
   }
-  lockData.split("\n").forEach(l => {
+  lockData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
     // Package section starts with this marker
@@ -227,9 +264,9 @@ exports.parsePoetrylockData = parsePoetrylockData;
  *
  * @param {Object} reqData Requirements.txt data
  */
-const parseReqFile = async function(reqData) {
+const parseReqFile = async function (reqData) {
   const pkgList = [];
-  reqData.split("\n").forEach(l => {
+  reqData.split("\n").forEach((l) => {
     if (l.indexOf("=") > -1) {
       const tmpA = l.split(/(==|<=|~=)/);
       let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
@@ -238,18 +275,18 @@ const parseReqFile = async function(reqData) {
       }
       pkgList.push({
         name: tmpA[0].trim(),
-        version: versionStr
+        version: versionStr,
       });
     } else if (/[>|\[|@]/.test(l)) {
       const tmpA = l.split(/(>|\[|@)/);
       pkgList.push({
         name: tmpA[0].trim(),
-        version: null
+        version: null,
       });
     } else if (l) {
       pkgList.push({
         name: l,
-        version: null
+        version: null,
       });
     }
   });
@@ -257,12 +294,12 @@ const parseReqFile = async function(reqData) {
 };
 exports.parseReqFile = parseReqFile;
 
-const parseGosumData = function(gosumData) {
+const parseGosumData = function (gosumData) {
   const pkgList = [];
   if (!gosumData) {
     return pkgList;
   }
-  gosumData.split("\n").forEach(l => {
+  gosumData.split("\n").forEach((l) => {
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
       const tmpA = l.split(" ");
@@ -274,7 +311,7 @@ const parseGosumData = function(gosumData) {
         group: group,
         name: name,
         version: version,
-        _integrity: hash
+        _integrity: hash,
       });
     }
   });
@@ -282,13 +319,13 @@ const parseGosumData = function(gosumData) {
 };
 exports.parseGosumData = parseGosumData;
 
-const parseGopkgData = function(gopkgData) {
+const parseGopkgData = function (gopkgData) {
   const pkgList = [];
   if (!gopkgData) {
     return pkgList;
   }
   let pkg = null;
-  gopkgData.split("\n").forEach(l => {
+  gopkgData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
     if (l.indexOf("[[projects]]") > -1) {
@@ -328,7 +365,7 @@ exports.parseGopkgData = parseGopkgData;
  *
  * @param {Array} pkgList Package list
  */
-const getCratesMetadata = async function(pkgList) {
+const getCratesMetadata = async function (pkgList) {
   const CRATES_URL = "https://crates.io/api/v1/crates/";
   const cdepList = [];
   for (const p of pkgList) {
@@ -359,13 +396,13 @@ const getCratesMetadata = async function(pkgList) {
 };
 exports.getCratesMetadata = getCratesMetadata;
 
-const parseCargoData = async function(cargoData) {
+const parseCargoData = async function (cargoData) {
   const pkgList = [];
   if (!cargoData) {
     return pkgList;
   }
   let pkg = null;
-  cargoData.split("\n").forEach(l => {
+  cargoData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
     if (l.indexOf("[[package]]") > -1) {
@@ -399,7 +436,7 @@ const parseCargoData = async function(cargoData) {
 };
 exports.parseCargoData = parseCargoData;
 
-const parseCsProjData = async function(csProjData) {
+const parseCsProjData = async function (csProjData) {
   const pkgList = [];
   let pkg = null;
   if (!csProjData) {
@@ -410,7 +447,7 @@ const parseCsProjData = async function(csProjData) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value"
+    commentKey: "value",
   }).Project;
   if (project.ItemGroup && project.ItemGroup.length) {
     for (let i in project.ItemGroup) {
@@ -441,7 +478,7 @@ exports.parseCsProjData = parseCsProjData;
  *
  * @param {Array} pkgList Package list
  */
-const getNugetMetadata = async function(pkgList) {
+const getNugetMetadata = async function (pkgList) {
   const NUGET_URL = "https://api.nuget.org/v3/registration3/";
   const cdepList = [];
   for (const p of pkgList) {
@@ -479,7 +516,7 @@ const getNugetMetadata = async function(pkgList) {
             p.name +
             "/" +
             p.version +
-            "/"
+            "/",
         };
       }
       cdepList.push(p);

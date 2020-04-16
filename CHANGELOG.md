@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.4.5 (16 April 2020)
+
+### Features:
+
+- Automatically fallback to parsing pom.xml if aggregateBom call fails
+
 ## Version 1.4.4 (31 March 2020)
 
 ### Features:

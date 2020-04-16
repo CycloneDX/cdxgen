@@ -13,9 +13,9 @@ const { spawnSync } = require("child_process");
 
 let MVN_CMD = "mvn";
 if (process.env.MVN_CMD) {
-  MVN_CMD = process.env.MVN_CMD
+  MVN_CMD = process.env.MVN_CMD;
 } else if (process.env.MAVEN_HOME) {
-  MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn")
+  MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn");
 }
 
 /**
@@ -31,7 +31,7 @@ function getLicenses(pkg) {
       license = [license];
     }
     return license
-      .map(l => {
+      .map((l) => {
         if (!(typeof l === "string" || l instanceof String)) {
           console.error(
             "Invalid license definition in package: " +
@@ -44,7 +44,7 @@ function getLicenses(pkg) {
         }
         let licenseContent = {};
         if (
-          spdxLicenses.some(v => {
+          spdxLicenses.some((v) => {
             return l === v;
           })
         ) {
@@ -55,7 +55,7 @@ function getLicenses(pkg) {
         addLicenseText(pkg, l, licenseContent);
         return licenseContent;
       })
-      .map(l => ({ license: l }));
+      .map((l) => ({ license: l }));
   }
   return null;
 }
@@ -75,13 +75,13 @@ function addLicenseText(pkg, l, licenseContent) {
     "licence",
     "NOTICE",
     "Notice",
-    "notice"
+    "notice",
   ];
   let licenseContentTypes = {
     "text/plain": "",
     "text/txt": ".txt",
     "text/markdown": ".md",
-    "text/xml": ".xml"
+    "text/xml": ".xml",
   };
   /* Loops over different name combinations starting from the license specified
        naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
@@ -129,17 +129,17 @@ function addExternalReferences(pkg) {
   let externalReferences = [];
   if (pkg.homepage) {
     externalReferences.push({
-      reference: { "@type": "website", url: pkg.homepage }
+      reference: { "@type": "website", url: pkg.homepage },
     });
   }
   if (pkg.bugs && pkg.bugs.url) {
     externalReferences.push({
-      reference: { "@type": "issue-tracker", url: pkg.bugs.url }
+      reference: { "@type": "issue-tracker", url: pkg.bugs.url },
     });
   }
   if (pkg.repository && pkg.repository.url) {
     externalReferences.push({
-      reference: { "@type": "vcs", url: pkg.repository.url }
+      reference: { "@type": "vcs", url: pkg.repository.url },
     });
   }
   return externalReferences;
@@ -154,13 +154,13 @@ function listComponents(pkg, ptype = "npm") {
   let list = {};
   let isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
-    pkg.forEach(p => {
+    pkg.forEach((p) => {
       addComponent(p, ptype, list, isRootPkg);
     });
   } else {
     addComponent(pkg, ptype, list, isRootPkg);
   }
-  return Object.keys(list).map(k => ({ component: list[k] }));
+  return Object.keys(list).map((k) => ({ component: list[k] }));
 }
 
 /**
@@ -195,7 +195,7 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
       hashes: [],
       licenses: licenses,
       purl: purlString,
-      externalReferences: addExternalReferences(pkg)
+      externalReferences: addExternalReferences(pkg),
     };
 
     if (
@@ -212,9 +212,9 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
   }
   if (pkg.dependencies) {
     Object.keys(pkg.dependencies)
-      .map(x => pkg.dependencies[x])
-      .filter(x => typeof x !== "string") //remove cycles
-      .map(x => addComponent(x, ptype, list));
+      .map((x) => pkg.dependencies[x])
+      .filter((x) => typeof x !== "string") //remove cycles
+      .map((x) => addComponent(x, ptype, list));
   }
 }
 
@@ -240,7 +240,7 @@ function determinePackageType(pkg) {
 function processHashes(pkg, component) {
   if (pkg._shasum) {
     component.hashes.push({
-      hash: { "@alg": "SHA-1", "#text": pkg._shasum }
+      hash: { "@alg": "SHA-1", "#text": pkg._shasum },
     });
   } else if (pkg._integrity) {
     let integrity = ssri.parse(pkg._integrity);
@@ -289,7 +289,7 @@ const buildBomString = (includeBomSerialNumber, pkgInfo, ptype, callback) => {
       newline: "\n",
       width: 0,
       allowEmpty: false,
-      spacebeforeslash: ""
+      spacebeforeslash: "",
     });
     callback(null, bomString);
   } else {
@@ -324,11 +324,9 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     });
   }
   // maven - pom.xml
-  const pomFiles = utils.getAllFiles(
-    path,
-    "pom.xml"
-  );
+  const pomFiles = utils.getAllFiles(path, "pom.xml");
   if (pomFiles && pomFiles.length) {
+    let pkgList = [];
     for (let i in pomFiles) {
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
@@ -336,11 +334,19 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         "Executing 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom' in",
         basePath
       );
-      spawnSync(
+      result = spawnSync(
         MVN_CMD,
         ["compile", "org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
         { cwd: basePath }
       );
+      if (result.status == 1) {
+        const dlist = utils.parsePom(f);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
+        pkgList = await utils.getMvnMetadata(pkgList);
+        buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
+      }
     }
     const firstPath = pathLib.dirname(pomFiles[0]);
     if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
@@ -362,7 +368,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   if (gradleFiles && gradleFiles.length) {
     let GRADLE_CMD = "gradle";
     if (process.env.GRADLE_HOME) {
-      GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle")
+      GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
     }
     if (fs.existsSync(pathLib.join(path, "gradlew"))) {
       GRADLE_CMD = "gradlew";
@@ -380,7 +386,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
           "--configuration",
           "default",
           "--console",
-          "plain"
+          "plain",
         ],
         { cwd: basePath }
       );
@@ -417,7 +423,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     } else if (poetryMode) {
       const poetrylockFile = pathLib.join(path, "poetry.lock");
       const lockData = fs.readFileSync(poetrylockFile, {
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       const pkgList = utils.parsePoetrylockData(lockData);
       buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
@@ -438,14 +444,19 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   const gopkgLockFile = pathLib.join(path, "Gopkg.lock");
   const gosumMode = fs.existsSync(gosumFile);
   const gopkgMode = fs.existsSync(gopkgLockFile);
-  if (projectType === "go" || projectType === "golang" || gosumMode || gopkgMode) {
+  if (
+    projectType === "go" ||
+    projectType === "golang" ||
+    gosumMode ||
+    gopkgMode
+  ) {
     if (gosumMode) {
       const gosumData = fs.readFileSync(gosumFile, { encoding: "utf-8" });
       const pkgList = utils.parseGosumData(gosumData);
       buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
     } else if (gopkgMode) {
       const gopkgData = fs.readFileSync(gopkgLockFile, {
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       const pkgList = utils.parseGopkgData(gopkgData);
       buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
@@ -508,7 +519,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
  *
  * @param args CLI args
  */
-exports.submitBom = function(args, bom, callback) {
+exports.submitBom = function (args, bom, callback) {
   let serverUrl = args.serverUrl + "/api/v1/bom";
 
   const formData = {
@@ -516,9 +527,9 @@ exports.submitBom = function(args, bom, callback) {
       value: bom,
       options: {
         filename: args.output ? pathLib.basename(args.output) : "bom.xml",
-        contentType: "text/xml"
-      }
-    }
+        contentType: "text/xml",
+      },
+    },
   };
   if (args.projectId) {
     formData.project = args.projectId;
@@ -534,9 +545,9 @@ exports.submitBom = function(args, bom, callback) {
     json: true,
     headers: {
       "X-Api-Key": args.apiKey,
-      "Content-Type": "multipart/form-data"
+      "Content-Type": "multipart/form-data",
     },
-    formData
+    formData,
   };
   request(options, callback);
 };
