@@ -35,12 +35,17 @@ const parsePom = function (pomFile) {
     dependencies = project.dependencies.dependency;
     for (var i in dependencies) {
       adep = dependencies[i];
-      deps.push({
-        group: adep.groupId._,
-        name: adep.artifactId._,
-        version: adep.version._,
-        qualifiers: { type: "jar" },
-      });
+      version = adep.version;
+      versionStr = undefined;
+      if (version && version._ && version._.indexOf("$") == -1) {
+        versionStr = version._;
+        deps.push({
+          group: adep.groupId ? adep.groupId._ : "",
+          name: adep.artifactId ? adep.artifactId._ : "",
+          version: versionStr,
+          qualifiers: { type: "jar" },
+        });
+      }
     }
   }
   return deps;
