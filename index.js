@@ -339,13 +339,18 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         ["compile", "org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
         { cwd: basePath }
       );
-      if (result.status == 1) {
+      if (result.status == 1 || result.error) {
         const dlist = utils.parsePom(f);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
         }
         pkgList = await utils.getMvnMetadata(pkgList);
-        buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
+        return buildBomString(
+          includeBomSerialNumber,
+          pkgList,
+          "maven",
+          callback
+        );
       }
     }
     const firstPath = pathLib.dirname(pomFiles[0]);
