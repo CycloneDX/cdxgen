@@ -336,7 +336,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       );
       result = spawnSync(
         MVN_CMD,
-        ["compile", "org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
+        ["org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
         { cwd: basePath }
       );
       if (result.status == 1 || result.error) {
