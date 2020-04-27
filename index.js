@@ -185,6 +185,7 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
       pkg.subpath
     );
     let purlString = purl.toString();
+    purlString = decodeURIComponent(purlString);
     let component = {
       "@type": determinePackageType(pkg),
       "@bom-ref": purlString,
