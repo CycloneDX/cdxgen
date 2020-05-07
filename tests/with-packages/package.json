@@ -33,7 +33,7 @@
     "cyclonedx-bom": "./bin/cyclonedx-bom"
   },
   "scripts": {
-    "test": "jest"
+    "test": "echo \"Warning: no test specified\" && exit 0"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -59,8 +59,5 @@
     "index.js",
     "bin/",
     "spdx-licenses.json"
-  ],
-  "devDependencies": {
-    "jest": "^26.0.1"
-  }
+  ]
 }
