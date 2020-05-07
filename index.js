@@ -115,10 +115,11 @@ function addComponent(pkg, list, isRootPkg = false) {
     if(!isRootPkg) {
         let pkgIdentifier = parsePackageJsonName(pkg.name);
         let group = pkgIdentifier.scope;
+        if (group != null) group = '@' + group;
         let name = pkgIdentifier.fullName;
         let version = pkg.version;
         let licenses = getLicenses(pkg);
-        let purl = new PackageURL('npm', pkgIdentifier.scope, pkg.name, pkg.version, null, null);
+        let purl = new PackageURL('npm', group, name, version, null, null);
         let purlString = purl.toString();
         let component = {
             '@type'            : determinePackageType(pkg),
