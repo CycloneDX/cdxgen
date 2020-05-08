@@ -7,40 +7,40 @@ const path = require("path");
 const args = require("yargs")
   .option("output", {
     alias: "o",
-    description: "Output file for bom.xml. Default console"
+    description: "Output file for bom.xml. Default console",
   })
   .option("type", {
     alias: "t",
-    description: "Project type"
+    description: "Project type",
   })
   .option("recurse", {
     alias: "r",
     type: "boolean",
-    description: "Recurse mode suitable for mono-repos"
+    description: "Recurse mode suitable for mono-repos",
   })
   .option("version", {
     alias: "v",
-    description: "Print version number"
+    description: "Print version number",
   })
   .option("server-url", {
     description:
-      "Dependency track or AppThreat server url. Eg: https://deptrack.appthreat.io"
+      "Dependency track or AppThreat server url. Eg: https://deptrack.appthreat.io",
   })
   .option("api-key", {
-    description: "Dependency track or AppThreat server api key"
+    description: "Dependency track or AppThreat server api key",
   })
   .option("project-name", {
     description:
-      "Dependency track or AppThreat project name. Default use the directory name"
+      "Dependency track or AppThreat project name. Default use the directory name",
   })
   .option("project-version", {
     description:
       "Dependency track or AppThreat project version. Default master",
-    default: "master"
+    default: "master",
   })
   .option("project-id", {
     description:
-      "Dependency track or AppThreat project id. Either provide the id or the project name and version together"
+      "Dependency track or AppThreat project id. Either provide the id or the project name and version together",
   })
   .help("h").argv;
 
@@ -59,7 +59,11 @@ if (args.version) {
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
  */
-let options = { dev: true, projectType: args.type, multiProject: args.recurse };
+let options = {
+  dev: false,
+  projectType: args.type,
+  multiProject: args.recurse,
+};
 
 let filePath = args._[0] || ".";
 
@@ -96,7 +100,7 @@ bom.createBom(true, filePath, options, (err, bomData) => {
 
   // Automatically submit the bom data
   if (args.serverUrl && args.apiKey) {
-    bom.submitBom(args, bomData, function(err, res, body) {
+    bom.submitBom(args, bomData, function (err, res, body) {
       if (err) console.log(err);
       console.log("Response from server", body);
     });
