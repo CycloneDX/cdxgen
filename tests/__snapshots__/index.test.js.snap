@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`dependencies produces a BOM 1`] = `
+exports[`createbom produces a BOM without development dependencies 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
 <bom xmlns=\\"http://cyclonedx.org/schema/bom/1.1\\" version=\\"1\\">
   <components>
@@ -2266,7 +2266,7 @@ http://www.gnu.org/licenses/lgpl.html
 </bom>"
 `;
 
-exports[`no dependencies produces an empty BOM 1`] = `
+exports[`createbom produces an empty BOM 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
 <bom xmlns=\\"http://cyclonedx.org/schema/bom/1.1\\" version=\\"1\\">
   <components/>
