@@ -13,3 +13,10 @@ test('createbom produces a BOM without development dependencies', done => {
     done();
   });
 });
+
+test('createbom produces a BOM with development dependencies', done => {
+  bom.createbom(false, './tests/with-packages', { dev: true }, (err, bom) => {
+    expect(bom).toMatchSnapshot();
+    done();
+  });
+});
