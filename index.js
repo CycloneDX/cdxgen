@@ -319,7 +319,6 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     projectType === "nodejs" ||
     fs.existsSync(pathLib.join(path, "package.json"))
   ) {
-    spawnSync("npm", ["install"], { cwd: path });
     readInstalled(path, options, (err, pkgInfo) => {
       buildBomString(includeBomSerialNumber, pkgInfo, "npm", callback);
     });
