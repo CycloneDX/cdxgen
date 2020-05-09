@@ -10,6 +10,7 @@ const PackageURL = require("packageurl-js");
 const builder = require("xmlbuilder");
 const utils = require("./utils");
 const { spawnSync } = require("child_process");
+const { connect } = require("http2");
 
 let MVN_CMD = "mvn";
 if (process.env.MVN_CMD) {
@@ -174,6 +175,10 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
     let pkgIdentifier = parsePackageJsonName(pkg.name);
     let group = pkg.group || pkgIdentifier.scope;
     let name = pkgIdentifier.fullName || pkg.name;
+    // Skip @types package for npm
+    if (ptype == "npm" && (group === "types" || name.startsWith("@types"))) {
+      return;
+    }
     let version = pkg.version;
     let licenses = getLicenses(pkg);
     let purl = new PackageURL(
@@ -319,7 +324,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     projectType === "nodejs" ||
     fs.existsSync(pathLib.join(path, "package.json"))
   ) {
-    readInstalled(path, {dev: false}, (err, pkgInfo) => {
+    readInstalled(path, options, (err, pkgInfo) => {
       buildBomString(includeBomSerialNumber, pkgInfo, "npm", callback);
     });
   }

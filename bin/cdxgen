@@ -60,7 +60,7 @@ if (args.version) {
  * multiProject: Boolean to indicate monorepo or multi-module projects
  */
 let options = {
-  dev: false,
+  dev: true,
   projectType: args.type,
   multiProject: args.recurse,
 };
