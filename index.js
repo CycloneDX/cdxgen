@@ -10,7 +10,6 @@ const PackageURL = require("packageurl-js");
 const builder = require("xmlbuilder");
 const utils = require("./utils");
 const { spawnSync } = require("child_process");
-const { connect } = require("http2");
 
 let MVN_CMD = "mvn";
 if (process.env.MVN_CMD) {
