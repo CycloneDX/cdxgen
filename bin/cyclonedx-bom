@@ -8,7 +8,15 @@ const xmlOptions = {indent: 4, newline: "\n"};
 const DomParser = require('xmldom').DOMParser;
 
 let arguments = process.argv.slice(2);
-let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !["-h", "-a", "-o", "-ns", "-d", "--version"].includes(x));
+const knownArguments = [
+    "-h",
+    "-a",
+    "-o",
+    "-ns",
+    "-d",
+    "--version",
+];
+let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !knownArguments.includes(x));
 if (arguments.includes("-h") || unknownOptions.length > 0) {
     if (unknownOptions.length > 0) {
         console.warn("ERROR: Unknown option(s) " + unknownOptions.join(" ") );
