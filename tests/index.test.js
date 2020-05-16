@@ -20,3 +20,10 @@ test('createbom produces a BOM with development dependencies', done => {
     done();
   });
 });
+
+test('creatbom produces a BOM in JSON format', done => {
+  bom.createbom(false, './tests/with-packages', { json: true }, (err, bom) => {
+    expect(bom).toMatchSnapshot();
+    done();
+  });
+});

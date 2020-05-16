@@ -12,6 +12,7 @@ const knownArguments = [
     "-h",
     "-a",
     "-o",
+    "-j",
     "-ns",
     "-d",
     "--version",
@@ -24,8 +25,9 @@ if (arguments.includes("-h") || unknownOptions.length > 0) {
     console.log("Usage:  cyclonedx-bom [OPTIONS] [path]");
     console.log("Options:");
     console.log("  -h        - this help");
-    console.log("  -a <path> - merge in additional modules from other scanner");
+    console.log("  -a <path> - merge in additional modules from other scanner (only supported for XML format)");
     console.log("  -o <path> - write to file instead of stdout");
+    console.log("  -j        - output JSON instead of XML");
     console.log("  -ns       - do not generate bom serial number");
     console.log("  -d        - include devDependencies");
     console.log("  --version - print version number");
@@ -70,26 +72,39 @@ if (d > -1) {
     options.dev = true;
     arguments = arguments.slice(0,d).concat(arguments.slice(d+1));
 }
+let j = arguments.indexOf("-j");
+if (j > -1) {
+    options.json = true;
+    arguments = arguments.slice(0,j).concat(arguments.slice(j+1));
+}
 
 
 let filePath = arguments[0] || '.';
 
 bom.createbom(includeBomSerialNumber, filePath, options, (err, bom) => {
-    let doc = new DomParser().parseFromString(bom);
-    for (let index = 0; index < additionalBoms.length; index++) {
-        let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
-        let additionalDoc = new DomParser().parseFromString(additionalBom);
-        let additionalDocComponents = additionalDoc.getElementsByTagName("component");
-        for (let i=0; i<additionalDocComponents.length; i++) {
-            doc.getElementsByTagName("components")[0].appendChild(
-              additionalDocComponents[i]
-            );
+    if (options.json) {
+        if (out) {
+            fs.writeFile(out, bom, () => {});
+        } else {
+            console.log(bom);
         }
-    }
-    bom = xmlFormat(doc.toString(), xmlOptions);
-    if (out) {
-        fs.writeFile(out, bom, () => {});
     } else {
-        console.log(bom);
+        let doc = new DomParser().parseFromString(bom);
+        for (let index = 0; index < additionalBoms.length; index++) {
+            let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
+            let additionalDoc = new DomParser().parseFromString(additionalBom);
+            let additionalDocComponents = additionalDoc.getElementsByTagName("component");
+            for (let i=0; i<additionalDocComponents.length; i++) {
+                doc.getElementsByTagName("components")[0].appendChild(
+                  additionalDocComponents[i]
+                );
+            }
+        }
+        bom = xmlFormat(doc.toString(), xmlOptions);
+        if (out) {
+            fs.writeFile(out, bom, () => {});
+        } else {
+            console.log(bom);
+        }
     }
 });
