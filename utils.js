@@ -23,7 +23,7 @@ exports.getAllFiles = getAllFiles;
  */
 const parsePom = function (pomFile) {
   const deps = [];
-  xmlData = fs.readFileSync(pomFile);
+  const xmlData = fs.readFileSync(pomFile);
   const project = convert.xml2js(xmlData, {
     compact: true,
     spaces: 4,
@@ -32,11 +32,11 @@ const parsePom = function (pomFile) {
     commentKey: "value",
   }).project;
   if (project && project.dependencies) {
-    dependencies = project.dependencies.dependency;
+    const dependencies = project.dependencies.dependency;
     for (var i in dependencies) {
-      adep = dependencies[i];
-      version = adep.version;
-      versionStr = undefined;
+      const adep = dependencies[i];
+      const version = adep.version;
+      let versionStr = undefined;
       if (version && version._ && version._.indexOf("$") == -1) {
         versionStr = version._;
         deps.push({
