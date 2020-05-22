@@ -117,7 +117,8 @@
       "GNU General Public License (GPL) version 2.0",
       "GNU General Public License v2",
       "GNU General Public License v2.0",
-      "GNU General Public License Version 2"
+      "GNU General Public License Version 2",
+      "GNU General Public License as published by the Free Software Foundation; version 2."
     ]
   },
   {
@@ -126,7 +127,8 @@
       "GNU General Public License (GPL) version 2, or any later version",
       "GNU General Public License (GPL) version 2.0, or any later version",
       "GNU General Public License v2 or later",
-      "GNU General Public License v2.0 or later"
+      "GNU General Public License v2.0 or later",
+      "GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version"
     ]
   },
   {
@@ -134,7 +136,8 @@
     "names": [
       "GPL2 w/ CPE",
       "GPLv2+CE",
-      "GPLv2 with classpath exception"
+      "GPLv2 with classpath exception",
+      "As a special exception, the copyright holders of this library give you permission to link this library with independent modules to produce an executable, regardless of the license terms of these independent modules"
     ]
   },
   {
@@ -143,7 +146,18 @@
       "GNU General Public License (GPL) version 3",
       "GNU General Public License (GPL) version 3.0",
       "GNU General Public License v3",
-      "GNU General Public License v3.0"
+      "GNU General Public License v3.0",
+      "GNU General Public License as published by the Free Software Foundation, version 3."
+    ]
+  },
+  {
+    "exp": "GPL-3.0-or-later",
+    "names": [
+      "GNU General Public License (GPL) version 3, or any later version",
+      "GNU General Public License (GPL) version 3.0, or any later version",
+      "GNU General Public License v3 or later",
+      "GNU General Public License v3.0 or later",
+      "GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version"
     ]
   },
   {

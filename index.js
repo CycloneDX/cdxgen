@@ -49,6 +49,8 @@ function getLicenses(pkg) {
           })
         ) {
           licenseContent.id = l;
+        } else if (l.startsWith("http")) {
+          licenseContent.url = l;
         } else {
           licenseContent.name = l;
         }
@@ -117,6 +119,27 @@ function readLicenseText(licenseFilepath, licenseContentType) {
     return licenseContentText;
   }
   return null;
+}
+
+/**
+ * Method to create global external references
+ *
+ * @param pkg
+ * @returns {Array}
+ */
+function addGlobalReferences(src, filename) {
+  let externalReferences = [];
+  externalReferences.push({
+    reference: { "@type": "other", url: src, comment: "Base path" },
+  });
+  externalReferences.push({
+    reference: {
+      "@type": "other",
+      url: pathLib.join(src, filename),
+      comment: "Package file",
+    },
+  });
+  return externalReferences;
 }
 
 /**
@@ -277,7 +300,10 @@ function addComponentHash(alg, digest, component) {
   component.hashes.push({ hash: { "@alg": alg, "#text": hash } });
 }
 
-const buildBomString = (includeBomSerialNumber, pkgInfo, ptype, callback) => {
+const buildBomString = (
+  { includeBomSerialNumber, pkgInfo, ptype, context },
+  callback
+) => {
   let bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.1");
@@ -285,6 +311,11 @@ const buildBomString = (includeBomSerialNumber, pkgInfo, ptype, callback) => {
     bom.att("serialNumber", "urn:uuid:" + uuidv4());
   }
   bom.att("version", 1);
+  if (context && context.src && context.filename) {
+    bom
+      .ele("externalReferences")
+      .ele(addGlobalReferences(context.src, context.filename));
+  }
   const components = listComponents(pkgInfo, ptype);
   if (components && components.length) {
     bom.ele("components").ele(components);
@@ -324,7 +355,15 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     fs.existsSync(pathLib.join(path, "package.json"))
   ) {
     readInstalled(path, options, (err, pkgInfo) => {
-      buildBomString(includeBomSerialNumber, pkgInfo, "npm", callback);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo,
+          ptype: "npm",
+          context: { src: path, filename: "package.json" },
+        },
+        callback
+      );
     });
   }
   // maven - pom.xml
@@ -350,9 +389,12 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         }
         pkgList = await utils.getMvnMetadata(pkgList);
         return buildBomString(
-          includeBomSerialNumber,
-          pkgList,
-          "maven",
+          {
+            includeBomSerialNumber,
+            pkgInfo: pkgList,
+            ptype: "maven",
+            context: { src: path, filename: "pom.xml" },
+          },
           callback
         );
       }
@@ -406,7 +448,15 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       }
     }
     pkgList = await utils.getMvnMetadata(pkgList);
-    buildBomString(includeBomSerialNumber, pkgList, "maven", callback);
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "maven",
+        context: { src: path, filename: "build.gradle" },
+      },
+      callback
+    );
   }
   // python
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
@@ -425,7 +475,15 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       if (fs.existsSync(piplockFile)) {
         const lockData = JSON.parse(fs.readFileSync(piplockFile));
         const pkgList = utils.parsePiplockData(lockData);
-        buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
+        buildBomString(
+          {
+            includeBomSerialNumber,
+            pkgInfo: pkgList,
+            ptype: "pypi",
+            context: { src: path, filename: "Pipfile.lock" },
+          },
+          callback
+        );
       } else {
         console.error("Pipfile.lock not found at", path);
       }
@@ -435,11 +493,27 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         encoding: "utf-8",
       });
       const pkgList = utils.parsePoetrylockData(lockData);
-      buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "pypi",
+          context: { src: path, filename: "poetry.lock" },
+        },
+        callback
+      );
     } else if (requirementsMode) {
       const reqData = fs.readFileSync(reqFile, { encoding: "utf-8" });
       const pkgList = await utils.parseReqFile(reqData);
-      buildBomString(includeBomSerialNumber, pkgList, "pypi", callback);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "pypi",
+          context: { src: path, filename: "requirements.txt" },
+        },
+        callback
+      );
     } else {
       console.error(
         "Unable to find requirements.txt or Pipfile.lock for the python project at",
@@ -461,14 +535,30 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   ) {
     if (gosumMode) {
       const gosumData = fs.readFileSync(gosumFile, { encoding: "utf-8" });
-      const pkgList = utils.parseGosumData(gosumData);
-      buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
+      const pkgList = await utils.parseGosumData(gosumData);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "golang",
+          context: { src: path, filename: "go.sum" },
+        },
+        callback
+      );
     } else if (gopkgMode) {
       const gopkgData = fs.readFileSync(gopkgLockFile, {
         encoding: "utf-8",
       });
-      const pkgList = utils.parseGopkgData(gopkgData);
-      buildBomString(includeBomSerialNumber, pkgList, "golang", callback);
+      const pkgList = await utils.parseGopkgData(gopkgData);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "golang",
+          context: { src: path, filename: "Gopkg.lock" },
+        },
+        callback
+      );
     } else {
       console.error(
         "Unable to find go.sum or Gopkg.lock for the python project at",
@@ -485,7 +575,15 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     if (cargoMode) {
       const cargoData = fs.readFileSync(cargoFile, { encoding: "utf-8" });
       const pkgList = await utils.parseCargoData(cargoData);
-      buildBomString(includeBomSerialNumber, pkgList, "crates", callback);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "crates",
+          context: { src: path, filename: "Cargo.lock" },
+        },
+        callback
+      );
     } else {
       console.error("Unable to find Cargo.lock for the rust project at", path);
       callback();
@@ -515,7 +613,15 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       }
     }
     if (pkgList.length) {
-      buildBomString(includeBomSerialNumber, pkgList, "nuget", callback);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "nuget",
+          context: { src: path, filename: csProjFiles.join(", ") },
+        },
+        callback
+      );
     } else {
       console.error("Unable to find .Net core dependencies at", path);
       callback();

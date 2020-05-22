@@ -17,7 +17,7 @@ NOTE:
 
 - Apache maven is required for parsing pom.xml
 - gradle or gradlew is required to parse gradle projects
-- License information is not available for Go projects as of now. It might be possible to build this information by parsing all folders in the GOPATH and extracting license files. Any PR welcome :)
+- For Go projects, license information is obtained via GitHub api lookups. This approach is not comprehensive yet
 
 ## Usage
 

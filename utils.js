@@ -104,6 +104,25 @@ const findLicenseId = function (name) {
 exports.findLicenseId = findLicenseId;
 
 /**
+ * Method to guess the spdx license id from license contents
+ *
+ * @param {string} name License file contents
+ */
+const guessLicenseId = function (content) {
+  content = content.replace(/\n/g, " ");
+  for (let i in licenseMapping) {
+    const l = licenseMapping[i];
+    for (let j in l.names) {
+      if (content.indexOf(l.names[j]) > -1) {
+        return l.exp;
+      }
+    }
+  }
+  return undefined;
+};
+exports.guessLicenseId = guessLicenseId;
+
+/**
  * Method to retrieve metadata for maven packages by querying maven central
  *
  * @param {Array} pkgList Package list
@@ -299,12 +318,62 @@ const parseReqFile = async function (reqData) {
 };
 exports.parseReqFile = parseReqFile;
 
-const parseGosumData = function (gosumData) {
+/**
+ * Method to retrieve repo license by querying github api
+ *
+ * @param {Array} pkgList Package list
+ * @return {String} SPDX license id
+ */
+const getRepoLicense = async function (repoUrl) {
+  if (repoUrl && repoUrl.indexOf("github.com") > -1) {
+    let apiUrl = repoUrl.replace(
+      "https://github.com",
+      "https://api.github.com/repos"
+    );
+    apiUrl += "/license";
+    const headers = {};
+    if (process.env.GITHUB_TOKEN) {
+      headers["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
+    }
+    try {
+      const res = await got.get(apiUrl, {
+        responseType: "json",
+        headers: headers,
+      });
+      if (res && res.body) {
+        const license = res.body.license;
+        let licenseId = license.spdx_id;
+        if (license.spdx_id === "NOASSERTION") {
+          if (res.body.content) {
+            content = Buffer.from(res.body.content, "base64").toString("ascii");
+            licenseId = guessLicenseId(content);
+          }
+          // If content match fails attempt to find by name
+          if (!licenseId && license.name.toLowerCase() !== "other") {
+            licenseId = findLicenseId(license.name);
+          }
+          // Fallback to download url
+          if (!licenseId) {
+            licenseId = res.body.download_url;
+          }
+        }
+        return licenseId;
+      }
+    } catch (err) {
+      return undefined;
+    }
+  }
+};
+exports.getRepoLicense = getRepoLicense;
+
+const parseGosumData = async function (gosumData) {
   const pkgList = [];
   if (!gosumData) {
     return pkgList;
   }
-  gosumData.split("\n").forEach((l) => {
+  const pkgs = gosumData.split("\n");
+  for (let i in pkgs) {
+    const l = pkgs[i];
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
       const tmpA = l.split(" ");
@@ -312,25 +381,29 @@ const parseGosumData = function (gosumData) {
       const name = path.basename(tmpA[0]);
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
+      const license = await getRepoLicense("https://" + tmpA[0]);
       pkgList.push({
         group: group,
         name: name,
         version: version,
         _integrity: hash,
+        license: license,
       });
     }
-  });
+  }
   return pkgList;
 };
 exports.parseGosumData = parseGosumData;
 
-const parseGopkgData = function (gopkgData) {
+const parseGopkgData = async function (gopkgData) {
   const pkgList = [];
   if (!gopkgData) {
     return pkgList;
   }
   let pkg = null;
-  gopkgData.split("\n").forEach((l) => {
+  const pkgs = gopkgData.split("\n");
+  for (let i in pkgs) {
+    const l = pkgs[i];
     let key = null;
     let value = null;
     if (l.indexOf("[[projects]]") > -1) {
@@ -350,6 +423,7 @@ const parseGopkgData = function (gopkgData) {
         case "name":
           pkg.group = path.dirname(value);
           pkg.name = path.basename(value);
+          pkg.license = await getRepoLicense("https://" + value);
           break;
         case "version":
           pkg.version = value;
@@ -360,7 +434,7 @@ const parseGopkgData = function (gopkgData) {
           }
       }
     }
-  });
+  }
   return pkgList;
 };
 exports.parseGopkgData = parseGopkgData;

@@ -12,7 +12,7 @@ test("finds license id from name", () => {
 
 test("parse gradle dependencies", () => {
   expect(utils.parseGradleDep(null)).toEqual([]);
-  dep_list = utils.parseGradleDep(
+  const dep_list = utils.parseGradleDep(
     fs.readFileSync("./test/gradle-dep.out", (encoding = "utf-8"))
   );
   expect(dep_list.length).toEqual(50);
@@ -27,7 +27,7 @@ test("parse gradle dependencies", () => {
 });
 
 test("get maven metadata", async () => {
-  data = await utils.getMvnMetadata([
+  let data = await utils.getMvnMetadata([
     {
       group: "com.squareup.okhttp3",
       name: "okhttp",
@@ -76,7 +76,7 @@ test("get maven metadata", async () => {
 });
 
 test("get py metadata", async () => {
-  data = await utils.getPyMetadata([
+  const data = await utils.getPyMetadata([
     {
       group: "",
       name: "Flask",
@@ -99,9 +99,10 @@ test("get py metadata", async () => {
   ]);
 });
 
-test("parseGosumData", () => {
-  expect(utils.parseGosumData(null)).toEqual([]);
-  dep_list = utils.parseGosumData(
+test("parseGosumData", async () => {
+  let dep_list = await utils.parseGosumData(null);
+  expect(dep_list).toEqual([]);
+  dep_list = await utils.parseGosumData(
     fs.readFileSync("./test/gosum/go.sum", (encoding = "utf-8"))
   );
   expect(dep_list.length).toEqual(310);
@@ -113,9 +114,10 @@ test("parseGosumData", () => {
   });
 });
 
-test("parseGopkgData", () => {
-  expect(utils.parseGopkgData(null)).toEqual([]);
-  dep_list = utils.parseGopkgData(
+test("parseGopkgData", async () => {
+  let dep_list = await utils.parseGopkgData(null);
+  expect(dep_list).toEqual([]);
+  dep_list = await utils.parseGopkgData(
     fs.readFileSync("./test/gopkg/Gopkg.lock", (encoding = "utf-8"))
   );
   expect(dep_list.length).toEqual(36);
@@ -146,7 +148,7 @@ test("parse cargo lock", async () => {
 */
 
 test("get crates metadata", async () => {
-  dep_list = await utils.getCratesMetadata([
+  const dep_list = await utils.getCratesMetadata([
     {
       group: "",
       name: "abscissa_core",
@@ -174,7 +176,7 @@ test("get crates metadata", async () => {
 
 test("parse cs proj", async () => {
   expect(await utils.parseCsProjData(null)).toEqual([]);
-  dep_list = await utils.parseCsProjData(
+  const dep_list = await utils.parseCsProjData(
     fs.readFileSync("./test/sample.csproj", (encoding = "utf-8"))
   );
   expect(dep_list.length).toEqual(5);
@@ -194,7 +196,7 @@ test("parse cs proj", async () => {
 });
 
 test("get nget metadata", async () => {
-  dep_list = await utils.getNugetMetadata([
+  const dep_list = await utils.getNugetMetadata([
     {
       group: "Castle",
       name: "Core",
@@ -215,12 +217,22 @@ test("get nget metadata", async () => {
 });
 
 test("parsePomFile", () => {
-  data = utils.parsePom("./test/pom.xml");
+  const data = utils.parsePom("./test/pom.xml");
   expect(data.length).toEqual(13);
 });
 
 test("parsePomMetadata", async () => {
-  deps = utils.parsePom("./test/pom.xml");
-  data = await utils.getMvnMetadata(deps);
+  const deps = utils.parsePom("./test/pom.xml");
+  const data = await utils.getMvnMetadata(deps);
   expect(data.length).toEqual(deps.length);
+});
+
+test("get repo license", async () => {
+  let license = await utils.getRepoLicense(
+    "https://github.com/ShiftLeftSecurity/sast-scan"
+  );
+  expect(license).toEqual("GPL-3.0-or-later");
+
+  license = await utils.getRepoLicense("https://github.com/AppThreat/cdxgen");
+  expect(license).toEqual("Apache-2.0");
 });
