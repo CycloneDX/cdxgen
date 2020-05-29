@@ -363,6 +363,7 @@ const getRepoLicense = async function (repoUrl) {
       return undefined;
     }
   }
+  return undefined;
 };
 exports.getRepoLicense = getRepoLicense;
 

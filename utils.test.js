@@ -99,7 +99,10 @@ test("get py metadata", async () => {
   ]);
 });
 
+/*
+// Slow running test
 test("parseGosumData", async () => {
+  jest.setTimeout(120000);
   let dep_list = await utils.parseGosumData(null);
   expect(dep_list).toEqual([]);
   dep_list = await utils.parseGosumData(
@@ -113,8 +116,10 @@ test("parseGosumData", async () => {
     _integrity: "sha256-990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=",
   });
 });
+*/
 
 test("parseGopkgData", async () => {
+  jest.setTimeout(30000);
   let dep_list = await utils.parseGopkgData(null);
   expect(dep_list).toEqual([]);
   dep_list = await utils.parseGopkgData(
