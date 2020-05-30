@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const bom = require("../index.js");
+const bomHelpers = require("../index.js");
 const fs = require("fs");
 const path = require("path");
 const xmlFormat = require("prettify-xml");
@@ -81,7 +81,7 @@ if (j > -1) {
 
 let filePath = arguments[0] || '.';
 
-bom.createbom(includeBomSerialNumber, filePath, options, (err, bom) => {
+bomHelpers.createbom(includeBomSerialNumber, filePath, options, (err, bom) => {
     if (options.json) {
         if (out) {
             fs.writeFile(out, bom, () => {});
@@ -93,12 +93,7 @@ bom.createbom(includeBomSerialNumber, filePath, options, (err, bom) => {
         for (let index = 0; index < additionalBoms.length; index++) {
             let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
             let additionalDoc = new DomParser().parseFromString(additionalBom);
-            let additionalDocComponents = additionalDoc.getElementsByTagName("component");
-            for (let i=0; i<additionalDocComponents.length; i++) {
-                doc.getElementsByTagName("components")[0].appendChild(
-                  additionalDocComponents[i]
-                );
-            }
+            bomHelpers.mergebom(doc, additionalDoc);
         }
         bom = xmlFormat(doc.toString(), xmlOptions);
         if (out) {

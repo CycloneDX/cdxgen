@@ -299,3 +299,13 @@ exports.createbom = (includeBomSerialNumber, path, options, callback) => readIns
         callback(null, bomString);
     }
 });
+
+exports.mergebom = function mergebom(doc, additionalDoc) {
+    let additionalDocComponents = additionalDoc.getElementsByTagName("component");
+    for (let i=0; i<additionalDocComponents.length; i++) {
+        doc.getElementsByTagName("components")[0].appendChild(
+          additionalDocComponents[i]
+        );
+    }
+    return true;
+};
