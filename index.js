@@ -302,9 +302,11 @@ exports.createbom = (includeBomSerialNumber, path, options, callback) => readIns
 
 exports.mergebom = function mergebom(doc, additionalDoc) {
     let additionalDocComponents = additionalDoc.getElementsByTagName("component");
-    for (let i=0; i<additionalDocComponents.length; i++) {
+    // appendChild actually removes the element from additionalDocComponents
+    // which is why we use a while loop instead of a for loop
+    while (additionalDocComponents.length > 0) {
         doc.getElementsByTagName("components")[0].appendChild(
-          additionalDocComponents[i]
+          additionalDocComponents[0]
         );
     }
     return true;
