@@ -203,25 +203,111 @@ function addComponentHash(alg, digest, component) {
     component.hashes.push({hash: {'@alg': alg, '#text': hash}});
 }
 
+/**
+ * Modifies JSON output
+ */
+function jsonReplacer(key, value) {
+    if (key == 'components') {
+        return value.map(function (componentArrayItem) {
+            var component = componentArrayItem.component;
+
+            if (component.group == null) delete component.group;
+
+            component.description = component.description['#cdata'];
+
+            component.type = component['@type'];
+            delete component['@type'];
+
+            component['bom-ref'] = component['@bom-ref'];
+            delete component['@bom-ref'];
+
+            return component;
+        });
+    }
+
+    if (key == 'hashes') {
+        return value.map(function (hashArrayItem) {
+            return {
+                'alg': hashArrayItem.hash['@alg'],
+                'content': hashArrayItem.hash['#text'],
+            }
+        });
+    }
+
+    if (key == 'externalReferences') {
+        return value.map(function (referenceArrayItem) {
+            return {
+                'url': referenceArrayItem.reference['url'],
+                'type': referenceArrayItem.reference['@type'],
+            }
+        });
+    }
+
+    if (key == 'licenses') {
+        return value.map(function (licenseArrayItem) {
+            var license = licenseArrayItem.license;
+            if (license.text)
+            {
+                license.content = {
+                    'text': license.text['#cdata'],
+                };
+                if (license.text['@content-type']) license.content['content-type'] = license.text['@content-type'];
+                delete license.text;
+            }
+            return { 'license': license };
+        });
+    }
+
+    return value;
+}
+
 exports.createbom = (includeBomSerialNumber, path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
-    let bom = builder.create('bom', { encoding: 'utf-8', separateArrayItems: true })
-        .att('xmlns', 'http://cyclonedx.org/schema/bom/1.1');
-    if (includeBomSerialNumber) {
-        bom.att('serialNumber', 'urn:uuid:' + uuidv4());
-    }
-    bom.att('version', 1);
-    let componentsNode = bom.ele('components');
     let components = listComponents(pkgInfo);
-    if (components.length > 0) {
-        componentsNode.ele(components);
+
+    if (options.json)
+    {
+        let bom = {
+            'bomFormat': 'CycloneDX',
+            'specVersion': '1.2',
+            'version': 1,
+            'components': components,
+        };
+        if (includeBomSerialNumber) {
+            bom.serialNumber = 'urn:uuid:' + uuidv4();
+        }
+        let bomString = JSON.stringify(bom, jsonReplacer, 2);
+        callback(null, bomString);
+    } else {
+        let bom = builder.create('bom', { encoding: 'utf-8', separateArrayItems: true })
+            .att('xmlns', 'http://cyclonedx.org/schema/bom/1.1');
+        if (includeBomSerialNumber) {
+            bom.att('serialNumber', 'urn:uuid:' + uuidv4());
+        }
+        bom.att('version', 1);
+        let componentsNode = bom.ele('components');
+        if (components.length > 0) {
+            componentsNode.ele(components);
+        }
+        let bomString = bom.end({
+            pretty: true,
+            indent: '  ',
+            newline: '\n',
+            width: 0,
+            allowEmpty: false,
+            spacebeforeslash: ''
+        });
+        callback(null, bomString);
     }
-    let bomString = bom.end({
-        pretty: true,
-        indent: '  ',
-        newline: '\n',
-        width: 0,
-        allowEmpty: false,
-        spacebeforeslash: ''
-    });
-    callback(null, bomString);
 });
+
+exports.mergebom = function mergebom(doc, additionalDoc) {
+    let additionalDocComponents = additionalDoc.getElementsByTagName("component");
+    // appendChild actually removes the element from additionalDocComponents
+    // which is why we use a while loop instead of a for loop
+    while (additionalDocComponents.length > 0) {
+        doc.getElementsByTagName("components")[0].appendChild(
+          additionalDocComponents[0]
+        );
+    }
+    return true;
+};
