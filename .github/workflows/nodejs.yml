@@ -5,10 +5,11 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [8.x, 10.x, 12.x]
 
     steps:
@@ -18,7 +19,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: npm install, build, and test
+      # first three lines are a workaround for issue #32 so tests run correctly
       run: |
+        cd tests/with-packages
+        npm install
+        cd ../..
         npm install
         npm run build --if-present
         npm test
