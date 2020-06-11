@@ -4,6 +4,7 @@ const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
 const licenseMapping = require("./license-mapping.json");
+const knownLicenses = require("./known-licenses.json");
 
 /**
  * Method to get files matching a pattern
@@ -321,11 +322,16 @@ exports.parseReqFile = parseReqFile;
 /**
  * Method to retrieve repo license by querying github api
  *
- * @param {Array} pkgList Package list
+ * @param {String} repoUrl Repository url
+ * @param {Object} repoMetadata Object containing group and package name strings
  * @return {String} SPDX license id
  */
-const getRepoLicense = async function (repoUrl) {
-  if (repoUrl && repoUrl.indexOf("github.com") > -1) {
+const getRepoLicense = async function (repoUrl, repoMetadata) {
+  if (!repoUrl) {
+    return undefined;
+  }
+  // Perform github lookups
+  if (repoUrl.indexOf("github.com") > -1) {
     let apiUrl = repoUrl.replace(
       "https://github.com",
       "https://api.github.com/repos"
@@ -362,6 +368,17 @@ const getRepoLicense = async function (repoUrl) {
     } catch (err) {
       return undefined;
     }
+  } else if (repoMetadata) {
+    const group = repoMetadata.group;
+    const name = repoMetadata.name;
+    if (group && name) {
+      for (let i in knownLicenses) {
+        const akLic = knownLicenses[i];
+        if (akLic.group === group && akLic.name === name) {
+          return akLic.license;
+        }
+      }
+    }
   }
   return undefined;
 };
@@ -382,7 +399,10 @@ const parseGosumData = async function (gosumData) {
       const name = path.basename(tmpA[0]);
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
-      const license = await getRepoLicense("https://" + tmpA[0]);
+      const license = await getRepoLicense("https://" + tmpA[0], {
+        group: group,
+        name: name,
+      });
       pkgList.push({
         group: group,
         name: name,
@@ -424,7 +444,10 @@ const parseGopkgData = async function (gopkgData) {
         case "name":
           pkg.group = path.dirname(value);
           pkg.name = path.basename(value);
-          pkg.license = await getRepoLicense("https://" + value);
+          pkg.license = await getRepoLicense("https://" + value, {
+            group: pkg.group,
+            name: pkg.name,
+          });
           break;
         case "version":
           pkg.version = value;

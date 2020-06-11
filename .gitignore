@@ -108,3 +108,4 @@ dist
 
 .tool-versions
 .idea/
+test/obj

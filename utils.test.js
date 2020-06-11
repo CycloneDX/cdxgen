@@ -112,6 +112,7 @@ test("parseGosumData", async () => {
   expect(dep_list[0]).toEqual({
     group: "cloud.google.com",
     name: "go",
+    license: "Apache-2.0",
     version: "v0.38.0",
     _integrity: "sha256-990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=",
   });
@@ -129,6 +130,7 @@ test("parseGopkgData", async () => {
   expect(dep_list[0]).toEqual({
     group: "cloud.google.com",
     name: "go",
+    license: "Apache-2.0",
     version: "v0.39.0",
     _integrity:
       "sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
@@ -238,6 +240,15 @@ test("get repo license", async () => {
   );
   expect(license).toEqual("GPL-3.0-or-later");
 
-  license = await utils.getRepoLicense("https://github.com/AppThreat/cdxgen");
+  license = await utils.getRepoLicense("https://github.com/AppThreat/cdxgen", {
+    group: "",
+    name: "cdxgen",
+  });
+  expect(license).toEqual("Apache-2.0");
+
+  license = await utils.getRepoLicense("https://cloud.google.com/go", {
+    group: "cloud.google.com",
+    name: "go",
+  });
   expect(license).toEqual("Apache-2.0");
 });
