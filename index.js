@@ -49,6 +49,7 @@ function getLicenses(pkg) {
           })
         ) {
           licenseContent.id = l;
+          licenseContent.url = "https://opensource.org/licenses/" + l;
         } else if (l.startsWith("http")) {
           licenseContent.url = l;
         } else {

@@ -402,7 +402,11 @@ const getGoPkgLicense = async function (repoMetadata) {
     const res = await got.get(pkgUrlPrefix);
     if (res && res.body) {
       const $ = cheerio.load(res.body);
-      return $("#LICENSE > h2").text();
+      let licenses = $("#LICENSE > h2").text();
+      if (licenses === "") {
+        licenses = $("section.License > h2").text();
+      }
+      return licenses.split(", ");
     }
   } catch (err) {
     return undefined;
