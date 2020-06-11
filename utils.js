@@ -374,7 +374,12 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
     if (group && name) {
       for (let i in knownLicenses) {
         const akLic = knownLicenses[i];
-        if (akLic.group === group && akLic.name === name) {
+        if (akLic.group === "." && akLic.name === name) {
+          return akLic.license;
+        } else if (
+          group.includes(akLic.group) &&
+          (akLic.name === name || akLic.name === "*")
+        ) {
           return akLic.license;
         }
       }
