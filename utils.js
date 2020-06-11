@@ -5,6 +5,7 @@ const got = require("got");
 const convert = require("xml-js");
 const licenseMapping = require("./license-mapping.json");
 const knownLicenses = require("./known-licenses.json");
+const cheerio = require("cheerio");
 
 /**
  * Method to get files matching a pattern
@@ -389,6 +390,27 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
 };
 exports.getRepoLicense = getRepoLicense;
 
+const getGoPkgLicense = async function (repoMetadata) {
+  const group = repoMetadata.group;
+  const name = repoMetadata.name;
+  let pkgUrlPrefix = "https://pkg.go.dev/";
+  if (group && group !== ".") {
+    pkgUrlPrefix = pkgUrlPrefix + group + "/";
+  }
+  pkgUrlPrefix = pkgUrlPrefix + name + "?tab=licenses";
+  try {
+    const res = await got.get(pkgUrlPrefix);
+    if (res && res.body) {
+      const $ = cheerio.load(res.body);
+      return $("#LICENSE > h2").text();
+    }
+  } catch (err) {
+    return undefined;
+  }
+  return undefined;
+};
+exports.getGoPkgLicense = getGoPkgLicense;
+
 const parseGosumData = async function (gosumData) {
   const pkgList = [];
   if (!gosumData) {
@@ -404,7 +426,7 @@ const parseGosumData = async function (gosumData) {
       const name = path.basename(tmpA[0]);
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
-      const license = await getRepoLicense("https://" + tmpA[0], {
+      const license = await getGoPkgLicense({
         group: group,
         name: name,
       });
@@ -449,7 +471,7 @@ const parseGopkgData = async function (gopkgData) {
         case "name":
           pkg.group = path.dirname(value);
           pkg.name = path.basename(value);
-          pkg.license = await getRepoLicense("https://" + value, {
+          pkg.license = await getGoPkgLicense({
             group: pkg.group,
             name: pkg.name,
           });

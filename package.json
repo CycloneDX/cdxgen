@@ -51,6 +51,7 @@
     "url": "https://github.com/AppThreat/cdxgen/issues"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "glob": "^7.1.6",
     "got": "^10.7.0",
     "packageurl-js": "^0.0.1",
