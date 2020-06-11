@@ -68,7 +68,8 @@
     "*.js",
     "bin/",
     "spdx-licenses.json",
-    "license-mapping.json"
+    "license-mapping.json",
+    "known-licenses.json"
   ],
   "devDependencies": {
     "jest": "^25.1.0"
