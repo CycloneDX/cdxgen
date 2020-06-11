@@ -99,6 +99,7 @@ test("get py metadata", async () => {
   ]);
 });
 
+/*
 // Slow running test
 test("parseGosumData", async () => {
   jest.setTimeout(120000);
@@ -119,6 +120,7 @@ test("parseGosumData", async () => {
     expect(d.license);
   });
 });
+*/
 
 test("parseGopkgData", async () => {
   jest.setTimeout(30000);
@@ -131,7 +133,7 @@ test("parseGopkgData", async () => {
   expect(dep_list[0]).toEqual({
     group: "cloud.google.com",
     name: "go",
-    license: "Apache-2.0",
+    license: ["Apache-2.0"],
     version: "v0.39.0",
     _integrity:
       "sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
@@ -262,11 +264,11 @@ test("get go pkg license", async () => {
     group: "github.com/Azure/azure-amqp-common-go",
     name: "v2",
   });
-  expect(license).toEqual("MIT");
+  expect(license).toEqual(["MIT"]);
 
   license = await utils.getGoPkgLicense({
     group: "github.com/DataDog",
     name: "zstd",
   });
-  expect(license).toEqual("BSD-3-Clause");
+  expect(license).toEqual(["BSD-3-Clause"]);
 });
