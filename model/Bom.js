@@ -43,7 +43,7 @@ class Bom {
     let list = {};
     let isRootPkg = true;
     this.addComponent(pkg, list, isRootPkg);
-    return Object.keys(list).map(k => ({ component: list[k] }));
+    return Object.keys(list).map(k => (list[k]));
   }
 
   /**
@@ -54,7 +54,7 @@ class Bom {
     //if a package is marked as extraneous, do not include it as a component
     if(pkg.extraneous) return;
     if(!isRootPkg) {
-      let component = new Component(pkg, this.includeLicenseText).toXML();
+      let component = new Component(pkg, this.includeLicenseText);
       if (component.externalReferences === undefined || component.externalReferences.length === 0) {
           delete component.externalReferences;
       }
@@ -142,15 +142,16 @@ class Bom {
   }
 
   toJSON() {
-    return {
+    let json = {
       "bomFormat": "CycloneDX",
       "specVersion": this._schemaVersion,
       "serialNumber": this._serialNumber,
       "version": this._version,
       "components": [
-        //this._components TODO
+        this._components
       ]
     };
+    return JSON.stringify(json, null, 2);
   }
 
   toXML() {
@@ -162,7 +163,11 @@ class Bom {
     bom.att('version', this._version);
     let componentsNode = bom.ele('components');
     if (this._components.length > 0) {
-      componentsNode.ele(this._components);
+      let value = [];
+      for (let component of this._components) {
+        value.push(component.toXML());
+      }
+      componentsNode.ele(value);
     }
     return bom.end({
       pretty: true,

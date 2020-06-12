@@ -67,8 +67,7 @@ bomHelpers.createbom(includeSerialNumber, includeLicenseText, filePath, options,
         let xmlString = xmlFormat(doc.toString(), xmlOptions);
         fs.writeFile(output, xmlString, () => {});
     } else if (output.endsWith(".json")) {
-        let jsonString = JSON.stringify(bom.toJSON(), null, 2);
-        fs.writeFile(output, jsonString, () => {});
+        fs.writeFile(output, bom.toJSON(), () => {});
     } else {
         console.log("Unsupported file extension. Output filename must end with .xml or .json");
         process.exit(1);

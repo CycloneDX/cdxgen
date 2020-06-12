@@ -139,21 +139,36 @@ class Component {
   }
 
   toJSON() {
-
+    return {
+      'component': {
+        'type': this._type,
+        'bom-ref': this._bomRef,
+        group: this._group,
+        name: this._name,
+        version: this._version,
+        description: this._description,
+        hashes: (this._hashes) ? this._hashes.toJSON() : null,
+        licenses: (this._licenses) ? this._licenses.toJSON() : null,
+        purl: this._purl,
+        externalReferences: (this._externalReferences) ? this._externalReferences.toJSON() : null
+      }
+    };
   }
 
   toXML() {
     return {
-      '@type'            : this._type,
-      '@bom-ref'         : this._bomRef,
-      group              : this._group,
-      name               : this._name,
-      version            : this._version,
-      description        : { '#cdata' : this._description },
-      hashes             : (this._hashes) ? this._hashes.toXML() : null,
-      licenses           : (this._licenses) ? this._licenses.toXML(): null,
-      purl               : this._purl,
-      externalReferences : (this._externalReferences) ? this._externalReferences.toXML() : null,
+      'component': {
+        '@type': this._type,
+        '@bom-ref': this._bomRef,
+        group: this._group,
+        name: this._name,
+        version: this._version,
+        description: {'#cdata': this._description},
+        hashes: (this._hashes) ? this._hashes.toXML() : null,
+        licenses: (this._licenses) ? this._licenses.toXML() : null,
+        purl: this._purl,
+        externalReferences: (this._externalReferences) ? this._externalReferences.toXML() : null
+      }
     };
   }
 }
