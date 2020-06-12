@@ -18,8 +18,17 @@
  */
 class ExternalReference {
 
-  constructor(pkg) {
-    //TODO
+  constructor(type, url, comment) {
+    const validTypes = ["vcs", "issue-tracker", "website", "advisories", "bom", "mailing-list", "social", "chat",
+      "documentation", "support", "distribution", "license", "build-meta", "build-system", "other"];
+
+    if (validTypes.indexOf(type) === -1) {
+      throw "Unsupported reference type";
+    } else {
+      this._type = type;
+      this._url = url;
+      this._comment = comment;
+    }
   }
 
   get url() {
@@ -46,29 +55,12 @@ class ExternalReference {
     this._comment = value;
   }
 
-  /**
-   * Adds external references supported by the package format.
-   */
-  addExternalReferences(pkg) {
-    let externalReferences = [];
-    if (pkg.homepage) {
-      externalReferences.push({'reference': {'@type': 'website', url: pkg.homepage}});
-    }
-    if (pkg.bugs && pkg.bugs.url) {
-      externalReferences.push({'reference': {'@type': 'issue-tracker', url: pkg.bugs.url}});
-    }
-    if (pkg.repository && pkg.repository.url) {
-      externalReferences.push({'reference': {'@type': 'vcs', url: pkg.repository.url}});
-    }
-    return externalReferences;
-  }
-
   toJSON() {
-    //TODO
+    return { reference: { 'type': this._type, 'url': this._url} };
   }
 
   toXML() {
-    //TODO
+    return { reference: { '@type': this._type, 'url': this._url} };
   }
 }
 

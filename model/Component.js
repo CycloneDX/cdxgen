@@ -20,6 +20,7 @@ const parsePackageJsonName = require('parse-packagejson-name');
 const PackageURL = require('packageurl-js');
 const LicenseChoice = require('./LicenseChoice');
 const HashList = require('./HashList');
+const ExternalReferenceList = require('./ExternalReferenceList');
 
 class Component {
 
@@ -36,7 +37,7 @@ class Component {
       this._description = pkg.description;
       this._licenses = new LicenseChoice(pkg, includeLicenseText);
       this._hashes = new HashList(pkg);
-      //this._externalReferences = addExternalReferences; TODO
+      this._externalReferences = new ExternalReferenceList(pkg);
 
       this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString();
     }
@@ -152,7 +153,7 @@ class Component {
       hashes             : (this._hashes) ? this._hashes.toXML() : null,
       licenses           : (this._licenses) ? this._licenses.toXML(): null,
       purl               : this._purl,
-      //externalReferences : addExternalReferences(pkg) TODO
+      externalReferences : (this._externalReferences) ? this._externalReferences.toXML() : null,
     };
   }
 }
