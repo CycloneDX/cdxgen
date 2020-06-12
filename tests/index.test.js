@@ -32,17 +32,15 @@ test('creatbom produces a BOM in JSON format', done => {
   });
 });
 
-/* TODO - broken with refacgtor - consumes all available memory
 test('mergebom includes all dependencies in XML format', done => {
   let additionalBom = fs.readFileSync('./tests/other-bom.xml', "utf-8");
   let additionalDoc = new DomParser().parseFromString(additionalBom);
 
-  bomHelpers.createbom(false, false, './tests/with-packages', {}, (err, bom) => {
-    let doc = new DomParser().parseFromString(bom);
+  bomHelpers.createbom(false, true, './tests/with-packages', {}, (err, bom) => {
+    let doc = new DomParser().parseFromString(bom.toXML());
     bomHelpers.mergebom(doc, additionalDoc);
-    bom = xmlFormat(doc.toString(), xmlOptions);
-    expect(bom).toMatchSnapshot();
+    let result = xmlFormat(doc.toString(), xmlOptions);
+    expect(result).toMatchSnapshot();
     done();
   });
 });
- */
