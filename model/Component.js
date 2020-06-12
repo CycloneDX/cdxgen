@@ -61,40 +61,80 @@ class Component {
     return this._type;
   }
 
+  set type(value) {
+    this._type = value;
+  }
+
   get purl() {
     return this._purl;
+  }
+
+  set purl(value) {
+    this._purl = value;
   }
 
   get bomRef() {
     return this._bomRef;
   }
 
+  set bomRef(value) {
+    this._bomRef = value;
+  }
+
   get group() {
     return this._group;
+  }
+
+  set group(value) {
+    this._group = value;
   }
 
   get name() {
     return this._name;
   }
 
+  set name(value) {
+    this._name = value;
+  }
+
   get version() {
     return this._version;
+  }
+
+  set version(value) {
+    this._version = value;
   }
 
   get licenses() {
     return this._licenses;
   }
 
+  set licenses(value) {
+    this._licenses = value;
+  }
+
   get description() {
     return this._description;
+  }
+
+  set description(value) {
+    this._description = value;
   }
 
   get hashes() {
     return this._hashes;
   }
 
+  set hashes(value) {
+    this._hashes = value;
+  }
+
   get externalReferences() {
     return this._externalReferences;
+  }
+
+  set externalReferences(value) {
+    this._externalReferences = value;
   }
 
   toJSON() {
