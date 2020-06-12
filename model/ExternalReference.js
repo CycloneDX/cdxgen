@@ -18,8 +18,32 @@
  */
 class ExternalReference {
 
-  constructor(props) {
+  constructor(pkg) {
     //TODO
+  }
+
+  get url() {
+    return this._url;
+  }
+
+  set url(value) {
+    this._url = value;
+  }
+
+  get type() {
+    return this._type;
+  }
+
+  set type(value) {
+    this._type = value;
+  }
+
+  get comment() {
+    return this._comment;
+  }
+
+  set comment(value) {
+    this._comment = value;
   }
 
   /**
