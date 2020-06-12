@@ -1565,7 +1565,7 @@ exports[`creatbom produces a BOM in JSON format 1`] = `
 
 exports[`createbom produces a BOM with development dependencies 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
-<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.1\\" version=\\"1\\">
   <components>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
       <name>packageurl-js</name>
@@ -3882,7 +3882,7 @@ SOFTWARE.
 
 exports[`createbom produces a BOM without development dependencies 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
-<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.1\\" version=\\"1\\">
   <components>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
       <name>packageurl-js</name>
@@ -3909,7 +3909,7 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
         <reference type=\\"vcs\\">
           <url>git+https://github.com/package-url/packageurl-js.git</url>
         </reference>
-createbom produces a BOM without development dependencies      </externalReferences>
+      </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.2\\">
       <name>urijs</name>
@@ -6148,14 +6148,14 @@ http://www.gnu.org/licenses/lgpl.html
 
 exports[`createbom produces an empty BOM 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
-<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.1\\" version=\\"1\\">
   <components/>
 </bom>"
 `;
 
 exports[`mergebom includes all dependencies in XML format 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
-<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.1\\" version=\\"1\\">
     <components>
         <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
             <name>packageurl-js</name>
