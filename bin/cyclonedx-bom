@@ -1,105 +1,76 @@
 #!/usr/bin/env node
-
+/*
+ * This file is part of CycloneDX Node Module.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright (c) Steve Springett. All Rights Reserved.
+ */
+const commander = require('commander');
+const program = require('../package.json');
 const bomHelpers = require("../index.js");
 const fs = require("fs");
-const path = require("path");
 const xmlFormat = require("prettify-xml");
 const xmlOptions = {indent: 4, newline: "\n"};
 const DomParser = require('xmldom').DOMParser;
 
-let arguments = process.argv.slice(2);
-const knownArguments = [
-    "-h",
-    "-a",
-    "-o",
-    "-j",
-    "-ns",
-    "-d",
-    "--version",
-];
-let unknownOptions = arguments.filter(x => x.startsWith("-")).filter(x => !knownArguments.includes(x));
-if (arguments.includes("-h") || unknownOptions.length > 0) {
-    if (unknownOptions.length > 0) {
-        console.warn("ERROR: Unknown option(s) " + unknownOptions.join(" ") );
-    }
-    console.log("Usage:  cyclonedx-bom [OPTIONS] [path]");
-    console.log("Options:");
-    console.log("  -h        - this help");
-    console.log("  -a <path> - merge in additional modules from other scanner (only supported for XML format)");
-    console.log("  -o <path> - write to file instead of stdout");
-    console.log("  -j        - output JSON instead of XML");
-    console.log("  -ns       - do not generate bom serial number");
-    console.log("  -d        - include devDependencies");
-    console.log("  --version - print version number");
-    process.exit(0);
+commander
+  .description(program.description)
+  .version(program.version, '-v, --version')
+  .usage('[OPTIONS] [path]')
+  .option('-a, --append <bom.xml>', 'Merge BOM(s) into the current BOM', commaSeparatedList, [])
+  .option('-d, --include-dev', "Include devDependencies", false)
+  .option('-l, --include-license-text', "Include full license text", false)
+  .option('-o, --output <output>', "Write BOM to file", "bom.xml")
+  .option('-ns, --no-serial-number', "Do not include BOM serial number", true)
+  .parse(process.argv);
+
+function commaSeparatedList(value, previous) {
+    return value.split(',');
 }
 
-let includeBomSerialNumber = true; // The default
+let filePath = commander.args[0] || '.';
+let additionalBoms = commander.append;
+let includeSerialNumber = commander.serialNumber;
+let includeLicenseText = commander.includeLicenseText;
+let output = commander.output;
 
-let printVersion = arguments.indexOf("--version");
-if (printVersion > -1) {
-    const packageJsonAsString = fs.readFileSync(path.join(__dirname, '../', 'package.json'), "utf-8");
-    const packageJson = JSON.parse(packageJsonAsString);
-
-    console.log(packageJson.version);
-    process.exit(0);
-}
-
-let ns = arguments.indexOf("-ns");
-if (ns > -1) {
-    includeBomSerialNumber = false;
-    arguments = arguments.slice(0,ns).concat(arguments.slice(ns+1));
-}
-
-let a = arguments.indexOf("-a");
-let additionalBoms = [];
-while (a > -1) {
-    additionalBoms.push(arguments[a+1]);
-    arguments = arguments.slice(0,a).concat(arguments.slice(a+2));
-    a = arguments.indexOf("-a");
-}
-
-let o = arguments.indexOf("-o");
-let out = null;
-if (o > -1) {
-    out = arguments[o+1];
-    arguments = arguments.slice(0,o).concat(arguments.slice(o+2));
-}
-
-let d = arguments.indexOf("-d");
+// Options are specific to readinstalled
 let options = {};
-if (d > -1) {
-    options.dev = true;
-    arguments = arguments.slice(0,d).concat(arguments.slice(d+1));
-}
-let j = arguments.indexOf("-j");
-if (j > -1) {
-    options.json = true;
-    arguments = arguments.slice(0,j).concat(arguments.slice(j+1));
-}
+options.dev = commander.includeDev;
 
-
-let filePath = arguments[0] || '.';
-
-bomHelpers.createbom(includeBomSerialNumber, filePath, options, (err, bom) => {
-    if (options.json) {
-        if (out) {
-            fs.writeFile(out, bom, () => {});
-        } else {
-            console.log(bom);
-        }
-    } else {
-        let doc = new DomParser().parseFromString(bom);
+/**
+ * Creates a Bom object and writes either XML or JSON.
+ */
+bomHelpers.createbom(includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
+    if (bom.components.length === 0) {
+        console.log("There are no components in the BOM. The project may not contain dependencies or node_modules does not exist. Executing `npm install` prior to CycloneDX may solve the issue.")
+    }
+    if (output.endsWith(".xml")) {
+        let doc = new DomParser().parseFromString(bom.toXML());
         for (let index = 0; index < additionalBoms.length; index++) {
             let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
             let additionalDoc = new DomParser().parseFromString(additionalBom);
             bomHelpers.mergebom(doc, additionalDoc);
         }
-        bom = xmlFormat(doc.toString(), xmlOptions);
-        if (out) {
-            fs.writeFile(out, bom, () => {});
-        } else {
-            console.log(bom);
-        }
+        let xmlString = xmlFormat(doc.toString(), xmlOptions);
+        fs.writeFile(output, xmlString, () => {});
+    } else if (output.endsWith(".json")) {
+        let jsonString = JSON.stringify(bom.toJSON(), null, 2);
+        fs.writeFile(output, jsonString, () => {});
+    } else {
+        console.log("Unsupported file extension. Output filename must end with .xml or .json");
+        process.exit(1);
     }
 });
