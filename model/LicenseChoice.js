@@ -77,7 +77,9 @@ class LicenseChoice {
         for (const [licenseContentType, fileExtension] of Object.entries(licenseContentTypes)) {
           let licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
           if (fs.existsSync(licenseFilepath)) {
-            licenseObject.attachmentText = this.createAttachmentText(licenseFilepath, licenseContentType);
+            // 'text/plain' is the default in the spec. No need to specify it.
+            let contentType = (licenseContentType === 'text/plain') ? null : licenseContentType;
+            licenseObject.attachmentText = this.createAttachmentText(licenseFilepath, contentType);
           }
         }
       }
