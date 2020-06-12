@@ -29,11 +29,11 @@ class Component {
       this._type = this.determinePackageType(pkg);
 
       let pkgIdentifier = parsePackageJsonName(pkg.name);
-      this._group = pkgIdentifier.scope;
-      if (this._group != null) this._group = '@' + this._group;
-      this._name = pkgIdentifier.fullName;
-      this._version = pkg.version;
-      this._description = pkg.description;
+      this._group = (pkgIdentifier.scope) ? pkgIdentifier.scope : undefined;
+      if (this._group) this._group = '@' + this._group;
+      this._name = (pkgIdentifier.fullName) ? pkgIdentifier.fullName : undefined;
+      this._version = (pkg.version) ? pkg.version : undefined;
+      this._description = (pkg.description) ? pkg.description : undefined;
       this._licenses = new LicenseChoice(pkg, includeLicenseText);
       this._hashes = new HashList(pkg);
       this._externalReferences = new ExternalReferenceList(pkg);
@@ -140,18 +140,16 @@ class Component {
 
   toJSON() {
     return {
-      'component': {
-        'type': this._type,
-        'bom-ref': this._bomRef,
-        group: this._group,
-        name: this._name,
-        version: this._version,
-        description: this._description,
-        hashes: (this._hashes) ? this._hashes.toJSON() : null,
-        licenses: (this._licenses) ? this._licenses.toJSON() : null,
-        purl: this._purl,
-        externalReferences: (this._externalReferences) ? this._externalReferences.toJSON() : null
-      }
+      'type': this._type,
+      'bom-ref': this._bomRef,
+      group: this._group,
+      name: this._name,
+      version: this._version,
+      description: this._description,
+      hashes: (this._hashes) ? this._hashes.toJSON() : null,
+      licenses: (this._licenses) ? this._licenses.toJSON() : null,
+      purl: this._purl,
+      externalReferences: (this._externalReferences) ? this._externalReferences.toJSON() : null
     };
   }
 

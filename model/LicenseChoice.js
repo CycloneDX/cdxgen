@@ -121,11 +121,16 @@ class LicenseChoice {
   }
 
   toJSON() {
-    let value = [];
-    for (let license of this._licenses) {
-      value.push(license.toJSON());
+    if (this._licenses && this._licenses.length > 0) {
+      let value = [];
+      for (let license of this._licenses) {
+        value.push(license.toJSON());
+      }
+      return value;
+    } else if (this._expression) {
+      return this._expression;
     }
-    return value;
+    return undefined;
   }
 
   toXML() {

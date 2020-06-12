@@ -147,9 +147,7 @@ class Bom {
       "specVersion": this._schemaVersion,
       "serialNumber": this._serialNumber,
       "version": this._version,
-      "components": [
-        this._components
-      ]
+      "components": this._components
     };
     return JSON.stringify(json, null, 2);
   }
