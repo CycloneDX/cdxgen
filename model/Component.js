@@ -27,7 +27,6 @@ class Component {
   constructor(pkg, includeLicenseText = true) {
     if (pkg) {
       this._type = this.determinePackageType(pkg);
-      this._bomRef = this._purl;
 
       let pkgIdentifier = parsePackageJsonName(pkg.name);
       this._group = pkgIdentifier.scope;
@@ -40,6 +39,7 @@ class Component {
       this._externalReferences = new ExternalReferenceList(pkg);
 
       this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString();
+      this._bomRef = this._purl;
     }
   }
 
