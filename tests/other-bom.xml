@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bom version="1" serialNumber="urn:uuid:3a0e55bf-50a9-451b-99df-f9051110127d" xmlns="http://cyclonedx.org/schema/bom/1.1">
+<bom version="1" serialNumber="urn:uuid:3a0e55bf-50a9-451b-99df-f9051110127d" xmlns="http://cyclonedx.org/schema/bom/1.2">
   <components>
     <component type="library">
       <name>Castle.Core</name>
@@ -96,7 +96,7 @@ Commonly Used Types:
 System.IAsyncDisposable
 System.Collections.Generic.IAsyncEnumerable
 System.Collections.Generic.IAsyncEnumerator
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -190,7 +190,7 @@ Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
 Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -242,8 +242,8 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.App</name>
       <version>2.1.0</version>
-      <description><![CDATA[A set of .NET API's that are included in the default .NET Core application model. 
-caa7b7e2bad98e56a687fb5cbaf60825500800f7 
+      <description><![CDATA[A set of .NET API's that are included in the default .NET Core application model.
+caa7b7e2bad98e56a687fb5cbaf60825500800f7
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -261,8 +261,8 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.DotNetAppHost</name>
       <version>2.1.0</version>
-      <description><![CDATA[Provides the .NET Core app bootstrapper intended for use in the application directory 
-caa7b7e2bad98e56a687fb5cbaf60825500800f7 
+      <description><![CDATA[Provides the .NET Core app bootstrapper intended for use in the application directory
+caa7b7e2bad98e56a687fb5cbaf60825500800f7
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -280,8 +280,8 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.DotNetHostPolicy</name>
       <version>2.1.0</version>
-      <description><![CDATA[Provides a CoreCLR hosting policy implementation -- configuration settings, assembly paths and assembly servicing 
-caa7b7e2bad98e56a687fb5cbaf60825500800f7 
+      <description><![CDATA[Provides a CoreCLR hosting policy implementation -- configuration settings, assembly paths and assembly servicing
+caa7b7e2bad98e56a687fb5cbaf60825500800f7
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -299,8 +299,8 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.DotNetHostResolver</name>
       <version>2.1.0</version>
-      <description><![CDATA[Provides an implementation of framework resolution strategy used by Microsoft.NETCore.DotNetHost 
-caa7b7e2bad98e56a687fb5cbaf60825500800f7 
+      <description><![CDATA[Provides an implementation of framework resolution strategy used by Microsoft.NETCore.DotNetHost
+caa7b7e2bad98e56a687fb5cbaf60825500800f7
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -318,7 +318,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.Platforms</name>
       <version>1.1.0</version>
-      <description><![CDATA[Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+      <description><![CDATA[Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -336,7 +336,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.Platforms</name>
       <version>3.1.0</version>
-      <description><![CDATA[Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+      <description><![CDATA[Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -354,7 +354,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.Targets</name>
       <version>1.1.0</version>
-      <description><![CDATA[Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these. 
+      <description><![CDATA[Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -372,8 +372,8 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>Microsoft.NETCore.Targets</name>
       <version>2.1.0</version>
-      <description><![CDATA[Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these. 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
+      <description><![CDATA[Provides supporting infrastructure for portable projects: support identifiers that define framework and runtime for support targets and packages that reference the minimum supported package versions when targeting these.
+30ab651fcb4354552bd4891619a0bdd81e0ebdbf
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -446,7 +446,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.ComponentModel.Win32Exception
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -472,7 +472,7 @@ Microsoft.Win32.Registry
 Microsoft.Win32.RegistryValueKind
 Microsoft.Win32.RegistryHive
 Microsoft.Win32.RegistryView
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -506,7 +506,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>NETStandard.Library</name>
       <version>1.6.1</version>
-      <description><![CDATA[A set of standard .NET APIs that are prescribed to be used and supported together. This includes all of the APIs in the NETStandard.Platform package plus additional libraries that are core to .NET but built on top of NETStandard.Platform. 
+      <description><![CDATA[A set of standard .NET APIs that are prescribed to be used and supported together. This includes all of the APIs in the NETStandard.Platform package plus additional libraries that are core to .NET but built on top of NETStandard.Platform.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -524,8 +524,8 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>NETStandard.Library</name>
       <version>2.0.3</version>
-      <description><![CDATA[A set of standard .NET APIs that are prescribed to be used and supported together. 
-18a36291e48808fa7ef2d00a764ceb1ec95645a5 
+      <description><![CDATA[A set of standard .NET APIs that are prescribed to be used and supported together.
+18a36291e48808fa7ef2d00a764ceb1ec95645a5
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -746,7 +746,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -764,7 +764,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -782,7 +782,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -800,7 +800,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.native.System</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -818,7 +818,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.native.System.IO.Compression</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -836,7 +836,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.native.System.Net.Http</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -854,7 +854,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.native.System.Security.Cryptography.Apple</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -872,7 +872,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -890,7 +890,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -908,7 +908,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -926,7 +926,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -944,7 +944,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -962,7 +962,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -980,7 +980,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -998,7 +998,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1016,7 +1016,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
     <component type="library">
       <name>runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl</name>
       <version>4.3.0</version>
-      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly. 
+      <description><![CDATA[Internal implementation package not meant for direct consumption.  Please do not reference directly.
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1073,7 +1073,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.AppContext
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1095,7 +1095,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.Buffers.ArrayPool<T>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1117,8 +1117,8 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.Buffers.ArrayPool<T>
- 
-7601f4f6225089ffb291dc7d58293c7bbf5c5d4f 
+
+7601f4f6225089ffb291dc7d58293c7bbf5c5d4f
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1148,7 +1148,7 @@ System.Collections.Generic.LinkedList<T>
 System.Collections.Generic.EqualityComparer<T>
 System.Collections.Generic.Comparer<T>
 System.Collections.Generic.SortedDictionary<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1174,7 +1174,7 @@ System.Collections.Concurrent.ConcurrentQueue<T>
 System.Collections.Concurrent.ConcurrentBag<T>
 System.Collections.Concurrent.BlockingCollection<T>
 System.Collections.Concurrent.ConcurrentStack<T>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1205,7 +1205,7 @@ System.Collections.DictionaryBase
 System.Collections.Queue
 System.Collections.Comparer
 System.Collections.CaseInsensitiveComparer
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1235,7 +1235,7 @@ System.Collections.Specialized.OrderedDictionary
 System.Collections.Specialized.ListDictionary
 System.Collections.Specialized.StringDictionary
 System.Collections.Specialized.BitVector32
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1261,7 +1261,7 @@ System.IServiceProvider
 System.ComponentModel.IEditableObject
 System.ComponentModel.IChangeTracking
 System.ComponentModel.IRevertibleChangeTracking
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1292,7 +1292,7 @@ System.ComponentModel.DataAnnotations.RegularExpressionAttribute
 System.ComponentModel.DataAnnotations.DataTypeAttribute
 System.ComponentModel.DataAnnotations.RangeAttribute
 System.ComponentModel.DataAnnotations.KeyAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1317,7 +1317,7 @@ System.ComponentModel.IComponent
 System.ComponentModel.IContainer
 System.ComponentModel.ISite
 System.ComponentModel.ComponentCollection
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1348,7 +1348,7 @@ System.ComponentModel.TypeDescriptor
 System.ComponentModel.Int32Converter
 System.ComponentModel.BooleanConverter
 System.ComponentModel.DoubleConverter
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1371,7 +1371,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Console
 System.ConsoleColor
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1401,7 +1401,7 @@ System.Diagnostics.DebuggerBrowsableState
 System.Diagnostics.DebuggerHiddenAttribute
 System.Diagnostics.DebuggerNonUserCodeAttribute
 System.Diagnostics.DebuggerTypeProxyAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1447,7 +1447,7 @@ System.Diagnostics.Process
 System.Diagnostics.ProcessModule
 System.Diagnostics.ProcessStartInfo
 System.Diagnostics.ProcessThread
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1470,7 +1470,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.CodeDom.Compiler.GeneratedCodeAttribute
 System.Diagnostics.CodeAnalysis.SuppressMessageAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1493,7 +1493,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.CodeDom.Compiler.GeneratedCodeAttribute
 System.Diagnostics.CodeAnalysis.SuppressMessageAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1520,7 +1520,7 @@ System.Diagnostics.TraceSource
 System.Diagnostics.TraceEventType
 System.Diagnostics.DefaultTraceListener
 System.Diagnostics.Trace
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1549,7 +1549,7 @@ System.Diagnostics.Tracing.EventWrittenEventArgs
 System.Diagnostics.Tracing.EventAttribute
 System.Diagnostics.Tracing.EventSourceAttribute
 System.Diagnostics.Tracing.NonEventAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1580,7 +1580,7 @@ System.Dynamic.ExpandoObject
 System.Dynamic.DynamicObject
 System.Runtime.CompilerServices.CallSiteBinder
 System.Runtime.CompilerServices.ConditionalWeakTable<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1610,7 +1610,7 @@ System.Globalization.Calendar
 System.Globalization.CompareInfo
 System.Globalization.CompareOptions
 System.Globalization.UnicodeCategory
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1641,7 +1641,7 @@ System.Globalization.JapaneseCalendar
 System.Globalization.GregorianCalendarTypes
 System.Globalization.PersianCalendar
 System.Globalization.UmAlQuraCalendar
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1665,7 +1665,7 @@ Commonly Used Types:
 System.StringNormalizationExtensions
 System.Text.NormalizationForm
 System.Globalization.IdnMapping
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1694,7 +1694,7 @@ System.IO.StreamWriter
 System.IO.StringWriter
 System.IO.TextWriter
 System.IO.TextReader
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1756,7 +1756,7 @@ System.IO.Compression.CompressionLevel
 System.IO.Compression.ZipArchiveEntry
 System.IO.Compression.ZipArchive
 System.IO.Compression.ZipArchiveMode
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1778,7 +1778,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.IO.Compression.ZipFile
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1807,7 +1807,7 @@ System.IO.File
 System.IO.Directory
 System.IO.SearchOption
 System.IO.FileOptions
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1835,7 +1835,7 @@ System.Security.AccessControl.FileSystemAccessRule
 System.Security.AccessControl.FileSystemAuditRule
 System.Security.AccessControl.FileSystemRights
 System.Security.AccessControl.FileSystemSecurity
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1863,7 +1863,7 @@ System.IO.PathTooLongException
 System.IO.FileMode
 System.IO.FileShare
 System.IO.FileAttributes
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1889,7 +1889,7 @@ System.Linq.IGrouping<TKey, TElement>
 System.Linq.IOrderedEnumerable<TElement>
 System.Linq.ILookup<TKey, TElement>
 System.Linq.Lookup<TKey, TElement>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1915,7 +1915,7 @@ System.Linq.IQueryable
 System.Linq.Expressions.Expression<TDelegate>
 System.Linq.Expressions.Expression
 System.Linq.Expressions.ExpressionVisitor
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1944,8 +1944,8 @@ System.Buffers.MemoryPool
 System.Buffers.ReadOnlySequence
 System.Buffers.Text.Utf8Parser
 System.Buffers.Text.Utf8Formatter
- 
-7601f4f6225089ffb291dc7d58293c7bbf5c5d4f 
+
+7601f4f6225089ffb291dc7d58293c7bbf5c5d4f
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -1976,7 +1976,7 @@ System.Net.Http.HttpClientHandler
 System.Net.Http.StreamContent
 System.Net.Http.FormUrlEncodedContent
 System.Net.Http.HttpMessageHandler
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2007,7 +2007,7 @@ System.Net.NetworkCredential
 System.Net.IPAddress
 System.Net.CookieCollection
 System.Net.CookieContainer
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2038,7 +2038,7 @@ System.Net.Sockets.TcpClient
 System.Net.Sockets.SocketType
 System.Net.Sockets.UdpClient
 System.Net.Sockets.SocketShutdown
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2068,7 +2068,7 @@ System.Numerics.Vector3
 System.Numerics.Vector4
 System.Numerics.Vector
 System.Numerics.Vector<T>
- 
+
 30ab651fcb4354552bd4891619a0bdd81e0ebdbf]]></description>
       <licenses>
         <license>
@@ -2099,7 +2099,7 @@ System.Collections.Specialized.NotifyCollectionChangedEventHandler
 System.Collections.ObjectModel.KeyedCollection<TKey, TItem>
 System.ComponentModel.PropertyChangedEventArgs
 System.Collections.ObjectModel.ReadOnlyDictionary<TKey, TValue>
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2129,7 +2129,7 @@ System.Reflection.Assembly
 System.Reflection.MemberInfo
 System.Reflection.EventInfo
 System.Reflection.Module
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2160,7 +2160,7 @@ System.Reflection.Emit.ModuleBuilder
 System.Reflection.Emit.PropertyBuilder
 System.Reflection.Emit.AssemblyBuilderAccess
 System.Reflection.Emit.EventBuilder
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2187,7 +2187,7 @@ System.Reflection.Emit.CustomAttributeBuilder
 System.Reflection.Emit.LocalBuilder
 System.Reflection.Emit.ParameterBuilder
 System.Reflection.Emit.SignatureHelper
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2209,7 +2209,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.Reflection.Emit.DynamicMethod
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2233,7 +2233,7 @@ Commonly Used Types:
 System.Reflection.InterfaceMapping
 System.Reflection.CustomAttributeExtensions
 System.Reflection.RuntimeReflectionExtensions
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2264,7 +2264,7 @@ System.Reflection.EventAttributes
 System.Reflection.ParameterAttributes
 System.Reflection.GenericParameterAttributes
 System.Reflection.MethodImplAttributes
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2287,7 +2287,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Reflection.TypeExtensions
 System.Reflection.BindingFlags
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2312,7 +2312,7 @@ System.Resources.ResourceManager
 System.Resources.NeutralResourcesLanguageAttribute
 System.Resources.SatelliteContractVersionAttribute
 System.Resources.MissingManifestResourceException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2353,7 +2353,7 @@ System.UInt32
 System.UInt64
 System.IDisposable
 System.Uri
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2375,7 +2375,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.Runtime.CompilerServices.Unsafe
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2405,7 +2405,7 @@ System.Diagnostics.Stopwatch
 System.Runtime.Versioning.FrameworkName
 System.StringComparer
 System.IO.Path
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2431,7 +2431,7 @@ Microsoft.Win32.SafeHandles.SafeWaitHandle
 System.Runtime.InteropServices.CriticalHandle
 System.Threading.WaitHandleExtensions
 System.IO.HandleInheritability
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2457,7 +2457,7 @@ System.Runtime.InteropServices.GuidAttribute
 System.Runtime.InteropServices.COMException
 System.DllNotFoundException
 System.Runtime.InteropServices.DllImportAttribute
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2480,7 +2480,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Runtime.InteropServices.RuntimeInformation
 System.Runtime.InteropServices.OSPlatform
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2503,7 +2503,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Numerics.BigInteger
 System.Numerics.Complex
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2534,7 +2534,7 @@ System.Runtime.Serialization.DataMemberAttribute
 System.Runtime.Serialization.DataContractAttribute
 System.Runtime.Serialization.IgnoreDataMemberAttribute
 System.Runtime.Serialization.SerializationException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2560,7 +2560,7 @@ System.Security.AccessControl.AuditRule
 System.Security.AccessControl.ObjectAccessRule
 System.Security.AccessControl.ObjectAuditRule
 System.Security.AccessControl.ObjectSecurity
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2593,7 +2593,7 @@ System.Security.Cryptography.HMACSHA256
 System.Security.Cryptography.MD5
 System.Security.Cryptography.HMACSHA384
 System.Security.Cryptography.HMACSHA512
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2617,7 +2617,7 @@ Commonly Used Types:
 System.Security.Cryptography.RSACng
 System.Security.Cryptography.ECDsaCng
 System.Security.Cryptography.CngKey
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2640,7 +2640,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Security.Cryptography.RSACryptoServiceProvider
 System.Security.Cryptography.CspParameters
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2664,7 +2664,7 @@ Commonly Used Types:
 System.Security.Cryptography.AsnEncodedData
 System.Security.Cryptography.Oid
 System.Security.Cryptography.OidCollection
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2686,7 +2686,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 
 Commonly Used Types:
 System.Security.Cryptography.RSAOpenSsl
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2719,7 +2719,7 @@ System.Security.Cryptography.CipherMode
 System.Security.Cryptography.PaddingMode
 System.Security.Cryptography.CryptoStream
 System.Security.Cryptography.CryptoStreamMode
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2742,7 +2742,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Security.Cryptography.DataProtectionScope
 System.Security.Cryptography.ProtectedData
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2773,7 +2773,7 @@ System.Security.Cryptography.X509Certificates.X509ChainStatus
 System.Security.Cryptography.X509Certificates.X509Certificate2Collection
 System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension
 System.Security.Cryptography.X509Certificates.X509Chain
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2802,7 +2802,7 @@ System.Security.Principal.IdentityReference
 System.Security.Principal.IdentityNotMappedException
 System.Security.Principal.WindowsBuiltInRole
 System.Security.Principal.WellKnownSidType
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2833,7 +2833,7 @@ System.Text.EncoderFallbackBuffer
 System.Text.DecoderFallback
 System.Text.DecoderFallbackBuffer
 System.Text.DecoderExceptionFallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2859,7 +2859,7 @@ System.Text.UnicodeEncoding
 System.Text.ASCIIEncoding
 System.Text.UTF7Encoding
 System.Text.UTF32Encoding
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2883,7 +2883,7 @@ Commonly Used Types:
 System.Text.Encodings.Web.HtmlEncoder
 System.Text.Encodings.Web.UrlEncoder
 System.Text.Encodings.Web.JavaScriptEncoder
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2909,7 +2909,7 @@ System.Text.Json.JsonDocument
 System.Text.Json.JsonElement
 System.Text.Json.Utf8JsonWriter
 System.Text.Json.Utf8JsonReader
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2936,7 +2936,7 @@ System.Text.RegularExpressions.Match
 System.Text.RegularExpressions.Group
 System.Text.RegularExpressions.Capture
 System.Text.RegularExpressions.MatchEvaluator
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2963,7 +2963,7 @@ System.Text.RegularExpressions.Match
 System.Text.RegularExpressions.Group
 System.Text.RegularExpressions.Capture
 System.Text.RegularExpressions.MatchEvaluator
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -2992,7 +2992,7 @@ System.Threading.ThreadLocal<T>
 System.Threading.EventWaitHandle
 System.Threading.SemaphoreSlim
 System.Threading.Mutex
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3019,7 +3019,7 @@ System.Threading.Tasks.TaskCompletionSource<TResult>
 System.Threading.Tasks.Task
 System.OperationCanceledException
 System.AggregateException
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3061,7 +3061,7 @@ System.Threading.Tasks.ValueTask<TResult>]]></description>
 
 Commonly Used Types:
 System.Threading.Tasks.ValueTask<TResult>
- 
+
 7ee84596d92e178bce54c986df31ccc52479e772]]></description>
       <licenses>
         <license>
@@ -3083,7 +3083,7 @@ System.Threading.Tasks.ValueTask<TResult>
 
 Commonly Used Types:
 System.Threading.Tasks.ValueTask<TResult>
- 
+
 7601f4f6225089ffb291dc7d58293c7bbf5c5d4f]]></description>
       <licenses>
         <license>
@@ -3107,7 +3107,7 @@ Commonly Used Types:
 System.Threading.Thread
 System.Threading.ThreadStart
 System.Threading.ParameterizedThreadStart
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3130,7 +3130,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Threading.ThreadPool
 System.Threading.WaitOrTimerCallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3153,7 +3153,7 @@ When using NuGet 3.x this package requires at least version 3.4.]]></description
 Commonly Used Types:
 System.Threading.Timer
 System.Threading.TimerCallback
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3183,7 +3183,7 @@ System.Xml.XmlNameTable
 System.Xml.IXmlNamespaceResolver
 System.Xml.XmlNamespaceManager
 System.Xml.XmlQualifiedName
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3213,7 +3213,7 @@ System.Xml.XmlNameTable
 System.Xml.IXmlNamespaceResolver
 System.Xml.XmlNamespaceManager
 System.Xml.XmlQualifiedName
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3244,7 +3244,7 @@ System.Xml.Linq.XComment
 System.Xml.Linq.XObject
 System.Xml.Linq.XProcessingInstruction
 System.Xml.Linq.XDocumentType
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3275,7 +3275,7 @@ System.Xml.Linq.XComment
 System.Xml.Linq.XObject
 System.Xml.Linq.XProcessingInstruction
 System.Xml.Linq.XDocumentType
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
@@ -3306,7 +3306,7 @@ System.Xml.XmlComment
 System.Xml.XmlNodeList
 System.Xml.XmlWhitespace
 System.Xml.XmlCDataSection
- 
+
 When using NuGet 3.x this package requires at least version 3.4.]]></description>
       <licenses>
         <license>
