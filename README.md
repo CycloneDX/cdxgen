@@ -42,10 +42,32 @@ Options:
   -h, --help                  display help for command
 ```
 
-#### Example
+#### Example (default: XML)
+```bash
+cyclonedx-bom
+```
+
+#### Example (XML)
 ```bash
 cyclonedx-bom -o bom.xml
 ```
+
+#### Example (JSON)
+```bash
+cyclonedx-bom -o bom.json
+```
+
+## CycloneDX Schema Support
+
+The following table provides information on the version of this node module, the CycloneDX schema version supported, 
+as well as the output format options. Use the latest possible version of this node module that is the compatible with 
+the CycloneDX version supported by the target system.
+
+| Version | Schema Version | Format(s) |
+| ------- | ----------------- | --------- |
+| 2.0.x | CycloneDX v1.2 | XML/JSON |
+| 1.1.x | CycloneDX v1.1 | XML |
+| 1.0x | CycloneDX v1.0 | XML |
 
 License
 -------------------
