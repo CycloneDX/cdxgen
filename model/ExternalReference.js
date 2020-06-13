@@ -56,7 +56,7 @@ class ExternalReference {
   }
 
   toJSON() {
-    return { reference: { 'type': this._type, 'url': this._url} };
+    return { 'type': this._type, 'url': this._url} ;
   }
 
   toXML() {

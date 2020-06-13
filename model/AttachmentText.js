@@ -19,8 +19,8 @@
 class AttachmentText {
 
   constructor(contentType, text, encoding) {
-    this._contentType = contentType;
-    this._text = text;
+    this._contentType = (contentType) ? contentType : undefined;
+    this._text = (text) ? text : undefined;
     this._encoding = this.validateEncoding(encoding);
   }
 
@@ -55,7 +55,11 @@ class AttachmentText {
   }
 
   toJSON() {
-
+    return {
+      'contentType': this._contentType,
+      'encoding': this._encoding,
+      'content': this._text
+    }
   }
 
   toXML() {

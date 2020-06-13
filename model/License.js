@@ -26,7 +26,7 @@ class License {
   }
 
   set id(value) {
-    this._name = null;
+    this._name = undefined;
     this._id = value;
   }
 
@@ -35,7 +35,7 @@ class License {
   }
 
   set name(value) {
-    this._id = null;
+    this._id = undefined;
     this._name = value;
   }
 
@@ -56,7 +56,12 @@ class License {
   }
 
   toJSON() {
-
+    return {
+      id: this._id,
+      name: this._name,
+      text: (this._attachmentText) ? this._attachmentText.toJSON() : undefined,
+      url: this._url
+    }
   }
 
   toXML() {
