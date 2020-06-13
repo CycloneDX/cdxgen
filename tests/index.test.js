@@ -26,8 +26,8 @@ test('createbom produces a BOM with development dependencies', done => {
 });
 
 test('creatbom produces a BOM in JSON format', done => {
-  bomHelpers.createbom(false, true, './tests/with-packages', { json: true }, (err, bom) => {
-    //expect(bom.toJSON()).toMatchSnapshot();
+  bomHelpers.createbom(false, true, './tests/with-packages', {}, (err, bom) => {
+    expect(bom.toJSON()).toMatchSnapshot();
     done();
   });
 });
