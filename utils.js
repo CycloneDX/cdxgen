@@ -4,6 +4,7 @@ const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
 const licenseMapping = require("./license-mapping.json");
+const spdxLicenses = require("./spdx-licenses.json");
 const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
 
@@ -17,6 +18,107 @@ const getAllFiles = function (dirPath, pattern) {
   return glob.sync(pattern, { cwd: dirPath, silent: false, absolute: true });
 };
 exports.getAllFiles = getAllFiles;
+
+/**
+ * Performs a lookup + validation of the license specified in the
+ * package. If the license is a valid SPDX license ID, set the 'id'
+ * and url of the license object, otherwise, set the 'name' of the license
+ * object.
+ */
+function getLicenses(pkg) {
+  let license = pkg.license && (pkg.license.type || pkg.license);
+  if (license) {
+    if (!Array.isArray(license)) {
+      license = [license];
+    }
+    return license
+      .map((l) => {
+        let licenseContent = {};
+        if (typeof l === "string" || l instanceof String) {
+          if (
+            spdxLicenses.some((v) => {
+              return l === v;
+            })
+          ) {
+            licenseContent.id = l;
+            licenseContent.url = "https://opensource.org/licenses/" + l;
+          } else if (l.startsWith("http")) {
+            licenseContent.url = l;
+          } else {
+            licenseContent.name = l;
+          }
+        } else if (Object.keys(l).length) {
+          licenseContent = l;
+        } else {
+          return null;
+        }
+        addLicenseText(pkg, l, licenseContent);
+        return licenseContent;
+      })
+      .map((l) => ({ license: l }));
+  }
+  return null;
+}
+exports.getLicenses = getLicenses;
+
+/**
+ * Tries to find a file containing the license text based on commonly
+ * used naming and content types. If a candidate file is found, add
+ * the text to the license text object and stop.
+ */
+function addLicenseText(pkg, l, licenseContent) {
+  let licenseFilenames = [
+    "LICENSE",
+    "License",
+    "license",
+    "LICENCE",
+    "Licence",
+    "licence",
+    "NOTICE",
+    "Notice",
+    "notice",
+  ];
+  let licenseContentTypes = {
+    "text/plain": "",
+    "text/txt": ".txt",
+    "text/markdown": ".md",
+    "text/xml": ".xml",
+  };
+  /* Loops over different name combinations starting from the license specified
+       naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
+  for (const licenseName of [`.${l}`, ""]) {
+    for (const licenseFilename of licenseFilenames) {
+      for (const [licenseContentType, fileExtension] of Object.entries(
+        licenseContentTypes
+      )) {
+        let licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
+        if (fs.existsSync(licenseFilepath)) {
+          licenseContent.text = readLicenseText(
+            licenseFilepath,
+            licenseContentType
+          );
+          return;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Read the file from the given path to the license text object and includes
+ * content-type attribute, if not default. Returns the license text object.
+ */
+function readLicenseText(licenseFilepath, licenseContentType) {
+  let licenseText = fs.readFileSync(licenseFilepath, "utf8");
+  if (licenseText) {
+    let licenseContentText = { "#cdata": licenseText };
+    if (licenseContentType !== "text/plain") {
+      licenseContentText["@content-type"] = licenseContentType;
+    }
+    return licenseContentText;
+  }
+  return null;
+}
 
 /**
  * Parse pom file
@@ -321,6 +423,26 @@ const parseReqFile = async function (reqData) {
 exports.parseReqFile = parseReqFile;
 
 /**
+ * Method to construct a github url for the given repo
+ * @param {Object} repoMetadata Repo metadata with group and name
+ */
+const toGitHubUrl = function (repoMetadata) {
+  if (repoMetadata) {
+    const group = repoMetadata.group;
+    const name = repoMetadata.name;
+    let ghUrl = "https://github.com";
+    if (group && group !== "." && group != "") {
+      ghUrl = ghUrl + "/" + group.replace("github.com/", "");
+    }
+    ghUrl = ghUrl + "/" + name;
+    return ghUrl;
+  } else {
+    return undefined;
+  }
+};
+exports.toGitHubUrl = toGitHubUrl;
+
+/**
  * Method to retrieve repo license by querying github api
  *
  * @param {String} repoUrl Repository url
@@ -329,7 +451,7 @@ exports.parseReqFile = parseReqFile;
  */
 const getRepoLicense = async function (repoUrl, repoMetadata) {
   if (!repoUrl) {
-    return undefined;
+    repoUrl = toGitHubUrl(repoMetadata);
   }
   // Perform github lookups
   if (repoUrl.indexOf("github.com") > -1) {
@@ -350,6 +472,9 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
       if (res && res.body) {
         const license = res.body.license;
         let licenseId = license.spdx_id;
+        const licObj = {
+          url: res.body.html_url,
+        };
         if (license.spdx_id === "NOASSERTION") {
           if (res.body.content) {
             content = Buffer.from(res.body.content, "base64").toString("ascii");
@@ -358,13 +483,11 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
           // If content match fails attempt to find by name
           if (!licenseId && license.name.toLowerCase() !== "other") {
             licenseId = findLicenseId(license.name);
-          }
-          // Fallback to download url
-          if (!licenseId) {
-            licenseId = res.body.download_url;
+            licObj["name"] = license.name;
           }
         }
-        return licenseId;
+        licObj["id"] = licenseId;
+        return licObj;
       }
     } catch (err) {
       return undefined;
@@ -390,6 +513,11 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
 };
 exports.getRepoLicense = getRepoLicense;
 
+/**
+ * Method to get go pkg license from go.dev site.
+ *
+ * @param {Object} repoMetadata Repo metadata
+ */
 const getGoPkgLicense = async function (repoMetadata) {
   const group = repoMetadata.group;
   const name = repoMetadata.name;
@@ -406,10 +534,22 @@ const getGoPkgLicense = async function (repoMetadata) {
       if (licenses === "") {
         licenses = $("section.License > h2").text();
       }
-      return licenses.split(", ");
+      licenseIds = licenses.split(", ");
+      const licList = [];
+      for (var i in licenseIds) {
+        const alicense = {
+          id: licenseIds[i],
+        };
+        alicense["url"] = pkgUrlPrefix;
+        licList.push(alicense);
+      }
+      return licList;
     }
   } catch (err) {
     return undefined;
+  }
+  if (group.indexOf("github.com") > -1) {
+    return await getRepoLicense(undefined, repoMetadata);
   }
   return undefined;
 };

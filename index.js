@@ -3,7 +3,6 @@ const parsePackageJsonName = require("parse-packagejson-name");
 const pathLib = require("path");
 const request = require("request");
 const ssri = require("ssri");
-const spdxLicenses = require("./spdx-licenses.json");
 const fs = require("fs");
 const uuidv4 = require("uuid/v4");
 const PackageURL = require("packageurl-js");
@@ -16,110 +15,6 @@ if (process.env.MVN_CMD) {
   MVN_CMD = process.env.MVN_CMD;
 } else if (process.env.MAVEN_HOME) {
   MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn");
-}
-
-/**
- * Performs a lookup + validation of the license specified in the
- * package. If the license is a valid SPDX license ID, set the 'id'
- * of the license object, otherwise, set the 'name' of the license
- * object.
- */
-function getLicenses(pkg) {
-  let license = pkg.license && (pkg.license.type || pkg.license);
-  if (license) {
-    if (!Array.isArray(license)) {
-      license = [license];
-    }
-    return license
-      .map((l) => {
-        if (!(typeof l === "string" || l instanceof String)) {
-          console.error(
-            "Invalid license definition in package: " +
-              pkg.name +
-              ":" +
-              pkg.version +
-              ". Skipping"
-          );
-          return null;
-        }
-        let licenseContent = {};
-        if (
-          spdxLicenses.some((v) => {
-            return l === v;
-          })
-        ) {
-          licenseContent.id = l;
-          licenseContent.url = "https://opensource.org/licenses/" + l;
-        } else if (l.startsWith("http")) {
-          licenseContent.url = l;
-        } else {
-          licenseContent.name = l;
-        }
-        addLicenseText(pkg, l, licenseContent);
-        return licenseContent;
-      })
-      .map((l) => ({ license: l }));
-  }
-  return null;
-}
-
-/**
- * Tries to find a file containing the license text based on commonly
- * used naming and content types. If a candidate file is found, add
- * the text to the license text object and stop.
- */
-function addLicenseText(pkg, l, licenseContent) {
-  let licenseFilenames = [
-    "LICENSE",
-    "License",
-    "license",
-    "LICENCE",
-    "Licence",
-    "licence",
-    "NOTICE",
-    "Notice",
-    "notice",
-  ];
-  let licenseContentTypes = {
-    "text/plain": "",
-    "text/txt": ".txt",
-    "text/markdown": ".md",
-    "text/xml": ".xml",
-  };
-  /* Loops over different name combinations starting from the license specified
-       naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
-  for (const licenseName of [`.${l}`, ""]) {
-    for (const licenseFilename of licenseFilenames) {
-      for (const [licenseContentType, fileExtension] of Object.entries(
-        licenseContentTypes
-      )) {
-        let licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
-        if (fs.existsSync(licenseFilepath)) {
-          licenseContent.text = readLicenseText(
-            licenseFilepath,
-            licenseContentType
-          );
-          return;
-        }
-      }
-    }
-  }
-}
-
-/**
- * Read the file from the given path to the license text object and includes
- * content-type attribute, if not default. Returns the license text object.
- */
-function readLicenseText(licenseFilepath, licenseContentType) {
-  let licenseText = fs.readFileSync(licenseFilepath, "utf8");
-  if (licenseText) {
-    let licenseContentText = { "#cdata": licenseText };
-    if (licenseContentType !== "text/plain") {
-      licenseContentText["@content-type"] = licenseContentType;
-    }
-    return licenseContentText;
-  }
-  return null;
 }
 
 /**
@@ -203,7 +98,7 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
       return;
     }
     let version = pkg.version;
-    let licenses = getLicenses(pkg);
+    let licenses = utils.getLicenses(pkg);
     let purl = new PackageURL(
       ptype,
       group,

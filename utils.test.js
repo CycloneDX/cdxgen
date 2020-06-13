@@ -133,7 +133,12 @@ test("parseGopkgData", async () => {
   expect(dep_list[0]).toEqual({
     group: "cloud.google.com",
     name: "go",
-    license: ["Apache-2.0"],
+    license: [
+      {
+        id: "Apache-2.0",
+        url: "https://pkg.go.dev/cloud.google.com/go?tab=licenses",
+      },
+    ],
     version: "v0.39.0",
     _integrity:
       "sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
@@ -244,19 +249,34 @@ test("get repo license", async () => {
   let license = await utils.getRepoLicense(
     "https://github.com/ShiftLeftSecurity/sast-scan"
   );
-  expect(license).toEqual("GPL-3.0-or-later");
+  expect(license).toEqual({
+    id: "GPL-3.0-or-later",
+    url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE",
+  });
 
   license = await utils.getRepoLicense("https://github.com/AppThreat/cdxgen", {
     group: "",
     name: "cdxgen",
   });
-  expect(license).toEqual("Apache-2.0");
+  expect(license).toEqual({
+    id: "Apache-2.0",
+    url: "https://github.com/AppThreat/cdxgen/blob/master/LICENSE",
+  });
 
   license = await utils.getRepoLicense("https://cloud.google.com/go", {
     group: "cloud.google.com",
     name: "go",
   });
   expect(license).toEqual("Apache-2.0");
+
+  license = await utils.getRepoLicense(undefined, {
+    group: "github.com/ugorji",
+    name: "go",
+  });
+  expect(license).toEqual({
+    id: "MIT",
+    url: "https://github.com/ugorji/go/blob/master/LICENSE",
+  });
 });
 
 test("get go pkg license", async () => {
@@ -264,11 +284,65 @@ test("get go pkg license", async () => {
     group: "github.com/Azure/azure-amqp-common-go",
     name: "v2",
   });
-  expect(license).toEqual(["MIT"]);
+  expect(license).toEqual([
+    {
+      id: "MIT",
+      url:
+        "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
+    },
+  ]);
 
   license = await utils.getGoPkgLicense({
     group: "github.com/DataDog",
     name: "zstd",
   });
-  expect(license).toEqual(["BSD-3-Clause"]);
+  expect(license).toEqual([
+    {
+      id: "BSD-3-Clause",
+      url: "https://pkg.go.dev/github.com/DataDog/zstd?tab=licenses",
+    },
+  ]);
+});
+
+test("get licenses", () => {
+  let licenses = utils.getLicenses({ license: "MIT" });
+  expect(licenses).toEqual([
+    {
+      license: {
+        id: "MIT",
+        url: "https://opensource.org/licenses/MIT",
+      },
+    },
+  ]);
+
+  licenses = utils.getLicenses({ license: ["MIT", "GPL-3.0-or-later"] });
+  expect(licenses).toEqual([
+    {
+      license: {
+        id: "MIT",
+        url: "https://opensource.org/licenses/MIT",
+      },
+    },
+    {
+      license: {
+        id: "GPL-3.0-or-later",
+        url: "https://opensource.org/licenses/GPL-3.0-or-later",
+      },
+    },
+  ]);
+
+  licenses = utils.getLicenses({
+    license: {
+      id: "MIT",
+      url: "https://opensource.org/licenses/MIT",
+    },
+  });
+  expect(licenses).toEqual([
+    {
+      license: {
+        id: "MIT",
+        url: "https://opensource.org/licenses/MIT",
+      },
+    },
+  ]);
 });
