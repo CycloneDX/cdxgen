@@ -28,15 +28,18 @@ npm install -g @cyclonedx/bom
 #### Getting Help
 ```bash
 $ cyclonedx-bom -h
-Usage:  cyclonedx-bom [OPTIONS] [path]
+Usage: cyclonedx-bom [OPTIONS] [path]
+
+Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects
+
 Options:
-  -h        - this help
-  -a <path> - merge in additional modules from other scanner
-  -o <path> - write to file instead of stdout
-  -j        - output JSON instead of XML
-  -ns       - do not generate bom serial number
-  -d        - include devDependencies
-  --version - print version number
+  -v, --version               output the version number
+  -a, --append <bom.xml>      Merge BOM(s) into the current BOM (default: [])
+  -d, --include-dev           Include devDependencies (default: false)
+  -l, --include-license-text  Include full license text (default: false)
+  -o, --output <output>       Write BOM to file (default: "bom.xml")
+  -ns, --no-serial-number     Do not include BOM serial number
+  -h, --help                  display help for command
 ```
 
 #### Example
