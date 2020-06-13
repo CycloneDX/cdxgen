@@ -47,7 +47,7 @@ class Hash {
   }
 
   toJSON() {
-    return { hash: { 'alg': this._algorithm, 'value': this._value} };
+    return { 'alg': this._algorithm, 'content': this._value};
   }
 
   toXML() {

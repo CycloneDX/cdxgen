@@ -57,10 +57,12 @@ class License {
 
   toJSON() {
     return {
-      id: this._id,
-      name: this._name,
-      text: (this._attachmentText) ? this._attachmentText.toJSON() : undefined,
-      url: this._url
+      license: {
+        id: this._id,
+        name: this._name,
+        text: (this._attachmentText) ? this._attachmentText.toJSON() : undefined,
+        url: this._url
+      }
     }
   }
 
