@@ -369,3 +369,36 @@ test("parseNodeShrinkwrap", () => {
     version: "7.8.3",
   });
 });
+
+test("parseSetupPyFile", async () => {
+  let deps = await utils.parseSetupPyFile(`install_requires=[
+    'colorama>=0.4.3',
+    'libsast>=1.0.3',
+],`);
+  expect(deps.length).toEqual(2);
+  expect(deps[0].name).toEqual("colorama");
+  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
+
+  deps = await utils.parseSetupPyFile(`install_requires=['colorama>=0.4.3','libsast>=1.0.3',],`);
+  expect(deps.length).toEqual(2);
+  expect(deps[0].name).toEqual("colorama");
+  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
+
+  deps = await utils.parseSetupPyFile(`install_requires=['colorama>=0.4.3','libsast>=1.0.3']`);
+  expect(deps.length).toEqual(2);
+  expect(deps[0].name).toEqual("colorama");
+  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
+
+  deps = await utils.parseSetupPyFile(`install_requires=['colorama>=0.4.3', 'libsast>=1.0.3']`);
+  expect(deps.length).toEqual(2);
+  expect(deps[0].name).toEqual("colorama");
+  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
+
+  deps = await utils.parseSetupPyFile(`install_requires=[
+'colorama>=0.4.3',
+'libsast>=1.0.3',
+]`);
+  expect(deps.length).toEqual(2);
+  expect(deps[0].name).toEqual("colorama");
+  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
+});

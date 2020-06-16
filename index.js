@@ -415,12 +415,15 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFile = pathLib.join(path, "requirements.txt");
+  const setupPy = pathLib.join(path, "setup.py");
   const requirementsMode = fs.existsSync(reqFile);
+  const setupPyMode = fs.existsSync(setupPy);
   if (
     projectType === "python" ||
     requirementsMode ||
     pipenvMode ||
-    poetryMode
+    poetryMode ||
+    setupPyMode
   ) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path });
@@ -464,6 +467,18 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
           pkgInfo: pkgList,
           ptype: "pypi",
           context: { src: path, filename: "requirements.txt" },
+        },
+        callback
+      );
+    } else if (setupPyMode) {
+      const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
+      const pkgList = await utils.parseSetupPyFile(setupPyData);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "pypi",
+          context: { src: path, filename: "setup.py" },
         },
         callback
       );
