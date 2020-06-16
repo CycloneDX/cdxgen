@@ -63,6 +63,7 @@ let options = {
   dev: true,
   projectType: args.type,
   multiProject: args.recurse,
+  depth: 3
 };
 
 let filePath = args._[0] || ".";

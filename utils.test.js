@@ -346,3 +346,8 @@ test("get licenses", () => {
     },
   ]);
 });
+
+test("parsePkgLock", () => {
+  const deps = utils.parsePkgLock("./test/package-lock.json");
+  expect(deps.length).toEqual(759);
+});

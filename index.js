@@ -74,7 +74,7 @@ function listComponents(pkg, ptype = "npm") {
   let isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach((p) => {
-      addComponent(p, ptype, list, isRootPkg);
+      addComponent(p, ptype, list, false);
     });
   } else {
     addComponent(pkg, ptype, list, isRootPkg);
@@ -250,17 +250,42 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     projectType === "nodejs" ||
     fs.existsSync(pathLib.join(path, "package.json"))
   ) {
-    readInstalled(path, options, (err, pkgInfo) => {
-      buildBomString(
+    if (fs.existsSync(pathLib.join(path, "node_modules"))) {
+      readInstalled(path, options, (err, pkgInfo) => {
+        buildBomString(
+          {
+            includeBomSerialNumber,
+            pkgInfo,
+            ptype: "npm",
+            context: { src: path, filename: "package.json" },
+          },
+          callback
+        );
+      });
+    } else if (fs.existsSync(pathLib.join(path, "package-lock.json"))) {
+      // Parse package-lock.json if available
+      const pkgList = utils.parsePkgLock(
+        pathLib.join(path, "package-lock.json")
+      );
+      console.log(
+        "NOTE: To obtain license information for the node.js dependencies perform npm or yarn install before invoking this script"
+      );
+      return buildBomString(
         {
           includeBomSerialNumber,
-          pkgInfo,
+          pkgInfo: pkgList,
           ptype: "npm",
-          context: { src: path, filename: "package.json" },
+          context: { src: path, filename: "package-lock.json" },
         },
         callback
       );
-    });
+    } else {
+      console.error(
+        "Unable to find node_modules or package-lock.json at",
+        path
+      );
+      callback();
+    }
   }
   // maven - pom.xml
   const pomFiles = utils.getAllFiles(path, "pom.xml");
@@ -370,7 +395,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       const piplockFile = pathLib.join(path, "Pipfile.lock");
       if (fs.existsSync(piplockFile)) {
         const lockData = JSON.parse(fs.readFileSync(piplockFile));
-        const pkgList = utils.parsePiplockData(lockData);
+        const pkgList = await utils.parsePiplockData(lockData);
         buildBomString(
           {
             includeBomSerialNumber,
@@ -388,7 +413,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       const lockData = fs.readFileSync(poetrylockFile, {
         encoding: "utf-8",
       });
-      const pkgList = utils.parsePoetrylockData(lockData);
+      const pkgList = await utils.parsePoetrylockData(lockData);
       buildBomString(
         {
           includeBomSerialNumber,

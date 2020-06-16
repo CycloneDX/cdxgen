@@ -120,6 +120,40 @@ function readLicenseText(licenseFilepath, licenseContentType) {
   return null;
 }
 
+const _getDepPkgList = function (pkgList, pkg) {
+  if (pkg && pkg.dependencies) {
+    const pkgKeys = Object.keys(pkg.dependencies);
+    for (var k in pkgKeys) {
+      const name = pkgKeys[k];
+      pkgList.push({
+        name: name,
+        version: pkg.dependencies[name].version,
+        _integrity: pkg.dependencies[name].integrity,
+      });
+      // Include child dependencies
+      if (pkg.dependencies[name].dependencies) {
+        _getDepPkgList(pkgList, pkg.dependencies[name]);
+      }
+    }
+  }
+  return pkgList;
+};
+
+/**
+ * Parse nodejs package lock file
+ *
+ * @param {string} pkgLockFile package-lock.json file
+ */
+const parsePkgLock = function (pkgLockFile) {
+  const pkgList = [];
+  if (fs.existsSync(pkgLockFile)) {
+    lockData = require(pkgLockFile);
+    return _getDepPkgList(pkgList, lockData);
+  }
+  return pkgList;
+};
+exports.parsePkgLock = parsePkgLock;
+
 /**
  * Parse pom file
  *
@@ -303,7 +337,12 @@ const getPyMetadata = async function (pkgList) {
         p.homepage = { url: body.info.home_page };
       }
       // Use the latest version if none specified
-      if (!p.version) {
+      if (
+        !p.version ||
+        p.version.includes("*") ||
+        p.version.includes("<") ||
+        p.version.includes(">")
+      ) {
         p.version = body.info.version;
       }
       if (body.releases && body.releases[p.version]) {
