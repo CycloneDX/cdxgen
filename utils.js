@@ -155,6 +155,50 @@ const parsePkgLock = function (pkgLockFile) {
 exports.parsePkgLock = parsePkgLock;
 
 /**
+ * Parse nodejs shrinkwrap deps file
+ *
+ * @param {string} swFile shrinkwrap-deps.json file
+ */
+const parseNodeShrinkwrap = function (swFile) {
+  const pkgList = [];
+  if (fs.existsSync(swFile)) {
+    lockData = require(swFile);
+    const pkgKeys = Object.keys(lockData);
+    for (var k in pkgKeys) {
+      const fullName = pkgKeys[k];
+      const integrity = lockData[fullName];
+      const parts = fullName.split("@");
+      if (parts && parts.length) {
+        let name = "";
+        let version = "";
+        let group = "";
+        if (parts.length === 2) {
+          name = parts[0];
+          version = parts[1];
+        } else if (parts.length === 3) {
+          if (parts[0] === "") {
+            let gnameparts = parts[1].split("/");
+            group = gnameparts[0];
+            name = gnameparts[1];
+          } else {
+            name = parts[0];
+          }
+          version = parts[2];
+        }
+        pkgList.push({
+          group: group,
+          name: name,
+          version: version,
+          _integrity: integrity,
+        });
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseNodeShrinkwrap = parseNodeShrinkwrap;
+
+/**
  * Parse pom file
  *
  * @param {string} pom file to parse

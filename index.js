@@ -248,7 +248,8 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   // node.js - package.json
   if (
     projectType === "nodejs" ||
-    fs.existsSync(pathLib.join(path, "package.json"))
+    fs.existsSync(pathLib.join(path, "package.json")) ||
+    fs.existsSync(pathLib.join(path, "rush.json"))
   ) {
     if (fs.existsSync(pathLib.join(path, "node_modules"))) {
       readInstalled(path, options, (err, pkgInfo) => {
@@ -279,9 +280,40 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         },
         callback
       );
+    } else if (fs.existsSync(pathLib.join(path, "rush.json"))) {
+      // Rush.js creates node_modules inside common/temp directory
+      const nmDir = pathLib.join(path, "common", "temp", "node_modules");
+      // Do rush install if we don't have node_modules directory
+      if (!fs.existsSync(nmDir)) {
+        console.log("Executing 'rush install --no-link'", path);
+        result = spawnSync("rush", ["install", "--no-link"], { cwd: path });
+      }
+      // Look for shrinkwrap file
+      const swFile = pathLib.join(
+        path,
+        "tools",
+        "build-tasks",
+        ".rush",
+        "temp",
+        "shrinkwrap-deps.json"
+      );
+      if (fs.existsSync(swFile)) {
+        const pkgList = utils.parseNodeShrinkwrap(swFile);
+        return buildBomString(
+          {
+            includeBomSerialNumber,
+            pkgInfo: pkgList,
+            ptype: "npm",
+            context: { src: path, filename: "shrinkwrap-deps.json" },
+          },
+          callback
+        );
+      } else {
+        console.log("Shrinkwrap file: ", swFile, "was not found");
+      }
     } else {
       console.error(
-        "Unable to find node_modules or package-lock.json at",
+        "Unable to find node_modules or package-lock.json or rush.json at",
         path
       );
       callback();

@@ -350,4 +350,22 @@ test("get licenses", () => {
 test("parsePkgLock", () => {
   const deps = utils.parsePkgLock("./test/package-lock.json");
   expect(deps.length).toEqual(759);
+  expect(deps[0]).toEqual({
+    _integrity:
+      "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==",
+    name: "abbrev",
+    version: "1.1.1",
+  });
+});
+
+test("parseNodeShrinkwrap", () => {
+  const deps = utils.parseNodeShrinkwrap("./test/shrinkwrap-deps.json");
+  expect(deps.length).toEqual(496);
+  expect(deps[0]).toEqual({
+    _integrity:
+      "sha512-a9gxpmdXtZEInkCSHUJDLHZVBgb1QS0jhss4cPP93EW7s+uC5bikET2twEF3KV+7rDblJcmNvTR7VJejqd2C2g==",
+    group: "babel",
+    name: "code-frame",
+    version: "7.8.3",
+  });
 });
