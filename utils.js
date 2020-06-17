@@ -678,8 +678,11 @@ const parseGosumData = async function (gosumData) {
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
       const tmpA = l.split(" ");
-      const group = path.dirname(tmpA[0]);
+      let group = path.dirname(tmpA[0]);
       const name = path.basename(tmpA[0]);
+      if (group === ".") {
+        group = name;
+      }
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
       const license = await getGoPkgLicense({
@@ -727,6 +730,9 @@ const parseGopkgData = async function (gopkgData) {
         case "name":
           pkg.group = path.dirname(value);
           pkg.name = path.basename(value);
+          if (pkg.group === ".") {
+            pkg.group = pkg.name;
+          }
           pkg.license = await getGoPkgLicense({
             group: pkg.group,
             name: pkg.name,
