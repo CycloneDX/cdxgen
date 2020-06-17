@@ -634,7 +634,7 @@ const getGoPkgLicense = async function (repoMetadata) {
   const group = repoMetadata.group;
   const name = repoMetadata.name;
   let pkgUrlPrefix = "https://pkg.go.dev/";
-  if (group && group !== ".") {
+  if (group && group !== "." && group !== name) {
     pkgUrlPrefix = pkgUrlPrefix + group + "/";
   }
   pkgUrlPrefix = pkgUrlPrefix + name + "?tab=licenses";

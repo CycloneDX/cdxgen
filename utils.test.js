@@ -99,8 +99,8 @@ test("get py metadata", async () => {
   ]);
 });
 
-/*
 // Slow running test
+/*
 test("parseGosumData", async () => {
   jest.setTimeout(120000);
   let dep_list = await utils.parseGosumData(null);
@@ -112,7 +112,7 @@ test("parseGosumData", async () => {
   expect(dep_list[0]).toEqual({
     group: "cloud.google.com",
     name: "go",
-    license: "Apache-2.0",
+    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/cloud.google.com/go?tab=licenses"}],
     version: "v0.38.0",
     _integrity: "sha256-990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=",
   });
@@ -289,6 +289,18 @@ test("get go pkg license", async () => {
       id: "MIT",
       url:
         "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
+    },
+  ]);
+
+  license = await utils.getGoPkgLicense({
+    group: "go.opencensus.io",
+    name: "go.opencensus.io",
+  });
+  expect(license).toEqual([
+    {
+      id: "Apache-2.0",
+      url:
+        "https://pkg.go.dev/go.opencensus.io?tab=licenses",
     },
   ]);
 
