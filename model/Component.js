@@ -219,7 +219,7 @@ class Component {
         group: this._group,
         name: this._name,
         version: this._version,
-        description: {'#cdata': this._description},
+        description: (this._description) ? {'#cdata': this._description} : undefined,
         scope: this._scope,
         hashes: (this._hashes && this.hashes.hashes && this.hashes.hashes.length > 0) ? this._hashes.toXML() : undefined,
         licenses: (this._licenses) ? this._licenses.toXML() : undefined,

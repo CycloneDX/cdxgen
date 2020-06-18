@@ -78,14 +78,12 @@ class Swid {
 
   toXML() {
     return {
-      swid: {
-        '@tagId': this._tagId,
-        '@name': this._name,
-        '@version': this._version,
-        '@tagVersion': this._tagVersion,
-        '@patch': this._patch,
-        text: (this._attachmentText) ? this._attachmentText.toXML() : undefined
-      }
+      '@tagId': this._tagId,
+      '@name': this._name,
+      '@version': this._version,
+      '@tagVersion': this._tagVersion,
+      '@patch': this._patch,
+      text: (this._attachmentText) ? this._attachmentText.toXML() : undefined
     };
   }
 }
