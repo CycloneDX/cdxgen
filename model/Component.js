@@ -25,9 +25,8 @@ const ExternalReferenceList = require('./ExternalReferenceList');
 class Component {
 
   constructor(pkg, includeLicenseText = true) {
+    this._type = this.determinePackageType(pkg); // Defaults to library
     if (pkg) {
-      this._type = this.determinePackageType(pkg);
-
       let pkgIdentifier = parsePackageJsonName(pkg.name);
       this._group = (pkgIdentifier.scope) ? pkgIdentifier.scope : undefined;
       if (this._group) this._group = '@' + this._group;
@@ -51,7 +50,7 @@ class Component {
    * word for it, otherwise, identify the module as a 'library'.
    */
   determinePackageType(pkg) {
-    if (pkg.hasOwnProperty('keywords')) {
+    if (pkg && pkg.hasOwnProperty('keywords')) {
       for (let keyword of pkg.keywords) {
         if (keyword.toLowerCase() === 'framework') {
           return 'framework';
@@ -69,20 +68,28 @@ class Component {
     this._type = value;
   }
 
-  get purl() {
-    return this._purl;
-  }
-
-  set purl(value) {
-    this._purl = value;
-  }
-
   get bomRef() {
     return this._bomRef;
   }
 
   set bomRef(value) {
     this._bomRef = value;
+  }
+
+  get author() {
+    return this._author;
+  }
+
+  set author(value) {
+    this._author = value;
+  }
+
+  get publisher() {
+    return this._publisher;
+  }
+
+  set publisher(value) {
+    this._publisher = value;
   }
 
   get group() {
@@ -109,14 +116,6 @@ class Component {
     this._version = value;
   }
 
-  get licenses() {
-    return this._licenses;
-  }
-
-  set licenses(value) {
-    this._licenses = value;
-  }
-
   get description() {
     return this._description;
   }
@@ -125,12 +124,60 @@ class Component {
     this._description = value;
   }
 
+  get scope() {
+    return this._scope;
+  }
+
+  set scope(value) {
+    this._scope = value;
+  }
+
   get hashes() {
     return this._hashes;
   }
 
   set hashes(value) {
     this._hashes = value;
+  }
+
+  get licenses() {
+    return this._licenses;
+  }
+
+  set licenses(value) {
+    this._licenses = value;
+  }
+
+  get copyright() {
+    return this._copyright;
+  }
+
+  set copyright(value) {
+    this._copyright = value;
+  }
+
+  get cpe() {
+    return this._cpe;
+  }
+
+  set cpe(value) {
+    this._cpe = value;
+  }
+
+  get purl() {
+    return this._purl;
+  }
+
+  set purl(value) {
+    this._purl = value;
+  }
+
+  get swid() {
+    return this._swid;
+  }
+
+  set swid(value) {
+    this._swid = value;
   }
 
   get externalReferences() {
@@ -145,13 +192,19 @@ class Component {
     return {
       'type': this._type,
       'bom-ref': this._bomRef,
+      author: this._author,
+      publisher: this._publisher,
       group: this._group,
       name: this._name,
       version: this._version,
       description: this._description,
+      scope: this._scope,
       hashes: (this._hashes && this.hashes.hashes && this.hashes.hashes.length > 0) ? this._hashes.toJSON() : undefined,
       licenses: (this._licenses) ? this._licenses.toJSON() : undefined,
+      copyright: this._copyright,
+      cpe: this._cpe,
       purl: this._purl,
+      swid: (this._swid) ? this.swid.toJSON() : undefined,
       externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toJSON() : undefined,
     };
   }
@@ -161,13 +214,19 @@ class Component {
       'component': {
         '@type': this._type,
         '@bom-ref': this._bomRef,
+        author: this._author,
+        publisher: this._publisher,
         group: this._group,
         name: this._name,
         version: this._version,
         description: {'#cdata': this._description},
+        scope: this._scope,
         hashes: (this._hashes && this.hashes.hashes && this.hashes.hashes.length > 0) ? this._hashes.toXML() : undefined,
         licenses: (this._licenses) ? this._licenses.toXML() : undefined,
+        copyright: this._copyright,
+        cpe: this._cpe,
         purl: this._purl,
+        swid: (this._swid) ? this.swid.toXML() : undefined,
         externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toXML() : undefined,
       }
     };
