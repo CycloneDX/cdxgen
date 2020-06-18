@@ -22,8 +22,8 @@ const Hash = require('./Hash');
 class HashList {
 
   constructor(pkg) {
+    this._hashes = [];
     if (pkg) {
-      this._hashes = [];
       this.processHashes(pkg);
     }
   }
