@@ -67,18 +67,18 @@ class Swid {
 
   toJSON() {
     return {
-      'tagId': this._tagId,
-      'name': this._name,
-      'version': this._version,
-      'tagVersion': this._tagVersion,
-      'patch': this._patch,
+      tagId: this._tagId,
+      name: this._name,
+      version: this._version,
+      tagVersion: this._tagVersion,
+      patch: this._patch,
       text: (this._attachmentText) ? this._attachmentText.toJSON() : undefined
     };
   }
 
   toXML() {
     return {
-      hash: {
+      swid: {
         '@tagId': this._tagId,
         '@name': this._name,
         '@version': this._version,
