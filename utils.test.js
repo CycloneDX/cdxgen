@@ -414,3 +414,14 @@ test("parseSetupPyFile", async () => {
   expect(deps[0].name).toEqual("colorama");
   expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
 });
+
+test("parsePnpmLock", () => {
+  const deps = utils.parsePnpmLock("./test/pnpm-lock.yaml");
+  expect(deps.length).toEqual(1610);
+  expect(deps[0]).toEqual({
+    "_integrity": "sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==",
+    "group": "@babel",
+    "name": "code-frame",
+    "version": "7.10.1"
+  });
+});

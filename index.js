@@ -286,7 +286,11 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       // Do rush install if we don't have node_modules directory
       if (!fs.existsSync(nmDir)) {
         console.log("Executing 'rush install --no-link'", path);
-        result = spawnSync("rush", ["install", "--no-link"], { cwd: path });
+        result = spawnSync(
+          "rush",
+          ["install", "--no-link", "--bypass-policy"],
+          { cwd: path }
+        );
       }
       // Look for shrinkwrap file
       const swFile = pathLib.join(
@@ -296,6 +300,13 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         ".rush",
         "temp",
         "shrinkwrap-deps.json"
+      );
+      const pnpmLock = pathLib.join(
+        path,
+        "common",
+        "config",
+        "rush",
+        "pnpm-lock.yaml"
       );
       if (fs.existsSync(swFile)) {
         const pkgList = utils.parseNodeShrinkwrap(swFile);
@@ -308,8 +319,25 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
           },
           callback
         );
+      } else if (fs.existsSync(pnpmLock)) {
+        const pkgList = utils.parsePnpmLock(pnpmLock);
+        return buildBomString(
+          {
+            includeBomSerialNumber,
+            pkgInfo: pkgList,
+            ptype: "npm",
+            context: { src: path, filename: "pnpm-lock.yaml" },
+          },
+          callback
+        );
       } else {
-        console.log("Shrinkwrap file: ", swFile, "was not found");
+        console.log(
+          "Neither shrinkwrap file: ",
+          swFile,
+          " nor pnpm lockfile",
+          pnpmLock,
+          "was found!"
+        );
       }
     } else {
       console.error(

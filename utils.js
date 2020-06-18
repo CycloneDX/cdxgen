@@ -7,6 +7,7 @@ const licenseMapping = require("./license-mapping.json");
 const spdxLicenses = require("./spdx-licenses.json");
 const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
+const yaml = require("js-yaml");
 
 /**
  * Method to get files matching a pattern
@@ -185,18 +186,64 @@ const parseNodeShrinkwrap = function (swFile) {
           }
           version = parts[2];
         }
-        pkgList.push({
-          group: group,
-          name: name,
-          version: version,
-          _integrity: integrity,
-        });
+        if (group !== "@types") {
+          pkgList.push({
+            group: group,
+            name: name,
+            version: version,
+            _integrity: integrity,
+          });
+        }
       }
     }
   }
   return pkgList;
 };
 exports.parseNodeShrinkwrap = parseNodeShrinkwrap;
+
+/**
+ * Parse nodejs pnpm lock file
+ *
+ * @param {string} pnpmLock pnpm-lock.yaml file
+ */
+const parsePnpmLock = function (pnpmLock) {
+  const pkgList = [];
+  if (fs.existsSync(pnpmLock)) {
+    const lockData = fs.readFileSync(pnpmLock, "utf8");
+    const yamlObj = yaml.safeLoad(lockData);
+    const packages = yamlObj.packages;
+    const pkgKeys = Object.keys(packages);
+    for (var k in pkgKeys) {
+      // Eg: @babel/code-frame/7.10.1
+      const fullName = pkgKeys[k].replace("/@", "@");
+      const parts = fullName.split("/");
+      const integrity = packages[pkgKeys[k]].resolution.integrity;
+      if (parts && parts.length) {
+        let name = "";
+        let version = "";
+        let group = "";
+        if (parts.length === 2) {
+          name = parts[0];
+          version = parts[1];
+        } else if (parts.length === 3) {
+          group = parts[0];
+          name = parts[1];
+          version = parts[2];
+        }
+        if (group !== "@types" && name.indexOf("file:") !== 0) {
+          pkgList.push({
+            group: group,
+            name: name,
+            version: version,
+            _integrity: integrity,
+          });
+        }
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parsePnpmLock = parsePnpmLock;
 
 /**
  * Parse pom file
