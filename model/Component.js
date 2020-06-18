@@ -149,10 +149,10 @@ class Component {
       name: this._name,
       version: this._version,
       description: this._description,
-      hashes: (this._hashes) ? this._hashes.toJSON() : undefined,
+      hashes: (this._hashes && this.hashes.hashes && this.hashes.hashes.length > 0) ? this._hashes.toJSON() : undefined,
       licenses: (this._licenses) ? this._licenses.toJSON() : undefined,
       purl: this._purl,
-      externalReferences: (this._externalReferences) ? this._externalReferences.toJSON() : undefined
+      externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toJSON() : undefined,
     };
   }
 
@@ -165,10 +165,10 @@ class Component {
         name: this._name,
         version: this._version,
         description: {'#cdata': this._description},
-        hashes: (this._hashes) ? this._hashes.toXML() : undefined,
+        hashes: (this._hashes && this.hashes.hashes && this.hashes.hashes.length > 0) ? this._hashes.toXML() : undefined,
         licenses: (this._licenses) ? this._licenses.toXML() : undefined,
         purl: this._purl,
-        externalReferences: (this._externalReferences) ? this._externalReferences.toXML() : undefined
+        externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toXML() : undefined,
       }
     };
   }
