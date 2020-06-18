@@ -425,3 +425,14 @@ test("parsePnpmLock", () => {
     "version": "7.10.1"
   });
 });
+
+test("parseYarnLock", () => {
+  const deps = utils.parseYarnLock("./test/yarn.lock");
+  expect(deps.length).toEqual(51);
+  expect(deps[0]).toEqual({
+    group: '',
+    name: 'asap',
+    version: '2.0.5"',
+    _integrity: 'sha256-522765b50c3510490e52d7dcfe085ef9ba96958f'
+  });
+});

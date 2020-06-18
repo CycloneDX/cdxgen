@@ -339,9 +339,22 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
           "was found!"
         );
       }
+    } else if (fs.existsSync(pathLib.join(path, "yarn.lock"))) {
+      // Parse yarn.lock if available. This is check after rush.json since
+      // rush.js could include yarn.lock :(
+      const pkgList = utils.parseYarnLock(pathLib.join(path, "yarn.lock"));
+      return buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "npm",
+          context: { src: path, filename: "yarn.lock" },
+        },
+        callback
+      );
     } else {
       console.error(
-        "Unable to find node_modules or package-lock.json or rush.json at",
+        "Unable to find node_modules or package-lock.json or rush.json or yarn.lock at",
         path
       );
       callback();

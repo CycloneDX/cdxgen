@@ -156,6 +156,64 @@ const parsePkgLock = function (pkgLockFile) {
 exports.parsePkgLock = parsePkgLock;
 
 /**
+ * Parse nodejs yarn lock file
+ *
+ * @param {string} yarnLockFile yarn.lock file
+ */
+const parseYarnLock = function (yarnLockFile) {
+  const pkgList = [];
+  if (fs.existsSync(yarnLockFile)) {
+    const lockData = fs.readFileSync(yarnLockFile, "utf8");
+    let name = "";
+    let group = "";
+    let version = "";
+    let integrity = "";
+    lockData.split("\n").forEach((l) => {
+      if (l === "\n" || l.startsWith("dependencies") || l.startsWith("    ")) {
+        return;
+      }
+      if (!l.startsWith(" ")) {
+        const tmpA = l.split("@");
+        if (tmpA.length == 2) {
+          const fullName = tmpA[0];
+          if (fullName.indexOf("/") > -1) {
+            const parts = fullName.split("/");
+            group = parts[0];
+            name = parts[1];
+          } else {
+            name = fullName;
+          }
+        }
+      } else {
+        l = l.trim();
+        const parts = l.split(" ");
+        if (l.includes("version")) {
+          version = parts[1].replace(/"/, "");
+        }
+        if (l.includes("resolved")) {
+          const tmpB = parts[1].split("#");
+          integrity = "sha256-" + tmpB[1].replace(/"/, "");
+        }
+      }
+      if (name !== "" && version !== "" && integrity != "") {
+        pkgList.push({
+          group: group,
+          name: name,
+          version: version,
+          _integrity: integrity,
+        });
+        group = "";
+        name = "";
+        version = "";
+        integrity = "";
+      }
+    });
+  }
+  return pkgList;
+};
+exports.parseYarnLock = parseYarnLock;
+
+/**
  * Parse nodejs shrinkwrap deps file
  *
  * @param {string} swFile shrinkwrap-deps.json file
