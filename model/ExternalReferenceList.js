@@ -21,8 +21,8 @@ const ExternalReference = require('./ExternalReference');
 class ExternalReferenceList {
 
   constructor(pkg) {
+    this._externalReferences = [];
     if (pkg) {
-      this._externalReferences = [];
       this.processExternalReferences(pkg);
     }
   }

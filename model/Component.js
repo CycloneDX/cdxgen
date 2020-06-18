@@ -40,6 +40,9 @@ class Component {
 
       this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString();
       this._bomRef = this._purl;
+    } else {
+      this._hashes = new HashList(pkg);
+      this._externalReferences = new ExternalReferenceList(pkg);
     }
   }
 
@@ -146,10 +149,10 @@ class Component {
       name: this._name,
       version: this._version,
       description: this._description,
-      hashes: (this._hashes) ? this._hashes.toJSON() : null,
-      licenses: (this._licenses) ? this._licenses.toJSON() : null,
+      hashes: (this._hashes) ? this._hashes.toJSON() : undefined,
+      licenses: (this._licenses) ? this._licenses.toJSON() : undefined,
       purl: this._purl,
-      externalReferences: (this._externalReferences) ? this._externalReferences.toJSON() : null
+      externalReferences: (this._externalReferences) ? this._externalReferences.toJSON() : undefined
     };
   }
 
@@ -162,10 +165,10 @@ class Component {
         name: this._name,
         version: this._version,
         description: {'#cdata': this._description},
-        hashes: (this._hashes) ? this._hashes.toXML() : null,
-        licenses: (this._licenses) ? this._licenses.toXML() : null,
+        hashes: (this._hashes) ? this._hashes.toXML() : undefined,
+        licenses: (this._licenses) ? this._licenses.toXML() : undefined,
         purl: this._purl,
-        externalReferences: (this._externalReferences) ? this._externalReferences.toXML() : null
+        externalReferences: (this._externalReferences) ? this._externalReferences.toXML() : undefined
       }
     };
   }
