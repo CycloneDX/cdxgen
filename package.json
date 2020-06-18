@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "commander": "^5.1.0",
-    "packageurl-js": "^0.0.1",
+    "packageurl-js": "^0.0.2",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",

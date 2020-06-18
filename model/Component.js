@@ -17,7 +17,7 @@
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
 const parsePackageJsonName = require('parse-packagejson-name');
-const PackageURL = require('packageurl-js');
+const { PackageURL } = require('packageurl-js');
 const LicenseChoice = require('./LicenseChoice');
 const HashList = require('./HashList');
 const ExternalReferenceList = require('./ExternalReferenceList');
