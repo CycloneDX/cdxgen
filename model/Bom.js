@@ -32,6 +32,8 @@ class Bom {
     }
     if (pkg) {
       this._components = this.listComponents(pkg);
+    } else {
+      this._components = [];
     }
   }
 
@@ -42,14 +44,14 @@ class Bom {
   listComponents(pkg) {
     let list = {};
     let isRootPkg = true;
-    this.addComponent(pkg, list, isRootPkg);
+    this.createComponent(pkg, list, isRootPkg);
     return Object.keys(list).map(k => (list[k]));
   }
 
   /**
    * Given the specified package, create a CycloneDX component and add it to the list.
    */
-  addComponent(pkg, list, isRootPkg = false) {
+  createComponent(pkg, list, isRootPkg = false) {
     //read-installed with default options marks devDependencies as extraneous
     //if a package is marked as extraneous, do not include it as a component
     if(pkg.extraneous) return;
@@ -65,8 +67,12 @@ class Bom {
       Object.keys(pkg.dependencies)
         .map(x => pkg.dependencies[x])
         .filter(x => typeof(x) !== 'string') //remove cycles
-        .map(x => this.addComponent(x, list));
+        .map(x => this.createComponent(x, list));
     }
+  }
+
+  addComponent(component) {
+    this._components.push(component);
   }
 
   get includeSerialNumber() {
@@ -160,7 +166,7 @@ class Bom {
     }
     bom.att('version', this._version);
     let componentsNode = bom.ele('components');
-    if (this._components.length > 0) {
+    if (this._components && this._components.length > 0) {
       let value = [];
       for (let component of this._components) {
         value.push(component.toXML());
