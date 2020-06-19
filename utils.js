@@ -188,11 +188,11 @@ const parseYarnLock = function (yarnLockFile) {
         l = l.trim();
         const parts = l.split(" ");
         if (l.includes("version")) {
-          version = parts[1].replace(/"/, "");
+          version = parts[1].replace(/"/g, "");
         }
         if (l.includes("resolved")) {
           const tmpB = parts[1].split("#");
-          integrity = "sha256-" + tmpB[1].replace(/"/, "");
+          integrity = "sha256-" + tmpB[1].replace(/"/g, "");
         }
       }
       if (name !== "" && version !== "" && integrity != "") {

@@ -427,12 +427,25 @@ test("parsePnpmLock", () => {
 });
 
 test("parseYarnLock", () => {
-  const deps = utils.parseYarnLock("./test/yarn.lock");
+  let deps = utils.parseYarnLock("./test/yarn.lock");
   expect(deps.length).toEqual(51);
   expect(deps[0]).toEqual({
     group: '',
     name: 'asap',
-    version: '2.0.5"',
+    version: '2.0.5',
     _integrity: 'sha256-522765b50c3510490e52d7dcfe085ef9ba96958f'
+  });
+
+  deps = utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
+  expect(deps.length).toEqual(1463);
+  expect(deps[0]).toEqual({
+    group: '',
+    name: 'JSONStream',
+    version: '4.2.2',
+    _integrity: 'sha256-d291c6a4e97989b5c61d9acf396ae4fe133a718d'
+  });
+  deps.forEach(d => {
+    expect(d.name).toBeDefined();
+    expect(d.version).toBeDefined();
   });
 });
