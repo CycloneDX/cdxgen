@@ -35,13 +35,6 @@ class Metadata extends CycloneDXObject {
 
   set timestamp(value) {
     this._timestamp = this.validateType("Timestamp", value, Date);
-    /*
-    if (Object.prototype.toString.call(value) === '[object Date]') {
-      this._timestamp = value;
-    } else {
-      throw "Timestamp value must be a Date object";
-    }
-     */
   }
 
   get tools() {
