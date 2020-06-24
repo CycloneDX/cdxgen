@@ -16,9 +16,12 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-class AttachmentText {
+const CycloneDXObject = require('./CycloneDXObject');
+
+class AttachmentText extends CycloneDXObject {
 
   constructor(contentType, text, encoding) {
+    super();
     this._contentType = (contentType) ? contentType : undefined;
     this._text = (text) ? text : undefined;
     this._encoding = this.validateEncoding(encoding);
@@ -35,7 +38,7 @@ class AttachmentText {
   }
 
   set contentType(value) {
-    this._contentType = value;
+    this._contentType = this.validateType("Content type", value, String);
   }
 
   get text() {
@@ -43,7 +46,7 @@ class AttachmentText {
   }
 
   set text(value) {
-    this._text = value;
+    this._text = this.validateType("Text", value, String);
   }
 
   get encoding() {

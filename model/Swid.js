@@ -16,7 +16,10 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-class Swid {
+const AttachmentText = require('./AttachmentText');
+const CycloneDXObject = require('./CycloneDXObject');
+
+class Swid extends CycloneDXObject {
 
   /**
    * @param tagId Maps to the tagId of a SoftwareIdentity. (REQUIRED)
@@ -26,15 +29,12 @@ class Swid {
    * @param patch Maps to the patch of a SoftwareIdentity. (OPTIONAL)
    */
   constructor(tagId, name, version, tagVersion, patch) {
-    if (!tagId) {
-      throw "SWID tagId is required";
-    } else {
-      this._tagId = tagId;
-      this._name = name;
-      this._version = version;
-      this._tagVersion = tagVersion;
-      this._patch = patch;
-    }
+    super();
+    this._tagId = this.validateType("SWID tagId", tagId, String, true);
+    this._name = this.validateType("Name", name, String);
+    this._version = this.validateType("Version", version, String);
+    this._tagVersion = this.validateType("Tag version", tagVersion, Number);
+    this._patch = this.validateType("Patch", patch, Boolean);
   }
 
   get tagId() {
@@ -62,7 +62,7 @@ class Swid {
   }
 
   set attachmentText(value) {
-    this._attachmentText = value;
+    this._attachmentText = this.validateType("Attachment text", value, AttachmentText);
   }
 
   toJSON() {

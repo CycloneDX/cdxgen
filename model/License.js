@@ -16,9 +16,13 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-class License {
+const AttachmentText = require('./AttachmentText');
+const CycloneDXObject = require('./CycloneDXObject');
+
+class License extends  CycloneDXObject {
 
   constructor() {
+    super();
   }
 
   get id() {
@@ -27,7 +31,7 @@ class License {
 
   set id(value) {
     this._name = undefined;
-    this._id = value;
+    this._id = this.validateType("SPDX License ID", value, String);
   }
 
   get name() {
@@ -36,7 +40,7 @@ class License {
 
   set name(value) {
     this._id = undefined;
-    this._name = value;
+    this._name = this.validateType("License name", value, String);
   }
 
   get url() {
@@ -44,7 +48,7 @@ class License {
   }
 
   set url(value) {
-    this._url = value;
+    this._url = this.validateType("URL", value, String);
   }
 
   get attachmentText() {
@@ -52,7 +56,7 @@ class License {
   }
 
   set attachmentText(value) {
-    this._attachmentText = value;
+    this._attachmentText = this.validateType("Attachment text", value, AttachmentText);
   }
 
   toJSON() {

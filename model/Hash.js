@@ -16,18 +16,19 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-class Hash {
+const CycloneDXObject = require('./CycloneDXObject');
+
+class Hash extends CycloneDXObject {
 
   constructor(algorithm, value) {
-    const validAlgorithms = ["MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512", "SHA3-256", "SHA3-384",
-      "SHA3-512", "BLAKE2b-256", "BLAKE2b-384", "BLAKE2b-512", "BLAKE3"];
+    super();
+    this._algorithm = this.validateChoice("Algorithm", algorithm, this.validAlgorithms());
+    this._value = value;
+  }
 
-    if (validAlgorithms.indexOf(algorithm) === -1) {
-      throw "Unsupported hash algorithm";
-    } else {
-      this._algorithm = algorithm;
-      this._value = value;
-    }
+  validAlgorithms() {
+    return ["MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512", "SHA3-256", "SHA3-384",
+      "SHA3-512", "BLAKE2b-256", "BLAKE2b-384", "BLAKE2b-512", "BLAKE3"];
   }
 
   get algorithm() {
@@ -35,7 +36,7 @@ class Hash {
   }
 
   set algorithm(value) {
-    this._algorithm = value;
+    this._algorithm = this.validateChoice("Algorithm", value, this.validAlgorithms());
   }
 
   get value() {
@@ -43,7 +44,7 @@ class Hash {
   }
 
   set value(value) {
-    this._value = value;
+    this._value = this.validateType("Hash value", value, String);
   }
 
   toJSON() {

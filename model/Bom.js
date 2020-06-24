@@ -19,10 +19,13 @@
 const builder = require('xmlbuilder');
 const uuidv4 = require('uuid/v4');
 const Component = require('./Component');
+const CycloneDXObject = require('./CycloneDXObject');
+const Metadata = require('./Metadata');
 
-class Bom {
+class Bom extends CycloneDXObject {
 
   constructor(pkg, includeSerialNumber = true, includeLicenseText = true) {
+    super();
     this._includeSerialNumber = includeSerialNumber;
     this._includeLicenseText = includeLicenseText;
     this._version = 1;
@@ -96,7 +99,7 @@ class Bom {
   }
 
   set metadata(value) {
-    this._metadata = value;
+    this._metadata = this.validateType("Metadata", value, Metadata);
   }
 
   get components() {
@@ -128,7 +131,7 @@ class Bom {
   }
 
   set version(value) {
-    this._version = value;
+    this._version = this.validateType("Version", value, Number);
   }
 
   get schemaVersion() {
@@ -136,7 +139,7 @@ class Bom {
   }
 
   set schemaVersion(value) {
-    this._schemaVersion = value;
+    this._schemaVersion = this.validateType("Schema version", value, String);
   }
 
   get serialNumber() {
@@ -144,7 +147,7 @@ class Bom {
   }
 
   set serialNumber(value) {
-    this._serialNumber = value;
+    this._serialNumber = this.validateType("Serial number", value. String);
   }
 
   toJSON() {
@@ -153,6 +156,7 @@ class Bom {
       "specVersion": this._schemaVersion,
       "serialNumber": this._serialNumber,
       "version": this._version,
+      "metadata": this._metadata,
       "components": this._components
     };
     return JSON.stringify(json, null, 2);
@@ -165,6 +169,12 @@ class Bom {
       bom.att('serialNumber', this._serialNumber);
     }
     bom.att('version', this._version);
+
+    if (this._metadata) {
+      let metadata = bom.ele("metadata");
+      metadata.ele(this._metadata.toXML());
+    }
+
     let componentsNode = bom.ele('components');
     if (this._components && this._components.length > 0) {
       let value = [];

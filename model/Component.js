@@ -18,13 +18,17 @@
  */
 const parsePackageJsonName = require('parse-packagejson-name');
 const { PackageURL } = require('packageurl-js');
+const CycloneDXObject = require('./CycloneDXObject');
 const LicenseChoice = require('./LicenseChoice');
 const HashList = require('./HashList');
 const ExternalReferenceList = require('./ExternalReferenceList');
+const OrganizationalEntity = require('./OrganizationalEntity');
+const Swid = require('./Swid');
 
-class Component {
+class Component extends CycloneDXObject {
 
   constructor(pkg, includeLicenseText = true) {
+    super();
     this._type = this.determinePackageType(pkg); // Defaults to library
     if (pkg) {
       let pkgIdentifier = parsePackageJsonName(pkg.name);
@@ -65,7 +69,8 @@ class Component {
   }
 
   set type(value) {
-    this._type = value;
+    const validChoices = ['application', 'framework', 'library', 'container', 'operating-system', 'device', 'firmware', 'file'];
+    this._type = this.validateChoice("Type", value, validChoices);
   }
 
   get bomRef() {
@@ -73,7 +78,15 @@ class Component {
   }
 
   set bomRef(value) {
-    this._bomRef = value;
+    this._bomRef = this.validateType("bom-ref", value, String);
+  }
+
+  get supplier() {
+    return this._supplier;
+  }
+
+  set supplier(value) {
+    this._supplier = this.validateType("Supplier", value, OrganizationalEntity);
   }
 
   get author() {
@@ -81,7 +94,7 @@ class Component {
   }
 
   set author(value) {
-    this._author = value;
+    this._author = this.validateType("Author", value, String);
   }
 
   get publisher() {
@@ -89,7 +102,7 @@ class Component {
   }
 
   set publisher(value) {
-    this._publisher = value;
+    this._publisher = this.validateType("Publisher", value, String);
   }
 
   get group() {
@@ -97,7 +110,7 @@ class Component {
   }
 
   set group(value) {
-    this._group = value;
+    this._group = this.validateType("Group", value, String);
   }
 
   get name() {
@@ -105,7 +118,7 @@ class Component {
   }
 
   set name(value) {
-    this._name = value;
+    this._name = this.validateType("Name", value, String);
   }
 
   get version() {
@@ -113,7 +126,7 @@ class Component {
   }
 
   set version(value) {
-    this._version = value;
+    this._version = this.validateType("Version", value, String);
   }
 
   get description() {
@@ -121,7 +134,7 @@ class Component {
   }
 
   set description(value) {
-    this._description = value;
+    this._description = this.validateType("Description", value, String);
   }
 
   get scope() {
@@ -129,7 +142,8 @@ class Component {
   }
 
   set scope(value) {
-    this._scope = value;
+    const validChoices = ['required', 'optional', 'excluded'];
+    this._scope = this.validateChoice("Scope", value, validChoices)
   }
 
   get hashes() {
@@ -137,7 +151,7 @@ class Component {
   }
 
   set hashes(value) {
-    this._hashes = value;
+    this._hashes = this.validateType("Hashes", value, HashList);
   }
 
   get licenses() {
@@ -145,7 +159,7 @@ class Component {
   }
 
   set licenses(value) {
-    this._licenses = value;
+    this._licenses = this.validateType("Licenses", value, LicenseChoice);
   }
 
   get copyright() {
@@ -153,7 +167,7 @@ class Component {
   }
 
   set copyright(value) {
-    this._copyright = value;
+    this._copyright = this.validateType("Copyright", value, String);
   }
 
   get cpe() {
@@ -161,7 +175,7 @@ class Component {
   }
 
   set cpe(value) {
-    this._cpe = value;
+    this._cpe = this.validateType("CPE", value, String);
   }
 
   get purl() {
@@ -169,7 +183,7 @@ class Component {
   }
 
   set purl(value) {
-    this._purl = value;
+    this._purl = this.validateType("PURL", value, String);
   }
 
   get swid() {
@@ -177,7 +191,7 @@ class Component {
   }
 
   set swid(value) {
-    this._swid = value;
+    this._swid = this.validateType("SWID", value, Swid);
   }
 
   get externalReferences() {
@@ -192,6 +206,7 @@ class Component {
     return {
       'type': this._type,
       'bom-ref': this._bomRef,
+      supplier: (this._supplier) ? this._supplier.toJSON() : undefined,
       author: this._author,
       publisher: this._publisher,
       group: this._group,
@@ -214,6 +229,7 @@ class Component {
       'component': {
         '@type': this._type,
         '@bom-ref': this._bomRef,
+        supplier: (this._supplier) ? this._supplier.toXML() : undefined,
         author: this._author,
         publisher: this._publisher,
         group: this._group,

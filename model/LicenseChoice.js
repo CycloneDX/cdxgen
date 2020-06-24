@@ -20,10 +20,12 @@ const spdxLicenses = require('../spdx-licenses.json');
 const fs = require('fs');
 const License = require('./License');
 const AttachmentText = require('./AttachmentText');
+const CycloneDXObject = require('./CycloneDXObject');
 
-class LicenseChoice {
+class LicenseChoice extends CycloneDXObject {
 
   constructor(pkg, includeLicenseText = true) {
+    super();
     if (pkg) {
       this._licenses = this.processLicenses(pkg, includeLicenseText);
       this._expression = null;
@@ -117,7 +119,7 @@ class LicenseChoice {
 
   set expression(value) {
     this._licenses = null;
-    this._expression = value;
+    this._expression = this.validateType("SPDX license expression", value, String);
   }
 
   toJSON() {

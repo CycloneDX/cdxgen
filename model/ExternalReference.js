@@ -16,19 +16,20 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-class ExternalReference {
+const CycloneDXObject = require('./CycloneDXObject');
+
+class ExternalReference extends CycloneDXObject {
 
   constructor(type, url, comment) {
-    const validTypes = ["vcs", "issue-tracker", "website", "advisories", "bom", "mailing-list", "social", "chat",
-      "documentation", "support", "distribution", "license", "build-meta", "build-system", "other"];
+    super();
+    this._type = this.validateChoice("Reference type", type, this.validChoices());
+    this._url = url;
+    this._comment = comment;
+  }
 
-    if (validTypes.indexOf(type) === -1) {
-      throw "Unsupported reference type";
-    } else {
-      this._type = type;
-      this._url = url;
-      this._comment = comment;
-    }
+  validChoices() {
+    return ["vcs", "issue-tracker", "website", "advisories", "bom", "mailing-list", "social", "chat",
+      "documentation", "support", "distribution", "license", "build-meta", "build-system", "other"];
   }
 
   get url() {
@@ -36,7 +37,7 @@ class ExternalReference {
   }
 
   set url(value) {
-    this._url = value;
+    this._url = this.validateType("URL", value, String);
   }
 
   get type() {
@@ -44,7 +45,7 @@ class ExternalReference {
   }
 
   set type(value) {
-    this._type = value;
+    this._type = this.validateChoice("Reference type", type, this.validChoices());
   }
 
   get comment() {
@@ -52,7 +53,7 @@ class ExternalReference {
   }
 
   set comment(value) {
-    this._comment = value;
+    this._comment = this.validateType("Comment", value, String);
   }
 
   toJSON() {
