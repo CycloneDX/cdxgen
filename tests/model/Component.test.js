@@ -58,10 +58,10 @@ test('Model: Component / Format: JSON', () => {
   expect(result.type).toBe("application");
   expect(result['bom-ref']).toBe("12345");
   expect(result.supplier.name).toBe("Acme R&D");
-  expect(result.supplier.url).toBe("https://example.com/r&d");
-  expect(result.supplier.contact.name).toBe("John Doe");
-  expect(result.supplier.contact.email).toBe("john.doe@example.com");
-  expect(result.supplier.contact.phone).toBe("555-1212");
+  expect(result.supplier.url[0]).toBe("https://example.com/r&d");
+  expect(result.supplier.contact[0].name).toBe("John Doe");
+  expect(result.supplier.contact[0].email).toBe("john.doe@example.com");
+  expect(result.supplier.contact[0].phone).toBe("555-1212");
   expect(result.author).toBe("Acme Development Team");
   expect(result.publisher).toBe("Example Inc");
   expect(result.group).toBe("com.example");
