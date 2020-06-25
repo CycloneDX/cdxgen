@@ -56,8 +56,8 @@ class OrganizationalEntity extends CycloneDXObject {
   toJSON() {
     return {
       name: this._name,
-      url: this._url,
-      contact: (this._contact) ? this._contact.toJSON() : undefined
+      url: [this._url],
+      contact: (this._contact) ? [this._contact.toJSON()] : undefined
     }
   }
 

@@ -52,6 +52,14 @@ class OrganizationalContact extends  CycloneDXObject {
     this._phone = this.validateType("Phone", value, String);
   }
 
+  get objectName() {
+    return this._objectName;
+  }
+
+  set objectName(value) {
+    this._objectName = this.validateType("Objectname", value, String);
+  }
+
   toJSON() {
     return {
       name: this._name,
