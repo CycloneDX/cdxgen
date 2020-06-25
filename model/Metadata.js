@@ -55,8 +55,11 @@ class Metadata extends CycloneDXObject {
 
   set authors(value) {
     if (!Array.isArray(value)) {
-      throw "Authors value must be an array of Author objects";
+      throw "Authors value must be an array of OrganizationalContact objects";
     } else {
+      for (const author of value) {
+        author.objectName = "author";
+      }
       this._authors = value;
     }
   }
@@ -113,7 +116,7 @@ class Metadata extends CycloneDXObject {
       timestamp: (this._timestamp) ? this._timestamp.toISOString() : undefined,
       tools: (this._tools && this._tools.length > 0) ? this.processArray(this._tools, "XML") : undefined,
       authors: (this._authors && this._authors.length > 0) ? this.processArray(this._authors, "XML") : undefined,
-      component: (this._component) ? this._component.toXML() : undefined,
+      component: (this._component) ? this._component.toXML().component : undefined,
       manufacture: (this._manufacture) ? this._manufacture.toXML() : undefined,
       supplier: (this._supplier) ? this._supplier.toXML() : undefined
     };
