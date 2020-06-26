@@ -34,7 +34,7 @@ commander
   .option('-d, --include-dev', "Include devDependencies", false)
   .option('-l, --include-license-text', "Include full license text", false)
   .option('-o, --output <output>', "Write BOM to file", "bom.xml")
-  .option('-s, --schema-version <version>', "Target schema version", "1.2")
+  .option('-s, --schema <version>', "Target schema version", "1.2")
   .option('-ns, --no-serial-number', "Do not include BOM serial number", true)
   .parse(process.argv);
 
@@ -47,7 +47,7 @@ let additionalBoms = commander.append;
 let includeSerialNumber = commander.serialNumber;
 let includeLicenseText = commander.includeLicenseText;
 let output = commander.output;
-let schemaVersion = commander.schemaVersion;
+let schemaVersion = commander.schema;
 
 if (Bom.supportedSchemaVersions().indexOf(schemaVersion) === -1) {
     throw "Unsupported schema version. Supported schema versions are " + Bom.supportedSchemaVersions().toString();

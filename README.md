@@ -33,14 +33,14 @@ Usage: cyclonedx-bom [OPTIONS] [path]
 Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects
 
 Options:
-  -v, --version                  output the version number
-  -a, --append <bom.xml>         Merge BOM(s) into the current BOM (default: [])
-  -d, --include-dev              Include devDependencies (default: false)
-  -l, --include-license-text     Include full license text (default: false)
-  -o, --output <output>          Write BOM to file (default: "bom.xml")
-  -s, --schema-version <version> Target schema version (default: "1.2")
-  -ns, --no-serial-number        Do not include BOM serial number
-  -h, --help                     display help for command
+  -v, --version              output the version number
+  -a, --append <bom.xml>     Merge BOM(s) into the current BOM (default: [])
+  -d, --include-dev          Include devDependencies (default: false)
+  -l, --include-license-text Include full license text (default: false)
+  -o, --output <output>      Write BOM to file (default: "bom.xml")
+  -s, --schema <version>     Target schema version (default: "1.2")
+  -ns, --no-serial-number    Do not include BOM serial number
+  -h, --help                 display help for command
 ```
 
 #### Example (default: XML)
