@@ -24,12 +24,12 @@ const Metadata = require('./Metadata');
 
 class Bom extends CycloneDXObject {
 
-  constructor(pkg, includeSerialNumber = true, includeLicenseText = true) {
+  constructor(pkg, schemaVersion = "1.2", includeSerialNumber = true, includeLicenseText = true) {
     super();
+    this._schemaVersion = this.validateChoice("Schema version", schemaVersion, Bom.supportedSchemaVersions());
     this._includeSerialNumber = includeSerialNumber;
     this._includeLicenseText = includeLicenseText;
     this._version = 1;
-    this._schemaVersion = "1.2";
     if (includeSerialNumber) {
       this._serialNumber = 'urn:uuid:' + uuidv4();
     }
@@ -38,6 +38,10 @@ class Bom extends CycloneDXObject {
     } else {
       this._components = [];
     }
+  }
+
+  static supportedSchemaVersions() {
+    return ["1.1", "1.2"];
   }
 
   /**
@@ -139,7 +143,7 @@ class Bom extends CycloneDXObject {
   }
 
   set schemaVersion(value) {
-    this._schemaVersion = this.validateType("Schema version", value, String);
+    this._schemaVersion = this.validateChoice("Schema version", value, Bom.supportedSchemaVersions());
   }
 
   get serialNumber() {
@@ -151,6 +155,9 @@ class Bom extends CycloneDXObject {
   }
 
   toJSON() {
+    if (this.schemaVersion === "1.1") {
+      throw "JSON format support was introduced in schema version 1.2";
+    }
     let json = {
       "bomFormat": "CycloneDX",
       "specVersion": this._schemaVersion,
@@ -170,7 +177,7 @@ class Bom extends CycloneDXObject {
     }
     bom.att('version', this._version);
 
-    if (this._metadata) {
+    if (this._schemaVersion !== "1.1" && this._metadata) {
       let metadata = bom.ele("metadata");
       metadata.ele(this._metadata.toXML());
     }

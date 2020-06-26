@@ -24,6 +24,7 @@ const fs = require("fs");
 const xmlFormat = require("prettify-xml");
 const xmlOptions = {indent: 4, newline: "\n"};
 const DomParser = require('xmldom').DOMParser;
+const Bom = require('../model/Bom');
 
 commander
   .description(program.description)
@@ -33,6 +34,7 @@ commander
   .option('-d, --include-dev', "Include devDependencies", false)
   .option('-l, --include-license-text', "Include full license text", false)
   .option('-o, --output <output>', "Write BOM to file", "bom.xml")
+  .option('-s, --schema-version <version>', "Target schema version", "1.2")
   .option('-ns, --no-serial-number', "Do not include BOM serial number", true)
   .parse(process.argv);
 
@@ -45,6 +47,11 @@ let additionalBoms = commander.append;
 let includeSerialNumber = commander.serialNumber;
 let includeLicenseText = commander.includeLicenseText;
 let output = commander.output;
+let schemaVersion = commander.schemaVersion;
+
+if (Bom.supportedSchemaVersions().indexOf(schemaVersion) === -1) {
+    throw "Unsupported schema version. Supported schema versions are " + Bom.supportedSchemaVersions().toString();
+}
 
 // Options are specific to readinstalled
 let options = {};
@@ -53,7 +60,7 @@ options.dev = commander.includeDev;
 /**
  * Creates a Bom object and writes either XML or JSON.
  */
-bomHelpers.createbom(includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
+bomHelpers.createbom(schemaVersion, includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
     if (bom.components.length === 0) {
         console.log("There are no components in the BOM. The project may not contain dependencies or node_modules does not exist. Executing `npm install` prior to CycloneDX may solve the issue.")
     }
