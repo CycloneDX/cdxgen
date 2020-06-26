@@ -47,7 +47,7 @@ class LicenseChoice extends CycloneDXObject {
       return license.map(l => {
         if (! (typeof l === 'string' || l instanceof String)) {
           console.error("Invalid license definition in package: " + pkg.name + ":" + pkg.version + ". Skipping");
-          return null;
+          return undefined;
         }
         let licenseObject = new License();
         if (spdxLicenses.some(v => { return l === v; })) {
@@ -126,7 +126,9 @@ class LicenseChoice extends CycloneDXObject {
     if (this._licenses && this._licenses.length > 0) {
       let value = [];
       for (let license of this._licenses) {
-        value.push(license.toJSON());
+        if (license instanceof License) {
+          value.push(license.toJSON());
+        }
       }
       return value;
     } else if (this._expression) {
@@ -139,7 +141,9 @@ class LicenseChoice extends CycloneDXObject {
     if (this._licenses && this._licenses.length > 0) {
       let value = [];
       for (let license of this._licenses) {
-        value.push(license.toXML());
+        if (license instanceof License) {
+          value.push(license.toXML());
+        }
       }
       return value;
     } else if (this._expression) {
