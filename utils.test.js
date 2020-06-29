@@ -449,3 +449,35 @@ test("parseYarnLock", () => {
     expect(d.version).toBeDefined();
   });
 });
+
+test("parseComposerLock", () => {
+  let deps = utils.parseComposerLock("./test/data/composer.lock");
+  expect(deps.length).toEqual(1);
+  expect(deps[0]).toEqual({
+    group: 'quickbooks',
+    name: 'v3-php-sdk',
+    version: '4.0.6.1',
+    repository: {
+      type: 'git',
+      url: 'https://github.com/intuit/QuickBooks-V3-PHP-SDK.git',
+      reference: 'fe42e409bcdc431614f1cfc80cfc4191b926f3ed'
+    },
+    license: [ 'Apache-2.0' ],
+    description: 'The Official PHP SDK for QuickBooks Online Accounting API'
+  });
+
+  deps = utils.parseComposerLock("./test/data/composer-2.lock");
+  expect(deps.length).toEqual(28);
+  expect(deps[0]).toEqual({
+    group: 'amphp',
+      name: 'amp',
+      version: '2.4.4',
+      repository: {
+        type: 'git',
+        url: 'https://github.com/amphp/amp.git',
+        reference: '1e58d53e4af390efc7813e36cd215bd82cba4b06'
+      },
+      license: [ 'MIT' ],
+      description: 'A non-blocking concurrency framework for PHP applications.'
+  });
+});

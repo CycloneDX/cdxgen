@@ -1,6 +1,6 @@
 # CycloneDX Generator
 
-This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, python, java and Go projects. Optionally, it can submit the generated BOM to dependency track or AppThreat server for analysis. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 ## Supported languages and package format
 
@@ -8,6 +8,7 @@ This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containi
 | --------- | ----------------------------------------------------- |
 | node.js   | package-lock.json, yarn.lock, rush.js                 |
 | java      | maven (pom.xml), gradle (build.gradle)                |
+| php       | composer.lock                                         |
 | python    | setup.py, requirements.txt, Pipfile.lock, poetry.lock |
 | go        | go.sum, Gopkg.lock                                    |
 | rust      | Cargo.lock                                            |
@@ -17,7 +18,6 @@ NOTE:
 
 - Apache maven is required for parsing pom.xml
 - gradle or gradlew is required to parse gradle projects
-- For Go projects, license information is obtained via GitHub api lookups. This approach is not comprehensive yet
 
 ## Usage
 

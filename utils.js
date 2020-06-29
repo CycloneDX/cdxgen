@@ -1025,3 +1025,35 @@ const getNugetMetadata = async function (pkgList) {
   return cdepList;
 };
 exports.getNugetMetadata = getNugetMetadata;
+
+/**
+ * Parse nodejs package lock file
+ *
+ * @param {string} pkgLockFile package-lock.json file
+ */
+const parseComposerLock = function (pkgLockFile) {
+  const pkgList = [];
+  if (fs.existsSync(pkgLockFile)) {
+    lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    if (lockData && lockData.packages) {
+      for (let i in lockData.packages) {
+        const pkg = lockData.packages[i];
+        let group = path.dirname(pkg.name);
+        if (group === ".") {
+          group = "";
+        }
+        let name = path.basename(pkg.name);
+        pkgList.push({
+          group: group,
+          name: name,
+          version: pkg.version.replace("v", ""),
+          repository: pkg.source,
+          license: pkg.license,
+          description: pkg.description,
+        });
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseComposerLock = parseComposerLock;

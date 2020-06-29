@@ -599,6 +599,40 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     }
   }
 
+  // php
+  const composerJsonFile = pathLib.join(path, "composer.json");
+  const composerLockFile = pathLib.join(path, "composer.lock");
+  const composerJsonMode = fs.existsSync(composerJsonFile);
+  let composerLockMode = fs.existsSync(composerLockFile);
+  if (projectType === "php" || composerJsonMode || composerMode) {
+    if (!composerLockMode && composerJsonMode) {
+      console.log("Executing 'composer install' in", path);
+      result = spawnSync("composer", ["install"], { cwd: path });
+      if (result.status == 1 || result.error) {
+        console.error("Composer install has failed.");
+      }
+      composerLockMode = fs.existsSync(composerLockFile);
+    }
+    if (composerLockMode) {
+      const pkgList = utils.parseComposerLock(composerLockFile);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "composer",
+          context: { src: path, filename: "composer.lock" },
+        },
+        callback
+      );
+    } else {
+      console.error(
+        "Unable to find composer.lock or composer.json for the php project at",
+        path
+      );
+      callback();
+    }
+  }
+
   // .Net
   const csProjFiles = utils.getAllFiles(
     path,
