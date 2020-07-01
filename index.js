@@ -604,7 +604,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
   const composerLockFile = pathLib.join(path, "composer.lock");
   const composerJsonMode = fs.existsSync(composerJsonFile);
   let composerLockMode = fs.existsSync(composerLockFile);
-  if (projectType === "php" || composerJsonMode || composerMode) {
+  if (projectType === "php" || composerJsonMode || composerLockMode) {
     if (!composerLockMode && composerJsonMode) {
       console.log("Executing 'composer install' in", path);
       result = spawnSync("composer", ["install"], { cwd: path });
