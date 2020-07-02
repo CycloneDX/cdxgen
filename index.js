@@ -415,11 +415,19 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     if (process.env.GRADLE_HOME) {
       GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
     }
+    // Use local gradle wrapper if available
+    if (fs.existsSync(path, "gradlew")) {
+      // Enable execute permission
+      try {
+        fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
+      } catch (e) {}
+      GRADLE_CMD = pathLib.join(path, "gradlew");
+    }
     let pkgList = [];
     for (let i in gradleFiles) {
       const f = gradleFiles[i];
       const basePath = pathLib.dirname(f);
-      console.log("Executing 'gradle dependencies' in", basePath);
+      console.log("Executing", GRADLE_CMD, "dependencies in", basePath);
       const result = spawnSync(
         GRADLE_CMD,
         ["dependencies", "-q", "--console", "plain"],
