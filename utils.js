@@ -428,9 +428,13 @@ const getMvnMetadata = async function (pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
     let urlPrefix = MAVEN_CENTRAL_URL;
+    // Ideally we should try one resolver after the other. But it increases the time taken
     if (p.group.indexOf("android") !== -1) {
       urlPrefix = ANDROID_MAVEN;
-    } else if (p.group.indexOf("jetbrains") !== -1) {
+    } else if (
+      p.group.indexOf("jetbrains") !== -1 ||
+      p.group.indexOf("airbnb") !== -1
+    ) {
       urlPrefix = JCENTER_MAVEN;
     }
     let groupPart = p.group.replace(/\./g, "/");

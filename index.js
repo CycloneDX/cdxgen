@@ -406,9 +406,9 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     }
   }
   // gradle
-  const gradleFiles = utils.getAllFiles(
+  let gradleFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "build.gradle"
+    (options.multiProject ? "**/" : "") + "build.gradle*"
   );
   if (gradleFiles && gradleFiles.length) {
     let GRADLE_CMD = "gradle";
