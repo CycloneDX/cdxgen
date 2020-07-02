@@ -346,6 +346,7 @@ exports.parsePom = parsePom;
 const parseGradleDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
+    const keys_cache = {};
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
       if (l.indexOf("--- ") >= 0) {
@@ -359,12 +360,18 @@ const parseGradleDep = function (rawOutput) {
               .substr(versionStr.indexOf("->") + 3, versionStr.length)
               .trim();
           }
-          deps.push({
-            group: verArr[0],
-            name: verArr[1],
-            version: versionStr,
-            qualifiers: { type: "jar" },
-          });
+          versionStr = versionStr.split(" ")[0];
+          const key = verArr[0] + "-" + verArr[1] + "-" + versionStr;
+          // Filter duplicates
+          if (!keys_cache[key]) {
+            keys_cache[key] = key;
+            deps.push({
+              group: verArr[0],
+              name: verArr[1],
+              version: versionStr,
+              qualifiers: { type: "jar" },
+            });
+          }
         }
       }
     });
@@ -416,11 +423,20 @@ exports.guessLicenseId = guessLicenseId;
  */
 const getMvnMetadata = async function (pkgList) {
   const MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
+  const ANDROID_MAVEN = "https://maven.google.com/";
+  const JCENTER_MAVEN = "https://jcenter.bintray.com/";
   const cdepList = [];
   for (const p of pkgList) {
+    let urlPrefix = MAVEN_CENTRAL_URL;
+    if (p.group.indexOf("android") !== -1) {
+      urlPrefix = ANDROID_MAVEN;
+    } else if (p.group.indexOf("jetbrains") !== -1) {
+      urlPrefix = JCENTER_MAVEN;
+    }
+    let groupPart = p.group.replace(/\./g, "/");
     const fullUrl =
-      MAVEN_CENTRAL_URL +
-      p.group.replace(/\./g, "/") +
+      urlPrefix +
+      groupPart +
       "/" +
       p.name +
       "/" +
@@ -456,7 +472,15 @@ const getMvnMetadata = async function (pkgList) {
       }
       cdepList.push(p);
     } catch (err) {
-      console.warn("Unable to find metadata for", p.group, p.name);
+      /*
+      console.warn(
+        "Unable to find metadata for",
+        p.group,
+        p.name,
+        p.version,
+        fullUrl
+      );
+      */
       cdepList.push(p);
     }
   }

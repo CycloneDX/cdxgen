@@ -12,10 +12,10 @@ test("finds license id from name", () => {
 
 test("parse gradle dependencies", () => {
   expect(utils.parseGradleDep(null)).toEqual([]);
-  const dep_list = utils.parseGradleDep(
+  let dep_list = utils.parseGradleDep(
     fs.readFileSync("./test/gradle-dep.out", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(50);
+  expect(dep_list.length).toEqual(33);
   expect(dep_list[0]).toEqual({
     group: "org.ethereum",
     name: "solcJ-all",
@@ -23,6 +23,19 @@ test("parse gradle dependencies", () => {
       type: "jar",
     },
     version: "0.4.25",
+  });
+
+  dep_list = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-android-dep.out", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(103);
+  expect(dep_list[0]).toEqual({
+    group: "com.android.support.test",
+    name: "runner",
+    qualifiers: {
+      type: "jar",
+    },
+    version: "1.0.2",
   });
 });
 

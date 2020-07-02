@@ -1,0 +1,948 @@
+:app:dependencies
+
+------------------------------------------------------------
+Project :app
+------------------------------------------------------------
+
+androidTestAnnotationProcessor - Classpath for the annotation processor for 'androidTest'. (n)
+No dependencies
+
+androidTestApi - API dependencies for 'androidTest' sources. (n)
+No dependencies
+
+androidTestApk - Apk dependencies for 'androidTest' sources (deprecated: use 'androidTestRuntimeOnly' instead). (n)
+No dependencies
+
+androidTestCompile - Compile dependencies for 'androidTest' sources (deprecated: use 'androidTestImplementation' instead). (n)
+No dependencies
+
+androidTestCompileOnly - Compile only dependencies for 'androidTest' sources. (n)
+No dependencies
+
+androidTestDebugAnnotationProcessor - Classpath for the annotation processor for 'androidTestDebug'. (n)
+No dependencies
+
+androidTestDebugApi - API dependencies for 'androidTestDebug' sources. (n)
+No dependencies
+
+androidTestDebugApk - Apk dependencies for 'androidTestDebug' sources (deprecated: use 'androidTestDebugRuntimeOnly' instead). (n)
+No dependencies
+
+androidTestDebugCompile - Compile dependencies for 'androidTestDebug' sources (deprecated: use 'androidTestDebugImplementation' instead). (n)
+No dependencies
+
+androidTestDebugCompileOnly - Compile only dependencies for 'androidTestDebug' sources. (n)
+No dependencies
+
+androidTestDebugImplementation - Implementation only dependencies for 'androidTestDebug' sources. (n)
+No dependencies
+
+androidTestDebugProvided - Provided dependencies for 'androidTestDebug' sources (deprecated: use 'androidTestDebugCompileOnly' instead). (n)
+No dependencies
+
+androidTestDebugRuntimeOnly - Runtime only dependencies for 'androidTestDebug' sources. (n)
+No dependencies
+
+androidTestDebugWearApp - Link to a wear app to embed for object 'androidTestDebug'. (n)
+No dependencies
+
+androidTestImplementation - Implementation only dependencies for 'androidTest' sources. (n)
++--- com.android.support.test:runner:1.0.2 (n)
+\--- com.android.support.test.espresso:espresso-core:3.0.2 (n)
+
+androidTestProvided - Provided dependencies for 'androidTest' sources (deprecated: use 'androidTestCompileOnly' instead). (n)
+No dependencies
+
+androidTestRuntimeOnly - Runtime only dependencies for 'androidTest' sources. (n)
+No dependencies
+
+androidTestUtil - Additional APKs used during instrumentation testing.
+No dependencies
+
+androidTestWearApp - Link to a wear app to embed for object 'androidTest'. (n)
+No dependencies
+
+annotationProcessor - Classpath for the annotation processor for 'main'. (n)
+No dependencies
+
+api - API dependencies for 'main' sources. (n)
+No dependencies
+
+apk - Apk dependencies for 'main' sources (deprecated: use 'runtimeOnly' instead). (n)
+No dependencies
+
+archives - Configuration for archive artifacts.
+No dependencies
+
+compile - Compile dependencies for 'main' sources (deprecated: use 'implementation' instead).
+No dependencies
+
+compileOnly - Compile only dependencies for 'main' sources. (n)
+No dependencies
+
+debugAndroidTestAnnotationProcessorClasspath - Resolved configuration for annotation-processor for variant: debugAndroidTest
+No dependencies
+
+debugAndroidTestCompileClasspath - Resolved configuration for compilation for variant: debugAndroidTest
++--- com.android.support.test:runner:1.0.2
+|    +--- com.android.support:support-annotations:27.1.1
+|    +--- com.android.support.test:monitor:1.0.2
+|    |    \--- com.android.support:support-annotations:27.1.1
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    \--- net.sf.kxml:kxml2:2.3.0
++--- com.android.support.test.espresso:espresso-core:3.0.2
+|    +--- com.android.support.test:runner:1.0.2 (*)
+|    +--- com.android.support.test.espresso:espresso-idling-resource:3.0.2
+|    +--- com.squareup:javawriter:2.1.1
+|    +--- javax.inject:javax.inject:1
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-integration:1.3
+|    |    \--- org.hamcrest:hamcrest-library:1.3 (*)
+|    \--- com.google.code.findbugs:jsr305:2.0.1
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
+\--- com.squareup.okhttp3:okhttp:3.8.0
+     \--- com.squareup.okio:okio:1.13.0
+
+debugAndroidTestRuntimeClasspath - Resolved configuration for runtime for variant: debugAndroidTest
++--- com.android.support.test:runner:1.0.2
+|    +--- com.android.support:support-annotations:27.1.1
+|    +--- com.android.support.test:monitor:1.0.2
+|    |    \--- com.android.support:support-annotations:27.1.1
+|    +--- junit:junit:4.12
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    \--- net.sf.kxml:kxml2:2.3.0
++--- com.android.support.test.espresso:espresso-core:3.0.2
+|    +--- com.android.support.test:runner:1.0.2 (*)
+|    +--- com.android.support.test.espresso:espresso-idling-resource:3.0.2
+|    +--- com.squareup:javawriter:2.1.1
+|    +--- javax.inject:javax.inject:1
+|    +--- org.hamcrest:hamcrest-library:1.3
+|    |    \--- org.hamcrest:hamcrest-core:1.3
+|    +--- org.hamcrest:hamcrest-integration:1.3
+|    |    \--- org.hamcrest:hamcrest-library:1.3 (*)
+|    \--- com.google.code.findbugs:jsr305:2.0.1
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0 -> 27.1.1
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
+\--- com.squareup.okhttp3:okhttp:3.8.0
+     \--- com.squareup.okio:okio:1.13.0
+
+debugAnnotationProcessor - Classpath for the annotation processor for 'debug'. (n)
+No dependencies
+
+debugAnnotationProcessorClasspath - Resolved configuration for annotation-processor for variant: debug
+No dependencies
+
+debugApi - API dependencies for 'debug' sources. (n)
+No dependencies
+
+debugApiElements - API elements for debug (n)
+No dependencies
+
+debugApk - Apk dependencies for 'debug' sources (deprecated: use 'debugRuntimeOnly' instead). (n)
+No dependencies
+
+debugBundleElements - Bundle elements for debug (n)
+No dependencies
+
+debugCompile - Compile dependencies for 'debug' sources (deprecated: use 'debugImplementation' instead). (n)
+No dependencies
+
+debugCompileClasspath - Resolved configuration for compilation for variant: debug
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
+\--- com.squareup.okhttp3:okhttp:3.8.0
+     \--- com.squareup.okio:okio:1.13.0
+
+debugCompileOnly - Compile only dependencies for 'debug' sources. (n)
+No dependencies
+
+debugImplementation - Implementation only dependencies for 'debug' sources. (n)
+No dependencies
+
+debugMetadataElements - Metadata elements for debug (n)
+No dependencies
+
+debugProvided - Provided dependencies for 'debug' sources (deprecated: use 'debugCompileOnly' instead). (n)
+No dependencies
+
+debugRuntimeClasspath - Resolved configuration for runtime for variant: debug
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
+\--- com.squareup.okhttp3:okhttp:3.8.0
+     \--- com.squareup.okio:okio:1.13.0
+
+debugRuntimeElements - Runtime elements for debug (n)
+No dependencies
+
+debugRuntimeOnly - Runtime only dependencies for 'debug' sources. (n)
+No dependencies
+
+debugUnitTestAnnotationProcessorClasspath - Resolved configuration for annotation-processor for variant: debugUnitTest
+No dependencies
+
+debugUnitTestCompileClasspath - Resolved configuration for compilation for variant: debugUnitTest
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
++--- com.squareup.okhttp3:okhttp:3.8.0
+|    \--- com.squareup.okio:okio:1.13.0
+\--- junit:junit:4.12
+     \--- org.hamcrest:hamcrest-core:1.3
+
+debugUnitTestRuntimeClasspath - Resolved configuration for runtime for variant: debugUnitTest
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
++--- com.squareup.okhttp3:okhttp:3.8.0
+|    \--- com.squareup.okio:okio:1.13.0
+\--- junit:junit:4.12
+     \--- org.hamcrest:hamcrest-core:1.3
+
+debugWearApp - Link to a wear app to embed for object 'debug'. (n)
+No dependencies
+
+debugWearBundling - Resolved Configuration for wear app bundling for variant: debug
+No dependencies
+
+default - Configuration for default artifacts.
+No dependencies
+
+implementation - Implementation only dependencies for 'main' sources. (n)
++--- unspecified (n)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50 (n)
++--- com.android.support:appcompat-v7:26.1.0 (n)
++--- com.android.support.constraint:constraint-layout:1.1.3 (n)
++--- org.jetbrains.anko:anko-commons:0.10.4 (n)
+\--- com.squareup.okhttp3:okhttp:3.8.0 (n)
+
+kapt
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+kaptAndroidTest
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+kaptAndroidTestDebug
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+kaptDebug
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+kaptRelease
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+kaptTest
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+kaptTestDebug
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+kaptTestRelease
+\--- org.jetbrains.kotlin:kotlin-annotation-processing-gradle:1.2.50
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+     |    \--- org.jetbrains:annotations:13.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.2.50
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50 (*)
+          \--- org.jetbrains.kotlin:kotlin-script-runtime:1.2.50
+
+lintChecks - Configuration to apply external lint check jar
+No dependencies
+
+lintClassPath - The lint embedded classpath
+\--- com.android.tools.lint:lint-gradle:26.1.4
+     +--- com.android.tools:sdk-common:26.1.4
+     |    +--- com.android.tools:sdklib:26.1.4
+     |    |    +--- com.android.tools.layoutlib:layoutlib-api:26.1.4
+     |    |    |    +--- com.android.tools:common:26.1.4
+     |    |    |    |    +--- com.android.tools:annotations:26.1.4
+     |    |    |    |    \--- com.google.guava:guava:22.0
+     |    |    |    |         +--- com.google.code.findbugs:jsr305:1.3.9
+     |    |    |    |         +--- com.google.errorprone:error_prone_annotations:2.0.18
+     |    |    |    |         +--- com.google.j2objc:j2objc-annotations:1.1
+     |    |    |    |         \--- org.codehaus.mojo:animal-sniffer-annotations:1.14
+     |    |    |    +--- net.sf.kxml:kxml2:2.3.0
+     |    |    |    +--- com.android.tools:annotations:26.1.4
+     |    |    |    \--- org.jetbrains:annotations:13.0
+     |    |    +--- com.android.tools:dvlib:26.1.4
+     |    |    |    \--- com.android.tools:common:26.1.4 (*)
+     |    |    +--- com.android.tools:repository:26.1.4
+     |    |    |    +--- com.android.tools:common:26.1.4 (*)
+     |    |    |    +--- com.sun.activation:javax.activation:1.2.0
+     |    |    |    +--- org.apache.commons:commons-compress:1.12
+     |    |    |    +--- org.glassfish.jaxb:jaxb-runtime:2.2.11
+     |    |    |    |    +--- org.glassfish.jaxb:jaxb-core:2.2.11
+     |    |    |    |    |    +--- javax.xml.bind:jaxb-api:2.2.12-b140109.1041
+     |    |    |    |    |    +--- org.glassfish.jaxb:txw2:2.2.11
+     |    |    |    |    |    \--- com.sun.istack:istack-commons-runtime:2.21
+     |    |    |    |    +--- org.jvnet.staxex:stax-ex:1.7.7
+     |    |    |    |    \--- com.sun.xml.fastinfoset:FastInfoset:1.2.13
+     |    |    |    +--- com.google.jimfs:jimfs:1.1
+     |    |    |    |    \--- com.google.guava:guava:18.0 -> 22.0 (*)
+     |    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0
+     |    |    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.2.0
+     |    |    |         |    \--- org.jetbrains:annotations:13.0
+     |    |    |         \--- org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.0
+     |    |    |              \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.0 (*)
+     |    |    +--- com.google.code.gson:gson:2.7
+     |    |    +--- org.apache.commons:commons-compress:1.12
+     |    |    +--- org.apache.httpcomponents:httpclient:4.2.6
+     |    |    |    +--- org.apache.httpcomponents:httpcore:4.2.5
+     |    |    |    +--- commons-logging:commons-logging:1.1.1
+     |    |    |    \--- commons-codec:commons-codec:1.6
+     |    |    \--- org.apache.httpcomponents:httpmime:4.1
+     |    |         +--- org.apache.httpcomponents:httpcore:4.1 -> 4.2.5
+     |    |         \--- commons-logging:commons-logging:1.1.1
+     |    +--- com.android.tools.build:builder-test-api:3.1.4
+     |    |    \--- com.android.tools.ddms:ddmlib:26.1.4
+     |    |         +--- com.android.tools:common:26.1.4 (*)
+     |    |         \--- net.sf.kxml:kxml2:2.3.0
+     |    +--- com.android.tools.build:builder-model:3.1.4
+     |    |    \--- com.android.tools:annotations:26.1.4
+     |    +--- com.android.tools.ddms:ddmlib:26.1.4 (*)
+     |    +--- org.bouncycastle:bcpkix-jdk15on:1.56
+     |    |    \--- org.bouncycastle:bcprov-jdk15on:1.56
+     |    +--- org.bouncycastle:bcprov-jdk15on:1.56
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-reflect:1.2.0
+     |    |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.0 (*)
+     |    \--- com.google.protobuf:protobuf-java:3.4.0
+     +--- com.android.tools.build:builder:3.1.4
+     |    +--- com.android.tools.build:builder-model:3.1.4 (*)
+     |    +--- com.android.tools.build:builder-test-api:3.1.4 (*)
+     |    +--- com.android.tools:sdklib:26.1.4 (*)
+     |    +--- com.android.tools:sdk-common:26.1.4 (*)
+     |    +--- com.android.tools:common:26.1.4 (*)
+     |    +--- com.android.tools.build:manifest-merger:26.1.4
+     |    |    +--- com.android.tools:common:26.1.4 (*)
+     |    |    +--- com.android.tools:sdklib:26.1.4 (*)
+     |    |    +--- com.android.tools:sdk-common:26.1.4 (*)
+     |    |    +--- com.google.code.gson:gson:2.7
+     |    |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     |    |    \--- net.sf.kxml:kxml2:2.3.0
+     |    +--- com.android.tools.ddms:ddmlib:26.1.4 (*)
+     |    +--- com.android.tools.analytics-library:protos:26.1.4
+     |    |    \--- com.google.protobuf:protobuf-java:3.4.0
+     |    +--- com.android.tools.analytics-library:shared:26.1.4
+     |    |    +--- com.android.tools.analytics-library:protos:26.1.4 (*)
+     |    |    +--- com.android.tools:annotations:26.1.4
+     |    |    +--- com.android.tools:common:26.1.4 (*)
+     |    |    +--- com.google.guava:guava:22.0 (*)
+     |    |    \--- com.google.code.gson:gson:2.7
+     |    +--- com.android.tools.analytics-library:tracker:26.1.4
+     |    |    +--- com.android.tools:annotations:26.1.4
+     |    |    +--- com.android.tools:common:26.1.4 (*)
+     |    |    +--- com.android.tools.analytics-library:protos:26.1.4 (*)
+     |    |    +--- com.android.tools.analytics-library:shared:26.1.4 (*)
+     |    |    +--- com.google.protobuf:protobuf-java:3.4.0
+     |    |    \--- com.google.guava:guava:22.0 (*)
+     |    +--- com.android.tools.build:apksig:3.1.4
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     |    +--- com.squareup:javawriter:2.5.0
+     |    +--- org.bouncycastle:bcpkix-jdk15on:1.56 (*)
+     |    +--- org.bouncycastle:bcprov-jdk15on:1.56
+     |    +--- org.ow2.asm:asm:5.1
+     |    +--- org.ow2.asm:asm-tree:5.1
+     |    |    \--- org.ow2.asm:asm:5.1
+     |    +--- org.ow2.asm:asm-commons:5.1
+     |    |    \--- org.ow2.asm:asm-tree:5.1 (*)
+     |    +--- org.ow2.asm:asm-util:5.1
+     |    |    \--- org.ow2.asm:asm-tree:5.1 (*)
+     |    +--- it.unimi.dsi:fastutil:7.2.0
+     |    +--- net.sf.jopt-simple:jopt-simple:4.9
+     |    \--- com.googlecode.json-simple:json-simple:1.1
+     +--- com.android.tools.build:builder-model:3.1.4 (*)
+     +--- com.android.tools.external.com-intellij:intellij-core:26.1.4
+     |    \--- org.jetbrains.trove4j:trove4j:20160824
+     +--- com.android.tools.external.org-jetbrains:uast:26.1.4
+     +--- com.android.tools.build:manifest-merger:26.1.4 (*)
+     +--- com.android.tools.lint:lint:26.1.4
+     |    +--- com.android.tools.lint:lint-checks:26.1.4
+     |    |    +--- com.android.tools.lint:lint-api:26.1.4
+     |    |    |    +--- com.android.tools:sdk-common:26.1.4 (*)
+     |    |    |    +--- com.android.tools.build:builder-model:3.1.4 (*)
+     |    |    |    +--- com.google.guava:guava:22.0 (*)
+     |    |    |    +--- com.android.tools.lint:lint-kotlin:26.1.4
+     |    |    |    |    +--- com.android.tools.external.com-intellij:intellij-core:26.1.4 (*)
+     |    |    |    |    +--- com.android.tools.external.com-intellij:kotlin-compiler:26.1.4
+     |    |    |    |    +--- com.android.tools.external.org-jetbrains:uast:26.1.4
+     |    |    |    |    +--- org.jetbrains.kotlin:kotlin-reflect:1.2.0 (*)
+     |    |    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     |    |    |    +--- com.android.tools.external.com-intellij:intellij-core:26.1.4 (*)
+     |    |    |    +--- com.android.tools.external.org-jetbrains:uast:26.1.4
+     |    |    |    +--- com.android.tools.build:manifest-merger:26.1.4 (*)
+     |    |    |    +--- org.ow2.asm:asm:5.1
+     |    |    |    +--- org.ow2.asm:asm-tree:5.1 (*)
+     |    |    |    +--- org.jetbrains.kotlin:kotlin-reflect:1.2.0 (*)
+     |    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     |    |    +--- com.google.guava:guava:22.0 (*)
+     |    |    +--- com.android.tools.external.com-intellij:intellij-core:26.1.4 (*)
+     |    |    +--- com.android.tools.external.org-jetbrains:uast:26.1.4
+     |    |    \--- org.ow2.asm:asm-analysis:5.1
+     |    |         \--- org.ow2.asm:asm-tree:5.1 (*)
+     |    +--- com.android.tools.lint:lint-kotlin:26.1.4 (*)
+     |    +--- com.google.guava:guava:22.0 (*)
+     |    +--- com.android.tools.external.org-jetbrains:uast:26.1.4
+     |    +--- com.android.tools.external.com-intellij:kotlin-compiler:26.1.4
+     |    +--- com.android.tools.build:manifest-merger:26.1.4 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-reflect:1.2.0 (*)
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     +--- com.android.tools.lint:lint-gradle-api:26.1.4
+     |    +--- com.android.tools:sdklib:26.1.4 (*)
+     |    +--- com.android.tools.build:builder-model:3.1.4 (*)
+     |    +--- com.android.tools.build:gradle-api:3.1.4
+     |    |    +--- com.android.tools.build:builder-model:3.1.4 (*)
+     |    |    +--- com.android.tools.build:builder-test-api:3.1.4 (*)
+     |    |    +--- com.google.guava:guava:22.0 (*)
+     |    |    \--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-reflect:1.2.0 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+     |    \--- com.google.guava:guava:22.0 (*)
+     +--- org.codehaus.groovy:groovy-all:2.4.12
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.2.0 (*)
+     \--- org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.0 (*)
+
+provided - Provided dependencies for 'main' sources (deprecated: use 'compileOnly' instead). (n)
+No dependencies
+
+releaseAnnotationProcessor - Classpath for the annotation processor for 'release'. (n)
+No dependencies
+
+releaseAnnotationProcessorClasspath - Resolved configuration for annotation-processor for variant: release
+No dependencies
+
+releaseApi - API dependencies for 'release' sources. (n)
+No dependencies
+
+releaseApiElements - API elements for release (n)
+No dependencies
+
+releaseApk - Apk dependencies for 'release' sources (deprecated: use 'releaseRuntimeOnly' instead). (n)
+No dependencies
+
+releaseBundleElements - Bundle elements for release (n)
+No dependencies
+
+releaseCompile - Compile dependencies for 'release' sources (deprecated: use 'releaseImplementation' instead). (n)
+No dependencies
+
+releaseCompileClasspath - Resolved configuration for compilation for variant: release
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
+\--- com.squareup.okhttp3:okhttp:3.8.0
+     \--- com.squareup.okio:okio:1.13.0
+
+releaseCompileOnly - Compile only dependencies for 'release' sources. (n)
+No dependencies
+
+releaseImplementation - Implementation only dependencies for 'release' sources. (n)
+No dependencies
+
+releaseMetadataElements - Metadata elements for release (n)
+No dependencies
+
+releaseProvided - Provided dependencies for 'release' sources (deprecated: use 'releaseCompileOnly' instead). (n)
+No dependencies
+
+releaseRuntimeClasspath - Resolved configuration for runtime for variant: release
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
+\--- com.squareup.okhttp3:okhttp:3.8.0
+     \--- com.squareup.okio:okio:1.13.0
+
+releaseRuntimeElements - Runtime elements for release (n)
+No dependencies
+
+releaseRuntimeOnly - Runtime only dependencies for 'release' sources. (n)
+No dependencies
+
+releaseUnitTestAnnotationProcessorClasspath - Resolved configuration for annotation-processor for variant: releaseUnitTest
+No dependencies
+
+releaseUnitTestCompileClasspath - Resolved configuration for compilation for variant: releaseUnitTest
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
++--- com.squareup.okhttp3:okhttp:3.8.0
+|    \--- com.squareup.okio:okio:1.13.0
+\--- junit:junit:4.12
+     \--- org.hamcrest:hamcrest-core:1.3
+
+releaseUnitTestRuntimeClasspath - Resolved configuration for runtime for variant: releaseUnitTest
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.50
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.2.50
+|         +--- org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50
+|         \--- org.jetbrains:annotations:13.0
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support.constraint:constraint-layout:1.1.3
+|    \--- com.android.support.constraint:constraint-layout-solver:1.1.3
++--- org.jetbrains.anko:anko-commons:0.10.4
+|    \--- org.jetbrains.kotlin:kotlin-stdlib:1.1.0 -> 1.2.50 (*)
++--- com.squareup.okhttp3:okhttp:3.8.0
+|    \--- com.squareup.okio:okio:1.13.0
+\--- junit:junit:4.12
+     \--- org.hamcrest:hamcrest-core:1.3
+
+releaseWearApp - Link to a wear app to embed for object 'release'. (n)
+No dependencies
+
+releaseWearBundling - Resolved Configuration for wear app bundling for variant: release
+No dependencies
+
+runtimeOnly - Runtime only dependencies for 'main' sources. (n)
+No dependencies
+
+testAnnotationProcessor - Classpath for the annotation processor for 'test'. (n)
+No dependencies
+
+testApi - API dependencies for 'test' sources. (n)
+No dependencies
+
+testApk - Apk dependencies for 'test' sources (deprecated: use 'testRuntimeOnly' instead). (n)
+No dependencies
+
+testCompile - Compile dependencies for 'test' sources (deprecated: use 'testImplementation' instead).
+No dependencies
+
+testCompileOnly - Compile only dependencies for 'test' sources. (n)
+No dependencies
+
+testDebugAnnotationProcessor - Classpath for the annotation processor for 'testDebug'. (n)
+No dependencies
+
+testDebugApi - API dependencies for 'testDebug' sources. (n)
+No dependencies
+
+testDebugApk - Apk dependencies for 'testDebug' sources (deprecated: use 'testDebugRuntimeOnly' instead). (n)
+No dependencies
+
+testDebugCompile - Compile dependencies for 'testDebug' sources (deprecated: use 'testDebugImplementation' instead). (n)
+No dependencies
+
+testDebugCompileOnly - Compile only dependencies for 'testDebug' sources. (n)
+No dependencies
+
+testDebugImplementation - Implementation only dependencies for 'testDebug' sources. (n)
+No dependencies
+
+testDebugProvided - Provided dependencies for 'testDebug' sources (deprecated: use 'testDebugCompileOnly' instead). (n)
+No dependencies
+
+testDebugRuntimeOnly - Runtime only dependencies for 'testDebug' sources. (n)
+No dependencies
+
+testDebugWearApp - Link to a wear app to embed for object 'testDebug'. (n)
+No dependencies
+
+testImplementation - Implementation only dependencies for 'test' sources. (n)
+\--- junit:junit:4.12 (n)
+
+testProvided - Provided dependencies for 'test' sources (deprecated: use 'testCompileOnly' instead). (n)
+No dependencies
+
+testReleaseAnnotationProcessor - Classpath for the annotation processor for 'testRelease'. (n)
+No dependencies
+
+testReleaseApi - API dependencies for 'testRelease' sources. (n)
+No dependencies
+
+testReleaseApk - Apk dependencies for 'testRelease' sources (deprecated: use 'testReleaseRuntimeOnly' instead). (n)
+No dependencies
+
+testReleaseCompile - Compile dependencies for 'testRelease' sources (deprecated: use 'testReleaseImplementation' instead). (n)
+No dependencies
+
+testReleaseCompileOnly - Compile only dependencies for 'testRelease' sources. (n)
+No dependencies
+
+testReleaseImplementation - Implementation only dependencies for 'testRelease' sources. (n)
+No dependencies
+
+testReleaseProvided - Provided dependencies for 'testRelease' sources (deprecated: use 'testReleaseCompileOnly' instead). (n)
+No dependencies
+
+testReleaseRuntimeOnly - Runtime only dependencies for 'testRelease' sources. (n)
+No dependencies
+
+testReleaseWearApp - Link to a wear app to embed for object 'testRelease'. (n)
+No dependencies
+
+testRuntimeOnly - Runtime only dependencies for 'test' sources. (n)
+No dependencies
+
+testWearApp - Link to a wear app to embed for object 'test'. (n)
+No dependencies
+
+wearApp - Link to a wear app to embed for object 'main'. (n)
+No dependencies
+
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+BUILD SUCCESSFUL in 0s
+1 actionable task: 1 executed

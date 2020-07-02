@@ -415,9 +415,6 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     if (process.env.GRADLE_HOME) {
       GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
     }
-    if (fs.existsSync(pathLib.join(path, "gradlew"))) {
-      GRADLE_CMD = "gradlew";
-    }
     let pkgList = [];
     for (let i in gradleFiles) {
       const f = gradleFiles[i];
@@ -425,20 +422,16 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
       console.log("Executing 'gradle dependencies' in", basePath);
       const result = spawnSync(
         GRADLE_CMD,
-        [
-          "dependencies",
-          "-q",
-          "--configuration",
-          "default",
-          "--console",
-          "plain",
-        ],
+        ["dependencies", "-q", "--console", "plain"],
         { cwd: basePath }
       );
-      const cmdOutput = Buffer.from(result.stdout).toString();
-      const dlist = utils.parseGradleDep(cmdOutput);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      const stdout = result.stdout;
+      if (stdout) {
+        const cmdOutput = Buffer.from(stdout).toString();
+        const dlist = utils.parseGradleDep(cmdOutput);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
       }
     }
     pkgList = await utils.getMvnMetadata(pkgList);
