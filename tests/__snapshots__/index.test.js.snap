@@ -5,6 +5,46 @@ exports[`creatbom produces a BOM in JSON format 1`] = `
   \\"bomFormat\\": \\"CycloneDX\\",
   \\"specVersion\\": \\"1.2\\",
   \\"version\\": 1,
+  \\"metadata\\": {
+    \\"timestamp\\": \\"2020-01-01T01:00:00.000Z\\",
+    \\"tools\\": [
+      {
+        \\"vendor\\": \\"CycloneDX\\",
+        \\"name\\": \\"Node.js module\\",
+        \\"version\\": \\"2.0.0-SNAPSHOT\\"
+      }
+    ],
+    \\"component\\": {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\",
+      \\"group\\": \\"@cyclonedx\\",
+      \\"name\\": \\"bom-test-with-packages\\",
+      \\"version\\": \\"1.1.3\\",
+      \\"description\\": \\"Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects\\",
+      \\"licenses\\": [
+        {
+          \\"license\\": {
+            \\"id\\": \\"Apache-2.0\\"
+          }
+        }
+      ],
+      \\"purl\\": \\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\",
+      \\"externalReferences\\": [
+        {
+          \\"type\\": \\"website\\",
+          \\"url\\": \\"http://github.com/CycloneDX/cyclonedx-node-module\\"
+        },
+        {
+          \\"type\\": \\"issue-tracker\\",
+          \\"url\\": \\"https://github.com/CycloneDX/cyclonedx-node-module/issues\\"
+        },
+        {
+          \\"type\\": \\"vcs\\",
+          \\"url\\": \\"git+https://github.com/CycloneDX/cyclonedx-node-module.git\\"
+        }
+      ]
+    }
+  },
   \\"components\\": [
     {
       \\"type\\": \\"library\\",
@@ -1566,6 +1606,41 @@ exports[`creatbom produces a BOM in JSON format 1`] = `
 exports[`createbom produces a BOM with development dependencies 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
 <bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+  <metadata>
+    <timestamp>2020-01-01T01:00:00.000Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>Node.js module</name>
+        <version>2.0.0-SNAPSHOT</version>
+      </tool>
+    </tools>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\">
+      <group>@cyclonedx</group>
+      <name>bom-test-with-packages</name>
+      <version>1.1.3</version>
+      <description>
+        <![CDATA[Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects]]>
+      </description>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>http://github.com/CycloneDX/cyclonedx-node-module</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/CycloneDX/cyclonedx-node-module/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git+https://github.com/CycloneDX/cyclonedx-node-module.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+  </metadata>
   <components>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
       <name>packageurl-js</name>
@@ -3883,6 +3958,41 @@ SOFTWARE.
 exports[`createbom produces a BOM without development dependencies 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
 <bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+  <metadata>
+    <timestamp>2020-01-01T01:00:00.000Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>Node.js module</name>
+        <version>2.0.0-SNAPSHOT</version>
+      </tool>
+    </tools>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\">
+      <group>@cyclonedx</group>
+      <name>bom-test-with-packages</name>
+      <version>1.1.3</version>
+      <description>
+        <![CDATA[Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects]]>
+      </description>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>http://github.com/CycloneDX/cyclonedx-node-module</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/CycloneDX/cyclonedx-node-module/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git+https://github.com/CycloneDX/cyclonedx-node-module.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+  </metadata>
   <components>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
       <name>packageurl-js</name>
@@ -6149,6 +6259,22 @@ http://www.gnu.org/licenses/lgpl.html
 exports[`createbom produces an empty BOM 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
 <bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+  <metadata>
+    <timestamp>2020-01-01T01:00:00.000Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>CycloneDX</vendor>
+        <name>Node.js module</name>
+        <version>2.0.0-SNAPSHOT</version>
+      </tool>
+    </tools>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-tests-no-packages@0.0.0\\">
+      <group>@cyclonedx</group>
+      <name>bom-tests-no-packages</name>
+      <version>0.0.0</version>
+      <purl>pkg:npm/%40cyclonedx/bom-tests-no-packages@0.0.0</purl>
+    </component>
+  </metadata>
   <components/>
 </bom>"
 `;
@@ -6156,6 +6282,41 @@ exports[`createbom produces an empty BOM 1`] = `
 exports[`mergebom includes all dependencies in XML format 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
 <bom xmlns=\\"http://cyclonedx.org/schema/bom/1.2\\" version=\\"1\\">
+    <metadata>
+        <timestamp>2020-01-01T01:00:00.000Z</timestamp>
+        <tools>
+            <tool>
+                <vendor>CycloneDX</vendor>
+                <name>Node.js module</name>
+                <version>2.0.0-SNAPSHOT</version>
+            </tool>
+        </tools>
+        <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\">
+            <group>@cyclonedx</group>
+            <name>bom-test-with-packages</name>
+            <version>1.1.3</version>
+            <description>
+                <![CDATA[Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects]]>
+            </description>
+            <licenses>
+                <license>
+                    <id>Apache-2.0</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3</purl>
+            <externalReferences>
+                <reference type=\\"website\\">
+                    <url>http://github.com/CycloneDX/cyclonedx-node-module</url>
+                </reference>
+                <reference type=\\"issue-tracker\\">
+                    <url>https://github.com/CycloneDX/cyclonedx-node-module/issues</url>
+                </reference>
+                <reference type=\\"vcs\\">
+                    <url>git+https://github.com/CycloneDX/cyclonedx-node-module.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+    </metadata>
     <components>
         <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
             <name>packageurl-js</name>
