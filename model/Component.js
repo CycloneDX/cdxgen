@@ -40,7 +40,6 @@ class Component extends CycloneDXObject {
       this._licenses = new LicenseChoice(pkg, includeLicenseText);
       this._hashes = new HashList(pkg);
       this._externalReferences = new ExternalReferenceList(pkg);
-
       this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString();
       this._bomRef = this._purl;
     } else {
@@ -64,13 +63,16 @@ class Component extends CycloneDXObject {
     return 'library';
   }
 
+  static supportedComponentTypes() {
+    return ['application', 'framework', 'library', 'container', 'operating-system', 'device', 'firmware', 'file'];
+  }
+
   get type() {
     return this._type;
   }
 
   set type(value) {
-    const validChoices = ['application', 'framework', 'library', 'container', 'operating-system', 'device', 'firmware', 'file'];
-    this._type = this.validateChoice("Type", value, validChoices);
+    this._type = this.validateChoice("Type", value, Component.supportedComponentTypes());
   }
 
   get bomRef() {
@@ -206,8 +208,8 @@ class Component extends CycloneDXObject {
     return {
       'type': this._type,
       'bom-ref': this._bomRef,
-      supplier: (this._supplier) ? this._supplier.toJSON() : undefined,
-      author: this._author,
+      supplier: (CycloneDXObject.targetSpecVersion > 1.1 && this._supplier) ? this._supplier.toJSON() : undefined,
+      author: (CycloneDXObject.targetSpecVersion > 1.1) ? this._author: undefined,
       publisher: this._publisher,
       group: this._group,
       name: this._name,
@@ -219,7 +221,7 @@ class Component extends CycloneDXObject {
       copyright: this._copyright,
       cpe: this._cpe,
       purl: this._purl,
-      swid: (this._swid) ? this.swid.toJSON() : undefined,
+      swid: (CycloneDXObject.targetSpecVersion > 1.1 && this._swid) ? this.swid.toJSON() : undefined,
       externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toJSON() : undefined,
     };
   }
@@ -229,8 +231,8 @@ class Component extends CycloneDXObject {
       'component': {
         '@type': this._type,
         '@bom-ref': this._bomRef,
-        supplier: (this._supplier) ? this._supplier.toXML() : undefined,
-        author: this._author,
+        supplier: (CycloneDXObject.targetSpecVersion > 1.1 && this._supplier) ? this._supplier.toXML() : undefined,
+        author: (CycloneDXObject.targetSpecVersion > 1.1) ? this._author : undefined,
         publisher: this._publisher,
         group: this._group,
         name: this._name,
@@ -242,7 +244,7 @@ class Component extends CycloneDXObject {
         copyright: this._copyright,
         cpe: this._cpe,
         purl: this._purl,
-        swid: (this._swid) ? this.swid.toXML() : undefined,
+        swid: (CycloneDXObject.targetSpecVersion > 1.1 && this._swid) ? this.swid.toXML() : undefined,
         externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toXML() : undefined,
       }
     };

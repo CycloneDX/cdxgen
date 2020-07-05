@@ -39,6 +39,7 @@ Options:
   -l, --include-license-text Include full license text (default: false)
   -o, --output <output>      Write BOM to file (default: "bom.xml")
   -s, --schema <version>     Target schema version (default: "1.2")
+  -t, --type <type>          Project type (default: "library")
   -ns, --no-serial-number    Do not include BOM serial number
   -h, --help                 display help for command
 ```

@@ -21,12 +21,15 @@ const uuidv4 = require('uuid/v4');
 const Component = require('./Component');
 const CycloneDXObject = require('./CycloneDXObject');
 const Metadata = require('./Metadata');
+const Tool = require('./Tool');
+const program = require('../package.json');
 
 class Bom extends CycloneDXObject {
 
-  constructor(pkg, schemaVersion = "1.2", includeSerialNumber = true, includeLicenseText = true) {
+  constructor(pkg, schemaVersion = "1.2", componentType, includeSerialNumber = true, includeLicenseText = true) {
     super();
     this._schemaVersion = this.validateChoice("Schema version", schemaVersion, Bom.supportedSchemaVersions());
+    CycloneDXObject.targetSpecVersion(this._schemaVersion);
     this._includeSerialNumber = includeSerialNumber;
     this._includeLicenseText = includeLicenseText;
     this._version = 1;
@@ -34,6 +37,7 @@ class Bom extends CycloneDXObject {
       this._serialNumber = 'urn:uuid:' + uuidv4();
     }
     if (pkg) {
+      this._metadata = this.createMetadata(pkg, componentType);
       this._components = this.listComponents(pkg);
     } else {
       this._components = [];
@@ -42,6 +46,15 @@ class Bom extends CycloneDXObject {
 
   static supportedSchemaVersions() {
     return ["1.1", "1.2"];
+  }
+
+  createMetadata(pkg, componentType) {
+    let metadata = new Metadata();
+    metadata.component = new Component(pkg, this.includeLicenseText);
+    metadata.component.type = componentType;
+    let tool = new Tool("CycloneDX", "Node.js module", program.version);
+    metadata.tools.push(tool);
+    return metadata;
   }
 
   /**
@@ -144,6 +157,7 @@ class Bom extends CycloneDXObject {
 
   set schemaVersion(value) {
     this._schemaVersion = this.validateChoice("Schema version", value, Bom.supportedSchemaVersions());
+    CycloneDXObject.targetSpecVersion(this._schemaVersion);
   }
 
   get serialNumber() {

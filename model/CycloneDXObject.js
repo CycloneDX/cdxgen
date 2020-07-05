@@ -64,6 +64,13 @@ class CycloneDXObject {
     }
   }
 
+  static targetSpecVersion(schemaVersion) {
+    if (schemaVersion) {
+      process.env.CYCLONEDX_TARGET_SPEC_VERSION = schemaVersion;
+    }
+    return Number(process.env.CYCLONEDX_TARGET_SPEC_VERSION);
+  }
+
 }
 
 module.exports = CycloneDXObject;
