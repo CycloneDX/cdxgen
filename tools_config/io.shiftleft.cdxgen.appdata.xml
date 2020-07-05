@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="console-application">
+  <id>io.shiftleft.cdxgen</id>
+  
+  <name>cdxgen</name>
+  <summary>Create valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects</summary>
+  
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>Apache-2.0</project_license>
+  
+  <description>
+    <p>
+      Create valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects.
+    </p>
+    <p>
+    CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+    </p>
+  </description>
+  
+  <icon type="stock">utilities-terminal</icon>
+  
+  <categories>
+    <category>Development</category>
+    <category>Building</category>
+  </categories>
+  <url type="homepage">https://slscan.io</url>
+  <project_group>ShiftLeftSecurity</project_group>
+
+  <provides>
+    <binary>cdxgen</binary>
+  </provides>
+</component>
