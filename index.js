@@ -202,7 +202,7 @@ const buildBomString = (
 ) => {
   let bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
-    .att("xmlns", "http://cyclonedx.org/schema/bom/1.1");
+    .att("xmlns", "http://cyclonedx.org/schema/bom/1.2");
   if (includeBomSerialNumber) {
     bom.att("serialNumber", "urn:uuid:" + uuidv4());
   }
