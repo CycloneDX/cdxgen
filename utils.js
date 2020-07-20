@@ -26,7 +26,7 @@ exports.getAllFiles = getAllFiles;
  * and url of the license object, otherwise, set the 'name' of the license
  * object.
  */
-function getLicenses(pkg) {
+function getLicenses(pkg, format = "xml") {
   let license = pkg.license && (pkg.license.type || pkg.license);
   if (license) {
     if (!Array.isArray(license)) {
@@ -53,10 +53,10 @@ function getLicenses(pkg) {
         } else {
           return null;
         }
-        addLicenseText(pkg, l, licenseContent);
+        // addLicenseText(pkg, l, licenseContent, format);
         return licenseContent;
       })
-      .map((l) => ({ license: l }));
+      .map((l) => (format === "xml" ? { license: l } : l));
   }
   return null;
 }
@@ -67,7 +67,7 @@ exports.getLicenses = getLicenses;
  * used naming and content types. If a candidate file is found, add
  * the text to the license text object and stop.
  */
-function addLicenseText(pkg, l, licenseContent) {
+function addLicenseText(pkg, l, licenseContent, format = "xml") {
   let licenseFilenames = [
     "LICENSE",
     "License",
@@ -96,7 +96,8 @@ function addLicenseText(pkg, l, licenseContent) {
         if (fs.existsSync(licenseFilepath)) {
           licenseContent.text = readLicenseText(
             licenseFilepath,
-            licenseContentType
+            licenseContentType,
+            format
           );
           return;
         }
@@ -109,14 +110,22 @@ function addLicenseText(pkg, l, licenseContent) {
  * Read the file from the given path to the license text object and includes
  * content-type attribute, if not default. Returns the license text object.
  */
-function readLicenseText(licenseFilepath, licenseContentType) {
+function readLicenseText(licenseFilepath, licenseContentType, format = "xml") {
   let licenseText = fs.readFileSync(licenseFilepath, "utf8");
   if (licenseText) {
-    let licenseContentText = { "#cdata": licenseText };
-    if (licenseContentType !== "text/plain") {
-      licenseContentText["@content-type"] = licenseContentType;
+    if (format === "xml") {
+      let licenseContentText = { "#cdata": licenseText };
+      if (licenseContentType !== "text/plain") {
+        licenseContentText["@content-type"] = licenseContentType;
+      }
+      return licenseContentText;
+    } else {
+      let licenseContentText = { content: licenseText };
+      if (licenseContentType !== "text/plain") {
+        licenseContentText["contentType"] = licenseContentType;
+      }
+      return licenseContentText;
     }
-    return licenseContentText;
   }
   return null;
 }

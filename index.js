@@ -9,7 +9,7 @@ const PackageURL = require("packageurl-js");
 const builder = require("xmlbuilder");
 const utils = require("./utils");
 const { spawnSync } = require("child_process");
-
+const selfPjson = require("./package.json");
 let MVN_CMD = "mvn";
 if (process.env.MVN_CMD) {
   MVN_CMD = process.env.MVN_CMD;
@@ -39,27 +39,74 @@ function addGlobalReferences(src, filename) {
 }
 
 /**
+ * Function to create metadata block
+ *
+ */
+function addMetadata() {
+  let metadata = {
+    timestamp: new Date().toISOString(),
+    tools: [
+      {
+        tool: {
+          vendor: "AppThreat",
+          name: "cdxgen",
+          version: selfPjson.version,
+        },
+      },
+    ],
+    authors: [
+      {
+        author: { name: selfPjson.author, email: "cloud@appthreat.com" },
+      },
+    ],
+    supplier: undefined,
+  };
+  return metadata;
+}
+
+/**
  * Method to create external references
  *
  * @param pkg
  * @returns {Array}
  */
-function addExternalReferences(pkg) {
+function addExternalReferences(pkg, format = "xml") {
   let externalReferences = [];
-  if (pkg.homepage) {
-    externalReferences.push({
-      reference: { "@type": "website", url: pkg.homepage },
-    });
-  }
-  if (pkg.bugs && pkg.bugs.url) {
-    externalReferences.push({
-      reference: { "@type": "issue-tracker", url: pkg.bugs.url },
-    });
-  }
-  if (pkg.repository && pkg.repository.url) {
-    externalReferences.push({
-      reference: { "@type": "vcs", url: pkg.repository.url },
-    });
+  if (format === "xml") {
+    if (pkg.homepage) {
+      externalReferences.push({
+        reference: { "@type": "website", url: pkg.homepage },
+      });
+    }
+    if (pkg.bugs && pkg.bugs.url) {
+      externalReferences.push({
+        reference: { "@type": "issue-tracker", url: pkg.bugs.url },
+      });
+    }
+    if (pkg.repository && pkg.repository.url) {
+      externalReferences.push({
+        reference: { "@type": "vcs", url: pkg.repository.url },
+      });
+    }
+  } else {
+    if (pkg.homepage) {
+      externalReferences.push({
+        type: "website",
+        url: pkg.homepage,
+      });
+    }
+    if (pkg.bugs && pkg.bugs.url) {
+      externalReferences.push({
+        type: "issue-tracker",
+        url: pkg.bugs.url,
+      });
+    }
+    if (pkg.repository && pkg.repository.url) {
+      externalReferences.push({
+        type: "vcs",
+        url: pkg.repository.url,
+      });
+    }
   }
   return externalReferences;
 }
@@ -69,23 +116,27 @@ function addExternalReferences(pkg) {
  * component objects from each one.
  */
 exports.listComponents = listComponents;
-function listComponents(pkg, ptype = "npm") {
+function listComponents(pkg, ptype = "npm", format = "xml") {
   let list = {};
   let isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach((p) => {
-      addComponent(p, ptype, list, false);
+      addComponent(p, ptype, list, false, format);
     });
   } else {
-    addComponent(pkg, ptype, list, isRootPkg);
+    addComponent(pkg, ptype, list, isRootPkg, format);
   }
-  return Object.keys(list).map((k) => ({ component: list[k] }));
+  if (format === "xml") {
+    return Object.keys(list).map((k) => ({ component: list[k] }));
+  } else {
+    return Object.keys(list).map((k) => list[k]);
+  }
 }
 
 /**
  * Given the specified package, create a CycloneDX component and add it to the list.
  */
-function addComponent(pkg, ptype, list, isRootPkg = false) {
+function addComponent(pkg, ptype, list, isRootPkg = false, format = "xml") {
   //read-installed with default options marks devDependencies as extraneous
   //if a package is marked as extraneous, do not include it as a component
   if (pkg.extraneous) return;
@@ -98,7 +149,7 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
       return;
     }
     let version = pkg.version;
-    let licenses = utils.getLicenses(pkg);
+    let licenses = utils.getLicenses(pkg, format);
     let purl = new PackageURL(
       ptype,
       group,
@@ -110,18 +161,24 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
     let purlString = purl.toString();
     purlString = decodeURIComponent(purlString);
     let component = {
-      "@type": determinePackageType(pkg),
-      "@bom-ref": purlString,
       group: group,
       name: name,
       version: version,
-      description: { "#cdata": pkg.description },
+
       hashes: [],
       licenses: licenses,
       purl: purlString,
-      externalReferences: addExternalReferences(pkg),
+      externalReferences: addExternalReferences(pkg, format),
     };
-
+    if (format === "xml") {
+      component["@type"] = determinePackageType(pkg);
+      component["@bom-ref"] = purlString;
+      component["description"] = { "#cdata": pkg.description };
+    } else {
+      component["type"] = determinePackageType(pkg);
+      component["bom-ref"] = purlString;
+      component["description"] = pkg.description;
+    }
     if (
       component.externalReferences === undefined ||
       component.externalReferences.length === 0
@@ -129,7 +186,7 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
       delete component.externalReferences;
     }
 
-    processHashes(pkg, component);
+    processHashes(pkg, component, format);
 
     if (list[component.purl]) return; //remove cycles
     list[component.purl] = component;
@@ -138,7 +195,7 @@ function addComponent(pkg, ptype, list, isRootPkg = false) {
     Object.keys(pkg.dependencies)
       .map((x) => pkg.dependencies[x])
       .filter((x) => typeof x !== "string") //remove cycles
-      .map((x) => addComponent(x, ptype, list));
+      .map((x) => addComponent(x, ptype, list, false, format));
   }
 }
 
@@ -161,26 +218,47 @@ function determinePackageType(pkg) {
  * Uses the SHA1 shasum (if present) otherwise utilizes Subresource Integrity
  * of the package with support for multiple hashing algorithms.
  */
-function processHashes(pkg, component) {
+function processHashes(pkg, component, format = "xml") {
   if (pkg._shasum) {
-    component.hashes.push({
-      hash: { "@alg": "SHA-1", "#text": pkg._shasum },
-    });
+    let ahash = { "@alg": "SHA-1", "#text": pkg._shasum };
+    if (format === "json") {
+      ahash = { alg: "SHA-1", content: pkg._shasum };
+      component.hashes.push(ahash);
+    } else {
+      component.hashes.push({
+        hash: ahash,
+      });
+    }
   } else if (pkg._integrity) {
     let integrity = ssri.parse(pkg._integrity);
     // Components may have multiple hashes with various lengths. Check each one
     // that is supported by the CycloneDX specification.
     if (integrity.hasOwnProperty("sha512")) {
-      addComponentHash("SHA-512", integrity.sha512[0].digest, component);
+      addComponentHash(
+        "SHA-512",
+        integrity.sha512[0].digest,
+        component,
+        format
+      );
     }
     if (integrity.hasOwnProperty("sha384")) {
-      addComponentHash("SHA-384", integrity.sha384[0].digest, component);
+      addComponentHash(
+        "SHA-384",
+        integrity.sha384[0].digest,
+        component,
+        format
+      );
     }
     if (integrity.hasOwnProperty("sha256")) {
-      addComponentHash("SHA-256", integrity.sha256[0].digest, component);
+      addComponentHash(
+        "SHA-256",
+        integrity.sha256[0].digest,
+        component,
+        format
+      );
     }
     if (integrity.hasOwnProperty("sha1")) {
-      addComponentHash("SHA-1", integrity.sha1[0].digest, component);
+      addComponentHash("SHA-1", integrity.sha1[0].digest, component, format);
     }
   }
   if (component.hashes.length === 0) {
@@ -191,9 +269,15 @@ function processHashes(pkg, component) {
 /**
  * Adds a hash to component.
  */
-function addComponentHash(alg, digest, component) {
+function addComponentHash(alg, digest, component, format = "xml") {
   let hash = Buffer.from(digest, "base64").toString("hex");
-  component.hashes.push({ hash: { "@alg": alg, "#text": hash } });
+  let ahash = { "@alg": alg, "#text": hash };
+  if (format === "json") {
+    ahash = { alg: alg, content: hash };
+    component.hashes.push(ahash);
+  } else {
+    component.hashes.push({ hash: ahash });
+  }
 }
 
 const buildBomString = (
@@ -203,8 +287,9 @@ const buildBomString = (
   let bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.2");
+  const serialNum = "urn:uuid:" + uuidv4();
   if (includeBomSerialNumber) {
-    bom.att("serialNumber", "urn:uuid:" + uuidv4());
+    bom.att("serialNumber", serialNum);
   }
   bom.att("version", 1);
   if (context && context.src && context.filename) {
@@ -212,7 +297,9 @@ const buildBomString = (
       .ele("externalReferences")
       .ele(addGlobalReferences(context.src, context.filename));
   }
-  const components = listComponents(pkgInfo, ptype);
+  const metadata = addMetadata();
+  bom.ele("metadata").ele(metadata);
+  const components = listComponents(pkgInfo, ptype, "xml");
   if (components && components.length) {
     bom.ele("components").ele(components);
     let bomString = bom.end({
@@ -223,7 +310,16 @@ const buildBomString = (
       allowEmpty: false,
       spacebeforeslash: "",
     });
-    callback(null, bomString);
+    // CycloneDX 1.2 Json Template
+    let jsonTpl = {
+      bomFormat: "CycloneDX",
+      specVersion: "1.2",
+      serialNumber: serialNum,
+      version: 1,
+      metadata: metadata,
+      components: listComponents(pkgInfo, ptype, "json"),
+    };
+    callback(null, bomString, JSON.stringify(jsonTpl, null, 2));
   } else {
     callback();
   }
@@ -251,7 +347,18 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     fs.existsSync(pathLib.join(path, "package.json")) ||
     fs.existsSync(pathLib.join(path, "rush.json"))
   ) {
-    if (fs.existsSync(pathLib.join(path, "node_modules"))) {
+    if (fs.existsSync(pathLib.join(path, "pnpm-lock.yaml"))) {
+      const pkgList = utils.parsePnpmLock(pathLib.join(path, "pnpm-lock.yaml"));
+      return buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "npm",
+          context: { src: path, filename: "pnpm-lock.yaml" },
+        },
+        callback
+      );
+    } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
       readInstalled(path, options, (err, pkgInfo) => {
         buildBomString(
           {

@@ -1,12 +1,12 @@
 # CycloneDX Generator
 
-This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects in XML or JSON format. CycloneDX 1.2 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 ## Supported languages and package format
 
 | Language  | Package format                                        |
 | --------- | ----------------------------------------------------- |
-| node.js   | package-lock.json, yarn.lock, rush.js                 |
+| node.js   | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js |
 | java      | maven (pom.xml), gradle (build.gradle, .kts)          |
 | php       | composer.lock                                         |
 | python    | setup.py, requirements.txt, Pipfile.lock, poetry.lock |
@@ -33,8 +33,11 @@ npm install -g @appthreat/cdxgen
 $ cdxgen -h
 Options:
   --version, -v      Print version number                              [boolean]
-  --output, -o       Output file for bom.xml. Default console
+  --output, -o       Output file for bom.xml or bom.json. Default console
   --type, -t         Project type
+  --recurse, -r      Recurse mode suitable for mono-repos              [boolean]
+  --json, -j         Produce JSON output instead of XML based on CycloneDX 1.2
+                     specification                                     [boolean]
   --server-url       Dependency track or AppThreat server url. Eg:
                      https://deptrack.appthreat.io
   --api-key          Dependency track or AppThreat server api key

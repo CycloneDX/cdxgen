@@ -7,7 +7,7 @@ const path = require("path");
 const args = require("yargs")
   .option("output", {
     alias: "o",
-    description: "Output file for bom.xml. Default console",
+    description: "Output file for bom.xml or bom.json. Default console",
   })
   .option("type", {
     alias: "t",
@@ -17,6 +17,12 @@ const args = require("yargs")
     alias: "r",
     type: "boolean",
     description: "Recurse mode suitable for mono-repos",
+  })
+  .option("json", {
+    alias: "j",
+    type: "boolean",
+    description:
+      "Produce JSON output instead of XML based on CycloneDX 1.2 specification",
   })
   .option("version", {
     alias: "v",
@@ -63,7 +69,7 @@ let options = {
   dev: true,
   projectType: args.type,
   multiProject: args.recurse,
-  depth: 3
+  depth: 3,
 };
 
 let filePath = args._[0] || ".";
@@ -76,7 +82,7 @@ let filePath = args._[0] || ".";
  * @param options Parse options from the cli
  * @param callback Callback function accepting err, bomData
  */
-bom.createBom(true, filePath, options, (err, bomData) => {
+bom.createBom(true, filePath, options, (err, bomData, bomJsonData) => {
   if (!args.projectName) {
     if (filePath !== ".") {
       args.projectName = path.basename(filePath);
@@ -88,11 +94,17 @@ bom.createBom(true, filePath, options, (err, bomData) => {
     if (Array.isArray(bomData)) {
       console.log("BOM files produced:", bomData);
     } else {
-      fs.writeFile(args.output, bomData, () => {});
+      if (args.json || args.output.endsWith(".json")) {
+        fs.writeFile(args.output, bomJsonData, () => {});
+      } else {
+        fs.writeFile(args.output, bomData, () => {});
+      }
       console.log("BOM file written to", args.output);
     }
   } else {
-    if (bomData) {
+    if (bomJsonData) {
+      console.log(Buffer.from(bomJsonData).toString());
+    } else if (bomData) {
       console.log(Buffer.from(bomData).toString());
     } else {
       console.log("Unable to produce BOM for", filePath);
