@@ -53,7 +53,9 @@ function getLicenses(pkg, format = "xml") {
         } else {
           return null;
         }
-        // addLicenseText(pkg, l, licenseContent, format);
+        if (!licenseContent.id) {
+          addLicenseText(pkg, l, licenseContent, format);
+        }
         return licenseContent;
       })
       .map((l) => (format === "xml" ? { license: l } : l));

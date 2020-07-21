@@ -143,6 +143,10 @@ function addComponent(pkg, ptype, list, isRootPkg = false, format = "xml") {
   if (!isRootPkg) {
     let pkgIdentifier = parsePackageJsonName(pkg.name);
     let group = pkg.group || pkgIdentifier.scope;
+    // Create empty group for json format
+    if (format === "json") {
+      group = group || "";
+    }
     let name = pkgIdentifier.fullName || pkg.name;
     // Skip @types package for npm
     if (ptype == "npm" && (group === "types" || name.startsWith("@types"))) {
