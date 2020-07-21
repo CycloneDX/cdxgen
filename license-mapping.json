@@ -52,7 +52,8 @@
     "exp": "CDDL-1.0",
     "names": [
       "CDDL 1.0",
-      "CDDL License"
+      "CDDL License",
+      "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0"
     ]
   },
   {
@@ -118,6 +119,7 @@
       "GNU General Public License v2",
       "GNU General Public License v2.0",
       "GNU General Public License Version 2",
+      "GNU General Public License, version 2",
       "GNU General Public License as published by the Free Software Foundation; version 2."
     ]
   },
@@ -137,6 +139,7 @@
       "GPL2 w/ CPE",
       "GPLv2+CE",
       "GPLv2 with classpath exception",
+      "GNU General Public License v2.0 only, with Classpath exception",
       "As a special exception, the copyright holders of this library give you permission to link this library with independent modules to produce an executable, regardless of the license terms of these independent modules"
     ]
   },

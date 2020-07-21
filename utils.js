@@ -58,7 +58,7 @@ function getLicenses(pkg, format = "xml") {
         }
         return licenseContent;
       })
-      .map((l) => (format === "xml" ? { license: l } : l));
+      .map((l) => ({ license: l }));
   }
   return null;
 }

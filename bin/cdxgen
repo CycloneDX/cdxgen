@@ -18,12 +18,6 @@ const args = require("yargs")
     type: "boolean",
     description: "Recurse mode suitable for mono-repos",
   })
-  .option("json", {
-    alias: "j",
-    type: "boolean",
-    description:
-      "Produce JSON output instead of XML based on CycloneDX 1.2 specification",
-  })
   .option("version", {
     alias: "v",
     description: "Print version number",
@@ -94,11 +88,12 @@ bom.createBom(true, filePath, options, (err, bomData, bomJsonData) => {
     if (Array.isArray(bomData)) {
       console.log("BOM files produced:", bomData);
     } else {
-      if (bomJsonData && (args.json || args.output.endsWith(".json"))) {
-        fs.writeFile(args.output, bomJsonData, () => {});
-      } else {
-        fs.writeFile(args.output, bomData, () => {});
+      if (bomJsonData) {
+        const jsonFile = args.output.replace(".xml", ".json");
+        fs.writeFile(jsonFile, bomJsonData, () => {});
       }
+      const xmlFile = args.output.replace(".json", ".xml");
+      fs.writeFile(xmlFile, bomData, () => {});
       console.log("BOM file written to", args.output);
     }
   } else {

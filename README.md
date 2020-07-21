@@ -1,6 +1,6 @@
 # CycloneDX Generator
 
-This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects in XML or JSON format. CycloneDX 1.2 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects in XML and JSON format. CycloneDX 1.2 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 ## Supported languages and package format
 
@@ -36,8 +36,6 @@ Options:
   --output, -o       Output file for bom.xml or bom.json. Default console
   --type, -t         Project type
   --recurse, -r      Recurse mode suitable for mono-repos              [boolean]
-  --json, -j         Produce JSON output instead of XML based on CycloneDX 1.2
-                     specification                                     [boolean]
   --server-url       Dependency track or AppThreat server url. Eg:
                      https://deptrack.appthreat.io
   --api-key          Dependency track or AppThreat server api key
