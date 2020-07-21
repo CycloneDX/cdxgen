@@ -94,7 +94,7 @@ bom.createBom(true, filePath, options, (err, bomData, bomJsonData) => {
     if (Array.isArray(bomData)) {
       console.log("BOM files produced:", bomData);
     } else {
-      if (args.json || args.output.endsWith(".json")) {
+      if (bomJsonData && (args.json || args.output.endsWith(".json"))) {
         fs.writeFile(args.output, bomJsonData, () => {});
       } else {
         fs.writeFile(args.output, bomData, () => {});

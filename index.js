@@ -506,10 +506,18 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
         pathLib.join(firstPath, "target", "bom.xml"),
         { encoding: "utf-8" }
       );
-      callback(null, bomString);
+      let bomJonString = "";
+      if (fs.existsSync(pathLib.join(firstPath, "target", "bom.json"))) {
+        bomJonString = fs.readFileSync(
+          pathLib.join(firstPath, "target", "bom.json"),
+          { encoding: "utf-8" }
+        );
+      }
+      callback(null, bomString, bomJonString);
     } else {
       const bomFiles = utils.getAllFiles(path, "bom.xml");
-      callback(null, bomFiles);
+      const bomJsonFiles = utils.getAllFiles(path, "bom.json");
+      callback(null, bomFiles, bomJsonFiles);
     }
   }
   // gradle
