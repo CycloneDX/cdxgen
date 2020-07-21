@@ -897,6 +897,98 @@ const parseGopkgData = async function (gopkgData) {
 exports.parseGopkgData = parseGopkgData;
 
 /**
+ * Method to query rubygems api for gems details
+ *
+ * @param {*} pkgList List of packages with metadata
+ */
+const getRubyGemsMetadata = async function (pkgList) {
+  const RUBYGEMS_URL = "https://rubygems.org/api/v1/versions/";
+  const rdepList = [];
+  for (const p of pkgList) {
+    try {
+      const res = await got.get(RUBYGEMS_URL + p.name + ".json", {
+        responseType: "json",
+      });
+      let body = res.body;
+      if (body && body.length) {
+        body = body[0];
+      }
+      p.description = body.description || body.summary || "";
+      if (body.licenses) {
+        p.license = body.licenses;
+      }
+      if (body.metadata) {
+        if (body.metadata.source_code_uri) {
+          p.repository = { url: body.metadata.source_code_uri };
+        }
+        if (body.metadata.bug_tracker_uri) {
+          p.homepage = { url: body.metadata.bug_tracker_uri };
+        }
+      }
+      if (body.sha) {
+        p._integrity = "sha256-" + body.sha;
+      }
+      // Use the latest version if none specified
+      if (!p.version) {
+        p.version = body.number;
+      }
+      rdepList.push(p);
+    } catch (err) {
+      rdepList.push(p);
+      console.error(err);
+    }
+  }
+  return rdepList;
+};
+exports.getRubyGemsMetadata = getRubyGemsMetadata;
+
+/**
+ * Method to parse Gemfile.lock
+ *
+ * @param {*} gemLockData Gemfile.lock data
+ */
+const parseGemfileLockData = async function (gemLockData) {
+  const pkgList = [];
+  const pkgnames = {};
+  if (!gemLockData) {
+    return pkgList;
+  }
+  let specsFound = false;
+  gemLockData.split("\n").forEach((l) => {
+    l = l.trim();
+    if (specsFound) {
+      const tmpA = l.split(" ");
+      if (tmpA && tmpA.length == 2) {
+        const name = tmpA[0];
+        if (!pkgnames[name]) {
+          let version = tmpA[1].split(", ")[0];
+          version = version.replace(/[\(>=<\)~ ]/g, "");
+          pkgList.push({
+            name,
+            version,
+          });
+          pkgnames[name] = true;
+        }
+      }
+    } else {
+    }
+    if (l === "specs:") {
+      specsFound = true;
+    }
+    if (
+      l === "PLATFORMS" ||
+      l === "DEPENDENCIES" ||
+      l === "RUBY VERSION" ||
+      l === "BUNDLED WITH"
+    ) {
+      specsFound = false;
+    }
+  });
+  return await getRubyGemsMetadata(pkgList);
+};
+exports.parseGemfileLockData = parseGemfileLockData;
+
+/**
  * Method to retrieve metadata for rust packages by querying crates
  *
  * @param {Array} pkgList Package list

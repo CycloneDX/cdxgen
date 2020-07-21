@@ -753,6 +753,41 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     }
   }
 
+  // Ruby
+  const gemFile = pathLib.join(path, "Gemfile");
+  const gemLockFile = pathLib.join(path, "Gemfile.lock");
+  const gemFileMode = fs.existsSync(gemFile);
+  let gemLockMode = fs.existsSync(gemLockFile);
+  if (projectType === "ruby" || gemLockMode || gemFileMode) {
+    if (gemFileMode && !gemLockMode) {
+      console.log("Executing 'bundle install' in", path);
+      result = spawnSync("bundle", ["install"], { cwd: path });
+      if (result.status == 1 || result.error) {
+        console.error("Bundle install has failed.");
+      }
+      gemLockMode = fs.existsSync(gemLockFile);
+    }
+    if (gemLockMode) {
+      let gemLockData = fs.readFileSync(gemLockFile, { encoding: "utf-8" });
+      const pkgList = await utils.parseGemfileLockData(gemLockData);
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "rubygems",
+          context: { src: path, filename: "Gemfile.lock" },
+        },
+        callback
+      );
+    } else {
+      console.error(
+        "Unable to find Gemfile.lock for the ruby project at",
+        path
+      );
+      callback();
+    }
+  }
+
   // .Net
   const csProjFiles = utils.getAllFiles(
     path,

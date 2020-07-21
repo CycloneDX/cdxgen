@@ -494,3 +494,20 @@ test("parseComposerLock", () => {
       description: 'A non-blocking concurrency framework for PHP applications.'
   });
 });
+
+/*
+test("parseGemfileLockData", async () => {
+  jest.setTimeout(120000);
+  let deps = await utils.parseGemfileLockData(fs.readFileSync("./test/data/Gemfile.lock", (encoding = "utf-8")));
+  expect(deps.length).toEqual(140);
+  expect(deps[0]).toEqual({
+    name: 'actioncable',
+    version: '6.0.0',
+    description: 'Structure many real-time application concerns into channels over a single WebSocket connection.',
+    license: [ 'MIT' ],
+    repository: { url: 'https://github.com/rails/rails/tree/v6.0.3.2/actioncable' },
+    homepage: { url: 'https://github.com/rails/rails/issues' },
+    _integrity: 'sha256-66e6b55cac145991a0f1e7d163551f7deda27d91c18ebb3b7b1bbd28d9d8edd9'
+  });
+});
+*/

@@ -11,6 +11,7 @@ This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containi
 | php       | composer.lock                                         |
 | python    | setup.py, requirements.txt, Pipfile.lock, poetry.lock |
 | go        | go.sum, Gopkg.lock                                    |
+| ruby      | Gemfile.lock                                          |
 | rust      | Cargo.lock                                            |
 | .Net core | .csproj                                               |
 

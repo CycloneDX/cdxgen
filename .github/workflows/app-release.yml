@@ -1,4 +1,4 @@
-name: Release Scan AppImage
+name: Release AppImage
 
 on:
   push:
