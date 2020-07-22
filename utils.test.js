@@ -197,7 +197,7 @@ test("get crates metadata", async () => {
       "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
     description:
       "Application microframework with support for command-line option parsing,\nconfiguration, error handling, logging, and terminal interactions.\nThis crate contains the framework's core functionality.\n",
-    license: "Apache-2.0",
+    license: ["Apache-2.0"],
     repository: {
       url: "https://github.com/iqlusioninc/abscissa/tree/develop/",
     },
