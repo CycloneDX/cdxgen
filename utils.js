@@ -1002,7 +1002,8 @@ const getCratesMetadata = async function (pkgList) {
       const body = res.body.crate;
       p.description = body.description;
       if (res.body.versions) {
-        p.license = findLicenseId(res.body.versions[0].license);
+        const licenseString = res.body.versions[0].license;
+        p.license = licenseString.split("/");
       }
       if (body.repository) {
         p.repository = { url: body.repository };
@@ -1017,7 +1018,6 @@ const getCratesMetadata = async function (pkgList) {
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
-      console.error(err);
     }
   }
   return cdepList;
@@ -1045,7 +1045,7 @@ const parseCargoData = async function (cargoData) {
       value = tmpA[1].trim().replace(/\"/g, "");
       switch (key) {
         case "checksum":
-          pkg._integrity = "sha256-" + value;
+          pkg._integrity = "sha384-" + value;
           break;
         case "name":
           pkg.group = path.dirname(value);
@@ -1150,7 +1150,6 @@ const getNugetMetadata = async function (pkgList) {
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
-      console.error(p, err);
     }
   }
   return cdepList;
