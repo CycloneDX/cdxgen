@@ -8,6 +8,7 @@ const spdxLicenses = require("./spdx-licenses.json");
 const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
+const ssri = require("ssri");
 
 /**
  * Method to get files matching a pattern
@@ -869,7 +870,7 @@ const parseGopkgData = async function (gopkgData) {
       value = tmpA[1].trim().replace(/\"/g, "");
       switch (key) {
         case "digest":
-          pkg._integrity = value.replace("1:", "sha256-");
+          pkg._integrity = ssri.fromHex(value.substring(2), "sha256");
           break;
         case "name":
           pkg.group = path.dirname(value);
