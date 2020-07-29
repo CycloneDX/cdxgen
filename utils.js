@@ -20,6 +20,10 @@ const getAllFiles = function (dirPath, pattern) {
 };
 exports.getAllFiles = getAllFiles;
 
+const toBase64 = (hexString) => {
+  return Buffer.from(hexString, "hex").toString("base64");
+};
+
 /**
  * Performs a lookup + validation of the license specified in the
  * package. If the license is a valid SPDX license ID, set the 'id'
@@ -869,7 +873,8 @@ const parseGopkgData = async function (gopkgData) {
       value = tmpA[1].trim().replace(/\"/g, "");
       switch (key) {
         case "digest":
-          pkg._integrity = value.replace("1:", "sha256-");
+          const digest = value.replace("1:", "");
+          pkg._integrity = "sha256-" + toBase64(digest);
           break;
         case "name":
           pkg.group = path.dirname(value);

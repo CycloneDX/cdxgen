@@ -1,5 +1,17 @@
 const utils = require("./utils");
 const fs = require("fs");
+const ssri = require("ssri");
+
+test("SSRI test", () => {
+  // gopkg.lock hash
+  ss = ssri.parse("2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf");
+  expect(ss).toEqual({});
+  ss = ssri.parse("sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf");
+  expect(ss.sha256[0].digest).toStrictEqual('2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf');
+  ss = ssri.parse("sha256-" + Buffer.from("2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf", "hex").toString("base64"));
+  expect(ss.sha256[0].digest).toStrictEqual('LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=');
+});
+
 
 test("finds license id from name", () => {
   expect(utils.findLicenseId("Apache License Version 2.0")).toEqual(
@@ -154,7 +166,7 @@ test("parseGopkgData", async () => {
     ],
     version: "v0.39.0",
     _integrity:
-      "sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
+      "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",
   });
   dep_list.forEach((d) => {
     expect(d.license);

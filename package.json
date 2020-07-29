@@ -38,7 +38,8 @@
     "cdxgen": "./bin/cdxgen"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "watch": "jest --watch"
   },
   "engines": {
     "node": ">=8.0.0"
