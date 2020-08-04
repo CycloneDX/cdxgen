@@ -40,7 +40,8 @@ class Component extends CycloneDXObject {
       this._licenses = new LicenseChoice(pkg, includeLicenseText);
       this._hashes = new HashList(pkg);
       this._externalReferences = new ExternalReferenceList(pkg);
-      this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString();
+      if (this._name && this._version)
+        this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString();
       this._bomRef = this._purl;
     } else {
       this._hashes = new HashList();
