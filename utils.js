@@ -207,7 +207,10 @@ const parseYarnLock = function (yarnLockFile) {
         }
         if (l.includes("resolved")) {
           const tmpB = parts[1].split("#");
-          integrity = "sha256-" + tmpB[1].replace(/"/g, "");
+          if (tmpB.length > 1) {
+            const digest = tmpB[1].replace(/"/g, "");
+            integrity = "sha256-" + digest;
+          }
         }
       }
       if (name !== "" && version !== "" && integrity != "") {
@@ -626,27 +629,29 @@ exports.parsePoetrylockData = parsePoetrylockData;
 const parseReqFile = async function (reqData) {
   const pkgList = [];
   reqData.split("\n").forEach((l) => {
-    if (l.indexOf("=") > -1) {
-      const tmpA = l.split(/(==|<=|~=|>=)/);
-      let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
-      if (versionStr === "0") {
-        versionStr = null;
+    if (!l.startsWith("#")) {
+      if (l.indexOf("=") > -1) {
+        const tmpA = l.split(/(==|<=|~=|>=)/);
+        let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
+        if (versionStr === "0") {
+          versionStr = null;
+        }
+        pkgList.push({
+          name: tmpA[0].trim(),
+          version: versionStr,
+        });
+      } else if (/[>|\[|@]/.test(l)) {
+        const tmpA = l.split(/(>|\[|@)/);
+        pkgList.push({
+          name: tmpA[0].trim(),
+          version: null,
+        });
+      } else if (l) {
+        pkgList.push({
+          name: l,
+          version: null,
+        });
       }
-      pkgList.push({
-        name: tmpA[0].trim(),
-        version: versionStr,
-      });
-    } else if (/[>|\[|@]/.test(l)) {
-      const tmpA = l.split(/(>|\[|@)/);
-      pkgList.push({
-        name: tmpA[0].trim(),
-        version: null,
-      });
-    } else if (l) {
-      pkgList.push({
-        name: l,
-        version: null,
-      });
     }
   });
   return await getPyMetadata(pkgList);
