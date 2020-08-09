@@ -633,6 +633,9 @@ const parseReqFile = async function (reqData) {
       if (l.indexOf("=") > -1) {
         const tmpA = l.split(/(==|<=|~=|>=)/);
         let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
+        if (versionStr.indexOf(" ") > -1) {
+          versionStr = versionStr.split(" ")[0];
+        }
         if (versionStr === "0") {
           versionStr = null;
         }

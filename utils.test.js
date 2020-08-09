@@ -523,3 +523,9 @@ test("parseGemfileLockData", async () => {
   });
 });
 */
+
+test("parse requirements.txt with comments", async () => {
+  jest.setTimeout(120000);
+  let deps = await utils.parseReqFile(fs.readFileSync("./test/data/requirements.comments.txt", (encoding = "utf-8")));
+  expect(deps.length).toEqual(31);
+});
