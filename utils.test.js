@@ -529,3 +529,10 @@ test("parse requirements.txt with comments", async () => {
   let deps = await utils.parseReqFile(fs.readFileSync("./test/data/requirements.comments.txt", (encoding = "utf-8")));
   expect(deps.length).toEqual(31);
 });
+
+test("parse pipfile.lock with hashes", async () => {
+  jest.setTimeout(120000);
+  let deps = await utils.parsePiplockData(JSON.parse(fs.readFileSync("./test/data/Pipfile.lock", (encoding = "utf-8"))));
+  expect(deps.length).toEqual(46);
+});
+
