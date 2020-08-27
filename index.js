@@ -479,7 +479,6 @@ const createJavaBom = async (
         ["--sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
         { cwd: basePath }
       );
-      const cmdOutput = Buffer.from(result.stdout).toString();
       if (fs.existsSync(dlFile)) {
         const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
         const dlist = utils.parseKVDep(cmdOutput);
