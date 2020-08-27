@@ -4,16 +4,16 @@ This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containi
 
 ## Supported languages and package format
 
-| Language  | Package format                                        |
-| --------- | ----------------------------------------------------- |
-| node.js   | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js |
-| java      | maven (pom.xml), gradle (build.gradle, .kts)          |
-| php       | composer.lock                                         |
-| python    | setup.py, requirements.txt, Pipfile.lock, poetry.lock |
-| go        | go.sum, Gopkg.lock                                    |
-| ruby      | Gemfile.lock                                          |
-| rust      | Cargo.lock                                            |
-| .Net core | .csproj                                               |
+| Language  | Package format                                            |
+| --------- | --------------------------------------------------------- |
+| node.js   | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js     |
+| java      | maven (pom.xml), gradle (build.gradle, .kts), scala (sbt) |
+| php       | composer.lock                                             |
+| python    | setup.py, requirements.txt, Pipfile.lock, poetry.lock     |
+| go        | go.sum, Gopkg.lock                                        |
+| ruby      | Gemfile.lock                                              |
+| rust      | Cargo.lock                                                |
+| .Net core | .csproj                                                   |
 
 NOTE:
 

@@ -397,7 +397,38 @@ const parseGradleDep = function (rawOutput) {
   }
   return [];
 };
+
+/**
+ * Parse dependencies in Key:Value format
+ */
 exports.parseGradleDep = parseGradleDep;
+
+const parseKVDep = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    const deps = [];
+    rawOutput.split("\n").forEach((l) => {
+      const tmpA = l.split(":");
+      if (tmpA.length === 3) {
+        deps.push({
+          group: tmpA[0],
+          name: tmpA[1],
+          version: tmpA[2],
+          qualifiers: { type: "jar" },
+        });
+      } else if (tmpA.length === 2) {
+        deps.push({
+          group: "",
+          name: tmpA[0],
+          version: tmpA[1],
+          qualifiers: { type: "jar" },
+        });
+      }
+    });
+    return deps;
+  }
+  return [];
+};
+exports.parseKVDep = parseKVDep;
 
 /**
  * Method to find the spdx license id from name

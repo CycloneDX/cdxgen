@@ -1,5 +1,6 @@
 const readInstalled = require("read-installed");
 const parsePackageJsonName = require("parse-packagejson-name");
+const os = require("os");
 const pathLib = require("path");
 const request = require("request");
 const ssri = require("ssri");
@@ -440,6 +441,60 @@ const createJavaBom = async (
         pkgInfo: pkgList,
         ptype: "maven",
         context: { src: path, filename: "build.gradle" },
+      },
+      callback
+    );
+  }
+  // scala sbt
+  let sbtFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "build.sbt*"
+  );
+  if (sbtFiles && sbtFiles.length) {
+    let pkgList = [];
+    let SBT_CMD = "sbt";
+    let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
+    let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
+    tempSbtgDir = pathLib.join(tempSbtgDir, "1.0", "plugins");
+    fs.mkdirSync(tempSbtgDir, { recursive: true });
+    // Create temporary global plugins
+    fs.writeFileSync(
+      pathLib.join(tempSbtgDir, "build.sbt"),
+      `addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")\n`
+    );
+    for (let i in sbtFiles) {
+      const f = sbtFiles[i];
+      const basePath = pathLib.dirname(f);
+      let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
+      console.log(
+        "Executing",
+        SBT_CMD,
+        "dependencyList in",
+        basePath,
+        "using plugins",
+        tempSbtgDir
+      );
+      const result = spawnSync(
+        SBT_CMD,
+        ["--sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
+        { cwd: basePath }
+      );
+      const cmdOutput = Buffer.from(result.stdout).toString();
+      if (fs.existsSync(dlFile)) {
+        const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
+        const dlist = utils.parseKVDep(cmdOutput);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
+      }
+    }
+    pkgList = await utils.getMvnMetadata(pkgList);
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "maven",
+        context: { src: path, filename: "build.sbt" },
       },
       callback
     );
@@ -987,7 +1042,12 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     path,
     (options.multiProject ? "**/" : "") + "build.gradle*"
   );
-  if (pomFiles.length || gradleFiles.length) {
+  // scala sbt
+  let sbtFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "build.sbt*"
+  );
+  if (pomFiles.length || gradleFiles.length || sbtFiles.length) {
     return await createJavaBom(includeBomSerialNumber, path, options, callback);
   }
   // python
