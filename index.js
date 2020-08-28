@@ -11,6 +11,8 @@ const builder = require("xmlbuilder");
 const utils = require("./utils");
 const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
+const { findJSImports } = require("./analyzer");
+
 let MVN_CMD = "mvn";
 if (process.env.MVN_CMD) {
   MVN_CMD = process.env.MVN_CMD;
@@ -117,15 +119,15 @@ function addExternalReferences(pkg, format = "xml") {
  * component objects from each one.
  */
 exports.listComponents = listComponents;
-function listComponents(pkg, ptype = "npm", format = "xml") {
+function listComponents(allImports, pkg, ptype = "npm", format = "xml") {
   let list = {};
   let isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach((p) => {
-      addComponent(p, ptype, list, false, format);
+      addComponent(allImports, p, ptype, list, false, format);
     });
   } else {
-    addComponent(pkg, ptype, list, isRootPkg, format);
+    addComponent(allImports, pkg, ptype, list, isRootPkg, format);
   }
   if (format === "xml") {
     return Object.keys(list).map((k) => ({ component: list[k] }));
@@ -137,7 +139,14 @@ function listComponents(pkg, ptype = "npm", format = "xml") {
 /**
  * Given the specified package, create a CycloneDX component and add it to the list.
  */
-function addComponent(pkg, ptype, list, isRootPkg = false, format = "xml") {
+function addComponent(
+  allImports,
+  pkg,
+  ptype,
+  list,
+  isRootPkg = false,
+  format = "xml"
+) {
   //read-installed with default options marks devDependencies as extraneous
   //if a package is marked as extraneous, do not include it as a component
   if (pkg.extraneous) return;
@@ -175,6 +184,16 @@ function addComponent(pkg, ptype, list, isRootPkg = false, format = "xml") {
       purl: purlString,
       externalReferences: addExternalReferences(pkg, format),
     };
+    let compScope = undefined;
+    if (allImports) {
+      const impPkgs = Object.keys(allImports);
+      if (impPkgs.includes(name) || impPkgs.includes(group + "/" + name)) {
+        compScope = "required";
+      }
+    }
+    if (compScope) {
+      component["scope"] = compScope;
+    }
     if (format === "xml") {
       component["@type"] = determinePackageType(pkg);
       component["@bom-ref"] = purlString;
@@ -200,7 +219,7 @@ function addComponent(pkg, ptype, list, isRootPkg = false, format = "xml") {
     Object.keys(pkg.dependencies)
       .map((x) => pkg.dependencies[x])
       .filter((x) => typeof x !== "string") //remove cycles
-      .map((x) => addComponent(x, ptype, list, false, format));
+      .map((x) => addComponent(allImports, x, ptype, list, false, format));
   }
 }
 
@@ -302,9 +321,13 @@ const buildBomString = (
       .ele("externalReferences")
       .ele(addGlobalReferences(context.src, context.filename));
   }
+  let allImports = {};
+  if (context && context.allImports) {
+    allImports = context.allImports;
+  }
   const metadata = addMetadata();
   bom.ele("metadata").ele(metadata);
-  const components = listComponents(pkgInfo, ptype, "xml");
+  const components = listComponents(allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
     bom.ele("components").ele(components);
     let bomString = bom.end({
@@ -322,7 +345,7 @@ const buildBomString = (
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
-      components: listComponents(pkgInfo, ptype, "json"),
+      components: listComponents(allImports, pkgInfo, ptype, "json"),
     };
     callback(null, bomString, JSON.stringify(jsonTpl, null, 2));
   } else {
@@ -526,6 +549,7 @@ const createNodejsBom = async (
     path,
     (options.multiProject ? "**/" : "") + "pnpm-lock.yaml"
   );
+  const { allImports } = await findJSImports(path);
   if (pnpmLockFiles && pnpmLockFiles.length) {
     let pkgList = [];
     for (let i in pnpmLockFiles) {
@@ -540,7 +564,7 @@ const createNodejsBom = async (
         includeBomSerialNumber,
         pkgInfo: pkgList,
         ptype: "npm",
-        context: { src: path, filename: "pnpm-lock.yaml" },
+        context: { allImports, src: path, filename: "pnpm-lock.yaml" },
       },
       callback
     );
@@ -551,7 +575,7 @@ const createNodejsBom = async (
           includeBomSerialNumber,
           pkgInfo,
           ptype: "npm",
-          context: { src: path, filename: "package.json" },
+          context: { allImports, src: path, filename: "package.json" },
         },
         callback
       );
@@ -571,7 +595,7 @@ const createNodejsBom = async (
         includeBomSerialNumber,
         pkgInfo: pkgList,
         ptype: "npm",
-        context: { src: path, filename: "package-lock.json" },
+        context: { allImports, src: path, filename: "package-lock.json" },
       },
       callback
     );
@@ -608,7 +632,7 @@ const createNodejsBom = async (
           includeBomSerialNumber,
           pkgInfo: pkgList,
           ptype: "npm",
-          context: { src: path, filename: "shrinkwrap-deps.json" },
+          context: { allImports, src: path, filename: "shrinkwrap-deps.json" },
         },
         callback
       );
@@ -619,7 +643,7 @@ const createNodejsBom = async (
           includeBomSerialNumber,
           pkgInfo: pkgList,
           ptype: "npm",
-          context: { src: path, filename: "pnpm-lock.yaml" },
+          context: { allImports, src: path, filename: "pnpm-lock.yaml" },
         },
         callback
       );
@@ -648,7 +672,7 @@ const createNodejsBom = async (
         includeBomSerialNumber,
         pkgInfo: pkgList,
         ptype: "npm",
-        context: { src: path, filename: "yarn.lock" },
+        context: { allImports, src: path, filename: "yarn.lock" },
       },
       callback
     );

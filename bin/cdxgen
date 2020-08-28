@@ -93,9 +93,11 @@ bom.createBom(true, filePath, options, (err, bomData, bomJsonData) => {
         const jsonFile = args.output.replace(".xml", ".json");
         fs.writeFile(jsonFile, bomJsonData, () => {});
       }
-      const xmlFile = args.output.replace(".json", ".xml");
-      fs.writeFile(xmlFile, bomData, () => {});
-      console.log("BOM file written to", args.output);
+      if (bomData) {
+        const xmlFile = args.output.replace(".json", ".xml");
+        fs.writeFile(xmlFile, bomData, () => {});
+        console.log("BOM file written to", args.output);
+      }
     }
   } else {
     if (bomJsonData) {

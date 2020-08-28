@@ -16,7 +16,7 @@ const yaml = require("js-yaml");
  * @param {string} pattern Glob pattern (eg: *.gradle)
  */
 const getAllFiles = function (dirPath, pattern) {
-  return glob.sync(pattern, { cwd: dirPath, silent: false, absolute: true });
+  return glob.sync(pattern, { cwd: dirPath, silent: true, absolute: true });
 };
 exports.getAllFiles = getAllFiles;
 

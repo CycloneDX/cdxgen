@@ -52,6 +52,8 @@
     "url": "https://github.com/AppThreat/cdxgen/issues"
   },
   "dependencies": {
+    "@babel/parser": "^7.11.4",
+    "@babel/traverse": "^7.11.0",
     "cheerio": "^1.0.0-rc.3",
     "glob": "^7.1.6",
     "got": "^10.7.0",
