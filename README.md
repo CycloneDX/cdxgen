@@ -19,6 +19,11 @@ NOTE:
 
 - Apache maven is required for parsing pom.xml
 - gradle or gradlew is required to parse gradle projects
+- sbt is required for parsing scala sbt projects
+
+### Automatic usage detection (Node.js)
+
+There is a basic AST parser powered by babel-parser to detect packages that are imported and used in Node.js and TypeScript projects. Such imported packages would automatically have their `scope` property set to `required`. This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/appthreat/dep-scan) use this attribute to prioritize vulnerabilities.
 
 ## Usage
 
