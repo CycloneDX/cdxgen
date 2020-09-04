@@ -46,7 +46,7 @@
     "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
   "dependencies": {
-    "commander": "^5.1.0",
+    "commander": "^6.1.0",
     "packageurl-js": "^0.0.2",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
