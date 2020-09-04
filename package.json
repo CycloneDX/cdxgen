@@ -66,6 +66,6 @@
     "spdx-licenses.json"
   ],
   "devDependencies": {
-    "jest": "^25.5.4"
+    "jest": "^26.4.2"
   }
 }
