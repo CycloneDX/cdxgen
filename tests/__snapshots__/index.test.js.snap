@@ -1619,9 +1619,7 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
       <group>@cyclonedx</group>
       <name>bom-test-with-packages</name>
       <version>1.1.3</version>
-      <description>
-        <![CDATA[Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects]]>
-      </description>
+      <description><![CDATA[Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects]]></description>
       <licenses>
         <license>
           <id>Apache-2.0</id>
@@ -1645,9 +1643,7 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
       <name>packageurl-js</name>
       <version>0.0.1</version>
-      <description>
-        <![CDATA[JavaScript library to parse and build \\"purl\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url]]>
-      </description>
+      <description><![CDATA[JavaScript library to parse and build \\"purl\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">863333aba5ee03130c895e7950e2217fa6f25ca47d15cd38eb26eba060a98c6b49e4423d4091bd83f12b6283edd11194680af9d42eb1fa9c141bda5780b9daaa</hash>
       </hashes>
@@ -1672,17 +1668,14 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
     <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.2\\">
       <name>urijs</name>
       <version>1.19.2</version>
-      <description>
-        <![CDATA[URI.js is a Javascript library for working with URLs.]]>
-      </description>
+      <description><![CDATA[URI.js is a Javascript library for working with URLs.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">b3f508abd6a9e093d9ec7d4407950ba3f68e51b5aa7c38bb14accc0b6373fb44a2f06893d6b2046a9aedf21cb7572d84c766893e9390bf83f80ee399f8ad5ceb</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/txt\\">
-            <![CDATA[The MIT License (MIT)
+          <text content-type=\\"text/txt\\"><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2011 Rodney Rehm
 
@@ -1702,8 +1695,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.]]>
-          </text>
+THE SOFTWARE.]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/urijs@1.19.2</purl>
@@ -1722,9 +1714,7 @@ THE SOFTWARE.]]>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/parse-packagejson-name@1.0.1\\">
       <name>parse-packagejson-name</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[Parse an npm package name and returns some mildly interesting details about it]]>
-      </description>
+      <description><![CDATA[Parse an npm package name and returns some mildly interesting details about it]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">ab5b322cd38c87b4a01620683cca56ad74c006a0</hash>
       </hashes>
@@ -1749,17 +1739,14 @@ THE SOFTWARE.]]>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/prettify-xml@1.2.0\\">
       <name>prettify-xml</name>
       <version>1.2.0</version>
-      <description>
-        <![CDATA[Pretty-print XML.]]>
-      </description>
+      <description><![CDATA[Pretty-print XML.]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">46dcf1ee8a8d8b73db30b7e06ef26dc9cf3f6f18</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 Copyright (c) 2016 Jonathan Werner
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1779,8 +1766,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/prettify-xml@1.2.0</purl>
@@ -1799,17 +1785,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-installed@4.0.3\\">
       <name>read-installed</name>
       <version>4.0.3</version>
-      <description>
-        <![CDATA[Read all the installed packages in a folder, and return a tree structure with all the data.]]>
-      </description>
+      <description><![CDATA[Read all the installed packages in a folder, and return a tree structure with all the data.]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">ff9b8b67f187d1e4c29b9feb31f6b223acd19067</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -1825,8 +1808,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/read-installed@4.0.3</purl>
@@ -1845,17 +1827,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/debuglog@1.0.1\\">
       <name>debuglog</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[backport of util.debuglog from node v0.11]]>
-      </description>
+      <description><![CDATA[backport of util.debuglog from node v0.11]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">aa24ffb9ac3df9a2351837cfb2d279360cd78492</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+          <text><![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the \\"Software\\"), to
@@ -1874,8 +1853,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/debuglog@1.0.1</purl>
@@ -1894,17 +1872,14 @@ IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.1\\">
       <name>read-package-json</name>
       <version>2.1.1</version>
-      <description>
-        <![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]>
-      </description>
+      <description><![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">7408aa1ad55cfeae5da05cfad3de827275e1a5893464df1d10a56418b5340ac012b7c4ab805e9217b39328062e6dfbc58566aaa1f97e63c1cad7d191f23c16f8</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -1919,8 +1894,7 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/read-package-json@2.1.1</purl>
@@ -1939,17 +1913,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.1.6\\">
       <name>glob</name>
       <version>7.1.6</version>
-      <description>
-        <![CDATA[a little globber]]>
-      </description>
+      <description><![CDATA[a little globber]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">2f06b1c3267bd8b93bbd920db4d36bcb05f466e2f24adadd0ed69b79f64a018e59189855b607739e5b917acc4d98f8ad1344803be3b6eac5931de292236c0c04</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -1970,8 +1941,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 Glob's logo created by Tanya Brassie <http://tanyabrassie.com/>, licensed
 under a Creative Commons Attribution-ShareAlike 4.0 International License
 https://creativecommons.org/licenses/by-sa/4.0/
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/glob@7.1.6</purl>
@@ -1990,17 +1960,14 @@ https://creativecommons.org/licenses/by-sa/4.0/
     <component type=\\"library\\" bom-ref=\\"pkg:npm/fs.realpath@1.0.0\\">
       <name>fs.realpath</name>
       <version>1.0.0</version>
-      <description>
-        <![CDATA[Use node's fs.realpath, but fall back to the JS implementation if the native one fails]]>
-      </description>
+      <description><![CDATA[Use node's fs.realpath, but fall back to the JS implementation if the native one fails]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">1504ad2523158caa40db4a2787cb01411994ea4f</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -2043,8 +2010,7 @@ the licensed code:
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/fs.realpath@1.0.0</purl>
@@ -2063,17 +2029,14 @@ the licensed code:
     <component type=\\"library\\" bom-ref=\\"pkg:npm/inflight@1.0.6\\">
       <name>inflight</name>
       <version>1.0.6</version>
-      <description>
-        <![CDATA[Add callbacks to requests in flight to avoid async duplication]]>
-      </description>
+      <description><![CDATA[Add callbacks to requests in flight to avoid async duplication]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">49bd6331d7d02d0c09bc910a1075ba8165b56df9</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -2088,8 +2051,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/inflight@1.0.6</purl>
@@ -2108,17 +2070,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/once@1.4.0\\">
       <name>once</name>
       <version>1.4.0</version>
-      <description>
-        <![CDATA[Run a function exactly one time]]>
-      </description>
+      <description><![CDATA[Run a function exactly one time]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">583b1aa775961d4b113ac17d9c50baef9dd76bd1</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -2133,8 +2092,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/once@1.4.0</purl>
@@ -2153,17 +2111,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/wrappy@1.0.2\\">
       <name>wrappy</name>
       <version>1.0.2</version>
-      <description>
-        <![CDATA[Callback wrapping utility]]>
-      </description>
+      <description><![CDATA[Callback wrapping utility]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">b5243d8f3ec1aa35f1364605bc0d1036e30ab69f</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -2178,8 +2133,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/wrappy@1.0.2</purl>
@@ -2198,17 +2152,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/inherits@2.0.4\\">
       <name>inherits</name>
       <version>2.0.4</version>
-      <description>
-        <![CDATA[Browser-friendly inheritance fully compatible with standard node.js inherits()]]>
-      </description>
+      <description><![CDATA[Browser-friendly inheritance fully compatible with standard node.js inherits()]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">93fbc6697e3f6256b75b3c8c0af4d039761e207bea38ab67a8176ecd31e9ce9419cc0b2428c859d8af849c189233dcc64a820578ca572b16b8758799210a9ec1</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -2224,8 +2175,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/inherits@2.0.4</purl>
@@ -2244,17 +2194,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/minimatch@3.0.4\\">
       <name>minimatch</name>
       <version>3.0.4</version>
-      <description>
-        <![CDATA[a glob matcher in javascript]]>
-      </description>
+      <description><![CDATA[a glob matcher in javascript]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">c891d5404872a8f2d44e0b7d07cdcf5eee96debc7832fbc7bd252f4e8a20a70a060ce510fb20eb4741d1a2dfb23827423bbbb8857de959fb7a91604172a87450</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -2269,8 +2216,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/minimatch@3.0.4</purl>
@@ -2289,17 +2235,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/brace-expansion@1.1.11\\">
       <name>brace-expansion</name>
       <version>1.1.11</version>
-      <description>
-        <![CDATA[Brace expansion as known from sh/bash]]>
-      </description>
+      <description><![CDATA[Brace expansion as known from sh/bash]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">882b8f1c3160ac75fb1f6bc423fe71a73d3bcd21c1d344e9ba0aa1998b5598c3bae75f260ae44ca0e60595d101974835f3bb9fa3375a1e058a71815beb5a8688</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[MIT License
+          <text><![CDATA[MIT License
 
 Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
 
@@ -2320,8 +2263,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/brace-expansion@1.1.11</purl>
@@ -2340,17 +2282,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.0\\">
       <name>balanced-match</name>
       <version>1.0.0</version>
-      <description>
-        <![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]>
-      </description>
+      <description><![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">89b4d199ab2bee49de164ea02b89ce462d71b767</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[(MIT)
+          <text content-type=\\"text/markdown\\"><![CDATA[(MIT)
 
 Copyright (c) 2013 Julian Gruber &lt;julian@juliangruber.com&gt;
 
@@ -2371,8 +2310,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/balanced-match@1.0.0</purl>
@@ -2391,17 +2329,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/concat-map@0.0.1\\">
       <name>concat-map</name>
       <version>0.0.1</version>
-      <description>
-        <![CDATA[concatenative mapdashery]]>
-      </description>
+      <description><![CDATA[concatenative mapdashery]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">d8a96bd77fd68df7793a73036a3ba0d5405d477b</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[This software is released under the MIT license:
+          <text><![CDATA[This software is released under the MIT license:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the \\"Software\\"), to deal in
@@ -2419,8 +2354,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/concat-map@0.0.1</purl>
@@ -2439,17 +2373,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-is-absolute@1.0.1\\">
       <name>path-is-absolute</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[Node.js 0.12 path.isAbsolute() ponyfill]]>
-      </description>
+      <description><![CDATA[Node.js 0.12 path.isAbsolute() ponyfill]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 
 Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
@@ -2470,8 +2401,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/path-is-absolute@1.0.1</purl>
@@ -2490,25 +2420,21 @@ THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-better-errors@1.0.2\\">
       <name>json-parse-better-errors</name>
       <version>1.0.2</version>
-      <description>
-        <![CDATA[JSON.parse with context information on error]]>
-      </description>
+      <description><![CDATA[JSON.parse with context information on error]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">9abab264a7d7e4484bee1bea715e961b5c988e78deb980f30e185c00052babc3e8f3934140124ff990d44fbe6a650f7c22452806a76413192e90e53b4ecdb0af</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[Copyright 2017 Kat Marchán
+          <text content-type=\\"text/markdown\\"><![CDATA[Copyright 2017 Kat Marchán
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \\"Software\\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/json-parse-better-errors@1.0.2</purl>
@@ -2527,17 +2453,14 @@ THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
     <component type=\\"library\\" bom-ref=\\"pkg:npm/normalize-package-data@2.5.0\\">
       <name>normalize-package-data</name>
       <version>2.5.0</version>
-      <description>
-        <![CDATA[Normalizes data that can be found in package.json files.]]>
-      </description>
+      <description><![CDATA[Normalizes data that can be found in package.json files.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">ff908c3774f44785d38f80dc19a7b1a3eae8652752156ff400e39344eae3c73086d70ad65c4b066d129ebe39482fe643138b19949af9103e185b4caa9a42be78</hash>
       </hashes>
       <licenses>
         <license>
           <id>BSD-2-Clause</id>
-          <text>
-            <![CDATA[This package contains code originally written by Isaac Z. Schlueter.
+          <text><![CDATA[This package contains code originally written by Isaac Z. Schlueter.
 Used with permission.
 
 Copyright (c) Meryn Stol (\\"Author\\")
@@ -2567,8 +2490,7 @@ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/normalize-package-data@2.5.0</purl>
@@ -2587,17 +2509,14 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.5\\">
       <name>hosted-git-info</name>
       <version>2.8.5</version>
-      <description>
-        <![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]>
-      </description>
+      <description><![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">92cb2369bf02bdd5df71731755cbec5ee9b81f076af571ad443dd3b5e304bc46ead0b5f288d42be80a6ba8aa9f79a0d7cdeed2c56bd1c5da7013a92eee290b92</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[Copyright (c) 2015, Rebecca Turner
+          <text><![CDATA[Copyright (c) 2015, Rebecca Turner
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -2610,8 +2529,7 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/hosted-git-info@2.8.5</purl>
@@ -2630,17 +2548,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.14.2\\">
       <name>resolve</name>
       <version>1.14.2</version>
-      <description>
-        <![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]>
-      </description>
+      <description><![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">12394e04b04ed64c6c531b0a8cbb7b4c0102c8a5ba7ce87555193291090a1b37016e38cf23106a1a1d237fb189de4fdfe66c4ca96de1b4c0f759d4d456d5bc1d</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[MIT License
+          <text><![CDATA[MIT License
 
 Copyright (c) 2012 James Halliday
 
@@ -2661,8 +2576,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/resolve@1.14.2</purl>
@@ -2681,17 +2595,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.6\\">
       <name>path-parse</name>
       <version>1.0.6</version>
-      <description>
-        <![CDATA[Node.js path.parse() ponyfill]]>
-      </description>
+      <description><![CDATA[Node.js path.parse() ponyfill]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">19298e4f611b1eb20d05ff5247b08310bc2527c004364dd09fb3a290ae2715802edceb5edbe258355be4a401109b7fd32cd109143ff16498f3cb183728158ecf</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2015 Javier Blanco
 
@@ -2712,8 +2623,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/path-parse@1.0.6</purl>
@@ -2732,17 +2642,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/semver@5.7.1\\">
       <name>semver</name>
       <version>5.7.1</version>
-      <description>
-        <![CDATA[The semantic version parser used by npm.]]>
-      </description>
+      <description><![CDATA[The semantic version parser used by npm.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">b1ab9a0dffcf65d560acb4cd60746da576b589188a71a79b88a435049769425587da50af7b141d5f9e6c9cf1722bb433a6e76a6c2234a9715f39ab0777234319</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -2757,8 +2664,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/semver@5.7.1</purl>
@@ -2777,17 +2683,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/validate-npm-package-license@3.0.4\\">
       <name>validate-npm-package-license</name>
       <version>3.0.4</version>
-      <description>
-        <![CDATA[Give me a string and I'll tell you if it's a valid npm package license string]]>
-      </description>
+      <description><![CDATA[Give me a string and I'll tell you if it's a valid npm package license string]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">0e92a6d948bfc4deff1d0282b69671a11581859f59d24aadca01bc5c280d43c6650e7c6e4265a18f9eba8fc7cde02bb7fc999b86c0e8edf70026ae2cf61dbb13</hash>
       </hashes>
       <licenses>
         <license>
           <id>Apache-2.0</id>
-          <text>
-            <![CDATA[
+          <text><![CDATA[
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -2989,8 +2892,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/validate-npm-package-license@3.0.4</purl>
@@ -3009,17 +2911,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.0\\">
       <name>spdx-correct</name>
       <version>3.1.0</version>
-      <description>
-        <![CDATA[correct invalid SPDX expressions]]>
-      </description>
+      <description><![CDATA[correct invalid SPDX expressions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">96bd8464272d0b604d47b8fb5b32761690f39f1932d6c8dfc6fbd8132cf13726fa9595c7383984a09785bb826ea589647e16b5299a49ca8aa227ba60035aaaf1</hash>
       </hashes>
       <licenses>
         <license>
           <id>Apache-2.0</id>
-          <text>
-            <![CDATA[
+          <text><![CDATA[
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -3221,8 +3120,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/spdx-correct@3.1.0</purl>
@@ -3241,17 +3139,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.0\\">
       <name>spdx-expression-parse</name>
       <version>3.0.0</version>
-      <description>
-        <![CDATA[parse SPDX license expressions]]>
-      </description>
+      <description><![CDATA[parse SPDX license expressions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">620e83dd7a510f89243a64e97606d48842452a08491f4ddf882d4e3e597987fd2c3ba9de8768ea443547390e28fcb31e6b4b600a46cc81e6b98a9fdef8c916ca</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License
+          <text><![CDATA[The MIT License
 
 Copyright (c) 2015 Kyle E. Mitchell & other authors listed in AUTHORS
 
@@ -3273,8 +3168,7 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/spdx-expression-parse@3.0.0</purl>
@@ -3293,9 +3187,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.2.0\\">
       <name>spdx-exceptions</name>
       <version>2.2.0</version>
-      <description>
-        <![CDATA[list of SPDX standard license exceptions]]>
-      </description>
+      <description><![CDATA[list of SPDX standard license exceptions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">d9740009f1252a2f529556f509869d2835efa1a8cf80154f9ff80e40bad3bc774495a561afb6446ea25a46724b54d79a23870c10081509e04c285e8c5910c244</hash>
       </hashes>
@@ -3320,9 +3212,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.5\\">
       <name>spdx-license-ids</name>
       <version>3.0.5</version>
-      <description>
-        <![CDATA[A list of SPDX license identifiers]]>
-      </description>
+      <description><![CDATA[A list of SPDX license identifiers]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">27e156cd9a329c91171a9855212f97121de41528d95ffd62f6014169641c07efed9a97b6a94b12040069731ab19c0c45762505120017d5b8d8190bc8666a33f5</hash>
       </hashes>
@@ -3347,17 +3237,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/npm-normalize-package-bin@1.0.1\\">
       <name>npm-normalize-package-bin</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[Turn any flavor of allowable package.json bin into a normalized object]]>
-      </description>
+      <description><![CDATA[Turn any flavor of allowable package.json bin into a normalized object]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">10f7da7e5e892f9feb53ea2de8fde04520a93c35b95662335fde7d39bd7ec92154bae6075877a45e9c1d51970a3f90be0d2e0612d74996ec018e7b0d0e5f9f48</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) npm, Inc.
 
@@ -3372,8 +3259,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/npm-normalize-package-bin@1.0.1</purl>
@@ -3392,17 +3278,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/readdir-scoped-modules@1.1.0\\">
       <name>readdir-scoped-modules</name>
       <version>1.1.0</version>
-      <description>
-        <![CDATA[Like \`fs.readdir\` but handling \`@org/module\` dirs as if they were a single entry.]]>
-      </description>
+      <description><![CDATA[Like \`fs.readdir\` but handling \`@org/module\` dirs as if they were a single entry.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">6ac6a29037aa01083b2627d1b199f5349657a3d13e57097209f6e4661c322128a7aa4e73352eb6eba1d2e646a1e8fd1269028617a4a43676551d4cc7158c580f</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -3417,8 +3300,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/readdir-scoped-modules@1.1.0</purl>
@@ -3437,17 +3319,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/dezalgo@1.0.3\\">
       <name>dezalgo</name>
       <version>1.0.3</version>
-      <description>
-        <![CDATA[Contain async insanity so that the dark pony lord doesn't eat souls]]>
-      </description>
+      <description><![CDATA[Contain async insanity so that the dark pony lord doesn't eat souls]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">7f742de066fc748bc8db820569dddce49bf0d456</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -3462,8 +3341,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/dezalgo@1.0.3</purl>
@@ -3482,17 +3360,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/asap@2.0.6\\">
       <name>asap</name>
       <version>2.0.6</version>
-      <description>
-        <![CDATA[High-priority task queue for Node.js and browsers]]>
-      </description>
+      <description><![CDATA[High-priority task queue for Node.js and browsers]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">e50347611d7e690943208bbdafebcbc2fb866d46</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[
+          <text content-type=\\"text/markdown\\"><![CDATA[
 Copyright 2009–2014 Contributors. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3513,8 +3388,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/asap@2.0.6</purl>
@@ -3533,17 +3407,14 @@ IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/graceful-fs@4.2.3\\">
       <name>graceful-fs</name>
       <version>4.2.3</version>
-      <description>
-        <![CDATA[A drop-in replacement for fs, making various improvements.]]>
-      </description>
+      <description><![CDATA[A drop-in replacement for fs, making various improvements.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">6b7d151019b83c4771d5d441ecc14aec17a37a3bc2bc1ae89db2e386dfac1ee1988fc3c7b3b33fe59fabb79970e79d6f67bc9f4c28f856ecb2de6489cad0d645</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter, Ben Noordhuis, and Contributors
 
@@ -3558,8 +3429,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/graceful-fs@4.2.3</purl>
@@ -3578,17 +3448,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/slide@1.1.6\\">
       <name>slide</name>
       <version>1.1.6</version>
-      <description>
-        <![CDATA[A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS]]>
-      </description>
+      <description><![CDATA[A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -3603,8 +3470,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/slide@1.1.6</purl>
@@ -3623,17 +3489,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/util-extend@1.0.3\\">
       <name>util-extend</name>
       <version>1.0.3</version>
-      <description>
-        <![CDATA[Node's internal object extension function]]>
-      </description>
+      <description><![CDATA[Node's internal object extension function]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">a7c216d267545169637b3b6edc6ca9119e2ff93f</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+          <text><![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the \\"Software\\"), to
 deal in the Software without restriction, including without limitation the
@@ -3651,8 +3514,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/util-extend@1.0.3</purl>
@@ -3671,17 +3533,14 @@ IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.1\\">
       <name>ssri</name>
       <version>6.0.1</version>
-      <description>
-        <![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]>
-      </description>
+      <description><![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">dd681ed7484d713d4ababe0f0c5c0489e5d208c089b3fed6bd200272b318acda7e6fc9032f5ff4c09721e4d8b65abb7011ad883bc3ac55f78a21c88a083c7f40</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[ISC License
+          <text content-type=\\"text/markdown\\"><![CDATA[ISC License
 
 Copyright (c) npm, Inc.
 
@@ -3697,8 +3556,7 @@ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
 USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/ssri@6.0.1</purl>
@@ -3717,17 +3575,14 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.1\\">
       <name>figgy-pudding</name>
       <version>3.5.1</version>
-      <description>
-        <![CDATA[Delicious, festive, cascading config/opts definitions]]>
-      </description>
+      <description><![CDATA[Delicious, festive, cascading config/opts definitions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">bcd2b12474c428d4e18dfadd2701dcedbaef33a7957afb8ee674e3e9ecfc650d6a6d74ef1ad86e71117b4b8bdfd9cafbd505674fbd15df8bf44b50f242cb62d3</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[ISC License
+          <text content-type=\\"text/markdown\\"><![CDATA[ISC License
 
 Copyright (c) npm, Inc.
 
@@ -3743,8 +3598,7 @@ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
 USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/figgy-pudding@3.5.1</purl>
@@ -3763,17 +3617,14 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/uuid@3.4.0\\">
       <name>uuid</name>
       <version>3.4.0</version>
-      <description>
-        <![CDATA[RFC4122 (v1, v4, and v5) UUIDs]]>
-      </description>
+      <description><![CDATA[RFC4122 (v1, v4, and v5) UUIDs]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">1e3483470ea0644e4932081cb4705c8d56a4d3cf8a1158522220f31674fd4bd69e826a7ce52fdb45e0554dbe104c5691369b49f64b9868d8676cd10e91b29bfc</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[The MIT License (MIT)
+          <text content-type=\\"text/markdown\\"><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2010-2016 Robert Kieffer and other contributors
 
@@ -3794,8 +3645,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/uuid@3.4.0</purl>
@@ -3814,17 +3664,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmlbuilder@13.0.2\\">
       <name>xmlbuilder</name>
       <version>13.0.2</version>
-      <description>
-        <![CDATA[An XML builder for node.js]]>
-      </description>
+      <description><![CDATA[An XML builder for node.js]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">12ec748b641d0d829b75b03a00ceb11389ba65366be06e3117d91a848dae91210c0b3c1c7b6797f56953239277b3e354ee1a5ab05b2bf2158838d69eecb96e01</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2013 Ozgur Ozcitak
 
@@ -3845,8 +3692,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/xmlbuilder@13.0.2</purl>
@@ -3865,17 +3711,14 @@ THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmldom@0.2.1\\">
       <name>xmldom</name>
       <version>0.2.1</version>
-      <description>
-        <![CDATA[A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).]]>
-      </description>
+      <description><![CDATA[A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">9175e262f99b9488047a619e07be72f7b1726996afc7a490846a692f0e53296003d96774280972d20db77952e1d7b61ca716699c5ca6d5093f79a463cb500f3e</hash>
       </hashes>
       <licenses>
         <license>
           <name>(LGPL-2.0 or MIT)</name>
-          <text>
-            <![CDATA[You can choose any one of those:
+          <text><![CDATA[You can choose any one of those:
 
 The MIT License (MIT):
 
@@ -3883,8 +3726,7 @@ link:http://opensource.org/licenses/MIT
 
 LGPL:
 http://www.gnu.org/licenses/lgpl.html
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/xmldom@0.2.1</purl>
@@ -3903,17 +3745,14 @@ http://www.gnu.org/licenses/lgpl.html
     <component type=\\"library\\" bom-ref=\\"pkg:npm/envinfo@7.5.1\\">
       <name>envinfo</name>
       <version>7.5.1</version>
-      <description>
-        <![CDATA[Info about your dev environment for debugging purposes]]>
-      </description>
+      <description><![CDATA[Info about your dev environment for debugging purposes]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">8500640dfda23b836fd02347a42b9205e692aef794ea74e15711464ebabf783955ef5e94424d3dcc285a25a7b899946ca2cd71e182d8d93687dcb1d469edd999</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[MIT License
+          <text><![CDATA[MIT License
 
 Copyright (c) 2018 Trevor Brindle
 
@@ -3934,8 +3773,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/envinfo@7.5.1</purl>
@@ -3971,9 +3809,7 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
       <group>@cyclonedx</group>
       <name>bom-test-with-packages</name>
       <version>1.1.3</version>
-      <description>
-        <![CDATA[Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects]]>
-      </description>
+      <description><![CDATA[Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects]]></description>
       <licenses>
         <license>
           <id>Apache-2.0</id>
@@ -3997,9 +3833,7 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
       <name>packageurl-js</name>
       <version>0.0.1</version>
-      <description>
-        <![CDATA[JavaScript library to parse and build \\"purl\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url]]>
-      </description>
+      <description><![CDATA[JavaScript library to parse and build \\"purl\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">863333aba5ee03130c895e7950e2217fa6f25ca47d15cd38eb26eba060a98c6b49e4423d4091bd83f12b6283edd11194680af9d42eb1fa9c141bda5780b9daaa</hash>
       </hashes>
@@ -4024,17 +3858,14 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
     <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.2\\">
       <name>urijs</name>
       <version>1.19.2</version>
-      <description>
-        <![CDATA[URI.js is a Javascript library for working with URLs.]]>
-      </description>
+      <description><![CDATA[URI.js is a Javascript library for working with URLs.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">b3f508abd6a9e093d9ec7d4407950ba3f68e51b5aa7c38bb14accc0b6373fb44a2f06893d6b2046a9aedf21cb7572d84c766893e9390bf83f80ee399f8ad5ceb</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/txt\\">
-            <![CDATA[The MIT License (MIT)
+          <text content-type=\\"text/txt\\"><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2011 Rodney Rehm
 
@@ -4054,8 +3885,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.]]>
-          </text>
+THE SOFTWARE.]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/urijs@1.19.2</purl>
@@ -4074,9 +3904,7 @@ THE SOFTWARE.]]>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/parse-packagejson-name@1.0.1\\">
       <name>parse-packagejson-name</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[Parse an npm package name and returns some mildly interesting details about it]]>
-      </description>
+      <description><![CDATA[Parse an npm package name and returns some mildly interesting details about it]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">ab5b322cd38c87b4a01620683cca56ad74c006a0</hash>
       </hashes>
@@ -4101,17 +3929,14 @@ THE SOFTWARE.]]>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/prettify-xml@1.2.0\\">
       <name>prettify-xml</name>
       <version>1.2.0</version>
-      <description>
-        <![CDATA[Pretty-print XML.]]>
-      </description>
+      <description><![CDATA[Pretty-print XML.]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">46dcf1ee8a8d8b73db30b7e06ef26dc9cf3f6f18</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 Copyright (c) 2016 Jonathan Werner
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4131,8 +3956,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/prettify-xml@1.2.0</purl>
@@ -4151,17 +3975,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-installed@4.0.3\\">
       <name>read-installed</name>
       <version>4.0.3</version>
-      <description>
-        <![CDATA[Read all the installed packages in a folder, and return a tree structure with all the data.]]>
-      </description>
+      <description><![CDATA[Read all the installed packages in a folder, and return a tree structure with all the data.]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">ff9b8b67f187d1e4c29b9feb31f6b223acd19067</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -4177,8 +3998,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/read-installed@4.0.3</purl>
@@ -4197,17 +4017,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/debuglog@1.0.1\\">
       <name>debuglog</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[backport of util.debuglog from node v0.11]]>
-      </description>
+      <description><![CDATA[backport of util.debuglog from node v0.11]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">aa24ffb9ac3df9a2351837cfb2d279360cd78492</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+          <text><![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the \\"Software\\"), to
@@ -4226,8 +4043,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/debuglog@1.0.1</purl>
@@ -4246,17 +4062,14 @@ IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.1\\">
       <name>read-package-json</name>
       <version>2.1.1</version>
-      <description>
-        <![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]>
-      </description>
+      <description><![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">7408aa1ad55cfeae5da05cfad3de827275e1a5893464df1d10a56418b5340ac012b7c4ab805e9217b39328062e6dfbc58566aaa1f97e63c1cad7d191f23c16f8</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -4271,8 +4084,7 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/read-package-json@2.1.1</purl>
@@ -4291,17 +4103,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.1.6\\">
       <name>glob</name>
       <version>7.1.6</version>
-      <description>
-        <![CDATA[a little globber]]>
-      </description>
+      <description><![CDATA[a little globber]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">2f06b1c3267bd8b93bbd920db4d36bcb05f466e2f24adadd0ed69b79f64a018e59189855b607739e5b917acc4d98f8ad1344803be3b6eac5931de292236c0c04</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -4322,8 +4131,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 Glob's logo created by Tanya Brassie <http://tanyabrassie.com/>, licensed
 under a Creative Commons Attribution-ShareAlike 4.0 International License
 https://creativecommons.org/licenses/by-sa/4.0/
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/glob@7.1.6</purl>
@@ -4342,17 +4150,14 @@ https://creativecommons.org/licenses/by-sa/4.0/
     <component type=\\"library\\" bom-ref=\\"pkg:npm/fs.realpath@1.0.0\\">
       <name>fs.realpath</name>
       <version>1.0.0</version>
-      <description>
-        <![CDATA[Use node's fs.realpath, but fall back to the JS implementation if the native one fails]]>
-      </description>
+      <description><![CDATA[Use node's fs.realpath, but fall back to the JS implementation if the native one fails]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">1504ad2523158caa40db4a2787cb01411994ea4f</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -4395,8 +4200,7 @@ the licensed code:
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
   DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/fs.realpath@1.0.0</purl>
@@ -4415,17 +4219,14 @@ the licensed code:
     <component type=\\"library\\" bom-ref=\\"pkg:npm/inflight@1.0.6\\">
       <name>inflight</name>
       <version>1.0.6</version>
-      <description>
-        <![CDATA[Add callbacks to requests in flight to avoid async duplication]]>
-      </description>
+      <description><![CDATA[Add callbacks to requests in flight to avoid async duplication]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">49bd6331d7d02d0c09bc910a1075ba8165b56df9</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -4440,8 +4241,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/inflight@1.0.6</purl>
@@ -4460,17 +4260,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/once@1.4.0\\">
       <name>once</name>
       <version>1.4.0</version>
-      <description>
-        <![CDATA[Run a function exactly one time]]>
-      </description>
+      <description><![CDATA[Run a function exactly one time]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">583b1aa775961d4b113ac17d9c50baef9dd76bd1</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -4485,8 +4282,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/once@1.4.0</purl>
@@ -4505,17 +4301,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/wrappy@1.0.2\\">
       <name>wrappy</name>
       <version>1.0.2</version>
-      <description>
-        <![CDATA[Callback wrapping utility]]>
-      </description>
+      <description><![CDATA[Callback wrapping utility]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">b5243d8f3ec1aa35f1364605bc0d1036e30ab69f</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -4530,8 +4323,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/wrappy@1.0.2</purl>
@@ -4550,17 +4342,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/inherits@2.0.4\\">
       <name>inherits</name>
       <version>2.0.4</version>
-      <description>
-        <![CDATA[Browser-friendly inheritance fully compatible with standard node.js inherits()]]>
-      </description>
+      <description><![CDATA[Browser-friendly inheritance fully compatible with standard node.js inherits()]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">93fbc6697e3f6256b75b3c8c0af4d039761e207bea38ab67a8176ecd31e9ce9419cc0b2428c859d8af849c189233dcc64a820578ca572b16b8758799210a9ec1</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -4576,8 +4365,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/inherits@2.0.4</purl>
@@ -4596,17 +4384,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/minimatch@3.0.4\\">
       <name>minimatch</name>
       <version>3.0.4</version>
-      <description>
-        <![CDATA[a glob matcher in javascript]]>
-      </description>
+      <description><![CDATA[a glob matcher in javascript]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">c891d5404872a8f2d44e0b7d07cdcf5eee96debc7832fbc7bd252f4e8a20a70a060ce510fb20eb4741d1a2dfb23827423bbbb8857de959fb7a91604172a87450</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -4621,8 +4406,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/minimatch@3.0.4</purl>
@@ -4641,17 +4425,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/brace-expansion@1.1.11\\">
       <name>brace-expansion</name>
       <version>1.1.11</version>
-      <description>
-        <![CDATA[Brace expansion as known from sh/bash]]>
-      </description>
+      <description><![CDATA[Brace expansion as known from sh/bash]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">882b8f1c3160ac75fb1f6bc423fe71a73d3bcd21c1d344e9ba0aa1998b5598c3bae75f260ae44ca0e60595d101974835f3bb9fa3375a1e058a71815beb5a8688</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[MIT License
+          <text><![CDATA[MIT License
 
 Copyright (c) 2013 Julian Gruber <julian@juliangruber.com>
 
@@ -4672,8 +4453,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/brace-expansion@1.1.11</purl>
@@ -4692,17 +4472,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.0\\">
       <name>balanced-match</name>
       <version>1.0.0</version>
-      <description>
-        <![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]>
-      </description>
+      <description><![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">89b4d199ab2bee49de164ea02b89ce462d71b767</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[(MIT)
+          <text content-type=\\"text/markdown\\"><![CDATA[(MIT)
 
 Copyright (c) 2013 Julian Gruber &lt;julian@juliangruber.com&gt;
 
@@ -4723,8 +4500,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/balanced-match@1.0.0</purl>
@@ -4743,17 +4519,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/concat-map@0.0.1\\">
       <name>concat-map</name>
       <version>0.0.1</version>
-      <description>
-        <![CDATA[concatenative mapdashery]]>
-      </description>
+      <description><![CDATA[concatenative mapdashery]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">d8a96bd77fd68df7793a73036a3ba0d5405d477b</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[This software is released under the MIT license:
+          <text><![CDATA[This software is released under the MIT license:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the \\"Software\\"), to deal in
@@ -4771,8 +4544,7 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/concat-map@0.0.1</purl>
@@ -4791,17 +4563,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-is-absolute@1.0.1\\">
       <name>path-is-absolute</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[Node.js 0.12 path.isAbsolute() ponyfill]]>
-      </description>
+      <description><![CDATA[Node.js 0.12 path.isAbsolute() ponyfill]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 
 Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
 
@@ -4822,8 +4591,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/path-is-absolute@1.0.1</purl>
@@ -4842,25 +4610,21 @@ THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-better-errors@1.0.2\\">
       <name>json-parse-better-errors</name>
       <version>1.0.2</version>
-      <description>
-        <![CDATA[JSON.parse with context information on error]]>
-      </description>
+      <description><![CDATA[JSON.parse with context information on error]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">9abab264a7d7e4484bee1bea715e961b5c988e78deb980f30e185c00052babc3e8f3934140124ff990d44fbe6a650f7c22452806a76413192e90e53b4ecdb0af</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[Copyright 2017 Kat Marchán
+          <text content-type=\\"text/markdown\\"><![CDATA[Copyright 2017 Kat Marchán
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \\"Software\\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/json-parse-better-errors@1.0.2</purl>
@@ -4879,17 +4643,14 @@ THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
     <component type=\\"library\\" bom-ref=\\"pkg:npm/normalize-package-data@2.5.0\\">
       <name>normalize-package-data</name>
       <version>2.5.0</version>
-      <description>
-        <![CDATA[Normalizes data that can be found in package.json files.]]>
-      </description>
+      <description><![CDATA[Normalizes data that can be found in package.json files.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">ff908c3774f44785d38f80dc19a7b1a3eae8652752156ff400e39344eae3c73086d70ad65c4b066d129ebe39482fe643138b19949af9103e185b4caa9a42be78</hash>
       </hashes>
       <licenses>
         <license>
           <id>BSD-2-Clause</id>
-          <text>
-            <![CDATA[This package contains code originally written by Isaac Z. Schlueter.
+          <text><![CDATA[This package contains code originally written by Isaac Z. Schlueter.
 Used with permission.
 
 Copyright (c) Meryn Stol (\\"Author\\")
@@ -4919,8 +4680,7 @@ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/normalize-package-data@2.5.0</purl>
@@ -4939,17 +4699,14 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.5\\">
       <name>hosted-git-info</name>
       <version>2.8.5</version>
-      <description>
-        <![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]>
-      </description>
+      <description><![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">92cb2369bf02bdd5df71731755cbec5ee9b81f076af571ad443dd3b5e304bc46ead0b5f288d42be80a6ba8aa9f79a0d7cdeed2c56bd1c5da7013a92eee290b92</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[Copyright (c) 2015, Rebecca Turner
+          <text><![CDATA[Copyright (c) 2015, Rebecca Turner
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -4962,8 +4719,7 @@ INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
 LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/hosted-git-info@2.8.5</purl>
@@ -4982,17 +4738,14 @@ PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.14.2\\">
       <name>resolve</name>
       <version>1.14.2</version>
-      <description>
-        <![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]>
-      </description>
+      <description><![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">12394e04b04ed64c6c531b0a8cbb7b4c0102c8a5ba7ce87555193291090a1b37016e38cf23106a1a1d237fb189de4fdfe66c4ca96de1b4c0f759d4d456d5bc1d</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[MIT License
+          <text><![CDATA[MIT License
 
 Copyright (c) 2012 James Halliday
 
@@ -5013,8 +4766,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/resolve@1.14.2</purl>
@@ -5033,17 +4785,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.6\\">
       <name>path-parse</name>
       <version>1.0.6</version>
-      <description>
-        <![CDATA[Node.js path.parse() ponyfill]]>
-      </description>
+      <description><![CDATA[Node.js path.parse() ponyfill]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">19298e4f611b1eb20d05ff5247b08310bc2527c004364dd09fb3a290ae2715802edceb5edbe258355be4a401109b7fd32cd109143ff16498f3cb183728158ecf</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2015 Javier Blanco
 
@@ -5064,8 +4813,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/path-parse@1.0.6</purl>
@@ -5084,17 +4832,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/semver@5.7.1\\">
       <name>semver</name>
       <version>5.7.1</version>
-      <description>
-        <![CDATA[The semantic version parser used by npm.]]>
-      </description>
+      <description><![CDATA[The semantic version parser used by npm.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">b1ab9a0dffcf65d560acb4cd60746da576b589188a71a79b88a435049769425587da50af7b141d5f9e6c9cf1722bb433a6e76a6c2234a9715f39ab0777234319</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -5109,8 +4854,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/semver@5.7.1</purl>
@@ -5129,17 +4873,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/validate-npm-package-license@3.0.4\\">
       <name>validate-npm-package-license</name>
       <version>3.0.4</version>
-      <description>
-        <![CDATA[Give me a string and I'll tell you if it's a valid npm package license string]]>
-      </description>
+      <description><![CDATA[Give me a string and I'll tell you if it's a valid npm package license string]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">0e92a6d948bfc4deff1d0282b69671a11581859f59d24aadca01bc5c280d43c6650e7c6e4265a18f9eba8fc7cde02bb7fc999b86c0e8edf70026ae2cf61dbb13</hash>
       </hashes>
       <licenses>
         <license>
           <id>Apache-2.0</id>
-          <text>
-            <![CDATA[
+          <text><![CDATA[
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -5341,8 +5082,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/validate-npm-package-license@3.0.4</purl>
@@ -5361,17 +5101,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.0\\">
       <name>spdx-correct</name>
       <version>3.1.0</version>
-      <description>
-        <![CDATA[correct invalid SPDX expressions]]>
-      </description>
+      <description><![CDATA[correct invalid SPDX expressions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">96bd8464272d0b604d47b8fb5b32761690f39f1932d6c8dfc6fbd8132cf13726fa9595c7383984a09785bb826ea589647e16b5299a49ca8aa227ba60035aaaf1</hash>
       </hashes>
       <licenses>
         <license>
           <id>Apache-2.0</id>
-          <text>
-            <![CDATA[
+          <text><![CDATA[
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -5573,8 +5310,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/spdx-correct@3.1.0</purl>
@@ -5593,17 +5329,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.0\\">
       <name>spdx-expression-parse</name>
       <version>3.0.0</version>
-      <description>
-        <![CDATA[parse SPDX license expressions]]>
-      </description>
+      <description><![CDATA[parse SPDX license expressions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">620e83dd7a510f89243a64e97606d48842452a08491f4ddf882d4e3e597987fd2c3ba9de8768ea443547390e28fcb31e6b4b600a46cc81e6b98a9fdef8c916ca</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License
+          <text><![CDATA[The MIT License
 
 Copyright (c) 2015 Kyle E. Mitchell & other authors listed in AUTHORS
 
@@ -5625,8 +5358,7 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/spdx-expression-parse@3.0.0</purl>
@@ -5645,9 +5377,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.2.0\\">
       <name>spdx-exceptions</name>
       <version>2.2.0</version>
-      <description>
-        <![CDATA[list of SPDX standard license exceptions]]>
-      </description>
+      <description><![CDATA[list of SPDX standard license exceptions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">d9740009f1252a2f529556f509869d2835efa1a8cf80154f9ff80e40bad3bc774495a561afb6446ea25a46724b54d79a23870c10081509e04c285e8c5910c244</hash>
       </hashes>
@@ -5672,9 +5402,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.5\\">
       <name>spdx-license-ids</name>
       <version>3.0.5</version>
-      <description>
-        <![CDATA[A list of SPDX license identifiers]]>
-      </description>
+      <description><![CDATA[A list of SPDX license identifiers]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">27e156cd9a329c91171a9855212f97121de41528d95ffd62f6014169641c07efed9a97b6a94b12040069731ab19c0c45762505120017d5b8d8190bc8666a33f5</hash>
       </hashes>
@@ -5699,17 +5427,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/npm-normalize-package-bin@1.0.1\\">
       <name>npm-normalize-package-bin</name>
       <version>1.0.1</version>
-      <description>
-        <![CDATA[Turn any flavor of allowable package.json bin into a normalized object]]>
-      </description>
+      <description><![CDATA[Turn any flavor of allowable package.json bin into a normalized object]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">10f7da7e5e892f9feb53ea2de8fde04520a93c35b95662335fde7d39bd7ec92154bae6075877a45e9c1d51970a3f90be0d2e0612d74996ec018e7b0d0e5f9f48</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) npm, Inc.
 
@@ -5724,8 +5449,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/npm-normalize-package-bin@1.0.1</purl>
@@ -5744,17 +5468,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/readdir-scoped-modules@1.1.0\\">
       <name>readdir-scoped-modules</name>
       <version>1.1.0</version>
-      <description>
-        <![CDATA[Like \`fs.readdir\` but handling \`@org/module\` dirs as if they were a single entry.]]>
-      </description>
+      <description><![CDATA[Like \`fs.readdir\` but handling \`@org/module\` dirs as if they were a single entry.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">6ac6a29037aa01083b2627d1b199f5349657a3d13e57097209f6e4661c322128a7aa4e73352eb6eba1d2e646a1e8fd1269028617a4a43676551d4cc7158c580f</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -5769,8 +5490,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/readdir-scoped-modules@1.1.0</purl>
@@ -5789,17 +5509,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/dezalgo@1.0.3\\">
       <name>dezalgo</name>
       <version>1.0.3</version>
-      <description>
-        <![CDATA[Contain async insanity so that the dark pony lord doesn't eat souls]]>
-      </description>
+      <description><![CDATA[Contain async insanity so that the dark pony lord doesn't eat souls]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">7f742de066fc748bc8db820569dddce49bf0d456</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter and Contributors
 
@@ -5814,8 +5531,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/dezalgo@1.0.3</purl>
@@ -5834,17 +5550,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/asap@2.0.6\\">
       <name>asap</name>
       <version>2.0.6</version>
-      <description>
-        <![CDATA[High-priority task queue for Node.js and browsers]]>
-      </description>
+      <description><![CDATA[High-priority task queue for Node.js and browsers]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">e50347611d7e690943208bbdafebcbc2fb866d46</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[
+          <text content-type=\\"text/markdown\\"><![CDATA[
 Copyright 2009–2014 Contributors. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -5865,8 +5578,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/asap@2.0.6</purl>
@@ -5885,17 +5597,14 @@ IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/graceful-fs@4.2.3\\">
       <name>graceful-fs</name>
       <version>4.2.3</version>
-      <description>
-        <![CDATA[A drop-in replacement for fs, making various improvements.]]>
-      </description>
+      <description><![CDATA[A drop-in replacement for fs, making various improvements.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">6b7d151019b83c4771d5d441ecc14aec17a37a3bc2bc1ae89db2e386dfac1ee1988fc3c7b3b33fe59fabb79970e79d6f67bc9f4c28f856ecb2de6489cad0d645</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter, Ben Noordhuis, and Contributors
 
@@ -5910,8 +5619,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/graceful-fs@4.2.3</purl>
@@ -5930,17 +5638,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/slide@1.1.6\\">
       <name>slide</name>
       <version>1.1.6</version>
-      <description>
-        <![CDATA[A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS]]>
-      </description>
+      <description><![CDATA[A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text>
-            <![CDATA[The ISC License
+          <text><![CDATA[The ISC License
 
 Copyright (c) Isaac Z. Schlueter
 
@@ -5955,8 +5660,7 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/slide@1.1.6</purl>
@@ -5975,17 +5679,14 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/util-extend@1.0.3\\">
       <name>util-extend</name>
       <version>1.0.3</version>
-      <description>
-        <![CDATA[Node's internal object extension function]]>
-      </description>
+      <description><![CDATA[Node's internal object extension function]]></description>
       <hashes>
         <hash alg=\\"SHA-1\\">a7c216d267545169637b3b6edc6ca9119e2ff93f</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
+          <text><![CDATA[Copyright Joyent, Inc. and other Node contributors. All rights reserved.
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the \\"Software\\"), to
 deal in the Software without restriction, including without limitation the
@@ -6003,8 +5704,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/util-extend@1.0.3</purl>
@@ -6023,17 +5723,14 @@ IN THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.1\\">
       <name>ssri</name>
       <version>6.0.1</version>
-      <description>
-        <![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]>
-      </description>
+      <description><![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">dd681ed7484d713d4ababe0f0c5c0489e5d208c089b3fed6bd200272b318acda7e6fc9032f5ff4c09721e4d8b65abb7011ad883bc3ac55f78a21c88a083c7f40</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[ISC License
+          <text content-type=\\"text/markdown\\"><![CDATA[ISC License
 
 Copyright (c) npm, Inc.
 
@@ -6049,8 +5746,7 @@ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
 USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/ssri@6.0.1</purl>
@@ -6069,17 +5765,14 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.1\\">
       <name>figgy-pudding</name>
       <version>3.5.1</version>
-      <description>
-        <![CDATA[Delicious, festive, cascading config/opts definitions]]>
-      </description>
+      <description><![CDATA[Delicious, festive, cascading config/opts definitions]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">bcd2b12474c428d4e18dfadd2701dcedbaef33a7957afb8ee674e3e9ecfc650d6a6d74ef1ad86e71117b4b8bdfd9cafbd505674fbd15df8bf44b50f242cb62d3</hash>
       </hashes>
       <licenses>
         <license>
           <id>ISC</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[ISC License
+          <text content-type=\\"text/markdown\\"><![CDATA[ISC License
 
 Copyright (c) npm, Inc.
 
@@ -6095,8 +5788,7 @@ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
 OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
 OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
 USE OR PERFORMANCE OF THIS SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/figgy-pudding@3.5.1</purl>
@@ -6115,17 +5807,14 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/uuid@3.4.0\\">
       <name>uuid</name>
       <version>3.4.0</version>
-      <description>
-        <![CDATA[RFC4122 (v1, v4, and v5) UUIDs]]>
-      </description>
+      <description><![CDATA[RFC4122 (v1, v4, and v5) UUIDs]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">1e3483470ea0644e4932081cb4705c8d56a4d3cf8a1158522220f31674fd4bd69e826a7ce52fdb45e0554dbe104c5691369b49f64b9868d8676cd10e91b29bfc</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text content-type=\\"text/markdown\\">
-            <![CDATA[The MIT License (MIT)
+          <text content-type=\\"text/markdown\\"><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2010-2016 Robert Kieffer and other contributors
 
@@ -6146,8 +5835,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/uuid@3.4.0</purl>
@@ -6166,17 +5854,14 @@ SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmlbuilder@13.0.2\\">
       <name>xmlbuilder</name>
       <version>13.0.2</version>
-      <description>
-        <![CDATA[An XML builder for node.js]]>
-      </description>
+      <description><![CDATA[An XML builder for node.js]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">12ec748b641d0d829b75b03a00ceb11389ba65366be06e3117d91a848dae91210c0b3c1c7b6797f56953239277b3e354ee1a5ab05b2bf2158838d69eecb96e01</hash>
       </hashes>
       <licenses>
         <license>
           <id>MIT</id>
-          <text>
-            <![CDATA[The MIT License (MIT)
+          <text><![CDATA[The MIT License (MIT)
 
 Copyright (c) 2013 Ozgur Ozcitak
 
@@ -6197,8 +5882,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/xmlbuilder@13.0.2</purl>
@@ -6217,17 +5901,14 @@ THE SOFTWARE.
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmldom@0.2.1\\">
       <name>xmldom</name>
       <version>0.2.1</version>
-      <description>
-        <![CDATA[A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).]]>
-      </description>
+      <description><![CDATA[A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).]]></description>
       <hashes>
         <hash alg=\\"SHA-512\\">9175e262f99b9488047a619e07be72f7b1726996afc7a490846a692f0e53296003d96774280972d20db77952e1d7b61ca716699c5ca6d5093f79a463cb500f3e</hash>
       </hashes>
       <licenses>
         <license>
           <name>(LGPL-2.0 or MIT)</name>
-          <text>
-            <![CDATA[You can choose any one of those:
+          <text><![CDATA[You can choose any one of those:
 
 The MIT License (MIT):
 
@@ -6235,8 +5916,7 @@ link:http://opensource.org/licenses/MIT
 
 LGPL:
 http://www.gnu.org/licenses/lgpl.html
-]]>
-          </text>
+]]></text>
         </license>
       </licenses>
       <purl>pkg:npm/xmldom@0.2.1</purl>
