@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionLevel:
+        description: 'Version level (must be one of major, minor, patch)'
+        required: true
+      commitMessage:
+        description: 'Release/commit message'
+        required: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Setup Node.js 8.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 8.x
+
+    - name: Configure Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Release Action"
+
+    - name: npm install, build, and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm version ${{ github.event.inputs.versionLevel }} --message ${{ github.event.inputs.commitMessage }}
+        git push "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${$GITHUB_REPOSITORY}.git" HEAD:master --tags
+        npm publish --dry-run
+      env:
+        CI: true
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
