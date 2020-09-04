@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: npm install, build, and test
-      # first three lines are a workaround for issue #32 so tests run correctly
+      # first three lines are to install test project packages so node_modules is present
       run: |
         cd tests/with-packages
         npm install
