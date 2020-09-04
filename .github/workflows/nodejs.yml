@@ -22,9 +22,9 @@ jobs:
       # first three lines are to install test project packages so node_modules is present
       run: |
         cd tests/with-packages
-        npm install
+        npm ci
         cd ../..
-        npm install
+        npm ci
         npm run build --if-present
         npm test
       env:
