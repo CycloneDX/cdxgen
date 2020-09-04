@@ -1,6 +1,6 @@
 name: Node CI
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [8.x, 10.x, 12.x, 14.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: npm install, build, and test
-      # first three lines are a workaround for issue #32 so tests run correctly
+      # first three lines are to install test project packages so node_modules is present
       run: |
         cd tests/with-packages
         npm install
