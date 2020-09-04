@@ -14,7 +14,7 @@ The CycloneDX module for Node.js creates a valid CycloneDX Software Bill-of-Mate
 
 Requirements
 -------------------
-Node.js v8.0.0 or higher
+Node.js v10.0.0 or higher
 
 Usage
 -------------------
