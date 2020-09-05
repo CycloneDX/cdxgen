@@ -1,3 +1,19 @@
+# This workflow is used for publishing the Node.js package.
+#
+# Releases are triggered manually. This can be done by browsing to
+# https://github.com/CycloneDX/cyclonedx-node-module/actions?query=workflow%3ARelease
+# and selecting "Run workflow". If releasing a patch for a previous version
+# make sure the correct branch is selected. It will default to the default
+# branch.
+#
+# You will also need to specify the version level increment for this release.
+#
+# Supported levels are major, minor and patch. Semantic versioning should be
+# followed. i.e. major if the release includes breaking changes, minor for
+# non-breaking changes with additional functionality and patch for bug fixes and
+# dependency updates.
+#
+# You will also need to specify a value for the related commit message.
 name: Release
 
 on:
