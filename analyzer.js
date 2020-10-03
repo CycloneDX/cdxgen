@@ -4,7 +4,17 @@ const { join } = require("path");
 const fs = require("fs");
 const path = require("path");
 
-const IGNORE_DIRS = ["node_modules", "venv", "docs", "test", "e2e", "examples"];
+const IGNORE_DIRS = [
+  "node_modules",
+  "venv",
+  "docs",
+  "test",
+  "tests",
+  "e2e",
+  "examples",
+];
+
+const IGNORE_FILE_PATTERN = new RegExp("(conf|test|spec)\\.(js|ts)$", "i");
 
 const getAllFiles = (dir, extn, files, result, regex) => {
   files = files || fs.readdirSync(dir);
@@ -12,6 +22,9 @@ const getAllFiles = (dir, extn, files, result, regex) => {
   regex = regex || new RegExp(`\\${extn}$`);
 
   for (let i = 0; i < files.length; i++) {
+    if (IGNORE_FILE_PATTERN.test(files[i])) {
+      continue;
+    }
     let file = join(dir, files[i]);
     if (fs.statSync(file).isDirectory()) {
       // Ignore directories
@@ -72,6 +85,17 @@ const setFileRef = (allImports, file, pathway) => {
     allImports[module] = allImports[module] + 1;
   } else {
     allImports[module] = 1;
+  }
+
+  // Handle module package name
+  // Eg: zone.js/dist/zone will be referred to as zone.js in package.json
+  if (!path.isAbsolute(module) && module.includes("/")) {
+    const modPkg = module.split("/")[0];
+    if (allImports.hasOwnProperty(modPkg)) {
+      allImports[modPkg] = allImports[modPkg] + 1;
+    } else {
+      allImports[modPkg] = 1;
+    }
   }
 };
 
@@ -145,7 +169,6 @@ const findJSImports = async (src) => {
         errFiles.push(file);
       }
     }
-
     return { allImports, errFiles };
   } catch (err) {
     console.error(err);

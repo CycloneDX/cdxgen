@@ -148,7 +148,7 @@ test("parseGosumData", async () => {
 */
 
 test("parseGopkgData", async () => {
-  jest.setTimeout(30000);
+  jest.setTimeout(120000);
   let dep_list = await utils.parseGopkgData(null);
   expect(dep_list).toEqual([]);
   dep_list = await utils.parseGopkgData(

@@ -187,8 +187,16 @@ function addComponent(
     let compScope = undefined;
     if (allImports) {
       const impPkgs = Object.keys(allImports);
-      if (impPkgs.includes(name) || impPkgs.includes(group + "/" + name)) {
+      if (
+        impPkgs.includes(name) ||
+        impPkgs.includes(group + "/" + name) ||
+        impPkgs.includes("@" + group + "/" + name) ||
+        impPkgs.includes(group) ||
+        impPkgs.includes("@" + group)
+      ) {
         compScope = "required";
+      } else {
+        compScope = "optional";
       }
     }
     if (compScope) {
