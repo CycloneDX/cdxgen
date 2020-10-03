@@ -47,6 +47,7 @@ AppDir:
 
   runtime:
     env:
+      APPDIR_LIBRARY_PATH: $APPDIR/usr/lib/x86_64-linux-gnu:$APPDIR/lib/x86_64-linux-gnu
       PATH: '${APPDIR}/usr/bin:${APPDIR}/usr/bin/nodejs/bin:${PATH}:${APPDIR}/usr/local/lib/node_modules/.bin:'
       PYTHONHOME: '${APPDIR}/usr'
       PYTHONPATH: '${APPDIR}/usr/lib/python3.8/site-packages'
