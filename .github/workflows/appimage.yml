@@ -14,7 +14,9 @@ jobs:
         # Install appimagetool AppImage
         sudo wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool
         sudo chmod +x /usr/local/bin/appimagetool
-        sudo pip3 install git+https://github.com/AppImageCrafters/appimage-builder.git
+        sudo pip3 install appimage-builder
+        mkdir -p appimage-builder-cache
+        wget https://github.com/AppImage/AppImageKit/releases/download/12/runtime-x86_64 -O appimage-builder-cache/runtime-x86_64
     - name: Build AppImage
       run: |
         appimage-builder --recipe appimage-builder.yml --skip-test
