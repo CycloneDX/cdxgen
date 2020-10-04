@@ -195,7 +195,7 @@ function addComponent(
         impPkgs.includes("@" + group)
       ) {
         compScope = "required";
-      } else {
+      } else if (impPkgs.length) {
         compScope = "optional";
       }
     }
