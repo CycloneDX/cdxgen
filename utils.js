@@ -551,6 +551,10 @@ const getPyMetadata = async function (pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
     try {
+      // Some packages support extra modules
+      if (p.name.includes("[")) {
+        p.name = p.name.split("[")[0];
+      }
       const res = await got.get(PYPI_URL + p.name + "/json", {
         responseType: "json",
       });

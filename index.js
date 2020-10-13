@@ -383,12 +383,12 @@ const createJavaBom = async (
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
       console.log(
-        "Executing 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom' in",
+        "Executing 'mvn org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
         basePath
       );
       result = spawnSync(
         MVN_CMD,
-        ["org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"],
+        ["org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom"],
         { cwd: basePath }
       );
       if (result.status == 1 || result.error) {
