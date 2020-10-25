@@ -71,6 +71,9 @@ bomHelpers.createbom(schemaVersion, componentType, includeSerialNumber, includeL
     if (bom.components.length === 0) {
         console.log("There are no components in the BOM. The project may not contain dependencies or node_modules does not exist. Executing `npm install` prior to CycloneDX may solve the issue.")
     }
+    if(!fs.existsSync(filePath)) {
+        console.log("File path does not exist")
+    }
     if (output.endsWith(".xml")) {
         let doc = new DomParser().parseFromString(bom.toXML());
         for (let index = 0; index < additionalBoms.length; index++) {
