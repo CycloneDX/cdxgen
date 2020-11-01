@@ -51,6 +51,8 @@ test("parse gradle dependencies", () => {
   });
 });
 
+// Slow test
+/*
 test("get maven metadata", async () => {
   let data = await utils.getMvnMetadata([
     {
@@ -99,6 +101,7 @@ test("get maven metadata", async () => {
     },
   ]);
 });
+*/
 
 test("get py metadata", async () => {
   const data = await utils.getPyMetadata([

@@ -20,6 +20,10 @@ if (process.env.MVN_CMD) {
   MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn");
 }
 
+// Debug mode flag
+const DEBUG_MODE =
+  process.env.SCAN_DEBUG_MODE === "debug" || process.env.NODE_ENV === "ci";
+
 /**
  * Method to create global external references
  *
@@ -389,9 +393,24 @@ const createJavaBom = async (
       result = spawnSync(
         MVN_CMD,
         ["org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom"],
-        { cwd: basePath }
+        { cwd: basePath, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
+        if (DEBUG_MODE) {
+          console.error(result.stdout, result.stderr);
+          console.log(
+            "Resolve the above maven error. This could be due to the following:\n"
+          );
+          console.log(
+            "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
+          );
+          console.log(
+            "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
+          );
+          console.log(
+            "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
+          );
+        }
         const dlist = utils.parsePom(f);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
