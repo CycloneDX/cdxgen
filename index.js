@@ -462,7 +462,7 @@ const createJavaBom = async (
       // Enable execute permission
       try {
         fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
-      } catch (e) { }
+      } catch (e) {}
       GRADLE_CMD = pathLib.join(path, "gradlew");
     }
     let pkgList = [];
