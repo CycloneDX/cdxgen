@@ -387,12 +387,12 @@ const createJavaBom = async (
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
       console.log(
-        "Executing 'mvn org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
+        "Executing 'mvn dependency:get -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
         basePath
       );
       result = spawnSync(
         MVN_CMD,
-        ["org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom"],
+        ["dependency:get", "-DrepoUrl=https://jitpack.io", "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1", "org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom"],
         { cwd: basePath, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
