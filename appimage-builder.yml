@@ -17,10 +17,6 @@ AppDir:
   app_info:
     id: io.shiftleft.cdxgen
     name: cdxgen
-    summary: Create valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects
-    metadata_license: FSFAP
-    project_license: Apache-2.0
-    project_group: ShiftLeftSecurity
     icon: utilities-terminal
     version: latest
     exec: usr/local/lib/node_modules/.bin/cdxgen
