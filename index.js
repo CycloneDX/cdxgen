@@ -387,30 +387,34 @@ const createJavaBom = async (
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
       console.log(
-        "Executing 'mvn dependency:get -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
+        "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
         basePath
       );
       result = spawnSync(
         MVN_CMD,
-        ["dependency:get", "-DrepoUrl=https://jitpack.io", "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1", "org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom"],
+        [
+          "dependency:get",
+          "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
+          "-DrepoUrl=https://jitpack.io",
+          "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
+          "org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom",
+        ],
         { cwd: basePath, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
-        if (DEBUG_MODE) {
-          console.error(result.stdout, result.stderr);
-          console.log(
-            "Resolve the above maven error. This could be due to the following:\n"
-          );
-          console.log(
-            "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
-          );
-          console.log(
-            "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
-          );
-          console.log(
-            "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
-          );
-        }
+        console.error(result.stdout, result.stderr);
+        console.log(
+          "Resolve the above maven error. This could be due to the following:\n"
+        );
+        console.log(
+          "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
+        );
+        console.log(
+          "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
+        );
+        console.log(
+          "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
+        );
         const dlist = utils.parsePom(f);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
