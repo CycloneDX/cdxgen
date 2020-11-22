@@ -1,6 +1,6 @@
 {
   "name": "@appthreat/cdxgen",
-  "version": "2.0.19",
+  "version": "2.0.20",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) for node.js, python, java and golang projects",
   "homepage": "http://github.com/AppThreat/cdxgen",
   "author": "Team AppThreat",
