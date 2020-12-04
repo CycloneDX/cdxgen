@@ -1118,13 +1118,18 @@ const parseCsProjData = async function (csProjData) {
   if (!csProjData) {
     return pkgList;
   }
-  const project = convert.xml2js(csProjData, {
+  const projects = convert.xml2js(csProjData, {
     compact: true,
+    alwaysArray: true,
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
     commentKey: "value",
   }).Project;
+  if (projects.length == 0) {
+    return pkgList;
+  }
+  const project = projects[0];
   if (project.ItemGroup && project.ItemGroup.length) {
     for (let i in project.ItemGroup) {
       const item = project.ItemGroup[i];
