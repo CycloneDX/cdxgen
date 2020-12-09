@@ -163,7 +163,7 @@ const _getDepPkgList = function (pkgList, pkg) {
 const parsePkgLock = function (pkgLockFile) {
   const pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
-    lockData = require(pkgLockFile);
+    lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
     return _getDepPkgList(pkgList, lockData);
   }
   return pkgList;
@@ -239,7 +239,7 @@ exports.parseYarnLock = parseYarnLock;
 const parseNodeShrinkwrap = function (swFile) {
   const pkgList = [];
   if (fs.existsSync(swFile)) {
-    lockData = require(swFile);
+    lockData = JSON.parse(fs.readFileSync(swFile, "utf8"));
     const pkgKeys = Object.keys(lockData);
     for (var k in pkgKeys) {
       const fullName = pkgKeys[k];
@@ -551,6 +551,10 @@ const getPyMetadata = async function (pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
     try {
+      if (p.name.includes("https")) {
+        cdepList.push(p);
+        continue;
+      }
       // Some packages support extra modules
       if (p.name.includes("[")) {
         p.name = p.name.split("[")[0];
@@ -666,7 +670,10 @@ const parseReqFile = async function (reqData) {
   reqData.split("\n").forEach((l) => {
     if (!l.startsWith("#")) {
       if (l.indexOf("=") > -1) {
-        const tmpA = l.split(/(==|<=|~=|>=)/);
+        let tmpA = l.split(/(==|<=|~=|>=)/);
+        if (tmpA.includes("#")) {
+          tmpA = tmpA.split("#")[0];
+        }
         let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
         if (versionStr.indexOf(" ") > -1) {
           versionStr = versionStr.split(" ")[0];
@@ -679,14 +686,20 @@ const parseReqFile = async function (reqData) {
           version: versionStr,
         });
       } else if (/[>|\[|@]/.test(l)) {
-        const tmpA = l.split(/(>|\[|@)/);
+        let tmpA = l.split(/(>|\[|@)/);
+        if (tmpA.includes("#")) {
+          tmpA = tmpA.split("#")[0];
+        }
         pkgList.push({
           name: tmpA[0].trim(),
           version: null,
         });
       } else if (l) {
+        if (l.includes("#")) {
+          l = l.split("#")[0];
+        }
         pkgList.push({
-          name: l,
+          name: l.trim(),
           version: null,
         });
       }
