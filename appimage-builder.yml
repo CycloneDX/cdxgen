@@ -9,7 +9,6 @@ script:
   - cp tools_config/io.shiftleft.cdxgen.appdata.xml AppDir/usr/share/metainfo/
   - chmod +x AppDir/usr/src/appimage-reqs.sh && AppDir/usr/src/appimage-reqs.sh AppDir
   - npm install --only=production --no-save --prefix AppDir/usr/local/lib yarn @appthreat/cdxgen @microsoft/rush
-  - python3 -m pip install --no-cache-dir --ignore-installed --prefix=/usr --root=AppDir pipenv
 
 AppDir:
   path: ./AppDir
@@ -27,11 +26,8 @@ AppDir:
     sources:
       - sourceline: 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse'
         key_url: 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3b4fe6acc0b21f32'
-      - sourceline: deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse
-      - sourceline: deb http://archive.ubuntu.com/ubuntu/ bionic-security main restricted universe multiverse
     include:
-      - python3.8
-      - python3-pkg-resources
+      - bash
   files:
     exclude:
     - usr/share/man
@@ -44,10 +40,6 @@ AppDir:
     env:
       APPDIR_LIBRARY_PATH: $APPDIR/usr/lib/x86_64-linux-gnu:$APPDIR/lib/x86_64-linux-gnu
       PATH: '${APPDIR}/usr/bin:${APPDIR}/usr/bin/nodejs/bin:${PATH}:${APPDIR}/usr/local/lib/node_modules/.bin:'
-      PYTHONHOME: '${APPDIR}/usr'
-      PYTHONPATH: '${APPDIR}/usr/lib/python3.8/site-packages'
-      PYTHONUNBUFFERED: '1'
-      APP_SRC_DIR: '${APPDIR}/usr/src'
 
   test:
     fedora:
