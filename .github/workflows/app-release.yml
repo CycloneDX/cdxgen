@@ -1,4 +1,4 @@
-name: Release AppImage
+name: Release AppImage and Exe
 
 on:
   push:
@@ -6,10 +6,25 @@ on:
     - 'v*'
 
 jobs:
-  build:
+  pkg:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Produce pkg
+      run: |
+        sudo npm install -g pkg
+        npm install
+        pkg -t node14-linux,node14-win,node14-mac package.json --out-path dist
+    - name: Test pkg
+      run: |
+        chmod +x dist/cdxgen*
+        ./dist/cdxgen-linux -v
+        ./dist/cdxgen-linux .
+
     - name: Install dependencies
       run: |
         sudo apt-get update -y
@@ -25,6 +40,10 @@ jobs:
         appimage-builder --recipe appimage-builder.yml --skip-test
       env:
         UPDATE_INFO: gh-releases-zsync|AppThreat|cdxgen|latest|*x86_64.AppImage.zsync
+
+    - name: Zip pkg
+      run: |
+        zip --junk-paths -r cdxgen-dist.zip dist cdxgen-latest-x86_64.AppImage
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -42,6 +61,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: cdxgen-latest-x86_64.AppImage
-        asset_name: cdxgen
+        asset_path: cdxgen-dist.zip
+        asset_name: cdxgen-dist.zip
         asset_content_type: application/octet-stream
