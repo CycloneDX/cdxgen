@@ -6,7 +6,7 @@ on:
     - 'v*'
 
 jobs:
-  pkg:
+  pkg-linux:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v1
@@ -18,7 +18,7 @@ jobs:
       run: |
         sudo npm install -g pkg
         npm install
-        pkg -t node14-linux,node14-win,node14-mac package.json --out-path dist
+        pkg -t node14-linux package.json --out-path dist
     - name: Test pkg
       run: |
         chmod +x dist/cdxgen*
@@ -45,6 +45,25 @@ jobs:
         asset_name: cdxgen-linux
         asset_content_type: application/octet-stream
 
+  pkg-win:
+    needs: pkg-linux
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Produce pkg
+      run: |
+        sudo npm install -g pkg
+        npm install
+        pkg -t node14-win package.json --out-path dist
+    - name: Test pkg
+      run: |
+        chmod +x dist/cdxgen*
+        ./dist/cdxgen-win.exe -v
+        ./dist/cdxgen-win.exe .
     - name: Upload Release Asset Win
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
@@ -55,6 +74,26 @@ jobs:
         asset_path: ./dist/cdxgen-win.exe
         asset_name: cdxgen-win.exe
         asset_content_type: application/octet-stream
+
+  pkg-mac:
+    needs: pkg-linux
+    runs-on: macos-11.0
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Produce pkg
+      run: |
+        sudo npm install -g pkg
+        npm install
+        pkg -t node14-mac package.json --out-path dist
+    - name: Test pkg
+      run: |
+        chmod +x dist/cdxgen*
+        ./dist/cdxgen-mac -v
+        ./dist/cdxgen-mac .
     - name: Upload Release Asset Mac
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
