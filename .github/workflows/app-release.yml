@@ -21,9 +21,9 @@ jobs:
         pkg -t node14-linux package.json --out-path dist
     - name: Test pkg
       run: |
-        chmod +x dist/cdxgen*
-        ./dist/cdxgen-linux -v
-        ./dist/cdxgen-linux .
+        chmod +x dist/cdxgen
+        ./dist/cdxgen -v
+        ./dist/cdxgen .
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -41,7 +41,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/cdxgen-linux
+        asset_path: ./dist/cdxgen
         asset_name: cdxgen-linux
         asset_content_type: application/octet-stream
 
@@ -61,9 +61,8 @@ jobs:
         pkg -t node14-win package.json --out-path dist
     - name: Test pkg
       run: |
-        chmod +x dist/cdxgen*
-        ./dist/cdxgen-win.exe -v
-        ./dist/cdxgen-win.exe .
+        ./dist/cdxgen.exe -v
+        ./dist/cdxgen.exe .
     - name: Upload Release Asset Win
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
@@ -71,8 +70,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/cdxgen-win.exe
-        asset_name: cdxgen-win.exe
+        asset_path: ./dist/cdxgen.exe
+        asset_name: cdxgen.exe
         asset_content_type: application/octet-stream
 
   pkg-mac:
@@ -91,9 +90,9 @@ jobs:
         pkg -t node14-mac package.json --out-path dist
     - name: Test pkg
       run: |
-        chmod +x dist/cdxgen*
-        ./dist/cdxgen-mac -v
-        ./dist/cdxgen-mac .
+        chmod +x dist/cdxgen
+        ./dist/cdxgen -v
+        ./dist/cdxgen .
     - name: Upload Release Asset Mac
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
@@ -101,7 +100,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/cdxgen-mac
+        asset_path: ./dist/cdxgen
         asset_name: cdxgen-mac
         asset_content_type: application/octet-stream
 
