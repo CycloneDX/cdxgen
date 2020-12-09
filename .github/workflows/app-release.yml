@@ -1,4 +1,4 @@
-name: Release AppImage
+name: Release AppImage and Exe
 
 on:
   push:
@@ -63,6 +63,17 @@ jobs:
       run: |
         ./dist/cdxgen.exe -v
         ./dist/cdxgen.exe .
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
     - name: Upload Release Asset Win
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
@@ -93,6 +104,17 @@ jobs:
         chmod +x dist/cdxgen
         ./dist/cdxgen -v
         ./dist/cdxgen .
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
     - name: Upload Release Asset Mac
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
@@ -123,6 +145,17 @@ jobs:
         appimage-builder --recipe appimage-builder.yml --skip-test
       env:
         UPDATE_INFO: gh-releases-zsync|AppThreat|cdxgen|latest|*x86_64.AppImage.zsync
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
