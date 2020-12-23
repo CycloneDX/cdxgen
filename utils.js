@@ -1146,6 +1146,7 @@ const parseCsProjData = async function (csProjData) {
   if (project.ItemGroup && project.ItemGroup.length) {
     for (let i in project.ItemGroup) {
       const item = project.ItemGroup[i];
+      // .net core use PackageReference
       for (let j in item.PackageReference) {
         const pref = item.PackageReference[j].$;
         let pkg = {};
@@ -1159,6 +1160,25 @@ const parseCsProjData = async function (csProjData) {
         }
         pkg.name = path.basename(pname);
         pkg.version = pref.Version;
+        pkgList.push(pkg);
+      }
+      // .net framework use Reference
+      for (let j in item.Reference) {
+        const pref = item.Reference[j].$;
+        let pkg = {};
+        if (!pref.Include || pref.Include.includes(".csproj")) {
+          continue;
+        }
+        const incParts = pref.Include.split(",");
+        const pname = incParts[0].replace(/\./g, "/");
+        pkg.group = path.dirname(pname).replace(/\//g, ".");
+        if (pkg.group == ".") {
+          pkg.group = "";
+        }
+        pkg.name = path.basename(pname);
+        if (incParts.length > 1 && incParts[1].includes("Version")) {
+          pkg.version = incParts[1].replace("Version=", "").trim();
+        }
         pkgList.push(pkg);
       }
     }
