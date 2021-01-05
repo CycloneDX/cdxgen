@@ -479,6 +479,9 @@ const createJavaBom = async (
         ["dependencies", "-q", "--console", "plain"],
         { cwd: basePath }
       );
+      if (result.status == 1 || result.error) {
+        console.error(result.stdout, result.stderr);
+      }
       const stdout = result.stdout;
       if (stdout) {
         const cmdOutput = Buffer.from(stdout).toString();
@@ -533,11 +536,26 @@ const createJavaBom = async (
         ["--sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
         { cwd: basePath }
       );
+      if (result.status == 1 || result.error) {
+        console.error(result.stdout, result.stderr);
+        if (DEBUG_MODE) {
+          console.log(
+            `1. Check if scala-sbt is installed and available in PATH`
+          );
+          console.log(
+            `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
+          );
+        }
+      }
       if (fs.existsSync(dlFile)) {
         const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
         const dlist = utils.parseKVDep(cmdOutput);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
+        }
+      } else {
+        if (DEBUG_MODE) {
+          console.log(`sbt dependencyList did not yield ${dlFile}`);
         }
       }
     }
