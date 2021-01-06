@@ -533,7 +533,7 @@ const createJavaBom = async (
       );
       const result = spawnSync(
         SBT_CMD,
-        ["--sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
+        ["-sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
         { cwd: basePath, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
