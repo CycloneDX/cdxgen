@@ -477,7 +477,7 @@ const createJavaBom = async (
       const result = spawnSync(
         GRADLE_CMD,
         ["dependencies", "-q", "--console", "plain"],
-        { cwd: basePath }
+        { cwd: basePath, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
@@ -534,7 +534,7 @@ const createJavaBom = async (
       const result = spawnSync(
         SBT_CMD,
         ["--sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
-        { cwd: basePath }
+        { cwd: basePath, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
@@ -656,6 +656,7 @@ const createNodejsBom = async (
       console.log("Executing 'rush install --no-link'", path);
       result = spawnSync("rush", ["install", "--no-link", "--bypass-policy"], {
         cwd: path,
+        encoding: "utf-8",
       });
     }
     // Look for shrinkwrap file
@@ -759,7 +760,7 @@ const createPythonBom = async (
   const setupPyMode = fs.existsSync(setupPy);
   if (requirementsMode || pipenvMode || poetryMode || setupPyMode) {
     if (pipenvMode) {
-      spawnSync("pipenv", ["install"], { cwd: path });
+      spawnSync("pipenv", ["install"], { cwd: path, encoding: "utf-8" });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
       if (fs.existsSync(piplockFile)) {
         const lockData = JSON.parse(fs.readFileSync(piplockFile));
@@ -903,7 +904,7 @@ const createRustBom = async (
   if (cargoMode) {
     if (!cargoLockMode) {
       console.log("Executing 'cargo update' in", path);
-      result = spawnSync("cargo", ["update"], { cwd: path });
+      result = spawnSync("cargo", ["update"], { cwd: path, encoding: "utf-8" });
       if (result.status == 1 || result.error) {
         console.error("cargo update has failed.");
       }
@@ -955,7 +956,10 @@ const createPHPBom = async (
   if (composerJsonMode || composerLockMode) {
     if (!composerLockMode && composerJsonMode) {
       console.log("Executing 'composer install' in", path);
-      result = spawnSync("composer", ["install"], { cwd: path });
+      result = spawnSync("composer", ["install"], {
+        cwd: path,
+        encoding: "utf-8",
+      });
       if (result.status == 1 || result.error) {
         console.error("Composer install has failed.");
       }
@@ -1003,7 +1007,10 @@ const createRubyBom = async (
   if (gemLockMode || gemFileMode) {
     if (gemFileMode && !gemLockMode) {
       console.log("Executing 'bundle install' in", path);
-      result = spawnSync("bundle", ["install"], { cwd: path });
+      result = spawnSync("bundle", ["install"], {
+        cwd: path,
+        encoding: "utf-8",
+      });
       if (result.status == 1 || result.error) {
         console.error("Bundle install has failed.");
       }
