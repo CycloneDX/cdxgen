@@ -1,4 +1,5 @@
 const glob = require("glob");
+const os = require("os");
 const path = require("path");
 const fs = require("fs");
 const got = require("got");
@@ -8,6 +9,7 @@ const spdxLicenses = require("./spdx-licenses.json");
 const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
+const { spawnSync } = require("child_process");
 
 /**
  * Method to get files matching a pattern
@@ -1273,3 +1275,88 @@ const parseComposerLock = function (pkgLockFile) {
   return pkgList;
 };
 exports.parseComposerLock = parseComposerLock;
+
+/**
+ * Collect maven dependencies
+ *
+ * @param {string} mavenCmd Maven command to use
+ * @param {string} basePath Path to the maven project
+ */
+const collectMvnDependencies = function (mavenCmd, basePath) {
+  let tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mvn-deps-"));
+  console.log(
+    `Executing 'mvn dependency:copy-dependencies -DoutputDirectory=${tempDir} -DexcludeTransitive=true -DincludeScope=runtime' in ${basePath}`
+  );
+  const result = spawnSync(
+    mavenCmd,
+    [
+      "dependency:copy-dependencies",
+      `-DoutputDirectory=${tempDir}`,
+      "-DexcludeTransitive=true",
+      "-DincludeScope=runtime",
+      "-U",
+      "-Dmdep.prependGroupId=true",
+      "-Dmdep.stripVersion=true",
+    ],
+    { cwd: basePath, encoding: "utf-8" }
+  );
+  const jarNSMapping = {};
+  if (result.status === 1 || result.error) {
+    console.error(result.stdout, result.stderr);
+    console.log(
+      "Resolve the above maven error. You can try the following remediation tips:\n"
+    );
+    console.log(
+      "1. Check if the correct version of maven is installed and available in the PATH."
+    );
+    console.log(
+      "2. Perform 'mvn compile package' before invoking this command. Fix any errors found during this invocation."
+    );
+    console.log(
+      "3. Ensure the temporary directory is available and has sufficient disk space to copy all the artifacts."
+    );
+  } else {
+    // Execute jar tvf to get class names
+    const jarFiles = getAllFiles(tempDir, "*.jar");
+    if (jarFiles && jarFiles.length) {
+      for (let i in jarFiles) {
+        const jf = jarFiles[i];
+        const jarname = path.basename(jf);
+        // console.log(`Executing 'jar tvf ${jf}'`);
+        const jarResult = spawnSync("jar", ["-tf", jf], { encoding: "utf-8" });
+        if (jarResult.status === 1 || jarResult.error) {
+          console.error(jarResult.stdout, jarResult.stderr);
+          console.log(
+            "Check if JRE is installed and the jar command is available in the PATH."
+          );
+          break;
+        } else {
+          const consolelines = (jarResult.stdout || "").split("\n");
+          const nsList = consolelines
+            .filter((l) => {
+              return l.includes(".class") && !l.includes("-INF");
+            })
+            .map((e) => {
+              return e
+                .replace(/\/$/, "")
+                .replace(/\//g, ".")
+                .replace(".class", "");
+            });
+          jarNSMapping[jarname] = nsList;
+        }
+      }
+    }
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(os.tmpdir())) {
+    console.log(`Cleaning up ${tempDir}`);
+    fs.rmdirSync(tempDir, { recursive: true });
+  }
+  if (!jarNSMapping) {
+    console.log(
+      `Unable to determine package and class names for the jar ${jarname}`
+    );
+  }
+  return jarNSMapping;
+};
+exports.collectMvnDependencies = collectMvnDependencies;

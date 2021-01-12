@@ -157,10 +157,8 @@ function addComponent(
   if (!isRootPkg) {
     let pkgIdentifier = parsePackageJsonName(pkg.name);
     let group = pkg.group || pkgIdentifier.scope;
-    // Create empty group for json format
-    if (format === "json") {
-      group = group || "";
-    }
+    // Create empty group
+    group = group || "";
     let name = pkgIdentifier.fullName || pkg.name;
     // Skip @types package for npm
     if (ptype == "npm" && (group === "types" || name.startsWith("@types"))) {
@@ -381,11 +379,19 @@ const createJavaBom = async (
 ) => {
   // maven - pom.xml
   const pomFiles = utils.getAllFiles(path, "pom.xml");
+  let jarNSMapping = {};
   if (pomFiles && pomFiles.length) {
     let pkgList = [];
     for (let i in pomFiles) {
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
+      // Should we attempt to resolve class names
+      if (options.resolveClass) {
+        console.log(
+          "Creating class names list based on available jars. This might take a few mins ..."
+        );
+        jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
+      }
       console.log(
         "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
         basePath
@@ -425,7 +431,11 @@ const createJavaBom = async (
             includeBomSerialNumber,
             pkgInfo: pkgList,
             ptype: "maven",
-            context: { src: path, filename: "pom.xml" },
+            context: {
+              src: path,
+              filename: "pom.xml",
+              nsMapping: jarNSMapping,
+            },
           },
           callback
         );
@@ -444,11 +454,11 @@ const createJavaBom = async (
           { encoding: "utf-8" }
         );
       }
-      callback(null, bomString, bomJonString);
+      callback(null, bomString, bomJonString, jarNSMapping);
     } else {
       const bomFiles = utils.getAllFiles(path, "bom.xml");
       const bomJsonFiles = utils.getAllFiles(path, "bom.json");
-      callback(null, bomFiles, bomJsonFiles);
+      callback(null, bomFiles, bomJsonFiles, jarNSMapping);
     }
   }
   // gradle
@@ -509,7 +519,7 @@ const createJavaBom = async (
   );
   if (sbtFiles && sbtFiles.length) {
     let pkgList = [];
-    let SBT_CMD = "sbt";
+    let SBT_CMD = process.env.SBT_CMD || "sbt";
     let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
     let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
     tempSbtgDir = pathLib.join(tempSbtgDir, "1.0", "plugins");
