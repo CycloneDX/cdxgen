@@ -104,6 +104,7 @@ test("get maven metadata", async () => {
 */
 
 test("get py metadata", async () => {
+  jest.setTimeout(120000);
   const data = await utils.getPyMetadata([
     {
       group: "",
