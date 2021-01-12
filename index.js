@@ -13,6 +13,7 @@ const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
 
+// Construct maven command
 let MVN_CMD = "mvn";
 if (process.env.MVN_CMD) {
   MVN_CMD = process.env.MVN_CMD;
@@ -20,9 +21,24 @@ if (process.env.MVN_CMD) {
   MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn");
 }
 
+// Construct gradle cache directory
+let GRADLE_CACHE_DIR =
+  process.env.GRADLE_CACHE_DIR ||
+  pathLib.join(os.homedir(), ".gradle", "caches", "modules-2", "files-2.1");
+if (process.env.GRADLE_USER_HOME) {
+  GRADLE_CACHE_DIR =
+    process.env.GRADLE_USER_HOME + "/caches/modules-2/files-2.1";
+}
+
+// Construct sbt cache directory
+let SBT_CACHE_DIR =
+  process.env.SBT_CACHE_DIR || pathLib.join(os.homedir(), ".ivy2", "cache");
+
 // Debug mode flag
 const DEBUG_MODE =
-  process.env.SCAN_DEBUG_MODE === "debug" || process.env.NODE_ENV === "ci";
+  process.env.SCAN_DEBUG_MODE === "debug" ||
+  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
+  process.env.NODE_ENV !== "production";
 
 /**
  * Method to create global external references
@@ -335,6 +351,7 @@ const buildBomString = (
   if (context && context.allImports) {
     allImports = context.allImports;
   }
+  const nsMapping = context.nsMapping || {};
   const metadata = addMetadata();
   bom.ele("metadata").ele(metadata);
   const components = listComponents(allImports, pkgInfo, ptype, "xml");
@@ -357,7 +374,7 @@ const buildBomString = (
       metadata: metadata,
       components: listComponents(allImports, pkgInfo, ptype, "json"),
     };
-    callback(null, bomString, JSON.stringify(jsonTpl, null, 2));
+    callback(null, bomString, JSON.stringify(jsonTpl, null, 2), nsMapping);
   } else {
     callback();
   }
@@ -502,12 +519,23 @@ const createJavaBom = async (
       }
     }
     pkgList = await utils.getMvnMetadata(pkgList);
+    // Should we attempt to resolve class names
+    if (options.resolveClass) {
+      console.log(
+        "Creating class names list based on available jars. This might take a few mins ..."
+      );
+      jarNSMapping = utils.collectJarNS(GRADLE_CACHE_DIR);
+    }
     buildBomString(
       {
         includeBomSerialNumber,
         pkgInfo: pkgList,
         ptype: "maven",
-        context: { src: path, filename: "build.gradle" },
+        context: {
+          src: path,
+          filename: "build.gradle",
+          nsMapping: jarNSMapping,
+        },
       },
       callback
     );
@@ -570,12 +598,19 @@ const createJavaBom = async (
       }
     }
     pkgList = await utils.getMvnMetadata(pkgList);
+    // Should we attempt to resolve class names
+    if (options.resolveClass) {
+      console.log(
+        "Creating class names list based on available jars. This might take a few mins ..."
+      );
+      jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
+    }
     buildBomString(
       {
         includeBomSerialNumber,
         pkgInfo: pkgList,
         ptype: "maven",
-        context: { src: path, filename: "build.sbt" },
+        context: { src: path, filename: "build.sbt", nsMapping: jarNSMapping },
       },
       callback
     );
