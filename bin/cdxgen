@@ -18,6 +18,11 @@ const args = require("yargs")
     type: "boolean",
     description: "Recurse mode suitable for mono-repos",
   })
+  .option("resolve-class", {
+    alias: "c",
+    type: "boolean",
+    description: "Resolve class names for packages. jars only for now.",
+  })
   .option("version", {
     alias: "v",
     description: "Print version number",
@@ -65,6 +70,7 @@ let options = {
   multiProject: args.recurse,
   depth: 3,
   output: args.output,
+  resolveClass: args.resolveClass,
 };
 
 let filePath = args._[0] || ".";
@@ -77,43 +83,56 @@ let filePath = args._[0] || ".";
  * @param options Parse options from the cli
  * @param callback Callback function accepting err, bomData
  */
-bom.createBom(true, filePath, options, (err, bomData, bomJsonData) => {
-  if (!args.projectName) {
-    if (filePath !== ".") {
-      args.projectName = path.basename(filePath);
-    } else {
-      args.projectName = path.basename(path.resolve(filePath));
+bom.createBom(
+  true,
+  filePath,
+  options,
+  (err, bomData, bomJsonData, nsMapping) => {
+    if (!args.projectName) {
+      if (filePath !== ".") {
+        args.projectName = path.basename(filePath);
+      } else {
+        args.projectName = path.basename(path.resolve(filePath));
+      }
     }
-  }
-  if (args.output) {
-    if (Array.isArray(bomData)) {
-      console.log("BOM files produced:", bomData);
+    if (args.output) {
+      if (Array.isArray(bomData)) {
+        console.log("BOM files produced:", bomData);
+      } else {
+        const jsonFile = args.output.replace(".xml", ".json");
+        // Create bom json file
+        if (bomJsonData) {
+          fs.writeFile(jsonFile, bomJsonData, () => {});
+        }
+        // Create bom xml file
+        if (bomData) {
+          const xmlFile = args.output.replace(".json", ".xml");
+          fs.writeFile(xmlFile, bomData, () => {});
+          console.log("BOM file written to", args.output);
+        }
+        //
+        if (nsMapping) {
+          const nsFile = jsonFile + ".map";
+          fs.writeFile(nsFile, JSON.stringify(nsMapping), () => {});
+          console.log("Namespace mapping file written to", nsFile);
+        }
+      }
     } else {
       if (bomJsonData) {
-        const jsonFile = args.output.replace(".xml", ".json");
-        fs.writeFile(jsonFile, bomJsonData, () => {});
-      }
-      if (bomData) {
-        const xmlFile = args.output.replace(".json", ".xml");
-        fs.writeFile(xmlFile, bomData, () => {});
-        console.log("BOM file written to", args.output);
+        console.log(Buffer.from(bomJsonData).toString());
+      } else if (bomData) {
+        console.log(Buffer.from(bomData).toString());
+      } else {
+        console.log("Unable to produce BOM for", filePath);
       }
     }
-  } else {
-    if (bomJsonData) {
-      console.log(Buffer.from(bomJsonData).toString());
-    } else if (bomData) {
-      console.log(Buffer.from(bomData).toString());
-    } else {
-      console.log("Unable to produce BOM for", filePath);
-    }
-  }
 
-  // Automatically submit the bom data
-  if (args.serverUrl && args.apiKey) {
-    bom.submitBom(args, bomData, function (err, res, body) {
-      if (err) console.log(err);
-      console.log("Response from server", body);
-    });
+    // Automatically submit the bom data
+    if (args.serverUrl && args.apiKey) {
+      bom.submitBom(args, bomData, function (err, res, body) {
+        if (err) console.log(err);
+        console.log("Response from server", body);
+      });
+    }
   }
-});
+);

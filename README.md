@@ -43,6 +43,8 @@ Options:
   --output, -o       Output file for bom.xml or bom.json. Default console
   --type, -t         Project type
   --recurse, -r      Recurse mode suitable for mono-repos              [boolean]
+  --resolve-class, -c  Resolve class names for packages. jars only for now.
+                                                                       [boolean]
   --server-url       Dependency track or AppThreat server url. Eg:
                      https://deptrack.appthreat.io
   --api-key          Dependency track or AppThreat server api key
@@ -57,9 +59,29 @@ Options:
 
 ## Example
 
+Minimal example.
+
 ```bash
 cdxgen -o bom.xml
 ```
+
+NOTE:
+
+cdxgen would always produce bom in both xml and json format as per CycloneDX 1.2 specification. json is the recommended format.
+
+For a java project. This would automatically detect maven, gradle or sbt and build bom accordingly
+
+```bash
+cdxgen -t java -o bom.xml
+```
+
+Sometimes it is necessary to resolve class names contained in jar files. By passing an optional argument `--resolve-class`, it is possible to get cdxgen create a separate mapping file with the jar name (including the version) as the key and class names list as a value.
+
+```bash
+cdxgen -t java --resolve-class -o bom.json
+```
+
+This would create a bom.json.map file with the jar - class name mapping. Refer to [these](test/data/bom-maven.json.map) [examples](test/data/bom-gradle.json.map) to learn about the structure.
 
 ## Integration with GitHub action
 

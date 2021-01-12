@@ -1,4 +1,5 @@
 const glob = require("glob");
+const os = require("os");
 const path = require("path");
 const fs = require("fs");
 const got = require("got");
@@ -8,6 +9,12 @@ const spdxLicenses = require("./spdx-licenses.json");
 const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
+const { spawnSync } = require("child_process");
+
+// Debug mode flag
+const DEBUG_MODE =
+  process.env.SCAN_DEBUG_MODE === "debug" ||
+  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
 
 /**
  * Method to get files matching a pattern
@@ -1273,3 +1280,110 @@ const parseComposerLock = function (pkgLockFile) {
   return pkgList;
 };
 exports.parseComposerLock = parseComposerLock;
+
+/**
+ * Collect maven dependencies
+ *
+ * @param {string} mavenCmd Maven command to use
+ * @param {string} basePath Path to the maven project
+ */
+const collectMvnDependencies = function (mavenCmd, basePath) {
+  let tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mvn-deps-"));
+  console.log(
+    `Executing 'mvn dependency:copy-dependencies -DoutputDirectory=${tempDir} -DexcludeTransitive=true -DincludeScope=runtime' in ${basePath}`
+  );
+  const result = spawnSync(
+    mavenCmd,
+    [
+      "dependency:copy-dependencies",
+      `-DoutputDirectory=${tempDir}`,
+      "-DexcludeTransitive=true",
+      "-DincludeScope=runtime",
+      "-U",
+      "-Dmdep.prependGroupId=" + (process.env.MAVEN_PREPEND_GROUP || "false"),
+      "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false"),
+    ],
+    { cwd: basePath, encoding: "utf-8" }
+  );
+  let jarNSMapping = {};
+  if (result.status === 1 || result.error) {
+    console.error(result.stdout, result.stderr);
+    console.log(
+      "Resolve the above maven error. You can try the following remediation tips:\n"
+    );
+    console.log(
+      "1. Check if the correct version of maven is installed and available in the PATH."
+    );
+    console.log(
+      "2. Perform 'mvn compile package' before invoking this command. Fix any errors found during this invocation."
+    );
+    console.log(
+      "3. Ensure the temporary directory is available and has sufficient disk space to copy all the artifacts."
+    );
+  } else {
+    jarNSMapping = collectJarNS(tempDir);
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(os.tmpdir())) {
+    console.log(`Cleaning up ${tempDir}`);
+    fs.rmdirSync(tempDir, { recursive: true });
+  }
+  return jarNSMapping;
+};
+exports.collectMvnDependencies = collectMvnDependencies;
+
+/**
+ * Method to collect class names from all jars in a directory
+ *
+ * @param {string} jarPath Path containing jars
+ *
+ * @return object containing jar name and class list
+ */
+const collectJarNS = function (jarPath) {
+  const jarNSMapping = {};
+  console.log(
+    `About to identify class names for all jars in the path ${jarPath}`
+  );
+  // Execute jar tvf to get class names
+  const jarFiles = getAllFiles(jarPath, "**/*.jar");
+  if (jarFiles && jarFiles.length) {
+    for (let i in jarFiles) {
+      const jf = jarFiles[i];
+      const jarname = path.basename(jf);
+      if (DEBUG_MODE) {
+        console.log(`Executing 'jar tf ${jf}'`);
+      }
+      const jarResult = spawnSync("jar", ["-tf", jf], { encoding: "utf-8" });
+      if (jarResult.status === 1) {
+        console.error(jarResult.stdout, jarResult.stderr);
+        console.log(
+          "Check if JRE is installed and the jar command is available in the PATH."
+        );
+        break;
+      } else {
+        const consolelines = (jarResult.stdout || "").split("\n");
+        const nsList = consolelines
+          .filter((l) => {
+            return l.includes(".class") && !l.includes("-INF");
+          })
+          .map((e) => {
+            return e
+              .replace(/\/$/, "")
+              .replace(/\//g, ".")
+              .replace(".class", "");
+          });
+        jarNSMapping[jarname] = nsList;
+      }
+    }
+    if (!jarNSMapping) {
+      console.log(`Unable to determine class names for the jars in ${jarPath}`);
+    }
+  } else {
+    console.log(`${jarPath} did not contain any jars.`);
+  }
+  if (DEBUG_MODE) {
+    console.log("JAR Namespace mapping", jarNSMapping);
+  }
+  return jarNSMapping;
+};
+exports.collectJarNS = collectJarNS;
