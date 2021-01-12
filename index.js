@@ -51,10 +51,14 @@ function addGlobalReferences(src, filename) {
   externalReferences.push({
     reference: { "@type": "other", url: src, comment: "Base path" },
   });
+  let packageFileMeta = filename;
+  if (!filename.includes(src)) {
+    packageFileMeta = pathLib.join(src, filename);
+  }
   externalReferences.push({
     reference: {
       "@type": "other",
-      url: pathLib.join(src, filename),
+      url: packageFileMeta,
       comment: "Package file",
     },
   });
@@ -887,44 +891,65 @@ const createPythonBom = async (
  * @param callback Function callback
  */
 const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
-  const gosumFile = pathLib.join(path, "go.sum");
-  const gopkgLockFile = pathLib.join(path, "Gopkg.lock");
-  const gosumMode = fs.existsSync(gosumFile);
-  const gopkgMode = fs.existsSync(gopkgLockFile);
-  if (gosumMode || gopkgMode) {
-    if (gosumMode) {
-      const gosumData = fs.readFileSync(gosumFile, { encoding: "utf-8" });
-      const pkgList = await utils.parseGosumData(gosumData);
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "golang",
-          context: { src: path, filename: "go.sum" },
-        },
-        callback
-      );
-    } else if (gopkgMode) {
-      const gopkgData = fs.readFileSync(gopkgLockFile, {
+  const gosumFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "go.sum"
+  );
+  const gopkgLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gopkg.lock"
+  );
+  let pkgList = [];
+  if (gosumFiles.length) {
+    for (let i in gosumFiles) {
+      const f = gosumFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const gosumData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseGosumData(gosumData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "golang",
+        context: { src: path, filename: gosumFiles.join(", ") },
+      },
+      callback
+    );
+  } else if (gopkgLockFiles.length) {
+    for (let i in gopkgLockFiles) {
+      const f = gopkgLockFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const gopkgData = fs.readFileSync(f, {
         encoding: "utf-8",
       });
-      const pkgList = await utils.parseGopkgData(gopkgData);
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "golang",
-          context: { src: path, filename: "Gopkg.lock" },
-        },
-        callback
-      );
-    } else {
-      console.error(
-        "Unable to find go.sum or Gopkg.lock for the python project at",
-        path
-      );
-      callback();
+      const dlist = await utils.parseGopkgData(gopkgData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
     }
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "golang",
+        context: { src: path, filename: gopkgLockFiles.join(", ") },
+      },
+      callback
+    );
+  } else {
+    console.error(
+      "Unable to find go.sum or Gopkg.lock for the project at",
+      path
+    );
+    callback();
   }
 };
 
@@ -942,40 +967,66 @@ const createRustBom = async (
   options,
   callback
 ) => {
-  const cargoLockFile = pathLib.join(path, "Cargo.lock");
-  const cargoFile = pathLib.join(path, "Cargo.toml");
-  const cargoMode = fs.existsSync(cargoFile);
-  let cargoLockMode = fs.existsSync(cargoLockFile);
-  if (cargoMode) {
-    if (!cargoLockMode) {
-      console.log("Executing 'cargo update' in", path);
-      result = spawnSync("cargo", ["update"], { cwd: path, encoding: "utf-8" });
+  let cargoLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Cargo.lock"
+  );
+  const cargoFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Cargo.toml"
+  );
+  let pkgList = [];
+  const cargoMode = cargoFiles.length;
+  let cargoLockMode = cargoLockFiles.length;
+  if (cargoMode && !cargoLockMode) {
+    // Run cargo update in all directories with Cargo.toml
+    for (let i in cargoFiles) {
+      const f = cargoFiles[i];
+      const basePath = pathLib.dirname(f);
+      console.log("Executing 'cargo update' in", basePath);
+      result = spawnSync("cargo", ["update"], {
+        cwd: basePath,
+        encoding: "utf-8",
+      });
       if (result.status == 1 || result.error) {
-        console.error("cargo update has failed.");
+        console.error(
+          "cargo update has failed. Check if cargo is installed and available in PATH."
+        );
+        console.log(result.error, result.stderr);
       }
-      cargoLockMode = fs.existsSync(cargoLockFile);
     }
-    if (cargoLockMode) {
-      const cargoData = fs.readFileSync(cargoLockFile, { encoding: "utf-8" });
-      const pkgList = await utils.parseCargoData(cargoData);
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "crates",
-          context: { src: path, filename: "Cargo.lock" },
-        },
-        callback
-      );
-    } else {
-      console.error(
-        "Unable to find or generate Cargo.lock for the rust project at",
-        path
-      );
-      callback();
+  }
+  // Get the new lock files
+  cargoLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Cargo.lock"
+  );
+  if (cargoLockFiles.length) {
+    for (let i in cargoLockFiles) {
+      const f = cargoLockFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const cargoData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseCargoData(cargoData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
     }
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "crates",
+        context: { src: path, filename: cargoLockFiles.join(", ") },
+      },
+      callback
+    );
   } else {
-    console.error("Unable to find Cargo.toml for the rust project at", path);
+    console.error(
+      "Unable to find or generate Cargo.lock for the rust project at",
+      path
+    );
     callback();
   }
 };
@@ -994,45 +1045,69 @@ const createPHPBom = async (
   options,
   callback
 ) => {
-  const composerJsonFile = pathLib.join(path, "composer.json");
-  const composerLockFile = pathLib.join(path, "composer.lock");
-  const composerJsonMode = fs.existsSync(composerJsonFile);
-  let composerLockMode = fs.existsSync(composerLockFile);
-  if (composerJsonMode || composerLockMode) {
-    if (!composerLockMode && composerJsonMode) {
-      console.log("Executing 'composer install' in", path);
+  const composerJsonFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "composer.json"
+  );
+  let composerLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "composer.lock"
+  );
+  let pkgList = [];
+  const composerJsonMode = composerJsonFiles.length;
+  const composerLockMode = composerLockFiles.length;
+  if (!composerLockMode && composerJsonMode) {
+    for (let i in composerJsonFiles) {
+      const f = composerJsonFiles[i];
+      const basePath = pathLib.dirname(f);
+      console.log("Executing 'composer install' in", basePath);
       result = spawnSync("composer", ["install"], {
-        cwd: path,
+        cwd: basePath,
         encoding: "utf-8",
       });
       if (result.status == 1 || result.error) {
-        console.error("Composer install has failed.");
+        console.error(
+          "Composer install has failed. Check if composer is installed and available in PATH."
+        );
+        console.log(result.error, result.stderr);
       }
-      composerLockMode = fs.existsSync(composerLockFile);
     }
-    if (composerLockMode) {
-      const pkgList = utils.parseComposerLock(composerLockFile);
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "composer",
-          context: { src: path, filename: "composer.lock" },
-        },
-        callback
-      );
-    } else {
-      console.error(
-        "Unable to find composer.lock or composer.json for the php project at",
-        path
-      );
-      callback();
+  }
+  composerLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "composer.lock"
+  );
+  if (composerLockFiles.length) {
+    for (let i in composerLockFiles) {
+      const f = composerLockFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      let dlist = utils.parseComposerLock(f);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
     }
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "composer",
+        context: { src: path, filename: composerLockFiles.join(", ") },
+      },
+      callback
+    );
+  } else {
+    console.error(
+      "Unable to find composer.lock or composer.json for the php project at",
+      path
+    );
+    callback();
   }
 };
 
 /**
- * Function to create bom string for roby projects
+ * Function to create bom string for ruby projects
  *
  * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
@@ -1045,46 +1120,67 @@ const createRubyBom = async (
   options,
   callback
 ) => {
-  const gemFile = pathLib.join(path, "Gemfile");
-  const gemLockFile = pathLib.join(path, "Gemfile.lock");
-  const gemFileMode = fs.existsSync(gemFile);
-  let gemLockMode = fs.existsSync(gemLockFile);
-  if (gemLockMode || gemFileMode) {
-    if (gemFileMode && !gemLockMode) {
-      console.log("Executing 'bundle install' in", path);
+  const gemFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gemfile"
+  );
+  let gemLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gemfile.lock"
+  );
+  let pkgList = [];
+  const gemFileMode = gemFiles.length;
+  let gemLockMode = gemLockFiles.length;
+  if (gemFileMode && !gemLockMode) {
+    for (let i in gemFiles) {
+      const f = gemFiles[i];
+      const basePath = pathLib.dirname(f);
+      console.log("Executing 'bundle install' in", basePath);
       result = spawnSync("bundle", ["install"], {
-        cwd: path,
+        cwd: basePath,
         encoding: "utf-8",
       });
       if (result.status == 1 || result.error) {
-        console.error("Bundle install has failed.");
+        console.error(
+          "Bundle install has failed. Check if bundle is installed and available in PATH."
+        );
+        console.log(result.error, result.stderr);
       }
-      gemLockMode = fs.existsSync(gemLockFile);
     }
-    if (gemLockMode) {
-      let gemLockData = fs.readFileSync(gemLockFile, { encoding: "utf-8" });
-      const pkgList = await utils.parseGemfileLockData(gemLockData);
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "rubygems",
-          context: { src: path, filename: "Gemfile.lock" },
-        },
-        callback
-      );
-    } else {
-      console.error(
-        "Unable to find Gemfile.lock for the ruby project at",
-        path
-      );
-      callback();
+  }
+  gemLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gemfile.lock"
+  );
+  if (gemLockFiles.length) {
+    for (let i in gemLockFiles) {
+      const f = gemLockFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      let gemLockData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseGemfileLockData(gemLockData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
     }
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "rubygems",
+        context: { src: path, filename: gemLockFiles.join(", ") },
+      },
+      callback
+    );
+  } else {
+    console.error("Unable to find Gemfile.lock for the ruby project at", path);
+    callback();
   }
 };
 
 /**
- * Function to create bom string for roby projects
+ * Function to create bom string for csharp projects
  *
  * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
@@ -1105,6 +1201,9 @@ const createCsharpBom = async (
     let pkgList = [];
     for (let i in csProjFiles) {
       const f = csProjFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
       let csProjData = fs.readFileSync(f, { encoding: "utf-8" });
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
@@ -1190,38 +1289,54 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     );
   }
   // go
-  const gosumFile = pathLib.join(path, "go.sum");
-  const gopkgLockFile = pathLib.join(path, "Gopkg.lock");
-  const gosumMode = fs.existsSync(gosumFile);
-  const gopkgMode = fs.existsSync(gopkgLockFile);
-  if (gosumMode || gopkgMode) {
+  const gosumFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "go.sum"
+  );
+  const gopkgLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gopkg.lock"
+  );
+  if (gosumFiles.length || gopkgLockFiles.length) {
     return await createGoBom(includeBomSerialNumber, path, options, callback);
   }
 
   // rust
-  const cargoLockFile = pathLib.join(path, "Cargo.lock");
-  const cargoFile = pathLib.join(path, "Cargo.toml");
-  const cargoMode = fs.existsSync(cargoFile);
-  const cargoLockMode = fs.existsSync(cargoLockFile);
-  if (cargoMode || cargoLockMode) {
+  const cargoLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Cargo.lock"
+  );
+  const cargoFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Cargo.toml"
+  );
+  if (cargoLockFiles.length || cargoFiles.length) {
     return await createRustBom(includeBomSerialNumber, path, options, callback);
   }
 
   // php
-  const composerJsonFile = pathLib.join(path, "composer.json");
-  const composerLockFile = pathLib.join(path, "composer.lock");
-  const composerJsonMode = fs.existsSync(composerJsonFile);
-  let composerLockMode = fs.existsSync(composerLockFile);
-  if (composerJsonMode || composerLockMode) {
+  const composerJsonFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "composer.json"
+  );
+  const composerLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "composer.lock"
+  );
+  if (composerJsonFiles.length || composerLockFiles.length) {
     return await createPHPBom(includeBomSerialNumber, path, options, callback);
   }
 
   // Ruby
-  const gemFile = pathLib.join(path, "Gemfile");
-  const gemLockFile = pathLib.join(path, "Gemfile.lock");
-  const gemFileMode = fs.existsSync(gemFile);
-  let gemLockMode = fs.existsSync(gemLockFile);
-  if (gemLockMode || gemFileMode) {
+  const gemFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gemfile"
+  );
+  const gemLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gemfile.lock"
+  );
+  if (gemFiles.length || gemLockFiles.length) {
     return await createRubyBom(includeBomSerialNumber, path, options, callback);
   }
 

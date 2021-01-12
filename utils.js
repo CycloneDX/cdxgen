@@ -56,6 +56,9 @@ function getLicenses(pkg, format = "xml") {
             licenseContent.url = "https://opensource.org/licenses/" + l;
           } else if (l.startsWith("http")) {
             licenseContent.url = l;
+            if (!l.includes("opensource.org")) {
+              licenseContent.name = "CUSTOM";
+            }
           } else {
             licenseContent.name = l;
           }
@@ -896,10 +899,18 @@ const parseGosumData = async function (gosumData) {
       }
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
-      const license = await getGoPkgLicense({
-        group: group,
-        name: name,
-      });
+      let license = undefined;
+      if (!process.env.SKIP_FETCH_LICENSE) {
+        if (DEBUG_MODE) {
+          console.log(
+            `About to fetch go package license information for ${group}:${name}`
+          );
+        }
+        license = await getGoPkgLicense({
+          group: group,
+          name: name,
+        });
+      }
       pkgList.push({
         group: group,
         name: name,
@@ -974,6 +985,9 @@ const getRubyGemsMetadata = async function (pkgList) {
   const rdepList = [];
   for (const p of pkgList) {
     try {
+      if (DEBUG_MODE) {
+        console.log(`Querying rubygems.org for ${p.name}`);
+      }
       const res = await got.get(RUBYGEMS_URL + p.name + ".json", {
         responseType: "json",
       });
@@ -1066,6 +1080,9 @@ const getCratesMetadata = async function (pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
     try {
+      if (DEBUG_MODE) {
+        console.log(`Querying crates.io for ${p.name}`);
+      }
       const res = await got.get(CRATES_URL + p.name, { responseType: "json" });
       const body = res.body.crate;
       p.description = body.description;
@@ -1204,6 +1221,9 @@ const getNugetMetadata = async function (pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
     try {
+      if (DEBUG_MODE) {
+        console.log(`Querying nuget for ${p.name}`);
+      }
       const res = await got.get(
         NUGET_URL +
           p.group.toLowerCase() +
@@ -1218,6 +1238,10 @@ const getNugetMetadata = async function (pkgList) {
       }
       const firstItem = items[0];
       const body = firstItem.items[firstItem.items.length - 1];
+      // Set the latest version in case it is missing
+      if (!p.version && body.catalogEntry.version) {
+        p.version = body.catalogEntry.version;
+      }
       p.description = body.catalogEntry.description;
       if (
         body.catalogEntry.licenseExpression &&

@@ -111,7 +111,7 @@ bom.createBom(
           console.log("BOM file written to", args.output);
         }
         //
-        if (nsMapping) {
+        if (nsMapping && Object.keys(nsMapping).length) {
           const nsFile = jsonFile + ".map";
           fs.writeFile(nsFile, JSON.stringify(nsMapping), () => {});
           console.log("Namespace mapping file written to", nsFile);

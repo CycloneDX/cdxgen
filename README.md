@@ -83,6 +83,18 @@ cdxgen -t java --resolve-class -o bom.json
 
 This would create a bom.json.map file with the jar - class name mapping. Refer to [these](test/data/bom-maven.json.map) [examples](test/data/bom-gradle.json.map) to learn about the structure.
 
+## Environment variables
+
+| Variable           | Description                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| SCAN_DEBUG_MODE    | Set to debug to enable debug messages                                                       |
+| GITHUB_TOKEN       | Specify GitHub token to prevent traffic shaping while querying license and repo information |
+| MVN_CMD            | Set to override maven command                                                               |
+| MAVEN_HOME         | Specify maven home                                                                          |
+| GRADLE_CACHE_DIR   | Specify gradle cache directory. Useful for class name resolving                             |
+| SBT_CACHE_DIR      | Specify sbt cache directory. Useful for class name resolving                                |
+| SKIP_FETCH_LICENSE | Set to true to skip fetching license information. golang only for now                       |
+
 ## Integration with GitHub action
 
 Use the GitHub [action](https://github.com/AppThreat/cdxgen-action) to automatically generate and upload bom to the server. Refer to `nodejs.yml` in this repo for a working example.
