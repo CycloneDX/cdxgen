@@ -1274,9 +1274,9 @@ const getNugetMetadata = async function (pkgList) {
 exports.getNugetMetadata = getNugetMetadata;
 
 /**
- * Parse nodejs package lock file
+ * Parse composer lock file
  *
- * @param {string} pkgLockFile package-lock.json file
+ * @param {string} pkgLockFile composer.lock file
  */
 const parseComposerLock = function (pkgLockFile) {
   const pkgList = [];
@@ -1304,6 +1304,45 @@ const parseComposerLock = function (pkgLockFile) {
   return pkgList;
 };
 exports.parseComposerLock = parseComposerLock;
+
+/**
+ * Parse sbt lock file
+ *
+ * @param {string} pkgLockFile build.sbt.lock file
+ */
+const parseSbtLock = function (pkgLockFile) {
+  const pkgList = [];
+  if (fs.existsSync(pkgLockFile)) {
+    lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    if (lockData && lockData.dependencies) {
+      for (let i in lockData.dependencies) {
+        const pkg = lockData.dependencies[i];
+        const artifacts = pkg.artifacts || undefined;
+        let integrity = "";
+        if (artifacts && artifacts.length) {
+          integrity = artifacts[0].hash.replace("sha1:", "sha1-");
+        }
+        let compScope = undefined;
+        if (pkg.configurations) {
+          if (pkg.configurations.includes("runtime")) {
+            compScope = "required";
+          } else {
+            compScope = "optional";
+          }
+        }
+        pkgList.push({
+          group: pkg.org,
+          name: pkg.name,
+          version: pkg.version,
+          _integrity: integrity,
+          scope: compScope,
+        });
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseSbtLock = parseSbtLock;
 
 /**
  * Collect maven dependencies

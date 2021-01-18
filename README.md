@@ -20,7 +20,8 @@ NOTE:
 
 - Apache maven 3.x is required for parsing pom.xml
 - gradle or gradlew is required to parse gradle projects
-- sbt is required for parsing scala sbt projects
+- sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.
+  - Alternatively, create a lock file using sbt-dependency-lock [plugin](https://github.com/stringbean/sbt-dependency-lock)
 
 ### Automatic usage detection (Node.js)
 
