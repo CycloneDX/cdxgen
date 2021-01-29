@@ -566,7 +566,7 @@ const createJavaBom = async (
         }
       }
     } else {
-      let SBT_CMD = "sbt";
+      let SBT_CMD = process.env.SBT_CMD || "sbt";
       let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
       let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
       fs.mkdirSync(tempSbtgDir, { recursive: true });
