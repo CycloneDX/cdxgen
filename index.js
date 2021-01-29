@@ -566,17 +566,18 @@ const createJavaBom = async (
         }
       }
     } else {
-      // Attempt to create dependency graph via global plugin. Very limited support.
       let SBT_CMD = process.env.SBT_CMD || "sbt";
       let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
       let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
-      tempSbtgDir = pathLib.join(tempSbtgDir, "1.0", "plugins");
       fs.mkdirSync(tempSbtgDir, { recursive: true });
-      // Create temporary global plugins
-      fs.writeFileSync(
-        pathLib.join(tempSbtgDir, "build.sbt"),
-        `addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")\n`
+      // Create temporary plugins file
+      let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt")
+      // TODO: change to official forked version once it is available/
+      // Requires `--append` for `toFile` subtask.
+      fs.writeFileSync(tempSbtPlugins,
+        `addSbtPlugin("com.michaelpollmeier" % "sbt-dependency-graph" % "0.10.0-RC1+8-7f17b203+20210129-2104")\n`
       );
+
       for (let i in sbtFiles) {
         const f = sbtFiles[i];
         const basePath = pathLib.dirname(f);
@@ -591,7 +592,7 @@ const createJavaBom = async (
         );
         const result = spawnSync(
           SBT_CMD,
-          ["--sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
+          [`--addPluginSbtFile=${tempSbtPlugins}`,`dependencyList::toFile "${dlFile}" --append`],
           { cwd: basePath, encoding: "utf-8" }
         );
         if (result.status == 1 || result.error) {
