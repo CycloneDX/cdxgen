@@ -556,6 +556,7 @@ const createJavaBom = async (
 
   if (sbtFiles && sbtFiles.length) {
     let pkgList = [];
+    // If the project use sbt lock files
     if (sbtLockFiles && sbtLockFiles.length) {
       for (let i in sbtLockFiles) {
         const f = sbtLockFiles[i];
@@ -577,78 +578,44 @@ const createJavaBom = async (
         `addSbtPlugin("com.michaelpollmeier" % "sbt-dependency-graph" % "0.10.0-RC1+8-7f17b203+20210129-2104")\n`
       );
 
-      // 1. Run dependency analysis on a root sbt file
-      let dlFile = pathLib.join(tempDir, "dl.tmp");
-      console.log(
-        "Executing",
-        SBT_CMD,
-        "dependencyList in",
-        path,
-        "using plugins",
-        tempSbtPlugins
-      );
-      const result = spawnSync(
-        SBT_CMD,
-        [`--addPluginSbtFile=${tempSbtPlugins}`,`dependencyList::toFile "${dlFile}" --append`],
-        { cwd: path, encoding: "utf-8" }
-      );
-      if (result.status == 1 || result.error) {
-        if (DEBUG_MODE) {
+      for (let i in sbtFiles) {
+        const f = sbtFiles[i];
+        const basePath = pathLib.dirname(f);
+        let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
+        console.log(
+          "Executing",
+          SBT_CMD,
+          "dependencyList in",
+          basePath,
+          "using plugins",
+          tempSbtgDir
+        );
+        const result = spawnSync(
+          SBT_CMD,
+          [`--addPluginSbtFile=${tempSbtPlugins}`,`dependencyList::toFile "${dlFile}" --append`],
+          { cwd: basePath, encoding: "utf-8" }
+        );
+        if (result.status == 1 || result.error) {
           console.error(result.stdout, result.stderr);
-        }
-        fs.unlinkSync(tempSbtPlugins)
-        // 2. Fallback, try with individual sbt files
-        for (let i in sbtFiles) {
-          const f = sbtFiles[i];
-          const basePath = pathLib.dirname(f);
-          let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
-          console.log(
-            "Executing",
-            SBT_CMD,
-            "dependencyList in",
-            basePath,
-            "using plugins",
-            tempSbtgDir
-          );
-          const result = spawnSync(
-            SBT_CMD,
-            ["--sbt-dir", tempSbtgDir, `dependencyList::toFile"${dlFile}"`],
-            { cwd: basePath, encoding: "utf-8" }
-          );
-          if (result.status == 1 || result.error) {
-            console.error(result.stdout, result.stderr);
-            if (DEBUG_MODE) {
-              console.log(
-                `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
-              );
-              console.log(
-                `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
-              );
-              console.log(
-                "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
-              );
-            }
-          } else if (DEBUG_MODE) {
-            console.log(result.stdout);
+          if (DEBUG_MODE) {
+            console.log(
+              `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
+            );
+            console.log(
+              `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
+            );
+            console.log(
+              "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
+            );
           }
-          if (fs.existsSync(dlFile)) {
-            const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
-            if (DEBUG_MODE) {
-              console.log(cmdOutput);
-            }
-            const dlist = utils.parseKVDep(cmdOutput);
-            if (dlist && dlist.length) {
-              pkgList = pkgList.concat(dlist);
-            }
-          } else {
-            if (DEBUG_MODE) {
-              console.log(`sbt dependencyList did not yield ${dlFile}`);
-            }
-          }
+        } else if (DEBUG_MODE) {
+          console.log(result.stdout);
         }
-      } else {
         if (fs.existsSync(dlFile)) {
           const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
+          if (DEBUG_MODE) {
+            console.log(cmdOutput);
+          }
           const dlist = utils.parseKVDep(cmdOutput);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
@@ -663,7 +630,6 @@ const createJavaBom = async (
     if (DEBUG_MODE) {
       console.log(`Found ${pkgList.length} packages`);
     }
-    // Note: this call can be expensive
     pkgList = await utils.getMvnMetadata(pkgList);
     // Should we attempt to resolve class names
     if (options.resolveClass) {
