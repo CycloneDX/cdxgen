@@ -1464,8 +1464,8 @@ exports.collectJarNS = collectJarNS;
 const determineSbtVersion = function (projectPath) {
   const buildPropFile = path.join(projectPath, 'project', 'build.properties');
   if (fs.existsSync(buildPropFile)) {
-    var properties = propertiesReader(buildPropFile);
-    var property = properties.get('sbt.version')
+    let properties = propertiesReader(buildPropFile);
+    let property = properties.get('sbt.version')
     if (property != null && semver.valid(property)) {
       return property;
     }
@@ -1507,7 +1507,7 @@ const addPlugin = function (projectPath, plugin) {
 exports.addPlugin = addPlugin;
 
 /**
- * Cleansup up modifications to the project's plugins' file made by the
+ * Cleans up modifications to the project's plugins' file made by the
  * `addPlugin` function.
  *
  * @param {string} projectPath Path to the SBT project
@@ -1515,8 +1515,6 @@ exports.addPlugin = addPlugin;
  */
 const cleanupPlugin = function (projectPath, originalPluginsFile) {
   const pluginsFile = path.join(projectPath, 'project', 'plugins.sbt');
-
-
   if (fs.existsSync(pluginsFile)) {
     if (originalPluginsFile == null) {
       // just remove the file, it was never there
