@@ -12,6 +12,7 @@ const utils = require("./utils");
 const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
+const semver = require('semver')
 
 // Construct maven command
 let MVN_CMD = "mvn";
@@ -567,16 +568,21 @@ const createJavaBom = async (
       }
     } else {
       let SBT_CMD = process.env.SBT_CMD || "sbt";
+      let sbtVersion = utils.determineSbtVersion(path)
+      if (DEBUG_MODE) {
+        console.log("Detected sbt version: " + sbtVersion);
+      }
+      const standalonePluginFile = sbtVersion != null && semver.gte(sbtVersion, '1.2.0')
       let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
       let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
       fs.mkdirSync(tempSbtgDir, { recursive: true });
       // Create temporary plugins file
       let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt")
-      // TODO: change to official forked version once it is available/
-      // Requires `--append` for `toFile` subtask.
-      fs.writeFileSync(tempSbtPlugins,
-        `addSbtPlugin("com.michaelpollmeier" % "sbt-dependency-graph" % "0.10.0-RC1+8-7f17b203+20210129-2104")\n`
-      );
+
+      // Requires a custom version of `sbt-dependency-graph` that 
+      // supports `--append` for `toFile` subtask.
+      const sbtPluginDefinition = `addSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file1")\n`
+      fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
 
       for (let i in sbtFiles) {
         const f = sbtFiles[i];
@@ -590,9 +596,18 @@ const createJavaBom = async (
           "using plugins",
           tempSbtgDir
         );
+        var sbtArgs = [];
+        var pluginFile = null;
+        if (standalonePluginFile) {
+          sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`dependencyList::toFile "${dlFile}" --append`]
+        } else {
+          // write to the existing plugins file
+          sbtArgs = [`dependencyList::toFile "${dlFile}" --append`]
+          pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
+        }
         const result = spawnSync(
           SBT_CMD,
-          [`--addPluginSbtFile=${tempSbtPlugins}`,`dependencyList::toFile "${dlFile}" --append`],
+          sbtArgs,
           { cwd: basePath, encoding: "utf-8" }
         );
         if (result.status == 1 || result.error) {
@@ -611,6 +626,9 @@ const createJavaBom = async (
         } else if (DEBUG_MODE) {
           console.log(result.stdout);
         }
+        if (!standalonePluginFile) {
+          utils.cleanupPlugin(basePath, pluginFile);
+        }
         if (fs.existsSync(dlFile)) {
           const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
           if (DEBUG_MODE) {
@@ -627,6 +645,10 @@ const createJavaBom = async (
         }
       }
     } // else
+
+    // Cleanup 
+    fs.unlinkSync(tempSbtPlugins)
+    
     if (DEBUG_MODE) {
       console.log(`Found ${pkgList.length} packages`);
     }

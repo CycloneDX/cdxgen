@@ -10,6 +10,8 @@ const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
 const { spawnSync } = require("child_process");
+const propertiesReader = require('properties-reader');
+const semver = require('semver')
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -1450,3 +1452,84 @@ const collectJarNS = function (jarPath) {
   return jarNSMapping;
 };
 exports.collectJarNS = collectJarNS;
+
+/**
+ * Determine the version of SBT used in compilation of this project.
+ * By default it looks into a standard SBT location i.e.
+ * <path-project>/project/build.properties
+ * Returns `null` if the version cannot be determined.
+ *
+ * @param {string} projectPath Path to the SBT project
+ */
+const determineSbtVersion = function (projectPath) {
+  const buildPropFile = path.join(projectPath, 'project', 'build.properties');
+  if (fs.existsSync(buildPropFile)) {
+    var properties = propertiesReader(buildPropFile);
+    var property = properties.get('sbt.version')
+    if (property != null && semver.valid(property)) {
+      return property;
+    }
+  }
+  return null;
+}
+exports.determineSbtVersion = determineSbtVersion;
+
+/**
+ * Adds a new plugin to the SBT project by amending its plugins list.
+ * Only recommended for SBT < 1.2.0 or otherwise use `addPluginSbtFile`
+ * parameter.
+ * The change manipulates the existing plugins' file by creating a copy of it
+ * and returning a path where it is moved to.
+ * Once the SBT task is complete one must always call `cleanupPlugin` to remove
+ * the modifications made in place.
+ *
+ * @param {string} projectPath Path to the SBT project
+ * @param {string} plugin Name of the plugin to add
+ */
+const addPlugin = function (projectPath, plugin) {
+  const pluginsFile = path.join(projectPath, 'project', 'plugins.sbt');
+
+  var originalPluginsFile = null;
+  if (fs.existsSync(pluginsFile)) {
+    originalPluginsFile = pluginsFile + '.cdxgen';
+    fs.copyFileSync(pluginsFile, originalPluginsFile);
+  }
+
+  options = {
+    flag: 'a'
+  };
+
+  fs.writeFileSync(pluginsFile,
+      plugin,
+      options)
+  return originalPluginsFile;
+}
+exports.addPlugin = addPlugin;
+
+/**
+ * Cleansup up modifications to the project's plugins' file made by the
+ * `addPlugin` function.
+ *
+ * @param {string} projectPath Path to the SBT project
+ * @param {string} originalPluginsFile Location of the original plugins file, if any
+ */
+const cleanupPlugin = function (projectPath, originalPluginsFile) {
+  const pluginsFile = path.join(projectPath, 'project', 'plugins.sbt');
+
+
+  if (fs.existsSync(pluginsFile)) {
+    if (originalPluginsFile == null) {
+      // just remove the file, it was never there
+      fs.unlinkSync(pluginsFile);
+      return !fs.existsSync(pluginsFile);
+    } else {
+      // Bring back the original file
+      fs.copyFileSync(originalPluginsFile, pluginsFile);
+      fs.unlinkSync(originalPluginsFile);
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
+exports.cleanupPlugin = cleanupPlugin;
