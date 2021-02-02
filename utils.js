@@ -1487,21 +1487,14 @@ exports.determineSbtVersion = determineSbtVersion;
  * @param {string} plugin Name of the plugin to add
  */
 const addPlugin = function (projectPath, plugin) {
-  const pluginsFile = path.join(projectPath, 'project', 'plugins.sbt');
-
+  const pluginsFile = sbtPluginsPath(projectPath);
   var originalPluginsFile = null;
   if (fs.existsSync(pluginsFile)) {
     originalPluginsFile = pluginsFile + '.cdxgen';
     fs.copyFileSync(pluginsFile, originalPluginsFile);
   }
 
-  options = {
-    flag: 'a'
-  };
-
-  fs.writeFileSync(pluginsFile,
-      plugin,
-      options)
+  fs.writeFileSync(pluginsFile, plugin, { flag: 'a' })
   return originalPluginsFile;
 }
 exports.addPlugin = addPlugin;
@@ -1514,7 +1507,7 @@ exports.addPlugin = addPlugin;
  * @param {string} originalPluginsFile Location of the original plugins file, if any
  */
 const cleanupPlugin = function (projectPath, originalPluginsFile) {
-  const pluginsFile = path.join(projectPath, 'project', 'plugins.sbt');
+  const pluginsFile = sbtPluginsPath(projectPath);
   if (fs.existsSync(pluginsFile)) {
     if (originalPluginsFile == null) {
       // just remove the file, it was never there
@@ -1531,3 +1524,13 @@ const cleanupPlugin = function (projectPath, originalPluginsFile) {
   }
 }
 exports.cleanupPlugin = cleanupPlugin;
+
+/**
+ * Returns a default location of the plugins file.
+ * 
+ * @param {string} projectPath Path to the SBT project
+ */
+const sbtPluginsPath = function (projectPath) {
+  return path.join(projectPath, 'project', 'plugins.sbt');
+}
+exports.sbtPluginsPath = sbtPluginsPath

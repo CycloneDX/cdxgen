@@ -644,10 +644,10 @@ const createJavaBom = async (
           }
         }
       }
-    } // else
 
-    // Cleanup 
-    fs.unlinkSync(tempSbtPlugins)
+      // Cleanup
+      fs.unlinkSync(tempSbtPlugins)
+    } // else
     
     if (DEBUG_MODE) {
       console.log(`Found ${pkgList.length} packages`);
