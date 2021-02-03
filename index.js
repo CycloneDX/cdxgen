@@ -415,7 +415,7 @@ const createJavaBom = async (
         jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
       }
       console.log(
-        "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
+        "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom' in",
         basePath
       );
       result = spawnSync(
@@ -425,7 +425,7 @@ const createJavaBom = async (
           "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
           "-DrepoUrl=https://jitpack.io",
           "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
-          "org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom",
+          "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
         ],
         { cwd: basePath, encoding: "utf-8" }
       );
