@@ -581,7 +581,7 @@ const createJavaBom = async (
 
       // Requires a custom version of `sbt-dependency-graph` that 
       // supports `--append` for `toFile` subtask.
-      const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file1")\n`
+      const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`
       fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
 
       for (let i in sbtFiles) {
