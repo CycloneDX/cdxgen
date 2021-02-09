@@ -12,7 +12,7 @@ const utils = require("./utils");
 const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
-const semver = require('semver')
+const semver = require("semver");
 
 // Construct maven command
 let MVN_CMD = "mvn";
@@ -40,6 +40,10 @@ const DEBUG_MODE =
   process.env.SCAN_DEBUG_MODE === "debug" ||
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
   process.env.NODE_ENV !== "production";
+
+// CycloneDX Hash pattern
+const HASH_PATTERN =
+  "^([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{96}|[a-fA-F0-9]{128})$";
 
 /**
  * Method to create global external references
@@ -325,7 +329,18 @@ function processHashes(pkg, component, format = "xml") {
  * Adds a hash to component.
  */
 function addComponentHash(alg, digest, component, format = "xml") {
-  let hash = Buffer.from(digest, "base64").toString("hex");
+  let hash = "";
+  // If it is a valid hash simply use it
+  if (new RegExp(HASH_PATTERN).test(digest)) {
+    hash = digest;
+  } else {
+    // Check if base64 encoded
+    const isBase64Encoded =
+      Buffer.from(digest, "base64").toString("base64") === digest;
+    hash = isBase64Encoded
+      ? Buffer.from(digest, "base64").toString("hex")
+      : digest;
+  }
   let ahash = { "@alg": alg, "#text": hash };
   if (format === "json") {
     ahash = { alg: alg, content: hash };
@@ -568,20 +583,21 @@ const createJavaBom = async (
       }
     } else {
       let SBT_CMD = process.env.SBT_CMD || "sbt";
-      let sbtVersion = utils.determineSbtVersion(path)
+      let sbtVersion = utils.determineSbtVersion(path);
       if (DEBUG_MODE) {
         console.log("Detected sbt version: " + sbtVersion);
       }
-      const standalonePluginFile = sbtVersion != null && semver.gte(sbtVersion, '1.2.0')
+      const standalonePluginFile =
+        sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
       let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
       let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
       fs.mkdirSync(tempSbtgDir, { recursive: true });
       // Create temporary plugins file
-      let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt")
+      let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
 
-      // Requires a custom version of `sbt-dependency-graph` that 
+      // Requires a custom version of `sbt-dependency-graph` that
       // supports `--append` for `toFile` subtask.
-      const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`
+      const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
       fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
 
       for (let i in sbtFiles) {
@@ -599,17 +615,19 @@ const createJavaBom = async (
         var sbtArgs = [];
         var pluginFile = null;
         if (standalonePluginFile) {
-          sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`dependencyList::toFile "${dlFile}" --append`]
+          sbtArgs = [
+            `-addPluginSbtFile=${tempSbtPlugins}`,
+            `dependencyList::toFile "${dlFile}" --append`,
+          ];
         } else {
           // write to the existing plugins file
-          sbtArgs = [`dependencyList::toFile "${dlFile}" --append`]
+          sbtArgs = [`dependencyList::toFile "${dlFile}" --append`];
           pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
         }
-        const result = spawnSync(
-          SBT_CMD,
-          sbtArgs,
-          { cwd: basePath, encoding: "utf-8" }
-        );
+        const result = spawnSync(SBT_CMD, sbtArgs, {
+          cwd: basePath,
+          encoding: "utf-8",
+        });
         if (result.status == 1 || result.error) {
           console.error(result.stdout, result.stderr);
           if (DEBUG_MODE) {
@@ -646,9 +664,9 @@ const createJavaBom = async (
       }
 
       // Cleanup
-      fs.unlinkSync(tempSbtPlugins)
+      fs.unlinkSync(tempSbtPlugins);
     } // else
-    
+
     if (DEBUG_MODE) {
       console.log(`Found ${pkgList.length} packages`);
     }

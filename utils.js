@@ -10,8 +10,8 @@ const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
 const { spawnSync } = require("child_process");
-const propertiesReader = require('properties-reader');
-const semver = require('semver')
+const propertiesReader = require("properties-reader");
+const semver = require("semver");
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -1462,16 +1462,16 @@ exports.collectJarNS = collectJarNS;
  * @param {string} projectPath Path to the SBT project
  */
 const determineSbtVersion = function (projectPath) {
-  const buildPropFile = path.join(projectPath, 'project', 'build.properties');
+  const buildPropFile = path.join(projectPath, "project", "build.properties");
   if (fs.existsSync(buildPropFile)) {
     let properties = propertiesReader(buildPropFile);
-    let property = properties.get('sbt.version')
+    let property = properties.get("sbt.version");
     if (property != null && semver.valid(property)) {
       return property;
     }
   }
   return null;
-}
+};
 exports.determineSbtVersion = determineSbtVersion;
 
 /**
@@ -1490,13 +1490,13 @@ const addPlugin = function (projectPath, plugin) {
   const pluginsFile = sbtPluginsPath(projectPath);
   var originalPluginsFile = null;
   if (fs.existsSync(pluginsFile)) {
-    originalPluginsFile = pluginsFile + '.cdxgen';
+    originalPluginsFile = pluginsFile + ".cdxgen";
     fs.copyFileSync(pluginsFile, originalPluginsFile);
   }
 
-  fs.writeFileSync(pluginsFile, plugin, { flag: 'a' })
+  fs.writeFileSync(pluginsFile, plugin, { flag: "a" });
   return originalPluginsFile;
-}
+};
 exports.addPlugin = addPlugin;
 
 /**
@@ -1522,15 +1522,15 @@ const cleanupPlugin = function (projectPath, originalPluginsFile) {
   } else {
     return false;
   }
-}
+};
 exports.cleanupPlugin = cleanupPlugin;
 
 /**
  * Returns a default location of the plugins file.
- * 
+ *
  * @param {string} projectPath Path to the SBT project
  */
 const sbtPluginsPath = function (projectPath) {
-  return path.join(projectPath, 'project', 'plugins.sbt');
-}
-exports.sbtPluginsPath = sbtPluginsPath
+  return path.join(projectPath, "project", "plugins.sbt");
+};
+exports.sbtPluginsPath = sbtPluginsPath;
