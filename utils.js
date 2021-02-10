@@ -594,7 +594,7 @@ const getPyMetadata = async function (pkgList) {
       if (body.releases && body.releases[p.version]) {
         const digest = body.releases[p.version][0].digests;
         if (digest["sha256"]) {
-          p._integrity = "sha256-" + digest["sha256"];
+          p._integrity = "sha256-" + toBase64(digest["sha256"]);
         } else if (digest["md5"]) {
           p._integrity = "md5-" + digest["md5"];
         }
