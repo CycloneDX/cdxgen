@@ -60,6 +60,11 @@ if (args.version) {
   process.exit(0);
 }
 
+if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
+  const globalAgent = require('global-agent');
+  globalAgent.bootstrap();
+}
+
 /**
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
