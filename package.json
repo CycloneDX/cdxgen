@@ -77,7 +77,8 @@
     "bin/",
     "spdx-licenses.json",
     "license-mapping.json",
-    "known-licenses.json"
+    "known-licenses.json",
+    "vendor-alias.json"
   ],
   "devDependencies": {
     "jest": "^25.1.0"

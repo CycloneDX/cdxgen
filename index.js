@@ -414,137 +414,34 @@ const createJavaBom = async (
   options,
   callback
 ) => {
-  // maven - pom.xml
-  const pomFiles = utils.getAllFiles(path, "pom.xml");
   let jarNSMapping = {};
-  if (pomFiles && pomFiles.length) {
-    let pkgList = [];
-    for (let i in pomFiles) {
-      const f = pomFiles[i];
-      const basePath = pathLib.dirname(f);
+  let pkgList = [];
+  // war/ear mode
+  if (path.endsWith(".war")) {
+    // Check if the file exists
+    if (fs.existsSync(path)) {
+      if (DEBUG_MODE) {
+        console.log(`Retrieving packages from ${path}`);
+      }
+      let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "war-deps-"));
+      pkgList = utils.extractJarArchive(path, tempDir);
+      if (pkgList.length) {
+        pkgList = await utils.getMvnMetadata(pkgList);
+      }
       // Should we attempt to resolve class names
       if (options.resolveClass) {
         console.log(
           "Creating class names list based on available jars. This might take a few mins ..."
         );
-        jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
+        jarNSMapping = utils.collectJarNS(tempDir);
       }
-      console.log(
-        "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom' in",
-        basePath
-      );
-      result = spawnSync(
-        MVN_CMD,
-        [
-          "dependency:get",
-          "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
-          "-DrepoUrl=https://jitpack.io",
-          "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
-          "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
-        ],
-        { cwd: basePath, encoding: "utf-8" }
-      );
-      if (result.status == 1 || result.error) {
-        console.error(result.stdout, result.stderr);
-        console.log(
-          "Resolve the above maven error. This could be due to the following:\n"
-        );
-        console.log(
-          "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
-        );
-        console.log(
-          "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
-        );
-        console.log(
-          "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
-        );
-        const dlist = utils.parsePom(f);
-        if (dlist && dlist.length) {
-          pkgList = pkgList.concat(dlist);
-        }
-        pkgList = await utils.getMvnMetadata(pkgList);
-        return buildBomString(
-          {
-            includeBomSerialNumber,
-            pkgInfo: pkgList,
-            ptype: "maven",
-            context: {
-              src: path,
-              filename: "pom.xml",
-              nsMapping: jarNSMapping,
-            },
-          },
-          callback
-        );
+      // Clean up
+      if (tempDir && tempDir.startsWith(os.tmpdir())) {
+        console.log(`Cleaning up ${tempDir}`);
+        fs.rmdirSync(tempDir, { recursive: true });
       }
-    }
-    const firstPath = pathLib.dirname(pomFiles[0]);
-    if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
-      const bomString = fs.readFileSync(
-        pathLib.join(firstPath, "target", "bom.xml"),
-        { encoding: "utf-8" }
-      );
-      let bomJonString = "";
-      if (fs.existsSync(pathLib.join(firstPath, "target", "bom.json"))) {
-        bomJonString = fs.readFileSync(
-          pathLib.join(firstPath, "target", "bom.json"),
-          { encoding: "utf-8" }
-        );
-      }
-      callback(null, bomString, bomJonString, jarNSMapping);
     } else {
-      const bomFiles = utils.getAllFiles(path, "bom.xml");
-      const bomJsonFiles = utils.getAllFiles(path, "bom.json");
-      callback(null, bomFiles, bomJsonFiles, jarNSMapping);
-    }
-  }
-  // gradle
-  let gradleFiles = utils.getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "build.gradle*"
-  );
-  if (gradleFiles && gradleFiles.length) {
-    let GRADLE_CMD = "gradle";
-    if (process.env.GRADLE_HOME) {
-      GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
-    }
-    // Use local gradle wrapper if available
-    if (fs.existsSync(path, "gradlew")) {
-      // Enable execute permission
-      try {
-        fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
-      } catch (e) {}
-      GRADLE_CMD = pathLib.join(path, "gradlew");
-    }
-    let pkgList = [];
-    for (let i in gradleFiles) {
-      const f = gradleFiles[i];
-      const basePath = pathLib.dirname(f);
-      console.log("Executing", GRADLE_CMD, "dependencies in", basePath);
-      const result = spawnSync(
-        GRADLE_CMD,
-        ["dependencies", "-q", "--console", "plain"],
-        { cwd: basePath, encoding: "utf-8" }
-      );
-      if (result.status == 1 || result.error) {
-        console.error(result.stdout, result.stderr);
-      }
-      const stdout = result.stdout;
-      if (stdout) {
-        const cmdOutput = Buffer.from(stdout).toString();
-        const dlist = utils.parseGradleDep(cmdOutput);
-        if (dlist && dlist.length) {
-          pkgList = pkgList.concat(dlist);
-        }
-      }
-    }
-    pkgList = await utils.getMvnMetadata(pkgList);
-    // Should we attempt to resolve class names
-    if (options.resolveClass) {
-      console.log(
-        "Creating class names list based on available jars. This might take a few mins ..."
-      );
-      jarNSMapping = utils.collectJarNS(GRADLE_CACHE_DIR);
+      console.log(`${path} doesn't exist`);
     }
     buildBomString(
       {
@@ -552,145 +449,288 @@ const createJavaBom = async (
         pkgInfo: pkgList,
         ptype: "maven",
         context: {
-          src: path,
-          filename: "build.gradle",
+          src: pathLib.dirname(path),
+          filename: path,
           nsMapping: jarNSMapping,
         },
       },
       callback
     );
-  }
-  // scala sbt
-  let sbtFiles = utils.getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "build.sbt"
-  );
-  let sbtLockFiles = utils.getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "build.sbt.lock"
-  );
-
-  if (sbtFiles && sbtFiles.length) {
-    let pkgList = [];
-    // If the project use sbt lock files
-    if (sbtLockFiles && sbtLockFiles.length) {
-      for (let i in sbtLockFiles) {
-        const f = sbtLockFiles[i];
-        const dlist = utils.parseSbtLock(f);
-        if (dlist && dlist.length) {
-          pkgList = pkgList.concat(dlist);
-        }
-      }
-    } else {
-      let SBT_CMD = process.env.SBT_CMD || "sbt";
-      let sbtVersion = utils.determineSbtVersion(path);
-      if (DEBUG_MODE) {
-        console.log("Detected sbt version: " + sbtVersion);
-      }
-      const standalonePluginFile =
-        sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
-      let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
-      let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
-      fs.mkdirSync(tempSbtgDir, { recursive: true });
-      // Create temporary plugins file
-      let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
-
-      // Requires a custom version of `sbt-dependency-graph` that
-      // supports `--append` for `toFile` subtask.
-      const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
-      fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
-
-      for (let i in sbtFiles) {
-        const f = sbtFiles[i];
+  } else {
+    // maven - pom.xml
+    const pomFiles = utils.getAllFiles(path, "pom.xml");
+    if (pomFiles && pomFiles.length) {
+      for (let i in pomFiles) {
+        const f = pomFiles[i];
         const basePath = pathLib.dirname(f);
-        let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
-        console.log(
-          "Executing",
-          SBT_CMD,
-          "dependencyList in",
-          basePath,
-          "using plugins",
-          tempSbtgDir
-        );
-        var sbtArgs = [];
-        var pluginFile = null;
-        if (standalonePluginFile) {
-          sbtArgs = [
-            `-addPluginSbtFile=${tempSbtPlugins}`,
-            `dependencyList::toFile "${dlFile}" --append`,
-          ];
-        } else {
-          // write to the existing plugins file
-          sbtArgs = [`dependencyList::toFile "${dlFile}" --append`];
-          pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
+        // Should we attempt to resolve class names
+        if (options.resolveClass) {
+          console.log(
+            "Creating class names list based on available jars. This might take a few mins ..."
+          );
+          jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
         }
-        const result = spawnSync(SBT_CMD, sbtArgs, {
-          cwd: basePath,
-          encoding: "utf-8",
-        });
+        console.log(
+          "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom' in",
+          basePath
+        );
+        result = spawnSync(
+          MVN_CMD,
+          [
+            "dependency:get",
+            "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
+            "-DrepoUrl=https://jitpack.io",
+            "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
+            "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
+          ],
+          { cwd: basePath, encoding: "utf-8" }
+        );
         if (result.status == 1 || result.error) {
           console.error(result.stdout, result.stderr);
-          if (DEBUG_MODE) {
-            console.log(
-              `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
-            );
-            console.log(
-              `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
-            );
-            console.log(
-              "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
-            );
-          }
-        } else if (DEBUG_MODE) {
-          console.log(result.stdout);
-        }
-        if (!standalonePluginFile) {
-          utils.cleanupPlugin(basePath, pluginFile);
-        }
-        if (fs.existsSync(dlFile)) {
-          const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
-          if (DEBUG_MODE) {
-            console.log(cmdOutput);
-          }
-          const dlist = utils.parseKVDep(cmdOutput);
+          console.log(
+            "Resolve the above maven error. This could be due to the following:\n"
+          );
+          console.log(
+            "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
+          );
+          console.log(
+            "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
+          );
+          console.log(
+            "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
+          );
+          const dlist = utils.parsePom(f);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
-        } else {
-          if (DEBUG_MODE) {
-            console.log(`sbt dependencyList did not yield ${dlFile}`);
+          pkgList = await utils.getMvnMetadata(pkgList);
+          return buildBomString(
+            {
+              includeBomSerialNumber,
+              pkgInfo: pkgList,
+              ptype: "maven",
+              context: {
+                src: path,
+                filename: "pom.xml",
+                nsMapping: jarNSMapping,
+              },
+            },
+            callback
+          );
+        }
+      }
+      const firstPath = pathLib.dirname(pomFiles[0]);
+      if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
+        const bomString = fs.readFileSync(
+          pathLib.join(firstPath, "target", "bom.xml"),
+          { encoding: "utf-8" }
+        );
+        let bomJonString = "";
+        if (fs.existsSync(pathLib.join(firstPath, "target", "bom.json"))) {
+          bomJonString = fs.readFileSync(
+            pathLib.join(firstPath, "target", "bom.json"),
+            { encoding: "utf-8" }
+          );
+        }
+        callback(null, bomString, bomJonString, jarNSMapping);
+      } else {
+        const bomFiles = utils.getAllFiles(path, "bom.xml");
+        const bomJsonFiles = utils.getAllFiles(path, "bom.json");
+        callback(null, bomFiles, bomJsonFiles, jarNSMapping);
+      }
+    }
+    // gradle
+    let gradleFiles = utils.getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "build.gradle*"
+    );
+    if (gradleFiles && gradleFiles.length) {
+      let GRADLE_CMD = "gradle";
+      if (process.env.GRADLE_HOME) {
+        GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
+      }
+      // Use local gradle wrapper if available
+      if (fs.existsSync(path, "gradlew")) {
+        // Enable execute permission
+        try {
+          fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
+        } catch (e) {}
+        GRADLE_CMD = pathLib.join(path, "gradlew");
+      }
+      for (let i in gradleFiles) {
+        const f = gradleFiles[i];
+        const basePath = pathLib.dirname(f);
+        console.log("Executing", GRADLE_CMD, "dependencies in", basePath);
+        const result = spawnSync(
+          GRADLE_CMD,
+          ["dependencies", "-q", "--console", "plain"],
+          { cwd: basePath, encoding: "utf-8" }
+        );
+        if (result.status == 1 || result.error) {
+          console.error(result.stdout, result.stderr);
+        }
+        const stdout = result.stdout;
+        if (stdout) {
+          const cmdOutput = Buffer.from(stdout).toString();
+          const dlist = utils.parseGradleDep(cmdOutput);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
           }
         }
       }
-
-      // Cleanup
-      fs.unlinkSync(tempSbtPlugins);
-    } // else
-
-    if (DEBUG_MODE) {
-      console.log(`Found ${pkgList.length} packages`);
-    }
-    pkgList = await utils.getMvnMetadata(pkgList);
-    // Should we attempt to resolve class names
-    if (options.resolveClass) {
-      console.log(
-        "Creating class names list based on available jars. This might take a few mins ..."
-      );
-      jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
-    }
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "maven",
-        context: {
-          src: path,
-          filename: sbtFiles.join(", "),
-          nsMapping: jarNSMapping,
+      pkgList = await utils.getMvnMetadata(pkgList);
+      // Should we attempt to resolve class names
+      if (options.resolveClass) {
+        console.log(
+          "Creating class names list based on available jars. This might take a few mins ..."
+        );
+        jarNSMapping = utils.collectJarNS(GRADLE_CACHE_DIR);
+      }
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "maven",
+          context: {
+            src: path,
+            filename: "build.gradle",
+            nsMapping: jarNSMapping,
+          },
         },
-      },
-      callback
+        callback
+      );
+    }
+    // scala sbt
+    let sbtFiles = utils.getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "build.sbt"
     );
+    let sbtLockFiles = utils.getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "build.sbt.lock"
+    );
+
+    if (sbtFiles && sbtFiles.length) {
+      // If the project use sbt lock files
+      if (sbtLockFiles && sbtLockFiles.length) {
+        for (let i in sbtLockFiles) {
+          const f = sbtLockFiles[i];
+          const dlist = utils.parseSbtLock(f);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
+          }
+        }
+      } else {
+        let SBT_CMD = process.env.SBT_CMD || "sbt";
+        let sbtVersion = utils.determineSbtVersion(path);
+        if (DEBUG_MODE) {
+          console.log("Detected sbt version: " + sbtVersion);
+        }
+        const standalonePluginFile =
+          sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
+        let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
+        let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
+        fs.mkdirSync(tempSbtgDir, { recursive: true });
+        // Create temporary plugins file
+        let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
+
+        // Requires a custom version of `sbt-dependency-graph` that
+        // supports `--append` for `toFile` subtask.
+        const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
+        fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
+
+        for (let i in sbtFiles) {
+          const f = sbtFiles[i];
+          const basePath = pathLib.dirname(f);
+          let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
+          console.log(
+            "Executing",
+            SBT_CMD,
+            "dependencyList in",
+            basePath,
+            "using plugins",
+            tempSbtgDir
+          );
+          var sbtArgs = [];
+          var pluginFile = null;
+          if (standalonePluginFile) {
+            sbtArgs = [
+              `-addPluginSbtFile=${tempSbtPlugins}`,
+              `dependencyList::toFile "${dlFile}" --append`,
+            ];
+          } else {
+            // write to the existing plugins file
+            sbtArgs = [`dependencyList::toFile "${dlFile}" --append`];
+            pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
+          }
+          const result = spawnSync(SBT_CMD, sbtArgs, {
+            cwd: basePath,
+            encoding: "utf-8",
+          });
+          if (result.status == 1 || result.error) {
+            console.error(result.stdout, result.stderr);
+            if (DEBUG_MODE) {
+              console.log(
+                `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
+              );
+              console.log(
+                `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
+              );
+              console.log(
+                "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
+              );
+            }
+          } else if (DEBUG_MODE) {
+            console.log(result.stdout);
+          }
+          if (!standalonePluginFile) {
+            utils.cleanupPlugin(basePath, pluginFile);
+          }
+          if (fs.existsSync(dlFile)) {
+            const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
+            if (DEBUG_MODE) {
+              console.log(cmdOutput);
+            }
+            const dlist = utils.parseKVDep(cmdOutput);
+            if (dlist && dlist.length) {
+              pkgList = pkgList.concat(dlist);
+            }
+          } else {
+            if (DEBUG_MODE) {
+              console.log(`sbt dependencyList did not yield ${dlFile}`);
+            }
+          }
+        }
+
+        // Cleanup
+        fs.unlinkSync(tempSbtPlugins);
+      } // else
+
+      if (DEBUG_MODE) {
+        console.log(`Found ${pkgList.length} packages`);
+      }
+      pkgList = await utils.getMvnMetadata(pkgList);
+      // Should we attempt to resolve class names
+      if (options.resolveClass) {
+        console.log(
+          "Creating class names list based on available jars. This might take a few mins ..."
+        );
+        jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
+      }
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo: pkgList,
+          ptype: "maven",
+          context: {
+            src: path,
+            filename: sbtFiles.join(", "),
+            nsMapping: jarNSMapping,
+          },
+        },
+        callback
+      );
+    }
   }
 };
 
@@ -1442,6 +1482,9 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     projectType = "";
   }
   projectType = projectType.toLowerCase();
+  if (path.endsWith(".war")) {
+    projectType = "java";
+  }
   switch (projectType) {
     case "java":
     case "groovy":

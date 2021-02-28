@@ -1,0 +1,9 @@
+{
+	"commons-": "org.apache.commons",
+	"spring-": "org.springframework",
+	"jackson-dataformat-": "com.fasterxml.jackson.dataformat",
+	"jackson-databind": "com.fasterxml.jackson.core",
+	"jackson-core": "com.fasterxml.jackson.core",
+	"jackson-annotations": "com.fasterxml.jackson.core",
+	"jackson-jaxrs-": "com.fasterxml.jackson.jaxrs"
+}

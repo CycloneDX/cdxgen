@@ -5,6 +5,7 @@ const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
 const licenseMapping = require("./license-mapping.json");
+const vendorAliases = require("./vendor-alias.json");
 const spdxLicenses = require("./spdx-licenses.json");
 const knownLicenses = require("./known-licenses.json");
 const cheerio = require("cheerio");
@@ -545,6 +546,17 @@ const getMvnMetadata = async function (pkgList) {
   const JCENTER_MAVEN = "https://jcenter.bintray.com/";
   const cdepList = [];
   for (const p of pkgList) {
+    // If the package already has key metadata skip querying maven
+    if (
+      p.group &&
+      p.name &&
+      p.version &&
+      p.description &&
+      !process.env.FETCH_LICENSE
+    ) {
+      cdepList.push(p);
+      continue;
+    }
     let urlPrefix = MAVEN_CENTRAL_URL;
     // Ideally we should try one resolver after the other. But it increases the time taken
     if (p.group.indexOf("android") !== -1) {
@@ -594,15 +606,15 @@ const getMvnMetadata = async function (pkgList) {
       }
       cdepList.push(p);
     } catch (err) {
-      /*
-      console.warn(
-        "Unable to find metadata for",
-        p.group,
-        p.name,
-        p.version,
-        fullUrl
-      );
-      */
+      if (DEBUG_MODE) {
+        console.log(
+          "Unable to find metadata for",
+          p.group,
+          p.name,
+          p.version,
+          fullUrl
+        );
+      }
       cdepList.push(p);
     }
   }
@@ -1509,6 +1521,202 @@ const collectJarNS = function (jarPath) {
   return jarNSMapping;
 };
 exports.collectJarNS = collectJarNS;
+
+const parsePomXml = function (pomXmlData) {
+  if (!pomXmlData) {
+    return undefined;
+  }
+  const project = convert.xml2js(pomXmlData, {
+    compact: true,
+    spaces: 4,
+    textKey: "_",
+    attributesKey: "$",
+    commentKey: "value",
+  }).project;
+  if (project) {
+    let version = project.version ? project.version._ : undefined;
+    if (!version && project.parent) {
+      version = project.parent.version._;
+    }
+    let groupId = project.groupId ? project.groupId._ : undefined;
+    if (!groupId && project.parent) {
+      groupId = project.parent.groupId._;
+    }
+    return {
+      artifactId: project.artifactId ? project.artifactId._ : "",
+      groupId,
+      version,
+      description: project.description ? project.description._ : "",
+      url: project.url ? project.url._ : "",
+      scm: project.scm ? project.scm.url._ : "",
+    };
+  }
+  return undefined;
+};
+exports.parsePomXml = parsePomXml;
+
+const parseJarManifest = function (jarMetadata) {
+  const metadata = {};
+  if (!jarMetadata) {
+    return metadata;
+  }
+  jarMetadata.split("\n").forEach((l) => {
+    if (l.includes(": ")) {
+      const tmpA = l.split(": ");
+      if (tmpA && tmpA.length === 2) {
+        metadata[tmpA[0]] = tmpA[1].replace("\r", "");
+      }
+    }
+  });
+  return metadata;
+};
+exports.parseJarManifest = parseJarManifest;
+
+/**
+ * Method to extract a war or ear file
+ *
+ * @param {string} jarFile Path to jar file
+ * @param {string} tempDir Temporary directory to use for extraction
+ *
+ * @return pkgList Package list
+ */
+const extractJarArchive = function (jarFile, tempDir) {
+  let pkgList = [];
+  const fname = path.basename(jarFile);
+  fs.copyFileSync(jarFile, path.join(tempDir, fname));
+  let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
+    encoding: "utf-8",
+    cwd: tempDir,
+  });
+  if (jarResult.status === 1) {
+    console.error(jarResult.stdout, jarResult.stderr);
+    console.log(
+      "Check if JRE is installed and the jar command is available in the PATH."
+    );
+    return pkgList;
+  }
+  const jarFiles = getAllFiles(
+    path.join(tempDir, "WEB-INF", "lib"),
+    "**/*.jar"
+  );
+  if (jarFiles && jarFiles.length) {
+    for (let i in jarFiles) {
+      const jf = jarFiles[i];
+      const jarname = path.basename(jf);
+      const manifestDir = path.join(tempDir, "META-INF");
+      const manifestFile = path.join(tempDir, "META-INF", "MANIFEST.MF");
+      jarResult = spawnSync("jar", ["-xf", jf], {
+        encoding: "utf-8",
+        cwd: tempDir,
+      });
+      if (jarResult.status === 1) {
+        console.error(jarResult.stdout, jarResult.stderr);
+      } else {
+        const pomXmls = getAllFiles(manifestDir, "**/pom.xml");
+        // Check if there are pom.xml
+        if (pomXmls && pomXmls.length) {
+          const pxml = pomXmls[0];
+          const pomMetadata = parsePomXml(
+            fs.readFileSync(pxml, {
+              encoding: "utf-8",
+            })
+          );
+          if (pomMetadata) {
+            pkgList.push({
+              group: pomMetadata["groupId"],
+              name: pomMetadata["artifactId"],
+              version: pomMetadata["version"],
+              description: pomMetadata["description"],
+              homepage: { url: pomMetadata["url"] },
+              repository: { url: pomMetadata["scm"] },
+              qualifiers: { type: "jar" },
+            });
+          }
+        } else if (fs.existsSync(manifestFile)) {
+          const jarMetadata = parseJarManifest(
+            fs.readFileSync(manifestFile, {
+              encoding: "utf-8",
+            })
+          );
+          let group =
+            jarMetadata["Extension-Name"] ||
+            jarMetadata["Implementation-Vendor-Id"] ||
+            jarMetadata["Bundle-SymbolicName"] ||
+            jarMetadata["Automatic-Module-Name"];
+          let name = undefined;
+          if (
+            jarMetadata["Bundle-Name"] &&
+            !jarMetadata["Bundle-Name"].includes(" ")
+          ) {
+            name = jarMetadata["Bundle-Name"];
+          }
+          let version =
+            jarMetadata["Bundle-Version"] ||
+            jarMetadata["Implementation-Version"];
+          if (!name && group) {
+            name = path.basename(group.replace(/\./g, "/"));
+            if (!group.startsWith("javax")) {
+              group = path.dirname(group.replace(/\./g, "/"));
+              group = group.replace(/\//g, ".");
+            }
+          }
+          // Sometimes the group might already contain the name
+          // Eg: group: org.checkerframework.checker.qual name: checker-qual
+          if (name && group && !group.startsWith("javax")) {
+            if (group.includes("." + name.toLowerCase().replace(/-/g, "."))) {
+              group = group.replace(
+                new RegExp("." + name.toLowerCase().replace(/-/g, ".") + "$"),
+                ""
+              );
+            } else if (group.includes("." + name.toLowerCase())) {
+              group = group.replace(
+                new RegExp("." + name.toLowerCase() + "$"),
+                ""
+              );
+            }
+          }
+          // Fallback to parsing jar filename
+          if (!name || !version || name === "" || version === "") {
+            const tmpA = jarname.split("-");
+            if (tmpA && tmpA.length > 1) {
+              const lastPart = tmpA[tmpA.length - 1];
+              if (!version || version === "") {
+                version = lastPart.replace(".jar", "");
+              }
+              if (!name || name === "") {
+                name = jarname.replace("-" + lastPart, "");
+              }
+            }
+          }
+          // Add some common groups
+          if (!group || group === "") {
+            for (const aprefix in vendorAliases) {
+              if (name.startsWith(aprefix)) {
+                group = vendorAliases[aprefix];
+                break;
+              }
+            }
+          }
+          if (name && version) {
+            pkgList.push({
+              group: group || "",
+              name,
+              version,
+            });
+          } else {
+            if (DEBUG_MODE) {
+              console.log(`Ignored jar ${jarname}`, jarMetadata);
+            }
+          }
+        }
+        // Clean up META-INF
+        fs.rmdirSync(path.join(tempDir, "META-INF"), { recursive: true });
+      }
+    }
+  }
+  return pkgList;
+};
+exports.extractJarArchive = extractJarArchive;
 
 /**
  * Determine the version of SBT used in compilation of this project.
