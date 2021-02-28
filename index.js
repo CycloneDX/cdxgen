@@ -739,24 +739,12 @@ const createNodejsBom = async (
       },
       callback
     );
-  } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
-    readInstalled(path, options, (err, pkgInfo) => {
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo,
-          ptype: "npm",
-          context: { allImports, src: path, filename: "package.json" },
-        },
-        callback
-      );
-    });
   } else if (pkgLockFiles && pkgLockFiles.length) {
     let pkgList = [];
     for (let i in pkgLockFiles) {
       const f = pkgLockFiles[i];
       // Parse package-lock.json if available
-      const dlist = utils.parsePkgLock(f);
+      const dlist = await utils.parsePkgLock(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -770,6 +758,18 @@ const createNodejsBom = async (
       },
       callback
     );
+  } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
+    readInstalled(path, options, (err, pkgInfo) => {
+      buildBomString(
+        {
+          includeBomSerialNumber,
+          pkgInfo,
+          ptype: "npm",
+          context: { allImports, src: path, filename: "package.json" },
+        },
+        callback
+      );
+    });
   } else if (fs.existsSync(pathLib.join(path, "rush.json"))) {
     // Rush.js creates node_modules inside common/temp directory
     const nmDir = pathLib.join(path, "common", "temp", "node_modules");
@@ -798,7 +798,7 @@ const createNodejsBom = async (
       "pnpm-lock.yaml"
     );
     if (fs.existsSync(swFile)) {
-      const pkgList = utils.parseNodeShrinkwrap(swFile);
+      const pkgList = await utils.parseNodeShrinkwrap(swFile);
       return buildBomString(
         {
           includeBomSerialNumber,
@@ -809,7 +809,7 @@ const createNodejsBom = async (
         callback
       );
     } else if (fs.existsSync(pnpmLock)) {
-      const pkgList = utils.parsePnpmLock(pnpmLock);
+      const pkgList = await utils.parsePnpmLock(pnpmLock);
       return buildBomString(
         {
           includeBomSerialNumber,
@@ -834,7 +834,7 @@ const createNodejsBom = async (
       const f = yarnLockFiles[i];
       // Parse yarn.lock if available. This check is after rush.json since
       // rush.js could include yarn.lock :(
-      const dlist = utils.parseYarnLock(f);
+      const dlist = await utils.parseYarnLock(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }

@@ -405,27 +405,16 @@ test("get licenses", () => {
   ]);
 });
 
-test("parsePkgLock", () => {
-  const deps = utils.parsePkgLock("./test/package-lock.json");
+test("parsePkgLock", async () => {
+  const deps = await utils.parsePkgLock("./test/package-lock.json");
   expect(deps.length).toEqual(759);
-  expect(deps[0]).toEqual({
-    _integrity:
-      "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==",
-    name: "abbrev",
-    version: "1.1.1",
-  });
+  expect(deps[0]._integrity).toEqual("sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==");
 });
 
-test("parseNodeShrinkwrap", () => {
-  const deps = utils.parseNodeShrinkwrap("./test/shrinkwrap-deps.json");
+test("parseNodeShrinkwrap", async () => {
+  const deps = await utils.parseNodeShrinkwrap("./test/shrinkwrap-deps.json");
   expect(deps.length).toEqual(496);
-  expect(deps[0]).toEqual({
-    _integrity:
-      "sha512-a9gxpmdXtZEInkCSHUJDLHZVBgb1QS0jhss4cPP93EW7s+uC5bikET2twEF3KV+7rDblJcmNvTR7VJejqd2C2g==",
-    group: "babel",
-    name: "code-frame",
-    version: "7.8.3",
-  });
+  expect(deps[0]._integrity).toEqual("sha512-a9gxpmdXtZEInkCSHUJDLHZVBgb1QS0jhss4cPP93EW7s+uC5bikET2twEF3KV+7rDblJcmNvTR7VJejqd2C2g==");
 });
 
 test("parseSetupPyFile", async () => {
@@ -461,8 +450,8 @@ test("parseSetupPyFile", async () => {
   expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
 });
 
-test("parsePnpmLock", () => {
-  const deps = utils.parsePnpmLock("./test/pnpm-lock.yaml");
+test("parsePnpmLock", async () => {
+  const deps = await utils.parsePnpmLock("./test/pnpm-lock.yaml");
   expect(deps.length).toEqual(1610);
   expect(deps[0]).toEqual({
     "_integrity": "sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==",
@@ -472,8 +461,8 @@ test("parsePnpmLock", () => {
   });
 });
 
-test("parseYarnLock", () => {
-  let deps = utils.parseYarnLock("./test/yarn.lock");
+test("parseYarnLock", async () => {
+  let deps = await utils.parseYarnLock("./test/yarn.lock");
   expect(deps.length).toEqual(51);
   expect(deps[0]).toEqual({
     group: '',
@@ -482,7 +471,7 @@ test("parseYarnLock", () => {
     _integrity: 'sha256-522765b50c3510490e52d7dcfe085ef9ba96958f'
   });
 
-  deps = utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
+  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
   expect(deps.length).toEqual(1463);
   expect(deps[0]).toEqual({
     group: '',

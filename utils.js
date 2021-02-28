@@ -18,6 +18,9 @@ const DEBUG_MODE =
   process.env.SCAN_DEBUG_MODE === "debug" ||
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
 
+// Metadata cache
+let metadata_cache = {};
+
 /**
  * Method to get files matching a pattern
  *
@@ -148,7 +151,53 @@ function readLicenseText(licenseFilepath, licenseContentType, format = "xml") {
   return null;
 }
 
-const _getDepPkgList = function (pkgList, pkg) {
+/**
+ * Method to retrieve metadata for npm packages by querying npmjs
+ *
+ * @param {Array} pkgList Package list
+ */
+const getNpmMetadata = async function (pkgList) {
+  const NPM_URL = "https://registry.npmjs.org/";
+  const cdepList = [];
+  for (const p of pkgList) {
+    try {
+      let key = p.name;
+      if (p.group && p.group !== "") {
+        let group = p.group;
+        if (!group.startsWith("@")) {
+          group = "@" + group;
+        }
+        key = group + "/" + p.name;
+      }
+      let body = {};
+      if (metadata_cache[key]) {
+        body = metadata_cache[key];
+      } else {
+        const res = await got.get(NPM_URL + key, {
+          responseType: "json",
+        });
+        body = res.body;
+        metadata_cache[key] = body;
+      }
+      p.description = body.description;
+      p.license = body.license;
+      if (body.repository && body.repository.url) {
+        p.repository = { url: body.repository.url };
+      }
+      if (body.homepage) {
+        p.homepage = { url: body.homepage };
+      }
+      cdepList.push(p);
+    } catch (err) {
+      cdepList.push(p);
+      console.error(err, p);
+    }
+  }
+  return cdepList;
+};
+exports.getNpmMetadata = getNpmMetadata;
+
+const _getDepPkgList = async function (pkgList, pkg) {
   if (pkg && pkg.dependencies) {
     const pkgKeys = Object.keys(pkg.dependencies);
     for (var k in pkgKeys) {
@@ -160,9 +209,17 @@ const _getDepPkgList = function (pkgList, pkg) {
       });
       // Include child dependencies
       if (pkg.dependencies[name].dependencies) {
-        _getDepPkgList(pkgList, pkg.dependencies[name]);
+        await _getDepPkgList(pkgList, pkg.dependencies[name]);
       }
     }
+  }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
   }
   return pkgList;
 };
@@ -172,11 +229,11 @@ const _getDepPkgList = function (pkgList, pkg) {
  *
  * @param {string} pkgLockFile package-lock.json file
  */
-const parsePkgLock = function (pkgLockFile) {
+const parsePkgLock = async function (pkgLockFile) {
   const pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
     lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
-    return _getDepPkgList(pkgList, lockData);
+    return await _getDepPkgList(pkgList, lockData);
   }
   return pkgList;
 };
@@ -187,7 +244,7 @@ exports.parsePkgLock = parsePkgLock;
  *
  * @param {string} yarnLockFile yarn.lock file
  */
-const parseYarnLock = function (yarnLockFile) {
+const parseYarnLock = async function (yarnLockFile) {
   const pkgList = [];
   if (fs.existsSync(yarnLockFile)) {
     const lockData = fs.readFileSync(yarnLockFile, "utf8");
@@ -248,7 +305,7 @@ exports.parseYarnLock = parseYarnLock;
  *
  * @param {string} swFile shrinkwrap-deps.json file
  */
-const parseNodeShrinkwrap = function (swFile) {
+const parseNodeShrinkwrap = async function (swFile) {
   const pkgList = [];
   if (fs.existsSync(swFile)) {
     lockData = JSON.parse(fs.readFileSync(swFile, "utf8"));
@@ -294,7 +351,7 @@ exports.parseNodeShrinkwrap = parseNodeShrinkwrap;
  *
  * @param {string} pnpmLock pnpm-lock.yaml file
  */
-const parsePnpmLock = function (pnpmLock) {
+const parsePnpmLock = async function (pnpmLock) {
   const pkgList = [];
   if (fs.existsSync(pnpmLock)) {
     const lockData = fs.readFileSync(pnpmLock, "utf8");
@@ -902,7 +959,7 @@ const parseGosumData = async function (gosumData) {
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
       let license = undefined;
-      if (!process.env.SKIP_FETCH_LICENSE) {
+      if (process.env.FETCH_LICENSE) {
         if (DEBUG_MODE) {
           console.log(
             `About to fetch go package license information for ${group}:${name}`
