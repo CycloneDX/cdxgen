@@ -1688,13 +1688,11 @@ const extractJarArchive = function (jarFile, tempDir) {
               }
             }
           }
-          // Add some common groups
-          if (!group || group === "") {
-            for (const aprefix in vendorAliases) {
-              if (name.startsWith(aprefix)) {
-                group = vendorAliases[aprefix];
-                break;
-              }
+          // Patch the group string
+          for (const aprefix in vendorAliases) {
+            if (name.startsWith(aprefix)) {
+              group = vendorAliases[aprefix];
+              break;
             }
           }
           if (name && version) {
