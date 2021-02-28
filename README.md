@@ -76,6 +76,17 @@ For a java project. This would automatically detect maven, gradle or sbt and bui
 cdxgen -t java -o bom.xml
 ```
 
+### War file support
+
+cdxgen can generate a BoM file from a given war file.
+
+```bash
+# cdxgen -t java app.war
+cdxgen app.war
+```
+
+### Resolving class names
+
 Sometimes it is necessary to resolve class names contained in jar files. By passing an optional argument `--resolve-class`, it is possible to get cdxgen create a separate mapping file with the jar name (including the version) as the key and class names list as a value.
 
 ```bash
