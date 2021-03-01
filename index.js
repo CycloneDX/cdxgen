@@ -1280,8 +1280,27 @@ const createCsharpBom = async (
     path,
     (options.multiProject ? "**/" : "") + "*.csproj"
   );
-  if (csProjFiles.length) {
-    let pkgList = [];
+  const pkgConfigFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "packages.config"
+  );
+  let pkgList = [];
+  if (pkgConfigFiles.length) {
+    for (let i in pkgConfigFiles) {
+      const f = pkgConfigFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      let pkgData = fs.readFileSync(f, { encoding: "utf-8" });
+      if (pkgData.charCodeAt(0) === 0xfeff) {
+        pkgData = pkgData.slice(1);
+      }
+      const dlist = await utils.parseCsPkgData(pkgData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  } else if (csProjFiles.length) {
     for (let i in csProjFiles) {
       const f = csProjFiles[i];
       if (DEBUG_MODE) {
@@ -1296,20 +1315,20 @@ const createCsharpBom = async (
         pkgList = pkgList.concat(dlist);
       }
     }
-    if (pkgList.length) {
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "nuget",
-          context: { src: path, filename: csProjFiles.join(", ") },
-        },
-        callback
-      );
-    } else {
-      console.error("Unable to find .Net core dependencies at", path);
-      callback();
-    }
+  }
+  if (pkgList.length) {
+    buildBomString(
+      {
+        includeBomSerialNumber,
+        pkgInfo: pkgList,
+        ptype: "nuget",
+        context: { src: path, filename: csProjFiles.join(", ") },
+      },
+      callback
+    );
+  } else {
+    console.error("Unable to find .Net core dependencies at", path);
+    callback();
   }
 };
 
