@@ -1228,6 +1228,7 @@ const parseCsPkgData = async function (pkgData) {
   }
   let packages = convert.xml2js(pkgData, {
     compact: true,
+    alwaysArray: true,
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
@@ -1236,7 +1237,7 @@ const parseCsPkgData = async function (pkgData) {
   if (packages.length == 0) {
     return pkgList;
   }
-  packages = packages.package;
+  packages = packages[0].package;
   for (let i in packages) {
     const p = packages[i].$;
     let pkg = {};
