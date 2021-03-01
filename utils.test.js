@@ -221,6 +221,23 @@ test("get crates metadata", async () => {
   });
 });
 
+test("parse cs pkg data", async () => {
+  expect(await utils.parseCsPkgData(null)).toEqual([]);
+  const dep_list = await utils.parseCsPkgData(
+    fs.readFileSync("./test/data/packages.config", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(21);
+  expect(dep_list[0]).toEqual({
+    group: '',
+    name: 'Antlr',
+    version: '3.5.0.2',
+    description: 'ANother Tool for Language Recognition, is a language tool that provides a framework for constructing recognizers, interpreters, compilers, and translators from grammatical descriptions containing actions in a variety of target languages.',
+    license: 'http://www.antlr3.org/license.html',
+    repository: { url: 'https://github.com/antlr/antlrcs' },
+    homepage: { url: 'https://www.nuget.org/packages/Antlr/3.5.0.2/' }
+  });
+});
+
 test("parse cs proj", async () => {
   expect(await utils.parseCsProjData(null)).toEqual([]);
   const dep_list = await utils.parseCsProjData(

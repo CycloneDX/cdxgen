@@ -1220,6 +1220,39 @@ const parseCargoData = async function (cargoData) {
 };
 exports.parseCargoData = parseCargoData;
 
+const parseCsPkgData = async function (pkgData) {
+  const pkgList = [];
+  let pkg = null;
+  if (!pkgData) {
+    return pkgList;
+  }
+  let packages = convert.xml2js(pkgData, {
+    compact: true,
+    spaces: 4,
+    textKey: "_",
+    attributesKey: "$",
+    commentKey: "value",
+  }).packages;
+  if (packages.length == 0) {
+    return pkgList;
+  }
+  packages = packages.package;
+  for (let i in packages) {
+    const p = packages[i].$;
+    let pkg = {};
+    const pname = p.id.replace(/\./g, "/");
+    pkg.group = path.dirname(pname).replace(/\//g, ".");
+    if (pkg.group == ".") {
+      pkg.group = "";
+    }
+    pkg.name = path.basename(pname);
+    pkg.version = p.version;
+    pkgList.push(pkg);
+  }
+  return await getNugetMetadata(pkgList);
+};
+exports.parseCsPkgData = parseCsPkgData;
+
 const parseCsProjData = async function (csProjData) {
   const pkgList = [];
   let pkg = null;
