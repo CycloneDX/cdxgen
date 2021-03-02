@@ -1005,14 +1005,14 @@ const createPythonBom = async (
  */
 const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
   // Read in go.sum and merge all go.sum files.
-  let goSumData = new String("")
+  let goSumData = "";
   const gosumFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.sum"
   );
 
   if (gosumFiles.length) {
-    goSumReader = []
+    goSumReader = [];
     for (let i in gosumFiles) {
       const f = gosumFiles[i];
       if (DEBUG_MODE) {
@@ -1020,7 +1020,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
       }
       goSumReader.push(fs.readFileSync(f, { encoding: "utf-8" }));
     }
-    goSumData = goSumReader.join("\n")
+    goSumData = goSumReader.join("\n");
   }
 
   // Read in data from Gopkg.lock files if they exist

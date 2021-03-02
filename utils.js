@@ -958,9 +958,9 @@ const getGoPkgComponent = async function (gosumData, group, name, version) {
     return pkgList;
   }
   const pkgs = gosumData.split("\n");
-  const query = `${group}/${name} ${version}`
+  const query = `${group}/${name} ${version}`;
   for (let i in pkgs) {
-    const l = pkgs[i]
+    const l = pkgs[i];
 
     if (l.includes(query)) {
       const tmpA = l.split(" ");
@@ -993,7 +993,7 @@ exports.getGoPkgComponent = getGoPkgComponent;
 
 const parseGoModData = async function (goModData, goSumData) {
   const pkgComponentsList = [];
-  let isModReplacement  = new Boolean(false);
+  let isModReplacement  = false;
 
   if (!goModData) {
     return pkgComponentsList;
@@ -1004,7 +1004,7 @@ const parseGoModData = async function (goModData, goSumData) {
     const l = pkgs[i];
 
     // Skip go.mod file headers, whitespace, and/or comments
-    if (l.includes("module ") || l.includes("go ")  || l.includes(")") || l.trim() === "" || l.trim().startsWith("//")){
+    if (l.includes("module ") || l.includes("go ") || l.includes(")") || l.trim() === "" || l.trim().startsWith("//")){
       continue;
     }
 
@@ -1026,13 +1026,13 @@ const parseGoModData = async function (goModData, goSumData) {
       if (group === ".") {
         group = name;
       }
-      const version = tmpA[1]
+      const version = tmpA[1];
       await getGoPkgComponent(goSumData, group, name, version)
         .then((component) => {
-          if(Object.keys(component).length !== 0) {
-            pkgComponentsList.push(component)
+          if (Object.keys(component).length !== 0) {
+            pkgComponentsList.push(component);
           }
-        })
+        });
     } else {
       // Add group, name and version component properties for replacement modules
       let group = path.dirname(tmpA[2]);
@@ -1043,10 +1043,10 @@ const parseGoModData = async function (goModData, goSumData) {
       const version = tmpA[3]
       await getGoPkgComponent(goSumData, group, name, version)
         .then((component) => {
-          if(Object.keys(component).length !== 0) {
-            pkgComponentsList.push(component)
+          if (Object.keys(component).length !== 0) {
+            pkgComponentsList.push(component);
           }
-        })
+        });
     }
   }
   return pkgComponentsList;
