@@ -992,23 +992,23 @@ const getGoPkgComponent = async function (gosumData, group, name, version) {
 exports.getGoPkgComponent = getGoPkgComponent;
 
 const parseGoModData = async function (goModData, goSumData) {
-  const pkgList = [];
+  const pkgComponentsList = [];
   let isModReplacement  = new Boolean(false);
 
   if (!goModData) {
-    return pkgList;
+    return pkgComponentsList;
   }
 
   const pkgs = goModData.split("\n");
   for (let i in pkgs) {
     const l = pkgs[i];
 
-    // look for lines only containing packages, and exclude go.mod headers & syntex, whitespace, or comments
-    if (l.includes("module ") || l.includes("go ")  || l.includes(")") || l.trim() === ""){
+    // Skip go.mod file headers, whitespace, and/or comments
+    if (l.includes("module ") || l.includes("go ")  || l.includes(")") || l.trim() === "" || l.trim().startsWith("//")){
       continue;
     }
 
-    // Handle required modules separately from replacement modules to ensure accuracy
+    // Handle required modules separately from replacement modules to ensure accuracy when parsing component data.
     if (l.includes("require (")) {
       isModReplacement = false;
       continue;
@@ -1019,8 +1019,8 @@ const parseGoModData = async function (goModData, goSumData) {
 
     const tmpA = l.trim().split(" ");
 
-    if (isModReplacement == false) {
-      // Add components for required modules
+    if (!isModReplacement) {
+      // Add group, name and version component properties for required modules
       let group = path.dirname(tmpA[0]);
       const name = path.basename(tmpA[0]);
       if (group === ".") {
@@ -1030,11 +1030,11 @@ const parseGoModData = async function (goModData, goSumData) {
       await getGoPkgComponent(goSumData, group, name, version)
         .then((component) => {
           if(Object.keys(component).length !== 0) {
-            pkgList.push(component)
+            pkgComponentsList.push(component)
           }
         })
     } else {
-      // Add components for replaced modules
+      // Add group, name and version component properties for replacement modules
       let group = path.dirname(tmpA[2]);
       const name = path.basename(tmpA[2]);
       if (group === ".") {
@@ -1044,12 +1044,12 @@ const parseGoModData = async function (goModData, goSumData) {
       await getGoPkgComponent(goSumData, group, name, version)
         .then((component) => {
           if(Object.keys(component).length !== 0) {
-            pkgList.push(component)
+            pkgComponentsList.push(component)
           }
         })
     }
   }
-  return pkgList;
+  return pkgComponentsList;
 };
 exports.parseGoModData = parseGoModData;
 
