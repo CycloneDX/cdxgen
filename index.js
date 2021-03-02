@@ -1004,23 +1004,45 @@ const createPythonBom = async (
  * @param callback Function callback
  */
 const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
+  // Read in go.sum and merge all go.sum files.
+  let goSumData = new String("")
   const gosumFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.sum"
   );
-  const gopkgLockFiles = utils.getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "Gopkg.lock"
-  );
-  let pkgList = [];
+
   if (gosumFiles.length) {
+    goSumReader = []
     for (let i in gosumFiles) {
       const f = gosumFiles[i];
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const gosumData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGosumData(gosumData);
+      goSumReader.push(fs.readFileSync(f, { encoding: "utf-8" }));
+    }
+    goSumData = goSumReader.join("\n")
+  }
+
+  // Read in data from Gopkg.lock files if they exist
+  const gopkgLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Gopkg.lock"
+  );
+  let pkgList = [];
+  
+  // Read in go.mod files and parse BOM components with checksums from goSumData
+  const goModFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "go.mod"
+  );
+  if (goModFiles.length) {
+    for (let i in goModFiles) {
+      const f = goModFiles[i];
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const goModData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseGoModData(goModData, goSumData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -1030,7 +1052,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
         includeBomSerialNumber,
         pkgInfo: pkgList,
         ptype: "golang",
-        context: { src: path, filename: gosumFiles.join(", ") },
+        context: { src: path, filename: goModFiles.join(", ") },
       },
       callback
     );

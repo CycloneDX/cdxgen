@@ -952,24 +952,20 @@ const getGoPkgLicense = async function (repoMetadata) {
 };
 exports.getGoPkgLicense = getGoPkgLicense;
 
-const parseGosumData = async function (gosumData) {
-  const pkgList = [];
+const getGoPkgComponent = async function (gosumData, group, name, version) {
+  let pkg = {};
   if (!gosumData) {
     return pkgList;
   }
   const pkgs = gosumData.split("\n");
+  const query = `${group}/${name} ${version}`
   for (let i in pkgs) {
-    const l = pkgs[i];
-    // look for lines containing go.mod
-    if (l.indexOf("go.mod") > -1) {
+    const l = pkgs[i]
+
+    if (l.includes(query)) {
       const tmpA = l.split(" ");
-      let group = path.dirname(tmpA[0]);
-      const name = path.basename(tmpA[0]);
-      if (group === ".") {
-        group = name;
-      }
-      const version = tmpA[1].replace("/go.mod", "");
-      const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
+      const sumVersion = tmpA[1].replace("/go.mod", "");
+      const sumHash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
       let license = undefined;
       if (process.env.FETCH_LICENSE) {
         if (DEBUG_MODE) {
@@ -982,18 +978,80 @@ const parseGosumData = async function (gosumData) {
           name: name,
         });
       }
-      pkgList.push({
+      pkg = {
         group: group,
         name: name,
-        version: version,
-        _integrity: hash,
+        version: sumVersion,
+        _integrity: sumHash,
         license: license,
-      });
+      };
+    }
+  }
+  return pkg;
+};
+exports.getGoPkgComponent = getGoPkgComponent;
+
+const parseGoModData = async function (goModData, goSumData) {
+  const pkgList = [];
+  let isModReplacement  = new Boolean(false);
+
+  if (!goModData) {
+    return pkgList;
+  }
+
+  const pkgs = goModData.split("\n");
+  for (let i in pkgs) {
+    const l = pkgs[i];
+
+    // look for lines only containing packages, and exclude go.mod headers & syntex, whitespace, or comments
+    if (l.includes("module ") || l.includes("go ")  || l.includes(")") || l.trim() === ""){
+      continue;
+    }
+
+    // Handle required modules separately from replacement modules to ensure accuracy
+    if (l.includes("require (")) {
+      isModReplacement = false;
+      continue;
+    } else if (l.includes("replace (")) {
+      isModReplacement = true;
+      continue;
+    }
+
+    const tmpA = l.trim().split(" ");
+
+    if (isModReplacement == false) {
+      // Add components for required modules
+      let group = path.dirname(tmpA[0]);
+      const name = path.basename(tmpA[0]);
+      if (group === ".") {
+        group = name;
+      }
+      const version = tmpA[1]
+      await getGoPkgComponent(goSumData, group, name, version)
+        .then((component) => {
+          if(Object.keys(component).length !== 0) {
+            pkgList.push(component)
+          }
+        })
+    } else {
+      // Add components for replaced modules
+      let group = path.dirname(tmpA[2]);
+      const name = path.basename(tmpA[2]);
+      if (group === ".") {
+        group = name;
+      }
+      const version = tmpA[3]
+      await getGoPkgComponent(goSumData, group, name, version)
+        .then((component) => {
+          if(Object.keys(component).length !== 0) {
+            pkgList.push(component)
+          }
+        })
     }
   }
   return pkgList;
 };
-exports.parseGosumData = parseGosumData;
+exports.parseGoModData = parseGoModData;
 
 const parseGopkgData = async function (gopkgData) {
   const pkgList = [];

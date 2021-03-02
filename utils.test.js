@@ -128,28 +128,35 @@ test("get py metadata", async () => {
   ]);
 });
 
-// Slow running test
-/*
-test("parseGosumData", async () => {
+
+test("parseGoModData", async () => {
   jest.setTimeout(120000);
-  let dep_list = await utils.parseGosumData(null);
+  let dep_list = await utils.parseGoModData(null);
   expect(dep_list).toEqual([]);
-  dep_list = await utils.parseGosumData(
-    fs.readFileSync("./test/gosum/go.sum", (encoding = "utf-8"))
+  dep_list = await utils.parseGoModData(
+    fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
+    fs.readFileSync("./test/gomod/go.sum", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(310);
+  expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
-    group: "cloud.google.com",
-    name: "go",
-    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/cloud.google.com/go?tab=licenses"}],
-    version: "v0.38.0",
-    _integrity: "sha256-990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=",
+    group: "github.com/spf13",
+    name: "cobra",
+    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/github.com/spf13/cobra?tab=licenses"}],
+    version: "v1.0.0",
+    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
+  });
+  expect(dep_list[1]).toEqual({
+    group: "google.golang.org",
+    name: "grpc",
+    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/google.golang.org/grpc?tab=licenses"}],
+    version: "v1.21.0",
+    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
   });
   dep_list.forEach((d) => {
     expect(d.license);
   });
 });
-*/
+
 
 test("parseGopkgData", async () => {
   jest.setTimeout(120000);
