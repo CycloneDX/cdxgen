@@ -138,7 +138,7 @@ test("parseGoModData", async () => {
     fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
     fs.readFileSync("./test/gomod/go.sum", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(2);
+  expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
     group: "github.com/spf13",
     name: "cobra",
@@ -153,11 +153,19 @@ test("parseGoModData", async () => {
     version: "v1.21.0",
     _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
   });
+  expect(dep_list[2]).toEqual({
+    group: "github.com/spf13",
+    name: "viper",
+    license: [{"id": "MIT", "url": "https://pkg.go.dev/github.com/spf13/viper?tab=licenses"}],
+    version: "v1.0.2",
+    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
+  });
   dep_list.forEach((d) => {
     expect(d.license);
   });
 });
 */
+
 
 test("parseGopkgData", async () => {
   jest.setTimeout(120000);

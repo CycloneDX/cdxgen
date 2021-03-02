@@ -1001,7 +1001,7 @@ const parseGoModData = async function (goModData, goSumData) {
 
   const pkgs = goModData.split("\n");
   for (let i in pkgs) {
-    const l = pkgs[i];
+    let l = pkgs[i];
 
     // Skip go.mod file headers, whitespace, and/or comments
     if (l.includes("module ") || l.includes("go ") || l.includes(")") || l.trim() === "" || l.trim().startsWith("//")){
@@ -1015,6 +1015,11 @@ const parseGoModData = async function (goModData, goSumData) {
     } else if (l.includes("replace (")) {
       isModReplacement = true;
       continue;
+    } else if (l.includes("replace ")) {
+      // If this is an inline replacement, drop the word replace 
+      // (eg; "replace google.golang.org/grpc => google.golang.org/grpc v1.21.0" becomes " google.golang.org/grpc => google.golang.org/grpc v1.21.0")
+      l = l.replace("replace", "");
+      isModReplacement = true;
     }
 
     const tmpA = l.trim().split(" ");
