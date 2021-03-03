@@ -400,6 +400,9 @@ const createJavaBom = async (
   callback
 ) => {
   // maven - pom.xml
+  if (DEBUG_MODE) {
+    console.log("JAVA_OPTS Env variable:", process.env.JAVA_OPTS || "");
+  }
   const pomFiles = utils.getAllFiles(path, "pom.xml");
   let jarNSMapping = {};
   if (pomFiles && pomFiles.length) {
@@ -427,7 +430,7 @@ const createJavaBom = async (
           "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
           "org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom",
         ],
-        { cwd: basePath, encoding: "utf-8" }
+        { cwd: basePath, shell: true, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
@@ -440,6 +443,7 @@ const createJavaBom = async (
         console.log(
           "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
         );
+        console.log("3. Check if all required environment variables are passed correctly to this tool");
         console.log(
           "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
         );
@@ -509,7 +513,7 @@ const createJavaBom = async (
       const result = spawnSync(
         GRADLE_CMD,
         ["dependencies", "-q", "--console", "plain"],
-        { cwd: basePath, encoding: "utf-8" }
+        { cwd: basePath, shell: true, encoding: "utf-8" }
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
@@ -608,7 +612,7 @@ const createJavaBom = async (
       // Create temporary plugins file
       let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt")
 
-      // Requires a custom version of `sbt-dependency-graph` that 
+      // Requires a custom version of `sbt-dependency-graph` that
       // supports `--append` for `toFile` subtask.
       const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`
       fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
@@ -636,7 +640,7 @@ const createJavaBom = async (
         const result = spawnSync(
           SBT_CMD,
           sbtArgs,
-          { cwd: basePath, encoding: "utf-8" }
+          { cwd: basePath, shell: true, encoding: "utf-8" }
         );
         if (result.status == 1 || result.error) {
           console.error(result.stdout, result.stderr);
