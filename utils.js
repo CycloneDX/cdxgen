@@ -991,7 +991,7 @@ const getGoPkgComponent = async function (gosumData, group, name, version) {
 };
 exports.getGoPkgComponent = getGoPkgComponent;
 
-const parseGoModData = async function (goModData, goSumData) {
+const parseGoModData = async function (goModData, gosumData) {
   const pkgComponentsList = [];
   let isModReplacement  = false;
 
@@ -1032,7 +1032,7 @@ const parseGoModData = async function (goModData, goSumData) {
         group = name;
       }
       const version = tmpA[1];
-      await getGoPkgComponent(goSumData, group, name, version)
+      await getGoPkgComponent(gosumData, group, name, version)
         .then((component) => {
           if (Object.keys(component).length !== 0) {
             pkgComponentsList.push(component);
@@ -1046,7 +1046,7 @@ const parseGoModData = async function (goModData, goSumData) {
         group = name;
       }
       const version = tmpA[3]
-      await getGoPkgComponent(goSumData, group, name, version)
+      await getGoPkgComponent(gosumData, group, name, version)
         .then((component) => {
           if (Object.keys(component).length !== 0) {
             pkgComponentsList.push(component);
@@ -1057,6 +1057,49 @@ const parseGoModData = async function (goModData, goSumData) {
   return pkgComponentsList;
 };
 exports.parseGoModData = parseGoModData;
+
+const parseGosumData = async function (gosumData) {
+  const pkgList = [];
+  if (!gosumData) {
+    return pkgList;
+  }
+  const pkgs = gosumData.split("\n");
+  for (let i in pkgs) {
+    const l = pkgs[i];
+    // look for lines containing go.mod
+    if (l.indexOf("go.mod") > -1) {
+      const tmpA = l.split(" ");
+      let group = path.dirname(tmpA[0]);
+      const name = path.basename(tmpA[0]);
+      if (group === ".") {
+        group = name;
+      }
+      const version = tmpA[1].replace("/go.mod", "");
+      const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
+      let license = undefined;
+      if (process.env.FETCH_LICENSE) {
+        if (DEBUG_MODE) {
+          console.log(
+            `About to fetch go package license information for ${group}:${name}`
+          );
+        }
+        license = await getGoPkgLicense({
+          group: group,
+          name: name,
+        });
+      }
+      pkgList.push({
+        group: group,
+        name: name,
+        version: version,
+        _integrity: hash,
+        license: license,
+      });
+    }
+  }
+  return pkgList;
+};
+exports.parseGosumData = parseGosumData;
 
 const parseGopkgData = async function (gopkgData) {
   const pkgList = [];
