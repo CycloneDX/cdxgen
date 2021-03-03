@@ -128,8 +128,8 @@ test("get py metadata", async () => {
   ]);
 });
 
-// // Slow running test
-// /*
+// Slow running test
+/*
 test("parseGoModData", async () => {
   jest.setTimeout(120000);
   let dep_list = await utils.parseGoModData(null);
@@ -205,7 +205,7 @@ test("parseGoSumData", async () => {
     expect(d.license);
   });
 });
-// */
+*/
 
 
 test("parseGopkgData", async () => {
