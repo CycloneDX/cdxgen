@@ -1005,7 +1005,7 @@ const createPythonBom = async (
  */
 const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
   let pkgList = [];
-  
+
   // Read in go.sum and merge all go.sum files.
   const gosumFiles = utils.getAllFiles(
     path,
@@ -1013,12 +1013,12 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
   );
 
   // If USE_GOSUM is true, generate BOM components only using go.sum.
-  const useGosum = (process.env.USE_GOSUM == "true")
+  const useGosum = process.env.USE_GOSUM == "true";
   if (useGosum && gosumFiles.length) {
-    console.log("\x1b[43m\x1b[30m%s\x1b[0m %s\n%s\n", 
-    "WARNING", 
-    "using go.sum to generate BOMs for go projects may return an innacurate representation of transitive dependencies. \nSee: https://github.com/golang/go/wiki/Modules#is-gosum-a-lock-file-why-does-gosum-include-information-for-module-versions-i-am-no-longer-using",
-    "set USE_GOSUM=false to generate BOMs using go.mod as the dependency source of truth.")
+    console.warn(
+      "Using go.sum to generate BOMs for go projects may return an inaccurate representation of transitive dependencies.\nSee: https://github.com/golang/go/wiki/Modules#is-gosum-a-lock-file-why-does-gosum-include-information-for-module-versions-i-am-no-longer-using\n",
+      "Set USE_GOSUM=false to generate BOMs using go.mod as the dependency source of truth."
+    );
     for (let i in gosumFiles) {
       const f = gosumFiles[i];
       if (DEBUG_MODE) {
@@ -1030,7 +1030,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    buildBomString(
+    return buildBomString(
       {
         includeBomSerialNumber,
         pkgInfo: pkgList,
@@ -1039,7 +1039,6 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
       },
       callback
     );
-    return;
   }
 
   // If USE_GOSUM is false, generate BOM components using go.mod.
@@ -1050,21 +1049,12 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      data = fs.readFileSync(f, { encoding: "utf-8" });
-      checkSums = data.split("\n")
-      for (let d in checkSums) {
-        const l = checkSums[d];
-        if (l.length > 0) {
-          const tmpA = l.split(" ");
-          let group = pathLib.dirname(tmpA[0]);
-          const name = pathLib.basename(tmpA[0]);
-          if (group === ".") {
-            group = name;
-          }
-          const version = tmpA[1].replace("/go.mod", "");
-          const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
-          gosumMap[`${group}/${name}/${version}`] = hash
-        }
+      const gosumData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseGosumData(gosumData);
+      if (dlist && dlist.length) {
+        dlist.forEach((pkg) => {
+          gosumMap[`${pkg.group}/${pkg.name}/${pkg.version}`] = pkg._integrity;
+        });
       }
     }
   }
@@ -1074,7 +1064,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
     path,
     (options.multiProject ? "**/" : "") + "Gopkg.lock"
   );
-  
+
   // Read in go.mod files and parse BOM components with checksums from gosumData
   const gomodFiles = utils.getAllFiles(
     path,
@@ -1087,7 +1077,6 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
         console.log(`Parsing ${f}`);
       }
       const gomodData = fs.readFileSync(f, { encoding: "utf-8" });
-
       const dlist = await utils.parseGoModData(gomodData, gosumMap);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);

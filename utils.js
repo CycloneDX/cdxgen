@@ -923,6 +923,10 @@ const getGoPkgLicense = async function (repoMetadata) {
     pkgUrlPrefix = pkgUrlPrefix + group + "/";
   }
   pkgUrlPrefix = pkgUrlPrefix + name + "?tab=licenses";
+  // Check the metadata cache first
+  if (metadata_cache[pkgUrlPrefix]) {
+    return metadata_cache[pkgUrlPrefix];
+  }
   try {
     const res = await got.get(pkgUrlPrefix);
     if (res && res.body) {
@@ -940,6 +944,7 @@ const getGoPkgLicense = async function (repoMetadata) {
         alicense["url"] = pkgUrlPrefix;
         licList.push(alicense);
       }
+      metadata_cache[pkgUrlPrefix] = licList;
       return licList;
     }
   } catch (err) {
@@ -954,8 +959,8 @@ exports.getGoPkgLicense = getGoPkgLicense;
 
 const getGoPkgComponent = async function (group, name, version, hash) {
   let pkg = {};
-    let license = undefined;
-    if (process.env.FETCH_LICENSE) {
+  let license = undefined;
+  if (process.env.FETCH_LICENSE) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch go package license information for ${group}:${name}`
@@ -979,7 +984,7 @@ exports.getGoPkgComponent = getGoPkgComponent;
 
 const parseGoModData = async function (goModData, gosumMap) {
   const pkgComponentsList = [];
-  let isModReplacement  = false;
+  let isModReplacement = false;
 
   if (!goModData) {
     return pkgComponentsList;
@@ -990,7 +995,13 @@ const parseGoModData = async function (goModData, gosumMap) {
     let l = pkgs[i];
 
     // Skip go.mod file headers, whitespace, and/or comments
-    if (l.includes("module ") || l.includes("go ") || l.includes(")") || l.trim() === "" || l.trim().startsWith("//")){
+    if (
+      l.includes("module ") ||
+      l.includes("go ") ||
+      l.includes(")") ||
+      l.trim() === "" ||
+      l.trim().startsWith("//")
+    ) {
       continue;
     }
 
@@ -1002,7 +1013,7 @@ const parseGoModData = async function (goModData, gosumMap) {
       isModReplacement = true;
       continue;
     } else if (l.includes("replace ")) {
-      // If this is an inline replacement, drop the word replace 
+      // If this is an inline replacement, drop the word replace
       // (eg; "replace google.golang.org/grpc => google.golang.org/grpc v1.21.0" becomes " google.golang.org/grpc => google.golang.org/grpc v1.21.0")
       l = l.replace("replace", "");
       isModReplacement = true;
@@ -1018,18 +1029,13 @@ const parseGoModData = async function (goModData, gosumMap) {
         group = name;
       }
       const version = tmpA[1];
-
       gosumHash = gosumMap[`${group}/${name}/${version}`];
       // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
       if (gosumHash === undefined) {
         continue;
       }
-      await getGoPkgComponent(group, name, version, gosumHash)
-        .then((component) => {
-          if (Object.keys(component).length !== 0) {
-            pkgComponentsList.push(component);
-          }
-        });
+      let component = await getGoPkgComponent(group, name, version, gosumHash);
+      pkgComponentsList.push(component);
     } else {
       // Add group, name and version component properties for replacement modules
       let group = path.dirname(tmpA[2]);
@@ -1044,14 +1050,12 @@ const parseGoModData = async function (goModData, gosumMap) {
       if (gosumHash === undefined) {
         continue;
       }
-      await getGoPkgComponent(group, name, version, gosumHash)
-        .then((component) => {
-          if (Object.keys(component).length !== 0) {
-            pkgComponentsList.push(component);
-          }
-        });
+      let component = await getGoPkgComponent(group, name, version, gosumHash);
+      pkgComponentsList.push(component);
     }
   }
+  // Clear the cache
+  metadata_cache = {};
   return pkgComponentsList;
 };
 exports.parseGoModData = parseGoModData;
@@ -1910,7 +1914,7 @@ exports.addPlugin = addPlugin;
 const cleanupPlugin = function (projectPath, originalPluginsFile) {
   const pluginsFile = sbtPluginsPath(projectPath);
   if (fs.existsSync(pluginsFile)) {
-    if (originalPluginsFile == null) {
+    if (!originalPluginsFile) {
       // just remove the file, it was never there
       fs.unlinkSync(pluginsFile);
       return !fs.existsSync(pluginsFile);
