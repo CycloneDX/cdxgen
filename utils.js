@@ -952,46 +952,32 @@ const getGoPkgLicense = async function (repoMetadata) {
 };
 exports.getGoPkgLicense = getGoPkgLicense;
 
-const getGoPkgComponent = async function (gosumData, group, name, version) {
+const getGoPkgComponent = async function (group, name, version, hash) {
   let pkg = {};
-  if (!gosumData) {
-    return pkgList;
-  }
-  const pkgs = gosumData.split("\n");
-  const query = `${group}/${name} ${version}`;
-  for (let i in pkgs) {
-    const l = pkgs[i];
-
-    if (l.includes(query)) {
-      const tmpA = l.split(" ");
-      const sumVersion = tmpA[1].replace("/go.mod", "");
-      const sumHash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
-      let license = undefined;
-      if (process.env.FETCH_LICENSE) {
-        if (DEBUG_MODE) {
-          console.log(
-            `About to fetch go package license information for ${group}:${name}`
-          );
-        }
-        license = await getGoPkgLicense({
-          group: group,
-          name: name,
-        });
-      }
-      pkg = {
-        group: group,
-        name: name,
-        version: sumVersion,
-        _integrity: sumHash,
-        license: license,
-      };
+    let license = undefined;
+    if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch go package license information for ${group}:${name}`
+      );
     }
+    license = await getGoPkgLicense({
+      group: group,
+      name: name,
+    });
   }
+  pkg = {
+    group: group,
+    name: name,
+    version: version,
+    _integrity: hash,
+    license: license,
+  };
   return pkg;
 };
 exports.getGoPkgComponent = getGoPkgComponent;
 
-const parseGoModData = async function (goModData, gosumData) {
+const parseGoModData = async function (goModData, gosumMap) {
   const pkgComponentsList = [];
   let isModReplacement  = false;
 
@@ -1032,7 +1018,13 @@ const parseGoModData = async function (goModData, gosumData) {
         group = name;
       }
       const version = tmpA[1];
-      await getGoPkgComponent(gosumData, group, name, version)
+
+      gosumHash = gosumMap[`${group}/${name}/${version}`];
+      // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
+      if (gosumHash === undefined) {
+        continue;
+      }
+      await getGoPkgComponent(group, name, version, gosumHash)
         .then((component) => {
           if (Object.keys(component).length !== 0) {
             pkgComponentsList.push(component);
@@ -1045,8 +1037,14 @@ const parseGoModData = async function (goModData, gosumData) {
       if (group === ".") {
         group = name;
       }
-      const version = tmpA[3]
-      await getGoPkgComponent(gosumData, group, name, version)
+      const version = tmpA[3];
+
+      gosumHash = gosumMap[`${group}/${name}/${version}`];
+      // The hash for this version was not found in go.sum, so skip.
+      if (gosumHash === undefined) {
+        continue;
+      }
+      await getGoPkgComponent(group, name, version, gosumHash)
         .then((component) => {
           if (Object.keys(component).length !== 0) {
             pkgComponentsList.push(component);

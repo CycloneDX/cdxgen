@@ -1007,7 +1007,6 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
   let pkgList = [];
   
   // Read in go.sum and merge all go.sum files.
-  let gosumData = "";
   const gosumFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.sum"
@@ -1044,16 +1043,28 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
   }
 
   // If USE_GOSUM is false, generate BOM components using go.mod.
+  gosumMap = {};
   if (gosumFiles.length) {
-    goSumReader = [];
     for (let i in gosumFiles) {
       const f = gosumFiles[i];
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      goSumReader.push(fs.readFileSync(f, { encoding: "utf-8" }));
+      data = fs.readFileSync(f, { encoding: "utf-8" });
+      checkSums = data.split("\n")
+      for (let d in checkSums) {
+        const l = checkSums[d];
+        const tmpA = l.split(" ");
+        let group = pathLib.dirname(tmpA[0]);
+        const name = pathLib.basename(tmpA[0]);
+        if (group === ".") {
+          group = name;
+        }
+        const version = tmpA[1].replace("/go.mod", "");
+        const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
+        gosumMap[`${group}/${name}/${version}`] = hash
+      }
     }
-    gosumData = goSumReader.join("\n");
   }
 
   // Read in data from Gopkg.lock files if they exist
@@ -1074,7 +1085,8 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
         console.log(`Parsing ${f}`);
       }
       const gomodData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGoModData(gomodData, gosumData);
+
+      const dlist = await utils.parseGoModData(gomodData, gosumMap);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
