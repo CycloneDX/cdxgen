@@ -130,26 +130,89 @@ test("get py metadata", async () => {
 
 // Slow running test
 /*
-test("parseGosumData", async () => {
+test("parseGoModData", async () => {
   jest.setTimeout(120000);
-  let dep_list = await utils.parseGosumData(null);
+  let dep_list = await utils.parseGoModData(null);
+  expect(dep_list).toEqual([]);
+  const gosumMap = {
+    "google.golang.org/grpc/v1.21.0": "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
+    "github.com/spf13/cobra/v1.0.0": "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
+    "github.com/spf13/viper/v1.0.2": "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
+    "github.com/stretchr/testify/v1.6.1": "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg="
+  }
+  dep_list = await utils.parseGoModData(
+    fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
+    gosumMap
+  );
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list[0]).toEqual({
+    group: "github.com/spf13",
+    name: "cobra",
+    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/github.com/spf13/cobra?tab=licenses"}],
+    version: "v1.0.0",
+    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
+  });
+  expect(dep_list[1]).toEqual({
+    group: "google.golang.org",
+    name: "grpc",
+    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/google.golang.org/grpc?tab=licenses"}],
+    version: "v1.21.0",
+    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
+  });
+  expect(dep_list[2]).toEqual({
+    group: "github.com/spf13",
+    name: "viper",
+    license: [{"id": "MIT", "url": "https://pkg.go.dev/github.com/spf13/viper?tab=licenses"}],
+    version: "v1.0.2",
+    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
+  });
+  dep_list.forEach((d) => {
+    expect(d.license);
+  });
+});
+
+test("parseGoSumData", async () => {
+  jest.setTimeout(120000);
+  let dep_list = await utils.parseGoModData(null);
   expect(dep_list).toEqual([]);
   dep_list = await utils.parseGosumData(
-    fs.readFileSync("./test/gosum/go.sum", (encoding = "utf-8"))
+    fs.readFileSync("./test/gomod/go.sum", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(310);
+  expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
-    group: "cloud.google.com",
-    name: "go",
-    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/cloud.google.com/go?tab=licenses"}],
-    version: "v0.38.0",
-    _integrity: "sha256-990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=",
+    group: "google.golang.org",
+    name: "grpc",
+    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/google.golang.org/grpc?tab=licenses"}],
+    version: "v1.21.0",
+    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
+  });
+  expect(dep_list[1]).toEqual({
+    group: "github.com/spf13",
+    name: "cobra",
+    license: [{"id": "Apache-2.0", "url": "https://pkg.go.dev/github.com/spf13/cobra?tab=licenses"}],
+    version: "v1.0.0",
+    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
+  });
+  expect(dep_list[2]).toEqual({
+    group: "github.com/spf13",
+    name: "viper",
+    license: [{"id": "MIT", "url": "https://pkg.go.dev/github.com/spf13/viper?tab=licenses"}],
+    version: "v1.0.2",
+    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
+  });
+  expect(dep_list[3]).toEqual({
+    group: "github.com/stretchr",
+    name: "testify",
+    license: [{"id": "MIT", "url": "https://pkg.go.dev/github.com/stretchr/testify?tab=licenses"}],
+    version: "v1.6.1",
+    _integrity: "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=",
   });
   dep_list.forEach((d) => {
     expect(d.license);
   });
 });
 */
+
 
 test("parseGopkgData", async () => {
   jest.setTimeout(120000);

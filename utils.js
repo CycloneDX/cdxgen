@@ -952,6 +952,110 @@ const getGoPkgLicense = async function (repoMetadata) {
 };
 exports.getGoPkgLicense = getGoPkgLicense;
 
+const getGoPkgComponent = async function (group, name, version, hash) {
+  let pkg = {};
+    let license = undefined;
+    if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch go package license information for ${group}:${name}`
+      );
+    }
+    license = await getGoPkgLicense({
+      group: group,
+      name: name,
+    });
+  }
+  pkg = {
+    group: group,
+    name: name,
+    version: version,
+    _integrity: hash,
+    license: license,
+  };
+  return pkg;
+};
+exports.getGoPkgComponent = getGoPkgComponent;
+
+const parseGoModData = async function (goModData, gosumMap) {
+  const pkgComponentsList = [];
+  let isModReplacement  = false;
+
+  if (!goModData) {
+    return pkgComponentsList;
+  }
+
+  const pkgs = goModData.split("\n");
+  for (let i in pkgs) {
+    let l = pkgs[i];
+
+    // Skip go.mod file headers, whitespace, and/or comments
+    if (l.includes("module ") || l.includes("go ") || l.includes(")") || l.trim() === "" || l.trim().startsWith("//")){
+      continue;
+    }
+
+    // Handle required modules separately from replacement modules to ensure accuracy when parsing component data.
+    if (l.includes("require (")) {
+      isModReplacement = false;
+      continue;
+    } else if (l.includes("replace (")) {
+      isModReplacement = true;
+      continue;
+    } else if (l.includes("replace ")) {
+      // If this is an inline replacement, drop the word replace 
+      // (eg; "replace google.golang.org/grpc => google.golang.org/grpc v1.21.0" becomes " google.golang.org/grpc => google.golang.org/grpc v1.21.0")
+      l = l.replace("replace", "");
+      isModReplacement = true;
+    }
+
+    const tmpA = l.trim().split(" ");
+
+    if (!isModReplacement) {
+      // Add group, name and version component properties for required modules
+      let group = path.dirname(tmpA[0]);
+      const name = path.basename(tmpA[0]);
+      if (group === ".") {
+        group = name;
+      }
+      const version = tmpA[1];
+
+      gosumHash = gosumMap[`${group}/${name}/${version}`];
+      // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
+      if (gosumHash === undefined) {
+        continue;
+      }
+      await getGoPkgComponent(group, name, version, gosumHash)
+        .then((component) => {
+          if (Object.keys(component).length !== 0) {
+            pkgComponentsList.push(component);
+          }
+        });
+    } else {
+      // Add group, name and version component properties for replacement modules
+      let group = path.dirname(tmpA[2]);
+      const name = path.basename(tmpA[2]);
+      if (group === ".") {
+        group = name;
+      }
+      const version = tmpA[3];
+
+      gosumHash = gosumMap[`${group}/${name}/${version}`];
+      // The hash for this version was not found in go.sum, so skip.
+      if (gosumHash === undefined) {
+        continue;
+      }
+      await getGoPkgComponent(group, name, version, gosumHash)
+        .then((component) => {
+          if (Object.keys(component).length !== 0) {
+            pkgComponentsList.push(component);
+          }
+        });
+    }
+  }
+  return pkgComponentsList;
+};
+exports.parseGoModData = parseGoModData;
+
 const parseGosumData = async function (gosumData) {
   const pkgList = [];
   if (!gosumData) {
