@@ -1054,15 +1054,17 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
       checkSums = data.split("\n")
       for (let d in checkSums) {
         const l = checkSums[d];
-        const tmpA = l.split(" ");
-        let group = pathLib.dirname(tmpA[0]);
-        const name = pathLib.basename(tmpA[0]);
-        if (group === ".") {
-          group = name;
+        if (l.length > 0) {
+          const tmpA = l.split(" ");
+          let group = pathLib.dirname(tmpA[0]);
+          const name = pathLib.basename(tmpA[0]);
+          if (group === ".") {
+            group = name;
+          }
+          const version = tmpA[1].replace("/go.mod", "");
+          const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
+          gosumMap[`${group}/${name}/${version}`] = hash
         }
-        const version = tmpA[1].replace("/go.mod", "");
-        const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
-        gosumMap[`${group}/${name}/${version}`] = hash
       }
     }
   }
