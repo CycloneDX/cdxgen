@@ -400,9 +400,7 @@ const createJavaBom = async (
   callback
 ) => {
   // maven - pom.xml
-  if (DEBUG_MODE) {
-    console.log("JAVA_OPTS Env variable:", process.env.JAVA_OPTS || "");
-  }
+  console.log("JAVA_OPTS Env variable:", process.env.JAVA_OPTS || "");
   const pomFiles = utils.getAllFiles(path, "pom.xml");
   let jarNSMapping = {};
   if (pomFiles && pomFiles.length) {
