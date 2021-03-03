@@ -75,8 +75,7 @@ let options = {
   multiProject: args.recurse,
   depth: 3,
   output: args.output,
-  resolveClass: args.resolveClass,
-  legacygo: args.legacyGo
+  resolveClass: args.resolveClass
 };
 
 let filePath = args._[0] || ".";
