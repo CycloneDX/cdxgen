@@ -27,10 +27,6 @@ const args = require("yargs")
     alias: "v",
     description: "Print version number",
   })
-  .option("gosum", {
-    type: "boolean",
-    description: "Generate BOM components using go.sum as lockfile, instead of go.mod.",
-  })
   .option("server-url", {
     description:
       "Dependency track or AppThreat server url. Eg: https://deptrack.appthreat.io",
@@ -80,7 +76,6 @@ let options = {
   depth: 3,
   output: args.output,
   resolveClass: args.resolveClass,
-  gosum: args.gosum,
   legacygo: args.legacyGo
 };
 

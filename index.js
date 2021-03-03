@@ -1013,11 +1013,13 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "go.sum"
   );
 
-  // If --gosum set, generate BOM components using go.sum.
-  if (options.gosum && gosumFiles.length) {
-    console.log("\x1b[43m\x1b[30m%s\x1b[0m %s", 
+  // If USE_GOSUM is true, generate BOM components only using go.sum.
+  const useGosum = (process.env.USE_GOSUM == "true")
+  if (useGosum && gosumFiles.length) {
+    console.log("\x1b[43m\x1b[30m%s\x1b[0m %s\n%s\n", 
     "WARNING", 
-    "using go.sum to generate BOMs for go projects may return an innacurate representation of transitive dependencies. \nSee: https://github.com/golang/go/wiki/Modules#is-gosum-a-lock-file-why-does-gosum-include-information-for-module-versions-i-am-no-longer-using\n")
+    "using go.sum to generate BOMs for go projects may return an innacurate representation of transitive dependencies. \nSee: https://github.com/golang/go/wiki/Modules#is-gosum-a-lock-file-why-does-gosum-include-information-for-module-versions-i-am-no-longer-using",
+    "set USE_GOSUM=false to generate BOMs using go.mod as the dependency source of truth.")
     for (let i in gosumFiles) {
       const f = gosumFiles[i];
       if (DEBUG_MODE) {
@@ -1041,7 +1043,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
     return;
   }
 
-  // If --gosum is false, generate BOM components using go.mod.
+  // If USE_GOSUM is false, generate BOM components using go.mod.
   if (gosumFiles.length) {
     goSumReader = [];
     for (let i in gosumFiles) {
