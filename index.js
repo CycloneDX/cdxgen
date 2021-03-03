@@ -1447,11 +1447,15 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     path,
     (options.multiProject ? "**/" : "") + "go.sum"
   );
+  const gomodFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "go.mod"
+  );
   const gopkgLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gopkg.lock"
   );
-  if (gosumFiles.length || gopkgLockFiles.length) {
+  if (gomodFiles.length || gosumFiles.length || gopkgLockFiles.length) {
     return await createGoBom(includeBomSerialNumber, path, options, callback);
   }
 
