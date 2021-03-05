@@ -629,10 +629,10 @@ const createJavaBom = async (
         var sbtArgs = [];
         var pluginFile = null;
         if (standalonePluginFile) {
-          sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`dependencyList::toFile "${dlFile}" --append`]
+          sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"dependencyList::toFile ${dlFile} --append"`]
         } else {
           // write to the existing plugins file
-          sbtArgs = [`dependencyList::toFile "${dlFile}" --append`]
+          sbtArgs = [`"dependencyList::toFile ${dlFile} --append"`]
           pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
         }
         const result = spawnSync(
