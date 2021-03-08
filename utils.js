@@ -22,6 +22,8 @@ const DEBUG_MODE =
 // Metadata cache
 let metadata_cache = {};
 
+const MAX_LICENSE_ID_LENGTH = 100;
+
 /**
  * Method to get files matching a pattern
  *
@@ -512,7 +514,9 @@ const findLicenseId = function (name) {
       return l.exp;
     }
   }
-  return name;
+  return name && (name.includes("\n") || name.length > MAX_LICENSE_ID_LENGTH)
+    ? guessLicenseId(name)
+    : name;
 };
 exports.findLicenseId = findLicenseId;
 
@@ -526,7 +530,7 @@ const guessLicenseId = function (content) {
   for (let i in licenseMapping) {
     const l = licenseMapping[i];
     for (let j in l.names) {
-      if (content.indexOf(l.names[j]) > -1) {
+      if (content.toUpperCase().indexOf(l.names[j].toUpperCase()) > -1) {
         return l.exp;
       }
     }
@@ -671,7 +675,7 @@ const getPyMetadata = async function (pkgList) {
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
-      console.error(err, p);
+      console.error(err);
     }
   }
   return cdepList;
