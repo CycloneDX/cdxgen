@@ -41,6 +41,9 @@ const DEBUG_MODE =
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
   process.env.NODE_ENV !== "production";
 
+// Timeout milliseconds. Default 10 mins
+const TIMEOUT_MS = process.env.CDXGEN_TIMEOUT_MS || 10 * 60 * 1000;
+
 /**
  * Method to create global external references
  *
@@ -400,7 +403,6 @@ const createJavaBom = async (
   callback
 ) => {
   // maven - pom.xml
-  console.log("JAVA_OPTS Env variable:", process.env.JAVA_OPTS || "");
   const pomFiles = utils.getAllFiles(path, "pom.xml");
   let jarNSMapping = {};
   if (pomFiles && pomFiles.length) {
@@ -428,7 +430,7 @@ const createJavaBom = async (
           "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
           "org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom",
         ],
-        { cwd: basePath, shell: true, encoding: "utf-8" }
+        { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
@@ -511,7 +513,7 @@ const createJavaBom = async (
       const result = spawnSync(
         GRADLE_CMD,
         ["dependencies", "-q", "--console", "plain"],
-        { cwd: basePath, shell: true, encoding: "utf-8" }
+        { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
@@ -638,7 +640,7 @@ const createJavaBom = async (
         const result = spawnSync(
           SBT_CMD,
           sbtArgs,
-          { cwd: basePath, shell: true, encoding: "utf-8" }
+          { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
         if (result.status == 1 || result.error) {
           console.error(result.stdout, result.stderr);
