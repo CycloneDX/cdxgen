@@ -430,6 +430,44 @@ const parsePom = function (pomFile) {
 exports.parsePom = parsePom;
 
 /**
+ * Parse maven tree output
+ * @param {string} rawOutput Raw string output
+ */
+const parseMavenTree = function (rawOutput) {
+  if (!rawOutput) {
+    return [];
+  }
+  const deps = [];
+  const keys_cache = {};
+  const tmpA = rawOutput.split("\n");
+  tmpA.forEach((l) => {
+    const tmpline = l.split(" ");
+    if (tmpline && tmpline.length) {
+      l = tmpline[tmpline.length - 1];
+      const pkgArr = l.split(":");
+      if (pkgArr && pkgArr.length > 2) {
+        versionStr = pkgArr[pkgArr.length - 2];
+        if (pkgArr.length == 4) {
+          versionStr = pkgArr[pkgArr.length - 1];
+        }
+        const key = pkgArr[0] + "-" + pkgArr[1] + "-" + versionStr;
+        if (!keys_cache[key]) {
+          keys_cache[key] = key;
+          deps.push({
+            group: pkgArr[0],
+            name: pkgArr[1],
+            version: versionStr,
+            qualifiers: { type: "jar" },
+          });
+        }
+      }
+    }
+  });
+  return deps;
+};
+exports.parseMavenTree = parseMavenTree;
+
+/**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
  */
@@ -469,12 +507,11 @@ const parseGradleDep = function (rawOutput) {
   }
   return [];
 };
+exports.parseGradleDep = parseGradleDep;
 
 /**
  * Parse dependencies in Key:Value format
  */
-exports.parseGradleDep = parseGradleDep;
-
 const parseKVDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];

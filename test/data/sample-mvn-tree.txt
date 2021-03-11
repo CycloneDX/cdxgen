@@ -1,0 +1,61 @@
+com.pogeyan.cmis:copper-server:war:1.15.2
++- javax:javaee-web-api:jar:7.0:provided
++- org.apache.chemistry.opencmis:chemistry-opencmis-server-support:jar:1.0.0:compile
+|  +- org.apache.chemistry.opencmis:chemistry-opencmis-commons-api:jar:1.0.0:compile
+|  +- org.apache.chemistry.opencmis:chemistry-opencmis-commons-impl:jar:1.0.0:compile
+|  |  \- org.codehaus.woodstox:woodstox-core-asl:jar:4.4.1:compile
+|  |     \- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
+|  +- org.antlr:antlr-runtime:jar:3.5:compile
+|  |  \- org.antlr:stringtemplate:jar:3.2.1:compile
+|  |     \- antlr:antlr:jar:2.7.7:compile
+|  \- org.slf4j:slf4j-api:jar:1.7.21:compile
++- com.pogeyan.cmis:copper-server-api:jar:1.15.2:compile
+|  +- io.prometheus:simpleclient:jar:0.0.13:compile
+|  +- io.prometheus:simpleclient_servlet:jar:0.0.13:compile
+|  |  \- io.prometheus:simpleclient_common:jar:0.0.13:compile
+|  +- io.prometheus:simpleclient_hotspot:jar:0.0.11:compile
+|  +- io.prometheus:simpleclient_pushgateway:jar:0.0.10:compile
+|  +- io.prometheus:simpleclient_dropwizard:jar:0.0.13:compile
+|  \- com.google.guava:guava:jar:21.0:compile
++- com.pogeyan.cmis:copper-server-impl:jar:1.15.2:compile
+|  \- org.apache.chemistry.opencmis:chemistry-opencmis-client-api:jar:1.1.0:compile
++- com.pogeyan.cmis:copper-server-ldap:jar:1.15.2:compile
++- com.pogeyan.cmis:copper-server-repo:jar:1.15.2:compile
+|  +- org.json:json:jar:20170516:compile
+|  +- org.mongodb:mongo-java-driver:jar:3.2.2:compile
+|  +- com.googlecode.json-simple:json-simple:jar:1.1.1:compile
+|  \- org.mongodb.morphia:morphia:jar:1.2.1:compile
+|     +- cglib:cglib-nodep:jar:2.2.2:compile
+|     \- com.thoughtworks.proxytoys:proxytoys:jar:1.0:compile
++- com.pogeyan.cmis:copper-server-mongo:jar:1.15.2:compile
+|  \- org.apache.commons:commons-collections4:jar:4.4:compile
++- org.apache.commons:commons-lang3:jar:3.4:compile
++- io.dropwizard.metrics:metrics-core:jar:3.1.2:compile
++- com.github.davidb:metrics-influxdb:jar:0.9.3:compile
++- commons-fileupload:commons-fileupload:jar:1.4:compile
++- com.fasterxml.jackson.core:jackson-core:jar:2.12.0:compile
++- com.fasterxml.jackson.core:jackson-databind:jar:2.12.0:compile
+|  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.12.0:compile
++- junit:junit:jar:4.12:test
+|  \- org.hamcrest:hamcrest-core:jar:1.3:test
++- com.typesafe.akka:akka-actor_2.11:jar:2.4.14:compile
+|  +- org.scala-lang:scala-library:jar:2.11.8:compile
+|  +- com.typesafe:config:jar:1.3.0:compile
+|  \- org.scala-lang.modules:scala-java8-compat_2.11:jar:0.7.0:compile
++- com.typesafe.akka:akka-cluster_2.11:jar:2.4.14:compile
+|  \- com.typesafe.akka:akka-remote_2.11:jar:2.4.14:compile
+|     +- com.typesafe.akka:akka-stream_2.11:jar:2.4.14:compile
+|     |  +- org.reactivestreams:reactive-streams:jar:1.0.0:compile
+|     |  \- com.typesafe:ssl-config-core_2.11:jar:0.2.1:compile
+|     |     \- org.scala-lang.modules:scala-parser-combinators_2.11:jar:1.0.4:compile
+|     +- com.typesafe.akka:akka-protobuf_2.11:jar:2.4.14:compile
+|     +- io.netty:netty:jar:3.10.6.Final:compile
+|     +- org.uncommons.maths:uncommons-maths:jar:1.2.2a:compile
+|     +- io.aeron:aeron-driver:jar:1.0.4:compile
+|     \- io.aeron:aeron-client:jar:1.0.4:compile
+|        \- org.agrona:Agrona:jar:0.9.0:compile
++- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.13:compile
+|  \- org.codehaus.jackson:jackson-core-asl:jar:1.9.13:compile
++- org.slf4j:slf4j-log4j12:jar:1.7.21:compile
+|  \- log4j:log4j:jar:1.2.17:compile
+\- commons-io:commons-io:jar:2.6:compile

@@ -486,22 +486,43 @@ const createJavaBom = async (
           { cwd: basePath, encoding: "utf-8" }
         );
         if (result.status == 1 || result.error) {
-          console.error(result.stdout, result.stderr);
-          console.log(
-            "Resolve the above maven error. This could be due to the following:\n"
+          let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
+          let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
+          console.log("Fallback to executing 'mvn dependency:tree'");
+          result = spawnSync(
+            MVN_CMD,
+            ["dependency:tree", "-DoutputFile=" + tempMvnTree],
+            { cwd: basePath, encoding: "utf-8" }
           );
-          console.log(
-            "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
-          );
-          console.log(
-            "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
-          );
-          console.log(
-            "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
-          );
-          const dlist = utils.parsePom(f);
-          if (dlist && dlist.length) {
-            pkgList = pkgList.concat(dlist);
+          if (result.status == 1 || result.error) {
+            console.error(result.stdout, result.stderr);
+            console.log(
+              "Resolve the above maven error. This could be due to the following:\n"
+            );
+            console.log(
+              "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
+            );
+            console.log(
+              "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
+            );
+            console.log(
+              "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
+            );
+            const dlist = utils.parsePom(f);
+            if (dlist && dlist.length) {
+              pkgList = pkgList.concat(dlist);
+            }
+          } else {
+            if (fs.existsSync(tempMvnTree)) {
+              const mvnTreeString = fs.readFileSync(tempMvnTree, {
+                encoding: "utf-8",
+              });
+              const dlist = utils.parseMavenTree(mvnTreeString);
+              if (dlist && dlist.length) {
+                pkgList = pkgList.concat(dlist);
+              }
+              fs.unlinkSync(tempMvnTree);
+            }
           }
           pkgList = await utils.getMvnMetadata(pkgList);
           return buildBomString(

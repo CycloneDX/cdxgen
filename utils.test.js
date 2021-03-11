@@ -51,6 +51,20 @@ test("parse gradle dependencies", () => {
   });
 });
 
+test("parse maven tree", () => {
+  expect(utils.parseMavenTree(null)).toEqual([]);
+  let dep_list = utils.parseMavenTree(
+    fs.readFileSync("./test/data/sample-mvn-tree.txt", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(61);
+  expect(dep_list[0]).toEqual({
+    group: 'com.pogeyan.cmis',
+    name: 'copper-server',
+    version: '1.15.2',
+    qualifiers: { type: 'jar' }
+  });
+});
+
 // Slow test
 /*
 test("get maven metadata", async () => {
