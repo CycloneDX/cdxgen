@@ -4,17 +4,17 @@ This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containi
 
 ## Supported languages and package format
 
-| Language       | Package format                                            |
-| -------------- | --------------------------------------------------------- |
-| node.js        | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js     |
-| java           | maven (pom.xml), gradle (build.gradle, .kts), scala (sbt) |
-| php            | composer.lock                                             |
-| python         | setup.py, requirements.txt, Pipfile.lock, poetry.lock     |
-| go             | go.mod, go.sum, Gopkg.lock                                |
-| ruby           | Gemfile.lock                                              |
-| rust           | Cargo.lock                                                |
-| .Net Framework | .csproj                                                   |
-| .Net core      | .csproj                                                   |
+| Language       | Package format                                                |
+| -------------- | ------------------------------------------------------------- |
+| node.js        | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js         |
+| java           | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt) |
+| php            | composer.lock                                                 |
+| python         | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock     |
+| go             | go.mod, go.sum, Gopkg.lock                                    |
+| ruby           | Gemfile.lock                                                  |
+| rust           | Cargo.lock                                                    |
+| .Net Framework | .csproj, packages.config                                      |
+| .Net core      | .csproj, packages.config                                      |
 
 NOTE:
 
@@ -22,6 +22,11 @@ NOTE:
 - gradle or gradlew is required to parse gradle projects
 - sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.
   - Alternatively, create a lock file using sbt-dependency-lock [plugin](https://github.com/stringbean/sbt-dependency-lock)
+
+Footnotes:
+
+[1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
+[2] - Use pip freeze to improve the accuracy for requirements.txt based parsing.
 
 ### Automatic usage detection (Node.js)
 

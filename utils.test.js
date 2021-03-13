@@ -12,6 +12,16 @@ test("SSRI test", () => {
   expect(ss.sha256[0].digest).toStrictEqual('LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=');
 });
 
+test("Parse requires dist string", () => {
+  expect(utils.parsePyRequiresDist("lazy-object-proxy (&gt;=1.4.0)")).toEqual({name: "lazy-object-proxy", version: "1.4.0"});
+  expect(utils.parsePyRequiresDist("wrapt (&lt;1.13,&gt;=1.11)")).toEqual({name: "wrapt", version: "1.13"});
+  expect(utils.parsePyRequiresDist("typed-ast (&lt;1.5,&gt;=1.4.0) ; implementation_name == \"cpython\" and python_version &lt; \"3.8\"")).toEqual({name: "typed-ast", version: "1.5"});
+  expect(utils.parsePyRequiresDist("asgiref (&lt;4,&gt;=3.2.10)")).toEqual({name: "asgiref", version: "4"});
+  expect(utils.parsePyRequiresDist("pytz")).toEqual({name: "pytz", version: ""});
+  expect(utils.parsePyRequiresDist("sqlparse (&gt;=0.2.2)")).toEqual({name: "sqlparse", version: "0.2.2"});
+  expect(utils.parsePyRequiresDist("argon2-cffi (&gt;=16.1.0) ; extra == 'argon2'")).toEqual({name: "argon2-cffi", version: "16.1.0"});
+  expect(utils.parsePyRequiresDist("bcrypt ; extra == 'bcrypt'")).toEqual({name: "bcrypt", version: ""});
+});
 
 test("finds license id from name", () => {
   expect(utils.findLicenseId("Apache License Version 2.0")).toEqual(
@@ -125,6 +135,7 @@ test("get py metadata", async () => {
       name: "Flask",
       version: "1.1.0",
     },
+    false
   ]);
   expect(data).toEqual([
     {

@@ -664,14 +664,47 @@ const getMvnMetadata = async function (pkgList) {
 exports.getMvnMetadata = getMvnMetadata;
 
 /**
+ * Method to parse python requires_dist attribute found in pypi setup.py
+ *
+ * @param requires_dist string
+ */
+const parsePyRequiresDist = function (dist_string) {
+  if (!dist_string) {
+    return undefined;
+  }
+  const tmpA = dist_string.split(" ");
+  let name = "";
+  let version = "";
+  if (!tmpA) {
+    return undefined;
+  } else if (tmpA.length == 1) {
+    name = tmpA[0];
+  } else if (tmpA.length > 1) {
+    name = tmpA[0];
+    let tmpVersion = tmpA[1];
+    version = tmpVersion.split(",")[0].replace(/[();=&glt><]/g, "");
+  }
+  return {
+    name,
+    version,
+  };
+};
+exports.parsePyRequiresDist = parsePyRequiresDist;
+
+/**
  * Method to retrieve metadata for python packages by querying pypi
  *
  * @param {Array} pkgList Package list
+ * @param {Boolean} fetchIndirectDeps Should we also fetch data about indirect dependencies from pypi
  */
-const getPyMetadata = async function (pkgList) {
+const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
   const PYPI_URL = "https://pypi.org/pypi/";
-  const cdepList = [];
+  let cdepList = [];
+  let indirectDeps = [];
   for (const p of pkgList) {
+    if (!p || !p.name) {
+      continue;
+    }
     try {
       if (p.name.includes("https")) {
         cdepList.push(p);
@@ -701,6 +734,12 @@ const getPyMetadata = async function (pkgList) {
       ) {
         p.version = body.info.version;
       }
+      const requires_dist = body.info.requires_dist;
+      if (requires_dist && requires_dist.length) {
+        indirectDeps = indirectDeps.concat(
+          requires_dist.map(parsePyRequiresDist)
+        );
+      }
       if (body.releases && body.releases[p.version]) {
         const digest = body.releases[p.version][0].digests;
         if (digest["sha256"]) {
@@ -712,8 +751,17 @@ const getPyMetadata = async function (pkgList) {
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
-      console.error(err);
+      if (DEBUG_MODE) {
+        console.error(p.name, err);
+      }
     }
+  }
+  if (indirectDeps.length && fetchIndirectDeps) {
+    if (DEBUG_MODE) {
+      console.log("Fetching metadata for indirect dependencies");
+    }
+    const extraList = await getPyMetadata(indirectDeps, false);
+    cdepList = cdepList.concat(extraList);
   }
   return cdepList;
 };
@@ -736,7 +784,7 @@ const parsePiplockData = async function (lockData) {
         pkgList.push({ name: p, version: versionStr });
       });
     });
-  return await getPyMetadata(pkgList);
+  return await getPyMetadata(pkgList, false);
 };
 exports.parsePiplockData = parsePiplockData;
 
@@ -778,7 +826,7 @@ const parsePoetrylockData = async function (lockData) {
       }
     }
   });
-  return await getPyMetadata(pkgList);
+  return await getPyMetadata(pkgList, false);
 };
 exports.parsePoetrylockData = parsePoetrylockData;
 
@@ -789,6 +837,9 @@ exports.parsePoetrylockData = parsePoetrylockData;
  */
 const parseReqFile = async function (reqData) {
   const pkgList = [];
+  // If the requirements file only has dependencies with == then no need for indirect deps.
+  // Else we need to pull the full tree
+  let fetchIndirectDeps = false;
   reqData.split("\n").forEach((l) => {
     if (!l.startsWith("#")) {
       if (l.indexOf("=") > -1) {
@@ -802,6 +853,7 @@ const parseReqFile = async function (reqData) {
         }
         if (versionStr === "0") {
           versionStr = null;
+          fetchIndirectDeps = true;
         }
         pkgList.push({
           name: tmpA[0].trim(),
@@ -812,6 +864,7 @@ const parseReqFile = async function (reqData) {
         if (tmpA.includes("#")) {
           tmpA = tmpA.split("#")[0];
         }
+        fetchIndirectDeps = true;
         pkgList.push({
           name: tmpA[0].trim(),
           version: null,
@@ -820,6 +873,7 @@ const parseReqFile = async function (reqData) {
         if (l.includes("#")) {
           l = l.split("#")[0];
         }
+        fetchIndirectDeps = true;
         pkgList.push({
           name: l.trim(),
           version: null,
@@ -827,7 +881,7 @@ const parseReqFile = async function (reqData) {
       }
     }
   });
-  return await getPyMetadata(pkgList);
+  return await getPyMetadata(pkgList, fetchIndirectDeps);
 };
 exports.parseReqFile = parseReqFile;
 

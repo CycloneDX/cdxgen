@@ -539,7 +539,7 @@ const createJavaBom = async (
             callback
           );
         }
-      }
+      } // for
       const firstPath = pathLib.dirname(pomFiles[0]);
       if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
         const bomString = fs.readFileSync(
