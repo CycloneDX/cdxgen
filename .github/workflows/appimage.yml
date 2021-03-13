@@ -9,7 +9,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get update -y
         sudo apt-get install -y python3.8 python3.8-dev python3-pip python3-testresources python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev
         # Install appimagetool AppImage
         sudo wget https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool
