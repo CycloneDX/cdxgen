@@ -45,6 +45,9 @@ const DEBUG_MODE =
 const HASH_PATTERN =
   "^([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{96}|[a-fA-F0-9]{128})$";
 
+// Timeout milliseconds. Default 10 mins
+const TIMEOUT_MS = process.env.CDXGEN_TIMEOUT_MS || 10 * 60 * 1000;
+
 /**
  * Method to create global external references
  *
@@ -460,6 +463,18 @@ const createJavaBom = async (
     // maven - pom.xml
     const pomFiles = utils.getAllFiles(path, "pom.xml");
     if (pomFiles && pomFiles.length) {
+      let mvnArgs = [
+        "dependency:get",
+        "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
+        "-DrepoUrl=https://jitpack.io",
+        "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
+        "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
+      ];
+      // Support for passing additional settings and profile to maven
+      if (process.env.MVN_ARGS) {
+        const addArgs = process.env.MVN_ARGS.split(" ");
+        mvnArgs = mvnArgs.concat(addArgs);
+      }
       for (let i in pomFiles) {
         const f = pomFiles[i];
         const basePath = pathLib.dirname(f);
@@ -470,30 +485,30 @@ const createJavaBom = async (
           );
           jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
         }
-        console.log(
-          "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom' in",
-          basePath
-        );
-        result = spawnSync(
-          MVN_CMD,
-          [
-            "dependency:get",
-            "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
-            "-DrepoUrl=https://jitpack.io",
-            "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
-            "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
-          ],
-          { cwd: basePath, encoding: "utf-8" }
-        );
+        console.log(`Executing '${MVN_CMD} ${mvnArgs.join(" ")}' in`, basePath);
+        result = spawnSync(MVN_CMD, mvnArgs, {
+          cwd: basePath,
+          shell: true,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+        });
         if (result.status == 1 || result.error) {
           let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
           let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
-          console.log("Fallback to executing 'mvn dependency:tree'");
-          result = spawnSync(
-            MVN_CMD,
-            ["dependency:tree", "-DoutputFile=" + tempMvnTree],
-            { cwd: basePath, encoding: "utf-8" }
+          let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
+          if (process.env.MVN_ARGS) {
+            const addArgs = process.env.MVN_ARGS.split(" ");
+            mvnTreeArgs = mvnTreeArgs.concat(addArgs);
+          }
+          console.log(
+            `Fallback to executing ${MVN_CMD} ${mvnTreeArgs.join(" ")}`
           );
+          result = spawnSync(MVN_CMD, mvnTreeArgs, {
+            cwd: basePath,
+            shell: true,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+          });
           if (result.status == 1 || result.error) {
             console.error(result.stdout, result.stderr);
             console.log(
@@ -503,7 +518,10 @@ const createJavaBom = async (
               "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
             );
             console.log(
-              "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
+              "2. Private maven repository is not serving all the required maven plugins correctly. Refer to your registry documentation to add support for jitpack.io"
+            );
+            console.log(
+              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool"
             );
             console.log(
               "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
@@ -585,7 +603,7 @@ const createJavaBom = async (
         const result = spawnSync(
           GRADLE_CMD,
           ["dependencies", "-q", "--console", "plain"],
-          { cwd: basePath, encoding: "utf-8" }
+          { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
         if (result.status == 1 || result.error) {
           console.error(result.stdout, result.stderr);
@@ -687,6 +705,7 @@ const createJavaBom = async (
           const result = spawnSync(SBT_CMD, sbtArgs, {
             cwd: basePath,
             encoding: "utf-8",
+            timeout: TIMEOUT_MS,
           });
           if (result.status == 1 || result.error) {
             console.error(result.stdout, result.stderr);

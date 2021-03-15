@@ -102,16 +102,18 @@ This would create a bom.json.map file with the jar - class name mapping. Refer t
 
 ## Environment variables
 
-| Variable         | Description                                                                                                        |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------ |
-| SCAN_DEBUG_MODE  | Set to debug to enable debug messages                                                                              |
-| GITHUB_TOKEN     | Specify GitHub token to prevent traffic shaping while querying license and repo information                        |
-| MVN_CMD          | Set to override maven command                                                                                      |
-| MAVEN_HOME       | Specify maven home                                                                                                 |
-| GRADLE_CACHE_DIR | Specify gradle cache directory. Useful for class name resolving                                                    |
-| SBT_CACHE_DIR    | Specify sbt cache directory. Useful for class name resolving                                                       |
-| FETCH_LICENSE    | Set to true to fetch license information from the registry. npm and golang only                                    |
-| USE_GOSUM        | Set to true to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod |
+| Variable          | Description                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| SCAN_DEBUG_MODE   | Set to debug to enable debug messages                                                                              |
+| GITHUB_TOKEN      | Specify GitHub token to prevent traffic shaping while querying license and repo information                        |
+| MVN_CMD           | Set to override maven command                                                                                      |
+| MVN_ARGS          | Set to pass additional arguments such as profile or settings to maven                                              |
+| MAVEN_HOME        | Specify maven home                                                                                                 |
+| GRADLE_CACHE_DIR  | Specify gradle cache directory. Useful for class name resolving                                                    |
+| SBT_CACHE_DIR     | Specify sbt cache directory. Useful for class name resolving                                                       |
+| FETCH_LICENSE     | Set to true to fetch license information from the registry. npm and golang only                                    |
+| USE_GOSUM         | Set to true to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod |
+| CDXGEN_TIMEOUT_MS | Default timeout for known execution involving maven, gradle or sbt                                                 |
 
 ## Integration with GitHub action
 
