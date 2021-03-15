@@ -91,7 +91,7 @@ This would create a bom.json.map file with the jar - class name mapping. Refer t
 | SCAN_DEBUG_MODE    | Set to debug to enable debug messages                                                       |
 | GITHUB_TOKEN       | Specify GitHub token to prevent traffic shaping while querying license and repo information |
 | MVN_CMD            | Set to override maven command                                                               |
-| MVN_ARGS           | Set to pass additional arguments such as profile or settings to maven                       |
+| MAVEN_EXTRA_OPTS   | Set to pass additional arguments such as profile or settings to maven                       |
 | MAVEN_HOME         | Specify maven home                                                                          |
 | GRADLE_CACHE_DIR   | Specify gradle cache directory. Useful for class name resolving                             |
 | SBT_CACHE_DIR      | Specify sbt cache directory. Useful for class name resolving                                |

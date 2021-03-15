@@ -407,6 +407,18 @@ const createJavaBom = async (
   let jarNSMapping = {};
   if (pomFiles && pomFiles.length) {
     let pkgList = [];
+    let mvnArgs = [
+      "dependency:get",
+      "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
+      "-DrepoUrl=https://jitpack.io",
+      "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
+      "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
+    ];
+    // Support for passing additional settings and profile to maven
+    if (process.env.MAVEN_EXTRA_OPTS) {
+      const addArgs = process.env.MAVEN_EXTRA_OPTS.split(" ");
+      mvnArgs = mvnArgs.concat(addArgs);
+    }
     for (let i in pomFiles) {
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
@@ -416,18 +428,6 @@ const createJavaBom = async (
           "Creating class names list based on available jars. This might take a few mins ..."
         );
         jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
-      }
-      let mvnArgs = [
-        "dependency:get",
-        "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
-        "-DrepoUrl=https://jitpack.io",
-        "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
-        "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
-      ];
-      // Support for passing additional settings and profile to maven
-      if (process.env.MVN_ARGS) {
-        const addArgs = process.env.MVN_ARGS.split(" ");
-        mvnArgs = mvnArgs.concat(addArgs);
       }
       console.log(
         `Executing '${MVN_CMD} ${mvnArgs.join(" ")}' in`, basePath
