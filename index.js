@@ -407,6 +407,18 @@ const createJavaBom = async (
   let jarNSMapping = {};
   if (pomFiles && pomFiles.length) {
     let pkgList = [];
+    let mvnArgs = [
+      "dependency:get",
+      "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
+      "-DrepoUrl=https://jitpack.io",
+      "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
+      "org.cyclonedx:cyclonedx-maven-plugin:2.2.0:makeAggregateBom",
+    ];
+    // Support for passing additional settings and profile to maven
+    if (process.env.MAVEN_EXTRA_OPTS) {
+      const addArgs = process.env.MAVEN_EXTRA_OPTS.split(" ");
+      mvnArgs = mvnArgs.concat(addArgs);
+    }
     for (let i in pomFiles) {
       const f = pomFiles[i];
       const basePath = pathLib.dirname(f);
@@ -418,18 +430,11 @@ const createJavaBom = async (
         jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
       }
       console.log(
-        "Executing 'mvn dependency:get -DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io -DrepoUrl=https://jitpack.io -Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1 org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom' in",
-        basePath
+        `Executing '${MVN_CMD} ${mvnArgs.join(" ")}' in`, basePath
       );
       result = spawnSync(
         MVN_CMD,
-        [
-          "dependency:get",
-          "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
-          "-DrepoUrl=https://jitpack.io",
-          "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
-          "org.cyclonedx:cyclonedx-maven-plugin:2.1.0:makeAggregateBom",
-        ],
+        mvnArgs,
         { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
       );
       if (result.status == 1 || result.error) {
@@ -441,9 +446,9 @@ const createJavaBom = async (
           "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
         );
         console.log(
-          "2. Private maven repository is not serving all the required maven plugins correctly. Refer to https://github.com/ShiftLeftSecurity/sast-scan/issues/229"
+          "2. Private maven repository is not serving all the required maven plugins correctly. Refer to your registry documentation to add support for jitpack.io"
         );
-        console.log("3. Check if all required environment variables are passed correctly to this tool");
+        console.log("3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool");
         console.log(
           "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
         );
