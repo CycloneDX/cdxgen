@@ -837,8 +837,6 @@ exports.parsePoetrylockData = parsePoetrylockData;
  */
 const parseReqFile = async function (reqData) {
   const pkgList = [];
-  // If the requirements file only has dependencies with == then no need for indirect deps.
-  // Else we need to pull the full tree
   let fetchIndirectDeps = false;
   reqData.split("\n").forEach((l) => {
     if (!l.startsWith("#")) {
@@ -853,7 +851,6 @@ const parseReqFile = async function (reqData) {
         }
         if (versionStr === "0") {
           versionStr = null;
-          fetchIndirectDeps = true;
         }
         pkgList.push({
           name: tmpA[0].trim(),
@@ -864,7 +861,6 @@ const parseReqFile = async function (reqData) {
         if (tmpA.includes("#")) {
           tmpA = tmpA.split("#")[0];
         }
-        fetchIndirectDeps = true;
         pkgList.push({
           name: tmpA[0].trim(),
           version: null,
@@ -873,7 +869,6 @@ const parseReqFile = async function (reqData) {
         if (l.includes("#")) {
           l = l.split("#")[0];
         }
-        fetchIndirectDeps = true;
         pkgList.push({
           name: l.trim(),
           version: null,
