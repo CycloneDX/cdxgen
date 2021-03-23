@@ -957,8 +957,13 @@ const createPythonBom = async (
     path,
     (options.multiProject ? "**/" : "") + "requirements.txt"
   );
+  const reqDirFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "requirements/*.txt"
+  );
   const setupPy = pathLib.join(path, "setup.py");
-  const requirementsMode = reqFiles && reqFiles.length;
+  const requirementsMode =
+    (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const setupPyMode = fs.existsSync(setupPy);
   if (requirementsMode || pipenvMode || poetryMode || setupPyMode) {
     if (pipenvMode) {
@@ -996,20 +1001,34 @@ const createPythonBom = async (
       );
     } else if (requirementsMode) {
       let pkgList = [];
-      for (let i in reqFiles) {
-        const f = reqFiles[i];
-        const reqData = fs.readFileSync(f, { encoding: "utf-8" });
-        const dlist = await utils.parseReqFile(reqData);
-        if (dlist && dlist.length) {
-          pkgList = pkgList.concat(dlist);
+      let metadataFilename = "requirements.txt";
+      if (reqFiles && reqFiles.length) {
+        for (let i in reqFiles) {
+          const f = reqFiles[i];
+          const reqData = fs.readFileSync(f, { encoding: "utf-8" });
+          const dlist = await utils.parseReqFile(reqData);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
+          }
         }
+        metadataFilename = reqFiles.join(", ");
+      } else if (reqDirFiles && reqDirFiles.length) {
+        for (let j in reqDirFiles) {
+          const f = reqDirFiles[j];
+          const reqData = fs.readFileSync(f, { encoding: "utf-8" });
+          const dlist = await utils.parseReqFile(reqData);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
+          }
+        }
+        metadataFilename = reqDirFiles.join(", ");
       }
       buildBomString(
         {
           includeBomSerialNumber,
           pkgInfo: pkgList,
           ptype: "pypi",
-          context: { src: path, filename: "requirements.txt" },
+          context: { src: path, filename: metadataFilename },
         },
         callback
       );
@@ -1505,9 +1524,17 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
   // python
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
-  const reqFile = pathLib.join(path, "requirements.txt");
+  const reqFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "requirements.txt"
+  );
+  const reqDirFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "requirements/*.txt"
+  );
   const setupPy = pathLib.join(path, "setup.py");
-  const requirementsMode = fs.existsSync(reqFile);
+  const requirementsMode =
+    (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const setupPyMode = fs.existsSync(setupPy);
   if (requirementsMode || pipenvMode || poetryMode || setupPyMode) {
     return await createPythonBom(
