@@ -464,10 +464,6 @@ const createJavaBom = async (
     const pomFiles = utils.getAllFiles(path, "pom.xml");
     if (pomFiles && pomFiles.length) {
       let mvnArgs = [
-        "dependency:get",
-        "-DremoteRepositories=central::default::https://repo.maven.apache.org/maven2,jitpack::::https://jitpack.io",
-        "-DrepoUrl=https://jitpack.io",
-        "-Dartifact=com.github.everit-org.json-schema:org.everit.json.schema:1.12.1",
         "org.cyclonedx:cyclonedx-maven-plugin:2.3.0:makeAggregateBom",
       ];
       // Support for passing additional settings and profile to maven
