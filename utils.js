@@ -852,10 +852,12 @@ const parseReqFile = async function (reqData) {
         if (versionStr === "0") {
           versionStr = null;
         }
-        pkgList.push({
-          name: tmpA[0].trim(),
-          version: versionStr,
-        });
+        if (!tmpA[0].includes("=")) {
+          pkgList.push({
+            name: tmpA[0].trim(),
+            version: versionStr,
+          });
+        }
       } else if (/[>|\[|@]/.test(l)) {
         let tmpA = l.split(/(>|\[|@)/);
         if (tmpA.includes("#")) {
