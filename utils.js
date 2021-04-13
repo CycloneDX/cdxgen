@@ -260,7 +260,12 @@ const parseYarnLock = async function (yarnLockFile) {
         return;
       }
       if (!l.startsWith(" ")) {
-        const tmpA = l.split("@");
+        // strip surrounding quotes, if any
+        const tmpA = l.replace(/["']/g, '').split("@");
+        // ignore possible leading empty strings
+        if (tmpA[0] === '') {
+          tmpA.shift();
+        }
         if (tmpA.length >= 2) {
           const fullName = tmpA[0];
           if (fullName.indexOf("/") > -1) {

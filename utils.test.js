@@ -576,7 +576,7 @@ test("parsePnpmLock", async () => {
 
 test("parseYarnLock", async () => {
   let deps = await utils.parseYarnLock("./test/yarn.lock");
-  expect(deps.length).toEqual(51);
+  expect(deps.length).toEqual(56);
   expect(deps[0]).toEqual({
     group: '',
     name: 'asap',
@@ -585,12 +585,12 @@ test("parseYarnLock", async () => {
   });
 
   deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
-  expect(deps.length).toEqual(1463);
+  expect(deps.length).toEqual(2029);
   expect(deps[0]).toEqual({
-    group: '',
-    name: 'JSONStream',
-    version: '4.2.2',
-    _integrity: 'sha256-d291c6a4e97989b5c61d9acf396ae4fe133a718d'
+    group: 'babel',
+    name: 'cli',
+    version: '7.10.1',
+    _integrity: 'sha256-b6e5cd43a17b8f639442ab027976408ebe6d79a0'
   });
   deps.forEach(d => {
     expect(d.name).toBeDefined();
