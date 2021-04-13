@@ -261,7 +261,7 @@ const parseYarnLock = async function (yarnLockFile) {
       }
       if (!l.startsWith(" ")) {
         const tmpA = l.split("@");
-        if (tmpA.length == 2) {
+        if (tmpA.length >= 2) {
           const fullName = tmpA[0];
           if (fullName.indexOf("/") > -1) {
             const parts = fullName.split("/");
