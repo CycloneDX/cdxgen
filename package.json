@@ -57,7 +57,7 @@
     "ssri": "^8.0.0",
     "uuid": "^3.3.2",
     "xmlbuilder": "^13.0.2",
-    "xmldom": "^0.3.0"
+    "xmldom": "^0.6.0"
   },
   "files": [
     "index.js",
