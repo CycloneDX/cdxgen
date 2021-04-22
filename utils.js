@@ -256,12 +256,21 @@ const parseYarnLock = async function (yarnLockFile) {
     let version = "";
     let integrity = "";
     lockData.split("\n").forEach((l) => {
-      if (l === "\n" || l.startsWith("dependencies") || l.startsWith("    ")) {
+      if (
+        l === "\n" ||
+        l.startsWith("dependencies") ||
+        l.startsWith("    ") ||
+        l.startsWith("#")
+      ) {
         return;
       }
       if (!l.startsWith(" ")) {
-        const tmpA = l.split("@");
-        if (tmpA.length == 2) {
+        const tmpA = l.replace(/["']/g, "").split("@");
+        // ignore possible leading empty strings
+        if (tmpA[0] === "") {
+          tmpA.shift();
+        }
+        if (tmpA.length >= 2) {
           const fullName = tmpA[0];
           if (fullName.indexOf("/") > -1) {
             const parts = fullName.split("/");
@@ -276,6 +285,9 @@ const parseYarnLock = async function (yarnLockFile) {
         const parts = l.split(" ");
         if (l.includes("version")) {
           version = parts[1].replace(/"/g, "");
+        }
+        if (l.includes("integrity")) {
+          integrity = parts[1];
         }
         if (l.includes("resolved")) {
           const tmpB = parts[1].split("#");
@@ -1440,17 +1452,16 @@ const parseCsPkgData = async function (pkgData) {
   packages = packages[0].package;
   for (let i in packages) {
     const p = packages[i].$;
-    let pkg = {};
-    const pname = p.id.replace(/\./g, "/");
-    pkg.group = path.dirname(pname).replace(/\//g, ".");
-    if (pkg.group == ".") {
-      pkg.group = "";
-    }
-    pkg.name = path.basename(pname);
+    let pkg = { group: "" };
+    pkg.name = p.id;
     pkg.version = p.version;
     pkgList.push(pkg);
   }
-  return await getNugetMetadata(pkgList);
+  if (process.env.FETCH_LICENSE) {
+    return await getNugetMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
 };
 exports.parseCsPkgData = parseCsPkgData;
 
@@ -1478,33 +1489,23 @@ const parseCsProjData = async function (csProjData) {
       // .net core use PackageReference
       for (let j in item.PackageReference) {
         const pref = item.PackageReference[j].$;
-        let pkg = {};
+        let pkg = { group: "" };
         if (pref.Include.includes(".csproj")) {
           continue;
         }
-        const pname = pref.Include.replace(/\./g, "/");
-        pkg.group = path.dirname(pname).replace(/\//g, ".");
-        if (pkg.group == ".") {
-          pkg.group = "";
-        }
-        pkg.name = path.basename(pname);
+        pkg.name = pref.Include;
         pkg.version = pref.Version;
         pkgList.push(pkg);
       }
       // .net framework use Reference
       for (let j in item.Reference) {
         const pref = item.Reference[j].$;
-        let pkg = {};
+        let pkg = { group: "" };
         if (!pref.Include || pref.Include.includes(".csproj")) {
           continue;
         }
         const incParts = pref.Include.split(",");
-        const pname = incParts[0].replace(/\./g, "/");
-        pkg.group = path.dirname(pname).replace(/\//g, ".");
-        if (pkg.group == ".") {
-          pkg.group = "";
-        }
-        pkg.name = path.basename(pname);
+        pkg.name = incParts[0];
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
@@ -1512,7 +1513,11 @@ const parseCsProjData = async function (csProjData) {
       }
     }
   }
-  return await getNugetMetadata(pkgList);
+  if (process.env.FETCH_LICENSE) {
+    return await getNugetMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
 };
 exports.parseCsProjData = parseCsProjData;
 
