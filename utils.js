@@ -31,7 +31,15 @@ const MAX_LICENSE_ID_LENGTH = 100;
  * @param {string} pattern Glob pattern (eg: *.gradle)
  */
 const getAllFiles = function (dirPath, pattern) {
-  return glob.sync(pattern, { cwd: dirPath, silent: true, absolute: true });
+  return glob.sync(pattern, {
+    cwd: dirPath,
+    silent: true,
+    absolute: true,
+    nocase: true,
+    nodir: true,
+    dot: false,
+    ignore: ["node_modules", "venv", "docs", "examples"],
+  });
 };
 exports.getAllFiles = getAllFiles;
 
