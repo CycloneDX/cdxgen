@@ -201,7 +201,9 @@ const getNpmMetadata = async function (pkgList) {
       cdepList.push(p);
     } catch (err) {
       cdepList.push(p);
-      console.error(err, p);
+      if (DEBUG_MODE) {
+        console.error(err, p);
+      }
     }
   }
   return cdepList;
@@ -379,6 +381,9 @@ const parsePnpmLock = async function (pnpmLock) {
   if (fs.existsSync(pnpmLock)) {
     const lockData = fs.readFileSync(pnpmLock, "utf8");
     const yamlObj = yaml.safeLoad(lockData);
+    if (!yamlObj) {
+      return pkgList;
+    }
     const packages = yamlObj.packages;
     const pkgKeys = Object.keys(packages);
     for (var k in pkgKeys) {
@@ -1308,7 +1313,9 @@ const getRubyGemsMetadata = async function (pkgList) {
       rdepList.push(p);
     } catch (err) {
       rdepList.push(p);
-      console.error(err);
+      if (DEBUG_MODE) {
+        console.error(err);
+      }
     }
   }
   return rdepList;
