@@ -464,7 +464,7 @@ const createJavaBom = async (
     const pomFiles = utils.getAllFiles(path, "pom.xml");
     if (pomFiles && pomFiles.length) {
       let mvnArgs = [
-        "org.cyclonedx:cyclonedx-maven-plugin:2.3.0:makeAggregateBom",
+        "org.cyclonedx:cyclonedx-maven-plugin:2.4.0:makeAggregateBom",
       ];
       // Support for passing additional settings and profile to maven
       if (process.env.MVN_ARGS) {
