@@ -380,7 +380,7 @@ const parsePnpmLock = async function (pnpmLock) {
   const pkgList = [];
   if (fs.existsSync(pnpmLock)) {
     const lockData = fs.readFileSync(pnpmLock, "utf8");
-    const yamlObj = yaml.safeLoad(lockData);
+    const yamlObj = yaml.load(lockData);
     if (!yamlObj) {
       return pkgList;
     }

@@ -40,7 +40,7 @@ jobs:
         run: |
           sudo npm install -g pkg
           npm install
-          pkg -t node14-linux,node14-win,node14-mac package.json --out-path dist
+          pkg -t node14-linux-x64,node14-linux-arm64,node14-win,node14-macos-x64,node14-macos-arm64 package.json --out-path dist
       - name: Test pkg
         run: |
           chmod +x dist/cdxgen*
