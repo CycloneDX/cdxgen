@@ -5,7 +5,7 @@ const ssri = require("ssri");
 test("SSRI test", () => {
   // gopkg.lock hash
   ss = ssri.parse("2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf");
-  expect(ss).toEqual({});
+  expect(ss).toEqual(null);
   ss = ssri.parse("sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf");
   expect(ss.sha256[0].digest).toStrictEqual('2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf');
   ss = ssri.parse("sha256-" + Buffer.from("2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf", "hex").toString("base64"));

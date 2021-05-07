@@ -5,8 +5,8 @@ const pathLib = require("path");
 const request = require("request");
 const ssri = require("ssri");
 const fs = require("fs");
-const uuidv4 = require("uuid/v4");
-const PackageURL = require("packageurl-js");
+const { v4: uuidv4 } = require("uuid");
+const { PackageURL } = require("packageurl-js");
 const builder = require("xmlbuilder");
 const utils = require("./utils");
 const { spawnSync } = require("child_process");
@@ -292,7 +292,7 @@ function processHashes(pkg, component, format = "xml") {
       });
     }
   } else if (pkg._integrity) {
-    let integrity = ssri.parse(pkg._integrity);
+    let integrity = ssri.parse(pkg._integrity) || {};
     // Components may have multiple hashes with various lengths. Check each one
     // that is supported by the CycloneDX specification.
     if (integrity.hasOwnProperty("sha512")) {
@@ -464,7 +464,7 @@ const createJavaBom = async (
     const pomFiles = utils.getAllFiles(path, "pom.xml");
     if (pomFiles && pomFiles.length) {
       let mvnArgs = [
-        "org.cyclonedx:cyclonedx-maven-plugin:2.3.0:makeAggregateBom",
+        "org.cyclonedx:cyclonedx-maven-plugin:2.4.0:makeAggregateBom",
       ];
       // Support for passing additional settings and profile to maven
       if (process.env.MVN_ARGS) {
