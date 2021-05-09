@@ -61,11 +61,11 @@ jobs:
       run: |
         zip --junk-paths -r cdxgen-node16-dist.zip dist-16
     - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            cdxgen-dist.zip
-            cdxgen-node16-dist.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          cdxgen-dist.zip
+          cdxgen-node16-dist.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
