@@ -312,22 +312,33 @@ test("parseGopkgData", async () => {
   });
 });
 
-/*
 test("parse cargo lock", async () => {
-    expect(await utils.parseCargoData(null)).toEqual([]);
-    dep_list = await utils.parseCargoData(
-        fs.readFileSync("./test/Cargo.lock", (encoding = "utf-8"))
-    );
-    expect(dep_list.length).toEqual(224);
-    expect(dep_list[0]).toEqual({
-        group: "",
-        name: "abscissa_core",
-        version: "0.5.2",
-        _integrity:
-            "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a"
-    });
+  expect(await utils.parseCargoData(null)).toEqual([]);
+  dep_list = await utils.parseCargoData(
+    fs.readFileSync("./test/Cargo.lock", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(224);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "abscissa_core",
+    version: "0.5.2",
+    _integrity:
+      "sha384-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
+  });
 });
-*/
+
+test("parse cargo tomml", async () => {
+  expect(await utils.parseCargoTomlData(null)).toEqual([]);
+  dep_list = await utils.parseCargoTomlData(
+    fs.readFileSync("./test/data/Cargo1.toml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "unwind",
+    version: "0.0.0",
+  });
+});
 
 test("get crates metadata", async () => {
   const dep_list = await utils.getCratesMetadata([
@@ -486,7 +497,8 @@ test("get go pkg license", async () => {
   expect(license).toEqual([
     {
       id: "MIT",
-      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
+      url:
+        "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
     },
   ]);
 
@@ -688,22 +700,29 @@ test("parseComposerLock", () => {
   });
 });
 
-/*
 test("parseGemfileLockData", async () => {
-  jest.setTimeout(120000);
-  let deps = await utils.parseGemfileLockData(fs.readFileSync("./test/data/Gemfile.lock", (encoding = "utf-8")));
+  let deps = await utils.parseGemfileLockData(
+    fs.readFileSync("./test/data/Gemfile.lock", (encoding = "utf-8"))
+  );
   expect(deps.length).toEqual(140);
   expect(deps[0]).toEqual({
-    name: 'actioncable',
-    version: '6.0.0',
-    description: 'Structure many real-time application concerns into channels over a single WebSocket connection.',
-    license: [ 'MIT' ],
-    repository: { url: 'https://github.com/rails/rails/tree/v6.0.3.2/actioncable' },
-    homepage: { url: 'https://github.com/rails/rails/issues' },
-    _integrity: 'sha256-66e6b55cac145991a0f1e7d163551f7deda27d91c18ebb3b7b1bbd28d9d8edd9'
+    name: "actioncable",
+    version: "6.0.0",
   });
 });
-*/
+
+test("parseGemspecData", async () => {
+  let deps = await utils.parseGemspecData(
+    fs.readFileSync("./test/data/xmlrpc.gemspec", (encoding = "utf-8"))
+  );
+  expect(deps.length).toEqual(1);
+  expect(deps[0]).toEqual({
+    name: "xmlrpc",
+    version: "0.3.0",
+    description:
+      "XMLRPC is a lightweight protocol that enables remote procedure calls over HTTP.",
+  });
+});
 
 test("parse requirements.txt with comments", async () => {
   jest.setTimeout(120000);
@@ -714,6 +733,21 @@ test("parse requirements.txt with comments", async () => {
     )
   );
   expect(deps.length).toEqual(31);
+});
+
+test("parse wheel metadata", () => {
+  let deps = utils.parseBdistMetadata(
+    fs.readFileSync("./test/data/METADATA", (encoding = "utf-8"))
+  );
+  expect(deps.length).toEqual(1);
+  expect(deps[0]).toEqual({
+    version: "1.26.1",
+    name: "yamllint",
+    description: "A linter for YAML files.",
+    homepage: { url: "https://github.com/adrienverge/yamllint" },
+    license: "GPLv3",
+    repository: { url: "https://github.com/adrienverge/yamllint" },
+  });
 });
 
 test("parse pipfile.lock with hashes", async () => {

@@ -1,6 +1,6 @@
-const readInstalled = require("read-installed");
 const parsePackageJsonName = require("parse-packagejson-name");
 const os = require("os");
+const glob = require("glob");
 const pathLib = require("path");
 const request = require("request");
 const ssri = require("ssri");
@@ -13,6 +13,7 @@ const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
 const semver = require("semver");
+const dockerLib = require("./docker");
 
 // Construct maven command
 let MVN_CMD = "mvn";
@@ -39,7 +40,7 @@ let SBT_CACHE_DIR =
 const DEBUG_MODE =
   process.env.SCAN_DEBUG_MODE === "debug" ||
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
-  process.env.NODE_ENV !== "production";
+  process.env.NODE_ENV === "development";
 
 // CycloneDX Hash pattern
 const HASH_PATTERN =
@@ -179,17 +180,20 @@ function addComponent(
   isRootPkg = false,
   format = "xml"
 ) {
-  //read-installed with default options marks devDependencies as extraneous
-  //if a package is marked as extraneous, do not include it as a component
-  if (pkg.extraneous) return;
+  if (!pkg || pkg.extraneous) {
+    return;
+  }
   if (!isRootPkg) {
     let pkgIdentifier = parsePackageJsonName(pkg.name);
     let group = pkg.group || pkgIdentifier.scope;
     // Create empty group
     group = group || "";
-    let name = pkgIdentifier.fullName || pkg.name;
+    let name = pkgIdentifier.fullName || pkg.name || "";
     // Skip @types package for npm
-    if (ptype == "npm" && (group === "types" || name.startsWith("@types"))) {
+    if (
+      ptype == "npm" &&
+      (group === "types" || !name || name.startsWith("@types"))
+    ) {
       return;
     }
     let version = pkg.version;
@@ -353,17 +357,22 @@ function addComponentHash(alg, digest, component, format = "xml") {
   }
 }
 
-const buildBomString = (
-  { includeBomSerialNumber, pkgInfo, ptype, context },
-  callback
-) => {
+/**
+ * Return the BOM in xml, json format including any namespace mapping
+ */
+const buildBomNSData = (pkgInfo, ptype, context) => {
+  const bomNSData = {
+    bomXml: undefined,
+    bomXmlFiles: undefined,
+    bomJson: undefined,
+    bomJsonFiles: undefined,
+    nsMapping: undefined,
+  };
   let bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.2");
   const serialNum = "urn:uuid:" + uuidv4();
-  if (includeBomSerialNumber) {
-    bom.att("serialNumber", serialNum);
-  }
+  bom.att("serialNumber", serialNum);
   bom.att("version", 1);
   if (context && context.src && context.filename) {
     bom
@@ -397,26 +406,20 @@ const buildBomString = (
       metadata: metadata,
       components: listComponents(allImports, pkgInfo, ptype, "json"),
     };
-    callback(null, bomString, JSON.stringify(jsonTpl, null, 2), nsMapping);
-  } else {
-    callback();
+    bomNSData.bomXml = bomString;
+    bomNSData.bomJson = jsonTpl;
+    bomNSData.nsMapping = nsMapping;
   }
+  return bomNSData;
 };
 
 /**
  * Function to create bom string for Java projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createJavaBom = async (
-  includeBomSerialNumber,
-  path,
-  options,
-  callback
-) => {
+const createJavaBom = async (path, options) => {
   let jarNSMapping = {};
   let pkgList = [];
   // war/ear mode
@@ -441,24 +444,16 @@ const createJavaBom = async (
       // Clean up
       if (tempDir && tempDir.startsWith(os.tmpdir())) {
         console.log(`Cleaning up ${tempDir}`);
-        fs.rmdirSync(tempDir, { recursive: true });
+        fs.rmSync(tempDir, { recursive: true, force: true });
       }
     } else {
       console.log(`${path} doesn't exist`);
     }
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "maven",
-        context: {
-          src: pathLib.dirname(path),
-          filename: path,
-          nsMapping: jarNSMapping,
-        },
-      },
-      callback
-    );
+    return buildBomNSData(pkgList, "maven", {
+      src: pathLib.dirname(path),
+      filename: path,
+      nsMapping: jarNSMapping,
+    });
   } else {
     // maven - pom.xml
     const pomFiles = utils.getAllFiles(path, "pom.xml");
@@ -539,19 +534,11 @@ const createJavaBom = async (
             }
           }
           pkgList = await utils.getMvnMetadata(pkgList);
-          return buildBomString(
-            {
-              includeBomSerialNumber,
-              pkgInfo: pkgList,
-              ptype: "maven",
-              context: {
-                src: path,
-                filename: "pom.xml",
-                nsMapping: jarNSMapping,
-              },
-            },
-            callback
-          );
+          return buildBomNSData(pkgList, "maven", {
+            src: path,
+            filename: "pom.xml",
+            nsMapping: jarNSMapping,
+          });
         }
       } // for
       const firstPath = pathLib.dirname(pomFiles[0]);
@@ -567,11 +554,19 @@ const createJavaBom = async (
             { encoding: "utf-8" }
           );
         }
-        callback(null, bomString, bomJonString, jarNSMapping);
+        const bomNSData = {};
+        bomNSData.bomXml = bomString;
+        bomNSData.bomJson = bomJonString;
+        bomNSData.nsMapping = jarNSMapping;
+        return bomNSData;
       } else {
         const bomFiles = utils.getAllFiles(path, "bom.xml");
         const bomJsonFiles = utils.getAllFiles(path, "bom.json");
-        callback(null, bomFiles, bomJsonFiles, jarNSMapping);
+        const bomNSData = {};
+        bomNSData.bomXmlFiles = bomFiles;
+        bomNSData.bomJsonFiles = bomJsonFiles;
+        bomNSData.nsMapping = jarNSMapping;
+        return bomNSData;
       }
     }
     // gradle
@@ -579,7 +574,7 @@ const createJavaBom = async (
       path,
       (options.multiProject ? "**/" : "") + "build.gradle*"
     );
-    if (gradleFiles && gradleFiles.length) {
+    if (gradleFiles && gradleFiles.length && options.installDeps) {
       let GRADLE_CMD = "gradle";
       if (process.env.GRADLE_HOME) {
         GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
@@ -621,19 +616,11 @@ const createJavaBom = async (
         );
         jarNSMapping = utils.collectJarNS(GRADLE_CACHE_DIR);
       }
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "maven",
-          context: {
-            src: path,
-            filename: "build.gradle",
-            nsMapping: jarNSMapping,
-          },
-        },
-        callback
-      );
+      return buildBomNSData(pkgList, "maven", {
+        src: path,
+        filename: "build.gradle",
+        nsMapping: jarNSMapping,
+      });
     }
     // scala sbt
     let sbtFiles = utils.getAllFiles(
@@ -753,19 +740,11 @@ const createJavaBom = async (
         );
         jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
       }
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "maven",
-          context: {
-            src: path,
-            filename: sbtFiles.join(", "),
-            nsMapping: jarNSMapping,
-          },
-        },
-        callback
-      );
+      return buildBomNSData(pkgList, "maven", {
+        src: path,
+        filename: sbtFiles.join(", "),
+        nsMapping: jarNSMapping,
+      });
     }
   }
 };
@@ -773,17 +752,27 @@ const createJavaBom = async (
 /**
  * Function to create bom string for Node.js projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createNodejsBom = async (
-  includeBomSerialNumber,
-  path,
-  options,
-  callback
-) => {
+const createNodejsBom = async (path, options) => {
+  let pkgList = [];
+  const { allImports } = await findJSImports(path);
+  // Docker mode requires special handling
+  if (options.projectType === "docker") {
+    const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
+    for (let pj of pkgJsonFiles) {
+      const dlist = utils.parsePkgJson(pj);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "npm", {
+      allImports,
+      src: path,
+      filename: "package.json",
+    });
+  }
   const yarnLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "yarn.lock"
@@ -796,9 +785,7 @@ const createNodejsBom = async (
     path,
     (options.multiProject ? "**/" : "") + "pnpm-lock.yaml"
   );
-  const { allImports } = await findJSImports(path);
   if (pnpmLockFiles && pnpmLockFiles.length) {
-    let pkgList = [];
     for (let i in pnpmLockFiles) {
       const f = pnpmLockFiles[i];
       const dlist = utils.parsePnpmLock(f);
@@ -806,17 +793,12 @@ const createNodejsBom = async (
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "npm",
-        context: { allImports, src: path, filename: "pnpm-lock.yaml" },
-      },
-      callback
-    );
+    return buildBomNSData(pkgList, "npm", {
+      allImports,
+      src: path,
+      filename: "pnpm-lock.yaml",
+    });
   } else if (pkgLockFiles && pkgLockFiles.length) {
-    let pkgList = [];
     for (let i in pkgLockFiles) {
       const f = pkgLockFiles[i];
       // Parse package-lock.json if available
@@ -825,26 +807,10 @@ const createNodejsBom = async (
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "npm",
-        context: { allImports, src: path, filename: "package-lock.json" },
-      },
-      callback
-    );
-  } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
-    readInstalled(path, options, (err, pkgInfo) => {
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo,
-          ptype: "npm",
-          context: { allImports, src: path, filename: "package.json" },
-        },
-        callback
-      );
+    return buildBomNSData(pkgList, "npm", {
+      allImports,
+      src: path,
+      filename: "package-lock.json",
     });
   } else if (fs.existsSync(pathLib.join(path, "rush.json"))) {
     // Rush.js creates node_modules inside common/temp directory
@@ -875,26 +841,18 @@ const createNodejsBom = async (
     );
     if (fs.existsSync(swFile)) {
       const pkgList = await utils.parseNodeShrinkwrap(swFile);
-      return buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "npm",
-          context: { allImports, src: path, filename: "shrinkwrap-deps.json" },
-        },
-        callback
-      );
+      return buildBomNSData(pkgList, "npm", {
+        allImports,
+        src: path,
+        filename: "shrinkwrap-deps.json",
+      });
     } else if (fs.existsSync(pnpmLock)) {
       const pkgList = await utils.parsePnpmLock(pnpmLock);
-      return buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "npm",
-          context: { allImports, src: path, filename: "pnpm-lock.yaml" },
-        },
-        callback
-      );
+      return buildBomNSData(pkgList, "npm", {
+        allImports,
+        src: path,
+        filename: "pnpm-lock.yaml",
+      });
     } else {
       console.log(
         "Neither shrinkwrap file: ",
@@ -905,7 +863,6 @@ const createNodejsBom = async (
       );
     }
   } else if (yarnLockFiles && yarnLockFiles.length) {
-    let pkgList = [];
     for (let i in yarnLockFiles) {
       const f = yarnLockFiles[i];
       // Parse yarn.lock if available. This check is after rush.json since
@@ -915,38 +872,39 @@ const createNodejsBom = async (
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "npm",
-        context: { allImports, src: path, filename: "yarn.lock" },
-      },
-      callback
+    return buildBomNSData(pkgList, "npm", {
+      allImports,
+      src: path,
+      filename: "yarn.lock",
+    });
+  } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
+    const pkgJsonFiles = utils.getAllFiles(
+      pathLib.join(path, "node_modules"),
+      "**/package.json"
     );
-  } else {
-    console.error(
-      "Unable to find node_modules or package-lock.json or rush.json or yarn.lock at",
-      path
-    );
-    callback();
+    for (let pkgjf of pkgJsonFiles) {
+      const dlist = utils.parsePkgJson(pkgjf);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "npm", {
+      allImports,
+      src: path,
+      filename: "package.json",
+    });
   }
+  return {};
 };
 
 /**
  * Function to create bom string for Python projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createPythonBom = async (
-  includeBomSerialNumber,
-  path,
-  options,
-  callback
-) => {
+const createPythonBom = async (path, options) => {
+  let pkgList = [];
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFiles = utils.getAllFiles(
@@ -957,26 +915,40 @@ const createPythonBom = async (
     path,
     (options.multiProject ? "**/" : "") + "requirements/*.txt"
   );
+  const metadataFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/site-packages/**/" : "") + "METADATA"
+  );
   const setupPy = pathLib.join(path, "setup.py");
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const setupPyMode = fs.existsSync(setupPy);
+  if (metadataFiles && metadataFiles.length) {
+    for (let mf of metadataFiles) {
+      const mData = fs.readFileSync(mf, {
+        encoding: "utf-8",
+      });
+      const dlist = utils.parseBdistMetadata(mData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "pypi", {
+      src: path,
+      filename: metadataFiles.join(", "),
+    });
+  }
   if (requirementsMode || pipenvMode || poetryMode || setupPyMode) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path, encoding: "utf-8" });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
       if (fs.existsSync(piplockFile)) {
         const lockData = JSON.parse(fs.readFileSync(piplockFile));
-        const pkgList = await utils.parsePiplockData(lockData);
-        buildBomString(
-          {
-            includeBomSerialNumber,
-            pkgInfo: pkgList,
-            ptype: "pypi",
-            context: { src: path, filename: "Pipfile.lock" },
-          },
-          callback
-        );
+        pkgList = await utils.parsePiplockData(lockData);
+        return buildBomNSData(pkgList, "pypi", {
+          src: path,
+          filename: "Pipfile.lock",
+        });
       } else {
         console.error("Pipfile.lock not found at", path);
       }
@@ -985,18 +957,12 @@ const createPythonBom = async (
       const lockData = fs.readFileSync(poetrylockFile, {
         encoding: "utf-8",
       });
-      const pkgList = await utils.parsePoetrylockData(lockData);
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "pypi",
-          context: { src: path, filename: "poetry.lock" },
-        },
-        callback
-      );
+      pkgList = await utils.parsePoetrylockData(lockData);
+      return buildBomNSData(pkgList, "pypi", {
+        src: path,
+        filename: "poetry.lock",
+      });
     } else if (requirementsMode) {
-      let pkgList = [];
       let metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
         for (let i in reqFiles) {
@@ -1019,46 +985,29 @@ const createPythonBom = async (
         }
         metadataFilename = reqDirFiles.join(", ");
       }
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "pypi",
-          context: { src: path, filename: metadataFilename },
-        },
-        callback
-      );
+      return buildBomNSData(pkgList, "pypi", {
+        src: path,
+        filename: metadataFilename,
+      });
     } else if (setupPyMode) {
       const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
-      const pkgList = await utils.parseSetupPyFile(setupPyData);
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "pypi",
-          context: { src: path, filename: "setup.py" },
-        },
-        callback
-      );
-    } else {
-      console.error(
-        "Unable to find requirements.txt or Pipfile.lock for the python project at",
-        path
-      );
-      callback();
+      pkgList = await utils.parseSetupPyFile(setupPyData);
+      return buildBomNSData(pkgList, "pypi", {
+        src: path,
+        filename: "setup.py",
+      });
     }
   }
+  return {};
 };
 
 /**
  * Function to create bom string for Go projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
+const createGoBom = async (path, options) => {
   let pkgList = [];
 
   // Read in go.sum and merge all go.sum files.
@@ -1085,15 +1034,10 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "golang",
-        context: { src: path, filename: gosumFiles.join(", ") },
-      },
-      callback
-    );
+    return buildBomNSData(pkgList, "golang", {
+      src: path,
+      filename: gosumFiles.join(", "),
+    });
   }
 
   // If USE_GOSUM is false, generate BOM components using go.mod.
@@ -1137,15 +1081,10 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "golang",
-        context: { src: path, filename: gomodFiles.join(", ") },
-      },
-      callback
-    );
+    return buildBomNSData(pkgList, "golang", {
+      src: path,
+      filename: gomodFiles.join(", "),
+    });
   } else if (gopkgLockFiles.length) {
     for (let i in gopkgLockFiles) {
       const f = gopkgLockFiles[i];
@@ -1160,38 +1099,21 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "golang",
-        context: { src: path, filename: gopkgLockFiles.join(", ") },
-      },
-      callback
-    );
-  } else {
-    console.error(
-      "Unable to find go.sum or Gopkg.lock for the project at",
-      path
-    );
-    callback();
+    return buildBomNSData(pkgList, "golang", {
+      src: path,
+      filename: gopkgLockFiles.join(", "),
+    });
   }
+  return {};
 };
 
 /**
  * Function to create bom string for Rust projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createRustBom = async (
-  includeBomSerialNumber,
-  path,
-  options,
-  callback
-) => {
+const createRustBom = async (path, options) => {
   let cargoLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock"
@@ -1204,22 +1126,22 @@ const createRustBom = async (
   const cargoMode = cargoFiles.length;
   let cargoLockMode = cargoLockFiles.length;
   if (cargoMode && !cargoLockMode) {
-    // Run cargo update in all directories with Cargo.toml
     for (let i in cargoFiles) {
       const f = cargoFiles[i];
       const basePath = pathLib.dirname(f);
-      console.log("Executing 'cargo update' in", basePath);
-      result = spawnSync("cargo", ["update"], {
-        cwd: basePath,
-        encoding: "utf-8",
-      });
-      if (result.status == 1 || result.error) {
-        console.error(
-          "cargo update has failed. Check if cargo is installed and available in PATH."
-        );
-        console.log(result.error, result.stderr);
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const cargoData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseCargoTomlData(cargoData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
       }
     }
+    return buildBomNSData(pkgList, "crates", {
+      src: path,
+      filename: cargoFiles.join(", "),
+    });
   }
   // Get the new lock files
   cargoLockFiles = utils.getAllFiles(
@@ -1238,38 +1160,21 @@ const createRustBom = async (
         pkgList = pkgList.concat(dlist);
       }
     }
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "crates",
-        context: { src: path, filename: cargoLockFiles.join(", ") },
-      },
-      callback
-    );
-  } else {
-    console.error(
-      "Unable to find or generate Cargo.lock for the rust project at",
-      path
-    );
-    callback();
+    return buildBomNSData(pkgList, "crates", {
+      src: path,
+      filename: cargoLockFiles.join(", "),
+    });
   }
+  return {};
 };
 
 /**
  * Function to create bom string for php projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createPHPBom = async (
-  includeBomSerialNumber,
-  path,
-  options,
-  callback
-) => {
+const createPHPBom = async (path, options) => {
   const composerJsonFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.json"
@@ -1281,7 +1186,7 @@ const createPHPBom = async (
   let pkgList = [];
   const composerJsonMode = composerJsonFiles.length;
   const composerLockMode = composerLockFiles.length;
-  if (!composerLockMode && composerJsonMode) {
+  if (!composerLockMode && composerJsonMode && options.installDeps) {
     for (let i in composerJsonFiles) {
       const f = composerJsonFiles[i];
       const basePath = pathLib.dirname(f);
@@ -1313,38 +1218,21 @@ const createPHPBom = async (
         pkgList = pkgList.concat(dlist);
       }
     }
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "composer",
-        context: { src: path, filename: composerLockFiles.join(", ") },
-      },
-      callback
-    );
-  } else {
-    console.error(
-      "Unable to find composer.lock or composer.json for the php project at",
-      path
-    );
-    callback();
+    return buildBomNSData(pkgList, "composer", {
+      src: path,
+      filename: composerLockFiles.join(", "),
+    });
   }
+  return {};
 };
 
 /**
  * Function to create bom string for ruby projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createRubyBom = async (
-  includeBomSerialNumber,
-  path,
-  options,
-  callback
-) => {
+const createRubyBom = async (path, options) => {
   const gemFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile"
@@ -1356,7 +1244,7 @@ const createRubyBom = async (
   let pkgList = [];
   const gemFileMode = gemFiles.length;
   let gemLockMode = gemLockFiles.length;
-  if (gemFileMode && !gemLockMode) {
+  if (gemFileMode && !gemLockMode && options.installDeps) {
     for (let i in gemFiles) {
       const f = gemFiles[i];
       const basePath = pathLib.dirname(f);
@@ -1389,35 +1277,21 @@ const createRubyBom = async (
         pkgList = pkgList.concat(dlist);
       }
     }
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "rubygems",
-        context: { src: path, filename: gemLockFiles.join(", ") },
-      },
-      callback
-    );
-  } else {
-    console.error("Unable to find Gemfile.lock for the ruby project at", path);
-    callback();
+    return buildBomNSData(pkgList, "rubygems", {
+      src: path,
+      filename: gemLockFiles.join(", "),
+    });
   }
+  return {};
 };
 
 /**
  * Function to create bom string for csharp projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createCsharpBom = async (
-  includeBomSerialNumber,
-  path,
-  options,
-  callback
-) => {
+const createCsharpBom = async (path, options) => {
   const csProjFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj"
@@ -1459,30 +1333,129 @@ const createCsharpBom = async (
     }
   }
   if (pkgList.length) {
-    buildBomString(
-      {
-        includeBomSerialNumber,
-        pkgInfo: pkgList,
-        ptype: "nuget",
-        context: { src: path, filename: csProjFiles.join(", ") },
-      },
-      callback
-    );
-  } else {
-    console.error("Unable to find .Net core dependencies at", path);
-    callback();
+    return buildBomNSData(pkgList, "nuget", {
+      src: path,
+      filename: csProjFiles.join(", "),
+    });
   }
+  return {};
+};
+
+const trimComponents = (components) => {
+  const keyCache = {};
+  const filteredComponents = [];
+  for (let comp of components) {
+    if (!keyCache[comp.purl]) {
+      keyCache[comp.purl] = true;
+      filteredComponents.push(comp);
+    }
+  }
+  return filteredComponents;
+};
+exports.trimComponents = trimComponents;
+
+/**
+ * Function to create bom string for all languages
+ *
+ * @param pathList list of to the project
+ * @param options Parse options from the cli
+ */
+const createMultiXBom = async (pathList, options) => {
+  let components = [];
+  let bomData = undefined;
+  for (let path of pathList) {
+    bomData = await createNodejsBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} node.js packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+    bomData = await createJavaBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} java packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+    bomData = await createPythonBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} python packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+    bomData = await createGoBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} go packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+    bomData = await createRustBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} rust packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+    bomData = await createPHPBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} php packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+    bomData = await createRubyBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} ruby packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+    bomData = await createCsharpBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} csharp packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+  }
+  components = trimComponents(components);
+  console.log(`BOM includes ${components.length} components`);
+  return {
+    bomFormat: "CycloneDX",
+    specVersion: "1.2",
+    serialNumber: "urn:uuid:" + uuidv4(),
+    version: 1,
+    metadata: addMetadata(),
+    components,
+  };
 };
 
 /**
  * Function to create bom string for various languages
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-const createXBom = async (includeBomSerialNumber, path, options, callback) => {
+const createXBom = async (path, options) => {
   try {
     fs.accessSync(path, fs.constants.R_OK);
   } catch (err) {
@@ -1495,12 +1468,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     fs.existsSync(pathLib.join(path, "package.json")) ||
     fs.existsSync(pathLib.join(path, "rush.json"))
   ) {
-    return await createNodejsBom(
-      includeBomSerialNumber,
-      path,
-      options,
-      callback
-    );
+    return await createNodejsBom(path, options);
   }
   // maven - pom.xml
   const pomFiles = utils.getAllFiles(path, "pom.xml");
@@ -1515,7 +1483,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "build.sbt*"
   );
   if (pomFiles.length || gradleFiles.length || sbtFiles.length) {
-    return await createJavaBom(includeBomSerialNumber, path, options, callback);
+    return await createJavaBom(path, options);
   }
   // python
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
@@ -1533,12 +1501,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const setupPyMode = fs.existsSync(setupPy);
   if (requirementsMode || pipenvMode || poetryMode || setupPyMode) {
-    return await createPythonBom(
-      includeBomSerialNumber,
-      path,
-      options,
-      callback
-    );
+    return await createPythonBom(path, options);
   }
   // go
   const gosumFiles = utils.getAllFiles(
@@ -1554,7 +1517,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "Gopkg.lock"
   );
   if (gomodFiles.length || gosumFiles.length || gopkgLockFiles.length) {
-    return await createGoBom(includeBomSerialNumber, path, options, callback);
+    return await createGoBom(path, options);
   }
 
   // rust
@@ -1567,7 +1530,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "Cargo.toml"
   );
   if (cargoLockFiles.length || cargoFiles.length) {
-    return await createRustBom(includeBomSerialNumber, path, options, callback);
+    return await createRustBom(path, options);
   }
 
   // php
@@ -1580,7 +1543,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "composer.lock"
   );
   if (composerJsonFiles.length || composerLockFiles.length) {
-    return await createPHPBom(includeBomSerialNumber, path, options, callback);
+    return await createPHPBom(path, options);
   }
 
   // Ruby
@@ -1593,7 +1556,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "Gemfile.lock"
   );
   if (gemFiles.length || gemLockFiles.length) {
-    return await createRubyBom(includeBomSerialNumber, path, options, callback);
+    return await createRubyBom(path, options);
   }
 
   // .Net
@@ -1602,29 +1565,55 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "*.csproj"
   );
   if (csProjFiles.length) {
-    return await createCsharpBom(
-      includeBomSerialNumber,
-      path,
-      options,
-      callback
-    );
+    return await createCsharpBom(path, options);
   }
 };
 
 /**
  * Function to create bom string for various languages
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
- * @param callback Function callback
  */
-exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
+exports.createBom = async (path, options) => {
   let { projectType } = options;
   if (!projectType) {
     projectType = "";
   }
   projectType = projectType.toLowerCase();
+  // Docker support
+  if (
+    projectType === "docker" ||
+    projectType === "podman" ||
+    projectType === "oci" ||
+    path.startsWith("docker.io") ||
+    path.startsWith("quay.io") ||
+    path.includes("@sha256") ||
+    path.includes(":latest")
+  ) {
+    const exportData = await dockerLib.exportImage(path);
+    if (!exportData) {
+      console.log(
+        "BOM generation has failed due to problems with exporting the image"
+      );
+      return {};
+    }
+    options.multiProject = true;
+    options.installDeps = false;
+    options.projectType = "docker";
+    const bomJsonData = await createMultiXBom(
+      [...new Set(exportData.pkgPathList)],
+      options
+    );
+    if (
+      exportData.allLayersDir &&
+      exportData.allLayersDir.startsWith(os.tmpdir())
+    ) {
+      console.log(`Cleaning up ${exportData.allLayersDir}`);
+      fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+    }
+    return { bomJson: bomJsonData };
+  }
   if (path.endsWith(".war")) {
     projectType = "java";
   }
@@ -1634,68 +1623,34 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     case "kotlin":
     case "scala":
     case "jvm":
-      return await createJavaBom(
-        includeBomSerialNumber,
-        path,
-        options,
-        callback
-      );
+      return await createJavaBom(path, options);
     case "nodejs":
     case "js":
     case "javascript":
     case "typescript":
     case "ts":
-      return await createNodejsBom(
-        includeBomSerialNumber,
-        path,
-        options,
-        callback
-      );
+      return await createNodejsBom(path, options);
     case "python":
     case "py":
-      return await createPythonBom(
-        includeBomSerialNumber,
-        path,
-        options,
-        callback
-      );
+      return await createPythonBom(path, options);
     case "go":
     case "golang":
-      return await createGoBom(includeBomSerialNumber, path, options, callback);
+      return await createGoBom(path, options);
     case "rust":
     case "rust-lang":
-      return await createRustBom(
-        includeBomSerialNumber,
-        path,
-        options,
-        callback
-      );
+      return await createRustBom(path, options);
     case "php":
-      return await createPHPBom(
-        includeBomSerialNumber,
-        path,
-        options,
-        callback
-      );
+      return await createPHPBom(path, options);
     case "ruby":
-      return await createRubyBom(
-        includeBomSerialNumber,
-        path,
-        options,
-        callback
-      );
+      return await createRubyBom(path, options);
     case "csharp":
     case "netcore":
     case "dotnet":
-      return await createCsharpBom(
-        includeBomSerialNumber,
-        path,
-        options,
-        callback
-      );
+      return await createCsharpBom(path, options);
     default:
-      return await createXBom(includeBomSerialNumber, path, options, callback);
+      return await createXBom(path, options);
   }
+  return {};
 };
 
 /**

@@ -4,17 +4,18 @@ This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containi
 
 ## Supported languages and package format
 
-| Language       | Package format                                                |
-| -------------- | ------------------------------------------------------------- |
-| node.js        | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js         |
-| java           | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt) |
-| php            | composer.lock                                                 |
-| python         | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock     |
-| go             | go.mod, go.sum, Gopkg.lock                                    |
-| ruby           | Gemfile.lock                                                  |
-| rust           | Cargo.lock                                                    |
-| .Net Framework | .csproj, packages.config                                      |
-| .Net core      | .csproj, packages.config                                      |
+| Language           | Package format                                                         |
+| ------------------ | ---------------------------------------------------------------------- |
+| node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js                  |
+| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt)          |
+| php                | composer.lock                                                          |
+| python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel |
+| go                 | go.mod, go.sum, Gopkg.lock                                             |
+| ruby               | Gemfile.lock, gemspec                                                  |
+| rust               | Cargo.toml, Cargo.lock                                                 |
+| .Net Framework     | .csproj, packages.config                                               |
+| .Net core          | .csproj, packages.config                                               |
+| docker / oci image | All supported languages excluding OS packages                          |
 
 NOTE:
 
@@ -25,8 +26,8 @@ NOTE:
 
 Footnotes:
 
-[1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
-[2] - Use pip freeze to improve the accuracy for requirements.txt based parsing.
+- [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
+- [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing.
 
 ### Automatic usage detection (Node.js)
 
@@ -81,6 +82,24 @@ For a java project. This would automatically detect maven, gradle or sbt and bui
 cdxgen -t java -o bom.xml
 ```
 
+### Docker / OCI container support
+
+`docker` type is automatically detected based on the presence of values such as `sha256` or `docker.io` prefix etc.
+
+```bash
+cdxgen odoo@sha256:4e1e147f0e6714e8f8c5806d2b484075b4076ca50490577cdf9162566086d15e -o /tmp/bom.json
+```
+
+You can also pass `-t docker` for simple labels. Only the `latest` tag would be pulled if none was specified.
+
+```bash
+cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
+```
+
+NOTE:
+
+Only application related packages are collected by cdxgen. Support for collecting OS packages in the images would be added in version 4 or above. If you would like to sponsor this feature please contact me.
+
 ### War file support
 
 cdxgen can generate a BoM file from a given war file.
@@ -99,6 +118,14 @@ cdxgen -t java --resolve-class -o bom.json
 ```
 
 This would create a bom.json.map file with the jar - class name mapping. Refer to [these](test/data/bom-maven.json.map) [examples](test/data/bom-gradle.json.map) to learn about the structure.
+
+## Resolving licenses
+
+cdxgen can automatically query the public registries such as maven or npm or nuget to resolve the package licenses. This is a time consuming operation and is disabled by default. To enable, set the environment variable `FETCH_LICENSE` to `true` as shown.
+
+```bash
+export FETCH_LICENSE=true
+```
 
 ## Environment variables
 

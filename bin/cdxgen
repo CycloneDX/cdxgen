@@ -61,7 +61,7 @@ if (args.version) {
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
-  const globalAgent = require('global-agent');
+  const globalAgent = require("global-agent");
   globalAgent.bootstrap();
 }
 
@@ -76,68 +76,61 @@ let options = {
   depth: 3,
   output: args.output,
   resolveClass: args.resolveClass,
+  installDeps: true,
 };
 
 let filePath = args._[0] || ".";
 
 /**
  * Method to start the bom creation process
- *
- * @param includeBomSerialNumber Boolean to include BOM serial number
- * @param path to the project
- * @param options Parse options from the cli
- * @param callback Callback function accepting err, bomData
  */
-bom.createBom(
-  true,
-  filePath,
-  options,
-  (err, bomData, bomJsonData, nsMapping) => {
-    if (!args.projectName) {
-      if (filePath !== ".") {
-        args.projectName = path.basename(filePath);
-      } else {
-        args.projectName = path.basename(path.resolve(filePath));
-      }
-    }
-    if (args.output) {
-      if (Array.isArray(bomData)) {
-        console.log("BOM files produced:", bomData);
-      } else {
-        const jsonFile = args.output.replace(".xml", ".json");
-        // Create bom json file
-        if (bomJsonData) {
-          fs.writeFile(jsonFile, bomJsonData, () => {});
-        }
-        // Create bom xml file
-        if (bomData) {
-          const xmlFile = args.output.replace(".json", ".xml");
-          fs.writeFile(xmlFile, bomData, () => {});
-          console.log("BOM file written to", args.output);
-        }
-        //
-        if (nsMapping && Object.keys(nsMapping).length) {
-          const nsFile = jsonFile + ".map";
-          fs.writeFile(nsFile, JSON.stringify(nsMapping), () => {});
-          console.log("Namespace mapping file written to", nsFile);
-        }
-      }
-    } else {
-      if (bomJsonData) {
-        console.log(Buffer.from(bomJsonData).toString());
-      } else if (bomData) {
-        console.log(Buffer.from(bomData).toString());
-      } else {
-        console.log("Unable to produce BOM for", filePath);
-      }
-    }
+(async () => {
+  const bomNSData = (await bom.createBom(filePath, options)) || {};
 
-    // Automatically submit the bom data
-    if (args.serverUrl && args.apiKey) {
-      bom.submitBom(args, bomData, function (err, res, body) {
-        if (err) console.log(err);
-        console.log("Response from server", body);
-      });
+  if (!args.projectName) {
+    if (filePath !== ".") {
+      args.projectName = path.basename(filePath);
+    } else {
+      args.projectName = path.basename(path.resolve(filePath));
     }
   }
-);
+  if (args.output) {
+    if (bomNSData.bomXmlFiles) {
+      console.log("BOM files produced:", bomNSData.bomXmlFiles);
+    } else {
+      const jsonFile = args.output.replace(".xml", ".json");
+      // Create bom json file
+      if (bomNSData.bomJson) {
+        fs.writeFileSync(jsonFile, JSON.stringify(bomNSData.bomJson, null, 2));
+      }
+      // Create bom xml file
+      if (bomNSData.bomXml) {
+        const xmlFile = args.output.replace(".json", ".xml");
+        fs.writeFileSync(xmlFile, bomNSData.bomXml);
+        console.log("BOM file written to", args.output);
+      }
+      //
+      if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
+        const nsFile = jsonFile + ".map";
+        fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
+        console.log("Namespace mapping file written to", nsFile);
+      }
+    }
+  } else {
+    if (bomNSData.bomJson) {
+      console.log(JSON.stringify(bomNSData.bomJson, null, 2));
+    } else if (bomNSData.bomXml) {
+      console.log(Buffer.from(bomNSData.bomXml).toString());
+    } else {
+      console.log("Unable to produce BOM for", filePath);
+    }
+  }
+
+  // Automatically submit the bom data
+  if (args.serverUrl && args.apiKey) {
+    bom.submitBom(args, bomNSData.bomXml, function (err, res, body) {
+      if (err) console.log(err);
+      console.log("Response from server", body);
+    });
+  }
+})();

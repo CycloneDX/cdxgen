@@ -16,7 +16,15 @@
       "Apache Software License - Version 2.0",
       "The Apache License, Version 2.0",
       "BSD or Apache License, Version 2.0",
-      "Apache Software License"
+      "Apache Software License",
+      "Apache-2.0 OR MIT"
+    ]
+  },
+  {
+    "exp": "0BSD",
+    "names": [
+      "Zero-Clause BSD",
+      "BSD"
     ]
   },
   {
@@ -239,7 +247,8 @@
       "MIT License",
       "The MIT License",
       "MIT license",
-      "The MIT License (MIT)"
+      "The MIT License (MIT)",
+      "Apache-2.0 OR MIT"
     ]
   },
   {

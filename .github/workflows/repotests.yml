@@ -1,0 +1,88 @@
+name: cdxgen tests
+
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+      - release/*
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm test
+          mkdir -p repotests
+          mkdir -p bomresults
+        env:
+          CI: true
+      - uses: actions/checkout@v2
+        with:
+          repository: 'ShiftLeftSecurity/shiftleft-csharp-example'
+          path: 'repotests/shiftleft-csharp-example'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'ShiftLeftSecurity/shiftleft-java-example'
+          path: 'repotests/shiftleft-java-example'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'ShiftLeftSecurity/shiftleft-ts-example'
+          path: 'repotests/shiftleft-ts-example'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'ShiftLeftSecurity/shiftleft-go-example'
+          path: 'repotests/shiftleft-go-example'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'prabhu/shiftleft-scala-example'
+          path: 'repotests/shiftleft-scala-example'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'HooliCorp/vulnerable_net_core'
+          path: 'repotests/vulnerable_net_core'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'HooliCorp/DjanGoat'
+          path: 'repotests/DjanGoat'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'prabhu/Vulnerable-Web-Application'
+          path: 'repotests/Vulnerable-Web-Application'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'prabhu/railsgoat'
+          path: 'repotests/railsgoat'
+      - name: repotests
+        run: |
+          echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+          curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add
+          sudo apt update -y
+          sudo apt-get install sbt -y
+          bin/cdxgen -r -t csharp repotests/shiftleft-csharp-example -o bomresults/bom-csharp.json
+          bin/cdxgen -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
+          bin/cdxgen -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
+          bin/cdxgen -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
+          bin/cdxgen -r -t scala repotests/shiftleft-scala-example -o bomresults/bom-scala.json
+          bin/cdxgen -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
+          bin/cdxgen -r -t python repotests/DjanGoat -o bomresults/bom-python.json
+          bin/cdxgen -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json
+          bin/cdxgen -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json
+          ls -ltr bomresults
+      - uses: actions/upload-artifact@v1
+        with:
+          name: bomresults
+          path: bomresults

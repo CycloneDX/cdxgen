@@ -1,6 +1,7 @@
 const glob = require("glob");
 const os = require("os");
 const path = require("path");
+const parsePackageJsonName = require("parse-packagejson-name");
 const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
@@ -31,15 +32,29 @@ const MAX_LICENSE_ID_LENGTH = 100;
  * @param {string} pattern Glob pattern (eg: *.gradle)
  */
 const getAllFiles = function (dirPath, pattern) {
-  return glob.sync(pattern, {
-    cwd: dirPath,
-    silent: true,
-    absolute: true,
-    nocase: true,
-    nodir: true,
-    dot: false,
-    ignore: ["node_modules", "venv", "docs", "examples"],
-  });
+  try {
+    return glob.sync(pattern, {
+      cwd: dirPath,
+      silent: true,
+      absolute: true,
+      nocase: true,
+      nodir: true,
+      dot: false,
+      follow: false,
+      ignore: [
+        "node_modules",
+        ".hg",
+        ".git",
+        "venv",
+        "docs",
+        "examples",
+        "site-packages",
+      ],
+    });
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 };
 exports.getAllFiles = getAllFiles;
 
@@ -238,6 +253,28 @@ const _getDepPkgList = async function (pkgList, pkg) {
 };
 
 /**
+ * Parse nodejs package json file
+ *
+ * @param {string} pkgJsonFile package.json file
+ */
+const parsePkgJson = function (pkgJsonFile) {
+  const pkgList = [];
+  if (fs.existsSync(pkgJsonFile)) {
+    try {
+      const pkgData = JSON.parse(fs.readFileSync(pkgJsonFile, "utf8"));
+      const pkgIdentifier = parsePackageJsonName(pkgData.name);
+      pkgList.push({
+        name: pkgIdentifier.fullName || pkgData.name,
+        group: pkgIdentifier.scope || "",
+        version: pkgData.version,
+      });
+    } catch (err) {}
+  }
+  return pkgList;
+};
+exports.parsePkgJson = parsePkgJson;
+
+/**
  * Parse nodejs package lock file
  *
  * @param {string} pkgLockFile package-lock.json file
@@ -245,7 +282,7 @@ const _getDepPkgList = async function (pkgList, pkg) {
 const parsePkgLock = async function (pkgLockFile) {
   const pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
-    lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
     return await _getDepPkgList(pkgList, lockData);
   }
   return pkgList;
@@ -611,6 +648,9 @@ const getMvnMetadata = async function (pkgList) {
   const ANDROID_MAVEN = "https://maven.google.com/";
   const JCENTER_MAVEN = "https://jcenter.bintray.com/";
   const cdepList = [];
+  if (!pkgList || !pkgList.length) {
+    return pkgList;
+  }
   if (DEBUG_MODE) {
     console.log(`About to query maven for ${pkgList.length} packages`);
   }
@@ -791,6 +831,32 @@ const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
   return cdepList;
 };
 exports.getPyMetadata = getPyMetadata;
+
+/**
+ * Method to parse bdist_wheel metadata
+ *
+ * @param {Object} mData bdist_wheel metadata
+ */
+const parseBdistMetadata = function (mData) {
+  const pkg = {};
+  mData.split("\n").forEach((l) => {
+    if (l.indexOf("Name: ") > -1) {
+      pkg.name = l.split("Name: ")[1];
+    } else if (l.indexOf("Version: ") > -1) {
+      pkg.version = l.split("Version: ")[1];
+    } else if (l.indexOf("Summary: ") > -1) {
+      pkg.description = l.split("Summary: ")[1];
+    } else if (l.indexOf("License: ") > -1) {
+      pkg.license = findLicenseId(l.split("License: ")[1]);
+    } else if (l.indexOf("Home-page: ") > -1) {
+      pkg.homepage = { url: l.split("Home-page: ")[1] };
+    } else if (l.indexOf("Project-URL: Source Code, ") > -1) {
+      pkg.repository = { url: l.split("Project-URL: Source Code, ")[1] };
+    }
+  });
+  return [pkg];
+};
+exports.parseBdistMetadata = parseBdistMetadata;
 
 /**
  * Method to parse pipfile.lock data
@@ -1314,13 +1380,52 @@ const getRubyGemsMetadata = async function (pkgList) {
     } catch (err) {
       rdepList.push(p);
       if (DEBUG_MODE) {
-        console.error(err);
+        console.error(p, err);
       }
     }
   }
   return rdepList;
 };
 exports.getRubyGemsMetadata = getRubyGemsMetadata;
+
+/**
+ * Method to parse Gemspec
+ *
+ * @param {*} gemspecData Gemspec data
+ */
+const parseGemspecData = async function (gemspecData) {
+  let pkgList = [];
+  const pkg = {};
+  if (!gemspecData) {
+    return pkgList;
+  }
+  gemspecData.split("\n").forEach((l) => {
+    l = l.trim();
+    if (l.includes(".name = ")) {
+      pkg.name = l
+        .split(".name = ")[1]
+        .replace(".freeze", "")
+        .replace(/\"/g, "");
+    } else if (l.includes(".version = ")) {
+      pkg.version = l
+        .split(".version = ")[1]
+        .replace(".freeze", "")
+        .replace(/\"/g, "");
+    } else if (l.includes(".description = ")) {
+      pkg.description = l
+        .split(".description = ")[1]
+        .replace(".freeze", "")
+        .replace(/\"/g, "");
+    }
+  });
+  pkgList = [pkg];
+  if (process.env.FETCH_LICENSE) {
+    return await getRubyGemsMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
+};
+exports.parseGemspecData = parseGemspecData;
 
 /**
  * Method to parse Gemfile.lock
@@ -1364,7 +1469,11 @@ const parseGemfileLockData = async function (gemLockData) {
       specsFound = false;
     }
   });
-  return await getRubyGemsMetadata(pkgList);
+  if (process.env.FETCH_LICENSE) {
+    return await getRubyGemsMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
 };
 exports.parseGemfileLockData = parseGemfileLockData;
 
@@ -1407,6 +1516,51 @@ const getCratesMetadata = async function (pkgList) {
 };
 exports.getCratesMetadata = getCratesMetadata;
 
+const parseCargoTomlData = async function (cargoData) {
+  let pkgList = [];
+  if (!cargoData) {
+    return pkgList;
+  }
+  let pkg = null;
+  cargoData.split("\n").forEach((l) => {
+    let key = null;
+    let value = null;
+    if (l.indexOf("[package]") > -1) {
+      if (pkg) {
+        pkgList.push(pkg);
+      }
+      pkg = {};
+    }
+    if (l.indexOf("=") > -1) {
+      const tmpA = l.split("=");
+      key = tmpA[0].trim();
+      value = tmpA[1].trim().replace(/\"/g, "");
+      switch (key) {
+        case "checksum":
+          pkg._integrity = "sha384-" + value;
+          break;
+        case "name":
+          pkg.group = path.dirname(value);
+          if (pkg.group === ".") {
+            pkg.group = "";
+          }
+          pkg.name = path.basename(value);
+          break;
+        case "version":
+          pkg.version = value;
+          break;
+      }
+    }
+  });
+  pkgList = [pkg];
+  if (process.env.FETCH_LICENSE) {
+    return await getCratesMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
+};
+exports.parseCargoTomlData = parseCargoTomlData;
+
 const parseCargoData = async function (cargoData) {
   const pkgList = [];
   if (!cargoData) {
@@ -1443,7 +1597,11 @@ const parseCargoData = async function (cargoData) {
       }
     }
   });
-  return await getCratesMetadata(pkgList);
+  if (process.env.FETCH_LICENSE) {
+    return await getCratesMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
 };
 exports.parseCargoData = parseCargoData;
 
@@ -1714,7 +1872,7 @@ const collectMvnDependencies = function (mavenCmd, basePath) {
   // Clean up
   if (tempDir && tempDir.startsWith(os.tmpdir())) {
     console.log(`Cleaning up ${tempDir}`);
-    fs.rmdirSync(tempDir, { recursive: true });
+    fs.rmSync(tempDir, { recursive: true, force: true });
   }
   return jarNSMapping;
 };
@@ -1962,7 +2120,10 @@ const extractJarArchive = function (jarFile, tempDir) {
           }
         }
         // Clean up META-INF
-        fs.rmdirSync(path.join(tempDir, "META-INF"), { recursive: true });
+        fs.rmSync(path.join(tempDir, "META-INF"), {
+          recursive: true,
+          force: true,
+        });
       }
     }
   }
