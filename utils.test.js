@@ -59,6 +59,16 @@ test("parse gradle dependencies", () => {
     },
     version: "1.0.2",
   });
+  dep_list = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-out1.dep", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(89);
+  expect(dep_list[0]).toEqual({
+    group: 'org.springframework.boot',
+    name: 'spring-boot-starter',
+    version: '2.2.0.RELEASE',
+    qualifiers: { type: 'jar' }
+  });
 });
 
 test("parse maven tree", () => {
@@ -144,7 +154,7 @@ test("get py metadata", async () => {
       description: "A simple framework for building complex web applications.",
       group: "",
       homepage: {
-        url: "https://palletsprojects.com/p/flask/",
+        url: "https://palletsprojects.com/p/flask",
       },
       license: "BSD-3-Clause",
       name: "Flask",
