@@ -611,15 +611,12 @@ const getMvnMetadata = async function (pkgList) {
   const ANDROID_MAVEN = "https://maven.google.com/";
   const JCENTER_MAVEN = "https://jcenter.bintray.com/";
   const cdepList = [];
+  if (DEBUG_MODE) {
+    console.log(`About to query maven for ${pkgList.length} packages`);
+  }
   for (const p of pkgList) {
     // If the package already has key metadata skip querying maven
-    if (
-      p.group &&
-      p.name &&
-      p.version &&
-      p.description &&
-      !process.env.FETCH_LICENSE
-    ) {
+    if (p.group && p.name && p.version && !process.env.FETCH_LICENSE) {
       cdepList.push(p);
       continue;
     }
@@ -647,6 +644,9 @@ const getMvnMetadata = async function (pkgList) {
       p.version +
       ".pom";
     try {
+      if (DEBUG_MODE) {
+        console.log(`Querying ${fullUrl}`);
+      }
       const res = await got.get(fullUrl);
       const bodyJson = convert.xml2js(res.body, {
         compact: true,

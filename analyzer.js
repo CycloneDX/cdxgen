@@ -12,7 +12,7 @@ const IGNORE_DIRS = [
   "tests",
   "e2e",
   "examples",
-  "cypress"
+  "cypress",
 ];
 
 const IGNORE_FILE_PATTERN = new RegExp("(conf|test|spec|mock)\\.(js|ts)$", "i");
