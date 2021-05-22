@@ -114,6 +114,65 @@
     ]
   },
   {
+    "exp": "LGPL-2.0-only",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 2",
+      "GNU Lesser General Public License (LGPL), version 2.0",
+      "GNU Lesser General Public License v2",
+      "GNU Lesser General Public License v2.0"
+    ]
+  },
+  {
+    "exp": "LGPL-2.0-or-later",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 2 or later",
+      "GNU Lesser General Public License (LGPL), version 2.0 or later",
+      "GNU Lesser General Public License v2 or later",
+      "GNU Lesser General Public License v2.0 or later"
+    ]
+  },
+  {
+    "exp": "LGPL-2.1-only",
+    "names": [
+      "LGPL 2.1",
+      "LGPL v2.1",
+      "LGPL-2.1",
+      "LGPL2.1",
+      "GNU Lesser General Public License",
+      "GNU Lesser General Public License Version 2.1",
+      "GNU Lesser General Public License Version 2.1, February 1999",
+      "GNU Library or Lesser General Public License (LGPL) V2.1"
+    ]
+  },
+  {
+    "exp": "LGPL-2.1-or-later",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 2.1 or later",
+      "GNU Lesser General Public License v2.1 or later",
+      "LGPL, v2.1 or later"
+    ]
+  },
+  {
+    "exp": "LGPL-3.0-only",
+    "names": [
+      "LGPL 3.0",
+      "LGPL v3.0",
+      "LGPL-3.0",
+      "LGPL3.0",
+      "GNU Lesser General Public License (LGPL), version 3",
+      "GNU Lesser General Public License (LGPL), version 3.0",
+      "GNU Lesser General Public License v3.0"
+    ]
+  },
+  {
+    "exp": "LGPL-3.0-or-later",
+    "names": [
+      "GNU Lesser General Public License (LGPL), version 3 or later",
+      "GNU Lesser General Public License (LGPL), version 3.0 or later",
+      "GNU Lesser General Public License v3.0 or later"
+    ]
+  },
+  {
     "exp": "GPL-2.0-only",
     "names": [
       "GNU General Public License (GPL) version 2",
@@ -175,69 +234,12 @@
     ]
   },
   {
-    "exp": "LGPL-2.0-only",
-    "names": [
-      "GNU Lesser General Public License (LGPL), version 2",
-      "GNU Lesser General Public License (LGPL), version 2.0",
-      "GNU Lesser General Public License v2",
-      "GNU Lesser General Public License v2.0"
-    ]
-  },
-  {
-    "exp": "LGPL-2.0-or-later",
-    "names": [
-      "GNU Lesser General Public License (LGPL), version 2 or later",
-      "GNU Lesser General Public License (LGPL), version 2.0 or later",
-      "GNU Lesser General Public License v2 or later",
-      "GNU Lesser General Public License v2.0 or later"
-    ]
-  },
-  {
-    "exp": "LGPL-2.1-only",
-    "names": [
-      "LGPL 2.1",
-      "LGPL v2.1",
-      "LGPL-2.1",
-      "LGPL2.1",
-      "GNU Lesser General Public License Version 2.1",
-      "GNU Lesser General Public License Version 2.1, February 1999",
-      "GNU Library or Lesser General Public License (LGPL) V2.1"
-    ]
-  },
-  {
-    "exp": "LGPL-2.1-or-later",
-    "names": [
-      "GNU Lesser General Public License (LGPL), version 2.1 or later",
-      "GNU Lesser General Public License v2.1 or later",
-      "LGPL, v2.1 or later"
-    ]
-  },
-  {
-    "exp": "LGPL-3.0-only",
-    "names": [
-      "LGPL 3.0",
-      "LGPL v3.0",
-      "LGPL-3.0",
-      "LGPL3.0",
-      "GNU Lesser General Public License (LGPL), version 3",
-      "GNU Lesser General Public License (LGPL), version 3.0",
-      "GNU Lesser General Public License v3.0"
-    ]
-  },
-  {
-    "exp": "LGPL-3.0-or-later",
-    "names": [
-      "GNU Lesser General Public License (LGPL), version 3 or later",
-      "GNU Lesser General Public License (LGPL), version 3.0 or later",
-      "GNU Lesser General Public License v3.0 or later"
-    ]
-  },
-  {
     "exp": "MIT",
     "names": [
       "MIT License",
       "The MIT License",
-      "MIT license"
+      "MIT license",
+      "The MIT License (MIT)"
     ]
   },
   {

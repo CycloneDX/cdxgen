@@ -1,0 +1,907 @@
+
+------------------------------------------------------------
+Root project 'VulnerableApp'
+------------------------------------------------------------
+
+annotationProcessor - Annotation processors and their dependencies for source set 'main'.
+No dependencies
+
+apiElements - API elements for main. (n)
+No dependencies
+
+archives - Configuration for archive artifacts. (n)
+No dependencies
+
+bootArchives - Configuration for Spring Boot archive artifacts.
+No dependencies
+
+compileClasspath - Compile classpath for source set 'main'.
++--- org.springframework.boot:spring-boot-starter-web -> 2.2.0.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE
+|    |    |    |    \--- org.springframework:spring-jcl:5.2.0.RELEASE
+|    |    |    \--- org.springframework:spring-context:5.2.0.RELEASE
+|    |    |         +--- org.springframework:spring-aop:5.2.0.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:5.2.0.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         \--- org.springframework:spring-expression:5.2.0.RELEASE
+|    |    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.2.0.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:2.2.0.RELEASE (*)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    +--- org.springframework.boot:spring-boot-starter-json:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-web:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    \--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0
+|    |         +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |         \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    +--- org.springframework.boot:spring-boot-starter-tomcat:2.2.0.RELEASE
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27
+|    |    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.27
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.27
+|    |    \--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27
+|    |         \--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27 (*)
+|    +--- org.springframework.boot:spring-boot-starter-validation:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.1
+|    |    \--- org.hibernate.validator:hibernate-validator:6.0.17.Final
+|    |         +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |         \--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    +--- org.springframework:spring-web:5.2.0.RELEASE (*)
+|    \--- org.springframework:spring-webmvc:5.2.0.RELEASE
+|         +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-expression:5.2.0.RELEASE (*)
+|         \--- org.springframework:spring-web:5.2.0.RELEASE (*)
++--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE
+|    +--- org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.0 -> 2.10.0 (c)
+|    |    +--- org.apache.logging.log4j:log4j-core:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-jul:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.springframework.data:spring-data-jpa:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aop:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aspects:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-beans:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-context:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-core:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-expression:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-web:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-webmvc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.apache.commons:commons-lang3:3.10 -> 3.9 (c)
+|    |    +--- org.hibernate:hibernate-core:5.4.17.Final -> 5.4.6.Final (c)
+|    |    +--- org.hibernate.validator:hibernate-validator:6.1.5.Final -> 6.0.17.Final (c)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5 (c)
+|    |    +--- jakarta.persistence:jakarta.persistence-api:2.2.3 (c)
+|    |    +--- jakarta.transaction:jakarta.transaction-api:1.3.3 (c)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.2 -> 2.0.1 (c)
+|    |    +--- org.springframework.boot:spring-boot:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-json:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-log4j2:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-tomcat:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-validation:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-web:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.aspectj:aspectjweaver:1.9.5 -> 1.9.4 (c)
+|    |    +--- com.zaxxer:HikariCP:3.4.5 -> 3.4.1 (c)
+|    |    +--- org.springframework:spring-jdbc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.jboss.logging:jboss-logging:3.4.1.Final (c)
+|    |    +--- net.bytebuddy:byte-buddy:1.10.11 -> 1.10.1 (c)
+|    |    +--- antlr:antlr:2.7.7 (c)
+|    |    +--- com.fasterxml:classmate:1.5.1 -> 1.5.0 (c)
+|    |    +--- org.glassfish.jaxb:jaxb-runtime:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.springframework.data:spring-data-commons:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-orm:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-tx:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.slf4j:slf4j-api:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.apache.logging.log4j:log4j-api:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.springframework:spring-jcl:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.0 -> 2.10.0 (c)
+|    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.glassfish.jaxb:txw2:2.3.3 -> 2.3.2 (c)
+|    |    +--- jakarta.activation:jakarta.activation-api:1.2.2 -> 1.2.1 (c)
+|    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.36 -> 9.0.27 (c)
+|    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.9.4
+|    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- com.zaxxer:HikariCP:3.4.1
+|    |    |    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    \--- org.springframework:spring-jdbc:5.2.0.RELEASE
+|    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |         \--- org.springframework:spring-tx:5.2.0.RELEASE
+|    |              +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    +--- jakarta.transaction:jakarta.transaction-api -> 1.3.3
+|    +--- jakarta.persistence:jakarta.persistence-api -> 2.2.3
+|    +--- org.hibernate:hibernate-core -> 5.4.6.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    +--- org.javassist:javassist:3.24.0-GA
+|    |    +--- net.bytebuddy:byte-buddy:1.9.11 -> 1.10.1
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.jboss:jandex:2.0.5.Final
+|    |    +--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    |    +--- org.dom4j:dom4j:2.1.1
+|    |    +--- org.hibernate.common:hibernate-commons-annotations:5.1.0.Final
+|    |    |    \--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    \--- org.glassfish.jaxb:jaxb-runtime:2.3.1 -> 2.3.2
+|    |         +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.glassfish.jaxb:txw2:2.3.2
+|    |         +--- com.sun.istack:istack-commons-runtime:3.0.8
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.jvnet.staxex:stax-ex:1.8.1
+|    |         |    +--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         |    \--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2 (*)
+|    |         +--- com.sun.xml.fastinfoset:FastInfoset:1.2.16
+|    |         \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    +--- org.springframework.data:spring-data-jpa -> 2.2.0.RELEASE
+|    |    +--- org.springframework.data:spring-data-commons:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    |    +--- org.springframework:spring-orm:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-jdbc:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    \--- org.springframework:spring-aspects -> 5.2.0.RELEASE
+|         +--- org.aspectj:aspectjweaver:1.9.4
+|         \--- org.springframework:spring-orm:5.2.0.RELEASE (*)
++--- org.apache.commons:commons-text:1.8
+|    \--- org.apache.commons:commons-lang3:3.9
++--- org.springframework.boot:spring-boot-starter-log4j2 -> 2.2.0.RELEASE
+|    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.12.1
+|    |    +--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    +--- org.apache.logging.log4j:log4j-core:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    +--- org.apache.logging.log4j:log4j-jul:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    \--- org.slf4j:jul-to-slf4j:1.7.28
+|         \--- org.slf4j:slf4j-api:1.7.28
++--- org.json:json:20190722
++--- com.nimbusds:nimbus-jose-jwt:8.3
+|    +--- com.github.stephenc.jcip:jcip-annotations:1.0-1
+|    \--- net.minidev:json-smart:[1.3.1,2.3] -> 2.3
+|         \--- net.minidev:accessors-smart:1.2
+|              \--- org.ow2.asm:asm:5.0.4
+\--- commons-io:commons-io:2.7
+
+compileOnly - Compile only dependencies for source set 'main'. (n)
+No dependencies
+
+default - Configuration for default artifacts. (n)
+No dependencies
+
+implementation - Implementation only dependencies for source set 'main'. (n)
++--- org.springframework.boot:spring-boot-starter-web (n)
++--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE (n)
++--- org.apache.commons:commons-text:1.8 (n)
++--- org.springframework.boot:spring-boot-starter-log4j2 (n)
++--- org.json:json:20190722 (n)
++--- com.nimbusds:nimbus-jose-jwt:8.3 (n)
+\--- commons-io:commons-io:2.7 (n)
+
+runtimeClasspath - Runtime classpath of source set 'main'.
++--- org.springframework.boot:spring-boot-starter-web -> 2.2.0.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE
+|    |    |    |    \--- org.springframework:spring-jcl:5.2.0.RELEASE
+|    |    |    \--- org.springframework:spring-context:5.2.0.RELEASE
+|    |    |         +--- org.springframework:spring-aop:5.2.0.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:5.2.0.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         \--- org.springframework:spring-expression:5.2.0.RELEASE
+|    |    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.2.0.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:2.2.0.RELEASE (*)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    \--- org.yaml:snakeyaml:1.25
+|    +--- org.springframework.boot:spring-boot-starter-json:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-web:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    \--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0
+|    |         +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |         \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    +--- org.springframework.boot:spring-boot-starter-tomcat:2.2.0.RELEASE
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27
+|    |    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.27
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.27
+|    |    \--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27
+|    |         \--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27 (*)
+|    +--- org.springframework.boot:spring-boot-starter-validation:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.1
+|    |    \--- org.hibernate.validator:hibernate-validator:6.0.17.Final
+|    |         +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |         \--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    +--- org.springframework:spring-web:5.2.0.RELEASE (*)
+|    \--- org.springframework:spring-webmvc:5.2.0.RELEASE
+|         +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-expression:5.2.0.RELEASE (*)
+|         \--- org.springframework:spring-web:5.2.0.RELEASE (*)
++--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE
+|    +--- org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.0 -> 2.10.0 (c)
+|    |    +--- org.apache.logging.log4j:log4j-core:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-jul:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.springframework.data:spring-data-jpa:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aop:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aspects:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-beans:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-context:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-core:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-expression:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-web:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-webmvc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.apache.commons:commons-lang3:3.10 -> 3.9 (c)
+|    |    +--- com.h2database:h2:1.4.200 -> 1.3.176 (c)
+|    |    +--- org.hibernate:hibernate-core:5.4.17.Final -> 5.4.6.Final (c)
+|    |    +--- org.hibernate.validator:hibernate-validator:6.1.5.Final -> 6.0.17.Final (c)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5 (c)
+|    |    +--- jakarta.persistence:jakarta.persistence-api:2.2.3 (c)
+|    |    +--- jakarta.transaction:jakarta.transaction-api:1.3.3 (c)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.2 -> 2.0.1 (c)
+|    |    +--- org.springframework.boot:spring-boot:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-json:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-log4j2:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-tomcat:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-validation:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-web:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.yaml:snakeyaml:1.26 -> 1.25 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.aspectj:aspectjweaver:1.9.5 -> 1.9.4 (c)
+|    |    +--- com.zaxxer:HikariCP:3.4.5 -> 3.4.1 (c)
+|    |    +--- org.springframework:spring-jdbc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.jboss.logging:jboss-logging:3.4.1.Final (c)
+|    |    +--- net.bytebuddy:byte-buddy:1.10.11 -> 1.10.1 (c)
+|    |    +--- antlr:antlr:2.7.7 (c)
+|    |    +--- com.fasterxml:classmate:1.5.1 -> 1.5.0 (c)
+|    |    +--- org.glassfish.jaxb:jaxb-runtime:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.springframework.data:spring-data-commons:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-orm:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-tx:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.slf4j:slf4j-api:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.apache.logging.log4j:log4j-api:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.springframework:spring-jcl:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.0 -> 2.10.0 (c)
+|    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.glassfish.jaxb:txw2:2.3.3 -> 2.3.2 (c)
+|    |    +--- jakarta.activation:jakarta.activation-api:1.2.2 -> 1.2.1 (c)
+|    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.36 -> 9.0.27 (c)
+|    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.9.4
+|    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- com.zaxxer:HikariCP:3.4.1
+|    |    |    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    \--- org.springframework:spring-jdbc:5.2.0.RELEASE
+|    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |         \--- org.springframework:spring-tx:5.2.0.RELEASE
+|    |              +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    +--- jakarta.transaction:jakarta.transaction-api -> 1.3.3
+|    +--- jakarta.persistence:jakarta.persistence-api -> 2.2.3
+|    +--- org.hibernate:hibernate-core -> 5.4.6.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    +--- org.javassist:javassist:3.24.0-GA
+|    |    +--- net.bytebuddy:byte-buddy:1.9.11 -> 1.10.1
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.jboss:jandex:2.0.5.Final
+|    |    +--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    |    +--- org.dom4j:dom4j:2.1.1
+|    |    +--- org.hibernate.common:hibernate-commons-annotations:5.1.0.Final
+|    |    |    \--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    \--- org.glassfish.jaxb:jaxb-runtime:2.3.1 -> 2.3.2
+|    |         +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.glassfish.jaxb:txw2:2.3.2
+|    |         +--- com.sun.istack:istack-commons-runtime:3.0.8
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.jvnet.staxex:stax-ex:1.8.1
+|    |         |    +--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         |    \--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2 (*)
+|    |         +--- com.sun.xml.fastinfoset:FastInfoset:1.2.16
+|    |         \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    +--- org.springframework.data:spring-data-jpa -> 2.2.0.RELEASE
+|    |    +--- org.springframework.data:spring-data-commons:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    |    +--- org.springframework:spring-orm:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-jdbc:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    \--- org.springframework:spring-aspects -> 5.2.0.RELEASE
+|         +--- org.aspectj:aspectjweaver:1.9.4
+|         \--- org.springframework:spring-orm:5.2.0.RELEASE (*)
++--- org.apache.commons:commons-text:1.8
+|    \--- org.apache.commons:commons-lang3:3.9
++--- org.springframework.boot:spring-boot-starter-log4j2 -> 2.2.0.RELEASE
+|    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.12.1
+|    |    +--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    +--- org.apache.logging.log4j:log4j-api:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-core:2.12.1
+|    |         \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    +--- org.apache.logging.log4j:log4j-core:2.12.1 (*)
+|    +--- org.apache.logging.log4j:log4j-jul:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    \--- org.slf4j:jul-to-slf4j:1.7.28
+|         \--- org.slf4j:slf4j-api:1.7.28
++--- org.json:json:20190722
++--- com.nimbusds:nimbus-jose-jwt:8.3
+|    +--- com.github.stephenc.jcip:jcip-annotations:1.0-1
+|    \--- net.minidev:json-smart:[1.3.1,2.3] -> 2.3
+|         \--- net.minidev:accessors-smart:1.2
+|              \--- org.ow2.asm:asm:5.0.4
++--- commons-io:commons-io:2.7
+\--- com.h2database:h2:1.3.176
+
+runtimeElements - Elements of runtime for main. (n)
+No dependencies
+
+runtimeOnly - Runtime only dependencies for source set 'main'. (n)
+\--- com.h2database:h2:1.3.176 (n)
+
+testAnnotationProcessor - Annotation processors and their dependencies for source set 'test'.
+No dependencies
+
+testCompileClasspath - Compile classpath for source set 'test'.
++--- org.springframework.boot:spring-boot-starter-web -> 2.2.0.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE
+|    |    |    |    \--- org.springframework:spring-jcl:5.2.0.RELEASE
+|    |    |    \--- org.springframework:spring-context:5.2.0.RELEASE
+|    |    |         +--- org.springframework:spring-aop:5.2.0.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:5.2.0.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         \--- org.springframework:spring-expression:5.2.0.RELEASE
+|    |    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.2.0.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:2.2.0.RELEASE (*)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    +--- org.springframework.boot:spring-boot-starter-json:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-web:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    \--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0
+|    |         +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |         \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    +--- org.springframework.boot:spring-boot-starter-tomcat:2.2.0.RELEASE
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27
+|    |    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.27
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.27
+|    |    \--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27
+|    |         \--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27 (*)
+|    +--- org.springframework.boot:spring-boot-starter-validation:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.1
+|    |    \--- org.hibernate.validator:hibernate-validator:6.0.17.Final
+|    |         +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |         \--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    +--- org.springframework:spring-web:5.2.0.RELEASE (*)
+|    \--- org.springframework:spring-webmvc:5.2.0.RELEASE
+|         +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-expression:5.2.0.RELEASE (*)
+|         \--- org.springframework:spring-web:5.2.0.RELEASE (*)
++--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE
+|    +--- org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.0 -> 2.10.0 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter:5.6.2 -> 5.7.0 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-api:5.6.2 -> 5.5.2 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-params:5.6.2 -> 5.5.2 (c)
+|    |    +--- org.apache.logging.log4j:log4j-core:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-jul:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.springframework.data:spring-data-jpa:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aop:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aspects:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-beans:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-context:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-core:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-expression:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-web:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-webmvc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.assertj:assertj-core:3.16.1 -> 3.17.2 (c)
+|    |    +--- net.bytebuddy:byte-buddy:1.10.11 -> 1.10.1 (c)
+|    |    +--- net.bytebuddy:byte-buddy-agent:1.10.11 -> 1.10.1 (c)
+|    |    +--- org.apache.commons:commons-lang3:3.10 -> 3.9 (c)
+|    |    +--- org.hibernate:hibernate-core:5.4.17.Final -> 5.4.6.Final (c)
+|    |    +--- org.hibernate.validator:hibernate-validator:6.1.5.Final -> 6.0.17.Final (c)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5 (c)
+|    |    +--- jakarta.persistence:jakarta.persistence-api:2.2.3 (c)
+|    |    +--- jakarta.transaction:jakarta.transaction-api:1.3.3 (c)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.2 -> 2.0.1 (c)
+|    |    +--- org.mockito:mockito-core:3.3.3 -> 3.5.13 (c)
+|    |    +--- org.springframework.boot:spring-boot:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-json:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-log4j2:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-tomcat:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-validation:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-web:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.aspectj:aspectjweaver:1.9.5 -> 1.9.4 (c)
+|    |    +--- com.zaxxer:HikariCP:3.4.5 -> 3.4.1 (c)
+|    |    +--- org.springframework:spring-jdbc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.jboss.logging:jboss-logging:3.4.1.Final (c)
+|    |    +--- antlr:antlr:2.7.7 (c)
+|    |    +--- com.fasterxml:classmate:1.5.1 -> 1.5.0 (c)
+|    |    +--- org.glassfish.jaxb:jaxb-runtime:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.springframework.data:spring-data-commons:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-orm:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-tx:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.slf4j:slf4j-api:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.apache.logging.log4j:log4j-api:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.junit.platform:junit-platform-commons:1.6.2 -> 1.5.2 (c)
+|    |    +--- org.springframework:spring-jcl:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.0 -> 2.10.0 (c)
+|    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.glassfish.jaxb:txw2:2.3.3 -> 2.3.2 (c)
+|    |    +--- jakarta.activation:jakarta.activation-api:1.2.2 -> 1.2.1 (c)
+|    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.36 -> 9.0.27 (c)
+|    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.9.4
+|    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- com.zaxxer:HikariCP:3.4.1
+|    |    |    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    \--- org.springframework:spring-jdbc:5.2.0.RELEASE
+|    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |         \--- org.springframework:spring-tx:5.2.0.RELEASE
+|    |              +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    +--- jakarta.transaction:jakarta.transaction-api -> 1.3.3
+|    +--- jakarta.persistence:jakarta.persistence-api -> 2.2.3
+|    +--- org.hibernate:hibernate-core -> 5.4.6.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    +--- org.javassist:javassist:3.24.0-GA
+|    |    +--- net.bytebuddy:byte-buddy:1.9.11 -> 1.10.1
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.jboss:jandex:2.0.5.Final
+|    |    +--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    |    +--- org.dom4j:dom4j:2.1.1
+|    |    +--- org.hibernate.common:hibernate-commons-annotations:5.1.0.Final
+|    |    |    \--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    \--- org.glassfish.jaxb:jaxb-runtime:2.3.1 -> 2.3.2
+|    |         +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.glassfish.jaxb:txw2:2.3.2
+|    |         +--- com.sun.istack:istack-commons-runtime:3.0.8
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.jvnet.staxex:stax-ex:1.8.1
+|    |         |    +--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         |    \--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2 (*)
+|    |         +--- com.sun.xml.fastinfoset:FastInfoset:1.2.16
+|    |         \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    +--- org.springframework.data:spring-data-jpa -> 2.2.0.RELEASE
+|    |    +--- org.springframework.data:spring-data-commons:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    |    +--- org.springframework:spring-orm:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-jdbc:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    \--- org.springframework:spring-aspects -> 5.2.0.RELEASE
+|         +--- org.aspectj:aspectjweaver:1.9.4
+|         \--- org.springframework:spring-orm:5.2.0.RELEASE (*)
++--- org.apache.commons:commons-text:1.8
+|    \--- org.apache.commons:commons-lang3:3.9
++--- org.springframework.boot:spring-boot-starter-log4j2 -> 2.2.0.RELEASE
+|    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.12.1
+|    |    +--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    +--- org.apache.logging.log4j:log4j-core:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    +--- org.apache.logging.log4j:log4j-jul:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    \--- org.slf4j:jul-to-slf4j:1.7.28
+|         \--- org.slf4j:slf4j-api:1.7.28
++--- org.json:json:20190722
++--- com.nimbusds:nimbus-jose-jwt:8.3
+|    +--- com.github.stephenc.jcip:jcip-annotations:1.0-1
+|    \--- net.minidev:json-smart:[1.3.1,2.3] -> 2.3
+|         \--- net.minidev:accessors-smart:1.2
+|              \--- org.ow2.asm:asm:5.0.4
++--- commons-io:commons-io:2.7
++--- org.mockito:mockito-core:3.5.13
+|    +--- net.bytebuddy:byte-buddy:1.10.15 -> 1.10.1
+|    +--- net.bytebuddy:byte-buddy-agent:1.10.15 -> 1.10.1
+|    \--- org.objenesis:objenesis:3.1
++--- org.junit.jupiter:junit-jupiter:5.7.0
+|    +--- org.junit:junit-bom:5.7.0
+|    |    +--- org.junit.jupiter:junit-jupiter:5.7.0 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-api:5.7.0 -> 5.5.2 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-params:5.7.0 -> 5.5.2 (c)
+|    |    \--- org.junit.platform:junit-platform-commons:1.7.0 -> 1.5.2 (c)
+|    +--- org.junit.jupiter:junit-jupiter-api:5.7.0 -> 5.5.2
+|    |    +--- org.apiguardian:apiguardian-api:1.1.0
+|    |    +--- org.opentest4j:opentest4j:1.2.0
+|    |    \--- org.junit.platform:junit-platform-commons:1.5.2
+|    |         \--- org.apiguardian:apiguardian-api:1.1.0
+|    \--- org.junit.jupiter:junit-jupiter-params:5.7.0 -> 5.5.2
+|         +--- org.apiguardian:apiguardian-api:1.1.0
+|         \--- org.junit.jupiter:junit-jupiter-api:5.5.2 (*)
+\--- org.assertj:assertj-core:3.17.2
+
+testCompileOnly - Compile only dependencies for source set 'test'. (n)
+No dependencies
+
+testImplementation - Implementation only dependencies for source set 'test'. (n)
++--- org.mockito:mockito-core:3.5.13 (n)
++--- org.junit.jupiter:junit-jupiter:5.7.0 (n)
+\--- org.assertj:assertj-core:3.17.2 (n)
+
+testRuntimeClasspath - Runtime classpath of source set 'test'.
++--- org.springframework.boot:spring-boot-starter-web -> 2.2.0.RELEASE
+|    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE
+|    |    |    |    \--- org.springframework:spring-jcl:5.2.0.RELEASE
+|    |    |    \--- org.springframework:spring-context:5.2.0.RELEASE
+|    |    |         +--- org.springframework:spring-aop:5.2.0.RELEASE
+|    |    |         |    +--- org.springframework:spring-beans:5.2.0.RELEASE
+|    |    |         |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |         \--- org.springframework:spring-expression:5.2.0.RELEASE
+|    |    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.2.0.RELEASE
+|    |    |    \--- org.springframework.boot:spring-boot:2.2.0.RELEASE (*)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    \--- org.yaml:snakeyaml:1.25
+|    +--- org.springframework.boot:spring-boot-starter-json:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-web:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.10.0
+|    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |    |    \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    |    \--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0
+|    |         +--- com.fasterxml.jackson.core:jackson-core:2.10.0
+|    |         \--- com.fasterxml.jackson.core:jackson-databind:2.10.0 (*)
+|    +--- org.springframework.boot:spring-boot-starter-tomcat:2.2.0.RELEASE
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27
+|    |    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.27
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.27
+|    |    \--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27
+|    |         \--- org.apache.tomcat.embed:tomcat-embed-core:9.0.27 (*)
+|    +--- org.springframework.boot:spring-boot-starter-validation:2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.1
+|    |    \--- org.hibernate.validator:hibernate-validator:6.0.17.Final
+|    |         +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |         \--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    +--- org.springframework:spring-web:5.2.0.RELEASE (*)
+|    \--- org.springframework:spring-webmvc:5.2.0.RELEASE
+|         +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|         +--- org.springframework:spring-expression:5.2.0.RELEASE (*)
+|         \--- org.springframework:spring-web:5.2.0.RELEASE (*)
++--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE
+|    +--- org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE
+|    |    +--- com.fasterxml.jackson.core:jackson-databind:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.0 -> 2.10.0 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter:5.6.2 -> 5.7.0 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-api:5.6.2 -> 5.5.2 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-engine:5.6.2 -> 5.5.2 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-params:5.6.2 -> 5.5.2 (c)
+|    |    +--- org.apache.logging.log4j:log4j-core:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.apache.logging.log4j:log4j-jul:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.springframework.data:spring-data-jpa:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aop:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-aspects:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-beans:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-context:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-core:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-expression:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-web:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-webmvc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.assertj:assertj-core:3.16.1 -> 3.17.2 (c)
+|    |    +--- net.bytebuddy:byte-buddy:1.10.11 -> 1.10.1 (c)
+|    |    +--- net.bytebuddy:byte-buddy-agent:1.10.11 -> 1.10.1 (c)
+|    |    +--- org.apache.commons:commons-lang3:3.10 -> 3.9 (c)
+|    |    +--- com.h2database:h2:1.4.200 -> 1.3.176 (c)
+|    |    +--- org.hibernate:hibernate-core:5.4.17.Final -> 5.4.6.Final (c)
+|    |    +--- org.hibernate.validator:hibernate-validator:6.1.5.Final -> 6.0.17.Final (c)
+|    |    +--- jakarta.annotation:jakarta.annotation-api:1.3.5 (c)
+|    |    +--- jakarta.persistence:jakarta.persistence-api:2.2.3 (c)
+|    |    +--- jakarta.transaction:jakarta.transaction-api:1.3.3 (c)
+|    |    +--- jakarta.validation:jakarta.validation-api:2.0.2 -> 2.0.1 (c)
+|    |    +--- org.mockito:mockito-core:3.3.3 -> 3.5.13 (c)
+|    |    +--- org.springframework.boot:spring-boot:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-autoconfigure:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-data-jpa:2.3.1.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-json:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-log4j2:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-tomcat:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-validation:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework.boot:spring-boot-starter-web:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.slf4j:jul-to-slf4j:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.yaml:snakeyaml:1.26 -> 1.25 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-core:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-el:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.apache.tomcat.embed:tomcat-embed-websocket:9.0.36 -> 9.0.27 (c)
+|    |    +--- org.aspectj:aspectjweaver:1.9.5 -> 1.9.4 (c)
+|    |    +--- com.zaxxer:HikariCP:3.4.5 -> 3.4.1 (c)
+|    |    +--- org.springframework:spring-jdbc:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.jboss.logging:jboss-logging:3.4.1.Final (c)
+|    |    +--- antlr:antlr:2.7.7 (c)
+|    |    +--- com.fasterxml:classmate:1.5.1 -> 1.5.0 (c)
+|    |    +--- org.glassfish.jaxb:jaxb-runtime:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.springframework.data:spring-data-commons:2.3.1.RELEASE -> 2.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-orm:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.springframework:spring-tx:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- org.slf4j:slf4j-api:1.7.30 -> 1.7.28 (c)
+|    |    +--- org.apache.logging.log4j:log4j-api:2.13.3 -> 2.12.1 (c)
+|    |    +--- org.junit.platform:junit-platform-commons:1.6.2 -> 1.5.2 (c)
+|    |    +--- org.junit.platform:junit-platform-engine:1.6.2 -> 1.5.2 (c)
+|    |    +--- org.springframework:spring-jcl:5.2.7.RELEASE -> 5.2.0.RELEASE (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.11.0 -> 2.10.0 (c)
+|    |    +--- com.fasterxml.jackson.core:jackson-core:2.11.0 -> 2.10.0 (c)
+|    |    +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.3 -> 2.3.2 (c)
+|    |    +--- org.glassfish.jaxb:txw2:2.3.3 -> 2.3.2 (c)
+|    |    +--- jakarta.activation:jakarta.activation-api:1.2.2 -> 1.2.1 (c)
+|    |    \--- org.apache.tomcat:tomcat-annotations-api:9.0.36 -> 9.0.27 (c)
+|    +--- org.springframework.boot:spring-boot-starter-aop:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    \--- org.aspectj:aspectjweaver:1.9.4
+|    +--- org.springframework.boot:spring-boot-starter-jdbc:2.3.1.RELEASE -> 2.2.0.RELEASE
+|    |    +--- org.springframework.boot:spring-boot-starter:2.2.0.RELEASE (*)
+|    |    +--- com.zaxxer:HikariCP:3.4.1
+|    |    |    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    \--- org.springframework:spring-jdbc:5.2.0.RELEASE
+|    |         +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |         +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |         \--- org.springframework:spring-tx:5.2.0.RELEASE
+|    |              +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |              \--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    +--- jakarta.transaction:jakarta.transaction-api -> 1.3.3
+|    +--- jakarta.persistence:jakarta.persistence-api -> 2.2.3
+|    +--- org.hibernate:hibernate-core -> 5.4.6.Final
+|    |    +--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    +--- org.javassist:javassist:3.24.0-GA
+|    |    +--- net.bytebuddy:byte-buddy:1.9.11 -> 1.10.1
+|    |    +--- antlr:antlr:2.7.7
+|    |    +--- org.jboss:jandex:2.0.5.Final
+|    |    +--- com.fasterxml:classmate:1.3.4 -> 1.5.0
+|    |    +--- org.dom4j:dom4j:2.1.1
+|    |    +--- org.hibernate.common:hibernate-commons-annotations:5.1.0.Final
+|    |    |    \--- org.jboss.logging:jboss-logging:3.3.2.Final -> 3.4.1.Final
+|    |    \--- org.glassfish.jaxb:jaxb-runtime:2.3.1 -> 2.3.2
+|    |         +--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.glassfish.jaxb:txw2:2.3.2
+|    |         +--- com.sun.istack:istack-commons-runtime:3.0.8
+|    |         |    \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         +--- org.jvnet.staxex:stax-ex:1.8.1
+|    |         |    +--- jakarta.activation:jakarta.activation-api:1.2.1
+|    |         |    \--- jakarta.xml.bind:jakarta.xml.bind-api:2.3.2 (*)
+|    |         +--- com.sun.xml.fastinfoset:FastInfoset:1.2.16
+|    |         \--- jakarta.activation:jakarta.activation-api:1.2.1
+|    +--- org.springframework.data:spring-data-jpa -> 2.2.0.RELEASE
+|    |    +--- org.springframework.data:spring-data-commons:2.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    |    +--- org.springframework:spring-orm:5.2.0.RELEASE
+|    |    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    |    +--- org.springframework:spring-jdbc:5.2.0.RELEASE (*)
+|    |    |    \--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-context:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-aop:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-tx:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-beans:5.2.0.RELEASE (*)
+|    |    +--- org.springframework:spring-core:5.2.0.RELEASE (*)
+|    |    \--- org.slf4j:slf4j-api:1.7.26 -> 1.7.28
+|    \--- org.springframework:spring-aspects -> 5.2.0.RELEASE
+|         +--- org.aspectj:aspectjweaver:1.9.4
+|         \--- org.springframework:spring-orm:5.2.0.RELEASE (*)
++--- org.apache.commons:commons-text:1.8
+|    \--- org.apache.commons:commons-lang3:3.9
++--- org.springframework.boot:spring-boot-starter-log4j2 -> 2.2.0.RELEASE
+|    +--- org.apache.logging.log4j:log4j-slf4j-impl:2.12.1
+|    |    +--- org.slf4j:slf4j-api:1.7.25 -> 1.7.28
+|    |    +--- org.apache.logging.log4j:log4j-api:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-core:2.12.1
+|    |         \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    +--- org.apache.logging.log4j:log4j-core:2.12.1 (*)
+|    +--- org.apache.logging.log4j:log4j-jul:2.12.1
+|    |    \--- org.apache.logging.log4j:log4j-api:2.12.1
+|    \--- org.slf4j:jul-to-slf4j:1.7.28
+|         \--- org.slf4j:slf4j-api:1.7.28
++--- org.json:json:20190722
++--- com.nimbusds:nimbus-jose-jwt:8.3
+|    +--- com.github.stephenc.jcip:jcip-annotations:1.0-1
+|    \--- net.minidev:json-smart:[1.3.1,2.3] -> 2.3
+|         \--- net.minidev:accessors-smart:1.2
+|              \--- org.ow2.asm:asm:5.0.4
++--- commons-io:commons-io:2.7
++--- com.h2database:h2:1.3.176
++--- org.mockito:mockito-core:3.5.13
+|    +--- net.bytebuddy:byte-buddy:1.10.15 -> 1.10.1
+|    +--- net.bytebuddy:byte-buddy-agent:1.10.15 -> 1.10.1
+|    \--- org.objenesis:objenesis:3.1
++--- org.junit.jupiter:junit-jupiter:5.7.0
+|    +--- org.junit:junit-bom:5.7.0
+|    |    +--- org.junit.jupiter:junit-jupiter:5.7.0 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-api:5.7.0 -> 5.5.2 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-engine:5.7.0 -> 5.5.2 (c)
+|    |    +--- org.junit.jupiter:junit-jupiter-params:5.7.0 -> 5.5.2 (c)
+|    |    +--- org.junit.platform:junit-platform-commons:1.7.0 -> 1.5.2 (c)
+|    |    \--- org.junit.platform:junit-platform-engine:1.7.0 -> 1.5.2 (c)
+|    +--- org.junit.jupiter:junit-jupiter-api:5.7.0 -> 5.5.2
+|    |    +--- org.apiguardian:apiguardian-api:1.1.0
+|    |    +--- org.opentest4j:opentest4j:1.2.0
+|    |    \--- org.junit.platform:junit-platform-commons:1.5.2
+|    |         \--- org.apiguardian:apiguardian-api:1.1.0
+|    +--- org.junit.jupiter:junit-jupiter-params:5.7.0 -> 5.5.2
+|    |    +--- org.apiguardian:apiguardian-api:1.1.0
+|    |    \--- org.junit.jupiter:junit-jupiter-api:5.5.2 (*)
+|    \--- org.junit.jupiter:junit-jupiter-engine:5.7.0 -> 5.5.2
+|         +--- org.apiguardian:apiguardian-api:1.1.0
+|         +--- org.junit.platform:junit-platform-engine:1.5.2
+|         |    +--- org.apiguardian:apiguardian-api:1.1.0
+|         |    +--- org.opentest4j:opentest4j:1.2.0
+|         |    \--- org.junit.platform:junit-platform-commons:1.5.2 (*)
+|         \--- org.junit.jupiter:junit-jupiter-api:5.5.2 (*)
+\--- org.assertj:assertj-core:3.17.2
+
+testRuntimeOnly - Runtime only dependencies for source set 'test'. (n)
+No dependencies
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+A web-based, searchable dependency report is available by adding the --scan option.

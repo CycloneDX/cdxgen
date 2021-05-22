@@ -12,7 +12,7 @@ const IGNORE_DIRS = [
   "tests",
   "e2e",
   "examples",
-  "cypress"
+  "cypress",
 ];
 
 const IGNORE_FILE_PATTERN = new RegExp("(conf|test|spec|mock)\\.(js|ts)$", "i");
@@ -112,11 +112,15 @@ const parseFileASTTree = (file, allImports) => {
   babelTraverse(ast, {
     // Used for all ES6 import statements
     ImportDeclaration: (path) => {
-      setFileRef(allImports, file, path.node.source.value);
+      if (path && path.node) {
+        setFileRef(allImports, file, path.node.source.value);
+      }
     },
     // For require('') statements
     Identifier: (path) => {
       if (
+        path &&
+        path.node &&
         path.node.name === "require" &&
         path.parent.type === "CallExpression"
       ) {
@@ -125,7 +129,7 @@ const parseFileASTTree = (file, allImports) => {
     },
     // Use for dynamic imports like routes.jsx
     CallExpression: (path) => {
-      if (path.node.callee.type === "Import") {
+      if (path && path.node && path.node.callee.type === "Import") {
         setFileRef(allImports, file, path.node.arguments[0].value);
       }
     },
@@ -135,7 +139,7 @@ const parseFileASTTree = (file, allImports) => {
     },
     ExportNamedDeclaration: (path) => {
       // ensure there is a path export
-      if (path.node.source) {
+      if (path && path.node && path.node.source) {
         setFileRef(allImports, file, path.node.source.value);
       }
     },
@@ -166,13 +170,11 @@ const findJSImports = async (src) => {
       try {
         parseFileASTTree(file, allImports);
       } catch (err) {
-        console.error(file, err.message);
         errFiles.push(file);
       }
     }
     return { allImports, errFiles };
   } catch (err) {
-    console.error(err);
     return { allImports, errFiles };
   }
 };

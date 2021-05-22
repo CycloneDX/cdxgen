@@ -13,8 +13,22 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v1
       with:
+        node-version: 16.x
+    - name: Produce pkg - 16
+      run: |
+        sudo npm install -g pkg
+        npm install
+        pkg -t node16-linux-x64,node16-linux-arm64,node16-win-x64,node16-mac-x64 package.json --out-path dist-16
+    - name: Test pkg
+      run: |
+        chmod +x dist-16/cdxgen*
+        ./dist-16/cdxgen-linux-x64 -v
+        ./dist-16/cdxgen-linux-x64 .
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
         node-version: 14.x
-    - name: Produce pkg
+    - name: Produce pkg - lts
       run: |
         sudo npm install -g pkg
         npm install
@@ -27,7 +41,6 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt-get update -y
         sudo apt-get install -y python3.8 python3.8-dev python3-pip python3-testresources python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev
         # Install appimagetool AppImage
         sudo wget https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool
@@ -41,26 +54,18 @@ jobs:
       env:
         UPDATE_INFO: gh-releases-zsync|AppThreat|cdxgen|latest|*x86_64.AppImage.zsync
 
-    - name: Zip pkg
+    - name: Zip pkg - lts
       run: |
         zip --junk-paths -r cdxgen-dist.zip dist cdxgen-latest-x86_64.AppImage
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+    - name: Zip pkg - node 16
+      run: |
+        zip --junk-paths -r cdxgen-node16-dist.zip dist-16
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          cdxgen-dist.zip
+          cdxgen-node16-dist.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: cdxgen-dist.zip
-        asset_name: cdxgen-dist.zip
-        asset_content_type: application/octet-stream
