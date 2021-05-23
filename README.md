@@ -1,6 +1,6 @@
 # CycloneDX Generator
 
-This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects in XML and JSON format. CycloneDX 1.2 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, ruby, rust, java, .Net and Go projects in XML and JSON format. CycloneDX 1.2 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 ## Supported languages and package format
 
@@ -98,7 +98,8 @@ cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
 
 NOTE:
 
-Only application related packages are collected by cdxgen. Support for collecting OS packages in the images would be added in version 4 or above. If you would like to sponsor this feature please contact me.
+- Only application related packages are collected by cdxgen. Support for collecting OS packages in the images would be added in version 4 or above. If you would like to sponsor this feature please contact me
+- Only json format is supported for container images SBoM
 
 ### War file support
 
