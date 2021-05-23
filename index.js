@@ -792,7 +792,7 @@ const createNodejsBom = async (path, options) => {
   if (options.projectType === "docker") {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
     for (let pj of pkgJsonFiles) {
-      const dlist = utils.parsePkgJson(pj);
+      const dlist = await utils.parsePkgJson(pj);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -914,7 +914,7 @@ const createNodejsBom = async (path, options) => {
       "**/package.json"
     );
     for (let pkgjf of pkgJsonFiles) {
-      const dlist = utils.parsePkgJson(pkgjf);
+      const dlist = await utils.parsePkgJson(pkgjf);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }

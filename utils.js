@@ -257,7 +257,7 @@ const _getDepPkgList = async function (pkgList, pkg) {
  *
  * @param {string} pkgJsonFile package.json file
  */
-const parsePkgJson = function (pkgJsonFile) {
+const parsePkgJson = async (pkgJsonFile) => {
   const pkgList = [];
   if (fs.existsSync(pkgJsonFile)) {
     try {
@@ -270,6 +270,14 @@ const parsePkgJson = function (pkgJsonFile) {
       });
     } catch (err) {}
   }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
+  }
   return pkgList;
 };
 exports.parsePkgJson = parsePkgJson;
@@ -279,7 +287,7 @@ exports.parsePkgJson = parsePkgJson;
  *
  * @param {string} pkgLockFile package-lock.json file
  */
-const parsePkgLock = async function (pkgLockFile) {
+const parsePkgLock = async (pkgLockFile) => {
   const pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
     const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
@@ -358,6 +366,14 @@ const parseYarnLock = async function (yarnLockFile) {
       }
     });
   }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
+  }
   return pkgList;
 };
 exports.parseYarnLock = parseYarnLock;
@@ -403,6 +419,14 @@ const parseNodeShrinkwrap = async function (swFile) {
         }
       }
     }
+  }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
   }
   return pkgList;
 };
@@ -450,6 +474,14 @@ const parsePnpmLock = async function (pnpmLock) {
         }
       }
     }
+  }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
   }
   return pkgList;
 };
