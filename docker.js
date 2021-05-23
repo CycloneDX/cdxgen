@@ -297,6 +297,9 @@ const exportImage = async (fullName) => {
         allLayersDir: tempDir,
         allLayersExplodedDir,
         lastLayerConfig,
+        lastWorkingDir: lastLayerConfig.config.WorkingDir
+          ? path.join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
+          : "",
       };
       exportData.pkgPathList = getPkgPathList(exportData);
       return exportData;
@@ -316,7 +319,7 @@ exports.exportImage = exportImage;
 const getPkgPathList = (exportData) => {
   const allLayersExplodedDir = exportData.allLayersExplodedDir;
   const allLayersDir = exportData.allLayersDir;
-  const lastWorkingDir = exportData.lastLayerConfig.config.WorkingDir;
+  const lastWorkingDir = exportData.lastLayerConfig.config.WorkingDir || "";
   let pathList = [];
   const knownSysPaths = [
     path.join(allLayersExplodedDir, lastWorkingDir),
@@ -330,10 +333,17 @@ const getPkgPathList = (exportData) => {
     path.join(allLayersExplodedDir, "/var/www/html"),
     path.join(allLayersExplodedDir, "/var/lib"),
     path.join(allLayersExplodedDir, "/mnt"),
-    path.join(allLayersExplodedDir, "/app"),
-    path.join(allLayersExplodedDir, "/data"),
-    path.join(allLayersExplodedDir, "/srv"),
   ];
+  // Some more common app dirs
+  if (!lastWorkingDir.startsWith("/app")) {
+    knownSysPaths.push(path.join(allLayersExplodedDir, "/app"));
+  }
+  if (!lastWorkingDir.startsWith("/data")) {
+    knownSysPaths.push(path.join(allLayersExplodedDir, "/data"));
+  }
+  if (!lastWorkingDir.startsWith("/srv")) {
+    knownSysPaths.push(path.join(allLayersExplodedDir, "/srv"));
+  }
   // Build path list
   for (let wpath of knownSysPaths) {
     pathList = pathList.concat(wpath);

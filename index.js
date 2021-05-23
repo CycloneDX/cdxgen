@@ -414,6 +414,37 @@ const buildBomNSData = (pkgInfo, ptype, context) => {
 };
 
 /**
+ * Function to create bom string for Java jars
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createJarBom = (path, options) => {
+  let pkgList = [];
+  let jarFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.jar"
+  );
+  let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "jar-deps-"));
+  for (let jar of jarFiles) {
+    const dlist = utils.extractJarArchive(jar, tempDir);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
+    }
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(os.tmpdir())) {
+    console.log(`Cleaning up ${tempDir}`);
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+  return buildBomNSData(pkgList, "maven", {
+    src: path,
+    filename: jarFiles.join(", "),
+    nsMapping: {},
+  });
+};
+
+/**
  * Function to create bom string for Java projects
  *
  * @param path to the project
@@ -757,7 +788,6 @@ const createJavaBom = async (path, options) => {
  */
 const createNodejsBom = async (path, options) => {
   let pkgList = [];
-  const { allImports } = await findJSImports(path);
   // Docker mode requires special handling
   if (options.projectType === "docker") {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
@@ -768,11 +798,12 @@ const createNodejsBom = async (path, options) => {
       }
     }
     return buildBomNSData(pkgList, "npm", {
-      allImports,
+      allImports: {},
       src: path,
       filename: "package.json",
     });
   }
+  const { allImports } = await findJSImports(path);
   const yarnLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "yarn.lock"
@@ -1437,6 +1468,17 @@ const createMultiXBom = async (pathList, options) => {
       components = components.concat(bomData.bomJson.components);
     }
   }
+  if (options.lastWorkingDir && options.lastWorkingDir !== "") {
+    bomData = createJarBom(options.lastWorkingDir, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} jar packages at ${options.lastWorkingDir}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
+  }
   components = trimComponents(components);
   console.log(`BOM includes ${components.length} components`);
   return {
@@ -1601,6 +1643,7 @@ exports.createBom = async (path, options) => {
     options.multiProject = true;
     options.installDeps = false;
     options.projectType = "docker";
+    options.lastWorkingDir = exportData.lastWorkingDir;
     const bomJsonData = await createMultiXBom(
       [...new Set(exportData.pkgPathList)],
       options

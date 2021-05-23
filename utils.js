@@ -1994,23 +1994,25 @@ exports.parseJarManifest = parseJarManifest;
  */
 const extractJarArchive = function (jarFile, tempDir) {
   let pkgList = [];
+  let jarFiles = [];
   const fname = path.basename(jarFile);
   fs.copyFileSync(jarFile, path.join(tempDir, fname));
-  let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
-    encoding: "utf-8",
-    cwd: tempDir,
-  });
-  if (jarResult.status === 1) {
-    console.error(jarResult.stdout, jarResult.stderr);
-    console.log(
-      "Check if JRE is installed and the jar command is available in the PATH."
-    );
-    return pkgList;
+  if (jarFile.endsWith(".war")) {
+    let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
+      encoding: "utf-8",
+      cwd: tempDir,
+    });
+    if (jarResult.status === 1) {
+      console.error(jarResult.stdout, jarResult.stderr);
+      console.log(
+        "Check if JRE is installed and the jar command is available in the PATH."
+      );
+      return pkgList;
+    }
+    jarFiles = getAllFiles(path.join(tempDir, "WEB-INF", "lib"), "**/*.jar");
+  } else if (jarFile.endsWith(".jar")) {
+    jarFiles = [path.join(tempDir, fname)];
   }
-  const jarFiles = getAllFiles(
-    path.join(tempDir, "WEB-INF", "lib"),
-    "**/*.jar"
-  );
   if (jarFiles && jarFiles.length) {
     for (let i in jarFiles) {
       const jf = jarFiles[i];
@@ -2109,7 +2111,7 @@ const extractJarArchive = function (jarFile, tempDir) {
           }
           if (name && version) {
             pkgList.push({
-              group: group || "",
+              group: group === "." ? "" : group || "",
               name,
               version,
             });
