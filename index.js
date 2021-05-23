@@ -423,7 +423,7 @@ const createJarBom = (path, options) => {
   let pkgList = [];
   let jarFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.jar"
+    (options.multiProject ? "**/" : "") + "*.[jw]ar"
   );
   let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "jar-deps-"));
   for (let jar of jarFiles) {

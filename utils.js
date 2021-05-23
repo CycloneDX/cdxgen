@@ -2098,13 +2098,13 @@ const extractJarArchive = function (jarFile, tempDir) {
                 version = lastPart.replace(".jar", "");
               }
               if (!name || name === "") {
-                name = jarname.replace("-" + lastPart, "");
+                name = jarname.replace("-" + lastPart, "") || "";
               }
             }
           }
           // Patch the group string
           for (const aprefix in vendorAliases) {
-            if (name.startsWith(aprefix)) {
+            if (name && name.startsWith(aprefix)) {
               group = vendorAliases[aprefix];
               break;
             }
@@ -2112,7 +2112,7 @@ const extractJarArchive = function (jarFile, tempDir) {
           if (name && version) {
             pkgList.push({
               group: group === "." ? "" : group || "",
-              name,
+              name: name || "",
               version,
             });
           } else {

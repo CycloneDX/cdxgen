@@ -37,6 +37,7 @@ jobs:
           bin/cdxgen redmine@sha256:a5c5f8a64a0d9a436a0a6941bc3fb156be0c89996add834fe33b66ebeed2439e -o bomresults/bom-redmine.json
           bin/cdxgen rocket.chat@sha256:379f7afa0e67497c363ac9a9b3e7e6a6d31deee228233307c987e4a0c68b28e6 -o bomresults/bom-rocket.json
           bin/cdxgen sonarqube@sha256:7c0edcb99c964984db6d24330db33bb12de1e8ae0d5974d77640b1efea1483d1 -o bomresults/bom-sonar.json
+          bin/cdxgen zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6 -o bomresults/bom-zoo.json
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
         with:
