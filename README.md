@@ -101,6 +101,18 @@ NOTE:
 - Only application related packages are collected by cdxgen. Support for collecting OS packages in the images would be added in version 4 or above. If you would like to sponsor this feature please contact me
 - Only json format is supported for container images SBoM
 
+### Podman in rootless mode
+
+Setup podman in either [rootless](https://github.com/containers/podman/blob/master/docs/tutorials/rootless_tutorial.md) or [remote](https://github.com/containers/podman/blob/master/docs/tutorials/mac_win_client.md) mode
+
+On Linux, do not forget to start the podman socket which is required for API access.
+
+```bash
+systemctl --user enable --now podman.socket
+systemctl --user start podman.socket
+podman system service -t 0 &
+```
+
 ### War file support
 
 cdxgen can generate a BoM file from a given war file.

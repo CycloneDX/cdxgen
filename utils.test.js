@@ -497,8 +497,7 @@ test("get go pkg license", async () => {
   expect(license).toEqual([
     {
       id: "MIT",
-      url:
-        "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
+      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
     },
   ]);
 

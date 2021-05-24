@@ -12,6 +12,8 @@ const tar = require("tar");
 const pipeline = util.promisify(stream.pipeline);
 
 let dockerConn = undefined;
+let isPodman = false;
+let isPodmanRootless = true;
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -47,12 +49,23 @@ const getDefaultOptions = () => {
     throwHttpErrors: true,
     "hooks.beforeError": [],
     method: "GET",
+    isPodman,
   };
-
+  const userInfo = os.userInfo();
+  opts.podmanPrefixUrl = isWin ? "" : `unix:/run/podman/podman.sock:`;
+  opts.podmanRootlessPrefixUrl = isWin
+    ? ""
+    : `unix:/run/user/${userInfo.uid}/podman/podman.sock:`;
   if (!process.env.DOCKER_HOST) {
-    opts.prefixUrl = isWin
-      ? "npipe://./pipe/docker_engine:"
-      : "unix:/var/run/docker.sock:";
+    if (isPodman) {
+      opts.prefixUrl = isPodmanRootless
+        ? opts.podmanRootlessPrefixUrl
+        : opts.podmanPrefixUrl;
+    } else {
+      opts.prefixUrl = isWin
+        ? "npipe://./pipe/docker_engine:"
+        : "unix:/var/run/docker.sock:";
+    }
   } else {
     let hostStr = process.env.DOCKER_HOST;
     opts.prefixUrl = hostStr;
@@ -75,15 +88,36 @@ const getDefaultOptions = () => {
 
 const getConnection = async (options) => {
   if (!dockerConn) {
+    let res = undefined;
     const opts = Object.assign({}, getDefaultOptions(), options);
     try {
-      const res = await got.get("_ping", opts);
+      res = await got.get("_ping", opts);
       dockerConn = got.extend(opts);
+      console.log("Docker service in root mode detected!");
     } catch (err) {
-      if (err && err.code === "ECONNREFUSED") {
-        console.warn("Ensure docker service or Docker for Desktop is running");
-      } else {
-        console.error(opts, err);
+      try {
+        opts.prefixUrl = opts.podmanRootlessPrefixUrl;
+        res = await got.get("libpod/_ping", opts);
+        isPodman = true;
+        isPodmanRootless = true;
+        dockerConn = got.extend(opts);
+        console.log("Podman in rootless mode detected!");
+      } catch (err) {
+        console.log(err);
+        try {
+          opts.prefixUrl = opts.podmanPrefixUrl;
+          res = await got.get("libpod/_ping", opts);
+          isPodman = true;
+          isPodmanRootless = false;
+          dockerConn = got.extend(opts);
+          console.log("Podman in root mode detected!");
+        } catch (err) {
+          console.warn(
+            "Ensure docker/podman service or Docker for Desktop is running",
+            opts,
+            err
+          );
+        }
       }
     }
   }
@@ -279,17 +313,35 @@ const exportImage = async (fullName) => {
           })
         );
       }
-      const lastLayerConfigFile = path.join(
-        tempDir,
-        lastLayer.replace("layer.tar", "json")
-      );
-      let lastLayerConfig = {};
-      if (fs.existsSync(lastLayerConfigFile)) {
-        lastLayerConfig = JSON.parse(
-          fs.readFileSync(lastLayerConfigFile, {
-            encoding: "utf-8",
-          })
+      let lastLayerConfigFile = "";
+      if (manifest.Config) {
+        lastLayerConfigFile = path.join(tempDir, manifest.Config);
+      }
+      if (lastLayer.includes("layer.tar")) {
+        lastLayerConfigFile = path.join(
+          tempDir,
+          lastLayer.replace("layer.tar", "json")
         );
+      }
+      let lastLayerConfig = {};
+      let lastWorkingDir = "";
+      if (lastLayerConfigFile && fs.existsSync(lastLayerConfigFile)) {
+        try {
+          lastLayerConfig = JSON.parse(
+            fs.readFileSync(lastLayerConfigFile, {
+              encoding: "utf-8",
+            })
+          );
+          lastWorkingDir =
+            lastLayerConfig.config && lastLayerConfig.config.WorkingDir
+              ? path.join(
+                  allLayersExplodedDir,
+                  lastLayerConfig.config.WorkingDir
+                )
+              : "";
+        } catch (err) {
+          console.log(err);
+        }
       }
       const exportData = {
         inspectData: localData,
@@ -297,11 +349,9 @@ const exportImage = async (fullName) => {
         allLayersDir: tempDir,
         allLayersExplodedDir,
         lastLayerConfig,
-        lastWorkingDir: lastLayerConfig.config.WorkingDir
-          ? path.join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
-          : "",
+        lastWorkingDir,
       };
-      exportData.pkgPathList = getPkgPathList(exportData);
+      exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
       return exportData;
     } else {
       console.log(`Unable to export image to ${tempDir}`);
@@ -316,13 +366,11 @@ exports.exportImage = exportImage;
 /**
  * Method to retrieve path list for system-level packages
  */
-const getPkgPathList = (exportData) => {
+const getPkgPathList = (exportData, lastWorkingDir) => {
   const allLayersExplodedDir = exportData.allLayersExplodedDir;
   const allLayersDir = exportData.allLayersDir;
-  const lastWorkingDir = exportData.lastLayerConfig.config.WorkingDir || "";
   let pathList = [];
   const knownSysPaths = [
-    path.join(allLayersExplodedDir, lastWorkingDir),
     path.join(allLayersExplodedDir, "/usr/lib"),
     path.join(allLayersExplodedDir, "/usr/lib64"),
     path.join(allLayersExplodedDir, "/usr/local/lib"),
@@ -334,6 +382,9 @@ const getPkgPathList = (exportData) => {
     path.join(allLayersExplodedDir, "/var/lib"),
     path.join(allLayersExplodedDir, "/mnt"),
   ];
+  if (lastWorkingDir && lastWorkingDir !== "") {
+    knownSysPaths.push(path.join(allLayersExplodedDir, lastWorkingDir));
+  }
   // Some more common app dirs
   if (!lastWorkingDir.startsWith("/app")) {
     knownSysPaths.push(path.join(allLayersExplodedDir, "/app"));
