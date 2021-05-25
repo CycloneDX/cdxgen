@@ -92,7 +92,7 @@ function addMetadata() {
     ],
     authors: [
       {
-        author: { name: selfPjson.author, email: "cloud@appthreat.com" },
+        author: { name: "Team AppThreat", email: "cloud@appthreat.com" },
       },
     ],
     supplier: undefined,
