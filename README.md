@@ -96,10 +96,17 @@ You can also pass `-t docker` for simple labels. Only the `latest` tag would be 
 cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
 ```
 
+You can also pass the .tar file of a container image.
+
+```bash
+docker save -o /tmp/slim.tar shiftleft/scan-slim
+podman save -q --format oci-archive -o /tmp/slim.tar shiftleft/scan-slim
+cdxgen /tmp/slim.tar -o /tmp/bom.json -t docker
+```
+
 NOTE:
 
-- Only application related packages are collected by cdxgen. Support for collecting OS packages in the images would be added in version 4 or above. If you would like to sponsor this feature please contact me
-- Only json format is supported for container images SBoM
+- Only application related packages are collected by cdxgen. Support for OS installed packages is coming soon.
 
 ### Podman in rootless mode
 

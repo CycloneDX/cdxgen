@@ -251,8 +251,157 @@ const getImage = async (fullName) => {
 };
 exports.getImage = getImage;
 
+const extractTar = async (fullName, dir) => {
+  try {
+    await pipeline(
+      fs.createReadStream(fullName),
+      tar.x({
+        sync: true,
+        preserveOwner: false,
+        noMtime: true,
+        noChmod: true,
+        C: dir,
+      })
+    );
+    return true;
+  } catch (err) {
+    if (DEBUG_MODE) {
+      console.log(err);
+    }
+    return false;
+  }
+};
+exports.extractTar = extractTar;
+
 /**
- * Method to export a container image by untarring. Returns the location of the layers with additional packages related metadata
+ * Method to export a container image archive.
+ * Returns the location of the layers with additional packages related metadata
+ */
+const exportArchive = async (fullName) => {
+  if (!fs.existsSync(fullName)) {
+    console.log(`Unable to find container image archive ${fullName}`);
+    return undefined;
+  }
+  let manifest = {};
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
+  const allLayersExplodedDir = path.join(tempDir, "all-layers");
+  const blobsDir = path.join(tempDir, "blobs", "sha256");
+  fs.mkdirSync(allLayersExplodedDir);
+  const manifestFile = path.join(tempDir, "manifest.json");
+  try {
+    await extractTar(fullName, tempDir);
+    // podman use blobs dir
+    if (fs.existsSync(blobsDir)) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Image archive ${fullName} successfully exported to directory ${tempDir}`
+        );
+      }
+      const allBlobs = getDirs(blobsDir, "*", false);
+      for (let ablob of allBlobs) {
+        if (DEBUG_MODE) {
+          console.log(`Extracting ${ablob} to ${allLayersExplodedDir}`);
+        }
+        await extractTar(ablob, allLayersExplodedDir);
+      }
+      let lastLayerConfig = {};
+      let lastWorkingDir = "";
+      const exportData = {
+        manifest,
+        allLayersDir: tempDir,
+        allLayersExplodedDir,
+        lastLayerConfig,
+        lastWorkingDir,
+      };
+      exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
+      return exportData;
+    } else if (fs.existsSync(manifestFile)) {
+      // docker manifest file
+      return await extractFromManifest(
+        manifestFile,
+        {},
+        tempDir,
+        allLayersExplodedDir
+      );
+    } else {
+      console.log(`Unable to extract image archive to ${tempDir}`);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return undefined;
+};
+exports.exportArchive = exportArchive;
+
+const extractFromManifest = async (
+  manifestFile,
+  localData,
+  tempDir,
+  allLayersExplodedDir
+) => {
+  manifest = JSON.parse(
+    fs.readFileSync(manifestFile, {
+      encoding: "utf-8",
+    })
+  );
+  if (manifest.length !== 1) {
+    if (DEBUG_MODE) {
+      console.log(
+        "Multiple image tags was downloaded. Only the last one would be used"
+      );
+      console.log(manifest[manifest.length - 1]);
+    }
+  }
+  const layers = manifest[manifest.length - 1]["Layers"];
+  const lastLayer = layers[layers.length - 1];
+  for (let layer of layers) {
+    if (DEBUG_MODE) {
+      console.log(`Extracting ${layer} to ${allLayersExplodedDir}`);
+    }
+    await extractTar(path.join(tempDir, layer), allLayersExplodedDir);
+  }
+  let lastLayerConfigFile = "";
+  if (manifest.Config) {
+    lastLayerConfigFile = path.join(tempDir, manifest.Config);
+  }
+  if (lastLayer.includes("layer.tar")) {
+    lastLayerConfigFile = path.join(
+      tempDir,
+      lastLayer.replace("layer.tar", "json")
+    );
+  }
+  let lastLayerConfig = {};
+  let lastWorkingDir = "";
+  if (lastLayerConfigFile && fs.existsSync(lastLayerConfigFile)) {
+    try {
+      lastLayerConfig = JSON.parse(
+        fs.readFileSync(lastLayerConfigFile, {
+          encoding: "utf-8",
+        })
+      );
+      lastWorkingDir =
+        lastLayerConfig.config && lastLayerConfig.config.WorkingDir
+          ? path.join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
+          : "";
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  const exportData = {
+    inspectData: localData,
+    manifest,
+    allLayersDir: tempDir,
+    allLayersExplodedDir,
+    lastLayerConfig,
+    lastWorkingDir,
+  };
+  exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
+  return exportData;
+};
+
+/**
+ * Method to export a container image by using the export feature in docker or podman service.
+ * Returns the location of the layers with additional packages related metadata
  */
 const exportImage = async (fullName) => {
   // Try to get the data locally first
@@ -266,7 +415,6 @@ const exportImage = async (fullName) => {
     fullName = fullName + ":latest";
   }
   let client = await getConnection();
-  let manifest = {};
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
   const allLayersExplodedDir = path.join(tempDir, "all-layers");
   fs.mkdirSync(allLayersExplodedDir);
@@ -277,6 +425,9 @@ const exportImage = async (fullName) => {
       client.stream(`images/${fullName}/get`),
       tar.x({
         sync: true,
+        preserveOwner: false,
+        noMtime: true,
+        noChmod: true,
         C: tempDir,
       })
     );
@@ -286,73 +437,12 @@ const exportImage = async (fullName) => {
           `Image ${fullName} successfully exported to directory ${tempDir}`
         );
       }
-      manifest = JSON.parse(
-        fs.readFileSync(manifestFile, {
-          encoding: "utf-8",
-        })
+      return await extractFromManifest(
+        manifestFile,
+        localData,
+        tempDir,
+        allLayersExplodedDir
       );
-      if (manifest.length !== 1) {
-        if (DEBUG_MODE) {
-          console.log(
-            "Multiple image tags was downloaded. Only the last one would be used"
-          );
-          console.log(manifest[manifest.length - 1]);
-        }
-      }
-      const layers = manifest[manifest.length - 1]["Layers"];
-      const lastLayer = layers[layers.length - 1];
-      for (let layer of layers) {
-        if (DEBUG_MODE) {
-          console.log(`Extracting ${layer} to ${allLayersExplodedDir}`);
-        }
-        await pipeline(
-          fs.createReadStream(path.join(tempDir, layer)),
-          tar.x({
-            sync: true,
-            C: allLayersExplodedDir,
-          })
-        );
-      }
-      let lastLayerConfigFile = "";
-      if (manifest.Config) {
-        lastLayerConfigFile = path.join(tempDir, manifest.Config);
-      }
-      if (lastLayer.includes("layer.tar")) {
-        lastLayerConfigFile = path.join(
-          tempDir,
-          lastLayer.replace("layer.tar", "json")
-        );
-      }
-      let lastLayerConfig = {};
-      let lastWorkingDir = "";
-      if (lastLayerConfigFile && fs.existsSync(lastLayerConfigFile)) {
-        try {
-          lastLayerConfig = JSON.parse(
-            fs.readFileSync(lastLayerConfigFile, {
-              encoding: "utf-8",
-            })
-          );
-          lastWorkingDir =
-            lastLayerConfig.config && lastLayerConfig.config.WorkingDir
-              ? path.join(
-                  allLayersExplodedDir,
-                  lastLayerConfig.config.WorkingDir
-                )
-              : "";
-        } catch (err) {
-          console.log(err);
-        }
-      }
-      const exportData = {
-        inspectData: localData,
-        manifest: manifest,
-        allLayersDir: tempDir,
-        allLayersExplodedDir,
-        lastLayerConfig,
-        lastWorkingDir,
-      };
-      exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
-      return exportData;
     } else {
       console.log(`Unable to export image to ${tempDir}`);
     }
