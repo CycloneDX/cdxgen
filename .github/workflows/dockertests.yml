@@ -39,6 +39,7 @@ jobs:
           bin/cdxgen sonarqube@sha256:7c0edcb99c964984db6d24330db33bb12de1e8ae0d5974d77640b1efea1483d1 -o bomresults/bom-sonar.json
           bin/cdxgen zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6 -o bomresults/bom-zoo.json
           docker save -o /tmp/scanslim.tar shiftleft/scan-slim:latest
+          ls -ltr /tmp/scanslim.tar
           bin/cdxgen /tmp/scanslim.tar -o bomresults/bom-scanarch.json
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
