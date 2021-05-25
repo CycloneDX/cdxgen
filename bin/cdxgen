@@ -101,7 +101,11 @@ let filePath = args._[0] || ".";
       const jsonFile = args.output.replace(".xml", ".json");
       // Create bom json file
       if (bomNSData.bomJson) {
-        fs.writeFileSync(jsonFile, JSON.stringify(bomNSData.bomJson, null, 2));
+        if (typeof bomNSData.bomJson === "string" || bomNSData.bomJson instanceof String) {
+          fs.writeFileSync(jsonFile, bomNSData.bomJson);
+        } else {
+          fs.writeFileSync(jsonFile, JSON.stringify(bomNSData.bomJson, null, 2));
+        }
       }
       // Create bom xml file
       if (bomNSData.bomXml) {
