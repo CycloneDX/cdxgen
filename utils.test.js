@@ -212,7 +212,7 @@ test("get py metadata", async () => {
 test("parseGoModData", async () => {
   jest.setTimeout(120000);
   let dep_list = await utils.parseGoModData(null);
-  expect(dep_list).toEqual([]);
+  expect(dep_list).toEqual({"modulename": "", "pkgComponentsList": [], "purl": ""});
   const gosumMap = {
     "google.golang.org/grpc/v1.21.0":
       "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
@@ -224,10 +224,11 @@ test("parseGoModData", async () => {
     "github.com/stretchr/testify/v1.6.1":
       "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=",
   };
-  dep_list = await utils.parseGoModData(
+  moduleinfo = await utils.parseGoModData(
     fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
     gosumMap
   );
+  dep_list = moduleinfo.pkgComponentsList
   expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
     group: "github.com/aws",
@@ -265,7 +266,7 @@ test("parseGoModData", async () => {
 test("parseGoSumData", async () => {
   jest.setTimeout(120000);
   let dep_list = await utils.parseGoModData(null);
-  expect(dep_list).toEqual([]);
+  expect(dep_list).toEqual({"modulename": "", "pkgComponentsList": [], "purl": ""});
   dep_list = await utils.parseGosumData(
     fs.readFileSync("./test/gomod/go.sum", (encoding = "utf-8"))
   );

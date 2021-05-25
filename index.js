@@ -112,6 +112,7 @@ function addMetadata(format = "xml") {
       },
     ],
     supplier: undefined,
+    component: undefined,
   };
   if (format === "json") {
     metadata.tools = [
@@ -437,7 +438,13 @@ const buildBomNSData = (pkgInfo, ptype, context) => {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
-  const metadata = addMetadata("json");
+  const metadata = addMetadata();
+  if (context.name) {
+    metadata.component = {
+      name: context.name,
+      purl: context.purl
+    }
+  } 
   const components = listComponents(allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
     const bomString = buildBomXml(serialNum, components, context);
@@ -1406,13 +1413,16 @@ const createGoBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       const gomodData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGoModData(gomodData, gosumMap);
+      moduleconfig = await utils.parseGoModData(gomodData, gosumMap);
+      const dlist = moduleconfig.pkgComponentsList
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
     return buildBomNSData(pkgList, "golang", {
       src: path,
+      name: moduleconfig.modulename,
+      purl: moduleconfig.modulename,
       filename: gomodFiles.join(", "),
     });
   } else if (gopkgLockFiles.length) {

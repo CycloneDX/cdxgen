@@ -1232,11 +1232,15 @@ const getGoPkgComponent = async function (group, name, version, hash) {
 exports.getGoPkgComponent = getGoPkgComponent;
 
 const parseGoModData = async function (goModData, gosumMap) {
-  const pkgComponentsList = [];
+  let result = {
+    modulename: "",
+    purl: "",
+    pkgComponentsList: []
+  }
   let isModReplacement = false;
 
   if (!goModData) {
-    return pkgComponentsList;
+    return result;
   }
 
   const pkgs = goModData.split("\n");
@@ -1253,7 +1257,6 @@ const parseGoModData = async function (goModData, gosumMap) {
     ) {
       continue;
     }
-
     // Handle required modules separately from replacement modules to ensure accuracy when parsing component data.
     if (l.includes("require (")) {
       isModReplacement = false;
@@ -1268,8 +1271,14 @@ const parseGoModData = async function (goModData, gosumMap) {
       isModReplacement = true;
     }
 
+
     const tmpA = l.trim().split(" ");
 
+    if (l.includes("module ")) {
+      result.modulename = tmpA[1];
+      result.purl = tmpA[1];
+    } else
+   
     if (!isModReplacement) {
       // Add group, name and version component properties for required modules
       let group = path.dirname(tmpA[0]);
@@ -1284,7 +1293,7 @@ const parseGoModData = async function (goModData, gosumMap) {
         continue;
       }
       let component = await getGoPkgComponent(group, name, version, gosumHash);
-      pkgComponentsList.push(component);
+      result.pkgComponentsList.push(component);
     } else {
       // Add group, name and version component properties for replacement modules
       let group = path.dirname(tmpA[2]);
@@ -1300,12 +1309,12 @@ const parseGoModData = async function (goModData, gosumMap) {
         continue;
       }
       let component = await getGoPkgComponent(group, name, version, gosumHash);
-      pkgComponentsList.push(component);
+      result.pkgComponentsList.push(component);
     }
   }
   // Clear the cache
   metadata_cache = {};
-  return pkgComponentsList;
+  return result;
 };
 exports.parseGoModData = parseGoModData;
 
