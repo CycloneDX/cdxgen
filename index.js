@@ -358,6 +358,41 @@ function addComponentHash(alg, digest, component, format = "xml") {
 }
 
 /**
+ * Return Bom in xml format
+ *
+ * @param {Array} components Bom components
+ * @param {Object} context Context object
+ * @returns bom xml string
+ */
+const buildBomXml = (serialNum, components, context) => {
+  const bom = builder
+    .create("bom", { encoding: "utf-8", separateArrayItems: true })
+    .att("xmlns", "http://cyclonedx.org/schema/bom/1.2");
+  bom.att("serialNumber", serialNum);
+  bom.att("version", 1);
+  if (context && context.src && context.filename) {
+    bom
+      .ele("externalReferences")
+      .ele(addGlobalReferences(context.src, context.filename));
+  }
+  const metadata = addMetadata();
+  bom.ele("metadata").ele(metadata);
+  if (components && components.length) {
+    bom.ele("components").ele(components);
+    const bomString = bom.end({
+      pretty: true,
+      indent: "  ",
+      newline: "\n",
+      width: 0,
+      allowEmpty: false,
+      spacebeforeslash: "",
+    });
+    return bomString;
+  }
+  return "";
+};
+
+/**
  * Return the BOM in xml, json format including any namespace mapping
  */
 const buildBomNSData = (pkgInfo, ptype, context) => {
@@ -368,37 +403,18 @@ const buildBomNSData = (pkgInfo, ptype, context) => {
     bomJsonFiles: undefined,
     nsMapping: undefined,
   };
-  let bom = builder
-    .create("bom", { encoding: "utf-8", separateArrayItems: true })
-    .att("xmlns", "http://cyclonedx.org/schema/bom/1.2");
   const serialNum = "urn:uuid:" + uuidv4();
-  bom.att("serialNumber", serialNum);
-  bom.att("version", 1);
-  if (context && context.src && context.filename) {
-    bom
-      .ele("externalReferences")
-      .ele(addGlobalReferences(context.src, context.filename));
-  }
   let allImports = {};
   if (context && context.allImports) {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
   const metadata = addMetadata();
-  bom.ele("metadata").ele(metadata);
   const components = listComponents(allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
-    bom.ele("components").ele(components);
-    let bomString = bom.end({
-      pretty: true,
-      indent: "  ",
-      newline: "\n",
-      width: 0,
-      allowEmpty: false,
-      spacebeforeslash: "",
-    });
+    const bomString = buildBomXml(serialNum, components, context);
     // CycloneDX 1.2 Json Template
-    let jsonTpl = {
+    const jsonTpl = {
       bomFormat: "CycloneDX",
       specVersion: "1.2",
       serialNumber: serialNum,
@@ -1481,13 +1497,17 @@ const createMultiXBom = async (pathList, options) => {
   }
   components = trimComponents(components);
   console.log(`BOM includes ${components.length} components`);
+  const serialNum = "urn:uuid:" + uuidv4();
   return {
-    bomFormat: "CycloneDX",
-    specVersion: "1.2",
-    serialNumber: "urn:uuid:" + uuidv4(),
-    version: 1,
-    metadata: addMetadata(),
-    components,
+    bomXml: buildBomXml(serialNum, components),
+    bomJson: {
+      bomFormat: "CycloneDX",
+      specVersion: "1.2",
+      serialNumber: serialNum,
+      version: 1,
+      metadata: addMetadata(),
+      components,
+    },
   };
 };
 
@@ -1623,8 +1643,19 @@ exports.createBom = async (path, options) => {
     projectType = "";
   }
   projectType = projectType.toLowerCase();
-  // Docker support
-  if (
+  let exportData = undefined;
+  let isContainerMode = false;
+  // Docker and image archive support
+  if (path.endsWith(".tar") || path.endsWith(".tar.gz")) {
+    exportData = await dockerLib.exportArchive(path);
+    if (!exportData) {
+      console.log(
+        "BOM generation has failed due to problems with exporting the image"
+      );
+      return {};
+    }
+    isContainerMode = true;
+  } else if (
     projectType === "docker" ||
     projectType === "podman" ||
     projectType === "oci" ||
@@ -1633,18 +1664,21 @@ exports.createBom = async (path, options) => {
     path.includes("@sha256") ||
     path.includes(":latest")
   ) {
-    const exportData = await dockerLib.exportImage(path);
+    exportData = await dockerLib.exportImage(path);
     if (!exportData) {
       console.log(
         "BOM generation has failed due to problems with exporting the image"
       );
       return {};
     }
+    isContainerMode = true;
+  }
+  if (isContainerMode) {
     options.multiProject = true;
     options.installDeps = false;
     options.projectType = "docker";
     options.lastWorkingDir = exportData.lastWorkingDir;
-    const bomJsonData = await createMultiXBom(
+    const bomData = await createMultiXBom(
       [...new Set(exportData.pkgPathList)],
       options
     );
@@ -1655,7 +1689,7 @@ exports.createBom = async (path, options) => {
       console.log(`Cleaning up ${exportData.allLayersDir}`);
       fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
     }
-    return { bomJson: bomJsonData };
+    return bomData;
   }
   if (path.endsWith(".war")) {
     projectType = "java";

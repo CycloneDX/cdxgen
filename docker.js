@@ -251,8 +251,81 @@ const getImage = async (fullName) => {
 };
 exports.getImage = getImage;
 
+const extractTar = async (fullName, dir) => {
+  try {
+    await pipeline(
+      fs.createReadStream(fullName),
+      tar.x({
+        sync: true,
+        preserveOwner: false,
+        noMtime: true,
+        noChmod: true,
+        C: dir,
+      })
+    );
+    return true;
+  } catch (err) {
+    if (DEBUG_MODE) {
+      console.log(err);
+    }
+    return false;
+  }
+};
+exports.extractTar = extractTar;
+
 /**
- * Method to export a container image by untarring. Returns the location of the layers with additional packages related metadata
+ * Method to export a container image archive.
+ * Returns the location of the layers with additional packages related metadata
+ */
+const exportArchive = async (fullName) => {
+  if (!fs.existsSync(fullName)) {
+    console.log(`Unable to find container image archive ${fullName}`);
+    return undefined;
+  }
+  let manifest = {};
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
+  const allLayersExplodedDir = path.join(tempDir, "all-layers");
+  const blobsDir = path.join(tempDir, "blobs", "sha256");
+  fs.mkdirSync(allLayersExplodedDir);
+  try {
+    await extractTar(fullName, tempDir);
+    if (fs.existsSync(blobsDir)) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Image archive ${fullName} successfully exported to directory ${tempDir}`
+        );
+      }
+      const allBlobs = getDirs(blobsDir, "*", false);
+      for (let ablob of allBlobs) {
+        if (DEBUG_MODE) {
+          console.log(`Extracting ${ablob} to ${allLayersExplodedDir}`);
+        }
+        await extractTar(ablob, allLayersExplodedDir);
+      }
+      let lastLayerConfig = {};
+      let lastWorkingDir = "";
+      const exportData = {
+        manifest,
+        allLayersDir: tempDir,
+        allLayersExplodedDir,
+        lastLayerConfig,
+        lastWorkingDir,
+      };
+      exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
+      return exportData;
+    } else {
+      console.log(`Unable to extract image archive to ${tempDir}`);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return undefined;
+};
+exports.exportArchive = exportArchive;
+
+/**
+ * Method to export a container image by using the export feature in docker or podman service.
+ * Returns the location of the layers with additional packages related metadata
  */
 const exportImage = async (fullName) => {
   // Try to get the data locally first
@@ -277,6 +350,9 @@ const exportImage = async (fullName) => {
       client.stream(`images/${fullName}/get`),
       tar.x({
         sync: true,
+        preserveOwner: false,
+        noMtime: true,
+        noChmod: true,
         C: tempDir,
       })
     );
@@ -305,13 +381,7 @@ const exportImage = async (fullName) => {
         if (DEBUG_MODE) {
           console.log(`Extracting ${layer} to ${allLayersExplodedDir}`);
         }
-        await pipeline(
-          fs.createReadStream(path.join(tempDir, layer)),
-          tar.x({
-            sync: true,
-            C: allLayersExplodedDir,
-          })
-        );
+        await extractTar(path.join(tempDir, layer), allLayersExplodedDir);
       }
       let lastLayerConfigFile = "";
       if (manifest.Config) {
@@ -345,7 +415,7 @@ const exportImage = async (fullName) => {
       }
       const exportData = {
         inspectData: localData,
-        manifest: manifest,
+        manifest,
         allLayersDir: tempDir,
         allLayersExplodedDir,
         lastLayerConfig,
