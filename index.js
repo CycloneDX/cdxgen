@@ -596,10 +596,17 @@ const createJavaBom = async (path, options) => {
         );
         let bomJonString = "";
         if (fs.existsSync(pathLib.join(firstPath, "target", "bom.json"))) {
-          bomJonString = fs.readFileSync(
-            pathLib.join(firstPath, "target", "bom.json"),
-            { encoding: "utf-8" }
-          );
+          try {
+            bomJonString = JSON.parse(
+              fs.readFileSync(pathLib.join(firstPath, "target", "bom.json"), {
+                encoding: "utf-8",
+              })
+            );
+          } catch (err) {
+            if (DEBUG_MODE) {
+              console.log(err);
+            }
+          }
         }
         const bomNSData = {};
         bomNSData.bomXml = bomString;
