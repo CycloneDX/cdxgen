@@ -8,5 +8,5 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install --production
 
 COPY . .
-
-ENTRYPOINT [ "entrypoint.sh"]
+ADD entrypoint.sh /
+ENTRYPOINT [ "/entrypoint.sh"]
