@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/bom",
-  "version": "2.0.1-SNAPSHOT",
+  "version": "2.0.2",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects",
   "homepage": "http://github.com/CycloneDX/cyclonedx-node-module",
   "author": "Erlend Oftedal",
@@ -26,6 +26,9 @@
       "name": "Steve Springett",
       "email": "steve.springett@owasp.org",
       "url": "https://about.me/stevespringett"
+    },
+    {
+      "name": "Patrick Dwyer"
     }
   ],
   "main": "index.js",
@@ -46,15 +49,15 @@
     "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
   "dependencies": {
-    "commander": "^5.1.0",
-    "packageurl-js": "^0.0.2",
+    "commander": "^7.0.0",
+    "packageurl-js": "^0.0.4",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
-    "ssri": "^6.0.0",
+    "ssri": "^8.0.0",
     "uuid": "^3.3.2",
     "xmlbuilder": "^13.0.2",
-    "xmldom": "^0.2.1"
+    "xmldom": "^0.3.0"
   },
   "files": [
     "index.js",
