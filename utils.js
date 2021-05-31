@@ -1211,8 +1211,8 @@ const parseGoModData = async function (goModData, gosumMap) {
 
     // Skip go.mod file headers, whitespace, and/or comments
     if (
-      l.includes("module ") ||
-      l.includes("go ") ||
+      l.startsWith("module ") ||
+      l.startsWith("go ") ||
       l.includes(")") ||
       l.trim() === "" ||
       l.trim().startsWith("//")
