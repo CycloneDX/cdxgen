@@ -208,6 +208,7 @@ test("parseGoModData", async () => {
   const gosumMap = {
     "google.golang.org/grpc/v1.21.0":
       "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
+    "github.com/aws/aws-sdk-go/v1.38.47":"sha256-fake-sha-for-aws-go-sdk=",
     "github.com/spf13/cobra/v1.0.0":
       "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
     "github.com/spf13/viper/v1.0.2":
@@ -219,22 +220,30 @@ test("parseGoModData", async () => {
     fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
     gosumMap
   );
-  expect(dep_list.length).toEqual(3);
+  console.log(dep_list);
+  expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
+    group: "github.com/aws",
+    name: "aws-sdk-go",
+    license: undefined,
+    version: "v1.38.47",
+    _integrity: "sha256-fake-sha-for-aws-go-sdk=",
+  });
+  expect(dep_list[1]).toEqual({
     group: "github.com/spf13",
     name: "cobra",
     license: undefined,
     version: "v1.0.0",
     _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
   });
-  expect(dep_list[1]).toEqual({
+  expect(dep_list[2]).toEqual({
     group: "google.golang.org",
     name: "grpc",
     license: undefined,
     version: "v1.21.0",
     _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
   });
-  expect(dep_list[2]).toEqual({
+  expect(dep_list[3]).toEqual({
     group: "github.com/spf13",
     name: "viper",
     license: undefined,
