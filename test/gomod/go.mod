@@ -4,6 +4,7 @@ go 1.14
 
 require (
     google.golang.org/grpc v1.32.0
+    github.com/aws/aws-sdk-go v1.38.47
     github.com/spf13/viper v1.3.0
     github.com/spf13/cobra v1.0.0
 )
