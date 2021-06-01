@@ -220,7 +220,6 @@ test("parseGoModData", async () => {
     fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
     gosumMap
   );
-  console.log(dep_list);
   expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
     group: "github.com/aws",
