@@ -1,9 +1,8 @@
 {
-  "name": "@appthreat/cdxgen",
-  "version": "3.2.9",
+  "name": "@sorenmat/cdxgen",
+  "version": "3.0.3",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) for node.js, python, java and golang projects",
-  "homepage": "http://github.com/AppThreat/cdxgen",
-  "author": "Team AppThreat",
+  "homepage": "http://github.com/sorenmat/cdxgen",
   "license": "Apache-2.0",
   "keywords": [
     "sbom",
@@ -20,9 +19,9 @@
   ],
   "contributors": [
     {
-      "name": "Team AppThreat",
-      "email": "cloud@appthreat.com",
-      "url": "https://appthreat.io"
+      "name": "Team sorenmat",
+      "email": "cloud@sorenmat.com",
+      "url": "https://sorenmat.io"
     },
     {
       "name": "Erlend Oftedal"
@@ -46,16 +45,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AppThreat/cdxgen.git"
+    "url": "git+https://github.com/sorenmat/cdxgen.git"
   },
   "bugs": {
-    "url": "https://github.com/AppThreat/cdxgen/issues"
+    "url": "https://github.com/sorenmat/cdxgen/issues"
   },
   "dependencies": {
-    "@babel/parser": "^7.14.7",
-    "@babel/traverse": "^7.14.7",
+    "@babel/parser": "^7.14.4",
+    "@babel/traverse": "^7.14.2",
     "cheerio": "^1.0.0-rc.9",
-    "glob": "^7.1.7",
+    "glob": "7.1.7",
     "global-agent": "^2.2.0",
     "got": "^11.8.2",
     "js-yaml": "^4.1.0",

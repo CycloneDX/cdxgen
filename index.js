@@ -1,7 +1,7 @@
 const parsePackageJsonName = require("parse-packagejson-name");
 const os = require("os");
 const pathLib = require("path");
-const request = require("request");
+const fetch = require('node-fetch');
 const ssri = require("ssri");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
@@ -2062,42 +2062,4 @@ exports.createBom = async (path, options) => {
     default:
       return await createXBom(path, options);
   }
-};
-
-/**
- * Method to submit the generated bom to dependency-track or AppThreat server
- *
- * @param args CLI args
- */
-exports.submitBom = function (args, bom, callback) {
-  let serverUrl = args.serverUrl + "/api/v1/bom";
-
-  const formData = {
-    bom: {
-      value: bom,
-      options: {
-        filename: args.output ? pathLib.basename(args.output) : "bom.xml",
-        contentType: "text/xml",
-      },
-    },
-  };
-  if (args.projectId) {
-    formData.project = args.projectId;
-  } else if (args.projectName) {
-    formData.projectName = args.projectName;
-    formData.projectVersion = args.projectVersion;
-    formData.autoCreate = "true";
-  }
-  const options = {
-    method: "POST",
-    url: serverUrl,
-    port: 443,
-    json: true,
-    headers: {
-      "X-Api-Key": args.apiKey,
-      "Content-Type": "multipart/form-data",
-    },
-    formData,
-  };
-  request(options, callback);
 };

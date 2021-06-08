@@ -109,3 +109,5 @@ dist
 .tool-versions
 .idea/
 test/obj
+/bom.json
+/bom.xml
