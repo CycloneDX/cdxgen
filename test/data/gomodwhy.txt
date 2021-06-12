@@ -1,0 +1,3 @@
+# github.com/mailgun/mailgun-go/v4
+github.com/Preetam/readfasterapp/api
+github.com/mailgun/mailgun-go/v4
