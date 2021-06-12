@@ -1150,11 +1150,9 @@ const createGoBom = async (path, options) => {
         }
         const allImports = {};
         const circuitBreak = false;
-        if (DEBUG_MODE) {
-          console.log(
-            "Attempting to detect required packages using `go mod why` command"
-          );
-        }
+        console.log(
+          `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+        );
         // Using go mod why detect required packages
         for (let apkg of pkgList) {
           if (circuitBreak) {
@@ -1181,6 +1179,9 @@ const createGoBom = async (path, options) => {
               }
             }
           }
+        }
+        if (DEBUG_MODE) {
+          console.log(`Required packages: ${Object.keys(allImports).length}`);
         }
         return buildBomNSData(pkgList, "golang", {
           allImports,
