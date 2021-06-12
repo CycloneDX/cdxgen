@@ -359,17 +359,18 @@ test("parse cargo lock", async () => {
   });
 });
 
-test("parse cargo tomml", async () => {
+test("parse cargo toml", async () => {
   expect(await utils.parseCargoTomlData(null)).toEqual([]);
   dep_list = await utils.parseCargoTomlData(
     fs.readFileSync("./test/data/Cargo1.toml", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(1);
-  expect(dep_list[0]).toEqual({
-    group: "",
-    name: "unwind",
-    version: "0.0.0",
-  });
+  expect(dep_list.length).toEqual(4);
+  expect(dep_list).toEqual([
+    { group: "", name: "unwind", version: "0.0.0" },
+    { name: "libc", version: "0.2.79" },
+    { name: "compiler_builtins", version: "0.1.0" },
+    { name: "cfg-if", version: "0.1.8" },
+  ]);
 });
 
 test("get crates metadata", async () => {

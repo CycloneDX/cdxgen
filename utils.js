@@ -1616,6 +1616,7 @@ const parseCargoTomlData = async function (cargoData) {
     return pkgList;
   }
   let pkg = null;
+  let dependencyMode = false;
   cargoData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
@@ -1625,7 +1626,13 @@ const parseCargoTomlData = async function (cargoData) {
       }
       pkg = {};
     }
-    if (l.indexOf("=") > -1) {
+    if (l.startsWith("[dependencies]")) {
+      dependencyMode = true;
+    }
+    if (l.startsWith("[build-dependencies]" || l.startsWith("[features]"))) {
+      dependencyMode = false;
+    }
+    if (!dependencyMode && l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
       value = tmpA[1].trim().replace(/\"/g, "");
@@ -1644,9 +1651,35 @@ const parseCargoTomlData = async function (cargoData) {
           pkg.version = value;
           break;
       }
+    } else if (dependencyMode && l.indexOf("=") > -1) {
+      if (pkg) {
+        pkgList.push(pkg);
+      }
+      pkg = undefined;
+      let tmpA = l.split(" = ");
+      let tmpB = undefined;
+      let name = undefined;
+      let version = undefined;
+      if (l.indexOf("version =") > -1) {
+        tmpB = l.split(" { version = ");
+        if (tmpB && tmpB.length > 1) {
+          name = tmpA[0];
+          version = tmpB[1].split(",")[0];
+        }
+      } else if (l.indexOf("path =") == -1 && tmpA.length > 1) {
+        name = tmpA[0];
+        version = tmpA[1];
+      }
+      if (name && version) {
+        name = name.replace(new RegExp("[\"']", "g"), "");
+        version = version.replace(new RegExp("[\"']", "g"), "");
+        pkgList.push({ name, version });
+      }
     }
   });
-  pkgList = [pkg];
+  if (pkg) {
+    pkgList.push(pkg);
+  }
   if (process.env.FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
