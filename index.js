@@ -1124,6 +1124,76 @@ const createGoBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "go.mod"
   );
   if (gomodFiles.length) {
+    // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
+    if (options.projectType !== "docker") {
+      console.log("Executing go list -deps in", path);
+      const result = spawnSync(
+        "go",
+        [
+          "list",
+          "-deps",
+          "-f",
+          "'{{with .Module}}{{.Path}} {{.Version}}{{end}}'",
+          "./...",
+        ],
+        { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+      );
+      if (result.status == 1 || result.error) {
+        console.error(result.stdout, result.stderr);
+      }
+      const stdout = result.stdout;
+      if (stdout) {
+        const cmdOutput = Buffer.from(stdout).toString();
+        const dlist = await utils.parseGoListDep(cmdOutput, gosumMap);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
+        const allImports = {};
+        const circuitBreak = false;
+        console.log(
+          `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+        );
+        // Using go mod why detect required packages
+        for (let apkg of pkgList) {
+          if (circuitBreak) {
+            break;
+          }
+          let pkgFullName = `${apkg.group}/${apkg.name}`;
+          if (DEBUG_MODE) {
+            console.log(`go mod why -m -vendor ${pkgFullName}`);
+          }
+          const mresult = spawnSync(
+            "go",
+            ["mod", "why", "-m", "-vendor", pkgFullName],
+            { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+          );
+          if (mresult.status == 1 || mresult.error) {
+            circuitBreak = true;
+          } else {
+            const mstdout = mresult.stdout;
+            if (mstdout) {
+              const cmdOutput = Buffer.from(mstdout).toString();
+              let whyPkg = utils.parseGoModWhy(cmdOutput);
+              if (whyPkg == pkgFullName) {
+                allImports[pkgFullName] = true;
+              }
+            }
+          }
+        }
+        if (DEBUG_MODE) {
+          console.log(`Required packages: ${Object.keys(allImports).length}`);
+        }
+        return buildBomNSData(pkgList, "golang", {
+          allImports,
+          src: path,
+          filename: gomodFiles.join(", "),
+        });
+      }
+    }
+    // Parse the gomod files manually. The resultant BoM would be incomplete
+    console.log(
+      "Manually parsing go.mod files. The resultant BoM would be incomplete."
+    );
     for (let i in gomodFiles) {
       const f = gomodFiles[i];
       if (DEBUG_MODE) {

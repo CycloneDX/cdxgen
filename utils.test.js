@@ -208,7 +208,7 @@ test("parseGoModData", async () => {
   const gosumMap = {
     "google.golang.org/grpc/v1.21.0":
       "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
-    "github.com/aws/aws-sdk-go/v1.38.47":"sha256-fake-sha-for-aws-go-sdk=",
+    "github.com/aws/aws-sdk-go/v1.38.47": "sha256-fake-sha-for-aws-go-sdk=",
     "github.com/spf13/cobra/v1.0.0":
       "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
     "github.com/spf13/viper/v1.0.2":
@@ -293,6 +293,30 @@ test("parseGoSumData", async () => {
   dep_list.forEach((d) => {
     expect(d.license);
   });
+});
+
+test("parse go list dependencies", async () => {
+  let dep_list = await utils.parseGoListDep(
+    fs.readFileSync("./test/data/golist-dep.txt", (encoding = "utf-8")),
+    {}
+  );
+  expect(dep_list.length).toEqual(8);
+  expect(dep_list[0]).toEqual({
+    group: "github.com/badoux",
+    name: "checkmail",
+    version: "v0.0.0-20181210160741-9661bd69e9ad",
+  });
+});
+
+test("parse go mod why dependencies", () => {
+  let pkg_name = utils.parseGoModWhy(
+    fs.readFileSync("./test/data/gomodwhy.txt", (encoding = "utf-8"))
+  );
+  expect(pkg_name).toEqual("github.com/mailgun/mailgun-go/v4");
+  pkg_name = utils.parseGoModWhy(
+    fs.readFileSync("./test/data/gomodwhynot.txt", (encoding = "utf-8"))
+  );
+  expect(pkg_name).toBeUndefined();
 });
 
 test("parseGopkgData", async () => {

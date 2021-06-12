@@ -1,0 +1,2 @@
+# github.com/mailgun/mailgun-go/v5
+(main module does not need to vendor module github.com/mailgun/mailgun-go/v5)

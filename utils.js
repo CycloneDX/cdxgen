@@ -1244,7 +1244,7 @@ const parseGoModData = async function (goModData, gosumMap) {
         group = name;
       }
       const version = tmpA[1];
-      gosumHash = gosumMap[`${group}/${name}/${version}`];
+      let gosumHash = gosumMap[`${group}/${name}/${version}`];
       // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
       if (gosumHash === undefined) {
         continue;
@@ -1260,7 +1260,7 @@ const parseGoModData = async function (goModData, gosumMap) {
       }
       const version = tmpA[3];
 
-      gosumHash = gosumMap[`${group}/${name}/${version}`];
+      let gosumHash = gosumMap[`${group}/${name}/${version}`];
       // The hash for this version was not found in go.sum, so skip.
       if (gosumHash === undefined) {
         continue;
@@ -1274,6 +1274,68 @@ const parseGoModData = async function (goModData, gosumMap) {
   return pkgComponentsList;
 };
 exports.parseGoModData = parseGoModData;
+
+/**
+ * Parse go list output
+ *
+ * @param {string} rawOutput Output from go list invocation
+ * @returns List of packages
+ */
+const parseGoListDep = async function (rawOutput, gosumMap) {
+  if (typeof rawOutput === "string") {
+    const deps = [];
+    const keys_cache = {};
+    const pkgs = rawOutput.split("\n");
+    for (let i in pkgs) {
+      let l = pkgs[i];
+      const verArr = l.trim().replace(new RegExp("[\"']", "g"), "").split(" ");
+      if (verArr && verArr.length === 2) {
+        const key = verArr[0] + "-" + verArr[1];
+        // Filter duplicates
+        if (!keys_cache[key]) {
+          keys_cache[key] = key;
+          let group = path.dirname(verArr[0]);
+          const name = path.basename(verArr[0]);
+          const version = verArr[1];
+          if (group === ".") {
+            group = name;
+          }
+          let gosumHash = gosumMap[`${group}/${name}/${version}`];
+          let component = await getGoPkgComponent(
+            group,
+            name,
+            version,
+            gosumHash
+          );
+          deps.push(component);
+        }
+      }
+    }
+    return deps;
+  }
+  return [];
+};
+exports.parseGoListDep = parseGoListDep;
+
+/**
+ * Parse go mod why output
+ * @param {string} rawOutput Output from go mod why
+ * @returns package name or none
+ */
+const parseGoModWhy = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    let pkg_name = undefined;
+    const tmpA = rawOutput.split("\n");
+    tmpA.forEach((l) => {
+      if (l && !l.startsWith("#") && !l.startsWith("(")) {
+        pkg_name = l.trim();
+      }
+    });
+    return pkg_name;
+  }
+  return undefined;
+};
+exports.parseGoModWhy = parseGoModWhy;
 
 const parseGosumData = async function (gosumData) {
   const pkgList = [];
