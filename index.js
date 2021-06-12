@@ -1150,14 +1150,23 @@ const createGoBom = async (path, options) => {
         }
         const allImports = {};
         const circuitBreak = false;
+        if (DEBUG_MODE) {
+          console.log(
+            "Attempting to detect required packages using `go mod why` command"
+          );
+        }
         // Using go mod why detect required packages
         for (let apkg of pkgList) {
           if (circuitBreak) {
             break;
           }
+          let pkgFullName = `${apkg.group}/${apkg.name}`;
+          if (DEBUG_MODE) {
+            console.log(`go mod why -m -vendor ${pkgFullName}`);
+          }
           const mresult = spawnSync(
             "go",
-            ["mod", "why", "-m", "-vendor", apkg],
+            ["mod", "why", "-m", "-vendor", pkgFullName],
             { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
           );
           if (mresult.status == 1 || mresult.error) {
@@ -1167,8 +1176,8 @@ const createGoBom = async (path, options) => {
             if (mstdout) {
               const cmdOutput = Buffer.from(mstdout).toString();
               let whyPkg = utils.parseGoModWhy(cmdOutput);
-              if (whyPkg) {
-                allImports[whyPkg] = true;
+              if (whyPkg == pkgFullName) {
+                allImports[pkgFullName] = true;
               }
             }
           }
