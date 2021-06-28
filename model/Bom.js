@@ -17,7 +17,7 @@
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
 const builder = require('xmlbuilder');
-const uuidv4 = require('uuid/v4');
+const uuid = require('uuid');
 const Component = require('./Component');
 const CycloneDXObject = require('./CycloneDXObject');
 const Metadata = require('./Metadata');
@@ -34,7 +34,7 @@ class Bom extends CycloneDXObject {
     this._includeLicenseText = includeLicenseText;
     this._version = 1;
     if (includeSerialNumber) {
-      this._serialNumber = 'urn:uuid:' + uuidv4();
+      this._serialNumber = 'urn:uuid:' + uuid.v4();
     }
     if (pkg) {
       this._metadata = this.createMetadata(pkg, componentType);
