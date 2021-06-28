@@ -20,7 +20,7 @@ const Bom = require('../../model/Bom');
 
 test('default schema version', () => {
   let bom = new Bom();
-  expect(bom.schemaVersion).toBe('1.2');
+  expect(bom.schemaVersion).toBe('1.3');
 });
 
 test('specific schema version', () => {

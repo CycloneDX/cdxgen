@@ -26,7 +26,7 @@ const program = require('../package.json');
 
 class Bom extends CycloneDXObject {
 
-  constructor(pkg, schemaVersion = "1.2", componentType, includeSerialNumber = true, includeLicenseText = true) {
+  constructor(pkg, schemaVersion = "1.3", componentType, includeSerialNumber = true, includeLicenseText = true) {
     super();
     this._schemaVersion = this.validateChoice("Schema version", schemaVersion, Bom.supportedSchemaVersions());
     CycloneDXObject.targetSpecVersion(this._schemaVersion);
@@ -45,7 +45,7 @@ class Bom extends CycloneDXObject {
   }
 
   static supportedSchemaVersions() {
-    return ["1.1", "1.2"];
+    return ["1.1", "1.2", "1.3"];
   }
 
   createMetadata(pkg, componentType) {

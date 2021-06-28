@@ -31,11 +31,10 @@ commander
   .description(program.description)
   .version(program.version, '-v, --version')
   .usage('[OPTIONS] [path]')
-  .option('-a, --append <bom.xml>', 'Merge BOM(s) into the current BOM', commaSeparatedList, [])
   .option('-d, --include-dev', "Include devDependencies", false)
   .option('-l, --include-license-text', "Include full license text", false)
   .option('-o, --output <output>', "Write BOM to file", "bom.xml")
-  .option('-s, --schema <version>', "Target schema version", "1.2")
+  .option('-s, --schema <version>', "Target schema version", "1.3")
   .option('-t, --type <type>', "Project type", "library")
   .option('-ns, --no-serial-number', "Do not include BOM serial number", true)
   .parse(process.argv);
@@ -45,7 +44,6 @@ function commaSeparatedList(value, previous) {
 }
 
 let filePath = commander.args[0] || '.';
-let additionalBoms = commander.append;
 let includeSerialNumber = commander.serialNumber;
 let includeLicenseText = commander.includeLicenseText;
 let output = commander.output;
@@ -77,11 +75,6 @@ bomHelpers.createbom(schemaVersion, componentType, includeSerialNumber, includeL
     }
     if (output.endsWith(".xml")) {
         let doc = new DomParser().parseFromString(bom.toXML());
-        for (let index = 0; index < additionalBoms.length; index++) {
-            let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
-            let additionalDoc = new DomParser().parseFromString(additionalBom);
-            bomHelpers.mergebom(doc, additionalDoc);
-        }
         let xmlString = xmlFormat(doc.toString(), xmlOptions);
         fs.writeFile(output, xmlString, () => {});
     } else if (output.endsWith(".json")) {

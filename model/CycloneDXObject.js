@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-const defaultSpecVersion = "1.2";
+const defaultSpecVersion = "1.3";
 
 class CycloneDXObject {
 

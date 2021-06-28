@@ -14,7 +14,7 @@ The CycloneDX module for Node.js creates a valid CycloneDX Software Bill-of-Mate
 
 Requirements
 -------------------
-Node.js v10.0.0 or higher
+Node.js v12.0.0 or higher
 
 Usage
 -------------------
@@ -34,7 +34,6 @@ Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects
 
 Options:
   -v, --version              output the version number
-  -a, --append <bom.xml>     Merge BOM(s) into the current BOM (default: [])
   -d, --include-dev          Include devDependencies (default: false)
   -l, --include-license-text Include full license text (default: false)
   -o, --output <output>      Write BOM to file (default: "bom.xml")
@@ -72,6 +71,7 @@ the CycloneDX version supported by the target system.
 
 | Version | Schema Version | Format(s) |
 | ------- | ----------------- | --------- |
+| 3.0.x | CycloneDX v1.3 | XML/JSON |
 | 2.0.x | CycloneDX v1.2 | XML/JSON |
 | 1.1.x | CycloneDX v1.1 | XML |
 | 1.0x | CycloneDX v1.0 | XML |
