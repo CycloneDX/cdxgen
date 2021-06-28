@@ -41,7 +41,7 @@ class HashList {
   }
 
   processHashes(pkg) {
-    if (pkg._shasum) {
+    if (pkg._shasum) {
       this._hashes.push(new Hash("SHA-1", pkg._shasum));
     } else if (pkg._integrity) {
       let integrity = ssri.parse(pkg._integrity);
