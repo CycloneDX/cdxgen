@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/bom",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects",
   "homepage": "http://github.com/CycloneDX/cyclonedx-node-module",
   "author": "Erlend Oftedal",
@@ -49,15 +49,15 @@
     "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
   "dependencies": {
-    "commander": "^6.1.0",
-    "packageurl-js": "^0.0.2",
+    "commander": "^7.0.0",
+    "packageurl-js": "^0.0.4",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
     "ssri": "^8.0.0",
     "uuid": "^8.3.0",
     "xmlbuilder": "^15.1.1",
-    "xmldom": "^0.3.0"
+    "xmldom": "^0.6.0"
   },
   "files": [
     "index.js",
