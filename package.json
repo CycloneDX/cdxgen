@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "commander": "^7.0.0",
-    "packageurl-js": "^0.0.4",
+    "packageurl-js": "^0.0.5",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
