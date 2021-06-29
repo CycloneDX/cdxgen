@@ -49,8 +49,8 @@
     "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
   "dependencies": {
-    "commander": "^7.0.0",
-    "packageurl-js": "^0.0.4",
+    "commander": "^8.0.0",
+    "packageurl-js": "^0.0.5",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
@@ -66,6 +66,6 @@
     "spdx-licenses.json"
   ],
   "devDependencies": {
-    "jest": "^26.4.2"
+    "jest": "^27.0.6"
   }
 }
