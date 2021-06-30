@@ -31,11 +31,9 @@ commander
   .description(program.description)
   .version(program.version, '-v, --version')
   .usage('[OPTIONS] [path]')
-  .option('-a, --append <bom.xml>', 'Merge BOM(s) into the current BOM', commaSeparatedList, [])
   .option('-d, --include-dev', "Include devDependencies", false)
   .option('-l, --include-license-text', "Include full license text", false)
   .option('-o, --output <output>', "Write BOM to file", "bom.xml")
-  .option('-s, --schema <version>', "Target schema version", "1.2")
   .option('-t, --type <type>', "Project type", "library")
   .option('-ns, --no-serial-number', "Do not include BOM serial number", true)
   .parse(process.argv);
@@ -45,16 +43,10 @@ function commaSeparatedList(value, previous) {
 }
 
 let filePath = commander.args[0] || '.';
-let additionalBoms = commander.append;
 let includeSerialNumber = commander.serialNumber;
 let includeLicenseText = commander.includeLicenseText;
 let output = commander.output;
-let schemaVersion = commander.schema;
 let componentType = commander.type;
-
-if (Bom.supportedSchemaVersions().indexOf(schemaVersion) === -1) {
-    throw "Unsupported schema version. Supported schema versions are " + Bom.supportedSchemaVersions().toString();
-}
 
 if (Component.supportedComponentTypes().indexOf(componentType) === -1) {
     throw "Unsupported component type. Supported types are " + Component.supportedComponentTypes().toString();
@@ -67,7 +59,7 @@ options.dev = commander.includeDev;
 /**
  * Creates a Bom object and writes either XML or JSON.
  */
-bomHelpers.createbom(schemaVersion, componentType, includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
+bomHelpers.createbom(componentType, includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
     if (bom.components.length === 0) {
         console.log("There are no components in the BOM. The project may not contain dependencies or node_modules does not exist. Executing `npm install` prior to CycloneDX may solve the issue.")
     }
@@ -77,11 +69,6 @@ bomHelpers.createbom(schemaVersion, componentType, includeSerialNumber, includeL
     }
     if (output.endsWith(".xml")) {
         let doc = new DomParser().parseFromString(bom.toXML());
-        for (let index = 0; index < additionalBoms.length; index++) {
-            let additionalBom = fs.readFileSync(additionalBoms[index], "utf-8");
-            let additionalDoc = new DomParser().parseFromString(additionalBom);
-            bomHelpers.mergebom(doc, additionalDoc);
-        }
         let xmlString = xmlFormat(doc.toString(), xmlOptions);
         fs.writeFile(output, xmlString, () => {});
     } else if (output.endsWith(".json")) {

@@ -209,8 +209,8 @@ class Component extends CycloneDXObject {
     return {
       'type': this._type,
       'bom-ref': this._bomRef,
-      supplier: (CycloneDXObject.targetSpecVersion() > 1.1 && this._supplier) ? this._supplier.toJSON() : undefined,
-      author: (CycloneDXObject.targetSpecVersion() > 1.1) ? this._author: undefined,
+      supplier: this._supplier ? this._supplier.toJSON() : undefined,
+      author: this._author,
       publisher: this._publisher,
       group: this._group,
       name: this._name,
@@ -222,7 +222,7 @@ class Component extends CycloneDXObject {
       copyright: this._copyright,
       cpe: this._cpe,
       purl: this._purl,
-      swid: (CycloneDXObject.targetSpecVersion() > 1.1 && this._swid) ? this.swid.toJSON() : undefined,
+      swid: this._swid ? this.swid.toJSON() : undefined,
       externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toJSON() : undefined,
     };
   }
@@ -232,8 +232,8 @@ class Component extends CycloneDXObject {
       'component': {
         '@type': this._type,
         '@bom-ref': this._bomRef,
-        supplier: (CycloneDXObject.targetSpecVersion() > 1.1 && this._supplier) ? this._supplier.toXML() : undefined,
-        author: (CycloneDXObject.targetSpecVersion() > 1.1) ? this._author : undefined,
+        supplier: this._supplier ? this._supplier.toXML() : undefined,
+        author: this._author,
         publisher: this._publisher,
         group: this._group,
         name: this._name,
@@ -245,7 +245,7 @@ class Component extends CycloneDXObject {
         copyright: this._copyright,
         cpe: this._cpe,
         purl: this._purl,
-        swid: (CycloneDXObject.targetSpecVersion() > 1.1 && this._swid) ? this.swid.toXML() : undefined,
+        swid: this._swid ? this.swid.toXML() : undefined,
         externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toXML() : undefined,
       }
     };

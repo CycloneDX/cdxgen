@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-const defaultSpecVersion = "1.2";
+const defaultSpecVersion = "1.3";
 
 class CycloneDXObject {
 
@@ -63,18 +63,6 @@ class CycloneDXObject {
       throw "Unsupported " + name + ". Valid choices are " + validChoices.toString();
     } else {
       return value;
-    }
-  }
-
-  static targetSpecVersion(schemaVersion) {
-    if (schemaVersion && !isNaN(Number(schemaVersion))) {
-      process.env.CYCLONEDX_TARGET_SPEC_VERSION = schemaVersion;
-    }
-    let specVersion = Number(process.env.CYCLONEDX_TARGET_SPEC_VERSION);
-    if (isNaN(specVersion)) {
-      return Number(defaultSpecVersion);
-    } else {
-      return Number(specVersion);
     }
   }
 

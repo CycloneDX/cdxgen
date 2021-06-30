@@ -20,8 +20,8 @@ const readInstalled = require('read-installed');
 const Bom = require('./model/Bom');
 
 
-exports.createbom = (schemaVersion, componentType, includeSerialNumber, includeLicenseText, path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
-    let bom = new Bom(pkgInfo, schemaVersion, componentType, includeSerialNumber, includeLicenseText);
+exports.createbom = (componentType, includeSerialNumber, includeLicenseText, path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
+    let bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText);
     callback(null, bom);
 });
 
