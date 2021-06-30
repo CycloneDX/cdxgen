@@ -34,7 +34,6 @@ commander
   .option('-d, --include-dev', "Include devDependencies", false)
   .option('-l, --include-license-text', "Include full license text", false)
   .option('-o, --output <output>', "Write BOM to file", "bom.xml")
-  .option('-s, --schema <version>', "Target schema version", "1.3")
   .option('-t, --type <type>', "Project type", "library")
   .option('-ns, --no-serial-number', "Do not include BOM serial number", true)
   .parse(process.argv);
@@ -47,12 +46,7 @@ let filePath = commander.args[0] || '.';
 let includeSerialNumber = commander.serialNumber;
 let includeLicenseText = commander.includeLicenseText;
 let output = commander.output;
-let schemaVersion = commander.schema;
 let componentType = commander.type;
-
-if (Bom.supportedSchemaVersions().indexOf(schemaVersion) === -1) {
-    throw "Unsupported schema version. Supported schema versions are " + Bom.supportedSchemaVersions().toString();
-}
 
 if (Component.supportedComponentTypes().indexOf(componentType) === -1) {
     throw "Unsupported component type. Supported types are " + Component.supportedComponentTypes().toString();
@@ -65,7 +59,7 @@ options.dev = commander.includeDev;
 /**
  * Creates a Bom object and writes either XML or JSON.
  */
-bomHelpers.createbom(schemaVersion, componentType, includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
+bomHelpers.createbom(componentType, includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
     if (bom.components.length === 0) {
         console.log("There are no components in the BOM. The project may not contain dependencies or node_modules does not exist. Executing `npm install` prior to CycloneDX may solve the issue.")
     }

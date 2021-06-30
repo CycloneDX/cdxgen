@@ -37,7 +37,6 @@ Options:
   -d, --include-dev          Include devDependencies (default: false)
   -l, --include-license-text Include full license text (default: false)
   -o, --output <output>      Write BOM to file (default: "bom.xml")
-  -s, --schema <version>     Target schema version (default: "1.2")
   -t, --type <type>          Project type (default: "library")
   -ns, --no-serial-number    Do not include BOM serial number
   -h, --help                 display help for command
@@ -58,16 +57,12 @@ cyclonedx-bom -o bom.xml
 cyclonedx-bom -o bom.json
 ```
 
-#### Example (Target Specification Version)
-```bash
-cyclonedx-bom -o bom.xml -s 1.1
-```
-
 ## CycloneDX Schema Support
 
 The following table provides information on the version of this node module, the CycloneDX schema version supported, 
 as well as the output format options. Use the latest possible version of this node module that is the compatible with 
-the CycloneDX version supported by the target system.
+the CycloneDX version supported by the target system. Or use the [CycloneDX CLI Tool](https://github.com/CycloneDX/cyclonedx-cli/)
+to convert to older specification versions as required.
 
 | Version | Schema Version | Format(s) |
 | ------- | ----------------- | --------- |

@@ -66,18 +66,6 @@ class CycloneDXObject {
     }
   }
 
-  static targetSpecVersion(schemaVersion) {
-    if (schemaVersion && !isNaN(Number(schemaVersion))) {
-      process.env.CYCLONEDX_TARGET_SPEC_VERSION = schemaVersion;
-    }
-    let specVersion = Number(process.env.CYCLONEDX_TARGET_SPEC_VERSION);
-    if (isNaN(specVersion)) {
-      return Number(defaultSpecVersion);
-    } else {
-      return Number(specVersion);
-    }
-  }
-
 }
 
 module.exports = CycloneDXObject;

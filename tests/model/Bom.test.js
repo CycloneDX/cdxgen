@@ -23,12 +23,6 @@ test('default schema version', () => {
   expect(bom.schemaVersion).toBe('1.3');
 });
 
-test('specific schema version', () => {
-  let bom = new Bom();
-  bom.schemaVersion = "1.1";
-  expect(bom.schemaVersion).toBe('1.1');
-});
-
 test('default bom version', () => {
   let bom = new Bom();
   expect(bom.version).toBe(1);
