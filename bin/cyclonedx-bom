@@ -45,8 +45,8 @@ function commaSeparatedList(value, previous) {
 let filePath = commander.args[0] || '.';
 let includeSerialNumber = commander.serialNumber;
 let includeLicenseText = commander.includeLicenseText;
-let output = commander.output;
-let componentType = commander.type;
+let output = commander.output || "bom.xml";
+let componentType = commander.type || "library";
 
 if (Component.supportedComponentTypes().indexOf(componentType) === -1) {
     throw "Unsupported component type. Supported types are " + Component.supportedComponentTypes().toString();
