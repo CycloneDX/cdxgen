@@ -27,39 +27,43 @@ const DomParser = require('xmldom').DOMParser;
 const Bom = require('../model/Bom');
 const Component = require('../model/Component');
 
-commander
+const cdx = new commander.Command();
+
+let filePath = '.';
+
+cdx
   .description(program.description)
   .version(program.version, '-v, --version')
-  .usage('[OPTIONS] [path]')
+  .argument('[path]', 'Path to analyze')
   .option('-d, --include-dev', "Include devDependencies", false)
   .option('-l, --include-license-text', "Include full license text", false)
   .option('-o, --output <output>', "Write BOM to file", "bom.xml")
   .option('-t, --type <type>', "Project type", "library")
   .option('-ns, --no-serial-number', "Do not include BOM serial number", true)
+  .action((path) => {
+    if (path) filePath = path;
+  })
   .parse(process.argv);
 
-function commaSeparatedList(value, previous) {
-    return value.split(',');
-}
+const options = cdx.opts();
 
-let filePath = commander.args[0] || '.';
-let includeSerialNumber = commander.serialNumber;
-let includeLicenseText = commander.includeLicenseText;
-let output = commander.output || "bom.xml";
-let componentType = commander.type || "library";
+let includeSerialNumber = options.serialNumber;
+let includeLicenseText = options.includeLicenseText;
+let output = options.output;
+let componentType = options.type;
 
 if (Component.supportedComponentTypes().indexOf(componentType) === -1) {
     throw "Unsupported component type. Supported types are " + Component.supportedComponentTypes().toString();
 }
 
 // Options are specific to readinstalled
-let options = {};
+let readInstalledOptions = {};
 options.dev = commander.includeDev;
 
 /**
  * Creates a Bom object and writes either XML or JSON.
  */
-bomHelpers.createbom(componentType, includeSerialNumber, includeLicenseText, filePath, options, (err, bom) => {
+bomHelpers.createbom(componentType, includeSerialNumber, includeLicenseText, filePath, readInstalledOptions, (err, bom) => {
     if (bom.components.length === 0) {
         console.log("There are no components in the BOM. The project may not contain dependencies or node_modules does not exist. Executing `npm install` prior to CycloneDX may solve the issue.")
     }
