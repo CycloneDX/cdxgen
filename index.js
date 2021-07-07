@@ -842,7 +842,7 @@ const createNodejsBom = async (path, options) => {
   if (pnpmLockFiles && pnpmLockFiles.length) {
     for (let i in pnpmLockFiles) {
       const f = pnpmLockFiles[i];
-      const dlist = utils.parsePnpmLock(f);
+      const dlist = await utils.parsePnpmLock(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
