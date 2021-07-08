@@ -57,8 +57,7 @@ if (Component.supportedComponentTypes().indexOf(componentType) === -1) {
 }
 
 // Options are specific to readinstalled
-let readInstalledOptions = {};
-options.dev = commander.includeDev;
+let readInstalledOptions = { dev: options.includeDev };
 
 /**
  * Creates a Bom object and writes either XML or JSON.
