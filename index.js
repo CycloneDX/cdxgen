@@ -370,15 +370,15 @@ const buildBomXml = (serialNum, components, context) => {
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.2");
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
-  if (context && context.src && context.filename) {
-    bom
-      .ele("externalReferences")
-      .ele(addGlobalReferences(context.src, context.filename));
-  }
   const metadata = addMetadata();
   bom.ele("metadata").ele(metadata);
   if (components && components.length) {
     bom.ele("components").ele(components);
+    if (context && context.src && context.filename) {
+      bom
+        .ele("externalReferences")
+        .ele(addGlobalReferences(context.src, context.filename));
+    }
     const bomString = bom.end({
       pretty: true,
       indent: "  ",
