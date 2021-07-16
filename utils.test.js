@@ -344,6 +344,21 @@ test("parseGopkgData", async () => {
   });
 });
 
+test("parse go version data", async () => {
+  let dep_list = await utils.parseGoVersionData(
+    fs.readFileSync("./test/data/goversion.txt", (encoding = "utf-8")),
+    {}
+  );
+  expect(dep_list.length).toEqual(125);
+  expect(dep_list[0]).toEqual({
+    group: "github.com/ShiftLeftSecurity",
+    name: "atlassian-connect-go",
+    version: "v0.0.2",
+    _integrity: "",
+    license: undefined,
+  });
+});
+
 test("parse cargo lock", async () => {
   expect(await utils.parseCargoData(null)).toEqual([]);
   dep_list = await utils.parseCargoData(
@@ -779,6 +794,22 @@ test("parse wheel metadata", () => {
     homepage: { url: "https://github.com/adrienverge/yamllint" },
     license: "GPLv3",
     repository: { url: "https://github.com/adrienverge/yamllint" },
+  });
+});
+
+test("parse wheel", async () => {
+  let metadata = await utils.readZipEntry(
+    "./test/data/appthreat_depscan-2.0.2-py3-none-any.whl",
+    "METADATA"
+  );
+  expect(metadata);
+  const parsed = utils.parseBdistMetadata(metadata);
+  expect(parsed[0]).toEqual({
+    version: '2.0.2',
+    name: 'appthreat-depscan',
+    description: 'Fully open-source security audit for project dependencies based on known vulnerabilities and advisories.',
+    homepage: { url: 'https://github.com/appthreat/dep-scan' },
+    license: 'UNKNOWN'
   });
 });
 

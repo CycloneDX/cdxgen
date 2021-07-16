@@ -14,6 +14,7 @@ const yaml = require("js-yaml");
 const { spawnSync } = require("child_process");
 const propertiesReader = require("properties-reader");
 const semver = require("semver");
+const StreamZip = require("node-stream-zip");
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -1431,6 +1432,33 @@ const parseGopkgData = async function (gopkgData) {
 };
 exports.parseGopkgData = parseGopkgData;
 
+const parseGoVersionData = async function (buildInfoData) {
+  const pkgList = [];
+  if (!buildInfoData) {
+    return pkgList;
+  }
+  const pkgs = buildInfoData.split("\n");
+  for (let i in pkgs) {
+    const l = pkgs[i].trim().replace(/\t/g, " ");
+    if (!l.startsWith("dep")) {
+      continue;
+    }
+    const tmpA = l.split(" ");
+    if (!tmpA || tmpA.length != 3) {
+      continue;
+    }
+    let group = path.dirname(tmpA[1].trim());
+    const name = path.basename(tmpA[1].trim());
+    if (group === ".") {
+      group = name;
+    }
+    let component = await getGoPkgComponent(group, name, tmpA[2].trim(), "");
+    pkgList.push(component);
+  }
+  return pkgList;
+};
+exports.parseGoVersionData = parseGoVersionData;
+
 /**
  * Method to query rubygems api for gems details
  *
@@ -2341,3 +2369,38 @@ const sbtPluginsPath = function (projectPath) {
   return path.join(projectPath, "project", "plugins.sbt");
 };
 exports.sbtPluginsPath = sbtPluginsPath;
+
+/**
+ * Method to read a single file entry from a zip file
+ *
+ * @param {string} zipFile Zip file to read
+ * @param {string} filePattern File pattern
+ *
+ * @returns File contents
+ */
+const readZipEntry = async function (zipFile, filePattern) {
+  let retData = undefined;
+  try {
+    const zip = new StreamZip.async({ file: zipFile });
+    const entriesCount = await zip.entriesCount;
+    if (!entriesCount) {
+      return undefined;
+    }
+    const entries = await zip.entries();
+    for (const entry of Object.values(entries)) {
+      if (entry.isDirectory) {
+        continue;
+      }
+      if (entry.name.endsWith(filePattern)) {
+        const fileData = await zip.entryData(entry.name);
+        retData = Buffer.from(fileData).toString();
+        break;
+      }
+    }
+    zip.close();
+  } catch (e) {
+    console.log(e);
+  }
+  return retData;
+};
+exports.readZipEntry = readZipEntry;

@@ -4,18 +4,18 @@ This script creates a valid CycloneDX Software Bill-of-Materials (SBOM) containi
 
 ## Supported languages and package format
 
-| Language           | Package format                                                         |
-| ------------------ | ---------------------------------------------------------------------- |
-| node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js                  |
-| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt)          |
-| php                | composer.lock                                                          |
-| python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel |
-| go                 | go.mod, go.sum, Gopkg.lock                                             |
-| ruby               | Gemfile.lock, gemspec                                                  |
-| rust               | Cargo.toml, Cargo.lock                                                 |
-| .Net Framework     | .csproj, packages.config                                               |
-| .Net core          | .csproj, packages.config                                               |
-| docker / oci image | All supported languages excluding OS packages                          |
+| Language           | Package format                                                               |
+| ------------------ | ---------------------------------------------------------------------------- |
+| node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js                        |
+| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt)                |
+| php                | composer.lock                                                                |
+| python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl |
+| go                 | binary, go.mod, go.sum, Gopkg.lock                                           |
+| ruby               | Gemfile.lock, gemspec                                                        |
+| rust               | Cargo.toml, Cargo.lock                                                       |
+| .Net Framework     | .csproj, packages.config                                                     |
+| .Net core          | .csproj, packages.config                                                     |
+| docker / oci image | All supported languages excluding OS packages                                |
 
 NOTE:
 
@@ -169,6 +169,10 @@ Use the GitHub [action](https://github.com/AppThreat/cdxgen-action) to automatic
 ## Integration with Google CloudBuild
 
 Use this [custom builder](https://github.com/CloudBuildr/google-custom-builders/tree/master/cdxgen) and refer to the readme for instruction.
+
+## Plugins
+
+The package published on npm would include additional binary executables under the plugins directory. These executables provide functionality that are difficult to implement with node.js alone. Example for this is the `goversion` [plugin](thirdparty/goversion) which helps with module identification for go binaries. The source code for all the plugins would be published inside the [thirdparty](thirdparty) directory.
 
 ## License
 
