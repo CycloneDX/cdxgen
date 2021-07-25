@@ -74,7 +74,7 @@ to convert to older specification versions as required.
 Copyright & License
 -------------------
 
-CycloneDX Core (Java) is Copyright (c) OWASP Foundation. All Rights Reserved.
+CycloneDX Node Module is Copyright (c) OWASP Foundation. All Rights Reserved.
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] file for the full license.
 
