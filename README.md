@@ -71,8 +71,10 @@ to convert to older specification versions as required.
 | 1.1.x | CycloneDX v1.1 | XML |
 | 1.0x | CycloneDX v1.0 | XML |
 
-License
+Copyright & License
 -------------------
+
+CycloneDX Core (Java) is Copyright (c) OWASP Foundation. All Rights Reserved.
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] file for the full license.
 
