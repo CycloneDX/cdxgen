@@ -1146,9 +1146,9 @@ const getGoPkgLicense = async function (repoMetadata) {
     const res = await got.get(pkgUrlPrefix);
     if (res && res.body) {
       const $ = cheerio.load(res.body);
-      let licenses = $("#LICENSE > h2").text();
+      let licenses = $("#LICENSE > h2").text().trim();
       if (licenses === "") {
-        licenses = $("section.License > h2").text();
+        licenses = $("section.License > h2").text().trim();
       }
       licenseIds = licenses.split(", ");
       const licList = [];
