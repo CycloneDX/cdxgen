@@ -636,16 +636,47 @@ const createJavaBom = async (
       );
     }
     // scala sbt
-    let sbtFiles = utils.getAllFiles(
+    // Identify sbt projects via its `project` directory:
+    // - all SBT project _should_ define build.properties file with sbt version info
+    // - SBT projects _typically_ have some configs/plugins defined in .sbt files
+    // - SBT projects that are still on 0.13.x, can still use the old approach,
+    //   where configs are defined via Scala files
+    // Detecting one of those should be enough to determine an SBT project.
+    let sbtProjectFiles = utils.getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "build.sbt"
+      (options.multiProject ? "**/" : "") + "project/{build.properties,*.sbt,*.scala}"
     );
+
+
+    let sbtProjects = [];
+    for (let i in sbtProjectFiles) {
+      // parent dir of sbtProjectFile is the `project` directory
+      // parent dir of `project` is the sbt root project directory
+      const baseDir = pathLib.dirname(pathLib.dirname(sbtProjectFiles[i]));
+      sbtProjects = sbtProjects.concat(baseDir)
+    }
+
+    // Fallback in case sbt's project directory is non-existent
+    if (!sbtProjects.length) {
+      sbtProjectFiles = utils.getAllFiles(
+        path,
+        (options.multiProject ? "**/" : "") + "*.sbt"
+      );
+      for (let i in sbtProjectFiles) {
+        const baseDir = pathLib.dirname(sbtProjectFiles[i]);
+        sbtProjects = sbtProjects.concat(baseDir)
+      }
+    }
+
+    sbtProjects = [...new Set(sbtProjects)] // eliminate duplicates
+
     let sbtLockFiles = utils.getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "build.sbt.lock"
     );
 
-    if (sbtFiles && sbtFiles.length) {
+    if (sbtProjects && sbtProjects.length) {
+      let pkgList = [];
       // If the project use sbt lock files
       if (sbtLockFiles && sbtLockFiles.length) {
         for (let i in sbtLockFiles) {
@@ -674,9 +705,8 @@ const createJavaBom = async (
         const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
         fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
 
-        for (let i in sbtFiles) {
-          const f = sbtFiles[i];
-          const basePath = pathLib.dirname(f);
+        for (let i in sbtProjects) {
+          const basePath = sbtProjects[i];
           let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
           console.log(
             "Executing",
@@ -689,20 +719,17 @@ const createJavaBom = async (
           var sbtArgs = [];
           var pluginFile = null;
           if (standalonePluginFile) {
-            sbtArgs = [
-              `-addPluginSbtFile=${tempSbtPlugins}`,
-              `dependencyList::toFile "${dlFile}" --append`,
-            ];
+            sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"dependencyList::toFile ${dlFile} --append"`]
           } else {
             // write to the existing plugins file
-            sbtArgs = [`dependencyList::toFile "${dlFile}" --append`];
+            sbtArgs = [`"dependencyList::toFile ${dlFile} --append"`]
             pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
           }
-          const result = spawnSync(SBT_CMD, sbtArgs, {
-            cwd: basePath,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-          });
+          const result = spawnSync(
+            SBT_CMD,
+            sbtArgs,
+            { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
+          );
           if (result.status == 1 || result.error) {
             console.error(result.stdout, result.stderr);
             if (DEBUG_MODE) {
@@ -760,7 +787,7 @@ const createJavaBom = async (
           ptype: "maven",
           context: {
             src: path,
-            filename: sbtFiles.join(", "),
+            filename: sbtProjects.join(", "),
             nsMapping: jarNSMapping,
           },
         },
@@ -1512,7 +1539,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
   // scala sbt
   let sbtFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "build.sbt*"
+    (options.multiProject ? "**/" : "") + "{build.sbt,Build.scala}*"
   );
   if (pomFiles.length || gradleFiles.length || sbtFiles.length) {
     return await createJavaBom(includeBomSerialNumber, path, options, callback);
