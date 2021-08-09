@@ -725,6 +725,7 @@ const createJavaBom = async (
             sbtArgs = [`"dependencyList::toFile ${dlFile} --append"`]
             pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
           }
+          // Note that the command has to be invoked with `shell: true` to properly execut sbt
           const result = spawnSync(
             SBT_CMD,
             sbtArgs,
