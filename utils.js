@@ -1056,7 +1056,7 @@ const getGoPkgLicense = async function (repoMetadata) {
       const licList = [];
       for (var i in licenseIds) {
         const alicense = {
-          id: licenseIds[i],
+          id: licenseIds[i].trim(),
         };
         alicense["url"] = pkgUrlPrefix;
         licList.push(alicense);
