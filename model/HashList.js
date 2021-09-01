@@ -21,10 +21,10 @@ const Hash = require('./Hash');
 
 class HashList {
 
-  constructor(pkg) {
+  constructor(pkg, lockfile) {
     this._hashes = [];
     if (pkg) {
-      this.processHashes(pkg);
+      this.processHashes(pkg,lockfile);
     }
   }
 
@@ -40,26 +40,35 @@ class HashList {
     }
   }
 
-  processHashes(pkg) {
-    if (pkg._shasum) {
+  processHashes(pkg, lockfile) {
+    // Default to checking the package-lock.json first and checking the node
+    // module package.json as a backup.
+    if (lockfile) {
+      if (lockfile.dependencies[pkg.name].integrity) {
+        this.formatHash(ssri.parse(lockfile.dependencies[pkg.name].integrity));
+      }
+    } else if (pkg._shasum) {
       this._hashes.push(new Hash("SHA-1", pkg._shasum));
     } else if (pkg._integrity) {
-      let integrity = ssri.parse(pkg._integrity);
-      // Components may have multiple hashes with various lengths. Check each one
-      // that is supported by the CycloneDX specification.
-      if (integrity.hasOwnProperty('sha512')) {
-        this._hashes.push(this.createHash('SHA-512', integrity.sha512[0].digest));
-      }
-      if (integrity.hasOwnProperty('sha384')) {
-        this._hashes.push(this.createHash('SHA-384', integrity.sha384[0].digest));
-      }
-      if (integrity.hasOwnProperty('sha256')) {
-        this._hashes.push(this.createHash('SHA-256', integrity.sha256[0].digest));
-      }
-      if (integrity.hasOwnProperty('sha1')) {
-        this._hashes.push(this.createHash('SHA-1', integrity.sha1[0].digest));
-      }
+      this.formatHash(ssri.parse(pkg._integrity));
     }
+  }
+
+  formatHash(integrity){
+        // Components may have multiple hashes with various lengths. Check each one
+        // that is supported by the CycloneDX specification.
+        if (integrity.hasOwnProperty('sha512')) {
+          this._hashes.push(this.createHash('SHA-512', integrity.sha512[0].digest));
+        }
+        if (integrity.hasOwnProperty('sha384')) {
+          this._hashes.push(this.createHash('SHA-384', integrity.sha384[0].digest));
+        }
+        if (integrity.hasOwnProperty('sha256')) {
+          this._hashes.push(this.createHash('SHA-256', integrity.sha256[0].digest));
+        }
+        if (integrity.hasOwnProperty('sha1')) {
+          this._hashes.push(this.createHash('SHA-1', integrity.sha1[0].digest));
+        }
   }
 
   createHash(algorithm, digest) {
