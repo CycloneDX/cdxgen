@@ -44,7 +44,7 @@ class HashList {
     // Default to checking the package-lock.json first and checking the node
     // module package.json as a backup.
     if (lockfile) {
-      if (lockfile.dependencies[pkg.name].integrity) {
+      if (lockfile.dependencies && lockfile.dependencies[pkg.name] && lockfile.dependencies[pkg.name].integrity) {
         this.formatHash(ssri.parse(lockfile.dependencies[pkg.name].integrity));
       }
     } else if (pkg._shasum) {
