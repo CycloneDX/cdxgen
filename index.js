@@ -17,11 +17,15 @@
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
 const readInstalled = require('read-installed');
+const filePath = require('path');
 const Bom = require('./model/Bom');
+const fs = require('fs');
 
 
 exports.createbom = (componentType, includeSerialNumber, includeLicenseText, path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
-    let bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText);
+    let lockfile = JSON.parse(fs.readFileSync(filePath.join(path, "package-lock.json")));
+
+    let bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText, lockfile);
     callback(null, bom);
 });
 

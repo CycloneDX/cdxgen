@@ -27,7 +27,7 @@ const Swid = require('./Swid');
 
 class Component extends CycloneDXObject {
 
-  constructor(pkg, includeLicenseText = true) {
+  constructor(pkg, includeLicenseText = true, lockfile) {
     super();
     this._type = this.determinePackageType(pkg); // Defaults to library
     if (pkg) {
@@ -38,7 +38,7 @@ class Component extends CycloneDXObject {
       this._version = (pkg.version) ? pkg.version : undefined;
       this._description = (pkg.description) ? pkg.description : undefined;
       this._licenses = new LicenseChoice(pkg, includeLicenseText);
-      this._hashes = new HashList(pkg);
+      this._hashes = new HashList(pkg, lockfile);
       this._externalReferences = new ExternalReferenceList(pkg);
       if (this._name && this._version)
         this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString();

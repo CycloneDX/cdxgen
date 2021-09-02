@@ -34,8 +34,17 @@ test('createbom produces a BOM with development dependencies', done => {
   });
 });
 
-test('creatbom produces a BOM in JSON format', done => {
+test('createbom produces a BOM in JSON format', done => {
   bomHelpers.createbom("library", false, true, './tests/with-packages', {}, (err, bom) => {
+    bom.metadata.timestamp = timestamp;
+    bom.metadata.tools[0].version = programVersion;
+    expect(bom.toJSON()).toMatchSnapshot();
+    done();
+  });
+});
+
+test('createbom produces a BOM in JSON format that includes hashes from package-lock.json', done => {
+  bomHelpers.createbom("library", false, true, './tests/with-lockfile-2', {}, (err, bom) => {
     bom.metadata.timestamp = timestamp;
     bom.metadata.tools[0].version = programVersion;
     expect(bom.toJSON()).toMatchSnapshot();

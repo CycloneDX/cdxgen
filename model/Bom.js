@@ -26,7 +26,7 @@ const program = require('../package.json');
 
 class Bom extends CycloneDXObject {
 
-  constructor(pkg, componentType, includeSerialNumber = true, includeLicenseText = true) {
+  constructor(pkg, componentType, includeSerialNumber = true, includeLicenseText = true, lockfile) {
     super();
     this._schemaVersion = "1.3";
     this._includeSerialNumber = includeSerialNumber;
@@ -37,10 +37,11 @@ class Bom extends CycloneDXObject {
     }
     if (pkg) {
       this._metadata = this.createMetadata(pkg, componentType);
-      this._components = this.listComponents(pkg);
+      this._components = this.listComponents(pkg, lockfile);
     } else {
       this._components = [];
     }
+
   }
 
   createMetadata(pkg, componentType) {
@@ -56,22 +57,22 @@ class Bom extends CycloneDXObject {
    * For all modules in the specified package, creates a list of
    * component objects from each one.
    */
-  listComponents(pkg) {
+  listComponents(pkg, lockfile) {
     let list = {};
     let isRootPkg = true;
-    this.createComponent(pkg, list, isRootPkg);
+    this.createComponent(pkg, list, lockfile, isRootPkg);
     return Object.keys(list).map(k => (list[k]));
   }
 
   /**
    * Given the specified package, create a CycloneDX component and add it to the list.
    */
-  createComponent(pkg, list, isRootPkg = false) {
+  createComponent(pkg, list, lockfile, isRootPkg = false) {
     //read-installed with default options marks devDependencies as extraneous
     //if a package is marked as extraneous, do not include it as a component
     if(pkg.extraneous) return;
     if(!isRootPkg) {
-      let component = new Component(pkg, this.includeLicenseText);
+      let component = new Component(pkg, this.includeLicenseText, lockfile);
       if (component.externalReferences === undefined || component.externalReferences.length === 0) {
           delete component.externalReferences;
       }
@@ -82,7 +83,7 @@ class Bom extends CycloneDXObject {
       Object.keys(pkg.dependencies)
         .map(x => pkg.dependencies[x])
         .filter(x => typeof(x) !== 'string') //remove cycles
-        .map(x => this.createComponent(x, list));
+        .map(x => this.createComponent(x, list, lockfile));
     }
   }
 
