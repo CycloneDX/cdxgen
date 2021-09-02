@@ -78,7 +78,7 @@ class LicenseChoice extends CycloneDXObject {
       for (const licenseFilename of licenseFilenames) {
         for (const [licenseContentType, fileExtension] of Object.entries(licenseContentTypes)) {
           let licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
-          if (fs.existsSync(licenseFilepath)) {
+          if (fs.existsSync(licenseFilepath) && fs.lstatSync(licenseFilepath).isFile()) {
             // 'text/plain' is the default in the spec. No need to specify it.
             let contentType = (licenseContentType === 'text/plain') ? null : licenseContentType;
             licenseObject.attachmentText = this.createAttachmentText(licenseFilepath, contentType);
