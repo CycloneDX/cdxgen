@@ -805,11 +805,12 @@ test("parse wheel", async () => {
   expect(metadata);
   const parsed = utils.parseBdistMetadata(metadata);
   expect(parsed[0]).toEqual({
-    version: '2.0.2',
-    name: 'appthreat-depscan',
-    description: 'Fully open-source security audit for project dependencies based on known vulnerabilities and advisories.',
-    homepage: { url: 'https://github.com/appthreat/dep-scan' },
-    license: 'UNKNOWN'
+    version: "2.0.2",
+    name: "appthreat-depscan",
+    description:
+      "Fully open-source security audit for project dependencies based on known vulnerabilities and advisories.",
+    homepage: { url: "https://github.com/appthreat/dep-scan" },
+    license: "UNKNOWN",
   });
 });
 
