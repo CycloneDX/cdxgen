@@ -51,3 +51,12 @@ test('createbom produces a BOM in JSON format that includes hashes from package-
     done();
   });
 });
+
+test('createbom produces a BOM when no package-lock.json is present', done => {
+  bomHelpers.createbom("library", false, true, './tests/no-lockfile', {}, (err, bom) => {
+    bom.metadata.timestamp = timestamp;
+    bom.metadata.tools[0].version = programVersion;
+    expect(bom.toJSON()).toMatchSnapshot();
+    done();
+  });
+});
