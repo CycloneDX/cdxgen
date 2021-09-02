@@ -97,7 +97,7 @@ function getLicenses(pkg, format = "xml") {
         } else if (Object.keys(l).length) {
           licenseContent = l;
         } else {
-          return null;
+          return [];
         }
         if (!licenseContent.id) {
           addLicenseText(pkg, l, licenseContent, format);
@@ -106,7 +106,7 @@ function getLicenses(pkg, format = "xml") {
       })
       .map((l) => ({ license: l }));
   }
-  return null;
+  return [];
 }
 exports.getLicenses = getLicenses;
 
