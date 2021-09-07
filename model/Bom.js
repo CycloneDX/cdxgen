@@ -88,6 +88,7 @@ class Bom extends CycloneDXObject {
   }
 
   addComponent(component) {
+    if (! this._components) this._components = [];
     this._components.push(component);
   }
 
@@ -131,6 +132,11 @@ class Bom extends CycloneDXObject {
     this._dependencies = value;
   }
 
+  addDependency(dependency) {
+    if (! this._dependencies) this._dependencies = [];
+    this._dependencies.push(dependency);
+  }
+
   get externalReferences() {
     return this._externalReferences;
   }
@@ -166,7 +172,8 @@ class Bom extends CycloneDXObject {
       "serialNumber": this._serialNumber,
       "version": this._version,
       "metadata": this._metadata,
-      "components": this._components
+      "components": this._components,
+      "dependencies": this._dependencies
     };
     return JSON.stringify(json, null, 2);
   }
@@ -192,6 +199,16 @@ class Bom extends CycloneDXObject {
       }
       componentsNode.ele(value);
     }
+
+    if (this._dependencies && this._dependencies.length > 0) {
+      let dependenciesNode = bom.ele('dependencies');
+      let value = [];
+      for (let dependency of this._dependencies) {
+        value.push(dependency.toXML());
+      }
+      dependenciesNode.ele(value);
+    }
+
     return bom.end({
       pretty: true,
       indent: '  ',
