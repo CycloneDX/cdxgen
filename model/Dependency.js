@@ -66,13 +66,13 @@ class Dependency extends CycloneDXObject {
         if (this._dependencies && this._dependencies.length > 0) {
             dependencyArray = [];
             for (let d of this._dependencies) {
-                dependencyArray.push({'@ref': d.ref});
+                dependencyArray.push({'dependency': {'@ref': d.ref}});
             }
         }
         return {
             'dependency': {
                 '@ref': this.ref,
-                'dependency': dependencyArray
+                '#text': dependencyArray
             }
         };
     }
