@@ -1173,7 +1173,14 @@ const createGoBom = async (path, options) => {
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
     }
+    // Since this pkg list is derived from the binary mark them as used.
+    const allImports = {};
+    for (let mpkg of pkgList) {
+      let pkgFullName = `${mpkg.group}/${mpkg.name}`;
+      allImports[pkgFullName] = true;
+    }
     return buildBomNSData(pkgList, "golang", {
+      allImports,
       src: path,
       filename: path,
     });
