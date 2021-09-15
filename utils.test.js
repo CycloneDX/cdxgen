@@ -357,6 +357,18 @@ test("parse go version data", async () => {
     _integrity: "",
     license: undefined,
   });
+  dep_list = await utils.parseGoVersionData(
+    fs.readFileSync("./test/data/goversion2.txt", (encoding = "utf-8")),
+    {}
+  );
+  expect(dep_list.length).toEqual(149);
+  expect(dep_list[0]).toEqual({
+    group: "cloud.google.com",
+    name: "go",
+    version: "v0.79.0",
+    _integrity: "sha256-oqqswrt4x6b9OGBnNqdssxBl1xf0rSUNjU2BR4BZar0=",
+    license: undefined,
+  });
 });
 
 test("parse cargo lock", async () => {

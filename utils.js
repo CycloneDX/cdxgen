@@ -1444,7 +1444,7 @@ const parseGoVersionData = async function (buildInfoData) {
       continue;
     }
     const tmpA = l.split(" ");
-    if (!tmpA || tmpA.length != 3) {
+    if (!tmpA || tmpA.length < 3) {
       continue;
     }
     let group = path.dirname(tmpA[1].trim());
@@ -1452,7 +1452,11 @@ const parseGoVersionData = async function (buildInfoData) {
     if (group === ".") {
       group = name;
     }
-    let component = await getGoPkgComponent(group, name, tmpA[2].trim(), "");
+    let hash = "";
+    if (tmpA.length == 4) {
+      hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
+    }
+    let component = await getGoPkgComponent(group, name, tmpA[2].trim(), hash);
     pkgList.push(component);
   }
   return pkgList;
