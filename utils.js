@@ -91,6 +91,9 @@ function getLicenses(pkg, format = "xml") {
             if (!l.includes("opensource.org")) {
               licenseContent.name = "CUSTOM";
             }
+            if (l.includes("mit-license")) {
+              licenseContent.id = "MIT";
+            }
           } else {
             licenseContent.name = l;
           }
