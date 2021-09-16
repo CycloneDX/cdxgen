@@ -17,6 +17,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: Set up JDK 8 and SBT
+        uses: olafurpg/setup-scala@v11
+        with:
+          java-version: adopt@1.8
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -78,6 +82,10 @@ jobs:
           bin/cdxgen -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
           ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml_v1_3
+          
+          bin/cdxgen -r -t java repotests/shiftleft-scala-example -o bomresults/bom-scala.json
+          ./cyclonedx validate --input-file bomresults/bom-scala.json --input-format json_v1_3
+          ./cyclonedx validate --input-file bomresults/bom-scala.xml --input-format xml_v1_3
 
           bin/cdxgen -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
           ./cyclonedx validate --input-file bomresults/bom-ts.json --input-format json_v1_3
