@@ -87,13 +87,13 @@ function getLicenses(pkg, format = "xml") {
             licenseContent.id = l;
             licenseContent.url = "https://opensource.org/licenses/" + l;
           } else if (l.startsWith("http")) {
-            licenseContent.url = l;
             if (!l.includes("opensource.org")) {
               licenseContent.name = "CUSTOM";
             }
             if (l.includes("mit-license")) {
               licenseContent.id = "MIT";
             }
+            licenseContent.url = l;
           } else {
             licenseContent.name = l;
           }
