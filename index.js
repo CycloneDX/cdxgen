@@ -862,19 +862,11 @@ const createJavaBom = async (path, options) => {
         );
         jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
       }
-      buildBomString(
-        {
-          includeBomSerialNumber,
-          pkgInfo: pkgList,
-          ptype: "maven",
-          context: {
-            src: path,
-            filename: sbtProjects.join(", "),
-            nsMapping: jarNSMapping,
-          },
-        },
-        callback
-      );
+      return buildBomNSData(pkgList, "maven", {
+        src: path,
+        filename: sbtProjects.join(", "),
+        nsMapping: jarNSMapping,
+      });
     }
   }
 };
