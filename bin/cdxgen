@@ -23,10 +23,6 @@ const args = require("yargs")
     type: "boolean",
     description: "Resolve class names for packages. jars only for now.",
   })
-  .option("version", {
-    alias: "v",
-    description: "Print version number",
-  })
   .option("server-url", {
     description:
       "Dependency track or AppThreat server url. Eg: https://deptrack.appthreat.io",
@@ -47,6 +43,7 @@ const args = require("yargs")
     description:
       "Dependency track or AppThreat project id. Either provide the id or the project name and version together",
   })
+  .version()
   .help("h").argv;
 
 if (args.version) {
@@ -101,10 +98,16 @@ let filePath = args._[0] || ".";
       const jsonFile = args.output.replace(".xml", ".json");
       // Create bom json file
       if (bomNSData.bomJson) {
-        if (typeof bomNSData.bomJson === "string" || bomNSData.bomJson instanceof String) {
+        if (
+          typeof bomNSData.bomJson === "string" ||
+          bomNSData.bomJson instanceof String
+        ) {
           fs.writeFileSync(jsonFile, bomNSData.bomJson);
         } else {
-          fs.writeFileSync(jsonFile, JSON.stringify(bomNSData.bomJson, null, 2));
+          fs.writeFileSync(
+            jsonFile,
+            JSON.stringify(bomNSData.bomJson, null, 2)
+          );
         }
       }
       // Create bom xml file
