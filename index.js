@@ -427,21 +427,24 @@ const createJavaBom = async (
         console.log(`Retrieving packages from ${path}`);
       }
       let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "war-deps-"));
-      pkgList = utils.extractJarArchive(path, tempDir);
-      if (pkgList.length) {
-        pkgList = await utils.getMvnMetadata(pkgList);
-      }
-      // Should we attempt to resolve class names
-      if (options.resolveClass) {
-        console.log(
-          "Creating class names list based on available jars. This might take a few mins ..."
-        );
-        jarNSMapping = utils.collectJarNS(tempDir);
-      }
-      // Clean up
-      if (tempDir && tempDir.startsWith(os.tmpdir())) {
-        console.log(`Cleaning up ${tempDir}`);
-        fs.rmdirSync(tempDir, { recursive: true });
+      try {
+        pkgList = utils.extractJarArchive(path, tempDir);
+        if (pkgList.length) {
+          pkgList = await utils.getMvnMetadata(pkgList);
+        }
+        // Should we attempt to resolve class names
+        if (options.resolveClass) {
+          console.log(
+            "Creating class names list based on available jars. This might take a few mins ..."
+          );
+          jarNSMapping = utils.collectJarNS(tempDir);
+        }
+      } finally {
+        // Clean up
+        if (tempDir && tempDir.startsWith(os.tmpdir())) {
+          console.log(`Cleaning up ${tempDir}`);
+          fs.rmdirSync(tempDir, { recursive: true });
+        }
       }
     } else {
       console.log(`${path} doesn't exist`);
@@ -490,52 +493,60 @@ const createJavaBom = async (
         });
         if (result.status == 1 || result.error) {
           let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
-          let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
-          let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
-          if (process.env.MVN_ARGS) {
-            const addArgs = process.env.MVN_ARGS.split(" ");
-            mvnTreeArgs = mvnTreeArgs.concat(addArgs);
-          }
-          console.log(
-            `Fallback to executing ${MVN_CMD} ${mvnTreeArgs.join(" ")}`
-          );
-          result = spawnSync(MVN_CMD, mvnTreeArgs, {
-            cwd: basePath,
-            shell: true,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-          });
-          if (result.status == 1 || result.error) {
-            console.error(result.stdout, result.stderr);
-            console.log(
-              "Resolve the above maven error. This could be due to the following:\n"
-            );
-            console.log(
-              "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
-            );
-            console.log(
-              "2. Private maven repository is not serving all the required maven plugins correctly. Refer to your registry documentation to add support for jitpack.io"
-            );
-            console.log(
-              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool"
-            );
-            console.log(
-              "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
-            );
-            const dlist = utils.parsePom(f);
-            if (dlist && dlist.length) {
-              pkgList = pkgList.concat(dlist);
+          try {
+            let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
+            let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
+            if (process.env.MVN_ARGS) {
+              const addArgs = process.env.MVN_ARGS.split(" ");
+              mvnTreeArgs = mvnTreeArgs.concat(addArgs);
             }
-          } else {
-            if (fs.existsSync(tempMvnTree)) {
-              const mvnTreeString = fs.readFileSync(tempMvnTree, {
-                encoding: "utf-8",
-              });
-              const dlist = utils.parseMavenTree(mvnTreeString);
+            console.log(
+              `Fallback to executing ${MVN_CMD} ${mvnTreeArgs.join(" ")}`
+            );
+            result = spawnSync(MVN_CMD, mvnTreeArgs, {
+              cwd: basePath,
+              shell: true,
+              encoding: "utf-8",
+              timeout: TIMEOUT_MS,
+            });
+            if (result.status == 1 || result.error) {
+              console.error(result.stdout, result.stderr);
+              console.log(
+                "Resolve the above maven error. This could be due to the following:\n"
+              );
+              console.log(
+                "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
+              );
+              console.log(
+                "2. Private maven repository is not serving all the required maven plugins correctly. Refer to your registry documentation to add support for jitpack.io"
+              );
+              console.log(
+                "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool"
+              );
+              console.log(
+                "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
+              );
+              const dlist = utils.parsePom(f);
               if (dlist && dlist.length) {
                 pkgList = pkgList.concat(dlist);
               }
-              fs.unlinkSync(tempMvnTree);
+            } else {
+              if (fs.existsSync(tempMvnTree)) {
+                const mvnTreeString = fs.readFileSync(tempMvnTree, {
+                  encoding: "utf-8",
+                });
+                const dlist = utils.parseMavenTree(mvnTreeString);
+                if (dlist && dlist.length) {
+                  pkgList = pkgList.concat(dlist);
+                }
+                fs.unlinkSync(tempMvnTree);
+              }
+            }
+          } finally {
+            // Clean up
+            if (tempDir && tempDir.startsWith(os.tmpdir())) {
+              console.log(`Cleaning up ${tempDir}`);
+              fs.rmdirSync(tempDir, { recursive: true });
             }
           }
           pkgList = await utils.getMvnMetadata(pkgList);
@@ -696,78 +707,87 @@ const createJavaBom = async (
           sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
         let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
         let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
-        fs.mkdirSync(tempSbtgDir, { recursive: true });
-        // Create temporary plugins file
-        let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
+        try {
+          fs.mkdirSync(tempSbtgDir, { recursive: true });
+          // Create temporary plugins file
+          let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
 
-        // Requires a custom version of `sbt-dependency-graph` that
-        // supports `--append` for `toFile` subtask.
-        const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
-        fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
+          // Requires a custom version of `sbt-dependency-graph` that
+          // supports `--append` for `toFile` subtask.
+          const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
+          fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
 
-        for (let i in sbtProjects) {
-          const basePath = sbtProjects[i];
-          let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
-          console.log(
-            "Executing",
-            SBT_CMD,
-            "dependencyList in",
-            basePath,
-            "using plugins",
-            tempSbtgDir
-          );
-          var sbtArgs = [];
-          var pluginFile = null;
-          if (standalonePluginFile) {
-            sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"dependencyList::toFile ${dlFile} --append"`]
-          } else {
-            // write to the existing plugins file
-            sbtArgs = [`"dependencyList::toFile ${dlFile} --append"`]
-            pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
+          for (let i in sbtProjects) {
+            const basePath = sbtProjects[i];
+            let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
+            console.log(
+              "Executing",
+              SBT_CMD,
+              "dependencyList in",
+              basePath,
+              "using plugins",
+              tempSbtgDir
+            );
+            var sbtArgs = [];
+            var pluginFile = null;
+            if (standalonePluginFile) {
+              sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"dependencyList::toFile ${dlFile} --append"`]
+            } else {
+              // write to the existing plugins file
+              sbtArgs = [`"dependencyList::toFile ${dlFile} --append"`]
+              pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
+            }
+            // Note that the command has to be invoked with `shell: true` to properly execut sbt
+            const result = spawnSync(
+              SBT_CMD,
+              sbtArgs,
+              { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
+            );
+            if (result.status == 1 || result.error) {
+              console.error(result.stdout, result.stderr);
+              if (DEBUG_MODE) {
+                console.log(
+                  `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
+                );
+                console.log(
+                  `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
+                );
+                console.log(
+                  "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
+                );
+              }
+            } else if (DEBUG_MODE) {
+              console.log(result.stdout);
+            }
+            if (!standalonePluginFile) {
+              utils.cleanupPlugin(basePath, pluginFile);
+            }
+            if (fs.existsSync(dlFile)) {
+              const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
+              if (DEBUG_MODE) {
+                console.log(cmdOutput);
+              }
+              const dlist = utils.parseKVDep(cmdOutput);
+              if (dlist && dlist.length) {
+                pkgList = pkgList.concat(dlist);
+              }
+            } else {
+              if (DEBUG_MODE) {
+                console.log(`sbt dependencyList did not yield ${dlFile}`);
+              }
+            }
           }
-          // Note that the command has to be invoked with `shell: true` to properly execut sbt
-          const result = spawnSync(
-            SBT_CMD,
-            sbtArgs,
-            { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
-          );
-          if (result.status == 1 || result.error) {
-            console.error(result.stdout, result.stderr);
-            if (DEBUG_MODE) {
-              console.log(
-                `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
-              );
-              console.log(
-                `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
-              );
-              console.log(
-                "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
-              );
-            }
-          } else if (DEBUG_MODE) {
-            console.log(result.stdout);
+        } finally {
+          // Cleanup
+          if (tempDir && tempDir.startsWith(os.tmpdir())) {
+            console.log(`Cleaning up ${tempDir}`);
+            fs.rmdirSync(tempDir, { recursive: true });
           }
-          if (!standalonePluginFile) {
-            utils.cleanupPlugin(basePath, pluginFile);
-          }
-          if (fs.existsSync(dlFile)) {
-            const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
-            if (DEBUG_MODE) {
-              console.log(cmdOutput);
-            }
-            const dlist = utils.parseKVDep(cmdOutput);
-            if (dlist && dlist.length) {
-              pkgList = pkgList.concat(dlist);
-            }
-          } else {
-            if (DEBUG_MODE) {
-              console.log(`sbt dependencyList did not yield ${dlFile}`);
-            }
+          if (tempSbtgDir && tempSbtgDir.startsWith(os.tmpdir())) {
+            console.log(`Cleaning up ${tempSbtgDir}`);
+            fs.rmdirSync(tempSbtgDir, { recursive: true });
           }
         }
-
-        // Cleanup
-        fs.unlinkSync(tempSbtPlugins);
       } // else
 
       if (DEBUG_MODE) {
