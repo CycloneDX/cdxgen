@@ -13,8 +13,8 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | go                 | binary, go.mod, go.sum, Gopkg.lock                                           |
 | ruby               | Gemfile.lock, gemspec                                                        |
 | rust               | Cargo.toml, Cargo.lock                                                       |
-| .Net Framework     | .csproj, packages.config                                                     |
-| .Net core          | .csproj, packages.config                                                     |
+| .Net Framework     | .csproj, packages.config, project.assets.json                                |
+| .Net core          | .csproj, packages.config, project.assets.json                                |
 | docker / oci image | All supported languages excluding OS packages                                |
 
 NOTE:

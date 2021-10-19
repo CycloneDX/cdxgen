@@ -1538,8 +1538,25 @@ const createCsharpBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "packages.config"
   );
+  const projAssetsFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "project.assets.json"
+  );
   let pkgList = [];
-  if (pkgConfigFiles.length) {
+  // project.assets.json parsing
+  if (projAssetsFiles.length) {
+    for (let af of projAssetsFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${af}`);
+      }
+      let pkgData = fs.readFileSync(af, { encoding: "utf-8" });
+      const dlist = await utils.parseCsProjAssetsData(pkgData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  } else if (pkgConfigFiles.length) {
+    // packages.config parsing
     for (let i in pkgConfigFiles) {
       const f = pkgConfigFiles[i];
       if (DEBUG_MODE) {
@@ -1555,6 +1572,7 @@ const createCsharpBom = async (path, options) => {
       }
     }
   } else if (csProjFiles.length) {
+    // .csproj parsing
     for (let i in csProjFiles) {
       const f = csProjFiles[i];
       if (DEBUG_MODE) {

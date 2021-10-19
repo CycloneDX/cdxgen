@@ -466,6 +466,20 @@ test("parse cs proj", async () => {
   });
 });
 
+test("parse project.assets.json", async () => {
+  expect(await utils.parseCsProjAssetsData(null)).toEqual([]);
+  const dep_list = await utils.parseCsProjAssetsData(
+    fs.readFileSync("./test/data/project.assets.json", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(142);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "Castle.Core",
+    version: "4.4.1",
+    "_integrity": "sha512-zanbjWC0Y05gbx4eGXkzVycOQqVOFVeCjVsDSyuao9P4mtN1w3WxxTo193NGC7j3o2u3AJRswaoC6hEbnGACnQ==",
+  });
+});
+
 test("parse .net cs proj", async () => {
   expect(await utils.parseCsProjData(null)).toEqual([]);
   const dep_list = await utils.parseCsProjData(

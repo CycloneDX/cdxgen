@@ -1856,6 +1856,46 @@ const parseCsProjData = async function (csProjData) {
 };
 exports.parseCsProjData = parseCsProjData;
 
+const parseCsProjAssetsData = async function (csProjData) {
+  const pkgList = [];
+  let pkg = null;
+  if (!csProjData) {
+    return pkgList;
+  }
+  const assetData = JSON.parse(csProjData);
+  if (!assetData || !assetData.libraries) {
+    return pkgList;
+  }
+  for (let alib of Object.keys(assetData.libraries)) {
+    // Skip os runtime packages
+    if (alib.startsWith("runtime")) {
+      continue;
+    }
+    const tmpA = alib.split("/");
+    const libData = assetData.libraries[alib];
+    if (tmpA.length > 1) {
+      pkg = {
+        group: "",
+        name: tmpA[0],
+        version: tmpA[tmpA.length - 1],
+      };
+      if (libData.sha256) {
+        pkg._integrity = "sha256-" + libData.sha256;
+      }
+      if (libData.sha512) {
+        pkg._integrity = "sha512-" + libData.sha512;
+      }
+      pkgList.push(pkg);
+    }
+  }
+  if (process.env.FETCH_LICENSE) {
+    return await getNugetMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
+};
+exports.parseCsProjAssetsData = parseCsProjAssetsData;
+
 /**
  * Method to retrieve metadata for nuget packages
  *
