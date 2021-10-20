@@ -611,24 +611,114 @@ const createJavaBom = async (
         } catch (e) {}
         GRADLE_CMD = pathLib.join(path, "gradlew");
       }
-      for (let i in gradleFiles) {
-        const f = gradleFiles[i];
-        const basePath = pathLib.dirname(f);
-        console.log("Executing", GRADLE_CMD, "dependencies in", basePath);
+      // Support for multi-project applications
+      if (process.env.GRADLE_MULTI_PROJECT_MODE) {
+        console.log("Executing", GRADLE_CMD, "projects in", path);
         const result = spawnSync(
           GRADLE_CMD,
-          ["dependencies", "-q", "--console", "plain"],
-          { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
+          ["projects", "-q", "--console", "plain"],
+          { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
         if (result.status == 1 || result.error) {
           console.error(result.stdout, result.stderr);
+          if (DEBUG_MODE) {
+            console.log(
+              "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
+            );
+          }
         }
         const stdout = result.stdout;
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
-          const dlist = utils.parseGradleDep(cmdOutput);
-          if (dlist && dlist.length) {
-            pkgList = pkgList.concat(dlist);
+          const allProjects = utils.parseGradleProjects(cmdOutput);
+          if (!allProjects) {
+            console.log(
+              "No projects found. Is this a gradle multi-project application?"
+            );
+          } else {
+            console.log("Found", allProjects.length, "gradle sub-projects");
+            for (let sp of allProjects) {
+              console.log(
+                "Executing",
+                GRADLE_CMD,
+                sp + ":dependencies in",
+                path
+              );
+              const sresult = spawnSync(
+                GRADLE_CMD,
+                [sp + ":dependencies", "-q", "--console", "plain"],
+                { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+              );
+              if (sresult.status == 1 || sresult.error) {
+                if (DEBUG_MODE) {
+                  console.error(sresult.stdout, sresult.stderr);
+                }
+              }
+              const sstdout = sresult.stdout;
+              if (sstdout) {
+                const cmdOutput = Buffer.from(sstdout).toString();
+                const dlist = utils.parseGradleDep(cmdOutput);
+                if (dlist && dlist.length) {
+                  if (DEBUG_MODE) {
+                    console.log(
+                      "Found",
+                      dlist.length,
+                      "packages in gradle project",
+                      sp
+                    );
+                  }
+                  pkgList = pkgList.concat(dlist);
+                } else {
+                  if (DEBUG_MODE) {
+                    console.log("No packages were found in gradle project", sp);
+                  }
+                }
+              }
+            }
+            if (pkgList.length) {
+              console.log(
+                "Obtained",
+                pkgList.length,
+                "from this gradle multi-project"
+              );
+            } else {
+              console.log(
+                "No packages found. Unset the environment variable GRADLE_MULTI_PROJECT_MODE and try again."
+              );
+            }
+          }
+        }
+      } else {
+        for (let i in gradleFiles) {
+          const f = gradleFiles[i];
+          const basePath = pathLib.dirname(f);
+          console.log("Executing", GRADLE_CMD, "dependencies in", basePath);
+          const result = spawnSync(
+            GRADLE_CMD,
+            ["dependencies", "-q", "--console", "plain"],
+            { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
+          );
+          if (result.status == 1 || result.error) {
+            console.error(result.stdout, result.stderr);
+            if (DEBUG_MODE) {
+              console.log(
+                "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
+              );
+            }
+          }
+          const stdout = result.stdout;
+          if (stdout) {
+            const cmdOutput = Buffer.from(stdout).toString();
+            const dlist = utils.parseGradleDep(cmdOutput);
+            if (dlist && dlist.length) {
+              pkgList = pkgList.concat(dlist);
+            } else {
+              if (DEBUG_MODE) {
+                console.log(
+                  "No packages were detected. If this is a multi-project gradle application set the environment variable GRADLE_MULTI_PROJECT_MODE to true and try again."
+                );
+              }
+            }
           }
         }
       }

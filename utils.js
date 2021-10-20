@@ -566,12 +566,15 @@ const parseGradleDep = function (rawOutput) {
           // Filter duplicates
           if (!keys_cache[key]) {
             keys_cache[key] = key;
-            deps.push({
-              group: verArr[0],
-              name: verArr[1],
-              version: versionStr,
-              qualifiers: { type: "jar" },
-            });
+            const group = verArr[0].trim();
+            if (group !== "project") {
+              deps.push({
+                group,
+                name: verArr[1].trim(),
+                version: versionStr,
+                qualifiers: { type: "jar" },
+              });
+            }
           }
         }
       }
@@ -581,6 +584,63 @@ const parseGradleDep = function (rawOutput) {
   return [];
 };
 exports.parseGradleDep = parseGradleDep;
+
+/**
+ * Parse gradle projects output
+ * @param {string} rawOutput Raw string output
+ */
+const parseGradleProjects = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    const projects = [];
+    const tmpA = rawOutput.split("\n");
+    tmpA.forEach((l) => {
+      if (l.startsWith("+--- Project")) {
+        let projName = l.replace("+--- Project ", "").split(" ")[0];
+        projName = projName.replace(/'/g, "");
+        if (
+          !projName.startsWith(":test") &&
+          !projName.startsWith(":docs") &&
+          !projName.startsWith(":qa")
+        ) {
+          projects.push(projName);
+        }
+      }
+    });
+    return projects;
+  }
+  return [];
+};
+exports.parseGradleProjects = parseGradleProjects;
+
+/**
+ * Parse dependencies in Key:Value format
+ */
+const parseKVDep = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    const deps = [];
+    rawOutput.split("\n").forEach((l) => {
+      const tmpA = l.split(":");
+      if (tmpA.length === 3) {
+        deps.push({
+          group: tmpA[0],
+          name: tmpA[1],
+          version: tmpA[2],
+          qualifiers: { type: "jar" },
+        });
+      } else if (tmpA.length === 2) {
+        deps.push({
+          group: "",
+          name: tmpA[0],
+          version: tmpA[1],
+          qualifiers: { type: "jar" },
+        });
+      }
+    });
+    return deps;
+  }
+  return [];
+};
+exports.parseKVDep = parseKVDep;
 
 /**
  * Method to find the spdx license id from name
