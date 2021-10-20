@@ -476,7 +476,21 @@ test("parse project.assets.json", async () => {
     group: "",
     name: "Castle.Core",
     version: "4.4.1",
-    "_integrity": "sha512-zanbjWC0Y05gbx4eGXkzVycOQqVOFVeCjVsDSyuao9P4mtN1w3WxxTo193NGC7j3o2u3AJRswaoC6hEbnGACnQ==",
+    _integrity:
+      "sha512-zanbjWC0Y05gbx4eGXkzVycOQqVOFVeCjVsDSyuao9P4mtN1w3WxxTo193NGC7j3o2u3AJRswaoC6hEbnGACnQ==",
+  });
+});
+
+test("parse packages.lock.json", async () => {
+  expect(await utils.parseCsPkgLockData(null)).toEqual([]);
+  const dep_list = await utils.parseCsPkgLockData(
+    fs.readFileSync("./test/data/packages.lock.json", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(14);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "Antlr",
+    version: "3.5.0.2",
   });
 });
 

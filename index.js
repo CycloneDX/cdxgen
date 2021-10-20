@@ -1542,6 +1542,10 @@ const createCsharpBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "project.assets.json"
   );
+  const pkgLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "packages.lock.json"
+  );
   let pkgList = [];
   // project.assets.json parsing
   if (projAssetsFiles.length) {
@@ -1551,6 +1555,18 @@ const createCsharpBom = async (path, options) => {
       }
       let pkgData = fs.readFileSync(af, { encoding: "utf-8" });
       const dlist = await utils.parseCsProjAssetsData(pkgData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  } else if (pkgLockFiles.length) {
+    // packages.lock.json from nuget
+    for (let af of pkgLockFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${af}`);
+      }
+      let pkgData = fs.readFileSync(af, { encoding: "utf-8" });
+      const dlist = await utils.parseCsPkgLockData(pkgData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
