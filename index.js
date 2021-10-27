@@ -720,21 +720,30 @@ const createJavaBom = async (
           for (let i in sbtProjects) {
             const basePath = sbtProjects[i];
             let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
+            var commandPrefix = "";
+            if (options.subprojectName) {
+              commandPrefix = `${options.subprojectName}/`
+            }
+
             console.log(
               "Executing",
               SBT_CMD,
-              "dependencyList in",
+              `${commandPrefix}dependencyList in`,
               basePath,
               "using plugins",
               tempSbtgDir
             );
             var sbtArgs = [];
             var pluginFile = null;
+            var commandPrefix = "";
+            if (options.subprojectName) {
+              commandPrefix = `${options.subprojectName}/`
+            }
             if (standalonePluginFile) {
-              sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"dependencyList::toFile ${dlFile} --append"`]
+              sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"${commandPrefix}dependencyList::toFile ${dlFile} --append"`]
             } else {
               // write to the existing plugins file
-              sbtArgs = [`"dependencyList::toFile ${dlFile} --append"`]
+              sbtArgs = [`"${commandPrefix}dependencyList::toFile ${dlFile} --append"`]
               pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
             }
             // Note that the command has to be invoked with `shell: true` to properly execut sbt
@@ -751,9 +760,6 @@ const createJavaBom = async (
                 );
                 console.log(
                   `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
-                );
-                console.log(
-                  "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
                 );
               }
             } else if (DEBUG_MODE) {

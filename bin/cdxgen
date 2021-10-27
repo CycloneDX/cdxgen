@@ -18,6 +18,10 @@ const args = require("yargs")
     type: "boolean",
     description: "Recurse mode suitable for mono-repos",
   })
+  .option("subproject", {
+    alias: "s",
+    description: "Analyze only a specific subproject",
+  })
   .option("resolve-class", {
     alias: "c",
     type: "boolean",
@@ -72,6 +76,7 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
 let options = {
   dev: true,
   projectType: args.type,
+  subprojectName: args.subproject,
   multiProject: args.recurse,
   depth: 3,
   output: args.output,
