@@ -2009,6 +2009,12 @@ const addPlugin = function (projectPath, plugin) {
   if (fs.existsSync(pluginsFile)) {
     originalPluginsFile = pluginsFile + ".cdxgen";
     fs.copyFileSync(pluginsFile, originalPluginsFile);
+
+    // Detect a situation when someone already addded
+    // sbt-dependency-graph as a dependency.
+    var data = fs.readFileSync(pluginsFile, 'utf-8').toString();
+    var newData = data.replace(/^(.+\"sbt-dependency-graph\".+)/gim, '//$1');
+    fs.writeFileSync(pluginsFile, newData, 'utf-8');
   }
 
   fs.writeFileSync(pluginsFile, plugin, { flag: "a" });
