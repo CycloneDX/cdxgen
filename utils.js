@@ -2009,6 +2009,17 @@ const addPlugin = function (projectPath, plugin) {
   if (fs.existsSync(pluginsFile)) {
     originalPluginsFile = pluginsFile + ".cdxgen";
     fs.copyFileSync(pluginsFile, originalPluginsFile);
+
+    // sbt-dependency-graph may already be present in the users' plugins file.
+    // Since we are using our own version of it, and require the most
+    // recent one, we have to ensure that there are no conflicts.
+    // There is no version resolution for plugins in SBT, and it seems to pick
+    // the first one that is defined. Rather than pre-pending the plugin,
+    // and wishing we are lucky, we just make sure there are no conflicts by
+    // ignoring the plugin.
+    var data = fs.readFileSync(pluginsFile, 'utf-8').toString();
+    var newData = data.replace(/^(.+\"sbt-dependency-graph\".+)/gim, '//$1');
+    fs.writeFileSync(pluginsFile, newData, 'utf-8');
   }
 
   fs.writeFileSync(pluginsFile, plugin, { flag: "a" });

@@ -474,9 +474,6 @@ const createJavaBom = async (
         const addArgs = process.env.MVN_ARGS.split(" ");
         mvnArgs = mvnArgs.concat(addArgs);
       }
-      if (DEBUG_MODE) {
-        mvnArgs = mvnArgs.concat("-X")
-      }
       for (let i in pomFiles) {
         const f = pomFiles[i];
         const basePath = pathLib.dirname(f);
