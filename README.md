@@ -57,6 +57,20 @@ cyclonedx-bom -o bom.xml
 cyclonedx-bom -o bom.json
 ```
 
+## Usage with docker
+
+Run `cyclonedx/cyclonedx-node` docker image inside your project folder using:
+
+```bash
+docker run --rm \
+  -v `pwd`:/src \
+  -w /src \
+  cyclonedx/cyclonedx-node -o /src/bom.xml /src
+```
+
+All options explained above are supported.
+
+
 ## CycloneDX Schema Support
 
 The following table provides information on the version of this node module, the CycloneDX schema version supported, 
