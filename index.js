@@ -1353,7 +1353,7 @@ const createGoBom = async (path, options) => {
           pkgList = pkgList.concat(dlist);
         }
         const allImports = {};
-        const circuitBreak = false;
+        let circuitBreak = false;
         console.log(
           `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
         );
