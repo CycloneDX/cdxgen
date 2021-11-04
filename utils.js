@@ -390,7 +390,7 @@ exports.parseYarnLock = parseYarnLock;
 const parseNodeShrinkwrap = async function (swFile) {
   const pkgList = [];
   if (fs.existsSync(swFile)) {
-    lockData = JSON.parse(fs.readFileSync(swFile, "utf8"));
+    const lockData = JSON.parse(fs.readFileSync(swFile, "utf8"));
     const pkgKeys = Object.keys(lockData);
     for (var k in pkgKeys) {
       const fullName = pkgKeys[k];
@@ -544,7 +544,7 @@ const parseMavenTree = function (rawOutput) {
       l = tmpline[tmpline.length - 1];
       const pkgArr = l.split(":");
       if (pkgArr && pkgArr.length > 2) {
-        versionStr = pkgArr[pkgArr.length - 2];
+        let versionStr = pkgArr[pkgArr.length - 2];
         if (pkgArr.length == 4) {
           versionStr = pkgArr[pkgArr.length - 1];
         }
@@ -767,7 +767,7 @@ const getMvnMetadata = async function (pkgList) {
             return findLicenseId(l.name._);
           });
         } else if (Object.keys(bodyJson.licenses.license).length) {
-          l = bodyJson.licenses.license;
+          const l = bodyJson.licenses.license;
           p.license = [findLicenseId(l.name._)];
         } else {
         }
@@ -1123,7 +1123,7 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
         };
         if (license.spdx_id === "NOASSERTION") {
           if (res.body.content) {
-            content = Buffer.from(res.body.content, "base64").toString("ascii");
+            const content = Buffer.from(res.body.content, "base64").toString("ascii");
             licenseId = guessLicenseId(content);
           }
           // If content match fails attempt to find by name
@@ -1184,7 +1184,7 @@ const getGoPkgLicense = async function (repoMetadata) {
       if (licenses === "") {
         licenses = $("section.License > h2").text().trim();
       }
-      licenseIds = licenses.split(", ");
+      const licenseIds = licenses.split(", ");
       const licList = [];
       for (var i in licenseIds) {
         const alicense = {
@@ -1799,7 +1799,6 @@ exports.parseCargoData = parseCargoData;
 
 const parseCsPkgData = async function (pkgData) {
   const pkgList = [];
-  let pkg = null;
   if (!pkgData) {
     return pkgList;
   }
@@ -1832,7 +1831,6 @@ exports.parseCsPkgData = parseCsPkgData;
 
 const parseCsProjData = async function (csProjData) {
   const pkgList = [];
-  let pkg = null;
   if (!csProjData) {
     return pkgList;
   }
@@ -2025,7 +2023,7 @@ exports.getNugetMetadata = getNugetMetadata;
 const parseComposerLock = function (pkgLockFile) {
   const pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
-    lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
     if (lockData && lockData.packages) {
       for (let i in lockData.packages) {
         const pkg = lockData.packages[i];
@@ -2057,7 +2055,7 @@ exports.parseComposerLock = parseComposerLock;
 const parseSbtLock = function (pkgLockFile) {
   const pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
-    lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
     if (lockData && lockData.dependencies) {
       for (let i in lockData.dependencies) {
         const pkg = lockData.dependencies[i];
@@ -2280,7 +2278,7 @@ const extractJarArchive = function (jarFile, tempDir) {
       const jarname = path.basename(jf);
       const manifestDir = path.join(tempDir, "META-INF");
       const manifestFile = path.join(tempDir, "META-INF", "MANIFEST.MF");
-      jarResult = spawnSync("jar", ["-xf", jf], {
+      const jarResult = spawnSync("jar", ["-xf", jf], {
         encoding: "utf-8",
         cwd: tempDir,
       });

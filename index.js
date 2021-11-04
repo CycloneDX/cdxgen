@@ -1,6 +1,5 @@
 const parsePackageJsonName = require("parse-packagejson-name");
 const os = require("os");
-const glob = require("glob");
 const pathLib = require("path");
 const request = require("request");
 const ssri = require("ssri");
@@ -560,7 +559,7 @@ const createJavaBom = async (path, options) => {
           jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
         }
         console.log(`Executing '${MVN_CMD} ${mvnArgs.join(" ")}' in`, basePath);
-        result = spawnSync(MVN_CMD, mvnArgs, {
+        let result = spawnSync(MVN_CMD, mvnArgs, {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
@@ -1030,7 +1029,7 @@ const createNodejsBom = async (path, options) => {
     // Do rush install if we don't have node_modules directory
     if (!fs.existsSync(nmDir)) {
       console.log("Executing 'rush install --no-link'", path);
-      result = spawnSync("rush", ["install", "--no-link", "--bypass-policy"], {
+      spawnSync("rush", ["install", "--no-link", "--bypass-policy"], {
         cwd: path,
         encoding: "utf-8",
       });
@@ -1299,7 +1298,7 @@ const createGoBom = async (path, options) => {
   }
 
   // If USE_GOSUM is false, generate BOM components using go.mod.
-  gosumMap = {};
+  const gosumMap = {};
   if (gosumFiles.length) {
     for (let i in gosumFiles) {
       const f = gosumFiles[i];
@@ -1372,6 +1371,9 @@ const createGoBom = async (path, options) => {
             { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
           );
           if (mresult.status == 1 || mresult.error) {
+            if (DEBUG_MODE) {
+              console.log(mresult.stdout, mresult.stderr);
+            }
             circuitBreak = true;
           } else {
             const mstdout = mresult.stdout;
@@ -1456,7 +1458,6 @@ const createRustBom = async (path, options) => {
   if (cargoMode && !cargoLockMode) {
     for (let i in cargoFiles) {
       const f = cargoFiles[i];
-      const basePath = pathLib.dirname(f);
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1519,7 +1520,7 @@ const createPHPBom = async (path, options) => {
       const f = composerJsonFiles[i];
       const basePath = pathLib.dirname(f);
       console.log("Executing 'composer install' in", basePath);
-      result = spawnSync("composer", ["install"], {
+      const result = spawnSync("composer", ["install"], {
         cwd: basePath,
         encoding: "utf-8",
       });
@@ -1577,7 +1578,7 @@ const createRubyBom = async (path, options) => {
       const f = gemFiles[i];
       const basePath = pathLib.dirname(f);
       console.log("Executing 'bundle install' in", basePath);
-      result = spawnSync("bundle", ["install"], {
+      const result = spawnSync("bundle", ["install"], {
         cwd: basePath,
         encoding: "utf-8",
       });
@@ -1839,7 +1840,6 @@ const createXBom = async (path, options) => {
     console.error(path, "is invalid");
     process.exit(1);
   }
-  const { projectType } = options;
   // node.js - package.json
   if (
     fs.existsSync(pathLib.join(path, "package.json")) ||
@@ -2052,7 +2052,6 @@ exports.createBom = async (path, options) => {
     default:
       return await createXBom(path, options);
   }
-  return {};
 };
 
 /**
