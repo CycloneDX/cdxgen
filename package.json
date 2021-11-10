@@ -37,7 +37,8 @@
     "cyclonedx-bom": "./bin/cyclonedx-bom"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "docker-release": "docker build . -t cyclonedx/cyclonedx-node:`node bin/cyclonedx-bom --version` -t cyclonedx/cyclonedx-node:latest && docker push cyclonedx/cyclonedx-node:`node bin/cyclonedx-bom --version` && docker push cyclonedx/cyclonedx-node:latest"
   },
   "engines": {
     "node": ">=12.0.0"
