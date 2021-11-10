@@ -34,7 +34,8 @@
   ],
   "main": "index.js",
   "bin": {
-    "cyclonedx-bom": "./bin/cyclonedx-bom"
+    "cyclonedx-bom": "./bin/cyclonedx-bom",
+    "cyclonedx-node": "./bin/cyclonedx-bom"
   },
   "scripts": {
     "test": "jest"
