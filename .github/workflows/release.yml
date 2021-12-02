@@ -62,11 +62,12 @@ jobs:
 
     - name: Publish Docker image to Docker Hub
       env:
-        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       run: |
         REPO=cyclonedx/cyclonedx-node
         VERSION=${{ steps.build.outputs.version }}
-        docker login --username coderpatros --password "$DOCKER_TOKEN"
+        docker login --username $DOCKERHUB_USERNAME --password "$DOCKERHUB_TOKEN"
         docker build -f Dockerfile -t $REPO:$VERSION -t $REPO:latest .
         docker push $REPO:latest
         docker push $REPO:$VERSION
