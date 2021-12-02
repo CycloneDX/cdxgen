@@ -619,8 +619,11 @@ const parseGradleProjects = function (rawOutput) {
     const projects = [];
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
-      if (l.startsWith("+--- Project")) {
-        let projName = l.replace("+--- Project ", "").split(" ")[0];
+      if (l.startsWith("+--- Project") || l.startsWith("\\--- Project")) {
+        let projName = l
+          .replace("+--- Project ", "")
+          .replace("\\--- Project ", "")
+          .split(" ")[0];
         projName = projName.replace(/'/g, "");
         if (
           !projName.startsWith(":test") &&
@@ -1123,7 +1126,9 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
         };
         if (license.spdx_id === "NOASSERTION") {
           if (res.body.content) {
-            const content = Buffer.from(res.body.content, "base64").toString("ascii");
+            const content = Buffer.from(res.body.content, "base64").toString(
+              "ascii"
+            );
             licenseId = guessLicenseId(content);
           }
           // If content match fails attempt to find by name

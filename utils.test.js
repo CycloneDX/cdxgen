@@ -114,7 +114,7 @@ test("parse gradle projects", () => {
   let proj_list = utils.parseGradleProjects(
     fs.readFileSync("./test/data/gradle-projects.out", (encoding = "utf-8"))
   );
-  expect(proj_list.length).toEqual(8);
+  expect(proj_list.length).toEqual(9);
 });
 
 test("parse maven tree", () => {
