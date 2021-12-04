@@ -63,9 +63,9 @@ Run `cyclonedx/cyclonedx-node` docker image inside your project folder using:
 
 ```bash
 docker run --rm \
-  -v `pwd`:/src \
+  -v "$PWD":/src \
   -w /src \
-  cyclonedx/cyclonedx-node -o /src/bom.xml /src
+  cyclonedx/cyclonedx-node -o /src/bom.xml
 ```
 
 All options explained above are supported.
