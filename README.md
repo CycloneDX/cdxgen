@@ -1,32 +1,33 @@
-[![Build Status](https://github.com/CycloneDX/cyclonedx-node-module/workflows/Node%20CI/badge.svg)](https://github.com/CycloneDX/cyclonedx-node-module/actions?workflow=Node+CI)
-[![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)][License]
-[![Latest](
-https://img.shields.io/npm/v/@cyclonedx/bom)](https://www.npmjs.com/package/@cyclonedx/bom)
-[![Website](https://img.shields.io/badge/https://-cyclonedx.org-blue.svg)](https://cyclonedx.org/)
-[![Slack Invite](https://img.shields.io/badge/Slack-Join-blue?logo=slack&labelColor=393939)](https://cyclonedx.org/slack/invite)
-[![Group Discussion](https://img.shields.io/badge/discussion-groups.io-blue.svg)](https://groups.io/g/CycloneDX)
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Follow)](https://twitter.com/CycloneDX_Spec)
+[![shield_gh-workflow-test]][link_gh-workflow-test]
+[![shield_npm-version]][link_npm]
+[![shield_docker-version]][link_docker]
+[![shield_license]][license_file]  
+[![shield_website]][link_website]
+[![shield_slack]][link_slack]
+[![shield_groups]][link_discussion]
+[![shield_twitter-follow]][link_twitter]
 
-CycloneDX Node.js Module
-=========
+----
+
+# CycloneDX Node.js Module
 
 The CycloneDX module for Node.js creates a valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies. CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
-Requirements
--------------------
+## Requirements
+
 Node.js v12.0.0 or higher
 
-Usage
--------------------
+## Usage
 
-#### Installing
+### Installing
 
 ```bash
 npm install -g @cyclonedx/bom
 ```
 
-#### Getting Help
-```bash
+### Getting Help
+
+```text
 $ cyclonedx-bom -h
 Usage: cyclonedx-bom [OPTIONS] [path]
 
@@ -42,26 +43,29 @@ Options:
   -h, --help                 display help for command
 ```
 
-#### Example (default: XML)
-```bash
+### Example (default: XML)
+
+```sh
 cyclonedx-bom
 ```
 
-#### Example (XML)
-```bash
+### Example (XML)
+
+```sh
 cyclonedx-bom -o bom.xml
 ```
 
-#### Example (JSON)
-```bash
+### Example (JSON)
+
+```sh
 cyclonedx-bom -o bom.json
 ```
 
-## Usage with docker
+### Usage with docker
 
 Run `cyclonedx/cyclonedx-node` docker image inside your project folder using:
 
-```bash
+```sh
 docker run --rm \
   -v "$PWD":/src \
   -w /src \
@@ -70,26 +74,45 @@ docker run --rm \
 
 All options explained above are supported.
 
-
 ## CycloneDX Schema Support
 
-The following table provides information on the version of this node module, the CycloneDX schema version supported, 
-as well as the output format options. Use the latest possible version of this node module that is the compatible with 
-the CycloneDX version supported by the target system. Or use the [CycloneDX CLI Tool](https://github.com/CycloneDX/cyclonedx-cli/)
+The following table provides information on the version of
+this node module,
+the CycloneDX schema version supported,
+as well as the output format options.  
+Use the latest possible version of this node module that is the compatible with
+the CycloneDX version supported by the target system.
+Or use the [CycloneDX CLI Tool](https://github.com/CycloneDX/cyclonedx-cli/)
 to convert to older specification versions as required.
 
 | Version | Schema Version | Format(s) |
-| ------- | ----------------- | --------- |
+| --- | --- | --- |
 | 3.0.x | CycloneDX v1.3 | XML/JSON |
 | 2.0.x | CycloneDX v1.2 | XML/JSON |
 | 1.1.x | CycloneDX v1.1 | XML |
-| 1.0x | CycloneDX v1.0 | XML |
+| 1.0.x | CycloneDX v1.0 | XML |
 
-Copyright & License
--------------------
+## Copyright & License
 
 CycloneDX Node Module is Copyright (c) OWASP Foundation. All Rights Reserved.
 
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] file for the full license.
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license.
+See the [LICENSE][license_file] file for the full license.
 
-[License]: https://github.com/CycloneDX/cyclonedx-node-module/blob/master/LICENSE
+[license_file]: https://github.com/CycloneDX/cyclonedx-node-module/blob/master/LICENSE
+
+[shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-node-module/Node%20CI/master?logo=GitHub&logoColor=white "build"
+[shield_npm-version]: https://img.shields.io/npm/v/@cyclonedx/bom?logo=Node.js&logoColor=white&label=npm "npm"
+[shield_docker-version]: https://img.shields.io/docker/v/cyclonedx/cyclonedx-node?logo=docker&logoColor=white&label=docker "docker"
+[shield_license]: https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg "license"
+[shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
+[shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
+[shield_groups]: https://img.shields.io/badge/discussion-groups.io-blue.svg "groups discussion"
+[shield_twitter-follow]: https://img.shields.io/badge/Twitter-follow-blue?logo=Twitter&logoColor=white "twitter follow"
+[link_gh-workflow-test]: https://github.com/CycloneDX/cyclonedx-node-module/actions/workflows/nodejs.yml?query=branch%3Amaster
+[link_npm]: https://www.npmjs.com/package/%40cyclonedx/bom
+[link_docker]: https://hub.docker.com/r/cyclonedx/cyclonedx-node
+[link_website]: https://cyclonedx.org/
+[link_slack]: https://cyclonedx.org/slack/invite
+[link_discussion]: https://groups.io/g/CycloneDX
+[link_twitter]: https://twitter.com/CycloneDX_Spec
