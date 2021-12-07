@@ -7,6 +7,7 @@
 #   -w /src \
 #   cyclonedx/cyclonedx-node:test -o /src/bom.xml /src
 
+## use active LTS verson of node - see https://nodejs.org/en/about/releases/
 FROM node:16.13-alpine3.12
 
 WORKDIR /usr/src/cyclonedx-bom
