@@ -4,7 +4,7 @@ Feel free to open pull requests.
 
 ## Setup 
 
-To start developing simply run `npm i` to install dev-dependencies and tools.
+To start developing simply run `npm ci` to install dev-dependencies and tools.
 
 ## Coding Style guide & standard
 
