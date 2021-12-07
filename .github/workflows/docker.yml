@@ -1,0 +1,30 @@
+# For details of what checks are run for PRs please refer below
+# docs: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+
+name: Docker CI
+
+on: 
+  push:
+    branches: ["master"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Build and test docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DOCKER_TAG: 'cdx-node-module-testing:${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}'
+    steps:
+      - name: Checkout
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2.4.0
+      - name: Build Docker image
+        run: docker build -f Dockerfile -t "$DOCKER_TAG" .
+      - name: Test Docker image
+        run: docker run --rm "$DOCKER_TAG" -h
+      - name: Destroy Docker image
+        # run regardless of outcome
+        if: ${{ always() }}
+        run: docker rmi -f "$DOCKER_TAG"

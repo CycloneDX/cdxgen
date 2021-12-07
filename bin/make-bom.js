@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-env node */
+
 /*
  * This file is part of CycloneDX Node Module.
  *

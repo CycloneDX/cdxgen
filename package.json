@@ -34,12 +34,12 @@
   ],
   "main": "index.js",
   "bin": {
-    "cyclonedx-bom": "./bin/cyclonedx-bom",
-    "cyclonedx-node": "./bin/cyclonedx-bom"
+    "cyclonedx-bom": "./bin/make-bom.js",
+    "cyclonedx-node": "./bin/make-bom.js"
   },
   "scripts": {
     "test": "jest",
-    "docker-release": "docker build . -t cyclonedx/cyclonedx-node:`node bin/cyclonedx-bom --version` -t cyclonedx/cyclonedx-node:latest && docker push cyclonedx/cyclonedx-node:`node bin/cyclonedx-bom --version` && docker push cyclonedx/cyclonedx-node:latest"
+    "docker-release": "docker build . -t cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` -t cyclonedx/cyclonedx-node:latest && docker push cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` && docker push cyclonedx/cyclonedx-node:latest"
   },
   "engines": {
     "node": ">=12.0.0"

@@ -14,7 +14,7 @@ env:
   CI: "true"
 
 jobs:
-  build:
+  test:
     name: Test (node${{ matrix.node-version }}, ${{ matrix.os }})
     timeout-minutes: 30
     runs-on: ${{ matrix.os }}

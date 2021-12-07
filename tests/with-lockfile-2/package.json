@@ -29,9 +29,6 @@
     }
   ],
   "main": "index.js",
-  "bin": {
-    "cyclonedx-bom": "./bin/cyclonedx-bom"
-  },
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0"
   },
