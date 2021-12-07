@@ -1,3 +1,5 @@
 node_modules/
+
+## IDE related files
 .vscode/
 .idea/
