@@ -16,81 +16,80 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const ssri = require('ssri');
-const Hash = require('./Hash');
+
+const ssri = require('ssri')
+const Hash = require('./Hash')
 
 class HashList {
-
-  constructor(pkg, lockfile) {
-    this._hashes = [];
+  constructor (pkg, lockfile) {
+    this._hashes = []
     if (pkg) {
-      this.processHashes(pkg,lockfile);
+      this.processHashes(pkg, lockfile)
     }
   }
 
-  get hashes() {
-    return this._hashes;
+  get hashes () {
+    return this._hashes
   }
 
-  set hashes(value) {
+  set hashes (value) {
     if (!Array.isArray(value)) {
-      throw "HashList value must be an array of Hash objects";
-    } else {
-      this._hashes = value;
+      throw new TypeError('HashList value must be an array of Hash objects')
     }
+    this._hashes = value
   }
 
-  processHashes(pkg, lockfile) {
+  processHashes (pkg, lockfile) {
     // Default to checking the package-lock.json first and checking the node
     // module package.json as a backup.
     if (lockfile) {
       if (lockfile.dependencies && lockfile.dependencies[pkg.name] && lockfile.dependencies[pkg.name].integrity) {
-        this.formatHash(ssri.parse(lockfile.dependencies[pkg.name].integrity));
+        this.formatHash(ssri.parse(lockfile.dependencies[pkg.name].integrity))
       }
     } else if (pkg._shasum) {
-      this._hashes.push(new Hash("SHA-1", pkg._shasum));
+      this._hashes.push(new Hash('SHA-1', pkg._shasum))
     } else if (pkg._integrity) {
-      this.formatHash(ssri.parse(pkg._integrity));
+      this.formatHash(ssri.parse(pkg._integrity))
     }
   }
 
-  formatHash(integrity){
-        // Components may have multiple hashes with various lengths. Check each one
-        // that is supported by the CycloneDX specification.
-        if (integrity.hasOwnProperty('sha512')) {
-          this._hashes.push(this.createHash('SHA-512', integrity.sha512[0].digest));
-        }
-        if (integrity.hasOwnProperty('sha384')) {
-          this._hashes.push(this.createHash('SHA-384', integrity.sha384[0].digest));
-        }
-        if (integrity.hasOwnProperty('sha256')) {
-          this._hashes.push(this.createHash('SHA-256', integrity.sha256[0].digest));
-        }
-        if (integrity.hasOwnProperty('sha1')) {
-          this._hashes.push(this.createHash('SHA-1', integrity.sha1[0].digest));
-        }
-  }
-
-  createHash(algorithm, digest) {
-    let hash = Buffer.from(digest, 'base64').toString('hex');
-    return new Hash(algorithm, hash);
-  }
-
-  toJSON() {
-    let value = [];
-    for (let hash of this._hashes) {
-      value.push(hash.toJSON());
+  formatHash (integrity) {
+    // Components may have multiple hashes with various lengths. Check each one
+    // that is supported by the CycloneDX specification.
+    if (Object.prototype.hasOwnProperty.call(integrity, 'sha512')) {
+      this._hashes.push(this.createHash('SHA-512', integrity.sha512[0].digest))
     }
-    return value;
+    if (Object.prototype.hasOwnProperty.call(integrity, 'sha384')) {
+      this._hashes.push(this.createHash('SHA-384', integrity.sha384[0].digest))
+    }
+    if (Object.prototype.hasOwnProperty.call(integrity, 'sha256')) {
+      this._hashes.push(this.createHash('SHA-256', integrity.sha256[0].digest))
+    }
+    if (Object.prototype.hasOwnProperty.call(integrity, 'sha1')) {
+      this._hashes.push(this.createHash('SHA-1', integrity.sha1[0].digest))
+    }
   }
 
-  toXML() {
-    let value = [];
-    for (let hash of this._hashes) {
-      value.push(hash.toXML());
+  createHash (algorithm, digest) {
+    const hash = Buffer.from(digest, 'base64').toString('hex')
+    return new Hash(algorithm, hash)
+  }
+
+  toJSON () {
+    const value = []
+    for (const hash of this._hashes) {
+      value.push(hash.toJSON())
     }
-    return value;
+    return value
+  }
+
+  toXML () {
+    const value = []
+    for (const hash of this._hashes) {
+      value.push(hash.toXML())
+    }
+    return value
   }
 }
 
-module.exports = HashList;
+module.exports = HashList

@@ -18,20 +18,21 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const OrganizationalContact = require('../../model/OrganizationalContact');
+
+const OrganizationalContact = require('../../model/OrganizationalContact')
 
 test('Model: OrganizationalContact / Format: XML', () => {
-  let contact = new OrganizationalContact("John Doe", "john.doe@examp.com", "555-1212");
-  let result = contact.toXML();
-  expect(result.name).toBe("John Doe");
-  expect(result.email).toBe("john.doe@examp.com");
-  expect(result.phone).toBe("555-1212");
-});
+  const contact = new OrganizationalContact('John Doe', 'john.doe@examp.com', '555-1212')
+  const result = contact.toXML()
+  expect(result.name).toBe('John Doe')
+  expect(result.email).toBe('john.doe@examp.com')
+  expect(result.phone).toBe('555-1212')
+})
 
 test('Model: OrganizationalContact / Format: JSON', () => {
-  let contact = new OrganizationalContact("John Doe", "john.doe@examp.com", "555-1212");
-  let result = contact.toJSON();
-  expect(result.name).toBe("John Doe");
-  expect(result.email).toBe("john.doe@examp.com");
-  expect(result.phone).toBe("555-1212");
-});
+  const contact = new OrganizationalContact('John Doe', 'john.doe@examp.com', '555-1212')
+  const result = contact.toJSON()
+  expect(result.name).toBe('John Doe')
+  expect(result.email).toBe('john.doe@examp.com')
+  expect(result.phone).toBe('555-1212')
+})

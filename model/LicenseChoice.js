@@ -16,19 +16,19 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const spdxLicenses = require('../spdx-licenses.json');
-const fs = require('fs');
-const License = require('./License');
-const AttachmentText = require('./AttachmentText');
-const CycloneDXObject = require('./CycloneDXObject');
+
+const spdxLicenses = require('../spdx-licenses.json')
+const fs = require('fs')
+const License = require('./License')
+const AttachmentText = require('./AttachmentText')
+const CycloneDXObject = require('./CycloneDXObject')
 
 class LicenseChoice extends CycloneDXObject {
-
-  constructor(pkg, includeLicenseText = true) {
-    super();
+  constructor (pkg, includeLicenseText = true) {
+    super()
     if (pkg) {
-      this._licenses = this.processLicenses(pkg, includeLicenseText);
-      this._expression = null;
+      this._licenses = this.processLicenses(pkg, includeLicenseText)
+      this._expression = null
     }
   }
 
@@ -38,30 +38,30 @@ class LicenseChoice extends CycloneDXObject {
    * of the license object, otherwise, set the 'name' of the license
    * object.
    */
-  processLicenses(pkg, includeLicenseText = true) {
-    let license = pkg.license && (pkg.license.type || pkg.license);
+  processLicenses (pkg, includeLicenseText = true) {
+    let license = pkg.license && (pkg.license.type || pkg.license)
     if (license) {
       if (!Array.isArray(license)) {
-        license = [license];
+        license = [license]
       }
       return license.map(l => {
-        if (! (typeof l === 'string' || l instanceof String)) {
-          console.error("Invalid license definition in package: " + pkg.name + ":" + pkg.version + ". Skipping");
-          return undefined;
+        if (!(typeof l === 'string' || l instanceof String)) {
+          console.error('Invalid license definition in package: ' + pkg.name + ':' + pkg.version + '. Skipping')
+          return undefined
         }
-        let licenseObject = new License();
-        if (spdxLicenses.some(v => { return l === v; })) {
-          licenseObject.id = l;
+        const licenseObject = new License()
+        if (spdxLicenses.some(v => { return l === v })) {
+          licenseObject.id = l
         } else {
-          licenseObject.name = l;
+          licenseObject.name = l
         }
         if (includeLicenseText) {
-          this.addLicenseText(pkg, l, licenseObject);
+          this.addLicenseText(pkg, l, licenseObject)
         }
-        return licenseObject;
-      });
+        return licenseObject
+      })
     }
-    return null;
+    return null
   }
 
   /**
@@ -69,19 +69,19 @@ class LicenseChoice extends CycloneDXObject {
    * used naming and content types. If a candidate file is found, add
    * the text to the license text object and stop.
    */
-  addLicenseText(pkg, l, licenseObject) {
-    let licenseFilenames = [ 'LICENSE', 'License', 'license', 'LICENCE', 'Licence', 'licence', 'NOTICE', 'Notice', 'notice' ];
-    let licenseContentTypes = { 'text/plain': '', 'text/txt': '.txt', 'text/markdown': '.md', 'text/xml': '.xml' };
+  addLicenseText (pkg, l, licenseObject) {
+    const licenseFilenames = ['LICENSE', 'License', 'license', 'LICENCE', 'Licence', 'licence', 'NOTICE', 'Notice', 'notice']
+    const licenseContentTypes = { 'text/plain': '', 'text/txt': '.txt', 'text/markdown': '.md', 'text/xml': '.xml' }
     /* Loops over different name combinations starting from the license specified
        naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
     for (const licenseName of [`.${l}`, '']) {
       for (const licenseFilename of licenseFilenames) {
         for (const [licenseContentType, fileExtension] of Object.entries(licenseContentTypes)) {
-          let licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
+          const licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`
           if (fs.existsSync(licenseFilepath) && fs.lstatSync(licenseFilepath).isFile()) {
             // 'text/plain' is the default in the spec. No need to specify it.
-            let contentType = (licenseContentType === 'text/plain') ? null : licenseContentType;
-            licenseObject.attachmentText = this.createAttachmentText(licenseFilepath, contentType);
+            const contentType = (licenseContentType === 'text/plain') ? null : licenseContentType
+            licenseObject.attachmentText = this.createAttachmentText(licenseFilepath, contentType)
           }
         }
       }
@@ -92,65 +92,65 @@ class LicenseChoice extends CycloneDXObject {
    * Read the file from the given path to the license text object and includes
    * content-type attribute, if not default. Returns the license text object.
    */
-  createAttachmentText(licenseFilepath, licenseContentType) {
-    let licenseText = fs.readFileSync(licenseFilepath, 'utf8');
+  createAttachmentText (licenseFilepath, licenseContentType) {
+    const licenseText = fs.readFileSync(licenseFilepath, 'utf8')
     if (licenseText) {
-      return new AttachmentText(licenseContentType, licenseText);
+      return new AttachmentText(licenseContentType, licenseText)
     }
-    return null;
+    return null
   }
 
-  get licenses() {
-    return this._licenses;
+  get licenses () {
+    return this._licenses
   }
 
-  set licenses(value) {
+  set licenses (value) {
     if (!Array.isArray(value)) {
-      throw "LicenseChoice.licenses value must be an array of License objects";
+      throw new TypeError('LicenseChoice.licenses value must be an array of License objects')
     } else {
-      this._expression = null;
-      this._licenses = value;
+      this._expression = null
+      this._licenses = value
     }
   }
 
-  get expression() {
-    return this._expression;
+  get expression () {
+    return this._expression
   }
 
-  set expression(value) {
-    this._licenses = null;
-    this._expression = this.validateType("SPDX license expression", value, String);
+  set expression (value) {
+    this._licenses = null
+    this._expression = this.validateType('SPDX license expression', value, String)
   }
 
-  toJSON() {
+  toJSON () {
     if (this._licenses && this._licenses.length > 0) {
-      let value = [];
-      for (let license of this._licenses) {
+      const value = []
+      for (const license of this._licenses) {
         if (license instanceof License) {
-          value.push(license.toJSON());
+          value.push(license.toJSON())
         }
       }
-      return value;
+      return value
     } else if (this._expression) {
-      return this._expression;
+      return this._expression
     }
-    return undefined;
+    return undefined
   }
 
-  toXML() {
+  toXML () {
     if (this._licenses && this._licenses.length > 0) {
-      let value = [];
-      for (let license of this._licenses) {
+      const value = []
+      for (const license of this._licenses) {
         if (license instanceof License) {
-          value.push(license.toXML());
+          value.push(license.toXML())
         }
       }
-      return value;
+      return value
     } else if (this._expression) {
-      return this._expression;
+      return this._expression
     }
-    return null;
+    return null
   }
 }
 
-module.exports = LicenseChoice;
+module.exports = LicenseChoice
