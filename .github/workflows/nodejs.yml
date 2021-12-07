@@ -1,31 +1,50 @@
+# For details of what checks are run for PRs please refer below
+# docs: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+
 name: Node CI
 
-on: [pull_request, workflow_dispatch]
+on: 
+  push:
+    branches: ["master"]
+  pull_request:
+  workflow_dispatch:
+
+
+env:
+  CI: "true"
 
 jobs:
   build:
-
+    name: Test (node${{ matrix.node-version }}, ${{ matrix.os }})
+    timeout-minutes: 30
     runs-on: ${{ matrix.os }}
-
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [12.x, 14.x]
-
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        node-version: 
+          # action based on https://github.com/actions/node-versions/releases
+          # see also: https://nodejs.org/en/about/releases/
+          - "16"  # active LTS
+          - "14"
+          - "12"  # lowest supported
     steps:
-    - uses: actions/checkout@v2.4.0
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2.5.0
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      # first three lines are to install test project packages so node_modules is present
-      run: |
-        cd tests/with-packages
-        npm ci
-        cd ../..
-        npm ci
-        npm run build --if-present
-        npm test
-      env:
-        CI: true
+      - name: Checkout
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2.4.0
+      - name: Setup Node.js ${{ matrix.node-version }}
+        ## see https://github.com/actions/setup-node
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - name: install project
+        run: npm ci
+      - name: install testing-project
+        run: npm ci
+        working-directory: tests/with-packages
+      - name: run tests
+        run: npm test
+      - name: try to buil project
+        run: npm run build --if-present
