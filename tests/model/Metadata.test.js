@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 /*
  * This file is part of CycloneDX Node Module.
  *
