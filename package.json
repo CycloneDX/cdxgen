@@ -38,7 +38,10 @@
     "cyclonedx-node": "./bin/make-bom.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "npm run test:standard && npm run test:unit",
+    "test:unit": "jest",
+    "test:standard": "standard -v",
+    "cs-fix": "standard --fix",
     "docker-release": "docker build . -t cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` -t cyclonedx/cyclonedx-node:latest && docker push cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` && docker push cyclonedx/cyclonedx-node:latest"
   },
   "engines": {
@@ -70,7 +73,8 @@
   ],
   "devDependencies": {
     "jest": "^27.1.0",
-    "jest-junit": "^13.0.0"
+    "jest-junit": "^13.0.0",
+    "standard": "^16.0.4"
   },
   "jest": {
     "cacheDirectory": ".jest.cache",
