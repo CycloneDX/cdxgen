@@ -11,7 +11,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
       {
         \\"vendor\\": \\"CycloneDX\\",
         \\"name\\": \\"Node.js module\\",
-        \\"version\\": \\"2.0.0\\"
+        \\"version\\": \\"3.0.0\\"
       }
     ],
     \\"component\\": {
@@ -83,14 +83,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/urijs@1.19.2\\",
+      \\"bom-ref\\": \\"pkg:npm/urijs@1.19.7\\",
       \\"name\\": \\"urijs\\",
-      \\"version\\": \\"1.19.2\\",
+      \\"version\\": \\"1.19.7\\",
       \\"description\\": \\"URI.js is a Javascript library for working with URLs.\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"b3f508abd6a9e093d9ec7d4407950ba3f68e51b5aa7c38bb14accc0b6373fb44a2f06893d6b2046a9aedf21cb7572d84c766893e9390bf83f80ee399f8ad5ceb\\"
+          \\"content\\": \\"21df882a3754d07c7eed9c7bd7b8f02cfb0f794ab3eeb02db950512cbb3eaa7f89da77fd3462135950b17228e063106a7bcdc2eecaac40fb3a1f5a72cf7c7d80\\"
         }
       ],
       \\"licenses\\": [
@@ -104,7 +104,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/urijs@1.19.2\\",
+      \\"purl\\": \\"pkg:npm/urijs@1.19.7\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -271,14 +271,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/read-package-json@2.1.1\\",
+      \\"bom-ref\\": \\"pkg:npm/read-package-json@2.1.2\\",
       \\"name\\": \\"read-package-json\\",
-      \\"version\\": \\"2.1.1\\",
+      \\"version\\": \\"2.1.2\\",
       \\"description\\": \\"The thing npm uses to read package.json files with semantics and defaults and validation\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"7408aa1ad55cfeae5da05cfad3de827275e1a5893464df1d10a56418b5340ac012b7c4ab805e9217b39328062e6dfbc58566aaa1f97e63c1cad7d191f23c16f8\\"
+          \\"content\\": \\"0f52a6b8b42be994894b4b56f217f7586a51970b3324e5d9dc4f1877f0cd45a33977ed7055165d1e5a4604b02ea2f8ebdbc2db5af8e95a4047331a511868f334\\"
         }
       ],
       \\"licenses\\": [
@@ -291,7 +291,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/read-package-json@2.1.1\\",
+      \\"purl\\": \\"pkg:npm/read-package-json@2.1.2\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -309,14 +309,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/glob@7.1.6\\",
+      \\"bom-ref\\": \\"pkg:npm/glob@7.2.0\\",
       \\"name\\": \\"glob\\",
-      \\"version\\": \\"7.1.6\\",
+      \\"version\\": \\"7.2.0\\",
       \\"description\\": \\"a little globber\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"2f06b1c3267bd8b93bbd920db4d36bcb05f466e2f24adadd0ed69b79f64a018e59189855b607739e5b917acc4d98f8ad1344803be3b6eac5931de292236c0c04\\"
+          \\"content\\": \\"9662dfea0b72acfabcb538d29ab3bde3005e41b151dc76cb1dbbb20faf70bb2424226a76856a8c181e3b397eb914190f7df3bae3520ff6359ad73e22bea1b6e9\\"
         }
       ],
       \\"licenses\\": [
@@ -329,7 +329,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/glob@7.1.6\\",
+      \\"purl\\": \\"pkg:npm/glob@7.2.0\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -613,14 +613,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/balanced-match@1.0.0\\",
+      \\"bom-ref\\": \\"pkg:npm/balanced-match@1.0.2\\",
       \\"name\\": \\"balanced-match\\",
-      \\"version\\": \\"1.0.0\\",
+      \\"version\\": \\"1.0.2\\",
       \\"description\\": \\"Match balanced character pairs, like \\\\\\"{\\\\\\" and \\\\\\"}\\\\\\"\\",
       \\"hashes\\": [
         {
-          \\"alg\\": \\"SHA-1\\",
-          \\"content\\": \\"89b4d199ab2bee49de164ea02b89ce462d71b767\\"
+          \\"alg\\": \\"SHA-512\\",
+          \\"content\\": \\"de849e50ed13315ebb84dd4099b5ec2b8c9aa94eed8e21e56f144364ea47d0a5bdf82797e1b440697d009f1b74b71d8cae94695b041a3f02252121098585393f\\"
         }
       ],
       \\"licenses\\": [
@@ -634,7 +634,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/balanced-match@1.0.0\\",
+      \\"purl\\": \\"pkg:npm/balanced-match@1.0.2\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -728,45 +728,6 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/json-parse-better-errors@1.0.2\\",
-      \\"name\\": \\"json-parse-better-errors\\",
-      \\"version\\": \\"1.0.2\\",
-      \\"description\\": \\"JSON.parse with context information on error\\",
-      \\"hashes\\": [
-        {
-          \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"9abab264a7d7e4484bee1bea715e961b5c988e78deb980f30e185c00052babc3e8f3934140124ff990d44fbe6a650f7c22452806a76413192e90e53b4ecdb0af\\"
-        }
-      ],
-      \\"licenses\\": [
-        {
-          \\"license\\": {
-            \\"id\\": \\"MIT\\",
-            \\"text\\": {
-              \\"contentType\\": \\"text/markdown\\",
-              \\"content\\": \\"Copyright 2017 Kat Marchán\\\\n\\\\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \\\\\\"Software\\\\\\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\\\\n\\\\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\\\\n\\\\nTHE SOFTWARE IS PROVIDED \\\\\\"AS IS\\\\\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\\\\n\\"
-            }
-          }
-        }
-      ],
-      \\"purl\\": \\"pkg:npm/json-parse-better-errors@1.0.2\\",
-      \\"externalReferences\\": [
-        {
-          \\"type\\": \\"website\\",
-          \\"url\\": \\"https://github.com/zkat/json-parse-better-errors#readme\\"
-        },
-        {
-          \\"type\\": \\"issue-tracker\\",
-          \\"url\\": \\"https://github.com/zkat/json-parse-better-errors/issues\\"
-        },
-        {
-          \\"type\\": \\"vcs\\",
-          \\"url\\": \\"git+https://github.com/zkat/json-parse-better-errors.git\\"
-        }
-      ]
-    },
-    {
-      \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/normalize-package-data@2.5.0\\",
       \\"name\\": \\"normalize-package-data\\",
       \\"version\\": \\"2.5.0\\",
@@ -805,14 +766,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/hosted-git-info@2.8.5\\",
+      \\"bom-ref\\": \\"pkg:npm/hosted-git-info@2.8.9\\",
       \\"name\\": \\"hosted-git-info\\",
-      \\"version\\": \\"2.8.5\\",
+      \\"version\\": \\"2.8.9\\",
       \\"description\\": \\"Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"92cb2369bf02bdd5df71731755cbec5ee9b81f076af571ad443dd3b5e304bc46ead0b5f288d42be80a6ba8aa9f79a0d7cdeed2c56bd1c5da7013a92eee290b92\\"
+          \\"content\\": \\"9b120301bf4bb26e83a0e27bc47fb9f97e32d4b53fe078b9d0bf42e6c22cc0adc9cd42d2e1bc24d45be374182f611e1bcd3e2db944220b5e451367f91db2ef63\\"
         }
       ],
       \\"licenses\\": [
@@ -825,7 +786,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/hosted-git-info@2.8.5\\",
+      \\"purl\\": \\"pkg:npm/hosted-git-info@2.8.9\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -843,14 +804,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/resolve@1.14.2\\",
+      \\"bom-ref\\": \\"pkg:npm/resolve@1.20.0\\",
       \\"name\\": \\"resolve\\",
-      \\"version\\": \\"1.14.2\\",
+      \\"version\\": \\"1.20.0\\",
       \\"description\\": \\"resolve like require.resolve() on behalf of files asynchronously and synchronously\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"12394e04b04ed64c6c531b0a8cbb7b4c0102c8a5ba7ce87555193291090a1b37016e38cf23106a1a1d237fb189de4fdfe66c4ca96de1b4c0f759d4d456d5bc1d\\"
+          \\"content\\": \\"c043413ede324b3838c9b1505b64d3d73310b9c3caf791d287f9ead82153655386baddbea50bd2b20b5d6b8776e98ad872bd3aef08db9b3386f1bc833c15fadc\\"
         }
       ],
       \\"licenses\\": [
@@ -863,7 +824,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/resolve@1.14.2\\",
+      \\"purl\\": \\"pkg:npm/resolve@1.20.0\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -881,14 +842,125 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/path-parse@1.0.6\\",
+      \\"bom-ref\\": \\"pkg:npm/is-core-module@2.8.0\\",
+      \\"name\\": \\"is-core-module\\",
+      \\"version\\": \\"2.8.0\\",
+      \\"description\\": \\"Is this specifier a node.js core module?\\",
+      \\"hashes\\": [
+        {
+          \\"alg\\": \\"SHA-512\\",
+          \\"content\\": \\"bddd79a87b1aaab44beddb47e9036ecb49dd266443ad2f4700cd420224a27cd505bf8c756b408256c8f5f21275992871206e93da2d6c3bbf0c90fe7aaf49d847\\"
+        }
+      ],
+      \\"licenses\\": [
+        {
+          \\"license\\": {
+            \\"id\\": \\"MIT\\",
+            \\"text\\": {
+              \\"content\\": \\"The MIT License (MIT)\\\\n\\\\nCopyright (c) 2014 Dave Justice\\\\n\\\\nPermission is hereby granted, free of charge, to any person obtaining a copy of\\\\nthis software and associated documentation files (the \\\\\\"Software\\\\\\"), to deal in\\\\nthe Software without restriction, including without limitation the rights to\\\\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\\\\nthe Software, and to permit persons to whom the Software is furnished to do so,\\\\nsubject to the following conditions:\\\\n\\\\nThe above copyright notice and this permission notice shall be included in all\\\\ncopies or substantial portions of the Software.\\\\n\\\\nTHE SOFTWARE IS PROVIDED \\\\\\"AS IS\\\\\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\\\\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\\\\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\\\\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\\\\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\\\\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\\"
+            }
+          }
+        }
+      ],
+      \\"purl\\": \\"pkg:npm/is-core-module@2.8.0\\",
+      \\"externalReferences\\": [
+        {
+          \\"type\\": \\"website\\",
+          \\"url\\": \\"https://github.com/inspect-js/is-core-module\\"
+        },
+        {
+          \\"type\\": \\"issue-tracker\\",
+          \\"url\\": \\"https://github.com/inspect-js/is-core-module/issues\\"
+        },
+        {
+          \\"type\\": \\"vcs\\",
+          \\"url\\": \\"git+https://github.com/inspect-js/is-core-module.git\\"
+        }
+      ]
+    },
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"pkg:npm/has@1.0.3\\",
+      \\"name\\": \\"has\\",
+      \\"version\\": \\"1.0.3\\",
+      \\"description\\": \\"Object.prototype.hasOwnProperty.call shortcut\\",
+      \\"hashes\\": [
+        {
+          \\"alg\\": \\"SHA-512\\",
+          \\"content\\": \\"7f676f3b4554e8e7a3ed1916246ade8636f33008c5a79fd528fa79b53a56215e091c764ad7f0716c546d7ffb220364964ded3d71a0e656d618cd61086c14b8cf\\"
+        }
+      ],
+      \\"licenses\\": [
+        {
+          \\"license\\": {
+            \\"id\\": \\"MIT\\"
+          }
+        }
+      ],
+      \\"purl\\": \\"pkg:npm/has@1.0.3\\",
+      \\"externalReferences\\": [
+        {
+          \\"type\\": \\"website\\",
+          \\"url\\": \\"https://github.com/tarruda/has\\"
+        },
+        {
+          \\"type\\": \\"issue-tracker\\",
+          \\"url\\": \\"https://github.com/tarruda/has/issues\\"
+        },
+        {
+          \\"type\\": \\"vcs\\",
+          \\"url\\": \\"git://github.com/tarruda/has.git\\"
+        }
+      ]
+    },
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"pkg:npm/function-bind@1.1.1\\",
+      \\"name\\": \\"function-bind\\",
+      \\"version\\": \\"1.1.1\\",
+      \\"description\\": \\"Implementation of Function.prototype.bind\\",
+      \\"hashes\\": [
+        {
+          \\"alg\\": \\"SHA-512\\",
+          \\"content\\": \\"c88a2f033317e3db05f18979f1f482589e6cbd22ee6a26cfc5740914b98139b4ee0abd0c7f52a23e8a4633d3621638980426df69ad8587a6eb790e803554c8d0\\"
+        }
+      ],
+      \\"licenses\\": [
+        {
+          \\"license\\": {
+            \\"id\\": \\"MIT\\",
+            \\"text\\": {
+              \\"content\\": \\"Copyright (c) 2013 Raynos.\\\\n\\\\nPermission is hereby granted, free of charge, to any person obtaining a copy\\\\nof this software and associated documentation files (the \\\\\\"Software\\\\\\"), to deal\\\\nin the Software without restriction, including without limitation the rights\\\\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\\\\ncopies of the Software, and to permit persons to whom the Software is\\\\nfurnished to do so, subject to the following conditions:\\\\n\\\\nThe above copyright notice and this permission notice shall be included in\\\\nall copies or substantial portions of the Software.\\\\n\\\\nTHE SOFTWARE IS PROVIDED \\\\\\"AS IS\\\\\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\\\\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\\\\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\\\\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\\\\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\\\\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\\\\nTHE SOFTWARE.\\\\n\\\\n\\"
+            }
+          }
+        }
+      ],
+      \\"purl\\": \\"pkg:npm/function-bind@1.1.1\\",
+      \\"externalReferences\\": [
+        {
+          \\"type\\": \\"website\\",
+          \\"url\\": \\"https://github.com/Raynos/function-bind\\"
+        },
+        {
+          \\"type\\": \\"issue-tracker\\",
+          \\"url\\": \\"https://github.com/Raynos/function-bind/issues\\"
+        },
+        {
+          \\"type\\": \\"vcs\\",
+          \\"url\\": \\"git://github.com/Raynos/function-bind.git\\"
+        }
+      ]
+    },
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"pkg:npm/path-parse@1.0.7\\",
       \\"name\\": \\"path-parse\\",
-      \\"version\\": \\"1.0.6\\",
+      \\"version\\": \\"1.0.7\\",
       \\"description\\": \\"Node.js path.parse() ponyfill\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"19298e4f611b1eb20d05ff5247b08310bc2527c004364dd09fb3a290ae2715802edceb5edbe258355be4a401109b7fd32cd109143ff16498f3cb183728158ecf\\"
+          \\"content\\": \\"2c32733d510410f47ecb8f33f7703411dd325dbf29001c865a8fe4e5861d620a58dbfd84b0eb24b09aeaee5387c6bcab54e9f57a31baa00a7c6a1bce2100fcb3\\"
         }
       ],
       \\"licenses\\": [
@@ -901,7 +973,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/path-parse@1.0.6\\",
+      \\"purl\\": \\"pkg:npm/path-parse@1.0.7\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -995,14 +1067,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/spdx-correct@3.1.0\\",
+      \\"bom-ref\\": \\"pkg:npm/spdx-correct@3.1.1\\",
       \\"name\\": \\"spdx-correct\\",
-      \\"version\\": \\"3.1.0\\",
+      \\"version\\": \\"3.1.1\\",
       \\"description\\": \\"correct invalid SPDX expressions\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"96bd8464272d0b604d47b8fb5b32761690f39f1932d6c8dfc6fbd8132cf13726fa9595c7383984a09785bb826ea589647e16b5299a49ca8aa227ba60035aaaf1\\"
+          \\"content\\": \\"70e61c516c210ae1c25e2e3d4611510b22442b788f8f5662cfd0e9562577b5b64ec170f8f50cc837732938b24dc61daac2ada524965a28c570f6a362e234c2d3\\"
         }
       ],
       \\"licenses\\": [
@@ -1015,7 +1087,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/spdx-correct@3.1.0\\",
+      \\"purl\\": \\"pkg:npm/spdx-correct@3.1.1\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -1033,14 +1105,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/spdx-expression-parse@3.0.0\\",
+      \\"bom-ref\\": \\"pkg:npm/spdx-expression-parse@3.0.1\\",
       \\"name\\": \\"spdx-expression-parse\\",
-      \\"version\\": \\"3.0.0\\",
+      \\"version\\": \\"3.0.1\\",
       \\"description\\": \\"parse SPDX license expressions\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"620e83dd7a510f89243a64e97606d48842452a08491f4ddf882d4e3e597987fd2c3ba9de8768ea443547390e28fcb31e6b4b600a46cc81e6b98a9fdef8c916ca\\"
+          \\"content\\": \\"71ba87ba7b105a724d13a2a155232c31e1f91ff2fd129ca66f3a93437b8bc0d08b675438f35a166a87ea1fb9cee95d3bc655f063a3e141d43621e756c7f64ae1\\"
         }
       ],
       \\"licenses\\": [
@@ -1053,7 +1125,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/spdx-expression-parse@3.0.0\\",
+      \\"purl\\": \\"pkg:npm/spdx-expression-parse@3.0.1\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -1071,14 +1143,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/spdx-exceptions@2.2.0\\",
+      \\"bom-ref\\": \\"pkg:npm/spdx-exceptions@2.3.0\\",
       \\"name\\": \\"spdx-exceptions\\",
-      \\"version\\": \\"2.2.0\\",
+      \\"version\\": \\"2.3.0\\",
       \\"description\\": \\"list of SPDX standard license exceptions\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"d9740009f1252a2f529556f509869d2835efa1a8cf80154f9ff80e40bad3bc774495a561afb6446ea25a46724b54d79a23870c10081509e04c285e8c5910c244\\"
+          \\"content\\": \\"fed4eb60e0bb3cf2359d4020c77e21529a97bb2246f834c72539c850b1b8ac3ca08b8c6efed7e09aad5ed5c211c11cf0660a3834bc928beae270b919930e22e4\\"
         }
       ],
       \\"licenses\\": [
@@ -1088,7 +1160,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/spdx-exceptions@2.2.0\\",
+      \\"purl\\": \\"pkg:npm/spdx-exceptions@2.3.0\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -1106,14 +1178,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/spdx-license-ids@3.0.5\\",
+      \\"bom-ref\\": \\"pkg:npm/spdx-license-ids@3.0.11\\",
       \\"name\\": \\"spdx-license-ids\\",
-      \\"version\\": \\"3.0.5\\",
+      \\"version\\": \\"3.0.11\\",
       \\"description\\": \\"A list of SPDX license identifiers\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"27e156cd9a329c91171a9855212f97121de41528d95ffd62f6014169641c07efed9a97b6a94b12040069731ab19c0c45762505120017d5b8d8190bc8666a33f5\\"
+          \\"content\\": \\"0ad97606b1623345f7300358823dc29328318519abf668bac617a36dd3bdeb49c5e840c90294d8a67d014270ca96734150b2a208dd67df0f440641caf195a0fa\\"
         }
       ],
       \\"licenses\\": [
@@ -1123,19 +1195,19 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/spdx-license-ids@3.0.5\\",
+      \\"purl\\": \\"pkg:npm/spdx-license-ids@3.0.11\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
-          \\"url\\": \\"https://github.com/shinnn/spdx-license-ids#readme\\"
+          \\"url\\": \\"https://github.com/jslicense/spdx-license-ids#readme\\"
         },
         {
           \\"type\\": \\"issue-tracker\\",
-          \\"url\\": \\"https://github.com/shinnn/spdx-license-ids/issues\\"
+          \\"url\\": \\"https://github.com/jslicense/spdx-license-ids/issues\\"
         },
         {
           \\"type\\": \\"vcs\\",
-          \\"url\\": \\"git+https://github.com/shinnn/spdx-license-ids.git\\"
+          \\"url\\": \\"git+https://github.com/jslicense/spdx-license-ids.git\\"
         }
       ]
     },
@@ -1174,6 +1246,45 @@ exports[`createbom produces a BOM in JSON format 1`] = `
         {
           \\"type\\": \\"vcs\\",
           \\"url\\": \\"git+https://github.com/npm/npm-normalize-package-bin.git\\"
+        }
+      ]
+    },
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"pkg:npm/json-parse-even-better-errors@2.3.1\\",
+      \\"name\\": \\"json-parse-even-better-errors\\",
+      \\"version\\": \\"2.3.1\\",
+      \\"description\\": \\"JSON.parse with context information on error\\",
+      \\"hashes\\": [
+        {
+          \\"alg\\": \\"SHA-512\\",
+          \\"content\\": \\"c72170ca1ae8fc91287fa1a17b68b3d8d717a23dac96836c5abfd7b044432bfa223c27da36197938d7e9fa341d01945043420958dcc7f7321917b962f75921db\\"
+        }
+      ],
+      \\"licenses\\": [
+        {
+          \\"license\\": {
+            \\"id\\": \\"MIT\\",
+            \\"text\\": {
+              \\"contentType\\": \\"text/markdown\\",
+              \\"content\\": \\"Copyright 2017 Kat Marchán\\\\nCopyright npm, Inc.\\\\n\\\\nPermission is hereby granted, free of charge, to any person obtaining a\\\\ncopy of this software and associated documentation files (the \\\\\\"Software\\\\\\"),\\\\nto deal in the Software without restriction, including without limitation\\\\nthe rights to use, copy, modify, merge, publish, distribute, sublicense,\\\\nand/or sell copies of the Software, and to permit persons to whom the\\\\nSoftware is furnished to do so, subject to the following conditions:\\\\n\\\\nThe above copyright notice and this permission notice shall be included in\\\\nall copies or substantial portions of the Software.\\\\n\\\\nTHE SOFTWARE IS PROVIDED \\\\\\"AS IS\\\\\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\\\\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\\\\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\\\\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\\\\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\\\\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER\\\\nDEALINGS IN THE SOFTWARE.\\\\n\\\\n---\\\\n\\\\nThis library is a fork of 'better-json-errors' by Kat Marchán, extended and\\\\ndistributed under the terms of the MIT license above.\\\\n\\"
+            }
+          }
+        }
+      ],
+      \\"purl\\": \\"pkg:npm/json-parse-even-better-errors@2.3.1\\",
+      \\"externalReferences\\": [
+        {
+          \\"type\\": \\"website\\",
+          \\"url\\": \\"https://github.com/npm/json-parse-even-better-errors#readme\\"
+        },
+        {
+          \\"type\\": \\"issue-tracker\\",
+          \\"url\\": \\"https://github.com/npm/json-parse-even-better-errors/issues\\"
+        },
+        {
+          \\"type\\": \\"vcs\\",
+          \\"url\\": \\"git+https://github.com/npm/json-parse-even-better-errors.git\\"
         }
       ]
     },
@@ -1294,14 +1405,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/graceful-fs@4.2.3\\",
+      \\"bom-ref\\": \\"pkg:npm/graceful-fs@4.2.8\\",
       \\"name\\": \\"graceful-fs\\",
-      \\"version\\": \\"4.2.3\\",
+      \\"version\\": \\"4.2.8\\",
       \\"description\\": \\"A drop-in replacement for fs, making various improvements.\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"6b7d151019b83c4771d5d441ecc14aec17a37a3bc2bc1ae89db2e386dfac1ee1988fc3c7b3b33fe59fabb79970e79d6f67bc9f4c28f856ecb2de6489cad0d645\\"
+          \\"content\\": \\"aa422294f51870d849a5ddf79f41815d307530c3e9d784f112c12cd294ebb1256e700a6c6335b957e43c43186293a294ddebf2faa900028c13072ca62b46af76\\"
         }
       ],
       \\"licenses\\": [
@@ -1314,7 +1425,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/graceful-fs@4.2.3\\",
+      \\"purl\\": \\"pkg:npm/graceful-fs@4.2.8\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -1408,14 +1519,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/ssri@6.0.1\\",
+      \\"bom-ref\\": \\"pkg:npm/ssri@6.0.2\\",
       \\"name\\": \\"ssri\\",
-      \\"version\\": \\"6.0.1\\",
+      \\"version\\": \\"6.0.2\\",
       \\"description\\": \\"Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"dd681ed7484d713d4ababe0f0c5c0489e5d208c089b3fed6bd200272b318acda7e6fc9032f5ff4c09721e4d8b65abb7011ad883bc3ac55f78a21c88a083c7f40\\"
+          \\"content\\": \\"71ea5b4aafe77852bbc41e80e74287374c470e8b58ceae7cc1609ae4b796aa73eb1c6f06cdf1233bfe0ef24a667065bea1ac64be110909681b80d938fd957ddd\\"
         }
       ],
       \\"licenses\\": [
@@ -1429,7 +1540,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/ssri@6.0.1\\",
+      \\"purl\\": \\"pkg:npm/ssri@6.0.2\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
@@ -1447,14 +1558,14 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     },
     {
       \\"type\\": \\"library\\",
-      \\"bom-ref\\": \\"pkg:npm/figgy-pudding@3.5.1\\",
+      \\"bom-ref\\": \\"pkg:npm/figgy-pudding@3.5.2\\",
       \\"name\\": \\"figgy-pudding\\",
-      \\"version\\": \\"3.5.1\\",
+      \\"version\\": \\"3.5.2\\",
       \\"description\\": \\"Delicious, festive, cascading config/opts definitions\\",
       \\"hashes\\": [
         {
           \\"alg\\": \\"SHA-512\\",
-          \\"content\\": \\"bcd2b12474c428d4e18dfadd2701dcedbaef33a7957afb8ee674e3e9ecfc650d6a6d74ef1ad86e71117b4b8bdfd9cafbd505674fbd15df8bf44b50f242cb62d3\\"
+          \\"content\\": \\"d1bb6723f1fc7f6a5abc630df30e349a548a39f4cad925499817c1795223de4370d2cc30833c91ab47794c954ec287459adbe93de58f37f30271fb961741336f\\"
         }
       ],
       \\"licenses\\": [
@@ -1468,19 +1579,19 @@ exports[`createbom produces a BOM in JSON format 1`] = `
           }
         }
       ],
-      \\"purl\\": \\"pkg:npm/figgy-pudding@3.5.1\\",
+      \\"purl\\": \\"pkg:npm/figgy-pudding@3.5.2\\",
       \\"externalReferences\\": [
         {
           \\"type\\": \\"website\\",
-          \\"url\\": \\"https://github.com/zkat/figgy-pudding#readme\\"
+          \\"url\\": \\"https://github.com/npm/figgy-pudding#readme\\"
         },
         {
           \\"type\\": \\"issue-tracker\\",
-          \\"url\\": \\"https://github.com/zkat/figgy-pudding/issues\\"
+          \\"url\\": \\"https://github.com/npm/figgy-pudding/issues\\"
         },
         {
           \\"type\\": \\"vcs\\",
-          \\"url\\": \\"git+https://github.com/zkat/figgy-pudding.git\\"
+          \\"url\\": \\"git+https://github.com/npm/figgy-pudding.git\\"
         }
       ]
     },
@@ -1614,7 +1725,7 @@ exports[`createbom produces a BOM in JSON format that includes hashes from packa
       {
         \\"vendor\\": \\"CycloneDX\\",
         \\"name\\": \\"Node.js module\\",
-        \\"version\\": \\"2.0.0\\"
+        \\"version\\": \\"3.0.0\\"
       }
     ],
     \\"component\\": {
@@ -1663,7 +1774,7 @@ exports[`createbom produces a BOM when no package-lock.json is present 1`] = `
       {
         \\"vendor\\": \\"CycloneDX\\",
         \\"name\\": \\"Node.js module\\",
-        \\"version\\": \\"2.0.0\\"
+        \\"version\\": \\"3.0.0\\"
       }
     ],
     \\"component\\": {
@@ -1710,7 +1821,7 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
       <tool>
         <vendor>CycloneDX</vendor>
         <name>Node.js module</name>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
       </tool>
     </tools>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\">
@@ -1763,12 +1874,12 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.2\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.7\\">
       <name>urijs</name>
-      <version>1.19.2</version>
+      <version>1.19.7</version>
       <description><![CDATA[URI.js is a Javascript library for working with URLs.]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">b3f508abd6a9e093d9ec7d4407950ba3f68e51b5aa7c38bb14accc0b6373fb44a2f06893d6b2046a9aedf21cb7572d84c766893e9390bf83f80ee399f8ad5ceb</hash>
+        <hash alg=\\"SHA-512\\">21df882a3754d07c7eed9c7bd7b8f02cfb0f794ab3eeb02db950512cbb3eaa7f89da77fd3462135950b17228e063106a7bcdc2eecaac40fb3a1f5a72cf7c7d80</hash>
       </hashes>
       <licenses>
         <license>
@@ -1796,7 +1907,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/urijs@1.19.2</purl>
+      <purl>pkg:npm/urijs@1.19.7</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>http://medialize.github.io/URI.js/</url>
@@ -1967,12 +2078,12 @@ IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.1\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.2\\">
       <name>read-package-json</name>
-      <version>2.1.1</version>
+      <version>2.1.2</version>
       <description><![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">7408aa1ad55cfeae5da05cfad3de827275e1a5893464df1d10a56418b5340ac012b7c4ab805e9217b39328062e6dfbc58566aaa1f97e63c1cad7d191f23c16f8</hash>
+        <hash alg=\\"SHA-512\\">0f52a6b8b42be994894b4b56f217f7586a51970b3324e5d9dc4f1877f0cd45a33977ed7055165d1e5a4604b02ea2f8ebdbc2db5af8e95a4047331a511868f334</hash>
       </hashes>
       <licenses>
         <license>
@@ -1995,7 +2106,7 @@ PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/read-package-json@2.1.1</purl>
+      <purl>pkg:npm/read-package-json@2.1.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/npm/read-package-json#readme</url>
@@ -2008,12 +2119,12 @@ PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.1.6\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.2.0\\">
       <name>glob</name>
-      <version>7.1.6</version>
+      <version>7.2.0</version>
       <description><![CDATA[a little globber]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">2f06b1c3267bd8b93bbd920db4d36bcb05f466e2f24adadd0ed69b79f64a018e59189855b607739e5b917acc4d98f8ad1344803be3b6eac5931de292236c0c04</hash>
+        <hash alg=\\"SHA-512\\">9662dfea0b72acfabcb538d29ab3bde3005e41b151dc76cb1dbbb20faf70bb2424226a76856a8c181e3b397eb914190f7df3bae3520ff6359ad73e22bea1b6e9</hash>
       </hashes>
       <licenses>
         <license>
@@ -2042,7 +2153,7 @@ https://creativecommons.org/licenses/by-sa/4.0/
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/glob@7.1.6</purl>
+      <purl>pkg:npm/glob@7.2.0</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/isaacs/node-glob#readme</url>
@@ -2377,12 +2488,12 @@ SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.2\\">
       <name>balanced-match</name>
-      <version>1.0.0</version>
+      <version>1.0.2</version>
       <description><![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]></description>
       <hashes>
-        <hash alg=\\"SHA-1\\">89b4d199ab2bee49de164ea02b89ce462d71b767</hash>
+        <hash alg=\\"SHA-512\\">de849e50ed13315ebb84dd4099b5ec2b8c9aa94eed8e21e56f144364ea47d0a5bdf82797e1b440697d009f1b74b71d8cae94695b041a3f02252121098585393f</hash>
       </hashes>
       <licenses>
         <license>
@@ -2411,7 +2522,7 @@ SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/balanced-match@1.0.0</purl>
+      <purl>pkg:npm/balanced-match@1.0.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/juliangruber/balanced-match</url>
@@ -2515,39 +2626,6 @@ THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-better-errors@1.0.2\\">
-      <name>json-parse-better-errors</name>
-      <version>1.0.2</version>
-      <description><![CDATA[JSON.parse with context information on error]]></description>
-      <hashes>
-        <hash alg=\\"SHA-512\\">9abab264a7d7e4484bee1bea715e961b5c988e78deb980f30e185c00052babc3e8f3934140124ff990d44fbe6a650f7c22452806a76413192e90e53b4ecdb0af</hash>
-      </hashes>
-      <licenses>
-        <license>
-          <id>MIT</id>
-          <text content-type=\\"text/markdown\\"><![CDATA[Copyright 2017 Kat Marchán
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \\"Software\\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]></text>
-        </license>
-      </licenses>
-      <purl>pkg:npm/json-parse-better-errors@1.0.2</purl>
-      <externalReferences>
-        <reference type=\\"website\\">
-          <url>https://github.com/zkat/json-parse-better-errors#readme</url>
-        </reference>
-        <reference type=\\"issue-tracker\\">
-          <url>https://github.com/zkat/json-parse-better-errors/issues</url>
-        </reference>
-        <reference type=\\"vcs\\">
-          <url>git+https://github.com/zkat/json-parse-better-errors.git</url>
-        </reference>
-      </externalReferences>
-    </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/normalize-package-data@2.5.0\\">
       <name>normalize-package-data</name>
       <version>2.5.0</version>
@@ -2604,12 +2682,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.5\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.9\\">
       <name>hosted-git-info</name>
-      <version>2.8.5</version>
+      <version>2.8.9</version>
       <description><![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">92cb2369bf02bdd5df71731755cbec5ee9b81f076af571ad443dd3b5e304bc46ead0b5f288d42be80a6ba8aa9f79a0d7cdeed2c56bd1c5da7013a92eee290b92</hash>
+        <hash alg=\\"SHA-512\\">9b120301bf4bb26e83a0e27bc47fb9f97e32d4b53fe078b9d0bf42e6c22cc0adc9cd42d2e1bc24d45be374182f611e1bcd3e2db944220b5e451367f91db2ef63</hash>
       </hashes>
       <licenses>
         <license>
@@ -2630,7 +2708,7 @@ PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/hosted-git-info@2.8.5</purl>
+      <purl>pkg:npm/hosted-git-info@2.8.9</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/npm/hosted-git-info</url>
@@ -2643,12 +2721,12 @@ PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.14.2\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.20.0\\">
       <name>resolve</name>
-      <version>1.14.2</version>
+      <version>1.20.0</version>
       <description><![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">12394e04b04ed64c6c531b0a8cbb7b4c0102c8a5ba7ce87555193291090a1b37016e38cf23106a1a1d237fb189de4fdfe66c4ca96de1b4c0f759d4d456d5bc1d</hash>
+        <hash alg=\\"SHA-512\\">c043413ede324b3838c9b1505b64d3d73310b9c3caf791d287f9ead82153655386baddbea50bd2b20b5d6b8776e98ad872bd3aef08db9b3386f1bc833c15fadc</hash>
       </hashes>
       <licenses>
         <license>
@@ -2677,7 +2755,7 @@ SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/resolve@1.14.2</purl>
+      <purl>pkg:npm/resolve@1.20.0</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/browserify/resolve#readme</url>
@@ -2690,12 +2768,128 @@ SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.6\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/is-core-module@2.8.0\\">
+      <name>is-core-module</name>
+      <version>2.8.0</version>
+      <description><![CDATA[Is this specifier a node.js core module?]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">bddd79a87b1aaab44beddb47e9036ecb49dd266443ad2f4700cd420224a27cd505bf8c756b408256c8f5f21275992871206e93da2d6c3bbf0c90fe7aaf49d847</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <text><![CDATA[The MIT License (MIT)
+
+Copyright (c) 2014 Dave Justice
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the \\"Software\\"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></text>
+        </license>
+      </licenses>
+      <purl>pkg:npm/is-core-module@2.8.0</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/inspect-js/is-core-module</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/inspect-js/is-core-module/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git+https://github.com/inspect-js/is-core-module.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/has@1.0.3\\">
+      <name>has</name>
+      <version>1.0.3</version>
+      <description><![CDATA[Object.prototype.hasOwnProperty.call shortcut]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">7f676f3b4554e8e7a3ed1916246ade8636f33008c5a79fd528fa79b53a56215e091c764ad7f0716c546d7ffb220364964ded3d71a0e656d618cd61086c14b8cf</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+      </licenses>
+      <purl>pkg:npm/has@1.0.3</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/tarruda/has</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/tarruda/has/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git://github.com/tarruda/has.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/function-bind@1.1.1\\">
+      <name>function-bind</name>
+      <version>1.1.1</version>
+      <description><![CDATA[Implementation of Function.prototype.bind]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">c88a2f033317e3db05f18979f1f482589e6cbd22ee6a26cfc5740914b98139b4ee0abd0c7f52a23e8a4633d3621638980426df69ad8587a6eb790e803554c8d0</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <text><![CDATA[Copyright (c) 2013 Raynos.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \\"Software\\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]></text>
+        </license>
+      </licenses>
+      <purl>pkg:npm/function-bind@1.1.1</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/Raynos/function-bind</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/Raynos/function-bind/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git://github.com/Raynos/function-bind.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.7\\">
       <name>path-parse</name>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
       <description><![CDATA[Node.js path.parse() ponyfill]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">19298e4f611b1eb20d05ff5247b08310bc2527c004364dd09fb3a290ae2715802edceb5edbe258355be4a401109b7fd32cd109143ff16498f3cb183728158ecf</hash>
+        <hash alg=\\"SHA-512\\">2c32733d510410f47ecb8f33f7703411dd325dbf29001c865a8fe4e5861d620a58dbfd84b0eb24b09aeaee5387c6bcab54e9f57a31baa00a7c6a1bce2100fcb3</hash>
       </hashes>
       <licenses>
         <license>
@@ -2724,7 +2918,7 @@ SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/path-parse@1.0.6</purl>
+      <purl>pkg:npm/path-parse@1.0.7</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/jbgutierrez/path-parse#readme</url>
@@ -3006,12 +3200,12 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.1\\">
       <name>spdx-correct</name>
-      <version>3.1.0</version>
+      <version>3.1.1</version>
       <description><![CDATA[correct invalid SPDX expressions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">96bd8464272d0b604d47b8fb5b32761690f39f1932d6c8dfc6fbd8132cf13726fa9595c7383984a09785bb826ea589647e16b5299a49ca8aa227ba60035aaaf1</hash>
+        <hash alg=\\"SHA-512\\">70e61c516c210ae1c25e2e3d4611510b22442b788f8f5662cfd0e9562577b5b64ec170f8f50cc837732938b24dc61daac2ada524965a28c570f6a362e234c2d3</hash>
       </hashes>
       <licenses>
         <license>
@@ -3221,7 +3415,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-correct@3.1.0</purl>
+      <purl>pkg:npm/spdx-correct@3.1.1</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/jslicense/spdx-correct.js#readme</url>
@@ -3234,12 +3428,12 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.1\\">
       <name>spdx-expression-parse</name>
-      <version>3.0.0</version>
+      <version>3.0.1</version>
       <description><![CDATA[parse SPDX license expressions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">620e83dd7a510f89243a64e97606d48842452a08491f4ddf882d4e3e597987fd2c3ba9de8768ea443547390e28fcb31e6b4b600a46cc81e6b98a9fdef8c916ca</hash>
+        <hash alg=\\"SHA-512\\">71ba87ba7b105a724d13a2a155232c31e1f91ff2fd129ca66f3a93437b8bc0d08b675438f35a166a87ea1fb9cee95d3bc655f063a3e141d43621e756c7f64ae1</hash>
       </hashes>
       <licenses>
         <license>
@@ -3269,7 +3463,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-expression-parse@3.0.0</purl>
+      <purl>pkg:npm/spdx-expression-parse@3.0.1</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/jslicense/spdx-expression-parse.js#readme</url>
@@ -3282,19 +3476,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.2.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.3.0\\">
       <name>spdx-exceptions</name>
-      <version>2.2.0</version>
+      <version>2.3.0</version>
       <description><![CDATA[list of SPDX standard license exceptions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">d9740009f1252a2f529556f509869d2835efa1a8cf80154f9ff80e40bad3bc774495a561afb6446ea25a46724b54d79a23870c10081509e04c285e8c5910c244</hash>
+        <hash alg=\\"SHA-512\\">fed4eb60e0bb3cf2359d4020c77e21529a97bb2246f834c72539c850b1b8ac3ca08b8c6efed7e09aad5ed5c211c11cf0660a3834bc928beae270b919930e22e4</hash>
       </hashes>
       <licenses>
         <license>
           <id>CC-BY-3.0</id>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-exceptions@2.2.0</purl>
+      <purl>pkg:npm/spdx-exceptions@2.3.0</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/kemitchell/spdx-exceptions.json#readme</url>
@@ -3307,28 +3501,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.5\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.11\\">
       <name>spdx-license-ids</name>
-      <version>3.0.5</version>
+      <version>3.0.11</version>
       <description><![CDATA[A list of SPDX license identifiers]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">27e156cd9a329c91171a9855212f97121de41528d95ffd62f6014169641c07efed9a97b6a94b12040069731ab19c0c45762505120017d5b8d8190bc8666a33f5</hash>
+        <hash alg=\\"SHA-512\\">0ad97606b1623345f7300358823dc29328318519abf668bac617a36dd3bdeb49c5e840c90294d8a67d014270ca96734150b2a208dd67df0f440641caf195a0fa</hash>
       </hashes>
       <licenses>
         <license>
           <id>CC0-1.0</id>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-license-ids@3.0.5</purl>
+      <purl>pkg:npm/spdx-license-ids@3.0.11</purl>
       <externalReferences>
         <reference type=\\"website\\">
-          <url>https://github.com/shinnn/spdx-license-ids#readme</url>
+          <url>https://github.com/jslicense/spdx-license-ids#readme</url>
         </reference>
         <reference type=\\"issue-tracker\\">
-          <url>https://github.com/shinnn/spdx-license-ids/issues</url>
+          <url>https://github.com/jslicense/spdx-license-ids/issues</url>
         </reference>
         <reference type=\\"vcs\\">
-          <url>git+https://github.com/shinnn/spdx-license-ids.git</url>
+          <url>git+https://github.com/jslicense/spdx-license-ids.git</url>
         </reference>
       </externalReferences>
     </component>
@@ -3370,6 +3564,57 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
         <reference type=\\"vcs\\">
           <url>git+https://github.com/npm/npm-normalize-package-bin.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-even-better-errors@2.3.1\\">
+      <name>json-parse-even-better-errors</name>
+      <version>2.3.1</version>
+      <description><![CDATA[JSON.parse with context information on error]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">c72170ca1ae8fc91287fa1a17b68b3d8d717a23dac96836c5abfd7b044432bfa223c27da36197938d7e9fa341d01945043420958dcc7f7321917b962f75921db</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <text content-type=\\"text/markdown\\"><![CDATA[Copyright 2017 Kat Marchán
+Copyright npm, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the \\"Software\\"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+---
+
+This library is a fork of 'better-json-errors' by Kat Marchán, extended and
+distributed under the terms of the MIT license above.
+]]></text>
+        </license>
+      </licenses>
+      <purl>pkg:npm/json-parse-even-better-errors@2.3.1</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/npm/json-parse-even-better-errors#readme</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/npm/json-parse-even-better-errors/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git+https://github.com/npm/json-parse-even-better-errors.git</url>
         </reference>
       </externalReferences>
     </component>
@@ -3502,12 +3747,12 @@ IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/graceful-fs@4.2.3\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/graceful-fs@4.2.8\\">
       <name>graceful-fs</name>
-      <version>4.2.3</version>
+      <version>4.2.8</version>
       <description><![CDATA[A drop-in replacement for fs, making various improvements.]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">6b7d151019b83c4771d5d441ecc14aec17a37a3bc2bc1ae89db2e386dfac1ee1988fc3c7b3b33fe59fabb79970e79d6f67bc9f4c28f856ecb2de6489cad0d645</hash>
+        <hash alg=\\"SHA-512\\">aa422294f51870d849a5ddf79f41815d307530c3e9d784f112c12cd294ebb1256e700a6c6335b957e43c43186293a294ddebf2faa900028c13072ca62b46af76</hash>
       </hashes>
       <licenses>
         <license>
@@ -3530,7 +3775,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/graceful-fs@4.2.3</purl>
+      <purl>pkg:npm/graceful-fs@4.2.8</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/isaacs/node-graceful-fs#readme</url>
@@ -3628,12 +3873,12 @@ IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.1\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.2\\">
       <name>ssri</name>
-      <version>6.0.1</version>
+      <version>6.0.2</version>
       <description><![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">dd681ed7484d713d4ababe0f0c5c0489e5d208c089b3fed6bd200272b318acda7e6fc9032f5ff4c09721e4d8b65abb7011ad883bc3ac55f78a21c88a083c7f40</hash>
+        <hash alg=\\"SHA-512\\">71ea5b4aafe77852bbc41e80e74287374c470e8b58ceae7cc1609ae4b796aa73eb1c6f06cdf1233bfe0ef24a667065bea1ac64be110909681b80d938fd957ddd</hash>
       </hashes>
       <licenses>
         <license>
@@ -3657,7 +3902,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/ssri@6.0.1</purl>
+      <purl>pkg:npm/ssri@6.0.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/zkat/ssri#readme</url>
@@ -3670,12 +3915,12 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.1\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.2\\">
       <name>figgy-pudding</name>
-      <version>3.5.1</version>
+      <version>3.5.2</version>
       <description><![CDATA[Delicious, festive, cascading config/opts definitions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">bcd2b12474c428d4e18dfadd2701dcedbaef33a7957afb8ee674e3e9ecfc650d6a6d74ef1ad86e71117b4b8bdfd9cafbd505674fbd15df8bf44b50f242cb62d3</hash>
+        <hash alg=\\"SHA-512\\">d1bb6723f1fc7f6a5abc630df30e349a548a39f4cad925499817c1795223de4370d2cc30833c91ab47794c954ec287459adbe93de58f37f30271fb961741336f</hash>
       </hashes>
       <licenses>
         <license>
@@ -3699,16 +3944,16 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/figgy-pudding@3.5.1</purl>
+      <purl>pkg:npm/figgy-pudding@3.5.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
-          <url>https://github.com/zkat/figgy-pudding#readme</url>
+          <url>https://github.com/npm/figgy-pudding#readme</url>
         </reference>
         <reference type=\\"issue-tracker\\">
-          <url>https://github.com/zkat/figgy-pudding/issues</url>
+          <url>https://github.com/npm/figgy-pudding/issues</url>
         </reference>
         <reference type=\\"vcs\\">
-          <url>git+https://github.com/zkat/figgy-pudding.git</url>
+          <url>git+https://github.com/npm/figgy-pudding.git</url>
         </reference>
       </externalReferences>
     </component>
@@ -3840,12 +4085,12 @@ http://www.gnu.org/licenses/lgpl.html
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/envinfo@7.5.1\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/envinfo@7.8.1\\">
       <name>envinfo</name>
-      <version>7.5.1</version>
+      <version>7.8.1</version>
       <description><![CDATA[Info about your dev environment for debugging purposes]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">8500640dfda23b836fd02347a42b9205e692aef794ea74e15711464ebabf783955ef5e94424d3dcc285a25a7b899946ca2cd71e182d8d93687dcb1d469edd999</hash>
+        <hash alg=\\"SHA-512\\">fe8f815c7981ee871b1c402ce85d849c6d288326d555476446e9d34f6825654f5701a1a686ab24aef2b0a97b837cd8c43b42d929675e8c41299eaf1a334b4e6b</hash>
       </hashes>
       <licenses>
         <license>
@@ -3874,7 +4119,7 @@ SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/envinfo@7.5.1</purl>
+      <purl>pkg:npm/envinfo@7.8.1</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/tabrindle/envinfo#readme</url>
@@ -3900,7 +4145,7 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
       <tool>
         <vendor>CycloneDX</vendor>
         <name>Node.js module</name>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
       </tool>
     </tools>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\">
@@ -3953,12 +4198,12 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.2\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.7\\">
       <name>urijs</name>
-      <version>1.19.2</version>
+      <version>1.19.7</version>
       <description><![CDATA[URI.js is a Javascript library for working with URLs.]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">b3f508abd6a9e093d9ec7d4407950ba3f68e51b5aa7c38bb14accc0b6373fb44a2f06893d6b2046a9aedf21cb7572d84c766893e9390bf83f80ee399f8ad5ceb</hash>
+        <hash alg=\\"SHA-512\\">21df882a3754d07c7eed9c7bd7b8f02cfb0f794ab3eeb02db950512cbb3eaa7f89da77fd3462135950b17228e063106a7bcdc2eecaac40fb3a1f5a72cf7c7d80</hash>
       </hashes>
       <licenses>
         <license>
@@ -3986,7 +4231,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/urijs@1.19.2</purl>
+      <purl>pkg:npm/urijs@1.19.7</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>http://medialize.github.io/URI.js/</url>
@@ -4157,12 +4402,12 @@ IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.1\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.2\\">
       <name>read-package-json</name>
-      <version>2.1.1</version>
+      <version>2.1.2</version>
       <description><![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">7408aa1ad55cfeae5da05cfad3de827275e1a5893464df1d10a56418b5340ac012b7c4ab805e9217b39328062e6dfbc58566aaa1f97e63c1cad7d191f23c16f8</hash>
+        <hash alg=\\"SHA-512\\">0f52a6b8b42be994894b4b56f217f7586a51970b3324e5d9dc4f1877f0cd45a33977ed7055165d1e5a4604b02ea2f8ebdbc2db5af8e95a4047331a511868f334</hash>
       </hashes>
       <licenses>
         <license>
@@ -4185,7 +4430,7 @@ PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/read-package-json@2.1.1</purl>
+      <purl>pkg:npm/read-package-json@2.1.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/npm/read-package-json#readme</url>
@@ -4198,12 +4443,12 @@ PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.1.6\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.2.0\\">
       <name>glob</name>
-      <version>7.1.6</version>
+      <version>7.2.0</version>
       <description><![CDATA[a little globber]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">2f06b1c3267bd8b93bbd920db4d36bcb05f466e2f24adadd0ed69b79f64a018e59189855b607739e5b917acc4d98f8ad1344803be3b6eac5931de292236c0c04</hash>
+        <hash alg=\\"SHA-512\\">9662dfea0b72acfabcb538d29ab3bde3005e41b151dc76cb1dbbb20faf70bb2424226a76856a8c181e3b397eb914190f7df3bae3520ff6359ad73e22bea1b6e9</hash>
       </hashes>
       <licenses>
         <license>
@@ -4232,7 +4477,7 @@ https://creativecommons.org/licenses/by-sa/4.0/
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/glob@7.1.6</purl>
+      <purl>pkg:npm/glob@7.2.0</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/isaacs/node-glob#readme</url>
@@ -4567,12 +4812,12 @@ SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.2\\">
       <name>balanced-match</name>
-      <version>1.0.0</version>
+      <version>1.0.2</version>
       <description><![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]></description>
       <hashes>
-        <hash alg=\\"SHA-1\\">89b4d199ab2bee49de164ea02b89ce462d71b767</hash>
+        <hash alg=\\"SHA-512\\">de849e50ed13315ebb84dd4099b5ec2b8c9aa94eed8e21e56f144364ea47d0a5bdf82797e1b440697d009f1b74b71d8cae94695b041a3f02252121098585393f</hash>
       </hashes>
       <licenses>
         <license>
@@ -4601,7 +4846,7 @@ SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/balanced-match@1.0.0</purl>
+      <purl>pkg:npm/balanced-match@1.0.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/juliangruber/balanced-match</url>
@@ -4705,39 +4950,6 @@ THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-better-errors@1.0.2\\">
-      <name>json-parse-better-errors</name>
-      <version>1.0.2</version>
-      <description><![CDATA[JSON.parse with context information on error]]></description>
-      <hashes>
-        <hash alg=\\"SHA-512\\">9abab264a7d7e4484bee1bea715e961b5c988e78deb980f30e185c00052babc3e8f3934140124ff990d44fbe6a650f7c22452806a76413192e90e53b4ecdb0af</hash>
-      </hashes>
-      <licenses>
-        <license>
-          <id>MIT</id>
-          <text content-type=\\"text/markdown\\"><![CDATA[Copyright 2017 Kat Marchán
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \\"Software\\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-]]></text>
-        </license>
-      </licenses>
-      <purl>pkg:npm/json-parse-better-errors@1.0.2</purl>
-      <externalReferences>
-        <reference type=\\"website\\">
-          <url>https://github.com/zkat/json-parse-better-errors#readme</url>
-        </reference>
-        <reference type=\\"issue-tracker\\">
-          <url>https://github.com/zkat/json-parse-better-errors/issues</url>
-        </reference>
-        <reference type=\\"vcs\\">
-          <url>git+https://github.com/zkat/json-parse-better-errors.git</url>
-        </reference>
-      </externalReferences>
-    </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/normalize-package-data@2.5.0\\">
       <name>normalize-package-data</name>
       <version>2.5.0</version>
@@ -4794,12 +5006,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.5\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.9\\">
       <name>hosted-git-info</name>
-      <version>2.8.5</version>
+      <version>2.8.9</version>
       <description><![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">92cb2369bf02bdd5df71731755cbec5ee9b81f076af571ad443dd3b5e304bc46ead0b5f288d42be80a6ba8aa9f79a0d7cdeed2c56bd1c5da7013a92eee290b92</hash>
+        <hash alg=\\"SHA-512\\">9b120301bf4bb26e83a0e27bc47fb9f97e32d4b53fe078b9d0bf42e6c22cc0adc9cd42d2e1bc24d45be374182f611e1bcd3e2db944220b5e451367f91db2ef63</hash>
       </hashes>
       <licenses>
         <license>
@@ -4820,7 +5032,7 @@ PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/hosted-git-info@2.8.5</purl>
+      <purl>pkg:npm/hosted-git-info@2.8.9</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/npm/hosted-git-info</url>
@@ -4833,12 +5045,12 @@ PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.14.2\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.20.0\\">
       <name>resolve</name>
-      <version>1.14.2</version>
+      <version>1.20.0</version>
       <description><![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">12394e04b04ed64c6c531b0a8cbb7b4c0102c8a5ba7ce87555193291090a1b37016e38cf23106a1a1d237fb189de4fdfe66c4ca96de1b4c0f759d4d456d5bc1d</hash>
+        <hash alg=\\"SHA-512\\">c043413ede324b3838c9b1505b64d3d73310b9c3caf791d287f9ead82153655386baddbea50bd2b20b5d6b8776e98ad872bd3aef08db9b3386f1bc833c15fadc</hash>
       </hashes>
       <licenses>
         <license>
@@ -4867,7 +5079,7 @@ SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/resolve@1.14.2</purl>
+      <purl>pkg:npm/resolve@1.20.0</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/browserify/resolve#readme</url>
@@ -4880,12 +5092,128 @@ SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.6\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/is-core-module@2.8.0\\">
+      <name>is-core-module</name>
+      <version>2.8.0</version>
+      <description><![CDATA[Is this specifier a node.js core module?]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">bddd79a87b1aaab44beddb47e9036ecb49dd266443ad2f4700cd420224a27cd505bf8c756b408256c8f5f21275992871206e93da2d6c3bbf0c90fe7aaf49d847</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <text><![CDATA[The MIT License (MIT)
+
+Copyright (c) 2014 Dave Justice
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the \\"Software\\"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></text>
+        </license>
+      </licenses>
+      <purl>pkg:npm/is-core-module@2.8.0</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/inspect-js/is-core-module</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/inspect-js/is-core-module/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git+https://github.com/inspect-js/is-core-module.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/has@1.0.3\\">
+      <name>has</name>
+      <version>1.0.3</version>
+      <description><![CDATA[Object.prototype.hasOwnProperty.call shortcut]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">7f676f3b4554e8e7a3ed1916246ade8636f33008c5a79fd528fa79b53a56215e091c764ad7f0716c546d7ffb220364964ded3d71a0e656d618cd61086c14b8cf</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+      </licenses>
+      <purl>pkg:npm/has@1.0.3</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/tarruda/has</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/tarruda/has/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git://github.com/tarruda/has.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/function-bind@1.1.1\\">
+      <name>function-bind</name>
+      <version>1.1.1</version>
+      <description><![CDATA[Implementation of Function.prototype.bind]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">c88a2f033317e3db05f18979f1f482589e6cbd22ee6a26cfc5740914b98139b4ee0abd0c7f52a23e8a4633d3621638980426df69ad8587a6eb790e803554c8d0</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <text><![CDATA[Copyright (c) 2013 Raynos.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the \\"Software\\"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]></text>
+        </license>
+      </licenses>
+      <purl>pkg:npm/function-bind@1.1.1</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/Raynos/function-bind</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/Raynos/function-bind/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git://github.com/Raynos/function-bind.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.7\\">
       <name>path-parse</name>
-      <version>1.0.6</version>
+      <version>1.0.7</version>
       <description><![CDATA[Node.js path.parse() ponyfill]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">19298e4f611b1eb20d05ff5247b08310bc2527c004364dd09fb3a290ae2715802edceb5edbe258355be4a401109b7fd32cd109143ff16498f3cb183728158ecf</hash>
+        <hash alg=\\"SHA-512\\">2c32733d510410f47ecb8f33f7703411dd325dbf29001c865a8fe4e5861d620a58dbfd84b0eb24b09aeaee5387c6bcab54e9f57a31baa00a7c6a1bce2100fcb3</hash>
       </hashes>
       <licenses>
         <license>
@@ -4914,7 +5242,7 @@ SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/path-parse@1.0.6</purl>
+      <purl>pkg:npm/path-parse@1.0.7</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/jbgutierrez/path-parse#readme</url>
@@ -5196,12 +5524,12 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.1\\">
       <name>spdx-correct</name>
-      <version>3.1.0</version>
+      <version>3.1.1</version>
       <description><![CDATA[correct invalid SPDX expressions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">96bd8464272d0b604d47b8fb5b32761690f39f1932d6c8dfc6fbd8132cf13726fa9595c7383984a09785bb826ea589647e16b5299a49ca8aa227ba60035aaaf1</hash>
+        <hash alg=\\"SHA-512\\">70e61c516c210ae1c25e2e3d4611510b22442b788f8f5662cfd0e9562577b5b64ec170f8f50cc837732938b24dc61daac2ada524965a28c570f6a362e234c2d3</hash>
       </hashes>
       <licenses>
         <license>
@@ -5411,7 +5739,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-correct@3.1.0</purl>
+      <purl>pkg:npm/spdx-correct@3.1.1</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/jslicense/spdx-correct.js#readme</url>
@@ -5424,12 +5752,12 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.1\\">
       <name>spdx-expression-parse</name>
-      <version>3.0.0</version>
+      <version>3.0.1</version>
       <description><![CDATA[parse SPDX license expressions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">620e83dd7a510f89243a64e97606d48842452a08491f4ddf882d4e3e597987fd2c3ba9de8768ea443547390e28fcb31e6b4b600a46cc81e6b98a9fdef8c916ca</hash>
+        <hash alg=\\"SHA-512\\">71ba87ba7b105a724d13a2a155232c31e1f91ff2fd129ca66f3a93437b8bc0d08b675438f35a166a87ea1fb9cee95d3bc655f063a3e141d43621e756c7f64ae1</hash>
       </hashes>
       <licenses>
         <license>
@@ -5459,7 +5787,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-expression-parse@3.0.0</purl>
+      <purl>pkg:npm/spdx-expression-parse@3.0.1</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/jslicense/spdx-expression-parse.js#readme</url>
@@ -5472,19 +5800,19 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.2.0\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.3.0\\">
       <name>spdx-exceptions</name>
-      <version>2.2.0</version>
+      <version>2.3.0</version>
       <description><![CDATA[list of SPDX standard license exceptions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">d9740009f1252a2f529556f509869d2835efa1a8cf80154f9ff80e40bad3bc774495a561afb6446ea25a46724b54d79a23870c10081509e04c285e8c5910c244</hash>
+        <hash alg=\\"SHA-512\\">fed4eb60e0bb3cf2359d4020c77e21529a97bb2246f834c72539c850b1b8ac3ca08b8c6efed7e09aad5ed5c211c11cf0660a3834bc928beae270b919930e22e4</hash>
       </hashes>
       <licenses>
         <license>
           <id>CC-BY-3.0</id>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-exceptions@2.2.0</purl>
+      <purl>pkg:npm/spdx-exceptions@2.3.0</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/kemitchell/spdx-exceptions.json#readme</url>
@@ -5497,28 +5825,28 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.5\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.11\\">
       <name>spdx-license-ids</name>
-      <version>3.0.5</version>
+      <version>3.0.11</version>
       <description><![CDATA[A list of SPDX license identifiers]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">27e156cd9a329c91171a9855212f97121de41528d95ffd62f6014169641c07efed9a97b6a94b12040069731ab19c0c45762505120017d5b8d8190bc8666a33f5</hash>
+        <hash alg=\\"SHA-512\\">0ad97606b1623345f7300358823dc29328318519abf668bac617a36dd3bdeb49c5e840c90294d8a67d014270ca96734150b2a208dd67df0f440641caf195a0fa</hash>
       </hashes>
       <licenses>
         <license>
           <id>CC0-1.0</id>
         </license>
       </licenses>
-      <purl>pkg:npm/spdx-license-ids@3.0.5</purl>
+      <purl>pkg:npm/spdx-license-ids@3.0.11</purl>
       <externalReferences>
         <reference type=\\"website\\">
-          <url>https://github.com/shinnn/spdx-license-ids#readme</url>
+          <url>https://github.com/jslicense/spdx-license-ids#readme</url>
         </reference>
         <reference type=\\"issue-tracker\\">
-          <url>https://github.com/shinnn/spdx-license-ids/issues</url>
+          <url>https://github.com/jslicense/spdx-license-ids/issues</url>
         </reference>
         <reference type=\\"vcs\\">
-          <url>git+https://github.com/shinnn/spdx-license-ids.git</url>
+          <url>git+https://github.com/jslicense/spdx-license-ids.git</url>
         </reference>
       </externalReferences>
     </component>
@@ -5560,6 +5888,57 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
         <reference type=\\"vcs\\">
           <url>git+https://github.com/npm/npm-normalize-package-bin.git</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-even-better-errors@2.3.1\\">
+      <name>json-parse-even-better-errors</name>
+      <version>2.3.1</version>
+      <description><![CDATA[JSON.parse with context information on error]]></description>
+      <hashes>
+        <hash alg=\\"SHA-512\\">c72170ca1ae8fc91287fa1a17b68b3d8d717a23dac96836c5abfd7b044432bfa223c27da36197938d7e9fa341d01945043420958dcc7f7321917b962f75921db</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <text content-type=\\"text/markdown\\"><![CDATA[Copyright 2017 Kat Marchán
+Copyright npm, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the \\"Software\\"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \\"AS IS\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+---
+
+This library is a fork of 'better-json-errors' by Kat Marchán, extended and
+distributed under the terms of the MIT license above.
+]]></text>
+        </license>
+      </licenses>
+      <purl>pkg:npm/json-parse-even-better-errors@2.3.1</purl>
+      <externalReferences>
+        <reference type=\\"website\\">
+          <url>https://github.com/npm/json-parse-even-better-errors#readme</url>
+        </reference>
+        <reference type=\\"issue-tracker\\">
+          <url>https://github.com/npm/json-parse-even-better-errors/issues</url>
+        </reference>
+        <reference type=\\"vcs\\">
+          <url>git+https://github.com/npm/json-parse-even-better-errors.git</url>
         </reference>
       </externalReferences>
     </component>
@@ -5692,12 +6071,12 @@ IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/graceful-fs@4.2.3\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/graceful-fs@4.2.8\\">
       <name>graceful-fs</name>
-      <version>4.2.3</version>
+      <version>4.2.8</version>
       <description><![CDATA[A drop-in replacement for fs, making various improvements.]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">6b7d151019b83c4771d5d441ecc14aec17a37a3bc2bc1ae89db2e386dfac1ee1988fc3c7b3b33fe59fabb79970e79d6f67bc9f4c28f856ecb2de6489cad0d645</hash>
+        <hash alg=\\"SHA-512\\">aa422294f51870d849a5ddf79f41815d307530c3e9d784f112c12cd294ebb1256e700a6c6335b957e43c43186293a294ddebf2faa900028c13072ca62b46af76</hash>
       </hashes>
       <licenses>
         <license>
@@ -5720,7 +6099,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/graceful-fs@4.2.3</purl>
+      <purl>pkg:npm/graceful-fs@4.2.8</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/isaacs/node-graceful-fs#readme</url>
@@ -5818,12 +6197,12 @@ IN THE SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.1\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.2\\">
       <name>ssri</name>
-      <version>6.0.1</version>
+      <version>6.0.2</version>
       <description><![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">dd681ed7484d713d4ababe0f0c5c0489e5d208c089b3fed6bd200272b318acda7e6fc9032f5ff4c09721e4d8b65abb7011ad883bc3ac55f78a21c88a083c7f40</hash>
+        <hash alg=\\"SHA-512\\">71ea5b4aafe77852bbc41e80e74287374c470e8b58ceae7cc1609ae4b796aa73eb1c6f06cdf1233bfe0ef24a667065bea1ac64be110909681b80d938fd957ddd</hash>
       </hashes>
       <licenses>
         <license>
@@ -5847,7 +6226,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/ssri@6.0.1</purl>
+      <purl>pkg:npm/ssri@6.0.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
           <url>https://github.com/zkat/ssri#readme</url>
@@ -5860,12 +6239,12 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
         </reference>
       </externalReferences>
     </component>
-    <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.1\\">
+    <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.2\\">
       <name>figgy-pudding</name>
-      <version>3.5.1</version>
+      <version>3.5.2</version>
       <description><![CDATA[Delicious, festive, cascading config/opts definitions]]></description>
       <hashes>
-        <hash alg=\\"SHA-512\\">bcd2b12474c428d4e18dfadd2701dcedbaef33a7957afb8ee674e3e9ecfc650d6a6d74ef1ad86e71117b4b8bdfd9cafbd505674fbd15df8bf44b50f242cb62d3</hash>
+        <hash alg=\\"SHA-512\\">d1bb6723f1fc7f6a5abc630df30e349a548a39f4cad925499817c1795223de4370d2cc30833c91ab47794c954ec287459adbe93de58f37f30271fb961741336f</hash>
       </hashes>
       <licenses>
         <license>
@@ -5889,16 +6268,16 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 ]]></text>
         </license>
       </licenses>
-      <purl>pkg:npm/figgy-pudding@3.5.1</purl>
+      <purl>pkg:npm/figgy-pudding@3.5.2</purl>
       <externalReferences>
         <reference type=\\"website\\">
-          <url>https://github.com/zkat/figgy-pudding#readme</url>
+          <url>https://github.com/npm/figgy-pudding#readme</url>
         </reference>
         <reference type=\\"issue-tracker\\">
-          <url>https://github.com/zkat/figgy-pudding/issues</url>
+          <url>https://github.com/npm/figgy-pudding/issues</url>
         </reference>
         <reference type=\\"vcs\\">
-          <url>git+https://github.com/zkat/figgy-pudding.git</url>
+          <url>git+https://github.com/npm/figgy-pudding.git</url>
         </reference>
       </externalReferences>
     </component>
@@ -6043,7 +6422,7 @@ exports[`createbom produces an empty BOM 1`] = `
       <tool>
         <vendor>CycloneDX</vendor>
         <name>Node.js module</name>
-        <version>2.0.0</version>
+        <version>3.0.0</version>
       </tool>
     </tools>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-tests-no-packages@0.0.0\\">

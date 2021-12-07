@@ -1,7 +1,7 @@
 const bomHelpers = require("../index.js");
 
 const timestamp = new Date("2020-01-01T01:00:00.000Z");
-const programVersion = "2.0.0";
+const programVersion = "3.0.0";
 
 test('createbom produces an empty BOM', done => {
   bomHelpers.createbom("library", false, false, './tests/no-packages', {}, (err, bom) => {
