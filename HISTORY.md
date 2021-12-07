@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Changed
+  * Renamed `bin/cyclonedx-bom` to `bin/make-bom.js` (via [#216])  
+    This is considered a none-breaking change,
+    as the CLI use of `npx cyclonedx-node`/`npx cyclonedx-bom`
+    is untouched.
+
+[#216]: https://github.com/CycloneDX/cyclonedx-node-module/pull/216
+
 ## 3.2.0
 
 * Added

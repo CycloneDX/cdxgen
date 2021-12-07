@@ -17,5 +17,5 @@ RUN npm ci --only=production
 
 COPY . /usr/src/cyclonedx-bom
 
-ENTRYPOINT ["/usr/src/cyclonedx-bom/bin/cyclonedx-bom"]
+ENTRYPOINT ["/usr/src/cyclonedx-bom/bin/make-bom.js"]
 CMD ["-h"]
