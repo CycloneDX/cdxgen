@@ -17,15 +17,24 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const commander = require('commander');
-const program = require('../package.json');
-const bomHelpers = require("../index.js");
+
 const fs = require("fs");
-const xmlFormat = require("prettify-xml");
-const xmlOptions = {indent: 4, newline: "\n"};
+const process = require('process');
+
+const commander = require('commander');
 const DomParser = require('@xmldom/xmldom').DOMParser;
+const xmlFormat = require("prettify-xml");
+
+const bomHelpers = require("../index.js");
+const program = require('../package.json');
 const Bom = require('../model/Bom');
 const Component = require('../model/Component');
+
+const EXIT_SUCCESS = 0;
+const EXIT_INVALID = 1;
+const EXIT_FAILURE = 2;
+
+const xmlOptions = {indent: 4, newline: "\n"};
 
 const cdx = new commander.Command();
 
@@ -62,22 +71,43 @@ let readInstalledOptions = { dev: options.includeDev };
 /**
  * Creates a Bom object and writes either XML or JSON.
  */
-bomHelpers.createbom(componentType, includeSerialNumber, includeLicenseText, filePath, readInstalledOptions, (err, bom) => {
-    if (bom.components.length === 0) {
-        console.log("There are no components in the BOM. The project may not contain dependencies or node_modules does not exist. Executing `npm install` prior to CycloneDX may solve the issue.")
-    }
+bomHelpers.createbom(componentType, includeSerialNumber, includeLicenseText, filePath, readInstalledOptions, (createbomError, bom) => {
     if(!fs.existsSync(filePath)) {
-        console.log("Folder path does not exist");
-        process.exit(1);
+        console.error("Folder path does not exist");
+        process.exit(EXIT_INVALID);
     }
+
+    if(createbomError) {
+        console.debug(createbomError);
+        console.error(
+            "Ooops. Something stupid happened.",
+            "Please file an issue at https://github.com/CycloneDX/cyclonedx-node-module/issues/new"
+        );
+        process.exit(EXIT_FAILURE);
+    }
+
+    const writeFileCB = (writeFileError) => {
+        if (!writeFileError) { process.exit(EXIT_SUCCESS) }
+        console.error("Failed to write output file: " + writeFileError.path);
+        process.exit(EXIT_FAILURE);
+    }
+
+    if (bom.components.length === 0) {
+        console.info(
+            "There are no components in the BOM.",
+            "The project may not contain dependencies or node_modules does not exist.",
+            "Executing `npm install` prior to CycloneDX may solve the issue."
+        );
+    }
+
     if (output.endsWith(".xml")) {
         let doc = new DomParser().parseFromString(bom.toXML());
         let xmlString = xmlFormat(doc.toString(), xmlOptions);
-        fs.writeFile(output, xmlString, () => {});
+        fs.writeFile(output, xmlString, writeFileCB);
     } else if (output.endsWith(".json")) {
-        fs.writeFile(output, bom.toJSON(), () => {});
+        fs.writeFile(output, bom.toJSON(), writeFileCB);
     } else {
-        console.log("Unsupported file extension. Output filename must end with .xml or .json");
-        process.exit(1);
+        console.error("Unsupported file extension. Output filename must end with .xml or .json");
+        process.exit(EXIT_INVALID);
     }
 });
