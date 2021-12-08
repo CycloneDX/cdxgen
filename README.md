@@ -92,6 +92,12 @@ to convert to older specification versions as required.
 | 1.1.x | CycloneDX v1.1 | XML |
 | 1.0.x | CycloneDX v1.0 | XML |
 
+
+## Contributing
+
+Feel free to open issues, bugreports or pull requests.  
+See the [CONTRIBUTING][contributing_file] file for details.
+
 ## Copyright & License
 
 CycloneDX Node Module is Copyright (c) OWASP Foundation. All Rights Reserved.
@@ -100,6 +106,7 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 See the [LICENSE][license_file] file for the full license.
 
 [license_file]: https://github.com/CycloneDX/cyclonedx-node-module/blob/master/LICENSE
+[contributing_file]: https://github.com/CycloneDX/cyclonedx-node-module/blob/master/CONTRIBUTING.md
 
 [shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-node-module/Node%20CI/master?logo=GitHub&logoColor=white "build"
 [shield_npm-version]: https://img.shields.io/npm/v/@cyclonedx/bom?logo=Node.js&logoColor=white&label=npm "npm"
