@@ -69,6 +69,21 @@
     "spdx-licenses.json"
   ],
   "devDependencies": {
-    "jest": "^27.1.0"
+    "jest": "^27.1.0",
+    "jest-junit": "^13.0.0"
+  },
+  "jest": {
+    "cacheDirectory": ".jest.cache",
+    "collectCoverage": true,
+    "coverageDirectory": "reports/jest/coverage",
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "outputDirectory": "reports/jest",
+    "outputName": "tests.junit.xml"
   }
 }
