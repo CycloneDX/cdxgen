@@ -1,5 +1,12 @@
 node_modules/
 
+## target or reportings, tests, etc
+/reports/
+/CI_reports/
+
+## caches
+/.*.cache
+
 ## IDE related files
 .vscode/
 .idea/
