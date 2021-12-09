@@ -9,8 +9,17 @@ All notable changes to this project will be documented in this file.
     This is considered a none-breaking change,
     as the CLI use of `npx cyclonedx-node`/`npx cyclonedx-bom`
     is untouched.
+  * Errors are no longer thrown as `String`, but inherited `Error`. (via [#217])  
+    This is considered a none-breaking change,
+    as `Error.toString()` returns the original error message.
+* Fixed
+  * `ExternalReference.type` setter sets value correctly now. (via [#217])  
+    Setter caused an Error or set to `undefined` in the past.
+  * `AttachmentText` sets `encoding` correctly via setter and constructor now. (via [#217])  
+    Set to `undefined` in the past.
 
 [#216]: https://github.com/CycloneDX/cyclonedx-node-module/pull/216
+[#217]: https://github.com/CycloneDX/cyclonedx-node-module/pull/217
 
 ## 3.2.0
 

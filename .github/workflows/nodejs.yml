@@ -15,8 +15,8 @@ env:
   REPORTS_DIR: CI_reports
 
 jobs:
-  test:
-    name: Test (node${{ matrix.node-version }}, ${{ matrix.os }})
+  unit-test:
+    name: UnitTest (node${{ matrix.node-version }}, ${{ matrix.os }})
     timeout-minutes: 30
     runs-on: ${{ matrix.os }}
     strategy:
@@ -51,7 +51,7 @@ jobs:
         working-directory: tests/with-packages
       - name: run tests
         run: >
-          npm run test --
+          npm run test:unit --
           --ci
           --no-cache
           --all
@@ -76,3 +76,24 @@ jobs:
           name: ${{ env.REPORTS_ARTIFACT }}
           path: ${{ env.REPORTS_DIR }}
           if-no-files-found: error
+
+  standards:
+    name: Standards
+    timeout-minutes: 30
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2.4.0
+      - name: Setup Node.js ${{ matrix.node-version }}
+        ## see https://github.com/actions/setup-node
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: '16' ## active LTS
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - name: install project
+        run: npm ci
+      - name: run tests
+        run: npm run test:standard
+

@@ -16,56 +16,47 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const defaultSpecVersion = "1.3";
 
 class CycloneDXObject {
-
-  constructor() {
-  }
-
-  validateType(name, value, expectedType, required = false) {
-    if (!value && required) {
-      throw name + " is required";
+  validateType (name, value, expectedType, required = false) {
+    if (!value) {
+      if (required) { throw new ReferenceError(name + ' is required') }
+      return undefined
     }
-    if (value) {
-      if (expectedType === String) {
-        if (typeof value === 'string' || value instanceof expectedType) {
-          return value;
-        } else {
-          throw name + " value must be a string";
-        }
-      } else if (expectedType === Number) {
-        if (typeof value === 'number' || value instanceof expectedType) {
-          return value;
-        } else {
-          throw name + " value must be a number";
-        }
-      } else if (expectedType === Boolean) {
-        if (typeof value === 'boolean' || value instanceof expectedType) {
-          return value;
-        } else {
-          throw name + " value must be a number";
-        }
-      } else {
-        if (value instanceof expectedType) {
-          return value;
-        } else {
-          throw name + " value must be an instance of " + expectedType;
-        }
+
+    if (expectedType === String) {
+      if (typeof value === 'string' || value instanceof expectedType) {
+        return value
       }
-    } else {
-      return undefined;
+      throw new TypeError(name + ' value must be a string')
     }
+
+    if (expectedType === Number) {
+      if (typeof value === 'number' || value instanceof expectedType) {
+        return value
+      }
+      throw new TypeError(name + ' value must be a number')
+    }
+
+    if (expectedType === Boolean) {
+      if (typeof value === 'boolean' || value instanceof expectedType) {
+        return value
+      }
+      throw new TypeError(name + ' value must be a boolean')
+    }
+
+    if (value instanceof expectedType) {
+      return value
+    }
+    throw TypeError(name + ' value must be an instance of ' + expectedType)
   }
 
-  validateChoice(name, value, validChoices = []) {
+  validateChoice (name, value, validChoices = []) {
     if (validChoices.indexOf(value) === -1) {
-      throw "Unsupported " + name + ". Valid choices are " + validChoices.toString();
-    } else {
-      return value;
+      throw new RangeError('Unsupported ' + name + '. Valid choices are ' + validChoices.toString())
     }
+    return value
   }
-
 }
 
-module.exports = CycloneDXObject;
+module.exports = CycloneDXObject

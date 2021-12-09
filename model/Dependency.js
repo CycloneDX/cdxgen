@@ -16,66 +16,66 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const CycloneDXObject = require('./CycloneDXObject');
+
+const CycloneDXObject = require('./CycloneDXObject')
 
 class Dependency extends CycloneDXObject {
+  constructor (ref, dependencies) {
+    super()
+    this._ref = ref
+    this._dependencies = dependencies
+  }
 
-    constructor(ref, dependencies) {
-        super();
-        this._ref = ref;
-        this._dependencies = dependencies;
-    }
+  get ref () {
+    return this._ref
+  }
 
-    get ref() {
-        return this._ref;
-    }
+  set ref (value) {
+    this._ref = value
+  }
 
-    set ref(value) {
-        this._ref = value;
-    }
+  get dependencies () {
+    return this._dependencies
+  }
 
-    get dependencies() {
-        return this._dependencies;
-    }
+  set dependencies (value) {
+    this._dependencies = value
+  }
 
-    set dependencies(value) {
-        this._dependencies = value;
-    }
+  addDependency (dependency) {
+    if (!this._dependencies) this._dependencies = []
+    this._dependencies.push(dependency)
+  }
 
-    addDependency(dependency) {
-        if (! this._dependencies) this._dependencies = [];
-        this._dependencies.push(dependency);
+  toJSON () {
+    let dependencyArray
+    if (this._dependencies && this._dependencies.length > 0) {
+      dependencyArray = []
+      for (const d of this._dependencies) {
+        dependencyArray.push(d.ref)
+      }
     }
+    return {
+      ref: this._ref,
+      dependsOn: dependencyArray
+    }
+  }
 
-    toJSON() {
-        let dependencyArray = undefined;
-        if (this._dependencies && this._dependencies.length > 0) {
-            dependencyArray = [];
-            for (let d of this._dependencies) {
-                dependencyArray.push(d.ref);
-            }
-        }
-        return {
-            'ref': this._ref,
-            'dependsOn': dependencyArray
-        };
+  toXML () {
+    let dependencyArray
+    if (this._dependencies && this._dependencies.length > 0) {
+      dependencyArray = []
+      for (const d of this._dependencies) {
+        dependencyArray.push({ dependency: { '@ref': d.ref } })
+      }
     }
-
-    toXML() {
-        let dependencyArray = undefined;
-        if (this._dependencies && this._dependencies.length > 0) {
-            dependencyArray = [];
-            for (let d of this._dependencies) {
-                dependencyArray.push({'dependency': {'@ref': d.ref}});
-            }
-        }
-        return {
-            'dependency': {
-                '@ref': this.ref,
-                '#text': dependencyArray
-            }
-        };
+    return {
+      dependency: {
+        '@ref': this.ref,
+        '#text': dependencyArray
+      }
     }
+  }
 }
 
-module.exports = Dependency;
+module.exports = Dependency

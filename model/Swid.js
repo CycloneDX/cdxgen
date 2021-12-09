@@ -16,11 +16,11 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const AttachmentText = require('./AttachmentText');
-const CycloneDXObject = require('./CycloneDXObject');
+
+const AttachmentText = require('./AttachmentText')
+const CycloneDXObject = require('./CycloneDXObject')
 
 class Swid extends CycloneDXObject {
-
   /**
    * @param tagId Maps to the tagId of a SoftwareIdentity. (REQUIRED)
    * @param name Maps to the name of a SoftwareIdentity. (OPTIONAL)
@@ -28,44 +28,44 @@ class Swid extends CycloneDXObject {
    * @param tagVersion Maps to the tagVersion of a SoftwareIdentity. (OPTIONAL)
    * @param patch Maps to the patch of a SoftwareIdentity. (OPTIONAL)
    */
-  constructor(tagId, name, version, tagVersion, patch) {
-    super();
-    this._tagId = this.validateType("SWID tagId", tagId, String, true);
-    this._name = this.validateType("Name", name, String);
-    this._version = this.validateType("Version", version, String);
-    this._tagVersion = this.validateType("Tag version", tagVersion, Number);
-    this._patch = this.validateType("Patch", patch, Boolean);
+  constructor (tagId, name, version, tagVersion, patch) {
+    super()
+    this._tagId = this.validateType('SWID tagId', tagId, String, true)
+    this._name = this.validateType('Name', name, String)
+    this._version = this.validateType('Version', version, String)
+    this._tagVersion = this.validateType('Tag version', tagVersion, Number)
+    this._patch = this.validateType('Patch', patch, Boolean)
   }
 
-  get tagId() {
-    return this._tagId;
+  get tagId () {
+    return this._tagId
   }
 
-  get name() {
-    return this._name;
+  get name () {
+    return this._name
   }
 
-  get version() {
-    return this._version;
+  get version () {
+    return this._version
   }
 
-  get tagVersion() {
-    return this._tagVersion;
+  get tagVersion () {
+    return this._tagVersion
   }
 
-  get patch() {
-    return this._patch;
+  get patch () {
+    return this._patch
   }
 
-  get attachmentText() {
-    return this._attachmentText;
+  get attachmentText () {
+    return this._attachmentText
   }
 
-  set attachmentText(value) {
-    this._attachmentText = this.validateType("Attachment text", value, AttachmentText);
+  set attachmentText (value) {
+    this._attachmentText = this.validateType('Attachment text', value, AttachmentText)
   }
 
-  toJSON() {
+  toJSON () {
     return {
       tagId: this._tagId,
       name: this._name,
@@ -73,10 +73,10 @@ class Swid extends CycloneDXObject {
       tagVersion: this._tagVersion,
       patch: this._patch,
       text: (this._attachmentText) ? this._attachmentText.toJSON() : undefined
-    };
+    }
   }
 
-  toXML() {
+  toXML () {
     return {
       '@tagId': this._tagId,
       '@name': this._name,
@@ -84,8 +84,8 @@ class Swid extends CycloneDXObject {
       '@tagVersion': this._tagVersion,
       '@patch': this._patch,
       text: (this._attachmentText) ? this._attachmentText.toXML() : undefined
-    };
+    }
   }
 }
 
-module.exports = Swid;
+module.exports = Swid

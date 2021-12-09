@@ -16,56 +16,56 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const CycloneDXObject = require('./CycloneDXObject');
+
+const CycloneDXObject = require('./CycloneDXObject')
 
 class AttachmentText extends CycloneDXObject {
-
-  constructor(contentType, text, encoding) {
-    super();
-    this._contentType = (contentType) ? contentType : undefined;
-    this._text = (text) ? text : undefined;
-    this._encoding = this.validateEncoding(encoding);
+  constructor (contentType, text, encoding) {
+    super()
+    this._contentType = (contentType) || undefined
+    this._text = (text) || undefined
+    this._encoding = this.validateEncoding(encoding)
   }
 
-  validateEncoding(encoding) {
-    if (encoding && encoding !== "base64") {
-      throw "Encoding may either be null or base64";
-    }
+  validateEncoding (encoding) {
+    if (!encoding) { return undefined }
+    if (encoding === 'base64') { return encoding }
+    throw new RangeError('Encoding may either be null or base64')
   }
 
-  get contentType() {
-    return this._contentType;
+  get contentType () {
+    return this._contentType
   }
 
-  set contentType(value) {
-    this._contentType = this.validateType("Content type", value, String);
+  set contentType (value) {
+    this._contentType = this.validateType('Content type', value, String)
   }
 
-  get text() {
-    return this._text;
+  get text () {
+    return this._text
   }
 
-  set text(value) {
-    this._text = this.validateType("Text", value, String);
+  set text (value) {
+    this._text = this.validateType('Text', value, String)
   }
 
-  get encoding() {
-    return this._encoding;
+  get encoding () {
+    return this._encoding
   }
 
-  set encoding(value) {
-    this._encoding = this.validateEncoding(value);
+  set encoding (value) {
+    this._encoding = this.validateEncoding(value)
   }
 
-  toJSON() {
+  toJSON () {
     return {
-      'contentType': this._contentType,
-      'encoding': this._encoding,
-      'content': this._text
+      contentType: this._contentType,
+      encoding: this._encoding,
+      content: this._text
     }
   }
 
-  toXML() {
+  toXML () {
     return {
       '#cdata': this._text,
       '@content-type': this._contentType,
@@ -74,4 +74,4 @@ class AttachmentText extends CycloneDXObject {
   }
 }
 
-module.exports = AttachmentText;
+module.exports = AttachmentText

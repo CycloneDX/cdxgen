@@ -16,51 +16,51 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const CycloneDXObject = require('./CycloneDXObject');
 
-class OrganizationalContact extends  CycloneDXObject {
+const CycloneDXObject = require('./CycloneDXObject')
 
-  constructor(name, email, phone, objectName) {
-    super();
-    this._name = this.validateType("Name", name, String);
-    this._email = this.validateType("Email", email, String);
-    this._phone = this.validateType("Phone", phone, String);
-    this._objectName = objectName;
+class OrganizationalContact extends CycloneDXObject {
+  constructor (name, email, phone, objectName) {
+    super()
+    this._name = this.validateType('Name', name, String)
+    this._email = this.validateType('Email', email, String)
+    this._phone = this.validateType('Phone', phone, String)
+    this._objectName = objectName
   }
 
-  get name() {
-    return this._name;
+  get name () {
+    return this._name
   }
 
-  set name(value) {
-    this._name = this.validateType("Name", value, String);
+  set name (value) {
+    this._name = this.validateType('Name', value, String)
   }
 
-  get email() {
-    return this._email;
+  get email () {
+    return this._email
   }
 
-  set email(value) {
-    this._email = this.validateType("Email", value, String);
+  set email (value) {
+    this._email = this.validateType('Email', value, String)
   }
 
-  get phone() {
-    return this._phone;
+  get phone () {
+    return this._phone
   }
 
-  set phone(value) {
-    this._phone = this.validateType("Phone", value, String);
+  set phone (value) {
+    this._phone = this.validateType('Phone', value, String)
   }
 
-  get objectName() {
-    return this._objectName;
+  get objectName () {
+    return this._objectName
   }
 
-  set objectName(value) {
-    this._objectName = this.validateType("Objectname", value, String);
+  set objectName (value) {
+    this._objectName = this.validateType('Objectname', value, String)
   }
 
-  toJSON() {
+  toJSON () {
     return {
       name: this._name,
       email: this._email,
@@ -68,15 +68,15 @@ class OrganizationalContact extends  CycloneDXObject {
     }
   }
 
-  toXML() {
-    let data = {};
+  toXML () {
+    const data = {}
     if (this._objectName) {
       data[this._objectName] = {
         name: this._name,
         email: this._email,
         phone: this._phone
-      };
-      return data;
+      }
+      return data
     } else {
       return {
         name: this._name,
@@ -87,4 +87,4 @@ class OrganizationalContact extends  CycloneDXObject {
   }
 }
 
-module.exports = OrganizationalContact;
+module.exports = OrganizationalContact

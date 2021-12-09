@@ -16,44 +16,44 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const CycloneDXObject = require('./CycloneDXObject');
+
+const CycloneDXObject = require('./CycloneDXObject')
 
 class Hash extends CycloneDXObject {
-
-  constructor(algorithm, value) {
-    super();
-    this._algorithm = this.validateChoice("Algorithm", algorithm, this.validAlgorithms());
-    this._value = value;
+  constructor (algorithm, value) {
+    super()
+    this._algorithm = this.validateChoice('Algorithm', algorithm, this.validAlgorithms())
+    this._value = value
   }
 
-  validAlgorithms() {
-    return ["MD5", "SHA-1", "SHA-256", "SHA-384", "SHA-512", "SHA3-256", "SHA3-384",
-      "SHA3-512", "BLAKE2b-256", "BLAKE2b-384", "BLAKE2b-512", "BLAKE3"];
+  validAlgorithms () {
+    return ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512', 'SHA3-256', 'SHA3-384',
+      'SHA3-512', 'BLAKE2b-256', 'BLAKE2b-384', 'BLAKE2b-512', 'BLAKE3']
   }
 
-  get algorithm() {
-    return this._algorithm;
+  get algorithm () {
+    return this._algorithm
   }
 
-  set algorithm(value) {
-    this._algorithm = this.validateChoice("Algorithm", value, this.validAlgorithms());
+  set algorithm (value) {
+    this._algorithm = this.validateChoice('Algorithm', value, this.validAlgorithms())
   }
 
-  get value() {
-    return this._value;
+  get value () {
+    return this._value
   }
 
-  set value(value) {
-    this._value = this.validateType("Hash value", value, String);
+  set value (value) {
+    this._value = this.validateType('Hash value', value, String)
   }
 
-  toJSON() {
-    return { 'alg': this._algorithm, 'content': this._value};
+  toJSON () {
+    return { alg: this._algorithm, content: this._value }
   }
 
-  toXML() {
-    return { hash: { '@alg': this._algorithm, '#text': this._value} };
+  toXML () {
+    return { hash: { '@alg': this._algorithm, '#text': this._value } }
   }
 }
 
-module.exports = Hash;
+module.exports = Hash

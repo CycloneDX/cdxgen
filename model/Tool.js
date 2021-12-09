@@ -16,81 +16,81 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const CycloneDXObject = require('./CycloneDXObject');
+
+const CycloneDXObject = require('./CycloneDXObject')
 
 class Tool extends CycloneDXObject {
-
-  constructor(vendor, name, version, hashes = []) {
-    super();
-    this._vendor = this.validateType("Vendor", vendor, String);
-    this._name = this.validateType("Name", name, String);
-    this._version = this.validateType("Version", version, String);
-    this._hashes = hashes;
+  constructor (vendor, name, version, hashes = []) {
+    super()
+    this._vendor = this.validateType('Vendor', vendor, String)
+    this._name = this.validateType('Name', name, String)
+    this._version = this.validateType('Version', version, String)
+    this._hashes = hashes
   }
 
-  get vendor() {
-    return this._vendor;
+  get vendor () {
+    return this._vendor
   }
 
-  set vendor(value) {
-    this._vendor = this.validateType("Vendor", value, String);
+  set vendor (value) {
+    this._vendor = this.validateType('Vendor', value, String)
   }
 
-  get name() {
-    return this._name;
+  get name () {
+    return this._name
   }
 
-  set name(value) {
-    this._name = this.validateType("Name", value, String);
+  set name (value) {
+    this._name = this.validateType('Name', value, String)
   }
 
-  get version() {
-    return this._version;
+  get version () {
+    return this._version
   }
 
-  set version(value) {
-    this._version = this.validateType("Version", value, String);
+  set version (value) {
+    this._version = this.validateType('Version', value, String)
   }
 
-  get hashes() {
-    return this._hashes;
+  get hashes () {
+    return this._hashes
   }
 
-  set hashes(value) {
-    this._hashes = value;
+  set hashes (value) {
+    this._hashes = value
   }
 
-  processArray(array, format) {
-    let value = [];
+  processArray (array, format) {
+    const value = []
     for (const object of array) {
       if (format === 'XML') {
-        value.push(object.toXML());
+        value.push(object.toXML())
       } else if (format === 'JSON') {
-        value.push(object.toJSON());
+        value.push(object.toJSON())
       }
     }
-    return value;
+    return value
   }
 
-  toJSON() {
+  toJSON () {
     return {
       vendor: this._vendor,
       name: this._name,
       version: this._version,
-      hashes: (this._hashes && this.hashes.length > 0) ? this.processArray(this._hashes, "JSON") : undefined,
+      hashes: (this._hashes && this.hashes.length > 0) ? this.processArray(this._hashes, 'JSON') : undefined
     }
   }
 
-  toXML() {
+  toXML () {
     return {
       tool: {
         vendor: this._vendor,
         name: this._name,
         version: this._version,
-        hashes: (this._hashes && this.hashes.length > 0) ? this.processArray(this._hashes, "XML") : undefined,
+        hashes: (this._hashes && this.hashes.length > 0) ? this.processArray(this._hashes, 'XML') : undefined
       }
     }
   }
 }
 
-module.exports = Tool;
+module.exports = Tool

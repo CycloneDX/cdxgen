@@ -16,56 +16,55 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const ExternalReference = require('./ExternalReference');
+
+const ExternalReference = require('./ExternalReference')
 
 class ExternalReferenceList {
-
-  constructor(pkg) {
-    this._externalReferences = [];
+  constructor (pkg) {
+    this._externalReferences = []
     if (pkg) {
-      this.processExternalReferences(pkg);
+      this.processExternalReferences(pkg)
     }
   }
 
-  get externalReferences() {
-    return this._externalReferences;
+  get externalReferences () {
+    return this._externalReferences
   }
 
-  set externalReferences(value) {
+  set externalReferences (value) {
     if (!Array.isArray(value)) {
-      throw "ExternalReferencesList value must be an array of ExternalReference objects";
-    } else {
-      this._externalReferences = value;
+      throw new TypeError('ExternalReferencesList value must be an array of ExternalReference objects')
     }
+    this._externalReferences = value
   }
 
-  processExternalReferences(pkg) {
+  processExternalReferences (pkg) {
     if (pkg.homepage) {
-      this._externalReferences.push(new ExternalReference("website", pkg.homepage));
+      this._externalReferences.push(new ExternalReference('website', pkg.homepage))
     }
     if (pkg.bugs && pkg.bugs.url) {
-      this._externalReferences.push(new ExternalReference("issue-tracker", pkg.bugs.url));
+      this._externalReferences.push(new ExternalReference('issue-tracker', pkg.bugs.url))
     }
     if (pkg.repository && pkg.repository.url) {
-      this._externalReferences.push(new ExternalReference("vcs", pkg.repository.url));
+      this._externalReferences.push(new ExternalReference('vcs', pkg.repository.url))
     }
   }
 
-  toJSON() {
-    let value = [];
-    for (let externalReference of this._externalReferences) {
-      value.push(externalReference.toJSON());
+  toJSON () {
+    const value = []
+    for (const externalReference of this._externalReferences) {
+      value.push(externalReference.toJSON())
     }
-    return value;
+    return value
   }
 
-  toXML() {
-    let value = [];
-    for (let externalReference of this._externalReferences) {
-      value.push(externalReference.toXML());
+  toXML () {
+    const value = []
+    for (const externalReference of this._externalReferences) {
+      value.push(externalReference.toXML())
     }
-    return value;
+    return value
   }
 }
 
-module.exports = ExternalReferenceList;
+module.exports = ExternalReferenceList

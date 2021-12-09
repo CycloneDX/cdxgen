@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 /*
  * This file is part of CycloneDX Node Module.
  *
@@ -16,25 +18,26 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const Bom = require('../../model/Bom');
+
+const Bom = require('../../model/Bom')
 
 test('default schema version', () => {
-  let bom = new Bom();
-  expect(bom.schemaVersion).toBe('1.3');
-});
+  const bom = new Bom()
+  expect(bom.schemaVersion).toBe('1.3')
+})
 
 test('default bom version', () => {
-  let bom = new Bom();
-  expect(bom.version).toBe(1);
-});
+  const bom = new Bom()
+  expect(bom.version).toBe(1)
+})
 
 test('specific bom version', () => {
-  let bom = new Bom();
-  bom.version = 2;
-  expect(bom.version).toBe(2);
-});
+  const bom = new Bom()
+  bom.version = 2
+  expect(bom.version).toBe(2)
+})
 
 test('generated serial number', () => {
-  let bom = new Bom();
-  expect(bom.serialNumber).toContain('urn:uuid:');
-});
+  const bom = new Bom()
+  expect(bom.serialNumber).toContain('urn:uuid:')
+})

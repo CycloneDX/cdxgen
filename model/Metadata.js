@@ -16,111 +16,109 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const Component = require('./Component');
-const CycloneDXObject = require('./CycloneDXObject');
-const OrganizationalEntity = require('./OrganizationalEntity');
+
+const Component = require('./Component')
+const CycloneDXObject = require('./CycloneDXObject')
+const OrganizationalEntity = require('./OrganizationalEntity')
 
 class Metadata extends CycloneDXObject {
-
-  constructor() {
-    super();
-    this._timestamp = new Date();
-    this._tools = [];
-    this._authors = [];
+  constructor () {
+    super()
+    this._timestamp = new Date()
+    this._tools = []
+    this._authors = []
   }
 
-  get timestamp() {
-    return this._timestamp;
+  get timestamp () {
+    return this._timestamp
   }
 
-  set timestamp(value) {
-    this._timestamp = this.validateType("Timestamp", value, Date);
+  set timestamp (value) {
+    this._timestamp = this.validateType('Timestamp', value, Date)
   }
 
-  get tools() {
-    return this._tools;
+  get tools () {
+    return this._tools
   }
 
-  set tools(value) {
+  set tools (value) {
     if (!Array.isArray(value)) {
-      throw "Tools value must be an array of Tool objects";
-    } else {
-      this._tools = value;
+      throw new TypeError('Tools value must be an array of Tool objects')
     }
+    this._tools = value
   }
 
-  get authors() {
-    return this._authors;
+  get authors () {
+    return this._authors
   }
 
-  set authors(value) {
+  set authors (value) {
     if (!Array.isArray(value)) {
-      throw "Authors value must be an array of OrganizationalContact objects";
-    } else {
-      for (const author of value) {
-        author.objectName = "author";
-      }
-      this._authors = value;
+      throw new TypeError('Authors value must be an array of OrganizationalContact objects')
     }
+    for (const author of value) {
+      author.objectName = 'author'
+    }
+    this._authors = value
   }
 
-  get component() {
-    return this._component;
+  get component () {
+    return this._component
   }
 
-  set component(value) {
-    this._component = this.validateType("Component", value, Component);
+  set component (value) {
+    this._component = this.validateType('Component', value, Component)
   }
 
-  get manufacture() {
-    return this._manufacture;
+  get manufacture () {
+    return this._manufacture
   }
 
-  set manufacture(value) {
-    this._manufacture = this.validateType("Manufacture", value, OrganizationalEntity);
+  set manufacture (value) {
+    this._manufacture = this.validateType('Manufacture', value, OrganizationalEntity)
   }
 
-  get supplier() {
-    return this._supplier;
+  get supplier () {
+    return this._supplier
   }
 
-  set supplier(value) {
-    this._supplier = this.validateType("Supplier", value, OrganizationalEntity);
+  set supplier (value) {
+    this._supplier = this.validateType('Supplier', value, OrganizationalEntity)
   }
 
-  processArray(array, format) {
-    let value = [];
+  processArray (array, format) {
+    const value = []
     for (const object of array) {
       if (format === 'XML') {
-        value.push(object.toXML());
+        value.push(object.toXML())
       } else if (format === 'JSON') {
-        value.push(object.toJSON());
+        value.push(object.toJSON())
       }
     }
-    return value;
+    return value
   }
 
-  toJSON() {
+  toJSON () {
     return {
       timestamp: (this._timestamp) ? this._timestamp.toISOString() : undefined,
-      tools: (this._tools && this._tools.length > 0) ? this.processArray(this._tools, "JSON") : undefined,
-      authors: (this._authors && this._authors.length > 0) ? this.processArray(this._authors, "JSON") : undefined,
+      tools: (this._tools && this._tools.length > 0) ? this.processArray(this._tools, 'JSON') : undefined,
+      authors: (this._authors && this._authors.length > 0) ? this.processArray(this._authors, 'JSON') : undefined,
       component: (this._component) ? this._component.toJSON() : undefined,
       manufacture: (this._manufacture) ? this._manufacture.toJSON() : undefined,
       supplier: (this._supplier) ? this._supplier.toJSON() : undefined
-    };
+    }
   }
 
-  toXML() {
+  toXML () {
     return {
       timestamp: (this._timestamp) ? this._timestamp.toISOString() : undefined,
-      tools: (this._tools && this._tools.length > 0) ? this.processArray(this._tools, "XML") : undefined,
-      authors: (this._authors && this._authors.length > 0) ? this.processArray(this._authors, "XML") : undefined,
+      tools: (this._tools && this._tools.length > 0) ? this.processArray(this._tools, 'XML') : undefined,
+      authors: (this._authors && this._authors.length > 0) ? this.processArray(this._authors, 'XML') : undefined,
       component: (this._component) ? this._component.toXML().component : undefined,
       manufacture: (this._manufacture) ? this._manufacture.toXML() : undefined,
       supplier: (this._supplier) ? this._supplier.toXML() : undefined
-    };
+    }
   }
 }
 
-module.exports = Metadata;
+module.exports = Metadata

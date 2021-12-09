@@ -16,29 +16,32 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) Steve Springett. All Rights Reserved.
  */
-const readInstalled = require('read-installed');
-const filePath = require('path');
-const Bom = require('./model/Bom');
-const fs = require('fs');
 
+const fs = require('fs')
+const filePath = require('path')
+const readInstalled = require('read-installed')
+
+const Bom = require('./model/Bom')
 
 exports.createbom = (componentType, includeSerialNumber, includeLicenseText, path, options, callback) => readInstalled(path, options, (err, pkgInfo) => {
-  let lockfile
-  if (fs.existsSync(filePath.join(path, "package-lock.json"))) {
-    lockfile = JSON.parse(fs.readFileSync(filePath.join(path, "package-lock.json")));
-  }
-    let bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText, lockfile);
-    callback(null, bom);
-});
+  if (err) { callback(err, null); return }
 
-exports.mergebom = function mergebom(doc, additionalDoc) {
-    let additionalDocComponents = additionalDoc.getElementsByTagName("component");
-    // appendChild actually removes the element from additionalDocComponents
-    // which is why we use a while loop instead of a for loop
-    while (additionalDocComponents.length > 0) {
-        doc.getElementsByTagName("components")[0].appendChild(
-          additionalDocComponents[0]
-        );
-    }
-    return true;
-};
+  let lockfile
+  if (fs.existsSync(filePath.join(path, 'package-lock.json'))) {
+    lockfile = JSON.parse(fs.readFileSync(filePath.join(path, 'package-lock.json')))
+  }
+  const bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText, lockfile)
+  callback(null, bom)
+})
+
+exports.mergebom = function mergebom (doc, additionalDoc) {
+  const additionalDocComponents = additionalDoc.getElementsByTagName('component')
+  // appendChild actually removes the element from additionalDocComponents
+  // which is why we use a while loop instead of a for loop
+  while (additionalDocComponents.length > 0) {
+    doc.getElementsByTagName('components')[0].appendChild(
+      additionalDocComponents[0]
+    )
+  }
+  return true
+}

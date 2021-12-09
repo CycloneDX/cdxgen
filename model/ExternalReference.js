@@ -16,53 +16,53 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
-const CycloneDXObject = require('./CycloneDXObject');
+
+const CycloneDXObject = require('./CycloneDXObject')
 
 class ExternalReference extends CycloneDXObject {
-
-  constructor(type, url, comment) {
-    super();
-    this._type = this.validateChoice("Reference type", type, this.validChoices());
-    this._url = url;
-    this._comment = comment;
+  constructor (type, url, comment) {
+    super()
+    this._type = this.validateChoice('Reference type', type, this.validChoices())
+    this._url = url
+    this._comment = comment
   }
 
-  validChoices() {
-    return ["vcs", "issue-tracker", "website", "advisories", "bom", "mailing-list", "social", "chat",
-      "documentation", "support", "distribution", "license", "build-meta", "build-system", "other"];
+  validChoices () {
+    return ['vcs', 'issue-tracker', 'website', 'advisories', 'bom', 'mailing-list', 'social', 'chat',
+      'documentation', 'support', 'distribution', 'license', 'build-meta', 'build-system', 'other']
   }
 
-  get url() {
-    return this._url;
+  get url () {
+    return this._url
   }
 
-  set url(value) {
-    this._url = this.validateType("URL", value, String);
+  set url (value) {
+    this._url = this.validateType('URL', value, String)
   }
 
-  get type() {
-    return this._type;
+  get type () {
+    return this._type
   }
 
-  set type(value) {
-    this._type = this.validateChoice("Reference type", type, this.validChoices());
+  set type (value) {
+    this._type = this.validateChoice('Reference type', value, this.validChoices())
   }
 
-  get comment() {
-    return this._comment;
+  get comment () {
+    return this._comment
   }
 
-  set comment(value) {
-    this._comment = this.validateType("Comment", value, String);
+  set comment (value) {
+    this._comment = this.validateType('Comment', value, String)
   }
 
-  toJSON() {
-    return { 'type': this._type, 'url': this._url} ;
+  toJSON () {
+    return { type: this._type, url: this._url }
   }
 
-  toXML() {
-    return { reference: { '@type': this._type, 'url': this._url} };
+  toXML () {
+    return { reference: { '@type': this._type, url: this._url } }
   }
 }
 
-module.exports = ExternalReference;
+module.exports = ExternalReference
