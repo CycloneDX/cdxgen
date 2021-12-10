@@ -49,6 +49,9 @@ All notable changes to this project will be documented in this file.
 
 ## 3.1.0
 
+* Added
+  * Added object model support for dependencies.
+
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.7...v3.1.0
 
 ## 3.0.7
