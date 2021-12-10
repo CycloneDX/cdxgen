@@ -25,6 +25,7 @@ on:
         required: true
       commitMessage:
         description: 'Release/commit message (%s will be replaced with the resulting version number)'
+        default: '%s'
         required: true
 
 env:
