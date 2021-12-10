@@ -14,60 +14,169 @@
 # dependency updates.
 #
 # You will also need to specify a value for the related commit message.
+
 name: Release
 
 on:
   workflow_dispatch:
     inputs:
-      versionLevel:
-        description: 'Version level (must be one of major, minor, patch)'
+      newversion:
+        description: 'Version level [ major | minor | patch | premajor | preminor | prepatch ]'
         required: true
       commitMessage:
-        description: 'Release/commit message'
+        description: 'Release/commit message (%s will be replaced with the resulting version number)'
         required: true
 
+env:
+  REPORTS_DIR: CI_reports
+  NODE_ACTIVE_LTS: "16"
+  DOCKERHUB_REPO: cyclonedx/cyclonedx-node
+  ARTIFACT_DOCKER_SBOM: 'docker-image-bom'
+
 jobs:
-  release:
-    name: Release
+  bump:
+    outputs:
+      version:       ${{ steps.bump.outputs.version }}
+      version_plain: ${{ steps.bump.outputs.version_plain }}
+    name: bump and tag release
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     steps:
-    - uses: actions/checkout@v2.4.0
+      - name: Checkout code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2.4.0
+      - name: Configure Git
+        # needed for push back of changes
+        run: |
+          git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --local user.name "${GITHUB_ACTOR}"
+      - name: Setup Node.js ${{ env.NODE_ACTIVE_LTS }}
+        # see https://github.com/actions/setup-node
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: ${{ env.NODE_ACTIVE_LTS }}
+      ## ! no npm build at the moment
+      - name: bump VERSION
+        id: bump
+        run: |
+          VERSION="$(npm version "$NPMV_NEWVERSION" --message "$NPMV_MESSAGE")"
+          echo "::debug::new version = $VERSION"
+          VERSION_PLAIN="${VERSION:1}" # remove 'v' prefix
+          echo "::debug::plain version = $VERSION_PLAIN"
+          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=version_plain::$VERSION_PLAIN"
+        env:
+          NPMV_NEWVERSION: ${{ github.event.inputs.newversion }}
+          NPMV_MESSAGE: ${{ github.event.inputs.commitMessage }}
+      - name: git push back
+        run: git push --follow-tags
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2.5.0
-      with:
-        node-version: 12.x
+  publish-NPM:
+    needs:
+      - "bump"
+    name: NPM - publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ needs.bump.outputs.version }}
+      - name: publish to NPM
+        run: |
+          npm config set "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN"
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: Configure Git
-      run: |
-        git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-        git config --local user.name "${GITHUB_ACTOR}"
+  release-DockerHub:
+    needs:
+      - "bump"
+    name: DockerHub - build & publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DI_VERSION: ${{ needs.bump.outputs.version_plain }}
+    steps:
+      - name: Checkout code
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ needs.bump.outputs.version }}
+      - name: Login to DockerHub
+        run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: build Docker image
+        run: > 
+          docker build 
+          -t "$DOCKERHUB_REPO:$DI_VERSION"
+          -t "$DOCKERHUB_REPO:latest"
+          -f Dockerfile .
+      - name: fetch own SBOM
+        run: |
+          mkdir "$REPORTS_DIR"
+          docker run --rm \
+            -v "$PWD/$REPORTS_DIR:/src/$REPORTS_DIR" \
+            "$DOCKERHUB_REPO:$DI_VERSION" \
+              --type 'application' \
+              --output "/src/$REPORTS_DIR/docker-image.bom.xml"
+          docker run --rm \
+            -v "$PWD/$REPORTS_DIR:/src/$REPORTS_DIR" \
+            "$DOCKERHUB_REPO:$DI_VERSION" \
+              --type 'application' \
+              --output "/src/$REPORTS_DIR/docker-image.bom.json"
+      - name: Artifact reports
+        if: ${{ ! cancelled() }}
+        # see https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_DOCKER_SBOM }}
+          path: ${{ env.REPORTS_DIR }}
+          if-no-files-found: error
+      - name: publish Docker image
+        run: docker push "$DOCKERHUB_REPO:$DI_VERSION"
+      - name: publish latest Docker image
+        if: ${{ ! startsWith(github.event.inputs.newversion, 'pre') }}
+        run: docker push "$DOCKERHUB_REPO:latest"
+      - name: Destroy Docker image
+        # run regardless of outcome
+        if: ${{ always() }}
+        run: > 
+          docker rmi -f
+          "$DOCKERHUB_REPO:$DI_VERSION"
+          "$DOCKERHUB_REPO:latest"
 
-    - name: Build & Publish
-      id: build
-      run: |
-        echo Version level: ${{ github.event.inputs.versionLevel }}
-        npm ci
-        npm run build --if-present
-        VERSION=$(npm version ${{ github.event.inputs.versionLevel }} --message "${{ github.event.inputs.commitMessage }}")
-        VERSION=${VERSION:1} # remove 'v' prefix
-        echo "##[set-output name=version;]$VERSION"
-        git push --follow-tags
-        npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-        npm publish --access public
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-    - name: Publish Docker image to Docker Hub
-      env:
-        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      run: |
-        REPO=cyclonedx/cyclonedx-node
-        VERSION=${{ steps.build.outputs.version }}
-        docker login --username $DOCKERHUB_USERNAME --password "$DOCKERHUB_TOKEN"
-        docker build -f Dockerfile -t $REPO:$VERSION -t $REPO:latest .
-        docker push $REPO:latest
-        docker push $REPO:$VERSION
+  release-GH:
+    needs:
+      - "bump"
+      - "publish-NPM"
+      - "release-DockerHub"
+    name: GitHub - release
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASSETS_DIR: release_assets
+    steps:
+      - name: create assets dir
+        run: mkdir "$ASSETS_DIR"
+      - name: download docker image sboms
+        # see https://github.com/actions/download-artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT_DOCKER_SBOM }}
+          path: ${{ env.ASSETS_DIR }}/${{ env.ARTIFACT_DOCKER_SBOM }}
+      - name: Create Release
+        id: release
+        # see https://github.com/softprops/action-gh-release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.bump.outputs.version }}
+          name:     ${{ needs.bump.outputs.version_plain }}
+          prerelease: ${{ startsWith(github.event.inputs.newversion, 'pre') }}
+          files: |
+            ${{ env.ASSETS_DIR }}/${{ env.ARTIFACT_DOCKER_SBOM }}/*.bom.*
