@@ -11,8 +11,8 @@ on:
 
 
 env:
-  CI: "true"
   REPORTS_DIR: CI_reports
+  NODE_ACTIVE_LTS: "16"
 
 jobs:
   unit-test:
@@ -38,7 +38,7 @@ jobs:
       - name: dir setup
         run: mkdir ${{ env.REPORTS_DIR }}
       - name: Setup Node.js ${{ matrix.node-version }}
-        ## see https://github.com/actions/setup-node
+        # see https://github.com/actions/setup-node
         uses: actions/setup-node@v2.5.0
         with:
           node-version: ${{ matrix.node-version }}
@@ -66,8 +66,7 @@ jobs:
           ## see https://www.npmjs.com/package/jest-junit
           JEST_JUNIT_OUTPUT_DIR: ${{ env.REPORTS_DIR }}/${{ matrix.os }}_${{ matrix.node-version }}
           JEST_JUNIT_OUTPUT_NAME: junit.xml
-      - name: try to buil project
-        run: npm run build --if-present
+      ## ! no npm build at the moment
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact
@@ -85,11 +84,11 @@ jobs:
       - name: Checkout
         # see https://github.com/actions/checkout
         uses: actions/checkout@v2.4.0
-      - name: Setup Node.js ${{ matrix.node-version }}
-        ## see https://github.com/actions/setup-node
+      - name: Setup Node.js ${{ env.NODE_ACTIVE_LTS }}
+        # see https://github.com/actions/setup-node
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: '16' ## active LTS
+          node-version: ${{ env.NODE_ACTIVE_LTS }}
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
       - name: install project

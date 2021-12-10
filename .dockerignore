@@ -1,6 +1,14 @@
 .dockerignore
+Dockerfile
+
+## node specifics
 node_modules
 npm-debug.log
-Dockerfile
+
+# repo specifics
 .git
 .gitignore
+
+# reports
+reports
+CI_REPORTS
