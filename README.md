@@ -87,8 +87,8 @@ to convert to older specification versions as required.
 
 | Version | Schema Version | Format(s) |
 | --- | --- | --- |
-| 3.0.x | CycloneDX v1.3 | XML/JSON |
-| 2.0.x | CycloneDX v1.2 | XML/JSON |
+| 3.x.x | CycloneDX v1.3 | XML/JSON |
+| 2.x.x | CycloneDX v1.2 | XML/JSON |
 | 1.1.x | CycloneDX v1.1 | XML |
 | 1.0.x | CycloneDX v1.0 | XML |
 
