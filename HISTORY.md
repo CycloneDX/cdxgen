@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.3.1 - 2021-12-11
+
 * Fixed
   * Brought deprecated file `bin/cyclonedx-bom` back. (via [#224])  
     File is now a compatibility-layer that spits a warning.
