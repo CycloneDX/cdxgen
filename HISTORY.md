@@ -45,53 +45,53 @@ All notable changes to this project will be documented in this file.
 [#168]: https://github.com/CycloneDX/cyclonedx-node-module/issues/168
 [#210]: https://github.com/CycloneDX/cyclonedx-node-module/pull/210
 
-## 3.1.3
+## 3.1.3 - 2021-12-05
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.1.2...v3.1.3
 
-## 3.1.2
+## 3.1.2 - 2021-12-05
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.1.1...v3.1.2
 
-## 3.1.1
+## 3.1.1 - 2021-09-10
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.1.0...v3.1.1
 
-## 3.1.0
+## 3.1.0 - 2021-09-07
 
 * Added
   * Added object model support for dependencies.
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.7...v3.1.0
 
-## 3.0.7
+## 3.0.7 - 2021-09-02
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.6...v3.0.7
 
-## 3.0.6
+## 3.0.6 - 2021-09-02
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.5...v3.0.6
 
-## 3.0.5
+## 3.0.5 - 2021-09-02
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.4...v3.0.5
 
-## 3.0.4
+## 3.0.4 - 2021-08-27
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.3...v3.0.4
 
-## 3.0.3
+## 3.0.3 - 2021-07-11
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.2...v3.0.3
 
-## 3.0.2
+## 3.0.2 - 2021-07-02
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.1...v3.0.2
 
-## 3.0.1
+## 3.0.1 - 2021-07-01
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v3.0.0...v3.0.1
 
-## 3.0.0
+## 3.0.0 - 2021-06-30
 
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v2.0.2...v3.0.0
