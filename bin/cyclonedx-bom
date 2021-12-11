@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+// backwards-compatibility layer.
+// @TODO remove this file in v4
+const path = require('path')
+console.warn(
+  '! ATTENTION\n',
+  'File is deprecated: ' + __filename + '\n',
+  'Use instead: ' + path.join(path.dirname(__filename), 'make-bom.js') + '\n'
+)
+require('./make-bom.js')
