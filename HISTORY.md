@@ -94,4 +94,21 @@ All notable changes to this project will be documented in this file.
 
 ## 3.0.0 - 2021-06-30
 
+* Breaking changes:
+  * Requires Node >= 12.0, was Node >= 8.0 before.
+  * CLI
+    * Dropped option `-a`/`--append`.
+      There is no replacement for it.
+    * Dropped option `-s`/`--schema`.
+      There is no replacement for it. 
+* Changes
+  * CLI output in CycloneDX v1.3 spec now,
+    was switchable defaulting CycloneDX v1.2 before.
+  * Dropped support for CycloneDX v1.2 spec.
+  * Dropped support for CycloneDX v1.1 spec.
+  * Dropped support for Node version 8.
+  * Dropped support for Node version 10.
+* Added
+  * Supports CycloneDX v1.3 spec.
+
 **Full Changelog**: https://github.com/CycloneDX/cyclonedx-node-module/compare/v2.0.2...v3.0.0
