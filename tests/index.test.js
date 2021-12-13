@@ -89,3 +89,25 @@ test('createbom produces a BOM when no package-lock.json is present', done => {
     done()
   })
 })
+
+test('createbom produces a BOM when all dependencies are dev-dependencies that shall not be listed', done => {
+  bomHelpers.createbom('library', false, true, './tests/with-dev-dependencies', {}, (err, bom) => {
+    expect(err).toBeFalsy()
+
+    bom.metadata.timestamp = timestamp
+    bom.metadata.tools[0].version = programVersion
+    expect(bom.toJSON()).toMatchSnapshot()
+    done()
+  })
+})
+
+test('createbom produces a BOM when all dependencies are dev-dependencies that shall be listed', done => {
+  bomHelpers.createbom('library', false, true, './tests/with-dev-dependencies', { dev: true }, (err, bom) => {
+    expect(err).toBeFalsy()
+
+    bom.metadata.timestamp = timestamp
+    bom.metadata.tools[0].version = programVersion
+    expect(bom.toJSON()).toMatchSnapshot()
+    done()
+  })
+})
