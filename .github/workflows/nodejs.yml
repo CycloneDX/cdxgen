@@ -46,9 +46,12 @@ jobs:
           cache-dependency-path: "**/package-lock.json"
       - name: install project
         run: npm ci
-      - name: install testing-project
+      - name: install testing-project "with-packages"
         run: npm ci
         working-directory: tests/with-packages
+      - name: install testing-project "with-dev-dependencies"
+        run: npm ci
+        working-directory: tests/with-dev-dependencies
       - name: run tests
         run: >
           npm run test:unit --

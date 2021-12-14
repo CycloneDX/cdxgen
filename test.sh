@@ -7,6 +7,7 @@ npm ci
 
 ## install testing-projects
 npm ci --prefix 'tests/with-packages'
+npm ci --prefix 'tests/with-dev-dependencies'
 
 ## run tests
 npm test
