@@ -75,39 +75,39 @@ jobs:
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.17.2/cyclonedx-linux-x64
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
-          bin/cdxgen -r -t csharp repotests/shiftleft-csharp-example -o bomresults/bom-csharp.json
+          bin/cdxgen -p -r -t csharp repotests/shiftleft-csharp-example -o bomresults/bom-csharp.json
           ./cyclonedx validate --input-file bomresults/bom-csharp.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-csharp.xml --input-format xml_v1_3
 
-          bin/cdxgen -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
+          bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
           ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml_v1_3
-          
-          bin/cdxgen -r -t java repotests/shiftleft-scala-example -o bomresults/bom-scala.json
+
+          bin/cdxgen -p -r -t java repotests/shiftleft-scala-example -o bomresults/bom-scala.json
           ./cyclonedx validate --input-file bomresults/bom-scala.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-scala.xml --input-format xml_v1_3
 
-          bin/cdxgen -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
+          bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
           ./cyclonedx validate --input-file bomresults/bom-ts.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-ts.xml --input-format xml_v1_3
 
-          bin/cdxgen -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
+          bin/cdxgen -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
           ./cyclonedx validate --input-file bomresults/bom-go.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-go.xml --input-format xml_v1_3
 
-          bin/cdxgen -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
+          bin/cdxgen -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
           ./cyclonedx validate --input-file bomresults/bom-csharp2.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-csharp2.xml --input-format xml_v1_3
 
-          bin/cdxgen -r -t python repotests/DjanGoat -o bomresults/bom-python.json
+          bin/cdxgen -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json
           ./cyclonedx validate --input-file bomresults/bom-python.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-python.xml --input-format xml_v1_3
 
-          bin/cdxgen -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json
+          bin/cdxgen -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json
           ./cyclonedx validate --input-file bomresults/bom-php.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-php.xml --input-format xml_v1_3
 
-          bin/cdxgen -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json
+          bin/cdxgen -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json
           ./cyclonedx validate --input-file bomresults/bom-ruby.json --input-format json_v1_3
           ./cyclonedx validate --input-file bomresults/bom-ruby.xml --input-format xml_v1_3
           ls -ltr bomresults

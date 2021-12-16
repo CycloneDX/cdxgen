@@ -1451,10 +1451,12 @@ const parseGopkgData = async function (gopkgData) {
           if (pkg.group === ".") {
             pkg.group = pkg.name;
           }
-          pkg.license = await getGoPkgLicense({
-            group: pkg.group,
-            name: pkg.name,
-          });
+          if (process.env.FETCH_LICENSE) {
+            pkg.license = await getGoPkgLicense({
+              group: pkg.group,
+              name: pkg.name,
+            });
+          }
           break;
         case "version":
           pkg.version = value;

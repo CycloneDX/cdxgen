@@ -45,22 +45,23 @@ npm install -g @appthreat/cdxgen
 ```bash
 $ cdxgen -h
 Options:
-  --version, -v        Print version number                            [boolean]
-  --output, -o         Output file for bom.xml or bom.json. Default console
-  --type, -t           Project type
-  --recurse, -r        Recurse mode suitable for mono-repos            [boolean]
-  --resolve-class, -c  Resolve class names for packages. jars only for now.
+  -o, --output           Output file for bom.xml or bom.json. Default console
+  -t, --type             Project type
+  -r, --recurse          Recurse mode suitable for mono-repos          [boolean]
+  -p, --print            Print the SBoM as a table                     [boolean]
+  -c, --resolve-class    Resolve class names for packages. jars only for now.
                                                                        [boolean]
-  --server-url         Dependency track or AppThreat server url. Eg:
-                       https://deptrack.appthreat.io
-  --api-key            Dependency track or AppThreat server api key
-  --project-name       Dependency track or AppThreat project name. Default use
-                       the directory name
-  --project-version    Dependency track or AppThreat project version. Default
-                       master                                [default: "master"]
-  --project-id         Dependency track or AppThreat project id. Either provide
-                       the id or the project name and version together
-  -h                   Show help                                       [boolean]
+      --server-url       Dependency track or AppThreat server url. Eg:
+                         https://deptrack.appthreat.io
+      --api-key          Dependency track or AppThreat server api key
+      --project-name     Dependency track or AppThreat project name. Default use
+                         the directory name
+      --project-version  Dependency track or AppThreat project version. Default
+                         master                              [default: "master"]
+      --project-id       Dependency track or AppThreat project id. Either
+                         provide the id or the project name and version together
+      --version          Show version number                           [boolean]
+  -h                     Show help                                     [boolean]
 ```
 
 ## Example
@@ -68,17 +69,23 @@ Options:
 Minimal example.
 
 ```bash
-cdxgen -o bom.xml
+cdxgen -o bom.json
 ```
 
 NOTE:
 
-cdxgen would always produce bom in both xml and json format as per CycloneDX 1.2 specification. json is the recommended format.
+cdxgen would always produce bom in both xml and json format as per CycloneDX 1.3 specification. json is the recommended format.
 
 For a java project. This would automatically detect maven, gradle or sbt and build bom accordingly
 
 ```bash
-cdxgen -t java -o bom.xml
+cdxgen -t java -o bom.json
+```
+
+To print the SBoM as a table pass `-p` argument.
+
+```bash
+cdxgen -t java -o bom.json -p
 ```
 
 ### Docker / OCI container support

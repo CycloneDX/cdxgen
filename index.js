@@ -565,7 +565,12 @@ const createJavaBom = async (path, options) => {
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
         });
-        if (result.status == 1 || result.error) {
+        // Check if the cyclonedx plugin created the required bom.xml file
+        // Sometimes the plugin fails silently for complex maven projects
+        const bomGenerated = fs.existsSync(
+          pathLib.join(basePath, "target", "bom.xml")
+        );
+        if (!bomGenerated || result.status == 1 || result.error) {
           let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
           let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
           let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
