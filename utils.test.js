@@ -338,12 +338,6 @@ test("parseGopkgData", async () => {
   expect(dep_list[0]).toEqual({
     group: "cloud.google.com",
     name: "go",
-    license: [
-      {
-        id: "Apache-2.0",
-        url: "https://pkg.go.dev/cloud.google.com/go?tab=licenses",
-      },
-    ],
     version: "v0.39.0",
     _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",
   });

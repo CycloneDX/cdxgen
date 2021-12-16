@@ -45,7 +45,7 @@ jobs:
         run: |
           chmod +x dist-16/cdxgen*
           ./dist-16/cdxgen-linux-x64 -v
-          ./dist-16/cdxgen-linux-x64 .
+          ./dist-16/cdxgen-linux-x64 . -p
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -59,7 +59,7 @@ jobs:
         run: |
           chmod +x dist/cdxgen*
           ./dist/cdxgen-linux -v
-          ./dist/cdxgen-linux .
+          ./dist/cdxgen-linux . -p
       - uses: actions/upload-artifact@v1
         with:
           name: dist-16

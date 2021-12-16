@@ -52,7 +52,13 @@ const getAllFiles = (dir, extn, files, result, regex) => {
 };
 
 const babelParserOptions = {
-  sourceType: "module",
+  sourceType: "unambiguous",
+  allowImportExportEverywhere: true,
+  allowAwaitOutsideFunction: true,
+  allowReturnOutsideFunction: true,
+  errorRecovery: true,
+  allowUndeclaredExports: true,
+  attachComment: true,
   plugins: [
     "optionalChaining",
     "classProperties",
