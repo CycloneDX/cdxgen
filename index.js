@@ -679,7 +679,7 @@ const createJavaBom = async (path, options) => {
         try {
           fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
         } catch (e) {}
-        GRADLE_CMD = pathLib.join(path, "gradlew");
+        GRADLE_CMD = pathLib.resolve(pathLib.join(path, "gradlew"));
       }
       // Support for multi-project applications
       if (process.env.GRADLE_MULTI_PROJECT_MODE) {
