@@ -36,6 +36,7 @@ env:
 
 jobs:
   bump:
+    concurrency: release-bump
     outputs:
       version:       ${{ steps.bump.outputs.version }}
       version_plain: ${{ steps.bump.outputs.version_plain }}
