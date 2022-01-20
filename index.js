@@ -1520,18 +1520,40 @@ const createPHPBom = async (path, options) => {
   let pkgList = [];
   const composerJsonMode = composerJsonFiles.length;
   const composerLockMode = composerLockFiles.length;
+  // Create a composer.lock file for each composer.json file if needed.
   if (!composerLockMode && composerJsonMode && options.installDeps) {
+    const versionResult = spawnSync("composer", ["--version"], {
+      encoding: "utf-8",
+    });
+    if (versionResult.status !== 0 || versionResult.error) {
+      console.error(
+          "No composer version found. Check if composer is installed and available in PATH."
+      );
+      console.log(versionResult.error, versionResult.stderr);
+      return {};
+    }
+    const composerVersion = versionResult.stdout.match(/version (\d)/)[1];
+    if (DEBUG_MODE) {
+      console.log("Detected composer version:", composerVersion);
+    }
     for (let i in composerJsonFiles) {
       const f = composerJsonFiles[i];
       const basePath = pathLib.dirname(f);
-      console.log("Executing 'composer install' in", basePath);
-      const result = spawnSync("composer", ["install"], {
+      let args = [];
+      if (composerVersion > 1) {
+        console.log("Generating composer.lock in", basePath);
+        args = ["update", "--no-install"];
+      } else {
+        console.log("Executing 'composer install' in", basePath);
+        args = ["install", "--ignore--platform-reqs"];
+      }
+      const result = spawnSync("composer", args, {
         cwd: basePath,
         encoding: "utf-8",
       });
-      if (result.status == 1 || result.error) {
+      if (result.status !== 0 || result.error) {
         console.error(
-          "Composer install has failed. Check if composer is installed and available in PATH."
+          "Error running composer:"
         );
         console.log(result.error, result.stderr);
       }
