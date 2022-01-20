@@ -2030,7 +2030,13 @@ exports.getNugetMetadata = getNugetMetadata;
 const parseComposerLock = function (pkgLockFile) {
   const pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
-    const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    let lockData = {};
+    try {
+      lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    } catch (e) {
+      console.error("Invalid composer.lock file:", pkgLockFile);
+      return [];
+    }
     if (lockData && lockData.packages) {
       for (let i in lockData.packages) {
         const pkg = lockData.packages[i];
