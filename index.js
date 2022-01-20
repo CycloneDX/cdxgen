@@ -1527,7 +1527,7 @@ const createPHPBom = async (path, options) => {
     });
     if (versionResult.status !== 0 || versionResult.error) {
       console.error(
-          "No composer version found. Check if composer is installed and available in PATH."
+        "No composer version found. Check if composer is installed and available in PATH."
       );
       console.log(versionResult.error, versionResult.stderr);
       return {};
@@ -1552,9 +1552,7 @@ const createPHPBom = async (path, options) => {
         encoding: "utf-8",
       });
       if (result.status !== 0 || result.error) {
-        console.error(
-          "Error running composer:"
-        );
+        console.error("Error running composer:");
         console.log(result.error, result.stderr);
       }
     }
