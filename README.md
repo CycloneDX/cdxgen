@@ -90,6 +90,12 @@ To print the SBoM as a table pass `-p` argument.
 cdxgen -t java -o bom.json -p
 ```
 
+To recursively generate a single BoM for all languages pass `-r` argument.
+
+```bash
+cdxgen -r -o bom.json
+```
+
 ### Docker / OCI container support
 
 `docker` type is automatically detected based on the presence of values such as `sha256` or `docker.io` prefix etc.
@@ -182,6 +188,10 @@ Use this [custom builder](https://github.com/CloudBuildr/google-custom-builders/
 ## Plugins
 
 The package published on npm would include additional binary executables under the plugins directory. These executables provide functionality that are difficult to implement with node.js alone. Example for this is the `goversion` [plugin](thirdparty/goversion) which helps with module identification for go binaries. The source code for all the plugins would be published inside the [thirdparty](thirdparty) directory.
+
+## Conversion to SPDX format or SBoM Signing
+
+Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for advanced use cases such as conversion, diff and signing.
 
 ## License
 
