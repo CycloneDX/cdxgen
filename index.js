@@ -395,7 +395,7 @@ function addComponentHash(alg, digest, component, format = "xml") {
 const buildBomXml = (serialNum, components, context) => {
   const bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
-    .att("xmlns", "http://cyclonedx.org/schema/bom/1.3");
+    .att("xmlns", "http://cyclonedx.org/schema/bom/1.4");
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
   const metadata = addMetadata("xml");
@@ -441,10 +441,10 @@ const buildBomNSData = (pkgInfo, ptype, context) => {
   const components = listComponents(allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
     const bomString = buildBomXml(serialNum, components, context);
-    // CycloneDX 1.3 Json Template
+    // CycloneDX 1.4 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
-      specVersion: "1.3",
+      specVersion: "1.4",
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
@@ -1847,7 +1847,7 @@ const createMultiXBom = async (pathList, options) => {
     bomXml: buildBomXml(serialNum, components),
     bomJson: {
       bomFormat: "CycloneDX",
-      specVersion: "1.3",
+      specVersion: "1.4",
       serialNumber: serialNum,
       version: 1,
       metadata: addMetadata(),
