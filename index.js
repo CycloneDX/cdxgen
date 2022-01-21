@@ -2075,7 +2075,13 @@ exports.createBom = async (path, options) => {
     case "dotnet":
       return await createCsharpBom(path, options);
     default:
-      return await createXBom(path, options);
+      // In recurse mode return multi-language Bom
+      // https://github.com/AppThreat/cdxgen/issues/95
+      if (options.multiProject) {
+        return await createMultiXBom([path], options);
+      } else {
+        return await createXBom(path, options);
+      }
   }
 };
 
