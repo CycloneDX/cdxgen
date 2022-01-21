@@ -1,6 +1,6 @@
 {
   "name": "@appthreat/cdxgen",
-  "version": "3.2.14",
+  "version": "3.2.15",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from source or container image",
   "homepage": "http://github.com/AppThreat/cdxgen",
   "author": "Team AppThreat",
