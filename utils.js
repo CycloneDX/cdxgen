@@ -2037,22 +2037,32 @@ const parseComposerLock = function (pkgLockFile) {
       console.error("Invalid composer.lock file:", pkgLockFile);
       return [];
     }
-    if (lockData && lockData.packages) {
-      for (let i in lockData.packages) {
-        const pkg = lockData.packages[i];
-        let group = path.dirname(pkg.name);
-        if (group === ".") {
-          group = "";
+    if (lockData) {
+      let packages = [];
+      if (lockData["packages"]) {
+        packages["required"] = lockData["packages"];
+      }
+      if (lockData["packages-dev"]) {
+        packages["optional"] = lockData["packages-dev"];
+      }
+      for (let compScope in packages) {
+        for (let i in packages[compScope]) {
+          const pkg = packages[compScope][i];
+          let group = path.dirname(pkg.name);
+          if (group === ".") {
+            group = "";
+          }
+          let name = path.basename(pkg.name);
+          pkgList.push({
+            group: group,
+            name: name,
+            version: pkg.version.replace("v", ""),
+            repository: pkg.source,
+            license: pkg.license,
+            description: pkg.description,
+            scope: compScope
+          });
         }
-        let name = path.basename(pkg.name);
-        pkgList.push({
-          group: group,
-          name: name,
-          version: pkg.version.replace("v", ""),
-          repository: pkg.source,
-          license: pkg.license,
-          description: pkg.description,
-        });
       }
     }
   }
