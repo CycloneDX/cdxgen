@@ -2038,7 +2038,7 @@ const parseComposerLock = function (pkgLockFile) {
       return [];
     }
     if (lockData) {
-      let packages = [];
+      let packages = {};
       if (lockData["packages"]) {
         packages["required"] = lockData["packages"];
       }
@@ -2060,7 +2060,7 @@ const parseComposerLock = function (pkgLockFile) {
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,
-            scope: compScope
+            scope: compScope,
           });
         }
       }

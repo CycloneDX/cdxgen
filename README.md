@@ -28,9 +28,11 @@ Footnotes:
 - [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
 - [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing.
 
-### Automatic usage detection (Node.js)
+### Automatic usage detection
 
-There is a basic AST parser powered by babel-parser to detect packages that are imported and used in Node.js and TypeScript projects. Such imported packages would automatically have their `scope` property set to `required`. This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/appthreat/dep-scan) use this attribute to prioritize vulnerabilities.
+For node.js projects, an AST parser powered by babel-parser is used to detect packages that are imported and used. Typical test directories would be ignored by default. Such imported packages would automatically have their `scope` property set to `required`. This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/appthreat/dep-scan) use this attribute to prioritize vulnerabilities.
+
+For go, `go mod why` command is used to identify required packages. For php, composer lock file is used to distinguish required (packages) from optional (packages-dev).
 
 ## Usage
 

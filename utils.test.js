@@ -763,6 +763,7 @@ test("parseComposerLock", () => {
   expect(deps[0]).toEqual({
     group: "quickbooks",
     name: "v3-php-sdk",
+    scope: "required",
     version: "4.0.6.1",
     repository: {
       type: "git",
@@ -774,10 +775,11 @@ test("parseComposerLock", () => {
   });
 
   deps = utils.parseComposerLock("./test/data/composer-2.lock");
-  expect(deps.length).toEqual(28);
+  expect(deps.length).toEqual(73);
   expect(deps[0]).toEqual({
     group: "amphp",
     name: "amp",
+    scope: "required",
     version: "2.4.4",
     repository: {
       type: "git",
