@@ -543,6 +543,10 @@ const createJavaBom = async (path, options) => {
       let mvnArgs = [
         "org.cyclonedx:cyclonedx-maven-plugin:2.5.3:makeAggregateBom",
       ];
+      // By using quiet mode we can reduce the maxBuffer used and avoid crashes
+      if (!DEBUG_MODE) {
+        mvnArgs.push("-q");
+      }
       // Support for passing additional settings and profile to maven
       if (process.env.MVN_ARGS) {
         const addArgs = process.env.MVN_ARGS.split(" ");
