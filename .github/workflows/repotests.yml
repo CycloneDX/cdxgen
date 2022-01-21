@@ -80,8 +80,8 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-csharp.xml --input-format xml --input-version v1_4
 
           bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
-          ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json_v1_3
-          ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml_v1_3
+          ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json --input-version v1_3
+          ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml --input-version v1_3
 
           bin/cdxgen -p -r -t java repotests/shiftleft-scala-example -o bomresults/bom-scala.json
           ./cyclonedx validate --input-file bomresults/bom-scala.json --input-format json --input-version v1_4
