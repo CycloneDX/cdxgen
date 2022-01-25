@@ -2056,7 +2056,11 @@ const parseComposerLock = function (pkgLockFile) {
           pkgList.push({
             group: group,
             name: name,
-            version: pkg.version.replace("v", ""),
+            // Remove leading v from version to work around bug
+            //  https://github.com/OSSIndex/vulns/issues/231
+            // @TODO: remove workaround when DependencyTrack v4.4 is released,
+            //  which has it's own workaround. Or when the 231 bug is fixed.
+            version: pkg.version.replace(/^v/, ""),
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,
