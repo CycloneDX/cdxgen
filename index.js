@@ -1546,10 +1546,10 @@ const createPHPBom = async (path, options) => {
       let args = [];
       if (composerVersion > 1) {
         console.log("Generating composer.lock in", basePath);
-        args = ["update", "--no-install"];
+        args = ["update", "--no-install", "--ignore-platform-reqs"];
       } else {
         console.log("Executing 'composer install' in", basePath);
-        args = ["install", "--ignore--platform-reqs"];
+        args = ["install", "--ignore-platform-reqs"];
       }
       const result = spawnSync("composer", args, {
         cwd: basePath,
