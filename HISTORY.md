@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
     Access via public getter/setter.
 * Fixed
   * Normalization guarantees `component.version`. ([#248] via [#247])
-  * Component's constructor may detect & set `autor` based on package info. ([#246] via [#247])
+  * Component's constructor may detect & set `author` based on package info. ([#246] via [#247])
 * Added
   * JSDoc for Component model. ([#220] via [#247])
 
