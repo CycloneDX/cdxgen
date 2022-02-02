@@ -26,9 +26,11 @@ jobs:
         node-version: 
           # action based on https://github.com/actions/node-versions/releases
           # see also: https://nodejs.org/en/about/releases/
-          - "16"  # active LTS
+          - "17"      # current
+          - "16"      # active LTS
           - "14"
-          - "12"  # lowest supported
+          - "12"
+          - "12.0.0"  # lowest supported
     env:
       REPORTS_ARTIFACT: tests-reports
     steps:
@@ -44,6 +46,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
+      - name: display node version
+        run: node --version
       - name: install project
         run: npm ci
       - name: install testing-project "with-packages"
@@ -99,3 +103,22 @@ jobs:
       - name: run tests
         run: npm run test:standard
 
+  jsdoc:
+    name: JSDoc
+    timeout-minutes: 30
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout
+        # see https://github.com/actions/checkout
+        uses: actions/checkout@v2.4.0
+      - name: Setup Node.js ${{ env.NODE_ACTIVE_LTS }}
+        # see https://github.com/actions/setup-node
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: ${{ env.NODE_ACTIVE_LTS }}
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+      - name: install project
+        run: npm ci
+      - name: generate JSDoc
+        run: npm run generate-jsdocs

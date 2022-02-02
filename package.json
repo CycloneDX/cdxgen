@@ -38,10 +38,11 @@
     "cyclonedx-node": "./bin/make-bom.js"
   },
   "scripts": {
-    "test": "npm run test:standard && npm run test:unit",
+    "test": "npm run test:unit && npm run test:standard",
     "test:unit": "jest",
     "test:standard": "standard -v",
     "cs-fix": "standard --fix",
+    "generate-jsdocs": "rm -rf docs/jsdoc && jsdoc -P package.json -d docs/jsdoc -r index.js model -R README.md --verbose",
     "docker-release": "docker build . -t cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` -t cyclonedx/cyclonedx-node:latest && docker push cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` && docker push cyclonedx/cyclonedx-node:latest"
   },
   "engines": {
@@ -72,10 +73,24 @@
     "spdx-licenses.json"
   ],
   "devDependencies": {
-    "jest": "^27.1.0",
-    "jest-junit": "^13.0.0",
-    "standard": "^16.0.4"
+    "@babel/eslint-parser": "7.16.5",
+    "jest": "27.4.7",
+    "jest-junit": "13.0.0",
+    "jsdoc": "3.6.10",
+    "standard": "16.0.4"
   },
+  "standard": {
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "requireConfigFile": false,
+      "babelOptions": {}
+    },
+    "env": {
+      "node": true,
+      "browser": true
+    }
+  },
+  "babel": {},
   "jest": {
     "cacheDirectory": ".jest.cache",
     "collectCoverage": true,

@@ -26,31 +26,123 @@ const ExternalReferenceList = require('./ExternalReferenceList')
 const OrganizationalEntity = require('./OrganizationalEntity')
 const Swid = require('./Swid')
 
+/**
+ * Component's scope
+ *
+ * @typedef {("required"|"optional"|"excluded")} Component.ComponentScope
+ */
+
+/**
+ * Component's type
+ *
+ * @typedef {("application"|"framework"|"library"|"container"|"operating-system"|"device"|"firmware"|"file")} Component.ComponentType
+ */
+
 class Component extends CycloneDXObject {
+  // region required properties
+
+  /** @type {Component.ComponentType} */
+  #type = 'library'
+  /** @type {string} */
+  #name = ''
+
+  // endregion required properties
+
+  // region optional properties
+
+  /** @type {(string|undefined)} */
+  #author
+  /** @type {(string|undefined)} */
+  #bomRef
+  /** @type {(string|undefined)} */
+  #copyright
+  /** @type {(string|undefined)} */
+  #cpe
+  /** @type {(string|undefined)} */
+  #description
+  /** @type {(ExternalReferenceList|undefined)} */
+  #externalReferences
+  /** @type {(string|undefined)} */
+  #group
+  /** @type {(HashList|undefined)} */
+  #hashes
+  /** @type {(LicenseChoice|undefined)} */
+  #licenses
+  /** @type {(string|undefined)} */
+  #publisher
+  /** @type {(string|undefined)} */
+  #purl
+  /** @type {(Component.ComponentScope|undefined)} */
+  #scope
+  /** @type {(OrganizationalEntity|undefined)} */
+  #supplier
+  /** @type {(Swid|undefined)} */
+  #swid
+  /** @type {(string|undefined)} */
+  #version
+
+  // endregion optional properties
+
+  /**
+   * @param {(object|undefined)} [pkg]
+   * @param {boolean} [includeLicenseText]
+   * @param {(object|undefined)} [lockfile]
+   */
   constructor (pkg, includeLicenseText = true, lockfile) {
     super()
-    this._type = this.determinePackageType(pkg) // Defaults to library
+
     if (pkg) {
+      // use the setters wherever type checks are needed, as the input data is untrusted and potentially malformed.
       const pkgIdentifier = parsePackageJsonName(pkg.name)
-      this._group = (pkgIdentifier.scope) ? pkgIdentifier.scope : undefined
-      if (this._group) this._group = '@' + this._group
-      this._name = (pkgIdentifier.fullName) ? pkgIdentifier.fullName : undefined
-      this._version = (pkg.version) ? pkg.version : undefined
-      this._description = (pkg.description) ? pkg.description : undefined
-      this._licenses = new LicenseChoice(pkg, includeLicenseText)
-      this._hashes = new HashList(pkg, lockfile)
-      this._externalReferences = new ExternalReferenceList(pkg)
-      if (this._name && this._version) { this._purl = new PackageURL('npm', this._group, this._name, this._version, null, null).toString() }
-      this._bomRef = this._purl
+
+      this.name = pkgIdentifier.fullName
+
+      this.type = this.determinePackageType(pkg)
+
+      try {
+        this.version = pkg.version
+      } catch (e) { /* pass */ }
+
+      this.group = pkgIdentifier.scope
+      if (this.#group) {
+        this.#group = `@${this.#group}`
+      }
+
+      try {
+        this.description = pkg.description
+      } catch (e) { /* pass */ }
+
+      try {
+        this.#licenses = new LicenseChoice(pkg, includeLicenseText)
+      } catch (e) { /* pass */ }
+
+      this.#hashes = new HashList(pkg, lockfile)
+
+      this.#externalReferences = new ExternalReferenceList(pkg)
+
+      if (this.#name && this.#version) {
+        this.#purl = new PackageURL('npm', this.#group, this.#name, this.#version, null, null).toString()
+      }
+
+      if (pkg.author instanceof Object) {
+        try {
+          this.author = pkg.author.name
+        } catch (e) { /* pass */ }
+      }
+
+      // bomRef defaults to PURL for backwards compatibility reasons
+      this.bomRef = this.purl
     } else {
-      this._hashes = new HashList()
-      this._externalReferences = new ExternalReferenceList()
+      this.#hashes = new HashList()
+      this.#externalReferences = new ExternalReferenceList()
     }
   }
 
   /**
    * If the author has described the module as a 'framework', the take their
    * word for it, otherwise, identify the module as a 'library'.
+   *
+   * @returns {("framework"|"library")}
    */
   determinePackageType (pkg) {
     if (pkg && Object.prototype.hasOwnProperty.call(pkg, 'keywords')) {
@@ -63,189 +155,351 @@ class Component extends CycloneDXObject {
     return 'library'
   }
 
+  /**
+   * @returns {Component.ComponentType[]}
+   */
   static supportedComponentTypes () {
     return ['application', 'framework', 'library', 'container', 'operating-system', 'device', 'firmware', 'file']
   }
 
+  /**
+   * @returns {Component.ComponentScope[]}
+   */
+  static supportedComponentScopes () {
+    return ['required', 'optional', 'excluded']
+  }
+
+  /**
+   * @type {Component.ComponentType}
+   */
   get type () {
-    return this._type
+    return this.#type
   }
 
+  /**
+   * @see supportedComponentTypes
+   * @param {Component.ComponentType} value
+   * @throws {TypeError} if value is not in expected range
+   */
   set type (value) {
-    this._type = this.validateChoice('Type', value, Component.supportedComponentTypes())
+    this.#type = this.validateChoice('Type', value, Component.supportedComponentTypes())
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get bomRef () {
-    return this._bomRef
+    return this.#bomRef
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set bomRef (value) {
-    this._bomRef = this.validateType('bom-ref', value, String)
+    this.#bomRef = this.validateType('bom-ref', value, String)
   }
 
+  /**
+   * @type {(OrganizationalEntity|undefined)}
+   */
   get supplier () {
-    return this._supplier
+    return this.#supplier
   }
 
+  /**
+   * @param {(OrganizationalEntity|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set supplier (value) {
-    this._supplier = this.validateType('Supplier', value, OrganizationalEntity)
+    this.#supplier = this.validateType('Supplier', value, OrganizationalEntity)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get author () {
-    return this._author
+    return this.#author
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set author (value) {
-    this._author = this.validateType('Author', value, String)
+    this.#author = this.validateType('Author', value, String)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get publisher () {
-    return this._publisher
+    return this.#publisher
   }
 
+  /**
+   *
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set publisher (value) {
-    this._publisher = this.validateType('Publisher', value, String)
+    this.#publisher = this.validateType('Publisher', value, String)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get group () {
-    return this._group
+    return this.#group
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set group (value) {
-    this._group = this.validateType('Group', value, String)
+    this.#group = this.validateType('Group', value, String)
   }
 
+  /**
+   * @type {string}
+   */
   get name () {
-    return this._name
+    return this.#name
   }
 
+  /**
+   * @param {string} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set name (value) {
-    this._name = this.validateType('Name', value, String)
+    this.#name = this.validateType('Name', value, String, true)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get version () {
-    return this._version
+    return this.#version
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set version (value) {
-    this._version = this.validateType('Version', value, String)
+    this.#version = this.validateType('Version', value, String)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get description () {
-    return this._description
+    return this.#description
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set description (value) {
-    this._description = this.validateType('Description', value, String)
+    this.#description = this.validateType('Description', value, String)
   }
 
+  /**
+   * @type {(Component.ComponentScope|undefined)}
+   */
   get scope () {
-    return this._scope
+    return this.#scope
   }
 
+  /**
+   * @see supportedComponentScopes
+   * @param {(Component.ComponentScope|undefined)} value
+   * @throws {RangeError} if value is not of expected range
+   */
   set scope (value) {
-    const validChoices = ['required', 'optional', 'excluded']
-    this._scope = this.validateChoice('Scope', value, validChoices)
+    this.#scope = value
+      ? this.validateChoice('Scope', value, Component.supportedComponentScopes())
+      : undefined
   }
 
+  /**
+   * @type {(HashList|undefined)}
+   */
   get hashes () {
-    return this._hashes
+    return this.#hashes
   }
 
+  /**
+   * @param {(HashList|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set hashes (value) {
-    this._hashes = this.validateType('Hashes', value, HashList)
+    this.#hashes = this.validateType('Hashes', value, HashList)
   }
 
+  /**
+   * @type {(LicenseChoice|undefined)}
+   */
   get licenses () {
-    return this._licenses
+    return this.#licenses
   }
 
+  /**
+   * @param {(LicenseChoice|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set licenses (value) {
-    this._licenses = this.validateType('Licenses', value, LicenseChoice)
+    this.#licenses = this.validateType('Licenses', value, LicenseChoice)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get copyright () {
-    return this._copyright
+    return this.#copyright
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set copyright (value) {
-    this._copyright = this.validateType('Copyright', value, String)
+    this.#copyright = this.validateType('Copyright', value, String)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get cpe () {
-    return this._cpe
+    return this.#cpe
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set cpe (value) {
-    this._cpe = this.validateType('CPE', value, String)
+    this.#cpe = this.validateType('CPE', value, String)
   }
 
+  /**
+   * @type {(string|undefined)}
+   */
   get purl () {
-    return this._purl
+    return this.#purl
   }
 
+  /**
+   * @param {(string|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set purl (value) {
-    this._purl = this.validateType('PURL', value, String)
+    this.#purl = this.validateType('PURL', value, String)
   }
 
+  /**
+   * @type {(Swid|undefined)}
+   */
   get swid () {
-    return this._swid
+    return this.#swid
   }
 
+  /**
+   * @param {(Swid|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set swid (value) {
-    this._swid = this.validateType('SWID', value, Swid)
+    this.#swid = this.validateType('SWID', value, Swid)
   }
 
+  /**
+   * @type {(ExternalReferenceList|undefined)}
+   */
   get externalReferences () {
-    return this._externalReferences
+    return this.#externalReferences
   }
 
+  /**
+   * @param {(ExternalReferenceList|undefined)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set externalReferences (value) {
-    this._externalReferences = value
+    this.#externalReferences = this.validateType('ExternalReferenceList', value, ExternalReferenceList)
   }
 
+  /**
+   *
+   * @returns {object}
+   */
   toJSON () {
     return {
-      type: this._type,
-      'bom-ref': this._bomRef,
-      supplier: this._supplier ? this._supplier.toJSON() : undefined,
-      author: this._author,
-      publisher: this._publisher,
-      group: this._group,
-      name: this._name,
-      version: this._version,
-      description: this._description,
-      scope: this._scope,
-      hashes: (this._hashes && this.hashes.hashes && this.hashes.hashes.length > 0) ? this._hashes.toJSON() : undefined,
-      licenses: (this._licenses) ? this._licenses.toJSON() : undefined,
-      copyright: this._copyright,
-      cpe: this._cpe,
-      purl: this._purl,
-      swid: this._swid ? this.swid.toJSON() : undefined,
-      externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toJSON() : undefined
+      type: this.#type,
+      'bom-ref': this.#bomRef,
+      supplier: this.#supplier
+        ? this.#supplier.toJSON()
+        : undefined,
+      author: this.#author,
+      publisher: this.#publisher,
+      group: this.#group,
+      name: this.#name,
+      version: this.#version || '',
+      description: this.#description,
+      scope: this.#scope,
+      hashes: this.#hashes && this.#hashes.length > 0
+        ? this.#hashes.toJSON()
+        : undefined,
+      licenses: this.#licenses
+        ? this.#licenses.toJSON()
+        : undefined,
+      copyright: this.#copyright,
+      cpe: this.#cpe,
+      purl: this.#purl,
+      swid: this.#swid
+        ? this.#swid.toJSON()
+        : undefined,
+      externalReferences: this.#externalReferences && this.#externalReferences.length > 0
+        ? this.#externalReferences.toJSON()
+        : undefined
     }
   }
 
+  /**
+   * @returns {object}
+   */
   toXML () {
     return {
       component: {
-        '@type': this._type,
-        '@bom-ref': this._bomRef,
-        supplier: this._supplier ? this._supplier.toXML() : undefined,
-        author: this._author,
-        publisher: this._publisher,
-        group: this._group,
-        name: this._name,
-        version: this._version,
-        description: (this._description) ? { '#cdata': this._description } : undefined,
-        scope: this._scope,
-        hashes: (this._hashes && this.hashes.hashes && this.hashes.hashes.length > 0) ? this._hashes.toXML() : undefined,
-        licenses: (this._licenses) ? this._licenses.toXML() : undefined,
-        copyright: this._copyright,
-        cpe: this._cpe,
-        purl: this._purl,
-        swid: this._swid ? this.swid.toXML() : undefined,
-        externalReferences: (this._externalReferences && this._externalReferences.externalReferences && this._externalReferences.externalReferences.length > 0) ? this._externalReferences.toXML() : undefined
+        '@type': this.#type,
+        '@bom-ref': this.#bomRef,
+        supplier: this.#supplier
+          ? this.#supplier.toXML()
+          : undefined,
+        author: this.#author,
+        publisher: this.#publisher,
+        group: this.#group,
+        name: this.#name,
+        version: this.#version || '',
+        description: this.#description
+          ? { '#cdata': this.#description }
+          : undefined,
+        scope: this.#scope,
+        hashes: this.#hashes && this.#hashes.length > 0
+          ? this.#hashes.toXML()
+          : undefined,
+        licenses: this.#licenses
+          ? this.#licenses.toXML()
+          : undefined,
+        copyright: this.#copyright,
+        cpe: this.#cpe,
+        purl: this.#purl,
+        swid: this.#swid
+          ? this.#swid.toXML()
+          : undefined,
+        externalReferences: this.#externalReferences && this.#externalReferences.length > 0
+          ? this.#externalReferences.toXML()
+          : undefined
       }
     }
   }

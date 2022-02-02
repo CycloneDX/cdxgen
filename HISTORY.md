@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Changed
+  * Private/protected properties of Component models are no longer directly accessible. ([#233] via [#247])  
+    Access via public getter/setter.
+* Fixed
+  * Normalization guarantees `component.version`. ([#248] via [#247])
+  * Component's constructor may detect & set `autor` based on package info. ([#246] via [#247])
+* Added
+  * JSDoc for Component model. ([#220] via [#247])
+
+[#220]: https://github.com/CycloneDX/cyclonedx-node-module/issues/220
+[#233]: https://github.com/CycloneDX/cyclonedx-node-module/issues/233
+[#246]: https://github.com/CycloneDX/cyclonedx-node-module/issues/246
+[#247]: https://github.com/CycloneDX/cyclonedx-node-module/pull/247
+[#248]: https://github.com/CycloneDX/cyclonedx-node-module/issues/248
+
 ## 3.3.1 - 2021-12-11
 
 * Fixed

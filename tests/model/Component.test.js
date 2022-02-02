@@ -82,6 +82,47 @@ test('Model: Component / Format: JSON', () => {
   expect(result.swid.version).toBe('1.0.0')
 })
 
+test('Model: Component detects and normalizes author', () => {
+  // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/246
+  const component = new Component({ name: 'test', author: { name: 'Foo' } })
+
+  const actual = component.author
+  const xml = component.toXML()
+  const json = component.toJSON()
+
+  expect(actual).toBe('Foo')
+  expect(json.author).toBe('Foo')
+  expect(xml.component.author).toBe('Foo')
+})
+
+test('Model: Component set empty version normalizes to empty string', () => {
+  // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/248
+  const component = createComponent()
+  expect(component.version).toEqual(expect.anything())
+  component.version = ''
+
+  const actual = component.version
+  const xml = component.toXML()
+  const json = component.toJSON()
+
+  expect(actual).toBeUndefined()
+  expect(json.version).toBe('')
+  expect(xml.component.version).toBe('')
+})
+
+test('Model: Component init with empty version normalizes to empty string', () => {
+  // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/248
+  const component = new Component()
+
+  const actual = component.version
+  const json = component.toJSON()
+  const xml = component.toXML()
+
+  expect(actual).toBeUndefined()
+  expect(json.version).toBe('')
+  expect(xml.component.version).toBe('')
+})
+
 function createComponent () {
   const component = new Component()
   component.type = 'application'

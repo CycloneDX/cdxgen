@@ -17,7 +17,19 @@
  * Copyright (c) OWASP Foundation. All Rights Reserved.
  */
 
+/**
+ * Base class for all data models.
+ */
 class CycloneDXObject {
+  /**
+   * @template TExpectedType
+   * @param {string} name
+   * @param {(TExpectedType|*)} value
+   * @param {TExpectedType} expectedType
+   * @param {boolean} [required]
+   * @throws {TypeError} if value is required and mismatches expectedType
+   * @returns {(TExpectedType|undefined)}
+   */
   validateType (name, value, expectedType, required = false) {
     if (!value) {
       if (required) { throw new ReferenceError(name + ' is required') }
@@ -51,6 +63,14 @@ class CycloneDXObject {
     throw TypeError(name + ' value must be an instance of ' + expectedType)
   }
 
+  /**
+   * @template TChoice
+   * @param {string} name
+   * @param {(TChoice|*)} value
+   * @param {TChoice[]} validChoices
+   * @throws {RangeError} if value is not in validChoices
+   * @returns {TChoice}
+   */
   validateChoice (name, value, validChoices = []) {
     if (validChoices.indexOf(value) === -1) {
       throw new RangeError('Unsupported ' + name + '. Valid choices are ' + validChoices.toString())

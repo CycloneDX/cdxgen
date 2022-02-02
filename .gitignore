@@ -4,6 +4,10 @@ node_modules/
 /reports/
 /CI_reports/
 
+## target of JSDoc
+/out/
+/docs/jsdoc/
+
 ## caches
 /.*.cache
 

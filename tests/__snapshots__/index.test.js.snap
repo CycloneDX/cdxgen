@@ -17,6 +17,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     \\"component\\": {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\",
+      \\"author\\": \\"Erlend Oftedal\\",
       \\"group\\": \\"@cyclonedx\\",
       \\"name\\": \\"bom-test-with-packages\\",
       \\"version\\": \\"1.1.3\\",
@@ -49,6 +50,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/packageurl-js@0.0.1\\",
+      \\"author\\": \\"the purl authors\\",
       \\"name\\": \\"packageurl-js\\",
       \\"version\\": \\"0.0.1\\",
       \\"description\\": \\"JavaScript library to parse and build \\\\\\"purl\\\\\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url\\",
@@ -84,6 +86,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/urijs@1.19.7\\",
+      \\"author\\": \\"Rodney Rehm\\",
       \\"name\\": \\"urijs\\",
       \\"version\\": \\"1.19.7\\",
       \\"description\\": \\"URI.js is a Javascript library for working with URLs.\\",
@@ -123,6 +126,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/parse-packagejson-name@1.0.1\\",
+      \\"author\\": \\"Keith Cirkel\\",
       \\"name\\": \\"parse-packagejson-name\\",
       \\"version\\": \\"1.0.1\\",
       \\"description\\": \\"Parse an npm package name and returns some mildly interesting details about it\\",
@@ -158,6 +162,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/prettify-xml@1.2.0\\",
+      \\"author\\": \\"Jonathan Werner\\",
       \\"name\\": \\"prettify-xml\\",
       \\"version\\": \\"1.2.0\\",
       \\"description\\": \\"Pretty-print XML.\\",
@@ -196,6 +201,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/read-installed@4.0.3\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"read-installed\\",
       \\"version\\": \\"4.0.3\\",
       \\"description\\": \\"Read all the installed packages in a folder, and return a tree structure with all the data.\\",
@@ -234,6 +240,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/debuglog@1.0.1\\",
+      \\"author\\": \\"Sam Roberts\\",
       \\"name\\": \\"debuglog\\",
       \\"version\\": \\"1.0.1\\",
       \\"description\\": \\"backport of util.debuglog from node v0.11\\",
@@ -272,6 +279,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/read-package-json@2.1.2\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"read-package-json\\",
       \\"version\\": \\"2.1.2\\",
       \\"description\\": \\"The thing npm uses to read package.json files with semantics and defaults and validation\\",
@@ -310,6 +318,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/glob@7.2.0\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"glob\\",
       \\"version\\": \\"7.2.0\\",
       \\"description\\": \\"a little globber\\",
@@ -348,6 +357,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/fs.realpath@1.0.0\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"fs.realpath\\",
       \\"version\\": \\"1.0.0\\",
       \\"description\\": \\"Use node's fs.realpath, but fall back to the JS implementation if the native one fails\\",
@@ -386,6 +396,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/inflight@1.0.6\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"inflight\\",
       \\"version\\": \\"1.0.6\\",
       \\"description\\": \\"Add callbacks to requests in flight to avoid async duplication\\",
@@ -424,6 +435,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/once@1.4.0\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"once\\",
       \\"version\\": \\"1.4.0\\",
       \\"description\\": \\"Run a function exactly one time\\",
@@ -462,6 +474,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/wrappy@1.0.2\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"wrappy\\",
       \\"version\\": \\"1.0.2\\",
       \\"description\\": \\"Callback wrapping utility\\",
@@ -538,6 +551,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/minimatch@3.0.4\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"minimatch\\",
       \\"version\\": \\"3.0.4\\",
       \\"description\\": \\"a glob matcher in javascript\\",
@@ -576,6 +590,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/brace-expansion@1.1.11\\",
+      \\"author\\": \\"Julian Gruber\\",
       \\"name\\": \\"brace-expansion\\",
       \\"version\\": \\"1.1.11\\",
       \\"description\\": \\"Brace expansion as known from sh/bash\\",
@@ -614,6 +629,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/balanced-match@1.0.2\\",
+      \\"author\\": \\"Julian Gruber\\",
       \\"name\\": \\"balanced-match\\",
       \\"version\\": \\"1.0.2\\",
       \\"description\\": \\"Match balanced character pairs, like \\\\\\"{\\\\\\" and \\\\\\"}\\\\\\"\\",
@@ -653,6 +669,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/concat-map@0.0.1\\",
+      \\"author\\": \\"James Halliday\\",
       \\"name\\": \\"concat-map\\",
       \\"version\\": \\"0.0.1\\",
       \\"description\\": \\"concatenative mapdashery\\",
@@ -691,6 +708,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/path-is-absolute@1.0.1\\",
+      \\"author\\": \\"Sindre Sorhus\\",
       \\"name\\": \\"path-is-absolute\\",
       \\"version\\": \\"1.0.1\\",
       \\"description\\": \\"Node.js 0.12 path.isAbsolute() ponyfill\\",
@@ -729,6 +747,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/normalize-package-data@2.5.0\\",
+      \\"author\\": \\"Meryn Stol\\",
       \\"name\\": \\"normalize-package-data\\",
       \\"version\\": \\"2.5.0\\",
       \\"description\\": \\"Normalizes data that can be found in package.json files.\\",
@@ -767,6 +786,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/hosted-git-info@2.8.9\\",
+      \\"author\\": \\"Rebecca Turner\\",
       \\"name\\": \\"hosted-git-info\\",
       \\"version\\": \\"2.8.9\\",
       \\"description\\": \\"Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab\\",
@@ -805,6 +825,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/resolve@1.20.0\\",
+      \\"author\\": \\"James Halliday\\",
       \\"name\\": \\"resolve\\",
       \\"version\\": \\"1.20.0\\",
       \\"description\\": \\"resolve like require.resolve() on behalf of files asynchronously and synchronously\\",
@@ -843,6 +864,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/is-core-module@2.8.0\\",
+      \\"author\\": \\"Jordan Harband\\",
       \\"name\\": \\"is-core-module\\",
       \\"version\\": \\"2.8.0\\",
       \\"description\\": \\"Is this specifier a node.js core module?\\",
@@ -881,6 +903,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/has@1.0.3\\",
+      \\"author\\": \\"Thiago de Arruda\\",
       \\"name\\": \\"has\\",
       \\"version\\": \\"1.0.3\\",
       \\"description\\": \\"Object.prototype.hasOwnProperty.call shortcut\\",
@@ -916,6 +939,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/function-bind@1.1.1\\",
+      \\"author\\": \\"Raynos\\",
       \\"name\\": \\"function-bind\\",
       \\"version\\": \\"1.1.1\\",
       \\"description\\": \\"Implementation of Function.prototype.bind\\",
@@ -954,6 +978,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/path-parse@1.0.7\\",
+      \\"author\\": \\"Javier Blanco\\",
       \\"name\\": \\"path-parse\\",
       \\"version\\": \\"1.0.7\\",
       \\"description\\": \\"Node.js path.parse() ponyfill\\",
@@ -1030,6 +1055,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/validate-npm-package-license@3.0.4\\",
+      \\"author\\": \\"Kyle E. Mitchell\\",
       \\"name\\": \\"validate-npm-package-license\\",
       \\"version\\": \\"3.0.4\\",
       \\"description\\": \\"Give me a string and I'll tell you if it's a valid npm package license string\\",
@@ -1068,6 +1094,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/spdx-correct@3.1.1\\",
+      \\"author\\": \\"Kyle E. Mitchell\\",
       \\"name\\": \\"spdx-correct\\",
       \\"version\\": \\"3.1.1\\",
       \\"description\\": \\"correct invalid SPDX expressions\\",
@@ -1106,6 +1133,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/spdx-expression-parse@3.0.1\\",
+      \\"author\\": \\"Kyle E. Mitchell\\",
       \\"name\\": \\"spdx-expression-parse\\",
       \\"version\\": \\"3.0.1\\",
       \\"description\\": \\"parse SPDX license expressions\\",
@@ -1144,6 +1172,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/spdx-exceptions@2.3.0\\",
+      \\"author\\": \\"The Linux Foundation\\",
       \\"name\\": \\"spdx-exceptions\\",
       \\"version\\": \\"2.3.0\\",
       \\"description\\": \\"list of SPDX standard license exceptions\\",
@@ -1179,6 +1208,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/spdx-license-ids@3.0.11\\",
+      \\"author\\": \\"Shinnosuke Watanabe\\",
       \\"name\\": \\"spdx-license-ids\\",
       \\"version\\": \\"3.0.11\\",
       \\"description\\": \\"A list of SPDX license identifiers\\",
@@ -1214,6 +1244,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/npm-normalize-package-bin@1.0.1\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"npm-normalize-package-bin\\",
       \\"version\\": \\"1.0.1\\",
       \\"description\\": \\"Turn any flavor of allowable package.json bin into a normalized object\\",
@@ -1252,6 +1283,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/json-parse-even-better-errors@2.3.1\\",
+      \\"author\\": \\"Kat Marchán\\",
       \\"name\\": \\"json-parse-even-better-errors\\",
       \\"version\\": \\"2.3.1\\",
       \\"description\\": \\"JSON.parse with context information on error\\",
@@ -1291,6 +1323,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/readdir-scoped-modules@1.1.0\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"readdir-scoped-modules\\",
       \\"version\\": \\"1.1.0\\",
       \\"description\\": \\"Like \`fs.readdir\` but handling \`@org/module\` dirs as if they were a single entry.\\",
@@ -1329,6 +1362,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/dezalgo@1.0.3\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"dezalgo\\",
       \\"version\\": \\"1.0.3\\",
       \\"description\\": \\"Contain async insanity so that the dark pony lord doesn't eat souls\\",
@@ -1444,6 +1478,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/slide@1.1.6\\",
+      \\"author\\": \\"Isaac Z. Schlueter\\",
       \\"name\\": \\"slide\\",
       \\"version\\": \\"1.1.6\\",
       \\"description\\": \\"A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS\\",
@@ -1520,6 +1555,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/ssri@6.0.2\\",
+      \\"author\\": \\"Kat Marchán\\",
       \\"name\\": \\"ssri\\",
       \\"version\\": \\"6.0.2\\",
       \\"description\\": \\"Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.\\",
@@ -1559,6 +1595,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/figgy-pudding@3.5.2\\",
+      \\"author\\": \\"Kat Marchán\\",
       \\"name\\": \\"figgy-pudding\\",
       \\"version\\": \\"3.5.2\\",
       \\"description\\": \\"Delicious, festive, cascading config/opts definitions\\",
@@ -1637,6 +1674,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/xmlbuilder@13.0.2\\",
+      \\"author\\": \\"Ozgur Ozcitak\\",
       \\"name\\": \\"xmlbuilder\\",
       \\"version\\": \\"13.0.2\\",
       \\"description\\": \\"An XML builder for node.js\\",
@@ -1675,6 +1713,7 @@ exports[`createbom produces a BOM in JSON format 1`] = `
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/xmldom@0.2.1\\",
+      \\"author\\": \\"jindw\\",
       \\"name\\": \\"xmldom\\",
       \\"version\\": \\"0.2.1\\",
       \\"description\\": \\"A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).\\",
@@ -1731,6 +1770,7 @@ exports[`createbom produces a BOM in JSON format that includes hashes from packa
     \\"component\\": {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/%40cyclonedx/bom-test-with-lockfile-2@1.1.3\\",
+      \\"author\\": \\"Erlend Oftedal\\",
       \\"group\\": \\"@cyclonedx\\",
       \\"name\\": \\"bom-test-with-lockfile-2\\",
       \\"version\\": \\"1.1.3\\",
@@ -1790,6 +1830,7 @@ exports[`createbom produces a BOM when all dependencies are dev-dependencies tha
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/d3-array@3.1.1\\",
+      \\"author\\": \\"Mike Bostock\\",
       \\"name\\": \\"d3-array\\",
       \\"version\\": \\"3.1.1\\",
       \\"description\\": \\"Array manipulation, ordering, searching, summarizing, etc.\\",
@@ -1828,6 +1869,7 @@ exports[`createbom produces a BOM when all dependencies are dev-dependencies tha
     {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/internmap@2.0.3\\",
+      \\"author\\": \\"Mike Bostock\\",
       \\"name\\": \\"internmap\\",
       \\"version\\": \\"2.0.3\\",
       \\"description\\": \\"Map and Set with automatic key interning\\",
@@ -1911,6 +1953,7 @@ exports[`createbom produces a BOM when no package-lock.json is present 1`] = `
     \\"component\\": {
       \\"type\\": \\"library\\",
       \\"bom-ref\\": \\"pkg:npm/%40cyclonedx/bom-test-no-lockfile@1.1.3\\",
+      \\"author\\": \\"Erlend Oftedal\\",
       \\"group\\": \\"@cyclonedx\\",
       \\"name\\": \\"bom-test-no-lockfile\\",
       \\"version\\": \\"1.1.3\\",
@@ -1956,6 +1999,7 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
       </tool>
     </tools>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\">
+      <author>Erlend Oftedal</author>
       <group>@cyclonedx</group>
       <name>bom-test-with-packages</name>
       <version>1.1.3</version>
@@ -1981,6 +2025,7 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
   </metadata>
   <components>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
+      <author>the purl authors</author>
       <name>packageurl-js</name>
       <version>0.0.1</version>
       <description><![CDATA[JavaScript library to parse and build \\"purl\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url]]></description>
@@ -2006,6 +2051,7 @@ exports[`createbom produces a BOM with development dependencies 1`] = `
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.7\\">
+      <author>Rodney Rehm</author>
       <name>urijs</name>
       <version>1.19.7</version>
       <description><![CDATA[URI.js is a Javascript library for working with URLs.]]></description>
@@ -2052,6 +2098,7 @@ THE SOFTWARE.]]></text>
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/parse-packagejson-name@1.0.1\\">
+      <author>Keith Cirkel</author>
       <name>parse-packagejson-name</name>
       <version>1.0.1</version>
       <description><![CDATA[Parse an npm package name and returns some mildly interesting details about it]]></description>
@@ -2077,6 +2124,7 @@ THE SOFTWARE.]]></text>
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/prettify-xml@1.2.0\\">
+      <author>Jonathan Werner</author>
       <name>prettify-xml</name>
       <version>1.2.0</version>
       <description><![CDATA[Pretty-print XML.]]></description>
@@ -2123,6 +2171,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-installed@4.0.3\\">
+      <author>Isaac Z. Schlueter</author>
       <name>read-installed</name>
       <version>4.0.3</version>
       <description><![CDATA[Read all the installed packages in a folder, and return a tree structure with all the data.]]></description>
@@ -2165,6 +2214,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/debuglog@1.0.1\\">
+      <author>Sam Roberts</author>
       <name>debuglog</name>
       <version>1.0.1</version>
       <description><![CDATA[backport of util.debuglog from node v0.11]]></description>
@@ -2210,6 +2260,7 @@ IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.2\\">
+      <author>Isaac Z. Schlueter</author>
       <name>read-package-json</name>
       <version>2.1.2</version>
       <description><![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]></description>
@@ -2251,6 +2302,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.2.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>glob</name>
       <version>7.2.0</version>
       <description><![CDATA[a little globber]]></description>
@@ -2298,6 +2350,7 @@ https://creativecommons.org/licenses/by-sa/4.0/
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/fs.realpath@1.0.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>fs.realpath</name>
       <version>1.0.0</version>
       <description><![CDATA[Use node's fs.realpath, but fall back to the JS implementation if the native one fails]]></description>
@@ -2367,6 +2420,7 @@ the licensed code:
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/inflight@1.0.6\\">
+      <author>Isaac Z. Schlueter</author>
       <name>inflight</name>
       <version>1.0.6</version>
       <description><![CDATA[Add callbacks to requests in flight to avoid async duplication]]></description>
@@ -2408,6 +2462,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/once@1.4.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>once</name>
       <version>1.4.0</version>
       <description><![CDATA[Run a function exactly one time]]></description>
@@ -2449,6 +2504,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/wrappy@1.0.2\\">
+      <author>Isaac Z. Schlueter</author>
       <name>wrappy</name>
       <version>1.0.2</version>
       <description><![CDATA[Callback wrapping utility]]></description>
@@ -2532,6 +2588,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/minimatch@3.0.4\\">
+      <author>Isaac Z. Schlueter</author>
       <name>minimatch</name>
       <version>3.0.4</version>
       <description><![CDATA[a glob matcher in javascript]]></description>
@@ -2573,6 +2630,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/brace-expansion@1.1.11\\">
+      <author>Julian Gruber</author>
       <name>brace-expansion</name>
       <version>1.1.11</version>
       <description><![CDATA[Brace expansion as known from sh/bash]]></description>
@@ -2620,6 +2678,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.2\\">
+      <author>Julian Gruber</author>
       <name>balanced-match</name>
       <version>1.0.2</version>
       <description><![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]></description>
@@ -2667,6 +2726,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/concat-map@0.0.1\\">
+      <author>James Halliday</author>
       <name>concat-map</name>
       <version>0.0.1</version>
       <description><![CDATA[concatenative mapdashery]]></description>
@@ -2711,6 +2771,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-is-absolute@1.0.1\\">
+      <author>Sindre Sorhus</author>
       <name>path-is-absolute</name>
       <version>1.0.1</version>
       <description><![CDATA[Node.js 0.12 path.isAbsolute() ponyfill]]></description>
@@ -2758,6 +2819,7 @@ THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/normalize-package-data@2.5.0\\">
+      <author>Meryn Stol</author>
       <name>normalize-package-data</name>
       <version>2.5.0</version>
       <description><![CDATA[Normalizes data that can be found in package.json files.]]></description>
@@ -2814,6 +2876,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.9\\">
+      <author>Rebecca Turner</author>
       <name>hosted-git-info</name>
       <version>2.8.9</version>
       <description><![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]></description>
@@ -2853,6 +2916,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.20.0\\">
+      <author>James Halliday</author>
       <name>resolve</name>
       <version>1.20.0</version>
       <description><![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]></description>
@@ -2900,6 +2964,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/is-core-module@2.8.0\\">
+      <author>Jordan Harband</author>
       <name>is-core-module</name>
       <version>2.8.0</version>
       <description><![CDATA[Is this specifier a node.js core module?]]></description>
@@ -2945,6 +3010,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></t
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/has@1.0.3\\">
+      <author>Thiago de Arruda</author>
       <name>has</name>
       <version>1.0.3</version>
       <description><![CDATA[Object.prototype.hasOwnProperty.call shortcut]]></description>
@@ -2970,6 +3036,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></t
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/function-bind@1.1.1\\">
+      <author>Raynos</author>
       <name>function-bind</name>
       <version>1.1.1</version>
       <description><![CDATA[Implementation of Function.prototype.bind]]></description>
@@ -3016,6 +3083,7 @@ THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.7\\">
+      <author>Javier Blanco</author>
       <name>path-parse</name>
       <version>1.0.7</version>
       <description><![CDATA[Node.js path.parse() ponyfill]]></description>
@@ -3104,6 +3172,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/validate-npm-package-license@3.0.4\\">
+      <author>Kyle E. Mitchell</author>
       <name>validate-npm-package-license</name>
       <version>3.0.4</version>
       <description><![CDATA[Give me a string and I'll tell you if it's a valid npm package license string]]></description>
@@ -3332,6 +3401,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.1\\">
+      <author>Kyle E. Mitchell</author>
       <name>spdx-correct</name>
       <version>3.1.1</version>
       <description><![CDATA[correct invalid SPDX expressions]]></description>
@@ -3560,6 +3630,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.1\\">
+      <author>Kyle E. Mitchell</author>
       <name>spdx-expression-parse</name>
       <version>3.0.1</version>
       <description><![CDATA[parse SPDX license expressions]]></description>
@@ -3608,6 +3679,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.3.0\\">
+      <author>The Linux Foundation</author>
       <name>spdx-exceptions</name>
       <version>2.3.0</version>
       <description><![CDATA[list of SPDX standard license exceptions]]></description>
@@ -3633,6 +3705,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.11\\">
+      <author>Shinnosuke Watanabe</author>
       <name>spdx-license-ids</name>
       <version>3.0.11</version>
       <description><![CDATA[A list of SPDX license identifiers]]></description>
@@ -3658,6 +3731,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/npm-normalize-package-bin@1.0.1\\">
+      <author>Isaac Z. Schlueter</author>
       <name>npm-normalize-package-bin</name>
       <version>1.0.1</version>
       <description><![CDATA[Turn any flavor of allowable package.json bin into a normalized object]]></description>
@@ -3699,6 +3773,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-even-better-errors@2.3.1\\">
+      <author>Kat Marchán</author>
       <name>json-parse-even-better-errors</name>
       <version>2.3.1</version>
       <description><![CDATA[JSON.parse with context information on error]]></description>
@@ -3750,6 +3825,7 @@ distributed under the terms of the MIT license above.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/readdir-scoped-modules@1.1.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>readdir-scoped-modules</name>
       <version>1.1.0</version>
       <description><![CDATA[Like \`fs.readdir\` but handling \`@org/module\` dirs as if they were a single entry.]]></description>
@@ -3791,6 +3867,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/dezalgo@1.0.3\\">
+      <author>Isaac Z. Schlueter</author>
       <name>dezalgo</name>
       <version>1.0.3</version>
       <description><![CDATA[Contain async insanity so that the dark pony lord doesn't eat souls]]></description>
@@ -3920,6 +3997,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/slide@1.1.6\\">
+      <author>Isaac Z. Schlueter</author>
       <name>slide</name>
       <version>1.1.6</version>
       <description><![CDATA[A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS]]></description>
@@ -4005,6 +4083,7 @@ IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.2\\">
+      <author>Kat Marchán</author>
       <name>ssri</name>
       <version>6.0.2</version>
       <description><![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]></description>
@@ -4047,6 +4126,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.2\\">
+      <author>Kat Marchán</author>
       <name>figgy-pudding</name>
       <version>3.5.2</version>
       <description><![CDATA[Delicious, festive, cascading config/opts definitions]]></description>
@@ -4136,6 +4216,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmlbuilder@13.0.2\\">
+      <author>Ozgur Ozcitak</author>
       <name>xmlbuilder</name>
       <version>13.0.2</version>
       <description><![CDATA[An XML builder for node.js]]></description>
@@ -4183,6 +4264,7 @@ THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmldom@0.2.1\\">
+      <author>jindw</author>
       <name>xmldom</name>
       <version>0.2.1</version>
       <description><![CDATA[A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).]]></description>
@@ -4217,6 +4299,7 @@ http://www.gnu.org/licenses/lgpl.html
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/envinfo@7.8.1\\">
+      <author>tabrindle@gmail.com</author>
       <name>envinfo</name>
       <version>7.8.1</version>
       <description><![CDATA[Info about your dev environment for debugging purposes]]></description>
@@ -4280,6 +4363,7 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
       </tool>
     </tools>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/%40cyclonedx/bom-test-with-packages@1.1.3\\">
+      <author>Erlend Oftedal</author>
       <group>@cyclonedx</group>
       <name>bom-test-with-packages</name>
       <version>1.1.3</version>
@@ -4305,6 +4389,7 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
   </metadata>
   <components>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/packageurl-js@0.0.1\\">
+      <author>the purl authors</author>
       <name>packageurl-js</name>
       <version>0.0.1</version>
       <description><![CDATA[JavaScript library to parse and build \\"purl\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url]]></description>
@@ -4330,6 +4415,7 @@ exports[`createbom produces a BOM without development dependencies 1`] = `
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/urijs@1.19.7\\">
+      <author>Rodney Rehm</author>
       <name>urijs</name>
       <version>1.19.7</version>
       <description><![CDATA[URI.js is a Javascript library for working with URLs.]]></description>
@@ -4376,6 +4462,7 @@ THE SOFTWARE.]]></text>
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/parse-packagejson-name@1.0.1\\">
+      <author>Keith Cirkel</author>
       <name>parse-packagejson-name</name>
       <version>1.0.1</version>
       <description><![CDATA[Parse an npm package name and returns some mildly interesting details about it]]></description>
@@ -4401,6 +4488,7 @@ THE SOFTWARE.]]></text>
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/prettify-xml@1.2.0\\">
+      <author>Jonathan Werner</author>
       <name>prettify-xml</name>
       <version>1.2.0</version>
       <description><![CDATA[Pretty-print XML.]]></description>
@@ -4447,6 +4535,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-installed@4.0.3\\">
+      <author>Isaac Z. Schlueter</author>
       <name>read-installed</name>
       <version>4.0.3</version>
       <description><![CDATA[Read all the installed packages in a folder, and return a tree structure with all the data.]]></description>
@@ -4489,6 +4578,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/debuglog@1.0.1\\">
+      <author>Sam Roberts</author>
       <name>debuglog</name>
       <version>1.0.1</version>
       <description><![CDATA[backport of util.debuglog from node v0.11]]></description>
@@ -4534,6 +4624,7 @@ IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/read-package-json@2.1.2\\">
+      <author>Isaac Z. Schlueter</author>
       <name>read-package-json</name>
       <version>2.1.2</version>
       <description><![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]></description>
@@ -4575,6 +4666,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/glob@7.2.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>glob</name>
       <version>7.2.0</version>
       <description><![CDATA[a little globber]]></description>
@@ -4622,6 +4714,7 @@ https://creativecommons.org/licenses/by-sa/4.0/
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/fs.realpath@1.0.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>fs.realpath</name>
       <version>1.0.0</version>
       <description><![CDATA[Use node's fs.realpath, but fall back to the JS implementation if the native one fails]]></description>
@@ -4691,6 +4784,7 @@ the licensed code:
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/inflight@1.0.6\\">
+      <author>Isaac Z. Schlueter</author>
       <name>inflight</name>
       <version>1.0.6</version>
       <description><![CDATA[Add callbacks to requests in flight to avoid async duplication]]></description>
@@ -4732,6 +4826,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/once@1.4.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>once</name>
       <version>1.4.0</version>
       <description><![CDATA[Run a function exactly one time]]></description>
@@ -4773,6 +4868,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/wrappy@1.0.2\\">
+      <author>Isaac Z. Schlueter</author>
       <name>wrappy</name>
       <version>1.0.2</version>
       <description><![CDATA[Callback wrapping utility]]></description>
@@ -4856,6 +4952,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/minimatch@3.0.4\\">
+      <author>Isaac Z. Schlueter</author>
       <name>minimatch</name>
       <version>3.0.4</version>
       <description><![CDATA[a glob matcher in javascript]]></description>
@@ -4897,6 +4994,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/brace-expansion@1.1.11\\">
+      <author>Julian Gruber</author>
       <name>brace-expansion</name>
       <version>1.1.11</version>
       <description><![CDATA[Brace expansion as known from sh/bash]]></description>
@@ -4944,6 +5042,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/balanced-match@1.0.2\\">
+      <author>Julian Gruber</author>
       <name>balanced-match</name>
       <version>1.0.2</version>
       <description><![CDATA[Match balanced character pairs, like \\"{\\" and \\"}\\"]]></description>
@@ -4991,6 +5090,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/concat-map@0.0.1\\">
+      <author>James Halliday</author>
       <name>concat-map</name>
       <version>0.0.1</version>
       <description><![CDATA[concatenative mapdashery]]></description>
@@ -5035,6 +5135,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-is-absolute@1.0.1\\">
+      <author>Sindre Sorhus</author>
       <name>path-is-absolute</name>
       <version>1.0.1</version>
       <description><![CDATA[Node.js 0.12 path.isAbsolute() ponyfill]]></description>
@@ -5082,6 +5183,7 @@ THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/normalize-package-data@2.5.0\\">
+      <author>Meryn Stol</author>
       <name>normalize-package-data</name>
       <version>2.5.0</version>
       <description><![CDATA[Normalizes data that can be found in package.json files.]]></description>
@@ -5138,6 +5240,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/hosted-git-info@2.8.9\\">
+      <author>Rebecca Turner</author>
       <name>hosted-git-info</name>
       <version>2.8.9</version>
       <description><![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]></description>
@@ -5177,6 +5280,7 @@ PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/resolve@1.20.0\\">
+      <author>James Halliday</author>
       <name>resolve</name>
       <version>1.20.0</version>
       <description><![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]></description>
@@ -5224,6 +5328,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/is-core-module@2.8.0\\">
+      <author>Jordan Harband</author>
       <name>is-core-module</name>
       <version>2.8.0</version>
       <description><![CDATA[Is this specifier a node.js core module?]]></description>
@@ -5269,6 +5374,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></t
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/has@1.0.3\\">
+      <author>Thiago de Arruda</author>
       <name>has</name>
       <version>1.0.3</version>
       <description><![CDATA[Object.prototype.hasOwnProperty.call shortcut]]></description>
@@ -5294,6 +5400,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.]]></t
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/function-bind@1.1.1\\">
+      <author>Raynos</author>
       <name>function-bind</name>
       <version>1.1.1</version>
       <description><![CDATA[Implementation of Function.prototype.bind]]></description>
@@ -5340,6 +5447,7 @@ THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/path-parse@1.0.7\\">
+      <author>Javier Blanco</author>
       <name>path-parse</name>
       <version>1.0.7</version>
       <description><![CDATA[Node.js path.parse() ponyfill]]></description>
@@ -5428,6 +5536,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/validate-npm-package-license@3.0.4\\">
+      <author>Kyle E. Mitchell</author>
       <name>validate-npm-package-license</name>
       <version>3.0.4</version>
       <description><![CDATA[Give me a string and I'll tell you if it's a valid npm package license string]]></description>
@@ -5656,6 +5765,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-correct@3.1.1\\">
+      <author>Kyle E. Mitchell</author>
       <name>spdx-correct</name>
       <version>3.1.1</version>
       <description><![CDATA[correct invalid SPDX expressions]]></description>
@@ -5884,6 +5994,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-expression-parse@3.0.1\\">
+      <author>Kyle E. Mitchell</author>
       <name>spdx-expression-parse</name>
       <version>3.0.1</version>
       <description><![CDATA[parse SPDX license expressions]]></description>
@@ -5932,6 +6043,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-exceptions@2.3.0\\">
+      <author>The Linux Foundation</author>
       <name>spdx-exceptions</name>
       <version>2.3.0</version>
       <description><![CDATA[list of SPDX standard license exceptions]]></description>
@@ -5957,6 +6069,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/spdx-license-ids@3.0.11\\">
+      <author>Shinnosuke Watanabe</author>
       <name>spdx-license-ids</name>
       <version>3.0.11</version>
       <description><![CDATA[A list of SPDX license identifiers]]></description>
@@ -5982,6 +6095,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/npm-normalize-package-bin@1.0.1\\">
+      <author>Isaac Z. Schlueter</author>
       <name>npm-normalize-package-bin</name>
       <version>1.0.1</version>
       <description><![CDATA[Turn any flavor of allowable package.json bin into a normalized object]]></description>
@@ -6023,6 +6137,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/json-parse-even-better-errors@2.3.1\\">
+      <author>Kat Marchán</author>
       <name>json-parse-even-better-errors</name>
       <version>2.3.1</version>
       <description><![CDATA[JSON.parse with context information on error]]></description>
@@ -6074,6 +6189,7 @@ distributed under the terms of the MIT license above.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/readdir-scoped-modules@1.1.0\\">
+      <author>Isaac Z. Schlueter</author>
       <name>readdir-scoped-modules</name>
       <version>1.1.0</version>
       <description><![CDATA[Like \`fs.readdir\` but handling \`@org/module\` dirs as if they were a single entry.]]></description>
@@ -6115,6 +6231,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/dezalgo@1.0.3\\">
+      <author>Isaac Z. Schlueter</author>
       <name>dezalgo</name>
       <version>1.0.3</version>
       <description><![CDATA[Contain async insanity so that the dark pony lord doesn't eat souls]]></description>
@@ -6244,6 +6361,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/slide@1.1.6\\">
+      <author>Isaac Z. Schlueter</author>
       <name>slide</name>
       <version>1.1.6</version>
       <description><![CDATA[A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS]]></description>
@@ -6329,6 +6447,7 @@ IN THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/ssri@6.0.2\\">
+      <author>Kat Marchán</author>
       <name>ssri</name>
       <version>6.0.2</version>
       <description><![CDATA[Standard Subresource Integrity library --  parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]></description>
@@ -6371,6 +6490,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/figgy-pudding@3.5.2\\">
+      <author>Kat Marchán</author>
       <name>figgy-pudding</name>
       <version>3.5.2</version>
       <description><![CDATA[Delicious, festive, cascading config/opts definitions]]></description>
@@ -6460,6 +6580,7 @@ SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmlbuilder@13.0.2\\">
+      <author>Ozgur Ozcitak</author>
       <name>xmlbuilder</name>
       <version>13.0.2</version>
       <description><![CDATA[An XML builder for node.js]]></description>
@@ -6507,6 +6628,7 @@ THE SOFTWARE.
       </externalReferences>
     </component>
     <component type=\\"library\\" bom-ref=\\"pkg:npm/xmldom@0.2.1\\">
+      <author>jindw</author>
       <name>xmldom</name>
       <version>0.2.1</version>
       <description><![CDATA[A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).]]></description>
