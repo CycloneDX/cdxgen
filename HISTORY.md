@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.4.0 - 2022-02-02
+
 * Changed
   * Private/protected properties of Component models are no longer directly accessible. ([#233] via [#247])  
     Access via public getter/setter.
