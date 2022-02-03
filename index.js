@@ -1126,7 +1126,10 @@ const createNodejsBom = async (path, options) => {
 const createPythonBom = async (path, options) => {
   let pkgList = [];
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
-  const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
+  const poetryFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "poetry.lock"
+  );
   const reqFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "requirements.txt"
@@ -1146,6 +1149,7 @@ const createPythonBom = async (path, options) => {
   const setupPy = pathLib.join(path, "setup.py");
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
+  const poetryMode = poetryFiles && poetryFiles.length;
   const setupPyMode = fs.existsSync(setupPy);
   // dist-info directories
   if (metadataFiles && metadataFiles.length) {
@@ -1194,14 +1198,17 @@ const createPythonBom = async (path, options) => {
         console.error("Pipfile.lock not found at", path);
       }
     } else if (poetryMode) {
-      const poetrylockFile = pathLib.join(path, "poetry.lock");
-      const lockData = fs.readFileSync(poetrylockFile, {
-        encoding: "utf-8",
-      });
-      pkgList = await utils.parsePoetrylockData(lockData);
+        for (let i in poetryFiles) {
+          const f = poetryFiles[i];
+          const lockData = fs.readFileSync(f, { encoding: "utf-8" });
+          const dlist = await utils.parsePoetrylockData(lockData);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
+          }
+        }
       return buildBomNSData(pkgList, "pypi", {
         src: path,
-        filename: "poetry.lock",
+        filename: poetryFiles.join(", "),
       });
     } else if (requirementsMode) {
       let metadataFilename = "requirements.txt";
