@@ -678,7 +678,7 @@ const createJavaBom = async (path, options) => {
         GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
       }
       // Use local gradle wrapper if available
-      if (fs.existsSync(path, "gradlew")) {
+      if (fs.existsSync(pathLib.join(path, "gradlew"))) {
         // Enable execute permission
         try {
           fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
