@@ -1198,14 +1198,14 @@ const createPythonBom = async (path, options) => {
         console.error("Pipfile.lock not found at", path);
       }
     } else if (poetryMode) {
-        for (let i in poetryFiles) {
-          const f = poetryFiles[i];
-          const lockData = fs.readFileSync(f, { encoding: "utf-8" });
-          const dlist = await utils.parsePoetrylockData(lockData);
-          if (dlist && dlist.length) {
-            pkgList = pkgList.concat(dlist);
-          }
+      for (let i in poetryFiles) {
+        const f = poetryFiles[i];
+        const lockData = fs.readFileSync(f, { encoding: "utf-8" });
+        const dlist = await utils.parsePoetrylockData(lockData);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
         }
+      }
       return buildBomNSData(pkgList, "pypi", {
         src: path,
         filename: poetryFiles.join(", "),
