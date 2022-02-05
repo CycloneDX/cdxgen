@@ -73,7 +73,7 @@
     "spdx-licenses.json"
   ],
   "devDependencies": {
-    "@babel/eslint-parser": "7.16.5",
+    "@babel/eslint-parser": "7.17.0",
     "jest": "27.4.7",
     "jest-junit": "13.0.0",
     "jsdoc": "3.6.10",
