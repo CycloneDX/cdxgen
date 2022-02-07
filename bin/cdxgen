@@ -128,7 +128,7 @@ let filePath = args._[0] || ".";
         console.log("Namespace mapping file written to", nsFile);
       }
     }
-  } else {
+  } else if (!args.print) {
     if (bomNSData.bomJson) {
       console.log(JSON.stringify(bomNSData.bomJson, null, 2));
     } else if (bomNSData.bomXml) {
@@ -148,9 +148,7 @@ let filePath = args._[0] || ".";
 
   if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     const { table } = require("table");
-    const data = [
-      ["Group", "Name", "Version"]
-    ];
+    const data = [["Group", "Name", "Version"]];
     for (let comp of bomNSData.bomJson.components) {
       data.push([comp.group || "", comp.name, comp.version]);
     }
