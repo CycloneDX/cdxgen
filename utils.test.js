@@ -665,6 +665,12 @@ test("parsePkgLock", async () => {
   );
 });
 
+test("parseBowerJson", async () => {
+  const deps = await utils.parseBowerJson("./test/data/bower.json");
+  expect(deps.length).toEqual(1);
+  expect(deps[0].name).toEqual("jquery");
+});
+
 test("parseNodeShrinkwrap", async () => {
   const deps = await utils.parseNodeShrinkwrap("./test/shrinkwrap-deps.json");
   expect(deps.length).toEqual(496);

@@ -552,8 +552,7 @@ const createJavaBom = async (path, options) => {
         const addArgs = process.env.MVN_ARGS.split(" ");
         mvnArgs = mvnArgs.concat(addArgs);
       }
-      for (let i in pomFiles) {
-        const f = pomFiles[i];
+      for (let f of pomFiles) {
         const basePath = pathLib.dirname(f);
         // Should we attempt to resolve class names
         if (options.resolveClass) {
@@ -763,8 +762,7 @@ const createJavaBom = async (path, options) => {
           }
         }
       } else {
-        for (let i in gradleFiles) {
-          const f = gradleFiles[i];
+        for (let f of gradleFiles) {
           const basePath = pathLib.dirname(f);
           console.log("Executing", GRADLE_CMD, "dependencies in", basePath);
           const result = spawnSync(
@@ -854,8 +852,7 @@ const createJavaBom = async (path, options) => {
       let pkgList = [];
       // If the project use sbt lock files
       if (sbtLockFiles && sbtLockFiles.length) {
-        for (let i in sbtLockFiles) {
-          const f = sbtLockFiles[i];
+        for (let f of sbtLockFiles) {
           const dlist = utils.parseSbtLock(f);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
@@ -977,20 +974,24 @@ const createJavaBom = async (path, options) => {
  */
 const createNodejsBom = async (path, options) => {
   let pkgList = [];
+  let manifestFiles = [];
   // Docker mode requires special handling
   if (options.projectType === "docker") {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
-    for (let pj of pkgJsonFiles) {
-      const dlist = await utils.parsePkgJson(pj);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+    // Are there any package.json files in the container?
+    if (pkgJsonFiles.length) {
+      for (let pj of pkgJsonFiles) {
+        const dlist = await utils.parsePkgJson(pj);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
       }
+      return buildBomNSData(pkgList, "npm", {
+        allImports: {},
+        src: path,
+        filename: "package.json",
+      });
     }
-    return buildBomNSData(pkgList, "npm", {
-      allImports: {},
-      src: path,
-      filename: "package.json",
-    });
   }
   const { allImports } = await findJSImports(path);
   const yarnLockFiles = utils.getAllFiles(
@@ -1005,9 +1006,37 @@ const createNodejsBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "pnpm-lock.yaml"
   );
+  const minJsFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*min.js"
+  );
+  const bowerFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "bower.json"
+  );
+  // Parse min js files
+  if (minJsFiles && minJsFiles.length) {
+    manifestFiles = manifestFiles.concat(minJsFiles);
+    for (let f of minJsFiles) {
+      const dlist = await utils.parseMinJs(f);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  }
+  // Parse bower json files
+  if (bowerFiles && bowerFiles.length) {
+    manifestFiles = manifestFiles.concat(bowerFiles);
+    for (let f of bowerFiles) {
+      const dlist = await utils.parseBowerJson(f);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  }
   if (pnpmLockFiles && pnpmLockFiles.length) {
-    for (let i in pnpmLockFiles) {
-      const f = pnpmLockFiles[i];
+    manifestFiles = manifestFiles.concat(pnpmLockFiles);
+    for (let f of pnpmLockFiles) {
       const dlist = await utils.parsePnpmLock(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
@@ -1016,11 +1045,11 @@ const createNodejsBom = async (path, options) => {
     return buildBomNSData(pkgList, "npm", {
       allImports,
       src: path,
-      filename: "pnpm-lock.yaml",
+      filename: manifestFiles.join(", "),
     });
   } else if (pkgLockFiles && pkgLockFiles.length) {
-    for (let i in pkgLockFiles) {
-      const f = pkgLockFiles[i];
+    manifestFiles = manifestFiles.concat(pkgLockFiles);
+    for (let f of pkgLockFiles) {
       // Parse package-lock.json if available
       const dlist = await utils.parsePkgLock(f);
       if (dlist && dlist.length) {
@@ -1030,7 +1059,7 @@ const createNodejsBom = async (path, options) => {
     return buildBomNSData(pkgList, "npm", {
       allImports,
       src: path,
-      filename: "package-lock.json",
+      filename: manifestFiles.join(", "),
     });
   } else if (fs.existsSync(pathLib.join(path, "rush.json"))) {
     // Rush.js creates node_modules inside common/temp directory
@@ -1083,8 +1112,8 @@ const createNodejsBom = async (path, options) => {
       );
     }
   } else if (yarnLockFiles && yarnLockFiles.length) {
-    for (let i in yarnLockFiles) {
-      const f = yarnLockFiles[i];
+    manifestFiles = manifestFiles.concat(yarnLockFiles);
+    for (let f of yarnLockFiles) {
       // Parse yarn.lock if available. This check is after rush.json since
       // rush.js could include yarn.lock :(
       const dlist = await utils.parseYarnLock(f);
@@ -1095,13 +1124,14 @@ const createNodejsBom = async (path, options) => {
     return buildBomNSData(pkgList, "npm", {
       allImports,
       src: path,
-      filename: "yarn.lock",
+      filename: manifestFiles.join(", "),
     });
   } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
     const pkgJsonFiles = utils.getAllFiles(
       pathLib.join(path, "node_modules"),
       "**/package.json"
     );
+    manifestFiles = manifestFiles.concat(pkgJsonFiles);
     for (let pkgjf of pkgJsonFiles) {
       const dlist = await utils.parsePkgJson(pkgjf);
       if (dlist && dlist.length) {
@@ -1111,7 +1141,15 @@ const createNodejsBom = async (path, options) => {
     return buildBomNSData(pkgList, "npm", {
       allImports,
       src: path,
-      filename: "package.json",
+      filename: manifestFiles.join(", "),
+    });
+  }
+  // Projects containing just min files or bower
+  if (pkgList.length && manifestFiles.length) {
+    return buildBomNSData(pkgList, "npm", {
+      allImports,
+      src: path,
+      filename: manifestFiles.join(", "),
     });
   }
   return {};
@@ -1198,8 +1236,7 @@ const createPythonBom = async (path, options) => {
         console.error("Pipfile.lock not found at", path);
       }
     } else if (poetryMode) {
-      for (let i in poetryFiles) {
-        const f = poetryFiles[i];
+      for (let f of poetryFiles) {
         const lockData = fs.readFileSync(f, { encoding: "utf-8" });
         const dlist = await utils.parsePoetrylockData(lockData);
         if (dlist && dlist.length) {
@@ -1213,8 +1250,7 @@ const createPythonBom = async (path, options) => {
     } else if (requirementsMode) {
       let metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
-        for (let i in reqFiles) {
-          const f = reqFiles[i];
+        for (let f of reqFiles) {
           const reqData = fs.readFileSync(f, { encoding: "utf-8" });
           const dlist = await utils.parseReqFile(reqData);
           if (dlist && dlist.length) {
@@ -1296,8 +1332,7 @@ const createGoBom = async (path, options) => {
       "Using go.sum to generate BOMs for go projects may return an inaccurate representation of transitive dependencies.\nSee: https://github.com/golang/go/wiki/Modules#is-gosum-a-lock-file-why-does-gosum-include-information-for-module-versions-i-am-no-longer-using\n",
       "Set USE_GOSUM=false to generate BOMs using go.mod as the dependency source of truth."
     );
-    for (let i in gosumFiles) {
-      const f = gosumFiles[i];
+    for (let f of gosumFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1316,8 +1351,7 @@ const createGoBom = async (path, options) => {
   // If USE_GOSUM is false, generate BOM components using go.mod.
   const gosumMap = {};
   if (gosumFiles.length) {
-    for (let i in gosumFiles) {
-      const f = gosumFiles[i];
+    for (let f of gosumFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1416,8 +1450,7 @@ const createGoBom = async (path, options) => {
     console.log(
       "Manually parsing go.mod files. The resultant BoM would be incomplete."
     );
-    for (let i in gomodFiles) {
-      const f = gomodFiles[i];
+    for (let f of gomodFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1432,8 +1465,7 @@ const createGoBom = async (path, options) => {
       filename: gomodFiles.join(", "),
     });
   } else if (gopkgLockFiles.length) {
-    for (let i in gopkgLockFiles) {
-      const f = gopkgLockFiles[i];
+    for (let f of gopkgLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1472,8 +1504,7 @@ const createRustBom = async (path, options) => {
   const cargoMode = cargoFiles.length;
   let cargoLockMode = cargoLockFiles.length;
   if (cargoMode && !cargoLockMode) {
-    for (let i in cargoFiles) {
-      const f = cargoFiles[i];
+    for (let f of cargoFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1494,8 +1525,7 @@ const createRustBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "Cargo.lock"
   );
   if (cargoLockFiles.length) {
-    for (let i in cargoLockFiles) {
-      const f = cargoLockFiles[i];
+    for (let f of cargoLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1547,8 +1577,7 @@ const createPHPBom = async (path, options) => {
     if (DEBUG_MODE) {
       console.log("Detected composer version:", composerVersion);
     }
-    for (let i in composerJsonFiles) {
-      const f = composerJsonFiles[i];
+    for (let f of composerJsonFiles) {
       const basePath = pathLib.dirname(f);
       let args = [];
       if (composerVersion > 1) {
@@ -1573,8 +1602,7 @@ const createPHPBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "composer.lock"
   );
   if (composerLockFiles.length) {
-    for (let i in composerLockFiles) {
-      const f = composerLockFiles[i];
+    for (let f of composerLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1610,8 +1638,7 @@ const createRubyBom = async (path, options) => {
   const gemFileMode = gemFiles.length;
   let gemLockMode = gemLockFiles.length;
   if (gemFileMode && !gemLockMode && options.installDeps) {
-    for (let i in gemFiles) {
-      const f = gemFiles[i];
+    for (let f of gemFiles) {
       const basePath = pathLib.dirname(f);
       console.log("Executing 'bundle install' in", basePath);
       const result = spawnSync("bundle", ["install"], {
@@ -1631,8 +1658,7 @@ const createRubyBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "Gemfile.lock"
   );
   if (gemLockFiles.length) {
-    for (let i in gemLockFiles) {
-      const f = gemLockFiles[i];
+    for (let f of gemLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1700,8 +1726,7 @@ const createCsharpBom = async (path, options) => {
     }
   } else if (pkgConfigFiles.length) {
     // packages.config parsing
-    for (let i in pkgConfigFiles) {
-      const f = pkgConfigFiles[i];
+    for (let f of pkgConfigFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -1716,8 +1741,7 @@ const createCsharpBom = async (path, options) => {
     }
   } else if (csProjFiles.length) {
     // .csproj parsing
-    for (let i in csProjFiles) {
-      const f = csProjFiles[i];
+    for (let f of csProjFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -2037,6 +2061,7 @@ exports.createBom = async (path, options) => {
   if (isContainerMode) {
     options.multiProject = true;
     options.installDeps = false;
+    // Force the project type to docker
     options.projectType = "docker";
     options.lastWorkingDir = exportData.lastWorkingDir;
     const bomData = await createMultiXBom(

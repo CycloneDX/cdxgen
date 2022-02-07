@@ -6,7 +6,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 
 | Language           | Package format                                                               |
 | ------------------ | ---------------------------------------------------------------------------- |
-| node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js                        |
+| node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js   |
 | java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt)                |
 | php                | composer.lock                                                                |
 | python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl |

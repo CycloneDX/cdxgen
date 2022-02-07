@@ -492,6 +492,91 @@ const parsePnpmLock = async function (pnpmLock) {
 exports.parsePnpmLock = parsePnpmLock;
 
 /**
+ * Parse bower json file
+ *
+ * @param {string} bowerJsonFile bower.json file
+ */
+const parseBowerJson = async (bowerJsonFile) => {
+  const pkgList = [];
+  if (fs.existsSync(bowerJsonFile)) {
+    try {
+      const pkgData = JSON.parse(fs.readFileSync(bowerJsonFile, "utf8"));
+      const pkgIdentifier = parsePackageJsonName(pkgData.name);
+      pkgList.push({
+        name: pkgIdentifier.fullName || pkgData.name,
+        group: pkgIdentifier.scope || "",
+        version: pkgData.version || "",
+        description: pkgData.description || "",
+        license: pkgData.license || "",
+      });
+    } catch (err) {}
+  }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
+  }
+  return pkgList;
+};
+exports.parseBowerJson = parseBowerJson;
+
+/**
+ * Parse minified js file
+ *
+ * @param {string} minJsFile min.js file
+ */
+const parseMinJs = async (minJsFile) => {
+  const pkgList = [];
+  if (fs.existsSync(minJsFile)) {
+    try {
+      const rawData = fs.readFileSync(minJsFile, { encoding: "utf-8" });
+      const tmpA = rawData.split("\n");
+      tmpA.forEach((l) => {
+        if (l.startsWith("/*!") && l.length < 500) {
+          let delimiter = " | ";
+          if (!l.includes(delimiter) && l.includes(" - ")) {
+            delimiter = " - ";
+          } else {
+            return;
+          }
+          // Eg: jQuery v3.6.0
+          const pkgNameVer = l.split(delimiter)[0].replace("/*!", "").trim();
+          const tmpB = pkgNameVer.split(" ");
+          if (tmpB && tmpB.length > 1) {
+            let name = tmpB[0];
+            if (tmpB.length > 2) {
+              name = pkgNameVer
+                .replace(" " + tmpB[tmpB.length - 1], "")
+                .replace(/ /g, "-")
+                .trim();
+            }
+            const pkgIdentifier = parsePackageJsonName(name);
+            pkgList.push({
+              name: pkgIdentifier.fullName || pkgData.name,
+              group: pkgIdentifier.scope || "",
+              version: tmpB[tmpB.length - 1].replace(/^v/, "") || "",
+            });
+          }
+        }
+      });
+    } catch (err) {}
+  }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
+  }
+  return pkgList;
+};
+exports.parseMinJs = parseMinJs;
+
+/**
  * Parse pom file
  *
  * @param {string} pom file to parse
@@ -508,8 +593,7 @@ const parsePom = function (pomFile) {
   }).project;
   if (project && project.dependencies) {
     const dependencies = project.dependencies.dependency;
-    for (var i in dependencies) {
-      const adep = dependencies[i];
+    for (let adep of dependencies) {
       const version = adep.version;
       let versionStr = undefined;
       if (version && version._ && version._.indexOf("$") == -1) {
@@ -676,8 +760,7 @@ exports.parseKVDep = parseKVDep;
  * @param {string} name License full name
  */
 const findLicenseId = function (name) {
-  for (let i in licenseMapping) {
-    const l = licenseMapping[i];
+  for (let l of licenseMapping) {
     if (l.names.includes(name)) {
       return l.exp;
     }
@@ -695,8 +778,7 @@ exports.findLicenseId = findLicenseId;
  */
 const guessLicenseId = function (content) {
   content = content.replace(/\n/g, " ");
-  for (let i in licenseMapping) {
-    const l = licenseMapping[i];
+  for (let l of licenseMapping) {
     for (let j in l.names) {
       if (content.toUpperCase().indexOf(l.names[j].toUpperCase()) > -1) {
         return l.exp;
@@ -1147,8 +1229,7 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
     const group = repoMetadata.group;
     const name = repoMetadata.name;
     if (group && name) {
-      for (let i in knownLicenses) {
-        const akLic = knownLicenses[i];
+      for (let akLic of knownLicenses) {
         if (akLic.group === "." && akLic.name === name) {
           return akLic.license;
         } else if (
@@ -1191,9 +1272,9 @@ const getGoPkgLicense = async function (repoMetadata) {
       }
       const licenseIds = licenses.split(", ");
       const licList = [];
-      for (var i in licenseIds) {
+      for (let id of licenseIds) {
         const alicense = {
-          id: licenseIds[i],
+          id: id,
         };
         alicense["url"] = pkgUrlPrefix;
         licList.push(alicense);
@@ -1245,9 +1326,7 @@ const parseGoModData = async function (goModData, gosumMap) {
   }
 
   const pkgs = goModData.split("\n");
-  for (let i in pkgs) {
-    let l = pkgs[i];
-
+  for (let l of pkgs) {
     // Skip go.mod file headers, whitespace, and/or comments
     if (
       l.startsWith("module ") ||
@@ -1325,8 +1404,7 @@ const parseGoListDep = async function (rawOutput, gosumMap) {
     const deps = [];
     const keys_cache = {};
     const pkgs = rawOutput.split("\n");
-    for (let i in pkgs) {
-      let l = pkgs[i];
+    for (let l of pkgs) {
       const verArr = l.trim().replace(new RegExp("[\"']", "g"), "").split(" ");
       if (verArr && verArr.length === 2) {
         const key = verArr[0] + "-" + verArr[1];
@@ -1382,8 +1460,7 @@ const parseGosumData = async function (gosumData) {
     return pkgList;
   }
   const pkgs = gosumData.split("\n");
-  for (let i in pkgs) {
-    const l = pkgs[i];
+  for (let l of pkgs) {
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
       const tmpA = l.split(" ");
@@ -1426,8 +1503,7 @@ const parseGopkgData = async function (gopkgData) {
   }
   let pkg = null;
   const pkgs = gopkgData.split("\n");
-  for (let i in pkgs) {
-    const l = pkgs[i];
+  for (let l of pkgs) {
     let key = null;
     let value = null;
     if (l.indexOf("[[projects]]") > -1) {
@@ -2084,8 +2160,7 @@ const parseSbtLock = function (pkgLockFile) {
   if (fs.existsSync(pkgLockFile)) {
     const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
     if (lockData && lockData.dependencies) {
-      for (let i in lockData.dependencies) {
-        const pkg = lockData.dependencies[i];
+      for (let pkg of lockData.dependencies) {
         const artifacts = pkg.artifacts || undefined;
         let integrity = "";
         if (artifacts && artifacts.length) {
@@ -2179,8 +2254,7 @@ const collectJarNS = function (jarPath) {
   // Execute jar tvf to get class names
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
   if (jarFiles && jarFiles.length) {
-    for (let i in jarFiles) {
-      const jf = jarFiles[i];
+    for (let jf of jarFiles) {
       const jarname = path.basename(jf);
       if (DEBUG_MODE) {
         console.log(`Executing 'jar tf ${jf}'`);
@@ -2300,8 +2374,7 @@ const extractJarArchive = function (jarFile, tempDir) {
     jarFiles = [path.join(tempDir, fname)];
   }
   if (jarFiles && jarFiles.length) {
-    for (let i in jarFiles) {
-      const jf = jarFiles[i];
+    for (let jf of jarFiles) {
       const jarname = path.basename(jf);
       const manifestDir = path.join(tempDir, "META-INF");
       const manifestFile = path.join(tempDir, "META-INF", "MANIFEST.MF");
