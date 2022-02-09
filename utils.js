@@ -535,30 +535,40 @@ const parseMinJs = async (minJsFile) => {
       const rawData = fs.readFileSync(minJsFile, { encoding: "utf-8" });
       const tmpA = rawData.split("\n");
       tmpA.forEach((l) => {
-        if (l.startsWith("/*!") && l.length < 500) {
-          let delimiter = " | ";
+        if ((l.startsWith("/*!") || l.startsWith("  * ")) && l.length < 500) {
+          let delimiter = "  * ";
+          if (!l.includes(delimiter) && l.includes("/*!")) {
+            delimiter = "/*!";
+          }
           if (!l.includes(delimiter) && l.includes(" - ")) {
             delimiter = " - ";
-          } else {
+          }
+          const tmpPV = l.split(delimiter);
+          if (!tmpPV || tmpPV.length < 2) {
             return;
           }
           // Eg: jQuery v3.6.0
-          const pkgNameVer = l.split(delimiter)[0].replace("/*!", "").trim();
-          const tmpB = pkgNameVer.split(" ");
+          const pkgNameVer = tmpPV[1]
+            .replace("/*!", "")
+            .replace("  * ", "")
+            .trim();
+          const tmpB = pkgNameVer.includes(" - ")
+            ? pkgNameVer.split(" - ")
+            : pkgNameVer.split(" ");
           if (tmpB && tmpB.length > 1) {
-            let name = tmpB[0];
-            if (tmpB.length > 2) {
-              name = pkgNameVer
-                .replace(" " + tmpB[tmpB.length - 1], "")
-                .replace(/ /g, "-")
-                .trim();
+            let name = tmpB[0].replace(/ /g, "-").trim();
+            if (
+              ["copyright", "author", "licensed"].includes(name.toLowerCase())
+            ) {
+              return;
             }
             const pkgIdentifier = parsePackageJsonName(name);
             pkgList.push({
               name: pkgIdentifier.fullName || pkgData.name,
               group: pkgIdentifier.scope || "",
-              version: tmpB[tmpB.length - 1].replace(/^v/, "") || "",
+              version: tmpB[1].replace(/^v/, "") || "",
             });
+            return;
           }
         }
       });
@@ -1879,6 +1889,34 @@ const parseCargoData = async function (cargoData) {
   }
 };
 exports.parseCargoData = parseCargoData;
+
+const parseNupkg = async function (nupkgFile) {
+  const pkgList = [];
+  const nuspecData = await readZipEntry(nupkgFile, ".nuspec");
+  let npkg = convert.xml2js(nuspecData, {
+    compact: true,
+    alwaysArray: false,
+    spaces: 4,
+    textKey: "_",
+    attributesKey: "$",
+    commentKey: "value",
+  }).package;
+  if (!npkg) {
+    return pkgList;
+  }
+  const m = npkg.metadata;
+  let pkg = { group: "" };
+  pkg.name = m.id._;
+  pkg.version = m.version._;
+  pkg.description = m.description._;
+  pkgList.push(pkg);
+  if (process.env.FETCH_LICENSE) {
+    return await getNugetMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
+};
+exports.parseNupkg = parseNupkg;
 
 const parseCsPkgData = async function (pkgData) {
   const pkgList = [];

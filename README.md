@@ -4,17 +4,17 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 
 ## Supported languages and package format
 
-| Language           | Package format                                                               |
-| ------------------ | ---------------------------------------------------------------------------- |
-| node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js   |
-| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt)                |
-| php                | composer.lock                                                                |
-| python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl |
-| go                 | binary, go.mod, go.sum, Gopkg.lock                                           |
-| ruby               | Gemfile.lock, gemspec                                                        |
-| rust               | Cargo.toml, Cargo.lock                                                       |
-| .Net               | .csproj, packages.config, project.assets.json, packages.lock.json            |
-| docker / oci image | All supported languages excluding OS packages                                |
+| Language           | Package format                                                                |
+| ------------------ | ----------------------------------------------------------------------------- |
+| node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js    |
+| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt)                 |
+| php                | composer.lock                                                                 |
+| python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl  |
+| go                 | binary, go.mod, go.sum, Gopkg.lock                                            |
+| ruby               | Gemfile.lock, gemspec                                                         |
+| rust               | Cargo.toml, Cargo.lock                                                        |
+| .Net               | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg |
+| docker / oci image | All supported languages excluding OS packages                                 |
 
 NOTE:
 
@@ -27,10 +27,15 @@ Footnotes:
 
 - [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
 - [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing.
+- [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file cdxgen would not include indirect dependencies.
 
 ### Automatic usage detection
 
-For node.js projects, an AST parser powered by babel-parser is used to detect packages that are imported and used. Typical test directories would be ignored by default. Such imported packages would automatically have their `scope` property set to `required`. This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/appthreat/dep-scan) use this attribute to prioritize vulnerabilities.
+For node.js projects, lock files are parsed initially so the SBoM would include all dependencies including dev dependencies. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically have their `scope` property set to `required` in the resulting SBoM.
+
+This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/appthreat/dep-scan) use this attribute to prioritize vulnerabilities. Tools such dependency track, unfortunately, do not include this feature and hence might over-report the CVEs.
+
+Use a tool like jq in this case to produce a json containing only the required components and ingest the same to dependency track.
 
 For go, `go mod why` command is used to identify required packages. For php, composer lock file is used to distinguish required (packages) from optional (packages-dev).
 
