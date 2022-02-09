@@ -812,6 +812,81 @@ const createJavaBom = async (path, options) => {
         nsMapping: jarNSMapping,
       });
     }
+
+    // Bazel
+    // Look for the BUILD file only in the root directory
+    let bazelFiles = utils.getAllFiles(path, "BUILD");
+    if (bazelFiles && bazelFiles.length) {
+      let BAZEL_CMD = "bazel";
+      if (process.env.BAZEL_HOME) {
+        BAZEL_CMD = pathLib.join(process.env.BAZEL_HOME, "bin", "bazel");
+      }
+      for (let f of bazelFiles) {
+        const basePath = pathLib.dirname(f);
+        // Invoke bazel build first
+        const bazelTarget = process.env.BAZEL_TARGET || ":all";
+        console.log(
+          "Executing",
+          BAZEL_CMD,
+          "build",
+          bazelTarget,
+          "in",
+          basePath
+        );
+        let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
+          cwd: basePath,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+        });
+        if (result.status == 1 || result.error) {
+          console.error(result.stdout, result.stderr);
+          if (DEBUG_MODE) {
+            console.log(
+              "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen"
+            );
+          }
+        } else {
+          console.log(
+            "Executing",
+            BAZEL_CMD,
+            "aquery --output=textproto --skyframe_state in",
+            basePath
+          );
+          result = spawnSync(
+            BAZEL_CMD,
+            ["aquery", "--output=textproto", "--skyframe_state"],
+            { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
+          );
+          if (result.status == 1 || result.error) {
+            console.error(result.stdout, result.stderr);
+          }
+          stdout = result.stdout;
+          if (stdout) {
+            const cmdOutput = Buffer.from(stdout).toString();
+            const dlist = utils.parseBazelSkyframe(cmdOutput);
+            if (dlist && dlist.length) {
+              pkgList = pkgList.concat(dlist);
+            } else {
+              if (DEBUG_MODE) {
+                console.log(
+                  "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved."
+                );
+                console.log(
+                  "If your project requires a different query, please file a bug at AppThreat/cdxgen repo!"
+                );
+              }
+            }
+          }
+          pkgList = await utils.getMvnMetadata(pkgList);
+          return buildBomNSData(pkgList, "maven", {
+            src: path,
+            filename: "BUILD",
+            nsMapping: {},
+          });
+        }
+      }
+    }
+
     // scala sbt
     // Identify sbt projects via its `project` directory:
     // - all SBT project _should_ define build.properties file with sbt version info

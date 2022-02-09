@@ -735,6 +735,83 @@ const parseGradleProjects = function (rawOutput) {
 exports.parseGradleProjects = parseGradleProjects;
 
 /**
+ * Parse bazel skyframe state output
+ * @param {string} rawOutput Raw string output
+ */
+const parseBazelSkyframe = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    const deps = [];
+    const keys_cache = {};
+    const tmpA = rawOutput.split("\n");
+    tmpA.forEach((l) => {
+      if (l.indexOf("external/maven") >= 0) {
+        l = l.replace("arguments: ", "").replace(/\"/g, "");
+        // Skyframe could have duplicate entries
+        if (l.includes("@@maven//")) {
+          l = l.split(",")[0];
+        }
+        const mparts = l.split("external/maven/v1/");
+        if (mparts && mparts[mparts.length - 1].endsWith(".jar")) {
+          // Example
+          // https/jcenter.bintray.com/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar
+          const jarPath = mparts[mparts.length - 1];
+          let jarPathParts = jarPath.split("/");
+          if (jarPathParts.length) {
+            // Remove the protocol, registry url and then file name
+            jarPathParts = jarPathParts.slice(2, -1);
+            // The last part would be the version
+            const version = jarPathParts[jarPathParts.length - 1];
+            // Last but one would be the name
+            const name = jarPathParts[jarPathParts.length - 2].toLowerCase();
+            // Rest would be the group
+            const group = jarPathParts.slice(0, -2).join(".").toLowerCase();
+            const key = `${group}:${name}:${version}`;
+            if (!keys_cache[key]) {
+              keys_cache[key] = true;
+              deps.push({
+                group,
+                name,
+                version,
+                qualifiers: { type: "jar" },
+              });
+            }
+          }
+        }
+      }
+    });
+    return deps;
+  }
+  return [];
+};
+exports.parseBazelSkyframe = parseBazelSkyframe;
+
+/**
+ * Parse bazel BUILD file
+ * @param {string} rawOutput Raw string output
+ */
+const parseBazelBuild = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    const projs = [];
+    const keys_cache = {};
+    const tmpA = rawOutput.split("\n");
+    tmpA.forEach((l) => {
+      if (l.includes("name =")) {
+        const name = l
+          .split("name =")[1]
+          .replace(/[\","]/g, "")
+          .trim();
+        if (!name.includes("test")) {
+          projs.push(name);
+        }
+      }
+    });
+    return projs;
+  }
+  return [];
+};
+exports.parseBazelBuild = parseBazelBuild;
+
+/**
  * Parse dependencies in Key:Value format
  */
 const parseKVDep = function (rawOutput) {
