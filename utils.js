@@ -1892,20 +1892,32 @@ exports.parseCargoData = parseCargoData;
 
 const parseNupkg = async function (nupkgFile) {
   const pkgList = [];
-  const nuspecData = await readZipEntry(nupkgFile, ".nuspec");
-  let npkg = convert.xml2js(nuspecData, {
-    compact: true,
-    alwaysArray: false,
-    spaces: 4,
-    textKey: "_",
-    attributesKey: "$",
-    commentKey: "value",
-  }).package;
+  let pkg = { group: "" };
+  let nuspecData = await readZipEntry(nupkgFile, ".nuspec");
+  // Remove byte order mark
+  if (nuspecData.charCodeAt(0) === 0xfeff) {
+    nuspecData = nuspecData.slice(1);
+  }
+  let npkg = undefined;
+  try {
+    npkg = convert.xml2js(nuspecData, {
+      compact: true,
+      alwaysArray: false,
+      spaces: 4,
+      textKey: "_",
+      attributesKey: "$",
+      commentKey: "value",
+    }).package;
+  } catch (e) {
+    // If we are parsing with invalid encoding unicode replacement character is used
+    if (nuspecData.charCodeAt(0) === 65533) {
+      console.log(`Unable to parse ${nupkgFile} in utf-8 mode`);
+    }
+  }
   if (!npkg) {
     return pkgList;
   }
   const m = npkg.metadata;
-  let pkg = { group: "" };
   pkg.name = m.id._;
   pkg.version = m.version._;
   pkg.description = m.description._;

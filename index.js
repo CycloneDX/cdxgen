@@ -217,6 +217,10 @@ function addComponent(
     // Create empty group
     group = group || "";
     let name = pkgIdentifier.fullName || pkg.name || "";
+    // name is mandatory
+    if (!name) {
+      return;
+    }
     // Skip @types package for npm
     if (
       ptype == "npm" &&
@@ -1751,6 +1755,7 @@ const createCsharpBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       let pkgData = fs.readFileSync(f, { encoding: "utf-8" });
+      // Remove byte order mark
       if (pkgData.charCodeAt(0) === 0xfeff) {
         pkgData = pkgData.slice(1);
       }
@@ -1767,6 +1772,7 @@ const createCsharpBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       let csProjData = fs.readFileSync(f, { encoding: "utf-8" });
+      // Remove byte order mark
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
