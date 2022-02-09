@@ -26,6 +26,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install bazelisk
+        run: |
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.1.0/bazelisk-linux-amd64"
+          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          sudo chmod +x /usr/local/bin/bazel
       - name: npm install, build and test
         run: |
           npm install
@@ -75,6 +80,10 @@ jobs:
         with:
           repository: 'prabhu/railsgoat'
           path: 'repotests/railsgoat'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'bazelbuild/examples'
+          path: 'repotests/bazel-examples'
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.22.0/cyclonedx-linux-x64
@@ -119,6 +128,10 @@ jobs:
           bin/cdxgen -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json
           ./cyclonedx validate --input-file bomresults/bom-ruby.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-ruby.xml --input-format xml --input-version v1_4
+
+          bin/cdxgen -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
+          ./cyclonedx validate --input-file bomresults/bom-bazel.json --input-format json --input-version v1_4
+          ./cyclonedx validate --input-file bomresults/bom-bazel.xml --input-format xml --input-version v1_4
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
         with:

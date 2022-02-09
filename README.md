@@ -7,7 +7,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | Language           | Package format                                                                |
 | ------------------ | ----------------------------------------------------------------------------- |
 | node.js            | package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js    |
-| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt)                 |
+| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel          |
 | php                | composer.lock                                                                 |
 | python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl  |
 | go                 | binary, go.mod, go.sum, Gopkg.lock                                            |
@@ -181,6 +181,7 @@ export FETCH_LICENSE=true
 | FETCH_LICENSE             | Set to true to fetch license information from the registry. npm and golang only                                    |
 | USE_GOSUM                 | Set to true to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod |
 | CDXGEN_TIMEOUT_MS         | Default timeout for known execution involving maven, gradle or sbt                                                 |
+| BAZEL_TARGET              | Bazel target to build. Default :all (Eg: //java-maven)                                                             |
 
 ## Integration with GitHub action
 

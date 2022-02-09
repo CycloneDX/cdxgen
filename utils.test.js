@@ -891,3 +891,19 @@ test("parse nupkg file", async () => {
   expect(deps.length).toEqual(1);
   expect(deps[0].name).toEqual("jQuery");
 });
+
+test("parse bazel skyframe", () => {
+  let deps = utils.parseBazelSkyframe(
+    fs.readFileSync("./test/data/bazel/bazel-state.txt", (encoding = "utf-8"))
+  );
+  expect(deps.length).toEqual(8);
+  expect(deps[0].name).toEqual("guava");
+});
+
+test("parse bazel build", () => {
+  let projs = utils.parseBazelBuild(
+    fs.readFileSync("./test/data/bazel/BUILD", (encoding = "utf-8"))
+  );
+  expect(projs.length).toEqual(2);
+  expect(projs[0]).toEqual("java-maven-lib");
+});
