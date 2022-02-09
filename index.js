@@ -1875,7 +1875,10 @@ const createMultiXBom = async (pathList, options) => {
   console.log(`BOM includes ${components.length} components`);
   const serialNum = "urn:uuid:" + uuidv4();
   return {
-    bomXml: buildBomXml(serialNum, components),
+    bomXml: buildBomXml(
+      serialNum,
+      listComponents({}, components, undefined, "xml")
+    ),
     bomJson: {
       bomFormat: "CycloneDX",
       specVersion: "1.4",
