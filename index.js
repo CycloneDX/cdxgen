@@ -1884,7 +1884,7 @@ const createMultiXBom = async (pathList, options) => {
       specVersion: "1.4",
       serialNumber: serialNum,
       version: 1,
-      metadata: addMetadata(),
+      metadata: addMetadata("json"),
       components,
     },
   };
