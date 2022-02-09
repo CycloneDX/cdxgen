@@ -1683,6 +1683,7 @@ const createRubyBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createCsharpBom = async (path, options) => {
+  let manifestFiles = [];
   const csProjFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj"
@@ -1699,9 +1700,26 @@ const createCsharpBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "packages.lock.json"
   );
+  const nupkgFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.nupkg"
+  );
   let pkgList = [];
+  if (nupkgFiles.length) {
+    manifestFiles = manifestFiles.concat(nupkgFiles);
+    for (let nf of nupkgFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${nf}`);
+      }
+      const dlist = await utils.parseNupkg(nf);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  }
   // project.assets.json parsing
   if (projAssetsFiles.length) {
+    manifestFiles = manifestFiles.concat(projAssetsFiles);
     for (let af of projAssetsFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${af}`);
@@ -1713,6 +1731,7 @@ const createCsharpBom = async (path, options) => {
       }
     }
   } else if (pkgLockFiles.length) {
+    manifestFiles = manifestFiles.concat(pkgLockFiles);
     // packages.lock.json from nuget
     for (let af of pkgLockFiles) {
       if (DEBUG_MODE) {
@@ -1725,6 +1744,7 @@ const createCsharpBom = async (path, options) => {
       }
     }
   } else if (pkgConfigFiles.length) {
+    manifestFiles = manifestFiles.concat(pkgConfigFiles);
     // packages.config parsing
     for (let f of pkgConfigFiles) {
       if (DEBUG_MODE) {
@@ -1740,6 +1760,7 @@ const createCsharpBom = async (path, options) => {
       }
     }
   } else if (csProjFiles.length) {
+    manifestFiles = manifestFiles.concat(csProjFiles);
     // .csproj parsing
     for (let f of csProjFiles) {
       if (DEBUG_MODE) {
@@ -1758,7 +1779,7 @@ const createCsharpBom = async (path, options) => {
   if (pkgList.length) {
     return buildBomNSData(pkgList, "nuget", {
       src: path,
-      filename: csProjFiles.join(", "),
+      filename: manifestFiles.join(", "),
     });
   }
   return {};

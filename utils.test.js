@@ -885,3 +885,9 @@ test("parse scala sbt lock", async () => {
   let deps = utils.parseSbtLock("./test/data/build.sbt.lock");
   expect(deps.length).toEqual(117);
 });
+
+test("parse nupkg file", async () => {
+  let deps = await utils.parseNupkg("./test/data/jquery.3.6.0.nupkg");
+  expect(deps.length).toEqual(1);
+  expect(deps[0].name).toEqual("jQuery");
+});
