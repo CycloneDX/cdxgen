@@ -6,6 +6,7 @@ on:
       - master
       - feature/*
       - release/*
+  workflow_dispatch:
 
 jobs:
   build:
@@ -60,6 +61,10 @@ jobs:
           path: 'repotests/vulnerable_net_core'
       - uses: actions/checkout@v2
         with:
+          repository: 'HooliCorp/Goatly.NET'
+          path: 'repotests/Goatly.NET'
+      - uses: actions/checkout@v2
+        with:
           repository: 'HooliCorp/DjanGoat'
           path: 'repotests/DjanGoat'
       - uses: actions/checkout@v2
@@ -98,6 +103,10 @@ jobs:
           bin/cdxgen -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
           ./cyclonedx validate --input-file bomresults/bom-csharp2.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-csharp2.xml --input-format xml --input-version v1_4
+
+          bin/cdxgen -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json
+          ./cyclonedx validate --input-file bomresults/bom-csharp3.json --input-format json --input-version v1_4
+          ./cyclonedx validate --input-file bomresults/bom-csharp3.xml --input-format xml --input-version v1_4
 
           bin/cdxgen -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json
           ./cyclonedx validate --input-file bomresults/bom-python.json --input-format json --input-version v1_4
