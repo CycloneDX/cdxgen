@@ -29,9 +29,8 @@ jobs:
       - name: Install bazelisk
         run: |
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.1.0/bazelisk-linux-amd64"
-          mkdir -p "${GITHUB_WORKSPACE}/bin/"
-          mv bazelisk-linux-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
-          chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
+          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          sudo chmod +x /usr/local/bin/bazel
       - name: npm install, build and test
         run: |
           npm install
@@ -134,8 +133,6 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-bazel.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-bazel.xml --input-format xml --input-version v1_4
           ls -ltr bomresults
-        env:
-          BAZEL_HOME: ${GITHUB_WORKSPACE}
       - uses: actions/upload-artifact@v1
         with:
           name: bomresults
