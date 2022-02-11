@@ -1,0 +1,7 @@
+{
+  "description": "an package without a name. see https://github.com/CycloneDX/cyclonedx-node-module/issues/252",
+  "private": true,
+  "dependencies": {
+    "packageurl-js": "^0.0.1"
+  }
+}
