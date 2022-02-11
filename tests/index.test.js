@@ -111,3 +111,15 @@ test('createbom produces a BOM when all dependencies are dev-dependencies that s
     done()
   })
 })
+
+test('createbom produces a BOM when there is no name in the root package', done => {
+  // test for https://github.com/CycloneDX/cyclonedx-node-module/issues/252
+  bomHelpers.createbom('library', false, true, './tests/no-name', { dev: true }, (err, bom) => {
+    expect(err).toBeFalsy()
+
+    bom.metadata.timestamp = timestamp
+    bom.metadata.tools[0].version = programVersion
+    expect(bom.toJSON()).toMatchSnapshot()
+    done()
+  })
+})

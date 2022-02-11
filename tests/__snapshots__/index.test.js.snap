@@ -1986,6 +1986,108 @@ exports[`createbom produces a BOM when no package-lock.json is present 1`] = `
 }"
 `;
 
+exports[`createbom produces a BOM when there is no name in the root package 1`] = `
+"{
+  \\"bomFormat\\": \\"CycloneDX\\",
+  \\"specVersion\\": \\"1.3\\",
+  \\"version\\": 1,
+  \\"metadata\\": {
+    \\"timestamp\\": \\"2020-01-01T01:00:00.000Z\\",
+    \\"tools\\": [
+      {
+        \\"vendor\\": \\"CycloneDX\\",
+        \\"name\\": \\"Node.js module\\",
+        \\"version\\": \\"3.0.0\\"
+      }
+    ],
+    \\"component\\": {
+      \\"type\\": \\"library\\",
+      \\"name\\": \\"NO-NAME-PACKAGE\\",
+      \\"version\\": \\"\\",
+      \\"description\\": \\"an package without a name. see https://github.com/CycloneDX/cyclonedx-node-module/issues/252\\"
+    }
+  },
+  \\"components\\": [
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"pkg:npm/packageurl-js@0.0.1\\",
+      \\"author\\": \\"the purl authors\\",
+      \\"name\\": \\"packageurl-js\\",
+      \\"version\\": \\"0.0.1\\",
+      \\"description\\": \\"JavaScript library to parse and build \\\\\\"purl\\\\\\" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url\\",
+      \\"hashes\\": [
+        {
+          \\"alg\\": \\"SHA-512\\",
+          \\"content\\": \\"863333aba5ee03130c895e7950e2217fa6f25ca47d15cd38eb26eba060a98c6b49e4423d4091bd83f12b6283edd11194680af9d42eb1fa9c141bda5780b9daaa\\"
+        }
+      ],
+      \\"licenses\\": [
+        {
+          \\"license\\": {
+            \\"id\\": \\"MIT\\"
+          }
+        }
+      ],
+      \\"purl\\": \\"pkg:npm/packageurl-js@0.0.1\\",
+      \\"externalReferences\\": [
+        {
+          \\"type\\": \\"website\\",
+          \\"url\\": \\"https://github.com/package-url/packageurl-js#readme\\"
+        },
+        {
+          \\"type\\": \\"issue-tracker\\",
+          \\"url\\": \\"https://github.com/package-url/packageurl-js/issues\\"
+        },
+        {
+          \\"type\\": \\"vcs\\",
+          \\"url\\": \\"git+https://github.com/package-url/packageurl-js.git\\"
+        }
+      ]
+    },
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"pkg:npm/urijs@1.19.7\\",
+      \\"author\\": \\"Rodney Rehm\\",
+      \\"name\\": \\"urijs\\",
+      \\"version\\": \\"1.19.7\\",
+      \\"description\\": \\"URI.js is a Javascript library for working with URLs.\\",
+      \\"hashes\\": [
+        {
+          \\"alg\\": \\"SHA-512\\",
+          \\"content\\": \\"21df882a3754d07c7eed9c7bd7b8f02cfb0f794ab3eeb02db950512cbb3eaa7f89da77fd3462135950b17228e063106a7bcdc2eecaac40fb3a1f5a72cf7c7d80\\"
+        }
+      ],
+      \\"licenses\\": [
+        {
+          \\"license\\": {
+            \\"id\\": \\"MIT\\",
+            \\"text\\": {
+              \\"contentType\\": \\"text/txt\\",
+              \\"content\\": \\"The MIT License (MIT)\\\\n\\\\nCopyright (c) 2011 Rodney Rehm\\\\n\\\\nPermission is hereby granted, free of charge, to any person obtaining a copy\\\\nof this software and associated documentation files (the \\\\\\"Software\\\\\\"), to deal\\\\nin the Software without restriction, including without limitation the rights\\\\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\\\\ncopies of the Software, and to permit persons to whom the Software is\\\\nfurnished to do so, subject to the following conditions:\\\\n\\\\nThe above copyright notice and this permission notice shall be included in\\\\nall copies or substantial portions of the Software.\\\\n\\\\nTHE SOFTWARE IS PROVIDED \\\\\\"AS IS\\\\\\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\\\\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\\\\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\\\\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\\\\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\\\\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\\\\nTHE SOFTWARE.\\"
+            }
+          }
+        }
+      ],
+      \\"purl\\": \\"pkg:npm/urijs@1.19.7\\",
+      \\"externalReferences\\": [
+        {
+          \\"type\\": \\"website\\",
+          \\"url\\": \\"http://medialize.github.io/URI.js/\\"
+        },
+        {
+          \\"type\\": \\"issue-tracker\\",
+          \\"url\\": \\"https://github.com/medialize/URI.js/issues\\"
+        },
+        {
+          \\"type\\": \\"vcs\\",
+          \\"url\\": \\"git+https://github.com/medialize/URI.js.git\\"
+        }
+      ]
+    }
+  ]
+}"
+`;
+
 exports[`createbom produces a BOM with development dependencies 1`] = `
 "<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
 <bom xmlns=\\"http://cyclonedx.org/schema/bom/1.3\\" version=\\"1\\">

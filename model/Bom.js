@@ -35,7 +35,11 @@ class Bom extends CycloneDXObject {
     if (includeSerialNumber) {
       this._serialNumber = 'urn:uuid:' + uuid.v4()
     }
-    if (pkg) {
+    if (pkg && typeof pkg === 'object') {
+      if (!pkg.name) {
+        pkg = Object.assign({}, pkg) // work with a modified/fixed clone
+        pkg.name = 'NO-NAME-PACKAGE'
+      }
       this._metadata = this.createMetadata(pkg, componentType)
       this._components = this.listComponents(pkg, lockfile)
     } else {

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Fixed
+  * root-packages without a name no longer cause unexpected crashes ([#252] via [#253])
+
+[#252]: https://github.com/CycloneDX/cyclonedx-node-module/issues/252
+[#253]: https://github.com/CycloneDX/cyclonedx-node-module/pull/253
+
 ## 3.4.0 - 2022-02-02
 
 * Changed
