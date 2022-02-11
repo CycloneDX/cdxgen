@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.4.1 - 2022-02-11
+
 * Fixed
   * root-packages without a name no longer cause unexpected crashes ([#252] via [#253])
 
