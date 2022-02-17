@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Documentation
+  * Examples use the preferred call via `cyclonedx-node`, instead of the fallback `cyclonedx-bom`. (via [#258])  
+    This is a follow-up of [#193].
+
+[#258]: https://github.com/CycloneDX/cyclonedx-node-module/pull/258
+
 ## 3.4.1 - 2022-02-11
 
 * Fixed

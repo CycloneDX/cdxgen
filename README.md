@@ -28,37 +28,40 @@ npm install -g @cyclonedx/bom
 ### Getting Help
 
 ```text
-$ cyclonedx-bom -h
-Usage: cyclonedx-bom [OPTIONS] [path]
+$ cyclonedx-node -h
+Usage: cyclonedx-node [options] [path]
 
-Creates CycloneDX Software Bill-of-Materials (SBOM) from Node.js projects
+Creates CycloneDX Software Bill of Materials (SBOM) from Node.js projects
+
+Arguments:
+  path                        Path to analyze
 
 Options:
-  -v, --version              output the version number
-  -d, --include-dev          Include devDependencies (default: false)
-  -l, --include-license-text Include full license text (default: false)
-  -o, --output <output>      Write BOM to file (default: "bom.xml")
-  -t, --type <type>          Project type (default: "library")
-  -ns, --no-serial-number    Do not include BOM serial number
-  -h, --help                 display help for command
+  -v, --version               output the version number
+  -d, --include-dev           Include devDependencies (default: false)
+  -l, --include-license-text  Include full license text (default: false)
+  -o, --output <output>       Write BOM to file (default: "bom.xml")
+  -t, --type <type>           Project type (default: "library")
+  -ns, --no-serial-number     Do not include BOM serial number
+  -h, --help                  display help for command
 ```
 
 ### Example (default: XML)
 
 ```shell
-cyclonedx-bom
+cyclonedx-node
 ```
 
 ### Example (XML)
 
 ```shell
-cyclonedx-bom -o bom.xml
+cyclonedx-node -o bom.xml
 ```
 
 ### Example (JSON)
 
 ```shell
-cyclonedx-bom -o bom.json
+cyclonedx-node -o bom.json
 ```
 
 ### Usage with docker
@@ -91,7 +94,6 @@ to convert to older specification versions as required.
 | `2.*.*` | CycloneDX v1.2 | XML/JSON |
 | `1.1.*` | CycloneDX v1.1 | XML |
 | `1.0.*` | CycloneDX v1.0 | XML |
-
 
 ## Contributing
 
