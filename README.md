@@ -21,7 +21,7 @@ Node.js v12.0.0 or higher
 
 ### Installing
 
-```bash
+```sh
 npm install -g @cyclonedx/bom
 ```
 
@@ -45,19 +45,19 @@ Options:
 
 ### Example (default: XML)
 
-```sh
+```shell
 cyclonedx-bom
 ```
 
 ### Example (XML)
 
-```sh
+```shell
 cyclonedx-bom -o bom.xml
 ```
 
 ### Example (JSON)
 
-```sh
+```shell
 cyclonedx-bom -o bom.json
 ```
 
@@ -65,7 +65,7 @@ cyclonedx-bom -o bom.json
 
 Run `cyclonedx/cyclonedx-node` docker image inside your project folder using:
 
-```sh
+```shell
 docker run --rm \
   -v "$PWD":/src \
   -w /src \
@@ -87,10 +87,10 @@ to convert to older specification versions as required.
 
 | Version | Schema Version | Format(s) |
 | --- | --- | --- |
-| 3.x.x | CycloneDX v1.3 | XML/JSON |
-| 2.x.x | CycloneDX v1.2 | XML/JSON |
-| 1.1.x | CycloneDX v1.1 | XML |
-| 1.0.x | CycloneDX v1.0 | XML |
+| `3.*.*` | CycloneDX v1.3 | XML/JSON |
+| `2.*.*` | CycloneDX v1.2 | XML/JSON |
+| `1.1.*` | CycloneDX v1.1 | XML |
+| `1.0.*` | CycloneDX v1.0 | XML |
 
 
 ## Contributing
