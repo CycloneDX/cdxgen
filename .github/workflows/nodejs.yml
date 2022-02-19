@@ -50,15 +50,8 @@ jobs:
         run: node --version
       - name: install project
         run: npm ci
-      - name: install testing-project "with-packages"
-        run: npm ci
-        working-directory: tests/with-packages
-      - name: install testing-project "with-dev-dependencies"
-        run: npm ci
-        working-directory: tests/with-dev-dependencies
-      - name: install testing-project "no-name"
-        run: npm ci
-        working-directory: tests/no-name
+      - name: setup tests
+        run: npm run setup-tests
       - name: run tests
         run: >
           npm run test:unit --

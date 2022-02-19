@@ -38,6 +38,7 @@
     "cyclonedx-node": "./bin/make-bom.js"
   },
   "scripts": {
+    "setup-tests": "node tests/integration/setup.js",
     "test": "npm run test:unit && npm run test:standard",
     "test:unit": "jest",
     "test:standard": "standard -v",

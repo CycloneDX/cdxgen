@@ -19,7 +19,15 @@ npm run cs-fix
 
 ## Testing
 
-Run `./test.sh` to have a proper test suite pass.
+Setup the tests once, via:
+```shell
+npm run setup-tests
+```
+
+Run to have a proper test suite pass:
+```shell
+npm test
+```
 
 ## Sign your commits
 
