@@ -7,8 +7,11 @@ All notable changes to this project will be documented in this file.
 * Documentation
   * Examples use the preferred call via `cyclonedx-node`, instead of the fallback `cyclonedx-bom`. (via [#258])  
     This is a follow-up of [#193].
+* Tests
+  * Moved integration tests to a dedicated space and updated documentation for it. (via [#260]) 
 
 [#258]: https://github.com/CycloneDX/cyclonedx-node-module/pull/258
+[#260]: https://github.com/CycloneDX/cyclonedx-node-module/pull/260
 
 ## 3.4.1 - 2022-02-11
 
