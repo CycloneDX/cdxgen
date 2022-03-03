@@ -4,12 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Changed
+  * If 'homepage' property is solely a period, then omit 'website' entry from the externalReferences array. ([#263] via [#264])
 * Documentation
   * Examples use the preferred call via `cyclonedx-node`, instead of the fallback `cyclonedx-bom`. (via [#258])  
     This is a follow-up of [#193].
 * Tests
   * Moved integration tests to a dedicated space and updated documentation for it. (via [#260]) 
 
+[#263]: https://github.com/CycloneDX/cyclonedx-node-module/issues/263
+[#264]: https://github.com/CycloneDX/cyclonedx-node-module/pull/264
 [#258]: https://github.com/CycloneDX/cyclonedx-node-module/pull/258
 [#260]: https://github.com/CycloneDX/cyclonedx-node-module/pull/260
 
