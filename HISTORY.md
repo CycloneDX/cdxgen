@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.5.0 - 2022-03-03
+
 * Changed
   * If 'homepage' property is solely a period, then omit 'website' entry from the externalReferences array. ([#263] via [#264])
 * Documentation
