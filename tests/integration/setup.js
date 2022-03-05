@@ -21,9 +21,11 @@ const { spawnSync } = require('child_process')
 const path = require('path')
 
 const REQUIRES_INSTALL = [
-  'with-packages',
+  'no-name',
+  'no-packages',
   'with-dev-dependencies',
-  'no-name'
+  'with-lockfile-2',
+  'with-packages'
 ]
 
 process.exitCode = 0

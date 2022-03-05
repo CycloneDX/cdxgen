@@ -21,18 +21,17 @@
 
 const OrganizationalContact = require('../../model/OrganizationalContact')
 
-test('Model: OrganizationalContact / Format: XML', () => {
+describe('Model: OrganizationalContact', () => {
   const contact = new OrganizationalContact('John Doe', 'john.doe@examp.com', '555-1212')
-  const result = contact.toXML()
-  expect(result.name).toBe('John Doe')
-  expect(result.email).toBe('john.doe@examp.com')
-  expect(result.phone).toBe('555-1212')
-})
-
-test('Model: OrganizationalContact / Format: JSON', () => {
-  const contact = new OrganizationalContact('John Doe', 'john.doe@examp.com', '555-1212')
-  const result = contact.toJSON()
-  expect(result.name).toBe('John Doe')
-  expect(result.email).toBe('john.doe@examp.com')
-  expect(result.phone).toBe('555-1212')
+  test.each(
+    [
+      'XML',
+      'JSON'
+    ]
+  )('normalized to %s', (target) => {
+    const result = contact[`to${target}`]()
+    expect(result.name).toBe('John Doe')
+    expect(result.email).toBe('john.doe@examp.com')
+    expect(result.phone).toBe('555-1212')
+  })
 })

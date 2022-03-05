@@ -82,46 +82,57 @@ test('Model: Component / Format: JSON', () => {
   expect(result.swid.version).toBe('1.0.0')
 })
 
-test('Model: Component detects and normalizes author', () => {
-  // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/246
-  const component = new Component({ name: 'test', author: { name: 'Foo' } })
-
-  const actual = component.author
-  const xml = component.toXML()
-  const json = component.toJSON()
-
-  expect(actual).toBe('Foo')
-  expect(json.author).toBe('Foo')
-  expect(xml.component.author).toBe('Foo')
+describe('Model: Component', () => {
+  describe.each([
+    {
+      purpose: 'constructed wit author',
+      // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/246
+      pkg: { name: 'test', author: { name: 'Foo Bar' } },
+      property: 'author',
+      detected: 'Foo Bar',
+      normalized: 'Foo Bar'
+    },
+    {
+      purpose: 'undefined version normalizes to empty-string',
+      property: 'version',
+      detected: undefined,
+      normalized: ''
+    }
+  ])('$purpose',
+    ({ pkg = undefined, property, detected, normalized }) => {
+      const component = new Component(pkg)
+      testPropertyAndNormalization({
+        component,
+        propertyName: property,
+        expectedProperty: detected,
+        expectedNormalized: normalized
+      })
+    })
 })
 
-test('Model: Component set empty version normalizes to empty string', () => {
+describe('Model: Component set empty version results in undefined', () => {
   // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/248
   const component = createComponent()
-  expect(component.version).toEqual(expect.anything())
+  expect(component.version).not.toBeUndefined()
   component.version = ''
-
-  const actual = component.version
-  const xml = component.toXML()
-  const json = component.toJSON()
-
-  expect(actual).toBeUndefined()
-  expect(json.version).toBe('')
-  expect(xml.component.version).toBe('')
+  expect(component.version).toBeUndefined()
 })
 
-test('Model: Component init with empty version normalizes to empty string', () => {
-  // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/248
-  const component = new Component()
+function testPropertyAndNormalization ({ component, propertyName, expectedProperty, expectedNormalized }) {
+  test('detects expected', () => {
+    expect(component[propertyName]).toEqual(expectedProperty)
+  })
 
-  const actual = component.version
-  const json = component.toJSON()
-  const xml = component.toXML()
+  test('normalizes to expected JSON', () => {
+    const json = component.toJSON()
+    expect(json[propertyName]).toBe(expectedNormalized)
+  })
 
-  expect(actual).toBeUndefined()
-  expect(json.version).toBe('')
-  expect(xml.component.version).toBe('')
-})
+  test('normalizes to expected XML', () => {
+    const xml = component.toXML()
+    expect(xml.component[propertyName]).toBe(expectedNormalized)
+  })
+}
 
 function createComponent () {
   const component = new Component()

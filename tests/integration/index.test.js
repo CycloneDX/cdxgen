@@ -22,133 +22,78 @@
 const path = require('path')
 
 const bomHelpers = require('../../index.js')
+const Bom = require('../../model/Bom.js')
 
 const timestamp = new Date('2020-01-01T01:00:00.000Z')
 const programVersion = '3.0.0'
 
-test('createbom produces an empty BOM', done => {
-  bomHelpers.createbom(
-    'library', false, false,
-    path.join(__dirname, 'no-packages'), {},
-    (err, bom) => {
-      expect(err).toBeFalsy()
+describe('integration:', () => {
+  const strCompare = (new Intl.Collator()).compare
+  describe.each(
+    [
+      {
+        dir: 'no-packages',
+        purpose: 'that is empty'
+      },
+      {
+        dir: 'no-lockfile',
+        purpose: 'when no package-lock.json is present'
+      },
+      {
+        dir: 'with-packages',
+        purpose: 'without development dependencies',
+        options: { /* do not set dev:false - is must be default */}
+      },
+      {
+        dir: 'with-packages',
+        purpose: 'with development dependencies',
+        options: { dev: true }
+      },
+      {
+        dir: 'with-lockfile-2',
+        purpose: 'that includes hashes from package-lock.json'
+      },
+      {
+        dir: 'with-dev-dependencies',
+        purpose: 'when all dependencies are dev-dependencies that shall not be listed',
+        options: { dev: false }
+      },
+      {
+        dir: 'with-dev-dependencies',
+        purpose: 'when all dependencies are dev-dependencies that shall be listed',
+        options: { dev: true }
+      },
+      {
+        dir: 'no-name',
+        purpose: 'when there is no name in the root package',
+        options: { dev: true }
+      }
+    ]
+  )('produce a BOM $purpose', ({ dir, options = {} }) => {
+    test.each(
+      [
+        'XML',
+        'JSON'
+      ]
+    )('as %s', (target, done) => {
+      bomHelpers.createbom(
+        'library', false, false,
+        path.join(__dirname, dir), options,
+        (err, bom) => {
+          expect(err).toBeNull()
+          expect(bom).toBeInstanceOf(Bom)
 
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toXML()).toMatchSnapshot()
-      done()
+          bom.metadata.timestamp = timestamp
+          bom.metadata.tools[0].version = programVersion
+          if (bom.components) {
+            // sort components to have consistency in results
+            bom.components.sort((a, b) => strCompare(`${a.purl}`, `${b.purl}`))
+          }
+
+          const result = bom[`to${target}`]()
+          expect(result).toMatchSnapshot()
+          done()
+        })
     })
-})
-
-test('createbom produces a BOM without development dependencies', done => {
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'with-packages'), {},
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toXML()).toMatchSnapshot()
-      done()
-    })
-})
-
-test('createbom produces a BOM with development dependencies', done => {
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'with-packages'), { dev: true },
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toXML()).toMatchSnapshot()
-      done()
-    })
-})
-
-test('createbom produces a BOM in JSON format', done => {
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'with-packages'), {},
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toJSON()).toMatchSnapshot()
-      done()
-    })
-})
-
-test('createbom produces a BOM in JSON format that includes hashes from package-lock.json', done => {
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'with-lockfile-2'), {},
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toJSON()).toMatchSnapshot()
-      done()
-    })
-})
-
-test('createbom produces a BOM when no package-lock.json is present', done => {
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'no-lockfile'), {},
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toJSON()).toMatchSnapshot()
-      done()
-    })
-})
-
-test('createbom produces a BOM when all dependencies are dev-dependencies that shall not be listed', done => {
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'with-dev-dependencies'), {},
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toJSON()).toMatchSnapshot()
-      done()
-    })
-})
-
-test('createbom produces a BOM when all dependencies are dev-dependencies that shall be listed', done => {
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'with-dev-dependencies'), { dev: true },
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toJSON()).toMatchSnapshot()
-      done()
-    })
-})
-
-test('createbom produces a BOM when there is no name in the root package', done => {
-  // test for https://github.com/CycloneDX/cyclonedx-node-module/issues/252
-  bomHelpers.createbom(
-    'library', false, true,
-    path.join(__dirname, 'no-name'), { dev: true },
-    (err, bom) => {
-      expect(err).toBeFalsy()
-
-      bom.metadata.timestamp = timestamp
-      bom.metadata.tools[0].version = programVersion
-      expect(bom.toJSON()).toMatchSnapshot()
-      done()
-    })
+  })
 })

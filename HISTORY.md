@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Tests
+  * Reduced code duplication and made integration tests more consistent. (via [#271])
+
+[#271]: https://github.com/CycloneDX/cyclonedx-node-module/pull/271
+
 ## 3.5.0 - 2022-03-03
 
 * Changed

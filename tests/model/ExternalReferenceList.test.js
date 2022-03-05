@@ -20,31 +20,37 @@
  */
 
 const ExternalReferenceList = require('../../model/ExternalReferenceList')
+const ExternalReference = require('../../model/ExternalReference')
 
-describe.each([
-  'http://someurl.com',
-  'https://someurl.com',
-  'https://any.other.string',
-  'https://example.com/#something.',
-  'https://example.com/?foobar=.',
-  'https://example.com/foo/.',
-  'https://example.com/bar.'
-])('Homepage %s', (homepage) => {
-  test('should be present in externalReferences array', () => {
-    const externalReferences = new ExternalReferenceList({ homepage }).externalReferences
+describe('ExternalReferenceList', () => {
+  const mustBePresent = [
+    'http://someurl.com',
+    'https://someurl.com',
+    'https://any.other.string',
+    'https://example.com/#something.',
+    'https://example.com/?foobar=.',
+    'https://example.com/foo/.',
+    'https://example.com/bar.'
+  ]
+  const mustBeOmitted = [
+    'http://.',
+    'https://.'
+  ]
+  const cases = [
+    ...mustBePresent.map(s => ({
+      purpose: `homepage be detected: ${s}`,
+      pkg: { homepage: s },
+      expected: [new ExternalReference('website', s)]
+    })),
+    ...mustBeOmitted.map(s => ({
+      purpose: `homepage be omitted: ${s}`,
+      pkg: { homepage: s },
+      expected: []
+    }))
+  ]
 
-    expect(externalReferences).toHaveLength(1)
-    expect(externalReferences).toEqual([expect.objectContaining({ url: homepage })])
-  })
-})
-
-describe.each([
-  'http://.',
-  'https://.'
-])('Homepage %s', (homepage) => {
-  test('should not be present in externalReferences array', () => {
-    const externalReferences = new ExternalReferenceList({ homepage }).externalReferences
-
-    expect(externalReferences).toHaveLength(0)
+  test.each(cases)('$purpose', ({ pkg, expected }) => {
+    const refs = new ExternalReferenceList(pkg)
+    expect(refs.externalReferences).toEqual(expected)
   })
 })
