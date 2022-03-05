@@ -46,7 +46,7 @@ jobs:
     steps:
       - name: Checkout code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
       - name: Configure Git
         # needed for push back of changes
         run: |
@@ -82,7 +82,7 @@ jobs:
     steps:
       - name: Checkout code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
         with:
           ref: ${{ needs.bump.outputs.version }}
       - name: publish to NPM
@@ -103,7 +103,7 @@ jobs:
     steps:
       - name: Checkout code
         # see https://github.com/actions/checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
         with:
           ref: ${{ needs.bump.outputs.version }}
       - name: Login to DockerHub
