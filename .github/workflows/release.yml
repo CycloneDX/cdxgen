@@ -21,7 +21,8 @@ on:
   workflow_dispatch:
     inputs:
       newversion:
-        description: 'Version level [ major | minor | patch | premajor | preminor | prepatch ]'
+        # is param from `npm version`. therefore the description should reference all the options from there
+        description: 'one of: [<newversion> | major | minor | patch | premajor | preminor | prepatch | prerelease | from-git]'
         required: true
       commitMessage:
         description: 'Release/commit message (%s will be replaced with the resulting version number)'
