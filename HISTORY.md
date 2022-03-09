@@ -4,15 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.6.0 - 2022-03-09
+
+* Changed
+  * Updated available set of SPDX license. (via [c837ada][commit:c837ada74553d2e73f111e11dcd9be46efed6a00])
 * Tests
   * Reduced code duplication and made integration tests more consistent. (via [#271])
 
 [#271]: https://github.com/CycloneDX/cyclonedx-node-module/pull/271
+[commit:c837ada74553d2e73f111e11dcd9be46efed6a00]: https://github.com/CycloneDX/cyclonedx-node-module/commit/c837ada74553d2e73f111e11dcd9be46efed6a00
 
 ## 3.5.0 - 2022-03-03
 
 * Changed
-  * If 'homepage' property is solely a period, then omit 'website' entry from the externalReferences array. ([#263] via [#264])
+  * If `homepage` property of a package is solely a period(`.`), then omit `website` entry from the `ExternalReferences`. ([#263] via [#264])
 * Documentation
   * Examples use the preferred call via `cyclonedx-node`, instead of the fallback `cyclonedx-bom`. (via [#258])  
     This is a follow-up of [#193].
