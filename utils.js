@@ -342,13 +342,13 @@ const parseYarnLock = async function (yarnLockFile) {
       } else {
         l = l.trim();
         const parts = l.split(" ");
-        if (l.includes("version")) {
+        if (l.startsWith("version")) {
           version = parts[1].replace(/"/g, "");
         }
-        if (l.includes("integrity")) {
+        if (l.startsWith("integrity")) {
           integrity = parts[1];
         }
-        if (l.includes("resolved")) {
+        if (l.startsWith("resolved")) {
           const tmpB = parts[1].split("#");
           if (tmpB.length > 1) {
             const digest = tmpB[1].replace(/"/g, "");
