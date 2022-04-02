@@ -111,9 +111,9 @@ See the [LICENSE][license_file] file for the full license.
 [contributing_file]: https://github.com/CycloneDX/cyclonedx-node-module/blob/master/CONTRIBUTING.md
 
 [shield_gh-workflow-test]: https://img.shields.io/github/workflow/status/CycloneDX/cyclonedx-node-module/Node%20CI/master?logo=GitHub&logoColor=white "build"
-[shield_npm-version]: https://img.shields.io/npm/v/@cyclonedx/bom?logo=Node.js&logoColor=white&label=npm "npm"
+[shield_npm-version]: https://img.shields.io/npm/v/@cyclonedx/bom?logo=npm&logoColor=white "npm"
 [shield_docker-version]: https://img.shields.io/docker/v/cyclonedx/cyclonedx-node?logo=docker&logoColor=white&label=docker "docker"
-[shield_license]: https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg "license"
+[shield_license]: https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?logo=open%20source%20initiative&logoColor=white "license"
 [shield_website]: https://img.shields.io/badge/https://-cyclonedx.org-blue.svg "homepage"
 [shield_slack]: https://img.shields.io/badge/slack-join-blue?logo=Slack&logoColor=white "slack join"
 [shield_groups]: https://img.shields.io/badge/discussion-groups.io-blue.svg "groups discussion"
