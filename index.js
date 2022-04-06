@@ -715,17 +715,29 @@ const createJavaBom = async (path, options) => {
           } else {
             console.log("Found", allProjects.length, "gradle sub-projects");
             for (let sp of allProjects) {
+              let gradleDepArgs = [
+                sp + ":dependencies",
+                "-q",
+                "--console",
+                "plain",
+              ];
+              // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
+              if (process.env.GRADLE_ARGS) {
+                const addArgs = process.env.GRADLE_ARGS.split(" ");
+                gradleDepArgs = gradleDepArgs.concat(addArgs);
+              }
               console.log(
                 "Executing",
                 GRADLE_CMD,
-                sp + ":dependencies in",
+                gradleDepArgs.join(" "),
+                "in",
                 path
               );
-              const sresult = spawnSync(
-                GRADLE_CMD,
-                [sp + ":dependencies", "-q", "--console", "plain"],
-                { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
-              );
+              const sresult = spawnSync(GRADLE_CMD, gradleDepArgs, {
+                cwd: path,
+                encoding: "utf-8",
+                timeout: TIMEOUT_MS,
+              });
               if (sresult.status == 1 || sresult.error) {
                 if (DEBUG_MODE) {
                   console.error(sresult.stdout, sresult.stderr);
@@ -766,14 +778,26 @@ const createJavaBom = async (path, options) => {
           }
         }
       } else {
+        let gradleDepArgs = ["dependencies", "-q", "--console", "plain"];
+        // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
+        if (process.env.GRADLE_ARGS) {
+          const addArgs = process.env.GRADLE_ARGS.split(" ");
+          gradleDepArgs = gradleDepArgs.concat(addArgs);
+        }
         for (let f of gradleFiles) {
           const basePath = pathLib.dirname(f);
-          console.log("Executing", GRADLE_CMD, "dependencies in", basePath);
-          const result = spawnSync(
+          console.log(
+            "Executing",
             GRADLE_CMD,
-            ["dependencies", "-q", "--console", "plain"],
-            { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
+            gradleDepArgs.join(" "),
+            "in",
+            basePath
           );
+          const result = spawnSync(GRADLE_CMD, gradleDepArgs, {
+            cwd: basePath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+          });
           if (result.status == 1 || result.error) {
             console.error(result.stdout, result.stderr);
             if (DEBUG_MODE) {
