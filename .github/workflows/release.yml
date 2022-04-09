@@ -167,7 +167,7 @@ jobs:
         run: mkdir "$ASSETS_DIR"
       - name: download docker image sboms
         # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: ${{ env.ARTIFACT_DOCKER_SBOM }}
           path: ${{ env.ASSETS_DIR }}/${{ env.ARTIFACT_DOCKER_SBOM }}
