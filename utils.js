@@ -1932,6 +1932,10 @@ const parseCargoData = async function (cargoData) {
   cargoData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
+    // Ignore version = 3 found at the top of newer lock files
+    if (!pkg && l.startsWith("version =")) {
+      return;
+    }
     if (l.indexOf("[[package]]") > -1) {
       if (pkg) {
         pkgList.push(pkg);

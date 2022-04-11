@@ -386,6 +386,17 @@ test("parse cargo lock", async () => {
     _integrity:
       "sha384-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
   });
+  dep_list = await utils.parseCargoData(
+    fs.readFileSync("./test/data/Cargom.lock", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(242);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "actix-codec",
+    version: "0.3.0",
+    _integrity:
+      "sha384-78d1833b3838dbe990df0f1f87baf640cf6146e898166afe401839d1b001e570",
+  });
 });
 
 test("parse cargo toml", async () => {
