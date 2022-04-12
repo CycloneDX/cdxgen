@@ -1771,7 +1771,7 @@ const createRubyBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "rubygems", {
+    return buildBomNSData(pkgList, "gem", {
       src: path,
       filename: gemLockFiles.join(", "),
     });
