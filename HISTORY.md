@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
   * Added support for `yarn.lock` file. ([#238] via [#282])
 * Misc: Dependencies
   * Bump `@xmldom/xmldom` from 0.7.5 to 0.8.2 (via [#279])
-  * Bump packageurl-js from 0.0.5 to 0.0.6 (via [#276]) 
+  * Bump `packageurl-js` from 0.0.5 to 0.0.6 (via [#276]) 
 
 [#238]: https://github.com/CycloneDX/cyclonedx-node-module/issues/238
 [#282]: https://github.com/CycloneDX/cyclonedx-node-module/pull/282
