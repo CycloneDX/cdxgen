@@ -20,6 +20,7 @@
 const fs = require('fs')
 const filePath = require('path')
 const readInstalled = require('read-installed')
+const { yarnToNpm } = require('synp')
 
 const Bom = require('./model/Bom')
 
@@ -29,7 +30,16 @@ exports.createbom = (componentType, includeSerialNumber, includeLicenseText, pat
   let lockfile
   if (fs.existsSync(filePath.join(path, 'package-lock.json'))) {
     lockfile = JSON.parse(fs.readFileSync(filePath.join(path, 'package-lock.json')))
+  } else if (fs.existsSync(filePath.join(path, 'yarn.lock'))) {
+    // Convert the yarn lock file to a package-lock.json string, prior to parsing JSON.
+    lockfile = JSON.parse(yarnToNpm(path))
   }
+
+  // Add a console warning for users that have both npm and yarn lock files.
+  if (fs.existsSync(filePath.join(path, 'package-lock.json')) && fs.existsSync(filePath.join(path, 'yarn.lock'))) {
+    console.warn('Please review your project as multiple package management lock files exist, defaulting to package-lock.json')
+  }
+
   const bom = new Bom(pkgInfo, componentType, includeSerialNumber, includeLicenseText, lockfile)
   callback(null, bom)
 })

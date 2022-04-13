@@ -64,6 +64,7 @@
     "prettify-xml": "^1.2.0",
     "read-installed": "^4.0.3",
     "ssri": "^8.0.0",
+    "synp": "^1.9.10",
     "uuid": "^8.3.0",
     "xmlbuilder": "^15.1.1"
   },

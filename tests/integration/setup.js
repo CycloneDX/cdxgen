@@ -20,7 +20,7 @@
 const { spawnSync } = require('child_process')
 const path = require('path')
 
-const REQUIRES_INSTALL = [
+const REQUIRES_NPM_INSTALL = [
   'no-name',
   'no-packages',
   'with-dev-dependencies',
@@ -28,13 +28,32 @@ const REQUIRES_INSTALL = [
   'with-packages'
 ]
 
+const REQUIRES_YARN_INSTALL = [
+  'with-yarn-lockfile'
+]
+
 process.exitCode = 0
 
 let done
-for (const DIR of REQUIRES_INSTALL) {
+for (const DIR of REQUIRES_NPM_INSTALL) {
   console.log('>>> setup:', DIR)
   done = spawnSync(
     'npm', ['ci'], {
+      cwd: path.join(__dirname, DIR),
+      stdio: 'inherit',
+      shell: true
+    }
+  )
+  if (done.status !== 0) {
+    ++process.exitCode
+    console.error(done)
+  }
+}
+
+for (const DIR of REQUIRES_YARN_INSTALL) {
+  console.log('>>> setup:', DIR)
+  done = spawnSync(
+    'npx yarn', ['install --frozen-lockfile'], {
       cwd: path.join(__dirname, DIR),
       stdio: 'inherit',
       shell: true
