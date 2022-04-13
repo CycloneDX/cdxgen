@@ -32,14 +32,20 @@ const REQUIRES_YARN_INSTALL = [
   'with-yarn-lockfile'
 ]
 
-process.exitCode = 0
+console.warn(`
+WILL SETUP INTEGRATION TEST BEDS 
+THAT MIGHT CONTAIN OUTDATED VULNERABLE PACKAGES 
+FOR SHOWCASING AND TESTING PURPOSES ONLY.
+`)
 
+process.exitCode = 0
 let done
+
 for (const DIR of REQUIRES_NPM_INSTALL) {
-  console.log('>>> setup:', DIR)
+  console.log('>>> setup with NPM:', DIR)
   done = spawnSync(
     'npm', ['ci'], {
-      cwd: path.join(__dirname, DIR),
+      cwd: path.resolve(__dirname, DIR),
       stdio: 'inherit',
       shell: true
     }
@@ -51,10 +57,10 @@ for (const DIR of REQUIRES_NPM_INSTALL) {
 }
 
 for (const DIR of REQUIRES_YARN_INSTALL) {
-  console.log('>>> setup:', DIR)
+  console.log('>>> setup with YARN:', DIR)
   done = spawnSync(
-    'npx yarn', ['install --frozen-lockfile'], {
-      cwd: path.join(__dirname, DIR),
+    'npx', ['yarn', 'install', '--frozen-lockfile', '--non-interactive'], {
+      cwd: path.resolve(__dirname, DIR),
       stdio: 'inherit',
       shell: true
     }
