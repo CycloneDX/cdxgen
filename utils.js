@@ -602,7 +602,11 @@ const parsePom = function (pomFile) {
     commentKey: "value",
   }).project;
   if (project && project.dependencies) {
-    const dependencies = project.dependencies.dependency;
+    let dependencies = project.dependencies.dependency;
+    // Convert to an array
+    if (dependencies && !Array.isArray(dependencies)) {
+      dependencies = [dependencies];
+    }
     for (let adep of dependencies) {
       const version = adep.version;
       let versionStr = undefined;
