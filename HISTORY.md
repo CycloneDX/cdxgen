@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.8.0 - 2022-04-24
+
 * Added 
-  * Environment variable `BOM_REPRODUCIBLE` cause resulting files to be more reproducible
-    by omitting time/rand-based values, and sorting lists. (via [#288])
+  * Environment variable `BOM_REPRODUCIBLE` causes bom result to be more consistent
+    over multiple runs by omitting time/rand-based values, and sorting lists. (via [#288])
   * Method `Component.compare()` compares self by `purl` or `group`/`name`/`version`. (via [#288])
   * Method `ExternalReference.compare()` compares self by `type`/`url`. (via [#288])
   * Method `Hash.compare()` compares self by `algorithm`/`value`. (via [#288])
@@ -18,8 +20,11 @@ All notable changes to this project will be documented in this file.
 * Changed
   * Private properties of `ExternalReference`, `ExternalReferenceList`,  `Hash`, `HashList`
     became inaccessible. ([#233] via [#288])
+* Misc: Dependencies
+  * Bump `jest-junit` from 13.1.0 to 13.2.0 (via [#287])
 
 [#288]: https://github.com/CycloneDX/cyclonedx-node-module/pull/288
+[#287]: https://github.com/CycloneDX/cyclonedx-node-module/pull/287
 
 ## 3.7.0 - 2022-04-13
 
