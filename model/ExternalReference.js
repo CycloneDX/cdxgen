@@ -19,49 +19,107 @@
 
 const CycloneDXObject = require('./CycloneDXObject')
 
+/**
+ * ExternalReference's type
+ *
+ * @see ExternalReference.validChoices
+ *
+ * @typedef {("vcs"|"issue-tracker"|"website"|"advisories"|"bom"|"mailing-list"|"social"|"chat"
+ *           |"documentation"|"support"|"distribution"|"license"|"build-meta"|"build-system"
+ *           |"other")} ExternalReference.ExternalReferenceType
+ */
+
 class ExternalReference extends CycloneDXObject {
+  /** @type {ExternalReference.ExternalReferenceType} */
+  #type
+  /** @type {string} */
+  #url
+  /** @type {(string|undefined)} */
+  #comment
+
+  /**
+   * @param {ExternalReference.ExternalReferenceType} type
+   * @param {string} url
+   * @param {(string|undefined|null)} [comment]
+   * @throws {TypeError} if param is not of expected type
+   */
   constructor (type, url, comment) {
     super()
-    this._type = this.validateChoice('Reference type', type, this.validChoices())
-    this._url = url
-    this._comment = comment
+    this.type = type
+    this.url = url
+    this.comment = comment
   }
 
+  /** @return {Array<ExternalReference.ExternalReferenceType>} */
   validChoices () {
     return ['vcs', 'issue-tracker', 'website', 'advisories', 'bom', 'mailing-list', 'social', 'chat',
-      'documentation', 'support', 'distribution', 'license', 'build-meta', 'build-system', 'other']
+      'documentation', 'support', 'distribution', 'license', 'build-meta', 'build-system',
+      'other']
   }
 
+  /**
+   * @return {string}
+   */
   get url () {
-    return this._url
+    return this.#url
   }
 
+  /**
+   * @param {string} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set url (value) {
-    this._url = this.validateType('URL', value, String)
+    this.#url = this.validateType('URL', value, String, true)
   }
 
+  /**
+   * @return {ExternalReference.ExternalReferenceType}
+   */
   get type () {
-    return this._type
+    return this.#type
   }
 
+  /**
+   * @param {ExternalReference.ExternalReferenceType} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set type (value) {
-    this._type = this.validateChoice('Reference type', value, this.validChoices())
+    this.#type = this.validateChoice('Reference type', value, this.validChoices())
   }
 
+  /**
+   * @return {(string|undefined)}
+   */
   get comment () {
-    return this._comment
+    return this.#comment
   }
 
+  /**
+   * @param {(string|undefined|null)} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set comment (value) {
-    this._comment = this.validateType('Comment', value, String)
+    this.#comment = this.validateType('Comment', value, String)
   }
 
   toJSON () {
-    return { type: this._type, url: this._url }
+    return { type: this.#type, url: this.#url }
   }
 
   toXML () {
-    return { reference: { '@type': this._type, url: this._url } }
+    return { reference: { '@type': this.#type, url: this.#url } }
+  }
+
+  /**
+   * Compare with another ExternalReference
+   *
+   * @param {ExternalReference} other
+   * @return {number}
+   */
+  compare (other) {
+    if (!(other instanceof ExternalReference)) { return 0 }
+    return this.#type.localeCompare(other.#type) ||
+      this.#url.localeCompare(other.#url)
   }
 }
 

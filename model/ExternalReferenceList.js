@@ -20,8 +20,11 @@
 const ExternalReference = require('./ExternalReference')
 
 class ExternalReferenceList {
+  /** @type {Array<ExternalReference>} */
+  #externalReferences
+
   constructor (pkg) {
-    this._externalReferences = []
+    this.#externalReferences = []
     if (pkg) {
       this.processExternalReferences(pkg)
     }
@@ -32,46 +35,46 @@ class ExternalReferenceList {
    * @type {number}
    */
   get length () {
-    return this._externalReferences
-      ? this._externalReferences.length
+    return this.#externalReferences
+      ? this.#externalReferences.length
       : 0
   }
 
   get externalReferences () {
-    return this._externalReferences
+    return this.#externalReferences
   }
 
   set externalReferences (value) {
     if (!Array.isArray(value)) {
       throw new TypeError('ExternalReferencesList value must be an array of ExternalReference objects')
     }
-    this._externalReferences = value
+    this.#externalReferences = value
   }
 
   processExternalReferences (pkg) {
-    if (pkg.homepage && !ExternalReferenceList.isEligibleHomepage(pkg.homepage)) {
-      this._externalReferences.push(new ExternalReference('website', pkg.homepage))
+    if (pkg.homepage && ExternalReferenceList.isEligibleHomepage(pkg.homepage)) {
+      this.#externalReferences.push(new ExternalReference('website', pkg.homepage))
     }
     if (pkg.bugs && pkg.bugs.url) {
-      this._externalReferences.push(new ExternalReference('issue-tracker', pkg.bugs.url))
+      this.#externalReferences.push(new ExternalReference('issue-tracker', pkg.bugs.url))
     }
     if (pkg.repository && pkg.repository.url) {
-      this._externalReferences.push(new ExternalReference('vcs', pkg.repository.url))
+      this.#externalReferences.push(new ExternalReference('vcs', pkg.repository.url))
     }
   }
 
   /**
-   * Checks the eligibility of the package 'homepage' to be included in the externalReferences array
    * @param {string} homepage the package homepage
    * @returns {boolean} `true` if an eligible homepage
    */
   static isEligibleHomepage (homepage) {
-    return /^https?:\/\/\.$/.test(homepage)
+    return /^https?:\/\//.test(homepage) &&
+      homepage !== 'http://.' && homepage !== 'https://.'
   }
 
   toJSON () {
     const value = []
-    for (const externalReference of this._externalReferences) {
+    for (const externalReference of this.#externalReferences) {
       value.push(externalReference.toJSON())
     }
     return value
@@ -79,7 +82,7 @@ class ExternalReferenceList {
 
   toXML () {
     const value = []
-    for (const externalReference of this._externalReferences) {
+    for (const externalReference of this.#externalReferences) {
       value.push(externalReference.toXML())
     }
     return value

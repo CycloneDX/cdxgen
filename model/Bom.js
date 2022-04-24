@@ -168,23 +168,33 @@ class Bom extends CycloneDXObject {
     this._serialNumber = this.validateType('Serial number', value.String)
   }
 
+  /**
+   * @returns {string}
+   */
   toJSON () {
     const json = {
       bomFormat: 'CycloneDX',
       specVersion: this._schemaVersion,
-      serialNumber: this._serialNumber,
+      serialNumber: process.env.BOM_REPRODUCIBLE
+        ? undefined
+        : this._serialNumber,
       version: this._version,
       metadata: this._metadata,
-      components: this._components,
+      components: this._components && this._components.length > 0 && process.env.BOM_REPRODUCIBLE
+        ? Array.from(this._components).sort((a, b) => a.compare(b))
+        : this._components,
       dependencies: this._dependencies
     }
     return JSON.stringify(json, null, 2)
   }
 
+  /**
+   * @returns {string}
+   */
   toXML () {
     const bom = builder.create('bom', { encoding: 'utf-8', separateArrayItems: true })
       .att('xmlns', 'http://cyclonedx.org/schema/bom/' + this._schemaVersion)
-    if (this._serialNumber) {
+    if (this._serialNumber && !process.env.BOM_REPRODUCIBLE) {
       bom.att('serialNumber', this._serialNumber)
     }
     bom.att('version', this._version)
@@ -196,11 +206,12 @@ class Bom extends CycloneDXObject {
 
     const componentsNode = bom.ele('components')
     if (this._components && this._components.length > 0) {
-      const value = []
-      for (const component of this._components) {
-        value.push(component.toXML())
-      }
-      componentsNode.ele(value)
+      componentsNode.ele(
+        (process.env.BOM_REPRODUCIBLE
+          ? Array.from(this._components).sort((a, b) => a.compare(b))
+          : this._components
+        ).map(c => c.toXML())
+      )
     }
 
     if (this._dependencies && this._dependencies.length > 0) {

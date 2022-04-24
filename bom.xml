@@ -1,0 +1,2127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.3" serialNumber="urn:uuid:a5f9dd30-c048-472a-a805-9c4d361a8e81" version="1">
+    <metadata>
+        <timestamp>2022-04-24T13:24:50.635Z</timestamp>
+        <tools>
+            <tool>
+                <vendor>CycloneDX</vendor>
+                <name>Node.js module</name>
+                <version>3.7.0</version>
+            </tool>
+        </tools>
+        <component type="library" bom-ref="pkg:npm/%40cyclonedx/bom@3.7.0">
+            <author>Erlend Oftedal</author>
+            <group>@cyclonedx</group>
+            <name>bom</name>
+            <version>3.7.0</version>
+            <description>
+                <![CDATA[Creates CycloneDX Software Bill of Materials (SBOM) from Node.js projects]]>
+            </description>
+            <licenses>
+                <license>
+                    <id>Apache-2.0</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/%40cyclonedx/bom@3.7.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>http://github.com/CycloneDX/cyclonedx-node-module</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/CycloneDX/cyclonedx-node-module/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/CycloneDX/cyclonedx-node-module.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+    </metadata>
+    <components>
+        <component type="library" bom-ref="pkg:npm/%40xmldom/xmldom@0.8.2">
+            <group>@xmldom</group>
+            <name>xmldom</name>
+            <version>0.8.2</version>
+            <description>
+                <![CDATA[A pure JavaScript W3C standard-based (XML DOM Level 2 Core) DOMParser and XMLSerializer module.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">f91d23b92b1e111ca83ef9c143f7198a1e9ba45ec8a425e559b1d1a02473633aa9cfa8161ce81ff28e0c3847fa28156e3b2a94fa008d2e4096548240ae8f17c9</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/%40xmldom/xmldom@0.8.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/xmldom/xmldom</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/xmldom/xmldom/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/xmldom/xmldom.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/commander@8.3.0">
+            <author>TJ Holowaychuk</author>
+            <name>commander</name>
+            <version>8.3.0</version>
+            <description>
+                <![CDATA[the complete solution for node.js command-line programs]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">3a44cbf6e99ff877b60d9914abc7fc27da1fef22fa449288db875521306635f6419ab8bdcd8650aca92e5e22a1c9f3d2bbcb5486754107588a5debef9e54785b</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/commander@8.3.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/tj/commander.js#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/tj/commander.js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/tj/commander.js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/packageurl-js@0.0.6">
+            <author>the purl authors</author>
+            <name>packageurl-js</name>
+            <version>0.0.6</version>
+            <description>
+                <![CDATA[JavaScript library to parse and build "purl" aka. package URLs. This is a microlibrary implementing the purl spec at https://github.com/package-url]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">5edc046cb37d1579288cfca667a555856ec7ac1ad466635ec401b8dcfe4717b96a6c554e4e0679390ece4da205e2e67a678be458fd4de337b45f75cb5ffa6abc</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/packageurl-js@0.0.6</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/package-url/packageurl-js#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/package-url/packageurl-js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/package-url/packageurl-js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/parse-packagejson-name@1.0.1">
+            <author>Keith Cirkel</author>
+            <name>parse-packagejson-name</name>
+            <version>1.0.1</version>
+            <description>
+                <![CDATA[Parse an npm package name and returns some mildly interesting details about it]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">ab5b322cd38c87b4a01620683cca56ad74c006a0</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/parse-packagejson-name@1.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/keithamus/sort-object-keys#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/keithamus/sort-object-keys/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+ssh://git@github.com/keithamus/parse-packagejson-name.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/prettify-xml@1.2.0">
+            <author>Jonathan Werner</author>
+            <name>prettify-xml</name>
+            <version>1.2.0</version>
+            <description>
+                <![CDATA[Pretty-print XML.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">46dcf1ee8a8d8b73db30b7e06ef26dc9cf3f6f18</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/prettify-xml@1.2.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jonathanewerner/prettify-xml#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jonathanewerner/prettify-xml/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jonathanewerner/prettify-xml.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/read-installed@4.0.3">
+            <author>Isaac Z. Schlueter</author>
+            <name>read-installed</name>
+            <version>4.0.3</version>
+            <description>
+                <![CDATA[Read all the installed packages in a folder, and return a tree structure with all the data.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">ff9b8b67f187d1e4c29b9feb31f6b223acd19067</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/read-installed@4.0.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/read-installed#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/read-installed/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/read-installed.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/debuglog@1.0.1">
+            <author>Sam Roberts</author>
+            <name>debuglog</name>
+            <version>1.0.1</version>
+            <description>
+                <![CDATA[backport of util.debuglog from node v0.11]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">aa24ffb9ac3df9a2351837cfb2d279360cd78492</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/debuglog@1.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/sam-github/node-debuglog#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/sam-github/node-debuglog/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/sam-github/node-debuglog.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/read-package-json@2.1.2">
+            <author>Isaac Z. Schlueter</author>
+            <name>read-package-json</name>
+            <version>2.1.2</version>
+            <description>
+                <![CDATA[The thing npm uses to read package.json files with semantics and defaults and validation]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">0f52a6b8b42be994894b4b56f217f7586a51970b3324e5d9dc4f1877f0cd45a33977ed7055165d1e5a4604b02ea2f8ebdbc2db5af8e95a4047331a511868f334</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/read-package-json@2.1.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/read-package-json#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/read-package-json/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/read-package-json.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/glob@7.2.0">
+            <author>Isaac Z. Schlueter</author>
+            <name>glob</name>
+            <version>7.2.0</version>
+            <description>
+                <![CDATA[a little globber]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">9662dfea0b72acfabcb538d29ab3bde3005e41b151dc76cb1dbbb20faf70bb2424226a76856a8c181e3b397eb914190f7df3bae3520ff6359ad73e22bea1b6e9</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/glob@7.2.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/node-glob#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/node-glob/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/node-glob.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/fs.realpath@1.0.0">
+            <author>Isaac Z. Schlueter</author>
+            <name>fs.realpath</name>
+            <version>1.0.0</version>
+            <description>
+                <![CDATA[Use node's fs.realpath, but fall back to the JS implementation if the native one fails]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">1504ad2523158caa40db4a2787cb01411994ea4f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/fs.realpath@1.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/fs.realpath#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/fs.realpath/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/isaacs/fs.realpath.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/inflight@1.0.6">
+            <author>Isaac Z. Schlueter</author>
+            <name>inflight</name>
+            <version>1.0.6</version>
+            <description>
+                <![CDATA[Add callbacks to requests in flight to avoid async duplication]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">49bd6331d7d02d0c09bc910a1075ba8165b56df9</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/inflight@1.0.6</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/inflight</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/inflight/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/inflight.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/once@1.4.0">
+            <author>Isaac Z. Schlueter</author>
+            <name>once</name>
+            <version>1.4.0</version>
+            <description>
+                <![CDATA[Run a function exactly one time]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">583b1aa775961d4b113ac17d9c50baef9dd76bd1</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/once@1.4.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/once#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/once/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/once.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/wrappy@1.0.2">
+            <author>Isaac Z. Schlueter</author>
+            <name>wrappy</name>
+            <version>1.0.2</version>
+            <description>
+                <![CDATA[Callback wrapping utility]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">b5243d8f3ec1aa35f1364605bc0d1036e30ab69f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/wrappy@1.0.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/wrappy</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/wrappy/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/wrappy.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/inherits@2.0.4">
+            <name>inherits</name>
+            <version>2.0.4</version>
+            <description>
+                <![CDATA[Browser-friendly inheritance fully compatible with standard node.js inherits()]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">93fbc6697e3f6256b75b3c8c0af4d039761e207bea38ab67a8176ecd31e9ce9419cc0b2428c859d8af849c189233dcc64a820578ca572b16b8758799210a9ec1</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/inherits@2.0.4</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/inherits#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/inherits/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/inherits.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/minimatch@3.0.4">
+            <author>Isaac Z. Schlueter</author>
+            <name>minimatch</name>
+            <version>3.0.4</version>
+            <description>
+                <![CDATA[a glob matcher in javascript]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">c891d5404872a8f2d44e0b7d07cdcf5eee96debc7832fbc7bd252f4e8a20a70a060ce510fb20eb4741d1a2dfb23827423bbbb8857de959fb7a91604172a87450</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/minimatch@3.0.4</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/minimatch#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/minimatch/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/minimatch.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/brace-expansion@1.1.11">
+            <author>Julian Gruber</author>
+            <name>brace-expansion</name>
+            <version>1.1.11</version>
+            <description>
+                <![CDATA[Brace expansion as known from sh/bash]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">882b8f1c3160ac75fb1f6bc423fe71a73d3bcd21c1d344e9ba0aa1998b5598c3bae75f260ae44ca0e60595d101974835f3bb9fa3375a1e058a71815beb5a8688</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/brace-expansion@1.1.11</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/juliangruber/brace-expansion</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/juliangruber/brace-expansion/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/juliangruber/brace-expansion.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/balanced-match@1.0.2">
+            <author>Julian Gruber</author>
+            <name>balanced-match</name>
+            <version>1.0.2</version>
+            <description>
+                <![CDATA[Match balanced character pairs, like "{" and "}"]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">de849e50ed13315ebb84dd4099b5ec2b8c9aa94eed8e21e56f144364ea47d0a5bdf82797e1b440697d009f1b74b71d8cae94695b041a3f02252121098585393f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/balanced-match@1.0.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/juliangruber/balanced-match</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/juliangruber/balanced-match/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/juliangruber/balanced-match.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/concat-map@0.0.1">
+            <author>James Halliday</author>
+            <name>concat-map</name>
+            <version>0.0.1</version>
+            <description>
+                <![CDATA[concatenative mapdashery]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">d8a96bd77fd68df7793a73036a3ba0d5405d477b</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/concat-map@0.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/substack/node-concat-map#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/substack/node-concat-map/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/substack/node-concat-map.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/path-is-absolute@1.0.1">
+            <author>Sindre Sorhus</author>
+            <name>path-is-absolute</name>
+            <version>1.0.1</version>
+            <description>
+                <![CDATA[Node.js 0.12 path.isAbsolute() ponyfill]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/path-is-absolute@1.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/sindresorhus/path-is-absolute#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/sindresorhus/path-is-absolute/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/sindresorhus/path-is-absolute.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/normalize-package-data@2.5.0">
+            <author>Meryn Stol</author>
+            <name>normalize-package-data</name>
+            <version>2.5.0</version>
+            <description>
+                <![CDATA[Normalizes data that can be found in package.json files.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">ff908c3774f44785d38f80dc19a7b1a3eae8652752156ff400e39344eae3c73086d70ad65c4b066d129ebe39482fe643138b19949af9103e185b4caa9a42be78</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>BSD-2-Clause</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/normalize-package-data@2.5.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/normalize-package-data#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/normalize-package-data/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/npm/normalize-package-data.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/hosted-git-info@2.8.9">
+            <author>Rebecca Turner</author>
+            <name>hosted-git-info</name>
+            <version>2.8.9</version>
+            <description>
+                <![CDATA[Provides metadata and conversions from repository urls for Github, Bitbucket and Gitlab]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">9b120301bf4bb26e83a0e27bc47fb9f97e32d4b53fe078b9d0bf42e6c22cc0adc9cd42d2e1bc24d45be374182f611e1bcd3e2db944220b5e451367f91db2ef63</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/hosted-git-info@2.8.9</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/hosted-git-info</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/hosted-git-info/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/hosted-git-info.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/resolve@1.22.0">
+            <author>James Halliday</author>
+            <name>resolve</name>
+            <version>1.22.0</version>
+            <description>
+                <![CDATA[resolve like require.resolve() on behalf of files asynchronously and synchronously]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">1e1b6bc349cb792ac543ba613e9e0e39c5632cf21e327465af999c9d5b8c7bb33fede067f7c0378661512e8168dc32d9922bd26308515094f23f2580939e962f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/resolve@1.22.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/browserify/resolve#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/browserify/resolve/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/browserify/resolve.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/is-core-module@2.8.1">
+            <author>Jordan Harband</author>
+            <name>is-core-module</name>
+            <version>2.8.1</version>
+            <description>
+                <![CDATA[Is this specifier a node.js core module?]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">49d34252cdbce21af8d2115314fea5d087d9fd14ab317177aa0a111dddffefdba7513beb14efc9a17c241a6fb927f39edc4fdbe46b271b7df4b94360469bb53c</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/is-core-module@2.8.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/inspect-js/is-core-module</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/inspect-js/is-core-module/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/inspect-js/is-core-module.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/has@1.0.3">
+            <author>Thiago de Arruda</author>
+            <name>has</name>
+            <version>1.0.3</version>
+            <description>
+                <![CDATA[Object.prototype.hasOwnProperty.call shortcut]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">7f676f3b4554e8e7a3ed1916246ade8636f33008c5a79fd528fa79b53a56215e091c764ad7f0716c546d7ffb220364964ded3d71a0e656d618cd61086c14b8cf</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/has@1.0.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/tarruda/has</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/tarruda/has/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/tarruda/has.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/function-bind@1.1.1">
+            <author>Raynos</author>
+            <name>function-bind</name>
+            <version>1.1.1</version>
+            <description>
+                <![CDATA[Implementation of Function.prototype.bind]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">c88a2f033317e3db05f18979f1f482589e6cbd22ee6a26cfc5740914b98139b4ee0abd0c7f52a23e8a4633d3621638980426df69ad8587a6eb790e803554c8d0</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/function-bind@1.1.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/Raynos/function-bind</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/Raynos/function-bind/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/Raynos/function-bind.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/path-parse@1.0.7">
+            <author>Javier Blanco</author>
+            <name>path-parse</name>
+            <version>1.0.7</version>
+            <description>
+                <![CDATA[Node.js path.parse() ponyfill]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">2c32733d510410f47ecb8f33f7703411dd325dbf29001c865a8fe4e5861d620a58dbfd84b0eb24b09aeaee5387c6bcab54e9f57a31baa00a7c6a1bce2100fcb3</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/path-parse@1.0.7</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jbgutierrez/path-parse#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jbgutierrez/path-parse/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jbgutierrez/path-parse.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/supports-preserve-symlinks-flag@1.0.0">
+            <author>Jordan Harband</author>
+            <name>supports-preserve-symlinks-flag</name>
+            <version>1.0.0</version>
+            <description>
+                <![CDATA[Determine if the current node version supports the `--preserve-symlinks` flag.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">a2dd169d74bd7e076480871e3dee911cd935580f3e9ae3dae9c4a3791dd5f0adbbabd041d6b4c4dd1d69ec7bf4cf567201cf2ce95beff0323259febcd4c02dd3</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/supports-preserve-symlinks-flag@1.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/inspect-js/node-supports-preserve-symlinks-flag#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/inspect-js/node-supports-preserve-symlinks-flag/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/inspect-js/node-supports-preserve-symlinks-flag.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/semver@5.7.1">
+            <name>semver</name>
+            <version>5.7.1</version>
+            <description>
+                <![CDATA[The semantic version parser used by npm.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">6f7f5305a4d27d5eb206b6a953cf69e5f29e904da6fcdc270e870e56bb90152d7fbde320773b8f72738cdf833a0b0c56f231ff97111ae6b0680de530bb91c74f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/semver@5.7.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/node-semver#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/node-semver/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/node-semver.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/validate-npm-package-license@3.0.4">
+            <author>Kyle E. Mitchell</author>
+            <name>validate-npm-package-license</name>
+            <version>3.0.4</version>
+            <description>
+                <![CDATA[Give me a string and I'll tell you if it's a valid npm package license string]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">0e92a6d948bfc4deff1d0282b69671a11581859f59d24aadca01bc5c280d43c6650e7c6e4265a18f9eba8fc7cde02bb7fc999b86c0e8edf70026ae2cf61dbb13</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>Apache-2.0</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/validate-npm-package-license@3.0.4</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/kemitchell/validate-npm-package-license.js#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/kemitchell/validate-npm-package-license.js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/kemitchell/validate-npm-package-license.js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/spdx-correct@3.1.1">
+            <author>Kyle E. Mitchell</author>
+            <name>spdx-correct</name>
+            <version>3.1.1</version>
+            <description>
+                <![CDATA[correct invalid SPDX expressions]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">70e61c516c210ae1c25e2e3d4611510b22442b788f8f5662cfd0e9562577b5b64ec170f8f50cc837732938b24dc61daac2ada524965a28c570f6a362e234c2d3</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>Apache-2.0</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/spdx-correct@3.1.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jslicense/spdx-correct.js#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jslicense/spdx-correct.js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jslicense/spdx-correct.js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/spdx-expression-parse@3.0.1">
+            <author>Kyle E. Mitchell</author>
+            <name>spdx-expression-parse</name>
+            <version>3.0.1</version>
+            <description>
+                <![CDATA[parse SPDX license expressions]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">71ba87ba7b105a724d13a2a155232c31e1f91ff2fd129ca66f3a93437b8bc0d08b675438f35a166a87ea1fb9cee95d3bc655f063a3e141d43621e756c7f64ae1</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/spdx-expression-parse@3.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jslicense/spdx-expression-parse.js#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jslicense/spdx-expression-parse.js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jslicense/spdx-expression-parse.js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/spdx-exceptions@2.3.0">
+            <author>The Linux Foundation</author>
+            <name>spdx-exceptions</name>
+            <version>2.3.0</version>
+            <description>
+                <![CDATA[list of SPDX standard license exceptions]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">fed4eb60e0bb3cf2359d4020c77e21529a97bb2246f834c72539c850b1b8ac3ca08b8c6efed7e09aad5ed5c211c11cf0660a3834bc928beae270b919930e22e4</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>CC-BY-3.0</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/spdx-exceptions@2.3.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/kemitchell/spdx-exceptions.json#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/kemitchell/spdx-exceptions.json/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/kemitchell/spdx-exceptions.json.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/spdx-license-ids@3.0.11">
+            <author>Shinnosuke Watanabe</author>
+            <name>spdx-license-ids</name>
+            <version>3.0.11</version>
+            <description>
+                <![CDATA[A list of SPDX license identifiers]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">0ad97606b1623345f7300358823dc29328318519abf668bac617a36dd3bdeb49c5e840c90294d8a67d014270ca96734150b2a208dd67df0f440641caf195a0fa</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>CC0-1.0</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/spdx-license-ids@3.0.11</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jslicense/spdx-license-ids#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jslicense/spdx-license-ids/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jslicense/spdx-license-ids.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/npm-normalize-package-bin@1.0.1">
+            <author>Isaac Z. Schlueter</author>
+            <name>npm-normalize-package-bin</name>
+            <version>1.0.1</version>
+            <description>
+                <![CDATA[Turn any flavor of allowable package.json bin into a normalized object]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">10f7da7e5e892f9feb53ea2de8fde04520a93c35b95662335fde7d39bd7ec92154bae6075877a45e9c1d51970a3f90be0d2e0612d74996ec018e7b0d0e5f9f48</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/npm-normalize-package-bin@1.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/npm-normalize-package-bin#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/npm-normalize-package-bin/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/npm-normalize-package-bin.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/json-parse-even-better-errors@2.3.1">
+            <author>Kat Marchán</author>
+            <name>json-parse-even-better-errors</name>
+            <version>2.3.1</version>
+            <description>
+                <![CDATA[JSON.parse with context information on error]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">c72170ca1ae8fc91287fa1a17b68b3d8d717a23dac96836c5abfd7b044432bfa223c27da36197938d7e9fa341d01945043420958dcc7f7321917b962f75921db</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/json-parse-even-better-errors@2.3.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/json-parse-even-better-errors#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/json-parse-even-better-errors/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/json-parse-even-better-errors.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/readdir-scoped-modules@1.1.0">
+            <author>Isaac Z. Schlueter</author>
+            <name>readdir-scoped-modules</name>
+            <version>1.1.0</version>
+            <description>
+                <![CDATA[Like `fs.readdir` but handling `@org/module` dirs as if they were a single entry.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">6ac6a29037aa01083b2627d1b199f5349657a3d13e57097209f6e4661c322128a7aa4e73352eb6eba1d2e646a1e8fd1269028617a4a43676551d4cc7158c580f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/readdir-scoped-modules@1.1.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/readdir-scoped-modules</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/readdir-scoped-modules/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/readdir-scoped-modules.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/dezalgo@1.0.3">
+            <author>Isaac Z. Schlueter</author>
+            <name>dezalgo</name>
+            <version>1.0.3</version>
+            <description>
+                <![CDATA[Contain async insanity so that the dark pony lord doesn't eat souls]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">7f742de066fc748bc8db820569dddce49bf0d456</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/dezalgo@1.0.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/dezalgo</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/dezalgo/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/dezalgo.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/asap@2.0.6">
+            <name>asap</name>
+            <version>2.0.6</version>
+            <description>
+                <![CDATA[High-priority task queue for Node.js and browsers]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">e50347611d7e690943208bbdafebcbc2fb866d46</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/asap@2.0.6</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/kriskowal/asap#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/kriskowal/asap/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/kriskowal/asap.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/graceful-fs@4.2.9">
+            <name>graceful-fs</name>
+            <version>4.2.9</version>
+            <description>
+                <![CDATA[A drop-in replacement for fs, making various improvements.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">36d371a947178295b688cadfa927d1ef71a5b77f4af812f05ac3ecf78c91eb7bf8e53d166de8fb79198be5c59fc0482a5e79a3429df36894ec85d456fea0b665</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/graceful-fs@4.2.9</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/node-graceful-fs#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/node-graceful-fs/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/isaacs/node-graceful-fs.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/slide@1.1.6">
+            <author>Isaac Z. Schlueter</author>
+            <name>slide</name>
+            <version>1.1.6</version>
+            <description>
+                <![CDATA[A flow control lib small enough to fit on in a slide presentation. Derived live at Oak.JS]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/slide@1.1.6</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/slide-flow-control#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/slide-flow-control/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/slide-flow-control.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/util-extend@1.0.3">
+            <name>util-extend</name>
+            <version>1.0.3</version>
+            <description>
+                <![CDATA[Node's internal object extension function]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">a7c216d267545169637b3b6edc6ca9119e2ff93f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/util-extend@1.0.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/util-extend#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/util-extend/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/util-extend.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/ssri@8.0.1">
+            <author>Kat Marchán</author>
+            <name>ssri</name>
+            <version>8.0.1</version>
+            <description>
+                <![CDATA[Standard Subresource Integrity library -- parses, serializes, generates, and verifies integrity metadata according to the SRI spec.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">f7ba92873cb5022cb1bcf34890b5a81ae6bbc68433ccf8d0d07007e01d2b58aa3b499e944ae3dcad488016bc2cd141fc46b6d69a0ab72cc4ce6e13c81db6c179</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/ssri@8.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/ssri#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/ssri/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/ssri.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/minipass@3.1.6">
+            <author>Isaac Z. Schlueter</author>
+            <name>minipass</name>
+            <version>3.1.6</version>
+            <description>
+                <![CDATA[minimal implementation of a PassThrough stream]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">aedcb9929c3dff3f125fd766c5b94503a79d22d526c0980c7980d946bc25215376ee2f20cac19bce7270520830d95fc556a1520dd5b2d38d193d2f35d43600a9</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/minipass@3.1.6</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/minipass#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/minipass/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/isaacs/minipass.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/yallist@4.0.0">
+            <author>Isaac Z. Schlueter</author>
+            <name>yallist</name>
+            <version>4.0.0</version>
+            <description>
+                <![CDATA[Yet Another Linked List]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">df074689d672ab93c1d3ce172c44b94e9392440df08d7025216321ba6da445cbffe354a7d9e990d1dc9c416e2e6572de8f02af83a12cbdb76554bf8560472dec</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/yallist@4.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/yallist#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/yallist/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/isaacs/yallist.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/synp@1.9.10">
+            <author>Aram Drevekenin</author>
+            <name>synp</name>
+            <version>1.9.10</version>
+            <description>
+                <![CDATA[Convert yarn.lock to package-lock.json and vice versa]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">1bd67f4d74da046d7136c9547f7747162773ffcb6fbd1691e7ad165b23b0c88ed7ac61841814c420883885d461d6a16dcfc98f6329c0518c165d483f661d0fcf</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/synp@1.9.10</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/imsnif/synp#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/imsnif/synp/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/imsnif/synp.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/%40yarnpkg/lockfile@1.1.0">
+            <group>@yarnpkg</group>
+            <name>lockfile</name>
+            <version>1.1.0</version>
+            <description>
+                <![CDATA[The parser/stringifier for Yarn lockfiles.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">1a94b0bf25ce70e3a557bd2f6e7ce38f87d6e715bf15d505ea7404b7510dcbb9b86427338b5fbf6ee5543c0aa619fab39ec391345cd432372d4c8a7c6bdb6e09</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>BSD-2-Clause</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/%40yarnpkg/lockfile@1.1.0</purl>
+            <externalReferences>
+                <reference type="vcs">
+                    <url>https://github.com/yarnpkg/yarn/blob/master/packages/lockfile</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/bash-glob@2.0.0">
+            <author>Jon Schlinkert</author>
+            <name>bash-glob</name>
+            <version>2.0.0</version>
+            <description>
+                <![CDATA[Bash-powered globbing for node.js]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">e77fcd27eb7650090462040f3ba6858dbc7551ef2f34d5c261a0381258cd28fd5247c03d752410a01998591f012d73b4fcd0d12443122780715a2862fff9b72b</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/bash-glob@2.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/micromatch/bash-glob</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/micromatch/bash-glob/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/micromatch/bash-glob.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/bash-path@1.0.3">
+            <author>Jon Schlinkert</author>
+            <name>bash-path</name>
+            <version>1.0.3</version>
+            <description>
+                <![CDATA[Get the path to the bash binary on your OS.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">986ad8bce6bac9363fa8d0a26643c526a5a63832baf32ea499544027534d6d694da09ad4aec171bbb154d842a0ee06eb7abeadb6b2a4176b3f13f961472eff38</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/bash-path@1.0.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/micromatch/bash-path</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/micromatch/bash-path/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/micromatch/bash-path.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/arr-union@3.1.0">
+            <author>Jon Schlinkert</author>
+            <name>arr-union</name>
+            <version>3.1.0</version>
+            <description>
+                <![CDATA[Combines a list of arrays, returning a single array with unique values, using strict equality for comparisons.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">e39b09aea9def866a8f206e288af63919bae39c4</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/arr-union@3.1.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jonschlinkert/arr-union</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jonschlinkert/arr-union/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jonschlinkert/arr-union.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/is-windows@1.0.2">
+            <author>Jon Schlinkert</author>
+            <name>is-windows</name>
+            <version>1.0.2</version>
+            <description>
+                <![CDATA[Returns true if the platform is windows. UMD module, works with node.js, commonjs, browser, AMD, electron, etc.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">7972b55089ead9b3e68f25fa7b754723330ba1b73827de22e005a7f87a6adce5392a4ad10bde8e01c4773d127fa46bba9bc4d19c11cff5d917415b13fc239520</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/is-windows@1.0.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jonschlinkert/is-windows</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jonschlinkert/is-windows/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jonschlinkert/is-windows.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/component-emitter@1.3.0">
+            <name>component-emitter</name>
+            <version>1.3.0</version>
+            <description>
+                <![CDATA[Event emitter]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">45ddec7ba401fac3b54f0a998ec710aeeae910f21f3b4ff26274a29fa43fac3de63aeb47bd4ac202126e6f7afdd2e35bf9211206e134418a01f7461d7dab6c46</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/component-emitter@1.3.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/component/emitter#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/component/emitter/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/component/emitter.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/cross-spawn@5.1.0">
+            <author>IndigoUnited</author>
+            <name>cross-spawn</name>
+            <version>5.1.0</version>
+            <description>
+                <![CDATA[Cross platform child_process#spawn and child_process#spawnSync]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">8910cf24a50f544343edd1cf3bcae46ce9cfa720f281c0c5b568e9796342832f163f6ad77315cbf13b2445e425e8eac1d86efe509ada82cd6ad7916e75cec6eb</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/cross-spawn@5.1.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/IndigoUnited/node-cross-spawn#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/IndigoUnited/node-cross-spawn/issues/</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/IndigoUnited/node-cross-spawn.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/lru-cache@4.1.5">
+            <author>Isaac Z. Schlueter</author>
+            <name>lru-cache</name>
+            <version>4.1.5</version>
+            <description>
+                <![CDATA[A cache object that deletes the least-recently-used items.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">268e9d274e029928eece7c09492de951e5a677f1f47df4e59175e0c198be7aad540a6a90c0287e78bb183980b063df758b615a878875044302c78a938466ec88</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/lru-cache@4.1.5</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/node-lru-cache#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/node-lru-cache/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/node-lru-cache.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/pseudomap@1.0.2">
+            <author>Isaac Z. Schlueter</author>
+            <name>pseudomap</name>
+            <version>1.0.2</version>
+            <description>
+                <![CDATA[A thing that is a lot like ES6 `Map`, but without iterators, for use in environments where `for..of` syntax and `Map` are not available.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">f052a28da70e618917ef0a8ac34c1ae5a68286b3</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/pseudomap@1.0.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/pseudomap#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/pseudomap/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/isaacs/pseudomap.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/yallist@2.1.2">
+            <author>Isaac Z. Schlueter</author>
+            <name>yallist</name>
+            <version>2.1.2</version>
+            <description>
+                <![CDATA[Yet Another Linked List]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">df074689d672ab93c1d3ce172c44b94e9392440df08d7025216321ba6da445cbffe354a7d9e990d1dc9c416e2e6572de8f02af83a12cbdb76554bf8560472dec</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/yallist@2.1.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/yallist#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/yallist/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/isaacs/yallist.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/shebang-command@1.2.0">
+            <author>Kevin Martensson</author>
+            <name>shebang-command</name>
+            <version>1.2.0</version>
+            <description>
+                <![CDATA[Get the command from a shebang]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">907c6bdb366962d766acdd6a0e3aeb5ff675ad1d641bc0f1fa09292b51b87979af5ecc26704d614d6056614ce5ada630d7fc99a7a62e0d8efb62dbdb3747660c</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/shebang-command@1.2.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/kevva/shebang-command#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/kevva/shebang-command/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/kevva/shebang-command.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/shebang-regex@1.0.0">
+            <author>Sindre Sorhus</author>
+            <name>shebang-regex</name>
+            <version>1.0.0</version>
+            <description>
+                <![CDATA[Regular expression for matching a shebang]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">efef9d161b5cc77df9dee05aabc0c347836ec417ad0730bb6503a19934089c711de9b4ab5dd884cb30af1b4ed9e3851874b4a1594c97b7933fca1cfc7a471bd4</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/shebang-regex@1.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/sindresorhus/shebang-regex#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/sindresorhus/shebang-regex/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/sindresorhus/shebang-regex.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/which@1.3.1">
+            <author>Isaac Z. Schlueter</author>
+            <name>which</name>
+            <version>1.3.1</version>
+            <description>
+                <![CDATA[Like which(1) unix command. Find the first instance of an executable in the PATH.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">04b2374e5d535b73ef97bd25df2ab763ae22f9ac29c17aac181616924a8cb676d782b303fb28fbae15b492e103c7325a6171a3116e6881aa4a34c10a34c8e26c</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/which@1.3.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/node-which#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/node-which/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/node-which.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/isexe@2.0.0">
+            <author>Isaac Z. Schlueter</author>
+            <name>isexe</name>
+            <version>2.0.0</version>
+            <description>
+                <![CDATA[Minimal module to check if a file is executable.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">e8fbf374dc556ff8947a10dcb0572d633f2cfa10</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/isexe@2.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/isexe#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/isexe/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/isaacs/isexe.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/each-parallel-async@1.0.0">
+            <author>Jon Schlinkert</author>
+            <name>each-parallel-async</name>
+            <version>1.0.0</version>
+            <description>
+                <![CDATA[Asynchronously calls a function on each element in an array in parallel.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">3fff642d08908f4bd9373a61bca29381180c9e5aace5c26cc5e022ba88358eb527c2fd19de1554c090d088fecc9cb6f623d4b5e6747d49151c7854fd231b6a46</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/each-parallel-async@1.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jonschlinkert/each-parallel-async</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jonschlinkert/each-parallel-async/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jonschlinkert/each-parallel-async.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/extend-shallow@2.0.1">
+            <author>Jon Schlinkert</author>
+            <name>extend-shallow</name>
+            <version>2.0.1</version>
+            <description>
+                <![CDATA[Extend an object with the properties of additional objects. node.js/javascript util.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">51af7d614ad9a9f610ea1bafbb989d6b1c56890f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/extend-shallow@2.0.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jonschlinkert/extend-shallow</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jonschlinkert/extend-shallow/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jonschlinkert/extend-shallow.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/is-extendable@0.1.1">
+            <author>Jon Schlinkert</author>
+            <name>is-extendable</name>
+            <version>0.1.1</version>
+            <description>
+                <![CDATA[Returns true if a value is any of the object types: array, regexp, plain object, function or date. This is useful for determining if a value can be extended, e.g. "can the value have keys?"]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">62b110e289a471418e3ec36a617d472e301dfc89</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/is-extendable@0.1.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jonschlinkert/is-extendable</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jonschlinkert/is-extendable/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jonschlinkert/is-extendable.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/is-extglob@2.1.1">
+            <author>Jon Schlinkert</author>
+            <name>is-extglob</name>
+            <version>2.1.1</version>
+            <description>
+                <![CDATA[Returns true if a string has an extglob.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-1">a88c02535791f02ed37c76a1b9ea9773c833f8c2</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/is-extglob@2.1.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/jonschlinkert/is-extglob</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/jonschlinkert/is-extglob/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/jonschlinkert/is-extglob.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/is-glob@4.0.3">
+            <author>Jon Schlinkert</author>
+            <name>is-glob</name>
+            <version>4.0.3</version>
+            <description>
+                <![CDATA[Returns `true` if the given string looks like a glob pattern or an extglob pattern. This makes it easy to create code that only uses external modules like node-glob when necessary, resulting in much faster code execution and initialization time, and a better user experience.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">c5e9526b21c7dfa66013b6568658bba56df884d6cd97c3a3bf92959a4243e2105d0f7b61f137e4f6f61ab0b33e99758e6611648197f184b4a7af046be1e9524a</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/is-glob@4.0.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/micromatch/is-glob</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/micromatch/is-glob/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/micromatch/is-glob.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/colors@1.4.0">
+            <author>Marak Squires</author>
+            <name>colors</name>
+            <version>1.4.0</version>
+            <description>
+                <![CDATA[get colors in your node.js console]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">6be52a4e1e2481983f4a51af7dbcc31e9811bbb00040e9a6a911c99f185164808a1544fdd5bad584d36de7c08c594f4fb016efdcf0c26541db571b83887da6b4</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/colors@1.4.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/Marak/colors.js</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/Marak/colors.js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+ssh://git@github.com/Marak/colors.js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/commander@7.2.0">
+            <author>TJ Holowaychuk</author>
+            <name>commander</name>
+            <version>7.2.0</version>
+            <description>
+                <![CDATA[the complete solution for node.js command-line programs]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">3a44cbf6e99ff877b60d9914abc7fc27da1fef22fa449288db875521306635f6419ab8bdcd8650aca92e5e22a1c9f3d2bbcb5486754107588a5debef9e54785b</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/commander@7.2.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/tj/commander.js#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/tj/commander.js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/tj/commander.js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/eol@0.9.1">
+            <author>Ryan Van Etten</author>
+            <name>eol</name>
+            <version>0.9.1</version>
+            <description>
+                <![CDATA[Newline character converter]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">0ecfd3128663c20811a33fd0d8eed21378b8266eba9aa4c37e674776affb0ca564ddbae8f50f21e9675729d3ea14b328ab1ac32b94954731d53ce4babae1adae</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/eol@0.9.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/ryanve/eol</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/ryanve/eol/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/ryanve/eol.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/lodash@4.17.21">
+            <author>John-David Dalton</author>
+            <name>lodash</name>
+            <version>4.17.21</version>
+            <description>
+                <![CDATA[Lodash modular utilities.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">bf690311ee7b95e713ba568322e3533f2dd1cb880b189e99d4edef13592b81764daec43e2c54c61d5c558dc5cfb35ecb85b65519e74026ff17675b6f8f916f4a</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/lodash@4.17.21</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://lodash.com/</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/lodash/lodash/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/lodash/lodash.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/nmtree@1.0.6">
+            <author>Aram Drevekenin</author>
+            <name>nmtree</name>
+            <version>1.0.6</version>
+            <description>
+                <![CDATA[Get a (flat) tree representation of the modules in your node_modules folder]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">4943c2a325f9c3f94e4fac03fcf644ca647e27cf7df7ce2d6043988ee0ea42520e797e4d49bd4c12c09c4f46b3f9d8590f430b023e61181644a4a431b8376788</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/nmtree@1.0.6</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/imsnif/nmtree#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/imsnif/nmtree/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/imsnif/nmtree.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/commander@2.20.3">
+            <author>TJ Holowaychuk</author>
+            <name>commander</name>
+            <version>2.20.3</version>
+            <description>
+                <![CDATA[the complete solution for node.js command-line programs]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">3a44cbf6e99ff877b60d9914abc7fc27da1fef22fa449288db875521306635f6419ab8bdcd8650aca92e5e22a1c9f3d2bbcb5486754107588a5debef9e54785b</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/commander@2.20.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/tj/commander.js#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/tj/commander.js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/tj/commander.js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/semver@7.3.5">
+            <name>semver</name>
+            <version>7.3.5</version>
+            <description>
+                <![CDATA[The semantic version parser used by npm.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">6f7f5305a4d27d5eb206b6a953cf69e5f29e904da6fcdc270e870e56bb90152d7fbde320773b8f72738cdf833a0b0c56f231ff97111ae6b0680de530bb91c74f</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/semver@7.3.5</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/npm/node-semver#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/npm/node-semver/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/npm/node-semver.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/lru-cache@6.0.0">
+            <author>Isaac Z. Schlueter</author>
+            <name>lru-cache</name>
+            <version>6.0.0</version>
+            <description>
+                <![CDATA[A cache object that deletes the least-recently-used items.]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">268e9d274e029928eece7c09492de951e5a677f1f47df4e59175e0c198be7aad540a6a90c0287e78bb183980b063df758b615a878875044302c78a938466ec88</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>ISC</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/lru-cache@6.0.0</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/isaacs/node-lru-cache#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/isaacs/node-lru-cache/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/isaacs/node-lru-cache.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/sort-object-keys@1.1.3">
+            <author>Keith Cirkel</author>
+            <name>sort-object-keys</name>
+            <version>1.1.3</version>
+            <description>
+                <![CDATA[Sort an object's keys, including an optional key list]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">f39e69bcaf95914ecf68a60f73e2639e6b781337a3407ca1845df7ab7d6a1bcc7b99a0f391e1610004e174261acb5d422123bea803308ce04ff9f3d97b420fca</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/sort-object-keys@1.1.3</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/keithamus/sort-object-keys#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/keithamus/sort-object-keys/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+ssh://git@github.com/keithamus/sort-object-keys.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/uuid@8.3.2">
+            <name>uuid</name>
+            <version>8.3.2</version>
+            <description>
+                <![CDATA[RFC4122 (v1, v4, and v5) UUIDs]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">f8d62cd9078c5b2f865853849bdc679fa1c20e9d25ed0043ee697cccb52627ef77439345d0da1c12b9f09139175453625f7fdfa42e9a7d2f0385bfe0cfb47b7a</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/uuid@8.3.2</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>https://github.com/uuidjs/uuid#readme</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>https://github.com/uuidjs/uuid/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git+https://github.com/uuidjs/uuid.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+        <component type="library" bom-ref="pkg:npm/xmlbuilder@15.1.1">
+            <author>Ozgur Ozcitak</author>
+            <name>xmlbuilder</name>
+            <version>15.1.1</version>
+            <description>
+                <![CDATA[An XML builder for node.js]]>
+            </description>
+            <hashes>
+                <hash alg="SHA-512">c8ca8606ab57c9e3757b74c662f80d803559de3f385b873090e5d0b30821a25e803e065669f7fd9676ef37b3076093a25ecbc63d7b634d8244882f49db0bfd12</hash>
+            </hashes>
+            <licenses>
+                <license>
+                    <id>MIT</id>
+                </license>
+            </licenses>
+            <purl>pkg:npm/xmlbuilder@15.1.1</purl>
+            <externalReferences>
+                <reference type="website">
+                    <url>http://github.com/oozcitak/xmlbuilder-js</url>
+                </reference>
+                <reference type="issue-tracker">
+                    <url>http://github.com/oozcitak/xmlbuilder-js/issues</url>
+                </reference>
+                <reference type="vcs">
+                    <url>git://github.com/oozcitak/xmlbuilder-js.git</url>
+                </reference>
+            </externalReferences>
+        </component>
+    </components>
+</bom>

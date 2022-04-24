@@ -21,8 +21,11 @@ const ssri = require('ssri')
 const Hash = require('./Hash')
 
 class HashList {
+  /** @type {Array<Hash>} */
+  #hashes
+
   constructor (pkg, lockfile) {
-    this._hashes = []
+    this.#hashes = []
     if (pkg) {
       this.processHashes(pkg, lockfile)
     }
@@ -33,20 +36,20 @@ class HashList {
    * @type {number}
    */
   get length () {
-    return this._hashes
-      ? this._hashes.length
+    return this.#hashes
+      ? this.#hashes.length
       : 0
   }
 
   get hashes () {
-    return this._hashes
+    return this.#hashes
   }
 
   set hashes (value) {
     if (!Array.isArray(value)) {
       throw new TypeError('HashList value must be an array of Hash objects')
     }
-    this._hashes = value
+    this.#hashes = value
   }
 
   processHashes (pkg, lockfile) {
@@ -57,7 +60,7 @@ class HashList {
         this.formatHash(ssri.parse(lockfile.dependencies[pkg.name].integrity))
       }
     } else if (pkg._shasum) {
-      this._hashes.push(new Hash('SHA-1', pkg._shasum))
+      this.#hashes.push(new Hash('SHA-1', pkg._shasum))
     } else if (pkg._integrity) {
       this.formatHash(ssri.parse(pkg._integrity))
     }
@@ -67,16 +70,16 @@ class HashList {
     // Components may have multiple hashes with various lengths. Check each one
     // that is supported by the CycloneDX specification.
     if (Object.prototype.hasOwnProperty.call(integrity, 'sha512')) {
-      this._hashes.push(this.createHash('SHA-512', integrity.sha512[0].digest))
+      this.#hashes.push(this.createHash('SHA-512', integrity.sha512[0].digest))
     }
     if (Object.prototype.hasOwnProperty.call(integrity, 'sha384')) {
-      this._hashes.push(this.createHash('SHA-384', integrity.sha384[0].digest))
+      this.#hashes.push(this.createHash('SHA-384', integrity.sha384[0].digest))
     }
     if (Object.prototype.hasOwnProperty.call(integrity, 'sha256')) {
-      this._hashes.push(this.createHash('SHA-256', integrity.sha256[0].digest))
+      this.#hashes.push(this.createHash('SHA-256', integrity.sha256[0].digest))
     }
     if (Object.prototype.hasOwnProperty.call(integrity, 'sha1')) {
-      this._hashes.push(this.createHash('SHA-1', integrity.sha1[0].digest))
+      this.#hashes.push(this.createHash('SHA-1', integrity.sha1[0].digest))
     }
   }
 
@@ -86,19 +89,17 @@ class HashList {
   }
 
   toJSON () {
-    const value = []
-    for (const hash of this._hashes) {
-      value.push(hash.toJSON())
-    }
-    return value
+    const hashes = this.#hashes.length > 0 && process.env.BOM_REPRODUCIBLE
+      ? Array.from(this.#hashes).sort((a, b) => a.compare(b))
+      : this.#hashes
+    return hashes.map(h => h.toJSON())
   }
 
   toXML () {
-    const value = []
-    for (const hash of this._hashes) {
-      value.push(hash.toXML())
-    }
-    return value
+    const hashes = this.#hashes.length > 0 && process.env.BOM_REPRODUCIBLE
+      ? Array.from(this.#hashes).sort((a, b) => a.compare(b))
+      : this.#hashes
+    return hashes.map(h => h.toXML())
   }
 }
 

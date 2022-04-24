@@ -44,6 +44,9 @@ Options:
   -t, --type <type>           Project type (default: "library")
   -ns, --no-serial-number     Do not include BOM serial number
   -h, --help                  display help for command
+
+Environment variable BOM_REPRODUCIBLE causes bom result to be more consistent
+over multiple runs by omitting time/rand-based values, and sorting lists.
 ```
 
 ### Example (default: XML)

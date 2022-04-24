@@ -100,7 +100,7 @@ class Metadata extends CycloneDXObject {
 
   toJSON () {
     return {
-      timestamp: (this._timestamp) ? this._timestamp.toISOString() : undefined,
+      timestamp: (this._timestamp && !process.env.BOM_REPRODUCIBLE) ? this._timestamp.toISOString() : undefined,
       tools: (this._tools && this._tools.length > 0) ? this.processArray(this._tools, 'JSON') : undefined,
       authors: (this._authors && this._authors.length > 0) ? this.processArray(this._authors, 'JSON') : undefined,
       component: (this._component) ? this._component.toJSON() : undefined,
@@ -111,7 +111,7 @@ class Metadata extends CycloneDXObject {
 
   toXML () {
     return {
-      timestamp: (this._timestamp) ? this._timestamp.toISOString() : undefined,
+      timestamp: (this._timestamp && !process.env.BOM_REPRODUCIBLE) ? this._timestamp.toISOString() : undefined,
       tools: (this._tools && this._tools.length > 0) ? this.processArray(this._tools, 'XML') : undefined,
       authors: (this._authors && this._authors.length > 0) ? this.processArray(this._authors, 'XML') : undefined,
       component: (this._component) ? this._component.toXML().component : undefined,

@@ -19,40 +19,86 @@
 
 const CycloneDXObject = require('./CycloneDXObject')
 
+/**
+ * HashAlgorithm
+ *
+ * @see Hash.validAlgorithms
+ *
+ * @typedef {("MD5"|"SHA-1"|"SHA-256"|"SHA-384"|"SHA-512"|"SHA3-256"|"SHA3-384"
+ *           |"SHA3-512"|"BLAKE2b-256"|"BLAKE2b-384"|"BLAKE2b-512"|"BLAKE3")} Hash.HashAlgorithm
+ */
+
 class Hash extends CycloneDXObject {
+  /** @type {Hash.HashAlgorithm}  */
+  #algorithm
+  /** @type {string} */
+  #value
+
+  /**
+   * @param {Hash.HashAlgorithm} algorithm
+   * @param {string} value
+   * @throws {TypeError} if param is not of expected type
+   */
   constructor (algorithm, value) {
     super()
-    this._algorithm = this.validateChoice('Algorithm', algorithm, this.validAlgorithms())
-    this._value = value
+    this.algorithm = algorithm
+    this.value = value
   }
 
+  /** @return {Array<Hash.HashAlgorithm>} */
   validAlgorithms () {
     return ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512', 'SHA3-256', 'SHA3-384',
       'SHA3-512', 'BLAKE2b-256', 'BLAKE2b-384', 'BLAKE2b-512', 'BLAKE3']
   }
 
+  /**
+   * @return {Hash.HashAlgorithm}
+   */
   get algorithm () {
-    return this._algorithm
+    return this.#algorithm
   }
 
+  /**
+   * @param {Hash.HashAlgorithm} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set algorithm (value) {
-    this._algorithm = this.validateChoice('Algorithm', value, this.validAlgorithms())
+    this.#algorithm = this.validateChoice('Algorithm', value, this.validAlgorithms())
   }
 
+  /**
+   * @return {string}
+   */
   get value () {
-    return this._value
+    return this.#value
   }
 
+  /**
+   * @param {string} value
+   * @throws {TypeError} if value is not of expected type
+   */
   set value (value) {
-    this._value = this.validateType('Hash value', value, String)
+    this.#value = this.validateType('Hash value', value, String, true)
   }
 
   toJSON () {
-    return { alg: this._algorithm, content: this._value }
+    return { alg: this.#algorithm, content: this.#value }
   }
 
   toXML () {
-    return { hash: { '@alg': this._algorithm, '#text': this._value } }
+    return { hash: { '@alg': this.#algorithm, '#text': this.#value } }
+  }
+
+  /**
+   * Compare with another Hash.
+   *
+   * @param {Hash} other
+   * @return {number}
+   */
+  compare (other) {
+    if (!(other instanceof Hash)) { return 0 }
+    return this.#algorithm.localeCompare(other.#algorithm) ||
+      this.#value.localeCompare(other.#value)
   }
 }
 

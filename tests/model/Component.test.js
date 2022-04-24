@@ -85,7 +85,7 @@ test('Model: Component / Format: JSON', () => {
 describe('Model: Component', () => {
   describe.each([
     {
-      purpose: 'constructed wit author',
+      purpose: 'constructed with author',
       // issue: https://github.com/CycloneDX/cyclonedx-node-module/issues/246
       pkg: { name: 'test', author: { name: 'Foo Bar' } },
       property: 'author',
@@ -116,6 +116,63 @@ describe('Model: Component set empty version results in undefined', () => {
   expect(component.version).not.toBeUndefined()
   component.version = ''
   expect(component.version).toBeUndefined()
+})
+
+describe('Model: Component compare', () => {
+  it.each(
+    [
+      {
+        purpose: 'same',
+        a: new Component({ name: '@foo/bar', version: '1' }),
+        b: new Component({ name: '@foo/bar', version: '1' }),
+        expected: 0
+      },
+      {
+        purpose: 'group a/b',
+        a: new Component({ name: '@a/bar', version: '1' }),
+        b: new Component({ name: '@b/bar', version: '1' }),
+        expected: -1
+      },
+      {
+        purpose: 'group b/a',
+        a: new Component({ name: '@b/bar', version: '1' }),
+        b: new Component({ name: '@a/bar', version: '1' }),
+        expected: +1
+      },
+      {
+        purpose: 'group a/b',
+        a: new Component({ name: '@a/bar', version: '1' }),
+        b: new Component({ name: '@b/bar', version: '1' }),
+        expected: -1
+      },
+      {
+        purpose: 'name a/b',
+        a: new Component({ name: '@foo/a', version: '1' }),
+        b: new Component({ name: '@foo/b', version: '1' }),
+        expected: -1
+      },
+      {
+        purpose: 'name b/a',
+        a: new Component({ name: '@foo/b', version: '1' }),
+        b: new Component({ name: '@foo/a', version: '1' }),
+        expected: +1
+      },
+      {
+        purpose: 'version 1/2',
+        a: new Component({ name: '@foo/bar', version: '1' }),
+        b: new Component({ name: '@foo/bar', version: '2' }),
+        expected: -1
+      },
+      {
+        purpose: 'version 2/1',
+        a: new Component({ name: '@foo/bar', version: '2' }),
+        b: new Component({ name: '@foo/bar', version: '1' }),
+        expected: +1
+      }
+    ]
+  )('$purpose', ({ a, b, expected }) => {
+    expect(a.compare(b)).toBe(expected)
+  })
 })
 
 function testPropertyAndNormalization ({ component, propertyName, expectedProperty, expectedNormalized }) {

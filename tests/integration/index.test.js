@@ -24,11 +24,9 @@ const path = require('path')
 const bomHelpers = require('../../index.js')
 const Bom = require('../../model/Bom.js')
 
-const timestamp = new Date('2020-01-01T01:00:00.000Z')
 const programVersion = '3.0.0'
 
 describe('integration:', () => {
-  const strCompare = (new Intl.Collator()).compare
   describe.each(
     [
       {
@@ -87,12 +85,8 @@ describe('integration:', () => {
           expect(err).toBeNull()
           expect(bom).toBeInstanceOf(Bom)
 
-          bom.metadata.timestamp = timestamp
           bom.metadata.tools[0].version = programVersion
-          if (bom.components) {
-            // sort components to have consistency in results
-            bom.components.sort((a, b) => strCompare(`${a.purl}`, `${b.purl}`))
-          }
+          process.env.BOM_REPRODUCIBLE = '1'
 
           const result = bom[`to${target}`]()
           expect(result).toMatchSnapshot()

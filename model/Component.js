@@ -29,13 +29,18 @@ const Swid = require('./Swid')
 /**
  * Component's scope
  *
+ * @see Component.supportedComponentScopes
+ *
  * @typedef {("required"|"optional"|"excluded")} Component.ComponentScope
  */
 
 /**
  * Component's type
  *
- * @typedef {("application"|"framework"|"library"|"container"|"operating-system"|"device"|"firmware"|"file")} Component.ComponentType
+ * @see Component.supportedComponentTypes
+ *
+ * @typedef {("application"|"framework"|"library"|"container"|"operating-system"|"device"|"firmware"
+ *           |"file")} Component.ComponentType
  */
 
 class Component extends CycloneDXObject {
@@ -156,14 +161,14 @@ class Component extends CycloneDXObject {
   }
 
   /**
-   * @returns {Component.ComponentType[]}
+   * @returns {Array<Component.ComponentType>}
    */
   static supportedComponentTypes () {
     return ['application', 'framework', 'library', 'container', 'operating-system', 'device', 'firmware', 'file']
   }
 
   /**
-   * @returns {Component.ComponentScope[]}
+   * @returns {Array<Component.ComponentScope>}
    */
   static supportedComponentScopes () {
     return ['required', 'optional', 'excluded']
@@ -502,6 +507,22 @@ class Component extends CycloneDXObject {
           : undefined
       }
     }
+  }
+
+  /**
+   * Compare with another component.
+   *
+   * Compare purl, if exists; else compare group, name, version.
+   *
+   * @param {Component} other
+   * @return {number}
+   */
+  compare (other) {
+    if (!(other instanceof Component)) { return 0 }
+    if (this.#purl || other.#purl) { return this.#purl.localeCompare(other.#purl) }
+    return (this.#group || '').localeCompare(other.#group || '') ||
+      (this.#name).localeCompare(other.#name) ||
+      (this.#version || '').localeCompare(other.#version || '')
   }
 }
 

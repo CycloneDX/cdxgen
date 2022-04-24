@@ -43,6 +43,9 @@ let filePath = '.'
 
 cdx
   .description(program.description)
+  .addHelpText('afterAll', '\n\n' +
+    'Environment variable BOM_REPRODUCIBLE causes bom result to be more consistent\n' +
+    'over multiple runs by omitting time/rand-based values, and sorting lists.\n')
   .version(program.version, '-v, --version')
   .argument('[path]', 'Path to analyze')
   .option('-d, --include-dev', 'Include devDependencies', false)
