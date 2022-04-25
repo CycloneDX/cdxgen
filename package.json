@@ -68,12 +68,6 @@
     "uuid": "^8.3.0",
     "xmlbuilder": "^15.1.1"
   },
-  "files": [
-    "index.js",
-    "bin/",
-    "model/",
-    "spdx-licenses.json"
-  ],
   "devDependencies": {
     "@babel/eslint-parser": "7.17.0",
     "jest": "27.5.1",

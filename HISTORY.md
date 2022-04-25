@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Misc:
+  * Worked packaging from whitelist to blacklist to add files, like `NOTICE`. (via [#289])
+
+[#289]: https://github.com/CycloneDX/cyclonedx-node-module/pull/289
+
 ## 3.8.0 - 2022-04-24
 
-* Added 
+* Added
   * Environment variable `BOM_REPRODUCIBLE` causes bom result to be more consistent
     over multiple runs by omitting time/rand-based values, and sorting lists. (via [#288])
   * Method `Component.compare()` compares self by `purl` or `group`/`name`/`version`. (via [#288])
@@ -57,7 +62,7 @@ All notable changes to this project will be documented in this file.
   * Examples use the preferred call via `cyclonedx-node`, instead of the fallback `cyclonedx-bom`. (via [#258])  
     This is a follow-up of [#193].
 * Tests
-  * Moved integration tests to a dedicated space and updated documentation for it. (via [#260]) 
+  * Moved integration tests to a dedicated space and updated documentation for it. (via [#260])
 
 [#263]: https://github.com/CycloneDX/cyclonedx-node-module/issues/263
 [#264]: https://github.com/CycloneDX/cyclonedx-node-module/pull/264

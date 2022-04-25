@@ -1,19 +1,8 @@
+# nodeignore - test with `npm pack`
+# content:
+# 1. general excludes
+# 2. some custom overrides
 
-## target of JSDoc
-/out/
-/docs/jsdoc/
-
-## target or reportings, tests, etc
-/reports/
-/CI_reports/
-/bom.xml
-/bom.json
-
-## caches
-/.*.cache
-
-/dist/
-/dist.*/
 
 ### https://github.com/github/gitignore/blob/main/Node.gitignore
 
@@ -147,3 +136,46 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+
+#### customs and additions below
+
+# ignore dot-files/-folders
+.*
+
+# project internals can be ignored
+/CODEOWNERS
+/CONTRIBUTING.*
+
+# these files are part of the license
+!/LICENSE
+!/NOTICE
+
+# never ignore the build results - these are intended to be shipped
+!/dist/
+!/dist.*/
+
+# docker-related stuff
+/Dockerfile
+/Dockerfile*
+/.dockerignore
+/.dockerignore*
+
+/test.sh
+/test/
+/tests/
+/examples/
+
+## target of JSDoc
+/out/
+/docs/jsdoc/
+
+## target or reportings, tests, etc
+/reports/
+/CI_reports/
+/bom.xml
+/bom.json
+
+## caches
+/.*.cache
