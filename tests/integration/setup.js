@@ -29,7 +29,7 @@ const REQUIRES_NPM_INSTALL = [
 ]
 
 const REQUIRES_YARN_INSTALL = [
-  'with-yarn-lockfile'
+  'with-yarn1-lockfile'
 ]
 
 console.warn(`

@@ -67,7 +67,7 @@ describe('integration:', () => {
         options: { dev: true }
       },
       {
-        dir: 'with-yarn-lockfile',
+        dir: 'with-yarn1-lockfile',
         purpose: 'verify conversion of yarn.lock to package.json'
       }
     ]
