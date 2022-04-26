@@ -68,7 +68,7 @@ describe('integration:', () => {
       },
       {
         dir: 'with-yarn1-lockfile',
-        purpose: 'verify conversion of yarn.lock to package.json'
+        purpose: 'verify conversion of yarn1 lock to package.json'
       }
     ]
   )('produce a BOM $purpose', ({ dir, options = {} }) => {
