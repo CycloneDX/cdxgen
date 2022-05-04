@@ -348,6 +348,11 @@ const parseYarnLock = async function (yarnLockFile) {
         if (l.startsWith("integrity")) {
           integrity = parts[1];
         }
+        // checksum used by yarn 2/3 is hex encoded
+        if (l.startsWith("checksum")) {
+          integrity =
+            "sha512-" + Buffer.from(parts[1], "hex").toString("base64");
+        }
         if (l.startsWith("resolved")) {
           const tmpB = parts[1].split("#");
           if (tmpB.length > 1) {

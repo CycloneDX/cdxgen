@@ -1913,6 +1913,9 @@ const createMultiXBom = async (pathList, options) => {
   let components = [];
   let bomData = undefined;
   for (let path of pathList) {
+    if (DEBUG_MODE) {
+      console.log("Scanning", path);
+    }
     bomData = await createNodejsBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {

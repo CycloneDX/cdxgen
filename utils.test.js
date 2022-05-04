@@ -781,6 +781,16 @@ test("parseYarnLock", async () => {
     name: "artifact",
     version: "0.6.1",
   });
+
+  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn3.lock");
+  expect(deps.length).toEqual(4);
+  expect(deps[0]).toEqual({
+    _integrity:
+      "sha512-+X9Jn4mPI+RYV0ITiiLyJSYlT9um111BocJSaztsxXR+9ZxWErpzdfQqyk+EYZUOklugjJkerQZRtJGLfJeClw==",
+    group: "",
+    name: "lru-cache",
+    version: "6.0.0",
+  });
 });
 
 test("parseComposerLock", () => {

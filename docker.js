@@ -38,7 +38,6 @@ const getDirs = (dirPath, dirName, hidden = false) => {
       dot: hidden,
     });
   } catch (err) {
-    console.error(err);
     return [];
   }
 };
@@ -461,8 +460,6 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   const allLayersDir = exportData.allLayersDir;
   let pathList = [];
   const knownSysPaths = [
-    path.join(allLayersExplodedDir, "/usr/lib"),
-    path.join(allLayersExplodedDir, "/usr/lib64"),
     path.join(allLayersExplodedDir, "/usr/local/lib"),
     path.join(allLayersExplodedDir, "/usr/local/lib64"),
     path.join(allLayersExplodedDir, "/opt"),
@@ -485,6 +482,9 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   if (!lastWorkingDir.startsWith("/srv")) {
     knownSysPaths.push(path.join(allLayersExplodedDir, "/srv"));
   }
+  // Known to cause EACCESS error
+  knownSysPaths.push(path.join(allLayersExplodedDir, "/usr/lib"));
+  knownSysPaths.push(path.join(allLayersExplodedDir, "/usr/lib64"));
   // Build path list
   for (let wpath of knownSysPaths) {
     pathList = pathList.concat(wpath);
@@ -504,6 +504,9 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
     if (composerDirs && composerDirs.length) {
       pathList = pathList.concat(composerDirs);
     }
+  }
+  if (DEBUG_MODE) {
+    console.log("pathList", pathList);
   }
   return pathList;
 };
