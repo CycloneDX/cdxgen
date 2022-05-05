@@ -1,4 +1,4 @@
-name: cdxgen tests
+name: Repo tests
 
 on:
   push:
@@ -84,6 +84,10 @@ jobs:
         with:
           repository: 'bazelbuild/examples'
           path: 'repotests/bazel-examples'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'flutter/gallery'
+          path: 'repotests/gallery'
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.22.0/cyclonedx-linux-x64
@@ -132,6 +136,10 @@ jobs:
           bin/cdxgen -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
           ./cyclonedx validate --input-file bomresults/bom-bazel.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-bazel.xml --input-format xml --input-version v1_4
+
+          bin/cdxgen -p -r -t dart repotests/gallery -o bomresults/bom-pub.json
+          ./cyclonedx validate --input-file bomresults/bom-pub.json --input-format json --input-version v1_4
+          ./cyclonedx validate --input-file bomresults/bom-pub.xml --input-format xml --input-version v1_4
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
         with:

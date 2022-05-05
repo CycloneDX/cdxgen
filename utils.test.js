@@ -440,6 +440,53 @@ test("get crates metadata", async () => {
   });
 });
 
+test("parse pub lock", async () => {
+  expect(await utils.parsePubLockData(null)).toEqual([]);
+  dep_list = await utils.parsePubLockData(
+    fs.readFileSync("./test/data/pubspec.lock", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(26);
+  expect(dep_list[0]).toEqual({
+    name: "async",
+    version: "2.8.2",
+  });
+  dep_list = await utils.parsePubYamlData(
+    fs.readFileSync("./test/data/pubspec.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    name: "awesome_dialog",
+    version: "2.2.1",
+    description:
+      "Flutter package to show beautiful dialogs(INFO,QUESTION,WARNING,SUCCESS,ERROR) with animations as simply as possible.",
+    homepage: {
+      url: "https://github.com/marcos930807/awesomeDialogs",
+    },
+  });
+});
+
+test("get dart metadata", async () => {
+  const dep_list = await utils.getDartMetadata([
+    {
+      group: "",
+      name: "async",
+      version: "2.8.2",
+    },
+  ]);
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "async",
+    version: "2.8.2",
+    description:
+      "Utility functions and classes related to the 'dart:async' library.",
+    license: "https://pub.dev/packages/async/license",
+    repository: {
+      url: "https://github.com/dart-lang/async",
+    },
+  });
+});
+
 test("parse cs pkg data", async () => {
   expect(await utils.parseCsPkgData(null)).toEqual([]);
   const dep_list = await utils.parseCsPkgData(
