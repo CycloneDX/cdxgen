@@ -2079,6 +2079,34 @@ const parsePubYamlData = async function (pubYamlData) {
 };
 exports.parsePubYamlData = parsePubYamlData;
 
+const parseCabalData = async function (cabalData) {
+  const pkgList = [];
+  if (!cabalData) {
+    return pkgList;
+  }
+  cabalData.split("\n").forEach((l) => {
+    if (!l.includes(" ==")) {
+      return;
+    }
+    if (l.includes(" ==")) {
+      const tmpA = l.split(" ==");
+      const name = tmpA[0]
+        .replace("constraints: ", "")
+        .replace("any.", "")
+        .trim();
+      const version = tmpA[1].replace(",", "").trim();
+      if (name && version) {
+        pkgList.push({
+          name,
+          version,
+        });
+      }
+    }
+  });
+  return pkgList;
+};
+exports.parseCabalData = parseCabalData;
+
 const parseNupkg = async function (nupkgFile) {
   const pkgList = [];
   let pkg = { group: "" };

@@ -1698,6 +1698,37 @@ const createDartBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for Haskell projects
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createHaskellBom = async (path, options) => {
+  const cabalFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "cabal.project.freeze"
+  );
+  let pkgList = [];
+  if (cabalFiles.length) {
+    for (let f of cabalFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const cabalData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseCabalData(cabalData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "hackage", {
+      src: path,
+      filename: cabalFiles.join(", "),
+    });
+  }
+  return {};
+};
+
+/**
  * Function to create bom string for php projects
  *
  * @param path to the project
@@ -2048,6 +2079,15 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
     }
+    bomData = await createHaskellBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} hackage packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
   }
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
@@ -2219,6 +2259,15 @@ const createXBom = async (path, options) => {
   if (pubFiles.length || pubSpecFiles.length) {
     return await createDartBom(path, options);
   }
+
+  // Haskell
+  const hackageFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "cabal.project.freeze"
+  );
+  if (hackageFiles.length) {
+    return await createHaskellBom(path, options);
+  }
 };
 
 /**
@@ -2319,6 +2368,10 @@ exports.createBom = async (path, options) => {
     case "flutter":
     case "pub":
       return await createDartBom(path, options);
+    case "haskell":
+    case "hackage":
+    case "cabal":
+      return await createHaskellBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95

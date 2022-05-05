@@ -1,6 +1,6 @@
 # CycloneDX Generator
 
-This script creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, ruby, rust, java, .Net, Dart, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This script creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, ruby, rust, java, .Net, dart, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 ## Supported languages and package format
 
@@ -14,7 +14,8 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | ruby               | Gemfile.lock, gemspec                                                         |
 | rust               | Cargo.toml, Cargo.lock                                                        |
 | .Net               | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg |
-| Dart               | pubspec.lock, pubspec.yaml                                                    |
+| dart               | pubspec.lock, pubspec.yaml                                                    |
+| haskell            | cabal.project.freeze                                                          |
 | docker / oci image | All supported languages excluding OS packages                                 |
 
 NOTE:

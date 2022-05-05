@@ -487,6 +487,26 @@ test("get dart metadata", async () => {
   });
 });
 
+test("parse cabal freeze", async () => {
+  expect(await utils.parseCabalData(null)).toEqual([]);
+  dep_list = await utils.parseCabalData(
+    fs.readFileSync("./test/data/cabal.project.freeze", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(24);
+  expect(dep_list[0]).toEqual({
+    name: "ansi-terminal",
+    version: "0.11.3",
+  });
+  dep_list = await utils.parseCabalData(
+    fs.readFileSync("./test/data/cabal-2.project.freeze", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(366);
+  expect(dep_list[0]).toEqual({
+    name: "Cabal",
+    version: "3.2.1.0",
+  });
+});
+
 test("parse cs pkg data", async () => {
   expect(await utils.parseCsPkgData(null)).toEqual([]);
   const dep_list = await utils.parseCsPkgData(
