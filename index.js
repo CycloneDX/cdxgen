@@ -1647,6 +1647,57 @@ const createRustBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for Dart projects
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createDartBom = async (path, options) => {
+  const pubFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pubspec.lock"
+  );
+  const pubSpecYamlFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pubspec.yaml"
+  );
+  let pkgList = [];
+  if (pubFiles.length) {
+    for (let f of pubFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const pubLockData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parsePubLockData(pubLockData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "pub", {
+      src: path,
+      filename: pubFiles.join(", "),
+    });
+  } else if (pubSpecYamlFiles.length) {
+    for (let f of pubSpecYamlFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const pubYamlData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseYamlData(pubYamlData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "pub", {
+      src: path,
+      filename: pubSpecYamlFiles.join(", "),
+    });
+  }
+
+  return {};
+};
+
+/**
  * Function to create bom string for php projects
  *
  * @param path to the project
@@ -1988,6 +2039,15 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
     }
+    bomData = await createDartBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} pub packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
   }
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
@@ -2146,6 +2206,19 @@ const createXBom = async (path, options) => {
   if (csProjFiles.length) {
     return await createCsharpBom(path, options);
   }
+
+  // Dart
+  const pubFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pubspec.lock"
+  );
+  const pubSpecFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pubspec.yaml"
+  );
+  if (pubFiles.length || pubSpecFiles.length) {
+    return await createDartBom(path, options);
+  }
 };
 
 /**
@@ -2242,6 +2315,10 @@ exports.createBom = async (path, options) => {
     case "netcore":
     case "dotnet":
       return await createCsharpBom(path, options);
+    case "dart":
+    case "flutter":
+    case "pub":
+      return await createDartBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95

@@ -1854,6 +1854,49 @@ const getCratesMetadata = async function (pkgList) {
 };
 exports.getCratesMetadata = getCratesMetadata;
 
+/**
+ * Method to retrieve metadata for dart packages by querying pub.dev
+ *
+ * @param {Array} pkgList Package list
+ */
+const getDartMetadata = async function (pkgList) {
+  const PUB_DEV_URL = "https://pub.dev/api/packages/";
+  const cdepList = [];
+  for (const p of pkgList) {
+    try {
+      if (DEBUG_MODE) {
+        console.log(`Querying pub.dev for ${p.name}`);
+      }
+      const res = await got.get(PUB_DEV_URL + p.name, {
+        responseType: "json",
+        Accept: "application/vnd.pub.v2+json",
+      });
+      if (res && res.body) {
+        const versions = res.body.versions;
+        for (let v of versions) {
+          if (p.version === v.version) {
+            const pubspec = v.pubspec;
+            p.description = pubspec.description;
+            if (pubspec.repository) {
+              p.repository = { url: pubspec.repository };
+            }
+            if (pubspec.homepage) {
+              p.homepage = { url: pubspec.homepage };
+            }
+            p.license = "https://pub.dev/packages/" + p.name + "/license";
+            cdepList.push(p);
+            break;
+          }
+        }
+      }
+    } catch (err) {
+      cdepList.push(p);
+    }
+  }
+  return cdepList;
+};
+exports.getDartMetadata = getDartMetadata;
+
 const parseCargoTomlData = async function (cargoData) {
   let pkgList = [];
   if (!cargoData) {
@@ -1979,6 +2022,62 @@ const parseCargoData = async function (cargoData) {
   }
 };
 exports.parseCargoData = parseCargoData;
+
+const parsePubLockData = async function (pubLockData) {
+  const pkgList = [];
+  if (!pubLockData) {
+    return pkgList;
+  }
+  let pkg = null;
+  pubLockData.split("\n").forEach((l) => {
+    let key = null;
+    let value = null;
+    if (!pkg && (l.startsWith("sdks:") || !l.startsWith("  "))) {
+      return;
+    }
+    if (l.startsWith("  ") && !l.startsWith("    ")) {
+      pkg = {
+        name: l.trim().replace(":", ""),
+      };
+    }
+    if (l.startsWith("    ")) {
+      const tmpA = l.split(":");
+      key = tmpA[0].trim();
+      value = tmpA[1].trim().replace(/\"/g, "");
+      switch (key) {
+        case "version":
+          pkg.version = value;
+          if (pkg.name) {
+            pkgList.push(pkg);
+          }
+          pkg = {};
+          break;
+      }
+    }
+  });
+  if (process.env.FETCH_LICENSE) {
+    return await getDartMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
+};
+exports.parsePubLockData = parsePubLockData;
+
+const parsePubYamlData = async function (pubYamlData) {
+  const pkgList = [];
+  const yamlObj = yaml.load(pubYamlData);
+  if (!yamlObj) {
+    return pkgList;
+  }
+  pkgList.push({
+    name: yamlObj.name,
+    description: yamlObj.description,
+    version: yamlObj.version,
+    homepage: { url: yamlObj.homepage },
+  });
+  return pkgList;
+};
+exports.parsePubYamlData = parsePubYamlData;
 
 const parseNupkg = async function (nupkgFile) {
   const pkgList = [];
