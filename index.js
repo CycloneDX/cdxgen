@@ -1698,6 +1698,57 @@ const createDartBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for cpp projects
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createCppBom = async (path, options) => {
+  const conanLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "conan.lock"
+  );
+  const conanFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "conanfile.txt"
+  );
+  let pkgList = [];
+  if (conanLockFiles.length) {
+    for (let f of conanLockFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const conanLockData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseConanLockData(conanLockData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "conan", {
+      src: path,
+      filename: conanLockFiles.join(", "),
+    });
+  } else if (conanFiles.length) {
+    for (let f of conanFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const conanData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseConanData(conanData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "conan", {
+      src: path,
+      filename: conanFiles.join(", "),
+    });
+  }
+
+  return {};
+};
+
+/**
  * Function to create bom string for Haskell projects
  *
  * @param path to the project
@@ -2128,6 +2179,15 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
     }
+    bomData = await createCppBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} cpp packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
   }
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
@@ -2317,6 +2377,19 @@ const createXBom = async (path, options) => {
   if (mixFiles.length) {
     return await createElixirBom(path, options);
   }
+
+  // cpp
+  const conanLockFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "conan.lock"
+  );
+  const conanFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "conanfile.txt"
+  );
+  if (conanLockFiles.length || conanFiles.length) {
+    return await createCppBom(path, options);
+  }
 };
 
 /**
@@ -2425,6 +2498,11 @@ exports.createBom = async (path, options) => {
     case "hex":
     case "mix":
       return await createElixirBom(path, options);
+    case "c":
+    case "cpp":
+    case "c++":
+    case "conan":
+      return await createCppBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95

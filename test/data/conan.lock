@@ -1,0 +1,40 @@
+{
+ "graph_lock": {
+  "nodes": {
+   "0": {
+    "options": "jerryscript:fPIC=True\njerryscript:shared=False\nwolfssl:fPIC=True\nwolfssl:opensslall=False\nwolfssl:opensslextra=False\nwolfssl:shared=False\nzstd:fPIC=True\nzstd:shared=False",
+    "requires": [
+     "1",
+     "2",
+     "3"
+    ],
+    "path": "conanfile.txt",
+    "context": "host"
+   },
+   "1": {
+    "ref": "zstd/1.4.4",
+    "options": "fPIC=True\nshared=False",
+    "package_id": "1d877a3df840030e6a8abb74c5ffb9088d08b47a",
+    "prev": "0",
+    "context": "host"
+   },
+   "2": {
+    "ref": "jerryscript/2.2.0",
+    "options": "fPIC=True\nshared=False",
+    "package_id": "1d877a3df840030e6a8abb74c5ffb9088d08b47a",
+    "prev": "0",
+    "context": "host"
+   },
+   "3": {
+    "ref": "wolfssl/4.4.0",
+    "options": "fPIC=True\nopensslall=False\nopensslextra=False\nshared=False",
+    "package_id": "1d877a3df840030e6a8abb74c5ffb9088d08b47a",
+    "prev": "0",
+    "context": "host"
+   }
+  },
+  "revisions_enabled": false
+ },
+ "version": "0.4",
+ "profile_host": "[settings]\narch=x86_64\narch_build=x86_64\nbuild_type=Release\ncompiler=gcc\ncompiler.libcxx=libstdc++\ncompiler.version=8\nos=Linux\nos_build=Linux\n[options]\n[build_requires]\n[env]\n"
+}

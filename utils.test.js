@@ -507,6 +507,27 @@ test("parse cabal freeze", async () => {
   });
 });
 
+test("parse conan data", async () => {
+  expect(await utils.parseConanLockData(null)).toEqual([]);
+  dep_list = await utils.parseConanLockData(
+    fs.readFileSync("./test/data/conan.lock", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list[0]).toEqual({
+    name: "zstd",
+    version: "1.4.4",
+  });
+
+  dep_list = await utils.parseConanData(
+    fs.readFileSync("./test/data/conanfile.txt", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list[0]).toEqual({
+    name: "zstd",
+    version: "1.4.4",
+  });
+});
+
 test("parse mix lock data", async () => {
   expect(await utils.parseMixLockData(null)).toEqual([]);
   dep_list = await utils.parseMixLockData(

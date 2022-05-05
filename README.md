@@ -1,6 +1,6 @@
 # CycloneDX Generator
 
-This script creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, ruby, rust, java, .Net, dart, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This script creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 ## Supported languages and package format
 
@@ -17,6 +17,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | dart               | pubspec.lock, pubspec.yaml                                                    |
 | haskell            | cabal.project.freeze                                                          |
 | elixir             | mix.lock                                                                      |
+| c/c++              | conan.lock, conanfile.txt                                                     |
 | docker / oci image | All supported languages excluding OS packages                                 |
 
 NOTE:
@@ -29,7 +30,7 @@ NOTE:
 Footnotes:
 
 - [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
-- [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing.
+- [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing. ```python -m pip freeze > requirements.txt```
 - [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file cdxgen would not include indirect dependencies.
 
 ### Automatic usage detection

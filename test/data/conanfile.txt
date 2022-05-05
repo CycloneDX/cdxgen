@@ -1,0 +1,7 @@
+[requires]
+zstd/1.4.4
+jerryscript/2.2.0
+wolfssl/4.4.0
+
+[generators]
+cmake

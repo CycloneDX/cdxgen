@@ -2134,6 +2134,48 @@ const parseMixLockData = async function (mixData) {
 };
 exports.parseMixLockData = parseMixLockData;
 
+const parseConanLockData = async function (conanLockData) {
+  const pkgList = [];
+  if (!conanLockData) {
+    return pkgList;
+  }
+  const graphLock = JSON.parse(conanLockData);
+  if (!graphLock || !graphLock.graph_lock || !graphLock.graph_lock.nodes) {
+    return pkgList;
+  }
+  const nodes = graphLock.graph_lock.nodes;
+  for (let nk of Object.keys(nodes)) {
+    if (nodes[nk].ref) {
+      const tmpA = nodes[nk].ref.split("/");
+      if (tmpA.length === 2) {
+        pkgList.push({ name: tmpA[0], version: tmpA[1] });
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseConanLockData = parseConanLockData;
+
+const parseConanData = async function (conanData) {
+  const pkgList = [];
+  if (!conanData) {
+    return pkgList;
+  }
+  conanData.split("\n").forEach((l) => {
+    if (!l.includes("/")) {
+      return;
+    }
+    if (l.includes("/")) {
+      const tmpA = l.split("/");
+      if (tmpA.length === 2) {
+        pkgList.push({ name: tmpA[0], version: tmpA[1] });
+      }
+    }
+  });
+  return pkgList;
+};
+exports.parseConanData = parseConanData;
+
 const parseNupkg = async function (nupkgFile) {
   const pkgList = [];
   let pkg = { group: "" };
