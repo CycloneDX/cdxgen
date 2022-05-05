@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.8.1 - 2022-05-05
+
 * Fixed
   * Added missing handling of `Dependency` when environment variable `BOM_REPRODUCIBLE` is present. (via [#297])
 * Misc:
