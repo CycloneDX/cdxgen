@@ -16,6 +16,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | .Net               | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg |
 | dart               | pubspec.lock, pubspec.yaml                                                    |
 | haskell            | cabal.project.freeze                                                          |
+| elixir             | mix.lock                                                                      |
 | docker / oci image | All supported languages excluding OS packages                                 |
 
 NOTE:

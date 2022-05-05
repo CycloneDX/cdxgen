@@ -2107,6 +2107,33 @@ const parseCabalData = async function (cabalData) {
 };
 exports.parseCabalData = parseCabalData;
 
+const parseMixLockData = async function (mixData) {
+  const pkgList = [];
+  if (!mixData) {
+    return pkgList;
+  }
+  mixData.split("\n").forEach((l) => {
+    if (!l.includes(":hex")) {
+      return;
+    }
+    if (l.includes(":hex")) {
+      const tmpA = l.split(",");
+      if (tmpA.length > 3) {
+        const name = tmpA[1].replace(":", "").trim();
+        const version = tmpA[2].trim().replace(/\"/g, "");
+        if (name && version) {
+          pkgList.push({
+            name,
+            version,
+          });
+        }
+      }
+    }
+  });
+  return pkgList;
+};
+exports.parseMixLockData = parseMixLockData;
+
 const parseNupkg = async function (nupkgFile) {
   const pkgList = [];
   let pkg = { group: "" };

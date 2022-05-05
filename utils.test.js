@@ -507,6 +507,26 @@ test("parse cabal freeze", async () => {
   });
 });
 
+test("parse mix lock data", async () => {
+  expect(await utils.parseMixLockData(null)).toEqual([]);
+  dep_list = await utils.parseMixLockData(
+    fs.readFileSync("./test/data/mix.lock", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(16);
+  expect(dep_list[0]).toEqual({
+    name: "absinthe",
+    version: "1.7.0",
+  });
+  dep_list = await utils.parseMixLockData(
+    fs.readFileSync("./test/data/mix.lock.1", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(23);
+  expect(dep_list[0]).toEqual({
+    name: "bunt",
+    version: "0.2.0",
+  });
+});
+
 test("parse cs pkg data", async () => {
   expect(await utils.parseCsPkgData(null)).toEqual([]);
   const dep_list = await utils.parseCsPkgData(

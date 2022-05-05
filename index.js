@@ -1729,6 +1729,37 @@ const createHaskellBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for Elixir projects
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createElixirBom = async (path, options) => {
+  const mixFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "mix.lock"
+  );
+  let pkgList = [];
+  if (mixFiles.length) {
+    for (let f of mixFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const mixData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseMixLockData(mixData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "hex", {
+      src: path,
+      filename: mixFiles.join(", "),
+    });
+  }
+  return {};
+};
+
+/**
  * Function to create bom string for php projects
  *
  * @param path to the project
@@ -2088,6 +2119,15 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
     }
+    bomData = await createElixirBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} mix packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
   }
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
@@ -2268,6 +2308,15 @@ const createXBom = async (path, options) => {
   if (hackageFiles.length) {
     return await createHaskellBom(path, options);
   }
+
+  // Elixir
+  const mixFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "mix.lock"
+  );
+  if (mixFiles.length) {
+    return await createElixirBom(path, options);
+  }
 };
 
 /**
@@ -2372,6 +2421,10 @@ exports.createBom = async (path, options) => {
     case "hackage":
     case "cabal":
       return await createHaskellBom(path, options);
+    case "elixir":
+    case "hex":
+    case "mix":
+      return await createElixirBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95
