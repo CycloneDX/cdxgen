@@ -14,7 +14,6 @@ All notable changes to this project will be documented in this file.
 [#289]: https://github.com/CycloneDX/cyclonedx-node-module/pull/289
 [#297]: https://github.com/CycloneDX/cyclonedx-node-module/pull/297
 
-
 ## 3.8.0 - 2022-04-24
 
 * Added
