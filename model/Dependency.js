@@ -20,28 +20,47 @@
 const CycloneDXObject = require('./CycloneDXObject')
 
 class Dependency extends CycloneDXObject {
+  /**
+   * @param {string} ref
+   * @param {(Array<Dependency>|undefined)} [dependencies]
+   */
   constructor (ref, dependencies) {
     super()
     this._ref = ref
     this._dependencies = dependencies
   }
 
+  /**
+   * @type {string}
+   */
   get ref () {
     return this._ref
   }
 
+  /**
+   * @param {string} value
+   */
   set ref (value) {
     this._ref = value
   }
 
+  /**
+   * @type {(Array<Dependency>|undefined)}
+   */
   get dependencies () {
     return this._dependencies
   }
 
+  /**
+   * @param {(Array<Dependency>|undefined)} value
+   */
   set dependencies (value) {
     this._dependencies = value
   }
 
+  /**
+   * @param {Dependency} dependency
+   */
   addDependency (dependency) {
     if (!this._dependencies) this._dependencies = []
     this._dependencies.push(dependency)
@@ -50,10 +69,11 @@ class Dependency extends CycloneDXObject {
   toJSON () {
     let dependencyArray
     if (this._dependencies && this._dependencies.length > 0) {
-      dependencyArray = []
-      for (const d of this._dependencies) {
-        dependencyArray.push(d.ref)
-      }
+      dependencyArray = (
+        process.env.BOM_REPRODUCIBLE
+          ? Array.from(this._dependencies).sort((a, b) => a.compare(b))
+          : this._dependencies
+      ).map(d => d.ref)
     }
     return {
       ref: this._ref,
@@ -64,10 +84,11 @@ class Dependency extends CycloneDXObject {
   toXML () {
     let dependencyArray
     if (this._dependencies && this._dependencies.length > 0) {
-      dependencyArray = []
-      for (const d of this._dependencies) {
-        dependencyArray.push({ dependency: { '@ref': d.ref } })
-      }
+      dependencyArray = (
+        process.env.BOM_REPRODUCIBLE
+          ? Array.from(this._dependencies).sort((a, b) => a.compare(b))
+          : this._dependencies
+      ).map(d => ({ dependency: { '@ref': d.ref } }))
     }
     return {
       dependency: {
@@ -75,6 +96,17 @@ class Dependency extends CycloneDXObject {
         '#text': dependencyArray
       }
     }
+  }
+
+  /**
+   * Compare with another Dependency.
+   *
+   * @param {Dependency} other
+   * @return {number}
+   */
+  compare (other) {
+    if (!(other instanceof Dependency)) { return 0 }
+    return this.ref.localeCompare(other.ref)
   }
 }
 

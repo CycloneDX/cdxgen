@@ -183,7 +183,9 @@ class Bom extends CycloneDXObject {
       components: this._components && this._components.length > 0 && process.env.BOM_REPRODUCIBLE
         ? Array.from(this._components).sort((a, b) => a.compare(b))
         : this._components,
-      dependencies: this._dependencies
+      dependencies: this._dependencies && this._dependencies.length > 0 && process.env.BOM_REPRODUCIBLE
+        ? Array.from(this._dependencies).sort((a, b) => a.compare(b))
+        : this._dependencies
     }
     return JSON.stringify(json, null, 2)
   }
@@ -216,11 +218,12 @@ class Bom extends CycloneDXObject {
 
     if (this._dependencies && this._dependencies.length > 0) {
       const dependenciesNode = bom.ele('dependencies')
-      const value = []
-      for (const dependency of this._dependencies) {
-        value.push(dependency.toXML())
-      }
-      dependenciesNode.ele(value)
+      dependenciesNode.ele(
+        (process.env.BOM_REPRODUCIBLE
+          ? Array.from(this._dependencies).sort((a, b) => a.compare(b))
+          : this._dependencies
+        ).map(d => d.toXML())
+      )
     }
 
     return bom.end({

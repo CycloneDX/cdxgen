@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integration of complex as JSON 1`] = `
+"{
+  \\"bomFormat\\": \\"CycloneDX\\",
+  \\"specVersion\\": \\"1.3\\",
+  \\"version\\": 1,
+  \\"metadata\\": {
+    \\"tools\\": [
+      {
+        \\"vendor\\": \\"foo\\",
+        \\"name\\": \\"bar\\",
+        \\"version\\": \\"0.0.0-testing\\"
+      }
+    ],
+    \\"component\\": {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"myRootComponent\\",
+      \\"name\\": \\"RootComponent\\",
+      \\"version\\": \\"1.33.7\\"
+    }
+  },
+  \\"components\\": [
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"some-component-0815\\",
+      \\"name\\": \\"SomeComponent\\",
+      \\"version\\": \\"0.8.15\\"
+    },
+    {
+      \\"type\\": \\"library\\",
+      \\"bom-ref\\": \\"some-component-2342\\",
+      \\"name\\": \\"SomeComponent\\",
+      \\"version\\": \\"23.42\\"
+    }
+  ],
+  \\"dependencies\\": [
+    {
+      \\"ref\\": \\"myRootComponent\\",
+      \\"dependsOn\\": [
+        \\"some-component-0815\\",
+        \\"some-component-2342\\"
+      ]
+    }
+  ]
+}"
+`;
+
+exports[`integration of complex as XML 1`] = `
+"<?xml version=\\"1.0\\" encoding=\\"utf-8\\"?>
+<bom xmlns=\\"http://cyclonedx.org/schema/bom/1.3\\" version=\\"1\\">
+  <metadata>
+    <tools>
+      <tool>
+        <vendor>foo</vendor>
+        <name>bar</name>
+        <version>0.0.0-testing</version>
+      </tool>
+    </tools>
+    <component type=\\"library\\" bom-ref=\\"myRootComponent\\">
+      <name>RootComponent</name>
+      <version>1.33.7</version>
+    </component>
+  </metadata>
+  <components>
+    <component type=\\"library\\" bom-ref=\\"some-component-0815\\">
+      <name>SomeComponent</name>
+      <version>0.8.15</version>
+    </component>
+    <component type=\\"library\\" bom-ref=\\"some-component-2342\\">
+      <name>SomeComponent</name>
+      <version>23.42</version>
+    </component>
+  </components>
+  <dependencies>
+    <dependency ref=\\"myRootComponent\\">
+      <dependency ref=\\"some-component-0815\\"/>
+      <dependency ref=\\"some-component-2342\\"/>
+    </dependency>
+  </dependencies>
+</bom>"
+`;
