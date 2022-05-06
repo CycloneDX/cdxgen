@@ -24,6 +24,7 @@ const CycloneDXObject = require('./CycloneDXObject')
 const Metadata = require('./Metadata')
 const Tool = require('./Tool')
 const program = require('../package.json')
+const Dependency = require('./Dependency')
 
 class Bom extends CycloneDXObject {
   constructor (pkg, componentType, includeSerialNumber = true, includeLicenseText = true, lockfile) {
@@ -69,25 +70,37 @@ class Bom extends CycloneDXObject {
 
   /**
    * Given the specified package, create a CycloneDX component and add it to the list.
+   *
+   * @returns {(Component|undefined)}
    */
   createComponent (pkg, list, lockfile, isRootPkg = false) {
     // read-installed with default options marks devDependencies as extraneous
     // if a package is marked as extraneous, do not include it as a component
     if (pkg.extraneous) return
-    if (!isRootPkg) {
-      const component = new Component(pkg, this.includeLicenseText, lockfile)
+    let component
+    if (isRootPkg) {
+      component = this._metadata.component
+    } else {
+      component = new Component(pkg, this.includeLicenseText, lockfile)
       if (component.externalReferences === undefined || component.externalReferences.length === 0) {
         delete component.externalReferences
       }
       if (list[component.purl]) return // remove cycles
       list[component.purl] = component
     }
-    if (pkg.dependencies) {
-      Object.keys(pkg.dependencies)
-        .map(x => pkg.dependencies[x])
-        .filter(x => typeof (x) !== 'string') // remove cycles
-        .map(x => this.createComponent(x, list, lockfile))
+    const deps = pkg.dependencies
+      ? Object.keys(pkg.dependencies)
+          .map(x => pkg.dependencies[x])
+          .filter(x => typeof (x) !== 'string') // remove cycles
+          .map(x => this.createComponent(x, list, lockfile))
+          .filter(x => !!x)
+          .map(({ bomRef }) => bomRef)
+          .filter(x => !!x)
+      : []
+    if (component && component.bomRef) {
+      this.addDependency(new Dependency(component.bomRef, deps.map((ref) => new Dependency(ref))))
     }
+    return component
   }
 
   addComponent (component) {
