@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.9.0 - 2022-05-06
+
 * Added
-  * Dependency graph is built and emitted. ([#61] via [#296]) 
+  * Dependency graph is built and emitted. ([#61] via [#296])
 
 [#61]: https://github.com/CycloneDX/cyclonedx-node-module/issues/61
 [#296]: https://github.com/CycloneDX/cyclonedx-node-module/pull/296
