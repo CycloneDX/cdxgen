@@ -12,7 +12,7 @@ on:
 
 env:
   REPORTS_DIR: CI_reports
-  NODE_ACTIVE_LTS: "16"
+  NODE_ACTIVE_LTS: "16"  # https://nodejs.org/en/about/releases/
 
 jobs:
   unit-test:
@@ -26,7 +26,7 @@ jobs:
         node-version: 
           # action based on https://github.com/actions/node-versions/releases
           # see also: https://nodejs.org/en/about/releases/
-          - "17"      # current
+          - "18"      # current
           - "16"      # active LTS
           - "14"
           - "12"
