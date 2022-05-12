@@ -1292,8 +1292,22 @@ const createPythonBom = async (path, options) => {
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const poetryMode = poetryFiles && poetryFiles.length;
   const setupPyMode = fs.existsSync(setupPy);
-  // dist-info directories
-  if (metadataFiles && metadataFiles.length) {
+  // Poetry sets up its own virtual env containing site-packages so
+  // we give preference to poetry lock file. Issue# 129
+  if (poetryMode) {
+    for (let f of poetryFiles) {
+      const lockData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parsePoetrylockData(lockData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(pkgList, "pypi", {
+      src: path,
+      filename: poetryFiles.join(", "),
+    });
+  } else if (metadataFiles && metadataFiles.length) {
+    // dist-info directories
     for (let mf of metadataFiles) {
       const mData = fs.readFileSync(mf, {
         encoding: "utf-8",
@@ -1324,7 +1338,7 @@ const createPythonBom = async (path, options) => {
       filename: whlFiles.join(", "),
     });
   }
-  if (requirementsMode || pipenvMode || poetryMode || setupPyMode) {
+  if (requirementsMode || pipenvMode || setupPyMode) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path, encoding: "utf-8" });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
@@ -1338,18 +1352,6 @@ const createPythonBom = async (path, options) => {
       } else {
         console.error("Pipfile.lock not found at", path);
       }
-    } else if (poetryMode) {
-      for (let f of poetryFiles) {
-        const lockData = fs.readFileSync(f, { encoding: "utf-8" });
-        const dlist = await utils.parsePoetrylockData(lockData);
-        if (dlist && dlist.length) {
-          pkgList = pkgList.concat(dlist);
-        }
-      }
-      return buildBomNSData(pkgList, "pypi", {
-        src: path,
-        filename: poetryFiles.join(", "),
-      });
     } else if (requirementsMode) {
       let metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
