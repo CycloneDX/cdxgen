@@ -461,6 +461,7 @@ const parsePnpmLock = async function (pnpmLock) {
       const fullName = pkgKeys[k].replace("/@", "@");
       const parts = fullName.split("/");
       const integrity = packages[pkgKeys[k]].resolution.integrity;
+      let scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
       if (parts && parts.length) {
         let name = "";
         let version = "";
@@ -478,6 +479,7 @@ const parsePnpmLock = async function (pnpmLock) {
             group: group,
             name: name,
             version: version,
+            scope,
             _integrity: integrity,
           });
         }

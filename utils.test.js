@@ -838,14 +838,25 @@ test("parseSetupPyFile", async () => {
 });
 
 test("parsePnpmLock", async () => {
-  const deps = await utils.parsePnpmLock("./test/pnpm-lock.yaml");
+  let deps = await utils.parsePnpmLock("./test/pnpm-lock.yaml");
   expect(deps.length).toEqual(1610);
   expect(deps[0]).toEqual({
     _integrity:
       "sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==",
     group: "@babel",
     name: "code-frame",
+    scope: undefined,
     version: "7.10.1",
+  });
+  deps = await utils.parsePnpmLock("./test/data/pnpm-lock.yaml");
+  expect(deps.length).toEqual(308);
+  expect(deps[0]).toEqual({
+    _integrity:
+      "sha512-iAXqUn8IIeBTNd72xsFlgaXHkMBMt6y4HJp1tIaK465CWLT/fG1aqB7ykr95gHHmlBdGbFeWWfyB4NJJ0nmeIg==",
+    group: "@babel",
+    name: "code-frame",
+    scope: "optional",
+    version: "7.16.7",
   });
 });
 
