@@ -470,7 +470,7 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
     path.join(allLayersExplodedDir, "/mnt"),
   ];
   if (lastWorkingDir && lastWorkingDir !== "") {
-    knownSysPaths.push(path.join(allLayersExplodedDir, lastWorkingDir));
+    knownSysPaths.push(lastWorkingDir);
   }
   // Some more common app dirs
   if (!lastWorkingDir.startsWith("/app")) {
