@@ -141,6 +141,7 @@ let filePath = args._[0] || ".";
       console.log(Buffer.from(bomNSData.bomXml).toString());
     } else {
       console.log("Unable to produce BOM for", filePath);
+      console.log("Try running the command with -t <type> or -r argument");
     }
   }
 
