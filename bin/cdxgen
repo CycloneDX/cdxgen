@@ -48,6 +48,11 @@ const args = require("yargs")
     description:
       "Dependency track or AppThreat project id. Either provide the id or the project name and version together",
   })
+  .option("required-only", {
+    type: "boolean",
+    description: "Include only the packages with required scope on the SBoM.",
+  })
+  .scriptName("cdxgen")
   .version()
   .help("h").argv;
 
@@ -79,6 +84,7 @@ let options = {
   output: args.output,
   resolveClass: args.resolveClass,
   installDeps: true,
+  requiredOnly: args.requiredOnly,
 };
 
 let filePath = args._[0] || ".";

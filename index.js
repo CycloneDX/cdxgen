@@ -180,15 +180,21 @@ function addExternalReferences(pkg, format = "xml") {
  * component objects from each one.
  */
 exports.listComponents = listComponents;
-function listComponents(allImports, pkg, ptype = "npm", format = "xml") {
+function listComponents(
+  options,
+  allImports,
+  pkg,
+  ptype = "npm",
+  format = "xml"
+) {
   let list = {};
   let isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach((p) => {
-      addComponent(allImports, p, ptype, list, false, format);
+      addComponent(options, allImports, p, ptype, list, false, format);
     });
   } else {
-    addComponent(allImports, pkg, ptype, list, isRootPkg, format);
+    addComponent(options, allImports, pkg, ptype, list, isRootPkg, format);
   }
   if (format === "xml") {
     return Object.keys(list).map((k) => ({ component: list[k] }));
@@ -201,6 +207,7 @@ function listComponents(allImports, pkg, ptype = "npm", format = "xml") {
  * Given the specified package, create a CycloneDX component and add it to the list.
  */
 function addComponent(
+  options,
   allImports,
   pkg,
   ptype,
@@ -259,6 +266,9 @@ function addComponent(
         compScope = "optional";
       }
     }
+    if (options.requiredOnly && ["optional", "excluded"].includes(compScope)) {
+      return;
+    }
     let component = {
       group,
       name,
@@ -293,7 +303,9 @@ function addComponent(
     Object.keys(pkg.dependencies)
       .map((x) => pkg.dependencies[x])
       .filter((x) => typeof x !== "string") //remove cycles
-      .map((x) => addComponent(allImports, x, ptype, list, false, format));
+      .map((x) =>
+        addComponent(options, allImports, x, ptype, list, false, format)
+      );
   }
 }
 
@@ -427,7 +439,7 @@ const buildBomXml = (serialNum, components, context) => {
 /**
  * Return the BOM in xml, json format including any namespace mapping
  */
-const buildBomNSData = (pkgInfo, ptype, context) => {
+const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const bomNSData = {
     bomXml: undefined,
     bomXmlFiles: undefined,
@@ -442,7 +454,7 @@ const buildBomNSData = (pkgInfo, ptype, context) => {
   }
   const nsMapping = context.nsMapping || {};
   const metadata = addMetadata("json");
-  const components = listComponents(allImports, pkgInfo, ptype, "xml");
+  const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
     const bomString = buildBomXml(serialNum, components, context);
     // CycloneDX 1.4 Json Template
@@ -452,7 +464,7 @@ const buildBomNSData = (pkgInfo, ptype, context) => {
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
-      components: listComponents(allImports, pkgInfo, ptype, "json"),
+      components: listComponents(options, allImports, pkgInfo, ptype, "json"),
     };
     if (context && context.src && context.filename) {
       jsonTpl.externalReferences = addGlobalReferences(
@@ -492,7 +504,7 @@ const createJarBom = (path, options) => {
     console.log(`Cleaning up ${tempDir}`);
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
-  return buildBomNSData(pkgList, "maven", {
+  return buildBomNSData(options, pkgList, "maven", {
     src: path,
     filename: jarFiles.join(", "),
     nsMapping: {},
@@ -535,7 +547,7 @@ const createJavaBom = async (path, options) => {
     } else {
       console.log(`${path} doesn't exist`);
     }
-    return buildBomNSData(pkgList, "maven", {
+    return buildBomNSData(options, pkgList, "maven", {
       src: pathLib.dirname(path),
       filename: path,
       nsMapping: jarNSMapping,
@@ -628,7 +640,7 @@ const createJavaBom = async (path, options) => {
             }
           }
           pkgList = await utils.getMvnMetadata(pkgList);
-          return buildBomNSData(pkgList, "maven", {
+          return buildBomNSData(options, pkgList, "maven", {
             src: path,
             filename: "pom.xml",
             nsMapping: jarNSMapping,
@@ -830,7 +842,7 @@ const createJavaBom = async (path, options) => {
         );
         jarNSMapping = utils.collectJarNS(GRADLE_CACHE_DIR);
       }
-      return buildBomNSData(pkgList, "maven", {
+      return buildBomNSData(options, pkgList, "maven", {
         src: path,
         filename: "build.gradle",
         nsMapping: jarNSMapping,
@@ -902,7 +914,7 @@ const createJavaBom = async (path, options) => {
             }
           }
           pkgList = await utils.getMvnMetadata(pkgList);
-          return buildBomNSData(pkgList, "maven", {
+          return buildBomNSData(options, pkgList, "maven", {
             src: path,
             filename: "BUILD",
             nsMapping: {},
@@ -1060,7 +1072,7 @@ const createJavaBom = async (path, options) => {
         );
         jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
       }
-      return buildBomNSData(pkgList, "maven", {
+      return buildBomNSData(options, pkgList, "maven", {
         src: path,
         filename: sbtProjects.join(", "),
         nsMapping: jarNSMapping,
@@ -1089,7 +1101,7 @@ const createNodejsBom = async (path, options) => {
           pkgList = pkgList.concat(dlist);
         }
       }
-      return buildBomNSData(pkgList, "npm", {
+      return buildBomNSData(options, pkgList, "npm", {
         allImports: {},
         src: path,
         filename: "package.json",
@@ -1145,7 +1157,7 @@ const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "npm", {
+    return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
       filename: manifestFiles.join(", "),
@@ -1159,7 +1171,7 @@ const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "npm", {
+    return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
       filename: manifestFiles.join(", "),
@@ -1193,14 +1205,14 @@ const createNodejsBom = async (path, options) => {
     );
     if (fs.existsSync(swFile)) {
       const pkgList = await utils.parseNodeShrinkwrap(swFile);
-      return buildBomNSData(pkgList, "npm", {
+      return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
         filename: "shrinkwrap-deps.json",
       });
     } else if (fs.existsSync(pnpmLock)) {
       const pkgList = await utils.parsePnpmLock(pnpmLock);
-      return buildBomNSData(pkgList, "npm", {
+      return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
         filename: "pnpm-lock.yaml",
@@ -1224,7 +1236,7 @@ const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "npm", {
+    return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
       filename: manifestFiles.join(", "),
@@ -1241,7 +1253,7 @@ const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "npm", {
+    return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
       filename: manifestFiles.join(", "),
@@ -1249,7 +1261,7 @@ const createNodejsBom = async (path, options) => {
   }
   // Projects containing just min files or bower
   if (pkgList.length && manifestFiles.length) {
-    return buildBomNSData(pkgList, "npm", {
+    return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
       filename: manifestFiles.join(", "),
@@ -1302,7 +1314,7 @@ const createPythonBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "pypi", {
+    return buildBomNSData(options, pkgList, "pypi", {
       src: path,
       filename: poetryFiles.join(", "),
     });
@@ -1317,7 +1329,7 @@ const createPythonBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "pypi", {
+    return buildBomNSData(options, pkgList, "pypi", {
       src: path,
       filename: metadataFiles.join(", "),
     });
@@ -1333,7 +1345,7 @@ const createPythonBom = async (path, options) => {
         }
       }
     }
-    return buildBomNSData(pkgList, "pypi", {
+    return buildBomNSData(options, pkgList, "pypi", {
       src: path,
       filename: whlFiles.join(", "),
     });
@@ -1345,7 +1357,7 @@ const createPythonBom = async (path, options) => {
       if (fs.existsSync(piplockFile)) {
         const lockData = JSON.parse(fs.readFileSync(piplockFile));
         pkgList = await utils.parsePiplockData(lockData);
-        return buildBomNSData(pkgList, "pypi", {
+        return buildBomNSData(options, pkgList, "pypi", {
           src: path,
           filename: "Pipfile.lock",
         });
@@ -1374,14 +1386,14 @@ const createPythonBom = async (path, options) => {
         }
         metadataFilename = reqDirFiles.join(", ");
       }
-      return buildBomNSData(pkgList, "pypi", {
+      return buildBomNSData(options, pkgList, "pypi", {
         src: path,
         filename: metadataFilename,
       });
     } else if (setupPyMode) {
       const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
       pkgList = await utils.parseSetupPyFile(setupPyData);
-      return buildBomNSData(pkgList, "pypi", {
+      return buildBomNSData(options, pkgList, "pypi", {
         src: path,
         filename: "setup.py",
       });
@@ -1417,7 +1429,7 @@ const createGoBom = async (path, options) => {
       let pkgFullName = `${mpkg.group}/${mpkg.name}`;
       allImports[pkgFullName] = true;
     }
-    return buildBomNSData(pkgList, "golang", {
+    return buildBomNSData(options, pkgList, "golang", {
       allImports,
       src: path,
       filename: path,
@@ -1447,7 +1459,7 @@ const createGoBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "golang", {
+    return buildBomNSData(options, pkgList, "golang", {
       src: path,
       filename: gosumFiles.join(", "),
     });
@@ -1544,7 +1556,7 @@ const createGoBom = async (path, options) => {
         if (DEBUG_MODE) {
           console.log(`Required packages: ${Object.keys(allImports).length}`);
         }
-        return buildBomNSData(pkgList, "golang", {
+        return buildBomNSData(options, pkgList, "golang", {
           allImports,
           src: path,
           filename: gomodFiles.join(", "),
@@ -1565,7 +1577,7 @@ const createGoBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "golang", {
+    return buildBomNSData(options, pkgList, "golang", {
       src: path,
       filename: gomodFiles.join(", "),
     });
@@ -1582,7 +1594,7 @@ const createGoBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "golang", {
+    return buildBomNSData(options, pkgList, "golang", {
       src: path,
       filename: gopkgLockFiles.join(", "),
     });
@@ -1619,7 +1631,7 @@ const createRustBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "crates", {
+    return buildBomNSData(options, pkgList, "crates", {
       src: path,
       filename: cargoFiles.join(", "),
     });
@@ -1640,7 +1652,7 @@ const createRustBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "crates", {
+    return buildBomNSData(options, pkgList, "crates", {
       src: path,
       filename: cargoLockFiles.join(", "),
     });
@@ -1675,7 +1687,7 @@ const createDartBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "pub", {
+    return buildBomNSData(options, pkgList, "pub", {
       src: path,
       filename: pubFiles.join(", "),
     });
@@ -1690,7 +1702,7 @@ const createDartBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "pub", {
+    return buildBomNSData(options, pkgList, "pub", {
       src: path,
       filename: pubSpecYamlFiles.join(", "),
     });
@@ -1726,7 +1738,7 @@ const createCppBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "conan", {
+    return buildBomNSData(options, pkgList, "conan", {
       src: path,
       filename: conanLockFiles.join(", "),
     });
@@ -1741,7 +1753,7 @@ const createCppBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "conan", {
+    return buildBomNSData(options, pkgList, "conan", {
       src: path,
       filename: conanFiles.join(", "),
     });
@@ -1773,7 +1785,7 @@ const createHaskellBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "hackage", {
+    return buildBomNSData(options, pkgList, "hackage", {
       src: path,
       filename: cabalFiles.join(", "),
     });
@@ -1804,7 +1816,7 @@ const createElixirBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "hex", {
+    return buildBomNSData(options, pkgList, "hex", {
       src: path,
       filename: mixFiles.join(", "),
     });
@@ -1880,7 +1892,7 @@ const createPHPBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "composer", {
+    return buildBomNSData(options, pkgList, "composer", {
       src: path,
       filename: composerLockFiles.join(", "),
     });
@@ -1937,7 +1949,7 @@ const createRubyBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(pkgList, "gem", {
+    return buildBomNSData(options, pkgList, "gem", {
       src: path,
       filename: gemLockFiles.join(", "),
     });
@@ -2048,7 +2060,7 @@ const createCsharpBom = async (path, options) => {
     }
   }
   if (pkgList.length) {
-    return buildBomNSData(pkgList, "nuget", {
+    return buildBomNSData(options, pkgList, "nuget", {
       src: path,
       filename: manifestFiles.join(", "),
     });
@@ -2208,7 +2220,7 @@ const createMultiXBom = async (pathList, options) => {
   return {
     bomXml: buildBomXml(
       serialNum,
-      listComponents({}, components, undefined, "xml")
+      listComponents(options, {}, components, undefined, "xml")
     ),
     bomJson: {
       bomFormat: "CycloneDX",

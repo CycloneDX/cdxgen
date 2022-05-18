@@ -39,7 +39,7 @@ For node.js projects, lock files are parsed initially so the SBoM would include 
 
 This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/appthreat/dep-scan) use this attribute to prioritize vulnerabilities. Tools such dependency track, unfortunately, do not include this feature and hence might over-report the CVEs.
 
-Use a tool like jq in this case to produce a json containing only the required components and ingest the same to dependency track.
+By passing the argument `--required-only`, you can limit the SBoM to only include packages with the scope "required", commonly referred to as production or non-dev dependencies.
 
 For go, `go mod why` command is used to identify required packages. For php, composer lock file is used to distinguish required (packages) from optional (packages-dev).
 
@@ -71,6 +71,8 @@ Options:
                          master                              [default: "master"]
       --project-id       Dependency track or AppThreat project id. Either
                          provide the id or the project name and version together
+      --required-only    Include only the packages with required scope on the
+                         SBoM.                                         [boolean]
       --version          Show version number                           [boolean]
   -h                     Show help                                     [boolean]
 ```
