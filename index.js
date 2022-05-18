@@ -871,6 +871,7 @@ const createJavaBom = async (path, options) => {
         );
         let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
           cwd: basePath,
+          shell: true,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
         });
