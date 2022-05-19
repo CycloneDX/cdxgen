@@ -183,7 +183,10 @@ export FETCH_LICENSE=true
 | MAVEN_HOME                | Specify maven home                                                                                                 |
 | GRADLE_CACHE_DIR          | Specify gradle cache directory. Useful for class name resolving                                                    |
 | GRADLE_MULTI_PROJECT_MODE | Set this variable for gradle multi-project applications. Do not use this with recurse mode.                        |
-| GRADLE_ARGS               | Set to pass additional arguments such as profile or settings to gradle                                             |
+| GRADLE_ARGS               | Set to pass additional arguments such as profile or settings to gradle. Eg: --configuration runtimeClassPath       |
+| GRADLE_HOME               | Specify gradle home                                                                                                |
+| GRADLE_CMD                | Set to override gradle command                                                                                     |
+| GRADLE_DEPENDENCY_TASK    | By default cdxgen use the task "dependencies" to collect packages. Set to override the task name.                  |
 | SBT_CACHE_DIR             | Specify sbt cache directory. Useful for class name resolving                                                       |
 | FETCH_LICENSE             | Set to true to fetch license information from the registry. npm and golang only                                    |
 | USE_GOSUM                 | Set to true to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod |

@@ -689,11 +689,12 @@ const createJavaBom = async (path, options) => {
     );
     if (gradleFiles && gradleFiles.length && options.installDeps) {
       let GRADLE_CMD = "gradle";
-      if (process.env.GRADLE_HOME) {
+      if (process.env.GRADLE_CMD) {
+        GRADLE_CMD = process.env.GRADLE_CMD;
+      } else if (process.env.GRADLE_HOME) {
         GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
-      }
-      // Use local gradle wrapper if available
-      if (fs.existsSync(pathLib.join(path, "gradlew"))) {
+      } else if (fs.existsSync(pathLib.join(path, "gradlew"))) {
+        // Use local gradle wrapper if available
         // Enable execute permission
         try {
           fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
@@ -709,12 +710,12 @@ const createJavaBom = async (path, options) => {
           { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
         if (result.status == 1 || result.error) {
-          console.error(result.stdout, result.stderr);
-          if (DEBUG_MODE) {
-            console.log(
-              "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
-            );
+          if (result.stderr) {
+            console.error(result.stdout, result.stderr);
           }
+          console.log(
+            "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
+          );
         }
         const stdout = result.stdout;
         if (stdout) {
@@ -791,8 +792,11 @@ const createJavaBom = async (path, options) => {
         }
       } else {
         let gradleDepArgs = ["dependencies", "-q", "--console", "plain"];
-        // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
-        if (process.env.GRADLE_ARGS) {
+        // Support for overriding the gradle task name. Issue# 90
+        if (process.env.GRADLE_DEPENDENCY_TASK) {
+          gradleDepArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
+        } else if (process.env.GRADLE_ARGS) {
+          // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
           const addArgs = process.env.GRADLE_ARGS.split(" ");
           gradleDepArgs = gradleDepArgs.concat(addArgs);
         }
@@ -811,10 +815,15 @@ const createJavaBom = async (path, options) => {
             timeout: TIMEOUT_MS,
           });
           if (result.status == 1 || result.error) {
-            console.error(result.stdout, result.stderr);
-            if (DEBUG_MODE) {
+            if (result.stderr) {
+              console.error(result.stdout, result.stderr);
+            }
+            if (DEBUG_MODE || !result.stderr) {
               console.log(
                 "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
+              );
+              console.log(
+                "2. When using tools such as sdkman, the init script must be invoked to set the PATH variables correctly."
               );
             }
           }
@@ -825,11 +834,9 @@ const createJavaBom = async (path, options) => {
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             } else {
-              if (DEBUG_MODE) {
-                console.log(
-                  "No packages were detected. If this is a multi-project gradle application set the environment variable GRADLE_MULTI_PROJECT_MODE to true and try again."
-                );
-              }
+              console.log(
+                "No packages were detected. If this is a multi-project gradle application set the environment variable GRADLE_MULTI_PROJECT_MODE to true and try again."
+              );
             }
           }
         }
@@ -876,12 +883,12 @@ const createJavaBom = async (path, options) => {
           timeout: TIMEOUT_MS,
         });
         if (result.status == 1 || result.error) {
-          console.error(result.stdout, result.stderr);
-          if (DEBUG_MODE) {
-            console.log(
-              "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen"
-            );
+          if (result.stderr) {
+            console.error(result.stdout, result.stderr);
           }
+          console.log(
+            "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen"
+          );
         } else {
           console.log(
             "Executing",
@@ -904,14 +911,12 @@ const createJavaBom = async (path, options) => {
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             } else {
-              if (DEBUG_MODE) {
-                console.log(
-                  "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved."
-                );
-                console.log(
-                  "If your project requires a different query, please file a bug at AppThreat/cdxgen repo!"
-                );
-              }
+              console.log(
+                "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved."
+              );
+              console.log(
+                "If your project requires a different query, please file a bug at AppThreat/cdxgen repo!"
+              );
             }
           }
           pkgList = await utils.getMvnMetadata(pkgList);
@@ -1025,17 +1030,15 @@ const createJavaBom = async (path, options) => {
           });
           if (result.status == 1 || result.error) {
             console.error(result.stdout, result.stderr);
-            if (DEBUG_MODE) {
-              console.log(
-                `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
-              );
-              console.log(
-                `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
-              );
-              console.log(
-                "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
-              );
-            }
+            console.log(
+              `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
+            );
+            console.log(
+              `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
+            );
+            console.log(
+              "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
+            );
           } else if (DEBUG_MODE) {
             console.log(result.stdout);
           }
