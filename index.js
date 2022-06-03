@@ -735,10 +735,6 @@ const createJavaBom = async (
             );
             var sbtArgs = [];
             var pluginFile = null;
-            var commandPrefix = "";
-            if (options.subprojectName) {
-              commandPrefix = `${options.subprojectName}/`
-            }
             if (standalonePluginFile) {
               sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"${commandPrefix}dependencyList::toFile ${dlFile} --append"`]
             } else {
