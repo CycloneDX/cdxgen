@@ -51,6 +51,11 @@ const args = require("yargs")
     description:
       "Dependency track or AppThreat project id. Either provide the id or the project name and version together",
   })
+  .option("deterministic-for-tests", {
+    type: "boolean",
+    description:
+      "Hardcode metadata like timestamps so the output is deterministic. Useful for integration tests",
+  })
   .help("h").argv;
 
 if (args.version) {
@@ -81,6 +86,7 @@ let options = {
   depth: 3,
   output: args.output,
   resolveClass: args.resolveClass,
+  deterministicForTests: args.deterministicForTests,
 };
 
 let filePath = args._[0] || ".";
@@ -88,13 +94,13 @@ let filePath = args._[0] || ".";
 /**
  * Method to start the bom creation process
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests Boolean to include BOM serial number
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Callback function accepting err, bomData
  */
 bom.createBom(
-  true,
+  options.deterministicForTests,
   filePath,
   options,
   (err, bomData, bomJsonData, nsMapping) => {

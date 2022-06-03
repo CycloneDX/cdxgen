@@ -875,34 +875,34 @@ const parseReqFile = async function (reqData) {
 };
 exports.parseReqFile = parseReqFile;
 
-// /**
-//  * Method to parse setup.py data
-//  *
-//  * @param {Object} setupPyData Contents of setup.py
-//  */
-// const parseSetupPyFile = async function (setupPyData) {
-//   let lines = [];
-//   let requires_found = false;
-//   let should_break = false;
-//   setupPyData.split("\n").forEach((l) => {
-//     l = l.trim();
-//     if (l.includes("install_requires")) {
-//       l = l.replace("install_requires=[", "");
-//       requires_found = true;
-//     }
-//     if (l.length && requires_found && !should_break) {
-//       if (l.includes("]")) {
-//         should_break = true;
-//         l = l.replace("],", "").replace("]", "");
-//       }
-//       let tmpA = l.replace(/['\"]/g, "").split(",");
-//       tmpA = tmpA.filter((v) => v.length);
-//       lines = lines.concat(tmpA);
-//     }
-//   });
-//   return await parseReqFile(lines.join("\n"));
-// };
-// exports.parseSetupPyFile = parseSetupPyFile;
+/**
+ * Method to parse setup.py data
+ *
+ * @param {Object} setupPyData Contents of setup.py
+ */
+const parseSetupPyFile = async function (setupPyData) {
+  let lines = [];
+  let requires_found = false;
+  let should_break = false;
+  setupPyData.split("\n").forEach((l) => {
+    l = l.trim();
+    if (l.includes("install_requires")) {
+      l = l.replace("install_requires=[", "");
+      requires_found = true;
+    }
+    if (l.length && requires_found && !should_break) {
+      if (l.includes("]")) {
+        should_break = true;
+        l = l.replace("],", "").replace("]", "");
+      }
+      let tmpA = l.replace(/['\"]/g, "").split(",");
+      tmpA = tmpA.filter((v) => v.length);
+      lines = lines.concat(tmpA);
+    }
+  });
+  return await parseReqFile(lines.join("\n"));
+};
+exports.parseSetupPyFile = parseSetupPyFile;
 
 /**
  * Method to construct a github url for the given repo

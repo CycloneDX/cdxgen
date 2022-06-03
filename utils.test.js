@@ -287,30 +287,30 @@ test("parseGoSumData", async () => {
   });
 });
 
-// test("parseGopkgData", async () => {
-//   jest.setTimeout(120000);
-//   let dep_list = await utils.parseGopkgData(null);
-//   expect(dep_list).toEqual([]);
-//   dep_list = await utils.parseGopkgData(
-//     fs.readFileSync("./test/gopkg/Gopkg.lock", (encoding = "utf-8"))
-//   );
-//   expect(dep_list.length).toEqual(36);
-//   expect(dep_list[0]).toEqual({
-//     group: "cloud.google.com",
-//     name: "go",
-//     license: [
-//       {
-//         id: "Apache-2.0",
-//         url: "https://pkg.go.dev/cloud.google.com/go?tab=licenses",
-//       },
-//     ],
-//     version: "v0.39.0",
-//     _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",
-//   });
-//   dep_list.forEach((d) => {
-//     expect(d.license);
-//   });
-// });
+test("parseGopkgData", async () => {
+  jest.setTimeout(120000);
+  let dep_list = await utils.parseGopkgData(null);
+  expect(dep_list).toEqual([]);
+  dep_list = await utils.parseGopkgData(
+    fs.readFileSync("./test/gopkg/Gopkg.lock", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(36);
+  expect(dep_list[0]).toEqual({
+    group: "cloud.google.com",
+    name: "go",
+    license: [
+      {
+        id: "Apache-2.0",
+        url: "https://pkg.go.dev/cloud.google.com/go?tab=licenses",
+      },
+    ],
+    version: "v0.39.0",
+    _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",
+  });
+  dep_list.forEach((d) => {
+    expect(d.license);
+  });
+});
 
 /*
 test("parse cargo lock", async () => {

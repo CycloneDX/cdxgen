@@ -14,6 +14,7 @@ const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
 const semver = require("semver");
+const { option } = require("yargs");
 
 // Construct maven command
 let MVN_CMD = "mvn";
@@ -78,9 +79,10 @@ function addGlobalReferences(src, filename) {
  * Function to create metadata block
  *
  */
-function addMetadata() {
+function addMetadata(deterministicForTests) {
+  let now = deterministicForTests ? '2022-06-03T09:34:10.062Z' : new Date().toISOString();
   let metadata = {
-    timestamp: new Date().toISOString(),
+    timestamp: now,
     tools: [
       {
         tool: {
@@ -355,14 +357,14 @@ function addComponentHash(alg, digest, component, format = "xml") {
 }
 
 const buildBomString = (
-  { includeBomSerialNumber, pkgInfo, ptype, context },
+  { deterministicForTests, pkgInfo, ptype, context },
   callback
 ) => {
   let bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.2");
   const serialNum = "urn:uuid:" + uuidv4();
-  if (includeBomSerialNumber) {
+  if (!deterministicForTests) {
     bom.att("serialNumber", serialNum);
   }
   bom.att("version", 1);
@@ -376,7 +378,7 @@ const buildBomString = (
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
-  const metadata = addMetadata();
+  const metadata = addMetadata(deterministicForTests);
   bom.ele("metadata").ele(metadata);
   const components = listComponents(allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
@@ -407,13 +409,13 @@ const buildBomString = (
 /**
  * Function to create bom string for Java projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
 const createJavaBom = async (
-  includeBomSerialNumber,
+  deterministicForTests,
   path,
   options,
   callback
@@ -452,7 +454,7 @@ const createJavaBom = async (
     }
     buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "maven",
         context: {
@@ -551,9 +553,10 @@ const createJavaBom = async (
             }
           }
           pkgList = await utils.getMvnMetadata(pkgList);
+          options.accessSync;
           return buildBomString(
             {
-              includeBomSerialNumber,
+              deterministicForTests,
               pkgInfo: pkgList,
               ptype: "maven",
               context: {
@@ -635,7 +638,7 @@ const createJavaBom = async (
       }
       buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo: pkgList,
           ptype: "maven",
           context: {
@@ -804,9 +807,11 @@ const createJavaBom = async (
         );
         jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
       }
+      // TODO: Sort for all build tools?
+      pkgList = utils.sortPkgs(pkgList);
       buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo: pkgList,
           ptype: "maven",
           context: {
@@ -824,13 +829,13 @@ const createJavaBom = async (
 /**
  * Function to create bom string for Node.js projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
 const createNodejsBom = async (
-  includeBomSerialNumber,
+  deterministicForTests,
   path,
   options,
   callback
@@ -859,7 +864,7 @@ const createNodejsBom = async (
     }
     return buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "npm",
         context: { allImports, src: path, filename: "pnpm-lock.yaml" },
@@ -878,7 +883,7 @@ const createNodejsBom = async (
     }
     return buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "npm",
         context: { allImports, src: path, filename: "package-lock.json" },
@@ -889,7 +894,7 @@ const createNodejsBom = async (
     readInstalled(path, options, (err, pkgInfo) => {
       buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo,
           ptype: "npm",
           context: { allImports, src: path, filename: "package.json" },
@@ -928,7 +933,7 @@ const createNodejsBom = async (
       const pkgList = await utils.parseNodeShrinkwrap(swFile);
       return buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo: pkgList,
           ptype: "npm",
           context: { allImports, src: path, filename: "shrinkwrap-deps.json" },
@@ -939,7 +944,7 @@ const createNodejsBom = async (
       const pkgList = await utils.parsePnpmLock(pnpmLock);
       return buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo: pkgList,
           ptype: "npm",
           context: { allImports, src: path, filename: "pnpm-lock.yaml" },
@@ -968,7 +973,7 @@ const createNodejsBom = async (
     }
     return buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "npm",
         context: { allImports, src: path, filename: "yarn.lock" },
@@ -987,13 +992,13 @@ const createNodejsBom = async (
 /**
  * Function to create bom string for Python projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
 const createPythonBom = async (
-  includeBomSerialNumber,
+  deterministicForTests,
   path,
   options,
   callback
@@ -1021,7 +1026,7 @@ const createPythonBom = async (
         const pkgList = await utils.parsePiplockData(lockData);
         buildBomString(
           {
-            includeBomSerialNumber,
+            deterministicForTests,
             pkgInfo: pkgList,
             ptype: "pypi",
             context: { src: path, filename: "Pipfile.lock" },
@@ -1039,7 +1044,7 @@ const createPythonBom = async (
       const pkgList = await utils.parsePoetrylockData(lockData);
       buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo: pkgList,
           ptype: "pypi",
           context: { src: path, filename: "poetry.lock" },
@@ -1072,7 +1077,7 @@ const createPythonBom = async (
       }
       buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo: pkgList,
           ptype: "pypi",
           context: { src: path, filename: metadataFilename },
@@ -1084,7 +1089,7 @@ const createPythonBom = async (
       const pkgList = await utils.parseSetupPyFile(setupPyData);
       buildBomString(
         {
-          includeBomSerialNumber,
+          deterministicForTests,
           pkgInfo: pkgList,
           ptype: "pypi",
           context: { src: path, filename: "setup.py" },
@@ -1104,12 +1109,12 @@ const createPythonBom = async (
 /**
  * Function to create bom string for Go projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
-const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
+const createGoBom = async (deterministicForTests, path, options, callback) => {
   let pkgList = [];
 
   // Read in go.sum and merge all go.sum files.
@@ -1138,7 +1143,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
     }
     return buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "golang",
         context: { src: path, filename: gosumFiles.join(", ") },
@@ -1190,7 +1195,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
     }
     buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "golang",
         context: { src: path, filename: gomodFiles.join(", ") },
@@ -1213,7 +1218,7 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
     }
     buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "golang",
         context: { src: path, filename: gopkgLockFiles.join(", ") },
@@ -1232,13 +1237,13 @@ const createGoBom = async (includeBomSerialNumber, path, options, callback) => {
 /**
  * Function to create bom string for Rust projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
 const createRustBom = async (
-  includeBomSerialNumber,
+  deterministicForTests,
   path,
   options,
   callback
@@ -1291,7 +1296,7 @@ const createRustBom = async (
     }
     buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "crates",
         context: { src: path, filename: cargoLockFiles.join(", ") },
@@ -1310,13 +1315,13 @@ const createRustBom = async (
 /**
  * Function to create bom string for php projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
 const createPHPBom = async (
-  includeBomSerialNumber,
+  deterministicForTests,
   path,
   options,
   callback
@@ -1366,7 +1371,7 @@ const createPHPBom = async (
     }
     buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "composer",
         context: { src: path, filename: composerLockFiles.join(", ") },
@@ -1385,13 +1390,13 @@ const createPHPBom = async (
 /**
  * Function to create bom string for ruby projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
 const createRubyBom = async (
-  includeBomSerialNumber,
+  deterministicForTests,
   path,
   options,
   callback
@@ -1442,7 +1447,7 @@ const createRubyBom = async (
     }
     buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "rubygems",
         context: { src: path, filename: gemLockFiles.join(", ") },
@@ -1458,13 +1463,13 @@ const createRubyBom = async (
 /**
  * Function to create bom string for csharp projects
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
 const createCsharpBom = async (
-  includeBomSerialNumber,
+  deterministicForTests,
   path,
   options,
   callback
@@ -1512,7 +1517,7 @@ const createCsharpBom = async (
   if (pkgList.length) {
     buildBomString(
       {
-        includeBomSerialNumber,
+        deterministicForTests,
         pkgInfo: pkgList,
         ptype: "nuget",
         context: { src: path, filename: csProjFiles.join(", ") },
@@ -1528,12 +1533,12 @@ const createCsharpBom = async (
 /**
  * Function to create bom string for various languages
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
-const createXBom = async (includeBomSerialNumber, path, options, callback) => {
+const createXBom = async (deterministicForTests, path, options, callback) => {
   try {
     fs.accessSync(path, fs.constants.R_OK);
   } catch (err) {
@@ -1547,7 +1552,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     fs.existsSync(pathLib.join(path, "rush.json"))
   ) {
     return await createNodejsBom(
-      includeBomSerialNumber,
+      deterministicForTests,
       path,
       options,
       callback
@@ -1566,7 +1571,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "{build.sbt,Build.scala}*"
   );
   if (pomFiles.length || gradleFiles.length || sbtFiles.length) {
-    return await createJavaBom(includeBomSerialNumber, path, options, callback);
+    return await createJavaBom(deterministicForTests, path, options, callback);
   }
   // python
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
@@ -1585,7 +1590,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
   const setupPyMode = fs.existsSync(setupPy);
   if (requirementsMode || pipenvMode || poetryMode || setupPyMode) {
     return await createPythonBom(
-      includeBomSerialNumber,
+      deterministicForTests,
       path,
       options,
       callback
@@ -1605,7 +1610,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "Gopkg.lock"
   );
   if (gomodFiles.length || gosumFiles.length || gopkgLockFiles.length) {
-    return await createGoBom(includeBomSerialNumber, path, options, callback);
+    return await createGoBom(deterministicForTests, path, options, callback);
   }
 
   // rust
@@ -1618,7 +1623,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "Cargo.toml"
   );
   if (cargoLockFiles.length || cargoFiles.length) {
-    return await createRustBom(includeBomSerialNumber, path, options, callback);
+    return await createRustBom(deterministicForTests, path, options, callback);
   }
 
   // php
@@ -1631,7 +1636,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "composer.lock"
   );
   if (composerJsonFiles.length || composerLockFiles.length) {
-    return await createPHPBom(includeBomSerialNumber, path, options, callback);
+    return await createPHPBom(deterministicForTests, path, options, callback);
   }
 
   // Ruby
@@ -1644,7 +1649,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
     (options.multiProject ? "**/" : "") + "Gemfile.lock"
   );
   if (gemFiles.length || gemLockFiles.length) {
-    return await createRubyBom(includeBomSerialNumber, path, options, callback);
+    return await createRubyBom(deterministicForTests, path, options, callback);
   }
 
   // .Net
@@ -1654,7 +1659,7 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
   );
   if (csProjFiles.length) {
     return await createCsharpBom(
-      includeBomSerialNumber,
+      deterministicForTests,
       path,
       options,
       callback
@@ -1665,12 +1670,12 @@ const createXBom = async (includeBomSerialNumber, path, options, callback) => {
 /**
  * Function to create bom string for various languages
  *
- * @param includeBomSerialNumber Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Function callback
  */
-exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
+exports.createBom = async (deterministicForTests, path, options, callback) => {
   let { projectType } = options;
   if (!projectType) {
     projectType = "";
@@ -1686,7 +1691,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     case "scala":
     case "jvm":
       return await createJavaBom(
-        includeBomSerialNumber,
+        deterministicForTests,
         path,
         options,
         callback
@@ -1697,7 +1702,7 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     case "typescript":
     case "ts":
       return await createNodejsBom(
-        includeBomSerialNumber,
+        deterministicForTests,
         path,
         options,
         callback
@@ -1705,32 +1710,32 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     case "python":
     case "py":
       return await createPythonBom(
-        includeBomSerialNumber,
+        deterministicForTests,
         path,
         options,
         callback
       );
     case "go":
     case "golang":
-      return await createGoBom(includeBomSerialNumber, path, options, callback);
+      return await createGoBom(deterministicForTests, path, options, callback);
     case "rust":
     case "rust-lang":
       return await createRustBom(
-        includeBomSerialNumber,
+        deterministicForTests,
         path,
         options,
         callback
       );
     case "php":
       return await createPHPBom(
-        includeBomSerialNumber,
+        deterministicForTests,
         path,
         options,
         callback
       );
     case "ruby":
       return await createRubyBom(
-        includeBomSerialNumber,
+        deterministicForTests,
         path,
         options,
         callback
@@ -1739,13 +1744,13 @@ exports.createBom = async (includeBomSerialNumber, path, options, callback) => {
     case "netcore":
     case "dotnet":
       return await createCsharpBom(
-        includeBomSerialNumber,
+        deterministicForTests,
         path,
         options,
         callback
       );
     default:
-      return await createXBom(includeBomSerialNumber, path, options, callback);
+      return await createXBom(deterministicForTests, path, options, callback);
   }
 };
 
