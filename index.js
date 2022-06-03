@@ -9,6 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 const { PackageURL } = require("packageurl-js");
 const builder = require("xmlbuilder");
 const utils = require("./utils");
+const sbtUtils = require("./sbt-utils");
 const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
@@ -692,14 +693,14 @@ const createJavaBom = async (
       if (sbtLockFiles && sbtLockFiles.length) {
         for (let i in sbtLockFiles) {
           const f = sbtLockFiles[i];
-          const dlist = utils.parseSbtLock(f);
+          const dlist = sbtUtils.parseSbtLock(f);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
         }
       } else {
         let SBT_CMD = process.env.SBT_CMD || "sbt";
-        let sbtVersion = utils.determineSbtVersion(path);
+        let sbtVersion = sbtUtils.determineSbtVersion(path);
         if (DEBUG_MODE) {
           console.log("Detected sbt version: " + sbtVersion);
         }
@@ -740,7 +741,7 @@ const createJavaBom = async (
             } else {
               // write to the existing plugins file
               sbtArgs = [`"${commandPrefix}dependencyList::toFile ${dlFile} --append"`]
-              pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
+              pluginFile = sbtUtils.addPlugin(basePath, sbtPluginDefinition);
             }
             // Note that the command has to be invoked with `shell: true` to properly execut sbt
             const result = spawnSync(
@@ -762,14 +763,14 @@ const createJavaBom = async (
               console.log(result.stdout);
             }
             if (!standalonePluginFile) {
-              utils.cleanupPlugin(basePath, pluginFile);
+              sbtUtils.cleanupPlugin(basePath, pluginFile);
             }
             if (fs.existsSync(dlFile)) {
               const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
               if (DEBUG_MODE) {
                 console.log(cmdOutput);
               }
-              const dlist = utils.parseKVDep(cmdOutput);
+              const dlist = sbtUtils.parseKVDep(cmdOutput);
               if (dlist && dlist.length) {
                 pkgList = pkgList.concat(dlist);
               }

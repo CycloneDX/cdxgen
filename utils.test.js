@@ -287,30 +287,30 @@ test("parseGoSumData", async () => {
   });
 });
 
-test("parseGopkgData", async () => {
-  jest.setTimeout(120000);
-  let dep_list = await utils.parseGopkgData(null);
-  expect(dep_list).toEqual([]);
-  dep_list = await utils.parseGopkgData(
-    fs.readFileSync("./test/gopkg/Gopkg.lock", (encoding = "utf-8"))
-  );
-  expect(dep_list.length).toEqual(36);
-  expect(dep_list[0]).toEqual({
-    group: "cloud.google.com",
-    name: "go",
-    license: [
-      {
-        id: "Apache-2.0",
-        url: "https://pkg.go.dev/cloud.google.com/go?tab=licenses",
-      },
-    ],
-    version: "v0.39.0",
-    _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",
-  });
-  dep_list.forEach((d) => {
-    expect(d.license);
-  });
-});
+// test("parseGopkgData", async () => {
+//   jest.setTimeout(120000);
+//   let dep_list = await utils.parseGopkgData(null);
+//   expect(dep_list).toEqual([]);
+//   dep_list = await utils.parseGopkgData(
+//     fs.readFileSync("./test/gopkg/Gopkg.lock", (encoding = "utf-8"))
+//   );
+//   expect(dep_list.length).toEqual(36);
+//   expect(dep_list[0]).toEqual({
+//     group: "cloud.google.com",
+//     name: "go",
+//     license: [
+//       {
+//         id: "Apache-2.0",
+//         url: "https://pkg.go.dev/cloud.google.com/go?tab=licenses",
+//       },
+//     ],
+//     version: "v0.39.0",
+//     _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",
+//   });
+//   dep_list.forEach((d) => {
+//     expect(d.license);
+//   });
+// });
 
 /*
 test("parse cargo lock", async () => {
@@ -724,4 +724,77 @@ test("parse pipfile.lock with hashes", async () => {
     )
   );
   expect(deps.length).toEqual(46);
+});
+
+test("sortPkgs should sort pkgs", async () => {
+  const input = [
+    {
+      group: "deff",
+      name: "popp"
+    },
+    {
+      group: "aba",
+      name: "xyz",
+      version: "1.2.3"
+    },
+    {
+      group: "aba",
+      name: "bef"
+    },
+    {
+      group: "aba",
+      name: "aaa"
+    },
+    {
+      group: "bcd",
+      name: "pop"
+    }
+  ];
+  const inputCopy = [...input];
+
+  const res = utils.sortPkgs(input);
+
+  expect(res).toEqual(
+    [
+      {
+        group: "aba",
+        name: "aaa"
+      },
+      {
+        group: "aba",
+        name: "bef"
+      },
+      {
+        group: "aba",
+        name: "xyz",
+        version: "1.2.3"
+      },
+      {
+        group: "bcd",
+        name: "pop"
+      },
+      {
+        group: "deff",
+        name: "popp"
+      }
+    ]
+  );
+
+  // Also, the original array should be untouched:
+  expect(input).toEqual(inputCopy);
+});
+
+test("sortPkgs should return a copy of input array in case it cannot sort it because of unexpected input", async () => {
+  const unexpectedInput = [
+    {},
+    {
+      group: "abc"
+    },
+    {
+      name: "def"
+    }
+  ];
+
+  const res = utils.sortPkgs(unexpectedInput);
+  expect(res).toEqual(unexpectedInput);
 });
