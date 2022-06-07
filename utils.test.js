@@ -784,7 +784,7 @@ test("sortPkgs should sort pkgs", async () => {
   expect(input).toEqual(inputCopy);
 });
 
-test("sortPkgs should return a copy of input array in case it cannot sort it because of unexpected input", async () => {
+test("sortPkgs should return a copy of an input array in case it cannot sort it because of unexpected input", async () => {
   const unexpectedInput = [
     {},
     {

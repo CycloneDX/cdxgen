@@ -13,9 +13,9 @@ function main(){
   local SUFFIX_2="$2"
 
   for i in "${PREDEFINED_DIRS[@]}"; do 
-		IFS=',' read LANG DIR <<< "${i}"
+    IFS=',' read LANG DIR <<< "${i}"
     diff "$DIR/cdx$SUFFIX_1.out.xml" "$DIR/cdx$SUFFIX_2.out.xml"
-	done
+  done
 }
 
 main $1 $2

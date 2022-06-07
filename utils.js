@@ -1899,6 +1899,12 @@ const extractJarArchive = function (jarFile, tempDir) {
 };
 exports.extractJarArchive = extractJarArchive;
 
+/**
+ * 
+ * @param {Array.<{group: String, name: String}>} pkgList 
+ * @returns a copy of an input array sorted firstly by group and secondly by name
+ * If input is in unexpected format it will just return a 1:1 copy of an input array
+ */
 const sortPkgs = function(pkgList) {
   pkgListCopy = [...pkgList];
   try {
