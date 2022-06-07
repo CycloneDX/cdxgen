@@ -2,15 +2,12 @@
 
 # Exit on any failure
 set -e
-
-function main() {
-  local BASELINE_BRANCH="$1"
-
-  ./run.sh
-  git checkout $BASELINE_BRANCH
-  ./run.sh "-baseline"
-  git checkout -
-  ./diff.sh "" "-baseline"
-}
-
-main "${1:-master}"
+ 
+if [ "$1" == "--update" ]; then
+    echo "Updating expectations..."
+    ./run.sh "-expected"
+else
+    echo "Verifying..."
+    ./run.sh "-actual"
+    ./diff.sh "-actual" "-expected"
+fi

@@ -5,20 +5,19 @@ Tests in this directory are supposed to detect changes in output produced by cdx
 The list of directories to be checked resides in `predefined-projects.sh`. Once you have configured that file, run the integration tests with:
 
 ```bash
-./diff.sh
+./verify.sh
 ```
 
-## Current status
+## How to update expectations
 
-Integration tests are in an early stage of development. There are two areas of improvement:
+If you introduced a change that affecs the output and you're sure that's your intention, then:
 
-### 1. Deterministic output
+```bash
+./verify.sh --update
+```
 
-For the tests to yield sensible results, it's assumed that output is deterministic. `cdxgen` offers a `--deterministic-for-tests` flag that hardcodes certain parts of the output, like BOM generation serial number and timestamps.
+## How to add a new test
 
-Another potential source of indeterminism is a different ordering of outputs. For SBT, the output is already sorted. We may add it for other tools as well.
-
-### 2. Including test repositories in the cdxgen repository
-
-The eventual goal is to include test repositories in the cdxgen repository, along with their expected output. Then, each time the change affects output, we would need to "confirm" it's expected by changing files with
-expectations.
+* Put a new build configuration somewhere into `samples` directory
+* Add a path to the above directory to `predefined-projects.sh`
+* Run `./verify.sh --update`. That will generate `cdx-expected.out.xml` file in a new directory
