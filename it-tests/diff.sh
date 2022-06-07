@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# Exit on any failure
-set -e
-# Print commands
-set -x
-
  # Load PREDEFINED_DIRS:
 source predefined-projects.sh
+
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+ENDCOLOR="\033[0m"
 
 function main(){
   local SUFFIX_1="$1"
@@ -14,7 +13,12 @@ function main(){
 
   for i in "${PREDEFINED_DIRS[@]}"; do 
     IFS=',' read LANG DIR <<< "${i}"
-    diff "$DIR/cdx$SUFFIX_1.out.xml" "$DIR/cdx$SUFFIX_2.out.xml"
+    if diff "$DIR/cdx$SUFFIX_1.out.xml" "$DIR/cdx$SUFFIX_2.out.xml"; then
+      echo -e "${GREEN}PASSED:${ENDCOLOR} $DIR/cdx$SUFFIX_2.out.xml"
+    else
+      echo -e "${RED}FAILED:${ENDCOLOR} $DIR/cdx$SUFFIX_1.out.xml and $DIR/cdx$SUFFIX_2.out.xml differ"
+    fi
+    
   done
 }
 
