@@ -94,7 +94,7 @@ let filePath = args._[0] || ".";
 /**
  * Method to start the bom creation process
  *
- * @param deterministicForTests Boolean to include BOM serial number
+ * @param deterministicForTests If true, hardcode BOM serial number and timestamp
  * @param path to the project
  * @param options Parse options from the cli
  * @param callback Callback function accepting err, bomData
