@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1">
+  <externalReferences>
+    <reference type="other">
+      <url>./samples/sbt/sbt1.6</url>
+      <comment>Base path</comment>
+    </reference>
+    <reference type="other">
+      <url>samples/sbt/sbt1.6/Users/michal/sl/cdxgen/it-tests/samples/sbt/sbt1.6</url>
+      <comment>Package file</comment>
+    </reference>
+  </externalReferences>
+  <metadata>
+    <timestamp>2022-06-03T09:34:10.062Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>AppThreat</vendor>
+        <name>cdxgen</name>
+        <version>2.3.7</version>
+      </tool>
+    </tools>
+    <authors>
+      <author>
+        <name>Team AppThreat</name>
+        <email>cloud@appthreat.com</email>
+      </author>
+    </authors>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:maven/app/app_2.12@0.1.0-SNAPSHOT?type=jar">
+      <group>app</group>
+      <name>app_2.12</name>
+      <version>0.1.0-SNAPSHOT</version>
+      <purl>pkg:maven/app/app_2.12@0.1.0-SNAPSHOT?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe/config@1.3.3?type=jar">
+      <group>com.typesafe</group>
+      <name>config</name>
+      <version>1.3.3</version>
+      <purl>pkg:maven/com.typesafe/config@1.3.3?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe/ssl-config-core_2.12@0.3.7?type=jar">
+      <group>com.typesafe</group>
+      <name>ssl-config-core_2.12</name>
+      <version>0.3.7</version>
+      <purl>pkg:maven/com.typesafe/ssl-config-core_2.12@0.3.7?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe.akka/akka-actor_2.12@2.5.23?type=jar">
+      <group>com.typesafe.akka</group>
+      <name>akka-actor_2.12</name>
+      <version>2.5.23</version>
+      <purl>pkg:maven/com.typesafe.akka/akka-actor_2.12@2.5.23?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe.akka/akka-http_2.12@10.1.8?type=jar">
+      <group>com.typesafe.akka</group>
+      <name>akka-http_2.12</name>
+      <version>10.1.8</version>
+      <purl>pkg:maven/com.typesafe.akka/akka-http_2.12@10.1.8?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe.akka/akka-http-core_2.12@10.1.8?type=jar">
+      <group>com.typesafe.akka</group>
+      <name>akka-http-core_2.12</name>
+      <version>10.1.8</version>
+      <purl>pkg:maven/com.typesafe.akka/akka-http-core_2.12@10.1.8?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe.akka/akka-parsing_2.12@10.1.8?type=jar">
+      <group>com.typesafe.akka</group>
+      <name>akka-parsing_2.12</name>
+      <version>10.1.8</version>
+      <purl>pkg:maven/com.typesafe.akka/akka-parsing_2.12@10.1.8?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe.akka/akka-protobuf_2.12@2.5.23?type=jar">
+      <group>com.typesafe.akka</group>
+      <name>akka-protobuf_2.12</name>
+      <version>2.5.23</version>
+      <purl>pkg:maven/com.typesafe.akka/akka-protobuf_2.12@2.5.23?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.typesafe.akka/akka-stream_2.12@2.5.23?type=jar">
+      <group>com.typesafe.akka</group>
+      <name>akka-stream_2.12</name>
+      <version>2.5.23</version>
+      <purl>pkg:maven/com.typesafe.akka/akka-stream_2.12@2.5.23?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/core/core_2.12@0.1.0-SNAPSHOT?type=jar">
+      <group>core</group>
+      <name>core_2.12</name>
+      <version>0.1.0-SNAPSHOT</version>
+      <purl>pkg:maven/core/core_2.12@0.1.0-SNAPSHOT?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/de.heikoseeberger/akka-http-circe_2.12@1.26.0?type=jar">
+      <group>de.heikoseeberger</group>
+      <name>akka-http-circe_2.12</name>
+      <version>1.26.0</version>
+      <purl>pkg:maven/de.heikoseeberger/akka-http-circe_2.12@1.26.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/default/sbt1-6_2.13@0.1.0-SNAPSHOT?type=jar">
+      <group>default</group>
+      <name>sbt1-6_2.13</name>
+      <version>0.1.0-SNAPSHOT</version>
+      <purl>pkg:maven/default/sbt1-6_2.13@0.1.0-SNAPSHOT?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-core_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-core_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-core_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-jawn_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-jawn_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-jawn_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-numbers_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-numbers_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-numbers_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-parser_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-parser_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-parser_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.flywaydb/flyway-core@8.5.12?type=jar">
+      <group>org.flywaydb</group>
+      <name>flyway-core</name>
+      <version>8.5.12</version>
+      <purl>pkg:maven/org.flywaydb/flyway-core@8.5.12?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.reactivestreams/reactive-streams@1.0.2?type=jar">
+      <group>org.reactivestreams</group>
+      <name>reactive-streams</name>
+      <version>1.0.2</version>
+      <purl>pkg:maven/org.reactivestreams/reactive-streams@1.0.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.scala-lang.modules/scala-java8-compat_2.12@0.8.0?type=jar">
+      <group>org.scala-lang.modules</group>
+      <name>scala-java8-compat_2.12</name>
+      <version>0.8.0</version>
+      <purl>pkg:maven/org.scala-lang.modules/scala-java8-compat_2.12@0.8.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.scala-lang.modules/scala-parser-combinators_2.12@1.1.1?type=jar">
+      <group>org.scala-lang.modules</group>
+      <name>scala-parser-combinators_2.12</name>
+      <version>1.1.1</version>
+      <purl>pkg:maven/org.scala-lang.modules/scala-parser-combinators_2.12@1.1.1?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-core_2.12@2.7.0?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-core_2.12</name>
+      <version>2.7.0</version>
+      <purl>pkg:maven/org.typelevel/cats-core_2.12@2.7.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-kernel_2.12@2.7.0?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-kernel_2.12</name>
+      <version>2.7.0</version>
+      <purl>pkg:maven/org.typelevel/cats-kernel_2.12@2.7.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/jawn-parser_2.12@1.3.2?type=jar">
+      <group>org.typelevel</group>
+      <name>jawn-parser_2.12</name>
+      <version>1.3.2</version>
+      <purl>pkg:maven/org.typelevel/jawn-parser_2.12@1.3.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/simulacrum-scalafix-annotations_2.12@0.5.4?type=jar">
+      <group>org.typelevel</group>
+      <name>simulacrum-scalafix-annotations_2.12</name>
+      <version>0.5.4</version>
+      <purl>pkg:maven/org.typelevel/simulacrum-scalafix-annotations_2.12@0.5.4?type=jar</purl>
+      <description/>
+    </component>
+  </components>
+</bom>

@@ -45,6 +45,8 @@ org.reactivestreams:reactive-streams:1.0.0
 org.scala-lang:scala-reflect:2.11.7
 org.scala-lang.modules:scala-parser-combinators_2.11:1.0.1
 org.scala-lang.modules:scala-xml_2.11:1.0.1
+
+
 org.scala-stm:scala-stm_2.11:0.7
 org.slf4j:jcl-over-slf4j:1.7.12
 org.slf4j:jul-to-slf4j:1.7.12
@@ -52,6 +54,9 @@ org.slf4j:slf4j-api:1.7.12
 org.spire-math:spire-macros_2.11:0.11.0
 org.spire-math:spire_2.11:0.11.0
 org.typelevel:machinist_2.11:0.4.1
+
+
 shiftleft-scala-example:shiftleft-scala-example_2.11:1.0-SNAPSHOT
 xerces:xercesImpl:2.11.0
 xml-apis:xml-apis:1.4.01
+

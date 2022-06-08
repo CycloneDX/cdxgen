@@ -1,7 +1,14 @@
 const fs = require("fs");
+const os = require("os");
 const pathLib = require("path");
 const propertiesReader = require("properties-reader");
 const semver = require("semver");
+const { spawnSync } = require("child_process");
+const utils = require("./utils");
+
+const ADD_SBT_PLUGIN='addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")';
+const ENABLE_SBT_PLUGIN='addDependencyTreePlugin';
+const EOL = "\n";
 
 /**
  * Parse sbt lock file
@@ -50,7 +57,7 @@ exports.parseSbtLock = parseSbtLock;
  *
  * @param {string} projectPath Path to the SBT project
  */
- const determineSbtVersion = function (projectPath) {
+const determineSbtVersion = function (projectPath) {
   const buildPropFile = pathLib.join(projectPath, "project", "build.properties");
   if (fs.existsSync(buildPropFile)) {
     let properties = propertiesReader(buildPropFile);
@@ -76,71 +83,39 @@ exports.determineSbtVersion = determineSbtVersion;
  * @param {string} plugin Name of the plugin to add
  */
 const addPlugin = function (projectPath, plugin) {
-  const pluginsFile = sbtPluginsPath(projectPath);
-  var originalPluginsFile = null;
-  if (fs.existsSync(pluginsFile)) {
-    originalPluginsFile = pluginsFile + ".cdxgen";
-    fs.copyFileSync(pluginsFile, originalPluginsFile);
-
-    // sbt-dependency-graph may already be present in the users' plugins file.
-    // Since we are using our own version of it, and require the most
-    // recent one, we have to ensure that there are no conflicts.
-    // There is no version resolution for plugins in SBT, and it seems to pick
-    // the first one that is defined. Rather than pre-pending the plugin,
-    // and wishing we are lucky, we just make sure there are no conflicts by
-    // ignoring the plugin.
-    var data = fs.readFileSync(pluginsFile, 'utf-8').toString();
-    var newData = data.replace(/^(.+\"sbt-dependency-graph\".+)/gim, '//$1');
-    fs.writeFileSync(pluginsFile, newData, 'utf-8');
-  }
-
-  fs.writeFileSync(pluginsFile, plugin, { flag: "a" });
-  return originalPluginsFile;
-};
-exports.addPlugin = addPlugin;
-
-/**
- * Cleans up modifications to the project's plugins' file made by the
- * `addPlugin` function.
- *
- * @param {string} projectPath Path to the SBT project
- * @param {string} originalPluginsFile Location of the original plugins file, if any
- */
- const cleanupPlugin = function (projectPath, originalPluginsFile) {
-  const pluginsFile = sbtPluginsPath(projectPath);
-  if (fs.existsSync(pluginsFile)) {
-    if (!originalPluginsFile) {
-      // just remove the file, it was never there
-      fs.unlinkSync(pluginsFile);
-      return !fs.existsSync(pluginsFile);
+  function uniqueFilename(attempt) {
+    const proposedName = pathLib.join(projectPath, 'project', `shiftleft-cdxgen-plugins${attempt}.sbt`);
+    if (!fs.existsSync(proposedName)) {
+      return proposedName;
     } else {
-      // Bring back the original file
-      fs.copyFileSync(originalPluginsFile, pluginsFile);
-      fs.unlinkSync(originalPluginsFile);
-      return true;
+      return uniqueFilename(attempt + 1);
     }
-  } else {
-    return false;
   }
+
+  const pluginFileName = uniqueFilename(0);
+  fs.writeFileSync(pluginFileName, plugin);
+  return pluginFileName;
 };
-exports.cleanupPlugin = cleanupPlugin;
 
 /**
- * Returns a default location of the plugins file.
- *
- * @param {string} projectPath Path to the SBT project
+ * 
+ * @param {string} input output of `sbt projectInfo` command
+ * @returns {Array.<string>} list of sbt projects
  */
-const sbtPluginsPath = function (projectPath) {
-  return pathLib.join(projectPath, "project", "plugins.sbt");
-};
+const parseProjectInfo = function(input) {
+  const startFrom = 'ModuleInfo('.length;
+  const regex = /ModuleInfo\([^,]+,/g;
+  return [...input.matchAll(regex)].map(s => s.toString()).map(s => s.substr(startFrom, s.length - (startFrom + 1)));
+}
+exports.parseProjectInfo = parseProjectInfo;
 
-/**
+ /**
  * Parse dependencies in Key:Value format
  */
- const parseKVDep = function (rawOutput) {
+const parseKVDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
-    rawOutput.split("\n").forEach((l) => {
+    rawOutput.split(EOL).forEach((l) => {
       const tmpA = l.split(":");
       if (tmpA.length === 3) {
         deps.push({
@@ -163,3 +138,103 @@ const sbtPluginsPath = function (projectPath) {
   return [];
 };
 exports.parseKVDep = parseKVDep;
+
+const sbtInvoker = function (debugMode, path, tempSbtPlugins) {
+  let SBT_CMD = process.env.SBT_CMD || "sbt";
+  let sbtVersion = determineSbtVersion(path);
+  if (debugMode) {
+    console.log("Detected sbt version: " + sbtVersion);
+  }
+  const standalonePluginFileSupported = standalonePluginFile(sbtVersion);
+  const disableAggregateString = isDependencyTreeBuiltIn(sbtVersion) ? `set every _root_.sbt.plugins.DependencyTreePlugin.autoImport.dependencyList / aggregate := false` : `set every dependencyList / aggregate := false`
+
+  let enablePluginString =  isDependencyTreeBuiltIn(sbtVersion) ? ENABLE_SBT_PLUGIN : ADD_SBT_PLUGIN;
+
+  if (standalonePluginFileSupported) {
+    fs.writeFileSync(tempSbtPlugins, enablePluginString);
+  }
+
+  return {
+    invokeDependencyList: function(commandPrefix, basePath, timeoutMs) {
+      let dependencyListCmd;
+      let filesToGatherOutput = [];
+      outDir = fs.mkdtempSync(os.tmpdir());
+      if (commandPrefix !== '') {
+        outFile = pathLib.join(outDir, 'outfile')
+        dependencyListCmd = `";${disableAggregateString};${commandPrefix}dependencyList::toFile ${outFile} --force"`
+        filesToGatherOutput = [outFile];
+      } else {
+        const projectInfoRes = spawnSync(SBT_CMD, ["projectInfo"], { cwd: basePath, shell: true, encoding: "utf-8", timeout: timeoutMs });
+        let subProjects = parseProjectInfo(projectInfoRes.stdout);
+
+        let subProjectsWithFiles = subProjects.map(sp => ({project: sp, filename: pathLib.join(outDir, `out-${sp}`)}));
+
+        dependencyListCmd = `";${disableAggregateString}` + subProjectsWithFiles.map(x => `;${x.project}/dependencyList::toFile ${x.filename} --force`).join('') + `"`;
+        filesToGatherOutput = subProjectsWithFiles.map(x => x.filename);
+      }
+
+      let pluginFileName = '';
+      if (standalonePluginFileSupported) {
+        sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`, dependencyListCmd]
+      } else {
+        // write to a new shiftleft-cdxgen-plugins0.sbt file
+        pluginFileName = addPlugin(basePath, enablePluginString);
+        sbtArgs = [dependencyListCmd]
+      }
+
+      try {
+        console.log(`Executing ${SBT_CMD} ${sbtArgs} in ${basePath}`)
+        // Note that the command has to be invoked with `shell: true` to properly execut sbt
+        const result = spawnSync(
+          SBT_CMD,
+          sbtArgs,
+          { cwd: basePath, shell: true, encoding: "utf-8", timeout: timeoutMs }
+        );
+        if (result.status == 1 || result.error) {
+          console.error(result.stdout, result.stderr);
+          utils.debug(`1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`);
+          utils.debug(`2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`);
+        } else {
+          utils.debug(result.stdout);
+        }
+      } finally {
+        if (pluginFileName != '' && fs.existsSync(pluginFileName)) {
+          fs.rmSync(pluginFileName);
+        }
+      }
+      outputAsStr = '';
+      filesToGatherOutput.forEach(f => {
+        if (fs.existsSync(f)) {
+          try {
+            outputAsStr += fs.readFileSync(f, { encoding: "utf-8" });
+            // Files we merge don't have trailing EOL so if we don't put it manually we would end up with 2 entries at a single line
+            outputAsStr += EOL;
+          } catch(error) {
+          }
+        }
+      });
+      return outputAsStr;
+    }
+  }
+}
+exports.sbtInvoker = sbtInvoker;
+
+/**
+ *
+ * @param {string} sbtVersion SBT version, might be null
+ * @returns {boolean} true if SBT version has sbt-dependency-graph built-in
+ */
+const isDependencyTreeBuiltIn = function(sbtVersion) {
+  // Introduced in https://www.scala-sbt.org/1.x/docs/sbt-1.4-Release-Notes.html#sbt-dependency-graph+is+in-sourced
+  return sbtVersion != null && semver.gte(sbtVersion, "1.4.0");
+}
+
+/**
+ *
+ * @param {string} sbtVersion SBT version, might be null
+ * @returns {boolean} true if SBT version supports addPluginSbtFile
+ */
+ const standalonePluginFile = function (sbtVersion) {
+  // Introduced in https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command
+  return sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
+}

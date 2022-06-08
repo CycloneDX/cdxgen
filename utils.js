@@ -15,7 +15,8 @@ const { spawnSync } = require("child_process");
 // Debug mode flag
 const DEBUG_MODE =
   process.env.SCAN_DEBUG_MODE === "debug" ||
-  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
+  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
+  process.env.NODE_ENV !== "production";
 
 // Metadata cache
 let metadata_cache = {};
@@ -1910,7 +1911,7 @@ const sortPkgs = function(pkgList) {
   try {
     return pkgListCopy.sort((a, b) => {
       const groupDiff = a.group.localeCompare(b.group);
-      if (groupDiff !== 0) {  
+      if (groupDiff !== 0) {
         return groupDiff;
       }
       return a.name.localeCompare(b.name);
@@ -1920,3 +1921,10 @@ const sortPkgs = function(pkgList) {
   }
 };
 exports.sortPkgs = sortPkgs;
+
+const debug = function(msg) {
+  if (DEBUG_MODE) {
+    console.log(msg);
+  }
+}
+exports.debug = debug;

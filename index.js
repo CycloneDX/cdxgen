@@ -426,9 +426,7 @@ const createJavaBom = async (
   if (path.endsWith(".war")) {
     // Check if the file exists
     if (fs.existsSync(path)) {
-      if (DEBUG_MODE) {
-        console.log(`Retrieving packages from ${path}`);
-      }
+      utils.debug(`Retrieving packages from ${path}`);
       let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "war-deps-"));
       try {
         pkgList = utils.extractJarArchive(path, tempDir);
@@ -702,93 +700,29 @@ const createJavaBom = async (
           }
         }
       } else {
-        let SBT_CMD = process.env.SBT_CMD || "sbt";
-        let sbtVersion = sbtUtils.determineSbtVersion(path);
-        if (DEBUG_MODE) {
-          console.log("Detected sbt version: " + sbtVersion);
-        }
-        const standalonePluginFile =
-          sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
-        let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
         let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
         try {
           fs.mkdirSync(tempSbtgDir, { recursive: true });
           // Create temporary plugins file
           let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
-
-          // Requires a custom version of `sbt-dependency-graph` that
-          // supports `--append` for `toFile` subtask.
-          const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
-          fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
+          const sbtInvoker = sbtUtils.sbtInvoker(DEBUG_MODE, path, tempSbtPlugins);
 
           for (let i in sbtProjects) {
             const basePath = sbtProjects[i];
-            let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
-            var commandPrefix = "";
-            if (options.subprojectName) {
-              commandPrefix = `${options.subprojectName}/`
-            }
+            const commandPrefix = options.subprojectName ? `${options.subprojectName}/` : "";
 
-            console.log(
-              "Executing",
-              SBT_CMD,
-              `${commandPrefix}dependencyList in`,
-              basePath,
-              "using plugins",
-              tempSbtgDir
-            );
-            var sbtArgs = [];
-            var pluginFile = null;
-            if (standalonePluginFile) {
-              sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`,`"${commandPrefix}dependencyList::toFile ${dlFile} --append"`]
-            } else {
-              // write to the existing plugins file
-              sbtArgs = [`"${commandPrefix}dependencyList::toFile ${dlFile} --append"`]
-              pluginFile = sbtUtils.addPlugin(basePath, sbtPluginDefinition);
-            }
-            // Note that the command has to be invoked with `shell: true` to properly execut sbt
-            const result = spawnSync(
-              SBT_CMD,
-              sbtArgs,
-              { cwd: basePath, shell: true, encoding: "utf-8", timeout: TIMEOUT_MS }
-            );
-            if (result.status == 1 || result.error) {
-              console.error(result.stdout, result.stderr);
-              if (DEBUG_MODE) {
-                console.log(
-                  `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
-                );
-                console.log(
-                  `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
-                );
-              }
-            } else if (DEBUG_MODE) {
-              console.log(result.stdout);
-            }
-            if (!standalonePluginFile) {
-              sbtUtils.cleanupPlugin(basePath, pluginFile);
-            }
-            if (fs.existsSync(dlFile)) {
-              const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
-              if (DEBUG_MODE) {
-                console.log(cmdOutput);
-              }
+            const cmdOutput = sbtInvoker.invokeDependencyList(commandPrefix, basePath, TIMEOUT_MS);
+
+            if (cmdOutput != '') {
+              utils.debug(`sbt dependencyList result read from: ${cmdOutput}`);
               const dlist = sbtUtils.parseKVDep(cmdOutput);
-              if (dlist && dlist.length) {
-                pkgList = pkgList.concat(dlist);
-              }
+              pkgList = pkgList.concat(dlist);
             } else {
-              if (DEBUG_MODE) {
-                console.log(`sbt dependencyList did not yield ${dlFile}`);
-              }
+              utils.debug(`sbt dependencyList did not yield any result`);
             }
           }
         } finally {
           // Cleanup
-          if (tempDir && tempDir.startsWith(os.tmpdir())) {
-            console.log(`Cleaning up ${tempDir}`);
-            fs.rmdirSync(tempDir, { recursive: true });
-          }
           if (tempSbtgDir && tempSbtgDir.startsWith(os.tmpdir())) {
             console.log(`Cleaning up ${tempSbtgDir}`);
             fs.rmdirSync(tempSbtgDir, { recursive: true });
@@ -807,7 +741,7 @@ const createJavaBom = async (
         );
         jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
       }
-      // TODO: Sort for all build tools?
+      // TODO: Should we sort for other langs / build tools as well?
       pkgList = utils.sortPkgs(pkgList);
       buildBomString(
         {
