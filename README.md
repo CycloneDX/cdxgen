@@ -45,22 +45,28 @@ npm install -g @appthreat/cdxgen
 ```bash
 $ cdxgen -h
 Options:
-  --version, -v        Print version number                            [boolean]
-  --output, -o         Output file for bom.xml or bom.json. Default console
-  --type, -t           Project type
-  --recurse, -r        Recurse mode suitable for mono-repos            [boolean]
-  --resolve-class, -c  Resolve class names for packages. jars only for now.
+  -v, --version                  Print version number                  [boolean]
+  -o, --output                   Output file for bom.xml or bom.json. Default
+                                 console
+  -t, --type                     Project type
+  -r, --recurse                  Recurse mode suitable for mono-repos  [boolean]
+  -s, --subproject               Analyze only a specific subproject
+  -c, --resolve-class            Resolve class names for packages. jars only for
+                                 now.                                  [boolean]
+      --server-url               Dependency track or AppThreat server url. Eg:
+                                 https://deptrack.appthreat.io
+      --api-key                  Dependency track or AppThreat server api key
+      --project-name             Dependency track or AppThreat project name.
+                                 Default use the directory name
+      --project-version          Dependency track or AppThreat project version.
+                                 Default master              [default: "master"]
+      --project-id               Dependency track or AppThreat project id.
+                                 Either provide the id or the project name and
+                                 version together
+      --deterministic-for-tests  Hardcode metadata like timestamps so the output
+                                 is deterministic. Useful for integration tests
                                                                        [boolean]
-  --server-url         Dependency track or AppThreat server url. Eg:
-                       https://deptrack.appthreat.io
-  --api-key            Dependency track or AppThreat server api key
-  --project-name       Dependency track or AppThreat project name. Default use
-                       the directory name
-  --project-version    Dependency track or AppThreat project version. Default
-                       master                                [default: "master"]
-  --project-id         Dependency track or AppThreat project id. Either provide
-                       the id or the project name and version together
-  -h                   Show help                                       [boolean]
+  -h                             Show help                             [boolean]
 ```
 
 ## Example

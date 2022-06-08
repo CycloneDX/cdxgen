@@ -726,14 +726,75 @@ test("parse pipfile.lock with hashes", async () => {
   expect(deps.length).toEqual(46);
 });
 
-test("parse scala sbt list", async () => {
-  let deps = utils.parseKVDep(
-    fs.readFileSync("./test/data/sbt-dl.list", { encoding: "utf-8" })
+test("sortPkgs should sort pkgs", async () => {
+  const input = [
+    {
+      group: "deff",
+      name: "popp"
+    },
+    {
+      group: "aba",
+      name: "xyz",
+      version: "1.2.3"
+    },
+    {
+      group: "aba",
+      name: "bef"
+    },
+    {
+      group: "aba",
+      name: "aaa"
+    },
+    {
+      group: "bcd",
+      name: "pop"
+    }
+  ];
+  const inputCopy = [...input];
+
+  const res = utils.sortPkgs(input);
+
+  expect(res).toEqual(
+    [
+      {
+        group: "aba",
+        name: "aaa"
+      },
+      {
+        group: "aba",
+        name: "bef"
+      },
+      {
+        group: "aba",
+        name: "xyz",
+        version: "1.2.3"
+      },
+      {
+        group: "bcd",
+        name: "pop"
+      },
+      {
+        group: "deff",
+        name: "popp"
+      }
+    ]
   );
-  expect(deps.length).toEqual(57);
+
+  // Also, the original array should be untouched:
+  expect(input).toEqual(inputCopy);
 });
 
-test("parse scala sbt lock", async () => {
-  let deps = utils.parseSbtLock("./test/data/build.sbt.lock");
-  expect(deps.length).toEqual(117);
+test("sortPkgs should return a copy of an input array in case it cannot sort it because of unexpected input", async () => {
+  const unexpectedInput = [
+    {},
+    {
+      group: "abc"
+    },
+    {
+      name: "def"
+    }
+  ];
+
+  const res = utils.sortPkgs(unexpectedInput);
+  expect(res).toEqual(unexpectedInput);
 });

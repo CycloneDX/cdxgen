@@ -1,0 +1,6 @@
+# Scala related:
+target
+/.bsp
+
+# Integration tests related:
+*-actual.out.xml
