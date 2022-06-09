@@ -368,10 +368,11 @@ const buildBomString = (
     bom.att("serialNumber", serialNum);
   }
   bom.att("version", 1);
+  let ctxFilename = !deterministicForTests ? context.filename : '/some/full/path';
   if (context && context.src && context.filename) {
     bom
       .ele("externalReferences")
-      .ele(addGlobalReferences(context.src, context.filename));
+      .ele(addGlobalReferences(context.src, ctxFilename));
   }
   let allImports = {};
   if (context && context.allImports) {

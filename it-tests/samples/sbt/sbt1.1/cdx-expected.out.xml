@@ -6,7 +6,7 @@
       <comment>Base path</comment>
     </reference>
     <reference type="other">
-      <url>samples/sbt/sbt1.1/Users/michal/sl/cdxgen/it-tests/samples/sbt/sbt1.1</url>
+      <url>samples/sbt/sbt1.1/some/full/path</url>
       <comment>Package file</comment>
     </reference>
   </externalReferences>
