@@ -177,11 +177,11 @@ const sbtInvoker = function (debugMode, path, tempSbtPlugins) {
 
       let pluginFileName = '';
       if (standalonePluginFileSupported) {
-        sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`, dependencyListCmd]
+        sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`, dependencyListCmd];
       } else {
         // write to a new shiftleft-cdxgen-plugins0.sbt file
         pluginFileName = addPlugin(basePath, enablePluginString);
-        sbtArgs = [dependencyListCmd]
+        sbtArgs = [dependencyListCmd];
       }
 
       try {
@@ -237,6 +237,7 @@ const isDependencyTreeBuiltIn = function(sbtVersion) {
  * @returns {boolean} true if SBT version supports addPluginSbtFile
  */
  const standalonePluginFile = function (sbtVersion) {
-  // Introduced in https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command
-  return sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
+  // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
+  // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
+  return sbtVersion != null && semver.gte(sbtVersion, "1.3.4");
 }

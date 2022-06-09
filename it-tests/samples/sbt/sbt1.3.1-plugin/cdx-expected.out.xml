@@ -2,11 +2,11 @@
 <bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1">
   <externalReferences>
     <reference type="other">
-      <url>./samples/sbt/sbt1.3</url>
+      <url>./samples/sbt/sbt1.3.1-plugin</url>
       <comment>Base path</comment>
     </reference>
     <reference type="other">
-      <url>samples/sbt/sbt1.3/some/full/path</url>
+      <url>samples/sbt/sbt1.3.1-plugin/some/full/path</url>
       <comment>Package file</comment>
     </reference>
   </externalReferences>
@@ -104,11 +104,11 @@
       <purl>pkg:maven/de.heikoseeberger/akka-http-circe_2.12@1.26.0?type=jar</purl>
       <description/>
     </component>
-    <component type="library" bom-ref="pkg:maven/default/sbt1-3_2.13@0.1.0-SNAPSHOT?type=jar">
+    <component type="library" bom-ref="pkg:maven/default/sbt1-3-1-plugin_2.13@0.1.0-SNAPSHOT?type=jar">
       <group>default</group>
-      <name>sbt1-3_2.13</name>
+      <name>sbt1-3-1-plugin_2.13</name>
       <version>0.1.0-SNAPSHOT</version>
-      <purl>pkg:maven/default/sbt1-3_2.13@0.1.0-SNAPSHOT?type=jar</purl>
+      <purl>pkg:maven/default/sbt1-3-1-plugin_2.13@0.1.0-SNAPSHOT?type=jar</purl>
       <description/>
     </component>
     <component type="library" bom-ref="pkg:maven/io.circe/circe-core_2.12@0.14.2?type=jar">
