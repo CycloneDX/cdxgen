@@ -158,7 +158,9 @@ const sbtInvoker = function (debugMode, path, tempSbtPlugins) {
     invokeDependencyList: function(commandPrefix, basePath, timeoutMs) {
       let dependencyListCmd;
       let filesToGatherOutput = [];
-      outDir = fs.mkdtempSync(os.tmpdir());
+      
+      let tmpDir = pathLib.join(os.tmpdir(), 'cdxgen-sbt');
+      outDir = fs.mkdtempSync(tmpDir);
       if (commandPrefix !== '') {
         outFile = pathLib.join(outDir, 'outfile')
         dependencyListCmd = `";${disableAggregateString};${commandPrefix}dependencyList::toFile ${outFile} --force"`
