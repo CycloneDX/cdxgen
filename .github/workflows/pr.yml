@@ -13,6 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - uses: olafurpg/setup-scala@v11
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -21,3 +22,5 @@ jobs:
         run: |
           npm install
           npm test
+          cd it-tests
+          ./verify.sh
