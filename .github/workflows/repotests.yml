@@ -88,6 +88,10 @@ jobs:
         with:
           repository: 'flutter/gallery'
           path: 'repotests/gallery'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'gojek/ziggurat'
+          path: 'repotests/ziggurat'
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.22.0/cyclonedx-linux-x64
@@ -140,6 +144,10 @@ jobs:
           bin/cdxgen -p -r -t dart repotests/gallery -o bomresults/bom-pub.json
           ./cyclonedx validate --input-file bomresults/bom-pub.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-pub.xml --input-format xml --input-version v1_4
+
+          bin/cdxgen -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
+          ./cyclonedx validate --input-file bomresults/bom-clj.json --input-format json --input-version v1_4
+          ./cyclonedx validate --input-file bomresults/bom-clj.xml --input-format xml --input-version v1_4
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
         with:
