@@ -55,6 +55,7 @@
     "@babel/parser": "^7.17.9",
     "@babel/traverse": "^7.17.9",
     "cheerio": "^1.0.0-rc.10",
+    "edn-data": "^0.2.0",
     "glob": "^8.0.1",
     "global-agent": "^3.0.0",
     "got": "^11.8.3",
