@@ -10,6 +10,78 @@ const ADD_SBT_PLUGIN='addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" %
 const ENABLE_SBT_PLUGIN='addDependencyTreePlugin';
 const EOL = "\n";
 
+
+const pluginStringForNonBuiltin = `
+import sbt.AutoPlugin
+import sbt._
+import Keys._
+import complete.DefaultParsers._
+import net.virtualvoid.sbt.graph.DependencyGraphPlugin.autoImport.asString
+import net.virtualvoid.sbt.graph.DependencyGraphPlugin.autoImport.dependencyList
+
+import java.io.{BufferedWriter, FileWriter}
+import java.nio.file.Paths
+
+object ShiftLeftDependencyListPlugin extends AutoPlugin {
+  override def requires = net.virtualvoid.sbt.graph.DependencyGraphPlugin
+  override def trigger = allRequirements
+
+  object autoImport {
+    val customShiftLeftListDependencies = inputKey[Unit]("list dependencies")
+  }
+  import autoImport._
+
+  override lazy val projectSettings = Seq(
+    customShiftLeftListDependencies := {
+      val outDir = (Space ~ StringBasic).map(s => Paths.get(s._2)).parsed
+      val filename = name.value + ".out"
+      val outAbsPath = outDir.resolve(filename)
+      val writer = new BufferedWriter(new FileWriter(outAbsPath.toString))
+
+      val res = (Compile / dependencyList / asString).value
+      writer.write(res)
+      writer.close()
+    }
+  )
+}
+`;
+
+const pluginStringForBuiltin = `
+import sbt.AutoPlugin
+import sbt._
+import Keys._
+import complete.DefaultParsers._
+import sbt.plugins.MiniDependencyTreeKeys.asString
+import sbt.plugins.DependencyTreePlugin.autoImport.dependencyList
+
+import java.io.{BufferedWriter, FileWriter}
+import java.nio.file.Paths
+
+object ShiftLeftDependencyListPlugin extends AutoPlugin {
+  override def requires = sbt.plugins.DependencyTreePlugin
+  override def trigger = allRequirements
+
+  object autoImport {
+    val customShiftLeftListDependencies = inputKey[Unit]("list dependencies")
+  }
+  import autoImport._
+
+  override lazy val projectSettings = Seq(
+    customShiftLeftListDependencies := {
+      val outDir = (Space ~ StringBasic).map(s => Paths.get(s._2)).parsed
+      val filename = name.value + ".out"
+      val outAbsPath = outDir.resolve(filename)
+      val writer = new BufferedWriter(new FileWriter(outAbsPath.toString))
+
+      val res = (Compile / dependencyList / asString).value
+      writer.write(res)
+      writer.close()
+    }
+  )
+}
+`;
+
+
 /**
  * Parse sbt lock file
  *
@@ -97,17 +169,20 @@ const addPlugin = function (projectPath, plugin) {
   return pluginFileName;
 };
 
-/**
- * 
- * @param {string} input output of `sbt projectInfo` command
- * @returns {Array.<string>} list of sbt projects
- */
-const parseProjectInfo = function(input) {
-  const startFrom = 'ModuleInfo('.length;
-  const regex = /ModuleInfo\([^,]+,/g;
-  return [...input.matchAll(regex)].map(s => s.toString()).map(s => s.substr(startFrom, s.length - (startFrom + 1)));
+const addCustomPlugin = function(projectPath, content) {
+  function uniqueFilename(attempt) {
+    const proposedName = pathLib.join(projectPath, 'project', `shiftleft-custom-plugin${attempt}.scala`);
+    if (!fs.existsSync(proposedName)) {
+      return proposedName;
+    } else {
+      return uniqueFilename(attempt + 1);
+    }
+  }
+
+  const customPluginFileName = uniqueFilename(0);
+  fs.writeFileSync(customPluginFileName, content);
+  return customPluginFileName;
 }
-exports.parseProjectInfo = parseProjectInfo;
 
  /**
  * Parse dependencies in Key:Value format
@@ -146,7 +221,6 @@ const sbtInvoker = function (debugMode, path, tempSbtPlugins) {
     console.log("Detected sbt version: " + sbtVersion);
   }
   const standalonePluginFileSupported = standalonePluginFile(sbtVersion);
-  const disableAggregateString = isDependencyTreeBuiltIn(sbtVersion) ? `set every _root_.sbt.plugins.DependencyTreePlugin.autoImport.dependencyList / aggregate := false` : `set every dependencyList / aggregate := false`
 
   let enablePluginString =  isDependencyTreeBuiltIn(sbtVersion) ? ENABLE_SBT_PLUGIN : ADD_SBT_PLUGIN;
 
@@ -157,25 +231,19 @@ const sbtInvoker = function (debugMode, path, tempSbtPlugins) {
   return {
     invokeDependencyList: function(commandPrefix, basePath, timeoutMs) {
       let dependencyListCmd;
-      let filesToGatherOutput = [];
       
-      let tmpDir = pathLib.join(os.tmpdir(), 'cdxgen-sbt');
-      outDir = fs.mkdtempSync(tmpDir);
+      let tmpDir = pathLib.join(os.tmpdir(), 'cdxgen-sbt-');
+      const outDir = fs.mkdtempSync(tmpDir);
+
       if (commandPrefix !== '') {
-        outFile = pathLib.join(outDir, 'outfile')
-        dependencyListCmd = `";${disableAggregateString};${commandPrefix}dependencyList::toFile ${outFile} --force"`
-        filesToGatherOutput = [outFile];
+        dependencyListCmd = `"${commandPrefix}customShiftLeftListDependencies ${outDir}"`;
       } else {
-        const projectInfoRes = spawnSync(SBT_CMD, ["projectInfo"], { cwd: basePath, shell: true, encoding: "utf-8", timeout: timeoutMs });
-        let subProjects = parseProjectInfo(projectInfoRes.stdout);
-
-        let subProjectsWithFiles = subProjects.map(sp => ({project: sp, filename: pathLib.join(outDir, `out-${sp}`)}));
-
-        dependencyListCmd = `";${disableAggregateString}` + subProjectsWithFiles.map(x => `;${x.project}/dependencyList::toFile ${x.filename} --force`).join('') + `"`;
-        filesToGatherOutput = subProjectsWithFiles.map(x => x.filename);
+        dependencyListCmd = `"customShiftLeftListDependencies ${outDir}"`;
       }
 
       let pluginFileName = '';
+      let customPluginContent = isDependencyTreeBuiltIn(sbtVersion) ? pluginStringForBuiltin : pluginStringForNonBuiltin;
+      let customPluginFileName = addCustomPlugin(basePath, customPluginContent);
       if (standalonePluginFileSupported) {
         sbtArgs = [`-addPluginSbtFile=${tempSbtPlugins}`, dependencyListCmd];
       } else {
@@ -203,16 +271,19 @@ const sbtInvoker = function (debugMode, path, tempSbtPlugins) {
         if (pluginFileName != '' && fs.existsSync(pluginFileName)) {
           fs.rmSync(pluginFileName);
         }
+        if (customPluginFileName != '' && fs.existsSync(customPluginFileName)) {
+          fs.rmSync(customPluginFileName);
+        }
       }
       outputAsStr = '';
-      filesToGatherOutput.forEach(f => {
-        if (fs.existsSync(f)) {
-          try {
-            outputAsStr += fs.readFileSync(f, { encoding: "utf-8" });
-            // Files we merge don't have trailing EOL so if we don't put it manually we would end up with 2 entries at a single line
-            outputAsStr += EOL;
-          } catch(error) {
-          }
+      fs.readdirSync(outDir).forEach(f => {
+        const file = pathLib.join(outDir, f)
+        try {
+          outputAsStr += fs.readFileSync(file, { encoding: "utf-8" });
+          // Files we merge don't have trailing EOL so if we don't put it manually we would end up with 2 entries at a single line
+          outputAsStr += EOL;
+        } catch(error) {
+          utils.debug(`Reading ${file} failed. Continuing anyway...`)
         }
       });
       return outputAsStr;
