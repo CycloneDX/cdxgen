@@ -92,10 +92,6 @@ jobs:
         with:
           repository: 'gojek/ziggurat'
           path: 'repotests/ziggurat'
-      - name: compile
-        run: |
-          cd repotests/shiftleft-scala-example
-          sbt stage
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.22.0/cyclonedx-linux-x64
@@ -108,10 +104,6 @@ jobs:
           bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
           ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json --input-version v1_3
           ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml --input-version v1_3
-
-          bin/cdxgen -p -r -t java repotests/shiftleft-scala-example -o bomresults/bom-scala.json
-          ./cyclonedx validate --input-file bomresults/bom-scala.json --input-format json --input-version v1_4
-          ./cyclonedx validate --input-file bomresults/bom-scala.xml --input-format xml --input-version v1_4
 
           bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
           ./cyclonedx validate --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
