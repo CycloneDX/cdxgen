@@ -18,6 +18,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | haskell            | cabal.project.freeze                                                          |
 | elixir             | mix.lock                                                                      |
 | c/c++              | conan.lock, conanfile.txt                                                     |
+| clojure            | Clojure CLI (deps.edn), Leiningen (project.clj)                               |
 | docker / oci image | All supported languages excluding OS packages                                 |
 
 NOTE:

@@ -113,8 +113,7 @@ const getConnection = async (options) => {
         } catch (err) {
           console.warn(
             "Ensure docker/podman service or Docker for Desktop is running",
-            opts,
-            err
+            opts
           );
         }
       }
@@ -147,7 +146,7 @@ exports.makeRequest = makeRequest;
  * docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
  * docker pull myregistry.local:5000/testing/test-image
  */
-const parseImageName = (fullName) => {
+const parseImageName = (fullImageName) => {
   const nameObj = {
     registry: "",
     repo: "",
@@ -155,43 +154,43 @@ const parseImageName = (fullName) => {
     digest: "",
     platform: "",
   };
-  if (!fullName) {
+  if (!fullImageName) {
     return nameObj;
   }
   // Extract registry name
   if (
-    fullName.includes("/") &&
-    (fullName.includes(".") || fullName.includes(":"))
+    fullImageName.includes("/") &&
+    (fullImageName.includes(".") || fullImageName.includes(":"))
   ) {
-    const urlObj = url.parse(fullName);
-    const tmpA = fullName.split("/");
+    const urlObj = url.parse(fullImageName);
+    const tmpA = fullImageName.split("/");
     if (
-      urlObj.path !== fullName ||
+      urlObj.path !== fullImageName ||
       tmpA[0].includes(".") ||
       tmpA[0].includes(":")
     ) {
       nameObj.registry = tmpA[0];
-      fullName = fullName.replace(tmpA[0] + "/", "");
+      fullImageName = fullImageName.replace(tmpA[0] + "/", "");
     }
   }
   // Extract digest name
-  if (fullName.includes("@sha256:")) {
-    const tmpA = fullName.split("@sha256:");
+  if (fullImageName.includes("@sha256:")) {
+    const tmpA = fullImageName.split("@sha256:");
     if (tmpA.length > 1) {
       nameObj.digest = tmpA[tmpA.length - 1];
-      fullName = fullName.replace("@sha256:" + nameObj.digest, "");
+      fullImageName = fullImageName.replace("@sha256:" + nameObj.digest, "");
     }
   }
   // Extract tag name
-  if (fullName.includes(":")) {
-    const tmpA = fullName.split(":");
+  if (fullImageName.includes(":")) {
+    const tmpA = fullImageName.split(":");
     if (tmpA.length > 1) {
       nameObj.tag = tmpA[tmpA.length - 1];
-      fullName = fullName.replace(":" + nameObj.tag, "");
+      fullImageName = fullImageName.replace(":" + nameObj.tag, "");
     }
   }
   // The left over string is the repo name
-  nameObj.repo = fullName;
+  nameObj.repo = fullImageName;
   return nameObj;
 };
 exports.parseImageName = parseImageName;
@@ -199,12 +198,12 @@ exports.parseImageName = parseImageName;
 /**
  * Method to get image to the local registry by pulling from the remote if required
  */
-const getImage = async (fullName) => {
+const getImage = async (fullImageName) => {
   let localData = undefined;
-  const { repo, tag, digest } = parseImageName(fullName);
+  const { repo, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
-    fullName = fullName + ":latest";
+    fullImageName = fullImageName + ":latest";
   }
   try {
     localData = await makeRequest(`images/${repo}/json`);
@@ -213,12 +212,12 @@ const getImage = async (fullName) => {
     }
   } catch (err) {
     console.log(
-      `Trying to pull the image ${fullName} from registry. This might take a while ...`
+      `Trying to pull the image ${fullImageName} from registry. This might take a while ...`
     );
     // If the data is not available locally
     try {
       const pullData = await makeRequest(
-        `images/create?fromImage=${fullName}`,
+        `images/create?fromImage=${fullImageName}`,
         "POST"
       );
       if (DEBUG_MODE) {
@@ -234,9 +233,9 @@ const getImage = async (fullName) => {
         }
       } catch (err) {
         if (DEBUG_MODE) {
-          console.log(`Retrying with ${fullName}`);
+          console.log(`Retrying with ${fullImageName}`);
         }
-        localData = await makeRequest(`images/${fullName}/json`);
+        localData = await makeRequest(`images/${fullImageName}/json`);
         if (DEBUG_MODE) {
           console.log(localData);
         }
@@ -250,10 +249,10 @@ const getImage = async (fullName) => {
 };
 exports.getImage = getImage;
 
-const extractTar = async (fullName, dir) => {
+const extractTar = async (fullImageName, dir) => {
   try {
     await pipeline(
-      fs.createReadStream(fullName),
+      fs.createReadStream(fullImageName),
       tar.x({
         sync: true,
         preserveOwner: false,
@@ -276,9 +275,9 @@ exports.extractTar = extractTar;
  * Method to export a container image archive.
  * Returns the location of the layers with additional packages related metadata
  */
-const exportArchive = async (fullName) => {
-  if (!fs.existsSync(fullName)) {
-    console.log(`Unable to find container image archive ${fullName}`);
+const exportArchive = async (fullImageName) => {
+  if (!fs.existsSync(fullImageName)) {
+    console.log(`Unable to find container image archive ${fullImageName}`);
     return undefined;
   }
   let manifest = {};
@@ -288,12 +287,12 @@ const exportArchive = async (fullName) => {
   fs.mkdirSync(allLayersExplodedDir);
   const manifestFile = path.join(tempDir, "manifest.json");
   try {
-    await extractTar(fullName, tempDir);
+    await extractTar(fullImageName, tempDir);
     // podman use blobs dir
     if (fs.existsSync(blobsDir)) {
       if (DEBUG_MODE) {
         console.log(
-          `Image archive ${fullName} successfully exported to directory ${tempDir}`
+          `Image archive ${fullImageName} successfully exported to directory ${tempDir}`
         );
       }
       const allBlobs = getDirs(blobsDir, "*", false);
@@ -402,16 +401,16 @@ const extractFromManifest = async (
  * Method to export a container image by using the export feature in docker or podman service.
  * Returns the location of the layers with additional packages related metadata
  */
-const exportImage = async (fullName) => {
+const exportImage = async (fullImageName) => {
   // Try to get the data locally first
-  const localData = await getImage(fullName);
+  const localData = await getImage(fullImageName);
   if (!localData) {
     return undefined;
   }
-  const { repo, tag, digest } = parseImageName(fullName);
+  const { repo, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
-    fullName = fullName + ":latest";
+    fullImageName = fullImageName + ":latest";
   }
   let client = await getConnection();
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
@@ -419,9 +418,9 @@ const exportImage = async (fullName) => {
   fs.mkdirSync(allLayersExplodedDir);
   const manifestFile = path.join(tempDir, "manifest.json");
   try {
-    console.log(`About to export image ${fullName} to ${tempDir}`);
+    console.log(`About to export image ${fullImageName} to ${tempDir}`);
     await pipeline(
-      client.stream(`images/${fullName}/get`),
+      client.stream(`images/${fullImageName}/get`),
       tar.x({
         sync: true,
         preserveOwner: false,
@@ -433,7 +432,7 @@ const exportImage = async (fullName) => {
     if (fs.existsSync(tempDir) && fs.existsSync(manifestFile)) {
       if (DEBUG_MODE) {
         console.log(
-          `Image ${fullName} successfully exported to directory ${tempDir}`
+          `Image ${fullImageName} successfully exported to directory ${tempDir}`
         );
       }
       return await extractFromManifest(
@@ -512,9 +511,9 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
 };
 exports.getPkgPathList = getPkgPathList;
 
-const removeImage = async (fullName, force = false) => {
+const removeImage = async (fullImageName, force = false) => {
   const removeData = await makeRequest(
-    `images/${fullName}?force=${force}`,
+    `images/${fullImageName}?force=${force}`,
     "DELETE"
   );
   if (DEBUG_MODE) {

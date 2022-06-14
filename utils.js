@@ -15,6 +15,7 @@ const { spawnSync } = require("child_process");
 const propertiesReader = require("properties-reader");
 const semver = require("semver");
 const StreamZip = require("node-stream-zip");
+const ednDataLib = require("edn-data");
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -2177,6 +2178,93 @@ const parseConanData = async function (conanData) {
   return pkgList;
 };
 exports.parseConanData = parseConanData;
+
+const parseLeiningenData = function (leinData) {
+  const pkgList = [];
+  if (!leinData) {
+    return pkgList;
+  }
+  const ednData = ednDataLib.parseEDNString(leinData);
+  for (let k of Object.keys(ednData)) {
+    if (k === "list") {
+      ednData[k].forEach((jk) => {
+        if (Array.isArray(jk)) {
+          jk.forEach((pobjl) => {
+            if (pobjl.length > 1) {
+              const psym = pobjl[0].sym;
+              if (psym) {
+                let group = path.dirname(psym) || "";
+                if (group === ".") {
+                  group = "";
+                }
+                const name = path.basename(psym);
+                pkgList.push({ group, name, version: pobjl[1] });
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+  return pkgList;
+};
+exports.parseLeiningenData = parseLeiningenData;
+
+const parseEdnData = function (rawEdnData) {
+  const pkgList = [];
+  if (!rawEdnData) {
+    return pkgList;
+  }
+  const ednData = ednDataLib.parseEDNString(rawEdnData);
+  const pkgCache = {};
+  for (let k of Object.keys(ednData)) {
+    if (k === "map") {
+      ednData[k].forEach((jk) => {
+        if (Array.isArray(jk)) {
+          jk.forEach((pobjl) => {
+            if (Array.isArray(jk)) {
+              if (jk.length > 1) {
+                if (jk[0].key === "deps") {
+                  const deps = jk[1].map;
+                  if (deps) {
+                    deps.forEach((d) => {
+                      if (Array.isArray(d)) {
+                        let psym = "";
+                        d.forEach((e) => {
+                          if (e.sym) {
+                            psym = e.sym;
+                          }
+                          if (e["map"]) {
+                            if (e["map"][0].length > 1) {
+                              const version = e["map"][0][1];
+                              let group = path.dirname(psym) || "";
+                              if (group === ".") {
+                                group = "";
+                              }
+                              const name = path.basename(psym);
+                              const cacheKey =
+                                group + "-" + name + "-" + version;
+                              if (!pkgCache[cacheKey]) {
+                                pkgList.push({ group, name, version });
+                                pkgCache[cacheKey] = true;
+                              }
+                            }
+                          }
+                        });
+                      }
+                    });
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+  return pkgList;
+};
+exports.parseEdnData = parseEdnData;
 
 const parseNupkg = async function (nupkgFile) {
   const pkgList = [];

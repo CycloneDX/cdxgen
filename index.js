@@ -1767,6 +1767,57 @@ const createCppBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for clojure projects
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createClojureBom = async (path, options) => {
+  const ednFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "deps.edn"
+  );
+  const leinFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "project.clj"
+  );
+  let pkgList = [];
+  if (leinFiles.length) {
+    for (let f of leinFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const leinData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = utils.parseLeiningenData(leinData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(options, pkgList, "clojars", {
+      src: path,
+      filename: leinFiles.join(", "),
+    });
+  } else if (ednFiles.length) {
+    for (let f of ednFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const ednData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = utils.parseEdnData(ednData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(options, pkgList, "clojars", {
+      src: path,
+      filename: ednFiles.join(", "),
+    });
+  }
+
+  return {};
+};
+
+/**
  * Function to create bom string for Haskell projects
  *
  * @param path to the project
@@ -2206,6 +2257,15 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
     }
+    bomData = await createClojureBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} clojure packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+    }
   }
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
@@ -2408,6 +2468,19 @@ const createXBom = async (path, options) => {
   if (conanLockFiles.length || conanFiles.length) {
     return await createCppBom(path, options);
   }
+
+  // clojure
+  const ednFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "deps.edn"
+  );
+  const leinFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "project.clj"
+  );
+  if (ednFiles.length || leinFiles.length) {
+    return await createClojureBom(path, options);
+  }
 };
 
 /**
@@ -2521,6 +2594,11 @@ exports.createBom = async (path, options) => {
     case "c++":
     case "conan":
       return await createCppBom(path, options);
+    case "clojure":
+    case "edn":
+    case "clj":
+    case "leiningen":
+      return await createClojureBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95

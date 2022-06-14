@@ -528,6 +528,55 @@ test("parse conan data", async () => {
   });
 });
 
+test("parse clojure data", () => {
+  expect(utils.parseLeiningenData(null)).toEqual([]);
+  let dep_list = utils.parseLeiningenData(
+    fs.readFileSync("./test/data/project.clj", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(14);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "leiningen-core",
+    version: "2.9.9-SNAPSHOT",
+  });
+  dep_list = utils.parseLeiningenData(
+    fs.readFileSync("./test/data/project.clj.1", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(17);
+  expect(dep_list[0]).toEqual({
+    group: "org.clojure",
+    name: "clojure",
+    version: "1.9.0",
+  });
+  dep_list = utils.parseEdnData(
+    fs.readFileSync("./test/data/deps.edn", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(20);
+  expect(dep_list[0]).toEqual({
+    group: "org.clojure",
+    name: "clojure",
+    version: "1.10.3",
+  });
+  dep_list = utils.parseEdnData(
+    fs.readFileSync("./test/data/deps.edn.1", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(11);
+  expect(dep_list[0]).toEqual({
+    group: "org.clojure",
+    name: "clojure",
+    version: "1.11.0-beta1",
+  });
+  dep_list = utils.parseEdnData(
+    fs.readFileSync("./test/data/deps.edn.2", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(5);
+  expect(dep_list[0]).toEqual({
+    group: "clj-commons",
+    name: "pomegranate",
+    version: "1.2.1",
+  });
+});
+
 test("parse mix lock data", async () => {
   expect(await utils.parseMixLockData(null)).toEqual([]);
   dep_list = await utils.parseMixLockData(
