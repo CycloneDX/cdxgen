@@ -141,7 +141,7 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-pub.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-pub.xml --input-format xml --input-version v1_4
 
-          bin/cdxgen -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
+          SCAN_DEBUG_MODE=debug bin/cdxgen -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
           ./cyclonedx validate --input-file bomresults/bom-clj.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-clj.xml --input-format xml --input-version v1_4
           ls -ltr bomresults
