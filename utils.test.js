@@ -548,6 +548,15 @@ test("parse clojure data", () => {
     name: "clojure",
     version: "1.9.0",
   });
+  dep_list = utils.parseLeiningenData(
+    fs.readFileSync("./test/data/project.clj.2", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(17);
+  expect(dep_list[0]).toEqual({
+    group: "org.clojure",
+    name: "clojure",
+    version: "1.9.0",
+  });
   dep_list = utils.parseEdnData(
     fs.readFileSync("./test/data/deps.edn", (encoding = "utf-8"))
   );

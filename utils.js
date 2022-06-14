@@ -2190,8 +2190,9 @@ const parseLeiningenData = function (leinData) {
       ednData[k].forEach((jk) => {
         if (Array.isArray(jk)) {
           jk.forEach((pobjl) => {
-            if (pobjl.length > 1) {
+            if (Array.isArray(pobjl) && pobjl.length > 1) {
               const psym = pobjl[0].sym;
+              console.log(path.dirname(psym), path.basename(psym));
               if (psym) {
                 let group = path.dirname(psym) || "";
                 if (group === ".") {
