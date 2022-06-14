@@ -2184,6 +2184,10 @@ const parseLeiningenData = function (leinData) {
   if (!leinData) {
     return pkgList;
   }
+  const tmpArr = leinData.split("(defproject");
+  if (tmpArr.length > 1) {
+    leinData = "(defproject" + tmpArr[1];
+  }
   const ednData = ednDataLib.parseEDNString(leinData);
   for (let k of Object.keys(ednData)) {
     if (k === "list") {
@@ -2192,7 +2196,6 @@ const parseLeiningenData = function (leinData) {
           jk.forEach((pobjl) => {
             if (Array.isArray(pobjl) && pobjl.length > 1) {
               const psym = pobjl[0].sym;
-              console.log(path.dirname(psym), path.basename(psym));
               if (psym) {
                 let group = path.dirname(psym) || "";
                 if (group === ".") {
