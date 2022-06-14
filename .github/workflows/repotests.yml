@@ -92,6 +92,10 @@ jobs:
         with:
           repository: 'gojek/ziggurat'
           path: 'repotests/ziggurat'
+      - name: compile
+        run: |
+          cd repotests/shiftleft-scala-example
+          sbt stage
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.22.0/cyclonedx-linux-x64
