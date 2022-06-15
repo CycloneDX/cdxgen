@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.10.0 - 2022-06-15
+
 * Added
   * Consider optional element "comment" when serializing `ExternalReference` (via [#312])
 
