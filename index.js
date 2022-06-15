@@ -1128,10 +1128,17 @@ const createNodejsBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "yarn.lock"
   );
-  const pkgLockFiles = utils.getAllFiles(
+  const shrinkwrapFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "npm-shrinkwrap.json"
+  );
+  let pkgLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "package-lock.json"
   );
+  if (shrinkwrapFiles.length) {
+    pkgLockFiles = pkgLockFiles.concat(shrinkwrapFiles);
+  }
   const pnpmLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pnpm-lock.yaml"
@@ -1180,6 +1187,9 @@ const createNodejsBom = async (path, options) => {
   } else if (pkgLockFiles && pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
     for (let f of pkgLockFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
       // Parse package-lock.json if available
       const dlist = await utils.parsePkgLock(f);
       if (dlist && dlist.length) {
