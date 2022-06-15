@@ -717,6 +717,93 @@ const parseGradleDep = function (rawOutput) {
 exports.parseGradleDep = parseGradleDep;
 
 /**
+ * Parse clojure cli dependencies output
+ * @param {string} rawOutput Raw string output
+ */
+const parseCljDep = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    const deps = [];
+    const keys_cache = {};
+    const tmpA = rawOutput.split("\n");
+    tmpA.forEach((l) => {
+      l = l.trim();
+      if (!l.startsWith("Downloading") || !l.startsWith("X ")) {
+        if (l.startsWith(". ")) {
+          l = l.replace(". ", "");
+        }
+        const tmpArr = l.split(" ");
+        if (tmpArr.length == 2) {
+          let group = path.dirname(tmpArr[0]);
+          if (group === ".") {
+            group = "";
+          }
+          const name = path.basename(tmpArr[0]);
+          const version = tmpArr[1];
+          const cacheKey = group + "-" + name + "-" + version;
+          if (!keys_cache[cacheKey]) {
+            keys_cache[cacheKey] = true;
+            deps.push({
+              group,
+              name,
+              version,
+            });
+          }
+        }
+      }
+    });
+    return deps;
+  }
+  return [];
+};
+exports.parseCljDep = parseCljDep;
+
+/**
+ * Parse lein dependency tree output
+ * @param {string} rawOutput Raw string output
+ */
+const parseLeinDep = function (rawOutput) {
+  if (typeof rawOutput === "string") {
+    const deps = [];
+    const keys_cache = {};
+    const tmpA = rawOutput.split("\n");
+    if (rawOutput.includes("{[") && !rawOutput.startsWith("{[")) {
+      rawOutput = "{[" + rawOutput.split("{[")[1];
+    }
+    const ednData = ednDataLib.parseEDNString(rawOutput);
+    return parseLeinMap(ednData, keys_cache, deps);
+  }
+  return [];
+};
+exports.parseLeinDep = parseLeinDep;
+
+const parseLeinMap = function (node, keys_cache, deps) {
+  if (node["map"]) {
+    for (let n of node["map"]) {
+      if (n.length === 2) {
+        const rootNode = n[0];
+        let psym = rootNode[0].sym;
+        let version = rootNode[1];
+        let group = path.dirname(psym);
+        if (group === ".") {
+          group = "";
+        }
+        let name = path.basename(psym);
+        let cacheKey = group + "-" + name + "-" + version;
+        if (!keys_cache[cacheKey]) {
+          keys_cache[cacheKey] = true;
+          deps.push({ group, name, version });
+        }
+        if (n[1]) {
+          parseLeinMap(n[1], keys_cache, deps);
+        }
+      }
+    }
+  }
+  return deps;
+};
+exports.parseLeinMap = parseLeinMap;
+
+/**
  * Parse gradle projects output
  * @param {string} rawOutput Raw string output
  */

@@ -584,6 +584,25 @@ test("parse clojure data", () => {
     name: "pomegranate",
     version: "1.2.1",
   });
+  dep_list = utils.parseCljDep(
+    fs.readFileSync("./test/data/clj-tree.txt", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(253);
+  expect(dep_list[0]).toEqual({
+    group: "org.bouncycastle",
+    name: "bcprov-jdk15on",
+    version: "1.70",
+  });
+
+  dep_list = utils.parseLeinDep(
+    fs.readFileSync("./test/data/lein-tree.txt", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(47);
+  expect(dep_list[0]).toEqual({
+    group: "javax.xml.bind",
+    name: "jaxb-api",
+    version: "2.4.0-b180830.0359",
+  });
 });
 
 test("parse mix lock data", async () => {

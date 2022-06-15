@@ -32,6 +32,17 @@ if (process.env.GRADLE_USER_HOME) {
     process.env.GRADLE_USER_HOME + "/caches/modules-2/files-2.1";
 }
 
+// Clojure CLI
+let CLJ_CMD = "clj";
+if (process.env.CLJ_CMD) {
+  CLJ_CMD = process.env.CLJ_CMD;
+}
+
+let LEIN_CMD = "lein";
+if (process.env.LEIN_CMD) {
+  LEIN_CMD = process.env.LEIN_CMD;
+}
+
 // Construct sbt cache directory
 let SBT_CACHE_DIR =
   process.env.SBT_CACHE_DIR || pathLib.join(os.homedir(), ".ivy2", "cache");
@@ -1783,14 +1794,45 @@ const createClojureBom = async (path, options) => {
   );
   let pkgList = [];
   if (leinFiles.length) {
+    let LEIN_ARGS = ["deps", ":tree-data"];
+    if (process.env.LEIN_ARGS) {
+      LEIN_ARGS = process.env.LEIN_ARGS.split(" ");
+    }
     for (let f of leinFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const leinData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = utils.parseLeiningenData(leinData);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      const basePath = pathLib.dirname(f);
+      console.log("Executing", LEIN_CMD, LEIN_ARGS.join(" "), "in", basePath);
+      const result = spawnSync(LEIN_CMD, LEIN_ARGS, {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+      });
+      if (result.status == 1 || result.error) {
+        if (result.stderr) {
+          console.error(result.stdout, result.stderr);
+        }
+        console.log(
+          "Check if the correct version of lein is installed and available in PATH. Falling back to manual parsing."
+        );
+        if (DEBUG_MODE) {
+          console.log(`Parsing ${f}`);
+        }
+        const leinData = fs.readFileSync(f, { encoding: "utf-8" });
+        const dlist = utils.parseLeiningenData(leinData);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
+      } else {
+        const stdout = result.stdout;
+        if (stdout) {
+          const cmdOutput = Buffer.from(stdout).toString();
+          const dlist = utils.parseLeinDep(cmdOutput);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
+          }
+        }
       }
     }
     return buildBomNSData(options, pkgList, "clojars", {
@@ -1798,14 +1840,42 @@ const createClojureBom = async (path, options) => {
       filename: leinFiles.join(", "),
     });
   } else if (ednFiles.length) {
+    let CLJ_ARGS = ["-Stree"];
+    if (process.env.CLJ_ARGS) {
+      CLJ_ARGS = process.env.CLJ_ARGS.split(" ");
+    }
     for (let f of ednFiles) {
-      if (DEBUG_MODE) {
-        console.log(`Parsing ${f}`);
-      }
-      const ednData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = utils.parseEdnData(ednData);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      const basePath = pathLib.dirname(f);
+      console.log("Executing", CLJ_CMD, CLJ_ARGS.join(" "), "in", basePath);
+      const result = spawnSync(CLJ_CMD, CLJ_ARGS, {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+      });
+      if (result.status == 1 || result.error) {
+        if (result.stderr) {
+          console.error(result.stdout, result.stderr);
+        }
+        console.log(
+          "Check if the correct version of clojure cli is installed and available in PATH. Falling back to manual parsing."
+        );
+        if (DEBUG_MODE) {
+          console.log(`Parsing ${f}`);
+        }
+        const ednData = fs.readFileSync(f, { encoding: "utf-8" });
+        const dlist = utils.parseEdnData(ednData);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
+      } else {
+        const stdout = result.stdout;
+        if (stdout) {
+          const cmdOutput = Buffer.from(stdout).toString();
+          const dlist = utils.parseCljDep(cmdOutput);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
+          }
+        }
       }
     }
     return buildBomNSData(options, pkgList, "clojars", {

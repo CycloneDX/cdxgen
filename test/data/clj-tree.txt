@@ -1,0 +1,643 @@
+org.bouncycastle/bcprov-jdk15on 1.70
+buddy/buddy-core 1.10.413
+  X cheshire/cheshire 5.10.1 :use-top
+org.clojure/java.jmx 1.0.0
+org.clojure/clojure 1.11.1
+  . org.clojure/spec.alpha 0.3.218
+  . org.clojure/core.specs.alpha 0.2.62
+org.apache.logging.log4j/log4j-slf4j-impl 2.17.2
+  X org.slf4j/slf4j-api 1.7.25 :use-top
+  X org.apache.logging.log4j/log4j-api 2.17.2 :use-top
+  X org.apache.logging.log4j/log4j-core 2.17.2 :use-top
+joda-time/joda-time 2.10.13
+commons-codec/commons-codec 1.15
+weavejester/dependency 0.2.1
+com.vladsch.flexmark/flexmark-ext-autolink 0.64.0
+  . com.vladsch.flexmark/flexmark-util 0.64.0
+    . com.vladsch.flexmark/flexmark-util-ast 0.64.0
+    . com.vladsch.flexmark/flexmark-util-builder 0.64.0
+    . com.vladsch.flexmark/flexmark-util-collection 0.64.0
+    . com.vladsch.flexmark/flexmark-util-data 0.64.0
+    . com.vladsch.flexmark/flexmark-util-dependency 0.64.0
+    . com.vladsch.flexmark/flexmark-util-format 0.64.0
+    . com.vladsch.flexmark/flexmark-util-html 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . com.vladsch.flexmark/flexmark-util-options 0.64.0
+      . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+      . com.vladsch.flexmark/flexmark-util-sequence 0.64.0
+      . org.jetbrains/annotations 15.0
+    . com.vladsch.flexmark/flexmark-util-sequence 0.64.0
+    . com.vladsch.flexmark/flexmark-util-visitor 0.64.0
+    . org.jetbrains/annotations 15.0
+  X com.vladsch.flexmark/flexmark 0.64.0 :use-top
+  . org.nibor.autolink/autolink 0.6.0
+org.apache.poi/poi 5.2.2
+  X commons-codec/commons-codec 1.15 :use-top
+  . org.apache.commons/commons-collections4 4.4
+  . org.apache.commons/commons-math3 3.6.1
+  X commons-io/commons-io 2.11.0 :use-top
+  . com.zaxxer/SparseBitSet 1.2
+  X org.apache.logging.log4j/log4j-api 2.17.2 :use-top
+org.apache.commons/commons-compress 1.21
+org.apache.commons/commons-lang3 3.12.0
+com.draines/postal 2.0.5
+  X commons-codec/commons-codec 1.9 :use-top
+  . com.sun.mail/jakarta.mail 1.6.5
+    . com.sun.activation/jakarta.activation 1.2.1
+commons-validator/commons-validator 1.7
+  . commons-collections/commons-collections 3.2.2
+org.clojure/tools.logging 1.2.4
+org.liquibase/liquibase-core 4.10.0
+  . javax.xml.bind/jaxb-api 2.3.0
+org.bouncycastle/bcpkix-jdk15on 1.70
+  X org.bouncycastle/bcprov-jdk15on 1.70 :use-top
+  . org.bouncycastle/bcutil-jdk15on 1.70
+    X org.bouncycastle/bcprov-jdk15on 1.70 :use-top
+org.apache.xmlgraphics/batik-all 1.14
+  . org.apache.xmlgraphics/batik-anim 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-css 1.14
+    . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-ext 1.14
+    . org.apache.xmlgraphics/batik-parser 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svg-dom 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/xmlgraphics-commons 2.6
+      X commons-io/commons-io 1.3.1 :use-top
+      X commons-logging/commons-logging 1.0.4 :older-version
+  . org.apache.xmlgraphics/batik-bridge 1.14
+    . org.apache.xmlgraphics/batik-anim 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-css 1.14
+    . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-gvt 1.14
+    . org.apache.xmlgraphics/batik-parser 1.14
+    . org.apache.xmlgraphics/batik-script 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svg-dom 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-xml 1.14
+    . org.apache.xmlgraphics/xmlgraphics-commons 2.6
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-codec 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-bridge 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-transcoder 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+  . org.apache.xmlgraphics/batik-constants 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+  . org.apache.xmlgraphics/batik-css 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/xmlgraphics-commons 2.6
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-css 1.14
+    . org.apache.xmlgraphics/batik-ext 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-xml 1.14
+    . xalan/xalan 2.7.2
+      . xalan/serializer 2.7.2
+        X xml-apis/xml-apis 1.3.04 :older-version
+    . xml-apis/xml-apis 1.4.01
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-ext 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+  . org.apache.xmlgraphics/batik-extension 1.14
+    . org.apache.xmlgraphics/batik-anim 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-bridge 1.14
+    . org.apache.xmlgraphics/batik-css 1.14
+    . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-ext 1.14
+    . org.apache.xmlgraphics/batik-gvt 1.14
+    . org.apache.xmlgraphics/batik-parser 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svg-dom 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-gui-util 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-xml 1.14
+  . org.apache.xmlgraphics/batik-gvt 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+  . org.apache.xmlgraphics/batik-i18n 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+  . org.apache.xmlgraphics/batik-parser 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-xml 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-rasterizer-ext 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svgrasterizer 1.14
+    . org.apache.xmlgraphics/batik-extension 1.14
+  . org.apache.xmlgraphics/batik-rasterizer 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svgrasterizer 1.14
+  . org.apache.xmlgraphics/batik-script 1.14
+    . org.apache.xmlgraphics/batik-anim 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+  . org.apache.xmlgraphics/batik-slideshow 1.14
+    . org.apache.xmlgraphics/batik-bridge 1.14
+    . org.apache.xmlgraphics/batik-gvt 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-squiggle-ext 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svgbrowser 1.14
+    . org.apache.xmlgraphics/batik-extension 1.14
+  . org.apache.xmlgraphics/batik-squiggle 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svgbrowser 1.14
+  . org.apache.xmlgraphics/batik-svg-dom 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-css 1.14
+    . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-ext 1.14
+    . org.apache.xmlgraphics/batik-parser 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-svgbrowser 1.14
+    . org.apache.xmlgraphics/batik-anim 1.14
+    . org.apache.xmlgraphics/batik-bridge 1.14
+    . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-gvt 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-swing 1.14
+    . org.apache.xmlgraphics/batik-transcoder 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-xml 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-svggen 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+  . org.apache.xmlgraphics/batik-svgpp 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-transcoder 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+  . org.apache.xmlgraphics/batik-svgrasterizer 1.14
+    . org.apache.xmlgraphics/batik-parser 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-transcoder 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-codec 1.14
+  . org.apache.xmlgraphics/batik-swing 1.14
+    . org.apache.xmlgraphics/batik-anim 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-bridge 1.14
+    . org.apache.xmlgraphics/batik-css 1.14
+    . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-ext 1.14
+    . org.apache.xmlgraphics/batik-gui-util 1.14
+    . org.apache.xmlgraphics/batik-gvt 1.14
+    . org.apache.xmlgraphics/batik-script 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-transcoder 1.14
+    . org.apache.xmlgraphics/batik-anim 1.14
+    . org.apache.xmlgraphics/batik-awt-util 1.14
+    . org.apache.xmlgraphics/batik-bridge 1.14
+    . org.apache.xmlgraphics/batik-dom 1.14
+    . org.apache.xmlgraphics/batik-gvt 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svggen 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-xml 1.14
+    . xml-apis/xml-apis-ext 1.3.04
+  . org.apache.xmlgraphics/batik-util 1.14
+    . org.apache.xmlgraphics/batik-constants 1.14
+    . org.apache.xmlgraphics/batik-i18n 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+  . org.apache.xmlgraphics/batik-ttf2svg 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-svggen 1.14
+  . org.apache.xmlgraphics/batik-xml 1.14
+    . org.apache.xmlgraphics/batik-shared-resources 1.14
+    . org.apache.xmlgraphics/batik-util 1.14
+redux/redux 0.1.4
+colorize/colorize 0.1.1
+org.clojars.pntblnk/clj-ldap 0.0.17
+  . com.unboundid/unboundid-ldapsdk 5.1.1
+org.graalvm.js/js 22.1.0
+  . org.graalvm.regex/regex 22.1.0
+    . org.graalvm.truffle/truffle-api 22.1.0
+  . org.graalvm.truffle/truffle-api 22.1.0
+    . org.graalvm.sdk/graal-sdk 22.1.0
+  . org.graalvm.sdk/graal-sdk 22.1.0
+com.fasterxml.jackson.core/jackson-databind 2.13.2.2
+  . com.fasterxml.jackson.core/jackson-annotations 2.13.2
+  . com.fasterxml.jackson.core/jackson-core 2.13.2
+metabase/saml20-clj 2.0.1
+  X org.clojure/tools.logging 1.2.4 :use-top
+  . org.opensaml/opensaml-core 3.4.6
+    X joda-time/joda-time 2.9 :use-top
+    . io.dropwizard.metrics/metrics-core 3.1.5
+      X org.slf4j/slf4j-api 1.7.7 :use-top
+    . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      . com.google.code.findbugs/jsr305 3.0.2
+      X com.google.guava/guava 20.0 :use-top
+      X joda-time/joda-time 2.9 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    X commons-codec/commons-codec 1.10 :use-top
+    X org.slf4j/slf4j-api 1.7.30 :use-top
+  . org.clojure/spec.alpha 0.3.218
+  . com.onelogin/java-saml 2.9.0
+    . com.onelogin/java-saml-core 2.9.0
+      X org.slf4j/slf4j-api 1.7.35 :use-top
+      X joda-time/joda-time 2.10.6 :use-top
+      X org.apache.commons/commons-lang3 3.12.0 :use-top
+      X org.apache.santuario/xmlsec 2.2.3 :older-version
+      X commons-codec/commons-codec 1.15 :use-top
+    X org.slf4j/slf4j-api 1.7.35 :use-top
+    X joda-time/joda-time 2.10.6 :use-top
+    X org.apache.commons/commons-lang3 3.12.0 :use-top
+    X org.apache.santuario/xmlsec 2.2.3 :older-version
+    X commons-codec/commons-codec 1.15 :use-top
+  . org.apache.santuario/xmlsec 2.3.0
+    X org.slf4j/slf4j-api 1.7.32 :use-top
+    X commons-codec/commons-codec 1.15 :use-top
+    . com.fasterxml.woodstox/woodstox-core 6.2.6
+      . org.codehaus.woodstox/stax2-api 4.2.1
+  . org.opensaml/opensaml-xmlsec-api 3.4.6
+    . org.opensaml/opensaml-security-api 3.4.6
+      . org.opensaml/opensaml-core 3.4.6
+      . org.opensaml/opensaml-messaging-api 3.4.6
+      X org.apache.santuario/xmlsec 2.0.10 :older-version
+      X org.cryptacular/cryptacular 1.1.4 :older-version
+      X org.bouncycastle/bcprov-jdk15on 1.59 :use-top
+      . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    . org.opensaml/opensaml-messaging-api 3.4.6
+      . org.opensaml/opensaml-core 3.4.6
+      X joda-time/joda-time 2.9 :use-top
+      . org.apache.httpcomponents/httpclient 4.5.13
+      . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    . net.shibboleth.utilities/java-support 7.5.2
+    X commons-codec/commons-codec 1.10 :use-top
+    X org.slf4j/slf4j-api 1.7.30 :use-top
+  . org.cryptacular/cryptacular 1.2.4
+    X org.bouncycastle/bcprov-jdk15on 1.64 :use-top
+  X commons-io/commons-io 2.11.0 :use-top
+  . org.opensaml/opensaml-xmlsec-impl 3.4.6
+    . org.opensaml/opensaml-core 3.4.6
+    . org.opensaml/opensaml-messaging-api 3.4.6
+    . org.opensaml/opensaml-security-api 3.4.6
+    . org.opensaml/opensaml-xmlsec-api 3.4.6
+    . com.google.code.findbugs/jsr305 3.0.2
+    X com.google.guava/guava 20.0 :use-top
+    X org.apache.santuario/xmlsec 2.0.10 :older-version
+    X org.cryptacular/cryptacular 1.1.4 :older-version
+    . org.opensaml/opensaml-security-impl 3.4.6
+      . org.opensaml/opensaml-security-api 3.4.6
+      . org.opensaml/opensaml-messaging-api 3.4.6
+      . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    . net.shibboleth.utilities/java-support 7.5.2
+    X commons-codec/commons-codec 1.10 :use-top
+    X org.slf4j/slf4j-api 1.7.30 :use-top
+  . org.opensaml/opensaml-saml-impl 3.4.6
+    . org.opensaml/opensaml-profile-api 3.4.6
+      . org.opensaml/opensaml-core 3.4.6
+      . org.opensaml/opensaml-messaging-api 3.4.6
+      . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    . org.opensaml/opensaml-saml-api 3.4.6
+    . org.opensaml/opensaml-storage-api 3.4.6
+      X joda-time/joda-time 2.9 :use-top
+      . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    . org.opensaml/opensaml-security-impl 3.4.6
+    . org.opensaml/opensaml-xmlsec-impl 3.4.6
+    . org.opensaml/opensaml-soap-impl 3.4.6
+      . org.opensaml/opensaml-soap-api 3.4.6
+      . org.opensaml/opensaml-profile-api 3.4.6
+      . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    . org.apache.velocity/velocity 1.7
+      X commons-collections/commons-collections 3.2.1 :older-version
+      . commons-lang/commons-lang 2.4
+    . org.apache.httpcomponents/httpclient 4.5.13
+    . net.shibboleth.utilities/java-support 7.5.2
+    X commons-codec/commons-codec 1.10 :use-top
+    X org.slf4j/slf4j-api 1.7.30 :use-top
+  X hiccup/hiccup 1.0.5 :use-top
+  . clojure.java-time/clojure.java-time 0.3.3
+    . clj-tuple/clj-tuple 0.2.2
+  . ring/ring-codec 1.2.0
+  X potemkin/potemkin 0.4.5 :use-top
+  X pretty/pretty 1.0.5 :use-top
+  . org.opensaml/opensaml-saml-api 3.4.6
+    . org.opensaml/opensaml-xmlsec-api 3.4.6
+    . org.opensaml/opensaml-soap-api 3.4.6
+      . org.opensaml/opensaml-xmlsec-api 3.4.6
+      . org.opensaml/opensaml-messaging-api 3.4.6
+      . org.apache.httpcomponents/httpclient 4.5.13
+      . net.shibboleth.utilities/java-support 7.5.2
+      X commons-codec/commons-codec 1.10 :use-top
+      X org.slf4j/slf4j-api 1.7.30 :use-top
+    . org.opensaml/opensaml-messaging-api 3.4.6
+    . org.opensaml/opensaml-profile-api 3.4.6
+    . org.opensaml/opensaml-storage-api 3.4.6
+    . net.shibboleth.utilities/java-support 7.5.2
+    X commons-codec/commons-codec 1.10 :use-top
+    X org.slf4j/slf4j-api 1.7.30 :use-top
+compojure/compojure 1.6.2
+  . org.clojure/tools.macro 0.1.5
+  . clout/clout 2.2.1
+    X instaparse/instaparse 1.4.8 :use-top
+  X medley/medley 1.3.0 :use-top
+  X ring/ring-core 1.8.1 :use-top
+org.clojure/tools.trace 0.7.11
+com.vladsch.flexmark/flexmark 0.64.0
+  . com.vladsch.flexmark/flexmark-util-ast 0.64.0
+    . com.vladsch.flexmark/flexmark-util-collection 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . com.vladsch.flexmark/flexmark-util-data 0.64.0
+    . com.vladsch.flexmark/flexmark-util-sequence 0.64.0
+    . com.vladsch.flexmark/flexmark-util-visitor 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-builder 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . com.vladsch.flexmark/flexmark-util-data 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-collection 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-data 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-dependency 0.64.0
+    . com.vladsch.flexmark/flexmark-util-collection 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . com.vladsch.flexmark/flexmark-util-data 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-format 0.64.0
+    . com.vladsch.flexmark/flexmark-util-ast 0.64.0
+    . com.vladsch.flexmark/flexmark-util-collection 0.64.0
+    . com.vladsch.flexmark/flexmark-util-data 0.64.0
+    . com.vladsch.flexmark/flexmark-util-html 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . com.vladsch.flexmark/flexmark-util-sequence 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-html 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . com.vladsch.flexmark/flexmark-util-sequence 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-sequence 0.64.0
+    . com.vladsch.flexmark/flexmark-util-collection 0.64.0
+    . com.vladsch.flexmark/flexmark-util-data 0.64.0
+    . com.vladsch.flexmark/flexmark-util-misc 0.64.0
+    . org.jetbrains/annotations 15.0
+  . com.vladsch.flexmark/flexmark-util-visitor 0.64.0
+    . org.jetbrains/annotations 15.0
+org.apache.logging.log4j/log4j-jul 2.17.2
+  X org.apache.logging.log4j/log4j-api 2.17.2 :use-top
+metabase/throttle 1.0.2
+  X org.clojure/math.numeric-tower 0.0.4 :use-top
+net.redhogs.cronparser/cron-parser-core 3.5
+  X org.apache.commons/commons-lang3 3.3.2 :use-top
+com.h2database/h2 1.4.197
+org.clojure/core.logic 1.0.1
+bigml/histogram 4.1.4
+  . com.googlecode.json-simple/json-simple 1.1.1
+    . junit/junit 4.10
+      . org.hamcrest/hamcrest-core 1.1
+honeysql/honeysql 1.0.461
+clojurewerkz/quartzite 2.1.0
+  . clj-time/clj-time 0.14.0
+    X joda-time/joda-time 2.9.7 :use-top
+slingshot/slingshot 0.12.2
+ring/ring-jetty-adapter 1.9.5
+  X ring/ring-core 1.9.5 :use-top
+  . ring/ring-servlet 1.9.5
+    X ring/ring-core 1.9.5 :use-top
+  X org.eclipse.jetty/jetty-server 9.4.44.v20210927 :use-top
+net.sf.cssbox/cssbox 5.0.0
+  . net.sourceforge.nekohtml/nekohtml 1.9.22
+    . xerces/xercesImpl 2.11.0
+      . xml-apis/xml-apis 1.4.01
+  . net.sf.cssbox/jstyleparser 4.0.0
+    . org.antlr/antlr4-runtime 4.5.3
+    X org.slf4j/slf4j-api 1.7.25 :excluded
+    . org.unbescape/unbescape 1.1.6.RELEASE
+ring/ring-json 0.5.1
+  X cheshire/cheshire 5.10.0 :use-top
+  X ring/ring-core 1.9.2 :use-top
+org.flatland/ordered 1.15.10
+commons-io/commons-io 2.11.0
+org.postgresql/postgresql 42.3.5
+  X org.checkerframework/checker-qual 3.5.0 :superseded
+org.clojure/tools.namespace 1.3.0
+  X org.clojure/java.classpath 1.0.0 :use-top
+  X org.clojure/tools.reader 1.3.6 :use-top
+org.yaml/snakeyaml 1.30
+clj-http/clj-http 3.12.3
+  . org.apache.httpcomponents/httpcore 4.4.14
+  . org.apache.httpcomponents/httpclient 4.5.13
+    X org.apache.httpcomponents/httpcore 4.4.13 :older-version
+    . commons-logging/commons-logging 1.2
+    X commons-codec/commons-codec 1.11 :excluded
+  . org.apache.httpcomponents/httpclient-cache 4.5.13
+    . org.apache.httpcomponents/httpclient 4.5.13
+    . commons-logging/commons-logging 1.2
+  . org.apache.httpcomponents/httpasyncclient 4.1.4
+    X org.apache.httpcomponents/httpcore 4.4.10 :older-version
+    . org.apache.httpcomponents/httpcore-nio 4.4.10
+      X org.apache.httpcomponents/httpcore 4.4.10 :older-version
+    X org.apache.httpcomponents/httpclient 4.5.6 :older-version
+    . commons-logging/commons-logging 1.2
+  . org.apache.httpcomponents/httpmime 4.5.13
+    . org.apache.httpcomponents/httpclient 4.5.13
+  X potemkin/potemkin 0.4.5 :use-top
+org.apache.logging.log4j/log4j-core 2.17.2
+  X org.apache.logging.log4j/log4j-api 2.17.2 :use-top
+user-agent/user-agent 0.1.0
+  X net.sf.uadetector/uadetector-core 0.9.10 :superseded
+    . net.sf.qualitycheck/quality-check 1.3
+      X com.google.code.findbugs/jsr305 2.0.1 :parent-omitted
+    X com.google.code.findbugs/jsr305 2.0.1 :older-version
+    . javax.annotation/jsr250-api 1.0
+    X org.slf4j/slf4j-api 1.7.5 :use-top
+  . net.sf.uadetector/uadetector-resources 2014.10
+    . net.sf.uadetector/uadetector-core 0.9.22 :newer-version
+      . net.sf.qualitycheck/quality-check 1.3
+        X com.google.code.findbugs/jsr305 2.0.1 :older-version
+      X com.google.code.findbugs/jsr305 2.0.3 :older-version
+      . javax.annotation/jsr250-api 1.0
+      X org.slf4j/slf4j-api 1.7.7 :use-top
+    X org.slf4j/slf4j-api 1.7.7 :use-top
+instaparse/instaparse 1.4.12
+org.quartz-scheduler/quartz 2.3.2
+  X com.mchange/c3p0 0.9.5.4 :superseded
+    X com.mchange/mchange-commons-java 0.2.15 :parent-omitted
+  X com.mchange/mchange-commons-java 0.2.15 :superseded
+  . com.zaxxer/HikariCP-java7 2.4.13
+    X org.slf4j/slf4j-api 1.7.21 :use-top
+  X org.slf4j/slf4j-api 1.7.7 :use-top
+org.apache.logging.log4j/log4j-1.2-api 2.17.2
+  X org.apache.logging.log4j/log4j-api 2.17.2 :use-top
+org.clojure/math.numeric-tower 0.0.5
+hiccup/hiccup 1.0.5
+io.github.resilience4j/resilience4j-retry 1.7.1
+  . io.vavr/vavr 0.10.2
+    . io.vavr/vavr-match 0.10.2
+  . io.github.resilience4j/resilience4j-core 1.7.1
+    . io.vavr/vavr 0.10.2
+    X org.slf4j/slf4j-api 1.7.30 :use-top
+  X org.slf4j/slf4j-api 1.7.30 :use-top
+riddley/riddley 0.2.0
+dk.ative/docjure 1.17.0
+org.apache.poi/poi-ooxml 5.2.2
+  X org.apache.poi/poi 5.2.2 :use-top
+  . org.apache.poi/poi-ooxml-lite 5.2.2
+    . org.apache.xmlbeans/xmlbeans 5.0.3
+  . org.apache.xmlbeans/xmlbeans 5.0.3
+    X org.apache.logging.log4j/log4j-api 2.17.1 :use-top
+    . xml-apis/xml-apis 1.4.01
+  X org.apache.commons/commons-compress 1.21 :use-top
+  X commons-io/commons-io 2.11.0 :use-top
+  . com.github.virtuald/curvesapi 1.07
+  X org.apache.logging.log4j/log4j-api 2.17.2 :use-top
+  . org.apache.commons/commons-collections4 4.4
+org.clojure/java.classpath 1.0.0
+org.apache.logging.log4j/log4j-jcl 2.17.2
+  . commons-logging/commons-logging 1.2
+  X org.apache.logging.log4j/log4j-api 2.17.2 :use-top
+com.snowplowanalytics/snowplow-java-tracker 0.12.0
+  X commons-codec/commons-codec 1.14 :use-top
+  . commons-net/commons-net 3.6
+  X org.slf4j/slf4j-api 1.7.30 :use-top
+  X com.google.guava/guava 31.0-jre :use-top
+environ/environ 1.2.0
+com.google.guava/guava 31.0.1-jre
+  . com.google.guava/failureaccess 1.0.1
+  . com.google.guava/listenablefuture 9999.0-empty-to-avoid-conflict-with-guava
+  . com.google.code.findbugs/jsr305 3.0.2
+  . org.checkerframework/checker-qual 3.12.0 :newer-version
+  . com.google.errorprone/error_prone_annotations 2.7.1
+  . com.google.j2objc/j2objc-annotations 1.3
+com.clearspring.analytics/stream 2.9.8
+amalloy/ring-buffer 1.3.1
+net.cgrand/macrovich 0.2.1
+org.clojure/data.csv 1.0.1
+org.clojure/java.jdbc 0.7.12
+nano-id/nano-id 1.0.0
+com.cemerick/friend 0.2.3
+  X org.mindrot/jbcrypt 0.3m :use-top
+  X org.clojure/core.cache 0.6.3 :superseded
+    X org.clojure/data.priority-map 0.0.2 :parent-omitted
+  . org.openid4java/openid4java-nodeps 0.9.6
+    X commons-logging/commons-logging 1.1.1 :older-version
+    . net.jcip/jcip-annotations 1.0
+  . com.google.inject/guice 2.0
+    . aopalliance/aopalliance 1.0
+crypto-random/crypto-random 1.2.1
+  X commons-codec/commons-codec 1.15 :use-top
+kixi/stats 0.4.4
+  X redux/redux 0.1.3 :use-top
+  . org.clojure/test.check 0.9.0
+  X org.clojure/math.combinatorics 0.1.4 :use-top
+  . com.tdunning/t-digest 3.2
+prismatic/schema 1.2.1
+org.clojure/math.combinatorics 0.1.6
+cheshire/cheshire 5.10.2
+  X com.fasterxml.jackson.core/jackson-core 2.12.4 :older-version
+  . com.fasterxml.jackson.dataformat/jackson-dataformat-smile 2.12.4
+    X com.fasterxml.jackson.core/jackson-core 2.12.4 :older-version
+  . com.fasterxml.jackson.dataformat/jackson-dataformat-cbor 2.12.4
+    X com.fasterxml.jackson.core/jackson-core 2.12.4 :older-version
+  . tigris/tigris 0.1.2
+org.apache.sshd/sshd-core 2.8.0
+  . org.apache.sshd/sshd-common 2.8.0
+    X org.slf4j/slf4j-api 1.7.32 :use-top
+    . org.slf4j/jcl-over-slf4j 1.7.32
+  X org.slf4j/slf4j-api 1.7.32 :use-top
+  . org.slf4j/jcl-over-slf4j 1.7.32
+    X org.slf4j/slf4j-api 1.7.32 :use-top
+org.clojure/core.match 1.0.0
+org.clojure/tools.reader 1.3.6
+org.tcrawley/dynapath 1.1.0
+org.mindrot/jbcrypt 0.4
+stencil/stencil 0.5.0
+  . scout/scout 0.1.0
+  . quoin/quoin 0.1.2
+  . org.clojure/core.cache 0.6.3
+org.threeten/threeten-extra 1.7.0
+com.taoensso/nippy 3.1.1
+  X org.clojure/tools.reader 1.3.4 :use-top
+  . com.taoensso/encore 3.9.2
+    X org.clojure/tools.reader 1.3.3 :use-top
+    . com.taoensso/truss 1.6.0
+  . org.iq80.snappy/snappy 0.4
+  . org.tukaani/xz 1.8
+  . org.lz4/lz4-java 1.7.1
+potemkin/potemkin 0.4.5
+  . clj-tuple/clj-tuple 0.2.2
+org.slf4j/slf4j-api 1.7.36
+amalloy/ring-gzip-middleware 0.1.4
+buddy/buddy-sign 3.4.333
+  X buddy/buddy-core 1.10.413 :use-top
+metabase/connection-pool 1.2.0
+  . com.mchange/c3p0 0.9.5.5 :newer-version
+    . com.mchange/mchange-commons-java 0.2.19 :newer-version
+pretty/pretty 1.0.5
+io.forward/yaml 1.0.11
+org.apache.logging.log4j/log4j-api 2.17.2
+me.raynes/fs 1.4.6
+org.clojure/core.memoize 1.0.257
+  . org.clojure/core.cache 1.0.225 :newer-version
+    . org.clojure/data.priority-map 1.1.0
+net.i2p.crypto/eddsa 0.3.0
+org.eclipse.jetty/jetty-server 9.4.44.v20210927
+  . javax.servlet/javax.servlet-api 3.1.0
+  . org.eclipse.jetty/jetty-http 9.4.44.v20210927
+    . org.eclipse.jetty/jetty-util 9.4.44.v20210927
+    . org.eclipse.jetty/jetty-io 9.4.44.v20210927
+  . org.eclipse.jetty/jetty-io 9.4.44.v20210927
+    . org.eclipse.jetty/jetty-util 9.4.44.v20210927
+toucan/toucan 1.18.0
+  X org.clojure/java.classpath 0.3.0 :use-top
+  X potemkin/potemkin 0.4.5 :use-top
+ring/ring-core 1.9.5
+  X ring/ring-codec 1.1.3 :older-version
+  X commons-io/commons-io 2.10.0 :use-top
+  . commons-fileupload/commons-fileupload 1.4
+    X commons-io/commons-io 2.2 :use-top
+  X crypto-random/crypto-random 1.2.1 :use-top
+  . crypto-equality/crypto-equality 1.0.0
+robdaemon/clojure.java-time 0.3.3-SNAPSHOT
+  . clj-tuple/clj-tuple 0.2.2
+medley/medley 1.4.0
+org.clojure/core.async 1.5.648
+  . org.clojure/tools.analyzer.jvm 1.2.2
+    . org.clojure/tools.analyzer 1.1.0
+    X org.clojure/core.memoize 1.0.253 :use-top
+    . org.ow2.asm/asm 9.2
+    X org.clojure/tools.reader 1.3.6 :excluded
+org.mariadb.jdbc/mariadb-java-client 2.7.5

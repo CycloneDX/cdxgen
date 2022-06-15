@@ -193,6 +193,8 @@ export FETCH_LICENSE=true
 | USE_GOSUM                 | Set to true to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod |
 | CDXGEN_TIMEOUT_MS         | Default timeout for known execution involving maven, gradle or sbt                                                 |
 | BAZEL_TARGET              | Bazel target to build. Default :all (Eg: //java-maven)                                                             |
+| CLJ_CMD                   | Set to override the clojure cli command                                                                            |
+| LEIN_CMD                  | Set to override the leiningen command                                                                              |
 
 ## Integration with GitHub action
 

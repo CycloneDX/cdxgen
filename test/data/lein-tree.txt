@@ -1,0 +1,61 @@
+{[javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
+ {[javax.activation/javax.activation-api "1.2.0"] nil},
+ [nrepl "0.8.3" :exclusions [[org.clojure/clojure]]] nil,
+ [org.clojars.prertik/fetch
+  "0.4.0"
+  :exclusions
+  [[org.clojure/clojure] [noir]]]
+ {[compojure "1.6.2"]
+  {[clout "2.2.1"]
+   {[instaparse "1.4.8" :exclusions [[org.clojure/clojure]]] nil},
+   [medley "1.3.0"] nil,
+   [ring/ring-codec "1.1.2"] {[commons-codec "1.11"] nil},
+   [ring/ring-core "1.8.1"]
+   {[commons-fileupload "1.4"] nil,
+    [commons-io "2.6"] nil,
+    [crypto-equality "1.0.0"] nil,
+    [crypto-random "1.2.0"] nil}},
+  [hiccup "2.0.0-alpha2"] nil,
+  [org.clojure/tools.macro "0.1.2"] nil,
+  [ring "1.8.2"]
+  {[ring/ring-devel "1.8.2"]
+   {[clj-stacktrace "0.2.8"] nil,
+    [ns-tracker "0.4.0"]
+    {[org.clojure/java.classpath "0.3.0"] nil,
+     [org.clojure/tools.namespace "0.2.11"] nil}},
+   [ring/ring-jetty-adapter "1.8.2"]
+   {[org.eclipse.jetty/jetty-server "9.4.31.v20200723"]
+    {[javax.servlet/javax.servlet-api "3.1.0"] nil,
+     [org.eclipse.jetty/jetty-http "9.4.31.v20200723"]
+     {[org.eclipse.jetty/jetty-util "9.4.31.v20200723"] nil},
+     [org.eclipse.jetty/jetty-io "9.4.31.v20200723"] nil}},
+   [ring/ring-servlet "1.8.2"] nil}},
+ [org.clojars.prertik/singultus "1.0.0"] nil,
+ [org.clojure/clojure "1.10.3"]
+ {[org.clojure/core.specs.alpha "0.2.56"] nil,
+  [org.clojure/spec.alpha "0.2.194"] nil},
+ [org.clojure/clojurescript
+  "1.10.844"
+  :exclusions
+  [[org.apache.ant/ant]]]
+ {[com.cognitect/transit-clj
+   "0.8.309"
+   :exclusions
+   [[org.clojure/clojure]]]
+  {[com.cognitect/transit-java "0.8.332"]
+   {[com.fasterxml.jackson.core/jackson-core "2.8.7"] nil,
+    [org.msgpack/msgpack "0.6.12"]
+    {[com.googlecode.json-simple/json-simple
+      "1.1.1"
+      :exclusions
+      [[junit]]]
+     nil,
+     [org.javassist/javassist "3.18.1-GA"] nil}}},
+  [com.google.javascript/closure-compiler-unshaded "v20210202"] nil,
+  [org.clojure/data.json "0.2.6"] nil,
+  [org.clojure/google-closure-library "0.0-20201211-3e6c510d"]
+  {[org.clojure/google-closure-library-third-party
+    "0.0-20201211-3e6c510d"]
+   nil},
+  [org.clojure/tools.reader "1.3.3"] nil},
+ [org.nrepl/incomplete "0.1.0" :exclusions [[org.clojure/clojure]]] nil}
