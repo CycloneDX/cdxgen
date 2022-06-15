@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Added
+  * Consider optional element "comment" when serializing `ExternalReference` (via [#312])
+
+[#312]: https://github.com/CycloneDX/cyclonedx-node-module/pull/312
+
 ## 3.9.0 - 2022-05-06
 
 * Added

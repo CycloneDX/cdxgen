@@ -103,11 +103,11 @@ class ExternalReference extends CycloneDXObject {
   }
 
   toJSON () {
-    return { type: this.#type, url: this.#url }
+    return { type: this.#type, url: this.#url, comment: this.#comment }
   }
 
   toXML () {
-    return { reference: { '@type': this.#type, url: this.#url } }
+    return { reference: { '@type': this.#type, url: this.#url, comment: this.#comment } }
   }
 
   /**
