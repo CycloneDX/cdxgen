@@ -4,22 +4,22 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 
 ## Supported languages and package format
 
-| Language           | Package format                                                                                  |
-| ------------------ | ----------------------------------------------------------------------------------------------- |
-| node.js            | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js |
-| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                            |
-| php                | composer.lock                                                                                   |
-| python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl                    |
-| go                 | binary, go.mod, go.sum, Gopkg.lock                                                              |
-| ruby               | Gemfile.lock, gemspec                                                                           |
-| rust               | Cargo.toml, Cargo.lock                                                                          |
-| .Net               | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg                   |
-| dart               | pubspec.lock, pubspec.yaml                                                                      |
-| haskell            | cabal.project.freeze                                                                            |
-| elixir             | mix.lock                                                                                        |
-| c/c++              | conan.lock, conanfile.txt                                                                       |
-| clojure            | Clojure CLI (deps.edn), Leiningen (project.clj)                                                 |
-| docker / oci image | All supported languages excluding OS packages                                                   |
+| Language           | Package format                                                                                  | Transitive dependencies                                                                            |
+| ------------------ | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| node.js            | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js | Yes except .min.js                                                                                 |
+| java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                            | Yes unless pom.xml is manually parsed due to unavailability of maven or errors with maven plugins  |
+| php                | composer.lock                                                                                   | Yes                                                                                                |
+| python             | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl                    | Only with Pipfile.lock and poetry.lock                                                             |
+| go                 | binary, go.mod, go.sum, Gopkg.lock                                                              | Yes except binary                                                                                  |
+| ruby               | Gemfile.lock, gemspec                                                                           | Only for Gemfile.lock                                                                              |
+| rust               | Cargo.toml, Cargo.lock                                                                          | Only for Cargo.lock                                                                                |
+| .Net               | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg                   | Only for project.assets.json, packages.lock.json                                                   |
+| dart               | pubspec.lock, pubspec.yaml                                                                      | Only for pubspec.lock                                                                              |
+| haskell            | cabal.project.freeze                                                                            | Yes                                                                                                |
+| elixir             | mix.lock                                                                                        | Yes                                                                                                |
+| c/c++              | conan.lock, conanfile.txt                                                                       | Yes only for conan.lock                                                                            |
+| clojure            | Clojure CLI (deps.edn), Leiningen (project.clj)                                                 | Yes unless the files are parsed manually due to unavailability of clojure cli or leiningen command |
+| docker / oci image | All supported languages excluding OS packages                                                   | Best effort based on lock files                                                                    |
 
 NOTE:
 
