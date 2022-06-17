@@ -52,11 +52,11 @@
     "url": "https://github.com/AppThreat/cdxgen/issues"
   },
   "dependencies": {
-    "@babel/parser": "^7.17.9",
-    "@babel/traverse": "^7.17.9",
-    "cheerio": "^1.0.0-rc.10",
+    "@babel/parser": "^7.18.5",
+    "@babel/traverse": "^7.18.5",
+    "cheerio": "^1.0.0-rc.11",
     "edn-data": "^0.2.0",
-    "glob": "^8.0.1",
+    "glob": "^8.0.3",
     "global-agent": "^3.0.0",
     "got": "^11.8.3",
     "js-yaml": "^4.1.0",
@@ -73,7 +73,7 @@
     "uuid": "^8.3.2",
     "xml-js": "^1.6.11",
     "xmlbuilder": "^15.1.1",
-    "yargs": "^17.4.1"
+    "yargs": "^17.5.1"
   },
   "files": [
     "*.js",

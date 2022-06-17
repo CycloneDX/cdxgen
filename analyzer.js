@@ -56,9 +56,10 @@ const babelParserOptions = {
   allowImportExportEverywhere: true,
   allowAwaitOutsideFunction: true,
   allowReturnOutsideFunction: true,
+  allowSuperOutsideMethod: true,
   errorRecovery: true,
   allowUndeclaredExports: true,
-  attachComment: true,
+  attachComment: false,
   plugins: [
     "optionalChaining",
     "classProperties",
