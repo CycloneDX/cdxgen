@@ -5,3 +5,4 @@ target
 
 # Integration tests related:
 *-actual.out.xml
+*out.json

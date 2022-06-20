@@ -15,6 +15,11 @@ const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
 const semver = require("semver");
 const { option } = require("yargs");
+const nodeCleanup = require('node-cleanup');
+
+const resourcesManager = utils.resourcesManager();
+
+nodeCleanup(resourcesManager.cleanUp);
 
 // Construct maven command
 let MVN_CMD = "mvn";
@@ -701,32 +706,20 @@ const createJavaBom = async (
           }
         }
       } else {
-        let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
-        try {
-          fs.mkdirSync(tempSbtgDir, { recursive: true });
-          // Create temporary plugins file
-          let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
-          const sbtInvoker = sbtUtils.sbtInvoker(DEBUG_MODE, path, tempSbtPlugins);
+        const sbtInvoker = sbtUtils.sbtInvoker(DEBUG_MODE, path, resourcesManager);
 
-          for (let i in sbtProjects) {
-            const basePath = sbtProjects[i];
-            const commandPrefix = options.subprojectName ? `${options.subprojectName}/` : "";
+        for (let i in sbtProjects) {
+          const basePath = sbtProjects[i];
+          const commandPrefix = options.subprojectName ? `${options.subprojectName}/` : "";
 
-            const cmdOutput = sbtInvoker.invokeDependencyList(commandPrefix, basePath, TIMEOUT_MS);
+          const cmdOutput = sbtInvoker.invokeDependencyList(commandPrefix, basePath, TIMEOUT_MS);
 
-            if (cmdOutput != '') {
-              utils.debug(`sbt dependencyList result read from: ${cmdOutput}`);
-              const dlist = sbtUtils.parseKVDep(cmdOutput);
-              pkgList = pkgList.concat(dlist);
-            } else {
-              utils.debug(`sbt dependencyList did not yield any result`);
-            }
-          }
-        } finally {
-          // Cleanup
-          if (tempSbtgDir && tempSbtgDir.startsWith(os.tmpdir())) {
-            console.log(`Cleaning up ${tempSbtgDir}`);
-            fs.rmdirSync(tempSbtgDir, { recursive: true });
+          if (cmdOutput != '') {
+            utils.debug(`sbt dependencyList result read from: ${cmdOutput}`);
+            const dlist = sbtUtils.parseKVDep(cmdOutput);
+            pkgList = pkgList.concat(dlist);
+          } else {
+            utils.debug(`sbt dependencyList did not yield any result`);
           }
         }
       } // else

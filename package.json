@@ -59,6 +59,7 @@
     "global-agent": "^2.2.0",
     "got": "^11.8.2",
     "js-yaml": "^4.1.0",
+    "node-cleanup": "^2.1.2",
     "packageurl-js": "^0.0.4",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
