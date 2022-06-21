@@ -1656,7 +1656,7 @@ const createRustBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(options, pkgList, "crates", {
+    return buildBomNSData(options, pkgList, "cargo", {
       src: path,
       filename: cargoFiles.join(", "),
     });
@@ -1677,7 +1677,7 @@ const createRustBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(options, pkgList, "crates", {
+    return buildBomNSData(options, pkgList, "cargo", {
       src: path,
       filename: cargoLockFiles.join(", "),
     });
