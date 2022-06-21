@@ -1208,8 +1208,10 @@ const parsePiplockData = async function (lockData) {
       const depBlock = lockData[k];
       Object.keys(depBlock).forEach((p) => {
         const pkg = depBlock[p];
-        let versionStr = pkg.version.replace("==", "");
-        pkgList.push({ name: p, version: versionStr });
+        if (pkg.hasOwnProperty("version")) {
+          let versionStr = pkg.version.replace("==", "");
+          pkgList.push({ name: p, version: versionStr });
+        }
       });
     });
   return await getPyMetadata(pkgList, false);
