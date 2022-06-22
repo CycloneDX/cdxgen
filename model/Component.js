@@ -519,7 +519,7 @@ class Component extends CycloneDXObject {
    */
   compare (other) {
     if (!(other instanceof Component)) { return 0 }
-    if (this.#purl || other.#purl) { return this.#purl.localeCompare(other.#purl) }
+    if (this.#purl && other.#purl) { return this.#purl.localeCompare(other.#purl) }
     return (this.#group || '').localeCompare(other.#group || '') ||
       (this.#name).localeCompare(other.#name) ||
       (this.#version || '').localeCompare(other.#version || '')

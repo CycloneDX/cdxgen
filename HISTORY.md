@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Fixed
+  * `Component.compare` raised an exception when the object passed as a parameter had a purl value, but not the current instance. ([#308] via [#313])
+
+[#308]: https://github.com/CycloneDX/cyclonedx-node-module/issues/308
+[#313]: https://github.com/CycloneDX/cyclonedx-node-module/pull/313
+
 ## 3.10.0 - 2022-06-15
 
 * Added

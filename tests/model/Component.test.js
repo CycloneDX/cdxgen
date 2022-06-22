@@ -168,6 +168,18 @@ describe('Model: Component compare', () => {
         a: new Component({ name: '@foo/bar', version: '2' }),
         b: new Component({ name: '@foo/bar', version: '1' }),
         expected: +1
+      },
+      {
+        purpose: 'version no/1',
+        a: new Component({ name: '@foo/bar' }),
+        b: new Component({ name: '@foo/bar', version: '1' }),
+        expected: -1
+      },
+      {
+        purpose: 'version 1/no',
+        a: new Component({ name: '@foo/bar', version: '1' }),
+        b: new Component({ name: '@foo/bar' }),
+        expected: +1
       }
     ]
   )('$purpose', ({ a, b, expected }) => {
