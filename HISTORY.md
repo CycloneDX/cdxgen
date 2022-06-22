@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.10.1 - 2022-06-22
+
 * Fixed
-  * `Component.compare` raised an exception when the object passed as a parameter had a purl value, but not the current instance. ([#308] via [#313])
+  * `Component.compare()` no longer raises an exception when only one of both has a `purl`. ([#308] via [#313])
 
 [#308]: https://github.com/CycloneDX/cyclonedx-node-module/issues/308
 [#313]: https://github.com/CycloneDX/cyclonedx-node-module/pull/313
@@ -29,7 +31,7 @@ All notable changes to this project will be documented in this file.
 
 * Fixed
   * Added missing handling of `Dependency` when environment variable `BOM_REPRODUCIBLE` is present. (via [#297])
-* Misc:
+* Misc
   * Worked packaging from whitelist to blacklist to add files, like `NOTICE`. (via [#289])
 
 [#289]: https://github.com/CycloneDX/cyclonedx-node-module/pull/289
