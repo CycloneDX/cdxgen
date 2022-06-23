@@ -411,6 +411,18 @@ test("parse cargo toml", async () => {
     { name: "compiler_builtins", version: "0.1.0" },
     { name: "cfg-if", version: "0.1.8" },
   ]);
+  dep_list = await utils.parseCargoTomlData(
+    fs.readFileSync("./test/data/Cargo2.toml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list).toEqual([
+    { group: "", name: "quiche-fuzz", version: "0.1.0" },
+    { name: "lazy_static", version: "1" },
+    {
+      name: "libfuzzer-sys",
+      version: "git+https://github.com/rust-fuzz/libfuzzer-sys.git",
+    },
+  ]);
 });
 
 test("get crates metadata", async () => {

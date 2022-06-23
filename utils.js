@@ -1996,10 +1996,12 @@ const parseCargoTomlData = async function (cargoData) {
   }
   let pkg = null;
   let dependencyMode = false;
+  let packageMode = false;
   cargoData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
     if (l.indexOf("[package]") > -1) {
+      packageMode = true;
       if (pkg) {
         pkgList.push(pkg);
       }
@@ -2007,11 +2009,13 @@ const parseCargoTomlData = async function (cargoData) {
     }
     if (l.startsWith("[dependencies]")) {
       dependencyMode = true;
+      packageMode = false;
     }
-    if (l.startsWith("[build-dependencies]" || l.startsWith("[features]"))) {
+    if (l.startsWith("[") && !l.startsWith("[dependencies]") && !packageMode) {
       dependencyMode = false;
+      packageMode = false;
     }
-    if (!dependencyMode && l.indexOf("=") > -1) {
+    if (packageMode && l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
       value = tmpA[1].trim().replace(/\"/g, "");
@@ -2037,16 +2041,19 @@ const parseCargoTomlData = async function (cargoData) {
       pkg = undefined;
       let tmpA = l.split(" = ");
       let tmpB = undefined;
-      let name = undefined;
+      let name = tmpA[0];
       let version = undefined;
       if (l.indexOf("version =") > -1) {
         tmpB = l.split(" { version = ");
         if (tmpB && tmpB.length > 1) {
-          name = tmpA[0];
           version = tmpB[1].split(",")[0];
         }
+      } else if (l.includes("git =")) {
+        tmpB = l.split(" { git = ");
+        if (tmpB && tmpB.length > 1) {
+          version = "git+" + tmpB[1].split(" }")[0];
+        }
       } else if (l.indexOf("path =") == -1 && tmpA.length > 1) {
-        name = tmpA[0];
         version = tmpA[1];
       }
       if (name && version) {
