@@ -2239,7 +2239,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "npm", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "npm", "xml")
       );
     }
     bomData = await createJavaBom(path, options);
@@ -2251,7 +2251,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "maven", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
       );
     }
     bomData = await createPythonBom(path, options);
@@ -2263,7 +2263,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "pypi", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "pypi", "xml")
       );
     }
     bomData = await createGoBom(path, options);
@@ -2275,7 +2275,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "golang", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "golang", "xml")
       );
     }
     bomData = await createRustBom(path, options);
@@ -2287,7 +2287,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "cargo", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "cargo", "xml")
       );
     }
     bomData = await createPHPBom(path, options);
@@ -2299,7 +2299,13 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "composer", "xml")
+        listComponents(
+          options,
+          {},
+          bomData.bomJson.components,
+          "composer",
+          "xml"
+        )
       );
     }
     bomData = await createRubyBom(path, options);
@@ -2311,7 +2317,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "gem", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "gem", "xml")
       );
     }
     bomData = await createCsharpBom(path, options);
@@ -2323,7 +2329,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "nuget", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "nuget", "xml")
       );
     }
     bomData = await createDartBom(path, options);
@@ -2335,7 +2341,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "pub", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "pub", "xml")
       );
     }
     bomData = await createHaskellBom(path, options);
@@ -2347,7 +2353,13 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "hackage", "xml")
+        listComponents(
+          options,
+          {},
+          bomData.bomJson.components,
+          "hackage",
+          "xml"
+        )
       );
     }
     bomData = await createElixirBom(path, options);
@@ -2359,7 +2371,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "hex", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "hex", "xml")
       );
     }
     bomData = await createCppBom(path, options);
@@ -2371,7 +2383,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "conan", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "conan", "xml")
       );
     }
     bomData = await createClojureBom(path, options);
@@ -2383,7 +2395,13 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "clojars", "xml")
+        listComponents(
+          options,
+          {},
+          bomData.bomJson.components,
+          "clojars",
+          "xml"
+        )
       );
     }
   }
@@ -2397,7 +2415,7 @@ const createMultiXBom = async (pathList, options) => {
       }
       components = components.concat(bomData.bomJson.components);
       componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, components, "maven", "xml")
+        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
       );
     }
   }
