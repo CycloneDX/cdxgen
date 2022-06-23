@@ -15,12 +15,62 @@ const { spawnSync } = require("child_process");
 // Debug mode flag
 const DEBUG_MODE =
   process.env.SCAN_DEBUG_MODE === "debug" ||
-  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
+  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
+  process.env.NODE_ENV !== "production";
 
 // Metadata cache
 let metadata_cache = {};
 
 const MAX_LICENSE_ID_LENGTH = 100;
+
+const resourcesManager = function () {
+  let filenames = [];
+  // cdxTmpDir acts as a root for all assets created with resourcesManager.tmpFile and resourcesManager.createTmpSubDir
+  // Since cdxTmpDir, with its contents, will be deleted by resourcesManager.cleanUp we don't have to track each tmpFile in filenames
+  let cdxTmpDir;
+
+  const cleanUpFileOnShutdownFun = function (filename) {
+    if (!filenames.includes(filename)) {
+      filenames.push(filename);
+    }
+  };
+  const tmpFileFun = function(filename) {
+    return path.join(cdxTmpDir, filename);
+  };
+  const createTmpSubDirFun = function(dirname) {
+    const dirPath = path.join(cdxTmpDir, dirname);
+    fs.mkdirSync(dirPath, { recursive: true });
+    return dirPath;
+  };
+
+  // Initialize cdxTmpDir
+  if (os.platform() === 'darwin') {
+    // We don't use tmpdir on MacOS because for some configurations there's a weird interaction between sbt >= 1.4.5 and tmp directories,
+    // namely sbt seems to delete any tmp directories created by a parent process
+    const parent = path.join(os.homedir(), '.shiftleft', 'cdxgen');
+    fs.mkdirSync(parent, { recursive: true });
+    cdxTmpDir = fs.mkdtempSync(path.join(parent, 'cdxgen-'));
+  } else {
+    cdxTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cdxgen-'));
+  }
+  
+  return {
+    tmpFile: tmpFileFun,
+    createTmpSubDir: createTmpSubDirFun,
+    cleanUpFileOnShutdown: cleanUpFileOnShutdownFun,
+    cleanUp: function() {
+      filenames.forEach((file) => {
+        try {
+          fs.unlinkSync(file);
+        } catch (err) {
+          debug(`When removing ${file}: ${err}`);
+        }
+      });
+      fs.rmdirSync(cdxTmpDir, {recursive: true});
+    }
+  }
+}
+exports.resourcesManager = resourcesManager;
 
 /**
  * Method to get files matching a pattern
@@ -1910,7 +1960,7 @@ const sortPkgs = function(pkgList) {
   try {
     return pkgListCopy.sort((a, b) => {
       const groupDiff = a.group.localeCompare(b.group);
-      if (groupDiff !== 0) {  
+      if (groupDiff !== 0) {
         return groupDiff;
       }
       return a.name.localeCompare(b.name);
@@ -1920,3 +1970,10 @@ const sortPkgs = function(pkgList) {
   }
 };
 exports.sortPkgs = sortPkgs;
+
+const debug = function(msg) {
+  if (DEBUG_MODE) {
+    console.log(msg);
+  }
+}
+exports.debug = debug;

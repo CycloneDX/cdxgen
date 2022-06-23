@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.2" version="1">
+  <externalReferences>
+    <reference type="other">
+      <url>./samples/sbt/sbt-aggregate</url>
+      <comment>Base path</comment>
+    </reference>
+    <reference type="other">
+      <url>samples/sbt/sbt-aggregate/some/full/path</url>
+      <comment>Package file</comment>
+    </reference>
+  </externalReferences>
+  <metadata>
+    <timestamp>2022-06-03T09:34:10.062Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>AppThreat</vendor>
+        <name>cdxgen</name>
+        <version>2.3.7</version>
+      </tool>
+    </tools>
+    <authors>
+      <author>
+        <name>Team AppThreat</name>
+        <email>cloud@appthreat.com</email>
+      </author>
+    </authors>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:maven/co.fs2/fs2-core_2.12@3.2.7?type=jar">
+      <group>co.fs2</group>
+      <name>fs2-core_2.12</name>
+      <version>3.2.7</version>
+      <purl>pkg:maven/co.fs2/fs2-core_2.12@3.2.7?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/co.fs2/fs2-io_2.12@3.2.7?type=jar">
+      <group>co.fs2</group>
+      <name>fs2-io_2.12</name>
+      <version>3.2.7</version>
+      <purl>pkg:maven/co.fs2/fs2-io_2.12@3.2.7?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.comcast/ip4s-core_2.12@3.1.3?type=jar">
+      <group>com.comcast</group>
+      <name>ip4s-core_2.12</name>
+      <version>3.1.3</version>
+      <purl>pkg:maven/com.comcast/ip4s-core_2.12@3.1.3?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-core_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-core_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-core_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-jawn_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-jawn_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-jawn_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-numbers_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-numbers_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-numbers_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/io.circe/circe-parser_2.12@0.14.2?type=jar">
+      <group>io.circe</group>
+      <name>circe-parser_2.12</name>
+      <version>0.14.2</version>
+      <purl>pkg:maven/io.circe/circe-parser_2.12@0.14.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.flywaydb/flyway-core@8.5.12?type=jar">
+      <group>org.flywaydb</group>
+      <name>flyway-core</name>
+      <version>8.5.12</version>
+      <purl>pkg:maven/org.flywaydb/flyway-core@8.5.12?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.http4s/http4s-core_2.12@0.23.12?type=jar">
+      <group>org.http4s</group>
+      <name>http4s-core_2.12</name>
+      <version>0.23.12</version>
+      <purl>pkg:maven/org.http4s/http4s-core_2.12@0.23.12?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.http4s/http4s-crypto_2.12@0.2.3?type=jar">
+      <group>org.http4s</group>
+      <name>http4s-crypto_2.12</name>
+      <version>0.2.3</version>
+      <purl>pkg:maven/org.http4s/http4s-crypto_2.12@0.2.3?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.log4s/log4s_2.12@1.10.0?type=jar">
+      <group>org.log4s</group>
+      <name>log4s_2.12</name>
+      <version>1.10.0</version>
+      <purl>pkg:maven/org.log4s/log4s_2.12@1.10.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.scala-lang/scala-reflect@2.12.15?type=jar">
+      <group>org.scala-lang</group>
+      <name>scala-reflect</name>
+      <version>2.12.15</version>
+      <purl>pkg:maven/org.scala-lang/scala-reflect@2.12.15?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.scodec/scodec-bits_2.12@1.1.31?type=jar">
+      <group>org.scodec</group>
+      <name>scodec-bits_2.12</name>
+      <version>1.1.31</version>
+      <purl>pkg:maven/org.scodec/scodec-bits_2.12@1.1.31?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.slf4j/slf4j-api@1.7.36?type=jar">
+      <group>org.slf4j</group>
+      <name>slf4j-api</name>
+      <version>1.7.36</version>
+      <purl>pkg:maven/org.slf4j/slf4j-api@1.7.36?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/case-insensitive_2.12@1.2.0?type=jar">
+      <group>org.typelevel</group>
+      <name>case-insensitive_2.12</name>
+      <version>1.2.0</version>
+      <purl>pkg:maven/org.typelevel/case-insensitive_2.12@1.2.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-core_2.12@2.7.0?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-core_2.12</name>
+      <version>2.7.0</version>
+      <purl>pkg:maven/org.typelevel/cats-core_2.12@2.7.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-effect_2.12@3.3.9?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-effect_2.12</name>
+      <version>3.3.9</version>
+      <purl>pkg:maven/org.typelevel/cats-effect_2.12@3.3.9?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-effect-kernel_2.12@3.3.12?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-effect-kernel_2.12</name>
+      <version>3.3.12</version>
+      <purl>pkg:maven/org.typelevel/cats-effect-kernel_2.12@3.3.12?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-effect-std_2.12@3.3.12?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-effect-std_2.12</name>
+      <version>3.3.12</version>
+      <purl>pkg:maven/org.typelevel/cats-effect-std_2.12@3.3.12?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-kernel_2.12@2.7.0?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-kernel_2.12</name>
+      <version>2.7.0</version>
+      <purl>pkg:maven/org.typelevel/cats-kernel_2.12@2.7.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/cats-parse_2.12@0.3.7?type=jar">
+      <group>org.typelevel</group>
+      <name>cats-parse_2.12</name>
+      <version>0.3.7</version>
+      <purl>pkg:maven/org.typelevel/cats-parse_2.12@0.3.7?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/jawn-parser_2.12@1.3.2?type=jar">
+      <group>org.typelevel</group>
+      <name>jawn-parser_2.12</name>
+      <version>1.3.2</version>
+      <purl>pkg:maven/org.typelevel/jawn-parser_2.12@1.3.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/literally_2.12@1.0.2?type=jar">
+      <group>org.typelevel</group>
+      <name>literally_2.12</name>
+      <version>1.0.2</version>
+      <purl>pkg:maven/org.typelevel/literally_2.12@1.0.2?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/simulacrum-scalafix-annotations_2.12@0.5.4?type=jar">
+      <group>org.typelevel</group>
+      <name>simulacrum-scalafix-annotations_2.12</name>
+      <version>0.5.4</version>
+      <purl>pkg:maven/org.typelevel/simulacrum-scalafix-annotations_2.12@0.5.4?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.typelevel/vault_2.12@3.1.0?type=jar">
+      <group>org.typelevel</group>
+      <name>vault_2.12</name>
+      <version>3.1.0</version>
+      <purl>pkg:maven/org.typelevel/vault_2.12@3.1.0?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/proja/proja_2.12@0.1.0-SNAPSHOT?type=jar">
+      <group>proja</group>
+      <name>proja_2.12</name>
+      <version>0.1.0-SNAPSHOT</version>
+      <purl>pkg:maven/proja/proja_2.12@0.1.0-SNAPSHOT?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/projb/projb_2.12@0.1.0-SNAPSHOT?type=jar">
+      <group>projb</group>
+      <name>projb_2.12</name>
+      <version>0.1.0-SNAPSHOT</version>
+      <purl>pkg:maven/projb/projb_2.12@0.1.0-SNAPSHOT?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/projc/projc_2.12@0.1.0-SNAPSHOT?type=jar">
+      <group>projc</group>
+      <name>projc_2.12</name>
+      <version>0.1.0-SNAPSHOT</version>
+      <purl>pkg:maven/projc/projc_2.12@0.1.0-SNAPSHOT?type=jar</purl>
+      <description/>
+    </component>
+    <component type="library" bom-ref="pkg:maven/projd/projd_2.12@0.1.0-SNAPSHOT?type=jar">
+      <group>projd</group>
+      <name>projd_2.12</name>
+      <version>0.1.0-SNAPSHOT</version>
+      <purl>pkg:maven/projd/projd_2.12@0.1.0-SNAPSHOT?type=jar</purl>
+      <description/>
+    </component>
+  </components>
+</bom>

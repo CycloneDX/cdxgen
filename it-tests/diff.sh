@@ -12,7 +12,7 @@ function main(){
   local SUFFIX_2="$2"
 
   for i in "${PREDEFINED_DIRS[@]}"; do 
-    IFS=',' read LANG DIR <<< "${i}"
+    IFS=',' read LANG SUBMODULE DIR <<< "${i}"
     if diff "$DIR/cdx$SUFFIX_1.out.xml" "$DIR/cdx$SUFFIX_2.out.xml"; then
       echo -e "${GREEN}PASSED:${ENDCOLOR} $DIR/cdx$SUFFIX_2.out.xml"
     else
