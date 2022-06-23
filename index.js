@@ -1,9 +1,9 @@
 const parsePackageJsonName = require("parse-packagejson-name");
 const os = require("os");
 const pathLib = require("path");
-const request = require("request");
 const ssri = require("ssri");
 const fs = require("fs");
+const got = require("got");
 const { v4: uuidv4 } = require("uuid");
 const { PackageURL } = require("packageurl-js");
 const builder = require("xmlbuilder");
@@ -2224,6 +2224,7 @@ exports.trimComponents = trimComponents;
  */
 const createMultiXBom = async (pathList, options) => {
   let components = [];
+  let componentsXmls = [];
   let bomData = undefined;
   for (let path of pathList) {
     if (DEBUG_MODE) {
@@ -2237,6 +2238,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "npm", "xml")
+      );
     }
     bomData = await createJavaBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2246,6 +2250,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "maven", "xml")
+      );
     }
     bomData = await createPythonBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2255,6 +2262,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "pypi", "xml")
+      );
     }
     bomData = await createGoBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2264,6 +2274,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "golang", "xml")
+      );
     }
     bomData = await createRustBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2273,6 +2286,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "cargo", "xml")
+      );
     }
     bomData = await createPHPBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2282,6 +2298,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "composer", "xml")
+      );
     }
     bomData = await createRubyBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2291,6 +2310,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "gem", "xml")
+      );
     }
     bomData = await createCsharpBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2300,6 +2322,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "nuget", "xml")
+      );
     }
     bomData = await createDartBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2309,6 +2334,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "pub", "xml")
+      );
     }
     bomData = await createHaskellBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2318,6 +2346,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "hackage", "xml")
+      );
     }
     bomData = await createElixirBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2327,6 +2358,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "hex", "xml")
+      );
     }
     bomData = await createCppBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2336,6 +2370,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "conan", "xml")
+      );
     }
     bomData = await createClojureBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -2345,6 +2382,9 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "clojars", "xml")
+      );
     }
   }
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
@@ -2356,16 +2396,16 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, components, "maven", "xml")
+      );
     }
   }
   components = trimComponents(components);
   console.log(`BOM includes ${components.length} components`);
   const serialNum = "urn:uuid:" + uuidv4();
   return {
-    bomXml: buildBomXml(
-      serialNum,
-      listComponents(options, {}, components, undefined, "xml")
-    ),
+    bomXml: buildBomXml(serialNum, componentsXmls),
     bomJson: {
       bomFormat: "CycloneDX",
       specVersion: "1.4",
@@ -2694,36 +2734,31 @@ exports.createBom = async (path, options) => {
  * Method to submit the generated bom to dependency-track or AppThreat server
  *
  * @param args CLI args
+ * @param bomContents BOM Xml
  */
-exports.submitBom = function (args, bom, callback) {
+exports.submitBom = async (args, bomContents) => {
   let serverUrl = args.serverUrl + "/api/v1/bom";
-
-  const formData = {
-    bom: {
-      value: bom,
-      options: {
-        filename: args.output ? pathLib.basename(args.output) : "bom.xml",
-        contentType: "text/xml",
-      },
-    },
-  };
-  if (args.projectId) {
-    formData.project = args.projectId;
-  } else if (args.projectName) {
-    formData.projectName = args.projectName;
-    formData.projectVersion = args.projectVersion;
-    formData.autoCreate = "true";
+  let encodedBomContents = Buffer.from(bomContents).toString("base64");
+  if (encodedBomContents.startsWith("77u/")) {
+    encodedBomContents = encodedBomContents.substring(4);
   }
-  const options = {
-    method: "POST",
-    url: serverUrl,
-    port: 443,
-    json: true,
+  const bomPayload = {
+    project: args.projectId,
+    projectName: args.projectName,
+    projectVersion: args.projectVersion,
+    autoCreate: "true",
+    bom: encodedBomContents,
+  };
+  if (DEBUG_MODE) {
+    console.log("Submitting BOM to", serverUrl);
+  }
+  return await got(serverUrl, {
+    method: "PUT",
     headers: {
       "X-Api-Key": args.apiKey,
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
     },
-    formData,
-  };
-  request(options, callback);
+    json: bomPayload,
+    responseType: "json",
+  }).json();
 };
