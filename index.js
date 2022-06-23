@@ -14,7 +14,6 @@ const { findJSImports } = require("./analyzer");
 const semver = require("semver");
 const dockerLib = require("./docker");
 const binaryLib = require("./binary");
-const { async } = require("node-stream-zip");
 
 // Construct maven command
 let MVN_CMD = "mvn";
