@@ -58,6 +58,7 @@ npm install -g @appthreat/cdxgen
 $ cdxgen -h
 Options:
   -o, --output           Output file for bom.xml or bom.json. Default console
+  -e, --env              Set environment variables using JSON config file
   -t, --type             Project type
   -r, --recurse          Recurse mode suitable for mono-repos          [boolean]
   -p, --print            Print the SBoM as a table                     [boolean]

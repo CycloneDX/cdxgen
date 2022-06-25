@@ -11,7 +11,7 @@ const args = require("yargs")
     })
     .option("env", {
         alias: "e",
-        description: "Path to the JSON config file to load options into ENV variables",
+        description: "Path to the JSON config file to load options into environment variables",
         type: "string"
     })
     .option("type", {
