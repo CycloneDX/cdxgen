@@ -5,71 +5,80 @@ const fs = require("fs");
 const path = require("path");
 
 const args = require("yargs")
-  .option("output", {
-    alias: "o",
-    description: "Output file for bom.xml or bom.json. Default console",
-  })
-  .option("type", {
-    alias: "t",
-    description: "Project type",
-  })
-  .option("recurse", {
-    alias: "r",
-    type: "boolean",
-    description: "Recurse mode suitable for mono-repos",
-  })
-  .option("print", {
-    alias: "p",
-    type: "boolean",
-    description: "Print the SBoM as a table",
-  })
-  .option("resolve-class", {
-    alias: "c",
-    type: "boolean",
-    description: "Resolve class names for packages. jars only for now.",
-  })
-  .option("server-url", {
-    description:
-      "Dependency track or AppThreat server url. Eg: https://deptrack.appthreat.io",
-  })
-  .option("api-key", {
-    description: "Dependency track or AppThreat server api key",
-  })
-  .option("project-name", {
-    description:
-      "Dependency track or AppThreat project name. Default use the directory name",
-  })
-  .option("project-version", {
-    description:
-      "Dependency track or AppThreat project version. Default master",
-    default: "master",
-  })
-  .option("project-id", {
-    description:
-      "Dependency track or AppThreat project id. Either provide the id or the project name and version together",
-  })
-  .option("required-only", {
-    type: "boolean",
-    description: "Include only the packages with required scope on the SBoM.",
-  })
-  .scriptName("cdxgen")
-  .version()
-  .help("h").argv;
+    .option("output", {
+        alias: "o",
+        description: "Output file for bom.xml or bom.json. Default console",
+    })
+    .option("env", {
+        alias: "e",
+        description: "Path to the JSON config file to load options into ENV variables",
+        type: "string"
+    })
+    .option("type", {
+        alias: "t",
+        description: "Project type",
+    })
+    .option("recurse", {
+        alias: "r",
+        type: "boolean",
+        description: "Recurse mode suitable for mono-repos",
+    })
+    .option("print", {
+        alias: "p",
+        type: "boolean",
+        description: "Print the SBoM as a table",
+    })
+    .option("resolve-class", {
+        alias: "c",
+        type: "boolean",
+        description: "Resolve class names for packages. jars only for now.",
+    })
+    .option("server-url", {
+        description: "Dependency track or AppThreat server url. Eg: https://deptrack.appthreat.io",
+    })
+    .option("api-key", {
+        description: "Dependency track or AppThreat server api key",
+    })
+    .option("project-name", {
+        description: "Dependency track or AppThreat project name. Default use the directory name",
+    })
+    .option("project-version", {
+        description: "Dependency track or AppThreat project version. Default master",
+        default: "master",
+    })
+    .option("project-id", {
+        description: "Dependency track or AppThreat project id. Either provide the id or the project name and version together",
+    })
+    .option("required-only", {
+        type: "boolean",
+        description: "Include only the packages with required scope on the SBoM.",
+    })
+    .scriptName("cdxgen")
+    .version()
+    .help("h").argv;
+
+if (args.env) {
+    const configJsonAsString = fs.readFileSync(args.env);
+    const configJson = JSON.parse(configJsonAsString);
+    Object.keys(configJson).forEach(function(key) {
+        process.env[key] = configJson[key];
+    })
+}
 
 if (args.version) {
-  const packageJsonAsString = fs.readFileSync(
-    path.join(__dirname, "../", "package.json"),
-    "utf-8"
-  );
-  const packageJson = JSON.parse(packageJsonAsString);
+    const packageJsonAsString = fs.readFileSync(
+        path.join(__dirname, "../", "package.json"),
+        "utf-8"
+    );
+    const packageJson = JSON.parse(packageJsonAsString);
 
-  console.log(packageJson.version);
-  process.exit(0);
+    console.log(packageJson.version);
+    process.exit(0);
 }
 
 if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
-  const globalAgent = require("global-agent");
-  globalAgent.bootstrap();
+    const globalAgent = require("global-agent");
+    globalAgent.bootstrap();
 }
 
 /**
@@ -77,14 +86,14 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
  * multiProject: Boolean to indicate monorepo or multi-module projects
  */
 let options = {
-  dev: true,
-  projectType: args.type,
-  multiProject: args.recurse,
-  depth: 3,
-  output: args.output,
-  resolveClass: args.resolveClass,
-  installDeps: true,
-  requiredOnly: args.requiredOnly,
+    dev: true,
+    projectType: args.type,
+    multiProject: args.recurse,
+    depth: 3,
+    output: args.output,
+    resolveClass: args.resolveClass,
+    installDeps: true,
+    requiredOnly: args.requiredOnly,
 };
 
 let filePath = args._[0] || ".";
@@ -93,80 +102,80 @@ let filePath = args._[0] || ".";
  * Method to start the bom creation process
  */
 (async () => {
-  const bomNSData = (await bom.createBom(filePath, options)) || {};
+    const bomNSData = (await bom.createBom(filePath, options)) || {};
 
-  if (!args.projectName) {
-    if (filePath !== ".") {
-      args.projectName = path.basename(filePath);
-    } else {
-      args.projectName = path.basename(path.resolve(filePath));
-    }
-  }
-  if (args.output) {
-    if (bomNSData.bomXmlFiles) {
-      console.log("BOM files produced:", bomNSData.bomXmlFiles);
-    } else {
-      const jsonFile = args.output.replace(".xml", ".json");
-      // Create bom json file
-      if (bomNSData.bomJson) {
-        if (
-          typeof bomNSData.bomJson === "string" ||
-          bomNSData.bomJson instanceof String
-        ) {
-          fs.writeFileSync(jsonFile, bomNSData.bomJson);
+    if (!args.projectName) {
+        if (filePath !== ".") {
+            args.projectName = path.basename(filePath);
         } else {
-          fs.writeFileSync(
-            jsonFile,
-            JSON.stringify(bomNSData.bomJson, null, 2)
-          );
+            args.projectName = path.basename(path.resolve(filePath));
         }
-      }
-      // Create bom xml file
-      if (bomNSData.bomXml) {
-        const xmlFile = args.output.replace(".json", ".xml");
-        fs.writeFileSync(xmlFile, bomNSData.bomXml);
-        console.log("BOM file written to", args.output);
-      }
-      //
-      if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
-        const nsFile = jsonFile + ".map";
-        fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
-        console.log("Namespace mapping file written to", nsFile);
-      }
     }
-  } else if (!args.print) {
-    if (bomNSData.bomJson) {
-      console.log(JSON.stringify(bomNSData.bomJson, null, 2));
-    } else if (bomNSData.bomXml) {
-      console.log(Buffer.from(bomNSData.bomXml).toString());
-    } else {
-      console.log("Unable to produce BOM for", filePath);
-      console.log("Try running the command with -t <type> or -r argument");
+    if (args.output) {
+        if (bomNSData.bomXmlFiles) {
+            console.log("BOM files produced:", bomNSData.bomXmlFiles);
+        } else {
+            const jsonFile = args.output.replace(".xml", ".json");
+            // Create bom json file
+            if (bomNSData.bomJson) {
+                if (
+                    typeof bomNSData.bomJson === "string" ||
+                    bomNSData.bomJson instanceof String
+                ) {
+                    fs.writeFileSync(jsonFile, bomNSData.bomJson);
+                } else {
+                    fs.writeFileSync(
+                        jsonFile,
+                        JSON.stringify(bomNSData.bomJson, null, 2)
+                    );
+                }
+            }
+            // Create bom xml file
+            if (bomNSData.bomXml) {
+                const xmlFile = args.output.replace(".json", ".xml");
+                fs.writeFileSync(xmlFile, bomNSData.bomXml);
+                console.log("BOM file written to", args.output);
+            }
+            //
+            if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
+                const nsFile = jsonFile + ".map";
+                fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
+                console.log("Namespace mapping file written to", nsFile);
+            }
+        }
+    } else if (!args.print) {
+        if (bomNSData.bomJson) {
+            console.log(JSON.stringify(bomNSData.bomJson, null, 2));
+        } else if (bomNSData.bomXml) {
+            console.log(Buffer.from(bomNSData.bomXml).toString());
+        } else {
+            console.log("Unable to produce BOM for", filePath);
+            console.log("Try running the command with -t <type> or -r argument");
+        }
     }
-  }
 
-  // Automatically submit the bom data
-  if (args.serverUrl && args.apiKey) {
-    try {
-      const dbody = await bom.submitBom(args, bomNSData.bomXml);
-      console.log("Response from server", dbody);
-    } catch (err) {
-      console.log(err);
+    // Automatically submit the bom data
+    if (args.serverUrl && args.apiKey) {
+        try {
+            const dbody = await bom.submitBom(args, bomNSData.bomXml);
+            console.log("Response from server", dbody);
+        } catch (err) {
+            console.log(err);
+        }
     }
-  }
 
-  if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
-    const { table } = require("table");
-    const data = [["Group", "Name", "Version"]];
-    for (let comp of bomNSData.bomJson.components) {
-      data.push([comp.group || "", comp.name, comp.version]);
+    if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
+        const {table} = require("table");
+        const data = [["Group", "Name", "Version"]];
+        for (let comp of bomNSData.bomJson.components) {
+            data.push([comp.group || "", comp.name, comp.version]);
+        }
+        const config = {
+            header: {
+                alignment: "center",
+                content: "Software Bill-of-Materials\nGenerated by @AppThreat/cdxgen",
+            },
+        };
+        console.log(table(data, config));
     }
-    const config = {
-      header: {
-        alignment: "center",
-        content: "Software Bill-of-Materials\nGenerated by @AppThreat/cdxgen",
-      },
-    };
-    console.log(table(data, config));
-  }
 })();
