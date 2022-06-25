@@ -191,7 +191,7 @@ export FETCH_LICENSE=true
 | SBT_CACHE_DIR             | Specify sbt cache directory. Useful for class name resolving                                                       |
 | FETCH_LICENSE             | Set to true to fetch license information from the registry. npm and golang only                                    |
 | USE_GOSUM                 | Set to true to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod |
-| CDXGEN_TIMEOUT_MS         | Default timeout for known execution involving maven, gradle or sbt                                                 |
+| CDXGEN_TIMEOUT_MS         | Default timeout for known execution involving maven, gradle or sbt. Default: 10 minutes                            |
 | BAZEL_TARGET              | Bazel target to build. Default :all (Eg: //java-maven)                                                             |
 | CLJ_CMD                   | Set to override the clojure cli command                                                                            |
 | LEIN_CMD                  | Set to override the leiningen command                                                                              |
