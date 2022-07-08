@@ -118,19 +118,21 @@ jobs:
           -t "$DOCKERHUB_REPO:$DI_VERSION"
           -t "$DOCKERHUB_REPO:latest"
           -f Dockerfile .
-      - name: fetch own SBOM
+      - name: build SBOM from the bundled application
         run: |
-          mkdir "$REPORTS_DIR"
+          mkdir "$PWD/$REPORTS_DIR"
           docker run --rm \
-            --volume "$PWD:/src" \
-            "$DOCKERHUB_REPO:$DI_VERSION" \
+            --volume "$PWD/$REPORTS_DIR:/src" \
+            --workdir /usr/src/cyclonedx-bom \
+            "$DOCKER_TAG" \
               --type 'application' \
-              --output "./$REPORTS_DIR/docker-image.bom.xml"
+              --output /src/docker-image.bom.xml
           docker run --rm \
-            --volume "$PWD:/src" \
-            "$DOCKERHUB_REPO:$DI_VERSION" \
+            --volume "$PWD/$REPORTS_DIR:/src" \
+            --workdir /usr/src/cyclonedx-bom \
+            "$DOCKER_TAG" \
               --type 'application' \
-              --output "./$REPORTS_DIR/docker-image.bom.json"
+              --output /src/docker-image.bom.json
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact

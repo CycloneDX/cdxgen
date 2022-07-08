@@ -33,19 +33,21 @@ jobs:
       ## ! no npm build at the moment
       - name: Build Docker image
         run: docker build -t "$DOCKER_TAG" -f Dockerfile .
-      - name: 'Test: fetch own SBOM'
+      - name: 'Test: build SBOM from the bundled application'
         run: |
-          mkdir "$REPORTS_DIR"
+          mkdir "$PWD/$REPORTS_DIR"
           docker run --rm \
-            --volume "$PWD:/src" \
+            --volume "$PWD/$REPORTS_DIR:/src" \
+            --workdir /usr/src/cyclonedx-bom \
             "$DOCKER_TAG" \
               --type 'application' \
-              --output "./$REPORTS_DIR/docker-image.bom.xml"
+              --output /src/docker-image.bom.xml
           docker run --rm \
-            --volume "$PWD:/src" \
+            --volume "$PWD/$REPORTS_DIR:/src" \
+            --workdir /usr/src/cyclonedx-bom \
             "$DOCKER_TAG" \
               --type 'application' \
-              --output "./$REPORTS_DIR/docker-image.bom.json"
+              --output /src/docker-image.bom.json
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact
