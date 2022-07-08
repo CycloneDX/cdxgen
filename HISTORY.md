@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.10.4 - 2022-07-08
+
 * Misc
   * CI: fixed SBOM gathering for the bundled application in the docker image.
 
