@@ -69,10 +69,12 @@ if (args.version) {
   process.exit(0);
 }
 
-if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
-  const globalAgent = require('global-agent');
-  globalAgent.bootstrap();
+// use standard names for the proxy configuration
+if (!process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE) {
+  process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE = "";
 }
+const globalAgent = require("global-agent");
+globalAgent.bootstrap();
 
 /**
  * projectType: python, nodejs, java, golang
