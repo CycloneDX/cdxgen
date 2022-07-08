@@ -58,24 +58,23 @@ cyclonedx-node
 ### Example (XML)
 
 ```shell
-cyclonedx-node -o bom.xml
+cyclonedx-node --output bom.xml
 ```
 
 ### Example (JSON)
 
 ```shell
-cyclonedx-node -o bom.json
+cyclonedx-node --output bom.json
 ```
 
 ### Usage with docker
 
-Run `cyclonedx/cyclonedx-node` docker image inside your project folder using:
+Run `cyclonedx/cyclonedx-node` docker image inside your project folder, just like:
 
 ```shell
 docker run --rm \
-  -v "$PWD":/src \
-  -w /src \
-  cyclonedx/cyclonedx-node -o /src/bom.xml
+  --volume "$PWD":/src \
+  cyclonedx/cyclonedx-node --output bom.xml
 ```
 
 All options explained above are supported.

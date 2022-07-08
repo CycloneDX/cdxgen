@@ -122,15 +122,15 @@ jobs:
         run: |
           mkdir "$REPORTS_DIR"
           docker run --rm \
-            -v "$PWD/$REPORTS_DIR:/src/$REPORTS_DIR" \
+            --volume "$PWD:/src" \
             "$DOCKERHUB_REPO:$DI_VERSION" \
               --type 'application' \
-              --output "/src/$REPORTS_DIR/docker-image.bom.xml"
+              --output "./$REPORTS_DIR/docker-image.bom.xml"
           docker run --rm \
-            -v "$PWD/$REPORTS_DIR:/src/$REPORTS_DIR" \
+            --volume "$PWD:/src" \
             "$DOCKERHUB_REPO:$DI_VERSION" \
               --type 'application' \
-              --output "/src/$REPORTS_DIR/docker-image.bom.json"
+              --output "./$REPORTS_DIR/docker-image.bom.json"
       - name: Artifact reports
         if: ${{ ! cancelled() }}
         # see https://github.com/actions/upload-artifact

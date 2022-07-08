@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+* Misc
+  * Simplified the docker image. (via [#316])
+
+[#316]: https://github.com/CycloneDX/cyclonedx-node-module/pull/316
+
 ## 3.10.1 - 2022-06-22
 
 * Fixed
