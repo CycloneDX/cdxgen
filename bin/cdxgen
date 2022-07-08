@@ -67,7 +67,11 @@ if (args.version) {
   process.exit(0);
 }
 
-if (process.env.GLOBAL_AGENT_HTTP_PROXY) {
+if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
+  // Support standard HTTP_PROXY variable if the user doesn't override the namespace
+  if (!process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE) {
+    process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE = "";
+  }
   const globalAgent = require("global-agent");
   globalAgent.bootstrap();
 }
