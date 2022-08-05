@@ -52,7 +52,7 @@ Options:
   -r, --recurse                  Recurse mode suitable for mono-repos  [boolean]
   -s, --subproject               Analyze only a specific subproject. Provide a
                                  subproject name used by a specific build tool.
-                                 Subproject names doesn't necessarily follow
+                                 Subproject names don't necessarily follow
                                  subdirectories names
   -c, --resolve-class            Resolve class names for packages. jars only for
                                  now.                                  [boolean]
