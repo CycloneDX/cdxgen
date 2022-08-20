@@ -1,19 +1,4 @@
-# This workflow is used for publishing the Node.js package.
-#
-# Releases are triggered manually. This can be done by browsing to
-# https://github.com/CycloneDX/cyclonedx-node-module/actions?query=workflow%3ARelease
-# and selecting "Run workflow". If releasing a patch for a previous version
-# make sure the correct branch is selected. It will default to the default
-# branch.
-#
-# You will also need to specify the version level increment for this release.
-#
-# Supported levels are major, minor and patch. Semantic versioning should be
-# followed. i.e. major if the release includes breaking changes, minor for
-# non-breaking changes with additional functionality and patch for bug fixes and
-# dependency updates.
-#
-# You will also need to specify a value for the related commit message.
+# docs: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
 
 name: Release
 
@@ -28,6 +13,16 @@ on:
         description: 'Release/commit message (%s will be replaced with the resulting version number)'
         default: '%s'
         required: true
+      preid:
+      preid:
+        description: 'The "prerelease identifier" to use as a prefix for the "prerelease" part of a semver. Like the rc in `1.2.0-rc.8`.'
+        type: choice
+        options:
+          - rc
+          - beta
+          - alpha
+        default: rc
+        required: false
 
 env:
   REPORTS_DIR: CI_reports
@@ -51,6 +46,7 @@ jobs:
       - name: Configure Git
         # needed for push back of changes
         run: |
+          set -ex
           git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git config --local user.name "${GITHUB_ACTOR}"
       - name: Setup Node.js ${{ env.NODE_ACTIVE_LTS }}
@@ -62,7 +58,8 @@ jobs:
       - name: bump VERSION
         id: bump
         run: |
-          VERSION="$(npm version "$NPMV_NEWVERSION" --message "$NPMV_MESSAGE")"
+          set -ex
+          VERSION="$(npm version "$NPMV_NEWVERSION" --message "$NPMV_MESSAGE" --preid "$NPMV_PREID")"
           echo "::debug::new version = $VERSION"
           VERSION_PLAIN="${VERSION:1}" # remove 'v' prefix
           echo "::debug::plain version = $VERSION_PLAIN"
@@ -71,13 +68,14 @@ jobs:
         env:
           NPMV_NEWVERSION: ${{ github.event.inputs.newversion }}
           NPMV_MESSAGE: ${{ github.event.inputs.commitMessage }}
+          NPMV_PREID: ${{ github.event.inputs.preid }}
       - name: git push back
         run: git push --follow-tags
 
-  publish-NPM:
+  publish-NPMJS:
     needs:
       - "bump"
-    name: NPM - publish
+    name: publish NPMJS
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -86,9 +84,17 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ needs.bump.outputs.version }}
-      - name: publish to NPM
+      - name: Setup Node.js ${{ env.NODE_ACTIVE_LTS }}
+        # see https://github.com/actions/setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_ACTIVE_LTS }}
+      - name: install build tools
+        run: npm ci --ignore-scripts
+      # no explicit npm build. if a build is required, it should be configured as prepublish/prepublishOnly script of npm.
+      - name: publish to NPMJS
         run: |
-          npm config set "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN"
+          npm config set "//registry.npmjs.org/:_authToken=$NPMJS_AUTH_TOKEN"
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -157,9 +163,9 @@ jobs:
   release-GH:
     needs:
       - "bump"
-      - "publish-NPM"
+      - "publish-NPMJS"
       - "release-DockerHub"
-    name: GitHub - release
+    name: publish GitHub
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -182,6 +188,6 @@ jobs:
         with:
           tag_name: ${{ needs.bump.outputs.version }}
           name:     ${{ needs.bump.outputs.version_plain }}
-          prerelease: ${{ startsWith(github.event.inputs.newversion, 'pre') }}
+          prerelease: ${{ startsWith(github.event.inputs.newversion, 'pre') || contains(github.event.inputs.newversion, 'rc') || contains(github.event.inputs.newversion, 'beta') || contains(github.event.inputs.newversion, 'alpha')}}
           files: |
             ${{ env.ASSETS_DIR }}/${{ env.ARTIFACT_DOCKER_SBOM }}/*.bom.*
