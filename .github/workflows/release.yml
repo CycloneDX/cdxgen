@@ -14,7 +14,6 @@ on:
         default: '%s'
         required: true
       preid:
-      preid:
         description: 'The "prerelease identifier" to use as a prefix for the "prerelease" part of a semver. Like the rc in `1.2.0-rc.8`.'
         type: choice
         options:
