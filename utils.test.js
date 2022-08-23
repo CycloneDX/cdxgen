@@ -109,6 +109,14 @@ test("parse gradle dependencies", () => {
   });
 });
 
+test("parse gradle projects", () => {
+  expect(utils.parseGradleProjects(null)).toEqual([]);
+  let proj_list = utils.parseGradleProjects(
+    fs.readFileSync("./test/data/gradle-projects.out", (encoding = "utf-8"))
+  );
+  expect(proj_list.length).toEqual(8);
+});
+
 test("parse maven tree", () => {
   expect(utils.parseMavenTree(null)).toEqual([]);
   let dep_list = utils.parseMavenTree(
