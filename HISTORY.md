@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 3.10.5 - 2022-09-05
+
+* Misc
+  * Own in-code license text comments should no longer get stripped by downstream tooling. ([#305] via [#326])
+
+[#305]: https://github.com/CycloneDX/cyclonedx-node-module/issues/305
+[#326]: https://github.com/CycloneDX/cyclonedx-node-module/pull/326
+
 ## 3.10.4 - 2022-07-08
 
 * Misc
