@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint-env node */
 
-/*
+/*!
  * This file is part of CycloneDX Node Module.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
