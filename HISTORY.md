@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
-## 3.10.5 - 2022-09-05
+## 3.10.6 - 2022-09-05
 
 * Misc
   * Own in-code license text comments should no longer get stripped by downstream tooling. ([#305] via [#326])

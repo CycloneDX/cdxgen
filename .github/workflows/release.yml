@@ -96,7 +96,7 @@ jobs:
           npm config set "//registry.npmjs.org/:_authToken=$NPMJS_AUTH_TOKEN"
           npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPMJS_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   release-DockerHub:
     needs:
