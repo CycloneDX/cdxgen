@@ -1722,7 +1722,7 @@ const createDartBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       const pubYamlData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseYamlData(pubYamlData);
+      const dlist = await utils.parsePubYamlData(pubYamlData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
