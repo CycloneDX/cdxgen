@@ -246,14 +246,6 @@ const _getDepPkgList = async function (pkgList, pkg) {
       }
     }
   }
-  if (process.env.FETCH_LICENSE) {
-    if (DEBUG_MODE) {
-      console.log(
-        `About to fetch license information for ${pkgList.length} packages`
-      );
-    }
-    return await getNpmMetadata(pkgList);
-  }
   return pkgList;
 };
 
@@ -293,10 +285,18 @@ exports.parsePkgJson = parsePkgJson;
  * @param {string} pkgLockFile package-lock.json file
  */
 const parsePkgLock = async (pkgLockFile) => {
-  const pkgList = [];
+  let pkgList = [];
   if (fs.existsSync(pkgLockFile)) {
     const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
-    return await _getDepPkgList(pkgList, lockData);
+    pkgList = await _getDepPkgList(pkgList, lockData);
+  }
+  if (process.env.FETCH_LICENSE) {
+    if (DEBUG_MODE) {
+      console.log(
+        `About to fetch license information for ${pkgList.length} packages`
+      );
+    }
+    return await getNpmMetadata(pkgList);
   }
   return pkgList;
 };
