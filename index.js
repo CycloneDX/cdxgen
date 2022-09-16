@@ -145,42 +145,65 @@ function addMetadata(format = "xml") {
  * @param pkg
  * @returns {Array}
  */
-function addExternalReferences(pkg, format = "xml") {
+function addExternalReferences(opkg, format = "xml") {
   let externalReferences = [];
-  if (format === "xml") {
-    if (pkg.homepage && pkg.homepage.url) {
-      externalReferences.push({
-        reference: { "@type": "website", url: pkg.homepage.url },
-      });
-    }
-    if (pkg.bugs && pkg.bugs.url) {
-      externalReferences.push({
-        reference: { "@type": "issue-tracker", url: pkg.bugs.url },
-      });
-    }
-    if (pkg.repository && pkg.repository.url) {
-      externalReferences.push({
-        reference: { "@type": "vcs", url: pkg.repository.url },
-      });
-    }
+  let pkgList = [];
+  if (Array.isArray(opkg)) {
+    pkgList = opkg;
   } else {
-    if (pkg.homepage && pkg.homepage.url) {
-      externalReferences.push({
-        type: "website",
-        url: pkg.homepage.url,
-      });
-    }
-    if (pkg.bugs && pkg.bugs.url) {
-      externalReferences.push({
-        type: "issue-tracker",
-        url: pkg.bugs.url,
-      });
-    }
-    if (pkg.repository && pkg.repository.url) {
-      externalReferences.push({
-        type: "vcs",
-        url: pkg.repository.url,
-      });
+    pkgList = [opkg];
+  }
+  for (const pkg of pkgList) {
+    if (pkg.externalReferences) {
+      if (format === "xml") {
+        for (const ref of pkg.externalReferences) {
+          // If the value already comes from json format
+          if (ref.type && ref.url) {
+            externalReferences.push({
+              reference: { "@type": ref.type, url: ref.url },
+            });
+          }
+        }
+      } else {
+        externalReferences.concat(pkg.externalReferences);
+      }
+    } else {
+      if (format === "xml") {
+        if (pkg.homepage && pkg.homepage.url) {
+          externalReferences.push({
+            reference: { "@type": "website", url: pkg.homepage.url },
+          });
+        }
+        if (pkg.bugs && pkg.bugs.url) {
+          externalReferences.push({
+            reference: { "@type": "issue-tracker", url: pkg.bugs.url },
+          });
+        }
+        if (pkg.repository && pkg.repository.url) {
+          externalReferences.push({
+            reference: { "@type": "vcs", url: pkg.repository.url },
+          });
+        }
+      } else {
+        if (pkg.homepage && pkg.homepage.url) {
+          externalReferences.push({
+            type: "website",
+            url: pkg.homepage.url,
+          });
+        }
+        if (pkg.bugs && pkg.bugs.url) {
+          externalReferences.push({
+            type: "issue-tracker",
+            url: pkg.bugs.url,
+          });
+        }
+        if (pkg.repository && pkg.repository.url) {
+          externalReferences.push({
+            type: "vcs",
+            url: pkg.repository.url,
+          });
+        }
+      }
     }
   }
   return externalReferences;
@@ -289,8 +312,7 @@ function addComponent(
       hashes: [],
       licenses,
       purl: purlString,
-      externalReferences:
-        pkg.externalReferences || addExternalReferences(pkg, format),
+      externalReferences: addExternalReferences(pkg, format),
     };
     if (format === "xml") {
       component["@type"] = determinePackageType(pkg);
