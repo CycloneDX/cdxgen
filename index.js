@@ -198,19 +198,19 @@ function listComponents(
   ptype = "npm",
   format = "xml"
 ) {
-  let list = {};
+  let compMap = {};
   let isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach((p) => {
-      addComponent(options, allImports, p, ptype, list, false, format);
+      addComponent(options, allImports, p, ptype, compMap, false, format);
     });
   } else {
-    addComponent(options, allImports, pkg, ptype, list, isRootPkg, format);
+    addComponent(options, allImports, pkg, ptype, compMap, isRootPkg, format);
   }
   if (format === "xml") {
-    return Object.keys(list).map((k) => ({ component: list[k] }));
+    return Object.keys(compMap).map((k) => ({ component: compMap[k] }));
   } else {
-    return Object.keys(list).map((k) => list[k]);
+    return Object.keys(compMap).map((k) => compMap[k]);
   }
 }
 
@@ -222,7 +222,7 @@ function addComponent(
   allImports,
   pkg,
   ptype,
-  list,
+  compMap,
   isRootPkg = false,
   format = "xml"
 ) {
@@ -247,7 +247,7 @@ function addComponent(
       return;
     }
     let version = pkg.version;
-    let licenses = utils.getLicenses(pkg, format);
+    let licenses = pkg.licenses || utils.getLicenses(pkg, format);
     let purl = new PackageURL(
       ptype,
       group,
@@ -289,7 +289,8 @@ function addComponent(
       hashes: [],
       licenses,
       purl: purlString,
-      externalReferences: addExternalReferences(pkg, format),
+      externalReferences:
+        pkg.externalReferences || addExternalReferences(pkg, format),
     };
     if (format === "xml") {
       component["@type"] = determinePackageType(pkg);
@@ -307,15 +308,15 @@ function addComponent(
 
     processHashes(pkg, component, format);
 
-    if (list[component.purl]) return; //remove cycles
-    list[component.purl] = component;
+    if (compMap[component.purl]) return; //remove cycles
+    compMap[component.purl] = component;
   }
   if (pkg.dependencies) {
     Object.keys(pkg.dependencies)
       .map((x) => pkg.dependencies[x])
       .filter((x) => typeof x !== "string") //remove cycles
       .map((x) =>
-        addComponent(options, allImports, x, ptype, list, false, format)
+        addComponent(options, allImports, x, ptype, compMap, false, format)
       );
   }
 }

@@ -1122,10 +1122,12 @@ const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
       const body = res.body;
       p.description = body.info.summary;
       p.license = findLicenseId(body.info.license);
-      if (body.info.home_page.indexOf("git") > -1) {
-        p.repository = { url: body.info.home_page };
-      } else {
-        p.homepage = { url: body.info.home_page };
+      if (body.info.home_page) {
+        if (body.info.home_page.indexOf("git") > -1) {
+          p.repository = { url: body.info.home_page };
+        } else {
+          p.homepage = { url: body.info.home_page };
+        }
       }
       // Use the latest version if none specified
       if (
