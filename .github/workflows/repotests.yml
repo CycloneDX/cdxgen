@@ -42,10 +42,6 @@ jobs:
           CI: true
       - uses: actions/checkout@v2
         with:
-          repository: 'ShiftLeftSecurity/shiftleft-csharp-example'
-          path: 'repotests/shiftleft-csharp-example'
-      - uses: actions/checkout@v2
-        with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
           path: 'repotests/shiftleft-java-example'
       - uses: actions/checkout@v2
@@ -97,10 +93,6 @@ jobs:
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.22.0/cyclonedx-linux-x64
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
-          bin/cdxgen -p -r -t csharp repotests/shiftleft-csharp-example -o bomresults/bom-csharp.json
-          ./cyclonedx validate --input-file bomresults/bom-csharp.json --input-format json --input-version v1_4
-          ./cyclonedx validate --input-file bomresults/bom-csharp.xml --input-format xml --input-version v1_4
-
           bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
           ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json --input-version v1_3
           ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml --input-version v1_3
