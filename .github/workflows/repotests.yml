@@ -97,7 +97,7 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json --input-version v1_3
           ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml --input-version v1_3
 
-          bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
+          FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
           ./cyclonedx validate --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
 
@@ -105,7 +105,7 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-go.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-go.xml --input-format xml --input-version v1_4
 
-          bin/cdxgen -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
+          FETCH_LICENSE=true bin/cdxgen -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
           ./cyclonedx validate --input-file bomresults/bom-csharp2.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-csharp2.xml --input-format xml --input-version v1_4
 
@@ -113,7 +113,7 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-csharp3.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-csharp3.xml --input-format xml --input-version v1_4
 
-          bin/cdxgen -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json
+          FETCH_LICENSE=true bin/cdxgen -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json
           ./cyclonedx validate --input-file bomresults/bom-python.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-python.xml --input-format xml --input-version v1_4
 
