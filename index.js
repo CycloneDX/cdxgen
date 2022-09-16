@@ -591,7 +591,7 @@ const createJavaBom = async (path, options) => {
     const pomFiles = utils.getAllFiles(path, "pom.xml");
     if (pomFiles && pomFiles.length) {
       let mvnArgs = [
-        "org.cyclonedx:cyclonedx-maven-plugin:2.5.3:makeAggregateBom",
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.1:makeAggregateBom",
       ];
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
       if (!DEBUG_MODE) {
