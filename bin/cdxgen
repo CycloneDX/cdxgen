@@ -152,7 +152,7 @@ let filePath = args._[0] || ".";
   // Automatically submit the bom data
   if (args.serverUrl && args.apiKey) {
     try {
-      const dbody = await bom.submitBom(args, bomNSData.bomXml);
+      const dbody = await bom.submitBom(args, JSON.stringify(bomNSData.bomJson, null, 2));
       console.log("Response from server", dbody);
     } catch (err) {
       console.log(err);
