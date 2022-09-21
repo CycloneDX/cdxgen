@@ -983,7 +983,6 @@ exports.guessLicenseId = guessLicenseId;
 const getMvnMetadata = async function (pkgList) {
   const MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
   const ANDROID_MAVEN = "https://maven.google.com/";
-  const JCENTER_MAVEN = "https://jcenter.bintray.com/";
   const cdepList = [];
   if (!pkgList || !pkgList.length) {
     return pkgList;
@@ -1001,11 +1000,6 @@ const getMvnMetadata = async function (pkgList) {
     // Ideally we should try one resolver after the other. But it increases the time taken
     if (p.group.indexOf("android") !== -1) {
       urlPrefix = ANDROID_MAVEN;
-    } else if (
-      p.group.indexOf("jetbrains") !== -1 ||
-      p.group.indexOf("airbnb") !== -1
-    ) {
-      urlPrefix = JCENTER_MAVEN;
     }
     let groupPart = p.group.replace(/\./g, "/");
     const fullUrl =
