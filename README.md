@@ -74,6 +74,7 @@ Options:
                          provide the id or the project name and version together
       --required-only    Include only the packages with required scope on the
                          SBoM.                                         [boolean]
+      --fail-on-error    Fail if any dependency extractor fails.       [boolean]
       --version          Show version number                           [boolean]
   -h                     Show help                                     [boolean]
 ```

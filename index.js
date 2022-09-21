@@ -724,24 +724,12 @@ const createJavaBom = async (path, options) => {
       (options.multiProject ? "**/" : "") + "build.gradle*"
     );
     if (gradleFiles && gradleFiles.length && options.installDeps) {
-      let GRADLE_CMD = "gradle";
-      if (process.env.GRADLE_CMD) {
-        GRADLE_CMD = process.env.GRADLE_CMD;
-      } else if (process.env.GRADLE_HOME) {
-        GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
-      } else if (fs.existsSync(pathLib.join(path, "gradlew"))) {
-        // Use local gradle wrapper if available
-        // Enable execute permission
-        try {
-          fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
-        } catch (e) {}
-        GRADLE_CMD = pathLib.resolve(pathLib.join(path, "gradlew"));
-      }
+      let gradleCmd = utils.getGradleCommand(path, null);
       // Support for multi-project applications
       if (process.env.GRADLE_MULTI_PROJECT_MODE) {
-        console.log("Executing", GRADLE_CMD, "projects in", path);
+        console.log("Executing", gradleCmd, "projects in", path);
         const result = spawnSync(
-          GRADLE_CMD,
+          gradleCmd,
           ["projects", "-q", "--console", "plain"],
           { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
@@ -779,12 +767,12 @@ const createJavaBom = async (path, options) => {
               }
               console.log(
                 "Executing",
-                GRADLE_CMD,
+                gradleCmd,
                 gradleDepArgs.join(" "),
                 "in",
                 path
               );
-              const sresult = spawnSync(GRADLE_CMD, gradleDepArgs, {
+              const sresult = spawnSync(gradleCmd, gradleDepArgs, {
                 cwd: path,
                 encoding: "utf-8",
                 timeout: TIMEOUT_MS,
@@ -846,14 +834,16 @@ const createJavaBom = async (path, options) => {
         }
         for (let f of gradleFiles) {
           const basePath = pathLib.dirname(f);
+          // Fixes #157. Look for wrapper script in the nested directory
+          gradleCmd = utils.getGradleCommand(basePath, path);
           console.log(
             "Executing",
-            GRADLE_CMD,
+            gradleCmd,
             gradleDepArgs.join(" "),
             "in",
             basePath
           );
-          const result = spawnSync(GRADLE_CMD, gradleDepArgs, {
+          const result = spawnSync(gradleCmd, gradleDepArgs, {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,

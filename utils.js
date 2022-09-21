@@ -3130,3 +3130,33 @@ const readZipEntry = async function (zipFile, filePattern) {
   return retData;
 };
 exports.readZipEntry = readZipEntry;
+
+/**
+ * Method to return the gradle command to use.
+ *
+ * @param {string} srcPath Path to look for gradlew wrapper
+ * @param {string} rootPath Root directory to look for gradlew wrapper
+ */
+const getGradleCommand = (srcPath, rootPath) => {
+  let gradleCmd = "gradle";
+  if (fs.existsSync(path.join(srcPath, "gradlew"))) {
+    // Use local gradle wrapper if available
+    // Enable execute permission
+    try {
+      fs.chmodSync(path.join(srcPath, "gradlew"), 0o775);
+    } catch (e) {}
+    gradleCmd = path.resolve(path.join(srcPath, "gradlew"));
+  } else if (rootPath && fs.existsSync(path.join(rootPath, "gradlew"))) {
+    // Check if the root directory has a wrapper script
+    try {
+      fs.chmodSync(path.join(rootPath, "gradlew"), 0o775);
+    } catch (e) {}
+    gradleCmd = path.resolve(path.join(rootPath, "gradlew"));
+  } else if (process.env.GRADLE_CMD) {
+    gradleCmd = process.env.gradleCmd;
+  } else if (process.env.GRADLE_HOME) {
+    gradleCmd = path.join(process.env.GRADLE_HOME, "bin", "gradle");
+  }
+  return gradleCmd;
+};
+exports.getGradleCommand = getGradleCommand;
