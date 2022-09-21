@@ -2735,7 +2735,7 @@ const collectMvnDependencies = function (mavenCmd, basePath) {
     { cwd: basePath, encoding: "utf-8" }
   );
   let jarNSMapping = {};
-  if (result.status === 1 || result.error) {
+  if (result.status !== 0 || result.error) {
     console.error(result.stdout, result.stderr);
     console.log(
       "Resolve the above maven error. You can try the following remediation tips:\n"
@@ -2782,7 +2782,7 @@ const collectJarNS = function (jarPath) {
         console.log(`Executing 'jar tf ${jf}'`);
       }
       const jarResult = spawnSync("jar", ["-tf", jf], { encoding: "utf-8" });
-      if (jarResult.status === 1) {
+      if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
         console.log(
           "Check if JRE is installed and the jar command is available in the PATH."
@@ -2884,7 +2884,7 @@ const extractJarArchive = function (jarFile, tempDir) {
       encoding: "utf-8",
       cwd: tempDir,
     });
-    if (jarResult.status === 1) {
+    if (jarResult.status !== 0) {
       console.error(jarResult.stdout, jarResult.stderr);
       console.log(
         "Check if JRE is installed and the jar command is available in the PATH."
@@ -2904,7 +2904,7 @@ const extractJarArchive = function (jarFile, tempDir) {
         encoding: "utf-8",
         cwd: tempDir,
       });
-      if (jarResult.status === 1) {
+      if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
       } else {
         const pomXmls = getAllFiles(manifestDir, "**/pom.xml");
