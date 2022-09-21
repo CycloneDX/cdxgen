@@ -983,7 +983,6 @@ exports.guessLicenseId = guessLicenseId;
 const getMvnMetadata = async function (pkgList) {
   const MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2/";
   const ANDROID_MAVEN = "https://maven.google.com/";
-  const JCENTER_MAVEN = "https://jcenter.bintray.com/";
   const cdepList = [];
   if (!pkgList || !pkgList.length) {
     return pkgList;
@@ -1001,11 +1000,6 @@ const getMvnMetadata = async function (pkgList) {
     // Ideally we should try one resolver after the other. But it increases the time taken
     if (p.group.indexOf("android") !== -1) {
       urlPrefix = ANDROID_MAVEN;
-    } else if (
-      p.group.indexOf("jetbrains") !== -1 ||
-      p.group.indexOf("airbnb") !== -1
-    ) {
-      urlPrefix = JCENTER_MAVEN;
     }
     let groupPart = p.group.replace(/\./g, "/");
     const fullUrl =
@@ -3136,3 +3130,63 @@ const readZipEntry = async function (zipFile, filePattern) {
   return retData;
 };
 exports.readZipEntry = readZipEntry;
+
+/**
+ * Method to return the gradle command to use.
+ *
+ * @param {string} srcPath Path to look for gradlew wrapper
+ * @param {string} rootPath Root directory to look for gradlew wrapper
+ */
+const getGradleCommand = (srcPath, rootPath) => {
+  let gradleCmd = "gradle";
+  if (fs.existsSync(path.join(srcPath, "gradlew"))) {
+    // Use local gradle wrapper if available
+    // Enable execute permission
+    try {
+      fs.chmodSync(path.join(srcPath, "gradlew"), 0o775);
+    } catch (e) {}
+    gradleCmd = path.resolve(path.join(srcPath, "gradlew"));
+  } else if (rootPath && fs.existsSync(path.join(rootPath, "gradlew"))) {
+    // Check if the root directory has a wrapper script
+    try {
+      fs.chmodSync(path.join(rootPath, "gradlew"), 0o775);
+    } catch (e) {}
+    gradleCmd = path.resolve(path.join(rootPath, "gradlew"));
+  } else if (process.env.GRADLE_CMD) {
+    gradleCmd = process.env.GRADLE_CMD;
+  } else if (process.env.GRADLE_HOME) {
+    gradleCmd = path.join(process.env.GRADLE_HOME, "bin", "gradle");
+  }
+  return gradleCmd;
+};
+exports.getGradleCommand = getGradleCommand;
+
+/**
+ * Method to return the maven command to use.
+ *
+ * @param {string} srcPath Path to look for maven wrapper
+ * @param {string} rootPath Root directory to look for maven wrapper
+ */
+const getMavenCommand = (srcPath, rootPath) => {
+  let mavenCmd = "mvn";
+  if (fs.existsSync(path.join(srcPath, "mvnw"))) {
+    // Use local maven wrapper if available
+    // Enable execute permission
+    try {
+      fs.chmodSync(path.join(srcPath, "mvnw"), 0o775);
+    } catch (e) {}
+    mavenCmd = path.resolve(path.join(srcPath, "mvnw"));
+  } else if (rootPath && fs.existsSync(path.join(rootPath, "mvnw"))) {
+    // Check if the root directory has a wrapper script
+    try {
+      fs.chmodSync(path.join(rootPath, "mvnw"), 0o775);
+    } catch (e) {}
+    mavenCmd = path.resolve(path.join(rootPath, "mvnw"));
+  } else if (process.env.MVN_CMD || process.env.MAVEN_CMD) {
+    mavenCmd = process.env.MVN_CMD || process.env.MAVEN_CMD;
+  } else if (process.env.MAVEN_HOME) {
+    mavenCmd = path.join(process.env.MAVEN_HOME, "bin", "mvn");
+  }
+  return mavenCmd;
+};
+exports.getMavenCommand = getMavenCommand;

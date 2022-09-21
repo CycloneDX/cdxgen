@@ -14,14 +14,7 @@ const { findJSImports } = require("./analyzer");
 const semver = require("semver");
 const dockerLib = require("./docker");
 const binaryLib = require("./binary");
-
-// Construct maven command
-let MVN_CMD = "mvn";
-if (process.env.MVN_CMD) {
-  MVN_CMD = process.env.MVN_CMD;
-} else if (process.env.MAVEN_HOME) {
-  MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn");
-}
+const { getSystemErrorMap } = require("util");
 
 // Construct gradle cache directory
 let GRADLE_CACHE_DIR =
@@ -604,15 +597,19 @@ const createJavaBom = async (path, options) => {
       }
       for (let f of pomFiles) {
         const basePath = pathLib.dirname(f);
+        let mavenCmd = utils.getMavenCommand(basePath, path);
         // Should we attempt to resolve class names
         if (options.resolveClass) {
           console.log(
             "Creating class names list based on available jars. This might take a few mins ..."
           );
-          jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
+          jarNSMapping = utils.collectMvnDependencies(mavenCmd, basePath);
         }
-        console.log(`Executing '${MVN_CMD} ${mvnArgs.join(" ")}' in`, basePath);
-        let result = spawnSync(MVN_CMD, mvnArgs, {
+        console.log(
+          `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
+          basePath
+        );
+        let result = spawnSync(mavenCmd, mvnArgs, {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
@@ -632,9 +629,9 @@ const createJavaBom = async (path, options) => {
             mvnTreeArgs = mvnTreeArgs.concat(addArgs);
           }
           console.log(
-            `Fallback to executing ${MVN_CMD} ${mvnTreeArgs.join(" ")}`
+            `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`
           );
-          result = spawnSync(MVN_CMD, mvnTreeArgs, {
+          result = spawnSync(mavenCmd, mvnTreeArgs, {
             cwd: basePath,
             shell: true,
             encoding: "utf-8",
@@ -673,15 +670,11 @@ const createJavaBom = async (path, options) => {
               fs.unlinkSync(tempMvnTree);
             }
           }
-          pkgList = await utils.getMvnMetadata(pkgList);
-          return buildBomNSData(options, pkgList, "maven", {
-            src: path,
-            filename: "pom.xml",
-            nsMapping: jarNSMapping,
-          });
         }
       } // for
       const firstPath = pathLib.dirname(pomFiles[0]);
+      const bomFiles = utils.getAllFiles(path, "bom.xml");
+      const bomJsonFiles = utils.getAllFiles(path, "bom.json");
       if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
         const bomString = fs.readFileSync(
           pathLib.join(firstPath, "target", "bom.xml"),
@@ -696,8 +689,9 @@ const createJavaBom = async (path, options) => {
               })
             );
           } catch (err) {
-            if (DEBUG_MODE) {
+            if (options.failOnError || DEBUG_MODE) {
               console.log(err);
+              options.failOnError && process.exit(1);
             }
           }
         }
@@ -706,14 +700,19 @@ const createJavaBom = async (path, options) => {
         bomNSData.bomJson = bomJonString;
         bomNSData.nsMapping = jarNSMapping;
         return bomNSData;
-      } else {
-        const bomFiles = utils.getAllFiles(path, "bom.xml");
-        const bomJsonFiles = utils.getAllFiles(path, "bom.json");
+      } else if (bomFiles.length) {
         const bomNSData = {};
         bomNSData.bomXmlFiles = bomFiles;
         bomNSData.bomJsonFiles = bomJsonFiles;
         bomNSData.nsMapping = jarNSMapping;
         return bomNSData;
+      } else if (pkgList) {
+        pkgList = await utils.getMvnMetadata(pkgList);
+        return buildBomNSData(options, pkgList, "maven", {
+          src: path,
+          filename: "pom.xml",
+          nsMapping: jarNSMapping,
+        });
       }
     }
     // gradle
@@ -722,24 +721,12 @@ const createJavaBom = async (path, options) => {
       (options.multiProject ? "**/" : "") + "build.gradle*"
     );
     if (gradleFiles && gradleFiles.length && options.installDeps) {
-      let GRADLE_CMD = "gradle";
-      if (process.env.GRADLE_CMD) {
-        GRADLE_CMD = process.env.GRADLE_CMD;
-      } else if (process.env.GRADLE_HOME) {
-        GRADLE_CMD = pathLib.join(process.env.GRADLE_HOME, "bin", "gradle");
-      } else if (fs.existsSync(pathLib.join(path, "gradlew"))) {
-        // Use local gradle wrapper if available
-        // Enable execute permission
-        try {
-          fs.chmodSync(pathLib.join(path, "gradlew"), 0o775);
-        } catch (e) {}
-        GRADLE_CMD = pathLib.resolve(pathLib.join(path, "gradlew"));
-      }
+      let gradleCmd = utils.getGradleCommand(path, null);
       // Support for multi-project applications
       if (process.env.GRADLE_MULTI_PROJECT_MODE) {
-        console.log("Executing", GRADLE_CMD, "projects in", path);
+        console.log("Executing", gradleCmd, "projects in", path);
         const result = spawnSync(
-          GRADLE_CMD,
+          gradleCmd,
           ["projects", "-q", "--console", "plain"],
           { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
@@ -750,6 +737,7 @@ const createJavaBom = async (path, options) => {
           console.log(
             "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
           );
+          options.failOnError && process.exit(1);
         }
         const stdout = result.stdout;
         if (stdout) {
@@ -759,6 +747,7 @@ const createJavaBom = async (path, options) => {
             console.log(
               "No projects found. Is this a gradle multi-project application?"
             );
+            options.failOnError && process.exit(1);
           } else {
             console.log("Found", allProjects.length, "gradle sub-projects");
             for (let sp of allProjects) {
@@ -775,20 +764,21 @@ const createJavaBom = async (path, options) => {
               }
               console.log(
                 "Executing",
-                GRADLE_CMD,
+                gradleCmd,
                 gradleDepArgs.join(" "),
                 "in",
                 path
               );
-              const sresult = spawnSync(GRADLE_CMD, gradleDepArgs, {
+              const sresult = spawnSync(gradleCmd, gradleDepArgs, {
                 cwd: path,
                 encoding: "utf-8",
                 timeout: TIMEOUT_MS,
               });
               if (sresult.status !== 0 || sresult.error) {
-                if (DEBUG_MODE) {
+                if (options.failOnError || DEBUG_MODE) {
                   console.error(sresult.stdout, sresult.stderr);
                 }
+                options.failOnError && process.exit(1);
               }
               const sstdout = sresult.stdout;
               if (sstdout) {
@@ -805,9 +795,10 @@ const createJavaBom = async (path, options) => {
                   }
                   pkgList = pkgList.concat(dlist);
                 } else {
-                  if (DEBUG_MODE) {
+                  if (options.failOnError || DEBUG_MODE) {
                     console.log("No packages were found in gradle project", sp);
                   }
+                  options.failOnError && process.exit(1);
                 }
               }
             }
@@ -821,8 +812,12 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "No packages found. Unset the environment variable GRADLE_MULTI_PROJECT_MODE and try again."
               );
+              options.failOnError && process.exit(1);
             }
           }
+        } else {
+          console.error("Gradle unexpectedly didn't return any output");
+          options.failOnError && process.exit(1);
         }
       } else {
         let gradleDepArgs = ["dependencies", "-q", "--console", "plain"];
@@ -836,14 +831,16 @@ const createJavaBom = async (path, options) => {
         }
         for (let f of gradleFiles) {
           const basePath = pathLib.dirname(f);
+          // Fixes #157. Look for wrapper script in the nested directory
+          gradleCmd = utils.getGradleCommand(basePath, path);
           console.log(
             "Executing",
-            GRADLE_CMD,
+            gradleCmd,
             gradleDepArgs.join(" "),
             "in",
             basePath
           );
-          const result = spawnSync(GRADLE_CMD, gradleDepArgs, {
+          const result = spawnSync(gradleCmd, gradleDepArgs, {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
@@ -852,13 +849,14 @@ const createJavaBom = async (path, options) => {
             if (result.stderr) {
               console.error(result.stdout, result.stderr);
             }
-            if (DEBUG_MODE || !result.stderr) {
+            if (DEBUG_MODE || !result.stderr || options.failOnError) {
               console.log(
                 "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
               );
               console.log(
                 "2. When using tools such as sdkman, the init script must be invoked to set the PATH variables correctly."
               );
+              options.failOnError && process.exit(1);
             }
           }
           const stdout = result.stdout;
@@ -871,7 +869,11 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "No packages were detected. If this is a multi-project gradle application set the environment variable GRADLE_MULTI_PROJECT_MODE to true and try again."
               );
+              options.failOnError && process.exit(1);
             }
+          } else {
+            console.log("Gradle unexpectedly didn't produce any output");
+            options.failOnError && process.exit(1);
           }
         }
       }
@@ -923,6 +925,7 @@ const createJavaBom = async (path, options) => {
           console.log(
             "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen"
           );
+          options.failOnError && process.exit(1);
         } else {
           console.log(
             "Executing",
@@ -937,6 +940,7 @@ const createJavaBom = async (path, options) => {
           );
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
+            options.failOnError && process.exit(1);
           }
           stdout = result.stdout;
           if (stdout) {
@@ -951,7 +955,11 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "If your project requires a different query, please file a bug at AppThreat/cdxgen repo!"
               );
+              options.failOnError && process.exit(1);
             }
+          } else {
+            console.log("Bazel unexpectedly didn't produce any output");
+            options.failOnError && process.exit(1);
           }
           pkgList = await utils.getMvnMetadata(pkgList);
           return buildBomNSData(options, pkgList, "maven", {
@@ -1073,6 +1081,7 @@ const createJavaBom = async (path, options) => {
             console.log(
               "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
             );
+            options.failOnError && process.exit(1);
           } else if (DEBUG_MODE) {
             console.log(result.stdout);
           }
@@ -1089,9 +1098,10 @@ const createJavaBom = async (path, options) => {
               pkgList = pkgList.concat(dlist);
             }
           } else {
-            if (DEBUG_MODE) {
+            if (options.failOnError || DEBUG_MODE) {
               console.log(`sbt dependencyList did not yield ${dlFile}`);
             }
+            options.failOnError && process.exit(1);
           }
         }
 
@@ -1230,10 +1240,18 @@ const createNodejsBom = async (path, options) => {
     // Do rush install if we don't have node_modules directory
     if (!fs.existsSync(nmDir)) {
       console.log("Executing 'rush install --no-link'", path);
-      spawnSync("rush", ["install", "--no-link", "--bypass-policy"], {
-        cwd: path,
-        encoding: "utf-8",
-      });
+      const result = spawnSync(
+        "rush",
+        ["install", "--no-link", "--bypass-policy"],
+        {
+          cwd: path,
+          encoding: "utf-8",
+        }
+      );
+      if (result.status == 1 || result.error) {
+        console.error(result.stdout, result.stderr);
+        options.failOnError && process.exit(1);
+      }
     }
     // Look for shrinkwrap file
     const swFile = pathLib.join(
@@ -1273,6 +1291,7 @@ const createNodejsBom = async (path, options) => {
         pnpmLock,
         "was found!"
       );
+      options.failOnError && process.exit(1);
     }
   } else if (yarnLockFiles && yarnLockFiles.length) {
     manifestFiles = manifestFiles.concat(yarnLockFiles);
@@ -1411,6 +1430,7 @@ const createPythonBom = async (path, options) => {
         });
       } else {
         console.error("Pipfile.lock not found at", path);
+        options.failOnError && process.exit(1);
       }
     } else if (requirementsMode) {
       let metadataFilename = "requirements.txt";
@@ -1558,6 +1578,7 @@ const createGoBom = async (path, options) => {
       );
       if (result.status !== 0 || result.error) {
         console.error(result.stdout, result.stderr);
+        options.failOnError && process.exit(1);
       }
       const stdout = result.stdout;
       if (stdout) {
@@ -1609,6 +1630,9 @@ const createGoBom = async (path, options) => {
           src: path,
           filename: gomodFiles.join(", "),
         });
+      } else {
+        console.error("go unexpectedly didn't return any output");
+        options.failOnError && process.exit(1);
       }
     }
     // Parse the gomod files manually. The resultant BoM would be incomplete
@@ -1845,6 +1869,7 @@ const createClojureBom = async (path, options) => {
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
           console.error(result.stdout, result.stderr);
+          options.failOnError && process.exit(1);
         }
         console.log(
           "Check if the correct version of lein is installed and available in PATH. Falling back to manual parsing."
@@ -1865,6 +1890,9 @@ const createClojureBom = async (path, options) => {
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
+        } else {
+          console.error("lein unexpectedly didn't return any output");
+          options.failOnError && process.exit(1);
         }
       }
     }
@@ -1888,6 +1916,7 @@ const createClojureBom = async (path, options) => {
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
           console.error(result.stdout, result.stderr);
+          options.failOnError && process.exit(1);
         }
         console.log(
           "Check if the correct version of clojure cli is installed and available in PATH. Falling back to manual parsing."
@@ -1908,6 +1937,9 @@ const createClojureBom = async (path, options) => {
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
+        } else {
+          console.error("clj unexpectedly didn't return any output");
+          options.failOnError && process.exit(1);
         }
       }
     }
@@ -2010,6 +2042,7 @@ const createPHPBom = async (path, options) => {
         "No composer version found. Check if composer is installed and available in PATH."
       );
       console.log(versionResult.error, versionResult.stderr);
+      options.failOnError && process.exit(1);
       return {};
     }
     const composerVersion = versionResult.stdout.match(/version (\d)/)[1];
@@ -2033,6 +2066,7 @@ const createPHPBom = async (path, options) => {
       if (result.status !== 0 || result.error) {
         console.error("Error running composer:");
         console.log(result.error, result.stderr);
+        options.failOnError && process.exit(1);
       }
     }
   }
@@ -2089,6 +2123,7 @@ const createRubyBom = async (path, options) => {
           "Bundle install has failed. Check if bundle is installed and available in PATH."
         );
         console.log(result.error, result.stderr);
+        options.failOnError && process.exit(1);
       }
     }
   }
@@ -2682,6 +2717,7 @@ exports.createBom = async (path, options) => {
       console.log(
         "BOM generation has failed due to problems with exporting the image"
       );
+      options.failOnError && process.exit(1);
       return {};
     }
     isContainerMode = true;
