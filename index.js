@@ -884,8 +884,8 @@ const createJavaBom = async (path, options) => {
               );
               options.failOnError && process.exit(1);
             }
-          } else { 
-            console.log("gradle unexpected didn't produce any output");
+          } else {
+            console.log("Gradle unexpectedly didn't produce any output");
             options.failOnError && process.exit(1);
           }
         }
@@ -970,8 +970,8 @@ const createJavaBom = async (path, options) => {
               );
               options.failOnError && process.exit(1);
             }
-          } else { 
-            console.log("bazel unexpected didn't produce any output");
+          } else {
+            console.log("Bazel unexpectedly didn't produce any output");
             options.failOnError && process.exit(1);
           }
           pkgList = await utils.getMvnMetadata(pkgList);
@@ -1253,10 +1253,14 @@ const createNodejsBom = async (path, options) => {
     // Do rush install if we don't have node_modules directory
     if (!fs.existsSync(nmDir)) {
       console.log("Executing 'rush install --no-link'", path);
-      const result = spawnSync("rush", ["install", "--no-link", "--bypass-policy"], {
-        cwd: path,
-        encoding: "utf-8",
-      });
+      const result = spawnSync(
+        "rush",
+        ["install", "--no-link", "--bypass-policy"],
+        {
+          cwd: path,
+          encoding: "utf-8",
+        }
+      );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
         options.failOnError && process.exit(1);
