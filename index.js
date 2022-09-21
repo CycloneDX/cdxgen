@@ -16,14 +16,6 @@ const dockerLib = require("./docker");
 const binaryLib = require("./binary");
 const { getSystemErrorMap } = require("util");
 
-// Construct maven command
-let MVN_CMD = "mvn";
-if (process.env.MVN_CMD) {
-  MVN_CMD = process.env.MVN_CMD;
-} else if (process.env.MAVEN_HOME) {
-  MVN_CMD = pathLib.join(process.env.MAVEN_HOME, "bin", "mvn");
-}
-
 // Construct gradle cache directory
 let GRADLE_CACHE_DIR =
   process.env.GRADLE_CACHE_DIR ||
@@ -605,15 +597,19 @@ const createJavaBom = async (path, options) => {
       }
       for (let f of pomFiles) {
         const basePath = pathLib.dirname(f);
+        let mavenCmd = utils.getMavenCommand(basePath, path);
         // Should we attempt to resolve class names
         if (options.resolveClass) {
           console.log(
             "Creating class names list based on available jars. This might take a few mins ..."
           );
-          jarNSMapping = utils.collectMvnDependencies(MVN_CMD, basePath);
+          jarNSMapping = utils.collectMvnDependencies(mavenCmd, basePath);
         }
-        console.log(`Executing '${MVN_CMD} ${mvnArgs.join(" ")}' in`, basePath);
-        let result = spawnSync(MVN_CMD, mvnArgs, {
+        console.log(
+          `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
+          basePath
+        );
+        let result = spawnSync(mavenCmd, mvnArgs, {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
@@ -633,9 +629,9 @@ const createJavaBom = async (path, options) => {
             mvnTreeArgs = mvnTreeArgs.concat(addArgs);
           }
           console.log(
-            `Fallback to executing ${MVN_CMD} ${mvnTreeArgs.join(" ")}`
+            `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`
           );
-          result = spawnSync(MVN_CMD, mvnTreeArgs, {
+          result = spawnSync(mavenCmd, mvnTreeArgs, {
             cwd: basePath,
             shell: true,
             encoding: "utf-8",
@@ -674,15 +670,11 @@ const createJavaBom = async (path, options) => {
               fs.unlinkSync(tempMvnTree);
             }
           }
-          pkgList = await utils.getMvnMetadata(pkgList);
-          return buildBomNSData(options, pkgList, "maven", {
-            src: path,
-            filename: "pom.xml",
-            nsMapping: jarNSMapping,
-          });
         }
       } // for
       const firstPath = pathLib.dirname(pomFiles[0]);
+      const bomFiles = utils.getAllFiles(path, "bom.xml");
+      const bomJsonFiles = utils.getAllFiles(path, "bom.json");
       if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
         const bomString = fs.readFileSync(
           pathLib.join(firstPath, "target", "bom.xml"),
@@ -708,14 +700,19 @@ const createJavaBom = async (path, options) => {
         bomNSData.bomJson = bomJonString;
         bomNSData.nsMapping = jarNSMapping;
         return bomNSData;
-      } else {
-        const bomFiles = utils.getAllFiles(path, "bom.xml");
-        const bomJsonFiles = utils.getAllFiles(path, "bom.json");
+      } else if (bomFiles.length) {
         const bomNSData = {};
         bomNSData.bomXmlFiles = bomFiles;
         bomNSData.bomJsonFiles = bomJsonFiles;
         bomNSData.nsMapping = jarNSMapping;
         return bomNSData;
+      } else if (pkgList) {
+        pkgList = await utils.getMvnMetadata(pkgList);
+        return buildBomNSData(options, pkgList, "maven", {
+          src: path,
+          filename: "pom.xml",
+          nsMapping: jarNSMapping,
+        });
       }
     }
     // gradle
