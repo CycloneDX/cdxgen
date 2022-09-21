@@ -41,7 +41,7 @@ const getGoBuildInfo = (src) => {
     let result = spawnSync(GOVERSION_BIN, [src], {
       encoding: "utf-8",
     });
-    if (result.status == 1 || result.error) {
+    if (result.status !== 0 || result.error) {
       console.error(result.stdout, result.stderr);
       if (DEBUG_MODE) {
         console.log("Falling back to go version command");
@@ -49,7 +49,7 @@ const getGoBuildInfo = (src) => {
       result = spawnSync("go", ["version", "-v", "-m", src], {
         encoding: "utf-8",
       });
-      if (result.status == 1 || result.error) {
+      if (result.status !== 0 || result.error) {
         console.error(result.stdout, result.stderr);
       }
     }

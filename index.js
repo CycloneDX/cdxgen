@@ -623,7 +623,7 @@ const createJavaBom = async (path, options) => {
         const bomGenerated = fs.existsSync(
           pathLib.join(basePath, "target", "bom.xml")
         );
-        if (!bomGenerated || result.status == 1 || result.error) {
+        if (!bomGenerated || result.status !== 0 || result.error) {
           let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
           let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
           let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
@@ -640,7 +640,7 @@ const createJavaBom = async (path, options) => {
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
           });
-          if (result.status == 1 || result.error) {
+          if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
             console.log(
               "Resolve the above maven error. This could be due to the following:\n"
@@ -743,7 +743,7 @@ const createJavaBom = async (path, options) => {
           ["projects", "-q", "--console", "plain"],
           { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
-        if (result.status == 1 || result.error) {
+        if (result.status !== 0 || result.error) {
           if (result.stderr) {
             console.error(result.stdout, result.stderr);
           }
@@ -785,7 +785,7 @@ const createJavaBom = async (path, options) => {
                 encoding: "utf-8",
                 timeout: TIMEOUT_MS,
               });
-              if (sresult.status == 1 || sresult.error) {
+              if (sresult.status !== 0 || sresult.error) {
                 if (DEBUG_MODE) {
                   console.error(sresult.stdout, sresult.stderr);
                 }
@@ -848,7 +848,7 @@ const createJavaBom = async (path, options) => {
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
           });
-          if (result.status == 1 || result.error) {
+          if (result.status !== 0 || result.error) {
             if (result.stderr) {
               console.error(result.stdout, result.stderr);
             }
@@ -916,7 +916,7 @@ const createJavaBom = async (path, options) => {
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
         });
-        if (result.status == 1 || result.error) {
+        if (result.status !== 0 || result.error) {
           if (result.stderr) {
             console.error(result.stdout, result.stderr);
           }
@@ -935,7 +935,7 @@ const createJavaBom = async (path, options) => {
             ["aquery", "--output=textproto", "--skyframe_state"],
             { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
           );
-          if (result.status == 1 || result.error) {
+          if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
           }
           stdout = result.stdout;
@@ -1062,7 +1062,7 @@ const createJavaBom = async (path, options) => {
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
           });
-          if (result.status == 1 || result.error) {
+          if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
             console.log(
               `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
@@ -1556,7 +1556,7 @@ const createGoBom = async (path, options) => {
         ],
         { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
       );
-      if (result.status == 1 || result.error) {
+      if (result.status !== 0 || result.error) {
         console.error(result.stdout, result.stderr);
       }
       const stdout = result.stdout;
@@ -1585,7 +1585,7 @@ const createGoBom = async (path, options) => {
             ["mod", "why", "-m", "-vendor", pkgFullName],
             { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
           );
-          if (mresult.status == 1 || mresult.error) {
+          if (mresult.status !== 0 || mresult.error) {
             if (DEBUG_MODE) {
               console.log(mresult.stdout, mresult.stderr);
             }
@@ -1842,7 +1842,7 @@ const createClojureBom = async (path, options) => {
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
       });
-      if (result.status == 1 || result.error) {
+      if (result.status !== 0 || result.error) {
         if (result.stderr) {
           console.error(result.stdout, result.stderr);
         }
@@ -1885,7 +1885,7 @@ const createClojureBom = async (path, options) => {
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
       });
-      if (result.status == 1 || result.error) {
+      if (result.status !== 0 || result.error) {
         if (result.stderr) {
           console.error(result.stdout, result.stderr);
         }
@@ -2084,7 +2084,7 @@ const createRubyBom = async (path, options) => {
         cwd: basePath,
         encoding: "utf-8",
       });
-      if (result.status == 1 || result.error) {
+      if (result.status !== 0 || result.error) {
         console.error(
           "Bundle install has failed. Check if bundle is installed and available in PATH."
         );
