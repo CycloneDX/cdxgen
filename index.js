@@ -14,6 +14,7 @@ const { findJSImports } = require("./analyzer");
 const semver = require("semver");
 const dockerLib = require("./docker");
 const binaryLib = require("./binary");
+const { getSystemErrorMap } = require("util");
 
 // Construct maven command
 let MVN_CMD = "mvn";
@@ -696,8 +697,9 @@ const createJavaBom = async (path, options) => {
               })
             );
           } catch (err) {
-            if (DEBUG_MODE) {
+            if (options.failOnError || DEBUG_MODE) {
               console.log(err);
+              options.failOnError && process.exit(1);
             }
           }
         }
@@ -750,6 +752,7 @@ const createJavaBom = async (path, options) => {
           console.log(
             "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
           );
+          options.failOnError && process.exit(1);
         }
         const stdout = result.stdout;
         if (stdout) {
@@ -759,6 +762,7 @@ const createJavaBom = async (path, options) => {
             console.log(
               "No projects found. Is this a gradle multi-project application?"
             );
+            options.failOnError && process.exit(1);
           } else {
             console.log("Found", allProjects.length, "gradle sub-projects");
             for (let sp of allProjects) {
@@ -786,9 +790,10 @@ const createJavaBom = async (path, options) => {
                 timeout: TIMEOUT_MS,
               });
               if (sresult.status == 1 || sresult.error) {
-                if (DEBUG_MODE) {
+                if (options.failOnError || DEBUG_MODE) {
                   console.error(sresult.stdout, sresult.stderr);
                 }
+                options.failOnError && process.exit(1);
               }
               const sstdout = sresult.stdout;
               if (sstdout) {
@@ -805,9 +810,10 @@ const createJavaBom = async (path, options) => {
                   }
                   pkgList = pkgList.concat(dlist);
                 } else {
-                  if (DEBUG_MODE) {
+                  if (options.failOnError || DEBUG_MODE) {
                     console.log("No packages were found in gradle project", sp);
                   }
+                  options.failOnError && process.exit(1);
                 }
               }
             }
@@ -821,8 +827,12 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "No packages found. Unset the environment variable GRADLE_MULTI_PROJECT_MODE and try again."
               );
+              options.failOnError && process.exit(1);
             }
           }
+        } else {
+          console.error("Gradle unexpectedly didn't return any output");
+          options.failOnError && process.exit(1);
         }
       } else {
         let gradleDepArgs = ["dependencies", "-q", "--console", "plain"];
@@ -852,13 +862,14 @@ const createJavaBom = async (path, options) => {
             if (result.stderr) {
               console.error(result.stdout, result.stderr);
             }
-            if (DEBUG_MODE || !result.stderr) {
+            if (DEBUG_MODE || !result.stderr || options.failOnError) {
               console.log(
                 "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
               );
               console.log(
                 "2. When using tools such as sdkman, the init script must be invoked to set the PATH variables correctly."
               );
+              options.failOnError && process.exit(1);
             }
           }
           const stdout = result.stdout;
@@ -871,7 +882,11 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "No packages were detected. If this is a multi-project gradle application set the environment variable GRADLE_MULTI_PROJECT_MODE to true and try again."
               );
+              options.failOnError && process.exit(1);
             }
+          } else { 
+            console.log("gradle unexpected didn't produce any output");
+            options.failOnError && process.exit(1);
           }
         }
       }
@@ -923,6 +938,7 @@ const createJavaBom = async (path, options) => {
           console.log(
             "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen"
           );
+          options.failOnError && process.exit(1);
         } else {
           console.log(
             "Executing",
@@ -937,6 +953,7 @@ const createJavaBom = async (path, options) => {
           );
           if (result.status == 1 || result.error) {
             console.error(result.stdout, result.stderr);
+            options.failOnError && process.exit(1);
           }
           stdout = result.stdout;
           if (stdout) {
@@ -951,7 +968,11 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "If your project requires a different query, please file a bug at AppThreat/cdxgen repo!"
               );
+              options.failOnError && process.exit(1);
             }
+          } else { 
+            console.log("bazel unexpected didn't produce any output");
+            options.failOnError && process.exit(1);
           }
           pkgList = await utils.getMvnMetadata(pkgList);
           return buildBomNSData(options, pkgList, "maven", {
@@ -1073,6 +1094,7 @@ const createJavaBom = async (path, options) => {
             console.log(
               "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
             );
+            options.failOnError && process.exit(1);
           } else if (DEBUG_MODE) {
             console.log(result.stdout);
           }
@@ -1089,9 +1111,10 @@ const createJavaBom = async (path, options) => {
               pkgList = pkgList.concat(dlist);
             }
           } else {
-            if (DEBUG_MODE) {
+            if (options.failOnError || DEBUG_MODE) {
               console.log(`sbt dependencyList did not yield ${dlFile}`);
             }
+            options.failOnError && process.exit(1);
           }
         }
 
@@ -1230,10 +1253,14 @@ const createNodejsBom = async (path, options) => {
     // Do rush install if we don't have node_modules directory
     if (!fs.existsSync(nmDir)) {
       console.log("Executing 'rush install --no-link'", path);
-      spawnSync("rush", ["install", "--no-link", "--bypass-policy"], {
+      const result = spawnSync("rush", ["install", "--no-link", "--bypass-policy"], {
         cwd: path,
         encoding: "utf-8",
       });
+      if (result.status == 1 || result.error) {
+        console.error(result.stdout, result.stderr);
+        options.failOnError && process.exit(1);
+      }
     }
     // Look for shrinkwrap file
     const swFile = pathLib.join(
@@ -1273,6 +1300,7 @@ const createNodejsBom = async (path, options) => {
         pnpmLock,
         "was found!"
       );
+      options.failOnError && process.exit(1);
     }
   } else if (yarnLockFiles && yarnLockFiles.length) {
     manifestFiles = manifestFiles.concat(yarnLockFiles);
@@ -1411,6 +1439,7 @@ const createPythonBom = async (path, options) => {
         });
       } else {
         console.error("Pipfile.lock not found at", path);
+        options.failOnError && process.exit(1);
       }
     } else if (requirementsMode) {
       let metadataFilename = "requirements.txt";
@@ -1558,6 +1587,7 @@ const createGoBom = async (path, options) => {
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
+        options.failOnError && process.exit(1);
       }
       const stdout = result.stdout;
       if (stdout) {
@@ -1609,6 +1639,9 @@ const createGoBom = async (path, options) => {
           src: path,
           filename: gomodFiles.join(", "),
         });
+      } else {
+        console.error("go unexpectedly didn't return any output");
+        options.failOnError && process.exit(1);
       }
     }
     // Parse the gomod files manually. The resultant BoM would be incomplete
@@ -1845,6 +1878,7 @@ const createClojureBom = async (path, options) => {
       if (result.status == 1 || result.error) {
         if (result.stderr) {
           console.error(result.stdout, result.stderr);
+          options.failOnError && process.exit(1);
         }
         console.log(
           "Check if the correct version of lein is installed and available in PATH. Falling back to manual parsing."
@@ -1865,6 +1899,9 @@ const createClojureBom = async (path, options) => {
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
+        } else {
+          console.error("lein unexpectedly didn't return any output");
+          options.failOnError && process.exit(1);
         }
       }
     }
@@ -1888,6 +1925,7 @@ const createClojureBom = async (path, options) => {
       if (result.status == 1 || result.error) {
         if (result.stderr) {
           console.error(result.stdout, result.stderr);
+          options.failOnError && process.exit(1);
         }
         console.log(
           "Check if the correct version of clojure cli is installed and available in PATH. Falling back to manual parsing."
@@ -1908,6 +1946,9 @@ const createClojureBom = async (path, options) => {
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
+        } else {
+          console.error("clj unexpectedly didn't return any output");
+          options.failOnError && process.exit(1);
         }
       }
     }
@@ -2010,6 +2051,7 @@ const createPHPBom = async (path, options) => {
         "No composer version found. Check if composer is installed and available in PATH."
       );
       console.log(versionResult.error, versionResult.stderr);
+      options.failOnError && process.exit(1);
       return {};
     }
     const composerVersion = versionResult.stdout.match(/version (\d)/)[1];
@@ -2033,6 +2075,7 @@ const createPHPBom = async (path, options) => {
       if (result.status !== 0 || result.error) {
         console.error("Error running composer:");
         console.log(result.error, result.stderr);
+        options.failOnError && process.exit(1);
       }
     }
   }
@@ -2089,6 +2132,7 @@ const createRubyBom = async (path, options) => {
           "Bundle install has failed. Check if bundle is installed and available in PATH."
         );
         console.log(result.error, result.stderr);
+        options.failOnError && process.exit(1);
       }
     }
   }
@@ -2682,6 +2726,7 @@ exports.createBom = async (path, options) => {
       console.log(
         "BOM generation has failed due to problems with exporting the image"
       );
+      options.failOnError && process.exit(1);
       return {};
     }
     isContainerMode = true;
