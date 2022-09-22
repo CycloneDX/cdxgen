@@ -103,7 +103,7 @@ test("parse gradle dependencies", () => {
   expect(dep_list.length).toEqual(89);
   expect(dep_list[0]).toEqual({
     group: "org.springframework.boot",
-    name: "spring-boot-starter",
+    name: "spring-boot-starter-web",
     version: "2.2.0.RELEASE",
     qualifiers: { type: "jar" },
   });
