@@ -651,6 +651,8 @@ const createJavaBom = async (path, options) => {
             console.log(
               "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool"
             );
+            // Do not fall back to methods that can produce incomplete results when failOnError is set
+            options.failOnError && process.exit(1);
             console.log(
               "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
             );
