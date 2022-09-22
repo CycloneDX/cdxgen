@@ -679,37 +679,26 @@ const parseGradleDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const keys_cache = {};
-    const tmpA = rawOutput.split("\n");
-    tmpA.forEach((l) => {
-      if (l.indexOf("--- ") >= 0) {
-        l = l.substr(l.indexOf("--- ") + 4, l.length).trim();
-        l = l.replace(" (*)", "");
-        const verArr = l.split(":");
-        if (verArr && verArr.length === 3) {
-          let versionStr = verArr[2];
-          if (versionStr.indexOf("->") >= 0) {
-            versionStr = versionStr
-              .substr(versionStr.indexOf("->") + 3, versionStr.length)
-              .trim();
-          }
-          versionStr = versionStr.split(" ")[0];
-          const key = verArr[0] + "-" + verArr[1] + "-" + versionStr;
-          // Filter duplicates
-          if (!keys_cache[key]) {
-            keys_cache[key] = key;
-            const group = verArr[0].trim();
-            if (group !== "project") {
-              deps.push({
-                group,
-                name: verArr[1].trim(),
-                version: versionStr,
-                qualifiers: { type: "jar" },
-              });
-            }
+    const depRegex = /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?<versionspecified>[^\s:]+))?(?: +-> +(?<versionoverride>[^\s:]+))?/gm;
+    while(match = depRegex.exec(rawOutput)) {
+      const [, group, name, versionspecified, versionoverride] = match;
+      const version = versionoverride || versionspecified;
+      if(version !== undefined) {
+        const key = group + ":" + name + ":" + version;
+        // Filter duplicates
+        if (!keys_cache[key]) {
+          keys_cache[key] = key;
+          if (group !== "project") {
+            deps.push({
+              group,
+              name: name,
+              version: version,
+              qualifiers: { type: "jar" },
+            });
           }
         }
       }
-    });
+    }
     return deps;
   }
   return [];
