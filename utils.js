@@ -2450,7 +2450,7 @@ const parseCsProjData = async function (csProjData) {
       for (let j in item.PackageReference) {
         const pref = item.PackageReference[j].$;
         let pkg = { group: "" };
-        if (pref.Include.includes(".csproj")) {
+        if (!pref.Include || pref.Include.includes(".csproj")) {
           continue;
         }
         pkg.name = pref.Include;
