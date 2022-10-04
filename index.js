@@ -1058,7 +1058,7 @@ const createJavaBom = async (path, options) => {
           if (standalonePluginFile) {
             sbtArgs = [
               `-addPluginSbtFile=${tempSbtPlugins}`,
-              `"dependencyList::toFile ${dlFile} --append"`,
+              `"dependencyList::toFile ${dlFile} --force"`,
             ];
           } else {
             // write to the existing plugins file
