@@ -263,6 +263,9 @@ function addComponent(
       return;
     }
     let version = pkg.version;
+    if (!version || ["dummy", "ignore"].includes(version)) {
+      return;
+    }
     let licenses = pkg.licenses || utils.getLicenses(pkg, format);
     let purl = new PackageURL(
       ptype,
@@ -1029,8 +1032,14 @@ const createJavaBom = async (path, options) => {
         if (DEBUG_MODE) {
           console.log("Detected sbt version: " + sbtVersion);
         }
+        // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
+        // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
         const standalonePluginFile =
-          sbtVersion != null && semver.gte(sbtVersion, "1.2.0");
+          sbtVersion != null &&
+          semver.gte(sbtVersion, "1.3.4") &&
+          semver.lte(sbtVersion, "1.4.0");
+        const isDependencyTreeBuiltIn =
+          sbtVersion != null && semver.gte(sbtVersion, "1.4.0");
         let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
         let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
         fs.mkdirSync(tempSbtgDir, { recursive: true });
@@ -1039,7 +1048,13 @@ const createJavaBom = async (path, options) => {
 
         // Requires a custom version of `sbt-dependency-graph` that
         // supports `--append` for `toFile` subtask.
-        const sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
+        let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
+        if (isDependencyTreeBuiltIn) {
+          sbtPluginDefinition = `\naddDependencyTreePlugin\n`;
+          if (DEBUG_MODE) {
+            console.log("Using addDependencyTreePlugin as the custom plugin");
+          }
+        }
         fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
 
         for (let i in sbtProjects) {
@@ -1062,7 +1077,7 @@ const createJavaBom = async (path, options) => {
             ];
           } else {
             // write to the existing plugins file
-            sbtArgs = [`"dependencyList::toFile ${dlFile} --append"`];
+            sbtArgs = [`"dependencyList::toFile ${dlFile} --force"`];
             pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
           }
           // Note that the command has to be invoked with `shell: true` to properly execut sbt

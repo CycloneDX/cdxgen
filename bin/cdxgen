@@ -173,7 +173,7 @@ let filePath = args._[0] || ".";
     const { table } = require("table");
     const data = [["Group", "Name", "Version", "Scope"]];
     for (let comp of bomNSData.bomJson.components) {
-      data.push([comp.group || "", comp.name, comp.version, comp.scope]);
+      data.push([comp.group || "", comp.name, comp.version, comp.scope || ""]);
     }
     const config = {
       header: {
@@ -183,7 +183,7 @@ let filePath = args._[0] || ".";
     };
     console.log(table(data, config));
     console.log(
-      "SBoM includes",
+      "BOM includes",
       bomNSData.bomJson.components.length,
       "components"
     );
