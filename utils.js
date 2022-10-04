@@ -235,10 +235,12 @@ const _getDepPkgList = async function (pkgList, pkg) {
     const pkgKeys = Object.keys(pkg.dependencies);
     for (var k in pkgKeys) {
       const name = pkgKeys[k];
+      let scope = pkg.dependencies[name].dev === true ? "optional" : undefined;
       pkgList.push({
-        name: name,
+        name,
         version: pkg.dependencies[name].version,
         _integrity: pkg.dependencies[name].integrity,
+        scope,
       });
       // Include child dependencies
       if (pkg.dependencies[name].dependencies) {

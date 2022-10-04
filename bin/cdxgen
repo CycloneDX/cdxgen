@@ -56,6 +56,11 @@ const args = require("yargs")
     type: "boolean",
     description: "Fail if any dependency extractor fails.",
   })
+  .option("no-babel", {
+    type: "boolean",
+    description:
+      "Do not use babel to perform usage analysis for JavaScript/TypeScript projects.",
+  })
   .scriptName("cdxgen")
   .version()
   .help("h").argv;
@@ -94,8 +99,8 @@ let options = {
   installDeps: true,
   requiredOnly: args.requiredOnly,
   failOnError: args.failOnError,
+  noBabel: args.noBabel || args.babel === false,
 };
-
 let filePath = args._[0] || ".";
 
 /**
@@ -166,9 +171,9 @@ let filePath = args._[0] || ".";
 
   if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     const { table } = require("table");
-    const data = [["Group", "Name", "Version"]];
+    const data = [["Group", "Name", "Version", "Scope"]];
     for (let comp of bomNSData.bomJson.components) {
-      data.push([comp.group || "", comp.name, comp.version]);
+      data.push([comp.group || "", comp.name, comp.version, comp.scope]);
     }
     const config = {
       header: {
@@ -177,5 +182,10 @@ let filePath = args._[0] || ".";
       },
     };
     console.log(table(data, config));
+    console.log(
+      "SBoM includes",
+      bomNSData.bomJson.components.length,
+      "components"
+    );
   }
 })();

@@ -1158,7 +1158,15 @@ const createNodejsBom = async (path, options) => {
       });
     }
   }
-  const { allImports } = await findJSImports(path);
+  let allImports = {};
+  if (!options.noBabel) {
+    if (DEBUG_MODE) {
+      console.log(
+        `Performing babel-based package usage analysis with source code at ${path}`
+      );
+    }
+    allImports = await findJSImports(path);
+  }
   const yarnLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "yarn.lock"
