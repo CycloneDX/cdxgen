@@ -682,7 +682,7 @@ const parseGradleDep = function (rawOutput) {
     const deps = [];
     const keys_cache = {};
     const depRegex =
-    /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly )?(?<versionspecified>[^\s:}]+))?(?:})?(?: +-> +(?<versionoverride>[^\s:]+))?/gm;
+      /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly )?(?<versionspecified>[^\s:}]+))?(?:})?(?: +-> +(?<versionoverride>[^\s:]+))?/gm;
     while ((match = depRegex.exec(rawOutput))) {
       const [, group, name, versionspecified, versionoverride] = match;
       const version = versionoverride || versionspecified;
