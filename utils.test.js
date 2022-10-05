@@ -88,7 +88,7 @@ test("parse gradle dependencies", () => {
   dep_list = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-android-dep.out", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(103);
+  expect(dep_list.length).toEqual(105);
   expect(dep_list[0]).toEqual({
     group: "com.android.support.test",
     name: "runner",
@@ -96,6 +96,22 @@ test("parse gradle dependencies", () => {
       type: "jar",
     },
     version: "1.0.2",
+  });
+  expect(dep_list[103]).toEqual({
+    group: "androidx.print",
+    name: "print",
+    qualifiers: {
+      type: "jar",
+    },
+    version: "1.0.0",
+  });
+  expect(dep_list[104]).toEqual({
+    group: "androidx.core",
+    name: "core",
+    qualifiers: {
+      type: "jar",
+    },
+    version: "1.7.0",
   });
   dep_list = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-out1.dep", (encoding = "utf-8"))

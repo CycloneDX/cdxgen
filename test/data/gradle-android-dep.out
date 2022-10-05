@@ -846,6 +846,8 @@ releaseUnitTestRuntimeClasspath - Resolved configuration for runtime for variant
 |    \--- com.squareup.okio:okio:1.13.0
 \--- junit:junit:4.12
      \--- org.hamcrest:hamcrest-core:1.3
++--- androidx.print:print:{strictly 1.0.0} -> 1.0.0 (c)
++--- androidx.core:core:1.1.0 -> 1.7.0 (*)
 
 releaseWearApp - Link to a wear app to embed for object 'release'. (n)
 No dependencies
