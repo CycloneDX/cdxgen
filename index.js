@@ -680,44 +680,38 @@ const createJavaBom = async (path, options) => {
       const firstPath = pathLib.dirname(pomFiles[0]);
       const bomFiles = utils.getAllFiles(path, "bom.xml");
       const bomJsonFiles = utils.getAllFiles(path, "bom.json");
-      if (fs.existsSync(pathLib.join(firstPath, "target", "bom.xml"))) {
-        const bomString = fs.readFileSync(
-          pathLib.join(firstPath, "target", "bom.xml"),
-          { encoding: "utf-8" }
-        );
-        let bomJonString = "";
-        if (fs.existsSync(pathLib.join(firstPath, "target", "bom.json"))) {
-          try {
-            bomJonString = JSON.parse(
-              fs.readFileSync(pathLib.join(firstPath, "target", "bom.json"), {
-                encoding: "utf-8",
-              })
-            );
-          } catch (err) {
-            if (options.failOnError || DEBUG_MODE) {
-              console.log(err);
-              options.failOnError && process.exit(1);
-            }
+      // Fixes: #147. Extract only the components to support filtering for required scope
+      if (fs.existsSync(pathLib.join(firstPath, "target", "bom.json"))) {
+        let bomJsonObj = "";
+        try {
+          bomJsonObj = JSON.parse(
+            fs.readFileSync(pathLib.join(firstPath, "target", "bom.json"), {
+              encoding: "utf-8",
+            })
+          );
+          if (bomJsonObj && bomJsonObj.components) {
+            pkgList = pkgList.concat(bomJsonObj.components);
+          }
+        } catch (err) {
+          if (options.failOnError || DEBUG_MODE) {
+            console.log(err);
+            options.failOnError && process.exit(1);
           }
         }
-        const bomNSData = {};
-        bomNSData.bomXml = bomString;
-        bomNSData.bomJson = bomJonString;
-        bomNSData.nsMapping = jarNSMapping;
-        return bomNSData;
+      }
+      if (pkgList) {
+        pkgList = await utils.getMvnMetadata(pkgList);
+        return buildBomNSData(options, pkgList, "maven", {
+          src: path,
+          filename: pomFiles.join(", "),
+          nsMapping: jarNSMapping,
+        });
       } else if (bomFiles.length) {
         const bomNSData = {};
         bomNSData.bomXmlFiles = bomFiles;
         bomNSData.bomJsonFiles = bomJsonFiles;
         bomNSData.nsMapping = jarNSMapping;
         return bomNSData;
-      } else if (pkgList) {
-        pkgList = await utils.getMvnMetadata(pkgList);
-        return buildBomNSData(options, pkgList, "maven", {
-          src: path,
-          filename: "pom.xml",
-          nsMapping: jarNSMapping,
-        });
       }
     }
     // gradle
@@ -892,7 +886,7 @@ const createJavaBom = async (path, options) => {
       }
       return buildBomNSData(options, pkgList, "maven", {
         src: path,
-        filename: "build.gradle",
+        filename: gradleFiles.join(", "),
         nsMapping: jarNSMapping,
       });
     }
