@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ## unreleased
 
+## 4.0.0 - unreleased
+
+This became a so-called **meta-package**, it does not ship any own functionality, but it is a collection of dependencies. (via [#321])
+
+This package's dependencies are tools with one purpose:
+generate _CycloneDX_ Software Bill-of-Materials (SBOM) from _node_-based projects.
+
+* for    _npm_-based projects: [`@cyclonedx/cyclonedx-npm`](https://www.npmjs.com/package/%40cyclonedx/cyclonedx-npm)
+* for   _yarn_-based projects: to be announced
+* for   _pnpm_-based projects: to be announced
+* for _parcel_-based projects: to be announced
+
+💡 You should not depend on this very package, but the actual tool that suites your specific ecosystem.
+
+💡 If you are looking for a JavaScript/TypeScript library for working with CycloneDX, its data models or serialization,
+then you might want to try [`@cyclonedx/cyclonedx-library`](https://www.npmjs.com/package/%40cyclonedx/cyclonedx-library).
+
+[#321]: https://github.com/CycloneDX/cyclonedx-node-module/pull/321
+
 ## 3.10.6 - 2022-09-05
 
 * Misc

@@ -1,54 +1,9 @@
 {
   "name": "@cyclonedx/bom",
-  "version": "3.10.6",
-  "description": "Creates CycloneDX Software Bill of Materials (SBOM) from Node.js projects",
-  "homepage": "http://github.com/CycloneDX/cyclonedx-node-module",
-  "author": "Erlend Oftedal",
-  "copyright": "Copyright OWASP Foundation",
+  "version": "4.0-rc.0",
+  "description": "Meta-package for known CycloneDX Software Bill of Materials (SBOM) generators",
   "license": "Apache-2.0",
-  "keywords": [
-    "sbom",
-    "bom",
-    "inventory",
-    "spdx",
-    "package-url",
-    "purl",
-    "owasp",
-    "component",
-    "dependency",
-    "appsec",
-    "scrm"
-  ],
-  "contributors": [
-    {
-      "name": "Erlend Oftedal"
-    },
-    {
-      "name": "Steve Springett",
-      "email": "steve.springett@owasp.org",
-      "url": "https://about.me/stevespringett"
-    },
-    {
-      "name": "Patrick Dwyer"
-    }
-  ],
-  "main": "index.js",
-  "bin": {
-    "cyclonedx-bom": "./bin/make-bom.js",
-    "cyclonedx-node": "./bin/make-bom.js"
-  },
-  "scripts": {
-    "setup-tests": "node tests/integration/setup.js",
-    "test": "npm run test:jest && npm run test:standard",
-    "test:jest": "jest",
-    "test:standard": "standard -v",
-    "cs-fix": "standard --fix",
-    "generate-jsdocs": "rm -rf docs/jsdoc && jsdoc -P package.json -d docs/jsdoc -r index.js model -R README.md --verbose",
-    "docker-release": "docker build . -t cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` -t cyclonedx/cyclonedx-node:latest && docker push cyclonedx/cyclonedx-node:`node bin/make-bom.js --version` && docker push cyclonedx/cyclonedx-node:latest"
-  },
-  "engines": {
-    "node": ">=12.0.0"
-  },
+  "homepage": "https://github.com/CycloneDX/cyclonedx-node-module#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CycloneDX/cyclonedx-node-module.git"
@@ -56,49 +11,8 @@
   "bugs": {
     "url": "https://github.com/CycloneDX/cyclonedx-node-module/issues"
   },
-  "dependencies": {
-    "@xmldom/xmldom": "^0.8.2",
-    "commander": "^8.1.0",
-    "packageurl-js": "^0.0.6",
-    "parse-packagejson-name": "^1.0.1",
-    "prettify-xml": "^1.2.0",
-    "read-installed": "^4.0.3",
-    "ssri": "^8.0.0",
-    "synp": "^1.9.10",
-    "uuid": "^8.3.0",
-    "xmlbuilder": "^15.1.1"
-  },
-  "devDependencies": {
-    "@babel/eslint-parser": "7.17.0",
-    "jest": "27.5.1",
-    "jest-junit": "13.2.0",
-    "jsdoc": "3.6.10",
-    "standard": "16.0.4"
-  },
-  "standard": {
-    "parser": "@babel/eslint-parser",
-    "parserOptions": {
-      "requireConfigFile": false,
-      "babelOptions": {}
-    },
-    "env": {
-      "node": true,
-      "browser": true
-    }
-  },
-  "babel": {},
-  "jest": {
-    "cacheDirectory": ".jest.cache",
-    "collectCoverage": true,
-    "coverageDirectory": "reports/jest/coverage",
-    "reporters": [
-      "default",
-      "jest-junit"
-    ]
-  },
-  "jest-junit": {
-    "suiteName": "jest tests",
-    "outputDirectory": "reports/jest",
-    "outputName": "tests.junit.xml"
+  "copyright": "Copyright OWASP Foundation",
+  "optionalDependencies": {
+    "@cyclonedx/cyclonedx-npm": "*"
   }
 }

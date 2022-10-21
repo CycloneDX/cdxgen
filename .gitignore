@@ -1,3 +1,9 @@
+## this is a meta-package - we dont lock
+/package-lock.json
+/.yarn
+/yarn.lock
+/pnpm-lock.yaml
+
 
 ## target of JSDoc
 /out/

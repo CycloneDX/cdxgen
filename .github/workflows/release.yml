@@ -24,10 +24,7 @@ on:
         required: false
 
 env:
-  REPORTS_DIR: CI_reports
   NODE_ACTIVE_LTS: "16"
-  DOCKERHUB_REPO: cyclonedx/cyclonedx-node
-  ARTIFACT_DOCKER_SBOM: 'docker-image-bom'
 
 jobs:
   bump:
@@ -53,7 +50,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_ACTIVE_LTS }}
-      ## ! no npm build at the moment
       - name: bump VERSION
         id: bump
         run: |
@@ -70,7 +66,6 @@ jobs:
           NPMV_PREID: ${{ github.event.inputs.preid }}
       - name: git push back
         run: git push --follow-tags
-
   publish-NPMJS:
     needs:
       - "bump"
@@ -88,96 +83,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_ACTIVE_LTS }}
-      - name: install build tools
-        run: npm ci --ignore-scripts
-      # no explicit npm build. if a build is required, it should be configured as prepublish/prepublishOnly script of npm.
       - name: publish to NPMJS
         run: |
           npm config set "//registry.npmjs.org/:_authToken=$NPMJS_AUTH_TOKEN"
           npm publish --access public
         env:
           NPMJS_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  release-DockerHub:
-    needs:
-      - "bump"
-    name: DockerHub - build & publish
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      DI_VERSION: ${{ needs.bump.outputs.version_plain }}
-    steps:
-      - name: Checkout code
-        # see https://github.com/actions/checkout
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ needs.bump.outputs.version }}
-      - name: Login to DockerHub
-        run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: build Docker image
-        run: > 
-          docker build 
-          -t "$DOCKERHUB_REPO:$DI_VERSION"
-          -t "$DOCKERHUB_REPO:latest"
-          -f Dockerfile .
-      - name: build SBOM from the bundled application
-        run: |
-          mkdir "$PWD/$REPORTS_DIR"
-          docker run --rm \
-            --volume "$PWD/$REPORTS_DIR:/src" \
-            --workdir /usr/src/cyclonedx-bom \
-            "$DOCKERHUB_REPO:$DI_VERSION" \
-              --type 'application' \
-              --output /src/docker-image.bom.xml
-          docker run --rm \
-            --volume "$PWD/$REPORTS_DIR:/src" \
-            --workdir /usr/src/cyclonedx-bom \
-            "$DOCKERHUB_REPO:$DI_VERSION" \
-              --type 'application' \
-              --output /src/docker-image.bom.json
-      - name: Artifact reports
-        if: ${{ ! cancelled() }}
-        # see https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.ARTIFACT_DOCKER_SBOM }}
-          path: ${{ env.REPORTS_DIR }}
-          if-no-files-found: error
-      - name: publish Docker image
-        run: docker push "$DOCKERHUB_REPO:$DI_VERSION"
-      - name: publish latest Docker image
-        if: ${{ ! startsWith(github.event.inputs.newversion, 'pre') }}
-        run: docker push "$DOCKERHUB_REPO:latest"
-      - name: Destroy Docker image
-        # run regardless of outcome
-        if: ${{ always() }}
-        run: > 
-          docker rmi -f
-          "$DOCKERHUB_REPO:$DI_VERSION"
-          "$DOCKERHUB_REPO:latest"
-
   release-GH:
     needs:
       - "bump"
       - "publish-NPMJS"
-      - "release-DockerHub"
     name: publish GitHub
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      ASSETS_DIR: release_assets
     steps:
-      - name: create assets dir
-        run: mkdir "$ASSETS_DIR"
-      - name: download docker image sboms
-        # see https://github.com/actions/download-artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ env.ARTIFACT_DOCKER_SBOM }}
-          path: ${{ env.ASSETS_DIR }}/${{ env.ARTIFACT_DOCKER_SBOM }}
       - name: Create Release
         id: release
         # see https://github.com/softprops/action-gh-release
@@ -188,5 +107,3 @@ jobs:
           tag_name: ${{ needs.bump.outputs.version }}
           name:     ${{ needs.bump.outputs.version_plain }}
           prerelease: ${{ startsWith(github.event.inputs.newversion, 'pre') || contains(github.event.inputs.newversion, 'rc') || contains(github.event.inputs.newversion, 'beta') || contains(github.event.inputs.newversion, 'alpha')}}
-          files: |
-            ${{ env.ASSETS_DIR }}/${{ env.ARTIFACT_DOCKER_SBOM }}/*.bom.*

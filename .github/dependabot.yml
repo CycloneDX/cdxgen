@@ -2,20 +2,9 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: 'weekly'
-      day: 'saturday'
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: 'weekly'
       day: 'saturday'
-
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: 'weekly'
-      day: 'saturday'
+  # this is a meta-package for npm - we dont update our dependencies
