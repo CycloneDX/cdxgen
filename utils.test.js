@@ -1150,7 +1150,7 @@ test("parse bazel skyframe", () => {
   let deps = utils.parseBazelSkyframe(
     fs.readFileSync("./test/data/bazel/bazel-state.txt", (encoding = "utf-8"))
   );
-  expect(deps.length).toEqual(8);
+  expect(deps.length).toEqual(16);
   expect(deps[0].name).toEqual("guava");
 });
 

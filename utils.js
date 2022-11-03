@@ -845,11 +845,17 @@ const parseBazelSkyframe = function (rawOutput) {
         if (mparts && mparts[mparts.length - 1].endsWith(".jar")) {
           // Example
           // https/jcenter.bintray.com/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar
+          // https/repo1.maven.org/maven2/org/simpleflatmapper/sfm-util/8.2.2/header_sfmutil-8.2.2.jar
           const jarPath = mparts[mparts.length - 1];
           let jarPathParts = jarPath.split("/");
           if (jarPathParts.length) {
             // Remove the protocol, registry url and then file name
-            jarPathParts = jarPathParts.slice(2, -1);
+            let prefix_slice_count = 2;
+            // Bug: #169
+            if (l.includes("/maven2/")) {
+              prefix_slice_count = 3;
+            }
+            jarPathParts = jarPathParts.slice(prefix_slice_count, -1);
             // The last part would be the version
             const version = jarPathParts[jarPathParts.length - 1];
             // Last but one would be the name
