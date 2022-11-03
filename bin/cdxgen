@@ -185,7 +185,9 @@ let filePath = args._[0] || ".";
     console.log(
       "BOM includes",
       bomNSData.bomJson.components.length,
-      "components"
+      "components and",
+      bomNSData.bomJson.dependencies.length,
+      "dependencies"
     );
   }
 })();

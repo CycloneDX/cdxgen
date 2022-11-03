@@ -95,10 +95,30 @@ function addGlobalReferences(src, filename, format = "xml") {
 }
 
 /**
+ * Function to create the dependency block
+ */
+function addDependencies(dependencies, format = "xml") {
+  let deps_list = [];
+  for (const adep of dependencies) {
+    let dependsOnList = adep.dependsOn.map((v) => ({
+      "@ref": v,
+    }));
+    const aentry = {
+      dependency: { "@ref": adep.ref },
+    };
+    if (dependsOnList.length) {
+      aentry.dependency.dependency = dependsOnList;
+    }
+    deps_list.push(aentry);
+  }
+  return deps_list;
+}
+
+/**
  * Function to create metadata block
  *
  */
-function addMetadata(format = "xml") {
+function addMetadata(parentComponent = {}, format = "xml") {
   let metadata = {
     timestamp: new Date().toISOString(),
     tools: [
@@ -128,6 +148,23 @@ function addMetadata(format = "xml") {
     metadata.authors = [
       { name: "Team AppThreat", email: "cloud@appthreat.com" },
     ];
+  }
+  if (parentComponent && Object.keys(parentComponent)) {
+    const allPComponents = listComponents(
+      {},
+      {},
+      parentComponent,
+      null,
+      format
+    );
+    if (allPComponents.length) {
+      const firstPComp = allPComponents[0];
+      if (format == "xml" && firstPComp.component) {
+        metadata.component = firstPComp.component;
+      } else {
+        metadata.component = firstPComp;
+      }
+    }
   }
   return metadata;
 }
@@ -267,14 +304,9 @@ function addComponent(
       return;
     }
     let licenses = pkg.licenses || utils.getLicenses(pkg, format);
-    let purl = new PackageURL(
-      ptype,
-      group,
-      name,
-      version,
-      pkg.qualifiers,
-      pkg.subpath
-    );
+    let purl =
+      pkg.purl ||
+      new PackageURL(ptype, group, name, version, pkg.qualifiers, pkg.subpath);
     let purlString = purl.toString();
     purlString = decodeURIComponent(purlString);
     let description = { "#cdata": pkg.description };
@@ -359,7 +391,13 @@ function determinePackageType(pkg) {
  * of the package with support for multiple hashing algorithms.
  */
 function processHashes(pkg, component, format = "xml") {
-  if (pkg._shasum) {
+  if (pkg.hashes) {
+    // This attribute would be available when we read a bom json directly
+    // Eg: cyclonedx-maven-plugin. See: Bugs: #172, #175
+    for (const ahash of pkg.hashes) {
+      addComponentHash(ahash.alg, ahash.content, component, format);
+    }
+  } else if (pkg._shasum) {
     let ahash = { "@alg": "SHA-1", "#text": pkg._shasum };
     if (format === "json") {
       ahash = { alg: "SHA-1", content: pkg._shasum };
@@ -434,17 +472,19 @@ function addComponentHash(alg, digest, component, format = "xml") {
 /**
  * Return Bom in xml format
  *
+ * @param {String} Serial number
+ * @param {Object} parentComponent Parent component object
  * @param {Array} components Bom components
  * @param {Object} context Context object
  * @returns bom xml string
  */
-const buildBomXml = (serialNum, components, context) => {
+const buildBomXml = (serialNum, parentComponent, components, context) => {
   const bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.4");
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
-  const metadata = addMetadata("xml");
+  const metadata = addMetadata(parentComponent, "xml");
   bom.ele("metadata").ele(metadata);
   if (components && components.length) {
     bom.ele("components").ele(components);
@@ -452,6 +492,9 @@ const buildBomXml = (serialNum, components, context) => {
       bom
         .ele("externalReferences")
         .ele(addGlobalReferences(context.src, context.filename, "xml"));
+    }
+    if (context && context.dependencies && context.dependencies.length) {
+      bom.ele("dependencies").ele(addDependencies(context.dependencies, "xml"));
     }
     const bomString = bom.end({
       pretty: true,
@@ -476,6 +519,8 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     bomJson: undefined,
     bomJsonFiles: undefined,
     nsMapping: undefined,
+    dependencies: undefined,
+    parentComponent: undefined,
   };
   const serialNum = "urn:uuid:" + uuidv4();
   let allImports = {};
@@ -483,10 +528,17 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
-  const metadata = addMetadata("json");
+  const dependencies = context.dependencies || [];
+  const parentComponent = context.parentComponent || {};
+  const metadata = addMetadata(parentComponent, "json");
   const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
-    const bomString = buildBomXml(serialNum, components, context);
+    const bomString = buildBomXml(
+      serialNum,
+      parentComponent,
+      components,
+      context
+    );
     // CycloneDX 1.4 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
@@ -495,6 +547,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       version: 1,
       metadata: metadata,
       components: listComponents(options, allImports, pkgInfo, ptype, "json"),
+      dependencies,
     };
     if (context && context.src && context.filename) {
       jsonTpl.externalReferences = addGlobalReferences(
@@ -506,6 +559,8 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     bomNSData.bomXml = bomString;
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
+    bomNSData.dependencies = dependencies;
+    bomNSData.parentComponent = parentComponent;
   }
   return bomNSData;
 };
@@ -550,6 +605,10 @@ const createJarBom = (path, options) => {
 const createJavaBom = async (path, options) => {
   let jarNSMapping = {};
   let pkgList = [];
+  let dependencies = [];
+  // cyclone-dx-maven plugin creates a component for the app under metadata
+  // This is subsequently referred to in the dependencies list
+  let parentComponent = {};
   // war/ear mode
   if (path.endsWith(".war")) {
     // Check if the file exists
@@ -581,13 +640,14 @@ const createJavaBom = async (path, options) => {
       src: pathLib.dirname(path),
       filename: path,
       nsMapping: jarNSMapping,
+      dependencies,
     });
   } else {
     // maven - pom.xml
     const pomFiles = utils.getAllFiles(path, "pom.xml");
     if (pomFiles && pomFiles.length) {
       let mvnArgs = [
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.1:makeAggregateBom",
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.2:makeAggregateBom",
       ];
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
       if (!DEBUG_MODE) {
@@ -689,8 +749,16 @@ const createJavaBom = async (path, options) => {
               encoding: "utf-8",
             })
           );
-          if (bomJsonObj && bomJsonObj.components) {
-            pkgList = pkgList.concat(bomJsonObj.components);
+          if (bomJsonObj) {
+            if (bomJsonObj.metadata && bomJsonObj.metadata.component) {
+              parentComponent = bomJsonObj.metadata.component;
+            }
+            if (bomJsonObj.components) {
+              pkgList = pkgList.concat(bomJsonObj.components);
+            }
+            if (bomJsonObj.dependencies && !options.requiredOnly) {
+              dependencies = dependencies.concat(bomJsonObj.dependencies);
+            }
           }
         } catch (err) {
           if (options.failOnError || DEBUG_MODE) {
@@ -705,12 +773,16 @@ const createJavaBom = async (path, options) => {
           src: path,
           filename: pomFiles.join(", "),
           nsMapping: jarNSMapping,
+          dependencies,
+          parentComponent,
         });
       } else if (bomFiles.length) {
         const bomNSData = {};
         bomNSData.bomXmlFiles = bomFiles;
         bomNSData.bomJsonFiles = bomJsonFiles;
         bomNSData.nsMapping = jarNSMapping;
+        bomNSData.dependencies = dependencies;
+        bomNSData.parentComponent = parentComponent;
         return bomNSData;
       }
     }
@@ -888,6 +960,7 @@ const createJavaBom = async (path, options) => {
         src: path,
         filename: gradleFiles.join(", "),
         nsMapping: jarNSMapping,
+        dependencies,
       });
     }
 
@@ -965,6 +1038,7 @@ const createJavaBom = async (path, options) => {
             src: path,
             filename: "BUILD",
             nsMapping: {},
+            dependencies,
           });
         }
       }
@@ -1135,6 +1209,7 @@ const createJavaBom = async (path, options) => {
         src: path,
         filename: sbtProjects.join(", "),
         nsMapping: jarNSMapping,
+        dependencies,
       });
     }
   }
@@ -2301,8 +2376,9 @@ exports.trimComponents = trimComponents;
  */
 const createMultiXBom = async (pathList, options) => {
   let components = [];
+  let dependencies = [];
   let componentsXmls = [];
-  let bomData = undefined;
+  let parentComponent = {};
   for (let path of pathList) {
     if (DEBUG_MODE) {
       console.log("Scanning", path);
@@ -2327,6 +2403,8 @@ const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
+      dependencies = dependencies.concat(bomData.bomJson.dependencies);
+      parentComponent = bomData.parentComponent;
       componentsXmls = componentsXmls.concat(
         listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
       );
@@ -2497,17 +2575,22 @@ const createMultiXBom = async (pathList, options) => {
     }
   }
   components = trimComponents(components);
-  console.log(`BOM includes ${components.length} components`);
+  console.log(
+    `BOM includes ${components.length} components and ${dependencies.length} dependencies`
+  );
   const serialNum = "urn:uuid:" + uuidv4();
   return {
-    bomXml: buildBomXml(serialNum, componentsXmls),
+    bomXml: buildBomXml(serialNum, parentComponent, componentsXmls, {
+      dependencies,
+    }),
     bomJson: {
       bomFormat: "CycloneDX",
       specVersion: "1.4",
       serialNumber: serialNum,
       version: 1,
-      metadata: addMetadata("json"),
+      metadata: addMetadata(parentComponent, "json"),
       components,
+      dependencies,
     },
   };
 };
