@@ -284,6 +284,7 @@ function addComponent(
   }
   if (!isRootPkg) {
     let pkgIdentifier = parsePackageJsonName(pkg.name);
+    let publisher = pkg.publisher || "";
     let group = pkg.group || pkgIdentifier.scope;
     // Create empty group
     group = group || "";
@@ -332,6 +333,7 @@ function addComponent(
       return;
     }
     let component = {
+      publisher,
       group,
       name,
       version,
