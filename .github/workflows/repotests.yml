@@ -41,51 +41,51 @@ jobs:
           mkdir -p bomresults
         env:
           CI: true
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
           path: 'repotests/shiftleft-java-example'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'ShiftLeftSecurity/shiftleft-ts-example'
           path: 'repotests/shiftleft-ts-example'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'ShiftLeftSecurity/shiftleft-go-example'
           path: 'repotests/shiftleft-go-example'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'prabhu/shiftleft-scala-example'
           path: 'repotests/shiftleft-scala-example'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'HooliCorp/vulnerable_net_core'
           path: 'repotests/vulnerable_net_core'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'HooliCorp/Goatly.NET'
           path: 'repotests/Goatly.NET'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'HooliCorp/DjanGoat'
           path: 'repotests/DjanGoat'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'prabhu/Vulnerable-Web-Application'
           path: 'repotests/Vulnerable-Web-Application'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'prabhu/railsgoat'
           path: 'repotests/railsgoat'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'bazelbuild/examples'
           path: 'repotests/bazel-examples'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'flutter/gallery'
           path: 'repotests/gallery'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: 'gojek/ziggurat'
           path: 'repotests/ziggurat'
@@ -95,8 +95,8 @@ jobs:
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
           bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
-          ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json --input-version v1_3
-          ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml --input-version v1_3
+          ./cyclonedx validate --input-file bomresults/bom-java.json --input-format json --input-version v1_4
+          ./cyclonedx validate --input-file bomresults/bom-java.xml --input-format xml --input-version v1_4
 
           FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
           ./cyclonedx validate --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
