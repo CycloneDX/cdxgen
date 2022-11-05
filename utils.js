@@ -1035,6 +1035,10 @@ const getMvnMetadata = async function (pkgList) {
         } else {
         }
       }
+      p.publisher =
+        bodyJson.organization && bodyJson.organization.name
+          ? bodyJson.organization.name._
+          : "";
       p.description = bodyJson.description ? bodyJson.description._ : "";
       if (bodyJson.scm && bodyJson.scm.url) {
         p.repository = { url: bodyJson.scm.url._ };

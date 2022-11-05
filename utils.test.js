@@ -1028,7 +1028,8 @@ test("parseYarnLock", async () => {
   deps = await utils.parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
   expect(deps.length).toEqual(320);
   expect(deps[0]).toEqual({
-    _integrity: "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
+    _integrity:
+      "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
     group: "babel",
     name: "code-frame",
     version: "7.16.7",
