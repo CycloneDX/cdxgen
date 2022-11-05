@@ -1015,6 +1015,24 @@ test("parseYarnLock", async () => {
     name: "lru-cache",
     version: "6.0.0",
   });
+
+  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
+  expect(deps.length).toEqual(1089);
+  expect(deps[0]).toEqual({
+    _integrity:
+      "sha512-G0U5NjBUYIs39l1J1ckgpVfVX2IxpzRAIT4/2An86O2Mcri3k5xNu7/RRkfObo12wN9s7BmnREAMhH7252oZiA==",
+    group: "arcanis",
+    name: "slice-ansi",
+    version: "1.0.2",
+  });
+  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
+  expect(deps.length).toEqual(320);
+  expect(deps[0]).toEqual({
+    _integrity: "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
+    group: "babel",
+    name: "code-frame",
+    version: "7.16.7",
+  });
 });
 
 test("parseComposerLock", () => {
