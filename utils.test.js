@@ -653,6 +653,32 @@ test("parse mix lock data", async () => {
   });
 });
 
+test("parse github actions workflow data", async () => {
+  expect(await utils.parseGitHubWorkflowData(null)).toEqual([]);
+  dep_list = await utils.parseGitHubWorkflowData(
+    fs.readFileSync("./.github/workflows/nodejs.yml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(4);
+  expect(dep_list[0]).toEqual({
+    group: "actions",
+    name: "checkout",
+    version: "v3",
+  });
+  dep_list = await utils.parseGitHubWorkflowData(
+    fs.readFileSync("./.github/workflows/repotests.yml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(4);
+  expect(dep_list[0]).toEqual({
+    group: "actions",
+    name: "checkout",
+    version: "v3",
+  });
+  dep_list = await utils.parseGitHubWorkflowData(
+    fs.readFileSync("./.github/workflows/app-release.yml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(3);
+});
+
 test("parse cs pkg data", async () => {
   expect(await utils.parseCsPkgData(null)).toEqual([]);
   const dep_list = await utils.parseCsPkgData(

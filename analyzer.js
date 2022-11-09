@@ -181,9 +181,9 @@ const findJSImports = async (src) => {
         errFiles.push(file);
       }
     }
-    return { allImports, errFiles };
+    return allImports;
   } catch (err) {
-    return { allImports, errFiles };
+    return allImports;
   }
 };
 exports.findJSImports = findJSImports;

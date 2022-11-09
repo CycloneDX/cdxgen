@@ -20,6 +20,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | c/c++              | conan.lock, conanfile.txt                                                                       | Yes only for conan.lock                                                                            |
 | clojure            | Clojure CLI (deps.edn), Leiningen (project.clj)                                                 | Yes unless the files are parsed manually due to unavailability of clojure cli or leiningen command |
 | docker / oci image | All supported languages excluding OS packages                                                   | Best effort based on lock files                                                                    |
+| GitHub Actions     | .github/workflows/\*.yml                                                                        | N/A                                                                                                |
 
 NOTE:
 
