@@ -41,7 +41,7 @@ const getAllFiles = function (dirPath, pattern) {
       absolute: true,
       nocase: true,
       nodir: true,
-      dot: false,
+      dot: pattern.startsWith(".") ? true : false,
       follow: false,
       ignore: [
         "node_modules",
@@ -2230,6 +2230,49 @@ const parseMixLockData = async function (mixData) {
   return pkgList;
 };
 exports.parseMixLockData = parseMixLockData;
+
+const parseGitHubWorkflowData = async function (ghwData) {
+  const pkgList = [];
+  const keys_cache = {};
+  if (!ghwData) {
+    return pkgList;
+  }
+  const yamlObj = yaml.load(ghwData);
+  if (!yamlObj) {
+    return pkgList;
+  }
+  for (const jobName of Object.keys(yamlObj.jobs)) {
+    if (yamlObj.jobs[jobName].steps) {
+      for (const step of yamlObj.jobs[jobName].steps) {
+        if (step.uses) {
+          const tmpA = step.uses.split("@");
+          if (tmpA.length === 2) {
+            const groupName = tmpA[0];
+            let name = groupName;
+            let group = "";
+            const version = tmpA[1];
+            const tmpB = groupName.split("/");
+            if (tmpB.length == 2) {
+              name = tmpB[1];
+              group = tmpB[0];
+            }
+            const key = group + "-" + name + "-" + version;
+            if (!keys_cache[key] && name && version) {
+              keys_cache[key] = key;
+              pkgList.push({
+                group,
+                name,
+                version,
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseGitHubWorkflowData = parseGitHubWorkflowData;
 
 const parseConanLockData = async function (conanLockData) {
   const pkgList = [];

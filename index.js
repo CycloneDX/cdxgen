@@ -2111,6 +2111,34 @@ const createElixirBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for GitHub action workflows
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createGitHubBom = async (path, options) => {
+  const ghactionFiles = utils.getAllFiles(path, ".github/workflows/" + "*.yml");
+  let pkgList = [];
+  if (ghactionFiles.length) {
+    for (let f of ghactionFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const ghwData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseGitHubWorkflowData(ghwData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(options, pkgList, "github", {
+      src: path,
+      filename: ghactionFiles.join(", "),
+    });
+  }
+  return {};
+};
+
+/**
  * Function to create bom string for php projects
  *
  * @param path to the project
@@ -2561,6 +2589,18 @@ const createMultiXBom = async (pathList, options) => {
         )
       );
     }
+    bomData = await createGitHubBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} GitHub action packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, bomData.bomJson.components, "github", "xml")
+      );
+    }
   }
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
@@ -2781,6 +2821,12 @@ const createXBom = async (path, options) => {
   if (ednFiles.length || leinFiles.length) {
     return await createClojureBom(path, options);
   }
+
+  // GitHub actions
+  const ghactionFiles = utils.getAllFiles(path, ".github/workflows/" + "*.yml");
+  if (ghactionFiles.length) {
+    return await createGitHubBom(path, options);
+  }
 };
 
 /**
@@ -2900,6 +2946,9 @@ exports.createBom = async (path, options) => {
     case "clj":
     case "leiningen":
       return await createClojureBom(path, options);
+    case "github":
+    case "actions":
+      return await createGitHubBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95
