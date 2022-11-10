@@ -106,6 +106,10 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
 
+          FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json
+          ./cyclonedx validate --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
+          ./cyclonedx validate --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
+
           bin/cdxgen -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
           ./cyclonedx validate --input-file bomresults/bom-go.json --input-format json --input-version v1_4
           ./cyclonedx validate --input-file bomresults/bom-go.xml --input-format xml --input-version v1_4
