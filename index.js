@@ -14,7 +14,6 @@ const { findJSImports } = require("./analyzer");
 const semver = require("semver");
 const dockerLib = require("./docker");
 const binaryLib = require("./binary");
-const { getSystemErrorMap } = require("util");
 
 // Construct gradle cache directory
 let GRADLE_CACHE_DIR =
@@ -1245,7 +1244,7 @@ const createNodejsBom = async (path, options) => {
     }
   }
   let allImports = {};
-  if (!options.noBabel) {
+  if (options.projectType !== "docker" && !options.noBabel) {
     if (DEBUG_MODE) {
       console.log(
         `Performing babel-based package usage analysis with source code at ${path}`
@@ -2385,13 +2384,20 @@ const createCsharpBom = async (path, options) => {
   return {};
 };
 
-const trimComponents = (components) => {
+const trimComponents = (components, format) => {
   const keyCache = {};
   const filteredComponents = [];
   for (let comp of components) {
-    if (!keyCache[comp.purl]) {
-      keyCache[comp.purl] = true;
-      filteredComponents.push(comp);
+    if (format === "xml" && comp.component) {
+      if (!keyCache[comp.component.purl]) {
+        keyCache[comp.component.purl] = true;
+        filteredComponents.push(comp);
+      }
+    } else {
+      if (!keyCache[comp.purl]) {
+        keyCache[comp.purl] = true;
+        filteredComponents.push(comp);
+      }
     }
   }
   return filteredComponents;
@@ -2409,6 +2415,18 @@ const createMultiXBom = async (pathList, options) => {
   let dependencies = [];
   let componentsXmls = [];
   let parentComponent = {};
+  if (options.projectType === "docker" && options.allLayersExplodedDir) {
+    const osPackages = binaryLib.getOSPackages(options.allLayersExplodedDir);
+    if (DEBUG_MODE) {
+      console.log(
+        `Found ${osPackages.length} OS packages at ${options.allLayersExplodedDir}`
+      );
+    }
+    components = components.concat(osPackages);
+    componentsXmls = componentsXmls.concat(
+      listComponents(options, {}, osPackages, "", "xml")
+    );
+  }
   for (let path of pathList) {
     if (DEBUG_MODE) {
       console.log("Scanning", path);
@@ -2616,7 +2634,9 @@ const createMultiXBom = async (pathList, options) => {
       );
     }
   }
-  components = trimComponents(components);
+  components = trimComponents(components, "json");
+  componentsXmls = trimComponents(componentsXmls, "xml");
+
   console.log(
     `BOM includes ${components.length} components and ${dependencies.length} dependencies`
   );
@@ -2878,6 +2898,7 @@ exports.createBom = async (path, options) => {
     // Force the project type to docker
     options.projectType = "docker";
     options.lastWorkingDir = exportData.lastWorkingDir;
+    options.allLayersExplodedDir = exportData.allLayersExplodedDir;
     const bomData = await createMultiXBom(
       [...new Set(exportData.pkgPathList)],
       options

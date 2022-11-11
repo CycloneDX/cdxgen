@@ -459,6 +459,7 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   const allLayersDir = exportData.allLayersDir;
   let pathList = [];
   const knownSysPaths = [
+    path.join(allLayersExplodedDir, "/usr/local/go"),
     path.join(allLayersExplodedDir, "/usr/local/lib"),
     path.join(allLayersExplodedDir, "/usr/local/lib64"),
     path.join(allLayersExplodedDir, "/opt"),
