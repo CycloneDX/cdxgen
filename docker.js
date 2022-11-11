@@ -14,6 +14,8 @@ const pipeline = util.promisify(stream.pipeline);
 let dockerConn = undefined;
 let isPodman = false;
 let isPodmanRootless = true;
+const WIN_LOCAL_TLS = "http://localhost:2375";
+let isWinLocalTLS = false;
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -35,7 +37,7 @@ const getDirs = (dirPath, dirName, hidden = false) => {
       nocase: true,
       nodir: false,
       follow: false,
-      dot: hidden,
+      dot: hidden
     });
   } catch (err) {
     return [];
@@ -48,7 +50,7 @@ const getDefaultOptions = () => {
     throwHttpErrors: true,
     "hooks.beforeError": [],
     method: "GET",
-    isPodman,
+    isPodman
   };
   const userInfo = os.userInfo();
   opts.podmanPrefixUrl = isWin ? "" : `unix:/run/podman/podman.sock:`;
@@ -61,9 +63,20 @@ const getDefaultOptions = () => {
         ? opts.podmanRootlessPrefixUrl
         : opts.podmanPrefixUrl;
     } else {
-      opts.prefixUrl = isWin
-        ? "npipe://./pipe/docker_engine:"
-        : "unix:/var/run/docker.sock:";
+      if (isWinLocalTLS) {
+        opts.prefixUrl = WIN_LOCAL_TLS;
+      } else {
+        // Named pipes syntax for Windows doesn't work with got
+        // See: https://github.com/sindresorhus/got/issues/2178
+        /*
+        opts.prefixUrl = isWin
+          ? "npipe//./pipe/docker_engine:"
+          : "unix:/var/run/docker.sock:";
+        */
+          opts.prefixUrl = isWin
+          ? WIN_LOCAL_TLS
+          : "unix:/var/run/docker.sock:";
+      }
     }
   } else {
     let hostStr = process.env.DOCKER_HOST;
@@ -77,7 +90,7 @@ const getDefaultOptions = () => {
         key: fs.readFileSync(
           path.join(process.env.DOCKER_CERT_PATH, "key.pem"),
           "utf8"
-        ),
+        )
       };
     }
   }
@@ -94,13 +107,22 @@ const getConnection = async (options) => {
       dockerConn = got.extend(opts);
       console.log("Docker service in root mode detected!");
     } catch (err) {
+      console.log(err);
       try {
-        opts.prefixUrl = opts.podmanRootlessPrefixUrl;
-        res = await got.get("libpod/_ping", opts);
-        isPodman = true;
-        isPodmanRootless = true;
-        dockerConn = got.extend(opts);
-        console.log("Podman in rootless mode detected!");
+        if (isWin) {
+          opts.prefixUrl = WIN_LOCAL_TLS;
+          res = await got.get("_ping", opts);
+          dockerConn = got.extend(opts);
+          isWinLocalTLS = true;
+          console.log("Docker desktop on Windows detected!");
+        } else {
+          opts.prefixUrl = opts.podmanRootlessPrefixUrl;
+          res = await got.get("libpod/_ping", opts);
+          isPodman = true;
+          isPodmanRootless = true;
+          dockerConn = got.extend(opts);
+          console.log("Podman in rootless mode detected!");
+        }
       } catch (err) {
         console.log(err);
         try {
@@ -111,10 +133,17 @@ const getConnection = async (options) => {
           dockerConn = got.extend(opts);
           console.log("Podman in root mode detected!");
         } catch (err) {
-          console.warn(
-            "Ensure docker/podman service or Docker for Desktop is running",
-            opts
-          );
+          if (os.platform() === "win32") {
+            console.warn(
+              "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
+              opts
+            );
+          } else {
+            console.warn(
+              "Ensure docker/podman service or Docker for Desktop is running.",
+              opts
+            );
+          }
         }
       }
     }
@@ -131,7 +160,7 @@ const makeRequest = async (path, method = "GET") => {
   const extraOptions = {
     responseType: method === "GET" ? "json" : "text",
     resolveBodyOnly: true,
-    method,
+    method
   };
   const opts = Object.assign({}, getDefaultOptions(), extraOptions);
   return await client(path, opts);
@@ -152,7 +181,7 @@ const parseImageName = (fullImageName) => {
     repo: "",
     tag: "",
     digest: "",
-    platform: "",
+    platform: ""
   };
   if (!fullImageName) {
     return nameObj;
@@ -220,6 +249,11 @@ const getImage = async (fullImageName) => {
         `images/create?fromImage=${fullImageName}`,
         "POST"
       );
+      if (pullData.includes("no match for platform in manifest")) {
+        console.warn("You may have to enable experimental settings in docker to support this platform!");
+        console.warn("To scan windows images, switch to windows containers in your Docker Desktop");
+        return undefined;
+      }
       if (DEBUG_MODE) {
         console.log(pullData);
       }
@@ -233,7 +267,7 @@ const getImage = async (fullImageName) => {
         }
       } catch (err) {
         if (DEBUG_MODE) {
-          console.log(`Retrying with ${fullImageName}`);
+          console.log(`Retrying with ${fullImageName} due to`, err);
         }
         localData = await makeRequest(`images/${fullImageName}/json`);
         if (DEBUG_MODE) {
@@ -258,7 +292,8 @@ const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        C: dir,
+        strict: false,
+        C: dir
       })
     );
     return true;
@@ -309,7 +344,7 @@ const exportArchive = async (fullImageName) => {
         allLayersDir: tempDir,
         allLayersExplodedDir,
         lastLayerConfig,
-        lastWorkingDir,
+        lastWorkingDir
       };
       exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
       return exportData;
@@ -337,52 +372,69 @@ const extractFromManifest = async (
   tempDir,
   allLayersExplodedDir
 ) => {
+  // Example of manifests
+  // [{"Config":"blobs/sha256/dedc100afa8d6718f5ac537730dd4a5ceea3563e695c90f1a8ac6df32c4cb291","RepoTags":["shiftleft/core:latest"],"Layers":["blobs/sha256/eaead16dc43bb8811d4ff450935d607f9ba4baffda4fc110cc402fa43f601d83","blobs/sha256/2039af03c0e17a3025b989335e9414149577fa09e7d0dcbee80155333639d11f"]}]
+  // {"schemaVersion":2,"manifests":[{"mediaType":"application/vnd.docker.distribution.manifest.list.v2+json","digest":"sha256:7706ac20c7587081dc7a00e0ec65a6633b0bb3788e0048a3e971d3eae492db63","size":318,"annotations":{"io.containerd.image.name":"docker.io/shiftleft/scan-slim:latest","org.opencontainers.image.ref.name":"latest"}}]}
   manifest = JSON.parse(
     fs.readFileSync(manifestFile, {
-      encoding: "utf-8",
+      encoding: "utf-8"
     })
   );
-  if (manifest.length !== 1) {
-    if (DEBUG_MODE) {
-      console.log(
-        "Multiple image tags was downloaded. Only the last one would be used"
-      );
-      console.log(manifest[manifest.length - 1]);
-    }
-  }
-  const layers = manifest[manifest.length - 1]["Layers"];
-  const lastLayer = layers[layers.length - 1];
-  for (let layer of layers) {
-    if (DEBUG_MODE) {
-      console.log(`Extracting ${layer} to ${allLayersExplodedDir}`);
-    }
-    await extractTar(path.join(tempDir, layer), allLayersExplodedDir);
-  }
-  let lastLayerConfigFile = "";
-  if (manifest.Config) {
-    lastLayerConfigFile = path.join(tempDir, manifest.Config);
-  }
-  if (lastLayer.includes("layer.tar")) {
-    lastLayerConfigFile = path.join(
-      tempDir,
-      lastLayer.replace("layer.tar", "json")
-    );
-  }
   let lastLayerConfig = {};
+  let lastLayerConfigFile = "";
   let lastWorkingDir = "";
-  if (lastLayerConfigFile && fs.existsSync(lastLayerConfigFile)) {
-    try {
-      lastLayerConfig = JSON.parse(
-        fs.readFileSync(lastLayerConfigFile, {
-          encoding: "utf-8",
-        })
+  // Extract the manifest for the new containerd syntax
+  if (Object.keys(manifest).length !== 0 && manifest.manifests) {
+    manifest = manifest.manifests;
+  }
+  if (Array.isArray(manifest)) {
+    if (manifest.length !== 1) {
+      if (DEBUG_MODE) {
+        console.log(
+          "Multiple image tags was downloaded. Only the last one would be used"
+        );
+        console.log(manifest[manifest.length - 1]);
+      }
+    }
+    let layers = manifest[manifest.length - 1]["Layers"] || [];
+    if (!layers.length && fs.existsSync(tempDir)) {
+      const blobFiles = fs.readdirSync(path.join(tempDir, "blobs", "sha256"));
+      if (blobFiles && blobFiles.length) {
+        for (const blobf of blobFiles) {
+          layers.push(path.join("blobs", "sha256", blobf));
+        }
+      }
+    }
+    const lastLayer = layers[layers.length - 1];
+    for (let layer of layers) {
+      if (DEBUG_MODE) {
+        console.log(`Extracting ${layer} to ${allLayersExplodedDir}`);
+      }
+      await extractTar(path.join(tempDir, layer), allLayersExplodedDir);
+    }
+    if (manifest.Config) {
+      lastLayerConfigFile = path.join(tempDir, manifest.Config);
+    }
+    if (lastLayer.includes("layer.tar")) {
+      lastLayerConfigFile = path.join(
+        tempDir,
+        lastLayer.replace("layer.tar", "json")
       );
-      lastWorkingDir =
-        lastLayerConfig.config && lastLayerConfig.config.WorkingDir
-          ? path.join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
-          : "";
-    } catch (err) {
-      console.log(err);
+    }
+    if (lastLayerConfigFile && fs.existsSync(lastLayerConfigFile)) {
+      try {
+        lastLayerConfig = JSON.parse(
+          fs.readFileSync(lastLayerConfigFile, {
+            encoding: "utf-8"
+          })
+        );
+        lastWorkingDir =
+          lastLayerConfig.config && lastLayerConfig.config.WorkingDir
+            ? path.join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
+            : "";
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
   const exportData = {
@@ -391,7 +443,7 @@ const extractFromManifest = async (
     allLayersDir: tempDir,
     allLayersExplodedDir,
     lastLayerConfig,
-    lastWorkingDir,
+    lastWorkingDir
   };
   exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
   return exportData;
@@ -416,7 +468,9 @@ const exportImage = async (fullImageName) => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
   const allLayersExplodedDir = path.join(tempDir, "all-layers");
   fs.mkdirSync(allLayersExplodedDir);
-  const manifestFile = path.join(tempDir, "manifest.json");
+  let manifestFile = path.join(tempDir, "manifest.json");
+  // Windows containers use index.json
+  const manifestIndexFile = path.join(tempDir, "index.json");
   try {
     console.log(`About to export image ${fullImageName} to ${tempDir}`);
     await pipeline(
@@ -426,10 +480,20 @@ const exportImage = async (fullImageName) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        C: tempDir,
+        strict: false,
+        C: tempDir
       })
     );
-    if (fs.existsSync(tempDir) && fs.existsSync(manifestFile)) {
+    if (fs.existsSync(tempDir)) {
+      if (fs.existsSync(manifestFile)) {
+      } else if (fs.existsSync(manifestIndexFile)) {
+        manifestFile = manifestIndexFile;
+      } else {
+        console.log(
+          `Manifest file ${manifestFile} was not found after export at ${tempDir}`
+        );
+        return undefined;
+      }
       if (DEBUG_MODE) {
         console.log(
           `Image ${fullImageName} successfully exported to directory ${tempDir}`
@@ -459,6 +523,7 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   const allLayersDir = exportData.allLayersDir;
   let pathList = [];
   const knownSysPaths = [
+    path.join(allLayersExplodedDir, "/usr/local/go"),
     path.join(allLayersExplodedDir, "/usr/local/lib"),
     path.join(allLayersExplodedDir, "/usr/local/lib64"),
     path.join(allLayersExplodedDir, "/opt"),
@@ -466,7 +531,7 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
     path.join(allLayersExplodedDir, "/usr/share"),
     path.join(allLayersExplodedDir, "/var/www/html"),
     path.join(allLayersExplodedDir, "/var/lib"),
-    path.join(allLayersExplodedDir, "/mnt"),
+    path.join(allLayersExplodedDir, "/mnt")
   ];
   if (lastWorkingDir && lastWorkingDir !== "") {
     knownSysPaths.push(lastWorkingDir);

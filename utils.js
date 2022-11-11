@@ -41,6 +41,7 @@ const getAllFiles = function (dirPath, pattern) {
       absolute: true,
       nocase: true,
       nodir: true,
+      strict: false,
       dot: pattern.startsWith(".") ? true : false,
       follow: false,
       ignore: [
@@ -50,11 +51,13 @@ const getAllFiles = function (dirPath, pattern) {
         "venv",
         "docs",
         "examples",
-        "site-packages",
-      ],
+        "site-packages"
+      ]
     });
   } catch (err) {
-    console.error(err);
+    if (DEBUG_MODE) {
+      console.error(err);
+    }
     return [];
   }
 };
@@ -129,13 +132,13 @@ function addLicenseText(pkg, l, licenseContent, format = "xml") {
     "licence",
     "NOTICE",
     "Notice",
-    "notice",
+    "notice"
   ];
   let licenseContentTypes = {
     "text/plain": "",
     "text/txt": ".txt",
     "text/markdown": ".md",
-    "text/xml": ".xml",
+    "text/xml": ".xml"
   };
   /* Loops over different name combinations starting from the license specified
        naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
@@ -205,7 +208,7 @@ const getNpmMetadata = async function (pkgList) {
         body = metadata_cache[key];
       } else {
         const res = await got.get(NPM_URL + key, {
-          responseType: "json",
+          responseType: "json"
         });
         body = res.body;
         metadata_cache[key] = body;
@@ -240,7 +243,7 @@ const _getDepPkgList = async function (pkgList, pkg) {
         name,
         version: pkg.dependencies[name].version,
         _integrity: pkg.dependencies[name].integrity,
-        scope,
+        scope
       });
       // Include child dependencies
       if (pkg.dependencies[name].dependencies) {
@@ -265,7 +268,7 @@ const parsePkgJson = async (pkgJsonFile) => {
       pkgList.push({
         name: pkgIdentifier.fullName || pkgData.name,
         group: pkgIdentifier.scope || "",
-        version: pkgData.version,
+        version: pkgData.version
       });
     } catch (err) {}
   }
@@ -369,7 +372,7 @@ const parseYarnLock = async function (yarnLockFile) {
           group: group,
           name: name,
           version: version,
-          _integrity: integrity,
+          _integrity: integrity
         });
         group = "";
         name = "";
@@ -426,7 +429,7 @@ const parseNodeShrinkwrap = async function (swFile) {
             group: group,
             name: name,
             version: version,
-            _integrity: integrity,
+            _integrity: integrity
           });
         }
       }
@@ -483,7 +486,7 @@ const parsePnpmLock = async function (pnpmLock) {
             name: name,
             version: version,
             scope,
-            _integrity: integrity,
+            _integrity: integrity
           });
         }
       }
@@ -517,7 +520,7 @@ const parseBowerJson = async (bowerJsonFile) => {
         group: pkgIdentifier.scope || "",
         version: pkgData.version || "",
         description: pkgData.description || "",
-        license: pkgData.license || "",
+        license: pkgData.license || ""
       });
     } catch (err) {}
   }
@@ -576,7 +579,7 @@ const parseMinJs = async (minJsFile) => {
             pkgList.push({
               name: pkgIdentifier.fullName || pkgData.name,
               group: pkgIdentifier.scope || "",
-              version: tmpB[1].replace(/^v/, "") || "",
+              version: tmpB[1].replace(/^v/, "") || ""
             });
             return;
           }
@@ -609,7 +612,7 @@ const parsePom = function (pomFile) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).project;
   if (project && project.dependencies) {
     let dependencies = project.dependencies.dependency;
@@ -626,7 +629,7 @@ const parsePom = function (pomFile) {
           group: adep.groupId ? adep.groupId._ : "",
           name: adep.artifactId ? adep.artifactId._ : "",
           version: versionStr,
-          qualifiers: { type: "jar" },
+          qualifiers: { type: "jar" }
         });
       }
     }
@@ -663,7 +666,7 @@ const parseMavenTree = function (rawOutput) {
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
-            qualifiers: { type: "jar" },
+            qualifiers: { type: "jar" }
           });
         }
       }
@@ -696,7 +699,7 @@ const parseGradleDep = function (rawOutput) {
               group,
               name: name,
               version: version,
-              qualifiers: { type: "jar" },
+              qualifiers: { type: "jar" }
             });
           }
         }
@@ -737,7 +740,7 @@ const parseCljDep = function (rawOutput) {
             deps.push({
               group,
               name,
-              version,
+              version
             });
           }
         }
@@ -869,7 +872,7 @@ const parseBazelSkyframe = function (rawOutput) {
                 group,
                 name,
                 version,
-                qualifiers: { type: "jar" },
+                qualifiers: { type: "jar" }
               });
             }
           }
@@ -921,14 +924,14 @@ const parseKVDep = function (rawOutput) {
           group: tmpA[0],
           name: tmpA[1],
           version: tmpA[2],
-          qualifiers: { type: "jar" },
+          qualifiers: { type: "jar" }
         });
       } else if (tmpA.length === 2) {
         deps.push({
           group: "",
           name: tmpA[0],
           version: tmpA[1],
-          qualifiers: { type: "jar" },
+          qualifiers: { type: "jar" }
         });
       }
     });
@@ -1022,7 +1025,7 @@ const getMvnMetadata = async function (pkgList) {
         spaces: 4,
         textKey: "_",
         attributesKey: "$",
-        commentKey: "value",
+        commentKey: "value"
       }).project;
       if (bodyJson && bodyJson.licenses && bodyJson.licenses.license) {
         if (Array.isArray(bodyJson.licenses.license)) {
@@ -1084,7 +1087,7 @@ const parsePyRequiresDist = function (dist_string) {
   }
   return {
     name,
-    version,
+    version
   };
 };
 exports.parsePyRequiresDist = parsePyRequiresDist;
@@ -1113,7 +1116,7 @@ const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
         p.name = p.name.split("[")[0];
       }
       const res = await got.get(PYPI_URL + p.name + "/json", {
-        responseType: "json",
+        responseType: "json"
       });
       const body = res.body;
       p.description = body.info.summary;
@@ -1283,7 +1286,7 @@ const parseReqFile = async function (reqData) {
         if (!tmpA[0].includes("=")) {
           pkgList.push({
             name: tmpA[0].trim(),
-            version: versionStr,
+            version: versionStr
           });
         }
       } else if (/[>|\[|@]/.test(l)) {
@@ -1293,7 +1296,7 @@ const parseReqFile = async function (reqData) {
         }
         pkgList.push({
           name: tmpA[0].trim(),
-          version: null,
+          version: null
         });
       } else if (l) {
         if (l.includes("#")) {
@@ -1301,7 +1304,7 @@ const parseReqFile = async function (reqData) {
         }
         pkgList.push({
           name: l.trim(),
-          version: null,
+          version: null
         });
       }
     }
@@ -1384,13 +1387,13 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
     try {
       const res = await got.get(apiUrl, {
         responseType: "json",
-        headers: headers,
+        headers: headers
       });
       if (res && res.body) {
         const license = res.body.license;
         let licenseId = license.spdx_id;
         const licObj = {
-          url: res.body.html_url,
+          url: res.body.html_url
         };
         if (license.spdx_id === "NOASSERTION") {
           if (res.body.content) {
@@ -1460,7 +1463,7 @@ const getGoPkgLicense = async function (repoMetadata) {
       const licList = [];
       for (let id of licenseIds) {
         const alicense = {
-          id: id,
+          id: id
         };
         alicense["url"] = pkgUrlPrefix;
         licList.push(alicense);
@@ -1489,7 +1492,7 @@ const getGoPkgComponent = async function (group, name, version, hash) {
     }
     license = await getGoPkgLicense({
       group: group,
-      name: name,
+      name: name
     });
   }
   pkg = {
@@ -1497,7 +1500,7 @@ const getGoPkgComponent = async function (group, name, version, hash) {
     name: name,
     version: version,
     _integrity: hash,
-    license: license,
+    license: license
   };
   return pkg;
 };
@@ -1666,7 +1669,7 @@ const parseGosumData = async function (gosumData) {
         }
         license = await getGoPkgLicense({
           group: group,
-          name: name,
+          name: name
         });
       }
       pkgList.push({
@@ -1674,7 +1677,7 @@ const parseGosumData = async function (gosumData) {
         name: name,
         version: version,
         _integrity: hash,
-        license: license,
+        license: license
       });
     }
   }
@@ -1716,7 +1719,7 @@ const parseGopkgData = async function (gopkgData) {
           if (process.env.FETCH_LICENSE) {
             pkg.license = await getGoPkgLicense({
               group: pkg.group,
-              name: pkg.name,
+              name: pkg.name
             });
           }
           break;
@@ -1779,7 +1782,7 @@ const getRubyGemsMetadata = async function (pkgList) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
       const res = await got.get(RUBYGEMS_URL + p.name + ".json", {
-        responseType: "json",
+        responseType: "json"
       });
       let body = res.body;
       if (body && body.length) {
@@ -1878,7 +1881,7 @@ const parseGemfileLockData = async function (gemLockData) {
           version = version.replace(/[\(>=<\)~ ]/g, "");
           pkgList.push({
             name,
-            version,
+            version
           });
           pkgnames[name] = true;
         }
@@ -1959,7 +1962,7 @@ const getDartMetadata = async function (pkgList) {
       }
       const res = await got.get(PUB_DEV_URL + p.name, {
         responseType: "json",
-        Accept: "application/vnd.pub.v2+json",
+        Accept: "application/vnd.pub.v2+json"
       });
       if (res && res.body) {
         const versions = res.body.versions;
@@ -2134,7 +2137,7 @@ const parsePubLockData = async function (pubLockData) {
     }
     if (l.startsWith("  ") && !l.startsWith("    ")) {
       pkg = {
-        name: l.trim().replace(":", ""),
+        name: l.trim().replace(":", "")
       };
     }
     if (l.startsWith("    ")) {
@@ -2170,7 +2173,7 @@ const parsePubYamlData = async function (pubYamlData) {
     name: yamlObj.name,
     description: yamlObj.description,
     version: yamlObj.version,
-    homepage: { url: yamlObj.homepage },
+    homepage: { url: yamlObj.homepage }
   });
   return pkgList;
 };
@@ -2195,7 +2198,7 @@ const parseCabalData = async function (cabalData) {
       if (name && version) {
         pkgList.push({
           name,
-          version,
+          version
         });
       }
     }
@@ -2221,7 +2224,7 @@ const parseMixLockData = async function (mixData) {
         if (name && version) {
           pkgList.push({
             name,
-            version,
+            version
           });
         }
       }
@@ -2262,7 +2265,7 @@ const parseGitHubWorkflowData = async function (ghwData) {
               pkgList.push({
                 group,
                 name,
-                version,
+                version
               });
             }
           }
@@ -2423,7 +2426,7 @@ const parseNupkg = async function (nupkgFile) {
       spaces: 4,
       textKey: "_",
       attributesKey: "$",
-      commentKey: "value",
+      commentKey: "value"
     }).package;
   } catch (e) {
     // If we are parsing with invalid encoding unicode replacement character is used
@@ -2458,7 +2461,7 @@ const parseCsPkgData = async function (pkgData) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).packages;
   if (packages.length == 0) {
     return pkgList;
@@ -2490,7 +2493,7 @@ const parseCsProjData = async function (csProjData) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).Project;
   if (projects.length == 0) {
     return pkgList;
@@ -2555,7 +2558,7 @@ const parseCsProjAssetsData = async function (csProjData) {
       pkg = {
         group: "",
         name: tmpA[0],
-        version: tmpA[tmpA.length - 1],
+        version: tmpA[tmpA.length - 1]
       };
       if (libData.sha256) {
         pkg._integrity = "sha256-" + libData.sha256;
@@ -2590,7 +2593,7 @@ const parseCsPkgLockData = async function (csLockData) {
       pkg = {
         group: "",
         name: alib,
-        version: libData.resolved,
+        version: libData.resolved
       };
       pkgList.push(pkg);
     }
@@ -2653,7 +2656,7 @@ const getNugetMetadata = async function (pkgList) {
             p.name +
             "/" +
             p.version +
-            "/",
+            "/"
         };
       }
       cdepList.push(p);
@@ -2707,7 +2710,7 @@ const parseComposerLock = function (pkgLockFile) {
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,
-            scope: compScope,
+            scope: compScope
           });
         }
       }
@@ -2746,7 +2749,7 @@ const parseSbtLock = function (pkgLockFile) {
           name: pkg.name,
           version: pkg.version,
           _integrity: integrity,
-          scope: compScope,
+          scope: compScope
         });
       }
     }
@@ -2775,7 +2778,7 @@ const collectMvnDependencies = function (mavenCmd, basePath) {
       "-DincludeScope=runtime",
       "-U",
       "-Dmdep.prependGroupId=" + (process.env.MAVEN_PREPEND_GROUP || "false"),
-      "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false"),
+      "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false")
     ],
     { cwd: basePath, encoding: "utf-8" }
   );
@@ -2870,7 +2873,7 @@ const parsePomXml = function (pomXmlData) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).project;
   if (project) {
     let version = project.version ? project.version._ : undefined;
@@ -2887,7 +2890,7 @@ const parsePomXml = function (pomXmlData) {
       version,
       description: project.description ? project.description._ : "",
       url: project.url ? project.url._ : "",
-      scm: project.scm ? project.scm.url._ : "",
+      scm: project.scm ? project.scm.url._ : ""
     };
   }
   return undefined;
@@ -2927,7 +2930,7 @@ const extractJarArchive = function (jarFile, tempDir) {
   if (jarFile.endsWith(".war")) {
     let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
       encoding: "utf-8",
-      cwd: tempDir,
+      cwd: tempDir
     });
     if (jarResult.status !== 0) {
       console.error(jarResult.stdout, jarResult.stderr);
@@ -2947,7 +2950,7 @@ const extractJarArchive = function (jarFile, tempDir) {
       const manifestFile = path.join(tempDir, "META-INF", "MANIFEST.MF");
       const jarResult = spawnSync("jar", ["-xf", jf], {
         encoding: "utf-8",
-        cwd: tempDir,
+        cwd: tempDir
       });
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
@@ -2958,7 +2961,7 @@ const extractJarArchive = function (jarFile, tempDir) {
           const pxml = pomXmls[0];
           const pomMetadata = parsePomXml(
             fs.readFileSync(pxml, {
-              encoding: "utf-8",
+              encoding: "utf-8"
             })
           );
           if (pomMetadata) {
@@ -2969,13 +2972,13 @@ const extractJarArchive = function (jarFile, tempDir) {
               description: pomMetadata["description"],
               homepage: { url: pomMetadata["url"] },
               repository: { url: pomMetadata["scm"] },
-              qualifiers: { type: "jar" },
+              qualifiers: { type: "jar" }
             });
           }
         } else if (fs.existsSync(manifestFile)) {
           const jarMetadata = parseJarManifest(
             fs.readFileSync(manifestFile, {
-              encoding: "utf-8",
+              encoding: "utf-8"
             })
           );
           let group =
@@ -2983,7 +2986,7 @@ const extractJarArchive = function (jarFile, tempDir) {
             jarMetadata["Implementation-Vendor-Id"] ||
             jarMetadata["Bundle-SymbolicName"] ||
             jarMetadata["Automatic-Module-Name"];
-          let name = undefined;
+          let name = "";
           if (
             jarMetadata["Bundle-Name"] &&
             !jarMetadata["Bundle-Name"].includes(" ")
@@ -2993,6 +2996,9 @@ const extractJarArchive = function (jarFile, tempDir) {
           let version =
             jarMetadata["Bundle-Version"] ||
             jarMetadata["Implementation-Version"];
+          if ((!version || version === "") && jarMetadata["Created-By"]) {
+            version = jarMetadata["Created-By"].split(" ")[0];
+          }
           if (!name && group) {
             name = path.basename(group.replace(/\./g, "/"));
             if (!group.startsWith("javax")) {
@@ -3026,6 +3032,8 @@ const extractJarArchive = function (jarFile, tempDir) {
               if (!name || name === "") {
                 name = jarname.replace("-" + lastPart, "") || "";
               }
+            } else {
+              name = jarname.replace(".jar", "");
             }
           }
           // Patch the group string
@@ -3039,18 +3047,18 @@ const extractJarArchive = function (jarFile, tempDir) {
             pkgList.push({
               group: group === "." ? "" : group || "",
               name: name || "",
-              version,
+              version
             });
           } else {
             if (DEBUG_MODE) {
-              console.log(`Ignored jar ${jarname}`, jarMetadata);
+              console.log(`Ignored jar ${jarname}`, jarMetadata, name, version);
             }
           }
         }
         // Clean up META-INF
         fs.rmSync(path.join(tempDir, "META-INF"), {
           recursive: true,
-          force: true,
+          force: true
         });
       }
     }

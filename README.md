@@ -19,7 +19,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | elixir             | mix.lock                                                                                        | Yes                                                                                                |
 | c/c++              | conan.lock, conanfile.txt                                                                       | Yes only for conan.lock                                                                            |
 | clojure            | Clojure CLI (deps.edn), Leiningen (project.clj)                                                 | Yes unless the files are parsed manually due to unavailability of clojure cli or leiningen command |
-| docker / oci image | All supported languages excluding OS packages                                                   | Best effort based on lock files                                                                    |
+| docker / oci image | All supported languages. OS packages with plugins                                               | Best effort based on lock files                                                                    |
 | GitHub Actions     | .github/workflows/\*.yml                                                                        | N/A                                                                                                |
 
 NOTE:
@@ -50,7 +50,10 @@ For go, `go mod why` command is used to identify required packages. For php, com
 ## Installing
 
 ```bash
-npm install -g @appthreat/cdxgen
+sudo npm install -g @appthreat/cdxgen
+
+# To install optional binary plugins
+sudo npm install -g @ngcloudsec/cdxgen-plugins-bin
 ```
 
 ## Getting Help
@@ -210,7 +213,11 @@ Use this [custom builder](https://github.com/CloudBuildr/google-custom-builders/
 
 ## Plugins
 
-The package published on npm would include additional binary executables under the plugins directory. These executables provide functionality that are difficult to implement with node.js alone. Example for this is the `goversion` [plugin](thirdparty/goversion) which helps with module identification for go binaries. The source code for all the plugins would be published inside the [thirdparty](thirdparty) directory.
+cdxgen could be extended with external binary plugins. These are now maintained [separately](https://github.com/ngcloudsec/cdxgen-plugins-bin) and optional.
+
+```
+sudo npm install -g @ngcloudsec/cdxgen-plugins-bin
+```
 
 ## Conversion to SPDX format or SBoM Signing
 

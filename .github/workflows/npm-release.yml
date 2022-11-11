@@ -1,0 +1,31 @@
+name: Release npm package
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  pkg:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        registry-url: https://registry.npmjs.org/
+    - name: Release
+      run: |
+        npm config set //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
+        npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+        echo "appthreat:registry=https://npm.pkg.github.com" > ~/.npmrc
+        npm publish --access=public --@appthreat:registry='https://npm.pkg.github.com'
+        echo "appthreat:registry=https://registry.npmjs.org" > ~/.npmrc
+        npm publish --access=public --@appthreat:registry='https://registry.npmjs.org'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
