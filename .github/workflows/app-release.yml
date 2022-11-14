@@ -14,20 +14,10 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16.x
-    - name: Produce pkg - 16
-      run: |
-        sudo npm install -g pkg
-        npm install
-        pkg -t node16-linux-x64,node16-linux-arm64,node16-win-x64,node16-mac-x64 package.json --out-path dist-16
-    - name: Test pkg
-      run: |
-        chmod +x dist-16/cdxgen*
-        ./dist-16/cdxgen-linux-x64 -v
-        ./dist-16/cdxgen-linux-x64 .
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 18.x
     - name: Produce pkg - lts
       run: |
         sudo npm install -g pkg
@@ -53,13 +43,9 @@ jobs:
         appimage-builder --recipe appimage-builder.yml --skip-test
       env:
         UPDATE_INFO: gh-releases-zsync|AppThreat|cdxgen|latest|*x86_64.AppImage.zsync
-
     - name: Zip pkg - lts
       run: |
         zip --junk-paths -r cdxgen-dist.zip dist cdxgen-latest-x86_64.AppImage
-    - name: Zip pkg - node 16
-      run: |
-        zip --junk-paths -r cdxgen-node16-dist.zip dist-16
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')

@@ -29,11 +29,11 @@ test("SSRI test", () => {
 test("Parse requires dist string", () => {
   expect(utils.parsePyRequiresDist("lazy-object-proxy (&gt;=1.4.0)")).toEqual({
     name: "lazy-object-proxy",
-    version: "1.4.0",
+    version: "1.4.0"
   });
   expect(utils.parsePyRequiresDist("wrapt (&lt;1.13,&gt;=1.11)")).toEqual({
     name: "wrapt",
-    version: "1.13",
+    version: "1.13"
   });
   expect(
     utils.parsePyRequiresDist(
@@ -42,22 +42,22 @@ test("Parse requires dist string", () => {
   ).toEqual({ name: "typed-ast", version: "1.5" });
   expect(utils.parsePyRequiresDist("asgiref (&lt;4,&gt;=3.2.10)")).toEqual({
     name: "asgiref",
-    version: "4",
+    version: "4"
   });
   expect(utils.parsePyRequiresDist("pytz")).toEqual({
     name: "pytz",
-    version: "",
+    version: ""
   });
   expect(utils.parsePyRequiresDist("sqlparse (&gt;=0.2.2)")).toEqual({
     name: "sqlparse",
-    version: "0.2.2",
+    version: "0.2.2"
   });
   expect(
     utils.parsePyRequiresDist("argon2-cffi (&gt;=16.1.0) ; extra == 'argon2'")
   ).toEqual({ name: "argon2-cffi", version: "16.1.0" });
   expect(utils.parsePyRequiresDist("bcrypt ; extra == 'bcrypt'")).toEqual({
     name: "bcrypt",
-    version: "",
+    version: ""
   });
 });
 
@@ -80,9 +80,9 @@ test("parse gradle dependencies", () => {
     group: "org.ethereum",
     name: "solcJ-all",
     qualifiers: {
-      type: "jar",
+      type: "jar"
     },
-    version: "0.4.25",
+    version: "0.4.25"
   });
 
   dep_list = utils.parseGradleDep(
@@ -93,25 +93,25 @@ test("parse gradle dependencies", () => {
     group: "com.android.support.test",
     name: "runner",
     qualifiers: {
-      type: "jar",
+      type: "jar"
     },
-    version: "1.0.2",
+    version: "1.0.2"
   });
   expect(dep_list[103]).toEqual({
     group: "androidx.print",
     name: "print",
     qualifiers: {
-      type: "jar",
+      type: "jar"
     },
-    version: "1.0.0",
+    version: "1.0.0"
   });
   expect(dep_list[104]).toEqual({
     group: "androidx.core",
     name: "core",
     qualifiers: {
-      type: "jar",
+      type: "jar"
     },
-    version: "1.7.0",
+    version: "1.7.0"
   });
   dep_list = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-out1.dep", (encoding = "utf-8"))
@@ -121,7 +121,7 @@ test("parse gradle dependencies", () => {
     group: "org.springframework.boot",
     name: "spring-boot-starter-web",
     version: "2.2.0.RELEASE",
-    qualifiers: { type: "jar" },
+    qualifiers: { type: "jar" }
   });
 });
 
@@ -143,7 +143,7 @@ test("parse maven tree", () => {
     group: "com.pogeyan.cmis",
     name: "copper-server",
     version: "1.15.2",
-    qualifiers: { type: "jar" },
+    qualifiers: { type: "jar" }
   });
 });
 
@@ -200,14 +200,14 @@ test("get maven metadata", async () => {
 */
 
 test("get py metadata", async () => {
-  jest.setTimeout(120000);
+  jest.setTimeout(240000);
   const data = await utils.getPyMetadata([
     {
       group: "",
       name: "Flask",
-      version: "1.1.0",
+      version: "1.1.0"
     },
-    false,
+    false
   ]);
   expect(data).toEqual([
     {
@@ -216,12 +216,12 @@ test("get py metadata", async () => {
       description: "A simple framework for building complex web applications.",
       group: "",
       homepage: {
-        url: "https://palletsprojects.com/p/flask",
+        url: "https://palletsprojects.com/p/flask"
       },
       license: "BSD-3-Clause",
       name: "Flask",
-      version: "1.1.0",
-    },
+      version: "1.1.0"
+    }
   ]);
 });
 
@@ -238,7 +238,7 @@ test("parseGoModData", async () => {
     "github.com/spf13/viper/v1.0.2":
       "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
     "github.com/stretchr/testify/v1.6.1":
-      "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=",
+      "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg="
   };
   dep_list = await utils.parseGoModData(
     fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
@@ -250,28 +250,28 @@ test("parseGoModData", async () => {
     name: "aws-sdk-go",
     license: undefined,
     version: "v1.38.47",
-    _integrity: "sha256-fake-sha-for-aws-go-sdk=",
+    _integrity: "sha256-fake-sha-for-aws-go-sdk="
   });
   expect(dep_list[1]).toEqual({
     group: "github.com/spf13",
     name: "cobra",
     license: undefined,
     version: "v1.0.0",
-    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
+    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE="
   });
   expect(dep_list[2]).toEqual({
     group: "google.golang.org",
     name: "grpc",
     license: undefined,
     version: "v1.21.0",
-    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
+    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM="
   });
   expect(dep_list[3]).toEqual({
     group: "github.com/spf13",
     name: "viper",
     license: undefined,
     version: "v1.0.2",
-    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
+    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM="
   });
   dep_list.forEach((d) => {
     expect(d.license);
@@ -291,28 +291,28 @@ test("parseGoSumData", async () => {
     name: "grpc",
     license: undefined,
     version: "v1.21.0",
-    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
+    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM="
   });
   expect(dep_list[1]).toEqual({
     group: "github.com/spf13",
     name: "cobra",
     license: undefined,
     version: "v1.0.0",
-    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
+    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE="
   });
   expect(dep_list[2]).toEqual({
     group: "github.com/spf13",
     name: "viper",
     license: undefined,
     version: "v1.0.2",
-    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
+    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM="
   });
   expect(dep_list[3]).toEqual({
     group: "github.com/stretchr",
     name: "testify",
     license: undefined,
     version: "v1.6.1",
-    _integrity: "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=",
+    _integrity: "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg="
   });
   dep_list.forEach((d) => {
     expect(d.license);
@@ -328,7 +328,7 @@ test("parse go list dependencies", async () => {
   expect(dep_list[0]).toEqual({
     group: "github.com/badoux",
     name: "checkmail",
-    version: "v0.0.0-20181210160741-9661bd69e9ad",
+    version: "v0.0.0-20181210160741-9661bd69e9ad"
   });
 });
 
@@ -355,7 +355,7 @@ test("parseGopkgData", async () => {
     group: "cloud.google.com",
     name: "go",
     version: "v0.39.0",
-    _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",
+    _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78="
   });
   dep_list.forEach((d) => {
     expect(d.license);
@@ -373,7 +373,7 @@ test("parse go version data", async () => {
     name: "atlassian-connect-go",
     version: "v0.0.2",
     _integrity: "",
-    license: undefined,
+    license: undefined
   });
   dep_list = await utils.parseGoVersionData(
     fs.readFileSync("./test/data/goversion2.txt", (encoding = "utf-8")),
@@ -385,7 +385,7 @@ test("parse go version data", async () => {
     name: "go",
     version: "v0.79.0",
     _integrity: "sha256-oqqswrt4x6b9OGBnNqdssxBl1xf0rSUNjU2BR4BZar0=",
-    license: undefined,
+    license: undefined
   });
 });
 
@@ -400,7 +400,7 @@ test("parse cargo lock", async () => {
     name: "abscissa_core",
     version: "0.5.2",
     _integrity:
-      "sha384-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
+      "sha384-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a"
   });
   dep_list = await utils.parseCargoData(
     fs.readFileSync("./test/data/Cargom.lock", (encoding = "utf-8"))
@@ -411,7 +411,7 @@ test("parse cargo lock", async () => {
     name: "actix-codec",
     version: "0.3.0",
     _integrity:
-      "sha384-78d1833b3838dbe990df0f1f87baf640cf6146e898166afe401839d1b001e570",
+      "sha384-78d1833b3838dbe990df0f1f87baf640cf6146e898166afe401839d1b001e570"
   });
 });
 
@@ -425,7 +425,7 @@ test("parse cargo toml", async () => {
     { group: "", name: "unwind", version: "0.0.0" },
     { name: "libc", version: "0.2.79" },
     { name: "compiler_builtins", version: "0.1.0" },
-    { name: "cfg-if", version: "0.1.8" },
+    { name: "cfg-if", version: "0.1.8" }
   ]);
   dep_list = await utils.parseCargoTomlData(
     fs.readFileSync("./test/data/Cargo2.toml", (encoding = "utf-8"))
@@ -436,8 +436,8 @@ test("parse cargo toml", async () => {
     { name: "lazy_static", version: "1" },
     {
       name: "libfuzzer-sys",
-      version: "git+https://github.com/rust-fuzz/libfuzzer-sys.git",
-    },
+      version: "git+https://github.com/rust-fuzz/libfuzzer-sys.git"
+    }
   ]);
 });
 
@@ -448,8 +448,8 @@ test("get crates metadata", async () => {
       name: "abscissa_core",
       version: "0.5.2",
       _integrity:
-        "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
-    },
+        "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a"
+    }
   ]);
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -462,9 +462,9 @@ test("get crates metadata", async () => {
       "Application microframework with support for command-line option parsing,\nconfiguration, error handling, logging, and terminal interactions.\nThis crate contains the framework's core functionality.\n",
     license: ["Apache-2.0"],
     repository: {
-      url: "https://github.com/iqlusioninc/abscissa/tree/main/core/",
+      url: "https://github.com/iqlusioninc/abscissa/tree/main/core/"
     },
-    homepage: { url: "https://github.com/iqlusioninc/abscissa/" },
+    homepage: { url: "https://github.com/iqlusioninc/abscissa/" }
   });
 });
 
@@ -476,7 +476,7 @@ test("parse pub lock", async () => {
   expect(dep_list.length).toEqual(26);
   expect(dep_list[0]).toEqual({
     name: "async",
-    version: "2.8.2",
+    version: "2.8.2"
   });
   dep_list = await utils.parsePubYamlData(
     fs.readFileSync("./test/data/pubspec.yaml", (encoding = "utf-8"))
@@ -488,8 +488,8 @@ test("parse pub lock", async () => {
     description:
       "Flutter package to show beautiful dialogs(INFO,QUESTION,WARNING,SUCCESS,ERROR) with animations as simply as possible.",
     homepage: {
-      url: "https://github.com/marcos930807/awesomeDialogs",
-    },
+      url: "https://github.com/marcos930807/awesomeDialogs"
+    }
   });
 });
 
@@ -498,8 +498,8 @@ test("get dart metadata", async () => {
     {
       group: "",
       name: "async",
-      version: "2.8.2",
-    },
+      version: "2.8.2"
+    }
   ]);
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -510,8 +510,8 @@ test("get dart metadata", async () => {
       "Utility functions and classes related to the 'dart:async' library.",
     license: "https://pub.dev/packages/async/license",
     repository: {
-      url: "https://github.com/dart-lang/async",
-    },
+      url: "https://github.com/dart-lang/async"
+    }
   });
 });
 
@@ -523,7 +523,7 @@ test("parse cabal freeze", async () => {
   expect(dep_list.length).toEqual(24);
   expect(dep_list[0]).toEqual({
     name: "ansi-terminal",
-    version: "0.11.3",
+    version: "0.11.3"
   });
   dep_list = await utils.parseCabalData(
     fs.readFileSync("./test/data/cabal-2.project.freeze", (encoding = "utf-8"))
@@ -531,7 +531,7 @@ test("parse cabal freeze", async () => {
   expect(dep_list.length).toEqual(366);
   expect(dep_list[0]).toEqual({
     name: "Cabal",
-    version: "3.2.1.0",
+    version: "3.2.1.0"
   });
 });
 
@@ -543,7 +543,7 @@ test("parse conan data", async () => {
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
     name: "zstd",
-    version: "1.4.4",
+    version: "1.4.4"
   });
 
   dep_list = await utils.parseConanData(
@@ -552,7 +552,7 @@ test("parse conan data", async () => {
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
     name: "zstd",
-    version: "1.4.4",
+    version: "1.4.4"
   });
 });
 
@@ -565,7 +565,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "leiningen-core",
-    version: "2.9.9-SNAPSHOT",
+    version: "2.9.9-SNAPSHOT"
   });
   dep_list = utils.parseLeiningenData(
     fs.readFileSync("./test/data/project.clj.1", (encoding = "utf-8"))
@@ -574,7 +574,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "org.clojure",
     name: "clojure",
-    version: "1.9.0",
+    version: "1.9.0"
   });
   dep_list = utils.parseLeiningenData(
     fs.readFileSync("./test/data/project.clj.2", (encoding = "utf-8"))
@@ -583,7 +583,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "bidi",
-    version: "2.1.6",
+    version: "2.1.6"
   });
   dep_list = utils.parseEdnData(
     fs.readFileSync("./test/data/deps.edn", (encoding = "utf-8"))
@@ -592,7 +592,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "org.clojure",
     name: "clojure",
-    version: "1.10.3",
+    version: "1.10.3"
   });
   dep_list = utils.parseEdnData(
     fs.readFileSync("./test/data/deps.edn.1", (encoding = "utf-8"))
@@ -601,7 +601,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "org.clojure",
     name: "clojure",
-    version: "1.11.0-beta1",
+    version: "1.11.0-beta1"
   });
   dep_list = utils.parseEdnData(
     fs.readFileSync("./test/data/deps.edn.2", (encoding = "utf-8"))
@@ -610,7 +610,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "clj-commons",
     name: "pomegranate",
-    version: "1.2.1",
+    version: "1.2.1"
   });
   dep_list = utils.parseCljDep(
     fs.readFileSync("./test/data/clj-tree.txt", (encoding = "utf-8"))
@@ -619,7 +619,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "org.bouncycastle",
     name: "bcprov-jdk15on",
-    version: "1.70",
+    version: "1.70"
   });
 
   dep_list = utils.parseLeinDep(
@@ -629,7 +629,7 @@ test("parse clojure data", () => {
   expect(dep_list[0]).toEqual({
     group: "javax.xml.bind",
     name: "jaxb-api",
-    version: "2.4.0-b180830.0359",
+    version: "2.4.0-b180830.0359"
   });
 });
 
@@ -641,7 +641,7 @@ test("parse mix lock data", async () => {
   expect(dep_list.length).toEqual(16);
   expect(dep_list[0]).toEqual({
     name: "absinthe",
-    version: "1.7.0",
+    version: "1.7.0"
   });
   dep_list = await utils.parseMixLockData(
     fs.readFileSync("./test/data/mix.lock.1", (encoding = "utf-8"))
@@ -649,7 +649,7 @@ test("parse mix lock data", async () => {
   expect(dep_list.length).toEqual(23);
   expect(dep_list[0]).toEqual({
     name: "bunt",
-    version: "0.2.0",
+    version: "0.2.0"
   });
 });
 
@@ -662,7 +662,7 @@ test("parse github actions workflow data", async () => {
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
-    version: "v3",
+    version: "v3"
   });
   dep_list = await utils.parseGitHubWorkflowData(
     fs.readFileSync("./.github/workflows/repotests.yml", (encoding = "utf-8"))
@@ -671,7 +671,7 @@ test("parse github actions workflow data", async () => {
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
-    version: "v3",
+    version: "v3"
   });
   dep_list = await utils.parseGitHubWorkflowData(
     fs.readFileSync("./.github/workflows/app-release.yml", (encoding = "utf-8"))
@@ -688,7 +688,7 @@ test("parse cs pkg data", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "Antlr",
-    version: "3.5.0.2",
+    version: "3.5.0.2"
   });
 });
 
@@ -701,7 +701,7 @@ test("parse cs pkg data 2", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "EntityFramework",
-    version: "6.2.0",
+    version: "6.2.0"
   });
 });
 
@@ -714,7 +714,7 @@ test("parse cs proj", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "Microsoft.AspNetCore.Mvc.NewtonsoftJson",
-    version: "3.1.1",
+    version: "3.1.1"
   });
 });
 
@@ -729,7 +729,7 @@ test("parse project.assets.json", async () => {
     name: "Castle.Core",
     version: "4.4.1",
     _integrity:
-      "sha512-zanbjWC0Y05gbx4eGXkzVycOQqVOFVeCjVsDSyuao9P4mtN1w3WxxTo193NGC7j3o2u3AJRswaoC6hEbnGACnQ==",
+      "sha512-zanbjWC0Y05gbx4eGXkzVycOQqVOFVeCjVsDSyuao9P4mtN1w3WxxTo193NGC7j3o2u3AJRswaoC6hEbnGACnQ=="
   });
 });
 
@@ -742,7 +742,7 @@ test("parse packages.lock.json", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "Antlr",
-    version: "3.5.0.2",
+    version: "3.5.0.2"
   });
 });
 
@@ -755,7 +755,7 @@ test("parse .net cs proj", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "Antlr3.Runtime",
-    version: "3.5.0.2",
+    version: "3.5.0.2"
   });
 });
 
@@ -764,8 +764,8 @@ test("get nget metadata", async () => {
     {
       group: "",
       name: "Castle.Core",
-      version: "4.4.0",
-    },
+      version: "4.4.0"
+    }
   ]);
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -775,12 +775,12 @@ test("get nget metadata", async () => {
     description:
       "Castle Core, including DynamicProxy, Logging Abstractions and DictionaryAdapter",
     homepage: {
-      url: "https://www.nuget.org/packages/Castle.Core/4.4.0/",
+      url: "https://www.nuget.org/packages/Castle.Core/4.4.0/"
     },
     license: "http://www.apache.org/licenses/LICENSE-2.0.html",
     repository: {
-      url: "http://www.castleproject.org/",
-    },
+      url: "http://www.castleproject.org/"
+    }
   });
 });
 
@@ -801,66 +801,66 @@ test("get repo license", async () => {
   );
   expect(license).toEqual({
     id: "GPL-3.0-or-later",
-    url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE",
+    url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE"
   });
 
   license = await utils.getRepoLicense("https://github.com/AppThreat/cdxgen", {
     group: "",
-    name: "cdxgen",
+    name: "cdxgen"
   });
   expect(license).toEqual({
     id: "Apache-2.0",
-    url: "https://github.com/AppThreat/cdxgen/blob/master/LICENSE",
+    url: "https://github.com/AppThreat/cdxgen/blob/master/LICENSE"
   });
 
   license = await utils.getRepoLicense("https://cloud.google.com/go", {
     group: "cloud.google.com",
-    name: "go",
+    name: "go"
   });
   expect(license).toEqual("Apache-2.0");
 
   license = await utils.getRepoLicense(undefined, {
     group: "github.com/ugorji",
-    name: "go",
+    name: "go"
   });
   expect(license).toEqual({
     id: "MIT",
-    url: "https://github.com/ugorji/go/blob/master/LICENSE",
+    url: "https://github.com/ugorji/go/blob/master/LICENSE"
   });
 });
 
 test("get go pkg license", async () => {
   let license = await utils.getGoPkgLicense({
     group: "github.com/Azure/azure-amqp-common-go",
-    name: "v2",
+    name: "v2"
   });
   expect(license).toEqual([
     {
       id: "MIT",
-      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
-    },
+      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses"
+    }
   ]);
 
   license = await utils.getGoPkgLicense({
     group: "go.opencensus.io",
-    name: "go.opencensus.io",
+    name: "go.opencensus.io"
   });
   expect(license).toEqual([
     {
       id: "Apache-2.0",
-      url: "https://pkg.go.dev/go.opencensus.io?tab=licenses",
-    },
+      url: "https://pkg.go.dev/go.opencensus.io?tab=licenses"
+    }
   ]);
 
   license = await utils.getGoPkgLicense({
     group: "github.com/DataDog",
-    name: "zstd",
+    name: "zstd"
   });
   expect(license).toEqual([
     {
       id: "BSD-3-Clause",
-      url: "https://pkg.go.dev/github.com/DataDog/zstd?tab=licenses",
-    },
+      url: "https://pkg.go.dev/github.com/DataDog/zstd?tab=licenses"
+    }
   ]);
 });
 
@@ -870,9 +870,9 @@ test("get licenses", () => {
     {
       license: {
         id: "MIT",
-        url: "https://opensource.org/licenses/MIT",
-      },
-    },
+        url: "https://opensource.org/licenses/MIT"
+      }
+    }
   ]);
 
   licenses = utils.getLicenses({ license: ["MIT", "GPL-3.0-or-later"] });
@@ -880,30 +880,30 @@ test("get licenses", () => {
     {
       license: {
         id: "MIT",
-        url: "https://opensource.org/licenses/MIT",
-      },
+        url: "https://opensource.org/licenses/MIT"
+      }
     },
     {
       license: {
         id: "GPL-3.0-or-later",
-        url: "https://opensource.org/licenses/GPL-3.0-or-later",
-      },
-    },
+        url: "https://opensource.org/licenses/GPL-3.0-or-later"
+      }
+    }
   ]);
 
   licenses = utils.getLicenses({
     license: {
       id: "MIT",
-      url: "https://opensource.org/licenses/MIT",
-    },
+      url: "https://opensource.org/licenses/MIT"
+    }
   });
   expect(licenses).toEqual([
     {
       license: {
         id: "MIT",
-        url: "https://opensource.org/licenses/MIT",
-      },
-    },
+        url: "https://opensource.org/licenses/MIT"
+      }
+    }
   ]);
 });
 
@@ -977,7 +977,7 @@ test("parsePnpmLock", async () => {
     group: "@babel",
     name: "code-frame",
     scope: undefined,
-    version: "7.10.1",
+    version: "7.10.1"
   });
   deps = await utils.parsePnpmLock("./test/data/pnpm-lock.yaml");
   expect(deps.length).toEqual(308);
@@ -987,7 +987,7 @@ test("parsePnpmLock", async () => {
     group: "@babel",
     name: "code-frame",
     scope: "optional",
-    version: "7.16.7",
+    version: "7.16.7"
   });
 });
 
@@ -998,7 +998,7 @@ test("parseYarnLock", async () => {
     group: "",
     name: "asap",
     version: "2.0.5",
-    _integrity: "sha256-522765b50c3510490e52d7dcfe085ef9ba96958f",
+    _integrity: "sha256-522765b50c3510490e52d7dcfe085ef9ba96958f"
   });
 
   deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
@@ -1007,7 +1007,7 @@ test("parseYarnLock", async () => {
     group: "babel",
     name: "cli",
     version: "7.10.1",
-    _integrity: "sha256-b6e5cd43a17b8f639442ab027976408ebe6d79a0",
+    _integrity: "sha256-b6e5cd43a17b8f639442ab027976408ebe6d79a0"
   });
   deps.forEach((d) => {
     expect(d.name).toBeDefined();
@@ -1020,7 +1020,7 @@ test("parseYarnLock", async () => {
     _integrity: "sha256-24e0a6faa1d231ab44807af237c6227410c75c4d",
     group: "apollo",
     name: "client",
-    version: "3.2.5",
+    version: "3.2.5"
   });
 
   deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn-light.lock");
@@ -1029,7 +1029,7 @@ test("parseYarnLock", async () => {
     _integrity: "sha256-7c24bbbff0714b45b593680b8b76b2af93114a29",
     group: "actions",
     name: "artifact",
-    version: "0.6.1",
+    version: "0.6.1"
   });
 
   deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn3.lock");
@@ -1039,7 +1039,7 @@ test("parseYarnLock", async () => {
       "sha512-+X9Jn4mPI+RYV0ITiiLyJSYlT9um111BocJSaztsxXR+9ZxWErpzdfQqyk+EYZUOklugjJkerQZRtJGLfJeClw==",
     group: "",
     name: "lru-cache",
-    version: "6.0.0",
+    version: "6.0.0"
   });
 
   deps = await utils.parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
@@ -1049,7 +1049,7 @@ test("parseYarnLock", async () => {
       "sha512-G0U5NjBUYIs39l1J1ckgpVfVX2IxpzRAIT4/2An86O2Mcri3k5xNu7/RRkfObo12wN9s7BmnREAMhH7252oZiA==",
     group: "arcanis",
     name: "slice-ansi",
-    version: "1.0.2",
+    version: "1.0.2"
   });
   deps = await utils.parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
   expect(deps.length).toEqual(320);
@@ -1058,7 +1058,7 @@ test("parseYarnLock", async () => {
       "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
     group: "babel",
     name: "code-frame",
-    version: "7.16.7",
+    version: "7.16.7"
   });
 });
 
@@ -1073,10 +1073,10 @@ test("parseComposerLock", () => {
     repository: {
       type: "git",
       url: "https://github.com/intuit/QuickBooks-V3-PHP-SDK.git",
-      reference: "fe42e409bcdc431614f1cfc80cfc4191b926f3ed",
+      reference: "fe42e409bcdc431614f1cfc80cfc4191b926f3ed"
     },
     license: ["Apache-2.0"],
-    description: "The Official PHP SDK for QuickBooks Online Accounting API",
+    description: "The Official PHP SDK for QuickBooks Online Accounting API"
   });
 
   deps = utils.parseComposerLock("./test/data/composer-2.lock");
@@ -1089,10 +1089,10 @@ test("parseComposerLock", () => {
     repository: {
       type: "git",
       url: "https://github.com/amphp/amp.git",
-      reference: "1e58d53e4af390efc7813e36cd215bd82cba4b06",
+      reference: "1e58d53e4af390efc7813e36cd215bd82cba4b06"
     },
     license: ["MIT"],
-    description: "A non-blocking concurrency framework for PHP applications.",
+    description: "A non-blocking concurrency framework for PHP applications."
   });
 });
 
@@ -1103,7 +1103,7 @@ test("parseGemfileLockData", async () => {
   expect(deps.length).toEqual(140);
   expect(deps[0]).toEqual({
     name: "actioncable",
-    version: "6.0.0",
+    version: "6.0.0"
   });
 });
 
@@ -1116,7 +1116,7 @@ test("parseGemspecData", async () => {
     name: "xmlrpc",
     version: "0.3.0",
     description:
-      "XMLRPC is a lightweight protocol that enables remote procedure calls over HTTP.",
+      "XMLRPC is a lightweight protocol that enables remote procedure calls over HTTP."
   });
 });
 
@@ -1142,7 +1142,7 @@ test("parse wheel metadata", () => {
     description: "A linter for YAML files.",
     homepage: { url: "https://github.com/adrienverge/yamllint" },
     license: "GPLv3",
-    repository: { url: "https://github.com/adrienverge/yamllint" },
+    repository: { url: "https://github.com/adrienverge/yamllint" }
   });
 });
 
@@ -1159,7 +1159,7 @@ test("parse wheel", async () => {
     description:
       "Fully open-source security audit for project dependencies based on known vulnerabilities and advisories.",
     homepage: { url: "https://github.com/appthreat/dep-scan" },
-    license: "UNKNOWN",
+    license: "UNKNOWN"
   });
 });
 

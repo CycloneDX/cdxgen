@@ -13,7 +13,7 @@ const IGNORE_DIRS = [
   "e2e",
   "examples",
   "cypress",
-  "site-packages",
+  "site-packages"
 ];
 
 const IGNORE_FILE_PATTERN = new RegExp("(conf|test|spec|mock)\\.(js|ts)$", "i");
@@ -69,8 +69,8 @@ const babelParserOptions = {
     "numericSeparator",
     "dynamicImport",
     "jsx",
-    "typescript",
-  ],
+    "typescript"
+  ]
 };
 
 /**
@@ -150,7 +150,7 @@ const parseFileASTTree = (file, allImports) => {
       if (path && path.node && path.node.source) {
         setFileRef(allImports, file, path.node.source.value);
       }
-    },
+    }
   });
 };
 
@@ -162,7 +162,7 @@ const getAllSrcJSAndTSFiles = (src) =>
     getAllFiles(src, ".js"),
     getAllFiles(src, ".jsx"),
     getAllFiles(src, ".ts"),
-    getAllFiles(src, ".tsx"),
+    getAllFiles(src, ".tsx")
   ]);
 
 /**
