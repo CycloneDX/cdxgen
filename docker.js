@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const tar = require("tar");
+const { spawnSync } = require("child_process");
 
 const pipeline = util.promisify(stream.pipeline);
 
@@ -232,6 +233,33 @@ const getImage = async (fullImageName) => {
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
   }
+  if (isWin) {
+    let result = spawnSync("docker", ["pull", fullImageName], {
+      encoding: "utf-8"
+    });
+    if (result.status !== 0 || result.error) {
+      return localData;
+    } else {
+      result = spawnSync("docker", ["inspect", fullImageName], {
+        encoding: "utf-8"
+      });
+      if (result.status !== 0 || result.error) {
+        return localData;
+      } else {
+        try {
+          const stdout = result.stdout;
+          if (stdout) {
+            const inspectData = JSON.parse(Buffer.from(stdout).toString());
+            if (inspectData && Array.isArray(inspectData)) {
+              return inspectData[0];
+            } else {
+              return inspectData;
+            }
+          }
+        } catch (err) {}
+      }
+    }
+  }
   try {
     localData = await makeRequest(`images/${repo}/json`);
     if (DEBUG_MODE) {
@@ -247,12 +275,15 @@ const getImage = async (fullImageName) => {
         `images/create?fromImage=${fullImageName}`,
         "POST"
       );
-      if (pullData.includes("no match for platform in manifest")) {
+      if (
+        pullData.includes("no match for platform in manifest") ||
+        pullData.includes("Error choosing an image from manifest list")
+      ) {
         console.warn(
           "You may have to enable experimental settings in docker to support this platform!"
         );
         console.warn(
-          "To scan windows images, switch to windows containers in your Docker Desktop"
+          "To scan windows images, run cdxgen on a windows server with hyper-v and docker installed. Switch to windows containers in your docker settings."
         );
         return undefined;
       }
@@ -294,7 +325,7 @@ const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: false,
+        strict: true,
         C: dir
       })
     );
@@ -466,52 +497,76 @@ const exportImage = async (fullImageName) => {
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
   }
-  let client = await getConnection();
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
   const allLayersExplodedDir = path.join(tempDir, "all-layers");
-  fs.mkdirSync(allLayersExplodedDir);
   let manifestFile = path.join(tempDir, "manifest.json");
   // Windows containers use index.json
   const manifestIndexFile = path.join(tempDir, "index.json");
-  try {
-    console.log(`About to export image ${fullImageName} to ${tempDir}`);
-    await pipeline(
-      client.stream(`images/${fullImageName}/get`),
-      tar.x({
-        sync: true,
-        preserveOwner: false,
-        noMtime: true,
-        noChmod: true,
-        strict: false,
-        C: tempDir
-      })
+  // On Windows, fallback to invoking cli
+  if (isWin) {
+    const imageTarFile = path.join(tempDir, "image.tar");
+    console.log(
+      `About to export image ${fullImageName} to ${imageTarFile} using docker cli`
     );
-    if (fs.existsSync(tempDir)) {
-      if (fs.existsSync(manifestFile)) {
-      } else if (fs.existsSync(manifestIndexFile)) {
-        manifestFile = manifestIndexFile;
-      } else {
-        console.log(
-          `Manifest file ${manifestFile} was not found after export at ${tempDir}`
-        );
-        return undefined;
+    let result = spawnSync(
+      "docker",
+      ["save", "-o", imageTarFile, fullImageName],
+      {
+        encoding: "utf-8"
       }
-      if (DEBUG_MODE) {
-        console.log(
-          `Image ${fullImageName} successfully exported to directory ${tempDir}`
-        );
-      }
-      return await extractFromManifest(
-        manifestFile,
-        localData,
-        tempDir,
-        allLayersExplodedDir
-      );
+    );
+    if (result.status !== 0 || result.error) {
+      console.log(result.stdout, result.stderr);
+      return localData;
     } else {
-      console.log(`Unable to export image to ${tempDir}`);
+      await extractTar(imageTarFile, tempDir);
+      console.log(`Cleaning up ${imageTarFile}`);
+      fs.rmSync(imageTarFile, { force: true });
     }
-  } catch (err) {
-    console.error(err);
+  } else {
+    let client = await getConnection();
+    try {
+      console.log(`About to export image ${fullImageName} to ${tempDir}`);
+      await pipeline(
+        client.stream(`images/${fullImageName}/get`),
+        tar.x({
+          sync: true,
+          preserveOwner: false,
+          noMtime: true,
+          noChmod: true,
+          strict: false,
+          C: tempDir
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  // Continue with extracting the layers
+  if (fs.existsSync(tempDir)) {
+    if (fs.existsSync(manifestFile)) {
+    } else if (fs.existsSync(manifestIndexFile)) {
+      manifestFile = manifestIndexFile;
+    } else {
+      console.log(
+        `Manifest file ${manifestFile} was not found after export at ${tempDir}`
+      );
+      return undefined;
+    }
+    if (DEBUG_MODE) {
+      console.log(
+        `Image ${fullImageName} successfully exported to directory ${tempDir}`
+      );
+    }
+    fs.mkdirSync(allLayersExplodedDir);
+    return await extractFromManifest(
+      manifestFile,
+      localData,
+      tempDir,
+      allLayersExplodedDir
+    );
+  } else {
+    console.log(`Unable to export image to ${tempDir}`);
   }
   return undefined;
 };
@@ -535,18 +590,22 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
     path.join(allLayersExplodedDir, "/var/lib"),
     path.join(allLayersExplodedDir, "/mnt")
   ];
+  if (isWin) {
+    knownSysPaths.push(path.join(allLayersExplodedDir, "/Files"));
+    knownSysPaths.push(path.join(allLayersExplodedDir, "/UtilityVM"));
+  }
   if (lastWorkingDir && lastWorkingDir !== "") {
     knownSysPaths.push(lastWorkingDir);
-  }
-  // Some more common app dirs
-  if (!lastWorkingDir.startsWith("/app")) {
-    knownSysPaths.push(path.join(allLayersExplodedDir, "/app"));
-  }
-  if (!lastWorkingDir.startsWith("/data")) {
-    knownSysPaths.push(path.join(allLayersExplodedDir, "/data"));
-  }
-  if (!lastWorkingDir.startsWith("/srv")) {
-    knownSysPaths.push(path.join(allLayersExplodedDir, "/srv"));
+    // Some more common app dirs
+    if (!lastWorkingDir.startsWith("/app")) {
+      knownSysPaths.push(path.join(allLayersExplodedDir, "/app"));
+    }
+    if (!lastWorkingDir.startsWith("/data")) {
+      knownSysPaths.push(path.join(allLayersExplodedDir, "/data"));
+    }
+    if (!lastWorkingDir.startsWith("/srv")) {
+      knownSysPaths.push(path.join(allLayersExplodedDir, "/srv"));
+    }
   }
   // Known to cause EACCESS error
   knownSysPaths.push(path.join(allLayersExplodedDir, "/usr/lib"));

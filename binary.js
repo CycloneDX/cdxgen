@@ -7,14 +7,16 @@ const DEBUG_MODE =
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
   process.env.NODE_ENV === "development";
 
-let globalNodePath = "";
-let result = spawnSync(isWin ? "npm.cmd" : "npm", ["root", "--quiet", "-g"], {
-  encoding: "utf-8"
-});
-if (result) {
-  const stdout = result.stdout;
-  if (stdout) {
-    globalNodePath = Buffer.from(stdout).toString().trim() + "/";
+let globalNodePath = process.env.GLOBAL_NODE_MODULES_PATH || undefined;
+if (!globalNodePath) {
+  let result = spawnSync(isWin ? "npm.cmd" : "npm", ["root", "--quiet", "-g"], {
+    encoding: "utf-8"
+  });
+  if (result) {
+    const stdout = result.stdout;
+    if (stdout) {
+      globalNodePath = Buffer.from(stdout).toString().trim() + "/";
+    }
   }
 }
 
