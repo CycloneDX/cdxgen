@@ -91,7 +91,7 @@ jobs:
           path: 'repotests/ziggurat'
       - name: repotests
         run: |
-          wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.22.0/cyclonedx-linux-x64
+          wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
           bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json
