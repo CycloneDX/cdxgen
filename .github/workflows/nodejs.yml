@@ -49,10 +49,6 @@ jobs:
           ./dist/cdxgen-linux . -p
       - uses: actions/upload-artifact@v1
         with:
-          name: dist-16
-          path: dist-16
-      - uses: actions/upload-artifact@v1
-        with:
           name: dist
           path: dist
       - name: Generate BOM using cdxgen

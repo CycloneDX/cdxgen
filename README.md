@@ -19,7 +19,7 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | elixir             | mix.lock                                                                                        | Yes                                                                                                |
 | c/c++              | conan.lock, conanfile.txt                                                                       | Yes only for conan.lock                                                                            |
 | clojure            | Clojure CLI (deps.edn), Leiningen (project.clj)                                                 | Yes unless the files are parsed manually due to unavailability of clojure cli or leiningen command |
-| docker / oci image | All supported languages. OS packages with plugins                                               | Best effort based on lock files                                                                    |
+| docker / oci image | All supported languages. Linux OS packages with plugins [4]                                     | Best effort based on lock files                                                                    |
 | GitHub Actions     | .github/workflows/\*.yml                                                                        | N/A                                                                                                |
 
 NOTE:
@@ -34,6 +34,7 @@ Footnotes:
 - [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
 - [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing. `python -m pip freeze > requirements.txt`
 - [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file cdxgen would not include indirect dependencies.
+- [4] - See section on plugins
 
 ### Automatic usage detection
 
