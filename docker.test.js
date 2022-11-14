@@ -59,9 +59,10 @@ test("parseImageName tests", () => {
 test("docker getImage", async () => {
   jest.setTimeout(120000);
   const imageData = await dockerLib.getImage("hello-world:latest");
-  expect(imageData);
-  const removeData = await dockerLib.removeImage("hello-world:latest");
-  expect(removeData);
+  if (imageData) {
+    const removeData = await dockerLib.removeImage("hello-world:latest");
+    expect(removeData);
+  }
 });
 
 test("docker getImage", async () => {
