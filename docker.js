@@ -73,9 +73,7 @@ const getDefaultOptions = () => {
           ? "npipe//./pipe/docker_engine:"
           : "unix:/var/run/docker.sock:";
         */
-          opts.prefixUrl = isWin
-          ? WIN_LOCAL_TLS
-          : "unix:/var/run/docker.sock:";
+        opts.prefixUrl = isWin ? WIN_LOCAL_TLS : "unix:/var/run/docker.sock:";
       }
     }
   } else {
@@ -250,8 +248,12 @@ const getImage = async (fullImageName) => {
         "POST"
       );
       if (pullData.includes("no match for platform in manifest")) {
-        console.warn("You may have to enable experimental settings in docker to support this platform!");
-        console.warn("To scan windows images, switch to windows containers in your Docker Desktop");
+        console.warn(
+          "You may have to enable experimental settings in docker to support this platform!"
+        );
+        console.warn(
+          "To scan windows images, switch to windows containers in your Docker Desktop"
+        );
         return undefined;
       }
       if (DEBUG_MODE) {
