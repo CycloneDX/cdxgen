@@ -28,7 +28,7 @@ jobs:
           npm install
           npm run build --if-present
           npm test
-          sudo npm install -g @ngcloudsec/cdxgen-plugins-bin
+          npm install -g @ngcloudsec/cdxgen-plugins-bin
           mkdir -p bomresults
         env:
           CI: true
@@ -43,8 +43,6 @@ jobs:
           docker save -o /tmp/scanslim.tar shiftleft/scan-slim:latest
           bin/cdxgen /tmp/scanslim.tar -o bomresults/bom-scanarch.json
           ls -ltr bomresults
-        env:
-          SCAN_DEBUG_MODE: debug
       - uses: actions/upload-artifact@v1
         with:
           name: bomresults
@@ -77,7 +75,7 @@ jobs:
           docker -D info
       - name: dockertests
         run: |
-          node bin/cdxgen mcr.microsoft.com/windows:ltsc2019 -t docker -p -o bomresults/bom-winltsc.json
+          node bin/cdxgen mcr.microsoft.com/windows/nanoserver:ltsc2022 -t docker -p -o bomresults/bom-winltsc.json
           dir bomresults
         env:
           SCAN_DEBUG_MODE: debug

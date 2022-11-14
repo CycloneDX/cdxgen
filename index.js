@@ -2918,6 +2918,14 @@ exports.createBom = async (path, options) => {
       return {};
     }
     isContainerMode = true;
+  } else if (projectType === "oci-dir") {
+    isContainerMode = true;
+    exportData = {
+      lastWorkingDir: "",
+      allLayersExplodedDir: path,
+      allLayersDir: path
+    };
+    exportData.pkgPathList = dockerLib.getPkgPathList(exportData, undefined);
   }
   if (isContainerMode) {
     options.multiProject = true;
@@ -2937,7 +2945,9 @@ exports.createBom = async (path, options) => {
       exportData.allLayersDir.startsWith(os.tmpdir())
     ) {
       console.log(`Cleaning up ${exportData.allLayersDir}`);
-      // fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+      try {
+        fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+      } catch (err) {}
     }
     return bomData;
   }
