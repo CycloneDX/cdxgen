@@ -36,6 +36,22 @@ const getGoBuildInfo = (src) => {
 };
 exports.getGoBuildInfo = getGoBuildInfo;
 
+const getCargoAuditableInfo = (src) => {
+  try {
+    const pluginsLib = require(globalNodePath +
+      "@ngcloudsec/cdxgen-plugins-bin");
+    return pluginsLib.getCargoAuditableInfo(src);
+  } catch (err) {
+    if (DEBUG_MODE) {
+      console.log(
+        `Missing cdxgen plugins at ${globalNodePath}. Install using npm install -g @ngcloudsec/cdxgen-plugins-bin`
+      );
+    }
+  }
+  return undefined;
+};
+exports.getCargoAuditableInfo = getCargoAuditableInfo;
+
 const getOSPackages = (src) => {
   const pkgList = [];
   try {

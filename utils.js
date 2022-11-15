@@ -2123,6 +2123,36 @@ const parseCargoData = async function (cargoData) {
 };
 exports.parseCargoData = parseCargoData;
 
+const parseCargoAuditableData = async function (cargoData) {
+  const pkgList = [];
+  if (!cargoData) {
+    return pkgList;
+  }
+  let pkg = null;
+  cargoData.split("\n").forEach((l) => {
+    const tmpA = l.split("\t");
+    if (tmpA && tmpA.length > 2) {
+      let group = path.dirname(tmpA[0].trim());
+      const name = path.basename(tmpA[0].trim());
+      if (group === ".") {
+        group = "";
+      }
+      const version = tmpA[1];
+      pkgList.push({
+        group,
+        name,
+        version
+      });
+    }
+  });
+  if (process.env.FETCH_LICENSE) {
+    return await getCratesMetadata(pkgList);
+  } else {
+    return pkgList;
+  }
+};
+exports.parseCargoAuditableData = parseCargoAuditableData;
+
 const parsePubLockData = async function (pubLockData) {
   const pkgList = [];
   if (!pubLockData) {

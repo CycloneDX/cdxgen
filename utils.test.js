@@ -441,6 +441,19 @@ test("parse cargo toml", async () => {
   ]);
 });
 
+test("parse cargo auditable data", async () => {
+  expect(await utils.parseCargoAuditableData(null)).toEqual([]);
+  dep_list = await utils.parseCargoAuditableData(
+    fs.readFileSync("./test/data/cargo-auditable.txt", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(32);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "adler",
+    version: "1.0.2"
+  });
+});
+
 test("get crates metadata", async () => {
   const dep_list = await utils.getCratesMetadata([
     {

@@ -1777,6 +1777,32 @@ const createGoBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createRustBom = async (path, options) => {
+  let pkgList = [];
+  // Is this a binary file
+  let maybeBinary = false;
+  try {
+    maybeBinary = fs.statSync(path).isFile();
+  } catch (err) {
+    maybeBinary = false;
+  }
+  if (maybeBinary) {
+    const cargoData = binaryLib.getCargoAuditableInfo(path);
+    const dlist = await utils.parseCargoAuditableData(cargoData);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
+    }
+    // Since this pkg list is derived from the binary mark them as used.
+    const allImports = {};
+    for (let mpkg of pkgList) {
+      let pkgFullName = `${mpkg.group}/${mpkg.name}`;
+      allImports[pkgFullName] = true;
+    }
+    return buildBomNSData(options, pkgList, "cargo", {
+      allImports,
+      src: path,
+      filename: path
+    });
+  }
   let cargoLockFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock"
@@ -1785,7 +1811,6 @@ const createRustBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "Cargo.toml"
   );
-  let pkgList = [];
   const cargoMode = cargoFiles.length;
   let cargoLockMode = cargoLockFiles.length;
   if (cargoMode && !cargoLockMode) {

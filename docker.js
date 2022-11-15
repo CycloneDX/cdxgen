@@ -106,7 +106,7 @@ const getConnection = async (options) => {
       dockerConn = got.extend(opts);
       console.log("Docker service in root mode detected!");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       try {
         if (isWin) {
           opts.prefixUrl = WIN_LOCAL_TLS;
@@ -123,7 +123,7 @@ const getConnection = async (options) => {
           console.log("Podman in rootless mode detected!");
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         try {
           opts.prefixUrl = opts.podmanPrefixUrl;
           res = await got.get("libpod/_ping", opts);
