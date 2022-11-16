@@ -580,6 +580,14 @@ const createJarBom = (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "*.[jw]ar"
   );
+  // Jenkins plugins
+  const hpiFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.hpi"
+  );
+  if (hpiFiles.length) {
+    jarFiles = jarFiles.concat(hpiFiles);
+  }
   let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "jar-deps-"));
   for (let jar of jarFiles) {
     const dlist = utils.extractJarArchive(jar, tempDir);
@@ -2209,6 +2217,54 @@ const createOSBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for Jenkins plugins
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createJenkinsBom = async (path, options) => {
+  let pkgList = [];
+  const hpiFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.hpi"
+  );
+  let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "hpi-deps-"));
+  if (hpiFiles.length) {
+    for (let f of hpiFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const dlist = utils.extractJarArchive(f, tempDir);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  }
+  const jsFiles = utils.getAllFiles(tempDir, "**/*.js");
+  if (jsFiles.length) {
+    for (let f of jsFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const dlist = await utils.parseMinJs(f);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(os.tmpdir())) {
+    console.log(`Cleaning up ${tempDir}`);
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+  return buildBomNSData(options, pkgList, "maven", {
+    src: path,
+    filename: hpiFiles.join(", "),
+    nsMapping: {}
+  });
+};
+
+/**
  * Function to create bom string for php projects
  *
  * @param path to the project
@@ -2955,6 +3011,15 @@ const createXBom = async (path, options) => {
   if (ghactionFiles.length) {
     return await createGitHubBom(path, options);
   }
+
+  // Jenkins plugins
+  const hpiFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.hpi"
+  );
+  if (hpiFiles.length) {
+    return await createJenkinsBom(path, options);
+  }
 };
 
 /**
@@ -3101,6 +3166,8 @@ exports.createBom = async (path, options) => {
     case "windows":
     case "linux":
       return await createOSBom(path, options);
+    case "jenkins":
+      return await createJenkinsBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95

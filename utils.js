@@ -3018,7 +3018,7 @@ const extractJarArchive = function (jarFile, tempDir) {
   let jarFiles = [];
   const fname = path.basename(jarFile);
   fs.copyFileSync(jarFile, path.join(tempDir, fname));
-  if (jarFile.endsWith(".war")) {
+  if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
     let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
       encoding: "utf-8",
       cwd: tempDir
@@ -3031,7 +3031,10 @@ const extractJarArchive = function (jarFile, tempDir) {
       return pkgList;
     }
     jarFiles = getAllFiles(path.join(tempDir, "WEB-INF", "lib"), "**/*.jar");
-  } else if (jarFile.endsWith(".jar")) {
+    if (jarFile.endsWith(".hpi")) {
+      jarFiles.push(jarFile);
+    }
+  } else {
     jarFiles = [path.join(tempDir, fname)];
   }
   if (jarFiles && jarFiles.length) {
@@ -3152,8 +3155,8 @@ const extractJarArchive = function (jarFile, tempDir) {
           force: true
         });
       }
-    }
-  }
+    } // for
+  } // if
   return pkgList;
 };
 exports.extractJarArchive = extractJarArchive;
