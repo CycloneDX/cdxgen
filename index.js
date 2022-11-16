@@ -14,6 +14,7 @@ const { findJSImports } = require("./analyzer");
 const semver = require("semver");
 const dockerLib = require("./docker");
 const binaryLib = require("./binary");
+const osQueries = require("./queries.json");
 const isWin = require("os").platform() === "win32";
 
 // Construct gradle cache directory
@@ -1227,7 +1228,7 @@ const createNodejsBom = async (path, options) => {
   let pkgList = [];
   let manifestFiles = [];
   // Docker mode requires special handling
-  if (options.projectType === "docker") {
+  if (["docker", "os"].includes(options.projectType)) {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
     // Are there any package.json files in the container?
     if (pkgJsonFiles.length) {
@@ -1245,7 +1246,7 @@ const createNodejsBom = async (path, options) => {
     }
   }
   let allImports = {};
-  if (options.projectType !== "docker" && !options.noBabel) {
+  if (!["docker", "os"].includes(options.projectType) && !options.noBabel) {
     if (DEBUG_MODE) {
       console.log(
         `Performing babel-based package usage analysis with source code at ${path}`
@@ -1659,7 +1660,7 @@ const createGoBom = async (path, options) => {
   );
   if (gomodFiles.length) {
     // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
-    if (options.projectType !== "docker") {
+    if (!["docker", "os"].includes(options.projectType)) {
       console.log("Executing go list -deps in", path);
       const result = spawnSync(
         "go",
@@ -1732,9 +1733,11 @@ const createGoBom = async (path, options) => {
       }
     }
     // Parse the gomod files manually. The resultant BoM would be incomplete
-    console.log(
-      "Manually parsing go.mod files. The resultant BoM would be incomplete."
-    );
+    if (!["docker", "os"].includes(options.projectType)) {
+      console.log(
+        "Manually parsing go.mod files. The resultant BoM would be incomplete."
+      );
+    }
     for (let f of gomodFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
@@ -2164,6 +2167,48 @@ const createGitHubBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for the current OS using osquery
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createOSBom = async (path, options) => {
+  console.warn(
+    "About to generate SBoM for the current OS installation. This would take several minutes ..."
+  );
+  let pkgList = [];
+  let bomData = {};
+  for (const queryCategory of Object.keys(osQueries)) {
+    const queryObj = osQueries[queryCategory];
+    const results = binaryLib.executeOsQuery(queryObj.query);
+    const dlist = utils.convertOSQueryResults(queryCategory, queryObj, results);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
+    }
+  } // for
+  if (pkgList.length) {
+    bomData = buildBomNSData(options, pkgList, "", {
+      src: "",
+      filename: ""
+    });
+  }
+  options.bomData = bomData;
+  options.multiProject = true;
+  options.installDeps = false;
+  // Force the project type to os
+  options.projectType = "os";
+  options.lastWorkingDir = undefined;
+  options.allLayersExplodedDir = isWin ? "C:\\" : "";
+  const exportData = {
+    lastWorkingDir: undefined,
+    allLayersDir: options.allLayersExplodedDir,
+    allLayersExplodedDir: options.allLayersExplodedDir
+  };
+  const pkgPathList = dockerLib.getPkgPathList(exportData, undefined);
+  return createMultiXBom(pkgPathList, options);
+};
+
+/**
  * Function to create bom string for php projects
  *
  * @param path to the project
@@ -2452,6 +2497,18 @@ const createMultiXBom = async (pathList, options) => {
     componentsXmls = componentsXmls.concat(
       listComponents(options, {}, osPackages, "", "xml")
     );
+  }
+  if (options.projectType === "os" && options.bomData) {
+    bomData = options.bomData;
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(`Found ${bomData.bomJson.components.length} OS components`);
+      }
+      components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, bomData.bomJson.components, "", "xml")
+      );
+    }
   }
   for (let path of pathList) {
     if (DEBUG_MODE) {
@@ -2947,9 +3004,12 @@ exports.createBom = async (path, options) => {
     isContainerMode = true;
     exportData = {
       lastWorkingDir: "",
-      allLayersExplodedDir: path,
-      allLayersDir: path
+      allLayersDir: path,
+      allLayersExplodedDir: path
     };
+    if (fs.existsSync(pathLib.join(path, "all-layers"))) {
+      exportData.allLayersDir = pathLib.join(path, "all-layers");
+    }
     exportData.pkgPathList = dockerLib.getPkgPathList(exportData, undefined);
   }
   if (isContainerMode) {
@@ -3036,6 +3096,11 @@ exports.createBom = async (path, options) => {
     case "github":
     case "actions":
       return await createGitHubBom(path, options);
+    case "os":
+    case "osquery":
+    case "windows":
+    case "linux":
+      return await createOSBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95

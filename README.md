@@ -2,9 +2,11 @@
 
 This script creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
+When used with plugins, cdxgen could generate an SBoM for Linux docker images and even VMs running Linux or Windows operating system.
+
 ## Supported languages and package format
 
-| Language           | Package format                                                                                  | Transitive dependencies                                                                            |
+| Language/Platform  | Package format                                                                                  | Transitive dependencies                                                                            |
 | ------------------ | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | node.js            | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js | Yes except .min.js                                                                                 |
 | java               | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                            | Yes unless pom.xml is manually parsed due to unavailability of maven or errors with maven plugins  |
@@ -21,6 +23,8 @@ This script creates a valid and compliant CycloneDX Software Bill-of-Materials (
 | clojure            | Clojure CLI (deps.edn), Leiningen (project.clj)                                                 | Yes unless the files are parsed manually due to unavailability of clojure cli or leiningen command |
 | docker / oci image | All supported languages. Linux OS packages with plugins [4]                                     | Best effort based on lock files                                                                    |
 | GitHub Actions     | .github/workflows/\*.yml                                                                        | N/A                                                                                                |
+| Linux              | All supported languages. Linux OS packages with plugins [5]                                     | Best effort based on lock files                                                                    |
+| Windows            | All supported languages. OS packages with best effort [5]                                       | Best effort based on lock files                                                                    |
 
 NOTE:
 
@@ -35,6 +39,7 @@ Footnotes:
 - [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing. `python -m pip freeze > requirements.txt`
 - [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file cdxgen would not include indirect dependencies.
 - [4] - See section on plugins
+- [5] - Powered by osquery. See section on plugins
 
 ### Automatic usage detection
 
@@ -116,44 +121,6 @@ To recursively generate a single BoM for all languages pass `-r` argument.
 cdxgen -r -o bom.json
 ```
 
-### Docker / OCI container support
-
-`docker` type is automatically detected based on the presence of values such as `sha256` or `docker.io` prefix etc.
-
-```bash
-cdxgen odoo@sha256:4e1e147f0e6714e8f8c5806d2b484075b4076ca50490577cdf9162566086d15e -o /tmp/bom.json
-```
-
-You can also pass `-t docker` for simple labels. Only the `latest` tag would be pulled if none was specified.
-
-```bash
-cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
-```
-
-You can also pass the .tar file of a container image.
-
-```bash
-docker save -o /tmp/slim.tar shiftleft/scan-slim
-podman save -q --format oci-archive -o /tmp/slim.tar shiftleft/scan-slim
-cdxgen /tmp/slim.tar -o /tmp/bom.json -t docker
-```
-
-NOTE:
-
-- Only application related packages are collected by cdxgen. Support for OS installed packages is coming soon.
-
-### Podman in rootless mode
-
-Setup podman in either [rootless](https://github.com/containers/podman/blob/master/docs/tutorials/rootless_tutorial.md) or [remote](https://github.com/containers/podman/blob/master/docs/tutorials/mac_win_client.md) mode
-
-On Linux, do not forget to start the podman socket which is required for API access.
-
-```bash
-systemctl --user enable --now podman.socket
-systemctl --user start podman.socket
-podman system service -t 0 &
-```
-
 ### War file support
 
 cdxgen can generate a BoM file from a given war file.
@@ -214,11 +181,59 @@ Use this [custom builder](https://github.com/CloudBuildr/google-custom-builders/
 
 ## Plugins
 
-cdxgen could be extended with external binary plugins. These are now maintained [separately](https://github.com/ngcloudsec/cdxgen-plugins-bin) and optional.
+cdxgen could be extended with external binary plugins to support more SBoM use cases. These are now maintained [separately](https://github.com/ngcloudsec/cdxgen-plugins-bin) and optional.
 
 ```
 sudo npm install -g @ngcloudsec/cdxgen-plugins-bin
 ```
+
+### Docker / OCI container support
+
+`docker` type is automatically detected based on the presence of values such as `sha256` or `docker.io` prefix etc in the path.
+
+```bash
+cdxgen odoo@sha256:4e1e147f0e6714e8f8c5806d2b484075b4076ca50490577cdf9162566086d15e -o /tmp/bom.json
+```
+
+You can also pass `-t docker` for simple labels. Only the `latest` tag would be pulled if none was specified.
+
+```bash
+cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
+```
+
+You can also pass the .tar file of a container image.
+
+```bash
+docker save -o /tmp/slim.tar shiftleft/scan-slim
+podman save -q --format oci-archive -o /tmp/slim.tar shiftleft/scan-slim
+cdxgen /tmp/slim.tar -o /tmp/bom.json -t docker
+```
+
+NOTE:
+
+- Only application related packages are collected by cdxgen. Support for OS installed packages is coming soon.
+
+### Podman in rootless mode
+
+Setup podman in either [rootless](https://github.com/containers/podman/blob/master/docs/tutorials/rootless_tutorial.md) or [remote](https://github.com/containers/podman/blob/master/docs/tutorials/mac_win_client.md) mode
+
+On Linux, do not forget to start the podman socket which is required for API access.
+
+```bash
+systemctl --user enable --now podman.socket
+systemctl --user start podman.socket
+podman system service -t 0 &
+```
+
+### Generate SBoM for a live system
+
+You can use cdxgen to generate SBoM for a live system or a VM for compliance and vulnerability management purposes by passing the argument `-t os`.
+
+```
+cdxgen -t os
+```
+
+This feature is powered by osquery which is [installed](https://github.com/ngcloudsec/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
 
 ## Conversion to SPDX format or SBoM Signing
 
@@ -226,6 +241,6 @@ Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for adv
 
 ## License
 
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE] file for the full license.
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for the full license.
 
 [license]: https://github.com/AppThreat/cdxgen/blob/master/LICENSE

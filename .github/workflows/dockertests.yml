@@ -65,6 +65,38 @@ jobs:
           name: bomresults
           path: bomresults
 
+  os-tests:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm install -g @ngcloudsec/cdxgen-plugins-bin
+          mkdir -p bomresults
+        env:
+          CI: true
+      - name: ostests
+        run: |
+          wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
+          mv cyclonedx-linux-x64 cyclonedx
+          chmod +x cyclonedx
+          bin/cdxgen -t os -o bomresults/bom-os.json
+          ./cyclonedx validate --input-file bomresults/bom-os.json --input-format json --input-version v1_4
+          ./cyclonedx validate --input-file bomresults/bom-os.xml --input-format xml --input-version v1_4
+        env:
+          SCAN_DEBUG_MODE: debug
+
   win-tests:
     runs-on: windows-latest
 
@@ -86,13 +118,12 @@ jobs:
           npm install -g @ngcloudsec/cdxgen-plugins-bin
         env:
           CI: true
-      - name: docker version
+      - name: wintests
         run: |
-          docker version
-          docker -D info
-      - name: dockertests
-        run: |
-          node bin/cdxgen mcr.microsoft.com/windows/nanoserver:ltsc2022 -t docker -p -o bomresults/bom-winltsc.json
+          Invoke-WebRequest -Uri https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-win-x64.exe -UseBasicParsing -OutFile cyclonedx.exe
+          node bin/cdxgen -t os -o bomresults/bom-win.json
+          .\cyclonedx.exe validate --input-file bomresults\\bom-win.json --input-format json --input-version v1_4
+          .\cyclonedx.exe validate --input-file bomresults\\bom-win.xml --input-format xml --input-version v1_4
           dir bomresults
         env:
           SCAN_DEBUG_MODE: debug
