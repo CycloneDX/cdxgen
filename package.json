@@ -80,7 +80,8 @@
     "spdx-licenses.json",
     "license-mapping.json",
     "known-licenses.json",
-    "vendor-alias.json"
+    "vendor-alias.json",
+    "queries.json"
   ],
   "devDependencies": {
     "jest": "^26.6.3"

@@ -16,6 +16,7 @@ const propertiesReader = require("properties-reader");
 const semver = require("semver");
 const StreamZip = require("node-stream-zip");
 const ednDataLib = require("edn-data");
+const { PackageURL } = require("packageurl-js");
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -2787,6 +2788,67 @@ const parseSbtLock = function (pkgLockFile) {
   return pkgList;
 };
 exports.parseSbtLock = parseSbtLock;
+
+/**
+ * Convert OS query results
+ *
+ * @param {Object} queryObj Query Object from the queries.json configuration
+ * @param {Array} results Query Results
+ */
+const convertOSQueryResults = function (queryCategory, queryObj, results) {
+  const pkgList = [];
+  if (results && results.length) {
+    for (const res of results) {
+      if (res.version) {
+        const version = res.version;
+        let name = res.name;
+        let group = "";
+        let subpath = res.path || res.admindir || res.source;
+        let publisher = res.maintainer || res.creator;
+        let scope = undefined;
+        let compScope = res.priority;
+        if (["required", "optional", "excluded"].includes(compScope)) {
+          scope = compScope;
+        }
+        let description =
+          res.description ||
+          res.arguments ||
+          res.device ||
+          res.codename ||
+          res.section ||
+          res.status ||
+          res.identifier ||
+          res.components;
+        // Re-use the name from query obj
+        if (!name && results.length === 1 && queryObj.name) {
+          name = queryObj.name;
+        }
+        if (name && version) {
+          name = encodeURIComponent(name);
+          const purl = new PackageURL(
+            queryObj.purlType || "swid",
+            group,
+            name,
+            version,
+            undefined,
+            subpath
+          );
+          pkgList.push({
+            name,
+            group,
+            version,
+            description,
+            publisher,
+            purl,
+            scope
+          });
+        }
+      }
+    }
+  }
+  return pkgList;
+};
+exports.convertOSQueryResults = convertOSQueryResults;
 
 /**
  * Collect maven dependencies

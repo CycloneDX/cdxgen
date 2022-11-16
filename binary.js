@@ -20,33 +20,34 @@ if (!globalNodePath) {
   }
 }
 
+let pluginsLib = undefined;
+try {
+  pluginsLib = require(globalNodePath + "@ngcloudsec/cdxgen-plugins-bin");
+} catch (err) {
+  if (DEBUG_MODE) {
+    console.log(
+      `Missing cdxgen plugins at ${globalNodePath}. Install using npm install -g @ngcloudsec/cdxgen-plugins-bin`
+    );
+  }
+}
+
 const getGoBuildInfo = (src) => {
   try {
-    const pluginsLib = require(globalNodePath +
-      "@ngcloudsec/cdxgen-plugins-bin");
-    return pluginsLib.getGoBuildInfo(src);
-  } catch (err) {
-    if (DEBUG_MODE) {
-      console.log(
-        `Missing cdxgen plugins at ${globalNodePath}. Install using npm install -g @ngcloudsec/cdxgen-plugins-bin`
-      );
+    if (pluginsLib) {
+      return pluginsLib.getGoBuildInfo(src);
     }
-  }
+  } catch (err) {}
   return undefined;
 };
 exports.getGoBuildInfo = getGoBuildInfo;
 
 const getCargoAuditableInfo = (src) => {
   try {
-    const pluginsLib = require(globalNodePath +
-      "@ngcloudsec/cdxgen-plugins-bin");
-    return pluginsLib.getCargoAuditableInfo(src);
-  } catch (err) {
-    if (DEBUG_MODE) {
-      console.log(
-        `Missing cdxgen plugins at ${globalNodePath}. Install using npm install -g @ngcloudsec/cdxgen-plugins-bin`
-      );
+    if (pluginsLib) {
+      return pluginsLib.getCargoAuditableInfo(src);
     }
+  } catch (err) {
+    console.log(err);
   }
   return undefined;
 };
@@ -55,15 +56,24 @@ exports.getCargoAuditableInfo = getCargoAuditableInfo;
 const getOSPackages = (src) => {
   const pkgList = [];
   try {
-    const pluginsLib = require(globalNodePath +
-      "@ngcloudsec/cdxgen-plugins-bin");
-    return pluginsLib.getOSPackages(src);
+    if (pluginsLib) {
+      return pluginsLib.getOSPackages(src);
+    }
   } catch (err) {
-    console.log(
-      `Missing cdxgen plugins at ${globalNodePath}. Install using npm install -g @ngcloudsec/cdxgen-plugins-bin"`,
-      err
-    );
+    console.log(err);
   }
   return pkgList;
 };
 exports.getOSPackages = getOSPackages;
+
+const executeOsQuery = (query) => {
+  try {
+    if (pluginsLib) {
+      return pluginsLib.executeOsQuery(query);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return undefined;
+};
+exports.executeOsQuery = executeOsQuery;

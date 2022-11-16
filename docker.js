@@ -325,8 +325,10 @@ const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: true,
-        C: dir
+        strict: false,
+        C: dir,
+        portable: true,
+        onwarn: (code, message, data) => {}
       })
     );
     return true;
@@ -535,7 +537,9 @@ const exportImage = async (fullImageName) => {
           noMtime: true,
           noChmod: true,
           strict: false,
-          C: tempDir
+          C: tempDir,
+          portable: true,
+          onwarn: (code, message, data) => {}
         })
       );
     } catch (err) {
@@ -579,20 +583,32 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   const allLayersExplodedDir = exportData.allLayersExplodedDir;
   const allLayersDir = exportData.allLayersDir;
   let pathList = [];
-  const knownSysPaths = [
-    path.join(allLayersExplodedDir, "/usr/local/go"),
-    path.join(allLayersExplodedDir, "/usr/local/lib"),
-    path.join(allLayersExplodedDir, "/usr/local/lib64"),
-    path.join(allLayersExplodedDir, "/opt"),
-    path.join(allLayersExplodedDir, "/home"),
-    path.join(allLayersExplodedDir, "/usr/share"),
-    path.join(allLayersExplodedDir, "/var/www/html"),
-    path.join(allLayersExplodedDir, "/var/lib"),
-    path.join(allLayersExplodedDir, "/mnt")
-  ];
-  if (isWin) {
-    knownSysPaths.push(path.join(allLayersExplodedDir, "/Files"));
-    knownSysPaths.push(path.join(allLayersExplodedDir, "/UtilityVM"));
+  let knownSysPaths = [];
+  if (allLayersExplodedDir && allLayersExplodedDir !== "") {
+    knownSysPaths = [
+      path.join(allLayersExplodedDir, "/usr/local/go"),
+      path.join(allLayersExplodedDir, "/usr/local/lib"),
+      path.join(allLayersExplodedDir, "/usr/local/lib64"),
+      path.join(allLayersExplodedDir, "/opt"),
+      path.join(allLayersExplodedDir, "/home"),
+      path.join(allLayersExplodedDir, "/usr/share"),
+      path.join(allLayersExplodedDir, "/var/www/html"),
+      path.join(allLayersExplodedDir, "/var/lib"),
+      path.join(allLayersExplodedDir, "/mnt")
+    ];
+  } else if (allLayersExplodedDir === "") {
+    knownSysPaths = [
+      path.join(allLayersExplodedDir, "/usr/local/go"),
+      path.join(allLayersExplodedDir, "/usr/local/lib"),
+      path.join(allLayersExplodedDir, "/usr/local/lib64"),
+      path.join(allLayersExplodedDir, "/opt"),
+      path.join(allLayersExplodedDir, "/usr/share"),
+      path.join(allLayersExplodedDir, "/var/www/html"),
+      path.join(allLayersExplodedDir, "/var/lib")
+    ];
+  }
+  if (isWin || fs.existsSync(path.join(allLayersDir, "Files"))) {
+    knownSysPaths.push(path.join(allLayersDir, "Files"));
   }
   if (lastWorkingDir && lastWorkingDir !== "") {
     knownSysPaths.push(lastWorkingDir);
