@@ -1,0 +1,68 @@
+{
+  "kernel_info": {
+    "query": "select * from kernel_info;",
+    "name": "os-image",
+    "description": "Retrieves information from the current kernel in the target system.",
+    "purlType": "swid"
+  },
+  "os_version": {
+    "query": "select * from os_version;",
+    "description": "Retrieves the current version of the running osquery in the target system and where the configuration was loaded from.",
+    "purlType": "swid"
+  },
+  "chrome_extensions": {
+    "query": "select chrome_extensions.* from users join chrome_extensions using (uid);",
+    "description": "Retrieves the list of extensions for Chrome in the target system.",
+    "purlType": "swid"
+  },
+  "firefox_addons": {
+    "query": "select firefox_addons.* from users join firefox_addons using (uid);",
+    "description": "Retrieves the list of addons for Firefox in the target system.",
+    "purlType": "swid"
+  },
+  "deb_packages": {
+    "query": "select * from deb_packages;",
+    "description": "Retrieves all the installed DEB packages in the target Linux system.",
+    "purlType": "deb"
+  },
+  "apt_sources": {
+    "query": "select * from apt_sources;",
+    "description": "Retrieves all the APT sources to install packages from in the target Linux system.",
+    "purlType": "deb"
+  },
+  "portage_packages": {
+    "query": "select * from portage_packages;",
+    "description": "Retrieves all the installed packages on the target Linux system.",
+    "purlType": "ebuild"
+  },
+  "rpm_packages": {
+    "query": "select * from rpm_packages;",
+    "description": "Retrieves all the installed RPM packages in the target Linux system.",
+    "purlType": "rpm"
+  },
+  "backdoored_python_packages": {
+    "query": "select name as package_name, version as package_version, path as package_path from python_packages where package_name = 'acqusition' or package_name = 'apidev-coop' or package_name = 'bzip' or package_name = 'crypt' or package_name = 'django-server' or package_name = 'pwd' or package_name = 'setup-tools' or package_name = 'telnet' or package_name = 'urlib3' or package_name = 'urllib';",
+    "description": "Watches for the backdoored Python packages installed on system.",
+    "purlType": "pypi"
+  },
+  "windows_programs": {
+    "query" : "select * from programs;",
+    "description" : "Retrieves the list of products as they are installed by Windows Installer in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_patches": {
+    "query" : "select * from patches;",
+    "description" : "Retrieves all the information for the current windows drivers in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_drivers": {
+    "query" : "select * from drivers;",
+    "description" : "Retrieves all the information for the current windows drivers in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_shared_resources": {
+    "query" : "select * from shared_resources;",
+    "description" : "Retrieves the list of shared resources in the target Windows system.",
+    "purlType": "swid"
+  }
+}
