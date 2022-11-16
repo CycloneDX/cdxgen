@@ -118,13 +118,9 @@ jobs:
           npm install -g @ngcloudsec/cdxgen-plugins-bin
         env:
           CI: true
-      - name: docker version
+      - name: wintests
         run: |
-          docker version
-          docker -D info
-      - name: dockertests
-        run: |
-          node bin/cdxgen mcr.microsoft.com/windows/nanoserver:ltsc2022 -t docker -p -o bomresults/bom-winltsc.json
+          node bin/cdxgen -t os -o bomresults/bom-win.json
           dir bomresults
         env:
           SCAN_DEBUG_MODE: debug

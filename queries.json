@@ -1,7 +1,7 @@
 {
   "kernel_info": {
     "query": "select * from kernel_info;",
-    "name": "linux-image",
+    "name": "os-image",
     "description": "Retrieves information from the current kernel in the target system.",
     "purlType": "swid"
   },
@@ -44,5 +44,25 @@
     "query": "select name as package_name, version as package_version, path as package_path from python_packages where package_name = 'acqusition' or package_name = 'apidev-coop' or package_name = 'bzip' or package_name = 'crypt' or package_name = 'django-server' or package_name = 'pwd' or package_name = 'setup-tools' or package_name = 'telnet' or package_name = 'urlib3' or package_name = 'urllib';",
     "description": "Watches for the backdoored Python packages installed on system.",
     "purlType": "pypi"
+  },
+  "windows_programs": {
+    "query" : "select * from programs;",
+    "description" : "Retrieves the list of products as they are installed by Windows Installer in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_patches": {
+    "query" : "select * from patches;",
+    "description" : "Retrieves all the information for the current windows drivers in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_drivers": {
+    "query" : "select * from drivers;",
+    "description" : "Retrieves all the information for the current windows drivers in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_shared_resources": {
+    "query" : "select * from shared_resources;",
+    "description" : "Retrieves the list of shared resources in the target Windows system.",
+    "purlType": "swid"
   }
 }

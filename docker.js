@@ -607,8 +607,24 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
       path.join(allLayersExplodedDir, "/var/lib")
     ];
   }
-  if (isWin || fs.existsSync(path.join(allLayersDir, "Files"))) {
+  if (fs.existsSync(path.join(allLayersDir, "Files"))) {
     knownSysPaths.push(path.join(allLayersDir, "Files"));
+  }
+  /*
+  // Too slow
+  if (fs.existsSync(path.join(allLayersDir, "Users"))) {
+    knownSysPaths.push(path.join(allLayersDir, "Users"));
+  }
+  */
+  if (fs.existsSync(path.join(allLayersDir, "ProgramData"))) {
+    knownSysPaths.push(path.join(allLayersDir, "ProgramData"));
+  }
+  // FIXME
+  if (fs.existsSync(path.join(allLayersDir, "Python39"))) {
+    knownSysPaths.push(path.join(allLayersDir, "Python39"));
+  }
+  if (fs.existsSync(path.join(allLayersDir, "Python38"))) {
+    knownSysPaths.push(path.join(allLayersDir, "Python38"));
   }
   if (lastWorkingDir && lastWorkingDir !== "") {
     knownSysPaths.push(lastWorkingDir);

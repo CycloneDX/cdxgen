@@ -2801,7 +2801,7 @@ const convertOSQueryResults = function (queryCategory, queryObj, results) {
     for (const res of results) {
       if (res.version) {
         const version = res.version;
-        let name = res.name;
+        let name = res.name || res.device_id;
         let group = "";
         let subpath = res.path || res.admindir || res.source;
         let publisher = res.maintainer || res.creator;
@@ -2824,7 +2824,6 @@ const convertOSQueryResults = function (queryCategory, queryObj, results) {
           name = queryObj.name;
         }
         if (name && version) {
-          name = encodeURIComponent(name);
           const purl = new PackageURL(
             queryObj.purlType || "swid",
             group,
