@@ -120,7 +120,10 @@ jobs:
           CI: true
       - name: wintests
         run: |
+          Invoke-WebRequest -Uri https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-win-x64.exe -UseBasicParsing -OutFile cyclonedx.exe
           node bin/cdxgen -t os -o bomresults/bom-win.json
+          .\cyclonedx.exe validate --input-file bomresults\\bom-win.json --input-format json --input-version v1_4
+          .\cyclonedx.exe validate --input-file bomresults\\bom-win.xml --input-format xml --input-version v1_4
           dir bomresults
         env:
           SCAN_DEBUG_MODE: debug
