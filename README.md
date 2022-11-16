@@ -25,6 +25,7 @@ When used with plugins, cdxgen could generate an SBoM for Linux docker images an
 | GitHub Actions     | .github/workflows/\*.yml                                                                        | N/A                                                                                                |
 | Linux              | All supported languages. Linux OS packages with plugins [5]                                     | Best effort based on lock files                                                                    |
 | Windows            | All supported languages. OS packages with best effort [5]                                       | Best effort based on lock files                                                                    |
+| Jenkins Plugins    | .hpi files                                                                                      |                                                                                                    |
 
 NOTE:
 
