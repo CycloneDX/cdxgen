@@ -3103,6 +3103,9 @@ const extractJarArchive = function (jarFile, tempDir) {
           if ((!version || version === "") && jarMetadata["Created-By"]) {
             version = jarMetadata["Created-By"].split(" ")[0];
           }
+          if (version && version.includes(" ")) {
+            version = version.split(" ")[0];
+          }
           if (!name && group) {
             name = path.basename(group.replace(/\./g, "/"));
             if (!group.startsWith("javax")) {

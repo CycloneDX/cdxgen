@@ -3103,7 +3103,7 @@ exports.createBom = async (path, options) => {
     ) {
       console.log(`Cleaning up ${exportData.allLayersDir}`);
       try {
-        // fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+        fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
       } catch (err) {}
     }
     return bomData;
