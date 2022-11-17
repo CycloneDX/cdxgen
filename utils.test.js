@@ -201,24 +201,19 @@ test("get maven metadata", async () => {
 
 test("get py metadata", async () => {
   jest.setTimeout(240000);
-  const data = await utils.getPyMetadata([
-    {
-      group: "",
-      name: "Flask",
-      version: "1.1.0"
-    },
+  const data = await utils.getPyMetadata(
+    [
+      {
+        group: "",
+        name: "Flask",
+        version: "1.1.0"
+      }
+    ],
     false
-  ]);
+  );
   expect(data).toEqual([
     {
-      _integrity:
-        "sha256-a31adc27de06034c657a8dc091cc5fcb0227f2474798409bff0e9674de31a026",
-      description: "A simple framework for building complex web applications.",
       group: "",
-      homepage: {
-        url: "https://palletsprojects.com/p/flask"
-      },
-      license: "BSD-3-Clause",
       name: "Flask",
       version: "1.1.0"
     }
@@ -949,28 +944,24 @@ test("parseSetupPyFile", async () => {
 ],`);
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
-  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
 
   deps = await utils.parseSetupPyFile(
     `install_requires=['colorama>=0.4.3','libsast>=1.0.3',],`
   );
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
-  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
 
   deps = await utils.parseSetupPyFile(
     `install_requires=['colorama>=0.4.3','libsast>=1.0.3']`
   );
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
-  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
 
   deps = await utils.parseSetupPyFile(
     `install_requires=['colorama>=0.4.3', 'libsast>=1.0.3']`
   );
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
-  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
 
   deps = await utils.parseSetupPyFile(`install_requires=[
 'colorama>=0.4.3',
@@ -978,7 +969,6 @@ test("parseSetupPyFile", async () => {
 ]`);
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
-  expect(deps[0].description).toEqual("Cross-platform colored terminal text.");
 });
 
 test("parsePnpmLock", async () => {
@@ -1152,10 +1142,27 @@ test("parse wheel metadata", () => {
   expect(deps[0]).toEqual({
     version: "1.26.1",
     name: "yamllint",
+    publisher: "Adrien Vergé",
     description: "A linter for YAML files.",
     homepage: { url: "https://github.com/adrienverge/yamllint" },
     license: "GPLv3",
     repository: { url: "https://github.com/adrienverge/yamllint" }
+  });
+  deps = utils.parseBdistMetadata(
+    fs.readFileSync(
+      "./test/data/mercurial-5.5.2-py3.8.egg-info",
+      (encoding = "utf-8")
+    )
+  );
+  expect(deps.length).toEqual(1);
+  expect(deps[0]).toEqual({
+    version: "5.5.2",
+    name: "mercurial",
+    publisher: "Matt Mackall and many others",
+    description:
+      "Fast scalable distributed SCM (revision control, version control) system",
+    homepage: { url: "https://mercurial-scm.org/" },
+    license: "GPL-2.0-or-later"
   });
 });
 
@@ -1172,7 +1179,8 @@ test("parse wheel", async () => {
     description:
       "Fully open-source security audit for project dependencies based on known vulnerabilities and advisories.",
     homepage: { url: "https://github.com/appthreat/dep-scan" },
-    license: "UNKNOWN"
+    license: "UNKNOWN",
+    publisher: "Team AppThreat"
   });
 });
 

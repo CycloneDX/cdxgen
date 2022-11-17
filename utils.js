@@ -1100,6 +1100,9 @@ exports.parsePyRequiresDist = parsePyRequiresDist;
  * @param {Boolean} fetchIndirectDeps Should we also fetch data about indirect dependencies from pypi
  */
 const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
+  if (!process.env.FETCH_LICENSE && !fetchIndirectDeps) {
+    return pkgList;
+  }
   const PYPI_URL = "https://pypi.org/pypi/";
   let cdepList = [];
   let indirectDeps = [];
@@ -1191,6 +1194,8 @@ const parseBdistMetadata = function (mData) {
       pkg.homepage = { url: l.split("Home-page: ")[1] };
     } else if (l.indexOf("Project-URL: Source Code, ") > -1) {
       pkg.repository = { url: l.split("Project-URL: Source Code, ")[1] };
+    } else if (l.indexOf("Author: ") > -1) {
+      pkg.publisher = l.split("Author: ")[1];
     }
   });
   return [pkg];
@@ -1284,29 +1289,34 @@ const parseReqFile = async function (reqData) {
         if (versionStr === "0") {
           versionStr = null;
         }
-        if (!tmpA[0].includes("=")) {
+        if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
           pkgList.push({
             name: tmpA[0].trim(),
             version: versionStr
           });
         }
       } else if (/[>|\[|@]/.test(l)) {
-        let tmpA = l.split(/(>|\[|@)/);
+        let tmpA = l.split(/(>|\[|@)/).trim();
         if (tmpA.includes("#")) {
           tmpA = tmpA.split("#")[0];
         }
-        pkgList.push({
-          name: tmpA[0].trim(),
-          version: null
-        });
+        if (!tmpA[0].trim().includes(" ")) {
+          pkgList.push({
+            name: tmpA[0].trim(),
+            version: null
+          });
+        }
       } else if (l) {
         if (l.includes("#")) {
           l = l.split("#")[0];
         }
-        pkgList.push({
-          name: l.trim(),
-          version: null
-        });
+        l = l.trim();
+        if (!l.includes(" ")) {
+          pkgList.push({
+            name: l,
+            version: null
+          });
+        }
       }
     }
   });

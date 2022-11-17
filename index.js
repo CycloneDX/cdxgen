@@ -1471,6 +1471,10 @@ const createPythonBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "*.whl"
   );
+  const eggInfoFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.egg-info"
+  );
   const setupPy = pathLib.join(path, "setup.py");
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
@@ -1501,10 +1505,6 @@ const createPythonBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(options, pkgList, "pypi", {
-      src: path,
-      filename: metadataFiles.join(", ")
-    });
   }
   // .whl files. Zip file containing dist-info directory
   if (whlFiles && whlFiles.length) {
@@ -1517,10 +1517,17 @@ const createPythonBom = async (path, options) => {
         }
       }
     }
-    return buildBomNSData(options, pkgList, "pypi", {
-      src: path,
-      filename: whlFiles.join(", ")
-    });
+  }
+  // .egg-info files
+  if (eggInfoFiles && eggInfoFiles.length) {
+    for (let ef of eggInfoFiles) {
+      const dlist = utils.parseBdistMetadata(
+        fs.readFileSync(ef, (encoding = "utf-8"))
+      );
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
   }
   if (requirementsMode || pipenvMode || setupPyMode) {
     if (pipenvMode) {
@@ -1528,11 +1535,10 @@ const createPythonBom = async (path, options) => {
       const piplockFile = pathLib.join(path, "Pipfile.lock");
       if (fs.existsSync(piplockFile)) {
         const lockData = JSON.parse(fs.readFileSync(piplockFile));
-        pkgList = await utils.parsePiplockData(lockData);
-        return buildBomNSData(options, pkgList, "pypi", {
-          src: path,
-          filename: "Pipfile.lock"
-        });
+        dlist = await utils.parsePiplockData(lockData);
+        if (dlist && dlist.length) {
+          pkgList = pkgList.concat(dlist);
+        }
       } else {
         console.error("Pipfile.lock not found at", path);
         options.failOnError && process.exit(1);
@@ -1559,18 +1565,19 @@ const createPythonBom = async (path, options) => {
         }
         metadataFilename = reqDirFiles.join(", ");
       }
-      return buildBomNSData(options, pkgList, "pypi", {
-        src: path,
-        filename: metadataFilename
-      });
     } else if (setupPyMode) {
       const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
-      pkgList = await utils.parseSetupPyFile(setupPyData);
-      return buildBomNSData(options, pkgList, "pypi", {
-        src: path,
-        filename: "setup.py"
-      });
+      dlist = await utils.parseSetupPyFile(setupPyData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
     }
+  }
+  if (pkgList.length) {
+    return buildBomNSData(options, pkgList, "pypi", {
+      src: path,
+      filename: ""
+    });
   }
   return {};
 };
@@ -3096,7 +3103,7 @@ exports.createBom = async (path, options) => {
     ) {
       console.log(`Cleaning up ${exportData.allLayersDir}`);
       try {
-        fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+        // fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
       } catch (err) {}
     }
     return bomData;
