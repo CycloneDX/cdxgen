@@ -1296,7 +1296,7 @@ const parseReqFile = async function (reqData) {
           });
         }
       } else if (/[>|\[|@]/.test(l)) {
-        let tmpA = l.split(/(>|\[|@)/).trim();
+        let tmpA = l.split(/(>|\[|@)/);
         if (tmpA.includes("#")) {
           tmpA = tmpA.split("#")[0];
         }
