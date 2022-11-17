@@ -288,12 +288,7 @@ const getImage = async (fullImageName) => {
         );
         return undefined;
       }
-      if (DEBUG_MODE) {
-        console.log(pullData);
-      }
-    } catch (err) {
-      return undefined;
-    }
+    } catch (err) {}
     try {
       if (DEBUG_MODE) {
         console.log(`Trying with ${repo}`);
@@ -311,6 +306,14 @@ const getImage = async (fullImageName) => {
         console.log(localData);
       }
     }
+  }
+  if (!localData) {
+    console.log(
+      `Unable to pull ${fullImageName}. Check if the name is valid. Perform any authentication prior to invoking cdxgen.`
+    );
+    console.log(
+      `Trying manually pulling this image using docker pull ${fullImageName}`
+    );
   }
   return localData;
 };
