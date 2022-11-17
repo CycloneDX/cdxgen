@@ -271,48 +271,45 @@ const getImage = async (fullImageName) => {
     );
     // If the data is not available locally
     try {
-      try {
-        const pullData = await makeRequest(
-          `images/create?fromImage=${fullImageName}`,
-          "POST"
+      const pullData = await makeRequest(
+        `images/create?fromImage=${fullImageName}`,
+        "POST"
+      );
+      if (
+        pullData &&
+        (pullData.includes("no match for platform in manifest") ||
+          pullData.includes("Error choosing an image from manifest list"))
+      ) {
+        console.warn(
+          "You may have to enable experimental settings in docker to support this platform!"
         );
-        if (
-          pullData.includes("no match for platform in manifest") ||
-          pullData.includes("Error choosing an image from manifest list")
-        ) {
-          console.warn(
-            "You may have to enable experimental settings in docker to support this platform!"
-          );
-          console.warn(
-            "To scan windows images, run cdxgen on a windows server with hyper-v and docker installed. Switch to windows containers in your docker settings."
-          );
-          return undefined;
-        }
-        if (DEBUG_MODE) {
-          console.log(pullData);
-        }
-      } catch (err) {
-        try {
-          if (DEBUG_MODE) {
-            console.log(`Trying with ${repo}`);
-          }
-          localData = await makeRequest(`images/${repo}/json`);
-          if (DEBUG_MODE) {
-            console.log(localData);
-          }
-        } catch (err) {
-          if (DEBUG_MODE) {
-            console.log(`Retrying with ${fullImageName} due to`, err);
-          }
-          localData = await makeRequest(`images/${fullImageName}/json`);
-          if (DEBUG_MODE) {
-            console.log(localData);
-          }
-        }
+        console.warn(
+          "To scan windows images, run cdxgen on a windows server with hyper-v and docker installed. Switch to windows containers in your docker settings."
+        );
+        return undefined;
+      }
+      if (DEBUG_MODE) {
+        console.log(pullData);
       }
     } catch (err) {
-      console.log(`Unable to pull the image ${repo}`);
-      console.error(err);
+      return undefined;
+    }
+    try {
+      if (DEBUG_MODE) {
+        console.log(`Trying with ${repo}`);
+      }
+      localData = await makeRequest(`images/${repo}/json`);
+      if (DEBUG_MODE) {
+        console.log(localData);
+      }
+    } catch (err) {
+      if (DEBUG_MODE) {
+        console.log(`Retrying with ${fullImageName} due to`, err);
+      }
+      localData = await makeRequest(`images/${fullImageName}/json`);
+      if (DEBUG_MODE) {
+        console.log(localData);
+      }
     }
   }
   return localData;
