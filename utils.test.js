@@ -1145,7 +1145,6 @@ test("parse wheel metadata", () => {
     publisher: "Adrien Vergé",
     description: "A linter for YAML files.",
     homepage: { url: "https://github.com/adrienverge/yamllint" },
-    license: "GPLv3",
     repository: { url: "https://github.com/adrienverge/yamllint" }
   });
   deps = utils.parseBdistMetadata(
@@ -1161,8 +1160,7 @@ test("parse wheel metadata", () => {
     publisher: "Matt Mackall and many others",
     description:
       "Fast scalable distributed SCM (revision control, version control) system",
-    homepage: { url: "https://mercurial-scm.org/" },
-    license: "GPL-2.0-or-later"
+    homepage: { url: "https://mercurial-scm.org/" }
   });
 });
 
@@ -1179,7 +1177,6 @@ test("parse wheel", async () => {
     description:
       "Fully open-source security audit for project dependencies based on known vulnerabilities and advisories.",
     homepage: { url: "https://github.com/appthreat/dep-scan" },
-    license: "UNKNOWN",
     publisher: "Team AppThreat"
   });
 });

@@ -1188,8 +1188,6 @@ const parseBdistMetadata = function (mData) {
       pkg.version = l.split("Version: ")[1];
     } else if (l.indexOf("Summary: ") > -1) {
       pkg.description = l.split("Summary: ")[1];
-    } else if (l.indexOf("License: ") > -1) {
-      pkg.license = findLicenseId(l.split("License: ")[1]);
     } else if (l.indexOf("Home-page: ") > -1) {
       pkg.homepage = { url: l.split("Home-page: ")[1] };
     } else if (l.indexOf("Project-URL: Source Code, ") > -1) {
