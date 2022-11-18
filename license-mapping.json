@@ -24,7 +24,9 @@
     "exp": "0BSD",
     "names": [
       "Zero-Clause BSD",
-      "BSD"
+      "BSD",
+      "BSD License",
+      "BSD-like"
     ]
   },
   {
@@ -137,7 +139,8 @@
       "GNU Lesser General Public License (LGPL), version 2 or later",
       "GNU Lesser General Public License (LGPL), version 2.0 or later",
       "GNU Lesser General Public License v2 or later",
-      "GNU Lesser General Public License v2.0 or later"
+      "GNU Lesser General Public License v2.0 or later",
+      "LGPLv2+"
     ]
   },
   {
@@ -170,7 +173,8 @@
       "LGPL3.0",
       "GNU Lesser General Public License (LGPL), version 3",
       "GNU Lesser General Public License (LGPL), version 3.0",
-      "GNU Lesser General Public License v3.0"
+      "GNU Lesser General Public License v3.0",
+      "GNU Lesser General Public License (LGPL), Version 3"
     ]
   },
   {
@@ -201,7 +205,8 @@
       "GNU General Public License v2 or later",
       "GNU General Public License v2.0 or later",
       "GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version",
-      "GNU GPLv2 or any later version"
+      "GNU GPLv2 or any later version",
+      "GPLv2+"
     ]
   },
   {
@@ -221,7 +226,8 @@
       "GNU General Public License (GPL) version 3.0",
       "GNU General Public License v3",
       "GNU General Public License v3.0",
-      "GNU General Public License as published by the Free Software Foundation, version 3."
+      "GNU General Public License as published by the Free Software Foundation, version 3.",
+      "GPL-3"
     ]
   },
   {
@@ -277,6 +283,12 @@
     "names": [
       "The JSON License",
       "JSON License"
+    ]
+  },
+  {
+    "exp": "ISC",
+    "names": [
+      "ISC license"
     ]
   }
 ]
