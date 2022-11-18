@@ -18,7 +18,7 @@ jobs:
       run: |
         sudo npm install -g pkg
         npm install
-        pkg -t node18-alpine,node18-linux,node18-win,node18-mac --public package.json --out-path dist
+        pkg -t node18-linux,node18-win,node18-mac --public package.json --out-path dist
         chmod +x dist/cdxgen*
         for f in `ls dist`; do sha256sum $f > $f.sha256 ; done
     - name: Test pkg
