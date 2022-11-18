@@ -74,6 +74,8 @@ Options:
   -p, --print            Print the SBoM as a table                     [boolean]
   -c, --resolve-class    Resolve class names for packages. jars only for now.
                                                                        [boolean]
+      --deep             Perform deep searches for components. Useful while
+                         scanning live OS and oci images.              [boolean]
       --server-url       Dependency track or AppThreat server url. Eg:
                          https://deptrack.appthreat.io
       --api-key          Dependency track or AppThreat server api key
