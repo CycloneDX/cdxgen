@@ -2219,7 +2219,10 @@ const createOSBom = async (path, options) => {
     allLayersDir: options.allLayersExplodedDir,
     allLayersExplodedDir: options.allLayersExplodedDir
   };
-  const pkgPathList = dockerLib.getPkgPathList(exportData, undefined);
+  let pkgPathList = [];
+  if (options.deep) {
+    dockerLib.getPkgPathList(exportData, undefined);
+  }
   return createMultiXBom(pkgPathList, options);
 };
 
@@ -2787,11 +2790,7 @@ const createMultiXBom = async (pathList, options) => {
       }
     }
   } // for
-  if (
-    !options.deep &&
-    options.lastWorkingDir &&
-    options.lastWorkingDir !== ""
-  ) {
+  if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
