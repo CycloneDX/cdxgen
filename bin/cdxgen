@@ -30,7 +30,8 @@ const args = require("yargs")
   })
   .option("deep", {
     type: "boolean",
-    description: "Perform deep searches for components. Useful while scanning oci images."
+    description:
+      "Perform deep searches for components. Useful while scanning live OS and oci images."
   })
   .option("server-url", {
     description:
