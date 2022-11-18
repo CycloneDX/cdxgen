@@ -13,16 +13,12 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 16.x
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
         node-version: 18.x
     - name: Produce pkg - lts
       run: |
         sudo npm install -g pkg
         npm install
-        pkg -t node14-linux,node14-win,node14-mac package.json --out-path dist
+        pkg -t node18-linux,node18-win,node18-mac package.json --out-path dist
     - name: Test pkg
       run: |
         chmod +x dist/cdxgen*
@@ -52,6 +48,5 @@ jobs:
       with:
         files: |
           cdxgen-dist.zip
-          cdxgen-node16-dist.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
