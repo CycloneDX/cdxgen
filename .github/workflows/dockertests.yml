@@ -96,6 +96,10 @@ jobs:
           ./cyclonedx validate --input-file bomresults/bom-os.xml --input-format xml --input-version v1_4
         env:
           SCAN_DEBUG_MODE: debug
+      - uses: actions/upload-artifact@v1
+        with:
+          name: bomresults-os
+          path: bomresults
 
   win-tests:
     runs-on: windows-latest
@@ -127,3 +131,7 @@ jobs:
           dir bomresults
         env:
           SCAN_DEBUG_MODE: debug
+      - uses: actions/upload-artifact@v1
+        with:
+          name: bomresults-win
+          path: bomresults

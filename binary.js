@@ -29,9 +29,16 @@ switch (arch) {
 }
 
 // Retrieve the cdxgen plugins directory
-let CDXGEN_PLUGINS_DIR =
-  process.env.CDXGEN_PLUGINS_DIR || path.join(__dirname, "plugins");
-if (!fs.existsSync(CDXGEN_PLUGINS_DIR)) {
+let CDXGEN_PLUGINS_DIR = process.env.CDXGEN_PLUGINS_DIR;
+// Is there a non-empty local plugins directory
+if (
+  !CDXGEN_PLUGINS_DIR &&
+  fs.existsSync(path.join(__dirname, "plugins")) &&
+  fs.existsSync(path.join(__dirname, "plugins", "goversion"))
+) {
+  CDXGEN_PLUGINS_DIR = path.join(__dirname, "plugins");
+}
+if (!CDXGEN_PLUGINS_DIR) {
   let globalNodePath = process.env.GLOBAL_NODE_MODULES_PATH || undefined;
   if (!globalNodePath) {
     let result = spawnSync(
@@ -62,6 +69,14 @@ if (!fs.existsSync(CDXGEN_PLUGINS_DIR)) {
   }
 }
 
+if (!CDXGEN_PLUGINS_DIR) {
+  if (DEBUG_MODE) {
+    console.warn(
+      "cdxgen plugins was not found. Please install with npm install -g @ngcloudsec/cdxgen-plugins-bin"
+    );
+  }
+  CDXGEN_PLUGINS_DIR = "";
+}
 let GOVERSION_BIN = null;
 if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "goversion"))) {
   GOVERSION_BIN = path.join(
