@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
 const { PackageURL } = require("packageurl-js");
+const isWin = require("os").platform() === "win32";
 
 // Debug mode flag
 const DEBUG_MODE =
