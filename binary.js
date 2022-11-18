@@ -28,12 +28,9 @@ switch (arch) {
 }
 
 // Retrieve the cdxgen plugins directory
-let CDXGEN_PLUGINS_DIR = process.env.CDXGEN_PLUGINS_DIR;
+let CDXGEN_PLUGINS_DIR =
+  process.env.CDXGEN_PLUGINS_DIR || path.join(__dirname, "plugins");
 if (!fs.existsSync(CDXGEN_PLUGINS_DIR)) {
-  const localPlugins = path.join(CDXGEN_PLUGINS_DIR);
-  if (fs.existsSync(localPlugins)) {
-    CDXGEN_PLUGINS_DIR = localPlugins;
-  }
   let globalNodePath = process.env.GLOBAL_NODE_MODULES_PATH || undefined;
   if (!globalNodePath) {
     let result = spawnSync(
