@@ -18,13 +18,13 @@ jobs:
       run: |
         sudo npm install -g pkg
         npm install
-        pkg -t node18-linux,node18-win,node18-mac package.json --out-path dist
+        pkg -t node18-alpine,node18-linux,node18-win,node18-mac --public package.json --out-path dist
+        chmod +x dist/cdxgen*
+        for f in `ls dist`; do sha256sum $f > $f.sha256 ; done
     - name: Test pkg
       run: |
-        chmod +x dist/cdxgen*
         ./dist/cdxgen-linux -v
         ./dist/cdxgen-linux .
-
     - name: Install dependencies
       run: |
         sudo apt-get install -y python3.8 python3.8-dev python3-pip python3-testresources python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev

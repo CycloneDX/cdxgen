@@ -29,9 +29,9 @@ const DEBUG_MODE =
  * @param {string} dirPath Root directory for search
  * @param {string} dirName Directory name
  */
-const getDirs = (dirPath, dirName, hidden = false) => {
+const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
-    return glob.sync("**/" + dirName, {
+    return glob.sync(recurse ? "**/" : "" + dirName, {
       cwd: dirPath,
       silent: true,
       absolute: true,
@@ -45,6 +45,48 @@ const getDirs = (dirPath, dirName, hidden = false) => {
   }
 };
 exports.getDirs = getDirs;
+
+function flatten(lists) {
+  return lists.reduce((a, b) => a.concat(b), []);
+}
+
+function getDirectories(srcpath) {
+  if (fs.existsSync(srcpath)) {
+    return fs
+      .readdirSync(srcpath)
+      .map((file) => path.join(srcpath, file))
+      .filter((path) => {
+        try {
+          return fs.statSync(path).isDirectory();
+        } catch (e) {
+          return false;
+        }
+      });
+  }
+  return [];
+}
+
+const getOnlyDirs = (srcpath, dirName) => {
+  return [
+    srcpath,
+    ...flatten(
+      getDirectories(srcpath)
+        .map((p) => {
+          try {
+            if (fs.existsSync(p)) {
+              if (fs.lstatSync(p).isDirectory()) {
+                return getOnlyDirs(p, dirName);
+              }
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        })
+        .filter((p) => p !== undefined)
+    )
+  ].filter((d) => d.endsWith(dirName));
+};
+exports.getOnlyDirs = getOnlyDirs;
 
 const getDefaultOptions = () => {
   let opts = {
@@ -368,7 +410,7 @@ const exportArchive = async (fullImageName) => {
           `Image archive ${fullImageName} successfully exported to directory ${tempDir}`
         );
       }
-      const allBlobs = getDirs(blobsDir, "*", false);
+      const allBlobs = getDirs(blobsDir, "*", false, true);
       for (let ablob of allBlobs) {
         if (DEBUG_MODE) {
           console.log(`Extracting ${ablob} to ${allLayersExplodedDir}`);
@@ -622,12 +664,14 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   if (fs.existsSync(path.join(allLayersDir, "ProgramData"))) {
     knownSysPaths.push(path.join(allLayersDir, "ProgramData"));
   }
-  // FIXME
-  if (fs.existsSync(path.join(allLayersDir, "Python39"))) {
-    knownSysPaths.push(path.join(allLayersDir, "Python39"));
-  }
-  if (fs.existsSync(path.join(allLayersDir, "Python38"))) {
-    knownSysPaths.push(path.join(allLayersDir, "Python38"));
+  const pyInstalls = getDirs(allLayersDir, "Python*/", false, false);
+  if (pyInstalls && pyInstalls.length) {
+    for (let pyiPath of pyInstalls) {
+      const pyDirs = getOnlyDirs(pyiPath, "site-packages");
+      if (pyDirs && pyDirs.length) {
+        pathList = pathList.concat(pyDirs);
+      }
+    }
   }
   if (lastWorkingDir && lastWorkingDir !== "") {
     knownSysPaths.push(lastWorkingDir);
@@ -648,19 +692,19 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   // Build path list
   for (let wpath of knownSysPaths) {
     pathList = pathList.concat(wpath);
-    const pyDirs = getDirs(wpath, "site-packages", false);
+    const pyDirs = getOnlyDirs(wpath, "site-packages");
     if (pyDirs && pyDirs.length) {
       pathList = pathList.concat(pyDirs);
     }
-    const gemsDirs = getDirs(wpath, "gems", false);
+    const gemsDirs = getOnlyDirs(wpath, "gems");
     if (gemsDirs && gemsDirs.length) {
       pathList = pathList.concat(gemsDirs);
     }
-    const cargoDirs = getDirs(wpath, ".cargo", true);
+    const cargoDirs = getOnlyDirs(wpath, ".cargo");
     if (cargoDirs && cargoDirs.length) {
       pathList = pathList.concat(cargoDirs);
     }
-    const composerDirs = getDirs(wpath, ".composer", true);
+    const composerDirs = getOnlyDirs(wpath, ".composer");
     if (composerDirs && composerDirs.length) {
       pathList = pathList.concat(composerDirs);
     }
