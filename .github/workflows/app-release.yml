@@ -4,6 +4,7 @@ on:
   push:
     tags:
     - 'v*'
+  workflow_dispatch:    
 
 jobs:
   pkg:
@@ -18,13 +19,18 @@ jobs:
       run: |
         sudo npm install -g pkg
         npm install
-        pkg -t node18-alpine,node18-linux,node18-win,node18-mac --public package.json --out-path dist
+        npm install @ngcloudsec/cdxgen-plugins-bin
+        cp -rf node_modules/@ngcloudsec/cdxgen-plugins-bin/plugins/* ./plugins/
+        rm ./plugins/.npmignore
+        ls -al ./plugins
+        pkg -t node18-linux,node18-win,node18-mac --public package.json --out-path dist
         chmod +x dist/cdxgen*
         for f in `ls dist`; do sha256sum dist/$f > dist/$f.sha256 ; done
     - name: Test pkg
       run: |
         ./dist/cdxgen-linux -v
         ./dist/cdxgen-linux .
+        ./dist/cdxgen-linux -t os
     - name: Install dependencies
       run: |
         sudo apt-get install -y python3.8 python3.8-dev python3-pip python3-testresources python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev
@@ -42,11 +48,22 @@ jobs:
     - name: Zip pkg - lts
       run: |
         zip --junk-paths -r cdxgen-dist.zip dist cdxgen-latest-x86_64.AppImage
+    - uses: actions/upload-artifact@v1
+      if: startsWith(github.ref, 'refs/tags/') != true
+      with:
+        name: cdxgen-dist
+        path: dist
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
           cdxgen-dist.zip
+          ./dist/cdxgen-linux
+          ./dist/cdxgen-linux.sha256
+          ./dist/cdxgen-win.exe
+          ./dist/cdxgen-win.exe.sha256
+          ./dist/cdxgen-macos
+          ./dist/cdxgen-macos.sha256
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

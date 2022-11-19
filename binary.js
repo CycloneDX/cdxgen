@@ -72,7 +72,7 @@ if (!CDXGEN_PLUGINS_DIR) {
 if (!CDXGEN_PLUGINS_DIR) {
   if (DEBUG_MODE) {
     console.warn(
-      "cdxgen plugins was not found. Please install with npm install -g @ngcloudsec/cdxgen-plugins-bin"
+      "cdxgen plugins is required for docker and os type scans. Please install with npm install -g @ngcloudsec/cdxgen-plugins-bin."
     );
   }
   CDXGEN_PLUGINS_DIR = "";

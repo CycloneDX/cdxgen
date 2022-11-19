@@ -2222,6 +2222,10 @@ const createOSBom = async (path, options) => {
   let pkgPathList = [];
   if (options.deep) {
     dockerLib.getPkgPathList(exportData, undefined);
+  } else {
+    console.log(
+      "To perform a deep scan for all application packages, invoke cdxgen with --deep argument"
+    );
   }
   return createMultiXBom(pkgPathList, options);
 };
@@ -2788,6 +2792,10 @@ const createMultiXBom = async (pathList, options) => {
           )
         );
       }
+    } else {
+      console.log(
+        "To scan for all jar files, invoke cdxgen with --deep argument"
+      );
     }
   } // for
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
