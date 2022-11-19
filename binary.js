@@ -275,7 +275,7 @@ const executeOsQuery = (query) => {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
-      if (result.error && !result.error.includes("no such table")) {
+      if (DEBUG_MODE && result.error) {
         console.error(result.stdout, result.stderr);
       }
     }
