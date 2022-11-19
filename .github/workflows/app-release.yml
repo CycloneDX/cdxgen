@@ -2,6 +2,11 @@ name: Release AppImage and Exe
 
 on:
   push:
+    branches:
+      - master
+      - feature/*
+      - release/*
+      - fix/*
     tags:
     - 'v*'
   workflow_dispatch:    
