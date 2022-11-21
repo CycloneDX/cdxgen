@@ -1224,3 +1224,75 @@ test("parse bazel build", () => {
   expect(projs.length).toEqual(2);
   expect(projs[0]).toEqual("java-maven-lib");
 });
+
+test("parse helm charts", async () => {
+  let dep_list = await utils.parseHelmYamlData(
+    fs.readFileSync("./test/data/Chart.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list[0]).toEqual({
+    name: "prometheus",
+    version: "16.0.0",
+    description: "Prometheus is a monitoring system and time series database.",
+    homepage: {
+      url: "https://prometheus.io/"
+    }
+  });
+  dep_list = await utils.parseHelmYamlData(
+    fs.readFileSync(
+      "./test/data/prometheus-community-index.yaml",
+      (encoding = "utf-8")
+    )
+  );
+  expect(dep_list.length).toEqual(1836);
+  expect(dep_list[0]).toEqual({
+    name: "alertmanager",
+    version: "0.22.0",
+    description:
+      "The Alertmanager handles alerts sent by client applications such as the Prometheus server.",
+    homepage: { url: "https://prometheus.io/" },
+    _integrity:
+      "sha256-c8ece226669d90fa56a3424fa789b80a10de2cd458cd93141b8e445e26c6054d",
+    repository: { url: "https://github.com/prometheus/alertmanager" }
+  });
+});
+
+test("parse container spec like files", async () => {
+  let dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/docker-compose.yml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(2);
+  expect(dep_list[0]).toEqual({
+    image: "docker.io/bitnami/mariadb:10.6"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/tekton-task.yml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    image:
+      "docker.io/amazon/aws-cli:2.0.52@sha256:1506cec98a7101c935176d440a14302ea528b8f92fcaf4a6f1ea2d7ecef7edc4"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/postgrescluster.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list[0]).toEqual({
+    image:
+      "registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.5-1"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/deployment.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    image: "node-typescript-example"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/skaffold.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list[0]).toEqual({
+    image: "leeroy-web"
+  });
+});

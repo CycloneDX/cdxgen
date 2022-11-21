@@ -575,6 +575,9 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
  * @param options Parse options from the cli
  */
 const createJarBom = (path, options) => {
+  console.log(
+    `About to create SBoM for all jar files under ${path}. This would take a while ...`
+  );
   let pkgList = [];
   let jarFiles = utils.getAllFiles(
     path,
@@ -590,6 +593,9 @@ const createJarBom = (path, options) => {
   }
   let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "jar-deps-"));
   for (let jar of jarFiles) {
+    if (DEBUG_MODE) {
+      console.log(`Parsing ${jar}`);
+    }
     const dlist = utils.extractJarArchive(jar, tempDir);
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
@@ -2275,6 +2281,138 @@ const createJenkinsBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for Helm charts
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createHelmBom = async (path, options) => {
+  let pkgList = [];
+  const yamlFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.yaml"
+  );
+  if (yamlFiles.length) {
+    for (let f of yamlFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const helmData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseHelmYamlData(helmData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(options, pkgList, "helm", {
+      src: path,
+      filename: yamlFiles.join(", ")
+    });
+  }
+  return {};
+};
+
+/**
+ * Function to create bom string for docker compose
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createContainerSpecLikeBom = async (path, options) => {
+  let components = [];
+  let componentsXmls = [];
+  let parentComponent = {};
+  let dependencies = [];
+  let doneimages = [];
+  let dcFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.yml"
+  );
+  const yamlFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.yaml"
+  );
+  if (yamlFiles.length) {
+    dcFiles = dcFiles.concat(yamlFiles);
+  }
+  if (dcFiles.length) {
+    for (let f of dcFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const dcData = fs.readFileSync(f, { encoding: "utf-8" });
+      const imglist = await utils.parseContainerSpecData(dcData);
+      if (imglist && imglist.length) {
+        if (DEBUG_MODE) {
+          console.log("Images identified in", f, "are", imglist);
+        }
+        for (const img of imglist) {
+          if (doneimages.includes(img.image)) {
+            if (DEBUG_MODE) {
+              console.log("Skipping", img.image);
+            }
+            continue;
+          }
+          if (DEBUG_MODE) {
+            console.log(`Parsing image ${img.image}`);
+          }
+          const imageObj = dockerLib.parseImageName(img.image);
+          const pkg = {
+            name: imageObj.repo,
+            version:
+              imageObj.tag ||
+              (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
+            qualifiers: {}
+          };
+          if (imageObj.registry) {
+            pkg["qualifiers"]["repository_url"] = imageObj.registry;
+          }
+          if (imageObj.platform) {
+            pkg["qualifiers"]["platform"] = imageObj.platform;
+          }
+          // Create an entry for the docker image
+          const imageBomData = buildBomNSData(options, [pkg], "docker", {
+            src: img.image,
+            filename: f,
+            nsMapping: {}
+          });
+          if (
+            imageBomData &&
+            imageBomData.bomJson &&
+            imageBomData.bomJson.components
+          ) {
+            components = components.concat(imageBomData.bomJson.components);
+            componentsXmls = componentsXmls.concat(
+              listComponents(
+                options,
+                {},
+                imageBomData.bomJson.components,
+                "docker",
+                "xml"
+              )
+            );
+          }
+          const bomData = await createBom(img.image, { projectType: "docker" });
+          doneimages.push(img.image);
+          if (bomData) {
+            if (bomData.components && bomData.components.length) {
+              components = components.concat(bomData.components);
+            }
+            if (bomData.componentsXmls && bomData.componentsXmls.length) {
+              componentsXmls = componentsXmls.concat(bomData.componentsXmls);
+            }
+          }
+          console.log(
+            `BOM includes ${components.length} unfiltered components so far`
+          );
+        }
+      }
+    }
+    return dedupeBom(components, componentsXmls, parentComponent, dependencies);
+  }
+  return {};
+};
+
+/**
  * Function to create bom string for php projects
  *
  * @param path to the project
@@ -2541,6 +2679,40 @@ const trimComponents = (components, format) => {
 };
 exports.trimComponents = trimComponents;
 
+const dedupeBom = (
+  components,
+  componentsXmls,
+  parentComponent,
+  dependencies
+) => {
+  if (!components.length) {
+    return {};
+  }
+  components = trimComponents(components, "json");
+  componentsXmls = trimComponents(componentsXmls, "xml");
+
+  console.log(`BoM includes ${components.length} components`);
+  const serialNum = "urn:uuid:" + uuidv4();
+  return {
+    parentComponent,
+    components,
+    componentsXmls,
+    bomXml: buildBomXml(serialNum, parentComponent, componentsXmls, {
+      dependencies
+    }),
+    bomJson: {
+      bomFormat: "CycloneDX",
+      specVersion: "1.4",
+      serialNumber: serialNum,
+      version: 1,
+      metadata: addMetadata(parentComponent, "json"),
+      components,
+      dependencies
+    }
+  };
+};
+exports.dedupeBom = dedupeBom;
+
 /**
  * Function to create bom string for all languages
  *
@@ -2804,27 +2976,7 @@ const createMultiXBom = async (pathList, options) => {
       );
     }
   }
-  components = trimComponents(components, "json");
-  componentsXmls = trimComponents(componentsXmls, "xml");
-
-  console.log(
-    `BOM includes ${components.length} components and ${dependencies.length} dependencies`
-  );
-  const serialNum = "urn:uuid:" + uuidv4();
-  return {
-    bomXml: buildBomXml(serialNum, parentComponent, componentsXmls, {
-      dependencies
-    }),
-    bomJson: {
-      bomFormat: "CycloneDX",
-      specVersion: "1.4",
-      serialNumber: serialNum,
-      version: 1,
-      metadata: addMetadata(parentComponent, "json"),
-      components,
-      dependencies
-    }
-  };
+  return dedupeBom(components, componentsXmls, parentComponent, dependencies);
 };
 
 /**
@@ -3026,6 +3178,36 @@ const createXBom = async (path, options) => {
   if (hpiFiles.length) {
     return await createJenkinsBom(path, options);
   }
+
+  // Helm charts
+  const chartFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Chart.yaml"
+  );
+  const yamlFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "values.yaml"
+  );
+  if (chartFiles.length || yamlFiles.length) {
+    return await createHelmBom(path, options);
+  }
+
+  // Docker compose, kubernetes and skaffold
+  const dcFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "docker-compose*.yml"
+  );
+  const skFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "skaffold.yaml"
+  );
+  const deplFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "deployment.yaml"
+  );
+  if (dcFiles.length || skFiles.length || deplFiles.length) {
+    return await createContainerSpecLikeBom(path, options);
+  }
 };
 
 /**
@@ -3034,7 +3216,7 @@ const createXBom = async (path, options) => {
  * @param path to the project
  * @param options Parse options from the cli
  */
-exports.createBom = async (path, options) => {
+const createBom = async (path, options) => {
   let { projectType } = options;
   if (!projectType) {
     projectType = "";
@@ -3118,7 +3300,24 @@ exports.createBom = async (path, options) => {
     case "jvm":
       return await createJavaBom(path, options);
     case "jar":
+      options.multiProject = true;
       return await createJarBom(path, options);
+    case "gradle-index":
+    case "gradle-cache":
+      options.multiProject = true;
+      return await createJarBom(GRADLE_CACHE_DIR, options);
+    case "sbt-index":
+    case "sbt-cache":
+      options.multiProject = true;
+      return await createJarBom(SBT_CACHE_DIR, options);
+    case "maven-index":
+    case "maven-cache":
+    case "maven-repo":
+      options.multiProject = true;
+      return await createJarBom(
+        pathLib.join(os.homedir(), ".m2", "repository"),
+        options
+      );
     case "nodejs":
     case "js":
     case "javascript":
@@ -3127,53 +3326,88 @@ exports.createBom = async (path, options) => {
       return await createNodejsBom(path, options);
     case "python":
     case "py":
+      options.multiProject = true;
       return await createPythonBom(path, options);
     case "go":
     case "golang":
+      options.multiProject = true;
       return await createGoBom(path, options);
     case "rust":
     case "rust-lang":
+      options.multiProject = true;
       return await createRustBom(path, options);
     case "php":
+      options.multiProject = true;
       return await createPHPBom(path, options);
     case "ruby":
+      options.multiProject = true;
       return await createRubyBom(path, options);
     case "csharp":
     case "netcore":
     case "dotnet":
+      options.multiProject = true;
       return await createCsharpBom(path, options);
     case "dart":
     case "flutter":
     case "pub":
+      options.multiProject = true;
       return await createDartBom(path, options);
     case "haskell":
     case "hackage":
     case "cabal":
+      options.multiProject = true;
       return await createHaskellBom(path, options);
     case "elixir":
     case "hex":
     case "mix":
+      options.multiProject = true;
       return await createElixirBom(path, options);
     case "c":
     case "cpp":
     case "c++":
     case "conan":
+      options.multiProject = true;
       return await createCppBom(path, options);
     case "clojure":
     case "edn":
     case "clj":
     case "leiningen":
+      options.multiProject = true;
       return await createClojureBom(path, options);
     case "github":
     case "actions":
+      options.multiProject = true;
       return await createGitHubBom(path, options);
     case "os":
     case "osquery":
     case "windows":
     case "linux":
+      options.multiProject = true;
       return await createOSBom(path, options);
     case "jenkins":
+      options.multiProject = true;
       return await createJenkinsBom(path, options);
+    case "helm":
+    case "charts":
+      options.multiProject = true;
+      return await createHelmBom(path, options);
+    case "helm-index":
+    case "helm-repo":
+      options.multiProject = true;
+      return await createHelmBom(
+        pathLib.join(os.homedir(), ".cache", "helm", "repository"),
+        options
+      );
+    case "docker-compose":
+    case "swarm":
+    case "tekton":
+    case "kustomize":
+    case "operator":
+    case "skaffold":
+    case "kubernetes":
+    case "openshift":
+      options.multiProject = true;
+      return await createContainerSpecLikeBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95
@@ -3184,6 +3418,7 @@ exports.createBom = async (path, options) => {
       }
   }
 };
+exports.createBom = createBom;
 
 /**
  * Method to submit the generated bom to dependency-track or AppThreat server

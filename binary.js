@@ -237,10 +237,12 @@ const getOSPackages = (src) => {
               group = "";
             }
             if (group === "") {
-              const purlObj = PackageURL.fromString(comp.purl);
-              if (purlObj.namespace && purlObj.namespace !== "") {
-                group = purlObj.namespace;
-              }
+              try {
+                const purlObj = PackageURL.fromString(comp.purl);
+                if (purlObj.namespace && purlObj.namespace !== "") {
+                  group = purlObj.namespace;
+                }
+              } catch (err) {}
             }
             comp.group = group;
             comp.name = name;
