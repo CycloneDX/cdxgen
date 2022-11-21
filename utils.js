@@ -42,7 +42,7 @@ const getAllFiles = function (dirPath, pattern) {
       absolute: true,
       nocase: true,
       nodir: true,
-      strict: false,
+      strict: true,
       dot: pattern.startsWith(".") ? true : false,
       follow: false,
       ignore: [
@@ -2204,7 +2204,10 @@ exports.parsePubLockData = parsePubLockData;
 
 const parsePubYamlData = async function (pubYamlData) {
   const pkgList = [];
-  const yamlObj = yaml.load(pubYamlData);
+  let yamlObj = undefined;
+  try {
+    yamlObj = yaml.load(pubYamlData);
+  } catch (err) {}
   if (!yamlObj) {
     return pkgList;
   }
@@ -2217,6 +2220,164 @@ const parsePubYamlData = async function (pubYamlData) {
   return pkgList;
 };
 exports.parsePubYamlData = parsePubYamlData;
+
+const parseHelmYamlData = async function (helmData) {
+  const pkgList = [];
+  let yamlObj = undefined;
+  try {
+    yamlObj = yaml.load(helmData);
+  } catch (err) {}
+  if (!yamlObj) {
+    return pkgList;
+  }
+  if (yamlObj.name && yamlObj.version) {
+    let pkg = {
+      name: yamlObj.name,
+      description: yamlObj.description || "",
+      version: yamlObj.version
+    };
+    if (yamlObj.home) {
+      pkg["homepage"] = { url: yamlObj.home };
+    }
+    pkgList.push(pkg);
+  }
+  if (yamlObj.dependencies) {
+    for (const hd of yamlObj.dependencies) {
+      let pkg = {
+        name: hd.name,
+        version: hd.version // This could have * so not precise
+      };
+      if (hd.repository) {
+        pkg["repository"] = { url: hd.repository };
+      }
+      pkgList.push(pkg);
+    }
+  }
+  if (yamlObj.entries) {
+    for (const he of Object.keys(yamlObj.entries)) {
+      for (const key of Object.keys(yamlObj.entries[he])) {
+        const hd = yamlObj.entries[he][key];
+        if (hd.name && hd.version) {
+          let pkg = {
+            name: hd.name,
+            version: hd.version,
+            description: hd.description || ""
+          };
+          if (hd.sources && Array.isArray(hd.sources) && hd.sources.length) {
+            pkg["repository"] = { url: hd.sources[0] };
+            if (hd.home && hd.home !== hd.sources[0]) {
+              pkg["homepage"] = { url: hd.home };
+            }
+          }
+          if (hd.home && !pkg["homepage"]) {
+            pkg["homepage"] = { url: hd.home };
+          }
+          if (hd.digest) {
+            pkg._integrity = "sha256-" + hd.digest;
+          }
+
+          pkgList.push(pkg);
+        }
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseHelmYamlData = parseHelmYamlData;
+
+const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
+  if (typeof keyValueObj === "string" || keyValueObj instanceof String) {
+    return imgList;
+  }
+  if (Object.keys(keyValueObj).length) {
+    const imageLike =
+      keyValueObj.image ||
+      keyValueObj.repository ||
+      keyValueObj.dockerImage ||
+      keyValueObj.mavenImage ||
+      keyValueObj.gradleImage ||
+      keyValueObj.packImage ||
+      keyValueObj.koImage ||
+      keyValueObj.kanikoImage;
+    if (
+      imageLike &&
+      typeof imageLike === "string" &&
+      !imgList.includes(imageLike)
+    ) {
+      pkgList.push({ image: imageLike });
+      imgList.push(imageLike);
+    }
+    for (const key of Object.keys(keyValueObj)) {
+      // Skip unwanted blocks to improve performance
+      if (["schema", "openAPIV3Schema", "names", "status"].includes(key)) {
+        continue;
+      }
+      const valueObj = keyValueObj[key];
+      if (!valueObj) {
+        continue;
+      }
+      if (Object.keys(valueObj).length && typeof valueObj !== "string") {
+        recurseImageNameLookup(valueObj, pkgList, imgList);
+      }
+      if (Array.isArray(valueObj)) {
+        for (const ele of valueObj) {
+          if (typeof ele !== "string") {
+            recurseImageNameLookup(ele, pkgList, imgList);
+          }
+        }
+      }
+    }
+  } else if (Array.isArray(keyValueObj)) {
+    for (const ele of keyValueObj) {
+      if (typeof ele !== "string") {
+        recurseImageNameLookup(ele, pkgList, imgList);
+      }
+    }
+  }
+  return imgList;
+};
+exports.recurseImageNameLookup = recurseImageNameLookup;
+
+const parseContainerSpecData = async function (dcData) {
+  const pkgList = [];
+  const imgList = [];
+  if (!dcData.includes("image:")) {
+    return pkgList;
+  }
+  let dcDataList = [dcData];
+  if (dcData.includes("---")) {
+    dcDataList = dcData.split("---");
+  }
+  for (const dcData of dcDataList) {
+    let yamlObj = undefined;
+    try {
+      yamlObj = yaml.load(dcData);
+    } catch (err) {
+      console.log(err);
+    }
+    if (!yamlObj) {
+      continue;
+    }
+    if (yamlObj.services) {
+      for (const serv of Object.keys(yamlObj.services)) {
+        const aservice = yamlObj.services[serv];
+        if (aservice.image && !imgList.includes(aservice.image)) {
+          pkgList.push({
+            image: aservice.image
+          });
+          imgList.push(aservice.image);
+        }
+      }
+    }
+    // Tekton tasks and kustomize have spec. Skaffold has build
+    const recurseBlock = yamlObj.spec || yamlObj.build;
+    if (recurseBlock) {
+      recurseImageNameLookup(recurseBlock, pkgList, imgList);
+    }
+  }
+  return pkgList;
+};
+exports.parseContainerSpecData = parseContainerSpecData;
 
 const parseCabalData = async function (cabalData) {
   const pkgList = [];
@@ -2989,7 +3150,7 @@ const parsePomXml = function (pomXmlData) {
       version,
       description: project.description ? project.description._ : "",
       url: project.url ? project.url._ : "",
-      scm: project.scm ? project.scm.url._ : ""
+      scm: project.scm && project.scm.url ? project.scm.url._ : ""
     };
   }
   return undefined;
@@ -3025,7 +3186,16 @@ const extractJarArchive = function (jarFile, tempDir) {
   let pkgList = [];
   let jarFiles = [];
   const fname = path.basename(jarFile);
-  fs.copyFileSync(jarFile, path.join(tempDir, fname));
+  let pomname = undefined;
+  // If there is a pom file in the same directory, try to use it
+  if (jarFile.endsWith(".jar")) {
+    pomname = jarFile.replace(".jar", ".pom");
+  }
+  if (pomname && fs.existsSync(pomname)) {
+    tempDir = path.dirname(jarFile);
+  } else {
+    fs.copyFileSync(jarFile, path.join(tempDir, fname));
+  }
   if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
     let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
       encoding: "utf-8",
@@ -3048,16 +3218,34 @@ const extractJarArchive = function (jarFile, tempDir) {
   if (jarFiles && jarFiles.length) {
     for (let jf of jarFiles) {
       const jarname = path.basename(jf);
-      const manifestDir = path.join(tempDir, "META-INF");
+      // Ignore test jars
+      if (
+        jarname.endsWith("-tests.jar") ||
+        jarname.endsWith("-test-sources.jar")
+      ) {
+        continue;
+      }
+      let manifestDir = path.join(tempDir, "META-INF");
       const manifestFile = path.join(tempDir, "META-INF", "MANIFEST.MF");
-      const jarResult = spawnSync("jar", ["-xf", jf], {
-        encoding: "utf-8",
-        cwd: tempDir
-      });
+      let jarResult = {
+        status: 1
+      };
+      if (fs.existsSync(pomname)) {
+        manifestDir = path.dirname(jf);
+        jarResult = { status: 0 };
+      } else {
+        jarResult = spawnSync("jar", ["-xf", jf], {
+          encoding: "utf-8",
+          cwd: tempDir
+        });
+      }
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
       } else {
-        const pomXmls = getAllFiles(manifestDir, "**/pom.xml");
+        let pomXmls = getAllFiles(manifestDir, "**/*.pom");
+        if (!pomXmls.length) {
+          pomXmls = getAllFiles(manifestDir, "**/pom.xml");
+        }
         // Check if there are pom.xml
         if (pomXmls && pomXmls.length) {
           const pxml = pomXmls[0];
@@ -3067,15 +3255,21 @@ const extractJarArchive = function (jarFile, tempDir) {
             })
           );
           if (pomMetadata) {
-            pkgList.push({
+            let ppkg = {
               group: pomMetadata["groupId"],
               name: pomMetadata["artifactId"],
               version: pomMetadata["version"],
               description: pomMetadata["description"],
-              homepage: { url: pomMetadata["url"] },
               repository: { url: pomMetadata["scm"] },
               qualifiers: { type: "jar" }
-            });
+            };
+            if (
+              pomMetadata["url"] &&
+              pomMetadata["url"] !== pomMetadata["scm"]
+            ) {
+              ppkg["homepage"] = { url: pomMetadata["url"] };
+            }
+            pkgList.push(ppkg);
           }
         } else if (fs.existsSync(manifestFile)) {
           const jarMetadata = parseJarManifest(

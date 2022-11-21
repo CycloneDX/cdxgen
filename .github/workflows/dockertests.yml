@@ -12,7 +12,7 @@ on:
 jobs:
   linux-tests:
     runs-on: ubuntu-latest
-
+    if: "! contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       matrix:
         node-version: [18.x]
@@ -29,9 +29,13 @@ jobs:
           npm run build --if-present
           npm test
           npm install -g @ngcloudsec/cdxgen-plugins-bin
-          mkdir -p bomresults
+          mkdir -p bomresults repotests
         env:
           CI: true
+      - uses: actions/checkout@v3
+        with:
+          repository: 'grafana-operator/grafana-operator'
+          path: 'repotests/grafana-operator'
       - name: dockertests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
@@ -59,6 +63,12 @@ jobs:
           bin/cdxgen /tmp/scanslim.tar -o bomresults/bom-scanarch.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-scanarch.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-scanarch.xml --input-format xml --input-version v1_4
+          bin/cdxgen -t docker-compose test/data -o bomresults/bom-dc.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-dc.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-dc.xml --input-format xml --input-version v1_4
+          bin/cdxgen -t operator repotests/grafana-operator -o bomresults/bom-op.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-op.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-op.xml --input-format xml --input-version v1_4
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
         with:

@@ -343,10 +343,12 @@ const getImage = async (fullImageName) => {
       if (DEBUG_MODE) {
         console.log(`Retrying with ${fullImageName} due to`, err);
       }
-      localData = await makeRequest(`images/${fullImageName}/json`);
-      if (DEBUG_MODE) {
-        console.log(localData);
-      }
+      try {
+        localData = await makeRequest(`images/${fullImageName}/json`);
+        if (DEBUG_MODE) {
+          console.log(localData);
+        }
+      } catch (err) {}
     }
   }
   if (!localData) {
@@ -370,7 +372,7 @@ const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: false,
+        strict: true,
         C: dir,
         portable: true,
         onwarn: (code, message, data) => {}
@@ -488,9 +490,13 @@ const extractFromManifest = async (
     const lastLayer = layers[layers.length - 1];
     for (let layer of layers) {
       if (DEBUG_MODE) {
-        console.log(`Extracting ${layer} to ${allLayersExplodedDir}`);
+        console.log(`Extracting layer ${layer} to ${allLayersExplodedDir}`);
       }
-      await extractTar(path.join(tempDir, layer), allLayersExplodedDir);
+      try {
+        await extractTar(path.join(tempDir, layer), allLayersExplodedDir);
+      } catch (err) {
+        console.log(err);
+      }
     }
     if (manifest.Config) {
       lastLayerConfigFile = path.join(tempDir, manifest.Config);
@@ -581,7 +587,7 @@ const exportImage = async (fullImageName) => {
           preserveOwner: false,
           noMtime: true,
           noChmod: true,
-          strict: false,
+          strict: true,
           C: tempDir,
           portable: true,
           onwarn: (code, message, data) => {}

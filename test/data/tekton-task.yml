@@ -1,0 +1,43 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: aws-ecr-login
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/categories: Cloud, Image Build
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: aws, ecr
+    tekton.dev/displayName: "Amazon ECR Login"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    This task retrieves an `authentication token` using the GetAuthorizationToken API
+    that you can use to authenticate to an `Amazon ECR registry`
+
+    You can pass the authorization token to the login command of the container
+    client of your preference, such as the Docker CLI. After you have
+    authenticated to an Amazon ECR registry with this authentication token, you
+    can use the client to push and pull images from that registry as long as your
+    IAM principal has access to do so until the token expires.
+
+  workspaces:
+    - name: secrets
+      mountPath: /tekton/home/.aws
+      optional: true
+  params:
+    - name: region
+      type: string
+      default: "us-east-1"
+      description: |
+        Region for AWS, ensure that you specify the
+        same Region that your Amazon ECR registry exists in.
+  steps:
+    - name: get-login-password
+      image: docker.io/amazon/aws-cli:2.0.52@sha256:1506cec98a7101c935176d440a14302ea528b8f92fcaf4a6f1ea2d7ecef7edc4 #tag: 2.0.52
+      script: |
+        aws ecr get-login-password --region $(params.region) > $(results.password.path)
+  results:
+    - name: password
+      description: The password to authenticate to ecr registry.
