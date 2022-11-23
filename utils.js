@@ -2289,8 +2289,14 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
   if (typeof keyValueObj === "string" || keyValueObj instanceof String) {
     return imgList;
   }
-  if (Object.keys(keyValueObj).length) {
-    const imageLike =
+  if (Array.isArray(keyValueObj)) {
+    for (const ele of keyValueObj) {
+      if (typeof ele !== "string") {
+        recurseImageNameLookup(ele, pkgList, imgList);
+      }
+    }
+  } else if (Object.keys(keyValueObj).length) {
+    let imageLike =
       keyValueObj.image ||
       keyValueObj.repository ||
       keyValueObj.dockerImage ||
@@ -2299,6 +2305,9 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
       keyValueObj.packImage ||
       keyValueObj.koImage ||
       keyValueObj.kanikoImage;
+    if (keyValueObj.name && keyValueObj.name.includes("/")) {
+      imageLike = keyValueObj.name;
+    }
     if (
       imageLike &&
       typeof imageLike === "string" &&
@@ -2327,12 +2336,6 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
         }
       }
     }
-  } else if (Array.isArray(keyValueObj)) {
-    for (const ele of keyValueObj) {
-      if (typeof ele !== "string") {
-        recurseImageNameLookup(ele, pkgList, imgList);
-      }
-    }
   }
   return imgList;
 };
@@ -2341,7 +2344,7 @@ exports.recurseImageNameLookup = recurseImageNameLookup;
 const parseContainerSpecData = async function (dcData) {
   const pkgList = [];
   const imgList = [];
-  if (!dcData.includes("image:")) {
+  if (!dcData.includes("image") && !dcData.includes("kind")) {
     return pkgList;
   }
   let dcDataList = [dcData];
@@ -2370,7 +2373,7 @@ const parseContainerSpecData = async function (dcData) {
       }
     }
     // Tekton tasks and kustomize have spec. Skaffold has build
-    const recurseBlock = yamlObj.spec || yamlObj.build;
+    const recurseBlock = yamlObj.spec || yamlObj.build || yamlObj.images;
     if (recurseBlock) {
       recurseImageNameLookup(recurseBlock, pkgList, imgList);
     }
@@ -2476,6 +2479,44 @@ const parseGitHubWorkflowData = async function (ghwData) {
   return pkgList;
 };
 exports.parseGitHubWorkflowData = parseGitHubWorkflowData;
+
+const parseCloudBuildData = async function (cbwData) {
+  const pkgList = [];
+  const keys_cache = {};
+  if (!cbwData) {
+    return pkgList;
+  }
+  const yamlObj = yaml.load(cbwData);
+  if (!yamlObj) {
+    return pkgList;
+  }
+  if (yamlObj.steps) {
+    for (const step of yamlObj.steps) {
+      if (step.name) {
+        const tmpA = step.name.split(":");
+        if (tmpA.length === 2) {
+          let group = path.dirname(tmpA[0]);
+          let name = path.basename(tmpA[0]);
+          if (group === ".") {
+            group = "";
+          }
+          const version = tmpA[1];
+          const key = group + "-" + name + "-" + version;
+          if (!keys_cache[key] && name && version) {
+            keys_cache[key] = key;
+            pkgList.push({
+              group,
+              name,
+              version
+            });
+          }
+        }
+      }
+    }
+  }
+  return pkgList;
+};
+exports.parseCloudBuildData = parseCloudBuildData;
 
 const parseConanLockData = async function (conanLockData) {
   const pkgList = [];

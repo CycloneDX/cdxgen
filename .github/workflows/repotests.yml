@@ -89,6 +89,10 @@ jobs:
         with:
           repository: 'gojek/ziggurat'
           path: 'repotests/ziggurat'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'GoogleCloudPlatform/microservices-demo'
+          path: 'repotests/microservices-demo'
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
@@ -145,6 +149,15 @@ jobs:
           SCAN_DEBUG_MODE=debug bin/cdxgen -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-clj.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-clj.xml --input-format xml --input-version v1_4
+
+          SCAN_DEBUG_MODE=debug bin/cdxgen -r repotests/microservices-demo -o bomresults/bom-msd.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-msd.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-msd.xml --input-format xml --input-version v1_4
+
+          SCAN_DEBUG_MODE=debug bin/cdxgen -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-yaml.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-yaml.xml --input-format xml --input-version v1_4
+
           mkdir -p jenkins
           wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
           wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
