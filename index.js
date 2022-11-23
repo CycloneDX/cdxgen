@@ -2188,6 +2188,34 @@ const createGitHubBom = async (path, options) => {
 };
 
 /**
+ * Function to create bom string for cloudbuild yaml
+ *
+ * @param path to the project
+ * @param options Parse options from the cli
+ */
+const createCloudBuildBom = async (path, options) => {
+  const cbFiles = utils.getAllFiles(path, "cloudbuild.yml");
+  let pkgList = [];
+  if (cbFiles.length) {
+    for (let f of cbFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const cbwData = fs.readFileSync(f, { encoding: "utf-8" });
+      const dlist = await utils.parseCloudBuildData(cbwData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    return buildBomNSData(options, pkgList, "cloudbuild", {
+      src: path,
+      filename: cbFiles.join(", ")
+    });
+  }
+  return {};
+};
+
+/**
  * Function to create bom string for the current OS using osquery
  *
  * @param path to the project
@@ -2940,6 +2968,24 @@ const createMultiXBom = async (pathList, options) => {
         listComponents(options, {}, bomData.bomJson.components, "github", "xml")
       );
     }
+    bomData = await createCloudBuildBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} CloudBuild configuration at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+      componentsXmls = componentsXmls.concat(
+        listComponents(
+          options,
+          {},
+          bomData.bomJson.components,
+          "cloudbuild",
+          "xml"
+        )
+      );
+    }
     // jar scanning is quite slow so this is limited to only deep scans
     if (options.deep) {
       bomData = createJarBom(path, options);
@@ -3208,6 +3254,15 @@ const createXBom = async (path, options) => {
   if (dcFiles.length || skFiles.length || deplFiles.length) {
     return await createContainerSpecLikeBom(path, options);
   }
+
+  // Google CloudBuild
+  const cbFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "cloudbuild.yaml"
+  );
+  if (cbFiles.length) {
+    return await createCloudBuildBom(path, options);
+  }
 };
 
 /**
@@ -3406,8 +3461,12 @@ const createBom = async (path, options) => {
     case "skaffold":
     case "kubernetes":
     case "openshift":
+    case "yaml-manifest":
       options.multiProject = true;
       return await createContainerSpecLikeBom(path, options);
+    case "cloudbuild":
+      options.multiProject = true;
+      return await createCloudBuildBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/AppThreat/cdxgen/issues/95

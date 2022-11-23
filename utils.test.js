@@ -1295,4 +1295,52 @@ test("parse container spec like files", async () => {
   expect(dep_list[0]).toEqual({
     image: "leeroy-web"
   });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/skaffold-ms.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(11);
+  expect(dep_list[0]).toEqual({
+    image: "emailservice"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/emailservice.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    image: "emailservice"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/redis.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    image: "redis:alpine"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/adservice.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    image: "gcr.io/google-samples/microservices-demo/adservice:v0.4.1"
+  });
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/kustomization.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(11);
+  expect(dep_list[0]).toEqual({
+    image: "gcr.io/google-samples/microservices-demo/adservice"
+  });
+});
+
+test("parse cloudbuild data", async () => {
+  expect(await utils.parseCloudBuildData(null)).toEqual([]);
+  dep_list = await utils.parseCloudBuildData(
+    fs.readFileSync("./test/data/cloudbuild.yaml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    group: "gcr.io/k8s-skaffold",
+    name: "skaffold",
+    version: "v2.0.1"
+  });
 });
