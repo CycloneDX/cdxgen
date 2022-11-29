@@ -307,9 +307,7 @@ const getOSPackages = (src) => {
                     comp["bom-ref"] = comp.purl;
                   }
                 }
-              } catch (err) {
-                console.log(err);
-              }
+              } catch (err) {}
             }
             if (
               comp.licenses &&
