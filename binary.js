@@ -210,7 +210,6 @@ const getOSPackages = (src) => {
       }
       if (tmpBom && tmpBom.components) {
         for (const comp of tmpBom.components) {
-          delete comp.properties;
           if (comp.purl) {
             // Retain go components alone from trivy
             if (
@@ -233,12 +232,13 @@ const getOSPackages = (src) => {
             // Fix the group
             let group = path.dirname(comp.name);
             const name = path.basename(comp.name);
+            let purlObj = undefined;
             if (group === ".") {
               group = "";
             }
             if (group === "") {
               try {
-                const purlObj = PackageURL.fromString(comp.purl);
+                purlObj = PackageURL.fromString(comp.purl);
                 if (purlObj.namespace && purlObj.namespace !== "") {
                   group = purlObj.namespace;
                 }
@@ -253,7 +253,39 @@ const getOSPackages = (src) => {
             ) {
               comp.licenses = [comp.licenses[0]];
             }
+            const compProperties = comp.properties;
+            let srcName = undefined;
+            let srcVersion = undefined;
+            if (compProperties && Array.isArray(compProperties)) {
+              for (const aprop of compProperties) {
+                if (aprop.name.endsWith("SrcName")) {
+                  srcName = aprop.value;
+                }
+                if (aprop.name.endsWith("SrcVersion")) {
+                  srcVersion = aprop.value;
+                }
+              }
+            }
+            delete comp.properties;
             pkgList.push(comp);
+            // If there is a source package defined include it as well
+            if (srcName && srcVersion && srcName !== comp.name) {
+              let newComp = Object.assign({}, comp);
+              newComp.name = srcName;
+              newComp.version = srcVersion;
+              if (purlObj) {
+                newComp.purl = new PackageURL(
+                  purlObj.type,
+                  purlObj.namespace,
+                  srcName,
+                  srcVersion,
+                  purlObj.qualifiers,
+                  purlObj.subpath
+                ).toString();
+              }
+              newComp["bom-ref"] = newComp.purl;
+              pkgList.push(newComp);
+            }
           }
         }
       }
