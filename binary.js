@@ -115,6 +115,44 @@ if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "osquery"))) {
 } else if (process.env.OSQUERY_CMD) {
   OSQUERY_BIN = process.env.OSQUERY_CMD;
 }
+
+const OS_DISTRO_ALIAS = {
+  "ubuntu-4.10": "warty",
+  "ubuntu-5.04": "hoary",
+  "ubuntu-5.10": "breezy",
+  "ubuntu-6.06": "dapper",
+  "ubuntu-6.10": "edgy",
+  "ubuntu-7.04": "feisty",
+  "ubuntu-7.10": "gutsy",
+  "ubuntu-8.04": "hardy",
+  "ubuntu-8.10": "intrepid",
+  "ubuntu-9.04": "jaunty",
+  "ubuntu-9.10": "karmic",
+  "ubuntu-10.04": "lucid",
+  "ubuntu-10.10": "maverick",
+  "ubuntu-11.04": "natty",
+  "ubuntu-11.10": "oneiric",
+  "ubuntu-12.04": "precise",
+  "ubuntu-12.10": "quantal",
+  "ubuntu-13.04": "raring",
+  "ubuntu-13.10": "saucy",
+  "ubuntu-14.04": "trusty",
+  "ubuntu-14.10": "utopic",
+  "ubuntu-15.04": "vivid",
+  "ubuntu-15.10": "wily",
+  "ubuntu-16.04": "xenial",
+  "ubuntu-16.10": "yakkety",
+  "ubuntu-17.04": "zesty",
+  "ubuntu-17.10": "artful",
+  "ubuntu-18.04": "bionic",
+  "ubuntu-18.10": "cosmic",
+  "ubuntu-19.04": "disco",
+  "ubuntu-19.10": "eoan",
+  "ubuntu-20.04": "focal",
+  "ubuntu-20.10": "groovy",
+  "ubuntu-23.04": "lunar"
+};
+
 const getGoBuildInfo = (src) => {
   if (GOVERSION_BIN) {
     let result = spawnSync(GOVERSION_BIN, [src], {
@@ -231,21 +269,48 @@ const getOSPackages = (src) => {
             }
             // Fix the group
             let group = path.dirname(comp.name);
-            const name = path.basename(comp.name);
+            let name = path.basename(comp.name);
             let purlObj = undefined;
+            let distro = undefined;
             if (group === ".") {
               group = "";
             }
+            comp.group = group;
+            comp.name = name;
             if (group === "") {
               try {
                 purlObj = PackageURL.fromString(comp.purl);
                 if (purlObj.namespace && purlObj.namespace !== "") {
                   group = purlObj.namespace;
+                  comp.group = group;
+                  purlObj.namespace = group;
                 }
-              } catch (err) {}
+                // Prefix distro codename for ubuntu
+                if (
+                  purlObj.qualifiers &&
+                  purlObj.qualifiers.distro &&
+                  OS_DISTRO_ALIAS[purlObj.qualifiers.distro]
+                ) {
+                  distro = OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
+                  if (distro !== "") {
+                    name = distro + "/" + name;
+                    comp.name = name;
+                    purlObj.name = name;
+                    comp.purl = new PackageURL(
+                      purlObj.type,
+                      purlObj.namespace,
+                      name,
+                      purlObj.version,
+                      purlObj.qualifiers,
+                      purlObj.subpath
+                    ).toString();
+                    comp["bom-ref"] = comp.purl;
+                  }
+                }
+              } catch (err) {
+                console.log(err);
+              }
             }
-            comp.group = group;
-            comp.name = name;
             if (
               comp.licenses &&
               Array.isArray(comp.licenses) &&
@@ -270,6 +335,9 @@ const getOSPackages = (src) => {
             pkgList.push(comp);
             // If there is a source package defined include it as well
             if (srcName && srcVersion && srcName !== comp.name) {
+              if (distro && distro != "") {
+                srcName = distro + "/" + srcName;
+              }
               let newComp = Object.assign({}, comp);
               newComp.name = srcName;
               newComp.version = srcVersion;
