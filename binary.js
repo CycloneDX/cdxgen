@@ -298,7 +298,7 @@ const getOSPackages = (src) => {
             let group = path.dirname(comp.name);
             let name = path.basename(comp.name);
             let purlObj = undefined;
-            let distro = undefined;
+            let distro_codename = undefined;
             if (group === ".") {
               group = "";
             }
@@ -318,11 +318,9 @@ const getOSPackages = (src) => {
                   purlObj.qualifiers.distro &&
                   OS_DISTRO_ALIAS[purlObj.qualifiers.distro]
                 ) {
-                  distro = OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
-                  if (distro !== "") {
-                    name = distro + "/" + name;
-                    comp.name = name;
-                    purlObj.name = name;
+                  distro_codename = OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
+                  purlObj.qualifiers["distro_name"] = distro_codename;
+                  if (distro_codename !== "") {
                     comp.purl = new PackageURL(
                       purlObj.type,
                       purlObj.namespace,
@@ -360,9 +358,6 @@ const getOSPackages = (src) => {
             pkgList.push(comp);
             // If there is a source package defined include it as well
             if (srcName && srcVersion && srcName !== comp.name) {
-              if (distro && distro != "") {
-                srcName = distro + "/" + srcName;
-              }
               let newComp = Object.assign({}, comp);
               newComp.name = srcName;
               newComp.version = srcVersion;
