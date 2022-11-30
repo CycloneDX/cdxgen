@@ -150,7 +150,34 @@ const OS_DISTRO_ALIAS = {
   "ubuntu-19.10": "eoan",
   "ubuntu-20.04": "focal",
   "ubuntu-20.10": "groovy",
-  "ubuntu-23.04": "lunar"
+  "ubuntu-23.04": "lunar",
+  "debian-14": "forky",
+  "debian-14.5": "forky",
+  "debian-13": "trixie",
+  "debian-13.5": "trixie",
+  "debian-12": "bookworm",
+  "debian-12.5": "bookworm",
+  "debian-11": "bullseye",
+  "debian-11.5": "bullseye",
+  "debian-10": "buster",
+  "debian-10.5": "buster",
+  "debian-9": "stretch",
+  "debian-9.5": "stretch",
+  "debian-8": "jessie",
+  "debian-8.5": "jessie",
+  "debian-7": "wheezy",
+  "debian-7.5": "wheezy",
+  "debian-6": "squeeze",
+  "debian-5": "lenny",
+  "debian-4": "etch",
+  "debian-3.1": "sarge",
+  "debian-3": "woody",
+  "debian-2.2": "potato",
+  "debian-2.1": "slink",
+  "debian-2": "hamm",
+  "debian-1.3": "bo",
+  "debian-1.2": "rex",
+  "debian-1.1": "buzz"
 };
 
 const getGoBuildInfo = (src) => {
@@ -271,7 +298,7 @@ const getOSPackages = (src) => {
             let group = path.dirname(comp.name);
             let name = path.basename(comp.name);
             let purlObj = undefined;
-            let distro = undefined;
+            let distro_codename = undefined;
             if (group === ".") {
               group = "";
             }
@@ -291,11 +318,9 @@ const getOSPackages = (src) => {
                   purlObj.qualifiers.distro &&
                   OS_DISTRO_ALIAS[purlObj.qualifiers.distro]
                 ) {
-                  distro = OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
-                  if (distro !== "") {
-                    name = distro + "/" + name;
-                    comp.name = name;
-                    purlObj.name = name;
+                  distro_codename = OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
+                  purlObj.qualifiers["distro_name"] = distro_codename;
+                  if (distro_codename !== "") {
                     comp.purl = new PackageURL(
                       purlObj.type,
                       purlObj.namespace,
@@ -333,9 +358,6 @@ const getOSPackages = (src) => {
             pkgList.push(comp);
             // If there is a source package defined include it as well
             if (srcName && srcVersion && srcName !== comp.name) {
-              if (distro && distro != "") {
-                srcName = distro + "/" + srcName;
-              }
               let newComp = Object.assign({}, comp);
               newComp.name = srcName;
               newComp.version = srcVersion;

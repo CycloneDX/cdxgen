@@ -643,6 +643,7 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
       path.join(allLayersExplodedDir, "/opt"),
       path.join(allLayersExplodedDir, "/home"),
       path.join(allLayersExplodedDir, "/usr/share"),
+      path.join(allLayersExplodedDir, "/usr/src"),
       path.join(allLayersExplodedDir, "/var/www/html"),
       path.join(allLayersExplodedDir, "/var/lib"),
       path.join(allLayersExplodedDir, "/mnt")
@@ -654,6 +655,7 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
       path.join(allLayersExplodedDir, "/usr/local/lib64"),
       path.join(allLayersExplodedDir, "/opt"),
       path.join(allLayersExplodedDir, "/usr/share"),
+      path.join(allLayersExplodedDir, "/usr/src"),
       path.join(allLayersExplodedDir, "/var/www/html"),
       path.join(allLayersExplodedDir, "/var/lib")
     ];
