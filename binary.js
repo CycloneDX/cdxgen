@@ -298,7 +298,7 @@ const getOSPackages = (src) => {
             let group = path.dirname(comp.name);
             let name = path.basename(comp.name);
             let purlObj = undefined;
-            let distro_codename = undefined;
+            let distro_codename = "";
             if (group === ".") {
               group = "";
             }
@@ -313,14 +313,18 @@ const getOSPackages = (src) => {
                   purlObj.namespace = group;
                 }
                 // Prefix distro codename for ubuntu
-                if (
-                  purlObj.qualifiers &&
-                  purlObj.qualifiers.distro &&
-                  OS_DISTRO_ALIAS[purlObj.qualifiers.distro]
-                ) {
-                  distro_codename = OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
-                  purlObj.qualifiers["distro_name"] = distro_codename;
+                if (purlObj.qualifiers && purlObj.qualifiers.distro) {
+                  if (OS_DISTRO_ALIAS[purlObj.qualifiers.distro]) {
+                    distro_codename =
+                      OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
+                  } else if (group === "alpine") {
+                    const dtmpA = purlObj.qualifiers.distro.split(".");
+                    if (dtmpA && dtmpA.length > 2) {
+                      distro_codename = group + "-" + dtmpA[0] + "." + dtmpA[1];
+                    }
+                  }
                   if (distro_codename !== "") {
+                    purlObj.qualifiers["distro_name"] = distro_codename;
                     comp.purl = new PackageURL(
                       purlObj.type,
                       purlObj.namespace,
