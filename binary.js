@@ -322,6 +322,14 @@ const getOSPackages = (src) => {
                     if (dtmpA && dtmpA.length > 2) {
                       distro_codename = group + "-" + dtmpA[0] + "." + dtmpA[1];
                     }
+                  } else if (group === "redhat") {
+                    const dtmpA = purlObj.qualifiers.distro.split(".");
+                    if (dtmpA && dtmpA.length > 1) {
+                      distro_codename = dtmpA[0].replace(
+                        "redhat",
+                        "enterprise_linux"
+                      );
+                    }
                   }
                   if (distro_codename !== "") {
                     purlObj.qualifiers["distro_name"] = distro_codename;
