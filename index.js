@@ -119,7 +119,9 @@ function addDependencies(dependencies, format = "xml") {
  * Function to create metadata block
  *
  */
-function addMetadata(parentComponent = {}, format = "xml") {
+function addMetadata(parentComponent = {}, format = "xml", options = {}) {
+  // DO NOT fork this project to just change the vendor or author's name
+  // Try to contribute to this project by sending PR or filing issues
   let metadata = {
     timestamp: new Date().toISOString(),
     tools: [
@@ -155,7 +157,7 @@ function addMetadata(parentComponent = {}, format = "xml") {
       {},
       {},
       parentComponent,
-      null,
+      parentComponent.type,
       format
     );
     if (allPComponents.length) {
@@ -164,6 +166,129 @@ function addMetadata(parentComponent = {}, format = "xml") {
         metadata.component = firstPComp.component;
       } else {
         metadata.component = firstPComp;
+      }
+    }
+  }
+  if (options) {
+    const mproperties = [];
+    if (options.exportData) {
+      const inspectData = options.exportData.inspectData;
+      if (inspectData) {
+        if (inspectData.Id) {
+          mproperties.push({
+            name: "oci:image:Id",
+            value: inspectData.Id
+          });
+        }
+        if (
+          inspectData.RepoTags &&
+          Array.isArray(inspectData.RepoTags) &&
+          inspectData.RepoTags.length
+        ) {
+          mproperties.push({
+            name: "oci:image:RepoTag",
+            value: inspectData.RepoTags[0]
+          });
+        }
+        if (
+          inspectData.RepoDigests &&
+          Array.isArray(inspectData.RepoDigests) &&
+          inspectData.RepoDigests.length
+        ) {
+          mproperties.push({
+            name: "oci:image:RepoDigest",
+            value: inspectData.RepoDigests[0]
+          });
+        }
+        if (inspectData.Created) {
+          mproperties.push({
+            name: "oci:image:Created",
+            value: inspectData.Created
+          });
+        }
+        if (inspectData.Architecture) {
+          mproperties.push({
+            name: "oci:image:Architecture",
+            value: inspectData.Architecture
+          });
+        }
+        if (inspectData.Os) {
+          mproperties.push({
+            name: "oci:image:Os",
+            value: inspectData.Os
+          });
+        }
+      }
+      const manifestList = options.exportData.manifest;
+      if (manifestList && Array.isArray(manifestList) && manifestList.length) {
+        const manifest = manifestList[0] || {};
+        if (manifest.Config) {
+          mproperties.push({
+            name: "oci:image:manifest:Config",
+            value: manifest.Config
+          });
+        }
+        if (
+          manifest.Layers &&
+          Array.isArray(manifest.Layers) &&
+          manifest.Layers.length
+        ) {
+          mproperties.push({
+            name: "oci:image:manifest:Layers",
+            value: manifest.Layers.join("\\n")
+          });
+        }
+      }
+      const lastLayerConfig = options.exportData.lastLayerConfig;
+      if (lastLayerConfig) {
+        if (lastLayerConfig.id) {
+          mproperties.push({
+            name: "oci:image:lastLayer:Id",
+            value: lastLayerConfig.id
+          });
+        }
+        if (lastLayerConfig.parent) {
+          mproperties.push({
+            name: "oci:image:lastLayer:ParentId",
+            value: lastLayerConfig.parent
+          });
+        }
+        if (lastLayerConfig.created) {
+          mproperties.push({
+            name: "oci:image:lastLayer:Created",
+            value: lastLayerConfig.created
+          });
+        }
+        if (lastLayerConfig.config) {
+          const env = lastLayerConfig.config.Env;
+          if (env && Array.isArray(env) && env.length) {
+            mproperties.push({
+              name: "oci:image:lastLayer:Env",
+              value: env.join("\\n")
+            });
+          }
+          const ccmd = lastLayerConfig.config.Cmd;
+          if (ccmd && Array.isArray(ccmd) && ccmd.length) {
+            mproperties.push({
+              name: "oci:image:lastLayer:Cmd",
+              value: ccmd.join(" ")
+            });
+          }
+        }
+      }
+    }
+    if (mproperties.length) {
+      if (format === "json") {
+        metadata.properties = mproperties;
+      } else {
+        metadata.properties = mproperties.map((v) => {
+          return {
+            property: {
+              "@name": v.name,
+              "#text": v.value
+            }
+          };
+        });
       }
     }
   }
@@ -379,6 +504,71 @@ function addComponent(
  * word for it, otherwise, identify the module as a 'library'.
  */
 function determinePackageType(pkg) {
+  if (pkg.purl) {
+    try {
+      purl = PackageURL.fromString(pkg.purl);
+      if (purl.type) {
+        if (["docker", "oci", "container"].includes(purl.type)) {
+          return "container";
+        }
+        if (["github"].includes(purl.type)) {
+          return "application";
+        }
+      }
+      if (purl.namespace) {
+        for (const cf of [
+          "System.Web",
+          "System.ServiceModel",
+          "System.Data",
+          "spring",
+          "flask",
+          "django",
+          "beego",
+          "chi",
+          "echo",
+          "gin",
+          "gorilla",
+          "rye",
+          "httprouter",
+          "akka",
+          "dropwizard",
+          "vertx",
+          "gwt",
+          "jax-rs",
+          "jax-ws",
+          "jsf",
+          "play",
+          "spark",
+          "struts",
+          "angular",
+          "react",
+          "next",
+          "ember",
+          "express",
+          "knex",
+          "vue",
+          "aiohttp",
+          "bottle",
+          "cherrypy",
+          "drt",
+          "falcon",
+          "hug",
+          "pyramid",
+          "sanic",
+          "tornado",
+          "vibora"
+        ]) {
+          if (purl.namespace.includes(cf)) {
+            return "framework";
+          }
+        }
+      }
+    } catch (e) {}
+  } else if (pkg.group) {
+    if (["actions"].includes(pkg.group)) {
+      return "application";
+    }
+  }
   if (pkg.hasOwnProperty("keywords")) {
     for (let keyword of pkg.keywords) {
       if (keyword.toLowerCase() === "framework") {
@@ -481,13 +671,19 @@ function addComponentHash(alg, digest, component, format = "xml") {
  * @param {Object} context Context object
  * @returns bom xml string
  */
-const buildBomXml = (serialNum, parentComponent, components, context) => {
+const buildBomXml = (
+  serialNum,
+  parentComponent,
+  components,
+  context,
+  options = {}
+) => {
   const bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.4");
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
-  const metadata = addMetadata(parentComponent, "xml");
+  const metadata = addMetadata(parentComponent, "xml", options);
   bom.ele("metadata").ele(metadata);
   if (components && components.length) {
     bom.ele("components").ele(components);
@@ -532,15 +728,17 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   }
   const nsMapping = context.nsMapping || {};
   const dependencies = context.dependencies || [];
-  const parentComponent = context.parentComponent || {};
-  const metadata = addMetadata(parentComponent, "json");
+  const parentComponent =
+    context.parentComponent || options.parentComponent || {};
+  const metadata = addMetadata(parentComponent, "json", options);
   const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
     const bomString = buildBomXml(
       serialNum,
       parentComponent,
       components,
-      context
+      context,
+      options
     );
     // CycloneDX 1.4 Json Template
     const jsonTpl = {
@@ -1242,7 +1440,7 @@ const createNodejsBom = async (path, options) => {
   let pkgList = [];
   let manifestFiles = [];
   // Docker mode requires special handling
-  if (["docker", "os"].includes(options.projectType)) {
+  if (["docker", "oci", "os"].includes(options.projectType)) {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
     // Are there any package.json files in the container?
     if (pkgJsonFiles.length) {
@@ -1260,7 +1458,10 @@ const createNodejsBom = async (path, options) => {
     }
   }
   let allImports = {};
-  if (!["docker", "os"].includes(options.projectType) && !options.noBabel) {
+  if (
+    !["docker", "oci", "os"].includes(options.projectType) &&
+    !options.noBabel
+  ) {
     if (DEBUG_MODE) {
       console.log(
         `Performing babel-based package usage analysis with source code at ${path}`
@@ -1681,7 +1882,7 @@ const createGoBom = async (path, options) => {
   );
   if (gomodFiles.length) {
     // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
-    if (!["docker", "os"].includes(options.projectType)) {
+    if (!["docker", "oci", "os"].includes(options.projectType)) {
       console.log("Executing go list -deps in", path);
       const result = spawnSync(
         "go",
@@ -1754,7 +1955,7 @@ const createGoBom = async (path, options) => {
       }
     }
     // Parse the gomod files manually. The resultant BoM would be incomplete
-    if (!["docker", "os"].includes(options.projectType)) {
+    if (!["docker", "oci", "os"].includes(options.projectType)) {
       console.log(
         "Manually parsing go.mod files. The resultant BoM would be incomplete."
       );
@@ -2397,8 +2598,8 @@ const createContainerSpecLikeBom = async (path, options) => {
           if (imageObj.platform) {
             pkg["qualifiers"]["platform"] = imageObj.platform;
           }
-          // Create an entry for the docker image
-          const imageBomData = buildBomNSData(options, [pkg], "docker", {
+          // Create an entry for the oci image
+          const imageBomData = buildBomNSData(options, [pkg], "oci", {
             src: img.image,
             filename: f,
             nsMapping: {}
@@ -2414,12 +2615,12 @@ const createContainerSpecLikeBom = async (path, options) => {
                 options,
                 {},
                 imageBomData.bomJson.components,
-                "docker",
+                "oci",
                 "xml"
               )
             );
           }
-          const bomData = await createBom(img.image, { projectType: "docker" });
+          const bomData = await createBom(img.image, { projectType: "oci" });
           doneimages.push(img.image);
           if (bomData) {
             if (bomData.components && bomData.components.length) {
@@ -2435,7 +2636,13 @@ const createContainerSpecLikeBom = async (path, options) => {
         }
       }
     }
-    return dedupeBom(components, componentsXmls, parentComponent, dependencies);
+    return dedupeBom(
+      options,
+      components,
+      componentsXmls,
+      parentComponent,
+      dependencies
+    );
   }
   return {};
 };
@@ -2708,6 +2915,7 @@ const trimComponents = (components, format) => {
 exports.trimComponents = trimComponents;
 
 const dedupeBom = (
+  options,
   components,
   componentsXmls,
   parentComponent,
@@ -2725,15 +2933,21 @@ const dedupeBom = (
     parentComponent,
     components,
     componentsXmls,
-    bomXml: buildBomXml(serialNum, parentComponent, componentsXmls, {
-      dependencies
-    }),
+    bomXml: buildBomXml(
+      serialNum,
+      parentComponent,
+      componentsXmls,
+      {
+        dependencies
+      },
+      options
+    ),
     bomJson: {
       bomFormat: "CycloneDX",
       specVersion: "1.4",
       serialNumber: serialNum,
       version: 1,
-      metadata: addMetadata(parentComponent, "json"),
+      metadata: addMetadata(parentComponent, "json", options),
       components,
       dependencies
     }
@@ -2751,8 +2965,11 @@ const createMultiXBom = async (pathList, options) => {
   let components = [];
   let dependencies = [];
   let componentsXmls = [];
-  let parentComponent = {};
-  if (options.projectType === "docker" && options.allLayersExplodedDir) {
+  let parentComponent = options.parentComponent || {};
+  if (
+    ["docker", "oci", "container"].includes(options.projectType) &&
+    options.allLayersExplodedDir
+  ) {
     const osPackages = binaryLib.getOSPackages(options.allLayersExplodedDir);
     if (DEBUG_MODE) {
       console.log(
@@ -3022,7 +3239,13 @@ const createMultiXBom = async (pathList, options) => {
       );
     }
   }
-  return dedupeBom(components, componentsXmls, parentComponent, dependencies);
+  return dedupeBom(
+    options,
+    components,
+    componentsXmls,
+    parentComponent,
+    dependencies
+  );
 };
 
 /**
@@ -3311,6 +3534,7 @@ const createBom = async (path, options) => {
   } else if (projectType === "oci-dir") {
     isContainerMode = true;
     exportData = {
+      inspectData: undefined,
       lastWorkingDir: "",
       allLayersDir: path,
       allLayersExplodedDir: path
@@ -3327,6 +3551,34 @@ const createBom = async (path, options) => {
     options.projectType = "docker";
     // Pass the original path
     options.path = path;
+    options.parentComponent = {};
+    // Create parent component based on the inspect config
+    const inspectData = exportData.inspectData;
+    if (
+      inspectData &&
+      inspectData.RepoDigests &&
+      inspectData.RepoTags &&
+      Array.isArray(inspectData.RepoDigests) &&
+      Array.isArray(inspectData.RepoTags) &&
+      inspectData.RepoDigests.length &&
+      inspectData.RepoTags.length
+    ) {
+      const repoTag = inspectData.RepoTags[0];
+      if (repoTag) {
+        const tmpA = repoTag.split(":");
+        if (tmpA && tmpA.length === 2) {
+          options.parentComponent = {
+            name: tmpA[0],
+            version: tmpA[1],
+            type: "container",
+            purl: "pkg:oci/" + inspectData.RepoDigests[0],
+            _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
+          };
+        }
+      }
+    }
+    // Pass the entire export data about the image layers
+    options.exportData = exportData;
     options.lastWorkingDir = exportData.lastWorkingDir;
     options.allLayersExplodedDir = exportData.allLayersExplodedDir;
     const bomData = await createMultiXBom(
