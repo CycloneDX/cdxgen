@@ -102,7 +102,7 @@ jobs:
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-java.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-java.xml --input-format xml --input-version v1_4
 
-          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=repotests/private.key SBOM_SIGN_PUBLIC_KEY=repotests/public.key bin/cdxgen -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
+          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-github.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-github.xml --input-format xml --input-version v1_4
 
