@@ -119,7 +119,7 @@ function addDependencies(dependencies, format = "xml") {
  * Function to create metadata block
  *
  */
-function addMetadata(parentComponent = {}, format = "xml") {
+function addMetadata(parentComponent = {}, format = "xml", options = {}) {
   let metadata = {
     timestamp: new Date().toISOString(),
     tools: [
@@ -379,6 +379,71 @@ function addComponent(
  * word for it, otherwise, identify the module as a 'library'.
  */
 function determinePackageType(pkg) {
+  if (pkg.purl) {
+    try {
+      purl = PackageURL.fromString(pkg.purl);
+      if (purl.type) {
+        if (["docker", "oci", "container"].includes(purl.type)) {
+          return "container";
+        }
+        if (["github"].includes(purl.type)) {
+          return "application";
+        }
+      }
+      if (purl.namespace) {
+        for (const cf of [
+          "System.Web",
+          "System.ServiceModel",
+          "System.Data",
+          "spring",
+          "flask",
+          "django",
+          "beego",
+          "chi",
+          "echo",
+          "gin",
+          "gorilla",
+          "rye",
+          "httprouter",
+          "akka",
+          "dropwizard",
+          "vertx",
+          "gwt",
+          "jax-rs",
+          "jax-ws",
+          "jsf",
+          "play",
+          "spark",
+          "struts",
+          "angular",
+          "react",
+          "next",
+          "ember",
+          "express",
+          "knex",
+          "vue",
+          "aiohttp",
+          "bottle",
+          "cherrypy",
+          "drt",
+          "falcon",
+          "hug",
+          "pyramid",
+          "sanic",
+          "tornado",
+          "vibora"
+        ]) {
+          if (purl.namespace.includes(cf)) {
+            return "framework";
+          }
+        }
+      }
+    } catch (e) {}
+  } else if (pkg.group) {
+    if (["actions"].includes(pkg.group)) {
+      return "application";
+    }
+  }
   if (pkg.hasOwnProperty("keywords")) {
     for (let keyword of pkg.keywords) {
       if (keyword.toLowerCase() === "framework") {
@@ -481,13 +546,19 @@ function addComponentHash(alg, digest, component, format = "xml") {
  * @param {Object} context Context object
  * @returns bom xml string
  */
-const buildBomXml = (serialNum, parentComponent, components, context) => {
+const buildBomXml = (
+  serialNum,
+  parentComponent,
+  components,
+  context,
+  options = {}
+) => {
   const bom = builder
     .create("bom", { encoding: "utf-8", separateArrayItems: true })
     .att("xmlns", "http://cyclonedx.org/schema/bom/1.4");
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
-  const metadata = addMetadata(parentComponent, "xml");
+  const metadata = addMetadata(parentComponent, "xml", options);
   bom.ele("metadata").ele(metadata);
   if (components && components.length) {
     bom.ele("components").ele(components);
@@ -533,14 +604,15 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const nsMapping = context.nsMapping || {};
   const dependencies = context.dependencies || [];
   const parentComponent = context.parentComponent || {};
-  const metadata = addMetadata(parentComponent, "json");
+  const metadata = addMetadata(parentComponent, "json", options);
   const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
     const bomString = buildBomXml(
       serialNum,
       parentComponent,
       components,
-      context
+      context,
+      options
     );
     // CycloneDX 1.4 Json Template
     const jsonTpl = {
@@ -2435,7 +2507,13 @@ const createContainerSpecLikeBom = async (path, options) => {
         }
       }
     }
-    return dedupeBom(components, componentsXmls, parentComponent, dependencies);
+    return dedupeBom(
+      options,
+      components,
+      componentsXmls,
+      parentComponent,
+      dependencies
+    );
   }
   return {};
 };
@@ -2708,6 +2786,7 @@ const trimComponents = (components, format) => {
 exports.trimComponents = trimComponents;
 
 const dedupeBom = (
+  options,
   components,
   componentsXmls,
   parentComponent,
@@ -2725,15 +2804,21 @@ const dedupeBom = (
     parentComponent,
     components,
     componentsXmls,
-    bomXml: buildBomXml(serialNum, parentComponent, componentsXmls, {
-      dependencies
-    }),
+    bomXml: buildBomXml(
+      serialNum,
+      parentComponent,
+      componentsXmls,
+      {
+        dependencies
+      },
+      options
+    ),
     bomJson: {
       bomFormat: "CycloneDX",
       specVersion: "1.4",
       serialNumber: serialNum,
       version: 1,
-      metadata: addMetadata(parentComponent, "json"),
+      metadata: addMetadata(parentComponent, "json", options),
       components,
       dependencies
     }
@@ -3022,7 +3107,13 @@ const createMultiXBom = async (pathList, options) => {
       );
     }
   }
-  return dedupeBom(components, componentsXmls, parentComponent, dependencies);
+  return dedupeBom(
+    options,
+    components,
+    componentsXmls,
+    parentComponent,
+    dependencies
+  );
 };
 
 /**
@@ -3327,6 +3418,8 @@ const createBom = async (path, options) => {
     options.projectType = "docker";
     // Pass the original path
     options.path = path;
+    // Pass the entire export data about the image layers
+    options.exportData = exportData;
     options.lastWorkingDir = exportData.lastWorkingDir;
     options.allLayersExplodedDir = exportData.allLayersExplodedDir;
     const bomData = await createMultiXBom(
