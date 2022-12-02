@@ -189,6 +189,7 @@ export FETCH_LICENSE=true
 | LEIN_CMD                  | Set to override the leiningen command                                                                              |
 | SBOM_SIGN_ALGORITHM       | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                     |
 | SBOM_SIGN_PRIVATE_KEY     | Private key to use for signing                                                                                     |
+| SBOM_SIGN_PUBLIC_KEY      | Optional. Public key to include in the SBoM signature                                                              |
 
 ## Integration with GitHub action
 
