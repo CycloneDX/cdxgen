@@ -3560,18 +3560,21 @@ const createBom = async (path, options) => {
       inspectData.RepoTags &&
       Array.isArray(inspectData.RepoDigests) &&
       Array.isArray(inspectData.RepoTags) &&
-      inspectData.RepoDigests.length
+      inspectData.RepoDigests.length &&
+      inspectData.RepoTags.length
     ) {
       const repoTag = inspectData.RepoTags[0];
-      const tmpA = repoTag.split(":");
-      if (tmpA && tmpA.length === 2) {
-        options.parentComponent = {
-          name: tmpA[0],
-          version: tmpA[1],
-          type: "container",
-          purl: "pkg:oci/" + inspectData.RepoDigests[0],
-          _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
-        };
+      if (repoTag) {
+        const tmpA = repoTag.split(":");
+        if (tmpA && tmpA.length === 2) {
+          options.parentComponent = {
+            name: tmpA[0],
+            version: tmpA[1],
+            type: "container",
+            purl: "pkg:oci/" + inspectData.RepoDigests[0],
+            _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
+          };
+        }
       }
     }
     // Pass the entire export data about the image layers
