@@ -1,5 +1,7 @@
 # CycloneDX Generator
 
+![cdxgen logo](cdxgen.png)
+
 This script creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 When used with plugins, cdxgen could generate an SBoM for Linux docker images and even VMs running Linux or Windows operating system.
@@ -257,13 +259,15 @@ This feature is powered by osquery which is [installed](https://github.com/ngclo
 
 ## SBoM signing
 
-Set the following two environment variables.
+cdxgen can sign the generated SBoM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
 
 - SBOM_SIGN_ALGORITHM: Algorithm. Example: RS512
 - SBOM_SIGN_PRIVATE_KEY: Location to the RSA private key
 - SBOM_SIGN_PUBLIC_KEY: Optional. Location to the RSA public key
 
-To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`
+To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature` which could be used for validation. [jwt.io](jwt.io) is a known site that could be used for validation.
+
+![SBoM signing](sbom-sign.jpg)
 
 ## Conversion to SPDX format
 

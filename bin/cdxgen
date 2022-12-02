@@ -192,7 +192,10 @@ let filePath = args._[0] || ".";
               .createPublicKey(publicKey)
               .export({ format: "jwk" });
           } else {
-            privateKeyToUse = process.env.SBOM_SIGN_PRIVATE_KEY;
+            privateKeyToUse = fs.readFileSync(
+              process.env.SBOM_SIGN_PRIVATE_KEY,
+              "utf8"
+            );
             if (
               process.env.SBOM_SIGN_PUBLIC_KEY &&
               fs.existsSync(process.env.SBOM_SIGN_PUBLIC_KEY)
@@ -204,25 +207,30 @@ let filePath = args._[0] || ".";
                 .export({ format: "jwk" });
             }
           }
-          const signature = jws.sign({
-            header: { alg },
-            payload: jsonPayload,
-            privateKey: privateKeyToUse
-          });
-          if (signature) {
-            const bomJsonUnsignedObj = JSON.parse(jsonPayload);
-            const signatureBlock = {
-              algorithm: alg,
-              value: signature
-            };
-            if (jwkPublicKey) {
-              signatureBlock.publicKey = jwkPublicKey;
+          try {
+            const signature = jws.sign({
+              header: { alg },
+              payload: jsonPayload,
+              privateKey: privateKeyToUse
+            });
+            if (signature) {
+              const bomJsonUnsignedObj = JSON.parse(jsonPayload);
+              const signatureBlock = {
+                algorithm: alg,
+                value: signature
+              };
+              if (jwkPublicKey) {
+                signatureBlock.publicKey = jwkPublicKey;
+              }
+              bomJsonUnsignedObj.signature = signatureBlock;
+              fs.writeFileSync(
+                jsonFile,
+                JSON.stringify(bomJsonUnsignedObj, null, 2)
+              );
             }
-            bomJsonUnsignedObj.signature = signatureBlock;
-            fs.writeFileSync(
-              jsonFile,
-              JSON.stringify(bomJsonUnsignedObj, null, 2)
-            );
+          } catch (ex) {
+            console.log("SBoM signing was unsuccessful", ex);
+            console.log("Check if the private key was exported in PEM format");
           }
         } else {
           console.log(
