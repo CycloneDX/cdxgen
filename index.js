@@ -235,7 +235,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
         ) {
           mproperties.push({
             name: "oci:image:manifest:Layers",
-            value: manifest.Layers.join("\n")
+            value: manifest.Layers.join("\\n")
           });
         }
       }
@@ -264,7 +264,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
           if (env && Array.isArray(env) && env.length) {
             mproperties.push({
               name: "oci:image:lastLayer:Env",
-              value: env.join("\n")
+              value: env.join("\\n")
             });
           }
           const ccmd = lastLayerConfig.config.Cmd;
@@ -278,7 +278,18 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       }
     }
     if (mproperties.length) {
-      metadata.properties = mproperties;
+      if (format === "json") {
+        metadata.properties = mproperties;
+      } else {
+        metadata.properties = mproperties.map((v) => {
+          return {
+            property: {
+              "@name": v.name,
+              "#text": v.value
+            }
+          };
+        });
+      }
     }
   }
   return metadata;
