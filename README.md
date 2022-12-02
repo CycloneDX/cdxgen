@@ -265,7 +265,7 @@ cdxgen can sign the generated SBoM json file to increase authenticity and non-re
 - SBOM_SIGN_PRIVATE_KEY: Location to the RSA private key
 - SBOM_SIGN_PUBLIC_KEY: Optional. Location to the RSA public key
 
-To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature` which could be used for validation. [jwt.io](jwt.io) is a known site that could be used for validation.
+To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature` which could be used for validation. [jwt.io](jwt.io) is a known site that could be used for such signature validation.
 
 ![SBoM signing](sbom-sign.jpg)
 
