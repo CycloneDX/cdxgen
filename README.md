@@ -101,6 +101,9 @@ Options:
       --fail-on-error    Fail if any dependency extractor fails.       [boolean]
       --no-babel         Do not use babel to perform usage analysis for
                          JavaScript/TypeScript projects.               [boolean]
+      --generate-key-and-sign  Generate an RSA public/private key pair and then
+                               sign the generated SBoM using JSON Web
+                               Signatures.                             [boolean]
       --version          Show version number                           [boolean]
   -h                     Show help                                     [boolean]
 ```
@@ -184,6 +187,8 @@ export FETCH_LICENSE=true
 | BAZEL_TARGET              | Bazel target to build. Default :all (Eg: //java-maven)                                                             |
 | CLJ_CMD                   | Set to override the clojure cli command                                                                            |
 | LEIN_CMD                  | Set to override the leiningen command                                                                              |
+| SBOM_SIGN_ALGORITHM       | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                     |
+| SBOM_SIGN_PRIVATE_KEY     | Private key to use for signing                                                                                     |
 
 ## Integration with GitHub action
 
@@ -249,7 +254,17 @@ cdxgen -t os
 
 This feature is powered by osquery which is [installed](https://github.com/ngcloudsec/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
 
-## Conversion to SPDX format or SBoM Signing
+## SBoM signing
+
+Set the following two environment variables.
+
+- SBOM_SIGN_ALGORITHM: Algorithm. Example: RS512
+- SBOM_SIGN_PRIVATE_KEY: Location to the RSA private key
+- SBOM_SIGN_PUBLIC_KEY: Optional. Location to the RSA public key
+
+To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`
+
+## Conversion to SPDX format
 
 Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for advanced use cases such as conversion, diff and signing.
 

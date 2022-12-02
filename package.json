@@ -60,6 +60,7 @@
     "global-agent": "^3.0.0",
     "got": "^11.8.5",
     "js-yaml": "^4.1.0",
+    "jws": "^4.0.0",
     "node-stream-zip": "^1.15.0",
     "packageurl-js": "^1.0.0",
     "parse-packagejson-name": "^1.0.1",
