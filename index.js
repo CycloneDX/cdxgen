@@ -157,7 +157,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       {},
       {},
       parentComponent,
-      null,
+      parentComponent.type,
       format
     );
     if (allPComponents.length) {
@@ -717,7 +717,8 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   }
   const nsMapping = context.nsMapping || {};
   const dependencies = context.dependencies || [];
-  const parentComponent = context.parentComponent || {};
+  const parentComponent =
+    context.parentComponent || options.parentComponent || {};
   const metadata = addMetadata(parentComponent, "json", options);
   const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
   if (components && components.length) {
@@ -1428,7 +1429,7 @@ const createNodejsBom = async (path, options) => {
   let pkgList = [];
   let manifestFiles = [];
   // Docker mode requires special handling
-  if (["docker", "os"].includes(options.projectType)) {
+  if (["docker", "oci", "os"].includes(options.projectType)) {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
     // Are there any package.json files in the container?
     if (pkgJsonFiles.length) {
@@ -1446,7 +1447,10 @@ const createNodejsBom = async (path, options) => {
     }
   }
   let allImports = {};
-  if (!["docker", "os"].includes(options.projectType) && !options.noBabel) {
+  if (
+    !["docker", "oci", "os"].includes(options.projectType) &&
+    !options.noBabel
+  ) {
     if (DEBUG_MODE) {
       console.log(
         `Performing babel-based package usage analysis with source code at ${path}`
@@ -1867,7 +1871,7 @@ const createGoBom = async (path, options) => {
   );
   if (gomodFiles.length) {
     // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
-    if (!["docker", "os"].includes(options.projectType)) {
+    if (!["docker", "oci", "os"].includes(options.projectType)) {
       console.log("Executing go list -deps in", path);
       const result = spawnSync(
         "go",
@@ -1940,7 +1944,7 @@ const createGoBom = async (path, options) => {
       }
     }
     // Parse the gomod files manually. The resultant BoM would be incomplete
-    if (!["docker", "os"].includes(options.projectType)) {
+    if (!["docker", "oci", "os"].includes(options.projectType)) {
       console.log(
         "Manually parsing go.mod files. The resultant BoM would be incomplete."
       );
@@ -2583,8 +2587,8 @@ const createContainerSpecLikeBom = async (path, options) => {
           if (imageObj.platform) {
             pkg["qualifiers"]["platform"] = imageObj.platform;
           }
-          // Create an entry for the docker image
-          const imageBomData = buildBomNSData(options, [pkg], "docker", {
+          // Create an entry for the oci image
+          const imageBomData = buildBomNSData(options, [pkg], "oci", {
             src: img.image,
             filename: f,
             nsMapping: {}
@@ -2600,12 +2604,12 @@ const createContainerSpecLikeBom = async (path, options) => {
                 options,
                 {},
                 imageBomData.bomJson.components,
-                "docker",
+                "oci",
                 "xml"
               )
             );
           }
-          const bomData = await createBom(img.image, { projectType: "docker" });
+          const bomData = await createBom(img.image, { projectType: "oci" });
           doneimages.push(img.image);
           if (bomData) {
             if (bomData.components && bomData.components.length) {
@@ -2950,8 +2954,11 @@ const createMultiXBom = async (pathList, options) => {
   let components = [];
   let dependencies = [];
   let componentsXmls = [];
-  let parentComponent = {};
-  if (options.projectType === "docker" && options.allLayersExplodedDir) {
+  let parentComponent = options.parentComponent || {};
+  if (
+    ["docker", "oci", "container"].includes(options.projectType) &&
+    options.allLayersExplodedDir
+  ) {
     const osPackages = binaryLib.getOSPackages(options.allLayersExplodedDir);
     if (DEBUG_MODE) {
       console.log(
@@ -3516,6 +3523,7 @@ const createBom = async (path, options) => {
   } else if (projectType === "oci-dir") {
     isContainerMode = true;
     exportData = {
+      inspectData: undefined,
       lastWorkingDir: "",
       allLayersDir: path,
       allLayersExplodedDir: path
@@ -3532,6 +3540,29 @@ const createBom = async (path, options) => {
     options.projectType = "docker";
     // Pass the original path
     options.path = path;
+    options.parentComponent = {};
+    // Create parent component based on the inspect config
+    const inspectData = exportData.inspectData;
+    if (
+      inspectData &&
+      inspectData.RepoDigests &&
+      inspectData.RepoTags &&
+      Array.isArray(inspectData.RepoDigests) &&
+      Array.isArray(inspectData.RepoTags) &&
+      inspectData.RepoDigests.length
+    ) {
+      const repoTag = inspectData.RepoTags[0];
+      const tmpA = repoTag.split(":");
+      if (tmpA && tmpA.length === 2) {
+        options.parentComponent = {
+          name: tmpA[0],
+          version: tmpA[1],
+          type: "container",
+          purl: "pkg:oci/" + inspectData.RepoDigests[0],
+          _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
+        };
+      }
+    }
     // Pass the entire export data about the image layers
     options.exportData = exportData;
     options.lastWorkingDir = exportData.lastWorkingDir;
