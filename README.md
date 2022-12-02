@@ -271,7 +271,7 @@ To generate test public/private key pairs, you can run cdxgen by passing the arg
 
 ## Conversion to SPDX format
 
-Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for advanced use cases such as conversion, diff and signing.
+Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for advanced use cases such as conversion, diff and merging.
 
 ## License
 
