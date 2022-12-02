@@ -120,6 +120,8 @@ function addDependencies(dependencies, format = "xml") {
  *
  */
 function addMetadata(parentComponent = {}, format = "xml", options = {}) {
+  // DO NOT fork this project to just change the vendor or author's name
+  // Try to contribute to this project by sending PR or filing issues
   let metadata = {
     timestamp: new Date().toISOString(),
     tools: [
@@ -165,6 +167,118 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       } else {
         metadata.component = firstPComp;
       }
+    }
+  }
+  if (options) {
+    const mproperties = [];
+    if (options.exportData) {
+      const inspectData = options.exportData.inspectData;
+      if (inspectData) {
+        if (inspectData.Id) {
+          mproperties.push({
+            name: "oci:image:Id",
+            value: inspectData.Id
+          });
+        }
+        if (
+          inspectData.RepoTags &&
+          Array.isArray(inspectData.RepoTags) &&
+          inspectData.RepoTags.length
+        ) {
+          mproperties.push({
+            name: "oci:image:RepoTag",
+            value: inspectData.RepoTags[0]
+          });
+        }
+        if (
+          inspectData.RepoDigests &&
+          Array.isArray(inspectData.RepoDigests) &&
+          inspectData.RepoDigests.length
+        ) {
+          mproperties.push({
+            name: "oci:image:RepoDigest",
+            value: inspectData.RepoDigests[0]
+          });
+        }
+        if (inspectData.Created) {
+          mproperties.push({
+            name: "oci:image:Created",
+            value: inspectData.Created
+          });
+        }
+        if (inspectData.Architecture) {
+          mproperties.push({
+            name: "oci:image:Architecture",
+            value: inspectData.Architecture
+          });
+        }
+        if (inspectData.Os) {
+          mproperties.push({
+            name: "oci:image:Os",
+            value: inspectData.Os
+          });
+        }
+      }
+      const manifestList = options.exportData.manifest;
+      if (manifestList && Array.isArray(manifestList) && manifestList.length) {
+        const manifest = manifestList[0] || {};
+        if (manifest.Config) {
+          mproperties.push({
+            name: "oci:image:manifest:Config",
+            value: manifest.Config
+          });
+        }
+        if (
+          manifest.Layers &&
+          Array.isArray(manifest.Layers) &&
+          manifest.Layers.length
+        ) {
+          mproperties.push({
+            name: "oci:image:manifest:Layers",
+            value: manifest.Layers.join("\n")
+          });
+        }
+      }
+      const lastLayerConfig = options.exportData.lastLayerConfig;
+      if (lastLayerConfig) {
+        if (lastLayerConfig.id) {
+          mproperties.push({
+            name: "oci:image:lastLayer:Id",
+            value: lastLayerConfig.id
+          });
+        }
+        if (lastLayerConfig.parent) {
+          mproperties.push({
+            name: "oci:image:lastLayer:ParentId",
+            value: lastLayerConfig.parent
+          });
+        }
+        if (lastLayerConfig.created) {
+          mproperties.push({
+            name: "oci:image:lastLayer:Created",
+            value: lastLayerConfig.created
+          });
+        }
+        if (lastLayerConfig.config) {
+          const env = lastLayerConfig.config.Env;
+          if (env && Array.isArray(env) && env.length) {
+            mproperties.push({
+              name: "oci:image:lastLayer:Env",
+              value: env.join("\n")
+            });
+          }
+          const ccmd = lastLayerConfig.config.Cmd;
+          if (ccmd && Array.isArray(ccmd) && ccmd.length) {
+            mproperties.push({
+              name: "oci:image:lastLayer:Cmd",
+              value: ccmd.join(" ")
+            });
+          }
+        }
+      }
+    }
+    if (mproperties.length) {
+      metadata.properties = mproperties;
     }
   }
   return metadata;
