@@ -3,6 +3,8 @@
 const bom = require("../index.js");
 const fs = require("fs");
 const path = require("path");
+const jws = require("jws");
+const crypto = require("crypto");
 
 const args = require("yargs")
   .option("output", {
@@ -66,6 +68,11 @@ const args = require("yargs")
     description:
       "Do not use babel to perform usage analysis for JavaScript/TypeScript projects."
   })
+  .option("generate-key-and-sign", {
+    type: "boolean",
+    description:
+      "Generate an RSA public/private key pair and then sign the generated SBoM using JSON Web Signatures."
+  })
   .scriptName("cdxgen")
   .version()
   .help("h").argv;
@@ -105,7 +112,8 @@ let options = {
   requiredOnly: args.requiredOnly,
   failOnError: args.failOnError,
   noBabel: args.noBabel || args.babel === false,
-  deep: args.deep
+  deep: args.deep,
+  generateKeyAndSign: args.generateKeyAndSign
 };
 let filePath = args._[0] || ".";
 
@@ -129,15 +137,104 @@ let filePath = args._[0] || ".";
       const jsonFile = args.output.replace(".xml", ".json");
       // Create bom json file
       if (bomNSData.bomJson) {
+        let jsonPayload = undefined;
         if (
           typeof bomNSData.bomJson === "string" ||
           bomNSData.bomJson instanceof String
         ) {
           fs.writeFileSync(jsonFile, bomNSData.bomJson);
+          jsonPayload = bomNSData.bomJson;
         } else {
-          fs.writeFileSync(
-            jsonFile,
-            JSON.stringify(bomNSData.bomJson, null, 2)
+          jsonPayload = JSON.stringify(bomNSData.bomJson, null, 2);
+          fs.writeFileSync(jsonFile, jsonPayload);
+        }
+        if (
+          jsonPayload &&
+          (args.generateKeyAndSign ||
+            (process.env.SBOM_SIGN_ALGORITHM &&
+              process.env.SBOM_SIGN_ALGORITHM !== "none" &&
+              process.env.SBOM_SIGN_PRIVATE_KEY &&
+              fs.existsSync(process.env.SBOM_SIGN_PRIVATE_KEY)))
+        ) {
+          let alg = process.env.SBOM_SIGN_ALGORITHM || "RS512";
+          if (alg.includes("none")) {
+            alg = "RS512";
+          }
+          let privateKeyToUse = undefined;
+          let jwkPublicKey = undefined;
+          if (args.generateKeyAndSign) {
+            const dirName = path.dirname(jsonFile);
+            const publicKeyFile = path.join(dirName, "public.key");
+            const privateKeyFile = path.join(dirName, "private.key");
+            const { privateKey, publicKey } = crypto.generateKeyPairSync(
+              "rsa",
+              {
+                modulusLength: 4096,
+                publicKeyEncoding: {
+                  type: "spki",
+                  format: "pem"
+                },
+                privateKeyEncoding: {
+                  type: "pkcs8",
+                  format: "pem"
+                }
+              }
+            );
+            fs.writeFileSync(publicKeyFile, publicKey);
+            fs.writeFileSync(privateKeyFile, privateKey);
+            console.log(
+              "Created public/private key pairs for testing purposes",
+              publicKeyFile,
+              privateKeyFile
+            );
+            privateKeyToUse = privateKey;
+            jwkPublicKey = crypto
+              .createPublicKey(publicKey)
+              .export({ format: "jwk" });
+          } else {
+            privateKeyToUse = fs.readFileSync(
+              process.env.SBOM_SIGN_PRIVATE_KEY,
+              "utf8"
+            );
+            if (
+              process.env.SBOM_SIGN_PUBLIC_KEY &&
+              fs.existsSync(process.env.SBOM_SIGN_PUBLIC_KEY)
+            ) {
+              jwkPublicKey = crypto
+                .createPublicKey(
+                  fs.readFileSync(process.env.SBOM_SIGN_PUBLIC_KEY, "utf8")
+                )
+                .export({ format: "jwk" });
+            }
+          }
+          try {
+            const signature = jws.sign({
+              header: { alg },
+              payload: jsonPayload,
+              privateKey: privateKeyToUse
+            });
+            if (signature) {
+              const bomJsonUnsignedObj = JSON.parse(jsonPayload);
+              const signatureBlock = {
+                algorithm: alg,
+                value: signature
+              };
+              if (jwkPublicKey) {
+                signatureBlock.publicKey = jwkPublicKey;
+              }
+              bomJsonUnsignedObj.signature = signatureBlock;
+              fs.writeFileSync(
+                jsonFile,
+                JSON.stringify(bomJsonUnsignedObj, null, 2)
+              );
+            }
+          } catch (ex) {
+            console.log("SBoM signing was unsuccessful", ex);
+            console.log("Check if the private key was exported in PEM format");
+          }
+        } else {
+          console.log(
+            "NOTE: To sign this SBoM for authenticity, set the environment variables SBOM_SIGN_ALGORITHM and SBOM_SIGN_PRIVATE_KEY"
           );
         }
       }
