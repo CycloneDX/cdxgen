@@ -15,6 +15,7 @@ const pipeline = util.promisify(stream.pipeline);
 let dockerConn = undefined;
 let isPodman = false;
 let isPodmanRootless = true;
+let isDockerRootless = false;
 const WIN_LOCAL_TLS = "http://localhost:2375";
 let isWinLocalTLS = false;
 
@@ -121,6 +122,13 @@ const getDefaultOptions = () => {
     }
   } else {
     let hostStr = process.env.DOCKER_HOST;
+    if (hostStr.startsWith("unix:///")) {
+      hostStr = hostStr.replace("unix:///", "unix:/");
+      if (hostStr.includes("docker.sock")) {
+        hostStr = hostStr.replace("docker.sock", "docker.sock:");
+        isDockerRootless = true;
+      }
+    }
     opts.prefixUrl = hostStr;
     if (process.env.DOCKER_CERT_PATH) {
       opts.https = {
@@ -146,9 +154,13 @@ const getConnection = async (options) => {
     try {
       res = await got.get("_ping", opts);
       dockerConn = got.extend(opts);
-      console.log("Docker service in root mode detected!");
+      if (isDockerRootless) {
+        console.log("Docker service in rootless mode detected!");
+      } else {
+        console.log("Docker service in root mode detected!");
+      }
     } catch (err) {
-      // console.log(err);
+      // console.log(err, opts);
       try {
         if (isWin) {
           opts.prefixUrl = WIN_LOCAL_TLS;

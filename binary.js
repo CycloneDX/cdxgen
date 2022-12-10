@@ -231,6 +231,7 @@ exports.getCargoAuditableInfo = getCargoAuditableInfo;
 
 const getOSPackages = (src) => {
   const pkgList = [];
+  const allTypes = new Set();
   if (TRIVY_BIN) {
     let imageType = "image";
     if (fs.existsSync(src)) {
@@ -312,8 +313,10 @@ const getOSPackages = (src) => {
                   comp.group = group;
                   purlObj.namespace = group;
                 }
+                allTypes.add(purlObj.type);
                 // Prefix distro codename for ubuntu
                 if (purlObj.qualifiers && purlObj.qualifiers.distro) {
+                  allTypes.add(purlObj.qualifiers.distro);
                   if (OS_DISTRO_ALIAS[purlObj.qualifiers.distro]) {
                     distro_codename =
                       OS_DISTRO_ALIAS[purlObj.qualifiers.distro];
@@ -332,6 +335,8 @@ const getOSPackages = (src) => {
                     }
                   }
                   if (distro_codename !== "") {
+                    allTypes.add(distro_codename);
+                    allTypes.add(purlObj.namespace);
                     purlObj.qualifiers["distro_name"] = distro_codename;
                     comp.purl = new PackageURL(
                       purlObj.type,
@@ -389,10 +394,10 @@ const getOSPackages = (src) => {
           }
         }
       }
-      return pkgList;
+      return { osPackages: pkgList, allTypes: Array.from(allTypes) };
     }
   }
-  return pkgList;
+  return { osPackages: pkgList, allTypes: Array.from(allTypes) };
 };
 exports.getOSPackages = getOSPackages;
 

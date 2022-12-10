@@ -277,6 +277,13 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
         }
       }
     }
+    if (options.allOSComponentTypes && options.allOSComponentTypes.length) {
+      mproperties.push({
+        name: "oci:image:componentTypes",
+        value: options.allOSComponentTypes.join("\\n")
+      });
+    }
+
     if (mproperties.length) {
       if (format === "json") {
         metadata.properties = mproperties;
@@ -2930,6 +2937,7 @@ const dedupeBom = (
   console.log(`BoM includes ${components.length} components`);
   const serialNum = "urn:uuid:" + uuidv4();
   return {
+    options,
     parentComponent,
     components,
     componentsXmls,
@@ -2970,11 +2978,16 @@ const createMultiXBom = async (pathList, options) => {
     ["docker", "oci", "container"].includes(options.projectType) &&
     options.allLayersExplodedDir
   ) {
-    const osPackages = binaryLib.getOSPackages(options.allLayersExplodedDir);
+    const { osPackages, allTypes } = binaryLib.getOSPackages(
+      options.allLayersExplodedDir
+    );
     if (DEBUG_MODE) {
       console.log(
         `Found ${osPackages.length} OS packages at ${options.allLayersExplodedDir}`
       );
+    }
+    if (allTypes && allTypes.length) {
+      options.allOSComponentTypes = allTypes;
     }
     components = components.concat(osPackages);
     componentsXmls = componentsXmls.concat(
