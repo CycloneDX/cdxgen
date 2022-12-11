@@ -339,6 +339,11 @@ const getOSPackages = (src) => {
                     if (dtmpA && dtmpA.length > 2) {
                       distro_codename = group + "-" + dtmpA[0] + "." + dtmpA[1];
                     }
+                  } else if (group === "photon") {
+                    const dtmpA = purlObj.qualifiers.distro.split("-");
+                    if (dtmpA && dtmpA.length > 1) {
+                      distro_codename = dtmpA[0];
+                    }
                   } else if (group === "redhat") {
                     const dtmpA = purlObj.qualifiers.distro.split(".");
                     if (dtmpA && dtmpA.length > 1) {
