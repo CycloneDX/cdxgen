@@ -313,7 +313,21 @@ const getOSPackages = (src) => {
                   comp.group = group;
                   purlObj.namespace = group;
                 }
-                allTypes.add(purlObj.type);
+                // Bug fix for mageia
+                if (
+                  purlObj.type === "none" &&
+                  comp.purl &&
+                  (comp.purl.includes(".mga") || comp.purl.includes("arch"))
+                ) {
+                  purlObj["type"] = "rpm";
+                  purlObj["namespace"] = "mageia";
+                  comp.group = "mageia";
+                  purlObj.qualifiers["distro"] = "mageia";
+                  distro_codename = "mga";
+                }
+                if (purlObj.type !== "none") {
+                  allTypes.add(purlObj.type);
+                }
                 // Prefix distro codename for ubuntu
                 if (purlObj.qualifiers && purlObj.qualifiers.distro) {
                   allTypes.add(purlObj.qualifiers.distro);
