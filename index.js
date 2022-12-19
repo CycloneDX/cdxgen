@@ -2593,6 +2593,7 @@ const createContainerSpecLikeBom = async (path, options) => {
   let parentComponent = {};
   let dependencies = [];
   let doneimages = [];
+  let doneservices = [];
   let dcFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yml"
@@ -2636,12 +2637,16 @@ const createContainerSpecLikeBom = async (path, options) => {
                 version = tmpA[1];
               }
             }
-            services.push({
-              "bom-ref": `urn:service:${name}:${version}`,
-              name: name,
-              version: version,
-              group: ""
-            });
+            const servbomRef = `urn:service:${name}:${version}`;
+            if (!doneservices.includes(servbomRef)) {
+              services.push({
+                "bom-ref": servbomRef,
+                name: name,
+                version: version,
+                group: ""
+              });
+              doneservices.push(servbomRef);
+            }
           } else if (img.image) {
             if (doneimages.includes(img.image)) {
               if (DEBUG_MODE) {
