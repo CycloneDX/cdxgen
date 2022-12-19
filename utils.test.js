@@ -1261,9 +1261,13 @@ test("parse container spec like files", async () => {
   let dep_list = await utils.parseContainerSpecData(
     fs.readFileSync("./test/data/docker-compose.yml", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(2);
+  expect(dep_list.length).toEqual(4);
+  dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/docker-compose-ng.yml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(8);
   expect(dep_list[0]).toEqual({
-    image: "docker.io/bitnami/mariadb:10.6"
+    service: "frontend"
   });
   dep_list = await utils.parseContainerSpecData(
     fs.readFileSync("./test/data/tekton-task.yml", (encoding = "utf-8"))
