@@ -269,6 +269,10 @@ To generate test public/private key pairs, you can run cdxgen by passing the arg
 
 ![SBoM signing](sbom-sign.jpg)
 
+## Automatic services detection
+
+cdxgen could automatically detect names of services from YAML manifests such as docker-compose or Kubernetes or Skaffold manifests. These would be populated under the `services` attribute in the generated SBoM. Please help improve this feature by filing issues for any inaccurate detection.
+
 ## Conversion to SPDX format
 
 Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for advanced use cases such as conversion, diff and merging.
