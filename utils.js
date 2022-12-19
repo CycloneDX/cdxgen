@@ -2314,6 +2314,7 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
       !imgList.includes(imageLike)
     ) {
       pkgList.push({ image: imageLike });
+      pkgList.push({ service: keyValueObj.name || imageLike });
       imgList.push(imageLike);
     }
     for (const key of Object.keys(keyValueObj)) {
