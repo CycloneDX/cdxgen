@@ -96,6 +96,31 @@ function addGlobalReferences(src, filename, format = "xml") {
 }
 
 /**
+ * Function to create the services block
+ */
+function addServices(services, format = "xml") {
+  let serv_list = [];
+  for (const aserv of services) {
+    if (format === "xml") {
+      let service = {
+        "@bom-ref": aserv["bom-ref"],
+        group: aserv.group || "",
+        name: aserv.name,
+        version: aserv.version | "latest"
+      };
+      delete service["bom-ref"];
+      const aentry = {
+        service
+      };
+      serv_list.push(aentry);
+    } else {
+      serv_list.push(aserv);
+    }
+  }
+  return serv_list;
+}
+
+/**
  * Function to create the dependency block
  */
 function addDependencies(dependencies, format = "xml") {
@@ -699,8 +724,15 @@ const buildBomXml = (
         .ele("externalReferences")
         .ele(addGlobalReferences(context.src, context.filename, "xml"));
     }
-    if (context && context.dependencies && context.dependencies.length) {
-      bom.ele("dependencies").ele(addDependencies(context.dependencies, "xml"));
+    if (context) {
+      if (context.services && context.services.length) {
+        bom.ele("services").ele(addServices(context.services, "xml"));
+      }
+      if (context.dependencies && context.dependencies.length) {
+        bom
+          .ele("dependencies")
+          .ele(addDependencies(context.dependencies, "xml"));
+      }
     }
     const bomString = bom.end({
       pretty: true,
@@ -2554,11 +2586,14 @@ const createHelmBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createContainerSpecLikeBom = async (path, options) => {
+  let services = [];
+  let ociSpecs = [];
   let components = [];
   let componentsXmls = [];
   let parentComponent = {};
   let dependencies = [];
   let doneimages = [];
+  let doneservices = [];
   let dcFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yml"
@@ -2582,67 +2617,101 @@ const createContainerSpecLikeBom = async (path, options) => {
           console.log("Images identified in", f, "are", imglist);
         }
         for (const img of imglist) {
-          if (doneimages.includes(img.image)) {
-            if (DEBUG_MODE) {
-              console.log("Skipping", img.image);
-            }
-            continue;
-          }
-          if (DEBUG_MODE) {
-            console.log(`Parsing image ${img.image}`);
-          }
-          const imageObj = dockerLib.parseImageName(img.image);
-          const pkg = {
-            name: imageObj.repo,
-            version:
-              imageObj.tag ||
-              (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
-            qualifiers: {}
-          };
-          if (imageObj.registry) {
-            pkg["qualifiers"]["repository_url"] = imageObj.registry;
-          }
-          if (imageObj.platform) {
-            pkg["qualifiers"]["platform"] = imageObj.platform;
-          }
-          // Create an entry for the oci image
-          const imageBomData = buildBomNSData(options, [pkg], "oci", {
-            src: img.image,
-            filename: f,
-            nsMapping: {}
-          });
-          if (
-            imageBomData &&
-            imageBomData.bomJson &&
-            imageBomData.bomJson.components
-          ) {
-            components = components.concat(imageBomData.bomJson.components);
-            componentsXmls = componentsXmls.concat(
-              listComponents(
-                options,
-                {},
-                imageBomData.bomJson.components,
-                "oci",
-                "xml"
-              )
+          // img could have .service, .ociSpec or .image
+          if (img.ociSpec) {
+            console.log(
+              `NOTE: ${img.ociSpec} needs to built using docker or podman and referred with a name to get included in this SBoM.`
             );
-          }
-          const bomData = await createBom(img.image, { projectType: "oci" });
-          doneimages.push(img.image);
-          if (bomData) {
-            if (bomData.components && bomData.components.length) {
-              components = components.concat(bomData.components);
+            ociSpecs.push({
+              group: "",
+              name: img.ociSpec,
+              version: "latest"
+            });
+          } else if (img.service) {
+            let version = "latest";
+            let name = img.service;
+            if (img.service.includes(":")) {
+              const tmpA = img.service.split(":");
+              if (tmpA && tmpA.length === 2) {
+                name = tmpA[0];
+                version = tmpA[1];
+              }
             }
-            if (bomData.componentsXmls && bomData.componentsXmls.length) {
-              componentsXmls = componentsXmls.concat(bomData.componentsXmls);
+            const servbomRef = `urn:service:${name}:${version}`;
+            if (!doneservices.includes(servbomRef)) {
+              services.push({
+                "bom-ref": servbomRef,
+                name: name,
+                version: version,
+                group: ""
+              });
+              doneservices.push(servbomRef);
             }
-          }
-          console.log(
-            `BOM includes ${components.length} unfiltered components so far`
-          );
-        }
+          } else if (img.image) {
+            if (doneimages.includes(img.image)) {
+              if (DEBUG_MODE) {
+                console.log("Skipping", img.image);
+              }
+              continue;
+            }
+            if (DEBUG_MODE) {
+              console.log(`Parsing image ${img.image}`);
+            }
+            const imageObj = dockerLib.parseImageName(img.image);
+            const pkg = {
+              name: imageObj.repo,
+              version:
+                imageObj.tag ||
+                (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
+              qualifiers: {}
+            };
+            if (imageObj.registry) {
+              pkg["qualifiers"]["repository_url"] = imageObj.registry;
+            }
+            if (imageObj.platform) {
+              pkg["qualifiers"]["platform"] = imageObj.platform;
+            }
+            // Create an entry for the oci image
+            const imageBomData = buildBomNSData(options, [pkg], "oci", {
+              src: img.image,
+              filename: f,
+              nsMapping: {}
+            });
+            if (
+              imageBomData &&
+              imageBomData.bomJson &&
+              imageBomData.bomJson.components
+            ) {
+              components = components.concat(imageBomData.bomJson.components);
+              componentsXmls = componentsXmls.concat(
+                listComponents(
+                  options,
+                  {},
+                  imageBomData.bomJson.components,
+                  "oci",
+                  "xml"
+                )
+              );
+            }
+            const bomData = await createBom(img.image, { projectType: "oci" });
+            doneimages.push(img.image);
+            if (bomData) {
+              if (bomData.components && bomData.components.length) {
+                components = components.concat(bomData.components);
+              }
+              if (bomData.componentsXmls && bomData.componentsXmls.length) {
+                componentsXmls = componentsXmls.concat(bomData.componentsXmls);
+              }
+            }
+            console.log(
+              `BOM includes ${components.length} unfiltered components so far`
+            );
+          } // img.image
+        } // for
       }
     }
+    options.services = services;
+    options.ociSpecs = ociSpecs;
     return dedupeBom(
       options,
       components,
@@ -2946,7 +3015,8 @@ const dedupeBom = (
       parentComponent,
       componentsXmls,
       {
-        dependencies
+        dependencies: dependencies,
+        services: options.services
       },
       options
     ),
@@ -2957,6 +3027,7 @@ const dedupeBom = (
       version: 1,
       metadata: addMetadata(parentComponent, "json", options),
       components,
+      services: options.services || [],
       dependencies
     }
   };

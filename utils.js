@@ -2314,6 +2314,7 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
       !imgList.includes(imageLike)
     ) {
       pkgList.push({ image: imageLike });
+      pkgList.push({ service: keyValueObj.name || imageLike });
       imgList.push(imageLike);
     }
     for (const key of Object.keys(keyValueObj)) {
@@ -2363,8 +2364,28 @@ const parseContainerSpecData = async function (dcData) {
     }
     if (yamlObj.services) {
       for (const serv of Object.keys(yamlObj.services)) {
+        pkgList.push({
+          service: serv
+        });
         const aservice = yamlObj.services[serv];
-        if (aservice.image && !imgList.includes(aservice.image)) {
+        // Track locally built images
+        if (aservice.build) {
+          if (Object.keys(aservice.build).length && aservice.build.dockerfile) {
+            pkgList.push({
+              ociSpec: aservice.build.dockerfile
+            });
+          } else {
+            if (aservice.build === "." || aservice.build === "./") {
+              pkgList.push({
+                ociSpec: "Dockerfile"
+              });
+            } else {
+              pkgList.push({
+                ociSpec: aservice.build
+              });
+            }
+          }
+        } else if (aservice.image && !imgList.includes(aservice.image)) {
           pkgList.push({
             image: aservice.image
           });
