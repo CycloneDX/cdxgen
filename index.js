@@ -898,7 +898,10 @@ const createJavaBom = async (path, options) => {
     });
   } else {
     // maven - pom.xml
-    const pomFiles = utils.getAllFiles(path, "pom.xml");
+    const pomFiles = utils.getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "pom.xml"
+    );
     if (pomFiles && pomFiles.length) {
       let mvnArgs = [
         "org.cyclonedx:cyclonedx-maven-plugin:2.7.2:makeAggregateBom"
@@ -2705,9 +2708,11 @@ const createContainerSpecLikeBom = async (path, options) => {
               }
             }
           } // img.image
-        } // for
+        } // for img
       }
-    }
+    } // for
+  } // if
+  if (origProjectType === "universal") {
     // In case of universal, repeat to collect multiX Boms
     const mbomData = await createMultiXBom([path], {
       projectType: origProjectType,
@@ -2724,17 +2729,16 @@ const createContainerSpecLikeBom = async (path, options) => {
         `BOM includes ${components.length} unfiltered components so far`
       );
     }
-    options.services = services;
-    options.ociSpecs = ociSpecs;
-    return dedupeBom(
-      options,
-      components,
-      componentsXmls,
-      parentComponent,
-      dependencies
-    );
   }
-  return {};
+  options.services = services;
+  options.ociSpecs = ociSpecs;
+  return dedupeBom(
+    options,
+    components,
+    componentsXmls,
+    parentComponent,
+    dependencies
+  );
 };
 
 /**
@@ -3367,7 +3371,10 @@ const createXBom = async (path, options) => {
     return await createNodejsBom(path, options);
   }
   // maven - pom.xml
-  const pomFiles = utils.getAllFiles(path, "pom.xml");
+  const pomFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pom.xml"
+  );
   // gradle
   let gradleFiles = utils.getAllFiles(
     path,
