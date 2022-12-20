@@ -1270,6 +1270,13 @@ test("parse container spec like files", async () => {
     service: "frontend"
   });
   dep_list = await utils.parseContainerSpecData(
+    fs.readFileSync("./test/data/docker-compose-cr.yml", (encoding = "utf-8"))
+  );
+  expect(dep_list.length).toEqual(14);
+  expect(dep_list[0]).toEqual({
+    service: "crapi-identity"
+  });
+  dep_list = await utils.parseContainerSpecData(
     fs.readFileSync("./test/data/tekton-task.yml", (encoding = "utf-8"))
   );
   expect(dep_list.length).toEqual(2);

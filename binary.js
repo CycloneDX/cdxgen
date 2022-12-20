@@ -313,17 +313,21 @@ const getOSPackages = (src) => {
                   comp.group = group;
                   purlObj.namespace = group;
                 }
-                // Bug fix for mageia
-                if (
-                  purlObj.type === "none" &&
-                  comp.purl &&
-                  (comp.purl.includes(".mga") || comp.purl.includes("arch"))
-                ) {
-                  purlObj["type"] = "rpm";
-                  purlObj["namespace"] = "mageia";
-                  comp.group = "mageia";
-                  purlObj.qualifiers["distro"] = "mageia";
-                  distro_codename = "mga";
+                // Bug fix for mageia and oracle linux
+                if (purlObj.type === "none") {
+                  if (comp.purl && comp.purl.includes(".mga")) {
+                    purlObj["type"] = "rpm";
+                    purlObj["namespace"] = "mageia";
+                    comp.group = "mageia";
+                    purlObj.qualifiers["distro"] = "mageia";
+                    distro_codename = "mga";
+                  } else if (comp.purl && comp.purl.includes(".el8")) {
+                    purlObj["type"] = "rpm";
+                    purlObj["namespace"] = "";
+                    comp.group = "";
+                    purlObj.qualifiers["distro"] = "el8";
+                    distro_codename = undefined;
+                  }
                 }
                 if (purlObj.type !== "none") {
                   allTypes.add(purlObj.type);

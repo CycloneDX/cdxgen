@@ -2313,6 +2313,12 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
       typeof imageLike === "string" &&
       !imgList.includes(imageLike)
     ) {
+      if (imageLike.includes(":${VERSION:")) {
+        imageLike = imageLike
+          .replace(":${VERSION:-", ":")
+          .replace(":${VERSION:", ":")
+          .replace("}", "");
+      }
       pkgList.push({ image: imageLike });
       pkgList.push({ service: keyValueObj.name || imageLike });
       imgList.push(imageLike);
@@ -2388,10 +2394,17 @@ const parseContainerSpecData = async function (dcData) {
             }
           }
         } else if (aservice.image && !imgList.includes(aservice.image)) {
+          let imgFullName = aservice.image;
+          if (imgFullName.includes(":${VERSION:")) {
+            imgFullName = imgFullName
+              .replace(":${VERSION:-", ":")
+              .replace(":${VERSION:", ":")
+              .replace("}", "");
+          }
           pkgList.push({
-            image: aservice.image
+            image: imgFullName
           });
-          imgList.push(aservice.image);
+          imgList.push(imgFullName);
         }
       }
     }

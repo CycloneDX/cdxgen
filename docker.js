@@ -282,10 +282,6 @@ exports.parseImageName = parseImageName;
  */
 const getImage = async (fullImageName) => {
   let localData = undefined;
-  // Simplify certain parameterisation
-  if (fullImageName.includes(":${VERSION:-latest}")) {
-    fullImageName = fullImageName.replace(":${VERSION:-latest}", ":latest");
-  }
   const { repo, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
@@ -556,9 +552,6 @@ const extractFromManifest = async (
  * Returns the location of the layers with additional packages related metadata
  */
 const exportImage = async (fullImageName) => {
-  if (fullImageName.includes(":${VERSION:-latest}")) {
-    fullImageName = fullImageName.replace(":${VERSION:-latest}", ":latest");
-  }
   // Try to get the data locally first
   const localData = await getImage(fullImageName);
   if (!localData) {
