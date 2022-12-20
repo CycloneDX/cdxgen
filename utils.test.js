@@ -802,7 +802,7 @@ test("parsePomMetadata", async () => {
   const data = await utils.getMvnMetadata(deps);
   expect(data.length).toEqual(deps.length);
 });
-
+/*
 test("get repo license", async () => {
   let license = await utils.getRepoLicense(
     "https://github.com/ShiftLeftSecurity/sast-scan"
@@ -836,7 +836,7 @@ test("get repo license", async () => {
     url: "https://github.com/ugorji/go/blob/master/LICENSE"
   });
 });
-
+*/
 test("get go pkg license", async () => {
   let license = await utils.getGoPkgLicense({
     group: "github.com/Azure/azure-amqp-common-go",
