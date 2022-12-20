@@ -2357,7 +2357,9 @@ const parseContainerSpecData = async function (dcData) {
     try {
       yamlObj = yaml.load(dcData);
     } catch (err) {
-      console.log(err);
+      if (DEBUG_MODE) {
+        console.log(err);
+      }
     }
     if (!yamlObj) {
       continue;
@@ -2402,6 +2404,57 @@ const parseContainerSpecData = async function (dcData) {
   return pkgList;
 };
 exports.parseContainerSpecData = parseContainerSpecData;
+
+const parseOpenapiSpecData = async function (oaData) {
+  const servlist = [];
+  if (!oaData) {
+    return servlist;
+  }
+  try {
+    if (oaData.startsWith("openapi:")) {
+      oaData = yaml.load(oaData);
+    } else {
+      oaData = JSON.parse(oaData);
+    }
+  } catch (e) {
+    console.error(e);
+    return servlist;
+  }
+  const name = oaData.info.title.replace(/ /g, "-");
+  const version = oaData.info.version || "latest";
+  const aservice = {
+    "bom-ref": `urn:service:${name}:${version}`,
+    name,
+    description: oaData.description || "",
+    version
+  };
+  let serverName = [];
+  if (oaData.servers && oaData.servers.length && oaData.servers[0].url) {
+    serverName = oaData.servers[0].url;
+    if (!serverName.startsWith("http") || !serverName.includes("//")) {
+      serverName = "http://" + serverName;
+    }
+  }
+  if (oaData.paths) {
+    const endpoints = [];
+    for (const route of Object.keys(oaData.paths)) {
+      let sep = "";
+      if (!route.startsWith("/")) {
+        sep = "/";
+      }
+      endpoints.push(`${serverName}${sep}${route}`);
+    }
+    aservice.endpoints = endpoints;
+  }
+  let authenticated = false;
+  if (oaData.components && oaData.components.securitySchemes) {
+    authenticated = true;
+  }
+  aservice.authenticated = authenticated;
+  servlist.push(aservice);
+  return servlist;
+};
+exports.parseOpenapiSpecData = parseOpenapiSpecData;
 
 const parseCabalData = async function (cabalData) {
   const pkgList = [];

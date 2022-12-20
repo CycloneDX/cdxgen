@@ -1925,76 +1925,83 @@ const createGoBom = async (path, options) => {
   if (gomodFiles.length) {
     // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
     if (!["docker", "oci", "os"].includes(options.projectType)) {
-      console.log("Executing go list -deps in", path);
-      const result = spawnSync(
-        "go",
-        [
-          "list",
-          "-deps",
-          "-f",
-          "'{{with .Module}}{{.Path}} {{.Version}}{{end}}'",
-          "./..."
-        ],
-        { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
-      );
-      if (result.status !== 0 || result.error) {
-        console.error(result.stdout, result.stderr);
-        options.failOnError && process.exit(1);
-      }
-      const stdout = result.stdout;
-      if (stdout) {
-        const cmdOutput = Buffer.from(stdout).toString();
-        const dlist = await utils.parseGoListDep(cmdOutput, gosumMap);
-        if (dlist && dlist.length) {
-          pkgList = pkgList.concat(dlist);
+      for (let f of gomodFiles) {
+        const basePath = pathLib.dirname(f);
+        // Ignore vendor packages
+        if (basePath.includes("vendor") || basePath.includes("build")) {
+          continue;
         }
-        const allImports = {};
-        let circuitBreak = false;
-        console.log(
-          `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+        console.log("Executing go list -deps in", basePath);
+        const result = spawnSync(
+          "go",
+          [
+            "list",
+            "-deps",
+            "-f",
+            "'{{with .Module}}{{.Path}} {{.Version}}{{end}}'",
+            "./..."
+          ],
+          { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
-        // Using go mod why detect required packages
-        for (let apkg of pkgList) {
-          if (circuitBreak) {
-            break;
-          }
-          let pkgFullName = `${apkg.group}/${apkg.name}`;
-          if (DEBUG_MODE) {
-            console.log(`go mod why -m -vendor ${pkgFullName}`);
-          }
-          const mresult = spawnSync(
-            "go",
-            ["mod", "why", "-m", "-vendor", pkgFullName],
-            { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
-          );
-          if (mresult.status !== 0 || mresult.error) {
-            if (DEBUG_MODE) {
-              console.log(mresult.stdout, mresult.stderr);
-            }
-            circuitBreak = true;
-          } else {
-            const mstdout = mresult.stdout;
-            if (mstdout) {
-              const cmdOutput = Buffer.from(mstdout).toString();
-              let whyPkg = utils.parseGoModWhy(cmdOutput);
-              if (whyPkg == pkgFullName) {
-                allImports[pkgFullName] = true;
-              }
-            }
-          }
+        if (result.status !== 0 || result.error) {
+          console.error(result.stdout, result.stderr);
+          options.failOnError && process.exit(1);
         }
-        if (DEBUG_MODE) {
-          console.log(`Required packages: ${Object.keys(allImports).length}`);
+        const stdout = result.stdout;
+        if (stdout) {
+          const cmdOutput = Buffer.from(stdout).toString();
+          const dlist = await utils.parseGoListDep(cmdOutput, gosumMap);
+          if (dlist && dlist.length) {
+            pkgList = pkgList.concat(dlist);
+          }
+        } else {
+          console.error("go unexpectedly didn't return any output");
+          options.failOnError && process.exit(1);
         }
-        return buildBomNSData(options, pkgList, "golang", {
-          allImports,
-          src: path,
-          filename: gomodFiles.join(", ")
-        });
-      } else {
-        console.error("go unexpectedly didn't return any output");
-        options.failOnError && process.exit(1);
       }
+      const allImports = {};
+      let circuitBreak = false;
+      console.log(
+        `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+      );
+      // Using go mod why detect required packages
+      for (let apkg of pkgList) {
+        if (circuitBreak) {
+          break;
+        }
+        let pkgFullName = `${apkg.group}/${apkg.name}`;
+        if (DEBUG_MODE) {
+          console.log(`go mod why -m -vendor ${pkgFullName}`);
+        }
+        const mresult = spawnSync(
+          "go",
+          ["mod", "why", "-m", "-vendor", pkgFullName],
+          { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+        );
+        if (mresult.status !== 0 || mresult.error) {
+          if (DEBUG_MODE) {
+            console.log(mresult.stdout, mresult.stderr);
+          }
+          circuitBreak = true;
+        } else {
+          const mstdout = mresult.stdout;
+          if (mstdout) {
+            const cmdOutput = Buffer.from(mstdout).toString();
+            let whyPkg = utils.parseGoModWhy(cmdOutput);
+            if (whyPkg == pkgFullName) {
+              allImports[pkgFullName] = true;
+            }
+          }
+        }
+      }
+      if (DEBUG_MODE) {
+        console.log(`Required packages: ${Object.keys(allImports).length}`);
+      }
+      return buildBomNSData(options, pkgList, "golang", {
+        allImports,
+        src: path,
+        filename: gomodFiles.join(", ")
+      });
     }
     // Parse the gomod files manually. The resultant BoM would be incomplete
     if (!["docker", "oci", "os"].includes(options.projectType)) {
@@ -2606,9 +2613,21 @@ const createContainerSpecLikeBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "*.yaml"
   );
+  let oapiFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "open*.json"
+  );
+  let oapiYamlFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "open*.yaml"
+  );
+  if (oapiYamlFiles && oapiYamlFiles.length) {
+    oapiFiles = oapiFiles.concat(oapiYamlFiles);
+  }
   if (yamlFiles.length) {
     dcFiles = dcFiles.concat(yamlFiles);
   }
+  // parse yaml manifest files
   if (dcFiles.length) {
     for (let f of dcFiles) {
       if (DEBUG_MODE) {
@@ -2712,6 +2731,19 @@ const createContainerSpecLikeBom = async (path, options) => {
       }
     } // for
   } // if
+  // Parse openapi files
+  if (oapiFiles.length) {
+    for (let f of oapiFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const oaData = fs.readFileSync(f, { encoding: "utf-8" });
+      const servlist = await utils.parseOpenapiSpecData(oaData);
+      if (servlist && servlist.length) {
+        services = services.concat(servlist);
+      }
+    }
+  }
   if (origProjectType === "universal") {
     // In case of universal, repeat to collect multiX Boms
     const mbomData = await createMultiXBom([path], {
@@ -3612,7 +3644,7 @@ const createBom = async (path, options) => {
     exportData = await dockerLib.exportArchive(path);
     if (!exportData) {
       console.log(
-        "BOM generation has failed due to problems with exporting the image"
+        `OS BOM generation has failed due to problems with exporting the image ${path}`
       );
       return {};
     }

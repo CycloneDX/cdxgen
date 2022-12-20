@@ -11,7 +11,7 @@ When used with plugins, cdxgen could generate an SBoM for Linux docker images an
 | Language/Platform               | Package format                                                                                  | Transitive dependencies                                                                  |
 | ------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | node.js                         | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js | Yes except .min.js                                                                       |
-| java                            | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                            | Yes unless pom.xml is manually parsed due to unavailability of maven or plugin errors    |
+| java                            | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                            | Yes unless pom.xml is manually parsed due to unavailability of maven or errors           |
 | php                             | composer.lock                                                                                   | Yes                                                                                      |
 | python                          | setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, bdist_wheel, .whl, .egg-info         | Only with Pipfile.lock and poetry.lock                                                   |
 | go                              | binary, go.mod, go.sum, Gopkg.lock                                                              | Yes except binary                                                                        |
@@ -39,6 +39,7 @@ When used with plugins, cdxgen could generate an SBoM for Linux docker images an
 | Helm Index                      | $HOME/.cache/helm/repository/\*\*/\*.yaml                                                       | N/A                                                                                      |
 | Docker compose                  | docker-compose\*.yml. Images would also be scanned.                                             | N/A                                                                                      |
 | Google CloudBuild configuration | cloudbuild.yaml                                                                                 | N/A                                                                                      |
+| OpenAPI                         | openapi\*.json, openapi\*.yaml                                                                  | N/A                                                                                      |
 
 NOTE:
 
@@ -139,6 +140,10 @@ To recursively generate a single BoM for all languages pass `-r` argument.
 ```bash
 cdxgen -r -o bom.json
 ```
+
+## Universal SBoM
+
+By passing the type `-t universal`, cdxgen could be forced to opportunistically collect as many components and services as possible by scanning all package, container and kubernetes manifests. The resulting SBoM could have over thousand components thus requiring additional triaging before use with traditional SCA tools.
 
 ### War file support
 
