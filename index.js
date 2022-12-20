@@ -2594,6 +2594,7 @@ const createContainerSpecLikeBom = async (path, options) => {
   let dependencies = [];
   let doneimages = [];
   let doneservices = [];
+  let origProjectType = options.projectType;
   let dcFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yml"
@@ -2703,12 +2704,25 @@ const createContainerSpecLikeBom = async (path, options) => {
                 componentsXmls = componentsXmls.concat(bomData.componentsXmls);
               }
             }
-            console.log(
-              `BOM includes ${components.length} unfiltered components so far`
-            );
           } // img.image
         } // for
       }
+    }
+    // In case of universal, repeat to collect multiX Boms
+    const mbomData = await createMultiXBom([path], {
+      projectType: origProjectType,
+      multiProject: true
+    });
+    if (mbomData) {
+      if (mbomData.components && mbomData.components.length) {
+        components = components.concat(mbomData.components);
+      }
+      if (mbomData.componentsXmls && mbomData.componentsXmls.length) {
+        componentsXmls = componentsXmls.concat(mbomData.componentsXmls);
+      }
+      console.log(
+        `BOM includes ${components.length} unfiltered components so far`
+      );
     }
     options.services = services;
     options.ociSpecs = ociSpecs;
