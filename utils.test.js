@@ -1348,3 +1348,98 @@ test("parse cloudbuild data", async () => {
     version: "v2.0.1"
   });
 });
+
+test("parse openapi spec files", async () => {
+  let aservice = await utils.parseOpenapiSpecData(
+    fs.readFileSync(
+      "./test/data/openapi/openapi-spec.json",
+      (encoding = "utf-8")
+    )
+  );
+  expect(aservice.length).toEqual(1);
+  expect(aservice[0]).toEqual({
+    "bom-ref": "urn:service:OWASP-crAPI-API:1-oas3",
+    name: "OWASP-crAPI-API",
+    description: "",
+    version: "1-oas3",
+    endpoints: [
+      "http://localhost:8888/identity/api/auth/signup",
+      "http://localhost:8888/identity/api/auth/login",
+      "http://localhost:8888/identity/api/auth/forget-password",
+      "http://localhost:8888/identity/api/auth/v3/check-otp",
+      "http://localhost:8888/identity/api/auth/v2/check-otp",
+      "http://localhost:8888/identity/api/auth/v4.0/user/login-with-token",
+      "http://localhost:8888/identity/api/auth/v2.7/user/login-with-token",
+      "http://localhost:8888/identity/api/v2/user/reset-password",
+      "http://localhost:8888/identity/api/v2/user/change-email",
+      "http://localhost:8888/identity/api/v2/user/verify-email-token",
+      "http://localhost:8888/identity/api/v2/user/dashboard",
+      "http://localhost:8888/identity/api/v2/user/pictures",
+      "http://localhost:8888/identity/api/v2/user/videos",
+      "http://localhost:8888/identity/api/v2/user/videos/{video_id}",
+      "http://localhost:8888/identity/api/v2/user/videos/convert_video",
+      "http://localhost:8888/identity/api/v2/admin/videos/{video_id}",
+      "http://localhost:8888/identity/api/v2/vehicle/vehicles",
+      "http://localhost:8888/identity/api/v2/vehicle/add_vehicle",
+      "http://localhost:8888/identity/api/v2/vehicle/{vehicleId}/location",
+      "http://localhost:8888/identity/api/v2/vehicle/resend_email",
+      "http://localhost:8888/community/api/v2/community/posts/{postId}",
+      "http://localhost:8888/community/api/v2/community/posts",
+      "http://localhost:8888/community/api/v2/community/posts/{postId}/comment",
+      "http://localhost:8888/community/api/v2/community/posts/recent",
+      "http://localhost:8888/community/api/v2/coupon/new-coupon",
+      "http://localhost:8888/community/api/v2/coupon/validate-coupon",
+      "http://localhost:8888/workshop/api/shop/products",
+      "http://localhost:8888/workshop/api/shop/orders",
+      "http://localhost:8888/workshop/api/shop/orders/{order_id}",
+      "http://localhost:8888/workshop/api/shop/orders/all",
+      "http://localhost:8888/workshop/api/shop/orders/return_order",
+      "http://localhost:8888/workshop/api/shop/apply_coupon",
+      "http://localhost:8888/workshop/api/shop/return_qr_code",
+      "http://localhost:8888/workshop/api/mechanic/",
+      "http://localhost:8888/workshop/api/merchant/contact_mechanic",
+      "http://localhost:8888/workshop/api/mechanic/receive_report",
+      "http://localhost:8888/workshop/api/mechanic/mechanic_report",
+      "http://localhost:8888/workshop/api/mechanic/service_requests",
+      "http://localhost:8888/workshop/api/mechanic/signup"
+    ],
+    authenticated: true
+  });
+  aservice = await utils.parseOpenapiSpecData(
+    fs.readFileSync(
+      "./test/data/openapi/openapi-oai.yaml",
+      (encoding = "utf-8")
+    )
+  );
+  expect(aservice.length).toEqual(1);
+  expect(aservice[0]).toEqual({
+    "bom-ref": "urn:service:OpenAI-API:1.1.0",
+    name: "OpenAI-API",
+    description: "",
+    version: "1.1.0",
+    endpoints: [
+      "https://api.openai.com/v1/engines",
+      "https://api.openai.com/v1/engines/{engine_id}",
+      "https://api.openai.com/v1/completions",
+      "https://api.openai.com/v1/edits",
+      "https://api.openai.com/v1/images/generations",
+      "https://api.openai.com/v1/images/edits",
+      "https://api.openai.com/v1/images/variations",
+      "https://api.openai.com/v1/embeddings",
+      "https://api.openai.com/v1/engines/{engine_id}/search",
+      "https://api.openai.com/v1/files",
+      "https://api.openai.com/v1/files/{file_id}",
+      "https://api.openai.com/v1/files/{file_id}/content",
+      "https://api.openai.com/v1/answers",
+      "https://api.openai.com/v1/classifications",
+      "https://api.openai.com/v1/fine-tunes",
+      "https://api.openai.com/v1/fine-tunes/{fine_tune_id}",
+      "https://api.openai.com/v1/fine-tunes/{fine_tune_id}/cancel",
+      "https://api.openai.com/v1/fine-tunes/{fine_tune_id}/events",
+      "https://api.openai.com/v1/models",
+      "https://api.openai.com/v1/models/{model}",
+      "https://api.openai.com/v1/moderations"
+    ],
+    authenticated: false
+  });
+});
