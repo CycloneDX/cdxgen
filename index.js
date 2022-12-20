@@ -3789,6 +3789,7 @@ const createBom = async (path, options) => {
         pathLib.join(os.homedir(), ".cache", "helm", "repository"),
         options
       );
+    case "universal":
     case "docker-compose":
     case "swarm":
     case "tekton":
