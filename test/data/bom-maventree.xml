@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:bd968e3a-d967-4305-9f9a-29e33cc67c7b" version="1">
+  <metadata>
+    <timestamp>2022-12-22T21:34:18.269Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>AppThreat</vendor>
+        <name>cdxgen</name>
+        <version>5.5.6</version>
+      </tool>
+    </tools>
+    <authors>
+      <author>
+        <name>Team AppThreat</name>
+        <email>cloud@appthreat.com</email>
+      </author>
+    </authors>
+    <component type="library" bom-ref="pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar">
+      <publisher/>
+      <group>com.gitlab.security_products.tests</group>
+      <name>java-maven</name>
+      <version>1.0-SNAPSHOT</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar</purl>
+    </component>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:maven/io.netty/netty@3.9.1.Final?type=jar">
+      <publisher/>
+      <group>io.netty</group>
+      <name>netty</name>
+      <version>3.9.1.Final</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/io.netty/netty@3.9.1.Final?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar">
+      <publisher/>
+      <group>org.apache.maven</group>
+      <name>maven-artifact</name>
+      <version>3.3.9</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar">
+      <publisher/>
+      <group>org.codehaus.plexus</group>
+      <name>plexus-utils</name>
+      <version>3.0.22</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar">
+      <publisher/>
+      <group>org.apache.commons</group>
+      <name>commons-lang3</name>
+      <version>3.4</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar">
+      <publisher/>
+      <group>com.fasterxml.jackson.core</group>
+      <name>jackson-databind</name>
+      <version>2.9.2</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar">
+      <publisher/>
+      <group>com.fasterxml.jackson.core</group>
+      <name>jackson-annotations</name>
+      <version>2.9.0</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar">
+      <publisher/>
+      <group>com.fasterxml.jackson.core</group>
+      <name>jackson-core</name>
+      <version>2.9.2</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.mozilla/rhino@1.7.10?type=jar">
+      <publisher/>
+      <group>org.mozilla</group>
+      <name>rhino</name>
+      <version>1.7.10</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.mozilla/rhino@1.7.10?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar">
+      <publisher/>
+      <group>org.apache.geode</group>
+      <name>geode-core</name>
+      <version>1.1.1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar">
+      <publisher/>
+      <group>com.github.stephenc.findbugs</group>
+      <name>findbugs-annotations</name>
+      <version>1.3.9-1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar">
+      <publisher/>
+      <group>org.jgroups</group>
+      <name>jgroups</name>
+      <version>3.6.10.Final</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/antlr/antlr@2.7.7?type=jar">
+      <publisher/>
+      <group>antlr</group>
+      <name>antlr</name>
+      <version>2.7.7</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/antlr/antlr@2.7.7?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/commons-io/commons-io@2.3?type=jar">
+      <publisher/>
+      <group>commons-io</group>
+      <name>commons-io</name>
+      <version>2.3</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/commons-io/commons-io@2.3?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/commons-lang/commons-lang@2.5?type=jar">
+      <publisher/>
+      <group>commons-lang</group>
+      <name>commons-lang</name>
+      <version>2.5</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/commons-lang/commons-lang@2.5?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar">
+      <publisher/>
+      <group>it.unimi.dsi</group>
+      <name>fastutil</name>
+      <version>7.0.2</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/javax.resource/javax.resource-api@1.7?type=jar">
+      <publisher/>
+      <group>javax.resource</group>
+      <name>javax.resource-api</name>
+      <version>1.7</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/javax.resource/javax.resource-api@1.7?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar">
+      <publisher/>
+      <group>javax.transaction</group>
+      <name>javax.transaction-api</name>
+      <version>1.2</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar">
+      <publisher/>
+      <group>net.java.dev.jna</group>
+      <name>jna</name>
+      <version>4.0.0</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar">
+      <publisher/>
+      <group>net.sf.jopt-simple</group>
+      <name>jopt-simple</name>
+      <version>5.0.1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar">
+      <publisher/>
+      <group>org.apache.logging.log4j</group>
+      <name>log4j-api</name>
+      <version>2.6.1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar">
+      <publisher/>
+      <group>org.apache.logging.log4j</group>
+      <name>log4j-core</name>
+      <version>2.6.1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar">
+      <publisher/>
+      <group>org.apache.shiro</group>
+      <name>shiro-core</name>
+      <version>1.3.1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar">
+      <publisher/>
+      <group>org.slf4j</group>
+      <name>slf4j-api</name>
+      <version>1.6.4</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar">
+      <publisher/>
+      <group>commons-beanutils</group>
+      <name>commons-beanutils</name>
+      <version>1.8.3</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar">
+      <publisher/>
+      <group>org.apache.geode</group>
+      <name>geode-common</name>
+      <version>1.1.1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar">
+      <publisher/>
+      <group>org.apache.geode</group>
+      <name>geode-json</name>
+      <version>1.1.1</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar</purl>
+    </component>
+  </components>
+  <externalReferences>
+    <reference type="other">
+      <url>/mnt/work/sandbox/dependency-scanning/java-maven</url>
+      <comment>Base path</comment>
+    </reference>
+    <reference type="other">
+      <url>/mnt/work/sandbox/dependency-scanning/java-maven/pom.xml</url>
+      <comment>Package file</comment>
+    </reference>
+  </externalReferences>
+  <dependencies>
+    <dependency ref="pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar">
+      <dependency ref="pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/io.netty/netty@3.9.1.Final?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar">
+      <dependency ref="pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"/>
+    <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar">
+      <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar"/>
+    <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"/>
+    <dependency ref="pkg:maven/org.mozilla/rhino@1.7.10?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar">
+      <dependency ref="pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar"/>
+    <dependency ref="pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar"/>
+    <dependency ref="pkg:maven/antlr/antlr@2.7.7?type=jar"/>
+    <dependency ref="pkg:maven/commons-io/commons-io@2.3?type=jar"/>
+    <dependency ref="pkg:maven/commons-lang/commons-lang@2.5?type=jar"/>
+    <dependency ref="pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar"/>
+    <dependency ref="pkg:maven/javax.resource/javax.resource-api@1.7?type=jar">
+      <dependency ref="pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"/>
+    <dependency ref="pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar"/>
+    <dependency ref="pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar">
+      <dependency ref="pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar"/>
+    <dependency ref="pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"/>
+  </dependencies>
+</bom>

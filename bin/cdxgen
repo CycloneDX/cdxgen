@@ -232,10 +232,6 @@ let filePath = args._[0] || ".";
             console.log("SBoM signing was unsuccessful", ex);
             console.log("Check if the private key was exported in PEM format");
           }
-        } else {
-          console.log(
-            "NOTE: To sign this SBoM for authenticity, set the environment variables SBOM_SIGN_ALGORITHM and SBOM_SIGN_PRIVATE_KEY"
-          );
         }
       }
       // Create bom xml file

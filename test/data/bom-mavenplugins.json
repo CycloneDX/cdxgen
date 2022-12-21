@@ -1,0 +1,1208 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:3ada63e1-1aa0-4a9e-be9c-1eda1d2725ad",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2022-12-22T19:11:52.179Z",
+    "tools": [
+      {
+        "vendor": "AppThreat",
+        "name": "cdxgen",
+        "version": "5.5.6"
+      }
+    ],
+    "authors": [
+      {
+        "name": "Team AppThreat",
+        "email": "cloud@appthreat.com"
+      }
+    ],
+    "component": {
+      "publisher": "",
+      "group": "com.gitlab.security_products.tests",
+      "name": "java-maven",
+      "version": "1.0-SNAPSHOT",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar"
+    }
+  },
+  "components": [
+    {
+      "publisher": "The Netty Project",
+      "group": "io.netty",
+      "name": "netty",
+      "version": "3.9.1.Final",
+      "description": "The Netty project is an effort to provide an asynchronous event-driven network application framework and tools for rapid development of maintainable high performance and high scalability protocol servers and clients. In other words, Netty is a NIO client server framework which enables quick and easy development of network applications such as protocol servers and clients. It greatly simplifies and streamlines network programming such as TCP and UDP socket server.",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "c1a35f5f1dbc6d8f693b836a66070d45"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "6063d76dbb90eb875e1c82c334b5111c4a77fe66"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "b9ca6e9cfd4ebc94a146065eb1db4a1734f1af06eae46ee24666185b1c0e95c8"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "5148bb686ac91f43339eeb571d4cbaae64a8f50b618b6aa9f25d2580814b24d24fc9ec6faed233cee118dc61ee6e8603252eea9269a6da7c0f7974c628161de2"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "e01cc8baaf8e40045553149081c41a70fc8f7106a83d321a05cc61b88c2fa465cd8528b14674ab575e4b30a83e86cdc2"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.netty/netty@3.9.1.Final?type=jar"
+    },
+    {
+      "publisher": "The Apache Software Foundation",
+      "group": "org.apache.maven",
+      "name": "maven-artifact",
+      "version": "3.3.9",
+      "description": "Maven is a software build management and comprehension tool. Based on the concept of a project object model: builds, dependency management, documentation creation, site publication, and distribution publication are all controlled from the declarative file. Maven can be extended by plugins to utilise a number of other development tools for reporting or the build process.",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "eabb57cd2980b2776fa4c441307ea60c"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "0f43afa184555fbc6e36b3334b17246c39b30f6e"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "1f702928f2233c6ecdf308fbd8f2932ea287c7062183d3c8364b0db7e9c4445d"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "22f5203e5b6639ef6134e811052a4e94caafa4ffb25c9f821c19672a7a7097ad3562cef0e7b9802ae66e005b151d410d4822a8e48a4e92819255758ef6c073ea"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "1cbdfda98fc70734efb6e11716ffbafa6ea5148ed07c47a25d042481fa65b633b79fb920b2a89a3576113d4ac6f329b1"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar"
+    },
+    {
+      "publisher": "Codehaus",
+      "group": "org.codehaus.plexus",
+      "name": "plexus-utils",
+      "version": "3.0.22",
+      "description": "A collection of various utility classes to ease working with strings, files, command lines, XML and more.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "2a32677a099da7c5b9b2b39c066f2cc6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "764f26e0ab13a87c48fe55f525dfb6a133b7a92f"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "0f31c44b275f87e56d46a582ce96d03b9e2ab344cf87c4e268b34d3ad046beab"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "b0be4608a6246630463989cbc7a554e4d6a886895fe9b9d1d38ff525e5ef9bcdbc96219731eb16940c6936808824e533bd6aedb77d8376657680a137e51e1fff"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "aedfa474d709222d69c6736588c7ede1aae1c39e9e4604e42b45dfa39dfc78ba85dfb17f424e6c934fd8d505a585f3ff"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar"
+    },
+    {
+      "publisher": "The Apache Software Foundation",
+      "group": "org.apache.commons",
+      "name": "commons-lang3",
+      "version": "3.4",
+      "description": "Apache Commons Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy, or are considered to be so standard as to justify existence in java.lang.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "8667a442ee77e509fbe8176b94726eb2"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "5fe28b9518e58819180a43a850fbc0dd24b7c050"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "734c8356420cc8e30c795d64fd1fcd5d44ea9d90342a2cc3262c5158fbc6d98b"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "b1b556692341a240f8b81f8f71b8b5c0225ccf857ce1b185e7fe6d7a9bb2a4d77823496cd6e2697a20386e7f3ba02d476a0e4ff38071367beb3090104544922d"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "961bd98a9b176b23f6162fa26b887ea54e970815f6ad10c5f98c0d8a35d6f056c19a46889bb380947a741daf7bc264cd"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"
+    },
+    {
+      "publisher": "FasterXML",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.9.2",
+      "description": "General data-binding functionality for Jackson: works on core streaming API",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "312a220f449bdeda184b7007e6ca5540"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "1d8d8cb7cf26920ba57fb61fa56da88cc123b21f"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "d06823e75174e566fc4a169cb3d162b128eebedc5de336a179d6513b59a0758a"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "e8630ad3a2fcf68d13545bac1794feb0ca303932cc1bc626b5f37d88465d378cd7569ac9137632c0fa84f4ba53ff51121aaa61f14ac033b9435de65ea3f5bcdd"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "64378b553bac8bd023dfb7d2a75a5eff8e486eb39c28c8bd8eaa483f957505d7d07a1f9878e941fdcb422f967dd66e03"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar"
+    },
+    {
+      "publisher": "FasterXML",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-annotations",
+      "version": "2.9.0",
+      "description": "Core annotations used for value types, used by Jackson data binding package.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "c09faa1b063681cf45706c6df50685b6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "07c10d545325e3a6e72e06381afe469fd40eb701"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "45d32ac61ef8a744b464c54c2b3414be571016dd46bfc2bec226761cf7ae457a"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "266589c36ea544ebca94aecd76ba9dfe88637563b94cf24e46846466b103074c9f95508bfa237c20d0ab9c60bfb6befa2628236dcf7222a69cf1ef9462bcf0b3"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "36289e4a5d6774c4fc6ed38a632a681759a4bc0389616a79edd22298dbcbe8f1bc7a107f00a9ec76b492d125c890a939"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar"
+    },
+    {
+      "publisher": "FasterXML",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.9.2",
+      "description": "Core Jackson processing abstractions (aka Streaming API), implementation for JSON",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "456af981c1be006d6ac38df86c4339d6"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "aed20e50152a2f19adc1995c8d8f307c7efa414d"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "0c0d5d4bae541d2f26a19c2eb1067d9be806c449f67af047ce8963059b18d1e1"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "63acdda57de93713239000deea2dbb9d69bca4a0a8c3d53c9f2b31638d47b870f30e0e7c9349f532ca21aa84cb6b384214e96c4ede44135af14079db1851db0d"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "9d3b125d2c228973f38a5de12190f3d242ac8a2452ea8017d5824d490a374164471ff210617867aa8fbbcffd39cf7752"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"
+    },
+    {
+      "publisher": "The Mozilla Foundation",
+      "group": "org.mozilla",
+      "name": "rhino",
+      "version": "1.7.10",
+      "description": "Rhino is an open-source implementation of JavaScript written entirely in Java. It is typically embedded into Java applications to provide scripting to end users.",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "95376a6a78a8ac54321fd8012c9e27a8"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "24650bd98b1041df2eb1be5cb64dd1ad5b2e7c55"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "38eb3000cf56b8c7559ee558866a768eebcbf254174522d6404b7f078f75c2d4"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "ff4f8bfa5f1afdd4f2e4c34de8aa3ce18e4955f3804a3b864cb54583b7cb20621302786d625a2e4ed9ee879452f2e5ba70e855e65c34e58cf7f716d8a4515bc2"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "432082ba669be971b4d99cb74fb617d4cf2a33a252975e009e3e005159c68a63c6672c38285c1fae9d70f0c71ea161cf"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "Mozilla Public License, Version 2.0",
+            "url": "http://www.mozilla.org/MPL/2.0/index.txt"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.mozilla/rhino@1.7.10?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.geode",
+      "name": "geode-core",
+      "version": "1.1.1",
+      "description": "Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing",
+      "scope": "optional",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "efcf54c9bdb6b445d6371c0c13aab814"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "28cbc629c60f9ad2cd97e46194854a0232c2ef50"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "de7ccbc2f78a37ea7b8517a7c717087fae6b592db5f2409ab3671475afbc31c9"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "995cac4bb39b93e0cff5646ba63580733a21f269a4e7495c5f47e75e856888bd576d64f733a7fd40eac44299d483159ecdee2c066bc1a4f06e3218bd33c4cc75"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "18a46fa30227feb29788d269934aafcd49d3ac9777093f9cd57b9cb84740fb682dcce1e7589d403cc64c4a556c0fc851"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "com.github.stephenc.findbugs",
+      "name": "findbugs-annotations",
+      "version": "1.3.9-1",
+      "description": "A clean room implementation of the Findbugs Annotations based entirely on the specification provided by the javadocs and at http://findbugs.sourceforge.net/manual/annotations.html.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "70fda5202eb9d9ce4f250f2c2ba71152"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "a6b11447635d80757d64b355bed3c00786d86801"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "1e651066ed9ae35d7e3001d635d1dbba1c2965db0e4e33e2c14ad610543f225c"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "34db789f9efcd342438d08699043d4bcc9da63d870b65b2d3f39b0f5de8f9db164869e7d7abae4046f56fbfea0aba7353811a04dc5ab4ca1f14af15d62b59407"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "ef67d91fc78186eef839ea4a38e139b54cd54c192702343596923d28dbc918735b2519a5c59d7499087c45b09e469bde"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar"
+    },
+    {
+      "publisher": "JBoss, a division of Red Hat",
+      "group": "org.jgroups",
+      "name": "jgroups",
+      "version": "3.6.10.Final",
+      "description": "Reliable cluster communication toolkit",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "54b56e09dd1583a0b07b113ddeeb3604"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "fc0ff5a8a9de27ab62939956f705c2909bf86bc2"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "46ddfd9d0c0c75b5dab967bb81a97efbe14f5b629ae590a633a4e983f5ea67de"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "99da13a189e6e9d4425e6755cf7083d99d3e0d87f178f9260b3d18af256d17eb670307f1b6aaf7d93d01c72a1917ddaf5ebbffe8d00b310d31c6cf6ef6149e52"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "6c78d37cf36502fe047fa0ff1608cb0b13788271369c5575fc6f35ae2e5883116240b3c5bd6663aa887337d7ce17bc0c"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "antlr",
+      "name": "antlr",
+      "version": "2.7.7",
+      "description": "A framework for constructing recognizers, compilers, and translators from grammatical descriptions containing Java, C#, C++, or Python actions.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "f8f1352c52a4c6a500b597596501fc64"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "83cd2cd674a217ade95a4bb83a8a14f351f48bd0"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "88fbda4b912596b9f56e8e12e580cc954bacfb51776ecfddd3e18fc1cf56dc4c"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "311c3115f9f6651d1711c52d1739e25a70f25456cacb9a2cdde7627498c30b13d721133cc75b39462ad18812a82472ef1b3b9d64fab5abb0377c12bf82043a74"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "2e811e531ce30a2a905d093a00de596cf04406413b60422db8252b46125cadf07b71459cf6ac6da575ec030a9bf05e57"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:maven/antlr/antlr@2.7.7?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/antlr/antlr@2.7.7?type=jar"
+    },
+    {
+      "publisher": "The Apache Software Foundation",
+      "group": "commons-io",
+      "name": "commons-io",
+      "version": "2.3",
+      "description": "The Commons IO library contains utility classes, stream implementations, file filters, file comparators, endian transformation classes, and much more.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "132db2975a086024994c920769b900db"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "cd8d6ffc833cc63c30d712a180f4663d8f55799b"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "f9c7cbd53f85951f5d3ef7c08a1bf2097029fcc1d0bfb01bd07d3d79ff0286bb"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "7aa15099512ddf64a223e1591df3bc693d2436c70d92a5658fc5070df7737bef5a523cb444c15c63fa3f5b176b6de67c9d5c1b7a09de45af0bc61731e3c45ff9"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "c66e976fc0ae1a9a1430da502e9a2d84f9987069fcc9c22e632ecb0838c7bbc93baf73c93ded37e434cbb806926d40c5"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/commons-io/commons-io@2.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/commons-io/commons-io@2.3?type=jar"
+    },
+    {
+      "publisher": "The Apache Software Foundation",
+      "group": "commons-lang",
+      "name": "commons-lang",
+      "version": "2.5",
+      "description": "Commons Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy, or are considered to be so standard as to justify existence in java.lang.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "ab04c560caea60d3b0050beb57776a32"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b0236b252e86419eef20c31a44579d2aee2f0a69"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "a64e0c73988fef8d5b73fc29d105a3a6e2dc5d9b90a94fca065cd2439dc56590"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "eff388ecce06df2d557b63559db2a6b8932f3466e1015b15653c7f788c77b8bb8e42df7dc4fe93077c96cc40942387d38b8110e00400a7594d9395cf0ec7334d"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "e0d02094a045733951ebaa6cb711306b8260f0edb07060685353bc4af417b101d7e25663cd617e17fb03c8384b96581a"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/commons-lang/commons-lang@2.5?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/commons-lang/commons-lang@2.5?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "it.unimi.dsi",
+      "name": "fastutil",
+      "version": "7.0.2",
+      "description": "fastutil extends the Java Collections Framework by providing type-specific maps, sets, lists and priority queues with a small memory footprint and fast access and insertion; provides also big (64-bit) arrays, sets and lists, and fast, practical I/O classes for binary and text files.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "69b2c971e075699454cf704b872c65a9"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "20876232e2cd12563507e4c9e85bd7948bc0656f"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "fbf38f134f18345e5b896653e1f70f3ccf7bfdd1717d17cc7852c89896c0d845"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "39c0b2333505f864ef51973097b0a30037f0c084557c028839fbd84cb9244bc92e5659edf9339edb0a7abba70ee7580afbceb9087f12e5a36e07af6159ec224e"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "1b8665b645633b1b2eaafb26d76a55767ec0da7e09eeb97d2aead437bc800f7fa8d3dc7f23182fabff512cebe5c8d4e4"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar"
+    },
+    {
+      "publisher": "GlassFish Community",
+      "group": "javax.resource",
+      "name": "javax.resource-api",
+      "version": "1.7",
+      "description": "Java EE Connector Architecture API",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "51129256d155d7352fc1f066d2cbc6dc"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "ae40e0864eb1e92c48bf82a2a3399cbbf523fb79"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "216e0ac7018752122f3f44291aa816fc3a50504a79212a4397a194ad51308798"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "1a801cd47fd551d7d606261818060eeb301dc97ca0d8591e087539a0bee95a9a6acdf676252948cd96ebca0a2f99417771e21d0a3a9469469cf2a64fec3cb0e6"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "dd9e8ca0c455397532380a22d410bf1f0605423c1394fa4f6262072287bfb17eafe4760ab951ff185df6bece8a4c41a8"
+        }
+      ],
+      "licenses": [],
+      "purl": "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar"
+    },
+    {
+      "publisher": "GlassFish Community",
+      "group": "javax.transaction",
+      "name": "javax.transaction-api",
+      "version": "1.2",
+      "description": "Project GlassFish Java Transaction API",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "2dfee184286530e726ad155816e15b4c"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d81aff979d603edd90dcd8db2abc1f4ce6479e3e"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "9528449583c34d9d63aa1d8d15069790f925ae1f27b33784773b8099eff4c9ff"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "3b99e73bb47a5cc5b6cec3ea40b9215f2cd35d48757e00f8dcf733dd7e1cf3c8f48dd8ee24993535675fe963ecce3f537261a273bbfdaab1be51cc1749ac60da"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "766f33dc68259303d6e3b76d7fad84f32b39c81d9ab6d9342bfae614f56c37061ce116fbf4a38a93cabbfb889b0e2326"
+        }
+      ],
+      "licenses": [],
+      "purl": "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "net.java.dev.jna",
+      "name": "jna",
+      "version": "4.0.0",
+      "description": "Java Native Access",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "a1e20e48a367063023db9137ceb7c63c"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "9b3a11c613ec3fd3440af4103b12c3de82d38b6e"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "dac270b6441ce24d93a96ddb6e8f93d8df099192738799a6f6fcfc2b2416ca19"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "d59d542518fa3e9aea162531c2836abf2374430e962771f9b051c6f7cd2ce19438841a5787ce47e15e24759c6321f823ed06131e556e5660963a728ecee8123d"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "2270ed17f8ea231e7d78b090ae9d7909db8ec89521220ef52b4067d407c9147ee65c175786665e617c24d963b8963d55"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPL, version 2.1",
+            "url": "http://www.gnu.org/licenses/licenses.html"
+          }
+        },
+        {
+          "license": {
+            "name": "ASL, version 2",
+            "url": "http://www.apache.org/licenses/"
+          }
+        }
+      ],
+      "purl": "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "net.sf.jopt-simple",
+      "name": "jopt-simple",
+      "version": "5.0.1",
+      "description": "A Java library for parsing command line options",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "c5ed11011fdeac9ec50826801d5adcbb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "20f7d76f9d06033d68f1b8e58666e7c542e91f08"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "9f0c8d50fa4b79b6ff1502dbec8502179d6b9497cacbe17a13074001aed537ec"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "b1e21ca243a351bb0b9f0fc6cf08d12575ce6faaa6b4a4c519a0cb6ee480960c4ec99bf9b5d691175676e4124f748ace806d3b81764a75a8db2253db9083cf90"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "706f4ad5de11a3b9f19c4c235c3018916afd005b3b79101185711614719f697b52e7f571dbcf838504a9695454b530b3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar"
+    },
+    {
+      "publisher": "Apache Software Foundation",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-api",
+      "version": "2.6.1",
+      "description": "The Apache Log4j API",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "2627a758c258a7311c773f2eb6b347bb"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "d2ad7ee0b0450204d720b4bc3f99b50e208bf51e"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "5439c842b73e9136327cabbaa3ebb4a1de979f7ec3072b9eacf072554ae1d3e1"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "54f8109ca786d333ded81fdc840a0e3ef58572619a03e18a5e1c86589556c7d3719b29f80a538a2de6062b91b57f26692dddfdb8df771bbf37a8d2046e5d72bb"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "2aeebf13fb131dae6cc527978475c86fda3c9d026e1625cb5e7a0e5d951f2e5d77f50f73daf99d15f7bba50d8fc5a4b5"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar",
+      "type": "framework",
+      "bom-ref": "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar"
+    },
+    {
+      "publisher": "Apache Software Foundation",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-core",
+      "version": "2.6.1",
+      "description": "The Apache Log4j Implementation",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "48f7f3cda53030a87e8c387d8d1e4265"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "2b557bf1023c3a3a0f7f200fafcd7641b89cbb83"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "28433734bd9e3121e0a0b78238d5131837b9dbe26f1a930bc872bad44e68e44e"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "2ba9aabc4080d47fad54ffe5bbe053b2646ced5614f10712e890fd8011d8796688f5d1e5446a243a70a83936c02ea83779e71b0237ce5de400a5cec911ea8bb8"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "2a6bf94076317352aa8dbc7649526933857cfaf2e7acbfe1e88e304ecda6e9b9ada01caff4c35f35ff302aed9dab5318"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar",
+      "type": "framework",
+      "bom-ref": "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar"
+    },
+    {
+      "publisher": "The Apache Software Foundation",
+      "group": "org.apache.shiro",
+      "name": "shiro-core",
+      "version": "1.3.1",
+      "description": "Apache Shiro is a powerful and flexible open-source security framework that cleanly handles authentication, authorization, enterprise session management, single sign-on and cryptography services.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "78e8c042ddf3f6982a28a6868b166a15"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "7edd30cd5b1b3293a40256b40b05bd8b8cbaa2df"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "a5da0717fb21f8fc15a5c425ca93f4317480773ddb3674f7016f3709e378c415"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "94d9c261ec8465da79b727a1680efeedf55807dcfb6ca70d608c182bbba957cc8170c5179624412f7c72ee6009e39b6270f3de1c056ec1cee6b6f47132ca387f"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "7e634f782ed831bea11b600bc7116c72fd9e6fad99ba4fd74050a5d2c37501164752a7927b6fce0ef50066d172bcbb7c"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar"
+    },
+    {
+      "publisher": "QOS.ch",
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "1.6.4",
+      "description": "The slf4j API",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "75e1a2a3b84c59bf9d4f42de57a533b1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "2396d74b12b905f780ed7966738bb78438e8371a"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "367b909030f714ee1176ab096b681e06348f03385e98d1bce0ed801b5452357e"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "aba86178858b4eb876788a1d1bfa83ffd2edf7a08af45eecdc3a42acc157c68d45cb6b578303cb7c93a941ff065624c623d877b279e3cc47bcf37724db4612d6"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "a0560af6b9fb75f22d97c6525e755ddd8a0384da4aef037057a0f19c40b2d3719d594778b901445c0b320374dac0b286"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar"
+    },
+    {
+      "publisher": "The Apache Software Foundation",
+      "group": "commons-beanutils",
+      "name": "commons-beanutils",
+      "version": "1.8.3",
+      "description": "BeanUtils provides an easy-to-use but flexible wrapper around reflection and introspection.",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "b45be74134796c89db7126083129532f"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "686ef3410bcf4ab8ce7fd0b899e832aaba5facf7"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "e1407b81d8138fb9c1fc731b87b5e0068ddccabfbc65dee59cdb378a90c5e81a"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "d1bb5a1180ee42f741e9935273638f38487e94adfa4c783a8c3f2aa060cacd6d9701b944a2b16dcf151058f237a533c2fa99df489fd48631892103bb6e3cda1f"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "e882ac1cfd9ecb13f00cd809da9d69e7a97f6bb4bd16621687001b69939a410ac684ae12f28b3ce21f448409fdd8a136"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.geode",
+      "name": "geode-common",
+      "version": "1.1.1",
+      "description": "Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "f2090c990a8d3279c2875a92bcee8be1"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "eead117dc9032ec705b98edb714a8e5a6b06d42c"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "bd28a08d35ec24234302b81f8aad37c089b2d66ef4e8d764de3f526da01803bc"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "c2f781ca70c86bde41f28d5c1b6de7bc3db4a229124409e0f38af3ce3153ba11579804cc222ae35edd4fabf3cb0362ad43b5383eae592e2415c31dbfff0c2ec1"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "4f5bd84990e81657d54d40a191a98bd7ab903e6cf78f8e745cd02aabde4d33abde422a359244b3e9f982e5f9eabc63e3"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.geode",
+      "name": "geode-json",
+      "version": "1.1.1",
+      "description": "Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing",
+      "hashes": [
+        {
+          "alg": "MD5",
+          "content": "d36339404e0cadbefe16ce37440d8f44"
+        },
+        {
+          "alg": "SHA-1",
+          "content": "b6b7f5e9ac7dd8a08800cf90f883500f586191fc"
+        },
+        {
+          "alg": "SHA-256",
+          "content": "05660625e78d73114d31feb862daa1c64c4292d6c0186d8a6a12f9ddd611f1f1"
+        },
+        {
+          "alg": "SHA-512",
+          "content": "db960c46a065fafca4ecf6f2aae85e1e64bc0cb4369b542e4e1c0d8c5d16dc3fa3bfbf9361a7e951d41ec53ca6b5f984eaa46db47e7921e7bc2fb60041e4597d"
+        },
+        {
+          "alg": "SHA-384",
+          "content": "0a77f0ab902ad6b894938b8c720c24c3891e27f87c9d35a704dc303ea1cbc0198aeab847312cc4c22a63ee061a14f5a0"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+        "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
+        "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
+        "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar",
+        "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar",
+        "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar",
+        "pkg:maven/antlr/antlr@2.7.7?type=jar",
+        "pkg:maven/commons-io/commons-io@2.3?type=jar",
+        "pkg:maven/commons-lang/commons-lang@2.5?type=jar",
+        "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar",
+        "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar",
+        "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar",
+        "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar",
+        "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar",
+        "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar",
+        "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar",
+        "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar",
+        "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/antlr/antlr@2.7.7?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/commons-io/commons-io@2.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/commons-lang/commons-lang@2.5?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar",
+      "dependsOn": [
+        "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar",
+        "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar",
+      "dependsOn": []
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "other",
+      "url": "/mnt/work/sandbox/dependency-scanning/java-maven",
+      "comment": "Base path"
+    },
+    {
+      "type": "other",
+      "url": "/mnt/work/sandbox/dependency-scanning/java-maven/pom.xml",
+      "comment": "Package file"
+    }
+  ]
+}

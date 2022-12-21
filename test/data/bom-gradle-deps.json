@@ -1,0 +1,508 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:efcabbc7-f176-454f-bf17-83b98d5a8447",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2022-12-22T22:15:58.805Z",
+    "tools": [
+      {
+        "vendor": "AppThreat",
+        "name": "cdxgen",
+        "version": "5.5.6"
+      }
+    ],
+    "authors": [
+      {
+        "name": "Team AppThreat",
+        "email": "cloud@appthreat.com"
+      }
+    ],
+    "component": {
+      "publisher": "",
+      "group": "",
+      "name": "root",
+      "version": "latest",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/root@latest?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/root@latest?type=jar"
+    }
+  },
+  "components": [
+    {
+      "publisher": "",
+      "group": "io.netty",
+      "name": "netty",
+      "version": "3.9.1.Final",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.netty/netty@3.9.1.Final?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.maven",
+      "name": "maven-artifact",
+      "version": "3.3.9",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.codehaus.plexus",
+      "name": "plexus-utils",
+      "version": "3.0.22",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.commons",
+      "name": "commons-lang3",
+      "version": "3.4",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.9.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-annotations",
+      "version": "2.9.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.9.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.mozilla",
+      "name": "rhino",
+      "version": "1.7.10",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.mozilla/rhino@1.7.10?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.geode",
+      "name": "geode-core",
+      "version": "1.1.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "com.github.stephenc.findbugs",
+      "name": "findbugs-annotations",
+      "version": "1.3.9-1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.jgroups",
+      "name": "jgroups",
+      "version": "3.6.10.Final",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "antlr",
+      "name": "antlr",
+      "version": "2.7.7",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/antlr/antlr@2.7.7?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/antlr/antlr@2.7.7?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "commons-io",
+      "name": "commons-io",
+      "version": "2.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/commons-io/commons-io@2.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/commons-io/commons-io@2.3?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "commons-lang",
+      "name": "commons-lang",
+      "version": "2.5",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/commons-lang/commons-lang@2.5?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/commons-lang/commons-lang@2.5?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "it.unimi.dsi",
+      "name": "fastutil",
+      "version": "7.0.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "javax.resource",
+      "name": "javax.resource-api",
+      "version": "1.7",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "javax.transaction",
+      "name": "javax.transaction-api",
+      "version": "1.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "net.java.dev.jna",
+      "name": "jna",
+      "version": "4.0.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "net.sf.jopt-simple",
+      "name": "jopt-simple",
+      "version": "5.0.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-api",
+      "version": "2.6.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.logging.log4j",
+      "name": "log4j-core",
+      "version": "2.6.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.shiro",
+      "name": "shiro-core",
+      "version": "1.3.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "1.6.4",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "commons-beanutils",
+      "name": "commons-beanutils",
+      "version": "1.8.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.geode",
+      "name": "geode-common",
+      "version": "1.1.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.geode",
+      "name": "geode-json",
+      "version": "1.1.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "junit",
+      "name": "junit",
+      "version": "4.12",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/junit/junit@4.12?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/junit/junit@4.12?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.hamcrest",
+      "name": "hamcrest-core",
+      "version": "1.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.hamcrest/hamcrest-core@1.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.hamcrest/hamcrest-core@1.3?type=jar"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:maven/root@latest?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+        "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
+        "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
+        "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar",
+        "pkg:maven/junit/junit@4.12?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar",
+        "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar",
+        "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar",
+        "pkg:maven/antlr/antlr@2.7.7?type=jar",
+        "pkg:maven/commons-io/commons-io@2.3?type=jar",
+        "pkg:maven/commons-lang/commons-lang@2.5?type=jar",
+        "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar",
+        "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar",
+        "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar",
+        "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar",
+        "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar",
+        "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar",
+        "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar",
+        "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar",
+        "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/antlr/antlr@2.7.7?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/commons-io/commons-io@2.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/commons-lang/commons-lang@2.5?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/javax.resource/javax.resource-api@1.7?type=jar",
+      "dependsOn": [
+        "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar",
+        "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/junit/junit@4.12?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.hamcrest/hamcrest-core@1.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.hamcrest/hamcrest-core@1.3?type=jar",
+      "dependsOn": []
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "other",
+      "url": "/mnt/work/sandbox/dependency-scanning/java-gradle",
+      "comment": "Base path"
+    },
+    {
+      "type": "other",
+      "url": "/mnt/work/sandbox/dependency-scanning/java-gradle/build.gradle",
+      "comment": "Package file"
+    }
+  ]
+}

@@ -451,6 +451,9 @@ function addComponent(
     if (!name) {
       return;
     }
+    if (!ptype && pkg.qualifiers && pkg.qualifiers.type === "jar") {
+      ptype = "maven";
+    }
     // Skip @types package for npm
     if (
       ptype == "npm" &&
@@ -463,6 +466,7 @@ function addComponent(
       return;
     }
     let licenses = pkg.licenses || utils.getLicenses(pkg, format);
+
     let purl =
       pkg.purl ||
       new PackageURL(ptype, group, name, version, pkg.qualifiers, pkg.subpath);
@@ -517,7 +521,10 @@ function addComponent(
     }
 
     processHashes(pkg, component, format);
-
+    // Retain any component properties
+    if (format === "json" && pkg.properties && pkg.properties.length) {
+      component.properties = pkg.properties;
+    }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;
   }
@@ -536,6 +543,9 @@ function addComponent(
  * word for it, otherwise, identify the module as a 'library'.
  */
 function determinePackageType(pkg) {
+  if (pkg.type === "application") {
+    return "application";
+  }
   if (pkg.purl) {
     try {
       purl = PackageURL.fromString(pkg.purl);
@@ -894,7 +904,8 @@ const createJavaBom = async (path, options) => {
       src: pathLib.dirname(path),
       filename: path,
       nsMapping: jarNSMapping,
-      dependencies
+      dependencies,
+      parentComponent
     });
   } else {
     // maven - pom.xml
@@ -985,9 +996,15 @@ const createJavaBom = async (path, options) => {
               const mvnTreeString = fs.readFileSync(tempMvnTree, {
                 encoding: "utf-8"
               });
-              const dlist = utils.parseMavenTree(mvnTreeString);
+              const parsedList = utils.parseMavenTree(mvnTreeString);
+              const dlist = parsedList.pkgList;
+              parentComponent = dlist.splice(0, 1)[0];
+              parentComponent.type = "application";
               if (dlist && dlist.length) {
                 pkgList = pkgList.concat(dlist);
+              }
+              if (parsedList.dependenciesList && parsedList.dependenciesList) {
+                dependencies = dependencies.concat(parsedList.dependenciesList);
               }
               fs.unlinkSync(tempMvnTree);
             }
@@ -1111,7 +1128,17 @@ const createJavaBom = async (path, options) => {
               const sstdout = sresult.stdout;
               if (sstdout) {
                 const cmdOutput = Buffer.from(sstdout).toString();
-                const dlist = utils.parseGradleDep(cmdOutput);
+                const parsedList = utils.parseGradleDep(cmdOutput);
+                const dlist = parsedList.pkgList;
+                parentComponent = dlist.splice(0, 1)[0];
+                if (
+                  parsedList.dependenciesList &&
+                  parsedList.dependenciesList
+                ) {
+                  dependencies = dependencies.concat(
+                    parsedList.dependenciesList
+                  );
+                }
                 if (dlist && dlist.length) {
                   if (DEBUG_MODE) {
                     console.log(
@@ -1190,7 +1217,12 @@ const createJavaBom = async (path, options) => {
           const stdout = result.stdout;
           if (stdout) {
             const cmdOutput = Buffer.from(stdout).toString();
-            const dlist = utils.parseGradleDep(cmdOutput);
+            const parsedList = utils.parseGradleDep(cmdOutput);
+            const dlist = parsedList.pkgList;
+            parentComponent = dlist.splice(0, 1)[0];
+            if (parsedList.dependenciesList && parsedList.dependenciesList) {
+              dependencies = dependencies.concat(parsedList.dependenciesList);
+            }
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             } else {
@@ -1217,7 +1249,8 @@ const createJavaBom = async (path, options) => {
         src: path,
         filename: gradleFiles.join(", "),
         nsMapping: jarNSMapping,
-        dependencies
+        dependencies,
+        parentComponent
       });
     }
 
@@ -1295,7 +1328,8 @@ const createJavaBom = async (path, options) => {
             src: path,
             filename: "BUILD",
             nsMapping: {},
-            dependencies
+            dependencies,
+            parentComponent
           });
         }
       }
@@ -1466,7 +1500,8 @@ const createJavaBom = async (path, options) => {
         src: path,
         filename: sbtProjects.join(", "),
         nsMapping: jarNSMapping,
-        dependencies
+        dependencies,
+        parentComponent
       });
     }
   }
@@ -1481,6 +1516,8 @@ const createJavaBom = async (path, options) => {
 const createNodejsBom = async (path, options) => {
   let pkgList = [];
   let manifestFiles = [];
+  let dependencies = [];
+  let parentComponent = {};
   // Docker mode requires special handling
   if (["docker", "oci", "os"].includes(options.projectType)) {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
@@ -1495,7 +1532,8 @@ const createNodejsBom = async (path, options) => {
       return buildBomNSData(options, pkgList, "npm", {
         allImports: {},
         src: path,
-        filename: "package.json"
+        filename: "package.json",
+        parentComponent
       });
     }
   }
@@ -1561,15 +1599,32 @@ const createNodejsBom = async (path, options) => {
   if (pnpmLockFiles && pnpmLockFiles.length) {
     manifestFiles = manifestFiles.concat(pnpmLockFiles);
     for (let f of pnpmLockFiles) {
-      const dlist = await utils.parsePnpmLock(f);
+      const basePath = pathLib.dirname(f);
+      // Determine the parent component
+      const packageJsonF = pathLib.join(basePath, "package.json");
+      if (fs.existsSync(packageJsonF)) {
+        const pcs = await utils.parsePkgJson(packageJsonF);
+        if (pcs.length) {
+          parentComponent = pcs[0];
+          parentComponent.type = "application";
+        }
+      }
+      // Parse the pnpm file
+      const parsedList = await utils.parsePnpmLock(f, parentComponent);
+      const dlist = parsedList.pkgList;
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
+      }
+      if (parsedList.dependenciesList && parsedList.dependenciesList) {
+        dependencies = dependencies.concat(parsedList.dependenciesList);
       }
     }
     return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
-      filename: manifestFiles.join(", ")
+      filename: manifestFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   } else if (pkgLockFiles && pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
@@ -1578,15 +1633,23 @@ const createNodejsBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       // Parse package-lock.json if available
-      const dlist = await utils.parsePkgLock(f);
+      const parsedList = await utils.parsePkgLock(f);
+      const dlist = parsedList.pkgList;
+      parentComponent = dlist.splice(0, 1)[0];
+      parentComponent.type = "application";
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
+      }
+      if (parsedList.dependenciesList && parsedList.dependenciesList) {
+        dependencies = dependencies.concat(parsedList.dependenciesList);
       }
     }
     return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
-      filename: manifestFiles.join(", ")
+      filename: manifestFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   } else if (fs.existsSync(pathLib.join(path, "rush.json"))) {
     // Rush.js creates node_modules inside common/temp directory
@@ -1650,17 +1713,52 @@ const createNodejsBom = async (path, options) => {
   } else if (yarnLockFiles && yarnLockFiles.length) {
     manifestFiles = manifestFiles.concat(yarnLockFiles);
     for (let f of yarnLockFiles) {
+      const basePath = pathLib.dirname(f);
+      // Determine the parent component
+      const packageJsonF = pathLib.join(basePath, "package.json");
+      if (fs.existsSync(packageJsonF)) {
+        const pcs = await utils.parsePkgJson(packageJsonF);
+        if (pcs.length) {
+          parentComponent = pcs[0];
+          parentComponent.type = "application";
+        }
+      }
       // Parse yarn.lock if available. This check is after rush.json since
       // rush.js could include yarn.lock :(
-      const dlist = await utils.parseYarnLock(f);
+      const parsedList = await utils.parseYarnLock(f);
+      const dlist = parsedList.pkgList;
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
+      }
+      const rdeplist = [];
+      if (parsedList.dependenciesList && parsedList.dependenciesList) {
+        // Inject parent component to the dependency tree to make it complete
+        // In case of yarn, yarn list command lists every root package as a direct dependency
+        // The same logic is matched with this for loop although this is incorrect since even dev dependencies would get included here
+        for (const dobj of parsedList.dependenciesList) {
+          rdeplist.push(dobj.ref);
+        }
+        const ppurl = new PackageURL(
+          "application",
+          "",
+          parentComponent.name,
+          parentComponent.version,
+          null,
+          null
+        ).toString();
+        parsedList.dependenciesList.push({
+          ref: decodeURIComponent(ppurl),
+          dependsOn: rdeplist
+        });
+        dependencies = dependencies.concat(parsedList.dependenciesList);
       }
     }
     return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
-      filename: manifestFiles.join(", ")
+      filename: manifestFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
     const pkgJsonFiles = utils.getAllFiles(
@@ -1677,7 +1775,9 @@ const createNodejsBom = async (path, options) => {
     return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
-      filename: manifestFiles.join(", ")
+      filename: manifestFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   }
   // Projects containing just min files or bower
@@ -1685,7 +1785,9 @@ const createNodejsBom = async (path, options) => {
     return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
-      filename: manifestFiles.join(", ")
+      filename: manifestFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   }
   return {};
@@ -2648,7 +2750,13 @@ const createContainerSpecLikeBom = async (path, options) => {
             ociSpecs.push({
               group: "",
               name: img.ociSpec,
-              version: "latest"
+              version: "latest",
+              properties: [
+                {
+                  name: "SrcFile",
+                  value: f
+                }
+              ]
             });
           } else if (img.service) {
             let version = "latest";
@@ -2666,7 +2774,13 @@ const createContainerSpecLikeBom = async (path, options) => {
                 "bom-ref": servbomRef,
                 name: name,
                 version: version,
-                group: ""
+                group: "",
+                properties: [
+                  {
+                    name: "SrcFile",
+                    value: f
+                  }
+                ]
               });
               doneservices.push(servbomRef);
             }
@@ -2686,7 +2800,17 @@ const createContainerSpecLikeBom = async (path, options) => {
               version:
                 imageObj.tag ||
                 (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
-              qualifiers: {}
+              qualifiers: {},
+              properties: [
+                {
+                  name: "SrcFile",
+                  value: f
+                },
+                {
+                  name: "oci:SrcImage",
+                  value: img.image
+                }
+              ]
             };
             if (imageObj.registry) {
               pkg["qualifiers"]["repository_url"] = imageObj.registry;
@@ -2720,6 +2844,19 @@ const createContainerSpecLikeBom = async (path, options) => {
             doneimages.push(img.image);
             if (bomData) {
               if (bomData.components && bomData.components.length) {
+                // Inject properties
+                for (const co of bomData.components) {
+                  co.properties = [
+                    {
+                      name: "SrcFile",
+                      value: f
+                    },
+                    {
+                      name: "oci:SrcImage",
+                      value: img.image
+                    }
+                  ];
+                }
                 components = components.concat(bomData.components);
               }
               if (bomData.componentsXmls && bomData.componentsXmls.length) {
@@ -2741,6 +2878,14 @@ const createContainerSpecLikeBom = async (path, options) => {
       const servlist = await utils.parseOpenapiSpecData(oaData);
       if (servlist && servlist.length) {
         services = services.concat(servlist);
+        for (const se of services) {
+          se.properties = [
+            {
+              name: "SrcFile",
+              value: f
+            }
+          ];
+        }
       }
     }
   }
