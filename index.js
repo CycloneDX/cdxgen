@@ -1740,7 +1740,7 @@ const createNodejsBom = async (path, options) => {
         }
         const ppurl = new PackageURL(
           "application",
-          "",
+          parentComponent.group,
           parentComponent.name,
           parentComponent.version,
           null,
