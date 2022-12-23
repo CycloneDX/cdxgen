@@ -71,12 +71,13 @@ test("finds license id from name", () => {
 });
 
 test("parse gradle dependencies", () => {
-  expect(utils.parseGradleDep(null)).toEqual([]);
-  let dep_list = utils.parseGradleDep(
+  expect(utils.parseGradleDep(null)).toEqual({});
+  let parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/gradle-dep.out", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(33);
-  expect(dep_list[0]).toEqual({
+  expect(parsedList.pkgList.length).toEqual(34);
+  expect(parsedList.dependenciesList.length).toEqual(34);
+  expect(parsedList.pkgList[1]).toEqual({
     group: "org.ethereum",
     name: "solcJ-all",
     qualifiers: {
@@ -85,11 +86,12 @@ test("parse gradle dependencies", () => {
     version: "0.4.25"
   });
 
-  dep_list = utils.parseGradleDep(
+  parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-android-dep.out", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(105);
-  expect(dep_list[0]).toEqual({
+  expect(parsedList.pkgList.length).toEqual(106);
+  expect(parsedList.dependenciesList.length).toEqual(106);
+  expect(parsedList.pkgList[1]).toEqual({
     group: "com.android.support.test",
     name: "runner",
     qualifiers: {
@@ -97,7 +99,7 @@ test("parse gradle dependencies", () => {
     },
     version: "1.0.2"
   });
-  expect(dep_list[103]).toEqual({
+  expect(parsedList.pkgList[104]).toEqual({
     group: "androidx.print",
     name: "print",
     qualifiers: {
@@ -105,7 +107,7 @@ test("parse gradle dependencies", () => {
     },
     version: "1.0.0"
   });
-  expect(dep_list[104]).toEqual({
+  expect(parsedList.pkgList[105]).toEqual({
     group: "androidx.core",
     name: "core",
     qualifiers: {
@@ -113,11 +115,12 @@ test("parse gradle dependencies", () => {
     },
     version: "1.7.0"
   });
-  dep_list = utils.parseGradleDep(
+  parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-out1.dep", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(89);
-  expect(dep_list[0]).toEqual({
+  expect(parsedList.pkgList.length).toEqual(90);
+  expect(parsedList.dependenciesList.length).toEqual(90);
+  expect(parsedList.pkgList[1]).toEqual({
     group: "org.springframework.boot",
     name: "spring-boot-starter-web",
     version: "2.2.0.RELEASE",
@@ -135,15 +138,60 @@ test("parse gradle projects", () => {
 
 test("parse maven tree", () => {
   expect(utils.parseMavenTree(null)).toEqual([]);
-  let dep_list = utils.parseMavenTree(
+  let parsedList = utils.parseMavenTree(
     fs.readFileSync("./test/data/sample-mvn-tree.txt", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(61);
-  expect(dep_list[0]).toEqual({
+  expect(parsedList.pkgList.length).toEqual(59);
+  expect(parsedList.dependenciesList.length).toEqual(59);
+  expect(parsedList.pkgList[0]).toEqual({
     group: "com.pogeyan.cmis",
     name: "copper-server",
     version: "1.15.2",
     qualifiers: { type: "jar" }
+  });
+  expect(parsedList.dependenciesList[0]).toEqual({
+    ref: "pkg:maven/com.pogeyan.cmis/copper-server@1.15.2?type=jar",
+    dependsOn: [
+      "pkg:maven/javax/javaee-web-api@7.0?type=jar",
+      "pkg:maven/org.apache.chemistry.opencmis/chemistry-opencmis-server-support@1.0.0?type=jar",
+      "pkg:maven/com.pogeyan.cmis/copper-server-api@1.15.2?type=jar",
+      "pkg:maven/com.pogeyan.cmis/copper-server-impl@1.15.2?type=jar",
+      "pkg:maven/com.pogeyan.cmis/copper-server-ldap@1.15.2?type=jar",
+      "pkg:maven/com.pogeyan.cmis/copper-server-repo@1.15.2?type=jar",
+      "pkg:maven/com.pogeyan.cmis/copper-server-mongo@1.15.2?type=jar",
+      "pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar",
+      "pkg:maven/io.dropwizard.metrics/metrics-core@3.1.2?type=jar",
+      "pkg:maven/com.github.davidb/metrics-influxdb@0.9.3?type=jar",
+      "pkg:maven/commons-fileupload/commons-fileupload@1.4?type=jar",
+      "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.12.0?type=jar",
+      "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.12.0?type=jar",
+      "pkg:maven/com.typesafe.akka/akka-actor_2.11@2.4.14?type=jar",
+      "pkg:maven/com.typesafe.akka/akka-cluster_2.11@2.4.14?type=jar",
+      "pkg:maven/org.codehaus.jackson/jackson-mapper-asl@1.9.13?type=jar",
+      "pkg:maven/org.slf4j/slf4j-log4j12@1.7.21?type=jar",
+      "pkg:maven/commons-io/commons-io@2.6?type=jar"
+    ]
+  });
+  parsedList = utils.parseMavenTree(
+    fs.readFileSync("./test/data/mvn-dep-tree-simple.txt", (encoding = "utf-8"))
+  );
+  expect(parsedList.pkgList.length).toEqual(27);
+  expect(parsedList.dependenciesList.length).toEqual(27);
+  expect(parsedList.pkgList[0]).toEqual({
+    group: "com.gitlab.security_products.tests",
+    name: "java-maven",
+    version: "1.0-SNAPSHOT",
+    qualifiers: { type: "jar" }
+  });
+  expect(parsedList.dependenciesList[0]).toEqual({
+    ref: "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
+    dependsOn: [
+      "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+      "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
+      "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
+      "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
+      "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar"
+    ]
   });
 });
 
@@ -916,11 +964,13 @@ test("get licenses", () => {
 });
 
 test("parsePkgLock", async () => {
-  const deps = await utils.parsePkgLock("./test/package-lock.json");
+  const parsedList = await utils.parsePkgLock("./test/package-lock.json");
+  const deps = parsedList.pkgList;
   expect(deps.length).toEqual(759);
   expect(deps[0]._integrity).toEqual(
     "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
   );
+  expect(parsedList.dependenciesList.length).toEqual(620);
 });
 
 test("parseBowerJson", async () => {
@@ -972,96 +1022,210 @@ test("parseSetupPyFile", async () => {
 });
 
 test("parsePnpmLock", async () => {
-  let deps = await utils.parsePnpmLock("./test/pnpm-lock.yaml");
-  expect(deps.length).toEqual(1610);
-  expect(deps[0]).toEqual({
+  let parsedList = await utils.parsePnpmLock("./test/pnpm-lock.yaml");
+  expect(parsedList.pkgList.length).toEqual(1610);
+  expect(parsedList.dependenciesList.length).toEqual(1610);
+  expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==",
     group: "@babel",
     name: "code-frame",
     scope: undefined,
-    version: "7.10.1"
+    version: "7.10.1",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/pnpm-lock.yaml"
+      }
+    ]
   });
-  deps = await utils.parsePnpmLock("./test/data/pnpm-lock.yaml");
-  expect(deps.length).toEqual(308);
-  expect(deps[0]).toEqual({
+  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock.yaml");
+  expect(parsedList.pkgList.length).toEqual(308);
+  expect(parsedList.dependenciesList.length).toEqual(308);
+  expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-iAXqUn8IIeBTNd72xsFlgaXHkMBMt6y4HJp1tIaK465CWLT/fG1aqB7ykr95gHHmlBdGbFeWWfyB4NJJ0nmeIg==",
     group: "@babel",
     name: "code-frame",
     scope: "optional",
-    version: "7.16.7"
+    version: "7.16.7",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/pnpm-lock.yaml"
+      }
+    ]
+  });
+  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock2.yaml");
+  expect(parsedList.pkgList.length).toEqual(7);
+  expect(parsedList.dependenciesList.length).toEqual(7);
+  expect(parsedList.pkgList[0]).toEqual({
+    group: "",
+    name: "ansi-regex",
+    version: "2.1.1",
+    scope: undefined,
+    _integrity: "sha1-w7M6te42DYbg5ijwRorn7yfWVN8=",
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock2.yaml" }]
+  });
+  expect(parsedList.dependenciesList[2]).toEqual({
+    ref: "pkg:npm/chalk@1.1.3",
+    dependsOn: [
+      "pkg:npm/ansi-styles@2.2.1",
+      "pkg:npm/escape-string-regexp@1.0.5",
+      "pkg:npm/has-ansi@2.0.0",
+      "pkg:npm/strip-ansi@3.0.1",
+      "pkg:npm/supports-color@2.0.0"
+    ]
+  });
+  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock3.yaml");
+  expect(parsedList.pkgList.length).toEqual(448);
+  expect(parsedList.dependenciesList.length).toEqual(448);
+  expect(parsedList.pkgList[0]).toEqual({
+    group: "@nodelib",
+    name: "fs.scandir",
+    version: "2.1.5",
+    scope: undefined,
+    _integrity:
+      "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==",
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock3.yaml" }]
+  });
+  expect(parsedList.dependenciesList[2]).toEqual({
+    ref: "pkg:npm/@nodelib/fs.walk@1.2.8",
+    dependsOn: ["pkg:npm/@nodelib/fs.scandir@2.1.5", "pkg:npm/fastq@1.13.0"]
   });
 });
 
 test("parseYarnLock", async () => {
-  let deps = await utils.parseYarnLock("./test/yarn.lock");
-  expect(deps.length).toEqual(56);
-  expect(deps[0]).toEqual({
+  let identMap = utils.yarnLockToIdentMap(
+    fs.readFileSync("./test/yarn.lock", "utf8")
+  );
+  expect(Object.keys(identMap).length).toEqual(62);
+  let parsedList = await utils.parseYarnLock("./test/yarn.lock");
+  expect(parsedList.pkgList.length).toEqual(56);
+  expect(parsedList.pkgList[0]).toEqual({
     group: "",
     name: "asap",
     version: "2.0.5",
-    _integrity: "sha256-522765b50c3510490e52d7dcfe085ef9ba96958f"
+    _integrity: "sha256-522765b50c3510490e52d7dcfe085ef9ba96958f",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/yarn.lock"
+      }
+    ]
   });
 
-  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
-  expect(deps.length).toEqual(2029);
-  expect(deps[0]).toEqual({
+  identMap = utils.yarnLockToIdentMap(
+    fs.readFileSync("./test/data/yarn_locks/yarn.lock", "utf8")
+  );
+  expect(Object.keys(identMap).length).toEqual(2566);
+  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
+  expect(parsedList.pkgList.length).toEqual(2029);
+  expect(parsedList.dependenciesList.length).toEqual(2029);
+  expect(parsedList.pkgList[0]).toEqual({
     group: "babel",
     name: "cli",
     version: "7.10.1",
-    _integrity: "sha256-b6e5cd43a17b8f639442ab027976408ebe6d79a0"
+    _integrity:
+      "sha512-cVB+dXeGhMOqViIaZs3A9OUAe4pKw4SBNdMw6yHJMYR7s4TB+Cei7ThquV/84O19PdIFWuwe03vxxES0BHUm5g==",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/yarn_locks/yarn.lock"
+      }
+    ]
   });
-  deps.forEach((d) => {
+  parsedList.pkgList.forEach((d) => {
     expect(d.name).toBeDefined();
     expect(d.version).toBeDefined();
   });
 
-  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn-multi.lock");
-  expect(deps.length).toEqual(1909);
-  expect(deps[0]).toEqual({
-    _integrity: "sha256-24e0a6faa1d231ab44807af237c6227410c75c4d",
+  parsedList = await utils.parseYarnLock(
+    "./test/data/yarn_locks/yarn-multi.lock"
+  );
+  expect(parsedList.pkgList.length).toEqual(1909);
+  expect(parsedList.dependenciesList.length).toEqual(1909);
+  expect(parsedList.pkgList[0]).toEqual({
+    _integrity:
+      "sha512-zpruxnFMz6K94gs2pqc3sidzFDbQpKT5D6P/J/I9s8ekHZ5eczgnRp6pqXC86Bh7+44j/btpmOT0kwiboyqTnA==",
     group: "apollo",
     name: "client",
-    version: "3.2.5"
+    version: "3.2.5",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/yarn_locks/yarn-multi.lock"
+      }
+    ]
   });
 
-  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn-light.lock");
-  expect(deps.length).toEqual(315);
-  expect(deps[0]).toEqual({
-    _integrity: "sha256-7c24bbbff0714b45b593680b8b76b2af93114a29",
+  parsedList = await utils.parseYarnLock(
+    "./test/data/yarn_locks/yarn-light.lock"
+  );
+  expect(parsedList.pkgList.length).toEqual(315);
+  expect(parsedList.dependenciesList.length).toEqual(315);
+  expect(parsedList.pkgList[0]).toEqual({
+    _integrity:
+      "sha512-rZ1k9kQvJX21Vwgx1L6kSQ6yeXo9cCMyqURSnjG+MRoJn+Mr3LblxmVdzScHXRzv0N9yzy49oG7Bqxp9Knyv/g==",
     group: "actions",
     name: "artifact",
-    version: "0.6.1"
+    version: "0.6.1",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/yarn_locks/yarn-light.lock"
+      }
+    ]
   });
 
-  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarn3.lock");
-  expect(deps.length).toEqual(4);
-  expect(deps[0]).toEqual({
+  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn3.lock");
+  expect(parsedList.pkgList.length).toEqual(5);
+  expect(parsedList.dependenciesList.length).toEqual(5);
+  expect(parsedList.pkgList[1]).toEqual({
     _integrity:
       "sha512-+X9Jn4mPI+RYV0ITiiLyJSYlT9um111BocJSaztsxXR+9ZxWErpzdfQqyk+EYZUOklugjJkerQZRtJGLfJeClw==",
     group: "",
     name: "lru-cache",
-    version: "6.0.0"
+    version: "6.0.0",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/yarn_locks/yarn3.lock"
+      }
+    ]
   });
 
-  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
-  expect(deps.length).toEqual(1089);
-  expect(deps[0]).toEqual({
+  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
+  expect(parsedList.pkgList.length).toEqual(1090);
+  expect(parsedList.dependenciesList.length).toEqual(1088);
+  expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-G0U5NjBUYIs39l1J1ckgpVfVX2IxpzRAIT4/2An86O2Mcri3k5xNu7/RRkfObo12wN9s7BmnREAMhH7252oZiA==",
     group: "arcanis",
     name: "slice-ansi",
-    version: "1.0.2"
+    version: "1.0.2",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/yarn_locks/yarnv2.lock"
+      }
+    ]
   });
-  deps = await utils.parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
-  expect(deps.length).toEqual(320);
-  expect(deps[0]).toEqual({
+  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
+  expect(parsedList.pkgList.length).toEqual(325);
+  expect(parsedList.dependenciesList.length).toEqual(323);
+  expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
     group: "babel",
     name: "code-frame",
-    version: "7.16.7"
+    version: "7.16.7",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/yarn_locks/yarnv3.lock"
+      }
+    ]
   });
 });
 
@@ -1079,7 +1243,13 @@ test("parseComposerLock", () => {
       reference: "fe42e409bcdc431614f1cfc80cfc4191b926f3ed"
     },
     license: ["Apache-2.0"],
-    description: "The Official PHP SDK for QuickBooks Online Accounting API"
+    description: "The Official PHP SDK for QuickBooks Online Accounting API",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/composer.lock"
+      }
+    ]
   });
 
   deps = utils.parseComposerLock("./test/data/composer-2.lock");
@@ -1095,7 +1265,13 @@ test("parseComposerLock", () => {
       reference: "1e58d53e4af390efc7813e36cd215bd82cba4b06"
     },
     license: ["MIT"],
-    description: "A non-blocking concurrency framework for PHP applications."
+    description: "A non-blocking concurrency framework for PHP applications.",
+    properties: [
+      {
+        name: "SrcFile",
+        value: "./test/data/composer-2.lock"
+      }
+    ]
   });
 });
 
@@ -1132,6 +1308,18 @@ test("parse requirements.txt with comments", async () => {
     )
   );
   expect(deps.length).toEqual(31);
+});
+
+test("parse poetry.lock", async () => {
+  jest.setTimeout(120000);
+  let deps = await utils.parsePoetrylockData(
+    fs.readFileSync("./test/data/poetry.lock", (encoding = "utf-8"))
+  );
+  expect(deps.length).toEqual(31);
+  deps = await utils.parsePoetrylockData(
+    fs.readFileSync("./test/data/poetry1.lock", (encoding = "utf-8"))
+  );
+  expect(deps.length).toEqual(67);
 });
 
 test("parse wheel metadata", () => {

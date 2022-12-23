@@ -172,6 +172,16 @@ cdxgen can automatically query the public registries such as maven or npm or nug
 export FETCH_LICENSE=true
 ```
 
+## Dependency Tree
+
+cdxgen can retain the dependency tree under the `dependencies` attribute for a small number of supported package manifests. These are currently limited to:
+
+- package-lock.json
+- yarn.lock
+- pnpm-lock.yaml
+- Maven (pom.xml)
+- Gradle
+
 ## Environment variables
 
 | Variable                  | Description                                                                                                        |

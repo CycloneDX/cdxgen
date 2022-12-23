@@ -234,21 +234,67 @@ const getNpmMetadata = async function (pkgList) {
 };
 exports.getNpmMetadata = getNpmMetadata;
 
-const _getDepPkgList = async function (pkgList, pkg) {
+const _getDepPkgList = async function (
+  pkgList,
+  dependenciesList,
+  depKeys,
+  pkg
+) {
   if (pkg && pkg.dependencies) {
     const pkgKeys = Object.keys(pkg.dependencies);
     for (var k in pkgKeys) {
       const name = pkgKeys[k];
+      const version = pkg.dependencies[name].version;
+      const purl = new PackageURL("npm", "", name, version, null, null);
+      const purlString = decodeURIComponent(purl.toString());
       let scope = pkg.dependencies[name].dev === true ? "optional" : undefined;
-      pkgList.push({
+      const apkg = {
         name,
-        version: pkg.dependencies[name].version,
+        version,
         _integrity: pkg.dependencies[name].integrity,
         scope
-      });
-      // Include child dependencies
+      };
+      pkgList.push(apkg);
       if (pkg.dependencies[name].dependencies) {
-        await _getDepPkgList(pkgList, pkg.dependencies[name]);
+        // Include child dependencies
+        const dependencies = pkg.dependencies[name].dependencies;
+        const pkgDepKeys = Object.keys(dependencies);
+        const deplist = [];
+        for (const j in pkgDepKeys) {
+          const depName = pkgDepKeys[j];
+          const depVersion = dependencies[depName].version;
+          const deppurl = new PackageURL(
+            "npm",
+            "",
+            depName,
+            depVersion,
+            null,
+            null
+          );
+          const deppurlString = decodeURIComponent(deppurl.toString());
+          deplist.push(deppurlString);
+        }
+        if (!depKeys[purlString]) {
+          dependenciesList.push({
+            ref: purlString,
+            dependsOn: deplist
+          });
+          depKeys[purlString] = true;
+        }
+        await _getDepPkgList(
+          pkgList,
+          dependenciesList,
+          depKeys,
+          pkg.dependencies[name]
+        );
+      } else {
+        if (!depKeys[purlString]) {
+          dependenciesList.push({
+            ref: purlString,
+            dependsOn: []
+          });
+          depKeys[purlString] = true;
+        }
       }
     }
   }
@@ -269,7 +315,13 @@ const parsePkgJson = async (pkgJsonFile) => {
       pkgList.push({
         name: pkgIdentifier.fullName || pkgData.name,
         group: pkgIdentifier.scope || "",
-        version: pkgData.version
+        version: pkgData.version,
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgJsonFile
+          }
+        ]
       });
     } catch (err) {}
   }
@@ -292,9 +344,61 @@ exports.parsePkgJson = parsePkgJson;
  */
 const parsePkgLock = async (pkgLockFile) => {
   let pkgList = [];
+  let dependenciesList = [];
+  let depKeys = {};
   if (fs.existsSync(pkgLockFile)) {
     const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
-    pkgList = await _getDepPkgList(pkgList, lockData);
+    // Only present in lockfile v2 onwards
+    if (lockData.name && lockData.packages && lockData.packages[""]) {
+      // Build the initial dependency tree for the root package
+      const rootPkg = {
+        group: "",
+        name: lockData.name,
+        version: lockData.version,
+        type: "application"
+      };
+      pkgList.push(rootPkg);
+      const purl = new PackageURL(
+        "application",
+        "",
+        rootPkg.name,
+        rootPkg.version,
+        null,
+        null
+      );
+      const purlString = decodeURIComponent(purl.toString());
+      // npm ls command seems to include both dependencies and devDependencies
+      // For tree purposes, including only the dependencies should be enough
+      const rootPkgDeps = Object.keys(lockData.packages[""].dependencies) || [];
+      const deplist = [];
+      for (const rd of rootPkgDeps) {
+        const resolvedVersion = (lockData.packages[`node_modules/${rd}`] || {})
+          .version;
+        if (resolvedVersion) {
+          const dpurl = decodeURIComponent(
+            new PackageURL(
+              "npm",
+              "",
+              rd,
+              resolvedVersion,
+              null,
+              null
+            ).toString()
+          );
+          deplist.push(dpurl);
+        }
+      }
+      dependenciesList.push({
+        ref: purlString,
+        dependsOn: deplist
+      });
+    }
+    pkgList = await _getDepPkgList(
+      pkgList,
+      dependenciesList,
+      depKeys,
+      lockData
+    );
   }
   if (process.env.FETCH_LICENSE) {
     if (DEBUG_MODE) {
@@ -302,11 +406,68 @@ const parsePkgLock = async (pkgLockFile) => {
         `About to fetch license information for ${pkgList.length} packages`
       );
     }
-    return await getNpmMetadata(pkgList);
+    pkgList = await getNpmMetadata(pkgList);
+    return { pkgList, dependenciesList };
   }
-  return pkgList;
+  return {
+    pkgList,
+    dependenciesList
+  };
 };
 exports.parsePkgLock = parsePkgLock;
+
+/**
+ * Given a lock file this method would return an Object with the identiy as the key and parsed name and value
+ * eg: "@actions/core@^1.2.6", "@actions/core@^1.6.0":
+ *        version "1.6.0"
+ * would result in two entries
+ *
+ * @param {string} lockData Yarn Lockfile data
+ */
+const yarnLockToIdentMap = function (lockData) {
+  const identMap = {};
+  let currentIdents = [];
+  lockData.split("\n").forEach((l) => {
+    if (l === "\n" || l.startsWith("#")) {
+      return;
+    }
+    // "@actions/core@^1.2.6", "@actions/core@^1.6.0":
+    if (!l.startsWith(" ") && l.trim().length > 0) {
+      const tmpA = l.replace(/["']/g, "").split(", ");
+      if (tmpA && tmpA.length) {
+        for (let s of tmpA) {
+          if (!s.startsWith("__")) {
+            if (s.endsWith(":")) {
+              s = s.substring(0, s.length - 1);
+            }
+            // Non-strict mode parsing
+            const match = s.match(/^(?:@([^/]+?)\/)?([^/]+?)(?:@(.+))?$/);
+            if (!match) {
+              continue;
+            }
+            let [, group, name, range] = match;
+            if (group) {
+              group = `${group}/`;
+            }
+            if (range.startsWith("npm:")) {
+              range = range.replace("npm:", "");
+            }
+            currentIdents.push(`${group || ""}${name}@${range}`);
+          }
+        }
+      }
+    } else if (l.startsWith("  version") && currentIdents.length) {
+      const tmpA = l.replace(/["']/g, "").split(" ");
+      const version = tmpA[tmpA.length - 1].trim();
+      for (const id of currentIdents) {
+        identMap[id] = version;
+      }
+      currentIdents = [];
+    }
+  });
+  return identMap;
+};
+exports.yarnLockToIdentMap = yarnLockToIdentMap;
 
 /**
  * Parse nodejs yarn lock file
@@ -314,23 +475,70 @@ exports.parsePkgLock = parsePkgLock;
  * @param {string} yarnLockFile yarn.lock file
  */
 const parseYarnLock = async function (yarnLockFile) {
-  const pkgList = [];
+  let pkgList = [];
+  const dependenciesList = [];
+  const depKeys = {};
   if (fs.existsSync(yarnLockFile)) {
     const lockData = fs.readFileSync(yarnLockFile, "utf8");
     let name = "";
     let group = "";
     let version = "";
     let integrity = "";
+    let depsMode = false;
+    let purlString = "";
+    let deplist = [];
+    // This would have the keys and the resolved version required to solve the dependency tree
+    const identMap = yarnLockToIdentMap(lockData);
     lockData.split("\n").forEach((l) => {
-      if (
-        l === "\n" ||
-        l.startsWith("dependencies") ||
-        l.startsWith("    ") ||
-        l.startsWith("#")
-      ) {
+      if (l === "\n" || l.startsWith("#")) {
         return;
       }
       if (!l.startsWith(" ")) {
+        // Create an entry for the package and reset variables
+        if (
+          name !== "" &&
+          version !== "" &&
+          (integrity !== "" || version.includes("local"))
+        ) {
+          // Create a purl ref for the current package
+          purlString = new PackageURL(
+            "npm",
+            group,
+            name,
+            version,
+            null,
+            null
+          ).toString();
+          pkgList.push({
+            group: group || "",
+            name: name,
+            version: version,
+            _integrity: integrity,
+            properties: [
+              {
+                name: "SrcFile",
+                value: yarnLockFile
+              }
+            ]
+          });
+          // Reset all the variables
+          group = "";
+          name = "";
+          version = "";
+          integrity = "";
+        }
+        if (purlString && purlString !== "" && !depKeys[purlString]) {
+          // Create an entry for dependencies
+          dependenciesList.push({
+            ref: decodeURIComponent(purlString),
+            dependsOn: deplist
+          });
+          depKeys[purlString] = true;
+          deplist = [];
+          purlString = "";
+          depsMode = false;
+        }
+        // Collect the group and the name
         const tmpA = l.replace(/["']/g, "").split("@");
         // ignore possible leading empty strings
         if (tmpA[0] === "") {
@@ -346,7 +554,35 @@ const parseYarnLock = async function (yarnLockFile) {
             name = fullName;
           }
         }
-      } else {
+      } else if (name !== "" && l.startsWith("  dependencies:")) {
+        depsMode = true;
+      } else if (depsMode && l.startsWith("    ")) {
+        // Given "@actions/http-client" "^1.0.11"
+        // We need the resolved version from identMap
+        const tmpA = l.trim().replace(/["']/g, "").split(" ");
+        if (tmpA && tmpA.length === 2) {
+          let dgroupname = tmpA[0];
+          if (dgroupname.startsWith("@")) {
+            dgroupname = dgroupname.substring(1);
+          }
+          if (dgroupname.endsWith(":")) {
+            dgroupname = dgroupname.substring(0, dgroupname.length - 1);
+          }
+          const resolvedVersion = identMap[`${dgroupname}@${tmpA[1]}`];
+          const depPurlString = new PackageURL(
+            "npm",
+            null,
+            dgroupname,
+            resolvedVersion,
+            null,
+            null
+          ).toString();
+          deplist.push(decodeURIComponent(depPurlString));
+        }
+      } else if (name !== "") {
+        if (!l.startsWith("    ")) {
+          depsMode = false;
+        }
         l = l.trim();
         const parts = l.split(" ");
         if (l.startsWith("version")) {
@@ -368,18 +604,6 @@ const parseYarnLock = async function (yarnLockFile) {
           }
         }
       }
-      if (name !== "" && version !== "" && integrity != "") {
-        pkgList.push({
-          group: group,
-          name: name,
-          version: version,
-          _integrity: integrity
-        });
-        group = "";
-        name = "";
-        version = "";
-        integrity = "";
-      }
     });
   }
   if (process.env.FETCH_LICENSE) {
@@ -388,9 +612,16 @@ const parseYarnLock = async function (yarnLockFile) {
         `About to fetch license information for ${pkgList.length} packages`
       );
     }
-    return await getNpmMetadata(pkgList);
+    pkgList = await getNpmMetadata(pkgList);
+    return {
+      pkgList,
+      dependenciesList
+    };
   }
-  return pkgList;
+  return {
+    pkgList,
+    dependenciesList
+  };
 };
 exports.parseYarnLock = parseYarnLock;
 
@@ -430,7 +661,13 @@ const parseNodeShrinkwrap = async function (swFile) {
             group: group,
             name: name,
             version: version,
-            _integrity: integrity
+            _integrity: integrity,
+            properties: [
+              {
+                name: "SrcFile",
+                value: swFile
+              }
+            ]
           });
         }
       }
@@ -453,13 +690,45 @@ exports.parseNodeShrinkwrap = parseNodeShrinkwrap;
  *
  * @param {string} pnpmLock pnpm-lock.yaml file
  */
-const parsePnpmLock = async function (pnpmLock) {
+const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
   const pkgList = [];
+  const dependenciesList = [];
+  let ppurl = "";
+  if (parentComponent) {
+    ppurl = new PackageURL(
+      "application",
+      parentComponent.group,
+      parentComponent.name,
+      parentComponent.version,
+      null,
+      null
+    ).toString();
+  }
   if (fs.existsSync(pnpmLock)) {
     const lockData = fs.readFileSync(pnpmLock, "utf8");
     const yamlObj = yaml.load(lockData);
     if (!yamlObj) {
-      return pkgList;
+      return {};
+    }
+    // This logic matches the pnpm list command to include only direct dependencies
+    if (ppurl !== "") {
+      const ddeps = yamlObj.dependencies || {};
+      const ddeplist = [];
+      for (const dk of Object.keys(ddeps)) {
+        const dpurl = new PackageURL(
+          "npm",
+          "",
+          dk,
+          ddeps[dk],
+          null,
+          null
+        ).toString();
+        ddeplist.push(decodeURIComponent(dpurl));
+      }
+      dependenciesList.push({
+        ref: decodeURIComponent(ppurl),
+        dependsOn: ddeplist
+      });
     }
     const packages = yamlObj.packages;
     const pkgKeys = Object.keys(packages);
@@ -468,6 +737,7 @@ const parsePnpmLock = async function (pnpmLock) {
       const fullName = pkgKeys[k].replace("/@", "@");
       const parts = fullName.split("/");
       const integrity = packages[pkgKeys[k]].resolution.integrity;
+      const deps = packages[pkgKeys[k]].dependencies || [];
       let scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
       if (parts && parts.length) {
         let name = "";
@@ -482,12 +752,42 @@ const parsePnpmLock = async function (pnpmLock) {
           version = parts[2];
         }
         if (group !== "@types" && name.indexOf("file:") !== 0) {
+          const purlString = new PackageURL(
+            "npm",
+            group,
+            name,
+            version,
+            null,
+            null
+          ).toString();
+          const deplist = [];
+          for (const dpkgName of Object.keys(deps)) {
+            const dpurlString = new PackageURL(
+              "npm",
+              "",
+              dpkgName,
+              deps[dpkgName],
+              null,
+              null
+            ).toString();
+            deplist.push(decodeURIComponent(dpurlString));
+          }
+          dependenciesList.push({
+            ref: decodeURIComponent(purlString),
+            dependsOn: deplist
+          });
           pkgList.push({
             group: group,
             name: name,
             version: version,
             scope,
-            _integrity: integrity
+            _integrity: integrity,
+            properties: [
+              {
+                name: "SrcFile",
+                value: pnpmLock
+              }
+            ]
           });
         }
       }
@@ -499,9 +799,16 @@ const parsePnpmLock = async function (pnpmLock) {
         `About to fetch license information for ${pkgList.length} packages`
       );
     }
-    return await getNpmMetadata(pkgList);
+    pkgList = await getNpmMetadata(pkgList);
+    return {
+      pkgList,
+      dependenciesList
+    };
   }
-  return pkgList;
+  return {
+    pkgList,
+    dependenciesList
+  };
 };
 exports.parsePnpmLock = parsePnpmLock;
 
@@ -521,7 +828,13 @@ const parseBowerJson = async (bowerJsonFile) => {
         group: pkgIdentifier.scope || "",
         version: pkgData.version || "",
         description: pkgData.description || "",
-        license: pkgData.license || ""
+        license: pkgData.license || "",
+        properties: [
+          {
+            name: "SrcFile",
+            value: bowerJsonFile
+          }
+        ]
       });
     } catch (err) {}
   }
@@ -580,7 +893,13 @@ const parseMinJs = async (minJsFile) => {
             pkgList.push({
               name: pkgIdentifier.fullName || pkgData.name,
               group: pkgIdentifier.scope || "",
-              version: tmpB[1].replace(/^v/, "") || ""
+              version: tmpB[1].replace(/^v/, "") || "",
+              properties: [
+                {
+                  name: "SrcFile",
+                  value: minJsFile
+                }
+              ]
             });
             return;
           }
@@ -630,7 +949,13 @@ const parsePom = function (pomFile) {
           group: adep.groupId ? adep.groupId._ : "",
           name: adep.artifactId ? adep.artifactId._ : "",
           version: versionStr,
-          qualifiers: { type: "jar" }
+          qualifiers: { type: "jar" },
+          properties: [
+            {
+              name: "SrcFile",
+              value: pomFile
+            }
+          ]
         });
       }
     }
@@ -648,11 +973,23 @@ const parseMavenTree = function (rawOutput) {
     return [];
   }
   const deps = [];
+  const dependenciesList = [];
   const keys_cache = {};
+  const level_trees = {};
   const tmpA = rawOutput.split("\n");
+  let last_level = 0;
+  let last_purl = "";
+  let stack = [];
   tmpA.forEach((l) => {
+    if (l.endsWith(":test")) {
+      return;
+    }
+    let level = 0;
     const tmpline = l.split(" ");
     if (tmpline && tmpline.length) {
+      if (l.includes(" ")) {
+        level = l.replace(tmpline[tmpline.length - 1], "").length / 3;
+      }
       l = tmpline[tmpline.length - 1];
       const pkgArr = l.split(":");
       if (pkgArr && pkgArr.length > 2) {
@@ -663,17 +1000,59 @@ const parseMavenTree = function (rawOutput) {
         const key = pkgArr[0] + "-" + pkgArr[1] + "-" + versionStr;
         if (!keys_cache[key]) {
           keys_cache[key] = key;
+          let purlString = new PackageURL(
+            "maven",
+            pkgArr[0],
+            pkgArr[1],
+            versionStr,
+            { type: "jar" },
+            null
+          ).toString();
+          purlString = decodeURIComponent(purlString);
           deps.push({
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
             qualifiers: { type: "jar" }
           });
+          if (!level_trees[purlString]) {
+            level_trees[purlString] = [];
+          }
+          if (level == 0 || last_purl === "") {
+            stack.push(purlString);
+          } else if (level > last_level) {
+            const cnodes = level_trees[last_purl] || [];
+            cnodes.push(purlString);
+            level_trees[last_purl] = cnodes;
+            if (stack[stack.length - 1] !== purlString) {
+              stack.push(purlString);
+            }
+          } else {
+            for (let i = level; i <= last_level; i++) {
+              stack.pop();
+            }
+            const last_stack = stack[stack.length - 1];
+            const cnodes = level_trees[last_stack] || [];
+            cnodes.push(purlString);
+            level_trees[last_stack] = cnodes;
+            stack.push(purlString);
+          }
+          last_level = level;
+          last_purl = purlString;
         }
       }
     }
   });
-  return deps;
+  for (const lk of Object.keys(level_trees)) {
+    dependenciesList.push({
+      ref: lk,
+      dependsOn: level_trees[lk]
+    });
+  }
+  return {
+    pkgList: deps,
+    dependenciesList
+  };
 };
 exports.parseMavenTree = parseMavenTree;
 
@@ -683,18 +1062,41 @@ exports.parseMavenTree = parseMavenTree;
  */
 const parseGradleDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
-    const deps = [];
+    // To render dependency tree we need a root project
+    const rootProject = {
+      group: "",
+      name: "root",
+      version: "latest",
+      type: "maven",
+      qualifiers: { type: "jar" }
+    };
+    const deps = [rootProject];
+    const dependenciesList = [];
     const keys_cache = {};
+    let last_level = 0;
+    let last_purl = "pkg:maven/root@latest?type=jar";
+    const level_trees = {};
+    level_trees[last_purl] = [];
+    let stack = [last_purl];
     const depRegex =
       /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly )?(?<versionspecified>[^\s:}]+))?(?:})?(?: +-> +(?<versionoverride>[^\s:]+))?/gm;
     while ((match = depRegex.exec(rawOutput))) {
-      const [, group, name, versionspecified, versionoverride] = match;
+      const [line, group, name, versionspecified, versionoverride] = match;
       const version = versionoverride || versionspecified;
+      const level = line.split(group)[0].length / 5;
       if (version !== undefined) {
-        const key = group + ":" + name + ":" + version;
+        let purlString = new PackageURL(
+          "maven",
+          group,
+          name,
+          version,
+          { type: "jar" },
+          null
+        ).toString();
+        purlString = decodeURIComponent(purlString);
         // Filter duplicates
-        if (!keys_cache[key]) {
-          keys_cache[key] = key;
+        if (!keys_cache[purlString]) {
+          keys_cache[purlString] = true;
           if (group !== "project") {
             deps.push({
               group,
@@ -702,13 +1104,46 @@ const parseGradleDep = function (rawOutput) {
               version: version,
               qualifiers: { type: "jar" }
             });
+            if (!level_trees[purlString]) {
+              level_trees[purlString] = [];
+            }
+            if (level == 0 || last_purl === "") {
+              stack.push(purlString);
+            } else if (level > last_level) {
+              const cnodes = level_trees[last_purl] || [];
+              cnodes.push(purlString);
+              level_trees[last_purl] = cnodes;
+              if (stack[stack.length - 1] !== purlString) {
+                stack.push(purlString);
+              }
+            } else {
+              for (let i = level; i <= last_level; i++) {
+                stack.pop();
+              }
+              const last_stack = stack[stack.length - 1];
+              const cnodes = level_trees[last_stack] || [];
+              cnodes.push(purlString);
+              level_trees[last_stack] = cnodes;
+              stack.push(purlString);
+            }
+            last_level = level;
+            last_purl = purlString;
           }
         }
       }
     }
-    return deps;
+    for (const lk of Object.keys(level_trees)) {
+      dependenciesList.push({
+        ref: lk,
+        dependsOn: level_trees[lk]
+      });
+    }
+    return {
+      pkgList: deps,
+      dependenciesList
+    };
   }
-  return [];
+  return {};
 };
 exports.parseGradleDep = parseGradleDep;
 
@@ -2769,6 +3204,12 @@ const parseNupkg = async function (nupkgFile) {
   pkg.name = m.id._;
   pkg.version = m.version._;
   pkg.description = m.description._;
+  pkg.properties = [
+    {
+      name: "SrcFile",
+      value: nupkgFile
+    }
+  ];
   pkgList.push(pkg);
   if (process.env.FETCH_LICENSE) {
     return await getNugetMetadata(pkgList);
@@ -3038,7 +3479,13 @@ const parseComposerLock = function (pkgLockFile) {
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,
-            scope: compScope
+            scope: compScope,
+            properties: [
+              {
+                name: "SrcFile",
+                value: pkgLockFile
+              }
+            ]
           });
         }
       }
@@ -3077,7 +3524,13 @@ const parseSbtLock = function (pkgLockFile) {
           name: pkg.name,
           version: pkg.version,
           _integrity: integrity,
-          scope: compScope
+          scope: compScope,
+          properties: [
+            {
+              name: "SrcFile",
+              value: pkgLockFile
+            }
+          ]
         });
       }
     }
@@ -3389,7 +3842,13 @@ const extractJarArchive = function (jarFile, tempDir) {
               version: pomMetadata["version"],
               description: pomMetadata["description"],
               repository: { url: pomMetadata["scm"] },
-              qualifiers: { type: "jar" }
+              qualifiers: { type: "jar" },
+              properties: [
+                {
+                  name: "SrcFile",
+                  value: jarFile
+                }
+              ]
             };
             if (
               pomMetadata["url"] &&
@@ -3474,7 +3933,13 @@ const extractJarArchive = function (jarFile, tempDir) {
             pkgList.push({
               group: group === "." ? "" : group || "",
               name: name || "",
-              version
+              version,
+              properties: [
+                {
+                  name: "SrcFile",
+                  value: jarname
+                }
+              ]
             });
           } else {
             if (DEBUG_MODE) {

@@ -106,7 +106,7 @@ jobs:
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-github.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-github.xml --input-format xml --input-version v1_4
 
-          FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --fail-on-error
+          FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
 

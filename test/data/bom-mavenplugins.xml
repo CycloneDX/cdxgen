@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bom xmlns="http://cyclonedx.org/schema/bom/1.4" serialNumber="urn:uuid:3ada63e1-1aa0-4a9e-be9c-1eda1d2725ad" version="1">
+  <metadata>
+    <timestamp>2022-12-22T19:11:52.184Z</timestamp>
+    <tools>
+      <tool>
+        <vendor>AppThreat</vendor>
+        <name>cdxgen</name>
+        <version>5.5.6</version>
+      </tool>
+    </tools>
+    <authors>
+      <author>
+        <name>Team AppThreat</name>
+        <email>cloud@appthreat.com</email>
+      </author>
+    </authors>
+    <component type="library" bom-ref="pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar">
+      <publisher/>
+      <group>com.gitlab.security_products.tests</group>
+      <name>java-maven</name>
+      <version>1.0-SNAPSHOT</version>
+      <description/>
+      <licenses/>
+      <purl>pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar</purl>
+    </component>
+  </metadata>
+  <components>
+    <component type="library" bom-ref="pkg:maven/io.netty/netty@3.9.1.Final?type=jar">
+      <publisher>The Netty Project</publisher>
+      <group>io.netty</group>
+      <name>netty</name>
+      <version>3.9.1.Final</version>
+      <description><![CDATA[The Netty project is an effort to provide an asynchronous event-driven network application framework and tools for rapid development of maintainable high performance and high scalability protocol servers and clients. In other words, Netty is a NIO client server framework which enables quick and easy development of network applications such as protocol servers and clients. It greatly simplifies and streamlines network programming such as TCP and UDP socket server.]]></description>
+      <scope>optional</scope>
+      <hashes>
+        <hash alg="MD5">c1a35f5f1dbc6d8f693b836a66070d45</hash>
+        <hash alg="SHA-1">6063d76dbb90eb875e1c82c334b5111c4a77fe66</hash>
+        <hash alg="SHA-256">b9ca6e9cfd4ebc94a146065eb1db4a1734f1af06eae46ee24666185b1c0e95c8</hash>
+        <hash alg="SHA-512">5148bb686ac91f43339eeb571d4cbaae64a8f50b618b6aa9f25d2580814b24d24fc9ec6faed233cee118dc61ee6e8603252eea9269a6da7c0f7974c628161de2</hash>
+        <hash alg="SHA-384">e01cc8baaf8e40045553149081c41a70fc8f7106a83d321a05cc61b88c2fa465cd8528b14674ab575e4b30a83e86cdc2</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/io.netty/netty@3.9.1.Final?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>http://netty.io/</url>
+        </reference>
+        <reference type="vcs">
+          <url>https://github.com/netty/netty</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar">
+      <publisher>The Apache Software Foundation</publisher>
+      <group>org.apache.maven</group>
+      <name>maven-artifact</name>
+      <version>3.3.9</version>
+      <description><![CDATA[Maven is a software build management and comprehension tool. Based on the concept of a project object model: builds, dependency management, documentation creation, site publication, and distribution publication are all controlled from the declarative file. Maven can be extended by plugins to utilise a number of other development tools for reporting or the build process.]]></description>
+      <scope>optional</scope>
+      <hashes>
+        <hash alg="MD5">eabb57cd2980b2776fa4c441307ea60c</hash>
+        <hash alg="SHA-1">0f43afa184555fbc6e36b3334b17246c39b30f6e</hash>
+        <hash alg="SHA-256">1f702928f2233c6ecdf308fbd8f2932ea287c7062183d3c8364b0db7e9c4445d</hash>
+        <hash alg="SHA-512">22f5203e5b6639ef6134e811052a4e94caafa4ffb25c9f821c19672a7a7097ad3562cef0e7b9802ae66e005b151d410d4822a8e48a4e92819255758ef6c073ea</hash>
+        <hash alg="SHA-384">1cbdfda98fc70734efb6e11716ffbafa6ea5148ed07c47a25d042481fa65b633b79fb920b2a89a3576113d4ac6f329b1</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar</purl>
+      <externalReferences>
+        <reference type="build-system">
+          <url>https://builds.apache.org/job/maven-3.x/</url>
+        </reference>
+        <reference type="distribution">
+          <url>http://maven.apache.org/download.html</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>https://issues.apache.org/jira/browse/MNG</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>http://mail-archives.apache.org/mod_mbox/maven-users</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.apache.org/viewvc/maven/pom/tags/maven-parent-27</url>
+        </reference>
+        <reference type="website">
+          <url>http://www.apache.org/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar">
+      <publisher>Codehaus</publisher>
+      <group>org.codehaus.plexus</group>
+      <name>plexus-utils</name>
+      <version>3.0.22</version>
+      <description><![CDATA[A collection of various utility classes to ease working with strings, files, command lines, XML and more.]]></description>
+      <hashes>
+        <hash alg="MD5">2a32677a099da7c5b9b2b39c066f2cc6</hash>
+        <hash alg="SHA-1">764f26e0ab13a87c48fe55f525dfb6a133b7a92f</hash>
+        <hash alg="SHA-256">0f31c44b275f87e56d46a582ce96d03b9e2ab344cf87c4e268b34d3ad046beab</hash>
+        <hash alg="SHA-512">b0be4608a6246630463989cbc7a554e4d6a886895fe9b9d1d38ff525e5ef9bcdbc96219731eb16940c6936808824e533bd6aedb77d8376657680a137e51e1fff</hash>
+        <hash alg="SHA-384">aedfa474d709222d69c6736588c7ede1aae1c39e9e4604e42b45dfa39dfc78ba85dfb17f424e6c934fd8d505a585f3ff</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>http://jira.codehaus.org/browse/PLXUTILS</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://github.com/codehaus-plexus/plexus-utils</url>
+        </reference>
+        <reference type="website">
+          <url>http://www.codehaus.org/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>http://archive.plexus.codehaus.org/user</url>
+        </reference>
+        <reference type="build-system">
+          <url>https://grid.sonatype.org/ci/view/Spice/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar">
+      <publisher>The Apache Software Foundation</publisher>
+      <group>org.apache.commons</group>
+      <name>commons-lang3</name>
+      <version>3.4</version>
+      <description><![CDATA[Apache Commons Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy, or are considered to be so standard as to justify existence in java.lang.]]></description>
+      <hashes>
+        <hash alg="MD5">8667a442ee77e509fbe8176b94726eb2</hash>
+        <hash alg="SHA-1">5fe28b9518e58819180a43a850fbc0dd24b7c050</hash>
+        <hash alg="SHA-256">734c8356420cc8e30c795d64fd1fcd5d44ea9d90342a2cc3262c5158fbc6d98b</hash>
+        <hash alg="SHA-512">b1b556692341a240f8b81f8f71b8b5c0225ccf857ce1b185e7fe6d7a9bb2a4d77823496cd6e2697a20386e7f3ba02d476a0e4ff38071367beb3090104544922d</hash>
+        <hash alg="SHA-384">961bd98a9b176b23f6162fa26b887ea54e970815f6ad10c5f98c0d8a35d6f056c19a46889bb380947a741daf7bc264cd</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>http://issues.apache.org/jira/browse/LANG</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.apache.org/viewvc/commons/proper/lang/tags/LANG_3_4</url>
+        </reference>
+        <reference type="build-system">
+          <url>https://continuum-ci.apache.org/</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>http://mail-archives.apache.org/mod_mbox/commons-user/</url>
+        </reference>
+        <reference type="website">
+          <url>http://www.apache.org/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar">
+      <publisher>FasterXML</publisher>
+      <group>com.fasterxml.jackson.core</group>
+      <name>jackson-databind</name>
+      <version>2.9.2</version>
+      <description><![CDATA[General data-binding functionality for Jackson: works on core streaming API]]></description>
+      <scope>optional</scope>
+      <hashes>
+        <hash alg="MD5">312a220f449bdeda184b7007e6ca5540</hash>
+        <hash alg="SHA-1">1d8d8cb7cf26920ba57fb61fa56da88cc123b21f</hash>
+        <hash alg="SHA-256">d06823e75174e566fc4a169cb3d162b128eebedc5de336a179d6513b59a0758a</hash>
+        <hash alg="SHA-512">e8630ad3a2fcf68d13545bac1794feb0ca303932cc1bc626b5f37d88465d378cd7569ac9137632c0fa84f4ba53ff51121aaa61f14ac033b9435de65ea3f5bcdd</hash>
+        <hash alg="SHA-384">64378b553bac8bd023dfb7d2a75a5eff8e486eb39c28c8bd8eaa483f957505d7d07a1f9878e941fdcb422f967dd66e03</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>http://github.com/FasterXML/jackson-databind</url>
+        </reference>
+        <reference type="website">
+          <url>http://fasterxml.com/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar">
+      <publisher>FasterXML</publisher>
+      <group>com.fasterxml.jackson.core</group>
+      <name>jackson-annotations</name>
+      <version>2.9.0</version>
+      <description><![CDATA[Core annotations used for value types, used by Jackson data binding package.]]></description>
+      <hashes>
+        <hash alg="MD5">c09faa1b063681cf45706c6df50685b6</hash>
+        <hash alg="SHA-1">07c10d545325e3a6e72e06381afe469fd40eb701</hash>
+        <hash alg="SHA-256">45d32ac61ef8a744b464c54c2b3414be571016dd46bfc2bec226761cf7ae457a</hash>
+        <hash alg="SHA-512">266589c36ea544ebca94aecd76ba9dfe88637563b94cf24e46846466b103074c9f95508bfa237c20d0ab9c60bfb6befa2628236dcf7222a69cf1ef9462bcf0b3</hash>
+        <hash alg="SHA-384">36289e4a5d6774c4fc6ed38a632a681759a4bc0389616a79edd22298dbcbe8f1bc7a107f00a9ec76b492d125c890a939</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>http://github.com/FasterXML/jackson-annotations</url>
+        </reference>
+        <reference type="website">
+          <url>http://fasterxml.com/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar">
+      <publisher>FasterXML</publisher>
+      <group>com.fasterxml.jackson.core</group>
+      <name>jackson-core</name>
+      <version>2.9.2</version>
+      <description><![CDATA[Core Jackson processing abstractions (aka Streaming API), implementation for JSON]]></description>
+      <hashes>
+        <hash alg="MD5">456af981c1be006d6ac38df86c4339d6</hash>
+        <hash alg="SHA-1">aed20e50152a2f19adc1995c8d8f307c7efa414d</hash>
+        <hash alg="SHA-256">0c0d5d4bae541d2f26a19c2eb1067d9be806c449f67af047ce8963059b18d1e1</hash>
+        <hash alg="SHA-512">63acdda57de93713239000deea2dbb9d69bca4a0a8c3d53c9f2b31638d47b870f30e0e7c9349f532ca21aa84cb6b384214e96c4ede44135af14079db1851db0d</hash>
+        <hash alg="SHA-384">9d3b125d2c228973f38a5de12190f3d242ac8a2452ea8017d5824d490a374164471ff210617867aa8fbbcffd39cf7752</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>http://github.com/FasterXML/jackson-core</url>
+        </reference>
+        <reference type="website">
+          <url>http://fasterxml.com/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.mozilla/rhino@1.7.10?type=jar">
+      <publisher>The Mozilla Foundation</publisher>
+      <group>org.mozilla</group>
+      <name>rhino</name>
+      <version>1.7.10</version>
+      <description><![CDATA[Rhino is an open-source implementation of JavaScript written entirely in Java. It is typically embedded into Java applications to provide scripting to end users.]]></description>
+      <scope>optional</scope>
+      <hashes>
+        <hash alg="MD5">95376a6a78a8ac54321fd8012c9e27a8</hash>
+        <hash alg="SHA-1">24650bd98b1041df2eb1be5cb64dd1ad5b2e7c55</hash>
+        <hash alg="SHA-256">38eb3000cf56b8c7559ee558866a768eebcbf254174522d6404b7f078f75c2d4</hash>
+        <hash alg="SHA-512">ff4f8bfa5f1afdd4f2e4c34de8aa3ce18e4955f3804a3b864cb54583b7cb20621302786d625a2e4ed9ee879452f2e5ba70e855e65c34e58cf7f716d8a4515bc2</hash>
+        <hash alg="SHA-384">432082ba669be971b4d99cb74fb617d4cf2a33a252975e009e3e005159c68a63c6672c38285c1fae9d70f0c71ea161cf</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <name>Mozilla Public License, Version 2.0</name>
+          <url>http://www.mozilla.org/MPL/2.0/index.txt</url>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.mozilla/rhino@1.7.10?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>http://www.mozilla.org</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.sonatype.org/spice/tags/oss-parent-7</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar">
+      <publisher/>
+      <group>org.apache.geode</group>
+      <name>geode-core</name>
+      <version>1.1.1</version>
+      <description><![CDATA[Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing]]></description>
+      <scope>optional</scope>
+      <hashes>
+        <hash alg="MD5">efcf54c9bdb6b445d6371c0c13aab814</hash>
+        <hash alg="SHA-1">28cbc629c60f9ad2cd97e46194854a0232c2ef50</hash>
+        <hash alg="SHA-256">de7ccbc2f78a37ea7b8517a7c717087fae6b592db5f2409ab3671475afbc31c9</hash>
+        <hash alg="SHA-512">995cac4bb39b93e0cff5646ba63580733a21f269a4e7495c5f47e75e856888bd576d64f733a7fd40eac44299d483159ecdee2c066bc1a4f06e3218bd33c4cc75</hash>
+        <hash alg="SHA-384">18a46fa30227feb29788d269934aafcd49d3ac9777093f9cd57b9cb84740fb682dcce1e7589d403cc64c4a556c0fc851</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>https://git-wip-us.apache.org/repos/asf?p=geode.git;a=tree</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar">
+      <publisher/>
+      <group>com.github.stephenc.findbugs</group>
+      <name>findbugs-annotations</name>
+      <version>1.3.9-1</version>
+      <description><![CDATA[A clean room implementation of the Findbugs Annotations based entirely on the specification provided by the javadocs and at http://findbugs.sourceforge.net/manual/annotations.html.]]></description>
+      <hashes>
+        <hash alg="MD5">70fda5202eb9d9ce4f250f2c2ba71152</hash>
+        <hash alg="SHA-1">a6b11447635d80757d64b355bed3c00786d86801</hash>
+        <hash alg="SHA-256">1e651066ed9ae35d7e3001d635d1dbba1c2965db0e4e33e2c14ad610543f225c</hash>
+        <hash alg="SHA-512">34db789f9efcd342438d08699043d4bcc9da63d870b65b2d3f39b0f5de8f9db164869e7d7abae4046f56fbfea0aba7353811a04dc5ab4ca1f14af15d62b59407</hash>
+        <hash alg="SHA-384">ef67d91fc78186eef839ea4a38e139b54cd54c192702343596923d28dbc918735b2519a5c59d7499087c45b09e469bde</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>http://github.com/stephenc/findbugs-annotations/issues</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://github.com/stephenc/findbugs-annotations/tree/master/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar">
+      <publisher>JBoss, a division of Red Hat</publisher>
+      <group>org.jgroups</group>
+      <name>jgroups</name>
+      <version>3.6.10.Final</version>
+      <description><![CDATA[Reliable cluster communication toolkit]]></description>
+      <hashes>
+        <hash alg="MD5">54b56e09dd1583a0b07b113ddeeb3604</hash>
+        <hash alg="SHA-1">fc0ff5a8a9de27ab62939956f705c2909bf86bc2</hash>
+        <hash alg="SHA-256">46ddfd9d0c0c75b5dab967bb81a97efbe14f5b629ae590a633a4e983f5ea67de</hash>
+        <hash alg="SHA-512">99da13a189e6e9d4425e6755cf7083d99d3e0d87f178f9260b3d18af256d17eb670307f1b6aaf7d93d01c72a1917ddaf5ebbffe8d00b310d31c6cf6ef6149e52</hash>
+        <hash alg="SHA-384">6c78d37cf36502fe047fa0ff1608cb0b13788271369c5575fc6f35ae2e5883116240b3c5bd6663aa887337d7ce17bc0c</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+          <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>http://www.jboss.org</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>https://jira.jboss.com/jira/browse/JGRP</url>
+        </reference>
+        <reference type="vcs">
+          <url>https://github.com/belaban/JGroups</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/antlr/antlr@2.7.7?type=jar">
+      <publisher/>
+      <group>antlr</group>
+      <name>antlr</name>
+      <version>2.7.7</version>
+      <description><![CDATA[A framework for constructing recognizers, compilers, and translators from grammatical descriptions containing Java, C#, C++, or Python actions.]]></description>
+      <hashes>
+        <hash alg="MD5">f8f1352c52a4c6a500b597596501fc64</hash>
+        <hash alg="SHA-1">83cd2cd674a217ade95a4bb83a8a14f351f48bd0</hash>
+        <hash alg="SHA-256">88fbda4b912596b9f56e8e12e580cc954bacfb51776ecfddd3e18fc1cf56dc4c</hash>
+        <hash alg="SHA-512">311c3115f9f6651d1711c52d1739e25a70f25456cacb9a2cdde7627498c30b13d721133cc75b39462ad18812a82472ef1b3b9d64fab5abb0377c12bf82043a74</hash>
+        <hash alg="SHA-384">2e811e531ce30a2a905d093a00de596cf04406413b60422db8252b46125cadf07b71459cf6ac6da575ec030a9bf05e57</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>BSD-3-Clause</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/antlr/antlr@2.7.7?type=jar</purl>
+    </component>
+    <component type="library" bom-ref="pkg:maven/commons-io/commons-io@2.3?type=jar">
+      <publisher>The Apache Software Foundation</publisher>
+      <group>commons-io</group>
+      <name>commons-io</name>
+      <version>2.3</version>
+      <description><![CDATA[The Commons IO library contains utility classes, stream implementations, file filters, file comparators, endian transformation classes, and much more.]]></description>
+      <hashes>
+        <hash alg="MD5">132db2975a086024994c920769b900db</hash>
+        <hash alg="SHA-1">cd8d6ffc833cc63c30d712a180f4663d8f55799b</hash>
+        <hash alg="SHA-256">f9c7cbd53f85951f5d3ef7c08a1bf2097029fcc1d0bfb01bd07d3d79ff0286bb</hash>
+        <hash alg="SHA-512">7aa15099512ddf64a223e1591df3bc693d2436c70d92a5658fc5070df7737bef5a523cb444c15c63fa3f5b176b6de67c9d5c1b7a09de45af0bc61731e3c45ff9</hash>
+        <hash alg="SHA-384">c66e976fc0ae1a9a1430da502e9a2d84f9987069fcc9c22e632ecb0838c7bbc93baf73c93ded37e434cbb806926d40c5</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/commons-io/commons-io@2.3?type=jar</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>http://issues.apache.org/jira/browse/IO</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.apache.org/viewvc/commons/proper/io/trunk</url>
+        </reference>
+        <reference type="build-system">
+          <url>http://vmbuild.apache.org/continuum/</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>http://mail-archives.apache.org/mod_mbox/commons-user/</url>
+        </reference>
+        <reference type="website">
+          <url>http://www.apache.org/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/commons-lang/commons-lang@2.5?type=jar">
+      <publisher>The Apache Software Foundation</publisher>
+      <group>commons-lang</group>
+      <name>commons-lang</name>
+      <version>2.5</version>
+      <description><![CDATA[Commons Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy, or are considered to be so standard as to justify existence in java.lang.]]></description>
+      <hashes>
+        <hash alg="MD5">ab04c560caea60d3b0050beb57776a32</hash>
+        <hash alg="SHA-1">b0236b252e86419eef20c31a44579d2aee2f0a69</hash>
+        <hash alg="SHA-256">a64e0c73988fef8d5b73fc29d105a3a6e2dc5d9b90a94fca065cd2439dc56590</hash>
+        <hash alg="SHA-512">eff388ecce06df2d557b63559db2a6b8932f3466e1015b15653c7f788c77b8bb8e42df7dc4fe93077c96cc40942387d38b8110e00400a7594d9395cf0ec7334d</hash>
+        <hash alg="SHA-384">e0d02094a045733951ebaa6cb711306b8260f0edb07060685353bc4af417b101d7e25663cd617e17fb03c8384b96581a</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/commons-lang/commons-lang@2.5?type=jar</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>http://issues.apache.org/jira/browse/LANG</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.apache.org/viewvc/commons/proper/lang/trunk</url>
+        </reference>
+        <reference type="build-system">
+          <url>http://vmbuild.apache.org/continuum/</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>http://mail-archives.apache.org/mod_mbox/commons-user/</url>
+        </reference>
+        <reference type="website">
+          <url>http://www.apache.org/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar">
+      <publisher/>
+      <group>it.unimi.dsi</group>
+      <name>fastutil</name>
+      <version>7.0.2</version>
+      <description><![CDATA[fastutil extends the Java Collections Framework by providing type-specific maps, sets, lists and priority queues with a small memory footprint and fast access and insertion; provides also big (64-bit) arrays, sets and lists, and fast, practical I/O classes for binary and text files.]]></description>
+      <hashes>
+        <hash alg="MD5">69b2c971e075699454cf704b872c65a9</hash>
+        <hash alg="SHA-1">20876232e2cd12563507e4c9e85bd7948bc0656f</hash>
+        <hash alg="SHA-256">fbf38f134f18345e5b896653e1f70f3ccf7bfdd1717d17cc7852c89896c0d845</hash>
+        <hash alg="SHA-512">39c0b2333505f864ef51973097b0a30037f0c084557c028839fbd84cb9244bc92e5659edf9339edb0a7abba70ee7580afbceb9087f12e5a36e07af6159ec224e</hash>
+        <hash alg="SHA-384">1b8665b645633b1b2eaafb26d76a55767ec0da7e09eeb97d2aead437bc800f7fa8d3dc7f23182fabff512cebe5c8d4e4</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>https://github.com/vigna/fastutil</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/javax.resource/javax.resource-api@1.7?type=jar">
+      <publisher>GlassFish Community</publisher>
+      <group>javax.resource</group>
+      <name>javax.resource-api</name>
+      <version>1.7</version>
+      <description><![CDATA[Java EE Connector Architecture API]]></description>
+      <hashes>
+        <hash alg="MD5">51129256d155d7352fc1f066d2cbc6dc</hash>
+        <hash alg="SHA-1">ae40e0864eb1e92c48bf82a2a3399cbbf523fb79</hash>
+        <hash alg="SHA-256">216e0ac7018752122f3f44291aa816fc3a50504a79212a4397a194ad51308798</hash>
+        <hash alg="SHA-512">1a801cd47fd551d7d606261818060eeb301dc97ca0d8591e087539a0bee95a9a6acdf676252948cd96ebca0a2f99417771e21d0a3a9469469cf2a64fec3cb0e6</hash>
+        <hash alg="SHA-384">dd9e8ca0c455397532380a22d410bf1f0605423c1394fa4f6262072287bfb17eafe4760ab951ff185df6bece8a4c41a8</hash>
+      </hashes>
+      <licenses/>
+      <purl>pkg:maven/javax.resource/javax.resource-api@1.7?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>https://glassfish.java.net</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>http://java.net/jira/browse/CONNECTOR_SPEC</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://java.net/projects/glassfish/sources/svn/show/tags/javax.resource-api-1.7</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://maven.java.net/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar">
+      <publisher>GlassFish Community</publisher>
+      <group>javax.transaction</group>
+      <name>javax.transaction-api</name>
+      <version>1.2</version>
+      <description><![CDATA[Project GlassFish Java Transaction API]]></description>
+      <hashes>
+        <hash alg="MD5">2dfee184286530e726ad155816e15b4c</hash>
+        <hash alg="SHA-1">d81aff979d603edd90dcd8db2abc1f4ce6479e3e</hash>
+        <hash alg="SHA-256">9528449583c34d9d63aa1d8d15069790f925ae1f27b33784773b8099eff4c9ff</hash>
+        <hash alg="SHA-512">3b99e73bb47a5cc5b6cec3ea40b9215f2cd35d48757e00f8dcf733dd7e1cf3c8f48dd8ee24993535675fe963ecce3f537261a273bbfdaab1be51cc1749ac60da</hash>
+        <hash alg="SHA-384">766f33dc68259303d6e3b76d7fad84f32b39c81d9ab6d9342bfae614f56c37061ce116fbf4a38a93cabbfb889b0e2326</hash>
+      </hashes>
+      <licenses/>
+      <purl>pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>https://glassfish.java.net</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>http://java.net/jira/browse/JTA_SPEC</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://java.net/projects/glassfish/sources/svn/show/tags/javax.transaction-api-1.2</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://maven.java.net/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar">
+      <publisher/>
+      <group>net.java.dev.jna</group>
+      <name>jna</name>
+      <version>4.0.0</version>
+      <description><![CDATA[Java Native Access]]></description>
+      <hashes>
+        <hash alg="MD5">a1e20e48a367063023db9137ceb7c63c</hash>
+        <hash alg="SHA-1">9b3a11c613ec3fd3440af4103b12c3de82d38b6e</hash>
+        <hash alg="SHA-256">dac270b6441ce24d93a96ddb6e8f93d8df099192738799a6f6fcfc2b2416ca19</hash>
+        <hash alg="SHA-512">d59d542518fa3e9aea162531c2836abf2374430e962771f9b051c6f7cd2ce19438841a5787ce47e15e24759c6321f823ed06131e556e5660963a728ecee8123d</hash>
+        <hash alg="SHA-384">2270ed17f8ea231e7d78b090ae9d7909db8ec89521220ef52b4067d407c9147ee65c175786665e617c24d963b8963d55</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <name>LGPL, version 2.1</name>
+          <url>http://www.gnu.org/licenses/licenses.html</url>
+        </license>
+        <license>
+          <name>ASL, version 2</name>
+          <url>http://www.apache.org/licenses/</url>
+        </license>
+      </licenses>
+      <purl>pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>https://github.com/twall/jna</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar">
+      <publisher/>
+      <group>net.sf.jopt-simple</group>
+      <name>jopt-simple</name>
+      <version>5.0.1</version>
+      <description><![CDATA[A Java library for parsing command line options]]></description>
+      <hashes>
+        <hash alg="MD5">c5ed11011fdeac9ec50826801d5adcbb</hash>
+        <hash alg="SHA-1">20f7d76f9d06033d68f1b8e58666e7c542e91f08</hash>
+        <hash alg="SHA-256">9f0c8d50fa4b79b6ff1502dbec8502179d6b9497cacbe17a13074001aed537ec</hash>
+        <hash alg="SHA-512">b1e21ca243a351bb0b9f0fc6cf08d12575ce6faaa6b4a4c519a0cb6ee480960c4ec99bf9b5d691175676e4124f748ace806d3b81764a75a8db2253db9083cf90</hash>
+        <hash alg="SHA-384">706f4ad5de11a3b9f19c4c235c3018916afd005b3b79101185711614719f697b52e7f571dbcf838504a9695454b530b3</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>https://github.com/pholser/jopt-simple/issues</url>
+        </reference>
+        <reference type="vcs">
+          <url>https://github.com/pholser/jopt-simple</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="framework" bom-ref="pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar">
+      <publisher>Apache Software Foundation</publisher>
+      <group>org.apache.logging.log4j</group>
+      <name>log4j-api</name>
+      <version>2.6.1</version>
+      <description><![CDATA[The Apache Log4j API]]></description>
+      <hashes>
+        <hash alg="MD5">2627a758c258a7311c773f2eb6b347bb</hash>
+        <hash alg="SHA-1">d2ad7ee0b0450204d720b4bc3f99b50e208bf51e</hash>
+        <hash alg="SHA-256">5439c842b73e9136327cabbaa3ebb4a1de979f7ec3072b9eacf072554ae1d3e1</hash>
+        <hash alg="SHA-512">54f8109ca786d333ded81fdc840a0e3ef58572619a03e18a5e1c86589556c7d3719b29f80a538a2de6062b91b57f26692dddfdb8df771bbf37a8d2046e5d72bb</hash>
+        <hash alg="SHA-384">2aeebf13fb131dae6cc527978475c86fda3c9d026e1625cb5e7a0e5d951f2e5d77f50f73daf99d15f7bba50d8fc5a4b5</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>http://www.apache.org</url>
+        </reference>
+        <reference type="build-system">
+          <url>https://builds.apache.org/job/Log4j%202.x/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>https://issues.apache.org/jira/browse/LOG4J2</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>https://lists.apache.org/list.html?log4j-user@logging.apache.org</url>
+        </reference>
+        <reference type="vcs">
+          <url>https://git-wip-us.apache.org/repos/asf?p=logging-log4j2.git;a=summary</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="framework" bom-ref="pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar">
+      <publisher>Apache Software Foundation</publisher>
+      <group>org.apache.logging.log4j</group>
+      <name>log4j-core</name>
+      <version>2.6.1</version>
+      <description><![CDATA[The Apache Log4j Implementation]]></description>
+      <hashes>
+        <hash alg="MD5">48f7f3cda53030a87e8c387d8d1e4265</hash>
+        <hash alg="SHA-1">2b557bf1023c3a3a0f7f200fafcd7641b89cbb83</hash>
+        <hash alg="SHA-256">28433734bd9e3121e0a0b78238d5131837b9dbe26f1a930bc872bad44e68e44e</hash>
+        <hash alg="SHA-512">2ba9aabc4080d47fad54ffe5bbe053b2646ced5614f10712e890fd8011d8796688f5d1e5446a243a70a83936c02ea83779e71b0237ce5de400a5cec911ea8bb8</hash>
+        <hash alg="SHA-384">2a6bf94076317352aa8dbc7649526933857cfaf2e7acbfe1e88e304ecda6e9b9ada01caff4c35f35ff302aed9dab5318</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>http://www.apache.org</url>
+        </reference>
+        <reference type="build-system">
+          <url>https://builds.apache.org/job/Log4j%202.x/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>https://issues.apache.org/jira/browse/LOG4J2</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>https://lists.apache.org/list.html?log4j-user@logging.apache.org</url>
+        </reference>
+        <reference type="vcs">
+          <url>https://git-wip-us.apache.org/repos/asf?p=logging-log4j2.git;a=summary</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar">
+      <publisher>The Apache Software Foundation</publisher>
+      <group>org.apache.shiro</group>
+      <name>shiro-core</name>
+      <version>1.3.1</version>
+      <description><![CDATA[Apache Shiro is a powerful and flexible open-source security framework that cleanly handles authentication, authorization, enterprise session management, single sign-on and cryptography services.]]></description>
+      <hashes>
+        <hash alg="MD5">78e8c042ddf3f6982a28a6868b166a15</hash>
+        <hash alg="SHA-1">7edd30cd5b1b3293a40256b40b05bd8b8cbaa2df</hash>
+        <hash alg="SHA-256">a5da0717fb21f8fc15a5c425ca93f4317480773ddb3674f7016f3709e378c415</hash>
+        <hash alg="SHA-512">94d9c261ec8465da79b727a1680efeedf55807dcfb6ca70d608c182bbba957cc8170c5179624412f7c72ee6009e39b6270f3de1c056ec1cee6b6f47132ca387f</hash>
+        <hash alg="SHA-384">7e634f782ed831bea11b600bc7116c72fd9e6fad99ba4fd74050a5d2c37501164752a7927b6fce0ef50066d172bcbb7c</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar</purl>
+      <externalReferences>
+        <reference type="build-system">
+          <url>http://hudson.zones.apache.org/hudson/view/Shiro/</url>
+        </reference>
+        <reference type="issue-tracker">
+          <url>http://issues.apache.org/jira/browse/SHIRO</url>
+        </reference>
+        <reference type="website">
+          <url>http://www.apache.org/</url>
+        </reference>
+        <reference type="distribution">
+          <url>https://repository.apache.org/service/local/staging/deploy/maven2</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.apache.org/viewvc/maven/pom/tags/apache-17</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar">
+      <publisher>QOS.ch</publisher>
+      <group>org.slf4j</group>
+      <name>slf4j-api</name>
+      <version>1.6.4</version>
+      <description><![CDATA[The slf4j API]]></description>
+      <hashes>
+        <hash alg="MD5">75e1a2a3b84c59bf9d4f42de57a533b1</hash>
+        <hash alg="SHA-1">2396d74b12b905f780ed7966738bb78438e8371a</hash>
+        <hash alg="SHA-256">367b909030f714ee1176ab096b681e06348f03385e98d1bce0ed801b5452357e</hash>
+        <hash alg="SHA-512">aba86178858b4eb876788a1d1bfa83ffd2edf7a08af45eecdc3a42acc157c68d45cb6b578303cb7c93a941ff065624c623d877b279e3cc47bcf37724db4612d6</hash>
+        <hash alg="SHA-384">a0560af6b9fb75f22d97c6525e755ddd8a0384da4aef037057a0f19c40b2d3719d594778b901445c0b320374dac0b286</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>MIT</id>
+          <url>https://opensource.org/licenses/MIT</url>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar</purl>
+      <externalReferences>
+        <reference type="website">
+          <url>http://www.qos.ch</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.slf4j.org/viewvc/slf4j/trunk/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar">
+      <publisher>The Apache Software Foundation</publisher>
+      <group>commons-beanutils</group>
+      <name>commons-beanutils</name>
+      <version>1.8.3</version>
+      <description><![CDATA[BeanUtils provides an easy-to-use but flexible wrapper around reflection and introspection.]]></description>
+      <hashes>
+        <hash alg="MD5">b45be74134796c89db7126083129532f</hash>
+        <hash alg="SHA-1">686ef3410bcf4ab8ce7fd0b899e832aaba5facf7</hash>
+        <hash alg="SHA-256">e1407b81d8138fb9c1fc731b87b5e0068ddccabfbc65dee59cdb378a90c5e81a</hash>
+        <hash alg="SHA-512">d1bb5a1180ee42f741e9935273638f38487e94adfa4c783a8c3f2aa060cacd6d9701b944a2b16dcf151058f237a533c2fa99df489fd48631892103bb6e3cda1f</hash>
+        <hash alg="SHA-384">e882ac1cfd9ecb13f00cd809da9d69e7a97f6bb4bd16621687001b69939a410ac684ae12f28b3ce21f448409fdd8a136</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar</purl>
+      <externalReferences>
+        <reference type="issue-tracker">
+          <url>http://issues.apache.org/jira/browse/BEANUTILS</url>
+        </reference>
+        <reference type="vcs">
+          <url>http://svn.apache.org/viewvc/commons/proper/beanutils/trunk/</url>
+        </reference>
+        <reference type="build-system">
+          <url>http://vmbuild.apache.org/continuum/</url>
+        </reference>
+        <reference type="mailing-list">
+          <url>http://mail-archives.apache.org/mod_mbox/commons-user/</url>
+        </reference>
+        <reference type="website">
+          <url>http://www.apache.org/</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar">
+      <publisher/>
+      <group>org.apache.geode</group>
+      <name>geode-common</name>
+      <version>1.1.1</version>
+      <description><![CDATA[Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing]]></description>
+      <hashes>
+        <hash alg="MD5">f2090c990a8d3279c2875a92bcee8be1</hash>
+        <hash alg="SHA-1">eead117dc9032ec705b98edb714a8e5a6b06d42c</hash>
+        <hash alg="SHA-256">bd28a08d35ec24234302b81f8aad37c089b2d66ef4e8d764de3f526da01803bc</hash>
+        <hash alg="SHA-512">c2f781ca70c86bde41f28d5c1b6de7bc3db4a229124409e0f38af3ce3153ba11579804cc222ae35edd4fabf3cb0362ad43b5383eae592e2415c31dbfff0c2ec1</hash>
+        <hash alg="SHA-384">4f5bd84990e81657d54d40a191a98bd7ab903e6cf78f8e745cd02aabde4d33abde422a359244b3e9f982e5f9eabc63e3</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>https://git-wip-us.apache.org/repos/asf?p=geode.git;a=tree</url>
+        </reference>
+      </externalReferences>
+    </component>
+    <component type="library" bom-ref="pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar">
+      <publisher/>
+      <group>org.apache.geode</group>
+      <name>geode-json</name>
+      <version>1.1.1</version>
+      <description><![CDATA[Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing]]></description>
+      <hashes>
+        <hash alg="MD5">d36339404e0cadbefe16ce37440d8f44</hash>
+        <hash alg="SHA-1">b6b7f5e9ac7dd8a08800cf90f883500f586191fc</hash>
+        <hash alg="SHA-256">05660625e78d73114d31feb862daa1c64c4292d6c0186d8a6a12f9ddd611f1f1</hash>
+        <hash alg="SHA-512">db960c46a065fafca4ecf6f2aae85e1e64bc0cb4369b542e4e1c0d8c5d16dc3fa3bfbf9361a7e951d41ec53ca6b5f984eaa46db47e7921e7bc2fb60041e4597d</hash>
+        <hash alg="SHA-384">0a77f0ab902ad6b894938b8c720c24c3891e27f87c9d35a704dc303ea1cbc0198aeab847312cc4c22a63ee061a14f5a0</hash>
+      </hashes>
+      <licenses>
+        <license>
+          <id>Apache-2.0</id>
+        </license>
+      </licenses>
+      <purl>pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar</purl>
+      <externalReferences>
+        <reference type="vcs">
+          <url>https://git-wip-us.apache.org/repos/asf?p=geode.git;a=tree</url>
+        </reference>
+      </externalReferences>
+    </component>
+  </components>
+  <externalReferences>
+    <reference type="other">
+      <url>/mnt/work/sandbox/dependency-scanning/java-maven</url>
+      <comment>Base path</comment>
+    </reference>
+    <reference type="other">
+      <url>/mnt/work/sandbox/dependency-scanning/java-maven/pom.xml</url>
+      <comment>Package file</comment>
+    </reference>
+  </externalReferences>
+  <dependencies>
+    <dependency ref="pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar">
+      <dependency ref="pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/io.netty/netty@3.9.1.Final?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar">
+      <dependency ref="pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/org.codehaus.plexus/plexus-utils@3.0.22?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.commons/commons-lang3@3.4?type=jar"/>
+    <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar">
+      <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.9.0?type=jar"/>
+    <dependency ref="pkg:maven/com.fasterxml.jackson.core/jackson-core@2.9.2?type=jar"/>
+    <dependency ref="pkg:maven/org.mozilla/rhino@1.7.10?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar">
+      <dependency ref="pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/com.github.stephenc.findbugs/findbugs-annotations@1.3.9-1?type=jar"/>
+    <dependency ref="pkg:maven/org.jgroups/jgroups@3.6.10.Final?type=jar"/>
+    <dependency ref="pkg:maven/antlr/antlr@2.7.7?type=jar"/>
+    <dependency ref="pkg:maven/commons-io/commons-io@2.3?type=jar"/>
+    <dependency ref="pkg:maven/commons-lang/commons-lang@2.5?type=jar"/>
+    <dependency ref="pkg:maven/it.unimi.dsi/fastutil@7.0.2?type=jar"/>
+    <dependency ref="pkg:maven/javax.resource/javax.resource-api@1.7?type=jar">
+      <dependency ref="pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/javax.transaction/javax.transaction-api@1.2?type=jar"/>
+    <dependency ref="pkg:maven/net.java.dev.jna/jna@4.0.0?type=jar"/>
+    <dependency ref="pkg:maven/net.sf.jopt-simple/jopt-simple@5.0.1?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.logging.log4j/log4j-core@2.6.1?type=jar">
+      <dependency ref="pkg:maven/org.apache.logging.log4j/log4j-api@2.6.1?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/org.apache.shiro/shiro-core@1.3.1?type=jar">
+      <dependency ref="pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"/>
+    </dependency>
+    <dependency ref="pkg:maven/org.slf4j/slf4j-api@1.6.4?type=jar"/>
+    <dependency ref="pkg:maven/commons-beanutils/commons-beanutils@1.8.3?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.geode/geode-common@1.1.1?type=jar"/>
+    <dependency ref="pkg:maven/org.apache.geode/geode-json@1.1.1?type=jar"/>
+  </dependencies>
+</bom>
