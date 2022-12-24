@@ -297,3 +297,7 @@ Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for adv
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for the full license.
 
 [license]: https://github.com/AppThreat/cdxgen/blob/master/LICENSE
+
+## Discord support
+
+The developers could be reached via the [discord](https://discord.gg/DCNxzaeUpd) channel.
