@@ -9,7 +9,7 @@ const IGNORE_DIRS = [
   "venv",
   "docs",
   "test",
-  "tests",
+
   "e2e",
   "examples",
   "cypress",
