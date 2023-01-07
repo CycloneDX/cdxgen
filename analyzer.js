@@ -5,6 +5,8 @@ const fs = require("fs");
 const path = require("path");
 
 const IGNORE_DIRS = [
+  
+  
   "node_modules",
   "venv",
   "docs",
