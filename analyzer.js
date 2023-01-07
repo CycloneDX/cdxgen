@@ -16,6 +16,8 @@ const IGNORE_DIRS = [
   "site-packages"
 ];
 
+
+
 const IGNORE_FILE_PATTERN = new RegExp("(conf|test|spec|mock)\\.(js|ts)$", "i");
 
 const getAllFiles = (dir, extn, files, result, regex) => {
