@@ -1556,6 +1556,14 @@ test("parse cloudbuild data", async () => {
   });
 });
 
+test("parse privado files", () => {
+  let servList = utils.parsePrivadoFile("./test/data/privado.json");
+  expect(servList.length).toEqual(1);
+  expect(servList[0].data.length).toEqual(11);
+  expect(servList[0].endpoints.length).toEqual(17);
+  expect(servList[0].properties.length).toEqual(5);
+});
+
 test("parse openapi spec files", async () => {
   let aservice = await utils.parseOpenapiSpecData(
     fs.readFileSync(

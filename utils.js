@@ -2891,6 +2891,118 @@ const parseContainerSpecData = async function (dcData) {
 };
 exports.parseContainerSpecData = parseContainerSpecData;
 
+const identifyFlow = function (processingObj) {
+  let flow = "unknown";
+  if (processingObj.sinkId) {
+    let sinkId = processingObj.sinkId.toLowerCase();
+    if (sinkId.endsWith("write")) {
+      flow = "inbound";
+    } else if (sinkId.endsWith("read")) {
+      flow = "outbound";
+    } else if (sinkId.includes("http") || sinkId.includes("grpc")) {
+      flow = "bi-directional";
+    }
+  }
+  return flow;
+};
+
+const convertProcessing = function (processing_list) {
+  const data_list = [];
+  for (const p of processing_list) {
+    data_list.push({
+      classification: p.sourceId || p.sinkId,
+      flow: identifyFlow(p)
+    });
+  }
+  return data_list;
+};
+
+const parsePrivadoFile = function (f) {
+  const pData = fs.readFileSync(f, { encoding: "utf-8" });
+  const servlist = [];
+  if (!pData) {
+    return servlist;
+  }
+  const jsonData = JSON.parse(pData);
+  let aservice = {
+    "x-trust-boundary": false,
+    properties: [],
+    data: [],
+    endpoints: []
+  };
+  if (jsonData.repoName) {
+    aservice.name = jsonData.repoName;
+    aservice.properties = [
+      {
+        name: "SrcFile",
+        value: f
+      }
+    ];
+    // Capture git metadata info
+    if (jsonData.gitMetadata) {
+      aservice.version = jsonData.gitMetadata.commitId || "";
+      aservice.properties.push({
+        name: "privadoCoreVersion",
+        value: jsonData.privadoCoreVersion || ""
+      });
+      aservice.properties.push({
+        name: "privadoCLIVersion",
+        value: jsonData.privadoCLIVersion || ""
+      });
+      aservice.properties.push({
+        name: "localScanPath",
+        value: jsonData.localScanPath || ""
+      });
+    }
+    // Capture processing
+    if (jsonData.processing && jsonData.processing.length) {
+      aservice.data = aservice.data.concat(
+        convertProcessing(jsonData.processing)
+      );
+    }
+    // Capture sink processing
+    if (jsonData.sinkProcessing && jsonData.sinkProcessing.length) {
+      aservice.data = aservice.data.concat(
+        convertProcessing(jsonData.sinkProcessing)
+      );
+    }
+    // Find endpoints
+    if (jsonData.collections) {
+      const endpoints = [];
+      for (let c of jsonData.collections) {
+        for (let occ of c.collections) {
+          for (let e of occ.occurrences) {
+            if (e.endPoint) {
+              endpoints.push(e.endPoint);
+            }
+          }
+        }
+      }
+      aservice.endpoints = endpoints;
+    }
+    // Capture violations
+    if (jsonData.violations) {
+      for (let v of jsonData.violations) {
+        aservice.properties.push({
+          name: "privado_violations",
+          value: v.policyId
+        });
+      }
+    }
+    // If there are third party libraries detected, then there are cross boundary calls happening
+    if (
+      jsonData.dataFlow &&
+      jsonData.dataFlow.third_parties &&
+      jsonData.dataFlow.third_parties.length
+    ) {
+      aservice["x-trust-boundary"] = true;
+    }
+    servlist.push(aservice);
+  }
+  return servlist;
+};
+exports.parsePrivadoFile = parsePrivadoFile;
+
 const parseOpenapiSpecData = async function (oaData) {
   const servlist = [];
   if (!oaData) {
