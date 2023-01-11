@@ -1738,18 +1738,21 @@ const createNodejsBom = async (path, options) => {
         for (const dobj of parsedList.dependenciesList) {
           rdeplist.push(dobj.ref);
         }
-        const ppurl = new PackageURL(
-          "application",
-          parentComponent.group,
-          parentComponent.name,
-          parentComponent.version,
-          null,
-          null
-        ).toString();
-        parsedList.dependenciesList.push({
-          ref: decodeURIComponent(ppurl),
-          dependsOn: rdeplist
-        });
+        // Fixes: 212. Handle case where there are no package.json to determine the parent package
+        if (Object.keys(parentComponent).length && parentComponent.name) {
+          const ppurl = new PackageURL(
+            "application",
+            parentComponent.group,
+            parentComponent.name,
+            parentComponent.version,
+            null,
+            null
+          ).toString();
+          parsedList.dependenciesList.push({
+            ref: decodeURIComponent(ppurl),
+            dependsOn: rdeplist
+          });
+        }
         dependencies = dependencies.concat(parsedList.dependenciesList);
       }
     }

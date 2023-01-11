@@ -1227,6 +1227,8 @@ test("parseYarnLock", async () => {
       }
     ]
   });
+  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn4.lock");
+  expect(parsedList.pkgList.length).toEqual(1);
 });
 
 test("parseComposerLock", () => {
