@@ -1012,26 +1012,35 @@ const createJavaBom = async (path, options) => {
         }
       } // for
       const firstPath = pathLib.dirname(pomFiles[0]);
-      const bomFiles = utils.getAllFiles(path, "bom.xml");
-      const bomJsonFiles = utils.getAllFiles(path, "bom.json");
-      // Fixes: #147. Extract only the components to support filtering for required scope
-      if (fs.existsSync(pathLib.join(firstPath, "target", "bom.json"))) {
-        let bomJsonObj = "";
+      const bomFiles = utils.getAllFiles(path, "**/target/bom.xml");
+      const bomJsonFiles = utils.getAllFiles(path, "**/target/bom.json");
+      for (const abjson of bomJsonFiles) {
+        let bomJsonObj = undefined;
         try {
+          if (DEBUG_MODE) {
+            console.log(`Extracting data from generated bom file ${abjson}`);
+          }
           bomJsonObj = JSON.parse(
-            fs.readFileSync(pathLib.join(firstPath, "target", "bom.json"), {
+            fs.readFileSync(abjson, {
               encoding: "utf-8"
             })
           );
           if (bomJsonObj) {
-            if (bomJsonObj.metadata && bomJsonObj.metadata.component) {
+            if (
+              bomJsonObj.metadata &&
+              bomJsonObj.metadata.component &&
+              !Object.keys(parentComponent).length
+            ) {
               parentComponent = bomJsonObj.metadata.component;
             }
             if (bomJsonObj.components) {
               pkgList = pkgList.concat(bomJsonObj.components);
             }
             if (bomJsonObj.dependencies && !options.requiredOnly) {
-              dependencies = dependencies.concat(bomJsonObj.dependencies);
+              dependencies = mergeDependencies(
+                dependencies,
+                bomJsonObj.dependencies
+              );
             }
           }
         } catch (err) {
@@ -1042,6 +1051,7 @@ const createJavaBom = async (path, options) => {
         }
       }
       if (pkgList) {
+        pkgList = trimComponents(pkgList, "json");
         pkgList = await utils.getMvnMetadata(pkgList);
         return buildBomNSData(options, pkgList, "maven", {
           src: path,
@@ -3167,6 +3177,28 @@ const createCsharpBom = async (path, options) => {
   }
   return {};
 };
+
+const mergeDependencies = (dependencies, newDependencies) => {
+  const deps_map = {};
+  let combinedDeps = dependencies.concat(newDependencies || []);
+  for (const adep of combinedDeps) {
+    if (!deps_map[adep.ref]) {
+      deps_map[adep.ref] = new Set();
+    }
+    for (const eachDepends of adep["dependsOn"]) {
+      deps_map[adep.ref].add(eachDepends);
+    }
+  }
+  let retlist = [];
+  for (const akey of Object.keys(deps_map)) {
+    retlist.push({
+      ref: akey,
+      dependsOn: Array.from(deps_map[akey])
+    });
+  }
+  return retlist;
+};
+exports.mergeDependencies = mergeDependencies;
 
 const trimComponents = (components, format) => {
   const keyCache = {};
