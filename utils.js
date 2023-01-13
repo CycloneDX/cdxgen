@@ -891,17 +891,19 @@ const parseMinJs = async (minJsFile) => {
               return;
             }
             const pkgIdentifier = parsePackageJsonName(name);
-            pkgList.push({
-              name: pkgIdentifier.fullName || pkgData.name,
-              group: pkgIdentifier.scope || "",
-              version: tmpB[1].replace(/^v/, "") || "",
-              properties: [
-                {
-                  name: "SrcFile",
-                  value: minJsFile
-                }
-              ]
-            });
+            if (pkgIdentifier.fullName != "") {
+              pkgList.push({
+                name: pkgIdentifier.fullName,
+                group: pkgIdentifier.scope || "",
+                version: tmpB[1].replace(/^v/, "") || "",
+                properties: [
+                  {
+                    name: "SrcFile",
+                    value: minJsFile
+                  }
+                ]
+              });
+            }
             return;
           }
         }
@@ -1063,6 +1065,7 @@ exports.parseMavenTree = parseMavenTree;
  */
 const parseGradleDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
+    let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
       group: "",
@@ -2573,7 +2576,6 @@ const parseCargoAuditableData = async function (cargoData) {
   if (!cargoData) {
     return pkgList;
   }
-  let pkg = null;
   cargoData.split("\n").forEach((l) => {
     const tmpA = l.split("\t");
     if (tmpA && tmpA.length > 2) {
@@ -4124,7 +4126,7 @@ const getMavenCommand = (srcPath, rootPath) => {
 
   let findMavenFile = "mvnw";
   if (os.platform() == "win32") {
-    findGradleFile = "mvnw.bat";
+    findMavenFile = "mvnw.bat";
   }
 
   if (fs.existsSync(path.join(srcPath, findMavenFile))) {

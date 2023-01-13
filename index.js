@@ -548,7 +548,7 @@ function determinePackageType(pkg) {
   }
   if (pkg.purl) {
     try {
-      purl = PackageURL.fromString(pkg.purl);
+      let purl = PackageURL.fromString(pkg.purl);
       if (purl.type) {
         if (["docker", "oci", "container"].includes(purl.type)) {
           return "container";
@@ -1314,7 +1314,7 @@ const createJavaBom = async (path, options) => {
             console.error(result.stdout, result.stderr);
             options.failOnError && process.exit(1);
           }
-          stdout = result.stdout;
+          let stdout = result.stdout;
           if (stdout) {
             const cmdOutput = Buffer.from(stdout).toString();
             const dlist = utils.parseBazelSkyframe(cmdOutput);
@@ -1814,6 +1814,7 @@ const createNodejsBom = async (path, options) => {
  */
 const createPythonBom = async (path, options) => {
   let pkgList = [];
+  let dlist = [];
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
   const poetryFiles = utils.getAllFiles(
     path,
@@ -1885,8 +1886,8 @@ const createPythonBom = async (path, options) => {
   // .egg-info files
   if (eggInfoFiles && eggInfoFiles.length) {
     for (let ef of eggInfoFiles) {
-      const dlist = utils.parseBdistMetadata(
-        fs.readFileSync(ef, (encoding = "utf-8"))
+      dlist = utils.parseBdistMetadata(
+        fs.readFileSync(ef, { encoding: "utf-8" })
       );
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
@@ -3274,6 +3275,7 @@ const createMultiXBom = async (pathList, options) => {
   let components = [];
   let dependencies = [];
   let componentsXmls = [];
+  let bomData = undefined;
   let parentComponent = options.parentComponent || {};
   if (
     ["docker", "oci", "container"].includes(options.projectType) &&
