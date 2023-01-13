@@ -369,7 +369,8 @@ const parsePkgLock = async (pkgLockFile) => {
       const purlString = decodeURIComponent(purl.toString());
       // npm ls command seems to include both dependencies and devDependencies
       // For tree purposes, including only the dependencies should be enough
-      const rootPkgDeps = Object.keys(lockData.packages[""].dependencies || {}) || [];
+      const rootPkgDeps =
+        Object.keys(lockData.packages[""].dependencies || {}) || [];
       const deplist = [];
       for (const rd of rootPkgDeps) {
         const resolvedVersion = (lockData.packages[`node_modules/${rd}`] || {})
@@ -694,7 +695,7 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
   const pkgList = [];
   const dependenciesList = [];
   let ppurl = "";
-  if (parentComponent) {
+  if (parentComponent && parentComponent.name) {
     ppurl = new PackageURL(
       "application",
       parentComponent.group,

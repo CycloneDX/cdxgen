@@ -1093,6 +1093,9 @@ test("parsePnpmLock", async () => {
     ref: "pkg:npm/@nodelib/fs.walk@1.2.8",
     dependsOn: ["pkg:npm/@nodelib/fs.scandir@2.1.5", "pkg:npm/fastq@1.13.0"]
   });
+
+  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock4.yaml");
+  expect(parsedList.pkgList.length).toEqual(1);
 });
 
 test("parseYarnLock", async () => {
