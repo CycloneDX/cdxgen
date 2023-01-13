@@ -692,7 +692,7 @@ exports.parseNodeShrinkwrap = parseNodeShrinkwrap;
  * @param {string} pnpmLock pnpm-lock.yaml file
  */
 const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
-  const pkgList = [];
+  let pkgList = [];
   const dependenciesList = [];
   let ppurl = "";
   if (parentComponent && parentComponent.name) {
