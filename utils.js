@@ -346,18 +346,31 @@ const parsePkgLock = async (pkgLockFile) => {
   let pkgList = [];
   let dependenciesList = [];
   let depKeys = {};
+  let rootPkg = undefined;
   if (fs.existsSync(pkgLockFile)) {
     const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
-    // Only present in lockfile v2 onwards
+    // lockfile v2 onwards
     if (lockData.name && lockData.packages && lockData.packages[""]) {
       // Build the initial dependency tree for the root package
-      const rootPkg = {
+      rootPkg = {
         group: "",
         name: lockData.name,
         version: lockData.version,
         type: "application"
       };
-      pkgList.push(rootPkg);
+    } else if (lockData.lockfileVersion === 1) {
+      let dirName = path.dirname(pkgLockFile);
+      const tmpA = dirName.split(path.sep);
+      dirName = tmpA[tmpA.length - 1];
+      // v1 lock file
+      rootPkg = {
+        group: "",
+        name: dirName,
+        version: "",
+        type: "application"
+      };
+    }
+    if (rootPkg) {
       const purl = new PackageURL(
         "application",
         "",
@@ -367,14 +380,30 @@ const parsePkgLock = async (pkgLockFile) => {
         null
       );
       const purlString = decodeURIComponent(purl.toString());
+      rootPkg["bom-ref"] = purlString;
+      pkgList.push(rootPkg);
       // npm ls command seems to include both dependencies and devDependencies
       // For tree purposes, including only the dependencies should be enough
-      const rootPkgDeps =
-        Object.keys(lockData.packages[""].dependencies || {}) || [];
+      let rootPkgDeps = undefined;
+      if (
+        lockData.packages &&
+        lockData.packages[""] &&
+        lockData.packages[""].dependencies
+      ) {
+        rootPkgDeps =
+          Object.keys(lockData.packages[""].dependencies || {}) || [];
+      } else if (lockData.dependencies) {
+        rootPkgDeps = Object.keys(lockData.dependencies || {}) || [];
+      }
       const deplist = [];
       for (const rd of rootPkgDeps) {
-        const resolvedVersion = (lockData.packages[`node_modules/${rd}`] || {})
-          .version;
+        let resolvedVersion = undefined;
+        if (lockData.packages) {
+          resolvedVersion = (lockData.packages[`node_modules/${rd}`] || {})
+            .version;
+        } else if (lockData.dependencies) {
+          resolvedVersion = lockData.dependencies[rd].version;
+        }
         if (resolvedVersion) {
           const dpurl = decodeURIComponent(
             new PackageURL(
@@ -1200,7 +1229,6 @@ const parseLeinDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const keys_cache = {};
-    const tmpA = rawOutput.split("\n");
     if (rawOutput.includes("{[") && !rawOutput.startsWith("{[")) {
       rawOutput = "{[" + rawOutput.split("{[")[1];
     }
@@ -1279,7 +1307,7 @@ const parseBazelSkyframe = function (rawOutput) {
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
       if (l.indexOf("external/maven") >= 0) {
-        l = l.replace("arguments: ", "").replace(/\"/g, "");
+        l = l.replace("arguments: ", "").replace(/"/g, "");
         // Skyframe could have duplicate entries
         if (l.includes("@@maven//")) {
           l = l.split(",")[0];
@@ -1332,14 +1360,10 @@ exports.parseBazelSkyframe = parseBazelSkyframe;
 const parseBazelBuild = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const projs = [];
-    const keys_cache = {};
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
       if (l.includes("name =")) {
-        const name = l
-          .split("name =")[1]
-          .replace(/[\","]/g, "")
-          .trim();
+        const name = l.split("name =")[1].replace(/[","]/g, "").trim();
         if (!name.includes("test")) {
           projs.push(name);
         }
@@ -1686,7 +1710,7 @@ const parsePoetrylockData = async function (lockData) {
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
-      value = tmpA[1].trim().replace(/\"/g, "");
+      value = tmpA[1].trim().replace(/"/g, "");
       switch (key) {
         case "description":
           pkg.description = value;
@@ -1781,7 +1805,7 @@ const parseSetupPyFile = async function (setupPyData) {
         should_break = true;
         l = l.replace("],", "").replace("]", "");
       }
-      let tmpA = l.replace(/['\"]/g, "").split(",");
+      let tmpA = l.replace(/['"]/g, "").split(",");
       tmpA = tmpA.filter((v) => v.length);
       lines = lines.concat(tmpA);
     }
@@ -2152,7 +2176,7 @@ const parseGopkgData = async function (gopkgData) {
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
-      value = tmpA[1].trim().replace(/\"/g, "");
+      value = tmpA[1].trim().replace(/"/g, "");
       switch (key) {
         case "digest":
           const digest = value.replace("1:", "");
@@ -2284,17 +2308,17 @@ const parseGemspecData = async function (gemspecData) {
       pkg.name = l
         .split(".name = ")[1]
         .replace(".freeze", "")
-        .replace(/\"/g, "");
+        .replace(/"/g, "");
     } else if (l.includes(".version = ")) {
       pkg.version = l
         .split(".version = ")[1]
         .replace(".freeze", "")
-        .replace(/\"/g, "");
+        .replace(/"/g, "");
     } else if (l.includes(".description = ")) {
       pkg.description = l
         .split(".description = ")[1]
         .replace(".freeze", "")
-        .replace(/\"/g, "");
+        .replace(/"/g, "");
     }
   });
   pkgList = [pkg];
@@ -2467,7 +2491,7 @@ const parseCargoTomlData = async function (cargoData) {
     if (packageMode && l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
-      value = tmpA[1].trim().replace(/\"/g, "");
+      value = tmpA[1].trim().replace(/"/g, "");
       switch (key) {
         case "checksum":
           pkg._integrity = "sha384-" + value;
@@ -2545,7 +2569,7 @@ const parseCargoData = async function (cargoData) {
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
-      value = tmpA[1].trim().replace(/\"/g, "");
+      value = tmpA[1].trim().replace(/"/g, "");
       switch (key) {
         case "checksum":
           pkg._integrity = "sha384-" + value;
@@ -2620,7 +2644,7 @@ const parsePubLockData = async function (pubLockData) {
     if (l.startsWith("    ")) {
       const tmpA = l.split(":");
       key = tmpA[0].trim();
-      value = tmpA[1].trim().replace(/\"/g, "");
+      value = tmpA[1].trim().replace(/"/g, "");
       switch (key) {
         case "version":
           pkg.version = value;
@@ -2948,7 +2972,7 @@ const parseMixLockData = async function (mixData) {
       const tmpA = l.split(",");
       if (tmpA.length > 3) {
         const name = tmpA[1].replace(":", "").trim();
-        const version = tmpA[2].trim().replace(/\"/g, "");
+        const version = tmpA[2].trim().replace(/"/g, "");
         if (name && version) {
           pkgList.push({
             name,
@@ -3131,43 +3155,40 @@ const parseEdnData = function (rawEdnData) {
     if (k === "map") {
       ednData[k].forEach((jk) => {
         if (Array.isArray(jk)) {
-          jk.forEach((pobjl) => {
-            if (Array.isArray(jk)) {
-              if (jk.length > 1) {
-                if (jk[0].key === "deps") {
-                  const deps = jk[1].map;
-                  if (deps) {
-                    deps.forEach((d) => {
-                      if (Array.isArray(d)) {
-                        let psym = "";
-                        d.forEach((e) => {
-                          if (e.sym) {
-                            psym = e.sym;
-                          }
-                          if (e["map"]) {
-                            if (e["map"][0].length > 1) {
-                              const version = e["map"][0][1];
-                              let group = path.dirname(psym) || "";
-                              if (group === ".") {
-                                group = "";
-                              }
-                              const name = path.basename(psym);
-                              const cacheKey =
-                                group + "-" + name + "-" + version;
-                              if (!pkgCache[cacheKey]) {
-                                pkgList.push({ group, name, version });
-                                pkgCache[cacheKey] = true;
-                              }
+          if (Array.isArray(jk)) {
+            if (jk.length > 1) {
+              if (jk[0].key === "deps") {
+                const deps = jk[1].map;
+                if (deps) {
+                  deps.forEach((d) => {
+                    if (Array.isArray(d)) {
+                      let psym = "";
+                      d.forEach((e) => {
+                        if (e.sym) {
+                          psym = e.sym;
+                        }
+                        if (e["map"]) {
+                          if (e["map"][0].length > 1) {
+                            const version = e["map"][0][1];
+                            let group = path.dirname(psym) || "";
+                            if (group === ".") {
+                              group = "";
+                            }
+                            const name = path.basename(psym);
+                            const cacheKey = group + "-" + name + "-" + version;
+                            if (!pkgCache[cacheKey]) {
+                              pkgList.push({ group, name, version });
+                              pkgCache[cacheKey] = true;
                             }
                           }
-                        });
-                      }
-                    });
-                  }
+                        }
+                      });
+                    }
+                  });
                 }
               }
             }
-          });
+          }
         }
       });
     }
