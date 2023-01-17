@@ -365,8 +365,8 @@ const parsePkgLock = async (pkgLockFile) => {
       // v1 lock file
       rootPkg = {
         group: "",
-        name: dirName,
-        version: "",
+        name: lockData.name || dirName,
+        version: lockData.version || "",
         type: "application"
       };
     }
