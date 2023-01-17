@@ -790,7 +790,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     context.parentComponent || options.parentComponent || {};
   const metadata = addMetadata(parentComponent, "json", options);
   const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
-  if (components && components.length) {
+  if (components && (components.length || parentComponent)) {
     const bomString = buildBomXml(
       serialNum,
       parentComponent,
@@ -924,7 +924,8 @@ const createJavaBom = async (path, options) => {
     );
     if (pomFiles && pomFiles.length) {
       let mvnArgs = [
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.2:makeAggregateBom"
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.2:makeAggregateBom",
+        "-DoutputName=bom"
       ];
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
       if (!DEBUG_MODE) {
@@ -957,9 +958,8 @@ const createJavaBom = async (path, options) => {
         });
         // Check if the cyclonedx plugin created the required bom.xml file
         // Sometimes the plugin fails silently for complex maven projects
-        const bomGenerated = fs.existsSync(
-          pathLib.join(basePath, "target", "bom.xml")
-        );
+        const bomJsonFiles = utils.getAllFiles(path, "**/target/*.json");
+        const bomGenerated = bomJsonFiles.length;
         if (!bomGenerated || result.status !== 0 || result.error) {
           let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
           let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
@@ -1020,8 +1020,7 @@ const createJavaBom = async (path, options) => {
           }
         }
       } // for
-      const bomFiles = utils.getAllFiles(path, "**/target/bom.xml");
-      const bomJsonFiles = utils.getAllFiles(path, "**/target/bom.json");
+      const bomJsonFiles = utils.getAllFiles(path, "**/target/*.json");
       for (const abjson of bomJsonFiles) {
         let bomJsonObj = undefined;
         try {
@@ -1040,6 +1039,7 @@ const createJavaBom = async (path, options) => {
               !Object.keys(parentComponent).length
             ) {
               parentComponent = bomJsonObj.metadata.component;
+              pkgList = [];
             }
             if (bomJsonObj.components) {
               pkgList = pkgList.concat(bomJsonObj.components);
@@ -3276,7 +3276,7 @@ const dedupeBom = (
   parentComponent,
   dependencies
 ) => {
-  if (!components.length) {
+  if (!components) {
     return {};
   }
   components = trimComponents(components, "json");
