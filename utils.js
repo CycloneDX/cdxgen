@@ -725,14 +725,16 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
   const dependenciesList = [];
   let ppurl = "";
   if (parentComponent && parentComponent.name) {
-    ppurl = new PackageURL(
-      "application",
-      parentComponent.group,
-      parentComponent.name,
-      parentComponent.version,
-      null,
-      null
-    ).toString();
+    ppurl =
+      parentComponent.purl ||
+      new PackageURL(
+        "application",
+        parentComponent.group,
+        parentComponent.name,
+        parentComponent.version,
+        null,
+        null
+      ).toString();
   }
   if (fs.existsSync(pnpmLock)) {
     const lockData = fs.readFileSync(pnpmLock, "utf8");

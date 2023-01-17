@@ -1536,6 +1536,7 @@ const createNodejsBom = async (path, options) => {
   let manifestFiles = [];
   let dependencies = [];
   let parentComponent = {};
+  let ppurl = "";
   // Docker mode requires special handling
   if (["docker", "oci", "os"].includes(options.projectType)) {
     const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
@@ -1626,6 +1627,25 @@ const createNodejsBom = async (path, options) => {
           parentComponent = pcs[0];
           parentComponent.type = "application";
         }
+      } else {
+        let dirName = pathLib.dirname(f);
+        const tmpA = dirName.split(pathLib.sep);
+        dirName = tmpA[tmpA.length - 1];
+        parentComponent = {
+          group: "",
+          name: dirName,
+          type: "application"
+        };
+        ppurl = new PackageURL(
+          "application",
+          parentComponent.group,
+          parentComponent.name,
+          parentComponent.version,
+          null,
+          null
+        ).toString();
+        parentComponent["bom-ref"] = ppurl;
+        parentComponent["purl"] = ppurl;
       }
       // Parse the pnpm file
       const parsedList = await utils.parsePnpmLock(f, parentComponent);
@@ -1740,6 +1760,25 @@ const createNodejsBom = async (path, options) => {
           parentComponent = pcs[0];
           parentComponent.type = "application";
         }
+      } else {
+        let dirName = pathLib.dirname(f);
+        const tmpA = dirName.split(pathLib.sep);
+        dirName = tmpA[tmpA.length - 1];
+        parentComponent = {
+          group: "",
+          name: dirName,
+          type: "application"
+        };
+        ppurl = new PackageURL(
+          "application",
+          parentComponent.group,
+          parentComponent.name,
+          parentComponent.version,
+          null,
+          null
+        ).toString();
+        parentComponent["bom-ref"] = ppurl;
+        parentComponent["purl"] = ppurl;
       }
       // Parse yarn.lock if available. This check is after rush.json since
       // rush.js could include yarn.lock :(
