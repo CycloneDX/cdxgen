@@ -964,13 +964,20 @@ test("get licenses", () => {
 });
 
 test("parsePkgLock", async () => {
-  const parsedList = await utils.parsePkgLock("./test/package-lock.json");
-  const deps = parsedList.pkgList;
-  expect(deps.length).toEqual(759);
-  expect(deps[0]._integrity).toEqual(
+  let parsedList = await utils.parsePkgLock("./test/package-lock.json");
+  let deps = parsedList.pkgList;
+  expect(deps.length).toEqual(760);
+  expect(deps[1]._integrity).toEqual(
     "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
   );
-  expect(parsedList.dependenciesList.length).toEqual(620);
+  expect(parsedList.dependenciesList.length).toEqual(621);
+  parsedList = await utils.parsePkgLock("./test/data/package-lock-v1.json");
+  deps = parsedList.pkgList;
+  expect(deps.length).toEqual(639);
+  expect(deps[1]._integrity).toEqual(
+    "sha512-/r5HiDwOXTjucbBYkrTMpzWQAwil9MH7zSEfKH+RWWZv27r4vDiUd2FiBJItyQoPThLPxaf82IO6gCXyJR0ZnQ=="
+  );
+  expect(parsedList.dependenciesList.length).toEqual(572);
 });
 
 test("parseBowerJson", async () => {
