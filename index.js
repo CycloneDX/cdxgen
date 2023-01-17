@@ -620,7 +620,7 @@ function determinePackageType(pkg) {
       return "application";
     }
   }
-  if (pkg.hasOwnProperty("keywords")) {
+  if (Object.prototype.hasOwnProperty.call(pkg, "keywords")) {
     for (let keyword of pkg.keywords) {
       if (keyword.toLowerCase() === "framework") {
         return "framework";
@@ -655,7 +655,7 @@ function processHashes(pkg, component, format = "xml") {
     let integrity = ssri.parse(pkg._integrity) || {};
     // Components may have multiple hashes with various lengths. Check each one
     // that is supported by the CycloneDX specification.
-    if (integrity.hasOwnProperty("sha512")) {
+    if (Object.prototype.hasOwnProperty.call(integrity, "sha512")) {
       addComponentHash(
         "SHA-512",
         integrity.sha512[0].digest,
@@ -663,7 +663,7 @@ function processHashes(pkg, component, format = "xml") {
         format
       );
     }
-    if (integrity.hasOwnProperty("sha384")) {
+    if (Object.prototype.hasOwnProperty.call(integrity, "sha384")) {
       addComponentHash(
         "SHA-384",
         integrity.sha384[0].digest,
@@ -671,7 +671,7 @@ function processHashes(pkg, component, format = "xml") {
         format
       );
     }
-    if (integrity.hasOwnProperty("sha256")) {
+    if (Object.prototype.hasOwnProperty.call(integrity, "sha256")) {
       addComponentHash(
         "SHA-256",
         integrity.sha256[0].digest,
@@ -679,7 +679,7 @@ function processHashes(pkg, component, format = "xml") {
         format
       );
     }
-    if (integrity.hasOwnProperty("sha1")) {
+    if (Object.prototype.hasOwnProperty.call(integrity, "sha1")) {
       addComponentHash("SHA-1", integrity.sha1[0].digest, component, format);
     }
   }

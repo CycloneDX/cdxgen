@@ -1676,7 +1676,7 @@ const parsePiplockData = async function (lockData) {
       const depBlock = lockData[k];
       Object.keys(depBlock).forEach((p) => {
         const pkg = depBlock[p];
-        if (pkg.hasOwnProperty("version")) {
+        if (Object.prototype.hasOwnProperty.call(pkg, "version")) {
           let versionStr = pkg.version.replace("==", "");
           pkgList.push({ name: p, version: versionStr });
         }
@@ -2177,10 +2177,11 @@ const parseGopkgData = async function (gopkgData) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
       value = tmpA[1].trim().replace(/"/g, "");
+      let digestStr = undefined;
       switch (key) {
         case "digest":
-          const digest = value.replace("1:", "");
-          pkg._integrity = "sha256-" + toBase64(digest);
+          digestStr = value.replace("1:", "");
+          pkg._integrity = "sha256-" + toBase64(digestStr);
           break;
         case "name":
           pkg.group = path.dirname(value);
