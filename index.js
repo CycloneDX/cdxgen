@@ -3693,7 +3693,8 @@ const createXBom = async (path, options) => {
   // node.js - package.json
   if (
     fs.existsSync(pathLib.join(path, "package.json")) ||
-    fs.existsSync(pathLib.join(path, "rush.json"))
+    fs.existsSync(pathLib.join(path, "rush.json")) ||
+    fs.existsSync(pathLib.join(path, "yarn.lock"))
   ) {
     return await createNodejsBom(path, options);
   }
