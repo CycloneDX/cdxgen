@@ -39,7 +39,9 @@
   },
   "scripts": {
     "test": "jest",
-    "watch": "jest --watch"
+    "watch": "jest --watch",
+    "lint": "eslint index.js utils.js binary.js docker.js bin/cdxgen",
+    "pretty": "prettier --write *.js bin/cdxgen --trailing-comma=none"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -52,8 +54,8 @@
     "url": "https://github.com/AppThreat/cdxgen/issues"
   },
   "dependencies": {
-    "@babel/parser": "^7.20.3",
-    "@babel/traverse": "^7.20.1",
+    "@babel/parser": "^7.20.7",
+    "@babel/traverse": "^7.20.12",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "^1.0.0",
     "glob": "^8.0.3",
@@ -69,7 +71,7 @@
     "semver": "^7.3.8",
     "ssri": "^8.0.1",
     "table": "^6.8.1",
-    "tar": "^6.1.12",
+    "tar": "^6.1.13",
     "uuid": "^9.0.0",
     "xml-js": "^1.6.11",
     "xmlbuilder": "^15.1.1",

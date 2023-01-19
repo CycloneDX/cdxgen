@@ -149,10 +149,9 @@ const getDefaultOptions = () => {
 
 const getConnection = async (options) => {
   if (!dockerConn) {
-    let res = undefined;
     const opts = Object.assign({}, getDefaultOptions(), options);
     try {
-      res = await got.get("_ping", opts);
+      await got.get("_ping", opts);
       dockerConn = got.extend(opts);
       if (isDockerRootless) {
         console.log("Docker service in rootless mode detected!");
@@ -164,13 +163,13 @@ const getConnection = async (options) => {
       try {
         if (isWin) {
           opts.prefixUrl = WIN_LOCAL_TLS;
-          res = await got.get("_ping", opts);
+          await got.get("_ping", opts);
           dockerConn = got.extend(opts);
           isWinLocalTLS = true;
           console.log("Docker desktop on Windows detected!");
         } else {
           opts.prefixUrl = opts.podmanRootlessPrefixUrl;
-          res = await got.get("libpod/_ping", opts);
+          await got.get("libpod/_ping", opts);
           isPodman = true;
           isPodmanRootless = true;
           dockerConn = got.extend(opts);
@@ -180,7 +179,7 @@ const getConnection = async (options) => {
         // console.log(err);
         try {
           opts.prefixUrl = opts.podmanPrefixUrl;
-          res = await got.get("libpod/_ping", opts);
+          await got.get("libpod/_ping", opts);
           isPodman = true;
           isPodmanRootless = false;
           dockerConn = got.extend(opts);
@@ -387,7 +386,7 @@ const extractTar = async (fullImageName, dir) => {
         strict: true,
         C: dir,
         portable: true,
-        onwarn: (code, message, data) => {}
+        onwarn: () => {}
       })
     );
     return true;
@@ -557,7 +556,7 @@ const exportImage = async (fullImageName) => {
   if (!localData) {
     return undefined;
   }
-  const { repo, tag, digest } = parseImageName(fullImageName);
+  const { tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
@@ -581,11 +580,15 @@ const exportImage = async (fullImageName) => {
       }
     );
     if (result.status !== 0 || result.error) {
-      console.log(result.stdout, result.stderr);
+      if (result.stdout || result.stderr) {
+        console.log(result.stdout, result.stderr);
+      }
       return localData;
     } else {
       await extractTar(imageTarFile, tempDir);
-      console.log(`Cleaning up ${imageTarFile}`);
+      if (DEBUG_MODE) {
+        console.log(`Cleaning up ${imageTarFile}`);
+      }
       fs.rmSync(imageTarFile, { force: true });
     }
   } else {
@@ -602,7 +605,7 @@ const exportImage = async (fullImageName) => {
           strict: true,
           C: tempDir,
           portable: true,
-          onwarn: (code, message, data) => {}
+          onwarn: () => {}
         })
       );
     } catch (err) {
