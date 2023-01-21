@@ -54,6 +54,24 @@ const HASH_PATTERN =
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
 
+const determineParentComponent = (options) => {
+  let parentComponent = undefined;
+  if (options.projectName) {
+    parentComponent = {
+      group: options.projectGroup || "",
+      name: options.projectName,
+      version: "" + options.projectVersion || "",
+      type: "application"
+    };
+  } else if (
+    options.parentComponent &&
+    Object.keys(options.parentComponent).length
+  ) {
+    return options.parentComponent;
+  }
+  return parentComponent;
+};
+
 /**
  * Method to create global external references
  *
@@ -123,7 +141,7 @@ function addServices(services, format = "xml") {
 /**
  * Function to create the dependency block
  */
-function addDependencies(dependencies, format) {
+function addDependencies(dependencies) {
   let deps_list = [];
   for (const adep of dependencies) {
     let dependsOnList = adep.dependsOn.map((v) => ({
@@ -748,9 +766,7 @@ const buildBomXml = (
         bom.ele("services").ele(addServices(context.services, "xml"));
       }
       if (context.dependencies && context.dependencies.length) {
-        bom
-          .ele("dependencies")
-          .ele(addDependencies(context.dependencies, "xml"));
+        bom.ele("dependencies").ele(addDependencies(context.dependencies));
       }
     }
     const bomString = bom.end({
@@ -787,7 +803,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const nsMapping = context.nsMapping || {};
   const dependencies = context.dependencies || [];
   const parentComponent =
-    context.parentComponent || options.parentComponent || {};
+    determineParentComponent(options) || context.parentComponent;
   const metadata = addMetadata(parentComponent, "json", options);
   const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
   if (components && (components.length || parentComponent)) {
@@ -1020,6 +1036,7 @@ const createJavaBom = async (path, options) => {
           }
         }
       } // for
+      const bomFiles = utils.getAllFiles(path, "**/target/bom.xml");
       const bomJsonFiles = utils.getAllFiles(path, "**/target/*.json");
       for (const abjson of bomJsonFiles) {
         let bomJsonObj = undefined;
@@ -1068,7 +1085,7 @@ const createJavaBom = async (path, options) => {
           dependencies,
           parentComponent
         });
-      } else if (bomFiles.length) {
+      } else if (bomJsonFiles.length) {
         const bomNSData = {};
         bomNSData.bomXmlFiles = bomFiles;
         bomNSData.bomJsonFiles = bomJsonFiles;
@@ -2804,6 +2821,25 @@ const createContainerSpecLikeBom = async (path, options) => {
           console.log("Images identified in", f, "are", imglist);
         }
         for (const img of imglist) {
+          let commonProperties = [
+            {
+              name: "SrcFile",
+              value: f
+            }
+          ];
+          if (img.image) {
+            commonProperties.push({
+              name: "oci:SrcImage",
+              value: img.image
+            });
+          }
+          if (img.service) {
+            commonProperties.push({
+              name: "ServiceName",
+              value: img.service
+            });
+          }
+
           // img could have .service, .ociSpec or .image
           if (img.ociSpec) {
             console.log(
@@ -2813,14 +2849,10 @@ const createContainerSpecLikeBom = async (path, options) => {
               group: "",
               name: img.ociSpec,
               version: "latest",
-              properties: [
-                {
-                  name: "SrcFile",
-                  value: f
-                }
-              ]
+              properties: commonProperties
             });
-          } else if (img.service) {
+          }
+          if (img.service) {
             let version = "latest";
             let name = img.service;
             if (img.service.includes(":")) {
@@ -2837,16 +2869,12 @@ const createContainerSpecLikeBom = async (path, options) => {
                 name: name,
                 version: version,
                 group: "",
-                properties: [
-                  {
-                    name: "SrcFile",
-                    value: f
-                  }
-                ]
+                properties: commonProperties
               });
               doneservices.push(servbomRef);
             }
-          } else if (img.image) {
+          }
+          if (img.image) {
             if (doneimages.includes(img.image)) {
               if (DEBUG_MODE) {
                 console.log("Skipping", img.image);
@@ -2863,16 +2891,7 @@ const createContainerSpecLikeBom = async (path, options) => {
                 imageObj.tag ||
                 (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
               qualifiers: {},
-              properties: [
-                {
-                  name: "SrcFile",
-                  value: f
-                },
-                {
-                  name: "oci:SrcImage",
-                  value: img.image
-                }
-              ]
+              properties: commonProperties
             };
             if (imageObj.registry) {
               pkg["qualifiers"]["repository_url"] = imageObj.registry;
@@ -2908,16 +2927,7 @@ const createContainerSpecLikeBom = async (path, options) => {
               if (bomData.components && bomData.components.length) {
                 // Inject properties
                 for (const co of bomData.components) {
-                  co.properties = [
-                    {
-                      name: "SrcFile",
-                      value: f
-                    },
-                    {
-                      name: "oci:SrcImage",
-                      value: img.image
-                    }
-                  ];
+                  co.properties = commonProperties;
                 }
                 components = components.concat(bomData.components);
               }
@@ -2932,22 +2942,23 @@ const createContainerSpecLikeBom = async (path, options) => {
   } // if
   // Parse openapi files
   if (oapiFiles.length) {
-    for (let f of oapiFiles) {
+    for (let af of oapiFiles) {
       if (DEBUG_MODE) {
-        console.log(`Parsing ${f}`);
+        console.log(`Parsing ${af}`);
       }
-      const oaData = fs.readFileSync(f, { encoding: "utf-8" });
+      const oaData = fs.readFileSync(af, { encoding: "utf-8" });
       const servlist = await utils.parseOpenapiSpecData(oaData);
       if (servlist && servlist.length) {
-        services = services.concat(servlist);
-        for (const se of services) {
+        // Inject SrcFile property
+        for (const se of servlist) {
           se.properties = [
             {
               name: "SrcFile",
-              value: f
+              value: af
             }
           ];
         }
+        services = services.concat(servlist);
       }
     }
   }
@@ -3323,7 +3334,7 @@ const createMultiXBom = async (pathList, options) => {
   let dependencies = [];
   let componentsXmls = [];
   let bomData = undefined;
-  let parentComponent = options.parentComponent || {};
+  let parentComponent = determineParentComponent(options);
   if (
     ["docker", "oci", "container"].includes(options.projectType) &&
     options.allLayersExplodedDir

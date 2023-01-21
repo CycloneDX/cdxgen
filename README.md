@@ -95,8 +95,7 @@ Options:
       --api-key          Dependency track or AppThreat server api key
       --project-name     Dependency track or AppThreat project name. Default use
                          the directory name
-      --project-version  Dependency track or AppThreat project version. Default
-                         master                              [default: "master"]
+      --project-version  Dependency track or AppThreat project version
       --project-id       Dependency track or AppThreat project id. Either
                          provide the id or the project name and version together
       --required-only    Include only the packages with required scope on the
