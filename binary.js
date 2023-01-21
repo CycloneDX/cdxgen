@@ -57,7 +57,7 @@ if (!CDXGEN_PLUGINS_DIR) {
   }
   const globalPlugins = path.join(
     globalNodePath,
-    "@ngcloudsec",
+    "@appthreat",
     "cdxgen-plugins-bin",
     "plugins"
   );
@@ -72,7 +72,7 @@ if (!CDXGEN_PLUGINS_DIR) {
 if (!CDXGEN_PLUGINS_DIR) {
   if (DEBUG_MODE) {
     console.warn(
-      "cdxgen plugins was not found. Please install with npm install -g @ngcloudsec/cdxgen-plugins-bin"
+      "cdxgen plugins was not found. Please install with npm install -g @appthreat/cdxgen-plugins-bin"
     );
   }
   CDXGEN_PLUGINS_DIR = "";

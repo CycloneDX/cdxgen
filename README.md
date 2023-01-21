@@ -74,7 +74,7 @@ For go, `go mod why` command is used to identify required packages. For php, com
 sudo npm install -g @appthreat/cdxgen
 
 # To install optional binary plugins
-sudo npm install -g @ngcloudsec/cdxgen-plugins-bin
+sudo npm install -g @appthreat/cdxgen-plugins-bin
 ```
 
 ## Getting Help
@@ -217,10 +217,10 @@ Use this [custom builder](https://github.com/CloudBuildr/google-custom-builders/
 
 ## Plugins
 
-cdxgen could be extended with external binary plugins to support more SBoM use cases. These are now maintained [separately](https://github.com/ngcloudsec/cdxgen-plugins-bin) and optional.
+cdxgen could be extended with external binary plugins to support more SBoM use cases. These are now maintained [separately](https://github.com/appthreat/cdxgen-plugins-bin) and optional.
 
 ```
-sudo npm install -g @ngcloudsec/cdxgen-plugins-bin
+sudo npm install -g @appthreat/cdxgen-plugins-bin
 ```
 
 ### Docker / OCI container support
@@ -269,7 +269,7 @@ You can use cdxgen to generate SBoM for a live system or a VM for compliance and
 cdxgen -t os
 ```
 
-This feature is powered by osquery which is [installed](https://github.com/ngcloudsec/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
+This feature is powered by osquery which is [installed](https://github.com/appthreat/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
 
 ## SBoM signing
 
