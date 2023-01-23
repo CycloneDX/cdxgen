@@ -127,6 +127,7 @@ let options = {
   generateKeyAndSign: args.generateKeyAndSign,
   project: args.projectId,
   projectName: args.projectName,
+  projectGroup: args.projectGroup,
   projectVersion: args.projectVersion
 };
 
