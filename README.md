@@ -93,6 +93,7 @@ Options:
       --server-url       Dependency track or AppThreat server url. Eg:
                          https://deptrack.appthreat.io
       --api-key          Dependency track or AppThreat server api key
+      --project-group    Dependency track or AppThreat project group
       --project-name     Dependency track or AppThreat project name. Default use
                          the directory name
       --project-version  Dependency track or AppThreat project version
