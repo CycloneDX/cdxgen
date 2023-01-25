@@ -1,9 +1,9 @@
 {
   "name": "@appthreat/cdxgen",
-  "version": "6.0.15",
+  "version": "7.0.0",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from source or container image",
   "homepage": "http://github.com/AppThreat/cdxgen",
-  "author": "Team AppThreat",
+  "author": "Team AppThreat <cloud@appthreat.com>",
   "license": "Apache-2.0",
   "keywords": [
     "sbom",
@@ -40,7 +40,7 @@
   "scripts": {
     "test": "jest",
     "watch": "jest --watch",
-    "lint": "eslint index.js utils.js binary.js docker.js bin/cdxgen",
+    "lint": "eslint index.js utils.js binary.js server.js docker.js bin/cdxgen",
     "pretty": "prettier --write *.js bin/cdxgen --trailing-comma=none"
   },
   "engines": {
@@ -76,6 +76,12 @@
     "xml-js": "^1.6.11",
     "xmlbuilder": "^15.1.1",
     "yargs": "^17.6.2"
+  },
+  "optionalDependencies": {
+    "@appthreat/cdxgen-plugins-bin": "^1.0.0",
+    "connect": "^3.7.0",
+    "body-parser": "^1.20.1",
+    "compression": "^1.7.4"
   },
   "files": [
     "*.js",

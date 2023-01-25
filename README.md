@@ -2,7 +2,7 @@
 
 ![cdxgen logo](cdxgen.png)
 
-This script creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+This tool creates a valid and compliant CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in XML and JSON format. CycloneDX 1.4 is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
 
 When used with plugins, cdxgen could generate an SBoM for Linux docker images and even VMs running Linux or Windows operating system.
 
@@ -72,9 +72,6 @@ For go, `go mod why` command is used to identify required packages. For php, com
 
 ```bash
 sudo npm install -g @appthreat/cdxgen
-
-# To install optional binary plugins
-sudo npm install -g @appthreat/cdxgen-plugins-bin
 ```
 
 ## Getting Help
@@ -107,6 +104,9 @@ Options:
       --generate-key-and-sign  Generate an RSA public/private key pair and then
                                sign the generated SBoM using JSON Web
                                Signatures.                             [boolean]
+      --server                 Run cdxgen as a server                  [boolean]
+      --server-host            Listen address             [default: "127.0.0.1"]
+      --server-port            Listen port                     [default: "9090"]
       --version          Show version number                           [boolean]
   -h                     Show help                                     [boolean]
 ```
@@ -144,6 +144,35 @@ cdxgen -r -o bom.json
 ## Universal SBoM
 
 By passing the type `-t universal`, cdxgen could be forced to opportunistically collect as many components and services as possible by scanning all package, container and kubernetes manifests. The resulting SBoM could have over thousand components thus requiring additional triaging before use with traditional SCA tools.
+
+## SBoM server
+
+Invoke cdxgen with `--server` argument to run it in a server mode. By default, it listens to port `9090` which can be customized with the arguments `--server-host` and `--server-port`.
+
+```bash
+cdxgen --server
+```
+
+Use curl or your favourite tool to pass arguments to the `/sbom` route.
+
+### Scanning a local path
+
+```bash
+curl "http://127.0.0.1:9090/sbom?path=/Volumes/Work/sandbox/vulnerable-aws-koa-app&multiProject=true&type=js"
+```
+
+### Scanning a git repo
+
+```bash
+curl "http://127.0.0.1:9090/sbom?url=https://github.com/HooliCorp/vulnerable-aws-koa-app.git&multiProject=true&type=js"
+```
+
+### Docker composer
+
+```
+git clone https://github.com/AppThreat/cdxgen.git
+docker compose up
+```
 
 ### War file support
 
@@ -218,7 +247,7 @@ Use this [custom builder](https://github.com/CloudBuildr/google-custom-builders/
 
 ## Plugins
 
-cdxgen could be extended with external binary plugins to support more SBoM use cases. These are now maintained [separately](https://github.com/appthreat/cdxgen-plugins-bin) and optional.
+cdxgen could be extended with external binary plugins to support more SBoM use cases. These are now installed as an optional dependency.
 
 ```
 sudo npm install -g @appthreat/cdxgen-plugins-bin

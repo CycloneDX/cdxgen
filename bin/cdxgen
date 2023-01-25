@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const jws = require("jws");
 const crypto = require("crypto");
+const bomServer = require("../server.js");
 
 const args = require("yargs")
   .option("output", {
@@ -75,6 +76,18 @@ const args = require("yargs")
     description:
       "Generate an RSA public/private key pair and then sign the generated SBoM using JSON Web Signatures."
   })
+  .option("server", {
+    type: "boolean",
+    description: "Run cdxgen as a server"
+  })
+  .option("server-host", {
+    description: "Listen address",
+    default: "127.0.0.1"
+  })
+  .option("server-port", {
+    description: "Listen port",
+    default: "9090"
+  })
   .scriptName("cdxgen")
   .version()
   .help("h").argv;
@@ -128,13 +141,20 @@ let options = {
   project: args.projectId,
   projectName: args.projectName,
   projectGroup: args.projectGroup,
-  projectVersion: args.projectVersion
+  projectVersion: args.projectVersion,
+  server: args.server,
+  serverHost: args.serverHost,
+  serverPort: args.serverPort
 };
 
 /**
  * Method to start the bom creation process
  */
 (async () => {
+  // Start SBoM server
+  if (args.server) {
+    return await bomServer.start(options);
+  }
   const bomNSData = (await bom.createBom(filePath, options)) || {};
 
   if (args.output) {

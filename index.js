@@ -632,7 +632,9 @@ function determinePackageType(pkg) {
           }
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      // continue regardless of error
+    }
   } else if (pkg.group) {
     if (["actions"].includes(pkg.group)) {
       return "application";
@@ -4037,7 +4039,9 @@ const createBom = async (path, options) => {
       console.log(`Cleaning up ${exportData.allLayersDir}`);
       try {
         fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
-      } catch (err) {}
+      } catch (err) {
+        // continue regardless of error
+      }
     }
     return bomData;
   }

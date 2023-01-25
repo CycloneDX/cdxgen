@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  cdxgen:
+    build: .
+    # image: ghcr.io/appthreat/cdxgen
+    ports:
+      - "9090:9090"
+    volumes:
+      - /Volumes/Work:/app # Set this to your directory containing sources
+      - /tmp:/tmp
+    cpus: 2
+    mem_limit: 8000m
+    mem_reservation: 4000m
+    command: cdxgen --server --server-host 0.0.0.0 --server-port 9090

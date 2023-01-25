@@ -732,7 +732,7 @@ test("parse github actions workflow data", async () => {
   dep_list = await utils.parseGitHubWorkflowData(
     fs.readFileSync("./.github/workflows/app-release.yml", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(3);
+  expect(dep_list.length).toEqual(4);
 });
 
 test("parse cs pkg data", async () => {
