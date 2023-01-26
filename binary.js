@@ -38,6 +38,38 @@ if (
 ) {
   CDXGEN_PLUGINS_DIR = path.join(__dirname, "plugins");
 }
+// Is there a non-empty local node_modules directory
+if (
+  !CDXGEN_PLUGINS_DIR &&
+  fs.existsSync(
+    path.join(
+      __dirname,
+      "node_modules",
+      "@appthreat",
+      "cdxgen-plugins-bin",
+      "plugins"
+    )
+  ) &&
+  fs.existsSync(
+    path.join(
+      __dirname,
+      "node_modules",
+      "@appthreat",
+      "cdxgen-plugins-bin",
+      "plugins",
+      "goversion"
+    )
+  )
+) {
+  CDXGEN_PLUGINS_DIR = path.join(
+    __dirname,
+    "node_modules",
+    "@appthreat",
+    "cdxgen-plugins-bin",
+    "plugins"
+  );
+}
+
 if (!CDXGEN_PLUGINS_DIR) {
   let globalNodePath = process.env.GLOBAL_NODE_MODULES_PATH || undefined;
   if (!globalNodePath) {
@@ -380,7 +412,9 @@ const getOSPackages = (src) => {
                     comp["bom-ref"] = comp.purl;
                   }
                 }
-              } catch (err) {}
+              } catch (err) {
+                // continue regardless of error
+              }
             }
             if (
               comp.licenses &&

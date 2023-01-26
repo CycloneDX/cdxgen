@@ -309,7 +309,9 @@ const getImage = async (fullImageName) => {
               return inspectData;
             }
           }
-        } catch (err) {}
+        } catch (err) {
+          // continue regardless of error
+        }
       }
     }
   }
@@ -341,7 +343,9 @@ const getImage = async (fullImageName) => {
         );
         return undefined;
       }
-    } catch (err) {}
+    } catch (err) {
+      // continue regardless of error
+    }
     try {
       if (DEBUG_MODE) {
         console.log(`Trying with ${repo}`);
@@ -359,7 +363,9 @@ const getImage = async (fullImageName) => {
         if (DEBUG_MODE) {
           console.log(localData);
         }
-      } catch (err) {}
+      } catch (err) {
+        // continue regardless of error
+      }
     }
   }
   if (!localData) {
@@ -615,6 +621,7 @@ const exportImage = async (fullImageName) => {
   // Continue with extracting the layers
   if (fs.existsSync(tempDir)) {
     if (fs.existsSync(manifestFile)) {
+      // This is fine
     } else if (fs.existsSync(manifestIndexFile)) {
       manifestFile = manifestIndexFile;
     } else {

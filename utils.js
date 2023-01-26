@@ -323,7 +323,9 @@ const parsePkgJson = async (pkgJsonFile) => {
           }
         ]
       });
-    } catch (err) {}
+    } catch (err) {
+      // continue regardless of error
+    }
   }
   if (process.env.FETCH_LICENSE) {
     if (DEBUG_MODE) {
@@ -868,7 +870,9 @@ const parseBowerJson = async (bowerJsonFile) => {
           }
         ]
       });
-    } catch (err) {}
+    } catch (err) {
+      // continue regardless of error
+    }
   }
   if (process.env.FETCH_LICENSE) {
     if (DEBUG_MODE) {
@@ -939,7 +943,9 @@ const parseMinJs = async (minJsFile) => {
           }
         }
       });
-    } catch (err) {}
+    } catch (err) {
+      // continue regardless of error
+    }
   }
   if (process.env.FETCH_LICENSE) {
     if (DEBUG_MODE) {
@@ -1501,7 +1507,6 @@ const getMvnMetadata = async function (pkgList) {
         } else if (Object.keys(bodyJson.licenses.license).length) {
           const l = bodyJson.licenses.license;
           p.license = [findLicenseId(l.name._)];
-        } else {
         }
       }
       p.publisher =
@@ -1758,7 +1763,7 @@ const parseReqFile = async function (reqData) {
             version: versionStr
           });
         }
-      } else if (/[>|\[|@]/.test(l)) {
+      } else if (/[>|[|@]/.test(l)) {
         let tmpA = l.split(/(>|\[|@)/);
         if (tmpA.includes("#")) {
           tmpA = tmpA.split("#")[0];
@@ -2353,7 +2358,7 @@ const parseGemfileLockData = async function (gemLockData) {
         const name = tmpA[0];
         if (!pkgnames[name]) {
           let version = tmpA[1].split(", ")[0];
-          version = version.replace(/[\(>=<\)~ ]/g, "");
+          version = version.replace(/[(>=<)~ ]/g, "");
           pkgList.push({
             name,
             version
@@ -2361,7 +2366,6 @@ const parseGemfileLockData = async function (gemLockData) {
           pkgnames[name] = true;
         }
       }
-    } else {
     }
     if (l === "specs:") {
       specsFound = true;
@@ -2672,7 +2676,9 @@ const parsePubYamlData = async function (pubYamlData) {
   let yamlObj = undefined;
   try {
     yamlObj = yaml.load(pubYamlData);
-  } catch (err) {}
+  } catch (err) {
+    // continue regardless of error
+  }
   if (!yamlObj) {
     return pkgList;
   }
@@ -2691,7 +2697,9 @@ const parseHelmYamlData = async function (helmData) {
   let yamlObj = undefined;
   try {
     yamlObj = yaml.load(helmData);
-  } catch (err) {}
+  } catch (err) {
+    // continue regardless of error
+  }
   if (!yamlObj) {
     return pkgList;
   }
@@ -4122,13 +4130,17 @@ const getGradleCommand = (srcPath, rootPath) => {
     // Enable execute permission
     try {
       fs.chmodSync(path.join(srcPath, findGradleFile), 0o775);
-    } catch (e) {}
+    } catch (e) {
+      // continue regardless of error
+    }
     gradleCmd = path.resolve(path.join(srcPath, findGradleFile));
   } else if (rootPath && fs.existsSync(path.join(rootPath, findGradleFile))) {
     // Check if the root directory has a wrapper script
     try {
       fs.chmodSync(path.join(rootPath, findGradleFile), 0o775);
-    } catch (e) {}
+    } catch (e) {
+      // continue regardless of error
+    }
     gradleCmd = path.resolve(path.join(rootPath, findGradleFile));
   } else if (process.env.GRADLE_CMD) {
     gradleCmd = process.env.GRADLE_CMD;
@@ -4158,13 +4170,17 @@ const getMavenCommand = (srcPath, rootPath) => {
     // Enable execute permission
     try {
       fs.chmodSync(path.join(srcPath, findMavenFile), 0o775);
-    } catch (e) {}
+    } catch (e) {
+      // continue regardless of error
+    }
     mavenCmd = path.resolve(path.join(srcPath, findMavenFile));
   } else if (rootPath && fs.existsSync(path.join(rootPath, findMavenFile))) {
     // Check if the root directory has a wrapper script
     try {
       fs.chmodSync(path.join(rootPath, findMavenFile), 0o775);
-    } catch (e) {}
+    } catch (e) {
+      // continue regardless of error
+    }
     mavenCmd = path.resolve(path.join(rootPath, findMavenFile));
   } else if (process.env.MVN_CMD || process.env.MAVEN_CMD) {
     mavenCmd = process.env.MVN_CMD || process.env.MAVEN_CMD;

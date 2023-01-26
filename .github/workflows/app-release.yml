@@ -14,11 +14,15 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 18.x
-    - name: Produce pkg - lts
+    - name: Install ldid
+      uses: MOZGIII/install-ldid-action@v1
+      with:
+        tag: v2.1.5-procursus6
+    - name: Produce pkg - 18
       run: |
         sudo npm install -g pkg
         npm install
-        pkg -t node18-alpine,node18-linux,node18-win,node18-mac --public package.json --out-path dist
+        pkg -t node18-alpine,node18-linux,node18-win,node18-mac,node18-mac-arm64 --no-bytecode --no-native-build --compress GZip --public package.json --out-path dist
         chmod +x dist/cdxgen*
         for f in `ls dist`; do sha256sum dist/$f > dist/$f.sha256 ; done
     - name: Test pkg
