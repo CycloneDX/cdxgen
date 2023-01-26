@@ -167,14 +167,14 @@ curl "http://127.0.0.1:9090/sbom?path=/Volumes/Work/sandbox/vulnerable-aws-koa-a
 curl "http://127.0.0.1:9090/sbom?url=https://github.com/HooliCorp/vulnerable-aws-koa-app.git&multiProject=true&type=js"
 ```
 
-### Docker composer
+### Docker compose
 
 ```
 git clone https://github.com/AppThreat/cdxgen.git
 docker compose up
 ```
 
-### War file support
+## War file support
 
 cdxgen can generate a BoM file from a given war file.
 
@@ -183,7 +183,7 @@ cdxgen can generate a BoM file from a given war file.
 cdxgen app.war
 ```
 
-### Resolving class names
+## Resolving class names
 
 Sometimes it is necessary to resolve class names contained in jar files. By passing an optional argument `--resolve-class`, it is possible to get cdxgen create a separate mapping file with the jar name (including the version) as the key and class names list as a value.
 
