@@ -17,6 +17,8 @@ const binaryLib = require("./binary");
 const osQueries = require("./queries.json");
 const isWin = require("os").platform() === "win32";
 
+const { table } = require("table");
+
 // Construct gradle cache directory
 let GRADLE_CACHE_DIR =
   process.env.GRADLE_CACHE_DIR ||
@@ -2810,6 +2812,8 @@ const createContainerSpecLikeBom = async (path, options) => {
   if (yamlFiles.length) {
     dcFiles = dcFiles.concat(yamlFiles);
   }
+  // Privado.ai json files
+  const privadoFiles = utils.getAllFiles(path, ".privado/" + "*.json");
   // parse yaml manifest files
   if (dcFiles.length) {
     for (let f of dcFiles) {
@@ -2961,6 +2965,49 @@ const createContainerSpecLikeBom = async (path, options) => {
           ];
         }
         services = services.concat(servlist);
+      }
+    }
+  }
+  // Parse privado files
+  if (privadoFiles.length) {
+    console.log(
+      "Enriching your SBoM with information from privado.ai scan reports"
+    );
+    let rows = [["Classification", "Flow"]];
+    let config = {
+      header: {
+        alignment: "center",
+        content: "Data Privacy Insights from privado.ai"
+      },
+      columns: [{ width: 50 }, { width: 10 }]
+    };
+    for (let f of privadoFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const servlist = utils.parsePrivadoFile(f);
+      services = services.concat(servlist);
+      if (servlist.length) {
+        const aservice = servlist[0];
+        if (aservice.data) {
+          for (let d of aservice.data) {
+            rows.push([d.classification, d.flow]);
+          }
+          console.log(table(rows, config));
+        }
+        if (aservice.endpoints) {
+          rows = [["Leaky Endpoints"]];
+          for (let e of aservice.endpoints) {
+            rows.push([e]);
+          }
+          console.log(
+            table(rows, {
+              columnDefault: {
+                width: 50
+              }
+            })
+          );
+        }
       }
     }
   }
@@ -4036,7 +4083,9 @@ const createBom = async (path, options) => {
       exportData.allLayersDir &&
       exportData.allLayersDir.startsWith(os.tmpdir())
     ) {
-      console.log(`Cleaning up ${exportData.allLayersDir}`);
+      if (DEBUG_MODE) {
+        console.log(`Cleaning up ${exportData.allLayersDir}`);
+      }
       try {
         fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
       } catch (err) {
