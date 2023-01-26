@@ -27,8 +27,8 @@ jobs:
         for f in `ls dist`; do sha256sum dist/$f > dist/$f.sha256 ; done
     - name: Test pkg
       run: |
-        ./dist/cdxgen-linux -v
-        ./dist/cdxgen-linux .
+        ./dist/cdxgen-linux-x64 -v
+        ./dist/cdxgen-linux-x64 .
     - name: Install dependencies
       run: |
         sudo apt-get install -y python3.8 python3.8-dev python3-pip python3-testresources python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev
