@@ -75,6 +75,12 @@ For go, `go mod why` command is used to identify required packages. For php, com
 sudo npm install -g @appthreat/cdxgen
 ```
 
+You can also use the cdxgen container image
+
+```bash
+docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/appthreat/cdxgen -r /app
+```
+
 ## Getting Help
 
 ```bash
@@ -152,6 +158,12 @@ Invoke cdxgen with `--server` argument to run it in a server mode. By default, i
 
 ```bash
 cdxgen --server
+```
+
+Or use the container image.
+
+```bash
+docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/appthreat/cdxgen -r /app --server
 ```
 
 Use curl or your favourite tool to pass arguments to the `/sbom` route.
