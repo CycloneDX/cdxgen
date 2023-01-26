@@ -75,14 +75,20 @@ const start = async (options) => {
     const q = url.parse(req.url, true).query;
     let cleanup = false;
     options = parseQueryString(q, req.body, options);
-    const filePath = q.path || q.url;
+    let filePath = q.path || q.url || req.body.path || req.body.url;
+    if (!filePath) {
+      res.writeHead(500, { "Content-Type": "application/json" });
+      return res.end(
+        "{'error': 'true', 'message': 'path or url is required.'}\n"
+      );
+    }
+    res.writeHead(200, { "Content-Type": "application/json" });
     let srcDir = filePath;
     if (filePath.startsWith("http") || filePath.startsWith("git")) {
       srcDir = gitClone(filePath);
       cleanup = true;
     }
     console.log("Generating SBoM for", srcDir);
-    res.writeHead(200, { "Content-Type": "application/json" });
     const bomNSData = (await bom.createBom(srcDir, options)) || {};
     if (bomNSData.bomJson) {
       if (
