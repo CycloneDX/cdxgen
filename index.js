@@ -1675,7 +1675,10 @@ const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
-        dependencies = dependencies.concat(parsedList.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          parsedList.dependenciesList
+        );
       }
     }
     return buildBomNSData(options, pkgList, "npm", {
@@ -1685,7 +1688,8 @@ const createNodejsBom = async (path, options) => {
       dependencies,
       parentComponent
     });
-  } else if (pkgLockFiles && pkgLockFiles.length) {
+  }
+  if (pkgLockFiles && pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
     for (let f of pkgLockFiles) {
       if (DEBUG_MODE) {
@@ -1700,17 +1704,14 @@ const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
-        dependencies = dependencies.concat(parsedList.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          parsedList.dependenciesList
+        );
       }
     }
-    return buildBomNSData(options, pkgList, "npm", {
-      allImports,
-      src: path,
-      filename: manifestFiles.join(", "),
-      dependencies,
-      parentComponent
-    });
-  } else if (fs.existsSync(pathLib.join(path, "rush.json"))) {
+  }
+  if (fs.existsSync(pathLib.join(path, "rush.json"))) {
     // Rush.js creates node_modules inside common/temp directory
     const nmDir = pathLib.join(path, "common", "temp", "node_modules");
     // Do rush install if we don't have node_modules directory
@@ -1769,9 +1770,13 @@ const createNodejsBom = async (path, options) => {
       );
       options.failOnError && process.exit(1);
     }
-  } else if (yarnLockFiles && yarnLockFiles.length) {
+  }
+  if (yarnLockFiles && yarnLockFiles.length) {
     manifestFiles = manifestFiles.concat(yarnLockFiles);
     for (let f of yarnLockFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
       const basePath = pathLib.dirname(f);
       // Determine the parent component
       const packageJsonF = pathLib.join(basePath, "package.json");
@@ -1831,17 +1836,14 @@ const createNodejsBom = async (path, options) => {
             dependsOn: rdeplist
           });
         }
-        dependencies = dependencies.concat(parsedList.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          parsedList.dependenciesList
+        );
       }
     }
-    return buildBomNSData(options, pkgList, "npm", {
-      allImports,
-      src: path,
-      filename: manifestFiles.join(", "),
-      dependencies,
-      parentComponent
-    });
-  } else if (fs.existsSync(pathLib.join(path, "node_modules"))) {
+  }
+  if (!pkgList.length && fs.existsSync(pathLib.join(path, "node_modules"))) {
     const pkgJsonFiles = utils.getAllFiles(
       pathLib.join(path, "node_modules"),
       "**/package.json"
@@ -1862,7 +1864,7 @@ const createNodejsBom = async (path, options) => {
     });
   }
   // Projects containing just min files or bower
-  if (pkgList.length && manifestFiles.length) {
+  if (pkgList.length) {
     return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,
@@ -3339,9 +3341,14 @@ const dedupeBom = (
   if (!components) {
     return {};
   }
+  if (!dependencies) {
+    dependencies = [];
+  }
   components = trimComponents(components, "json");
   componentsXmls = trimComponents(componentsXmls, "xml");
-  console.log(`BoM includes ${components.length} components after dedupe`);
+  console.log(
+    `BoM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
+  );
   const serialNum = "urn:uuid:" + uuidv4();
   return {
     options,
