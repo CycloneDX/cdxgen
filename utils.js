@@ -919,7 +919,8 @@ const parseMinJs = async (minJsFile) => {
             ? pkgNameVer.split(" - ")
             : pkgNameVer.split(" ");
           if (tmpB && tmpB.length > 1) {
-            let name = tmpB[0].replace(/ /g, "-").trim();
+            // Fix #223 - lowercase parsed package name
+            let name = tmpB[0].replace(/ /g, "-").trim().toLowerCase();
             if (
               ["copyright", "author", "licensed"].includes(name.toLowerCase())
             ) {
