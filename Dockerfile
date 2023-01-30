@@ -16,7 +16,7 @@ ENV GOPATH=/opt/app-root/go \
     SBT_VERSION=1.8.2 \
     GRADLE_VERSION=7.2 \
     GRADLE_HOME=/opt/gradle-${GRADLE_VERSION} \
-    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:
+    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:
 
 RUN echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core python3 python3-pip ruby \
