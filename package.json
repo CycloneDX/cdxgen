@@ -87,7 +87,7 @@
     "*.js",
     "bin/",
     "spdx-licenses.json",
-    "license-mapping.json",
+    "lic-mapping.json",
     "known-licenses.json",
     "vendor-alias.json",
     "queries.json"

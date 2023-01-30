@@ -265,7 +265,6 @@ let options = {
       if (bomNSData.bomXml) {
         const xmlFile = args.output.replace(".json", ".xml");
         fs.writeFileSync(xmlFile, bomNSData.bomXml);
-        console.log("BOM file written to", args.output);
       }
       //
       if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {

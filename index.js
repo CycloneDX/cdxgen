@@ -3026,9 +3026,11 @@ const createContainerSpecLikeBom = async (path, options) => {
       if (mbomData.componentsXmls && mbomData.componentsXmls.length) {
         componentsXmls = componentsXmls.concat(mbomData.componentsXmls);
       }
-      console.log(
-        `BOM includes ${components.length} unfiltered components so far`
-      );
+      if (DEBUG_MODE) {
+        console.log(
+          `BOM includes ${components.length} unfiltered components so far`
+        );
+      }
     }
   }
   options.services = services;
@@ -3346,9 +3348,11 @@ const dedupeBom = (
   }
   components = trimComponents(components, "json");
   componentsXmls = trimComponents(componentsXmls, "xml");
-  console.log(
-    `BoM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
-  );
+  if (DEBUG_MODE) {
+    console.log(
+      `BoM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
+    );
+  }
   const serialNum = "urn:uuid:" + uuidv4();
   return {
     options,
