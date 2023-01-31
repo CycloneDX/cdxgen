@@ -2118,7 +2118,9 @@ const createGoBom = async (path, options) => {
         if (basePath.includes("vendor") || basePath.includes("build")) {
           continue;
         }
-        console.log("Executing go list -deps in", basePath);
+        if (DEBUG_MODE) {
+          console.log("Executing go list -deps in", basePath);
+        }
         const result = spawnSync(
           "go",
           [
@@ -2148,9 +2150,11 @@ const createGoBom = async (path, options) => {
       }
       const allImports = {};
       let circuitBreak = false;
-      console.log(
-        `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
-      );
+      if (DEBUG_MODE) {
+        console.log(
+          `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+        );
+      }
       // Using go mod why detect required packages
       for (let apkg of pkgList) {
         if (circuitBreak) {
@@ -3026,9 +3030,20 @@ const createContainerSpecLikeBom = async (path, options) => {
       if (mbomData.componentsXmls && mbomData.componentsXmls.length) {
         componentsXmls = componentsXmls.concat(mbomData.componentsXmls);
       }
+      if (mbomData.bomJson) {
+        if (mbomData.bomJson.dependencies) {
+          dependencies = mergeDependencies(
+            dependencies,
+            mbomData.bomJson.dependencies
+          );
+        }
+        if (mbomData.bomJson.services) {
+          services = services.concat(mbomData.bomJson.services);
+        }
+      }
       if (DEBUG_MODE) {
         console.log(
-          `BOM includes ${components.length} unfiltered components so far`
+          `BOM includes ${components.length} unfiltered components ${dependencies.length} dependencies so far`
         );
       }
     }

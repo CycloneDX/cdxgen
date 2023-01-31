@@ -153,10 +153,12 @@ const getConnection = async (options) => {
     try {
       await got.get("_ping", opts);
       dockerConn = got.extend(opts);
-      if (isDockerRootless) {
-        console.log("Docker service in rootless mode detected!");
-      } else {
-        console.log("Docker service in root mode detected!");
+      if (DEBUG_MODE) {
+        if (isDockerRootless) {
+          console.log("Docker service in rootless mode detected!");
+        } else {
+          console.log("Docker service in root mode detected!");
+        }
       }
     } catch (err) {
       // console.log(err, opts);
@@ -166,14 +168,18 @@ const getConnection = async (options) => {
           await got.get("_ping", opts);
           dockerConn = got.extend(opts);
           isWinLocalTLS = true;
-          console.log("Docker desktop on Windows detected!");
+          if (DEBUG_MODE) {
+            console.log("Docker desktop on Windows detected!");
+          }
         } else {
           opts.prefixUrl = opts.podmanRootlessPrefixUrl;
           await got.get("libpod/_ping", opts);
           isPodman = true;
           isPodmanRootless = true;
           dockerConn = got.extend(opts);
-          console.log("Podman in rootless mode detected!");
+          if (DEBUG_MODE) {
+            console.log("Podman in rootless mode detected!");
+          }
         }
       } catch (err) {
         // console.log(err);
@@ -321,9 +327,11 @@ const getImage = async (fullImageName) => {
       console.log(localData);
     }
   } catch (err) {
-    console.log(
-      `Trying to pull the image ${fullImageName} from registry. This might take a while ...`
-    );
+    if (DEBUG_MODE) {
+      console.log(
+        `Trying to pull the image ${fullImageName} from registry. This might take a while ...`
+      );
+    }
     // If the data is not available locally
     try {
       const pullData = await makeRequest(
@@ -600,7 +608,9 @@ const exportImage = async (fullImageName) => {
   } else {
     let client = await getConnection();
     try {
-      console.log(`About to export image ${fullImageName} to ${tempDir}`);
+      if (DEBUG_MODE) {
+        console.log(`About to export image ${fullImageName} to ${tempDir}`);
+      }
       await pipeline(
         client.stream(`images/${fullImageName}/get`),
         tar.x({

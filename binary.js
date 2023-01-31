@@ -218,7 +218,9 @@ const getGoBuildInfo = (src) => {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
-      console.error(result.stdout, result.stderr);
+      if (result.stdout || result.stderr) {
+        console.error(result.stdout, result.stderr);
+      }
       if (DEBUG_MODE) {
         console.log("Falling back to go version command");
       }
@@ -226,7 +228,9 @@ const getGoBuildInfo = (src) => {
         encoding: "utf-8"
       });
       if (result.status !== 0 || result.error) {
-        console.error(result.stdout, result.stderr);
+        if (result.stdout || result.stderr) {
+          console.error(result.stdout, result.stderr);
+        }
       }
     }
     if (result) {
@@ -247,7 +251,9 @@ const getCargoAuditableInfo = (src) => {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
-      console.error(result.stdout, result.stderr);
+      if (result.stdout || result.stderr) {
+        console.error(result.stdout, result.stderr);
+      }
     }
     if (result) {
       const stdout = result.stdout;
@@ -291,7 +297,9 @@ const getOSPackages = (src) => {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
-      console.error(result.stdout, result.stderr);
+      if (result.stdout || result.stderr) {
+        console.error(result.stdout, result.stderr);
+      }
     }
     if (fs.existsSync(bomJsonFile)) {
       const tmpBom = JSON.parse(
