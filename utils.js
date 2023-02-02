@@ -1476,6 +1476,11 @@ const getMvnMetadata = async function (pkgList) {
       urlPrefix = ANDROID_MAVEN;
     }
     let groupPart = p.group.replace(/\./g, "/");
+    // Querying maven requires a valid group name
+    if (!groupPart || groupPart === "") {
+      cdepList.push(p);
+      continue;
+    }
     const fullUrl =
       urlPrefix +
       groupPart +
@@ -3790,7 +3795,7 @@ const collectMvnDependencies = function (mavenCmd, basePath) {
     jarNSMapping = collectJarNS(tempDir);
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir())) {
+  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
     console.log(`Cleaning up ${tempDir}`);
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
@@ -3946,6 +3951,7 @@ const extractJarArchive = function (jarFile, tempDir) {
   }
   if (jarFiles && jarFiles.length) {
     for (let jf of jarFiles) {
+      pomname = jf.replace(".jar", ".pom");
       const jarname = path.basename(jf);
       // Ignore test jars
       if (
@@ -3955,12 +3961,11 @@ const extractJarArchive = function (jarFile, tempDir) {
         continue;
       }
       let manifestDir = path.join(tempDir, "META-INF");
-      const manifestFile = path.join(tempDir, "META-INF", "MANIFEST.MF");
+      const manifestFile = path.join(manifestDir, "MANIFEST.MF");
       let jarResult = {
         status: 1
       };
       if (fs.existsSync(pomname)) {
-        manifestDir = path.dirname(jf);
         jarResult = { status: 0 };
       } else {
         jarResult = spawnSync("jar", ["-xf", jf], {
@@ -3971,42 +3976,7 @@ const extractJarArchive = function (jarFile, tempDir) {
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
       } else {
-        let pomXmls = getAllFiles(manifestDir, "**/*.pom");
-        if (!pomXmls.length) {
-          pomXmls = getAllFiles(manifestDir, "**/pom.xml");
-        }
-        // Check if there are pom.xml
-        if (pomXmls && pomXmls.length) {
-          const pxml = pomXmls[0];
-          const pomMetadata = parsePomXml(
-            fs.readFileSync(pxml, {
-              encoding: "utf-8"
-            })
-          );
-          if (pomMetadata) {
-            let ppkg = {
-              group: pomMetadata["groupId"],
-              name: pomMetadata["artifactId"],
-              version: pomMetadata["version"],
-              description: pomMetadata["description"],
-              repository: { url: pomMetadata["scm"] },
-              qualifiers: { type: "jar" },
-              properties: [
-                {
-                  name: "SrcFile",
-                  value: jarFile
-                }
-              ]
-            };
-            if (
-              pomMetadata["url"] &&
-              pomMetadata["url"] !== pomMetadata["scm"]
-            ) {
-              ppkg["homepage"] = { url: pomMetadata["url"] };
-            }
-            pkgList.push(ppkg);
-          }
-        } else if (fs.existsSync(manifestFile)) {
+        if (fs.existsSync(manifestFile)) {
           const jarMetadata = parseJarManifest(
             fs.readFileSync(manifestFile, {
               encoding: "utf-8"
@@ -4023,13 +3993,16 @@ const extractJarArchive = function (jarFile, tempDir) {
             !jarMetadata["Bundle-Name"].includes(" ")
           ) {
             name = jarMetadata["Bundle-Name"];
+          } else if (
+            jarMetadata["Implementation-Title"] &&
+            !jarMetadata["Implementation-Title"].includes(" ")
+          ) {
+            name = jarMetadata["Implementation-Title"];
           }
           let version =
             jarMetadata["Bundle-Version"] ||
-            jarMetadata["Implementation-Version"];
-          if ((!version || version === "") && jarMetadata["Created-By"]) {
-            version = jarMetadata["Created-By"].split(" ")[0];
-          }
+            jarMetadata["Implementation-Version"] ||
+            jarMetadata["Specification-Version"];
           if (version && version.includes(" ")) {
             version = version.split(" ")[0];
           }
@@ -4095,11 +4068,17 @@ const extractJarArchive = function (jarFile, tempDir) {
             }
           }
         }
-        // Clean up META-INF
-        fs.rmSync(path.join(tempDir, "META-INF"), {
-          recursive: true,
-          force: true
-        });
+        try {
+          if (fs.rmSync && fs.existsSync(path.join(tempDir, "META-INF"))) {
+            // Clean up META-INF
+            fs.rmSync(path.join(tempDir, "META-INF"), {
+              recursive: true,
+              force: true
+            });
+          }
+        } catch (err) {
+          // ignore cleanup errors
+        }
       }
     } // for
   } // if

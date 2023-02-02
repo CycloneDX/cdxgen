@@ -878,7 +878,7 @@ const createJarBom = (path, options) => {
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir())) {
+  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
     console.log(`Cleaning up ${tempDir}`);
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
@@ -922,7 +922,7 @@ const createJavaBom = async (path, options) => {
         jarNSMapping = utils.collectJarNS(tempDir);
       }
       // Clean up
-      if (tempDir && tempDir.startsWith(os.tmpdir())) {
+      if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
         console.log(`Cleaning up ${tempDir}`);
         fs.rmSync(tempDir, { recursive: true, force: true });
       }
@@ -2738,7 +2738,7 @@ const createJenkinsBom = async (path, options) => {
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir())) {
+  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
     console.log(`Cleaning up ${tempDir}`);
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
@@ -4113,7 +4113,9 @@ const createBom = async (path, options) => {
         console.log(`Cleaning up ${exportData.allLayersDir}`);
       }
       try {
-        fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+        if (fs.rmSync) {
+          fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+        }
       } catch (err) {
         // continue regardless of error
       }
