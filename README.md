@@ -40,7 +40,7 @@ When used with plugins, cdxgen could generate an SBoM for Linux docker images an
 | Docker compose                                         | docker-compose\*.yml. Images would also be scanned.                                             | N/A                                                                                      |
 | Google CloudBuild configuration                        | cloudbuild.yaml                                                                                 | N/A                                                                                      |
 | OpenAPI                                                | openapi\*.json, openapi\*.yaml                                                                  | N/A                                                                                      |
-| [Privado](https://www.privado.ai?utm_source=AppThreat) | privado.json                                                                                    | Data and service information will be included. Use with universal mode.                  |
+| [Privado](https://www.privado.ai?utm_source=cyclonedx) | privado.json                                                                                    | Data and service information will be included. Use with universal mode.                  |
 
 NOTE:
 
@@ -61,7 +61,7 @@ Footnotes:
 
 For node.js projects, lock files are parsed initially so the SBoM would include all dependencies including dev dependencies. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically have their `scope` property set to `required` in the resulting SBoM. By passing the argument `--no-babel`, you can disable this analysis. Scope property would then be set based on the `dev` attribute in the lock file.
 
-This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/appthreat/dep-scan) use this attribute to prioritize vulnerabilities. Tools such dependency track, unfortunately, do not include this feature and hence might over-report the CVEs.
+This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/cyclonedx/dep-scan) use this attribute to prioritize vulnerabilities. Tools such dependency track, unfortunately, do not include this feature and hence might over-report the CVEs.
 
 By passing the argument `--required-only`, you can limit the SBoM to only include packages with the scope "required", commonly referred to as production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
 
@@ -72,13 +72,13 @@ For go, `go mod why` command is used to identify required packages. For php, com
 ## Installing
 
 ```bash
-sudo npm install -g @appthreat/cdxgen
+sudo npm install -g @cyclonedx/cdxgen
 ```
 
 You can also use the cdxgen container image
 
 ```bash
-docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/appthreat/cdxgen -r /app
+docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app
 ```
 
 ## Getting Help
@@ -94,14 +94,14 @@ Options:
                                                                        [boolean]
       --deep             Perform deep searches for components. Useful while
                          scanning live OS and oci images.              [boolean]
-      --server-url       Dependency track or AppThreat server url. Eg:
-                         https://deptrack.appthreat.io
-      --api-key          Dependency track or AppThreat server api key
-      --project-group    Dependency track or AppThreat project group
-      --project-name     Dependency track or AppThreat project name. Default use
+      --server-url       Dependency track url. Eg:
+                         https://deptrack.cyclonedx.io
+      --api-key          Dependency track api key
+      --project-group    Dependency track project group
+      --project-name     Dependency track project name. Default use
                          the directory name
-      --project-version  Dependency track or AppThreat project version
-      --project-id       Dependency track or AppThreat project id. Either
+      --project-version  Dependency track project version
+      --project-id       Dependency track project id. Either
                          provide the id or the project name and version together
       --required-only    Include only the packages with required scope on the
                          SBoM.                                         [boolean]
@@ -163,7 +163,7 @@ cdxgen --server
 Or use the container image.
 
 ```bash
-docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/appthreat/cdxgen -r /app --server
+docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server
 ```
 
 Use curl or your favourite tool to pass arguments to the `/sbom` route.
@@ -189,13 +189,13 @@ curl -H "Content-Type: application/json" http://localhost:9090/sbom -XPOST -d $'
 ### Docker compose
 
 ```
-git clone https://github.com/AppThreat/cdxgen.git
+git clone https://github.com/cyclonedx/cdxgen.git
 docker compose up
 ```
 
 ## Privado.ai support
 
-In universal mode, cdxgen can look for any [Privado](https://www.privado.ai?utm_source=AppThreat) scan reports and enrich the SBoM with data (flow and classification), endpoints, and leakage information. Such an SBoM would help with privacy compliance and use cases.
+In universal mode, cdxgen can look for any [Privado](https://www.privado.ai?utm_source=cyclonedx) scan reports and enrich the SBoM with data (flow and classification), endpoints, and leakage information. Such an SBoM would help with privacy compliance and use cases.
 
 Invoke privado scan first to generate this report followed by an invocation of cdxgen in universal mode as shown.
 
@@ -267,14 +267,6 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | SBOM_SIGN_PRIVATE_KEY     | Private key to use for signing                                                                                     |
 | SBOM_SIGN_PUBLIC_KEY      | Optional. Public key to include in the SBoM signature                                                              |
 
-## Integration with GitHub action
-
-Use the GitHub [action](https://github.com/AppThreat/cdxgen-action) to automatically generate and upload bom to the server. Refer to `nodejs.yml` in this repo for a working example.
-
-## Integration with Google CloudBuild
-
-Use this [custom builder](https://github.com/CloudBuildr/google-custom-builders/tree/master/cdxgen) and refer to the readme for instruction.
-
 ## Plugins
 
 cdxgen could be extended with external binary plugins to support more SBoM use cases. These are now installed as an optional dependency.
@@ -329,7 +321,7 @@ You can use cdxgen to generate SBoM for a live system or a VM for compliance and
 cdxgen -t os
 ```
 
-This feature is powered by osquery which is [installed](https://github.com/appthreat/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
+This feature is powered by osquery which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
 
 ## SBoM signing
 
@@ -355,7 +347,7 @@ Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for adv
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for the full license.
 
-[license]: https://github.com/AppThreat/cdxgen/blob/master/LICENSE
+[license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 
 ## Discord support
 

@@ -8,7 +8,7 @@ script:
   - cp appimage-reqs.sh tools_config AppDir/usr/src -r
   - cp tools_config/io.shiftleft.cdxgen.appdata.xml AppDir/usr/share/metainfo/
   - chmod +x AppDir/usr/src/appimage-reqs.sh && AppDir/usr/src/appimage-reqs.sh AppDir
-  - npm install --only=production --no-save --prefix AppDir/usr/local/lib yarn @appthreat/cdxgen @microsoft/rush
+  - npm install --only=production --no-save --prefix AppDir/usr/local/lib yarn @cyclonedx/cdxgen @microsoft/rush
   - python3 -m pip install --no-cache-dir --ignore-installed --prefix=/usr --root=AppDir pipenv
 
 AppDir:

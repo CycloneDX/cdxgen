@@ -51,11 +51,3 @@ jobs:
         with:
           name: dist
           path: dist
-      - name: Generate BOM using cdxgen
-        uses: appthreat/cdxgen-action@v1
-        with:
-          output: "./reports/bom.xml"
-      - uses: actions/upload-artifact@v1
-        with:
-          name: reports
-          path: reports

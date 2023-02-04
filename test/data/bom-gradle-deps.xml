@@ -4,15 +4,15 @@
     <timestamp>2022-12-22T22:15:58.808Z</timestamp>
     <tools>
       <tool>
-        <vendor>AppThreat</vendor>
+        <vendor>cyclonedx</vendor>
         <name>cdxgen</name>
         <version>5.5.6</version>
       </tool>
     </tools>
     <authors>
       <author>
-        <name>Team AppThreat</name>
-        <email>cloud@appthreat.com</email>
+        <name>Prabhu Subramanian</name>
+        <email>prabhu@appthreat.com</email>
       </author>
     </authors>
     <component type="library" bom-ref="pkg:maven/root@latest?type=jar">
