@@ -172,7 +172,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     tools: [
       {
         tool: {
-          vendor: "AppThreat",
+          vendor: "cyclonedx",
           name: "cdxgen",
           version: selfPjson.version
         }
@@ -180,7 +180,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     ],
     authors: [
       {
-        author: { name: "Team AppThreat", email: "cloud@appthreat.com" }
+        author: { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
       }
     ],
     supplier: undefined
@@ -188,13 +188,13 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
   if (format === "json") {
     metadata.tools = [
       {
-        vendor: "AppThreat",
+        vendor: "cyclonedx",
         name: "cdxgen",
         version: selfPjson.version
       }
     ];
     metadata.authors = [
-      { name: "Team AppThreat", email: "cloud@appthreat.com" }
+      { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
     ];
   }
   if (
@@ -1354,7 +1354,7 @@ const createJavaBom = async (path, options) => {
                 "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved."
               );
               console.log(
-                "If your project requires a different query, please file a bug at AppThreat/cdxgen repo!"
+                "If your project requires a different query, please file a bug at cyclonedx/cdxgen repo!"
               );
               options.failOnError && process.exit(1);
             }
@@ -4248,7 +4248,7 @@ const createBom = async (path, options) => {
       return await createCloudBuildBom(path, options);
     default:
       // In recurse mode return multi-language Bom
-      // https://github.com/AppThreat/cdxgen/issues/95
+      // https://github.com/cyclonedx/cdxgen/issues/95
       if (options.multiProject) {
         return await createMultiXBom([path], options);
       } else {
@@ -4259,7 +4259,7 @@ const createBom = async (path, options) => {
 exports.createBom = createBom;
 
 /**
- * Method to submit the generated bom to dependency-track or AppThreat server
+ * Method to submit the generated bom to dependency-track or cyclonedx server
  *
  * @param args CLI args
  * @param bomContents BOM Xml

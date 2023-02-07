@@ -42,7 +42,7 @@ jobs:
       run: |
         appimage-builder --recipe appimage-builder.yml --skip-test
       env:
-        UPDATE_INFO: gh-releases-zsync|AppThreat|cdxgen|latest|*x86_64.AppImage.zsync
+        UPDATE_INFO: gh-releases-zsync|cyclonedx|cdxgen|latest|*x86_64.AppImage.zsync
     - name: Zip pkg - lts
       run: |
         zip --junk-paths -r cdxgen-dist.zip dist cdxgen-latest-x86_64.AppImage

@@ -1,9 +1,9 @@
 {
-  "name": "@appthreat/cdxgen",
-  "version": "7.0.5",
+  "name": "@cyclonedx/cdxgen",
+  "version": "8.0.0",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from source or container image",
-  "homepage": "http://github.com/AppThreat/cdxgen",
-  "author": "Team AppThreat <cloud@appthreat.com>",
+  "homepage": "http://github.com/cyclonedx/cdxgen",
+  "author": "Prabhu Subramanian <prabhu@appthreat.com>",
   "license": "Apache-2.0",
   "keywords": [
     "sbom",
@@ -19,11 +19,6 @@
     "scrm"
   ],
   "contributors": [
-    {
-      "name": "Team AppThreat",
-      "email": "cloud@appthreat.com",
-      "url": "https://appthreat.io"
-    },
     {
       "name": "Erlend Oftedal"
     },
@@ -48,10 +43,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AppThreat/cdxgen.git"
+    "url": "git+https://github.com/cyclonedx/cdxgen.git"
   },
   "bugs": {
-    "url": "https://github.com/AppThreat/cdxgen/issues"
+    "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
   "dependencies": {
     "@babel/parser": "^7.20.7",

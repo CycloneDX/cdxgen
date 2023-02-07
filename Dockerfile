@@ -1,15 +1,15 @@
 FROM almalinux/9-minimal:latest
 
-LABEL maintainer="appthreat" \
-      org.opencontainers.image.authors="Team AppThreat <cloud@appthreat.com>" \
-      org.opencontainers.image.source="https://github.com/appthreat/cdxgen" \
-      org.opencontainers.image.url="https://github.com/appthreat/cdxgen" \
+LABEL maintainer="cyclonedx" \
+      org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
+      org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
+      org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.version="7.0.0" \
-      org.opencontainers.image.vendor="AppThreat" \
+      org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
-      org.opencontainers.image.description="Container image for AppThreat cdxgen SBoM generator" \
-      org.opencontainers.docker.cmd="docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw --cpus=2 --memory=4g -t ghcr.io/appthreat/cdxgen -r /app --server"
+      org.opencontainers.image.description="Container image for cyclonedx cdxgen SBoM generator" \
+      org.opencontainers.docker.cmd="docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw --cpus=2 --memory=4g -t ghcr.io/cyclonedx/cdxgen -r /app --server"
 
 ENV GOPATH=/opt/app-root/go \
     GO_VERSION=1.19.5 \
@@ -39,7 +39,7 @@ RUN echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /et
     && curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh \
     && chmod +x linux-install-1.11.1.1208.sh \
     && sudo ./linux-install-1.11.1.1208.sh \
-    && useradd -ms /bin/bash appthreat \
+    && useradd -ms /bin/bash cyclonedx \
     && npm install --unsafe-perm -g @appthreat/cdxgen @microsoft/rush \
     && pecl channel-update pecl.php.net \
     && pecl install timezonedb \

@@ -29,10 +29,10 @@ jobs:
       run: |
         npm config set //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
         npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-        echo "appthreat:registry=https://npm.pkg.github.com" > ~/.npmrc
-        npm publish --access=public --@appthreat:registry='https://npm.pkg.github.com'
-        echo "appthreat:registry=https://registry.npmjs.org" > ~/.npmrc
-        npm publish --access=public --@appthreat:registry='https://registry.npmjs.org'
+        echo "cyclonedx:registry=https://npm.pkg.github.com" > ~/.npmrc
+        npm publish --access=public --@cyclonedx:registry='https://npm.pkg.github.com'
+        echo "cyclonedx:registry=https://registry.npmjs.org" > ~/.npmrc
+        npm publish --access=public --@cyclonedx:registry='https://registry.npmjs.org'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -49,7 +49,7 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: |
-          ghcr.io/appthreat/cdxgen
+          ghcr.io/cyclonedx/cdxgen
     - name: Build and push Docker images
       uses: docker/build-push-action@v3
       with:
@@ -57,14 +57,3 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-
-    - name: Release public ecr
-      run: |
-        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/a2o9d4d9
-        docker build -t cdxgen .
-        docker tag cdxgen:latest public.ecr.aws/a2o9d4d9/cdxgen:latest
-        docker push public.ecr.aws/a2o9d4d9/cdxgen:latest
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}

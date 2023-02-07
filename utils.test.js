@@ -714,7 +714,7 @@ test("parse github actions workflow data", async () => {
   dep_list = await utils.parseGitHubWorkflowData(
     fs.readFileSync("./.github/workflows/nodejs.yml", (encoding = "utf-8"))
   );
-  expect(dep_list.length).toEqual(4);
+  expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
@@ -860,13 +860,13 @@ test("get repo license", async () => {
     url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE"
   });
 
-  license = await utils.getRepoLicense("https://github.com/AppThreat/cdxgen", {
+  license = await utils.getRepoLicense("https://github.com/cyclonedx/cdxgen", {
     group: "",
     name: "cdxgen"
   });
   expect(license).toEqual({
     id: "Apache-2.0",
-    url: "https://github.com/AppThreat/cdxgen/blob/master/LICENSE"
+    url: "https://github.com/cyclonedx/cdxgen/blob/master/LICENSE"
   });
 
   license = await utils.getRepoLicense("https://cloud.google.com/go", {
