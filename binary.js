@@ -45,7 +45,7 @@ if (
     path.join(
       __dirname,
       "node_modules",
-      "@appthreat",
+      "@cyclonedx",
       "cdxgen-plugins-bin",
       "plugins"
     )
@@ -54,7 +54,7 @@ if (
     path.join(
       __dirname,
       "node_modules",
-      "@appthreat",
+      "@cyclonedx",
       "cdxgen-plugins-bin",
       "plugins",
       "goversion"
@@ -64,7 +64,7 @@ if (
   CDXGEN_PLUGINS_DIR = path.join(
     __dirname,
     "node_modules",
-    "@appthreat",
+    "@cyclonedx",
     "cdxgen-plugins-bin",
     "plugins"
   );
@@ -89,7 +89,7 @@ if (!CDXGEN_PLUGINS_DIR) {
   }
   const globalPlugins = path.join(
     globalNodePath,
-    "@appthreat",
+    "@cyclonedx",
     "cdxgen-plugins-bin",
     "plugins"
   );
@@ -104,7 +104,7 @@ if (!CDXGEN_PLUGINS_DIR) {
 if (!CDXGEN_PLUGINS_DIR) {
   if (DEBUG_MODE) {
     console.warn(
-      "cdxgen plugins was not found. Please install with npm install -g @appthreat/cdxgen-plugins-bin"
+      "cdxgen plugins was not found. Please install with npm install -g @cyclonedx/cdxgen-plugins-bin"
     );
   }
   CDXGEN_PLUGINS_DIR = "";

@@ -28,7 +28,7 @@ jobs:
           npm install
           npm run build --if-present
           npm test
-          npm install -g @appthreat/cdxgen-plugins-bin
+          npm install -g @cyclonedx/cdxgen-plugins-bin
           mkdir -p bomresults repotests
         env:
           CI: true
@@ -92,7 +92,7 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-          npm install -g @appthreat/cdxgen-plugins-bin
+          npm install -g @cyclonedx/cdxgen-plugins-bin
           mkdir -p bomresults
         env:
           CI: true
@@ -129,7 +129,7 @@ jobs:
           npm install
           npm run build --if-present
           mkdir bomresults
-          npm install -g @appthreat/cdxgen-plugins-bin
+          npm install -g @cyclonedx/cdxgen-plugins-bin
         env:
           CI: true
       - name: wintests
