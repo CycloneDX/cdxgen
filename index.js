@@ -3079,6 +3079,9 @@ const createPHPBom = async (path, options) => {
   const composerLockMode = composerLockFiles.length;
   // Create a composer.lock file for each composer.json file if needed.
   if (!composerLockMode && composerJsonMode && options.installDeps) {
+    if (DEBUG_MODE) {
+      console.log("About to invoke composer --version");
+    }
     const versionResult = spawnSync("composer", ["--version"], {
       encoding: "utf-8"
     });
@@ -3086,18 +3089,26 @@ const createPHPBom = async (path, options) => {
       console.error(
         "No composer version found. Check if composer is installed and available in PATH."
       );
-      console.log(versionResult.error, versionResult.stderr);
+      if (DEBUG_MODE) {
+        console.log(versionResult.error, versionResult.stderr);
+      }
       options.failOnError && process.exit(1);
-      return {};
     }
-    const composerVersion = versionResult.stdout.match(/version (\d)/)[1];
+    let composerVersion = undefined;
     if (DEBUG_MODE) {
-      console.log("Detected composer version:", composerVersion);
+      console.log("Parsing version", versionResult.stdout);
+    }
+    let tmpV = undefined;
+    if (versionResult && versionResult.stdout) {
+      versionResult.stdout.split(" ");
+    }
+    if (tmpV && tmpV.length > 1) {
+      composerVersion = tmpV[1];
     }
     for (let f of composerJsonFiles) {
       const basePath = pathLib.dirname(f);
       let args = [];
-      if (composerVersion > 1) {
+      if (composerVersion && !composerVersion.startsWith("1")) {
         console.log("Generating composer.lock in", basePath);
         args = ["update", "--no-install", "--ignore-platform-reqs"];
       } else {
