@@ -3616,6 +3616,10 @@ const parseComposerLock = function (pkgLockFile) {
       for (let compScope in packages) {
         for (let i in packages[compScope]) {
           const pkg = packages[compScope][i];
+          // Be extra cautious. Potential fix for #236
+          if (!pkg || !pkg.name || !pkg.version) {
+            continue;
+          }
           let group = path.dirname(pkg.name);
           if (group === ".") {
             group = "";

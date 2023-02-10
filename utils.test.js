@@ -1285,6 +1285,23 @@ test("parseComposerLock", () => {
       }
     ]
   });
+
+  deps = utils.parseComposerLock("./test/data/composer-3.lock");
+  expect(deps.length).toEqual(62);
+  expect(deps[0]).toEqual({
+    group: "amphp",
+    name: "amp",
+    version: "2.6.2",
+    repository: {
+      type: "git",
+      url: "https://github.com/amphp/amp.git",
+      reference: "9d5100cebffa729aaffecd3ad25dc5aeea4f13bb"
+    },
+    license: ["MIT"],
+    description: "A non-blocking concurrency framework for PHP applications.",
+    scope: "required",
+    properties: [{ name: "SrcFile", value: "./test/data/composer-3.lock" }]
+  });
 });
 
 test("parseGemfileLockData", async () => {
