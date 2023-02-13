@@ -77,7 +77,7 @@ sudo npm install -g @cyclonedx/cdxgen
 
 You can also use the cdxgen container image
 
-```shell
+```bash
 docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
 ```
 
@@ -162,7 +162,7 @@ cdxgen --server
 
 Or use the container image.
 
-```shell
+```bash
 docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server
 ```
 
