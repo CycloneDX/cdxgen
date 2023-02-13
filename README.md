@@ -71,19 +71,19 @@ For go, `go mod why` command is used to identify required packages. For php, com
 
 ## Installing
 
-```bash
+```shell
 sudo npm install -g @cyclonedx/cdxgen
 ```
 
 You can also use the cdxgen container image
 
-```bash
+```shell
 docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
 ```
 
 ## Getting Help
 
-```bash
+```text
 $ cdxgen -h
 Options:
   -o, --output           Output file for bom.xml or bom.json. Default console
@@ -122,7 +122,7 @@ Options:
 
 Minimal example.
 
-```bash
+```shell
 cdxgen -o bom.json
 ```
 
@@ -132,19 +132,19 @@ cdxgen would always produce bom in both xml and json format as per CycloneDX 1.4
 
 For a java project. This would automatically detect maven, gradle or sbt and build bom accordingly
 
-```bash
+```shell
 cdxgen -t java -o bom.json
 ```
 
 To print the SBoM as a table pass `-p` argument.
 
-```bash
+```shell
 cdxgen -t java -o bom.json -p
 ```
 
 To recursively generate a single BoM for all languages pass `-r` argument.
 
-```bash
+```shell
 cdxgen -r -o bom.json
 ```
 
@@ -156,13 +156,13 @@ By passing the type `-t universal`, cdxgen could be forced to opportunistically 
 
 Invoke cdxgen with `--server` argument to run it in a server mode. By default, it listens to port `9090` which can be customized with the arguments `--server-host` and `--server-port`.
 
-```bash
+```shell
 cdxgen --server
 ```
 
 Or use the container image.
 
-```bash
+```shell
 docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server
 ```
 
@@ -170,13 +170,13 @@ Use curl or your favourite tool to pass arguments to the `/sbom` route.
 
 ### Scanning a local path
 
-```bash
+```shell
 curl "http://127.0.0.1:9090/sbom?path=/Volumes/Work/sandbox/vulnerable-aws-koa-app&multiProject=true&type=js"
 ```
 
 ### Scanning a git repo
 
-```bash
+```shell
 curl "http://127.0.0.1:9090/sbom?url=https://github.com/HooliCorp/vulnerable-aws-koa-app.git&multiProject=true&type=js"
 ```
 
@@ -188,7 +188,7 @@ curl -H "Content-Type: application/json" http://localhost:9090/sbom -XPOST -d $'
 
 ### Docker compose
 
-```
+```shell
 git clone https://github.com/cyclonedx/cdxgen.git
 docker compose up
 ```
@@ -199,7 +199,7 @@ In universal mode, cdxgen can look for any [Privado](https://www.privado.ai?utm_
 
 Invoke privado scan first to generate this report followed by an invocation of cdxgen in universal mode as shown.
 
-```bash
+```shell
 privado scan --enable-javascript <directory>
 cdxgen -t universal <directory> -o bom.json
 ```
@@ -208,7 +208,7 @@ cdxgen -t universal <directory> -o bom.json
 
 cdxgen can generate a BoM file from a given war file.
 
-```bash
+```shell
 # cdxgen -t java app.war
 cdxgen app.war
 ```
@@ -217,7 +217,7 @@ cdxgen app.war
 
 Sometimes it is necessary to resolve class names contained in jar files. By passing an optional argument `--resolve-class`, it is possible to get cdxgen create a separate mapping file with the jar name (including the version) as the key and class names list as a value.
 
-```bash
+```shell
 cdxgen -t java --resolve-class -o bom.json
 ```
 
@@ -271,7 +271,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 
 cdxgen could be extended with external binary plugins to support more SBoM use cases. These are now installed as an optional dependency.
 
-```
+```shell
 sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 ```
 
@@ -279,19 +279,19 @@ sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 
 `docker` type is automatically detected based on the presence of values such as `sha256` or `docker.io` prefix etc in the path.
 
-```bash
+```shell
 cdxgen odoo@sha256:4e1e147f0e6714e8f8c5806d2b484075b4076ca50490577cdf9162566086d15e -o /tmp/bom.json
 ```
 
 You can also pass `-t docker` for simple labels. Only the `latest` tag would be pulled if none was specified.
 
-```bash
+```shell
 cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
 ```
 
 You can also pass the .tar file of a container image.
 
-```bash
+```shell
 docker save -o /tmp/slim.tar shiftleft/scan-slim
 podman save -q --format oci-archive -o /tmp/slim.tar shiftleft/scan-slim
 cdxgen /tmp/slim.tar -o /tmp/bom.json -t docker
@@ -307,7 +307,7 @@ Setup podman in either [rootless](https://github.com/containers/podman/blob/mast
 
 On Linux, do not forget to start the podman socket which is required for API access.
 
-```bash
+```shell
 systemctl --user enable --now podman.socket
 systemctl --user start podman.socket
 podman system service -t 0 &
@@ -317,7 +317,7 @@ podman system service -t 0 &
 
 You can use cdxgen to generate SBoM for a live system or a VM for compliance and vulnerability management purposes by passing the argument `-t os`.
 
-```
+```shell
 cdxgen -t os
 ```
 
