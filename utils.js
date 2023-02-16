@@ -485,7 +485,7 @@ const yarnLockToIdentMap = function (lockData) {
             if (group) {
               group = `${group}/`;
             }
-            if (range.startsWith("npm:")) {
+            if (range && range.startsWith("npm:")) {
               range = range.replace("npm:", "");
             }
             currentIdents.push(`${group || ""}${name}@${range}`);
