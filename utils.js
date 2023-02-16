@@ -36,6 +36,18 @@ const MAX_LICENSE_ID_LENGTH = 100;
  */
 const getAllFiles = function (dirPath, pattern) {
   try {
+    const ignoreList = [
+      "**/.hg/**",
+      "**/.git/**",
+      "**/venv/**",
+      "**/docs/**",
+      "**/examples/**",
+      "**/site-packages/**"
+    ];
+    // Only ignore node_modules if the caller is not looking for package.json
+    if (!pattern.includes("package.json")) {
+      ignoreList.push("**/node_modules/**");
+    }
     return glob.sync(pattern, {
       cwd: dirPath,
       silent: true,
@@ -45,15 +57,7 @@ const getAllFiles = function (dirPath, pattern) {
       strict: true,
       dot: pattern.startsWith(".") ? true : false,
       follow: false,
-      ignore: [
-        "node_modules",
-        ".hg",
-        ".git",
-        "venv",
-        "docs",
-        "examples",
-        "site-packages"
-      ]
+      ignore: ignoreList
     });
   } catch (err) {
     if (DEBUG_MODE) {
@@ -330,7 +334,7 @@ const parsePkgJson = async (pkgJsonFile) => {
   if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages`
+        `About to fetch license information for ${pkgList.length} packages in parsePkgJson`
       );
     }
     return await getNpmMetadata(pkgList);
@@ -435,7 +439,7 @@ const parsePkgLock = async (pkgLockFile) => {
   if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages`
+        `About to fetch license information for ${pkgList.length} packages in parsePkgLock`
       );
     }
     pkgList = await getNpmMetadata(pkgList);
@@ -641,7 +645,7 @@ const parseYarnLock = async function (yarnLockFile) {
   if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages`
+        `About to fetch license information for ${pkgList.length} packages in parseYarnLock`
       );
     }
     pkgList = await getNpmMetadata(pkgList);
@@ -708,7 +712,7 @@ const parseNodeShrinkwrap = async function (swFile) {
   if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages`
+        `About to fetch license information for ${pkgList.length} packages in parseNodeShrinkwrap`
       );
     }
     return await getNpmMetadata(pkgList);
@@ -830,7 +834,7 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
   if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages`
+        `About to fetch license information for ${pkgList.length} packages in parsePnpmLock`
       );
     }
     pkgList = await getNpmMetadata(pkgList);
@@ -877,7 +881,7 @@ const parseBowerJson = async (bowerJsonFile) => {
   if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages`
+        `About to fetch license information for ${pkgList.length} packages in parseBowerJson`
       );
     }
     return await getNpmMetadata(pkgList);
@@ -951,7 +955,7 @@ const parseMinJs = async (minJsFile) => {
   if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages`
+        `About to fetch license information for ${pkgList.length} packages in parseMinJs`
       );
     }
     return await getNpmMetadata(pkgList);

@@ -1681,13 +1681,6 @@ const createNodejsBom = async (path, options) => {
         );
       }
     }
-    return buildBomNSData(options, pkgList, "npm", {
-      allImports,
-      src: path,
-      filename: manifestFiles.join(", "),
-      dependencies,
-      parentComponent
-    });
   }
   if (pkgLockFiles && pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);

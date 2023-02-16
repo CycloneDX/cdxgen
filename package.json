@@ -49,11 +49,11 @@
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
   "dependencies": {
-    "@babel/parser": "^7.20.7",
-    "@babel/traverse": "^7.20.12",
+    "@babel/parser": "^7.20.15",
+    "@babel/traverse": "^7.20.13",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "^1.0.0",
-    "glob": "^8.0.3",
+    "glob": "^8.1.0",
     "global-agent": "^3.0.0",
     "got": "^11.8.5",
     "js-yaml": "^4.1.0",
@@ -73,7 +73,7 @@
     "yargs": "^17.6.2"
   },
   "optionalDependencies": {
-    "@cyclonedx/cdxgen-plugins-bin": "^1.0.0",
+    "@cyclonedx/cdxgen-plugins-bin": "^1.0.5",
     "connect": "^3.7.0",
     "body-parser": "^1.20.1",
     "compression": "^1.7.4"
