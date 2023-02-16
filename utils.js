@@ -327,7 +327,7 @@ const parsePkgJson = async (pkgJsonFile) => {
       // continue regardless of error
     }
   }
-  if (process.env.FETCH_LICENSE) {
+  if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages`
@@ -432,7 +432,7 @@ const parsePkgLock = async (pkgLockFile) => {
       lockData
     );
   }
-  if (process.env.FETCH_LICENSE) {
+  if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages`
@@ -638,7 +638,7 @@ const parseYarnLock = async function (yarnLockFile) {
       }
     });
   }
-  if (process.env.FETCH_LICENSE) {
+  if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages`
@@ -705,7 +705,7 @@ const parseNodeShrinkwrap = async function (swFile) {
       }
     }
   }
-  if (process.env.FETCH_LICENSE) {
+  if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages`
@@ -827,7 +827,7 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
       }
     }
   }
-  if (process.env.FETCH_LICENSE) {
+  if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages`
@@ -874,7 +874,7 @@ const parseBowerJson = async (bowerJsonFile) => {
       // continue regardless of error
     }
   }
-  if (process.env.FETCH_LICENSE) {
+  if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages`
@@ -948,7 +948,7 @@ const parseMinJs = async (minJsFile) => {
       // continue regardless of error
     }
   }
-  if (process.env.FETCH_LICENSE) {
+  if (process.env.FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages`
