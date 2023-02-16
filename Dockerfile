@@ -9,7 +9,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
       org.opencontainers.image.description="Container image for cyclonedx cdxgen SBoM generator" \
-      org.opencontainers.docker.cmd="docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw --cpus=2 --memory=4g -t ghcr.io/cyclonedx/cdxgen -r /app --server"
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw --cpus=2 --memory=4g -t ghcr.io/cyclonedx/cdxgen -r /app --server"
 
 ENV GOPATH=/opt/app-root/go \
     GO_VERSION=1.19.5 \

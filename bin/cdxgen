@@ -155,7 +155,10 @@ let options = {
   }
   const bomNSData = (await bom.createBom(filePath, options)) || {};
 
-  if (args.output) {
+  if (
+    args.output &&
+    (typeof args.output === "string" || args.output instanceof String)
+  ) {
     if (bomNSData.bomXmlFiles) {
       console.log("BOM files produced:", bomNSData.bomXmlFiles);
     } else {

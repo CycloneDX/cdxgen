@@ -78,7 +78,7 @@ sudo npm install -g @cyclonedx/cdxgen
 You can also use the cdxgen container image
 
 ```bash
-docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
 ```
 
 ## Getting Help
@@ -163,7 +163,7 @@ cdxgen --server
 Or use the container image.
 
 ```bash
-docker run --rm -it -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server
+docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server
 ```
 
 Use curl or your favourite tool to pass arguments to the `/sbom` route.
@@ -352,6 +352,5 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 ## Discord support
 
 The developers could be reached via the [discord](https://discord.gg/DCNxzaeUpd) channel.
-
 
 [cyclonedx-homepage]: https://cyclonedx.org
