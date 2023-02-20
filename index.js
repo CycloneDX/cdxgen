@@ -2108,7 +2108,7 @@ const createGoBom = async (path, options) => {
       for (let f of gomodFiles) {
         const basePath = pathLib.dirname(f);
         // Ignore vendor packages
-        if (basePath.includes("vendor") || basePath.includes("build")) {
+        if (basePath.includes("/vendor/") || basePath.includes("/build/")) {
           continue;
         }
         if (DEBUG_MODE) {
