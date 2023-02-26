@@ -1106,8 +1106,9 @@ const createJavaBom = async (path, options) => {
     );
     if (gradleFiles && gradleFiles.length && options.installDeps) {
       let gradleCmd = utils.getGradleCommand(path, null);
+      const multiProjectMode = process.env.GRADLE_MULTI_PROJECT_MODE || "";
       // Support for multi-project applications
-      if (process.env.GRADLE_MULTI_PROJECT_MODE) {
+      if (["true", "1"].includes(multiProjectMode)) {
         console.log("Executing", gradleCmd, "projects in", path);
         const result = spawnSync(
           gradleCmd,
