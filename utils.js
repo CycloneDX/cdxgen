@@ -477,7 +477,7 @@ const yarnLockToIdentMap = function (lockData) {
               s = s.substring(0, s.length - 1);
             }
             // Non-strict mode parsing
-            const match = s.match(/^(?:@([^/]+?)\/)?([^/]+?)(?:@(.+))?$/);
+            const match = s.match(/^(?:(@[^/]+?)\/)?([^/]+?)(?:@(.+))?$/);
             if (!match) {
               continue;
             }
@@ -488,7 +488,7 @@ const yarnLockToIdentMap = function (lockData) {
             if (range && range.startsWith("npm:")) {
               range = range.replace("npm:", "");
             }
-            currentIdents.push(`${group || ""}${name}@${range}`);
+            currentIdents.push(`${group || ""}${name}|${range}`);
           }
         }
       }
@@ -525,6 +525,7 @@ const parseYarnLock = async function (yarnLockFile) {
     let deplist = [];
     // This would have the keys and the resolved version required to solve the dependency tree
     const identMap = yarnLockToIdentMap(lockData);
+    let prefixAtSymbol = false;
     lockData.split("\n").forEach((l) => {
       if (l === "\n" || l.startsWith("#")) {
         return;
@@ -575,7 +576,9 @@ const parseYarnLock = async function (yarnLockFile) {
           depsMode = false;
         }
         // Collect the group and the name
-        const tmpA = l.replace(/["']/g, "").split("@");
+        l = l.replace(/["']/g, "");
+        prefixAtSymbol = l.startsWith("@");
+        const tmpA = l.split("@");
         // ignore possible leading empty strings
         if (tmpA[0] === "") {
           tmpA.shift();
@@ -584,7 +587,7 @@ const parseYarnLock = async function (yarnLockFile) {
           const fullName = tmpA[0];
           if (fullName.indexOf("/") > -1) {
             const parts = fullName.split("/");
-            group = parts[0];
+            group = (prefixAtSymbol ? "@" : "") + parts[0];
             name = parts[1];
           } else {
             name = fullName;
@@ -598,13 +601,10 @@ const parseYarnLock = async function (yarnLockFile) {
         const tmpA = l.trim().replace(/["']/g, "").split(" ");
         if (tmpA && tmpA.length === 2) {
           let dgroupname = tmpA[0];
-          if (dgroupname.startsWith("@")) {
-            dgroupname = dgroupname.substring(1);
-          }
           if (dgroupname.endsWith(":")) {
             dgroupname = dgroupname.substring(0, dgroupname.length - 1);
           }
-          const resolvedVersion = identMap[`${dgroupname}@${tmpA[1]}`];
+          const resolvedVersion = identMap[`${dgroupname}|${tmpA[1]}`];
           const depPurlString = new PackageURL(
             "npm",
             null,

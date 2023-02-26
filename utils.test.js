@@ -1133,7 +1133,7 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList.length).toEqual(2029);
   expect(parsedList.dependenciesList.length).toEqual(2029);
   expect(parsedList.pkgList[0]).toEqual({
-    group: "babel",
+    group: "@babel",
     name: "cli",
     version: "7.10.1",
     _integrity:
@@ -1158,7 +1158,7 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-zpruxnFMz6K94gs2pqc3sidzFDbQpKT5D6P/J/I9s8ekHZ5eczgnRp6pqXC86Bh7+44j/btpmOT0kwiboyqTnA==",
-    group: "apollo",
+    group: "@apollo",
     name: "client",
     version: "3.2.5",
     properties: [
@@ -1177,7 +1177,7 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-rZ1k9kQvJX21Vwgx1L6kSQ6yeXo9cCMyqURSnjG+MRoJn+Mr3LblxmVdzScHXRzv0N9yzy49oG7Bqxp9Knyv/g==",
-    group: "actions",
+    group: "@actions",
     name: "artifact",
     version: "0.6.1",
     properties: [
@@ -1211,7 +1211,7 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-G0U5NjBUYIs39l1J1ckgpVfVX2IxpzRAIT4/2An86O2Mcri3k5xNu7/RRkfObo12wN9s7BmnREAMhH7252oZiA==",
-    group: "arcanis",
+    group: "@arcanis",
     name: "slice-ansi",
     version: "1.0.2",
     properties: [
@@ -1227,7 +1227,7 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
-    group: "babel",
+    group: "@babel",
     name: "code-frame",
     version: "7.16.7",
     properties: [
@@ -1239,6 +1239,19 @@ test("parseYarnLock", async () => {
   });
   parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn4.lock");
   expect(parsedList.pkgList.length).toEqual(1);
+  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn-at.lock");
+  expect(parsedList.pkgList.length).toEqual(4);
+  expect(parsedList.dependenciesList.length).toEqual(4);
+  expect(parsedList.pkgList[0]).toEqual({
+    group: "@ac-synth",
+    name: "yjs",
+    version: "13.5.39-alpha1",
+    _integrity:
+      "sha512-JE93VWVyVa07xkK1wJ5ogjSZ30Nn4ptUuUXdPnu8MsKme1xFHLFFD3UtnHxnxnNDSnGx+WLlhuyHdIFfSCYqYg==",
+    properties: [
+      { name: "SrcFile", value: "./test/data/yarn_locks/yarn-at.lock" }
+    ]
+  });
 });
 
 test("parseComposerLock", () => {
