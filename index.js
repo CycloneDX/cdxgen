@@ -58,7 +58,7 @@ const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
 
 const determineParentComponent = (options) => {
   let parentComponent = undefined;
-  if (options.projectName) {
+  if (options.projectName && options.projectVersion) {
     parentComponent = {
       group: options.projectGroup || "",
       name: options.projectName,
