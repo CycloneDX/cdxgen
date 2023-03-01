@@ -982,7 +982,9 @@ const parsePom = function (pomFile) {
   if (project && project.dependencies) {
     let dependencies = project.dependencies.dependency;
     // Convert to an array
-    if (dependencies && !Array.isArray(dependencies)) {
+    if (!dependencies) {
+      dependencies = [];
+    } else if (dependencies && !Array.isArray(dependencies)) {
       dependencies = [dependencies];
     }
     for (let adep of dependencies) {
