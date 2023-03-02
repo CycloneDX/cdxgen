@@ -75,6 +75,12 @@ For go, `go mod why` command is used to identify required packages. For php, com
 sudo npm install -g @cyclonedx/cdxgen
 ```
 
+Use with [bun](https://bun.sh)
+
+```shell
+bunx @cyclonedx/cdxgen -h
+```
+
 You can also use the cdxgen container image
 
 ```bash

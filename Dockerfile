@@ -17,14 +17,15 @@ ENV GOPATH=/opt/app-root/go \
     GRADLE_VERSION=7.2 \
     GRADLE_HOME=/opt/gradle-${GRADLE_VERSION} \
     COMPOSER_ALLOW_SUPERUSER=1 \
-    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:
+    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/root/.bun/bin:
 
 COPY . /opt/cdxgen
 
 RUN echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core python3 python3-pip ruby ruby-devel \
         pcre2 which tar zip unzip maven sudo java-11-openjdk-headless nodejs ncurses \
-    && cd /opt/cdxgen && npm install --omit=dev \
+    && curl -fsSL https://bun.sh/install | bash \
+    && cd /opt/cdxgen && bun install --production \
     && curl -LO "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
     && unzip -q gradle-${GRADLE_VERSION}-bin.zip -d /opt/ \
     && chmod +x /opt/gradle-${GRADLE_VERSION}/bin/gradle \
@@ -54,4 +55,4 @@ RUN echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /et
     && rm -rf /var/cache/yum \
     && microdnf clean all
 
-ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen"]
+ENTRYPOINT ["bun", "run", "/opt/cdxgen/bin/cdxgen"]
