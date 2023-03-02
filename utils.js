@@ -352,9 +352,10 @@ const parsePkgLock = async (pkgLockFile) => {
   let pkgList = [];
   let dependenciesList = [];
   let depKeys = {};
-  let rootPkg = undefined;
+  let rootPkg = {};
   if (fs.existsSync(pkgLockFile)) {
     const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+    rootPkg.name = lockData.name || "";
     // lockfile v2 onwards
     if (lockData.name && lockData.packages && lockData.packages[""]) {
       // Build the initial dependency tree for the root package
@@ -390,7 +391,7 @@ const parsePkgLock = async (pkgLockFile) => {
       pkgList.push(rootPkg);
       // npm ls command seems to include both dependencies and devDependencies
       // For tree purposes, including only the dependencies should be enough
-      let rootPkgDeps = undefined;
+      let rootPkgDeps = [];
       if (
         lockData.packages &&
         lockData.packages[""] &&

@@ -1692,7 +1692,7 @@ const createNodejsBom = async (path, options) => {
       // Parse package-lock.json if available
       const parsedList = await utils.parsePkgLock(f);
       const dlist = parsedList.pkgList;
-      parentComponent = dlist.splice(0, 1)[0];
+      parentComponent = dlist.splice(0, 1)[0] || {};
       parentComponent.type = "application";
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
@@ -1858,7 +1858,7 @@ const createNodejsBom = async (path, options) => {
     });
   }
   // Projects containing just min files or bower
-  if (pkgList.length) {
+  if (pkgList) {
     return buildBomNSData(options, pkgList, "npm", {
       allImports,
       src: path,

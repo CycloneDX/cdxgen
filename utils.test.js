@@ -978,6 +978,13 @@ test("parsePkgLock", async () => {
     "sha512-/r5HiDwOXTjucbBYkrTMpzWQAwil9MH7zSEfKH+RWWZv27r4vDiUd2FiBJItyQoPThLPxaf82IO6gCXyJR0ZnQ=="
   );
   expect(parsedList.dependenciesList.length).toEqual(572);
+  parsedList = await utils.parsePkgLock("./test/data/package-lock2.json");
+  deps = parsedList.pkgList;
+  expect(deps.length).toEqual(1);
+  expect(deps[0]).toEqual({
+    "bom-ref": "pkg:application/MyProject",
+    name: "MyProject"
+  });
 });
 
 test("parseBowerJson", async () => {
