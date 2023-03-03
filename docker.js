@@ -381,7 +381,7 @@ const getImage = async (fullImageName) => {
       `Unable to pull ${fullImageName}. Check if the name is valid. Perform any authentication prior to invoking cdxgen.`
     );
     console.log(
-      `Trying manually pulling this image using docker pull ${fullImageName}`
+      `Trying to manually pulling this image using docker pull ${fullImageName}`
     );
   }
   return localData;

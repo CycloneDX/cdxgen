@@ -2104,6 +2104,7 @@ const createGoBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "go.mod"
   );
   if (gomodFiles.length) {
+    let shouldManuallyParse = false;
     // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
     if (!["docker", "oci", "os"].includes(options.projectType)) {
       for (let f of gomodFiles) {
@@ -2127,6 +2128,7 @@ const createGoBom = async (path, options) => {
           { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
         if (result.status !== 0 || result.error) {
+          shouldManuallyParse = true;
           console.error(result.stdout, result.stderr);
           options.failOnError && process.exit(1);
         }
@@ -2138,6 +2140,7 @@ const createGoBom = async (path, options) => {
             pkgList = pkgList.concat(dlist);
           }
         } else {
+          shouldManuallyParse = true;
           console.error("go unexpectedly didn't return any output");
           options.failOnError && process.exit(1);
         }
@@ -2182,11 +2185,13 @@ const createGoBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Required packages: ${Object.keys(allImports).length}`);
       }
-      return buildBomNSData(options, pkgList, "golang", {
-        allImports,
-        src: path,
-        filename: gomodFiles.join(", ")
-      });
+      if (pkgList.length && !shouldManuallyParse) {
+        return buildBomNSData(options, pkgList, "golang", {
+          allImports,
+          src: path,
+          filename: gomodFiles.join(", ")
+        });
+      }
     }
     // Parse the gomod files manually. The resultant BoM would be incomplete
     if (!["docker", "oci", "os"].includes(options.projectType)) {
@@ -3455,7 +3460,7 @@ const createMultiXBom = async (pathList, options) => {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} node.js packages at ${path}`
+          `Found ${bomData.bomJson.components.length} npm packages at ${path}`
         );
       }
       components = components.concat(bomData.bomJson.components);

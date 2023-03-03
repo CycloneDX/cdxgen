@@ -2799,10 +2799,11 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
       typeof imageLike === "string" &&
       !imgList.includes(imageLike)
     ) {
-      if (imageLike.includes(":${VERSION:")) {
+      if (imageLike.includes("VERSION")) {
         imageLike = imageLike
           .replace(":${VERSION:-", ":")
           .replace(":${VERSION:", ":")
+          .replace(":%VERSION%", ":latest")
           .replace("}", "");
       }
       pkgList.push({ image: imageLike });
