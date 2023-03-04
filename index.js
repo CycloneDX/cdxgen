@@ -39,6 +39,11 @@ if (process.env.LEIN_CMD) {
   LEIN_CMD = process.env.LEIN_CMD;
 }
 
+let PIP_CMD = "pip";
+if (process.env.PIP_CMD) {
+  PIP_CMD = process.env.PIP_CMD;
+}
+
 // Construct sbt cache directory
 let SBT_CACHE_DIR =
   process.env.SBT_CACHE_DIR || pathLib.join(os.homedir(), ".ivy2", "cache");
@@ -1887,7 +1892,7 @@ const createPythonBom = async (path, options) => {
   );
   const reqFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "requirements.txt"
+    (options.multiProject ? "**/" : "") + "*requirements.txt"
   );
   const reqDirFiles = utils.getAllFiles(
     path,
@@ -1977,7 +1982,28 @@ const createPythonBom = async (path, options) => {
       metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
         for (let f of reqFiles) {
-          const reqData = fs.readFileSync(f, { encoding: "utf-8" });
+          const basePath = pathLib.dirname(f);
+          let reqData = undefined;
+          // Attempt to pip freeze to improve precision
+          if (options.installDeps) {
+            const result = spawnSync(PIP_CMD, ["freeze", "-r", f, "-l"], {
+              cwd: basePath,
+              encoding: "utf-8",
+              timeout: TIMEOUT_MS
+            });
+            if (result.status === 0 && result.stdout) {
+              reqData = Buffer.from(result.stdout).toString();
+            }
+          }
+          // Fallback to parsing requirements file
+          if (!reqData) {
+            if (DEBUG_MODE) {
+              console.log(
+                `Falling back to manually parsing ${f}. The result would be incomplete!`
+              );
+            }
+            reqData = fs.readFileSync(f, { encoding: "utf-8" });
+          }
           const dlist = await utils.parseReqFile(reqData);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
@@ -3817,7 +3843,7 @@ const createXBom = async (path, options) => {
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "requirements.txt"
+    (options.multiProject ? "**/" : "") + "*requirements.txt"
   );
   const reqDirFiles = utils.getAllFiles(
     path,

@@ -52,7 +52,7 @@ NOTE:
 Footnotes:
 
 - [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
-- [2] - Use pip freeze to improve the accuracy for requirements.txt based parsing. `python -m pip freeze > requirements.txt`
+- [2] - Pip freeze is automatically performed to improve precision.
 - [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file cdxgen would not include indirect dependencies.
 - [4] - See section on plugins
 - [5] - Powered by osquery. See section on plugins
