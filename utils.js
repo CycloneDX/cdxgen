@@ -1756,12 +1756,12 @@ exports.parsePoetrylockData = parsePoetrylockData;
 const parseReqFile = async function (reqData) {
   const pkgList = [];
   let fetchIndirectDeps = false;
-  let compScope = "";
+  let compScope = undefined;
   reqData.split("\n").forEach((l) => {
     if (l.includes("# Basic requirements")) {
       compScope = "required";
     } else if (l.includes("added by pip freeze")) {
-      compScope = "";
+      compScope = undefined;
     }
     if (!l.startsWith("#")) {
       if (l.indexOf("=") > -1) {
