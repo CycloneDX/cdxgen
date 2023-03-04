@@ -1756,7 +1756,13 @@ exports.parsePoetrylockData = parsePoetrylockData;
 const parseReqFile = async function (reqData) {
   const pkgList = [];
   let fetchIndirectDeps = false;
+  let compScope = "";
   reqData.split("\n").forEach((l) => {
+    if (l.includes("# Basic requirements")) {
+      compScope = "required";
+    } else if (l.includes("added by pip freeze")) {
+      compScope = "";
+    }
     if (!l.startsWith("#")) {
       if (l.indexOf("=") > -1) {
         let tmpA = l.split(/(==|<=|~=|>=)/);
@@ -1773,7 +1779,8 @@ const parseReqFile = async function (reqData) {
         if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
           pkgList.push({
             name: tmpA[0].trim(),
-            version: versionStr
+            version: versionStr,
+            scope: compScope
           });
         }
       } else if (/[>|[|@]/.test(l)) {
@@ -1784,7 +1791,8 @@ const parseReqFile = async function (reqData) {
         if (!tmpA[0].trim().includes(" ")) {
           pkgList.push({
             name: tmpA[0].trim(),
-            version: null
+            version: null,
+            scope: compScope
           });
         }
       } else if (l) {
@@ -1795,7 +1803,8 @@ const parseReqFile = async function (reqData) {
         if (!l.includes(" ")) {
           pkgList.push({
             name: l,
-            version: null
+            version: null,
+            scope: compScope
           });
         }
       }

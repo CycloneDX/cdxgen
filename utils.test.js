@@ -1348,7 +1348,7 @@ test("parseGemspecData", async () => {
   });
 });
 
-test("parse requirements.txt with comments", async () => {
+test("parse requirements.txt", async () => {
   jest.setTimeout(120000);
   let deps = await utils.parseReqFile(
     fs.readFileSync(
@@ -1357,6 +1357,15 @@ test("parse requirements.txt with comments", async () => {
     )
   );
   expect(deps.length).toEqual(31);
+  deps = await utils.parseReqFile(
+    fs.readFileSync("./test/data/requirements.freeze.txt", (encoding = "utf-8"))
+  );
+  expect(deps.length).toEqual(113);
+  expect(deps[0]).toEqual({
+    name: "elasticsearch",
+    version: "8.6.2",
+    scope: "required"
+  });
 });
 
 test("parse poetry.lock", async () => {
