@@ -22,11 +22,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
       - name: npm install, build and test
         run: |
-          npm install
-          npm run build --if-present
-          npm test
+          bun install
+          bun run build --if-present
+          bun run test
         env:
           CI: true
   pkg:
@@ -37,11 +40,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
       - name: Produce pkg - lts
         run: |
-          sudo npm install -g pkg
-          npm install
-          pkg -t node18-linux,node18-win,node18-mac package.json --out-path dist
+          sudo bun install -g pkg
+          bun install
+          bun run pkg -t node18-linux,node18-win,node18-mac package.json --out-path dist
       - name: Test pkg
         run: |
           chmod +x dist/cdxgen*

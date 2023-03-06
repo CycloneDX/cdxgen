@@ -367,3 +367,11 @@ npm run lint
 npm run pretty
 npm test
 ```
+
+With bun
+
+```bash
+bun run lint
+bun run pretty
+bun run test
+```
