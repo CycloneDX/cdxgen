@@ -86,36 +86,38 @@ docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /a
 ```text
 $ cdxgen -h
 Options:
-  -o, --output           Output file for bom.xml or bom.json. Default console
-  -t, --type             Project type
-  -r, --recurse          Recurse mode suitable for mono-repos          [boolean]
-  -p, --print            Print the SBoM as a table                     [boolean]
-  -c, --resolve-class    Resolve class names for packages. jars only for now.
-                                                                       [boolean]
-      --deep             Perform deep searches for components. Useful while
-                         scanning live OS and oci images.              [boolean]
-      --server-url       Dependency track url. Eg:
-                         https://deptrack.cyclonedx.io
-      --api-key          Dependency track api key
-      --project-group    Dependency track project group
-      --project-name     Dependency track project name. Default use
-                         the directory name
-      --project-version  Dependency track project version
-      --project-id       Dependency track project id. Either
-                         provide the id or the project name and version together
-      --required-only    Include only the packages with required scope on the
-                         SBoM.                                         [boolean]
-      --fail-on-error    Fail if any dependency extractor fails.       [boolean]
-      --no-babel         Do not use babel to perform usage analysis for
-                         JavaScript/TypeScript projects.               [boolean]
+  -o, --output                 Output file for bom.xml or bom.json. Default
+                               bom.json
+  -t, --type                   Project type
+  -r, --recurse                Recurse mode suitable for mono-repos    [boolean]
+  -p, --print                  Print the SBoM as a table. Defaults to true if
+                               output file is not specified with -o    [boolean]
+  -c, --resolve-class          Resolve class names for packages. jars only for
+                               now.                                    [boolean]
+      --deep                   Perform deep searches for components. Useful
+                               while scanning live OS and oci images.  [boolean]
+      --server-url             Dependency track url. Eg:
+                               https://deptrack.cyclonedx.io
+      --api-key                Dependency track api key
+      --project-group          Dependency track project group
+      --project-name           Dependency track project name. Default use the
+                               directory name
+      --project-version        Dependency track project version    [default: ""]
+      --project-id             Dependency track project id. Either provide the
+                               id or the project name and version together
+      --required-only          Include only the packages with required scope on
+                               the SBoM.                               [boolean]
+      --fail-on-error          Fail if any dependency extractor fails. [boolean]
+      --no-babel               Do not use babel to perform usage analysis for
+                               JavaScript/TypeScript projects.         [boolean]
       --generate-key-and-sign  Generate an RSA public/private key pair and then
                                sign the generated SBoM using JSON Web
                                Signatures.                             [boolean]
       --server                 Run cdxgen as a server                  [boolean]
       --server-host            Listen address             [default: "127.0.0.1"]
       --server-port            Listen port                     [default: "9090"]
-      --version          Show version number                           [boolean]
-  -h                     Show help                                     [boolean]
+      --version                Show version number                     [boolean]
+  -h                           Show help                               [boolean]
 ```
 
 ## Example

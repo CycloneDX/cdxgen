@@ -13,10 +13,19 @@ const IGNORE_DIRS = [
   "e2e",
   "examples",
   "cypress",
-  "site-packages"
+  "site-packages",
+  "typings",
+  "api_docs",
+  "dev_docs",
+  "types",
+  "mock",
+  "mocks"
 ];
 
-const IGNORE_FILE_PATTERN = new RegExp("(conf|test|spec|mock)\\.(js|ts)$", "i");
+const IGNORE_FILE_PATTERN = new RegExp(
+  "(conf|test|spec|mock|\\.d)\\.(js|ts|tsx)$",
+  "i"
+);
 
 const getAllFiles = (dir, extn, files, result, regex) => {
   files = files || fs.readdirSync(dir);

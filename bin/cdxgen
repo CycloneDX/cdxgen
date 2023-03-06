@@ -10,7 +10,7 @@ const bomServer = require("../server.js");
 const args = require("yargs")
   .option("output", {
     alias: "o",
-    description: "Output file for bom.xml or bom.json. Default console"
+    description: "Output file for bom.xml or bom.json. Default bom.json"
   })
   .option("type", {
     alias: "t",
@@ -24,7 +24,8 @@ const args = require("yargs")
   .option("print", {
     alias: "p",
     type: "boolean",
-    description: "Print the SBoM as a table"
+    description:
+      "Print the SBoM as a table. Defaults to true if output file is not specified with -o"
   })
   .option("resolve-class", {
     alias: "c",
@@ -154,7 +155,10 @@ let options = {
     return await bomServer.start(options);
   }
   const bomNSData = (await bom.createBom(filePath, options)) || {};
-
+  if (!args.output) {
+    args.output = "bom.json";
+    args.print = true;
+  }
   if (
     args.output &&
     (typeof args.output === "string" || args.output instanceof String)
