@@ -45,7 +45,7 @@ jobs:
           bun-version: latest
       - name: Produce pkg - lts
         run: |
-          sudo bun install -g pkg
+          bun install -g pkg
           bun install
           bun run pkg -t node18-linux,node18-win,node18-mac package.json --out-path dist
       - name: Test pkg
