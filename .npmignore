@@ -99,6 +99,8 @@ dist
 .fusebox/
 
 # DynamoDB Local files
+
+1
 .dynamodb/
 
 # TernJS port file
@@ -110,3 +112,4 @@ dist
 .tool-versions
 .idea/
 test/
+BIB-2 #close Fixing a bug
