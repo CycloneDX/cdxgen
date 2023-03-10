@@ -105,7 +105,7 @@ dist
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
-.vscode-test
+.vscode-testr
 
 .tool-versions
 .idea/
