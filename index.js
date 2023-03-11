@@ -4306,15 +4306,25 @@ exports.submitBom = async (args, bomContents) => {
   if (encodedBomContents.startsWith("77u/")) {
     encodedBomContents = encodedBomContents.substring(4);
   }
+  const projectVersion =
+    args.projectVersion && args.projectVersion.length
+      ? args.projectVersion
+      : "master";
   const bomPayload = {
     project: args.projectId,
     projectName: args.projectName,
-    projectVersion: args.projectVersion,
+    projectVersion: projectVersion,
     autoCreate: "true",
     bom: encodedBomContents
   };
   if (DEBUG_MODE) {
-    console.log("Submitting BOM to", serverUrl);
+    console.log(
+      "Submitting BOM to",
+      serverUrl,
+      "params",
+      args.projectName,
+      projectVersion
+    );
   }
   return await got(serverUrl, {
     method: "PUT",

@@ -290,8 +290,9 @@ let options = {
   }
 
   // Automatically submit the bom data
-  if (args.serverUrl && args.apiKey) {
+  if (args.serverUrl && args.serverUrl != true && args.apiKey) {
     try {
+      // TODO: Need to use json format for v9
       const dbody = await bom.submitBom(args, bomNSData.bomXml);
       console.log("Response from server", dbody);
     } catch (err) {
