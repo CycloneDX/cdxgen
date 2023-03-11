@@ -4313,6 +4313,9 @@ exports.submitBom = async (args, bomContents) => {
     autoCreate: "true",
     bom: encodedBomContents
   };
+  if (!bomPayload.projectVersion) {
+    throw new Error("Missing --project-version, please specify one");
+  }
   if (DEBUG_MODE) {
     console.log("Submitting BOM to", serverUrl);
   }
