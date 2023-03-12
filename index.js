@@ -975,17 +975,14 @@ const createJavaBom = async (path, options) => {
           `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
           basePath
         );
-        let result = spawnSync(mavenCmd, mvnArgs, {
+        let result = Bun.spawnSync([mavenCmd].concat(mvnArgs), {
           cwd: basePath,
-          shell: true,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS
         });
         // Check if the cyclonedx plugin created the required bom.xml file
         // Sometimes the plugin fails silently for complex maven projects
         const bomJsonFiles = utils.getAllFiles(path, "**/target/*.json");
         const bomGenerated = bomJsonFiles.length;
-        if (!bomGenerated || result.status !== 0 || result.error) {
+        if (!bomGenerated || !result.success) {
           let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
           let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
           let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
@@ -996,13 +993,10 @@ const createJavaBom = async (path, options) => {
           console.log(
             `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`
           );
-          result = spawnSync(mavenCmd, mvnTreeArgs, {
+          result = Bun.spawnSync([mavenCmd].concat(mvnTreeArgs), {
             cwd: basePath,
-            shell: true,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS
           });
-          if (result.status !== 0 || result.error) {
+          if (!result.success) {
             console.error(result.stdout, result.stderr);
             console.log(
               "Resolve the above maven error. This could be due to the following:\n"
