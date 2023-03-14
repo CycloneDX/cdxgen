@@ -23,8 +23,11 @@ COPY . /opt/cdxgen
 
 RUN echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core python3 python3-pip ruby ruby-devel \
-        pcre2 which tar zip unzip maven sudo java-11-openjdk-headless nodejs ncurses \
+        pcre2 which tar zip unzip maven sudo java-17-openjdk-headless nodejs ncurses \
     && cd /opt/cdxgen && npm install --omit=dev \
+    && curl https://download.swift.org/experimental-use-only/repo/centos/releases/7/swiftlang.repo > /etc/dnf/modules.d/swiftlang.module \
+    && microdnf install -y epel-release \
+    && microdnf install -y swiftlang \
     && curl -LO "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
     && unzip -q gradle-${GRADLE_VERSION}-bin.zip -d /opt/ \
     && chmod +x /opt/gradle-${GRADLE_VERSION}/bin/gradle \
