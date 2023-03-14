@@ -4306,10 +4306,10 @@ exports.submitBom = async (args, bomContents) => {
   if (encodedBomContents.startsWith("77u/")) {
     encodedBomContents = encodedBomContents.substring(4);
   }
-  const projectVersion =
-    args.projectVersion && args.projectVersion.length
-      ? args.projectVersion
-      : "master";
+  let projectVersion = args.projectVersion || "master";
+  if (projectVersion == true) {
+    projectVersion = "master";
+  }
   const bomPayload = {
     project: args.projectId,
     projectName: args.projectName,
