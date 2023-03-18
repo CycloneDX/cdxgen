@@ -17,7 +17,7 @@ ENV GOPATH=/opt/app-root/go \
     GRADLE_VERSION=7.2 \
     GRADLE_HOME=/opt/gradle-${GRADLE_VERSION} \
     COMPOSER_ALLOW_SUPERUSER=1 \
-    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:
+    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/opt/sbt/bin:
 
 COPY . /opt/cdxgen
 
