@@ -4167,6 +4167,10 @@ const createBom = async (path, options) => {
     case "kotlin":
     case "scala":
     case "jvm":
+    case "gradle":
+    case "mvn":
+    case "maven":
+    case "sbt":
       return await createJavaBom(path, options);
     case "jar":
       options.multiProject = true;
@@ -4192,6 +4196,7 @@ const createBom = async (path, options) => {
     case "javascript":
     case "typescript":
     case "ts":
+    case "tsx":
       return await createNodejsBom(path, options);
     case "python":
     case "py":
