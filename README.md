@@ -262,6 +262,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | FETCH_LICENSE             | Set this variable to fetch license information from the registry. npm and golang only                              |
 | USE_GOSUM                 | Set to true to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod |
 | CDXGEN_TIMEOUT_MS         | Default timeout for known execution involving maven, gradle or sbt                                                 |
+| CDXGEN_SERVER_TIMEOUT_MS  | Default timeout in server mode                                                                                     |
 | BAZEL_TARGET              | Bazel target to build. Default :all (Eg: //java-maven)                                                             |
 | CLJ_CMD                   | Set to override the clojure cli command                                                                            |
 | LEIN_CMD                  | Set to override the leiningen command                                                                              |

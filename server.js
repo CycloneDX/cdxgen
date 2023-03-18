@@ -9,6 +9,10 @@ const path = require("path");
 const bom = require("./index.js");
 const compression = require("compression");
 
+// Timeout milliseconds. Default 10 mins
+const TIMEOUT_MS =
+  parseInt(process.env.CDXGEN_SERVER_TIMEOUT_MS) || 10 * 60 * 1000;
+
 const app = connect();
 
 app.use(
@@ -68,9 +72,19 @@ const parseQueryString = (q, body, options = {}) => {
   return options;
 };
 
+const configureServer = (cdxgenServer) => {
+  cdxgenServer.headersTimeout = TIMEOUT_MS;
+  cdxgenServer.requestTimeout = TIMEOUT_MS;
+  cdxgenServer.timeout = 0;
+  cdxgenServer.keepAliveTimeout = 0;
+};
+
 const start = async (options) => {
   console.log("Listening on", options.serverHost, options.serverPort);
-  http.createServer(app).listen(options.serverPort, options.serverHost);
+  const cdxgenServer = http
+    .createServer(app)
+    .listen(options.serverPort, options.serverHost);
+  configureServer(cdxgenServer);
   app.use("/sbom", async function (req, res) {
     const q = url.parse(req.url, true).query;
     let cleanup = false;
