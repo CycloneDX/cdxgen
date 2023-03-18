@@ -117,7 +117,11 @@ const getDefaultOptions = () => {
           ? "npipe//./pipe/docker_engine:"
           : "unix:/var/run/docker.sock:";
         */
-        opts.prefixUrl = isWin ? WIN_LOCAL_TLS : "unix:/var/run/docker.sock:";
+        opts.prefixUrl = isWin
+          ? WIN_LOCAL_TLS
+          : isDockerRootless
+          ? `unix:${os.homedir()}/.docker/run/docker.sock:`
+          : "unix:/var/run/docker.sock:";
       }
     }
   } else {
@@ -162,6 +166,18 @@ const getConnection = async (options) => {
       }
     } catch (err) {
       // console.log(err, opts);
+      opts.prefixUrl = `unix:${os.homedir()}/.docker/run/docker.sock:`;
+      try {
+        await got.get("_ping", opts);
+        dockerConn = got.extend(opts);
+        isDockerRootless = true;
+        if (DEBUG_MODE) {
+          console.log("Docker service in rootless mode detected!");
+        }
+        return dockerConn;
+      } catch (err) {
+        // console.log(err, opts);
+      }
       try {
         if (isWin) {
           opts.prefixUrl = WIN_LOCAL_TLS;
