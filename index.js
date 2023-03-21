@@ -66,6 +66,29 @@ const HASH_PATTERN =
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
 
+const createDefaultParentComponent = (path) => {
+  // Create a parent component based on the directory name
+  let dirName = pathLib.dirname(path);
+  const tmpA = dirName.split(pathLib.sep);
+  dirName = tmpA[tmpA.length - 1];
+  const parentComponent = {
+    group: "",
+    name: dirName,
+    type: "application"
+  };
+  ppurl = new PackageURL(
+    "application",
+    parentComponent.group,
+    parentComponent.name,
+    parentComponent.version,
+    null,
+    null
+  ).toString();
+  parentComponent["bom-ref"] = ppurl;
+  parentComponent["purl"] = ppurl;
+  return parentComponent;
+};
+
 const determineParentComponent = (options) => {
   let parentComponent = undefined;
   if (options.projectName && options.projectVersion) {
@@ -2821,11 +2844,29 @@ const createSwiftBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift"
   );
+  const pkgResolvedFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Package.resolved"
+  );
   let pkgList = [];
   let dependencies = [];
   let parentComponent = {};
   let completedPath = [];
-  if (swiftFiles.length) {
+  if (pkgResolvedFiles.length) {
+    for (let f of pkgResolvedFiles) {
+      const basePath = pathLib.dirname(f);
+      if (!parentComponent || !Object.keys(parentComponent).length) {
+        parentComponent = createDefaultParentComponent(f);
+      }
+      if (DEBUG_MODE) {
+        console.log("Parsing", f);
+      }
+      const dlist = utils.parseSwiftResolved(f);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  } else if (swiftFiles.length) {
     for (let f of swiftFiles) {
       const basePath = pathLib.dirname(f);
       if (completedPath.includes(basePath)) {
@@ -2869,13 +2910,13 @@ const createSwiftBom = async (path, options) => {
         options.failOnError && process.exit(1);
       }
     }
-    return buildBomNSData(options, pkgList, "swift", {
-      src: path,
-      filename: swiftFiles.join(", "),
-      parentComponent,
-      dependencies
-    });
   }
+  return buildBomNSData(options, pkgList, "swift", {
+    src: path,
+    filename: swiftFiles.join(", "),
+    parentComponent,
+    dependencies
+  });
   return {};
 };
 
@@ -4121,7 +4162,11 @@ const createXBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift"
   );
-  if (swiftFiles.length) {
+  const pkgResolvedFiles = utils.getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Package.resolved"
+  );
+  if (swiftFiles.length || pkgResolvedFiles.length) {
     return await createSwiftBom(path, options);
   }
 };

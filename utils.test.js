@@ -1781,4 +1781,22 @@ test("parse swift deps files", () => {
       dependsOn: []
     }
   ]);
+  let pkgList = utils.parseSwiftResolved("./test/data/Package.resolved");
+  expect(pkgList.length).toEqual(4);
+  expect(pkgList[0]).toEqual({
+    name: "swift-argument-parser",
+    group: "",
+    version: "1.0.3",
+    properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
+    repository: { url: "https://github.com/apple/swift-argument-parser" }
+  });
+  pkgList = utils.parseSwiftResolved("./test/data/Package2.resolved");
+  expect(pkgList.length).toEqual(4);
+  expect(pkgList[0]).toEqual({
+    name: "swift-argument-parser",
+    group: "",
+    version: "1.2.2",
+    properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
+    repository: { url: "https://github.com/apple/swift-argument-parser.git" }
+  });
 });

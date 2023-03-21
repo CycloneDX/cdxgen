@@ -3934,6 +3934,47 @@ const parseSwiftJsonTree = (rawOutput, pkgFile) => {
 exports.parseSwiftJsonTree = parseSwiftJsonTree;
 
 /**
+ * Parse swift package resolved file
+ * @param {string} resolvedFile Package.resolved file
+ */
+const parseSwiftResolved = (resolvedFile) => {
+  const pkgList = [];
+  if (fs.existsSync(resolvedFile)) {
+    try {
+      const pkgData = JSON.parse(fs.readFileSync(resolvedFile, "utf8"));
+      let resolvedList = [];
+      if (pkgData.pins) {
+        resolvedList = pkgData.pins;
+      } else if (pkgData.object && pkgData.object.pins) {
+        resolvedList = pkgData.object.pins;
+      }
+      for (const adep of resolvedList) {
+        const apkg = {
+          name: adep.package || adep.identity,
+          group: "",
+          version: adep.state.version || adep.state.revision,
+          properties: [
+            {
+              name: "SrcFile",
+              value: resolvedFile
+            }
+          ]
+        };
+        const repLocation = adep.location || adep.repositoryURL;
+        if (repLocation) {
+          apkg.repository = { url: repLocation };
+        }
+        pkgList.push(apkg);
+      }
+    } catch (err) {
+      // continue regardless of error
+    }
+  }
+  return pkgList;
+};
+exports.parseSwiftResolved = parseSwiftResolved;
+
+/**
  * Collect maven dependencies
  *
  * @param {string} mavenCmd Maven command to use
