@@ -1,0 +1,4 @@
+|    |    +--- com.github.spotbugs:spotbugs-annotations -> 4.7.1
+|    |    |    +--- org.junit:junit-bom:5.8.2
+|    |    |    +--- com.google.code.findbugs:jsr305:3.0.2
+|    |    |    \--- ch.qos.logback:logback-core:{strictly [1.2.9, 2[; prefer 1.2.10} -> 1.4.5 (c)

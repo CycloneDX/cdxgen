@@ -126,6 +126,85 @@ test("parse gradle dependencies", () => {
     version: "2.2.0.RELEASE",
     qualifiers: { type: "jar" }
   });
+
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-rich1.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(5);
+  expect(parsedList.pkgList[parsedList.pkgList.length - 1]).toEqual({
+    group: "ch.qos.logback",
+    name: "logback-core",
+    qualifiers: { type: "jar" },
+    version: "1.4.5"
+  });
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-rich2.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(3);
+  expect(parsedList.pkgList).toEqual([
+    {
+      group: "",
+      name: "root",
+      qualifiers: { type: "jar" },
+      type: "maven",
+      version: "latest"
+    },
+    {
+      group: "io.appium",
+      name: "java-client",
+      qualifiers: { type: "jar" },
+      version: "8.1.1"
+    },
+    {
+      group: "org.seleniumhq.selenium",
+      name: "selenium-support",
+      qualifiers: { type: "jar" },
+      version: "4.5.0"
+    }
+  ]);
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-rich3.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(2);
+  expect(parsedList.pkgList).toEqual([
+    {
+      group: "",
+      name: "root",
+      version: "latest",
+      type: "maven",
+      qualifiers: { type: "jar" }
+    },
+    {
+      group: "org.seleniumhq.selenium",
+      name: "selenium-remote-driver",
+      version: "4.5.0",
+      qualifiers: { type: "jar" }
+    }
+  ]);
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-rich4.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(2);
+  expect(parsedList.pkgList).toEqual([
+    {
+      group: "",
+      name: "root",
+      version: "latest",
+      type: "maven",
+      qualifiers: { type: "jar" }
+    },
+    {
+      group: "org.seleniumhq.selenium",
+      name: "selenium-api",
+      version: "4.5.0",
+      qualifiers: { type: "jar" }
+    }
+  ]);
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-rich5.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(68);
+  expect(parsedList.dependenciesList.length).toEqual(69);
 });
 
 test("parse gradle projects", () => {

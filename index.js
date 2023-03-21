@@ -1008,13 +1008,13 @@ const createJavaBom = async (path, options) => {
               "Resolve the above maven error. This could be due to the following:\n"
             );
             console.log(
-              "1. Java version requirement - Scan or the CI build agent could be using an incompatible version"
+              "1. Java version requirement: cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
             );
             console.log(
-              "2. Private maven repository is not serving all the required maven plugins correctly. Refer to your registry documentation to add support for jitpack.io"
+              "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
             );
             console.log(
-              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool"
+              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool."
             );
             // Do not fall back to methods that can produce incomplete results when failOnError is set
             options.failOnError && process.exit(1);
@@ -1125,7 +1125,7 @@ const createJavaBom = async (path, options) => {
             console.error(result.stdout, result.stderr);
           }
           console.log(
-            "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
+            "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
           );
           options.failOnError && process.exit(1);
         }
@@ -1251,7 +1251,7 @@ const createJavaBom = async (path, options) => {
             }
             if (DEBUG_MODE || !result.stderr || options.failOnError) {
               console.log(
-                "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7."
+                "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
               );
               console.log(
                 "2. When using tools such as sdkman, the init script must be invoked to set the PATH variables correctly."

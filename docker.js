@@ -339,7 +339,7 @@ const getImage = async (fullImageName) => {
   }
   try {
     localData = await makeRequest(`images/${repo}/json`);
-    if (DEBUG_MODE) {
+    if (DEBUG_MODE && localData) {
       console.log(localData);
     }
   } catch (err) {
