@@ -1,0 +1,2 @@
++--- io.appium:java-client -> 8.1.1
+|    +--- org.seleniumhq.selenium:selenium-support:{strictly [4.2.1, 5.0); prefer 4.2.1} -> 4.5.0 (*)

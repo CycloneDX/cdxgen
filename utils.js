@@ -1128,7 +1128,7 @@ const parseGradleDep = function (rawOutput) {
     level_trees[last_purl] = [];
     let stack = [last_purl];
     const depRegex =
-      /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly )?(?<versionspecified>[^\s:}]+))?(?:})?(?: +-> +(?<versionoverride>[^\s:]+))?/gm;
+      /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?<versionoverride>[^\s:]+))?/gm;
     while ((match = depRegex.exec(rawOutput))) {
       const [line, group, name, versionspecified, versionoverride] = match;
       const version = versionoverride || versionspecified;
