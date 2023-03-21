@@ -12,10 +12,10 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw --cpus=2 --memory=4g -t ghcr.io/cyclonedx/cdxgen -r /app --server"
 
 ENV GOPATH=/opt/app-root/go \
-    GO_VERSION=1.19.5 \
+    GO_VERSION=1.20.2 \
     SBT_VERSION=1.8.2 \
-    GRADLE_VERSION=7.2 \
-    GRADLE_HOME=/opt/gradle-${GRADLE_VERSION} \
+    GRADLE_VERSION=8.0.2 \
+    GRADLE_HOME=/opt/gradle-8.0.2 \
     COMPOSER_ALLOW_SUPERUSER=1 \
     PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/opt/sbt/bin:
 

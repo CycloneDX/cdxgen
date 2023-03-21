@@ -200,6 +200,11 @@ test("parse gradle dependencies", () => {
       qualifiers: { type: "jar" }
     }
   ]);
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-rich5.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(68);
+  expect(parsedList.dependenciesList.length).toEqual(69);
 });
 
 test("parse gradle projects", () => {
