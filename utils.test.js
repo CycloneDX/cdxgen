@@ -73,7 +73,7 @@ test("finds license id from name", () => {
 test("parse gradle dependencies", () => {
   expect(utils.parseGradleDep(null)).toEqual({});
   let parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/gradle-dep.out", (encoding = "utf-8"))
+    fs.readFileSync("./test/gradle-dep.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(34);
   expect(parsedList.dependenciesList.length).toEqual(34);
@@ -87,7 +87,7 @@ test("parse gradle dependencies", () => {
   });
 
   parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-android-dep.out", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/gradle-android-dep.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(106);
   expect(parsedList.dependenciesList.length).toEqual(106);
@@ -116,7 +116,7 @@ test("parse gradle dependencies", () => {
     version: "1.7.0"
   });
   parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-out1.dep", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/gradle-out1.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(90);
   expect(parsedList.dependenciesList.length).toEqual(90);
@@ -210,15 +210,15 @@ test("parse gradle dependencies", () => {
 test("parse gradle projects", () => {
   expect(utils.parseGradleProjects(null)).toEqual([]);
   let proj_list = utils.parseGradleProjects(
-    fs.readFileSync("./test/data/gradle-projects.out", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/gradle-projects.out", { encoding: "utf-8" })
   );
   expect(proj_list.length).toEqual(9);
 });
 
 test("parse maven tree", () => {
-  expect(utils.parseMavenTree(null)).toEqual([]);
+  expect(utils.parseMavenTree(null)).toEqual({});
   let parsedList = utils.parseMavenTree(
-    fs.readFileSync("./test/data/sample-mvn-tree.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/sample-mvn-tree.txt", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(59);
   expect(parsedList.dependenciesList.length).toEqual(59);
@@ -252,7 +252,9 @@ test("parse maven tree", () => {
     ]
   });
   parsedList = utils.parseMavenTree(
-    fs.readFileSync("./test/data/mvn-dep-tree-simple.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/mvn-dep-tree-simple.txt", {
+      encoding: "utf-8"
+    })
   );
   expect(parsedList.pkgList.length).toEqual(27);
   expect(parsedList.dependenciesList.length).toEqual(27);
@@ -363,7 +365,7 @@ test("parseGoModData", async () => {
       "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg="
   };
   dep_list = await utils.parseGoModData(
-    fs.readFileSync("./test/gomod/go.mod", (encoding = "utf-8")),
+    fs.readFileSync("./test/gomod/go.mod", { encoding: "utf-8" }),
     gosumMap
   );
   expect(dep_list.length).toEqual(4);
@@ -405,7 +407,7 @@ test("parseGoSumData", async () => {
   let dep_list = await utils.parseGoModData(null);
   expect(dep_list).toEqual([]);
   dep_list = await utils.parseGosumData(
-    fs.readFileSync("./test/gomod/go.sum", (encoding = "utf-8"))
+    fs.readFileSync("./test/gomod/go.sum", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
@@ -443,7 +445,7 @@ test("parseGoSumData", async () => {
 
 test("parse go list dependencies", async () => {
   let dep_list = await utils.parseGoListDep(
-    fs.readFileSync("./test/data/golist-dep.txt", (encoding = "utf-8")),
+    fs.readFileSync("./test/data/golist-dep.txt", { encoding: "utf-8" }),
     {}
   );
   expect(dep_list.length).toEqual(8);
@@ -456,11 +458,11 @@ test("parse go list dependencies", async () => {
 
 test("parse go mod why dependencies", () => {
   let pkg_name = utils.parseGoModWhy(
-    fs.readFileSync("./test/data/gomodwhy.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/gomodwhy.txt", { encoding: "utf-8" })
   );
   expect(pkg_name).toEqual("github.com/mailgun/mailgun-go/v4");
   pkg_name = utils.parseGoModWhy(
-    fs.readFileSync("./test/data/gomodwhynot.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/gomodwhynot.txt", { encoding: "utf-8" })
   );
   expect(pkg_name).toBeUndefined();
 });
@@ -470,7 +472,7 @@ test("parseGopkgData", async () => {
   let dep_list = await utils.parseGopkgData(null);
   expect(dep_list).toEqual([]);
   dep_list = await utils.parseGopkgData(
-    fs.readFileSync("./test/gopkg/Gopkg.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/gopkg/Gopkg.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(36);
   expect(dep_list[0]).toEqual({
@@ -486,7 +488,7 @@ test("parseGopkgData", async () => {
 
 test("parse go version data", async () => {
   let dep_list = await utils.parseGoVersionData(
-    fs.readFileSync("./test/data/goversion.txt", (encoding = "utf-8")),
+    fs.readFileSync("./test/data/goversion.txt", { encoding: "utf-8" }),
     {}
   );
   expect(dep_list.length).toEqual(125);
@@ -498,7 +500,7 @@ test("parse go version data", async () => {
     license: undefined
   });
   dep_list = await utils.parseGoVersionData(
-    fs.readFileSync("./test/data/goversion2.txt", (encoding = "utf-8")),
+    fs.readFileSync("./test/data/goversion2.txt", { encoding: "utf-8" }),
     {}
   );
   expect(dep_list.length).toEqual(149);
@@ -514,7 +516,7 @@ test("parse go version data", async () => {
 test("parse cargo lock", async () => {
   expect(await utils.parseCargoData(null)).toEqual([]);
   dep_list = await utils.parseCargoData(
-    fs.readFileSync("./test/Cargo.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/Cargo.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(224);
   expect(dep_list[0]).toEqual({
@@ -525,7 +527,7 @@ test("parse cargo lock", async () => {
       "sha384-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a"
   });
   dep_list = await utils.parseCargoData(
-    fs.readFileSync("./test/data/Cargom.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/Cargom.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(242);
   expect(dep_list[0]).toEqual({
@@ -540,7 +542,7 @@ test("parse cargo lock", async () => {
 test("parse cargo toml", async () => {
   expect(await utils.parseCargoTomlData(null)).toEqual([]);
   dep_list = await utils.parseCargoTomlData(
-    fs.readFileSync("./test/data/Cargo1.toml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/Cargo1.toml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
   expect(dep_list).toEqual([
@@ -550,7 +552,7 @@ test("parse cargo toml", async () => {
     { name: "cfg-if", version: "0.1.8" }
   ]);
   dep_list = await utils.parseCargoTomlData(
-    fs.readFileSync("./test/data/Cargo2.toml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/Cargo2.toml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list).toEqual([
@@ -566,7 +568,7 @@ test("parse cargo toml", async () => {
 test("parse cargo auditable data", async () => {
   expect(await utils.parseCargoAuditableData(null)).toEqual([]);
   dep_list = await utils.parseCargoAuditableData(
-    fs.readFileSync("./test/data/cargo-auditable.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/cargo-auditable.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(32);
   expect(dep_list[0]).toEqual({
@@ -606,7 +608,7 @@ test("get crates metadata", async () => {
 test("parse pub lock", async () => {
   expect(await utils.parsePubLockData(null)).toEqual([]);
   dep_list = await utils.parsePubLockData(
-    fs.readFileSync("./test/data/pubspec.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/pubspec.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(26);
   expect(dep_list[0]).toEqual({
@@ -614,7 +616,7 @@ test("parse pub lock", async () => {
     version: "2.8.2"
   });
   dep_list = await utils.parsePubYamlData(
-    fs.readFileSync("./test/data/pubspec.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/pubspec.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -653,7 +655,7 @@ test("get dart metadata", async () => {
 test("parse cabal freeze", async () => {
   expect(await utils.parseCabalData(null)).toEqual([]);
   dep_list = await utils.parseCabalData(
-    fs.readFileSync("./test/data/cabal.project.freeze", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/cabal.project.freeze", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(24);
   expect(dep_list[0]).toEqual({
@@ -661,7 +663,7 @@ test("parse cabal freeze", async () => {
     version: "0.11.3"
   });
   dep_list = await utils.parseCabalData(
-    fs.readFileSync("./test/data/cabal-2.project.freeze", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/cabal-2.project.freeze", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(366);
   expect(dep_list[0]).toEqual({
@@ -673,7 +675,7 @@ test("parse cabal freeze", async () => {
 test("parse conan data", async () => {
   expect(await utils.parseConanLockData(null)).toEqual([]);
   dep_list = await utils.parseConanLockData(
-    fs.readFileSync("./test/data/conan.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/conan.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -682,7 +684,7 @@ test("parse conan data", async () => {
   });
 
   dep_list = await utils.parseConanData(
-    fs.readFileSync("./test/data/conanfile.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/conanfile.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -694,7 +696,7 @@ test("parse conan data", async () => {
 test("parse clojure data", () => {
   expect(utils.parseLeiningenData(null)).toEqual([]);
   let dep_list = utils.parseLeiningenData(
-    fs.readFileSync("./test/data/project.clj", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/project.clj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(14);
   expect(dep_list[0]).toEqual({
@@ -703,7 +705,7 @@ test("parse clojure data", () => {
     version: "2.9.9-SNAPSHOT"
   });
   dep_list = utils.parseLeiningenData(
-    fs.readFileSync("./test/data/project.clj.1", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/project.clj.1", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(17);
   expect(dep_list[0]).toEqual({
@@ -712,7 +714,7 @@ test("parse clojure data", () => {
     version: "1.9.0"
   });
   dep_list = utils.parseLeiningenData(
-    fs.readFileSync("./test/data/project.clj.2", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/project.clj.2", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(49);
   expect(dep_list[0]).toEqual({
@@ -721,7 +723,7 @@ test("parse clojure data", () => {
     version: "2.1.6"
   });
   dep_list = utils.parseEdnData(
-    fs.readFileSync("./test/data/deps.edn", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/deps.edn", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(20);
   expect(dep_list[0]).toEqual({
@@ -730,7 +732,7 @@ test("parse clojure data", () => {
     version: "1.10.3"
   });
   dep_list = utils.parseEdnData(
-    fs.readFileSync("./test/data/deps.edn.1", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/deps.edn.1", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(11);
   expect(dep_list[0]).toEqual({
@@ -739,7 +741,7 @@ test("parse clojure data", () => {
     version: "1.11.0-beta1"
   });
   dep_list = utils.parseEdnData(
-    fs.readFileSync("./test/data/deps.edn.2", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/deps.edn.2", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
@@ -748,7 +750,7 @@ test("parse clojure data", () => {
     version: "1.2.1"
   });
   dep_list = utils.parseCljDep(
-    fs.readFileSync("./test/data/clj-tree.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/clj-tree.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(253);
   expect(dep_list[0]).toEqual({
@@ -758,7 +760,7 @@ test("parse clojure data", () => {
   });
 
   dep_list = utils.parseLeinDep(
-    fs.readFileSync("./test/data/lein-tree.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/lein-tree.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(47);
   expect(dep_list[0]).toEqual({
@@ -771,7 +773,7 @@ test("parse clojure data", () => {
 test("parse mix lock data", async () => {
   expect(await utils.parseMixLockData(null)).toEqual([]);
   dep_list = await utils.parseMixLockData(
-    fs.readFileSync("./test/data/mix.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/mix.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(16);
   expect(dep_list[0]).toEqual({
@@ -779,7 +781,7 @@ test("parse mix lock data", async () => {
     version: "1.7.0"
   });
   dep_list = await utils.parseMixLockData(
-    fs.readFileSync("./test/data/mix.lock.1", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/mix.lock.1", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(23);
   expect(dep_list[0]).toEqual({
@@ -791,7 +793,7 @@ test("parse mix lock data", async () => {
 test("parse github actions workflow data", async () => {
   expect(await utils.parseGitHubWorkflowData(null)).toEqual([]);
   dep_list = await utils.parseGitHubWorkflowData(
-    fs.readFileSync("./.github/workflows/nodejs.yml", (encoding = "utf-8"))
+    fs.readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -800,16 +802,18 @@ test("parse github actions workflow data", async () => {
     version: "v3"
   });
   dep_list = await utils.parseGitHubWorkflowData(
-    fs.readFileSync("./.github/workflows/repotests.yml", (encoding = "utf-8"))
+    fs.readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(4);
+  expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
     version: "v3"
   });
   dep_list = await utils.parseGitHubWorkflowData(
-    fs.readFileSync("./.github/workflows/app-release.yml", (encoding = "utf-8"))
+    fs.readFileSync("./.github/workflows/app-release.yml", {
+      encoding: "utf-8"
+    })
   );
   expect(dep_list.length).toEqual(4);
 });
@@ -817,7 +821,7 @@ test("parse github actions workflow data", async () => {
 test("parse cs pkg data", async () => {
   expect(await utils.parseCsPkgData(null)).toEqual([]);
   const dep_list = await utils.parseCsPkgData(
-    fs.readFileSync("./test/data/packages.config", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/packages.config", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(21);
   expect(dep_list[0]).toEqual({
@@ -830,7 +834,7 @@ test("parse cs pkg data", async () => {
 test("parse cs pkg data 2", async () => {
   expect(await utils.parseCsPkgData(null)).toEqual([]);
   const dep_list = await utils.parseCsPkgData(
-    fs.readFileSync("./test/data/packages2.config", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/packages2.config", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -843,7 +847,7 @@ test("parse cs pkg data 2", async () => {
 test("parse cs proj", async () => {
   expect(await utils.parseCsProjData(null)).toEqual([]);
   const dep_list = await utils.parseCsProjData(
-    fs.readFileSync("./test/sample.csproj", (encoding = "utf-8"))
+    fs.readFileSync("./test/sample.csproj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
@@ -856,7 +860,7 @@ test("parse cs proj", async () => {
 test("parse project.assets.json", async () => {
   expect(await utils.parseCsProjAssetsData(null)).toEqual([]);
   const dep_list = await utils.parseCsProjAssetsData(
-    fs.readFileSync("./test/data/project.assets.json", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(142);
   expect(dep_list[0]).toEqual({
@@ -871,7 +875,7 @@ test("parse project.assets.json", async () => {
 test("parse packages.lock.json", async () => {
   expect(await utils.parseCsPkgLockData(null)).toEqual([]);
   const dep_list = await utils.parseCsPkgLockData(
-    fs.readFileSync("./test/data/packages.lock.json", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(14);
   expect(dep_list[0]).toEqual({
@@ -884,7 +888,7 @@ test("parse packages.lock.json", async () => {
 test("parse .net cs proj", async () => {
   expect(await utils.parseCsProjData(null)).toEqual([]);
   const dep_list = await utils.parseCsProjData(
-    fs.readFileSync("./test/data/sample-dotnet.csproj", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/sample-dotnet.csproj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(19);
   expect(dep_list[0]).toEqual({
@@ -1405,7 +1409,7 @@ test("parseComposerLock", () => {
 
 test("parseGemfileLockData", async () => {
   let deps = await utils.parseGemfileLockData(
-    fs.readFileSync("./test/data/Gemfile.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/Gemfile.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(140);
   expect(deps[0]).toEqual({
@@ -1416,7 +1420,7 @@ test("parseGemfileLockData", async () => {
 
 test("parseGemspecData", async () => {
   let deps = await utils.parseGemspecData(
-    fs.readFileSync("./test/data/xmlrpc.gemspec", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/xmlrpc.gemspec", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
@@ -1430,14 +1434,15 @@ test("parseGemspecData", async () => {
 test("parse requirements.txt", async () => {
   jest.setTimeout(120000);
   let deps = await utils.parseReqFile(
-    fs.readFileSync(
-      "./test/data/requirements.comments.txt",
-      (encoding = "utf-8")
-    )
+    fs.readFileSync("./test/data/requirements.comments.txt", {
+      encoding: "utf-8"
+    })
   );
   expect(deps.length).toEqual(31);
   deps = await utils.parseReqFile(
-    fs.readFileSync("./test/data/requirements.freeze.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/requirements.freeze.txt", {
+      encoding: "utf-8"
+    })
   );
   expect(deps.length).toEqual(113);
   expect(deps[0]).toEqual({
@@ -1450,18 +1455,18 @@ test("parse requirements.txt", async () => {
 test("parse poetry.lock", async () => {
   jest.setTimeout(120000);
   let deps = await utils.parsePoetrylockData(
-    fs.readFileSync("./test/data/poetry.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/poetry.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(31);
   deps = await utils.parsePoetrylockData(
-    fs.readFileSync("./test/data/poetry1.lock", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/poetry1.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(67);
 });
 
 test("parse wheel metadata", () => {
   let deps = utils.parseBdistMetadata(
-    fs.readFileSync("./test/data/METADATA", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/METADATA", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
@@ -1473,10 +1478,9 @@ test("parse wheel metadata", () => {
     repository: { url: "https://github.com/adrienverge/yamllint" }
   });
   deps = utils.parseBdistMetadata(
-    fs.readFileSync(
-      "./test/data/mercurial-5.5.2-py3.8.egg-info",
-      (encoding = "utf-8")
-    )
+    fs.readFileSync("./test/data/mercurial-5.5.2-py3.8.egg-info", {
+      encoding: "utf-8"
+    })
   );
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
@@ -1510,7 +1514,7 @@ test("parse pipfile.lock with hashes", async () => {
   jest.setTimeout(120000);
   let deps = await utils.parsePiplockData(
     JSON.parse(
-      fs.readFileSync("./test/data/Pipfile.lock", (encoding = "utf-8"))
+      fs.readFileSync("./test/data/Pipfile.lock", { encoding: "utf-8" })
     )
   );
   expect(deps.length).toEqual(46);
@@ -1536,7 +1540,7 @@ test("parse nupkg file", async () => {
 
 test("parse bazel skyframe", () => {
   let deps = utils.parseBazelSkyframe(
-    fs.readFileSync("./test/data/bazel/bazel-state.txt", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/bazel/bazel-state.txt", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(16);
   expect(deps[0].name).toEqual("guava");
@@ -1544,7 +1548,7 @@ test("parse bazel skyframe", () => {
 
 test("parse bazel build", () => {
   let projs = utils.parseBazelBuild(
-    fs.readFileSync("./test/data/bazel/BUILD", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/bazel/BUILD", { encoding: "utf-8" })
   );
   expect(projs.length).toEqual(2);
   expect(projs[0]).toEqual("java-maven-lib");
@@ -1552,7 +1556,7 @@ test("parse bazel build", () => {
 
 test("parse helm charts", async () => {
   let dep_list = await utils.parseHelmYamlData(
-    fs.readFileSync("./test/data/Chart.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/Chart.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -1564,10 +1568,9 @@ test("parse helm charts", async () => {
     }
   });
   dep_list = await utils.parseHelmYamlData(
-    fs.readFileSync(
-      "./test/data/prometheus-community-index.yaml",
-      (encoding = "utf-8")
-    )
+    fs.readFileSync("./test/data/prometheus-community-index.yaml", {
+      encoding: "utf-8"
+    })
   );
   expect(dep_list.length).toEqual(1836);
   expect(dep_list[0]).toEqual({
@@ -1584,25 +1587,25 @@ test("parse helm charts", async () => {
 
 test("parse container spec like files", async () => {
   let dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/docker-compose.yml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/docker-compose.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/docker-compose-ng.yml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/docker-compose-ng.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(8);
   expect(dep_list[0]).toEqual({
     service: "frontend"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/docker-compose-cr.yml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/docker-compose-cr.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(14);
   expect(dep_list[0]).toEqual({
     service: "crapi-identity"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/tekton-task.yml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/tekton-task.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
@@ -1610,7 +1613,7 @@ test("parse container spec like files", async () => {
       "docker.io/amazon/aws-cli:2.0.52@sha256:1506cec98a7101c935176d440a14302ea528b8f92fcaf4a6f1ea2d7ecef7edc4"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/postgrescluster.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/postgrescluster.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(6);
   expect(dep_list[0]).toEqual({
@@ -1618,49 +1621,49 @@ test("parse container spec like files", async () => {
       "registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.5-1"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/deployment.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/deployment.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "node-typescript-example"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/skaffold.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/skaffold.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(6);
   expect(dep_list[0]).toEqual({
     image: "leeroy-web"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/skaffold-ms.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/skaffold-ms.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(22);
   expect(dep_list[0]).toEqual({
     image: "emailservice"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/emailservice.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/emailservice.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "emailservice"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/redis.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/redis.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "redis:alpine"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/adservice.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/adservice.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "gcr.io/google-samples/microservices-demo/adservice:v0.4.1"
   });
   dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/kustomization.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/kustomization.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(22);
   expect(dep_list[0]).toEqual({
@@ -1671,7 +1674,7 @@ test("parse container spec like files", async () => {
 test("parse cloudbuild data", async () => {
   expect(await utils.parseCloudBuildData(null)).toEqual([]);
   dep_list = await utils.parseCloudBuildData(
-    fs.readFileSync("./test/data/cloudbuild.yaml", (encoding = "utf-8"))
+    fs.readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -1691,10 +1694,9 @@ test("parse privado files", () => {
 
 test("parse openapi spec files", async () => {
   let aservice = await utils.parseOpenapiSpecData(
-    fs.readFileSync(
-      "./test/data/openapi/openapi-spec.json",
-      (encoding = "utf-8")
-    )
+    fs.readFileSync("./test/data/openapi/openapi-spec.json", {
+      encoding: "utf-8"
+    })
   );
   expect(aservice.length).toEqual(1);
   expect(aservice[0]).toEqual({
@@ -1746,10 +1748,9 @@ test("parse openapi spec files", async () => {
     authenticated: true
   });
   aservice = await utils.parseOpenapiSpecData(
-    fs.readFileSync(
-      "./test/data/openapi/openapi-oai.yaml",
-      (encoding = "utf-8")
-    )
+    fs.readFileSync("./test/data/openapi/openapi-oai.yaml", {
+      encoding: "utf-8"
+    })
   );
   expect(aservice.length).toEqual(1);
   expect(aservice[0]).toEqual({
@@ -1781,5 +1782,100 @@ test("parse openapi spec files", async () => {
       "https://api.openai.com/v1/moderations"
     ],
     authenticated: false
+  });
+});
+
+test("parse swift deps files", () => {
+  expect(utils.parseSwiftJsonTree(null, "./test/data/swift-deps.json")).toEqual(
+    {}
+  );
+  let retData = utils.parseSwiftJsonTree(
+    fs.readFileSync("./test/data/swift-deps.json", { encoding: "utf-8" }),
+    "./test/data/swift-deps.json"
+  );
+  expect(retData.pkgList.length).toEqual(5);
+  expect(retData.pkgList[0]).toEqual({
+    group: "swift-markdown",
+    name: "swift-markdown",
+    version: "unspecified",
+    properties: [
+      { name: "SrcPath", value: "/Volumes/Work/sandbox/swift-markdown" },
+      { name: "SrcFile", value: "./test/data/swift-deps.json" }
+    ],
+    "bom-ref": "pkg:application/swift-markdown/swift-markdown@unspecified"
+  });
+  expect(retData.dependenciesList.length).toEqual(5);
+  expect(retData.dependenciesList[0]).toEqual({
+    ref: "pkg:application/swift-markdown/swift-markdown@unspecified",
+    dependsOn: [
+      "pkg:swift/swift-cmark/cmark-gfm@unspecified",
+      "pkg:swift/swift-argument-parser/swift-argument-parser@1.0.3",
+      "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"
+    ]
+  });
+  expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual(
+    {
+      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
+      dependsOn: []
+    }
+  );
+  retData = utils.parseSwiftJsonTree(
+    fs.readFileSync("./test/data/swift-deps1.json", { encoding: "utf-8" }),
+    "./test/data/swift-deps.json"
+  );
+  expect(retData.pkgList.length).toEqual(5);
+  expect(retData.pkgList[0]).toEqual({
+    group: "swift-certificates",
+    name: "swift-certificates",
+    version: "unspecified",
+    properties: [
+      {
+        name: "SrcPath",
+        value: "/Volumes/Work/sandbox/swift-certificates"
+      },
+      { name: "SrcFile", value: "./test/data/swift-deps.json" }
+    ],
+    "bom-ref":
+      "pkg:application/swift-certificates/swift-certificates@unspecified"
+  });
+  expect(retData.dependenciesList).toEqual([
+    {
+      ref: "pkg:application/swift-certificates/swift-certificates@unspecified",
+      dependsOn: ["pkg:swift/swift-crypto/swift-crypto@2.4.0"]
+    },
+    {
+      ref: "pkg:swift/swift-crypto/swift-crypto@2.4.0",
+      dependsOn: ["pkg:swift/swift-asn1/swift-asn1@0.7.0"]
+    },
+    {
+      ref: "pkg:swift/swift-asn1/swift-asn1@0.7.0",
+      dependsOn: ["pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"]
+    },
+    {
+      ref: "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0",
+      dependsOn: ["pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0"]
+    },
+    {
+      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
+      dependsOn: []
+    }
+  ]);
+  let pkgList = utils.parseSwiftResolved("./test/data/Package.resolved");
+  expect(pkgList.length).toEqual(4);
+  expect(pkgList[0]).toEqual({
+    name: "swift-argument-parser",
+    group: "",
+    version: "1.0.3",
+    properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
+    repository: { url: "https://github.com/apple/swift-argument-parser" }
+  });
+  pkgList = utils.parseSwiftResolved("./test/data/Package2.resolved");
+  expect(pkgList.length).toEqual(4);
+  expect(pkgList[0]).toEqual({
+    name: "swift-argument-parser",
+    group: "",
+    version: "1.2.2",
+    properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
+    repository: { url: "https://github.com/apple/swift-argument-parser.git" }
   });
 });

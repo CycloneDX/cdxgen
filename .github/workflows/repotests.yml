@@ -36,11 +36,13 @@ jobs:
         run: |
           npm install
           npm run build --if-present
+          npm run lint
           npm test
           mkdir -p repotests
           mkdir -p bomresults
         env:
           CI: true
+      - uses: swift-actions/setup-swift@v1
       - uses: actions/checkout@v3
         with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
@@ -89,6 +91,10 @@ jobs:
         with:
           repository: 'gojek/ziggurat'
           path: 'repotests/ziggurat'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'apple/swift-markdown'
+          path: 'repotests/swift-markdown'
       - uses: actions/checkout@v3
         with:
           repository: 'GoogleCloudPlatform/microservices-demo'
@@ -149,6 +155,10 @@ jobs:
           SCAN_DEBUG_MODE=debug bin/cdxgen -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-clj.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-clj.xml --input-format xml --input-version v1_4
+
+          SCAN_DEBUG_MODE=debug bin/cdxgen -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-swift.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-swift.xml --input-format xml --input-version v1_4
 
           SCAN_DEBUG_MODE=debug bin/cdxgen -r repotests/microservices-demo -o bomresults/bom-msd.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-msd.json --input-format json --input-version v1_4

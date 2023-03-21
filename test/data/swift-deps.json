@@ -1,0 +1,48 @@
+{
+  "identity": "swift-markdown",
+  "name": "swift-markdown",
+  "url": "/Volumes/Work/sandbox/swift-markdown",
+  "version": "unspecified",
+  "path": "/Volumes/Work/sandbox/swift-markdown",
+  "dependencies": [
+    {
+      "identity": "swift-cmark",
+      "name": "cmark-gfm",
+      "url": "https://github.com/apple/swift-cmark.git",
+      "version": "unspecified",
+      "path": "/Volumes/Work/sandbox/swift-markdown/.build/checkouts/swift-cmark",
+      "dependencies": [
+
+      ]
+    },
+    {
+      "identity": "swift-argument-parser",
+      "name": "swift-argument-parser",
+      "url": "https://github.com/apple/swift-argument-parser",
+      "version": "1.0.3",
+      "path": "/Volumes/Work/sandbox/swift-markdown/.build/checkouts/swift-argument-parser",
+      "dependencies": [
+
+      ]
+    },
+    {
+      "identity": "swift-docc-plugin",
+      "name": "SwiftDocCPlugin",
+      "url": "https://github.com/apple/swift-docc-plugin",
+      "version": "1.1.0",
+      "path": "/Volumes/Work/sandbox/swift-markdown/.build/checkouts/swift-docc-plugin",
+      "dependencies": [
+        {
+          "identity": "swift-docc-symbolkit",
+          "name": "SymbolKit",
+          "url": "https://github.com/apple/swift-docc-symbolkit",
+          "version": "1.0.0",
+          "path": "/Volumes/Work/sandbox/swift-markdown/.build/checkouts/swift-docc-symbolkit",
+          "dependencies": [
+
+          ]
+        }
+      ]
+    }
+  ]
+}

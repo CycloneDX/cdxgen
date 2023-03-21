@@ -377,7 +377,7 @@ const parsePkgLock = async (pkgLockFile) => {
         type: "application"
       };
     }
-    if (rootPkg) {
+    if (rootPkg && rootPkg.name) {
       const purl = new PackageURL(
         "application",
         "",
@@ -1018,7 +1018,7 @@ exports.parsePom = parsePom;
  */
 const parseMavenTree = function (rawOutput) {
   if (!rawOutput) {
-    return [];
+    return {};
   }
   const deps = [];
   const dependenciesList = [];
@@ -3772,6 +3772,207 @@ const convertOSQueryResults = function (queryCategory, queryObj, results) {
   return pkgList;
 };
 exports.convertOSQueryResults = convertOSQueryResults;
+
+const _swiftDepPkgList = (pkgList, dependenciesList, depKeys, jsonData) => {
+  if (jsonData && jsonData.dependencies) {
+    for (let adep of jsonData.dependencies) {
+      const urlOrPath = adep.url || adep.path;
+      const apkg = {
+        group: adep.identity || "",
+        name: adep.name,
+        version: adep.version
+      };
+      const purl = new PackageURL(
+        "swift",
+        apkg.group,
+        apkg.name,
+        apkg.version,
+        null,
+        null
+      );
+      const purlString = decodeURIComponent(purl.toString());
+      if (urlOrPath) {
+        if (urlOrPath.startsWith("http")) {
+          apkg.repository = { url: urlOrPath };
+          if (apkg.path) {
+            apkg.properties = [
+              {
+                name: "SrcPath",
+                value: apkg.path
+              }
+            ];
+          }
+        } else {
+          apkg.properties = [
+            {
+              name: "SrcPath",
+              value: urlOrPath
+            }
+          ];
+        }
+      }
+      pkgList.push(apkg);
+      // Handle the immediate dependencies before recursing
+      if (adep.dependencies && adep.dependencies.length) {
+        const deplist = [];
+        for (let cdep of adep.dependencies) {
+          const deppurl = new PackageURL(
+            "swift",
+            cdep.identity || "",
+            cdep.name,
+            cdep.version,
+            null,
+            null
+          );
+          const deppurlString = decodeURIComponent(deppurl.toString());
+          deplist.push(deppurlString);
+        }
+        if (!depKeys[purlString]) {
+          dependenciesList.push({
+            ref: purlString,
+            dependsOn: deplist
+          });
+          depKeys[purlString] = true;
+        }
+        if (adep.dependencies && adep.dependencies.length) {
+          _swiftDepPkgList(pkgList, dependenciesList, depKeys, adep);
+        }
+      } else {
+        if (!depKeys[purlString]) {
+          dependenciesList.push({
+            ref: purlString,
+            dependsOn: []
+          });
+          depKeys[purlString] = true;
+        }
+      }
+    }
+  }
+  return { pkgList, dependenciesList };
+};
+
+/**
+ * Parse swift dependency tree output
+ * @param {string} rawOutput Swift dependencies json output
+ * @param {string} pkgFile Package.swift file
+ */
+const parseSwiftJsonTree = (rawOutput, pkgFile) => {
+  if (!rawOutput) {
+    return {};
+  }
+  const pkgList = [];
+  const dependenciesList = [];
+  let depKeys = {};
+  let rootPkg = {};
+  let jsonData = {};
+  try {
+    jsonData = JSON.parse(rawOutput);
+    if (jsonData && jsonData.name) {
+      rootPkg = {
+        group: jsonData.identity || "",
+        name: jsonData.name,
+        version: jsonData.version
+      };
+      const urlOrPath = jsonData.url || jsonData.path;
+      if (urlOrPath) {
+        if (urlOrPath.startsWith("http")) {
+          rootPkg.repository = { url: urlOrPath };
+        } else {
+          rootPkg.properties = [
+            {
+              name: "SrcPath",
+              value: urlOrPath
+            },
+            {
+              name: "SrcFile",
+              value: pkgFile
+            }
+          ];
+        }
+      }
+      const purl = new PackageURL(
+        "application",
+        rootPkg.group,
+        rootPkg.name,
+        rootPkg.version,
+        null,
+        null
+      );
+      const purlString = decodeURIComponent(purl.toString());
+      rootPkg["bom-ref"] = purlString;
+      pkgList.push(rootPkg);
+      const deplist = [];
+      for (const rd of jsonData.dependencies) {
+        const deppurl = new PackageURL(
+          "swift",
+          rd.identity || "",
+          rd.name,
+          rd.version,
+          null,
+          null
+        );
+        const deppurlString = decodeURIComponent(deppurl.toString());
+        deplist.push(deppurlString);
+      }
+      dependenciesList.push({
+        ref: purlString,
+        dependsOn: deplist
+      });
+      _swiftDepPkgList(pkgList, dependenciesList, depKeys, jsonData);
+    }
+  } catch (e) {
+    if (DEBUG_MODE) {
+      console.log(e);
+    }
+    return {};
+  }
+  return {
+    pkgList,
+    dependenciesList
+  };
+};
+exports.parseSwiftJsonTree = parseSwiftJsonTree;
+
+/**
+ * Parse swift package resolved file
+ * @param {string} resolvedFile Package.resolved file
+ */
+const parseSwiftResolved = (resolvedFile) => {
+  const pkgList = [];
+  if (fs.existsSync(resolvedFile)) {
+    try {
+      const pkgData = JSON.parse(fs.readFileSync(resolvedFile, "utf8"));
+      let resolvedList = [];
+      if (pkgData.pins) {
+        resolvedList = pkgData.pins;
+      } else if (pkgData.object && pkgData.object.pins) {
+        resolvedList = pkgData.object.pins;
+      }
+      for (const adep of resolvedList) {
+        const apkg = {
+          name: adep.package || adep.identity,
+          group: "",
+          version: adep.state.version || adep.state.revision,
+          properties: [
+            {
+              name: "SrcFile",
+              value: resolvedFile
+            }
+          ]
+        };
+        const repLocation = adep.location || adep.repositoryURL;
+        if (repLocation) {
+          apkg.repository = { url: repLocation };
+        }
+        pkgList.push(apkg);
+      }
+    } catch (err) {
+      // continue regardless of error
+    }
+  }
+  return pkgList;
+};
+exports.parseSwiftResolved = parseSwiftResolved;
 
 /**
  * Collect maven dependencies
