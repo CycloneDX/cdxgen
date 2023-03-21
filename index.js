@@ -76,7 +76,7 @@ const createDefaultParentComponent = (path) => {
     name: dirName,
     type: "application"
   };
-  ppurl = new PackageURL(
+  const ppurl = new PackageURL(
     "application",
     parentComponent.group,
     parentComponent.name,
@@ -2854,7 +2854,6 @@ const createSwiftBom = async (path, options) => {
   let completedPath = [];
   if (pkgResolvedFiles.length) {
     for (let f of pkgResolvedFiles) {
-      const basePath = pathLib.dirname(f);
       if (!parentComponent || !Object.keys(parentComponent).length) {
         parentComponent = createDefaultParentComponent(f);
       }
@@ -2917,7 +2916,6 @@ const createSwiftBom = async (path, options) => {
     parentComponent,
     dependencies
   });
-  return {};
 };
 
 /**
