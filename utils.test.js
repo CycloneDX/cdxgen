@@ -1214,7 +1214,7 @@ test("parseYarnLock", async () => {
       }
     ]
   });
-
+  expect(parsedList.dependenciesList.length).toEqual(56);
   identMap = utils.yarnLockToIdentMap(
     fs.readFileSync("./test/data/yarn_locks/yarn.lock", "utf8")
   );
@@ -1329,6 +1329,7 @@ test("parseYarnLock", async () => {
   });
   parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn4.lock");
   expect(parsedList.pkgList.length).toEqual(1);
+  expect(parsedList.dependenciesList.length).toEqual(1);
   parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn-at.lock");
   expect(parsedList.pkgList.length).toEqual(4);
   expect(parsedList.dependenciesList.length).toEqual(4);

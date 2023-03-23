@@ -4208,6 +4208,7 @@ const extractJarArchive = function (jarFile, tempDir) {
             jarMetadata["Extension-Name"] ||
             jarMetadata["Implementation-Vendor-Id"] ||
             jarMetadata["Bundle-SymbolicName"] ||
+            jarMetadata["Bundle-Vendor"] ||
             jarMetadata["Automatic-Module-Name"];
           let name = "";
           if (
@@ -4274,8 +4275,8 @@ const extractJarArchive = function (jarFile, tempDir) {
           }
           if (name && version) {
             pkgList.push({
-              group: group === "." ? "" : group || "",
-              name: name || "",
+              group: group === "." ? "" : encodeURIComponent(group) || "",
+              name: name ? encodeURIComponent(name) : "",
               version,
               properties: [
                 {
