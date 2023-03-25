@@ -531,7 +531,14 @@ function addComponent(
 
     let purl =
       pkg.purl ||
-      new PackageURL(ptype, group, name, version, pkg.qualifiers, pkg.subpath);
+      new PackageURL(
+        ptype,
+        encodeURIComponent(group),
+        encodeURIComponent(name),
+        version,
+        pkg.qualifiers,
+        pkg.subpath
+      );
     let purlString = purl.toString();
     purlString = decodeURIComponent(purlString);
     let description = { "#cdata": pkg.description };
