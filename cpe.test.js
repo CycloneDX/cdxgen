@@ -21,13 +21,14 @@ test("test query", () => {
       "pkg:maven/org.springframework.integration/spring-integration-jms@5.5.5"
     );
     expect(cpeString).toEqual(
-      "cpe:2.3:a:org.springframework.integration:spring-integration-jms:5.5.5:*:*:*:*:*:*:*"
+      "cpe:2.3:a:org.springframework.integration:spring-integration-jms:5.5.5:*:*:*:*:maven:*:*"
     );
     cpeLib.closeDatabase();
   }
 });
 
 test("test query db less", () => {
+  cpeLib.closeDatabase();
   let cpeString = cpeLib.convertPurl(
     "pkg:github/aerospike/aerospike-server@5.5.5"
   );
@@ -38,6 +39,10 @@ test("test query db less", () => {
     "pkg:maven/org.springframework.integration/spring-integration-jms@5.5.5"
   );
   expect(cpeString).toEqual(
-    "cpe:2.3:a:org.springframework.integration:spring-integration-jms:5.5.5:*:*:*:*:*:*:*"
+    "cpe:2.3:a:org.springframework.integration:spring-integration-jms:5.5.5:*:*:*:*:maven:*:*"
+  );
+  cpeString = cpeLib.convertPurl("pkg:debian/openssl@1.1.0");
+  expect(cpeString).toEqual(
+    "cpe:2.3:a:openssl_project:openssl:1.1.0:*:*:*:*:*:*:*"
   );
 });
