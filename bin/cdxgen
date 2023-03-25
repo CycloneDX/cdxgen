@@ -95,13 +95,13 @@ const args = require("yargs")
     description: "Path to the purl2cpe sqllite database.",
     default: "purl2cpe.db"
   })
-  .option("component-supplier-name", {
+  .option("components-supplier-name", {
     description:
-      "The organization that supplied the component. The supplier may often be the manufacturer, but may also be a distributor or repackager."
+      "The organization that supplied all the components. The supplier may often be the manufacturer, but may also be a distributor or repackager."
   })
-  .option("component-supplier-url", {
+  .option("components-supplier-url", {
     description:
-      "The organization url that supplied the component. The supplier may often be the manufacturer, but may also be a distributor or repackager."
+      "The organization url that supplied all the components. The supplier may often be the manufacturer, but may also be a distributor or repackager. Comma separated values for multiple urls."
   })
   .scriptName("cdxgen")
   .version()
@@ -162,8 +162,8 @@ let options = {
   serverPort: args.serverPort,
   convertCpe: args.cpe,
   cpeData: args.cpeData,
-  componentSupplierName: args.componentSupplierName,
-  componentSupplierUrl: args.componentSupplierUrl
+  componentsSupplierName: args.componentsSupplierName,
+  componentsSupplierUrl: args.componentsSupplierUrl
 };
 
 /**

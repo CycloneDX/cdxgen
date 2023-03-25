@@ -236,7 +236,10 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     Object.keys(parentComponent).length
   ) {
     const allPComponents = listComponents(
-      {},
+      {
+        componentsSupplierName: options.componentsSupplierName,
+        componentsSupplierUrl: options.componentsSupplierUrl
+      },
       {},
       parentComponent,
       parentComponent.type,
@@ -505,6 +508,19 @@ function addComponent(
   if (!isRootPkg) {
     let pkgIdentifier = parsePackageJsonName(pkg.name);
     let publisher = pkg.publisher || "";
+    // Fill the default supplier details if available
+    let supplier = pkg.supplier || {};
+    if (
+      options.componentsSupplierName &&
+      options.componentsSupplierName.length
+    ) {
+      supplier.name = options.componentsSupplierName;
+    }
+    if (options.componentsSupplierUrl && options.componentsSupplierUrl.length) {
+      if (format === "json") {
+        supplier.url = options.componentsSupplierUrl.split(",");
+      }
+    }
     let group = pkg.group || pkgIdentifier.scope;
     // Create empty group
     group = group || "";
@@ -564,6 +580,7 @@ function addComponent(
       return;
     }
     let component = {
+      supplier,
       publisher,
       group,
       name,
