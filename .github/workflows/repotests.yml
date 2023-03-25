@@ -113,82 +113,86 @@ jobs:
           bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-java.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-java.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-java.json
+          sbomqs score bomresults/bom-java.json
+
+          # Now let's beat the score
+          bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --components-supplier-name "Foo" --components-supplier-url "https://cyclonedx.example.com" --cpe --cpe-data ./purl2cpe.db --sbom-license "Apache-2.0"
+          sbomqs score bomresults/bom-java.json
 
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-github.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-github.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-github.json
+          sbomqs score bomresults/bom-github.json
 
-          FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
+          FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --components-supplier-name "Foo" --components-supplier-url "https://cyclonedx.example.com" --cpe --cpe-data ./purl2cpe.db --sbom-license "Apache-2.0"
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-ts.json
+          sbomqs score bomresults/bom-ts.json
 
           FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-ts.json
+          sbomqs score bomresults/bom-ts.json
 
           bin/cdxgen -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-go.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-go.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-go.json
+          sbomqs score bomresults/bom-go.json
 
           FETCH_LICENSE=true bin/cdxgen -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp2.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp2.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-csharp2.json
+          sbomqs score bomresults/bom-csharp2.json
 
           bin/cdxgen -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp3.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp3.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-csharp3.json
+          sbomqs score bomresults/bom-csharp3.json
 
-          FETCH_LICENSE=true bin/cdxgen -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json
+          FETCH_LICENSE=true bin/cdxgen -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --components-supplier-name "Foo" --components-supplier-url "https://cyclonedx.example.com" --cpe --cpe-data ./purl2cpe.db --sbom-license "Apache-2.0"
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-python.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-python.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-python.json
+          sbomqs score bomresults/bom-python.json
 
           bin/cdxgen -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-php.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-php.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-php.json
+          sbomqs score bomresults/bom-php.json
 
           bin/cdxgen -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ruby.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ruby.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-ruby.json
+          sbomqs score bomresults/bom-ruby.json
 
           bin/cdxgen -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-bazel.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-bazel.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-bazel.json
+          sbomqs score bomresults/bom-bazel.json
 
           bin/cdxgen -p -r -t dart repotests/gallery -o bomresults/bom-pub.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-pub.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-pub.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-pub.json
+          sbomqs score bomresults/bom-pub.json
 
           SCAN_DEBUG_MODE=debug bin/cdxgen -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-clj.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-clj.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-clj.json
+          sbomqs score bomresults/bom-clj.json
 
           SCAN_DEBUG_MODE=debug bin/cdxgen -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-swift.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-swift.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-swift.json
+          sbomqs score bomresults/bom-swift.json
 
           SCAN_DEBUG_MODE=debug bin/cdxgen -r repotests/microservices-demo -o bomresults/bom-msd.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-msd.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-msd.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-msd.json
+          sbomqs score bomresults/bom-msd.json
 
           SCAN_DEBUG_MODE=debug bin/cdxgen -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-yaml.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-yaml.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-yaml.json
+          sbomqs score bomresults/bom-yaml.json
 
           mkdir -p jenkins
           wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
@@ -200,7 +204,7 @@ jobs:
           SCAN_DEBUG_MODE=debug bin/cdxgen -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-jenkins.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-jenkins.xml --input-format xml --input-version v1_4
-          sbomqs score --filepath bomresults/bom-jenkins.json
+          sbomqs score bomresults/bom-jenkins.json
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
         with:
