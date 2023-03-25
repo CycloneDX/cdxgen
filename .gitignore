@@ -110,3 +110,4 @@ dist
 .idea/
 test/obj
 .vscode/
+purl2cpe.db

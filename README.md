@@ -117,6 +117,10 @@ Options:
       --server                 Run cdxgen as a server                  [boolean]
       --server-host            Listen address             [default: "127.0.0.1"]
       --server-port            Listen port                     [default: "9090"]
+      --cpe                    Perform purl to cpe conversion using scanoss
+                               purl2cpe.                               [boolean]
+      --cpe-data               Path to the purl2cpe sqllite database.
+                                                        [default: "purl2cpe.db"]
       --version                Show version number                     [boolean]
   -h                           Show help                               [boolean]
 ```
@@ -194,6 +198,29 @@ curl -H "Content-Type: application/json" http://localhost:9090/sbom -XPOST -d $'
 ```shell
 git clone https://github.com/cyclonedx/cdxgen.git
 docker compose up
+```
+
+## purl2cpe conversion
+
+cdxgen can use scanoss purl2cpe sqlite database to add cpe strings to all the components. To enable this conversion, either build the [database](./contrib/purl2cpe/build.sh) or [download](https://github.com/AppThreat/vdb) a pre-built database.
+
+```bash
+cd contrib/purl2cpe
+bash build.sh
+```
+
+or
+
+```shell
+oras pull ghcr.io/appthreat/purl2cpe:v1
+```
+
+Then invoke cdxgen with `--cpe` and `--cpe-data` arguments.
+
+Example
+
+```shell
+cdxgen --cpe --cpe-data purl2cpe.db -t java -o bom.json
 ```
 
 ## Privado.ai support

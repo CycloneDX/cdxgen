@@ -590,9 +590,14 @@ function addComponent(
     }
 
     processHashes(pkg, component, format);
-    // Retain any component properties
-    if (format === "json" && pkg.properties && pkg.properties.length) {
-      component.properties = pkg.properties;
+    // Retain any component properties and externalReferences
+    if (format === "json") {
+      if (pkg.properties && pkg.properties.length) {
+        component.properties = pkg.properties;
+      }
+      if (pkg.externalReferences && pkg.externalReferences.length) {
+        component.externalReferences = pkg.externalReferences;
+      }
     }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;

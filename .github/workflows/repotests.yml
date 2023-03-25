@@ -109,6 +109,7 @@ jobs:
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
+          oras pull ghcr.io/appthreat/purl2cpe:v1
           bin/cdxgen -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-java.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-java.xml --input-format xml --input-version v1_4
