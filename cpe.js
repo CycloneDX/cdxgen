@@ -31,7 +31,7 @@ const KNOWN_PKG_TYPES = [
   "swift"
 ];
 
-CPE_FULL_REGEX =
+const CPE_FULL_REGEX =
   /cpe:?:[^:]+:(?<cve_type>[^:]+):(?<vendor>[^:]+):(?<package>[^:]+):(?<version>[^:]+):(?<update>[^:]+):(?<edition>[^:]+):(?<lang>[^:]+):(?<sw_edition>[^:]+):(?<target_sw>[^:]+):(?<target_hw>[^:]+):(?<other>[^:]+)/gm;
 
 const openDatabase = (dbpath) => {

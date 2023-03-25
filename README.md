@@ -121,6 +121,13 @@ Options:
                                purl2cpe.                               [boolean]
       --cpe-data               Path to the purl2cpe sqllite database.
                                                         [default: "purl2cpe.db"]
+      --component-supplier-name  The organization that supplied the component.
+                                 The supplier may often be the manufacturer, but
+                                 may also be a distributor or repackager.
+      --component-supplier-url   The organization url that supplied the
+                                 component. The supplier may often be the
+                                 manufacturer, but may also be a distributor or
+                                 repackager.
       --version                Show version number                     [boolean]
   -h                           Show help                               [boolean]
 ```
