@@ -3,6 +3,7 @@ const fs = require("fs");
 const { PackageURL } = require("packageurl-js");
 
 let db = undefined;
+let dbOpenTried = false;
 
 const KNOWN_PKG_TYPES = [
   "composer",
@@ -41,6 +42,7 @@ const openDatabase = (dbpath) => {
   if (fs.existsSync(dbpath)) {
     try {
       db = sqlite3(dbpath, { readonly: true, fileMustExist: true });
+      dbOpenTried = true;
     } catch (err) {
       console.log("Unable to open the cpe database at", dbpath);
       console.log(err);
@@ -64,7 +66,12 @@ const closeDatabase = () => {
 };
 exports.closeDatabase = closeDatabase;
 
-const convertPurl = (purl) => {
+const convertPurl = (purl, dbpath = undefined) => {
+  // Try to open database for first invocation
+  if (!db && dbpath && !dbOpenTried) {
+    openDatabase(dbpath);
+    dbOpenTried = true;
+  }
   let purlString = "";
   if (typeof purl === "string" || purl instanceof String) {
     try {

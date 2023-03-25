@@ -133,6 +133,7 @@ Options:
                                   manufacturer, but may also be a distributor or
                                   repackager. Comma separated values for
                                   multiple urls.
+      --sbom-license              SPDX License ID for the final SBoM.
       --version                   Show version number                  [boolean]
   -h                              Show help                            [boolean]
 ```
@@ -212,29 +213,6 @@ git clone https://github.com/cyclonedx/cdxgen.git
 docker compose up
 ```
 
-## purl2cpe conversion
-
-cdxgen can use scanoss purl2cpe sqlite database to add cpe strings to all the components. To enable this conversion, either build the [database](./contrib/purl2cpe/build.sh) or [download](https://github.com/AppThreat/vdb) a pre-built database.
-
-```bash
-cd contrib/purl2cpe
-bash build.sh
-```
-
-or
-
-```shell
-oras pull ghcr.io/appthreat/purl2cpe:v1
-```
-
-Then invoke cdxgen with `--cpe` and `--cpe-data` arguments.
-
-Example
-
-```shell
-cdxgen --cpe --cpe-data purl2cpe.db -t java -o bom.json
-```
-
 ## Privado.ai support
 
 In universal mode, cdxgen can look for any [Privado](https://www.privado.ai?utm_source=cyclonedx) scan reports and enrich the SBoM with data (flow and classification), endpoints, and leakage information. Such an SBoM would help with privacy compliance and use cases.
@@ -309,6 +287,39 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | SBOM_SIGN_ALGORITHM       | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                     |
 | SBOM_SIGN_PRIVATE_KEY     | Private key to use for signing                                                                                     |
 | SBOM_SIGN_PUBLIC_KEY      | Optional. Public key to include in the SBoM signature                                                              |
+
+## purl2cpe conversion
+
+cdxgen can use scanoss purl2cpe sqlite database to add cpe strings to all the components. If one is missing in the database, it can generate one based on the purl. The resulting cpe string must be treated as just a random string since there is no way to know whether it would be compatible with any other systems. If cpe is not required for your use cases, do not use this feature!
+
+To enable this conversion, either build the [database](./contrib/purl2cpe/build.sh) or [download](https://github.com/AppThreat/vdb) a pre-built database.
+
+```bash
+cd contrib/purl2cpe
+bash build.sh
+```
+
+or
+
+```shell
+oras pull ghcr.io/appthreat/purl2cpe:v1
+```
+
+Then invoke cdxgen with `--cpe` and `--cpe-data` arguments.
+
+Example
+
+```shell
+cdxgen --cpe --cpe-data purl2cpe.db -t java -o bom.json
+```
+
+When used in combination with the arguments `--components-supplier-name` and `--components-supplier-url`, cdxgen can beat the SBoM scoring tools that look for completeness.
+
+Example command to beat the score:
+
+```shell
+bin/cdxgen -t java -o /tmp/bom.json /Volumes/Work/sandbox/shiftleft-java-demo --components-supplier-name "Foo" --components-supplier-url "https://cyclonedx.example.com" --cpe --cpe-data ./purl2cpe.db --sbom-license "Apache-2.0"
+```
 
 ## Plugins
 

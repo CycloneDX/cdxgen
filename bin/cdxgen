@@ -103,6 +103,9 @@ const args = require("yargs")
     description:
       "The organization url that supplied all the components. The supplier may often be the manufacturer, but may also be a distributor or repackager. Comma separated values for multiple urls."
   })
+  .option("sbom-license", {
+    description: "SPDX License ID for the final SBoM."
+  })
   .scriptName("cdxgen")
   .version()
   .help("h").argv;
@@ -163,7 +166,8 @@ let options = {
   convertCpe: args.cpe,
   cpeData: args.cpeData,
   componentsSupplierName: args.componentsSupplierName,
-  componentsSupplierUrl: args.componentsSupplierUrl
+  componentsSupplierUrl: args.componentsSupplierUrl,
+  sbomLicense: args.sbomLicense
 };
 
 /**

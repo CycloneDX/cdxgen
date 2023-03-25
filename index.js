@@ -12,6 +12,7 @@ const { spawnSync } = require("child_process");
 const selfPjson = require("./package.json");
 const { findJSImports } = require("./analyzer");
 const semver = require("semver");
+const cpeLib = require("./cpe");
 const dockerLib = require("./docker");
 const binaryLib = require("./binary");
 const osQueries = require("./queries.json");
@@ -229,14 +230,24 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     metadata.authors = [
       { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
     ];
+    if (options.sbomLicense) {
+      metadata.licenses = [
+        {
+          license: { id: options.sbomLicense }
+        }
+      ];
+    }
   }
   if (
     parentComponent &&
     Object.keys(parentComponent) &&
     Object.keys(parentComponent).length
   ) {
+    // We only need limited amount of options while building parent component
     const allPComponents = listComponents(
       {
+        convertCpe: options.convertCpe,
+        cpeData: options.cpeData,
         componentsSupplierName: options.componentsSupplierName,
         componentsSupplierUrl: options.componentsSupplierUrl
       },
@@ -589,6 +600,9 @@ function addComponent(
       scope: compScope,
       hashes: [],
       licenses,
+      cpe: options.convertCpe
+        ? cpeLib.convertPurl(purl, options.cpeData)
+        : undefined,
       purl: purlString,
       externalReferences: addExternalReferences(pkg, format)
     };
