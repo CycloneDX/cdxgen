@@ -519,7 +519,10 @@ function addComponent(
     // Skip @types package for npm
     if (
       ptype == "npm" &&
-      (group === "types" || !name || name.startsWith("@types"))
+      (group === "types" ||
+        group === "@types" ||
+        !name ||
+        name.startsWith("@types"))
     ) {
       return;
     }

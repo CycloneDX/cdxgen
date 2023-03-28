@@ -17,7 +17,8 @@ ENV GOPATH=/opt/app-root/go \
     GRADLE_VERSION=8.0.2 \
     GRADLE_HOME=/opt/gradle-8.0.2 \
     COMPOSER_ALLOW_SUPERUSER=1 \
-    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/opt/sbt/bin:
+    ANDROID_HOME=/opt/android-sdk-linux \
+    PATH=${PATH}:${GRADLE_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:/opt/sbt/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
 
 COPY . /opt/cdxgen
 
@@ -36,6 +37,20 @@ RUN echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /et
     && unzip -q sbt-${SBT_VERSION}.zip -d /opt/ \
     && chmod +x /opt/sbt/bin/sbt \
     && rm sbt-${SBT_VERSION}.zip \
+    && mkdir -p ${ANDROID_HOME}/cmdline-tools \
+    && curl -L https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
+    && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
+    && rm ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
+    && mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest \
+    && yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platform-tools' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platforms;android-32' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;32.0.0' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;google;m2repository' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;android;m2repository' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;google;google_play_services' --sdk_root=/opt/android-sdk-linux \
     && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz" \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz \
     && rm go${GO_VERSION}.linux-amd64.tar.gz \
