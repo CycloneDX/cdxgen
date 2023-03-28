@@ -115,7 +115,7 @@ const start = async (options) => {
       }
     }
     res.end("\n");
-    if (cleanup && srcDir && srcDir.startsWith(os.tmpdir())) {
+    if (cleanup && srcDir && srcDir.startsWith(os.tmpdir()) && fs.rmSync) {
       console.log(`Cleaning up ${srcDir}`);
       fs.rmSync(srcDir, { recursive: true, force: true });
     }
