@@ -312,7 +312,9 @@ const getOSPackages = (src) => {
         if (DEBUG_MODE) {
           console.log(`Cleaning up ${tempDir}`);
         }
-        fs.rmSync(tempDir, { recursive: true, force: true });
+        if (fs.rmSync) {
+          fs.rmSync(tempDir, { recursive: true, force: true });
+        }
       }
       if (tmpBom && tmpBom.components) {
         for (const comp of tmpBom.components) {

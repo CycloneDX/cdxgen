@@ -619,7 +619,9 @@ const exportImage = async (fullImageName) => {
       if (DEBUG_MODE) {
         console.log(`Cleaning up ${imageTarFile}`);
       }
-      fs.rmSync(imageTarFile, { force: true });
+      if (fs.rmSync) {
+        fs.rmSync(imageTarFile, { force: true });
+      }
     }
   } else {
     let client = await getConnection();
