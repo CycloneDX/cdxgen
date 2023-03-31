@@ -754,11 +754,15 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
       const ddeps = yamlObj.dependencies || {};
       const ddeplist = [];
       for (const dk of Object.keys(ddeps)) {
+        let version = ddeps[dk];
+        if (typeof version === "object" && version.version) {
+          version = version.version;
+        }
         const dpurl = new PackageURL(
           "npm",
           "",
           dk,
-          ddeps[dk],
+          version,
           null,
           null
         ).toString();
@@ -769,10 +773,12 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
         dependsOn: ddeplist
       });
     }
+    const lockfileVersion = yamlObj.lockfileVersion;
     const packages = yamlObj.packages;
     const pkgKeys = Object.keys(packages);
     for (var k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
+      // In lockfileVersion 6, /@babel/code-frame@7.18.6
       const fullName = pkgKeys[k].replace("/@", "@");
       const parts = fullName.split("/");
       const integrity = packages[pkgKeys[k]].resolution.integrity;
@@ -782,13 +788,22 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
         let name = "";
         let version = "";
         let group = "";
-        if (parts.length === 2) {
-          name = parts[0];
-          version = parts[1];
-        } else if (parts.length === 3) {
+        if (lockfileVersion === "6.0" && fullName.includes("@")) {
+          const tmpA = parts[parts.length - 1].split("@");
           group = parts[0];
-          name = parts[1];
-          version = parts[2];
+          if (parts.length === 2 && tmpA.length > 1) {
+            name = tmpA[0];
+            version = tmpA[1];
+          }
+        } else {
+          if (parts.length === 2) {
+            name = parts[0];
+            version = parts[1];
+          } else if (parts.length === 3) {
+            group = parts[0];
+            name = parts[1];
+            version = parts[2];
+          }
         }
         if (group !== "@types" && name.indexOf("file:") !== 0) {
           const purlString = new PackageURL(

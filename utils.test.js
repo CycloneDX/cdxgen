@@ -1193,6 +1193,28 @@ test("parsePnpmLock", async () => {
 
   parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock4.yaml");
   expect(parsedList.pkgList.length).toEqual(1);
+
+  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock6.yaml");
+  expect(parsedList.pkgList.length).toEqual(195);
+  expect(parsedList.dependenciesList.length).toEqual(195);
+  expect(parsedList.pkgList[0]).toEqual({
+    group: "@babel",
+    name: "code-frame",
+    version: "7.18.6",
+    scope: "optional",
+    _integrity:
+      "sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==",
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6.yaml" }]
+  });
+  expect(parsedList.pkgList[parsedList.pkgList.length - 1]).toEqual({
+    group: "",
+    name: "yargs",
+    version: "17.7.1",
+    scope: "optional",
+    _integrity:
+      "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6.yaml" }]
+  });
 });
 
 test("parseYarnLock", async () => {
