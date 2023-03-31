@@ -773,13 +773,22 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
         dependsOn: ddeplist
       });
     }
-    const lockfileVersion = yamlObj.lockfileVersion;
+    let lockfileVersion = yamlObj.lockfileVersion;
+    try {
+      lockfileVersion = parseInt(lockfileVersion, 10);
+    } catch (e) {
+      // ignore parse errors
+    }
     const packages = yamlObj.packages;
     const pkgKeys = Object.keys(packages);
     for (var k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
       // In lockfileVersion 6, /@babel/code-frame@7.18.6
-      const fullName = pkgKeys[k].replace("/@", "@");
+      let fullName = pkgKeys[k].replace("/@", "@");
+      // Handle /vite@4.2.1(@types/node@18.15.11) in lockfileVersion 6
+      if (lockfileVersion >= 6 && fullName.includes("(")) {
+        fullName = fullName.split("(")[0];
+      }
       const parts = fullName.split("/");
       const integrity = packages[pkgKeys[k]].resolution.integrity;
       const deps = packages[pkgKeys[k]].dependencies || [];
@@ -788,12 +797,14 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
         let name = "";
         let version = "";
         let group = "";
-        if (lockfileVersion === "6.0" && fullName.includes("@")) {
+        if (lockfileVersion >= 6 && fullName.includes("@")) {
           const tmpA = parts[parts.length - 1].split("@");
           group = parts[0];
           if (parts.length === 2 && tmpA.length > 1) {
             name = tmpA[0];
             version = tmpA[1];
+          } else {
+            console.log(parts, fullName);
           }
         } else {
           if (parts.length === 2) {
@@ -804,6 +815,13 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
             name = parts[1];
             version = parts[2];
           }
+        }
+        // Let's have some warnings till we fully support pnpm 8
+        if (!name) {
+          console.warn(
+            `Unable to extract name and version for string ${pkgKeys[k]}`
+          );
+          continue;
         }
         if (group !== "@types" && name.indexOf("file:") !== 0) {
           const purlString = new PackageURL(
