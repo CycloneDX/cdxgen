@@ -958,9 +958,13 @@ const parseMinJs = async (minJsFile) => {
             : pkgNameVer.split(" ");
           if (tmpB && tmpB.length > 1) {
             // Fix #223 - lowercase parsed package name
+            // Fix #287 - special characters in name
             let name = tmpB[0].replace(/ /g, "-").trim().toLowerCase();
             if (
-              ["copyright", "author", "licensed"].includes(name.toLowerCase())
+              ["copyright", "author", "licensed"].includes(
+                name.toLowerCase()
+              ) ||
+              name.includes("==")
             ) {
               return;
             }
@@ -1156,6 +1160,7 @@ const parseGradleDep = function (rawOutput) {
     const dependenciesList = [];
     const keys_cache = {};
     let last_level = 0;
+    // FIXME: Bug# 289 - need a better logic to set the root component name
     let last_purl = "pkg:maven/root@latest?type=jar";
     const level_trees = {};
     level_trees[last_purl] = [];
