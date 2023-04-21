@@ -239,6 +239,7 @@ const getNpmMetadata = async function (pkgList) {
 exports.getNpmMetadata = getNpmMetadata;
 
 const _getDepPkgList = async function (
+  pkgLockFile,
   pkgList,
   dependenciesList,
   depKeys,
@@ -256,7 +257,13 @@ const _getDepPkgList = async function (
         name,
         version,
         _integrity: pkg.dependencies[name].integrity,
-        scope
+        scope,
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgLockFile
+          }
+        ]
       };
       pkgList.push(apkg);
       if (pkg.dependencies[name].dependencies) {
@@ -286,6 +293,7 @@ const _getDepPkgList = async function (
           depKeys[purlString] = true;
         }
         await _getDepPkgList(
+          pkgLockFile,
           pkgList,
           dependenciesList,
           depKeys,
@@ -431,6 +439,7 @@ const parsePkgLock = async (pkgLockFile) => {
       });
     }
     pkgList = await _getDepPkgList(
+      pkgLockFile,
       pkgList,
       dependenciesList,
       depKeys,
