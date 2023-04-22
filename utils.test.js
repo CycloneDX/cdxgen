@@ -208,19 +208,25 @@ test("parse gradle dependencies", () => {
 });
 
 test("parse gradle projects", () => {
-  expect(utils.parseGradleProjects(null)).toEqual([]);
-  let proj_list = utils.parseGradleProjects(
+  expect(utils.parseGradleProjects(null)).toEqual({
+    projects: [],
+    rootProject: "root"
+  });
+  let retMap = utils.parseGradleProjects(
     fs.readFileSync("./test/data/gradle-projects.out", { encoding: "utf-8" })
   );
-  expect(proj_list.length).toEqual(368);
-  proj_list = utils.parseGradleProjects(
+  expect(retMap.rootProject).toEqual("elasticsearch");
+  expect(retMap.projects.length).toEqual(368);
+  retMap = utils.parseGradleProjects(
     fs.readFileSync("./test/data/gradle-projects1.out", { encoding: "utf-8" })
   );
-  expect(proj_list.length).toEqual(403);
-  proj_list = utils.parseGradleProjects(
+  expect(retMap.rootProject).toEqual("elasticsearch");
+  expect(retMap.projects.length).toEqual(403);
+  retMap = utils.parseGradleProjects(
     fs.readFileSync("./test/data/gradle-projects2.out", { encoding: "utf-8" })
   );
-  expect(proj_list.length).toEqual(22);
+  expect(retMap.rootProject).toEqual("fineract");
+  expect(retMap.projects.length).toEqual(22);
 });
 
 test("parse maven tree", () => {

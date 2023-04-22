@@ -1149,14 +1149,15 @@ exports.parseMavenTree = parseMavenTree;
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
+ * @param {string} rootProjectName Root project name
  */
-const parseGradleDep = function (rawOutput) {
+const parseGradleDep = function (rawOutput, rootProjectName = "root") {
   if (typeof rawOutput === "string") {
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
       group: "",
-      name: "root",
+      name: rootProjectName,
       version: "latest",
       type: "maven",
       qualifiers: { type: "jar" }
@@ -1165,7 +1166,7 @@ const parseGradleDep = function (rawOutput) {
     const dependenciesList = [];
     const keys_cache = {};
     let last_level = 0;
-    let last_purl = "pkg:maven/root@latest?type=jar";
+    let last_purl = `pkg:maven/${rootProjectName}@latest?type=jar`;
     const level_trees = {};
     level_trees[last_purl] = [];
     let stack = [last_purl];
@@ -1329,11 +1330,17 @@ exports.parseLeinMap = parseLeinMap;
  * @param {string} rawOutput Raw string output
  */
 const parseGradleProjects = function (rawOutput) {
+  let rootProject = "root";
+  const projects = new Set();
   if (typeof rawOutput === "string") {
-    const projects = new Set();
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
-      if (l.includes("--- Project")) {
+      if (l.startsWith("Root project ")) {
+        rootProject = l
+          .split("Root project ")[1]
+          .split(" ")[0]
+          .replace(/'/g, "");
+      } else if (l.includes("--- Project")) {
         const tmpB = l.split("Project ");
         if (tmpB && tmpB.length > 1) {
           let projName = tmpB[1].split(" ")[0].replace(/'/g, "");
@@ -1344,9 +1351,15 @@ const parseGradleProjects = function (rawOutput) {
         }
       }
     });
-    return Array.from(projects);
+    return {
+      rootProject,
+      projects: Array.from(projects)
+    };
   }
-  return [];
+  return {
+    rootProject,
+    projects: []
+  };
 };
 exports.parseGradleProjects = parseGradleProjects;
 

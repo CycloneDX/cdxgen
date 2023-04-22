@@ -1181,7 +1181,9 @@ const createJavaBom = async (path, options) => {
         const stdout = result.stdout;
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
-          const allProjects = utils.parseGradleProjects(cmdOutput);
+          const retMap = utils.parseGradleProjects(cmdOutput);
+          const allProjects = retMap.projects || [];
+          let rootProject = retMap.rootProject;
           if (!allProjects) {
             console.log(
               "No projects found. Is this a gradle multi-project application?"
@@ -1226,7 +1228,7 @@ const createJavaBom = async (path, options) => {
               const sstdout = sresult.stdout;
               if (sstdout) {
                 const cmdOutput = Buffer.from(sstdout).toString();
-                const parsedList = utils.parseGradleDep(cmdOutput);
+                const parsedList = utils.parseGradleDep(cmdOutput, rootProject);
                 const dlist = parsedList.pkgList;
                 parentComponent = dlist.splice(0, 1)[0];
                 if (
@@ -1259,7 +1261,7 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "Obtained",
                 pkgList.length,
-                "from this gradle multi-project"
+                "from this gradle multi-project. De-duping this list ..."
               );
             } else {
               console.log(
