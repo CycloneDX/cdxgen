@@ -988,9 +988,13 @@ const createJavaBom = async (path, options) => {
     if (pomFiles && pomFiles.length) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.6";
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.7";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
-      let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
+      let mvnArgs = [
+        `${cdxMavenPlugin}:${cdxMavenGoal}`,
+        "-DoutputName=bom",
+        "-DincludeTestScope=true"
+      ];
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
       if (!DEBUG_MODE) {
         mvnArgs.push("-q");
@@ -1184,10 +1188,11 @@ const createJavaBom = async (path, options) => {
             );
             options.failOnError && process.exit(1);
           } else {
-            console.log("Found", allProjects.length, "gradle sub-projects");
-            if (allProjects.length > 10) {
-              console.log("This would take a while ...");
-            }
+            console.log(
+              "Found",
+              allProjects.length,
+              "gradle sub-projects. This might take a while ..."
+            );
             for (let sp of allProjects) {
               let gradleDepArgs = [
                 sp + ":dependencies",
