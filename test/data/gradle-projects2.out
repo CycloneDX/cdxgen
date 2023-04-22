@@ -1,0 +1,39 @@
+Could not open the public key ring.
+
+------------------------------------------------------------
+Root project 'fineract' - Run as:
+gradle clean bootRun
+------------------------------------------------------------
+
+Root project 'fineract' - Run as:...
++--- Project ':custom'
+|    +--- Project ':custom:acme'
+|    |    +--- Project ':custom:acme:event'
+|    |    |    +--- Project ':custom:acme:event:externalevent' - ACME Corp.: Fineract external events
+|    |    |    \--- Project ':custom:acme:event:starter' - ACME Corp.: Fineract Event Starter
+|    |    +--- Project ':custom:acme:loan'
+|    |    |    +--- Project ':custom:acme:loan:cob' - ACME Corp.: Fineract COB Loan
+|    |    |    +--- Project ':custom:acme:loan:job' - ACME Corp.: Fineract Loan Job
+|    |    |    +--- Project ':custom:acme:loan:processor' - ACME Corp.: Fineract Loan Transaction Processors
+|    |    |    \--- Project ':custom:acme:loan:starter' - ACME Corp.: Fineract COB Starter
+|    |    \--- Project ':custom:acme:note'
+|    |         +--- Project ':custom:acme:note:service' - ACME Corp.: Fineract Note Service
+|    |         \--- Project ':custom:acme:note:starter' - ACME Corp.: Fineract Note Starter
+|    \--- Project ':custom:docker' - Fineract Custom Docker Image
++--- Project ':fineract-avro-schemas' - Fineract Avro Schemas
++--- Project ':fineract-client' - Fineract Client
++--- Project ':fineract-doc'
++--- Project ':fineract-provider' - Fineract Provider
++--- Project ':fineract-war' - Fineract WAR
++--- Project ':integration-tests' - Fineract Integration Tests
++--- Project ':oauth2-tests' - Fineract Integration Tests for OAuth2
+\--- Project ':twofactor-tests' - Fineract Integration Tests
+
+To see a list of the tasks of a project, run gradlew <project-path>:tasks
+For example, try running gradlew :custom:tasks
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 8.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+See https://docs.gradle.org/7.5.1/userguide/command_line_interface.html#sec:command_line_warnings

@@ -239,6 +239,7 @@ const getNpmMetadata = async function (pkgList) {
 exports.getNpmMetadata = getNpmMetadata;
 
 const _getDepPkgList = async function (
+  pkgLockFile,
   pkgList,
   dependenciesList,
   depKeys,
@@ -256,7 +257,13 @@ const _getDepPkgList = async function (
         name,
         version,
         _integrity: pkg.dependencies[name].integrity,
-        scope
+        scope,
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgLockFile
+          }
+        ]
       };
       pkgList.push(apkg);
       if (pkg.dependencies[name].dependencies) {
@@ -286,6 +293,7 @@ const _getDepPkgList = async function (
           depKeys[purlString] = true;
         }
         await _getDepPkgList(
+          pkgLockFile,
           pkgList,
           dependenciesList,
           depKeys,
@@ -431,6 +439,7 @@ const parsePkgLock = async (pkgLockFile) => {
       });
     }
     pkgList = await _getDepPkgList(
+      pkgLockFile,
       pkgList,
       dependenciesList,
       depKeys,
@@ -1140,15 +1149,21 @@ exports.parseMavenTree = parseMavenTree;
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
+ * @param {string} rootProjectName Root project name
+ * @param {string} rootProjectVersion Root project version
  */
-const parseGradleDep = function (rawOutput) {
+const parseGradleDep = function (
+  rawOutput,
+  rootProjectName = "root",
+  rootProjectVersion = "latest"
+) {
   if (typeof rawOutput === "string") {
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
       group: "",
-      name: "root",
-      version: "latest",
+      name: rootProjectName,
+      version: rootProjectVersion,
       type: "maven",
       qualifiers: { type: "jar" }
     };
@@ -1156,7 +1171,7 @@ const parseGradleDep = function (rawOutput) {
     const dependenciesList = [];
     const keys_cache = {};
     let last_level = 0;
-    let last_purl = "pkg:maven/root@latest?type=jar";
+    let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
     const level_trees = {};
     level_trees[last_purl] = [];
     let stack = [last_purl];
@@ -1317,31 +1332,41 @@ exports.parseLeinMap = parseLeinMap;
 
 /**
  * Parse gradle projects output
+ * FIXME: The method needs to be enhanced to capture project dependency tree. See issue #249
+ *
  * @param {string} rawOutput Raw string output
  */
 const parseGradleProjects = function (rawOutput) {
+  let rootProject = "root";
+  const projects = new Set();
   if (typeof rawOutput === "string") {
-    const projects = [];
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
-      if (l.startsWith("+--- Project") || l.startsWith("\\--- Project")) {
-        let projName = l
-          .replace("+--- Project ", "")
-          .replace("\\--- Project ", "")
-          .split(" ")[0];
-        projName = projName.replace(/'/g, "");
-        if (
-          !projName.startsWith(":test") &&
-          !projName.startsWith(":docs") &&
-          !projName.startsWith(":qa")
-        ) {
-          projects.push(projName);
+      if (l.startsWith("Root project ")) {
+        rootProject = l
+          .split("Root project ")[1]
+          .split(" ")[0]
+          .replace(/'/g, "");
+      } else if (l.includes("--- Project")) {
+        const tmpB = l.split("Project ");
+        if (tmpB && tmpB.length > 1) {
+          let projName = tmpB[1].split(" ")[0].replace(/'/g, "");
+          // Include all projects including test projects
+          if (projName.startsWith(":")) {
+            projects.add(projName);
+          }
         }
       }
     });
-    return projects;
+    return {
+      rootProject,
+      projects: Array.from(projects)
+    };
   }
-  return [];
+  return {
+    rootProject,
+    projects: []
+  };
 };
 exports.parseGradleProjects = parseGradleProjects;
 

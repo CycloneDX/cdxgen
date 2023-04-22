@@ -988,9 +988,13 @@ const createJavaBom = async (path, options) => {
     if (pomFiles && pomFiles.length) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.6";
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.7";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
-      let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
+      let mvnArgs = [
+        `${cdxMavenPlugin}:${cdxMavenGoal}`,
+        "-DoutputName=bom",
+        "-DincludeTestScope=true"
+      ];
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
       if (!DEBUG_MODE) {
         mvnArgs.push("-q");
@@ -1152,8 +1156,14 @@ const createJavaBom = async (path, options) => {
       let gradleCmd = utils.getGradleCommand(path, null);
       const multiProjectMode = process.env.GRADLE_MULTI_PROJECT_MODE || "";
       // Support for multi-project applications
-      if (["true", "1"].includes(multiProjectMode)) {
-        console.log("Executing", gradleCmd, "projects in", path);
+      // Let's experiment with defaulting to multi-project mode when multiple gradle files gets detected
+      if (
+        ["true", "1"].includes(multiProjectMode) ||
+        (gradleFiles.length > 1 && !["false", "0"].includes(multiProjectMode))
+      ) {
+        if (DEBUG_MODE) {
+          console.log("Executing", gradleCmd, "projects in", path);
+        }
         const result = spawnSync(
           gradleCmd,
           ["projects", "-q", "--console", "plain"],
@@ -1171,14 +1181,20 @@ const createJavaBom = async (path, options) => {
         const stdout = result.stdout;
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
-          const allProjects = utils.parseGradleProjects(cmdOutput);
+          const retMap = utils.parseGradleProjects(cmdOutput);
+          const allProjects = retMap.projects || [];
+          let rootProject = retMap.rootProject;
           if (!allProjects) {
             console.log(
               "No projects found. Is this a gradle multi-project application?"
             );
             options.failOnError && process.exit(1);
           } else {
-            console.log("Found", allProjects.length, "gradle sub-projects");
+            console.log(
+              "Found",
+              allProjects.length,
+              "gradle sub-projects. This might take a while ..."
+            );
             for (let sp of allProjects) {
               let gradleDepArgs = [
                 sp + ":dependencies",
@@ -1212,7 +1228,7 @@ const createJavaBom = async (path, options) => {
               const sstdout = sresult.stdout;
               if (sstdout) {
                 const cmdOutput = Buffer.from(sstdout).toString();
-                const parsedList = utils.parseGradleDep(cmdOutput);
+                const parsedList = utils.parseGradleDep(cmdOutput, rootProject);
                 const dlist = parsedList.pkgList;
                 parentComponent = dlist.splice(0, 1)[0];
                 if (
@@ -1245,7 +1261,7 @@ const createJavaBom = async (path, options) => {
               console.log(
                 "Obtained",
                 pkgList.length,
-                "from this gradle multi-project"
+                "from this gradle multi-project. De-duping this list ..."
               );
             } else {
               console.log(
@@ -1286,8 +1302,29 @@ const createJavaBom = async (path, options) => {
           });
           if (result.status !== 0 || result.error) {
             if (result.stderr) {
+              const cmdError = Buffer.from(result.stderr).toString();
+              if (
+                cmdError.includes(
+                  "is not part of the build defined by settings file"
+                ) ||
+                cmdError.includes(
+                  "was not found in any of the following sources"
+                )
+              ) {
+                console.log(
+                  "This is a multi-project gradle application. Set the environment variable GRADLE_MULTI_PROJECT_MODE to true to improve SBoM accuracy."
+                );
+              }
+              if (DEBUG_MODE) {
+                console.log("-----------------------");
+              }
               console.error(result.stdout, result.stderr);
+              if (DEBUG_MODE) {
+                console.log("-----------------------");
+              }
+              options.failOnError && process.exit(1);
             }
+
             if (DEBUG_MODE || !result.stderr || options.failOnError) {
               console.log(
                 "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
@@ -1315,9 +1352,6 @@ const createJavaBom = async (path, options) => {
               );
               options.failOnError && process.exit(1);
             }
-          } else {
-            console.log("Gradle unexpectedly didn't produce any output");
-            options.failOnError && process.exit(1);
           }
         }
       }
@@ -4308,6 +4342,7 @@ const createBom = async (path, options) => {
     case "mvn":
     case "maven":
     case "sbt":
+      options.multiProject = true;
       return await createJavaBom(path, options);
     case "jar":
       options.multiProject = true;
@@ -4334,6 +4369,7 @@ const createBom = async (path, options) => {
     case "typescript":
     case "ts":
     case "tsx":
+      options.multiProject = true;
       return await createNodejsBom(path, options);
     case "python":
     case "py":
