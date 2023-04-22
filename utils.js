@@ -1150,15 +1150,20 @@ exports.parseMavenTree = parseMavenTree;
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
  * @param {string} rootProjectName Root project name
+ * @param {string} rootProjectVersion Root project version
  */
-const parseGradleDep = function (rawOutput, rootProjectName = "root") {
+const parseGradleDep = function (
+  rawOutput,
+  rootProjectName = "root",
+  rootProjectVersion = "latest"
+) {
   if (typeof rawOutput === "string") {
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
       group: "",
       name: rootProjectName,
-      version: "latest",
+      version: rootProjectVersion,
       type: "maven",
       qualifiers: { type: "jar" }
     };
@@ -1166,7 +1171,7 @@ const parseGradleDep = function (rawOutput, rootProjectName = "root") {
     const dependenciesList = [];
     const keys_cache = {};
     let last_level = 0;
-    let last_purl = `pkg:maven/${rootProjectName}@latest?type=jar`;
+    let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
     const level_trees = {};
     level_trees[last_purl] = [];
     let stack = [last_purl];
@@ -1327,6 +1332,8 @@ exports.parseLeinMap = parseLeinMap;
 
 /**
  * Parse gradle projects output
+ * FIXME: The method needs to be enhanced to capture project dependency tree. See issue #249
+ *
  * @param {string} rawOutput Raw string output
  */
 const parseGradleProjects = function (rawOutput) {
