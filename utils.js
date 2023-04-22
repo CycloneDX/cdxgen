@@ -1330,25 +1330,21 @@ exports.parseLeinMap = parseLeinMap;
  */
 const parseGradleProjects = function (rawOutput) {
   if (typeof rawOutput === "string") {
-    const projects = [];
+    const projects = new Set();
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
-      if (l.startsWith("+--- Project") || l.startsWith("\\--- Project")) {
-        let projName = l
-          .replace("+--- Project ", "")
-          .replace("\\--- Project ", "")
-          .split(" ")[0];
-        projName = projName.replace(/'/g, "");
-        if (
-          !projName.startsWith(":test") &&
-          !projName.startsWith(":docs") &&
-          !projName.startsWith(":qa")
-        ) {
-          projects.push(projName);
+      if (l.includes("--- Project")) {
+        const tmpB = l.split("Project ");
+        if (tmpB && tmpB.length > 1) {
+          let projName = tmpB[1].split(" ")[0].replace(/'/g, "");
+          // Include all projects including test projects
+          if (projName.startsWith(":")) {
+            projects.add(projName);
+          }
         }
       }
     });
-    return projects;
+    return Array.from(projects);
   }
   return [];
 };

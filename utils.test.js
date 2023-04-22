@@ -212,7 +212,15 @@ test("parse gradle projects", () => {
   let proj_list = utils.parseGradleProjects(
     fs.readFileSync("./test/data/gradle-projects.out", { encoding: "utf-8" })
   );
-  expect(proj_list.length).toEqual(9);
+  expect(proj_list.length).toEqual(368);
+  proj_list = utils.parseGradleProjects(
+    fs.readFileSync("./test/data/gradle-projects1.out", { encoding: "utf-8" })
+  );
+  expect(proj_list.length).toEqual(403);
+  proj_list = utils.parseGradleProjects(
+    fs.readFileSync("./test/data/gradle-projects2.out", { encoding: "utf-8" })
+  );
+  expect(proj_list.length).toEqual(22);
 });
 
 test("parse maven tree", () => {

@@ -1152,8 +1152,14 @@ const createJavaBom = async (path, options) => {
       let gradleCmd = utils.getGradleCommand(path, null);
       const multiProjectMode = process.env.GRADLE_MULTI_PROJECT_MODE || "";
       // Support for multi-project applications
-      if (["true", "1"].includes(multiProjectMode)) {
-        console.log("Executing", gradleCmd, "projects in", path);
+      // Let's experiment with defaulting to multi-project mode when multiple gradle files gets detected
+      if (
+        ["true", "1"].includes(multiProjectMode) ||
+        (gradleFiles.length > 1 && !["false", "0"].includes(multiProjectMode))
+      ) {
+        if (DEBUG_MODE) {
+          console.log("Executing", gradleCmd, "projects in", path);
+        }
         const result = spawnSync(
           gradleCmd,
           ["projects", "-q", "--console", "plain"],
@@ -1179,6 +1185,9 @@ const createJavaBom = async (path, options) => {
             options.failOnError && process.exit(1);
           } else {
             console.log("Found", allProjects.length, "gradle sub-projects");
+            if (allProjects.length > 10) {
+              console.log("This would take a while ...");
+            }
             for (let sp of allProjects) {
               let gradleDepArgs = [
                 sp + ":dependencies",
@@ -1286,8 +1295,29 @@ const createJavaBom = async (path, options) => {
           });
           if (result.status !== 0 || result.error) {
             if (result.stderr) {
+              const cmdError = Buffer.from(result.stderr).toString();
+              if (
+                cmdError.includes(
+                  "is not part of the build defined by settings file"
+                ) ||
+                cmdError.includes(
+                  "was not found in any of the following sources"
+                )
+              ) {
+                console.log(
+                  "This is a multi-project gradle application. Set the environment variable GRADLE_MULTI_PROJECT_MODE to true to improve SBoM accuracy."
+                );
+              }
+              if (DEBUG_MODE) {
+                console.log("-----------------------");
+              }
               console.error(result.stdout, result.stderr);
+              if (DEBUG_MODE) {
+                console.log("-----------------------");
+              }
+              options.failOnError && process.exit(1);
             }
+
             if (DEBUG_MODE || !result.stderr || options.failOnError) {
               console.log(
                 "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
@@ -1315,9 +1345,6 @@ const createJavaBom = async (path, options) => {
               );
               options.failOnError && process.exit(1);
             }
-          } else {
-            console.log("Gradle unexpectedly didn't produce any output");
-            options.failOnError && process.exit(1);
           }
         }
       }
