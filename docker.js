@@ -159,9 +159,11 @@ const getConnection = async (options) => {
       dockerConn = got.extend(opts);
       if (DEBUG_MODE) {
         if (isDockerRootless) {
-          console.log("Docker service in rootless mode detected!");
+          console.log("Docker service in rootless mode detected.");
         } else {
-          console.log("Docker service in root mode detected!");
+          console.log(
+            "Docker service in root mode detected. Consider switching to rootless mode to improve security. See https://docs.docker.com/engine/security/rootless/"
+          );
         }
       }
     } catch (err) {
@@ -172,7 +174,7 @@ const getConnection = async (options) => {
         dockerConn = got.extend(opts);
         isDockerRootless = true;
         if (DEBUG_MODE) {
-          console.log("Docker service in rootless mode detected!");
+          console.log("Docker service in rootless mode detected.");
         }
         return dockerConn;
       } catch (err) {
@@ -185,7 +187,7 @@ const getConnection = async (options) => {
           dockerConn = got.extend(opts);
           isWinLocalTLS = true;
           if (DEBUG_MODE) {
-            console.log("Docker desktop on Windows detected!");
+            console.log("Docker desktop on Windows detected.");
           }
         } else {
           opts.prefixUrl = opts.podmanRootlessPrefixUrl;
@@ -194,7 +196,9 @@ const getConnection = async (options) => {
           isPodmanRootless = true;
           dockerConn = got.extend(opts);
           if (DEBUG_MODE) {
-            console.log("Podman in rootless mode detected!");
+            console.log(
+              "Podman in rootless mode detected. Thank you for using podman!"
+            );
           }
         }
       } catch (err) {
@@ -205,7 +209,9 @@ const getConnection = async (options) => {
           isPodman = true;
           isPodmanRootless = false;
           dockerConn = got.extend(opts);
-          console.log("Podman in root mode detected!");
+          console.log(
+            "Podman in root mode detected. Consider switching to rootless mode to improve security. See https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md"
+          );
         } catch (err) {
           if (os.platform() === "win32") {
             console.warn(
@@ -416,7 +422,13 @@ const extractTar = async (fullImageName, dir) => {
         strict: true,
         C: dir,
         portable: true,
-        onwarn: () => {}
+        onwarn: () => {},
+        filter: (path) => {
+          if (path.endsWith("cacerts")) {
+            return false;
+          }
+          return true;
+        }
       })
     );
     return true;

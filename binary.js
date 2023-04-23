@@ -279,8 +279,12 @@ const getOSPackages = (src) => {
     const bomJsonFile = path.join(tempDir, "trivy-bom.json");
     const args = [
       imageType,
-      "--skip-update",
+      "--skip-db-update",
+      "--skip-java-db-update",
       "--offline-scan",
+      "--no-progress",
+      "--exit-code",
+      "0",
       "--format",
       "cyclonedx",
       "--output",
@@ -302,11 +306,16 @@ const getOSPackages = (src) => {
       }
     }
     if (fs.existsSync(bomJsonFile)) {
-      const tmpBom = JSON.parse(
-        fs.readFileSync(bomJsonFile, {
-          encoding: "utf-8"
-        })
-      );
+      let tmpBom = {};
+      try {
+        tmpBom = JSON.parse(
+          fs.readFileSync(bomJsonFile, {
+            encoding: "utf-8"
+          })
+        );
+      } catch (e) {
+        // ignore errors
+      }
       // Clean up
       if (tempDir && tempDir.startsWith(os.tmpdir())) {
         if (DEBUG_MODE) {

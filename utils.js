@@ -4207,8 +4207,13 @@ const extractJarArchive = function (jarFile, tempDir) {
   }
   if (pomname && fs.existsSync(pomname)) {
     tempDir = path.dirname(jarFile);
-  } else {
-    fs.copyFileSync(jarFile, path.join(tempDir, fname));
+  } else if (!fs.existsSync(path.join(tempDir, fname))) {
+    // Only copy if the file doesn't exist
+    fs.copyFileSync(
+      jarFile,
+      path.join(tempDir, fname),
+      fs.constants.COPYFILE_FICLONE
+    );
   }
   if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
     let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
@@ -4405,7 +4410,11 @@ const addPlugin = function (projectPath, plugin) {
   var originalPluginsFile = null;
   if (fs.existsSync(pluginsFile)) {
     originalPluginsFile = pluginsFile + ".cdxgen";
-    fs.copyFileSync(pluginsFile, originalPluginsFile);
+    fs.copyFileSync(
+      pluginsFile,
+      originalPluginsFile,
+      fs.constants.COPYFILE_FICLONE
+    );
   }
 
   fs.writeFileSync(pluginsFile, plugin, { flag: "a" });
@@ -4429,7 +4438,11 @@ const cleanupPlugin = function (projectPath, originalPluginsFile) {
       return !fs.existsSync(pluginsFile);
     } else {
       // Bring back the original file
-      fs.copyFileSync(originalPluginsFile, pluginsFile);
+      fs.copyFileSync(
+        originalPluginsFile,
+        pluginsFile,
+        fs.constants.COPYFILE_FICLONE
+      );
       fs.unlinkSync(originalPluginsFile);
       return true;
     }

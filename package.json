@@ -49,8 +49,8 @@
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
   "dependencies": {
-    "@babel/parser": "^7.20.15",
-    "@babel/traverse": "^7.20.13",
+    "@babel/parser": "^7.21.4",
+    "@babel/traverse": "^7.21.4",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "^1.0.0",
     "glob": "^8.1.0",
@@ -59,24 +59,24 @@
     "js-yaml": "^4.1.0",
     "jws": "^4.0.0",
     "node-stream-zip": "^1.15.0",
-    "packageurl-js": "^1.0.0",
+    "packageurl-js": "^1.0.2",
     "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.2.0",
-    "semver": "^7.3.8",
+    "semver": "^7.5.0",
     "ssri": "^8.0.1",
     "table": "^6.8.1",
     "tar": "^6.1.13",
     "uuid": "^9.0.0",
     "xml-js": "^1.6.11",
     "xmlbuilder": "^15.1.1",
-    "yargs": "^17.6.2"
+    "yargs": "^17.7.1"
   },
   "optionalDependencies": {
-    "@cyclonedx/cdxgen-plugins-bin": "^1.0.5",
-    "connect": "^3.7.0",
-    "body-parser": "^1.20.1",
-    "compression": "^1.7.4"
+    "@cyclonedx/cdxgen-plugins-bin": "^1.1.0",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "connect": "^3.7.0"
   },
   "files": [
     "*.js",
@@ -88,7 +88,7 @@
     "queries.json"
   ],
   "devDependencies": {
-    "eslint": "^8.31.0",
+    "eslint": "^8.39.0",
     "jest": "^26.6.3"
   }
 }
