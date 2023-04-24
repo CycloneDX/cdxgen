@@ -1,4 +1,5 @@
 const dockerLib = require("./docker");
+const { jest, expect, test } = require("@jest/globals");
 
 test("docker connection", async () => {
   const dockerConn = await dockerLib.getConnection();

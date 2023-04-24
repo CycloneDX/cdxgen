@@ -33,9 +33,9 @@
     "cdxgen": "./bin/cdxgen"
   },
   "scripts": {
-    "test": "jest",
-    "watch": "jest --watch",
-    "lint": "eslint index.js utils.js binary.js server.js docker.js bin/cdxgen",
+    "test": "jest --inject-globals false",
+    "watch": "jest --watch --inject-globals false",
+    "lint": "eslint index.js utils.js binary.js server.js docker.js *.test.js bin/cdxgen",
     "pretty": "prettier --write *.js bin/cdxgen --trailing-comma=none"
   },
   "engines": {

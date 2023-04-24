@@ -1,10 +1,11 @@
 const utils = require("./utils");
 const fs = require("fs");
 const ssri = require("ssri");
+const { jest, expect, test } = require("@jest/globals");
 
 test("SSRI test", () => {
   // gopkg.lock hash
-  ss = ssri.parse(
+  let ss = ssri.parse(
     "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf"
   );
   expect(ss).toEqual(null);
@@ -529,7 +530,7 @@ test("parse go version data", async () => {
 
 test("parse cargo lock", async () => {
   expect(await utils.parseCargoData(null)).toEqual([]);
-  dep_list = await utils.parseCargoData(
+  let dep_list = await utils.parseCargoData(
     fs.readFileSync("./test/Cargo.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(224);
@@ -555,7 +556,7 @@ test("parse cargo lock", async () => {
 
 test("parse cargo toml", async () => {
   expect(await utils.parseCargoTomlData(null)).toEqual([]);
-  dep_list = await utils.parseCargoTomlData(
+  let dep_list = await utils.parseCargoTomlData(
     fs.readFileSync("./test/data/Cargo1.toml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
@@ -581,7 +582,7 @@ test("parse cargo toml", async () => {
 
 test("parse cargo auditable data", async () => {
   expect(await utils.parseCargoAuditableData(null)).toEqual([]);
-  dep_list = await utils.parseCargoAuditableData(
+  let dep_list = await utils.parseCargoAuditableData(
     fs.readFileSync("./test/data/cargo-auditable.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(32);
@@ -621,7 +622,7 @@ test("get crates metadata", async () => {
 
 test("parse pub lock", async () => {
   expect(await utils.parsePubLockData(null)).toEqual([]);
-  dep_list = await utils.parsePubLockData(
+  let dep_list = await utils.parsePubLockData(
     fs.readFileSync("./test/data/pubspec.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(26);
@@ -668,7 +669,7 @@ test("get dart metadata", async () => {
 
 test("parse cabal freeze", async () => {
   expect(await utils.parseCabalData(null)).toEqual([]);
-  dep_list = await utils.parseCabalData(
+  let dep_list = await utils.parseCabalData(
     fs.readFileSync("./test/data/cabal.project.freeze", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(24);
@@ -688,7 +689,7 @@ test("parse cabal freeze", async () => {
 
 test("parse conan data", async () => {
   expect(await utils.parseConanLockData(null)).toEqual([]);
-  dep_list = await utils.parseConanLockData(
+  let dep_list = await utils.parseConanLockData(
     fs.readFileSync("./test/data/conan.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
@@ -786,7 +787,7 @@ test("parse clojure data", () => {
 
 test("parse mix lock data", async () => {
   expect(await utils.parseMixLockData(null)).toEqual([]);
-  dep_list = await utils.parseMixLockData(
+  let dep_list = await utils.parseMixLockData(
     fs.readFileSync("./test/data/mix.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(16);
@@ -806,7 +807,7 @@ test("parse mix lock data", async () => {
 
 test("parse github actions workflow data", async () => {
   expect(await utils.parseGitHubWorkflowData(null)).toEqual([]);
-  dep_list = await utils.parseGitHubWorkflowData(
+  let dep_list = await utils.parseGitHubWorkflowData(
     fs.readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
@@ -1722,7 +1723,7 @@ test("parse container spec like files", async () => {
 
 test("parse cloudbuild data", async () => {
   expect(await utils.parseCloudBuildData(null)).toEqual([]);
-  dep_list = await utils.parseCloudBuildData(
+  let dep_list = await utils.parseCloudBuildData(
     fs.readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
