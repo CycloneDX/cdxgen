@@ -536,11 +536,11 @@ function addComponent(
       pkg.purl ||
       new PackageURL(
         ptype,
-        encodeURIComponent(group),
-        encodeURIComponent(name),
+        utils.encodeForPurl(group),
+        utils.encodeForPurl(name),
         version,
         pkg.qualifiers,
-        pkg.subpath
+        utils.encodeForPurl(pkg.subpath)
       );
     let purlString = purl.toString();
     purlString = decodeURIComponent(purlString);

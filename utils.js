@@ -4188,6 +4188,13 @@ const parseJarManifest = function (jarMetadata) {
 };
 exports.parseJarManifest = parseJarManifest;
 
+const encodeForPurl = (s) => {
+  return s
+    ? encodeURIComponent(s).replace(/%3A/g, ":").replace(/%2F/g, "/")
+    : s;
+};
+exports.encodeForPurl = encodeForPurl;
+
 /**
  * Method to extract a war or ear file
  *
@@ -4339,8 +4346,8 @@ const extractJarArchive = function (jarFile, tempDir) {
           }
           if (name && version) {
             pkgList.push({
-              group: group === "." ? "" : encodeURIComponent(group || "") || "",
-              name: name ? encodeURIComponent(name) : "",
+              group: group === "." ? "" : encodeForPurl(group || "") || "",
+              name: name ? encodeForPurl(name) : "",
               version,
               properties: [
                 {
