@@ -280,7 +280,6 @@ const getOSPackages = (src) => {
     const args = [
       imageType,
       "--skip-db-update",
-      "--skip-java-db-update",
       "--offline-scan",
       "--no-progress",
       "--exit-code",
