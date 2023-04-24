@@ -2221,7 +2221,7 @@ const createGoBom = async (path, options) => {
             "list",
             "-deps",
             "-f",
-            "'{{with .Module}}{{.Path}} {{.Version}}{{end}}'",
+            "'{{with .Module}}{{.Path}} {{.Version}} {{.Indirect}} {{.GoMod}} {{.GoVersion}}{{end}}'",
             "./..."
           ],
           { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
@@ -2256,7 +2256,11 @@ const createGoBom = async (path, options) => {
         if (circuitBreak) {
           break;
         }
-        let pkgFullName = `${apkg.group}/${apkg.name}`;
+        let pkgFullName = `${apkg.name}`;
+        if (apkg.scope === "required") {
+          allImports[pkgFullName] = true;
+          continue;
+        }
         if (DEBUG_MODE) {
           console.log(`go mod why -m -vendor ${pkgFullName}`);
         }
