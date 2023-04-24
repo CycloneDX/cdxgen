@@ -4272,7 +4272,8 @@ const extractJarArchive = function (jarFile, tempDir) {
             jarMetadata["Implementation-Vendor-Id"] ||
             jarMetadata["Bundle-SymbolicName"] ||
             jarMetadata["Bundle-Vendor"] ||
-            jarMetadata["Automatic-Module-Name"];
+            jarMetadata["Automatic-Module-Name"] ||
+            "";
           let name = "";
           if (
             jarMetadata["Bundle-Name"] &&
@@ -4338,7 +4339,7 @@ const extractJarArchive = function (jarFile, tempDir) {
           }
           if (name && version) {
             pkgList.push({
-              group: group === "." ? "" : encodeURIComponent(group) || "",
+              group: group === "." ? "" : encodeURIComponent(group || "") || "",
               name: name ? encodeURIComponent(name) : "",
               version,
               properties: [

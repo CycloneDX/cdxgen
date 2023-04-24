@@ -298,6 +298,7 @@ cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
 You can also pass the .tar file of a container image.
 
 ```shell
+docker pull shiftleft/scan-slim
 docker save -o /tmp/slim.tar shiftleft/scan-slim
 podman save -q --format oci-archive -o /tmp/slim.tar shiftleft/scan-slim
 cdxgen /tmp/slim.tar -o /tmp/bom.json -t docker

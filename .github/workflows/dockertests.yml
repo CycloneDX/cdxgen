@@ -59,6 +59,7 @@ jobs:
           bin/cdxgen zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6 -p -o bomresults/bom-zoo.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-zoo.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-zoo.xml --input-format xml --input-version v1_4
+          docker pull shiftleft/scan-slim:latest
           docker save -o /tmp/scanslim.tar shiftleft/scan-slim:latest
           bin/cdxgen /tmp/scanslim.tar -o bomresults/bom-scanarch.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-scanarch.json --input-format json --input-version v1_4
