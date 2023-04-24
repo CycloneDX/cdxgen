@@ -2917,9 +2917,7 @@ const parseContainerSpecData = async function (dcData) {
     try {
       yamlObj = yaml.load(dcData);
     } catch (err) {
-      if (DEBUG_MODE) {
-        console.log(err);
-      }
+      // ignore errors
     }
     if (!yamlObj) {
       continue;

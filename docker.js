@@ -423,9 +423,15 @@ const extractTar = async (fullImageName, dir) => {
         C: dir,
         portable: true,
         onwarn: () => {},
-        filter: (path) => {
+        filter: (path, entry) => {
           // Some files are known to cause issues with extract
-          if (path.includes("cacerts") || path.includes("ssl/certs")) {
+          if (
+            path.includes("cacerts") ||
+            path.includes("ssl/certs") ||
+            path.includes("etc/") ||
+            path.includes("logs/") ||
+            ["CharacterDevice"].includes(entry.type)
+          ) {
             return false;
           }
           return true;
@@ -434,12 +440,14 @@ const extractTar = async (fullImageName, dir) => {
     );
     return true;
   } catch (err) {
-    console.log(
-      "Error during extraction. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues"
-    );
-    console.log("------------");
-    console.log(err);
-    console.log("------------");
+    if (err.code !== "TAR_BAD_ARCHIVE") {
+      console.log(
+        `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`
+      );
+      console.log("------------");
+      console.log(err);
+      console.log("------------");
+    }
     return false;
   }
 };
