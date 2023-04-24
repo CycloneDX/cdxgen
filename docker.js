@@ -424,7 +424,8 @@ const extractTar = async (fullImageName, dir) => {
         portable: true,
         onwarn: () => {},
         filter: (path) => {
-          if (path.endsWith("cacerts")) {
+          // Some files are known to cause issues with extract
+          if (path.includes("cacerts") || path.includes("ssl/certs")) {
             return false;
           }
           return true;
@@ -433,9 +434,12 @@ const extractTar = async (fullImageName, dir) => {
     );
     return true;
   } catch (err) {
-    if (DEBUG_MODE) {
-      console.log(err);
-    }
+    console.log(
+      "Error during extraction. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues"
+    );
+    console.log("------------");
+    console.log(err);
+    console.log("------------");
     return false;
   }
 };
