@@ -128,7 +128,6 @@ let options = {
   dev: true,
   projectType: args.type,
   multiProject: args.recurse,
-  depth: 3,
   output: args.output,
   resolveClass: args.resolveClass,
   installDeps: true,
