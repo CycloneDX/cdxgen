@@ -2104,34 +2104,24 @@ const parseGoModData = async function (goModData, gosumMap) {
 
     if (!isModReplacement) {
       // Add group, name and version component properties for required modules
-      let group = path.dirname(tmpA[0]);
-      const name = path.basename(tmpA[0]);
-      if (group === ".") {
-        group = name;
-      }
       const version = tmpA[1];
-      let gosumHash = gosumMap[`${group}/${name}/${version}`];
+      let gosumHash = gosumMap[`${tmpA[0]}/${version}`];
       // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
       if (gosumHash === undefined) {
         continue;
       }
-      let component = await getGoPkgComponent(group, name, version, gosumHash);
+      let component = await getGoPkgComponent("", tmpA[0], version, gosumHash);
       pkgComponentsList.push(component);
     } else {
       // Add group, name and version component properties for replacement modules
-      let group = path.dirname(tmpA[2]);
-      const name = path.basename(tmpA[2]);
-      if (group === ".") {
-        group = name;
-      }
       const version = tmpA[3];
 
-      let gosumHash = gosumMap[`${group}/${name}/${version}`];
+      let gosumHash = gosumMap[`${tmpA[2]}/${version}`];
       // The hash for this version was not found in go.sum, so skip.
       if (gosumHash === undefined) {
         continue;
       }
-      let component = await getGoPkgComponent(group, name, version, gosumHash);
+      let component = await getGoPkgComponent("", tmpA[2], version, gosumHash);
       pkgComponentsList.push(component);
     }
   }
@@ -2154,24 +2144,35 @@ const parseGoListDep = async function (rawOutput, gosumMap) {
     const pkgs = rawOutput.split("\n");
     for (let l of pkgs) {
       const verArr = l.trim().replace(new RegExp("[\"']", "g"), "").split(" ");
-      if (verArr && verArr.length === 2) {
+
+      if (verArr && verArr.length === 5) {
         const key = verArr[0] + "-" + verArr[1];
         // Filter duplicates
         if (!keys_cache[key]) {
           keys_cache[key] = key;
-          let group = path.dirname(verArr[0]);
-          const name = path.basename(verArr[0]);
           const version = verArr[1];
-          if (group === ".") {
-            group = name;
-          }
-          let gosumHash = gosumMap[`${group}/${name}/${version}`];
+          let gosumHash = gosumMap[`${verArr[0]}/${version}`];
           let component = await getGoPkgComponent(
-            group,
-            name,
+            "",
+            verArr[0],
             version,
             gosumHash
           );
+          if (verArr[2] === "false") {
+            component.scope = "required";
+          } else if (verArr[2] === "true") {
+            component.scope = "optional";
+          }
+          component.properties = [
+            {
+              name: "SrcGoMod",
+              value: verArr[3] || ""
+            },
+            {
+              name: "ModuleGoVersion",
+              value: verArr[4] || ""
+            }
+          ];
           deps.push(component);
         }
       }
@@ -2212,27 +2213,23 @@ const parseGosumData = async function (gosumData) {
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
       const tmpA = l.split(" ");
-      let group = path.dirname(tmpA[0]);
-      const name = path.basename(tmpA[0]);
-      if (group === ".") {
-        group = name;
-      }
+      const name = tmpA[0];
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
       let license = undefined;
       if (process.env.FETCH_LICENSE) {
         if (DEBUG_MODE) {
           console.log(
-            `About to fetch go package license information for ${group}:${name}`
+            `About to fetch go package license information for ${name}`
           );
         }
         license = await getGoPkgLicense({
-          group: group,
+          group: "",
           name: name
         });
       }
       pkgList.push({
-        group: group,
+        group: "",
         name: name,
         version: version,
         _integrity: hash,
@@ -2271,11 +2268,8 @@ const parseGopkgData = async function (gopkgData) {
           pkg._integrity = "sha256-" + toBase64(digestStr);
           break;
         case "name":
-          pkg.group = path.dirname(value);
-          pkg.name = path.basename(value);
-          if (pkg.group === ".") {
-            pkg.group = pkg.name;
-          }
+          pkg.group = "";
+          pkg.name = value;
           if (process.env.FETCH_LICENSE) {
             pkg.license = await getGoPkgLicense({
               group: pkg.group,
@@ -2312,16 +2306,12 @@ const parseGoVersionData = async function (buildInfoData) {
     if (!tmpA || tmpA.length < 3) {
       continue;
     }
-    let group = path.dirname(tmpA[1].trim());
-    const name = path.basename(tmpA[1].trim());
-    if (group === ".") {
-      group = name;
-    }
+    const name = tmpA[1].trim();
     let hash = "";
     if (tmpA.length == 4) {
       hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
     }
-    let component = await getGoPkgComponent(group, name, tmpA[2].trim(), hash);
+    let component = await getGoPkgComponent("", name, tmpA[2].trim(), hash);
     pkgList.push(component);
   }
   return pkgList;

@@ -1006,6 +1006,12 @@ const createJavaBom = async (path, options) => {
       }
       for (let f of pomFiles) {
         const basePath = pathLib.dirname(f);
+        const settingsXml = pathLib.join(basePath, "settings.xml");
+        if (fs.existsSync(settingsXml)) {
+          console.log(
+            `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`
+          );
+        }
         let mavenCmd = utils.getMavenCommand(basePath, path);
         // Should we attempt to resolve class names
         if (options.resolveClass) {
@@ -2221,7 +2227,7 @@ const createGoBom = async (path, options) => {
             "list",
             "-deps",
             "-f",
-            "'{{with .Module}}{{.Path}} {{.Version}}{{end}}'",
+            "'{{with .Module}}{{.Path}} {{.Version}} {{.Indirect}} {{.GoMod}} {{.GoVersion}}{{end}}'",
             "./..."
           ],
           { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
@@ -2256,7 +2262,11 @@ const createGoBom = async (path, options) => {
         if (circuitBreak) {
           break;
         }
-        let pkgFullName = `${apkg.group}/${apkg.name}`;
+        let pkgFullName = `${apkg.name}`;
+        if (apkg.scope === "required") {
+          allImports[pkgFullName] = true;
+          continue;
+        }
         if (DEBUG_MODE) {
           console.log(`go mod why -m -vendor ${pkgFullName}`);
         }

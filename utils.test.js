@@ -385,29 +385,29 @@ test("parseGoModData", async () => {
   );
   expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
-    group: "github.com/aws",
-    name: "aws-sdk-go",
+    group: "",
+    name: "github.com/aws/aws-sdk-go",
     license: undefined,
     version: "v1.38.47",
     _integrity: "sha256-fake-sha-for-aws-go-sdk="
   });
   expect(dep_list[1]).toEqual({
-    group: "github.com/spf13",
-    name: "cobra",
+    group: "",
+    name: "github.com/spf13/cobra",
     license: undefined,
     version: "v1.0.0",
     _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE="
   });
   expect(dep_list[2]).toEqual({
-    group: "google.golang.org",
-    name: "grpc",
+    group: "",
+    name: "google.golang.org/grpc",
     license: undefined,
     version: "v1.21.0",
     _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM="
   });
   expect(dep_list[3]).toEqual({
-    group: "github.com/spf13",
-    name: "viper",
+    group: "",
+    name: "github.com/spf13/viper",
     license: undefined,
     version: "v1.0.2",
     _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM="
@@ -426,29 +426,29 @@ test("parseGoSumData", async () => {
   );
   expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
-    group: "google.golang.org",
-    name: "grpc",
+    group: "",
+    name: "google.golang.org/grpc",
     license: undefined,
     version: "v1.21.0",
     _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM="
   });
   expect(dep_list[1]).toEqual({
-    group: "github.com/spf13",
-    name: "cobra",
+    group: "",
+    name: "github.com/spf13/cobra",
     license: undefined,
     version: "v1.0.0",
     _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE="
   });
   expect(dep_list[2]).toEqual({
-    group: "github.com/spf13",
-    name: "viper",
+    group: "",
+    name: "github.com/spf13/viper",
     license: undefined,
     version: "v1.0.2",
     _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM="
   });
   expect(dep_list[3]).toEqual({
-    group: "github.com/stretchr",
-    name: "testify",
+    group: "",
+    name: "github.com/stretchr/testify",
     license: undefined,
     version: "v1.6.1",
     _integrity: "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg="
@@ -463,11 +463,22 @@ test("parse go list dependencies", async () => {
     fs.readFileSync("./test/data/golist-dep.txt", { encoding: "utf-8" }),
     {}
   );
-  expect(dep_list.length).toEqual(8);
+  expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
-    group: "github.com/badoux",
-    name: "checkmail",
-    version: "v0.0.0-20181210160741-9661bd69e9ad"
+    group: "",
+    name: "github.com/gorilla/mux",
+    version: "v1.7.4",
+    _integrity: undefined,
+    license: undefined,
+    scope: "required",
+    properties: [
+      {
+        name: "SrcGoMod",
+        value:
+          "/home/almalinux/go/pkg/mod/cache/download/github.com/gorilla/mux/@v/v1.7.4.mod"
+      },
+      { name: "ModuleGoVersion", value: "1.12" }
+    ]
   });
 });
 
@@ -491,8 +502,8 @@ test("parseGopkgData", async () => {
   );
   expect(dep_list.length).toEqual(36);
   expect(dep_list[0]).toEqual({
-    group: "cloud.google.com",
-    name: "go",
+    group: "",
+    name: "cloud.google.com/go",
     version: "v0.39.0",
     _integrity: "sha256-LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78="
   });
@@ -508,8 +519,8 @@ test("parse go version data", async () => {
   );
   expect(dep_list.length).toEqual(125);
   expect(dep_list[0]).toEqual({
-    group: "github.com/ShiftLeftSecurity",
-    name: "atlassian-connect-go",
+    group: "",
+    name: "github.com/ShiftLeftSecurity/atlassian-connect-go",
     version: "v0.0.2",
     _integrity: "",
     license: undefined
@@ -520,8 +531,8 @@ test("parse go version data", async () => {
   );
   expect(dep_list.length).toEqual(149);
   expect(dep_list[0]).toEqual({
-    group: "cloud.google.com",
-    name: "go",
+    group: "",
+    name: "cloud.google.com/go",
     version: "v0.79.0",
     _integrity: "sha256-oqqswrt4x6b9OGBnNqdssxBl1xf0rSUNjU2BR4BZar0=",
     license: undefined
