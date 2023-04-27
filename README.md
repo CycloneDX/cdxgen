@@ -270,7 +270,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | SBOM_SIGN_ALGORITHM       | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                     |
 | SBOM_SIGN_PRIVATE_KEY     | Private key to use for signing                                                                                     |
 | SBOM_SIGN_PUBLIC_KEY      | Optional. Public key to include in the SBoM signature                                                              |
-| CDX_MAVEN_PLUGIN          | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.6"                                |
+| CDX_MAVEN_PLUGIN          | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.8"                                |
 | CDX_MAVEN_GOAL            | CycloneDX Maven plugin goal to use. Default makeAggregateBom. Other options: makeBom, makePackageBom               |
 
 ## Plugins
