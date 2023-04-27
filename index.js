@@ -988,13 +988,15 @@ const createJavaBom = async (path, options) => {
     if (pomFiles && pomFiles.length) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.7";
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.8";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
       let mvnArgs = [
         `${cdxMavenPlugin}:${cdxMavenGoal}`,
-        "-DoutputName=bom",
-        "-DincludeTestScope=true"
+        "-DoutputName=bom"        
       ];
+      if (utils.includeMavenTestScope) {
+        mvnArgs.push("-DincludeTestScope=true");
+      }
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
       if (!DEBUG_MODE) {
         mvnArgs.push("-q");

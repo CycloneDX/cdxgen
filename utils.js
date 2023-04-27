@@ -26,6 +26,10 @@ const DEBUG_MODE =
 // Metadata cache
 let metadata_cache = {};
 
+// Whether test scope shall be included for java/maven projects; default, if unset shall be 'true'
+const includeMavenTestScope = !process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE || ["true", "1"].includes(process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE);
+exports.includeMavenTestScope = includeMavenTestScope;
+
 const MAX_LICENSE_ID_LENGTH = 100;
 
 /**
@@ -1035,6 +1039,7 @@ const parsePom = function (pomFile) {
       let versionStr = undefined;
       if (version && version._ && version._.indexOf("$") == -1) {
         versionStr = version._;
+        if (includeMavenTestScope || !adep.scope || adep.scope !== "test")
         deps.push({
           group: adep.groupId ? adep.groupId._ : "",
           name: adep.artifactId ? adep.artifactId._ : "",
@@ -1071,7 +1076,7 @@ const parseMavenTree = function (rawOutput) {
   let last_purl = "";
   let stack = [];
   tmpA.forEach((l) => {
-    if (l.endsWith(":test")) {
+    if (!includeMavenTestScope && l.endsWith(":test")) {
       return;
     }
     let level = 0;
