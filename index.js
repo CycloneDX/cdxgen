@@ -992,9 +992,11 @@ const createJavaBom = async (path, options) => {
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
       let mvnArgs = [
         `${cdxMavenPlugin}:${cdxMavenGoal}`,
-        "-DoutputName=bom",
-        "-DincludeTestScope=true"
+        "-DoutputName=bom"        
       ];
+      if (utils.includeMavenTestScope) {
+        mvnArgs.push("-DincludeTestScope=true");
+      }
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
       if (!DEBUG_MODE) {
         mvnArgs.push("-q");
