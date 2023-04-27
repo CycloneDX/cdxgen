@@ -235,8 +235,8 @@ test("parse maven tree", () => {
   let parsedList = utils.parseMavenTree(
     fs.readFileSync("./test/data/sample-mvn-tree.txt", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(59);
-  expect(parsedList.dependenciesList.length).toEqual(59);
+  expect(parsedList.pkgList.length).toEqual(61);
+  expect(parsedList.dependenciesList.length).toEqual(61);
   expect(parsedList.pkgList[0]).toEqual({
     group: "com.pogeyan.cmis",
     name: "copper-server",
@@ -259,6 +259,7 @@ test("parse maven tree", () => {
       "pkg:maven/commons-fileupload/commons-fileupload@1.4?type=jar",
       "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.12.0?type=jar",
       "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.12.0?type=jar",
+      "pkg:maven/junit/junit@4.12?type=jar",
       "pkg:maven/com.typesafe.akka/akka-actor_2.11@2.4.14?type=jar",
       "pkg:maven/com.typesafe.akka/akka-cluster_2.11@2.4.14?type=jar",
       "pkg:maven/org.codehaus.jackson/jackson-mapper-asl@1.9.13?type=jar",
@@ -271,8 +272,8 @@ test("parse maven tree", () => {
       encoding: "utf-8"
     })
   );
-  expect(parsedList.pkgList.length).toEqual(27);
-  expect(parsedList.dependenciesList.length).toEqual(27);
+  expect(parsedList.pkgList.length).toEqual(37);
+  expect(parsedList.dependenciesList.length).toEqual(37);
   expect(parsedList.pkgList[0]).toEqual({
     group: "com.gitlab.security_products.tests",
     name: "java-maven",
@@ -282,7 +283,9 @@ test("parse maven tree", () => {
   expect(parsedList.dependenciesList[0]).toEqual({
     ref: "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
     dependsOn: [
+      "pkg:maven/org.powermock/powermock-api-mockito@1.7.3?type=jar",
       "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
+      "pkg:maven/junit/junit@3.8.1?type=jar",
       "pkg:maven/org.apache.maven/maven-artifact@3.3.9?type=jar",
       "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
       "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
