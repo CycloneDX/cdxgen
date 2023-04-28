@@ -2156,8 +2156,9 @@ const createGoBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "go.sum"
   );
 
-  // If USE_GOSUM is true, generate BOM components only using go.sum.
-  const useGosum = process.env.USE_GOSUM == "true";
+  // If USE_GOSUM is true|1, generate BOM components only using go.sum.
+  const useGosum =
+    process.env.USE_GOSUM && ["true", "1"].includes(process.env.USE_GOSUM);
   if (useGosum && gosumFiles.length) {
     console.warn(
       "Using go.sum to generate BOMs for go projects may return an inaccurate representation of transitive dependencies.\nSee: https://github.com/golang/go/wiki/Modules#is-gosum-a-lock-file-why-does-gosum-include-information-for-module-versions-i-am-no-longer-using\n",
