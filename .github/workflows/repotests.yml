@@ -116,11 +116,11 @@ jobs:
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
 
-          FETCH_LICENSE=true bin/cdxgen -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json
+          FETCH_LICENSE=1 bin/cdxgen -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.xml --input-format xml --input-version v1_4
 
-          bin/cdxgen -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
+          FETCH_LICENSE=false bin/cdxgen -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-go.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-go.xml --input-format xml --input-version v1_4
 
@@ -128,7 +128,7 @@ jobs:
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp2.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp2.xml --input-format xml --input-version v1_4
 
-          bin/cdxgen -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json
+          FETCH_LICENSE=0 bin/cdxgen -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp3.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp3.xml --input-format xml --input-version v1_4
 
