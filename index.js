@@ -2920,7 +2920,8 @@ const createSwiftBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-  } else if (swiftFiles.length) {
+  }
+  if (swiftFiles.length) {
     for (let f of swiftFiles) {
       const basePath = pathLib.dirname(f);
       if (completedPath.includes(basePath)) {
@@ -3912,6 +3913,22 @@ const createMultiXBom = async (pathList, options) => {
           "cloudbuild",
           "xml"
         )
+      );
+    }
+    bomData = await createSwiftBom(path, options);
+    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} Swift packages at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+      dependencies = dependencies.concat(bomData.bomJson.dependencies);
+      if (!parentComponent || !Object.keys(parentComponent).length) {
+        parentComponent = bomData.parentComponent;
+      }
+      componentsXmls = componentsXmls.concat(
+        listComponents(options, {}, bomData.bomJson.components, "swift", "xml")
       );
     }
     // jar scanning is quite slow so this is limited to only deep scans
