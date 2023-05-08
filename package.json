@@ -43,7 +43,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cyclonedx/cdxgen.git"
+    "url": "git+https://github.com/CycloneDX/cdxgen"
   },
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
