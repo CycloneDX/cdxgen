@@ -90,8 +90,5 @@
   "devDependencies": {
     "eslint": "^8.40.0",
     "jest": "^26.6.3"
-  },
-  "publishConfig": {
-    "provenance": true
   }
 }
