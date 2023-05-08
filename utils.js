@@ -256,18 +256,33 @@ const _getDepPkgList = async function (
   depKeys,
   pkg
 ) {
-  if (pkg && pkg.dependencies) {
-    const pkgKeys = Object.keys(pkg.dependencies);
-    for (var k in pkgKeys) {
-      const name = pkgKeys[k];
-      const version = pkg.dependencies[name].version;
-      const purl = new PackageURL("npm", "", name, version, null, null);
-      const purlString = decodeURIComponent(purl.toString());
-      let scope = pkg.dependencies[name].dev === true ? "optional" : undefined;
-      const apkg = {
-        name,
+  let pkgDependencies =
+    pkg.lockfileVersion && pkg.lockfileVersion >= 3
+      ? pkg.packages
+      : pkg.dependencies;
+  if (pkg && pkgDependencies) {
+    const pkgKeys = Object.keys(pkgDependencies);
+    for (const k of pkgKeys) {
+      // Skip the root package in lockFileVersion 3 and above
+      if (k === "") {
+        continue;
+      }
+      let name = k;
+      const version = pkgDependencies[name].version;
+      const purl = new PackageURL(
+        "npm",
+        "",
+        name.replace("node_modules/", ""),
         version,
-        _integrity: pkg.dependencies[name].integrity,
+        null,
+        null
+      );
+      const purlString = decodeURIComponent(purl.toString());
+      let scope = pkgDependencies[name].dev === true ? "optional" : undefined;
+      const apkg = {
+        name: name.replace("node_modules/", ""),
+        version,
+        _integrity: pkgDependencies[name].integrity,
         scope,
         properties: [
           {
@@ -277,9 +292,9 @@ const _getDepPkgList = async function (
         ]
       };
       pkgList.push(apkg);
-      if (pkg.dependencies[name].dependencies) {
+      if (pkgDependencies[name].dependencies) {
         // Include child dependencies
-        const dependencies = pkg.dependencies[name].dependencies;
+        const dependencies = pkgDependencies[name].dependencies;
         const pkgDepKeys = Object.keys(dependencies);
         const deplist = [];
         for (const j in pkgDepKeys) {
@@ -288,7 +303,7 @@ const _getDepPkgList = async function (
           const deppurl = new PackageURL(
             "npm",
             "",
-            depName,
+            depName.replace("node_modules/", ""),
             depVersion,
             null,
             null
@@ -303,13 +318,17 @@ const _getDepPkgList = async function (
           });
           depKeys[purlString] = true;
         }
-        await _getDepPkgList(
-          pkgLockFile,
-          pkgList,
-          dependenciesList,
-          depKeys,
-          pkg.dependencies[name]
-        );
+        if (pkg.lockfileVersion && pkg.lockfileVersion >= 3) {
+          // Do not recurse for lock file v3 and above
+        } else {
+          await _getDepPkgList(
+            pkgLockFile,
+            pkgList,
+            dependenciesList,
+            depKeys,
+            pkgDependencies[name]
+          );
+        }
       } else {
         if (!depKeys[purlString]) {
           dependenciesList.push({
