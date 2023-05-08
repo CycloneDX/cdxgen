@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js
@@ -32,7 +33,7 @@ jobs:
         echo "cyclonedx:registry=https://npm.pkg.github.com" > ~/.npmrc
         npm publish --access=public --@cyclonedx:registry='https://npm.pkg.github.com'
         echo "cyclonedx:registry=https://registry.npmjs.org" > ~/.npmrc
-        npm publish --access=public --@cyclonedx:registry='https://registry.npmjs.org'
+        npm publish --provenance --access=public --@cyclonedx:registry='https://registry.npmjs.org'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1097,6 +1097,30 @@ test("parsePkgLock", async () => {
     "bom-ref": "pkg:application/MyProject",
     name: "MyProject"
   });
+  parsedList = await utils.parsePkgLock("./test/data/package-lock-v2.json");
+  deps = parsedList.pkgList;
+  expect(deps.length).toEqual(1467);
+  expect(parsedList.dependenciesList.length).toEqual(1280);
+  expect(deps[0]).toEqual({
+    "bom-ref": "pkg:application/flink-dashboard@2.0.0",
+    group: "",
+    name: "flink-dashboard",
+    type: "application",
+    version: "2.0.0"
+  });
+  expect(deps[deps.length - 1].name).toEqual("zone.js");
+  parsedList = await utils.parsePkgLock("./test/data/package-lock-v3.json");
+  deps = parsedList.pkgList;
+  expect(deps.length).toEqual(879);
+  expect(parsedList.dependenciesList.length).toEqual(879);
+  expect(deps[0]).toEqual({
+    "bom-ref": "pkg:application/@cyclonedx/cdxgen@8.4.3",
+    group: "",
+    name: "@cyclonedx/cdxgen",
+    type: "application",
+    version: "8.4.3"
+  });
+  expect(deps[deps.length - 1].name).toEqual("yocto-queue");
 });
 
 test("parseBowerJson", async () => {
