@@ -55,6 +55,7 @@ let SBT_CACHE_DIR =
 
 // Debug mode flag
 const DEBUG_MODE =
+  process.env.CDXGEN_DEBUG_MODE === "debug" ||
   process.env.SCAN_DEBUG_MODE === "debug" ||
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
   process.env.NODE_ENV === "development";
@@ -1189,6 +1190,15 @@ const createJavaBom = async (path, options) => {
           const retMap = utils.parseGradleProjects(cmdOutput);
           const allProjects = retMap.projects || [];
           let rootProject = retMap.rootProject;
+          if (rootProject) {
+            parentComponent = {
+              group: "",
+              name: rootProject,
+              version: "latest",
+              type: "maven",
+              qualifiers: { type: "jar" }
+            };
+          }
           if (!allProjects) {
             console.log(
               "No projects found. Is this a gradle multi-project application?"
@@ -1200,6 +1210,37 @@ const createJavaBom = async (path, options) => {
               allProjects.length,
               "gradle sub-projects. This might take a while ..."
             );
+            // We need the first dependency between the root project and child projects
+            // See: #249 and #315
+            const rootDependsOn = [];
+            for (let sp of allProjects) {
+              sp = sp.replace(":", "");
+              rootDependsOn.push(
+                decodeURIComponent(
+                  new PackageURL(
+                    "maven",
+                    "",
+                    sp,
+                    parentComponent.version,
+                    parentComponent.qualifiers,
+                    null
+                  ).toString()
+                )
+              );
+            }
+            dependencies.push({
+              ref: decodeURIComponent(
+                new PackageURL(
+                  "maven",
+                  parentComponent.group,
+                  parentComponent.name,
+                  parentComponent.version,
+                  parentComponent.qualifiers,
+                  null
+                ).toString()
+              ),
+              dependsOn: rootDependsOn
+            });
             for (let sp of allProjects) {
               let gradleDepArgs = [
                 sp + ":dependencies",
@@ -1232,15 +1273,20 @@ const createJavaBom = async (path, options) => {
               }
               const sstdout = sresult.stdout;
               if (sstdout) {
+                sp = sp.replace(":", "");
                 const cmdOutput = Buffer.from(sstdout).toString();
-                const parsedList = utils.parseGradleDep(cmdOutput, rootProject);
+                const parsedList = utils.parseGradleDep(cmdOutput, sp);
                 const dlist = parsedList.pkgList;
-                parentComponent = dlist.splice(0, 1)[0];
+                // Do not overwrite the parentComponent in multi-project mode
+                if (!parentComponent) {
+                  parentComponent = dlist.splice(0, 1)[0];
+                }
                 if (
                   parsedList.dependenciesList &&
                   parsedList.dependenciesList
                 ) {
-                  dependencies = dependencies.concat(
+                  dependencies = mergeDependencies(
+                    dependencies,
                     parsedList.dependenciesList
                   );
                 }
@@ -1347,7 +1393,10 @@ const createJavaBom = async (path, options) => {
             const dlist = parsedList.pkgList;
             parentComponent = dlist.splice(0, 1)[0];
             if (parsedList.dependenciesList && parsedList.dependenciesList) {
-              dependencies = dependencies.concat(parsedList.dependenciesList);
+              dependencies = mergeDependencies(
+                dependencies,
+                parsedList.dependenciesList
+              );
             }
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);

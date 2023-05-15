@@ -106,7 +106,7 @@ jobs:
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-os.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-os.xml --input-format xml --input-version v1_4
         env:
-          SCAN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: debug
       - uses: actions/upload-artifact@v1
         with:
           name: bomresults-os
@@ -141,7 +141,7 @@ jobs:
           .\cyclonedx.exe validate --fail-on-errors --input-file bomresults\\bom-win.xml --input-format xml --input-version v1_4
           dir bomresults
         env:
-          SCAN_DEBUG_MODE: debug
+          CDXGEN_DEBUG_MODE: debug
       - uses: actions/upload-artifact@v1
         with:
           name: bomresults-win
