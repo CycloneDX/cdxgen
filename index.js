@@ -1214,6 +1214,7 @@ const createJavaBom = async (path, options) => {
             // See: #249 and #315
             const rootDependsOn = [];
             for (let sp of allProjects) {
+              sp = sp.replace(":", "");
               rootDependsOn.push(
                 decodeURIComponent(
                   new PackageURL(
@@ -1272,11 +1273,9 @@ const createJavaBom = async (path, options) => {
               }
               const sstdout = sresult.stdout;
               if (sstdout) {
+                sp = sp.replace(":", "");
                 const cmdOutput = Buffer.from(sstdout).toString();
-                const parsedList = utils.parseGradleDep(
-                  cmdOutput,
-                  sp.replace(":", "")
-                );
+                const parsedList = utils.parseGradleDep(cmdOutput, sp);
                 const dlist = parsedList.pkgList;
                 // Do not overwrite the parentComponent in multi-project mode
                 if (!parentComponent) {

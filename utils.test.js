@@ -206,6 +206,11 @@ test("parse gradle dependencies", () => {
   );
   expect(parsedList.pkgList.length).toEqual(68);
   expect(parsedList.dependenciesList.length).toEqual(69);
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(21);
+  expect(parsedList.dependenciesList.length).toEqual(21);
 });
 
 test("parse gradle projects", () => {

@@ -1204,8 +1204,28 @@ const parseGradleDep = function (
     const keys_cache = {};
     let last_level = 0;
     let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
+    // Bug: 249. Get any sub-projects refered here
+    const retMap = parseGradleProjects(rawOutput);
     const level_trees = {};
     level_trees[last_purl] = [];
+    if (retMap && retMap.projects) {
+      const subDependsOn = [];
+      for (const sd of retMap.projects) {
+        subDependsOn.push(
+          decodeURIComponent(
+            new PackageURL(
+              "maven",
+              "",
+              sd.replace(":", ""),
+              rootProject.version,
+              rootProject.qualifiers,
+              null
+            ).toString()
+          )
+        );
+      }
+      level_trees[last_purl] = subDependsOn;
+    }
     let stack = [last_purl];
     const depRegex =
       /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?<versionoverride>[^\s:]+))?/gm;
@@ -1384,6 +1404,14 @@ const parseGradleProjects = function (rawOutput) {
         if (tmpB && tmpB.length > 1) {
           let projName = tmpB[1].split(" ")[0].replace(/'/g, "");
           // Include all projects including test projects
+          if (projName.startsWith(":")) {
+            projects.add(projName);
+          }
+        }
+      } else if (l.includes("--- project ")) {
+        const tmpB = l.split("--- project ");
+        if (tmpB && tmpB.length > 1) {
+          let projName = tmpB[1];
           if (projName.startsWith(":")) {
             projects.add(projName);
           }
