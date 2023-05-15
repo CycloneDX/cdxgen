@@ -20,6 +20,7 @@ const { PackageURL } = require("packageurl-js");
 
 // Debug mode flag
 const DEBUG_MODE =
+  process.env.CDXGEN_DEBUG_MODE === "debug" ||
   process.env.SCAN_DEBUG_MODE === "debug" ||
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
 

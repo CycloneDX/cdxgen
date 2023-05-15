@@ -7,6 +7,7 @@ const isWin = require("os").platform() === "win32";
 
 // Debug mode flag
 const DEBUG_MODE =
+  process.env.CDXGEN_DEBUG_MODE === "debug" ||
   process.env.SCAN_DEBUG_MODE === "debug" ||
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
   process.env.NODE_ENV === "development";

@@ -248,7 +248,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 
 | Variable                     | Description                                                                                                                 |
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| SCAN_DEBUG_MODE              | Set to `debug` to enable debug messages                                                                                     |
+| CDXGEN_DEBUG_MODE            | Set to `debug` to enable debug messages                                                                                     |
 | GITHUB_TOKEN                 | Specify GitHub token to prevent traffic shaping while querying license and repo information                                 |
 | MVN_CMD                      | Set to override maven command                                                                                               |
 | MVN_ARGS                     | Set to pass additional arguments such as profile or settings to maven                                                       |
