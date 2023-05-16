@@ -4584,7 +4584,7 @@ exports.submitBom = async (args, bomContents) => {
     );
   }
   return await got(serverUrl, {
-    method: "PUT",
+    method: "POST",
     headers: {
       "X-Api-Key": args.apiKey,
       "Content-Type": "application/json"
