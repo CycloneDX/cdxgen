@@ -205,12 +205,17 @@ test("parse gradle dependencies", () => {
     fs.readFileSync("./test/data/gradle-rich5.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(68);
-  expect(parsedList.dependenciesList.length).toEqual(69);
+  expect(parsedList.dependenciesList.length).toEqual(68);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(21);
   expect(parsedList.dependenciesList.length).toEqual(21);
+  parsedList = utils.parseGradleDep(
+    fs.readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(35);
+  expect(parsedList.dependenciesList.length).toEqual(35);
 });
 
 test("parse gradle projects", () => {

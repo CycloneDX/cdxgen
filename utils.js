@@ -1204,6 +1204,7 @@ const parseGradleDep = function (
     const keys_cache = {};
     let last_level = 0;
     let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
+    const first_purl = last_purl;
     // Bug: 249. Get any sub-projects refered here
     const retMap = parseGradleProjects(rawOutput);
     const level_trees = {};
@@ -1229,54 +1230,68 @@ const parseGradleDep = function (
     let stack = [last_purl];
     const depRegex =
       /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?<versionoverride>[^\s:]+))?/gm;
-    while ((match = depRegex.exec(rawOutput))) {
-      const [line, group, name, versionspecified, versionoverride] = match;
-      const version = versionoverride || versionspecified;
-      const level = line.split(group)[0].length / 5;
-      if (version !== undefined) {
-        let purlString = new PackageURL(
-          "maven",
-          group,
-          name,
-          version,
-          { type: "jar" },
-          null
-        ).toString();
-        purlString = decodeURIComponent(purlString);
-        // Filter duplicates
-        if (!keys_cache[purlString]) {
-          keys_cache[purlString] = true;
-          if (group !== "project") {
-            deps.push({
-              group,
-              name: name,
-              version: version,
-              qualifiers: { type: "jar" }
-            });
-            if (!level_trees[purlString]) {
-              level_trees[purlString] = [];
-            }
-            if (level == 0 || last_purl === "") {
-              stack.push(purlString);
-            } else if (level > last_level) {
-              const cnodes = level_trees[last_purl] || [];
-              cnodes.push(purlString);
-              level_trees[last_purl] = cnodes;
-              if (stack[stack.length - 1] !== purlString) {
+    for (const rline of rawOutput.split("\n")) {
+      if (last_level !== 1) {
+        if (
+          !rline ||
+          rline.trim() === "" ||
+          rline.startsWith("+--- ") ||
+          rline.startsWith("--- ")
+        ) {
+          last_level = 1;
+        }
+      }
+      while ((match = depRegex.exec(rline))) {
+        const [line, group, name, versionspecified, versionoverride] = match;
+        const version = versionoverride || versionspecified;
+        const level = line.split(group)[0].length / 5;
+        if (version !== undefined) {
+          let purlString = new PackageURL(
+            "maven",
+            group,
+            name,
+            version,
+            { type: "jar" },
+            null
+          ).toString();
+          purlString = decodeURIComponent(purlString);
+
+          // Filter duplicates
+          if (!keys_cache[purlString]) {
+            keys_cache[purlString] = true;
+            if (group !== "project") {
+              deps.push({
+                group,
+                name: name,
+                version: version,
+                qualifiers: { type: "jar" }
+              });
+              if (!level_trees[purlString]) {
+                level_trees[purlString] = [];
+              }
+              if (level == 0 || last_purl === "") {
+                stack.push(purlString);
+              } else if (level > last_level) {
+                const cnodes = level_trees[last_purl] || [];
+                cnodes.push(purlString);
+                level_trees[last_purl] = cnodes;
+                if (stack[stack.length - 1] !== purlString) {
+                  stack.push(purlString);
+                }
+              } else {
+                for (let i = level; i <= last_level; i++) {
+                  stack.pop();
+                }
+                const last_stack =
+                  stack.length > 0 ? stack[stack.length - 1] : first_purl;
+                const cnodes = level_trees[last_stack] || [];
+                cnodes.push(purlString);
+                level_trees[last_stack] = cnodes;
                 stack.push(purlString);
               }
-            } else {
-              for (let i = level; i <= last_level; i++) {
-                stack.pop();
-              }
-              const last_stack = stack[stack.length - 1];
-              const cnodes = level_trees[last_stack] || [];
-              cnodes.push(purlString);
-              level_trees[last_stack] = cnodes;
-              stack.push(purlString);
+              last_level = level;
+              last_purl = purlString;
             }
-            last_level = level;
-            last_purl = purlString;
           }
         }
       }

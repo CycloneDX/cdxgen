@@ -1,0 +1,220 @@
+
+------------------------------------------------------------
+Project ':dependency-diff-check-client-starter'
+------------------------------------------------------------
+
+annotationProcessor - Annotation processors and their dependencies for source set 'main'.
+No dependencies
+
+api - API dependencies for source set 'main'. (n)
+\--- project dependency-diff-check-common-core (n)
+
+apiElements - API elements for main. (n)
+No dependencies
+
+archives - Configuration for archive artifacts. (n)
+No dependencies
+
+bootArchives - Configuration for Spring Boot archive artifacts. (n)
+No dependencies
+
+compileClasspath - Compile classpath for source set 'main'.
++--- project :dependency-diff-check-common-core
++--- org.springframework.boot:spring-boot-autoconfigure -> 3.0.1
+|    \--- org.springframework.boot:spring-boot:3.0.1
+|         +--- org.springframework:spring-core:6.0.3
+|         |    \--- org.springframework:spring-jcl:6.0.3
+|         \--- org.springframework:spring-context:6.0.3
+|              +--- org.springframework:spring-aop:6.0.3
+|              |    +--- org.springframework:spring-beans:6.0.3
+|              |    |    \--- org.springframework:spring-core:6.0.3 (*)
+|              |    \--- org.springframework:spring-core:6.0.3 (*)
+|              +--- org.springframework:spring-beans:6.0.3 (*)
+|              +--- org.springframework:spring-core:6.0.3 (*)
+|              \--- org.springframework:spring-expression:6.0.3
+|                   \--- org.springframework:spring-core:6.0.3 (*)
+\--- org.slf4j:slf4j-api:2.0.7
+
+compileOnly - Compile only dependencies for source set 'main'. (n)
+No dependencies
+
+compileOnlyApi - Compile only API dependencies for source set 'main'. (n)
+No dependencies
+
+default - Configuration for default artifacts. (n)
+No dependencies
+
+developmentOnly - Configuration for development-only dependencies such as Spring Boot's DevTools.
+No dependencies
+
+implementation - Implementation only dependencies for source set 'main'. (n)
++--- org.springframework.boot:spring-boot-autoconfigure (n)
+\--- org.slf4j:slf4j-api:2.0.7 (n)
+
+mainSourceElements - List of source directories contained in the Main SourceSet. (n)
+No dependencies
+
+productionRuntimeClasspath
++--- project :dependency-diff-check-common-core
+|    +--- org.apache.commons:commons-lang3:3.12.0
+|    +--- com.fasterxml.jackson.core:jackson-core:2.14.2 -> 2.14.1
+|    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1
+|    |         \--- com.fasterxml.jackson.core:jackson-core:2.14.1 (c)
+|    +--- io.opentelemetry:opentelemetry-jdbc:1.19.0 FAILED
+|    \--- io.grpc:grpc-core:1.49.2
+|         +--- io.grpc:grpc-api:1.49.2
+|         |    +--- io.grpc:grpc-context:1.49.2
+|         |    +--- com.google.code.findbugs:jsr305:3.0.2
+|         |    +--- com.google.errorprone:error_prone_annotations:2.14.0
+|         |    \--- com.google.guava:guava:31.1-android
+|         |         +--- com.google.guava:failureaccess:1.0.1
+|         |         +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|         |         +--- com.google.code.findbugs:jsr305:3.0.2
+|         |         +--- org.checkerframework:checker-qual:3.12.0
+|         |         +--- com.google.errorprone:error_prone_annotations:2.11.0 -> 2.14.0
+|         |         \--- com.google.j2objc:j2objc-annotations:1.3
+|         +--- com.google.code.gson:gson:2.9.0 -> 2.9.1
+|         +--- com.google.android:annotations:4.1.1.4
+|         +--- org.codehaus.mojo:animal-sniffer-annotations:1.21
+|         +--- com.google.errorprone:error_prone_annotations:2.14.0
+|         +--- com.google.guava:guava:31.1-android (*)
+|         \--- io.perfmark:perfmark-api:0.25.0
++--- org.springframework.boot:spring-boot-autoconfigure -> 3.0.1
+|    \--- org.springframework.boot:spring-boot:3.0.1
+|         +--- org.springframework:spring-core:6.0.3
+|         |    \--- org.springframework:spring-jcl:6.0.3
+|         \--- org.springframework:spring-context:6.0.3
+|              +--- org.springframework:spring-aop:6.0.3
+|              |    +--- org.springframework:spring-beans:6.0.3
+|              |    |    \--- org.springframework:spring-core:6.0.3 (*)
+|              |    \--- org.springframework:spring-core:6.0.3 (*)
+|              +--- org.springframework:spring-beans:6.0.3 (*)
+|              +--- org.springframework:spring-core:6.0.3 (*)
+|              \--- org.springframework:spring-expression:6.0.3
+|                   \--- org.springframework:spring-core:6.0.3 (*)
+\--- org.slf4j:slf4j-api:2.0.7
+
+runtimeClasspath - Runtime classpath of source set 'main'.
++--- project :dependency-diff-check-common-core
+|    +--- org.apache.commons:commons-lang3:3.12.0
+|    +--- com.fasterxml.jackson.core:jackson-core:2.14.2 -> 2.14.1
+|    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1
+|    |         \--- com.fasterxml.jackson.core:jackson-core:2.14.1 (c)
+|    +--- io.opentelemetry:opentelemetry-jdbc:1.19.0 FAILED
+|    \--- io.grpc:grpc-core:1.49.2
+|         +--- io.grpc:grpc-api:1.49.2
+|         |    +--- io.grpc:grpc-context:1.49.2
+|         |    +--- com.google.code.findbugs:jsr305:3.0.2
+|         |    +--- com.google.errorprone:error_prone_annotations:2.14.0
+|         |    \--- com.google.guava:guava:31.1-android
+|         |         +--- com.google.guava:failureaccess:1.0.1
+|         |         +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|         |         +--- com.google.code.findbugs:jsr305:3.0.2
+|         |         +--- org.checkerframework:checker-qual:3.12.0
+|         |         +--- com.google.errorprone:error_prone_annotations:2.11.0 -> 2.14.0
+|         |         \--- com.google.j2objc:j2objc-annotations:1.3
+|         +--- com.google.code.gson:gson:2.9.0 -> 2.9.1
+|         +--- com.google.android:annotations:4.1.1.4
+|         +--- org.codehaus.mojo:animal-sniffer-annotations:1.21
+|         +--- com.google.errorprone:error_prone_annotations:2.14.0
+|         +--- com.google.guava:guava:31.1-android (*)
+|         \--- io.perfmark:perfmark-api:0.25.0
++--- org.springframework.boot:spring-boot-autoconfigure -> 3.0.1
+|    \--- org.springframework.boot:spring-boot:3.0.1
+|         +--- org.springframework:spring-core:6.0.3
+|         |    \--- org.springframework:spring-jcl:6.0.3
+|         \--- org.springframework:spring-context:6.0.3
+|              +--- org.springframework:spring-aop:6.0.3
+|              |    +--- org.springframework:spring-beans:6.0.3
+|              |    |    \--- org.springframework:spring-core:6.0.3 (*)
+|              |    \--- org.springframework:spring-core:6.0.3 (*)
+|              +--- org.springframework:spring-beans:6.0.3 (*)
+|              +--- org.springframework:spring-core:6.0.3 (*)
+|              \--- org.springframework:spring-expression:6.0.3
+|                   \--- org.springframework:spring-core:6.0.3 (*)
+\--- org.slf4j:slf4j-api:2.0.7
+
+runtimeElements - Elements of runtime for main. (n)
+No dependencies
+
+runtimeOnly - Runtime only dependencies for source set 'main'. (n)
+No dependencies
+
+testAnnotationProcessor - Annotation processors and their dependencies for source set 'test'.
+No dependencies
+
+testCompileClasspath - Compile classpath for source set 'test'.
++--- project :dependency-diff-check-common-core
++--- org.springframework.boot:spring-boot-autoconfigure -> 3.0.1
+|    \--- org.springframework.boot:spring-boot:3.0.1
+|         +--- org.springframework:spring-core:6.0.3
+|         |    \--- org.springframework:spring-jcl:6.0.3
+|         \--- org.springframework:spring-context:6.0.3
+|              +--- org.springframework:spring-aop:6.0.3
+|              |    +--- org.springframework:spring-beans:6.0.3
+|              |    |    \--- org.springframework:spring-core:6.0.3 (*)
+|              |    \--- org.springframework:spring-core:6.0.3 (*)
+|              +--- org.springframework:spring-beans:6.0.3 (*)
+|              +--- org.springframework:spring-core:6.0.3 (*)
+|              \--- org.springframework:spring-expression:6.0.3
+|                   \--- org.springframework:spring-core:6.0.3 (*)
+\--- org.slf4j:slf4j-api:2.0.7
+
+testCompileOnly - Compile only dependencies for source set 'test'. (n)
+No dependencies
+
+testImplementation - Implementation only dependencies for source set 'test'. (n)
+No dependencies
+
+testResultsElementsForTest - Directory containing binary results of running tests for the test Test Suite's test target. (n)
+No dependencies
+
+testRuntimeClasspath - Runtime classpath of source set 'test'.
++--- project :dependency-diff-check-common-core
+|    +--- org.apache.commons:commons-lang3:3.12.0
+|    +--- com.fasterxml.jackson.core:jackson-core:2.14.2 -> 2.14.1
+|    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1
+|    |         \--- com.fasterxml.jackson.core:jackson-core:2.14.1 (c)
+|    +--- io.opentelemetry:opentelemetry-jdbc:1.19.0 FAILED
+|    \--- io.grpc:grpc-core:1.49.2
+|         +--- io.grpc:grpc-api:1.49.2
+|         |    +--- io.grpc:grpc-context:1.49.2
+|         |    +--- com.google.code.findbugs:jsr305:3.0.2
+|         |    +--- com.google.errorprone:error_prone_annotations:2.14.0
+|         |    \--- com.google.guava:guava:31.1-android
+|         |         +--- com.google.guava:failureaccess:1.0.1
+|         |         +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|         |         +--- com.google.code.findbugs:jsr305:3.0.2
+|         |         +--- org.checkerframework:checker-qual:3.12.0
+|         |         +--- com.google.errorprone:error_prone_annotations:2.11.0 -> 2.14.0
+|         |         \--- com.google.j2objc:j2objc-annotations:1.3
+|         +--- com.google.code.gson:gson:2.9.0 -> 2.9.1
+|         +--- com.google.android:annotations:4.1.1.4
+|         +--- org.codehaus.mojo:animal-sniffer-annotations:1.21
+|         +--- com.google.errorprone:error_prone_annotations:2.14.0
+|         +--- com.google.guava:guava:31.1-android (*)
+|         \--- io.perfmark:perfmark-api:0.25.0
++--- org.springframework.boot:spring-boot-autoconfigure -> 3.0.1
+|    \--- org.springframework.boot:spring-boot:3.0.1
+|         +--- org.springframework:spring-core:6.0.3
+|         |    \--- org.springframework:spring-jcl:6.0.3
+|         \--- org.springframework:spring-context:6.0.3
+|              +--- org.springframework:spring-aop:6.0.3
+|              |    +--- org.springframework:spring-beans:6.0.3
+|              |    |    \--- org.springframework:spring-core:6.0.3 (*)
+|              |    \--- org.springframework:spring-core:6.0.3 (*)
+|              +--- org.springframework:spring-beans:6.0.3 (*)
+|              +--- org.springframework:spring-core:6.0.3 (*)
+|              \--- org.springframework:spring-expression:6.0.3
+|                   \--- org.springframework:spring-core:6.0.3 (*)
+\--- org.slf4j:slf4j-api:2.0.7
+
+testRuntimeOnly - Runtime only dependencies for source set 'test'. (n)
+No dependencies
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+A web-based, searchable dependency report is available by adding the --scan option.

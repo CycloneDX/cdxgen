@@ -1,0 +1,136 @@
+
+------------------------------------------------------------
+Project ':dependency-diff-check-common-core'
+------------------------------------------------------------
+
+annotationProcessor - Annotation processors and their dependencies for source set 'main'.
+No dependencies
+
+api - API dependencies for source set 'main'. (n)
+No dependencies
+
+apiElements - API elements for main. (n)
+No dependencies
+
+archives - Configuration for archive artifacts. (n)
+No dependencies
+
+compileClasspath - Compile classpath for source set 'main'.
++--- org.apache.commons:commons-lang3:3.12.0
++--- com.fasterxml.jackson.core:jackson-core:2.14.2
+|    \--- com.fasterxml.jackson:jackson-bom:2.14.2
+|         \--- com.fasterxml.jackson.core:jackson-core:2.14.2 (c)
++--- io.opentelemetry:opentelemetry-jdbc:1.19.0 FAILED
+\--- io.grpc:grpc-core:1.49.2
+     \--- io.grpc:grpc-api:1.49.2
+          +--- io.grpc:grpc-context:1.49.2
+          +--- com.google.code.findbugs:jsr305:3.0.2
+          \--- com.google.errorprone:error_prone_annotations:2.14.0
+
+compileOnly - Compile only dependencies for source set 'main'. (n)
+No dependencies
+
+compileOnlyApi - Compile only API dependencies for source set 'main'. (n)
+No dependencies
+
+default - Configuration for default artifacts. (n)
+No dependencies
+
+implementation - Implementation only dependencies for source set 'main'. (n)
++--- org.apache.commons:commons-lang3:3.12.0 (n)
++--- com.fasterxml.jackson.core:jackson-core:2.14.2 (n)
++--- io.opentelemetry:opentelemetry-jdbc:1.19.0 (n)
+\--- io.grpc:grpc-core:1.49.2 (n)
+
+mainSourceElements - List of source directories contained in the Main SourceSet. (n)
+No dependencies
+
+runtimeClasspath - Runtime classpath of source set 'main'.
++--- org.apache.commons:commons-lang3:3.12.0
++--- com.fasterxml.jackson.core:jackson-core:2.14.2
+|    \--- com.fasterxml.jackson:jackson-bom:2.14.2
+|         \--- com.fasterxml.jackson.core:jackson-core:2.14.2 (c)
++--- io.opentelemetry:opentelemetry-jdbc:1.19.0 FAILED
+\--- io.grpc:grpc-core:1.49.2
+     +--- io.grpc:grpc-api:1.49.2
+     |    +--- io.grpc:grpc-context:1.49.2
+     |    +--- com.google.code.findbugs:jsr305:3.0.2
+     |    +--- com.google.errorprone:error_prone_annotations:2.14.0
+     |    \--- com.google.guava:guava:31.1-android
+     |         +--- com.google.guava:failureaccess:1.0.1
+     |         +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     |         +--- com.google.code.findbugs:jsr305:3.0.2
+     |         +--- org.checkerframework:checker-qual:3.12.0
+     |         +--- com.google.errorprone:error_prone_annotations:2.11.0 -> 2.14.0
+     |         \--- com.google.j2objc:j2objc-annotations:1.3
+     +--- com.google.code.gson:gson:2.9.0
+     +--- com.google.android:annotations:4.1.1.4
+     +--- org.codehaus.mojo:animal-sniffer-annotations:1.21
+     +--- com.google.errorprone:error_prone_annotations:2.14.0
+     +--- com.google.guava:guava:31.1-android (*)
+     \--- io.perfmark:perfmark-api:0.25.0
+
+runtimeElements - Elements of runtime for main. (n)
+No dependencies
+
+runtimeOnly - Runtime only dependencies for source set 'main'. (n)
+No dependencies
+
+testAnnotationProcessor - Annotation processors and their dependencies for source set 'test'.
+No dependencies
+
+testCompileClasspath - Compile classpath for source set 'test'.
++--- org.apache.commons:commons-lang3:3.12.0
++--- com.fasterxml.jackson.core:jackson-core:2.14.2
+|    \--- com.fasterxml.jackson:jackson-bom:2.14.2
+|         \--- com.fasterxml.jackson.core:jackson-core:2.14.2 (c)
++--- io.opentelemetry:opentelemetry-jdbc:1.19.0 FAILED
+\--- io.grpc:grpc-core:1.49.2
+     \--- io.grpc:grpc-api:1.49.2
+          +--- io.grpc:grpc-context:1.49.2
+          +--- com.google.code.findbugs:jsr305:3.0.2
+          \--- com.google.errorprone:error_prone_annotations:2.14.0
+
+testCompileOnly - Compile only dependencies for source set 'test'. (n)
+No dependencies
+
+testImplementation - Implementation only dependencies for source set 'test'. (n)
+No dependencies
+
+testResultsElementsForTest - Directory containing binary results of running tests for the test Test Suite's test target. (n)
+No dependencies
+
+testRuntimeClasspath - Runtime classpath of source set 'test'.
++--- org.apache.commons:commons-lang3:3.12.0
++--- com.fasterxml.jackson.core:jackson-core:2.14.2
+|    \--- com.fasterxml.jackson:jackson-bom:2.14.2
+|         \--- com.fasterxml.jackson.core:jackson-core:2.14.2 (c)
++--- io.opentelemetry:opentelemetry-jdbc:1.19.0 FAILED
+\--- io.grpc:grpc-core:1.49.2
+     +--- io.grpc:grpc-api:1.49.2
+     |    +--- io.grpc:grpc-context:1.49.2
+     |    +--- com.google.code.findbugs:jsr305:3.0.2
+     |    +--- com.google.errorprone:error_prone_annotations:2.14.0
+     |    \--- com.google.guava:guava:31.1-android
+     |         +--- com.google.guava:failureaccess:1.0.1
+     |         +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     |         +--- com.google.code.findbugs:jsr305:3.0.2
+     |         +--- org.checkerframework:checker-qual:3.12.0
+     |         +--- com.google.errorprone:error_prone_annotations:2.11.0 -> 2.14.0
+     |         \--- com.google.j2objc:j2objc-annotations:1.3
+     +--- com.google.code.gson:gson:2.9.0
+     +--- com.google.android:annotations:4.1.1.4
+     +--- org.codehaus.mojo:animal-sniffer-annotations:1.21
+     +--- com.google.errorprone:error_prone_annotations:2.14.0
+     +--- com.google.guava:guava:31.1-android (*)
+     \--- io.perfmark:perfmark-api:0.25.0
+
+testRuntimeOnly - Runtime only dependencies for source set 'test'. (n)
+No dependencies
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+A web-based, searchable dependency report is available by adding the --scan option.
