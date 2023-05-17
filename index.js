@@ -1167,14 +1167,23 @@ const createJavaBom = async (path, options) => {
         ["true", "1"].includes(multiProjectMode) ||
         (gradleFiles.length > 1 && !["false", "0"].includes(multiProjectMode))
       ) {
-        if (DEBUG_MODE) {
-          console.log("Executing", gradleCmd, "projects in", path);
+        let gradleProjectsArgs = ["projects", "-q", "--console", "plain"];
+        if (process.env.GRADLE_ARGS) {
+          const addArgs = process.env.GRADLE_ARGS.split(" ");
+          gradleProjectsArgs = gradleProjectsArgs.concat(addArgs);
         }
-        const result = spawnSync(
+        console.log(
+          "Executing",
           gradleCmd,
-          ["projects", "-q", "--console", "plain"],
-          { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+          gradleProjectsArgs.join(" "),
+          "projects in",
+          path
         );
+        const result = spawnSync(gradleCmd, gradleProjectsArgs, {
+          cwd: path,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS
+        });
         if (result.status !== 0 || result.error) {
           if (result.stderr) {
             console.error(result.stdout, result.stderr);
