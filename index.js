@@ -1391,7 +1391,9 @@ const createJavaBom = async (path, options) => {
             const cmdOutput = Buffer.from(stdout).toString();
             const parsedList = utils.parseGradleDep(cmdOutput);
             const dlist = parsedList.pkgList;
-            parentComponent = dlist.splice(0, 1)[0];
+            if (!parentComponent) {
+              parentComponent = dlist.splice(0, 1)[0];
+            }
             if (parsedList.dependenciesList && parsedList.dependenciesList) {
               dependencies = mergeDependencies(
                 dependencies,

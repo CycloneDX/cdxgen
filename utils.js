@@ -1190,6 +1190,18 @@ const parseGradleDep = function (
   rootProjectVersion = "latest"
 ) {
   if (typeof rawOutput === "string") {
+    // Bug: 249. Get any sub-projects refered here
+    const retMap = parseGradleProjects(rawOutput);
+    // Issue #289. Work hard to find the root project name
+    if (
+      !rootProjectName ||
+      (rootProjectName === "root" &&
+        retMap &&
+        retMap.rootProject &&
+        retMap.rootProject !== "root")
+    ) {
+      rootProjectName = retMap.rootProject;
+    }
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
@@ -1205,8 +1217,6 @@ const parseGradleDep = function (
     let last_level = 0;
     let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
     const first_purl = last_purl;
-    // Bug: 249. Get any sub-projects refered here
-    const retMap = parseGradleProjects(rawOutput);
     const level_trees = {};
     level_trees[last_purl] = [];
     if (retMap && retMap.projects) {
