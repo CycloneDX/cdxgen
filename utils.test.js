@@ -953,6 +953,7 @@ test("parse .net cs proj", async () => {
 });
 
 test("get nget metadata", async () => {
+  jest.setTimeout(240000);
   const dep_list = await utils.getNugetMetadata([
     {
       group: "",
