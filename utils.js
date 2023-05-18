@@ -1221,6 +1221,8 @@ const parseGradleDep = function (
     let last_project_purl = first_purl;
     const level_trees = {};
     level_trees[last_purl] = [];
+    let scope = undefined;
+    let profileName = undefined;
     if (retMap && retMap.projects) {
       const subDependsOn = [];
       for (const sd of retMap.projects) {
@@ -1243,8 +1245,10 @@ const parseGradleDep = function (
     const depRegex =
       /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?<versionoverride>[^\s:]+))?/gm;
     for (const rline of rawOutput.split("\n")) {
+      if (!rline) {
+        continue;
+      }
       if (
-        !rline ||
         rline.trim() === "" ||
         rline.startsWith("+--- ") ||
         rline.startsWith("\\--- ")
@@ -1259,6 +1263,16 @@ const parseGradleDep = function (
           last_project_purl = first_purl;
           last_purl = last_project_purl;
           stack = [first_purl];
+        }
+      }
+      if (rline.includes(" - ")) {
+        profileName = rline.split(" - ")[0];
+        if (profileName.toLowerCase().includes("test")) {
+          scope = "optional";
+        } else if (profileName.toLowerCase().includes("runtime")) {
+          scope = "required";
+        } else {
+          scope = undefined;
         }
       }
       while ((match = depRegex.exec(rline))) {
@@ -1280,12 +1294,24 @@ const parseGradleDep = function (
             // Filter duplicates
             if (!deps_keys_cache[purlString]) {
               deps_keys_cache[purlString] = true;
-              deps.push({
+              const adep = {
                 group,
                 name: name,
                 version: version,
                 qualifiers: { type: "jar" }
-              });
+              };
+              if (scope) {
+                adep["scope"] = scope;
+              }
+              if (profileName) {
+                adep.properties = [
+                  {
+                    name: "GradleProfileName",
+                    value: profileName
+                  }
+                ];
+              }
+              deps.push(adep);
             }
             if (!level_trees[purlString]) {
               level_trees[purlString] = [];

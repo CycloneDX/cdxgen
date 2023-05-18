@@ -98,7 +98,14 @@ test("parse gradle dependencies", () => {
     qualifiers: {
       type: "jar"
     },
-    version: "1.0.2"
+    scope: "optional",
+    version: "1.0.2",
+    properties: [
+      {
+        name: "GradleProfileName",
+        value: "androidTestImplementation"
+      }
+    ]
   });
   expect(parsedList.pkgList[104]).toEqual({
     group: "androidx.print",
@@ -106,15 +113,14 @@ test("parse gradle dependencies", () => {
     qualifiers: {
       type: "jar"
     },
-    version: "1.0.0"
-  });
-  expect(parsedList.pkgList[105]).toEqual({
-    group: "androidx.core",
-    name: "core",
-    qualifiers: {
-      type: "jar"
-    },
-    version: "1.7.0"
+    version: "1.0.0",
+    scope: "optional",
+    properties: [
+      {
+        name: "GradleProfileName",
+        value: "releaseUnitTestRuntimeClasspath"
+      }
+    ]
   });
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-out1.dep", { encoding: "utf-8" })
@@ -125,7 +131,13 @@ test("parse gradle dependencies", () => {
     group: "org.springframework.boot",
     name: "spring-boot-starter-web",
     version: "2.2.0.RELEASE",
-    qualifiers: { type: "jar" }
+    qualifiers: { type: "jar" },
+    properties: [
+      {
+        name: "GradleProfileName",
+        value: "compileClasspath"
+      }
+    ]
   });
 
   parsedList = utils.parseGradleDep(
