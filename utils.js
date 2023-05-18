@@ -1214,6 +1214,7 @@ const parseGradleDep = function (
     const deps = [rootProject];
     const dependenciesList = [];
     const keys_cache = {};
+    const deps_keys_cache = {};
     let last_level = 0;
     let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
     const first_purl = last_purl;
@@ -1246,9 +1247,11 @@ const parseGradleDep = function (
           !rline ||
           rline.trim() === "" ||
           rline.startsWith("+--- ") ||
-          rline.startsWith("--- ")
+          rline.startsWith("\\--- ")
         ) {
           last_level = 1;
+          last_purl = first_purl;
+          stack = [last_purl];
         }
       }
       while ((match = depRegex.exec(rline))) {
@@ -1265,43 +1268,43 @@ const parseGradleDep = function (
             null
           ).toString();
           purlString = decodeURIComponent(purlString);
-
-          // Filter duplicates
-          if (!keys_cache[purlString]) {
-            keys_cache[purlString] = true;
-            if (group !== "project") {
+          keys_cache[purlString + "_" + last_purl] = true;
+          if (group !== "project") {
+            // Filter duplicates
+            if (!deps_keys_cache[purlString]) {
+              deps_keys_cache[purlString] = true;
               deps.push({
                 group,
                 name: name,
                 version: version,
                 qualifiers: { type: "jar" }
               });
-              if (!level_trees[purlString]) {
-                level_trees[purlString] = [];
-              }
-              if (level == 0 || last_purl === "") {
-                stack.push(purlString);
-              } else if (level > last_level) {
-                const cnodes = level_trees[last_purl] || [];
-                cnodes.push(purlString);
-                level_trees[last_purl] = cnodes;
-                if (stack[stack.length - 1] !== purlString) {
-                  stack.push(purlString);
-                }
-              } else {
-                for (let i = level; i <= last_level; i++) {
-                  stack.pop();
-                }
-                const last_stack =
-                  stack.length > 0 ? stack[stack.length - 1] : first_purl;
-                const cnodes = level_trees[last_stack] || [];
-                cnodes.push(purlString);
-                level_trees[last_stack] = cnodes;
-                stack.push(purlString);
-              }
-              last_level = level;
-              last_purl = purlString;
             }
+            if (!level_trees[purlString]) {
+              level_trees[purlString] = [];
+            }
+            if (level == 0 || last_purl === "") {
+              stack.push(purlString);
+            } else if (level > last_level) {
+              const cnodes = level_trees[last_purl] || [];
+              cnodes.push(purlString);
+              level_trees[last_purl] = cnodes;
+              if (stack[stack.length - 1] !== purlString) {
+                stack.push(purlString);
+              }
+            } else {
+              for (let i = level; i <= last_level; i++) {
+                stack.pop();
+              }
+              const last_stack =
+                stack.length > 0 ? stack[stack.length - 1] : first_purl;
+              const cnodes = level_trees[last_stack] || [];
+              cnodes.push(purlString);
+              level_trees[last_stack] = cnodes;
+              stack.push(purlString);
+            }
+            last_level = level;
+            last_purl = purlString;
           }
         }
       }
