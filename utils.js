@@ -1218,6 +1218,7 @@ const parseGradleDep = function (
     let last_level = 0;
     let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
     const first_purl = last_purl;
+    let last_project_purl = first_purl;
     const level_trees = {};
     level_trees[last_purl] = [];
     if (retMap && retMap.projects) {
@@ -1242,14 +1243,18 @@ const parseGradleDep = function (
     const depRegex =
       /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?<versionoverride>[^\s:]+))?/gm;
     for (const rline of rawOutput.split("\n")) {
-      if (last_level !== 1) {
-        if (
-          !rline ||
-          rline.trim() === "" ||
-          rline.startsWith("+--- ") ||
-          rline.startsWith("\\--- ")
-        ) {
-          last_level = 1;
+      if (
+        !rline ||
+        rline.trim() === "" ||
+        rline.startsWith("+--- ") ||
+        rline.startsWith("\\--- ")
+      ) {
+        last_level = 1;
+        if (rline.startsWith("+--- project :")) {
+          let tmpProj = rline.split("+--- project :");
+          last_project_purl = `pkg:maven/${tmpProj[1].trim()}@${rootProjectVersion}?type=jar`;
+          stack = [last_project_purl];
+        } else {
           last_purl = first_purl;
           stack = [last_purl];
         }
@@ -1283,11 +1288,15 @@ const parseGradleDep = function (
             if (!level_trees[purlString]) {
               level_trees[purlString] = [];
             }
-            if (level == 0 || last_purl === "") {
+            if (level == 0) {
+              stack = [purlString];
+            } else if (last_purl === "") {
               stack.push(purlString);
             } else if (level > last_level) {
               const cnodes = level_trees[last_purl] || [];
-              cnodes.push(purlString);
+              if (!cnodes.includes(purlString)) {
+                cnodes.push(purlString);
+              }
               level_trees[last_purl] = cnodes;
               if (stack[stack.length - 1] !== purlString) {
                 stack.push(purlString);
@@ -1297,9 +1306,11 @@ const parseGradleDep = function (
                 stack.pop();
               }
               const last_stack =
-                stack.length > 0 ? stack[stack.length - 1] : first_purl;
+                stack.length > 0 ? stack[stack.length - 1] : last_project_purl;
               const cnodes = level_trees[last_stack] || [];
-              cnodes.push(purlString);
+              if (!cnodes.includes(purlString)) {
+                cnodes.push(purlString);
+              }
               level_trees[last_stack] = cnodes;
               stack.push(purlString);
             }

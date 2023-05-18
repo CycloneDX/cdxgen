@@ -210,17 +210,17 @@ test("parse gradle dependencies", () => {
     fs.readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(21);
-  expect(parsedList.dependenciesList.length).toEqual(21);
+  expect(parsedList.dependenciesList.length).toEqual(22);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(35);
-  expect(parsedList.dependenciesList.length).toEqual(35);
+  expect(parsedList.dependenciesList.length).toEqual(36);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-s.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(28);
-  expect(parsedList.dependenciesList.length).toEqual(28);
+  expect(parsedList.dependenciesList.length).toEqual(29);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-core.out", { encoding: "utf-8" })
   );
