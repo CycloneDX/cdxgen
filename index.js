@@ -1287,7 +1287,7 @@ const createJavaBom = async (path, options) => {
                 const parsedList = utils.parseGradleDep(cmdOutput, sp);
                 const dlist = parsedList.pkgList;
                 // Do not overwrite the parentComponent in multi-project mode
-                if (!parentComponent) {
+                if (!parentComponent || !Object.keys(parentComponent).length) {
                   parentComponent = dlist.splice(0, 1)[0];
                 }
                 if (
@@ -1400,7 +1400,7 @@ const createJavaBom = async (path, options) => {
             const cmdOutput = Buffer.from(stdout).toString();
             const parsedList = utils.parseGradleDep(cmdOutput);
             const dlist = parsedList.pkgList;
-            if (!parentComponent) {
+            if (!parentComponent || !Object.keys(parentComponent).length) {
               parentComponent = dlist.splice(0, 1)[0];
             }
             if (parsedList.dependenciesList && parsedList.dependenciesList) {
