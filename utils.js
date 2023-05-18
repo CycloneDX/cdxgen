@@ -1253,10 +1253,13 @@ const parseGradleDep = function (
         if (rline.startsWith("+--- project :")) {
           let tmpProj = rline.split("+--- project :");
           last_project_purl = `pkg:maven/${tmpProj[1].trim()}@${rootProjectVersion}?type=jar`;
-          stack = [last_project_purl];
-        } else {
+          stack = [first_purl];
+          stack.push(last_project_purl);
           last_purl = first_purl;
-          stack = [last_purl];
+        } else {
+          last_project_purl = first_purl;
+          last_purl = last_project_purl;
+          stack.push(last_purl);
         }
       }
       while ((match = depRegex.exec(rline))) {
@@ -1289,7 +1292,8 @@ const parseGradleDep = function (
               level_trees[purlString] = [];
             }
             if (level == 0) {
-              stack = [purlString];
+              stack = [first_purl];
+              stack.push(purlString);
             } else if (last_purl === "") {
               stack.push(purlString);
             } else if (level > last_level) {
