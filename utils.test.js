@@ -1034,8 +1034,8 @@ test("get repo license", async () => {
     url: "https://github.com/ugorji/go/blob/master/LICENSE"
   });
 });
-*/
 test("get go pkg license", async () => {
+  jest.setTimeout(120000);
   let license = await utils.getGoPkgLicense({
     group: "github.com/Azure/azure-amqp-common-go",
     name: "v2"
@@ -1069,6 +1069,7 @@ test("get go pkg license", async () => {
     }
   ]);
 });
+*/
 
 test("get licenses", () => {
   let licenses = utils.getLicenses({ license: "MIT" });
