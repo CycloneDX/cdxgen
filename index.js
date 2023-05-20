@@ -4594,13 +4594,42 @@ exports.submitBom = async (args, bomContents) => {
       projectVersion
     );
   }
-  return await got(serverUrl, {
-    method: "POST",
-    headers: {
-      "X-Api-Key": args.apiKey,
-      "Content-Type": "application/json"
-    },
-    json: bomPayload,
-    responseType: "json"
-  }).json();
+  try {
+    return await got(serverUrl, {
+      method: "PUT",
+      headers: {
+        "X-Api-Key": args.apiKey,
+        "Content-Type": "application/json"
+      },
+      json: bomPayload,
+      responseType: "json"
+    }).json();
+  } catch (error) {
+    // Method not allowed errors
+    if (error.response.statusCode === 405) {
+      try {
+        return await got(serverUrl, {
+          method: "POST",
+          headers: {
+            "X-Api-Key": args.apiKey,
+            "Content-Type": "application/json"
+          },
+          json: {
+            project: args.projectId,
+            projectName: args.projectName,
+            projectVersion: projectVersion,
+            autoCreate: "true",
+            bom: Buffer.from(bomContents).toString()
+          },
+          responseType: "json"
+        }).json();
+      } catch (error) {
+        console.log("Unable to submit the SBoM to the Dependency-Track server");
+        console.log(error);
+      }
+    } else {
+      console.log("Unable to submit the SBoM to the Dependency-Track server");
+      console.log(error);
+    }
+  }
 };
