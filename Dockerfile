@@ -62,8 +62,8 @@ RUN echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /et
     && chmod +x linux-install-1.11.1.1208.sh \
     && sudo ./linux-install-1.11.1.1208.sh \
     && useradd -ms /bin/bash cyclonedx \
+    && npm install --unsafe-perm -g @microsoft/rush --omit=dev \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen \
-    && npm install --unsafe-perm -g @microsoft/rush \
     && pecl channel-update pecl.php.net \
     && pecl install timezonedb \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
