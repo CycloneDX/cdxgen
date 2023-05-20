@@ -1218,8 +1218,11 @@ const parseGradleDep = function (
     let last_level = 0;
     let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
     const first_purl = last_purl;
+    let last_project_purl = first_purl;
     const level_trees = {};
     level_trees[last_purl] = [];
+    let scope = undefined;
+    let profileName = undefined;
     if (retMap && retMap.projects) {
       const subDependsOn = [];
       for (const sd of retMap.projects) {
@@ -1242,16 +1245,34 @@ const parseGradleDep = function (
     const depRegex =
       /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?<versionoverride>[^\s:]+))?/gm;
     for (const rline of rawOutput.split("\n")) {
-      if (last_level !== 1) {
-        if (
-          !rline ||
-          rline.trim() === "" ||
-          rline.startsWith("+--- ") ||
-          rline.startsWith("\\--- ")
-        ) {
-          last_level = 1;
-          last_purl = first_purl;
-          stack = [last_purl];
+      if (!rline) {
+        continue;
+      }
+      if (
+        rline.trim() === "" ||
+        rline.startsWith("+--- ") ||
+        rline.startsWith("\\--- ")
+      ) {
+        last_level = 1;
+        if (rline.startsWith("+--- project :")) {
+          let tmpProj = rline.split("+--- project :");
+          last_project_purl = `pkg:maven/${tmpProj[1].trim()}@${rootProjectVersion}?type=jar`;
+          stack = [last_project_purl];
+          last_purl = last_project_purl;
+        } else {
+          last_project_purl = first_purl;
+          last_purl = last_project_purl;
+          stack = [first_purl];
+        }
+      }
+      if (rline.includes(" - ")) {
+        profileName = rline.split(" - ")[0];
+        if (profileName.toLowerCase().includes("test")) {
+          scope = "optional";
+        } else if (profileName.toLowerCase().includes("runtime")) {
+          scope = "required";
+        } else {
+          scope = undefined;
         }
       }
       while ((match = depRegex.exec(rline))) {
@@ -1273,21 +1294,38 @@ const parseGradleDep = function (
             // Filter duplicates
             if (!deps_keys_cache[purlString]) {
               deps_keys_cache[purlString] = true;
-              deps.push({
+              const adep = {
                 group,
                 name: name,
                 version: version,
                 qualifiers: { type: "jar" }
-              });
+              };
+              if (scope) {
+                adep["scope"] = scope;
+              }
+              if (profileName) {
+                adep.properties = [
+                  {
+                    name: "GradleProfileName",
+                    value: profileName
+                  }
+                ];
+              }
+              deps.push(adep);
             }
             if (!level_trees[purlString]) {
               level_trees[purlString] = [];
             }
-            if (level == 0 || last_purl === "") {
+            if (level == 0) {
+              stack = [first_purl];
+              stack.push(purlString);
+            } else if (last_purl === "") {
               stack.push(purlString);
             } else if (level > last_level) {
               const cnodes = level_trees[last_purl] || [];
-              cnodes.push(purlString);
+              if (!cnodes.includes(purlString)) {
+                cnodes.push(purlString);
+              }
               level_trees[last_purl] = cnodes;
               if (stack[stack.length - 1] !== purlString) {
                 stack.push(purlString);
@@ -1297,9 +1335,11 @@ const parseGradleDep = function (
                 stack.pop();
               }
               const last_stack =
-                stack.length > 0 ? stack[stack.length - 1] : first_purl;
+                stack.length > 0 ? stack[stack.length - 1] : last_project_purl;
               const cnodes = level_trees[last_stack] || [];
-              cnodes.push(purlString);
+              if (!cnodes.includes(purlString)) {
+                cnodes.push(purlString);
+              }
               level_trees[last_stack] = cnodes;
               stack.push(purlString);
             }

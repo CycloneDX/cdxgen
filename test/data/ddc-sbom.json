@@ -1,0 +1,1309 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:88abf372-cbc8-41db-8b72-d4f3d0d8e4bf",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2023-05-18T20:49:25.771Z",
+    "tools": [
+      {
+        "vendor": "cyclonedx",
+        "name": "cdxgen",
+        "version": "8.4.11"
+      }
+    ],
+    "authors": [
+      {
+        "name": "Prabhu Subramanian",
+        "email": "prabhu@appthreat.com"
+      }
+    ],
+    "component": {
+      "publisher": "",
+      "group": "",
+      "name": "dependency-diff-check",
+      "version": "latest",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/dependency-diff-check@latest?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/dependency-diff-check@latest?type=jar"
+    }
+  },
+  "components": [
+    {
+      "publisher": "",
+      "group": "",
+      "name": "dependency-diff-check-client-starter",
+      "version": "latest",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/dependency-diff-check-client-starter@latest?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/dependency-diff-check-client-starter@latest?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework.boot",
+      "name": "spring-boot-autoconfigure",
+      "version": "3.0.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-autoconfigure@3.0.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-autoconfigure@3.0.1?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework.boot",
+      "name": "spring-boot",
+      "version": "3.0.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework.boot/spring-boot@3.0.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework.boot/spring-boot@3.0.1?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework",
+      "name": "spring-core",
+      "version": "6.0.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework/spring-core@6.0.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework/spring-core@6.0.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework",
+      "name": "spring-jcl",
+      "version": "6.0.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework/spring-jcl@6.0.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework/spring-jcl@6.0.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework",
+      "name": "spring-context",
+      "version": "6.0.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework/spring-context@6.0.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework/spring-context@6.0.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework",
+      "name": "spring-aop",
+      "version": "6.0.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework/spring-aop@6.0.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework/spring-aop@6.0.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework",
+      "name": "spring-beans",
+      "version": "6.0.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework/spring-beans@6.0.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework/spring-beans@6.0.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.springframework",
+      "name": "spring-expression",
+      "version": "6.0.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.springframework/spring-expression@6.0.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.springframework/spring-expression@6.0.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "2.0.7",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.slf4j/slf4j-api@2.0.7?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.slf4j/slf4j-api@2.0.7?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.commons",
+      "name": "commons-lang3",
+      "version": "3.12.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.commons/commons-lang3@3.12.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.commons/commons-lang3@3.12.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.14.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.1?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson",
+      "name": "jackson-bom",
+      "version": "2.14.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.1?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.opentelemetry.instrumentation",
+      "name": "opentelemetry-jdbc",
+      "version": "1.19.2-alpha",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-jdbc@1.19.2-alpha?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-jdbc@1.19.2-alpha?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.opentelemetry.instrumentation",
+      "name": "opentelemetry-instrumentation-api",
+      "version": "1.19.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api@1.19.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api@1.19.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.opentelemetry",
+      "name": "opentelemetry-api",
+      "version": "1.19.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-api@1.19.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-api@1.19.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.opentelemetry",
+      "name": "opentelemetry-context",
+      "version": "1.19.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-context@1.19.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-context@1.19.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.opentelemetry.instrumentation",
+      "name": "opentelemetry-instrumentation-api-semconv",
+      "version": "1.19.2-alpha",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api-semconv@1.19.2-alpha?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api-semconv@1.19.2-alpha?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.opentelemetry",
+      "name": "opentelemetry-semconv",
+      "version": "1.19.0-alpha",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.opentelemetry/opentelemetry-semconv@1.19.0-alpha?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.opentelemetry/opentelemetry-semconv@1.19.0-alpha?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.grpc",
+      "name": "grpc-core",
+      "version": "1.49.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.grpc/grpc-core@1.49.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.grpc/grpc-core@1.49.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.grpc",
+      "name": "grpc-api",
+      "version": "1.49.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.grpc/grpc-api@1.49.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.grpc/grpc-api@1.49.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.grpc",
+      "name": "grpc-context",
+      "version": "1.49.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.grpc/grpc-context@1.49.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.grpc/grpc-context@1.49.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.code.findbugs",
+      "name": "jsr305",
+      "version": "3.0.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.code.findbugs/jsr305@3.0.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.code.findbugs/jsr305@3.0.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.errorprone",
+      "name": "error_prone_annotations",
+      "version": "2.14.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.errorprone/error_prone_annotations@2.14.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.errorprone/error_prone_annotations@2.14.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.guava",
+      "name": "guava",
+      "version": "31.1-android",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.guava/guava@31.1-android?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.guava/guava@31.1-android?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.guava",
+      "name": "failureaccess",
+      "version": "1.0.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.guava/failureaccess@1.0.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.guava/failureaccess@1.0.1?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.guava",
+      "name": "listenablefuture",
+      "version": "9999.0-empty-to-avoid-conflict-with-guava",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.guava/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.guava/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.checkerframework",
+      "name": "checker-qual",
+      "version": "3.12.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.checkerframework/checker-qual@3.12.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.checkerframework/checker-qual@3.12.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.j2objc",
+      "name": "j2objc-annotations",
+      "version": "1.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.j2objc/j2objc-annotations@1.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.j2objc/j2objc-annotations@1.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.code.gson",
+      "name": "gson",
+      "version": "2.9.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.code.gson/gson@2.9.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.code.gson/gson@2.9.1?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.android",
+      "name": "annotations",
+      "version": "4.1.1.4",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.android/annotations@4.1.1.4?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.android/annotations@4.1.1.4?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.codehaus.mojo",
+      "name": "animal-sniffer-annotations",
+      "version": "1.21",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.codehaus.mojo/animal-sniffer-annotations@1.21?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.codehaus.mojo/animal-sniffer-annotations@1.21?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "io.perfmark",
+      "name": "perfmark-api",
+      "version": "0.25.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/io.perfmark/perfmark-api@0.25.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/io.perfmark/perfmark-api@0.25.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "mainSourceElements"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "",
+      "name": "dependency-diff-check-common-core",
+      "version": "latest",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/dependency-diff-check-common-core@latest?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/dependency-diff-check-common-core@latest?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.14.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson",
+      "name": "jackson-bom",
+      "version": "2.14.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.code.gson",
+      "name": "gson",
+      "version": "2.9.0",
+      "description": "",
+      "scope": "required",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.code.gson/gson@2.9.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.code.gson/gson@2.9.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "runtimeClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "",
+      "name": "dependency-diff-check-service",
+      "version": "latest",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/dependency-diff-check-service@latest?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/dependency-diff-check-service@latest?type=jar"
+    },
+    {
+      "publisher": "",
+      "group": "org.projectlombok",
+      "name": "lombok",
+      "version": "1.18.26",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.projectlombok/lombok@1.18.26?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.projectlombok/lombok@1.18.26?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.graphql-java",
+      "name": "graphql-java",
+      "version": "20.2",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.graphql-java/graphql-java@20.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.graphql-java/graphql-java@20.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.graphql-java",
+      "name": "java-dataloader",
+      "version": "3.2.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.graphql-java/java-dataloader@3.2.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.graphql-java/java-dataloader@3.2.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "1.7.30",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.slf4j/slf4j-api@1.7.30?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.slf4j/slf4j-api@1.7.30?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.reactivestreams",
+      "name": "reactive-streams",
+      "version": "1.0.3",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.reactivestreams/reactive-streams@1.0.3?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.reactivestreams/reactive-streams@1.0.3?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.flywaydb",
+      "name": "flyway-mysql",
+      "version": "9.18.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.flywaydb/flyway-mysql@9.18.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.flywaydb/flyway-mysql@9.18.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.flywaydb",
+      "name": "flyway-core",
+      "version": "9.18.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.flywaydb/flyway-core@9.18.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.flywaydb/flyway-core@9.18.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-toml",
+      "version": "2.14.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.14.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-annotations",
+      "version": "2.14.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson",
+      "name": "jackson-bom",
+      "version": "2.14.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-core",
+      "version": "2.14.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.apache.commons",
+      "name": "commons-text",
+      "version": "1.10.0",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/org.apache.commons/commons-text@1.10.0?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.apache.commons/commons-text@1.10.0?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.google.code.gson",
+      "name": "gson",
+      "version": "2.10.1",
+      "description": "",
+      "licenses": [],
+      "purl": "pkg:maven/com.google.code.gson/gson@2.10.1?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.google.code.gson/gson@2.10.1?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "compileClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.dataformat",
+      "name": "jackson-dataformat-toml",
+      "version": "2.14.2",
+      "description": "",
+      "scope": "required",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "runtimeClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-databind",
+      "version": "2.14.2",
+      "description": "",
+      "scope": "required",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "runtimeClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "com.fasterxml.jackson.core",
+      "name": "jackson-annotations",
+      "version": "2.14.2",
+      "description": "",
+      "scope": "required",
+      "licenses": [],
+      "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.2?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.2?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "runtimeClasspath"
+        }
+      ]
+    },
+    {
+      "publisher": "",
+      "group": "org.slf4j",
+      "name": "slf4j-api",
+      "version": "1.7.35",
+      "description": "",
+      "scope": "required",
+      "licenses": [],
+      "purl": "pkg:maven/org.slf4j/slf4j-api@1.7.35?type=jar",
+      "type": "library",
+      "bom-ref": "pkg:maven/org.slf4j/slf4j-api@1.7.35?type=jar",
+      "properties": [
+        {
+          "name": "GradleProfileName",
+          "value": "runtimeClasspath"
+        }
+      ]
+    }
+  ],
+  "services": [],
+  "dependencies": [
+    {
+      "ref": "pkg:maven/dependency-diff-check@latest?type=jar",
+      "dependsOn": [
+        "pkg:maven/dependency-diff-check-client-starter@latest?type=jar",
+        "pkg:maven/dependency-diff-check-common-core@latest?type=jar",
+        "pkg:maven/dependency-diff-check-service@latest?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/dependency-diff-check-client-starter@latest?type=jar",
+      "dependsOn": [
+        "pkg:maven/dependency-diff-check-common-core@latest?type=jar",
+        "pkg:maven/org.springframework.boot/spring-boot-autoconfigure@3.0.1?type=jar",
+        "pkg:maven/org.slf4j/slf4j-api@2.0.7?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.springframework.boot/spring-boot-autoconfigure@3.0.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.springframework.boot/spring-boot@3.0.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.springframework.boot/spring-boot@3.0.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.springframework/spring-core@6.0.3?type=jar",
+        "pkg:maven/org.springframework/spring-context@6.0.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.springframework/spring-core@6.0.3?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.springframework/spring-jcl@6.0.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.springframework/spring-jcl@6.0.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.springframework/spring-context@6.0.3?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.springframework/spring-aop@6.0.3?type=jar",
+        "pkg:maven/org.springframework/spring-expression@6.0.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.springframework/spring-aop@6.0.3?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.springframework/spring-beans@6.0.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.springframework/spring-beans@6.0.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.springframework/spring-expression@6.0.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.slf4j/slf4j-api@2.0.7?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.commons/commons-lang3@3.12.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/dependency-diff-check-common-core@latest?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.apache.commons/commons-lang3@3.12.0?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.1?type=jar",
+        "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-jdbc@1.19.2-alpha?type=jar",
+        "pkg:maven/io.grpc/grpc-core@1.49.2?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.1?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-jdbc@1.19.2-alpha?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api@1.19.2?type=jar",
+        "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api-semconv@1.19.2-alpha?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api@1.19.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.opentelemetry/opentelemetry-api@1.19.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.opentelemetry/opentelemetry-api@1.19.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.opentelemetry/opentelemetry-context@1.19.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.opentelemetry/opentelemetry-context@1.19.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/io.opentelemetry.instrumentation/opentelemetry-instrumentation-api-semconv@1.19.2-alpha?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.opentelemetry/opentelemetry-semconv@1.19.0-alpha?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.opentelemetry/opentelemetry-semconv@1.19.0-alpha?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/io.grpc/grpc-core@1.49.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.grpc/grpc-api@1.49.2?type=jar",
+        "pkg:maven/com.google.code.gson/gson@2.9.1?type=jar",
+        "pkg:maven/com.google.android/annotations@4.1.1.4?type=jar",
+        "pkg:maven/org.codehaus.mojo/animal-sniffer-annotations@1.21?type=jar",
+        "pkg:maven/com.google.errorprone/error_prone_annotations@2.14.0?type=jar",
+        "pkg:maven/io.perfmark/perfmark-api@0.25.0?type=jar",
+        "pkg:maven/com.google.code.gson/gson@2.9.0?type=jar",
+        "pkg:maven/com.google.code.gson/gson@2.10.1?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.grpc/grpc-api@1.49.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/io.grpc/grpc-context@1.49.2?type=jar",
+        "pkg:maven/com.google.code.findbugs/jsr305@3.0.2?type=jar",
+        "pkg:maven/com.google.errorprone/error_prone_annotations@2.14.0?type=jar",
+        "pkg:maven/com.google.guava/guava@31.1-android?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/io.grpc/grpc-context@1.49.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.google.code.findbugs/jsr305@3.0.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.google.errorprone/error_prone_annotations@2.14.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.google.guava/guava@31.1-android?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.google.guava/failureaccess@1.0.1?type=jar",
+        "pkg:maven/com.google.guava/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava?type=jar",
+        "pkg:maven/com.google.code.findbugs/jsr305@3.0.2?type=jar",
+        "pkg:maven/org.checkerframework/checker-qual@3.12.0?type=jar",
+        "pkg:maven/com.google.errorprone/error_prone_annotations@2.14.0?type=jar",
+        "pkg:maven/com.google.j2objc/j2objc-annotations@1.3?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.google.guava/failureaccess@1.0.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.google.guava/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.checkerframework/checker-qual@3.12.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.google.j2objc/j2objc-annotations@1.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.google.code.gson/gson@2.9.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.google.android/annotations@4.1.1.4?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.codehaus.mojo/animal-sniffer-annotations@1.21?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/io.perfmark/perfmark-api@0.25.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.2?type=jar",
+        "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.2?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.2?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.google.code.gson/gson@2.9.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/dependency-diff-check-service@latest?type=jar",
+      "dependsOn": [
+        "pkg:maven/dependency-diff-check-common-core@latest?type=jar",
+        "pkg:maven/org.projectlombok/lombok@1.18.26?type=jar",
+        "pkg:maven/com.graphql-java/graphql-java@20.2?type=jar",
+        "pkg:maven/org.flywaydb/flyway-mysql@9.18.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.projectlombok/lombok@1.18.26?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.graphql-java/graphql-java@20.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.graphql-java/java-dataloader@3.2.0?type=jar",
+        "pkg:maven/org.reactivestreams/reactive-streams@1.0.3?type=jar",
+        "pkg:maven/org.slf4j/slf4j-api@1.7.35?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.graphql-java/java-dataloader@3.2.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.slf4j/slf4j-api@1.7.30?type=jar",
+        "pkg:maven/org.slf4j/slf4j-api@1.7.35?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.slf4j/slf4j-api@1.7.30?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.reactivestreams/reactive-streams@1.0.3?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.flywaydb/flyway-mysql@9.18.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.flywaydb/flyway-core@9.18.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.flywaydb/flyway-core@9.18.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.0?type=jar",
+        "pkg:maven/org.apache.commons/commons-text@1.10.0?type=jar",
+        "pkg:maven/com.google.code.gson/gson@2.10.1?type=jar",
+        "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.0?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson/jackson-bom@2.14.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.0?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.0?type=jar",
+        "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.0?type=jar",
+        "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-core@2.14.0?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.apache.commons/commons-text@1.10.0?type=jar",
+      "dependsOn": [
+        "pkg:maven/org.apache.commons/commons-lang3@3.12.0?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.google.code.gson/gson@2.10.1?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.dataformat/jackson-dataformat-toml@2.14.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.14.2?type=jar",
+      "dependsOn": [
+        "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.2?type=jar"
+      ]
+    },
+    {
+      "ref": "pkg:maven/com.fasterxml.jackson.core/jackson-annotations@2.14.2?type=jar",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:maven/org.slf4j/slf4j-api@1.7.35?type=jar",
+      "dependsOn": []
+    }
+  ]
+}
