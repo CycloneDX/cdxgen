@@ -4605,8 +4605,13 @@ exports.submitBom = async (args, bomContents) => {
       responseType: "json"
     }).json();
   } catch (error) {
-    // Method not allowed errors
-    if (error.response.statusCode === 405) {
+    if (error.response.statusCode === 401) {
+      // Unauthorized
+      console.log(
+        "Received Unauthorized error. Check the API key used is valid and has necessary permissions to create projects and upload bom."
+      );
+    } else if (error.response.statusCode === 405) {
+      // Method not allowed errors
       try {
         return await got(serverUrl, {
           method: "POST",
