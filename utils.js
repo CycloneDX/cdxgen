@@ -1103,7 +1103,7 @@ const parseMavenTree = function (rawOutput) {
   let last_purl = "";
   let stack = [];
   tmpA.forEach((l) => {
-    if (!includeMavenTestScope && l.endsWith(":test")) {
+    if (!includeMavenTestScope && l.trim().endsWith(":test")) {
       return;
     }
     let level = 0;

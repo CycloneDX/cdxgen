@@ -1,0 +1,2572 @@
+io.appthreat:atom_2.13:1.0.0 [S]
+  +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  +-io.joern:c2cpg_2.13:1.1.1731 [S]
+  | +-com.diffplug.spotless:spotless-eclipse-cdt:10.5.0
+  | | +-com.diffplug.spotless:spotless-eclipse-base:3.5.2
+  | | | +-org.eclipse.platform:org.eclipse.core.resources:3.18.200
+  | | | | +-org.eclipse.platform:org.eclipse.core.filesystem:1.9.500
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (e..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.2.0,4.0.0) ..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:[3.2.0,4.0.0) (evicted by:..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.core.runtime:3.26.100
+  | | | | | +-org.eclipse.platform:org.eclipse.core.contenttype:3.8.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.13.0,4.0.0)..
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | | 
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0..
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3...
+  | | | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | | | 
+  | | | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1..
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:[3.2.0,4...
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | | 
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4...
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.2.0,4.0.0..
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.core.jobs:3.13.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicte..
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3...
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.app:1.6.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | | 
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4...
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.4.0,4.0.0..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted ..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | | 
+  | | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3.18..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | 
+  | | | +-org.eclipse.platform:org.eclipse.core.resources:[3.15.0,4.0.0) (evic..
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | +-org.slf4j:slf4j-api:[1.6,2.0) (evicted by: 2.0.7)
+  | | | 
+  | | +-com.diffplug.spotless:spotless-eclipse-base:[3.5.0,4.0.0) (evicted by:..
+  | | +-com.ibm.icu:icu4j:72.1
+  | | +-com.ibm.icu:icu4j:[67.1,68) (evicted by: 72.1)
+  | | +-org.eclipse.platform:org.eclipse.core.filebuffers:3.7.200
+  | | | +-org.eclipse.platform:org.eclipse.core.filesystem:1.9.500
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (evi..
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0.0)..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.2.0,4.0.0) (e..
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:[3.2.0,4.0.0) (evicted by: 3..
+  | | | | 
+  | | | +-org.eclipse.platform:org.eclipse.core.filesystem:[1.2.0,2.0.0) (evic..
+  | | | +-org.eclipse.platform:org.eclipse.core.runtime:3.26.100
+  | | | | +-org.eclipse.platform:org.eclipse.core.contenttype:3.8.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.13.0,4.0.0) (..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | | 
+  | | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:[3.2.0,4.0...
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.2.0,4.0.0) ..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18.3..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.core.jobs:3.13.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted ..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3.18..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.app:1.6.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (e..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.4.0,4.0.0) ..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted by..
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (e..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18.3..
+  | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | 
+  | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1.2)
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0.0)..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3.18.3..
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | 
+  | | | +-org.eclipse.platform:org.eclipse.core.runtime:[3.7.0,4.0.0) (evicted..
+  | | | +-org.eclipse.platform:org.eclipse.text:3.12.300
+  | | | | +-org.eclipse.platform:org.eclipse.core.commands:3.10.300 (evicted b..
+  | | | | +-org.eclipse.platform:org.eclipse.core.commands:3.10.400
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | |   +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | |   
+  | | | | +-org.eclipse.platform:org.eclipse.core.runtime:3.26.100
+  | | | | | +-org.eclipse.platform:org.eclipse.core.contenttype:3.8.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.13.0,4.0.0)..
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | | 
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0..
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3...
+  | | | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | | | 
+  | | | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1..
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:[3.2.0,4...
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | | 
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4...
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.2.0,4.0.0..
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.core.jobs:3.13.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicte..
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3...
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.app:1.6.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | | 
+  | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4...
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.4.0,4.0.0..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted ..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | | 
+  | | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3.18..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted by..
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | |   +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | |   | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | |   | 
+  | | | |   +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (e..
+  | | | |   +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | |   +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18.3..
+  | | | |   +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | |   | +-org.osgi:osgi.annotation:8.0.1
+  | | | |   | 
+  | | | |   +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1.2)
+  | | | |   
+  | | | +-org.eclipse.platform:org.eclipse.text:[3.5.0,4.0.0) (evicted by: 3.1..
+  | | | 
+  | | +-org.eclipse.platform:org.eclipse.core.filebuffers:[3.7.0,4.0.0) (evict..
+  | | +-org.eclipse.platform:org.eclipse.jface.text:3.23.0
+  | | | +-com.ibm.icu:icu4j:72.1
+  | | | +-org.eclipse.platform:org.eclipse.core.runtime:3.26.100
+  | | | | +-org.eclipse.platform:org.eclipse.core.contenttype:3.8.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.13.0,4.0.0) (..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | | 
+  | | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1..
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:[3.2.0,4.0...
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.2.0,4.0.0) ..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18.3..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.core.jobs:3.13.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted ..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3.18..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.app:1.6.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (e..
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | | 
+  | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.4.0,4.0.0) ..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted by..
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (e..
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18.3..
+  | | | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | | | | | 
+  | | | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1.2)
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | | 
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0.0)..
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3.18.3..
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | 
+  | | | +-org.eclipse.platform:org.eclipse.jface:3.29.0
+  | | | | +-org.eclipse.platform:org.eclipse.core.commands:3.10.400
+  | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | |   +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | |   
+  | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | | 
+  | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | | | 
+  | | | +-org.eclipse.platform:org.eclipse.text:3.12.300
+  | | |   +-org.eclipse.platform:org.eclipse.core.commands:3.10.300 (evicted b..
+  | | |   +-org.eclipse.platform:org.eclipse.core.commands:3.10.400
+  | | |   | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   |   +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   |   
+  | | |   +-org.eclipse.platform:org.eclipse.core.runtime:3.26.100
+  | | |   | +-org.eclipse.platform:org.eclipse.core.contenttype:3.8.200
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.13.0,4.0.0)..
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | |   | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | | 
+  | | |   | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0..
+  | | |   | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3...
+  | | |   | | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | |   | | | | +-org.osgi:osgi.annotation:8.0.1
+  | | |   | | | | 
+  | | |   | | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1..
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.preferences:[3.2.0,4...
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | |   | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | | 
+  | | |   | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4...
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.2.0,4.0.0..
+  | | |   | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | |   | | 
+  | | |   | +-org.eclipse.platform:org.eclipse.core.jobs:3.13.200
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicte..
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3...
+  | | |   | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | 
+  | | |   | +-org.eclipse.platform:org.eclipse.equinox.app:1.6.200
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | |   | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | | 
+  | | |   | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4...
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.registry:[3.4.0,4.0.0..
+  | | |   | | 
+  | | |   | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted ..
+  | | |   | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | 
+  | | |   | +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) ..
+  | | |   | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18..
+  | | |   | | +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | |   | | | +-org.osgi:osgi.annotation:8.0.1
+  | | |   | | | 
+  | | |   | | +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1..
+  | | |   | | 
+  | | |   | +-org.eclipse.platform:org.eclipse.equinox.registry:3.11.200
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | | | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | | | 
+  | | |   | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+  | | |   | | 
+  | | |   | +-org.eclipse.platform:org.eclipse.osgi:3.18.200 (evicted by: 3.18..
+  | | |   | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | 
+  | | |   +-org.eclipse.platform:org.eclipse.equinox.common:3.17.0 (evicted by..
+  | | |   +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |   | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |   | 
+  | | |   +-org.eclipse.platform:org.eclipse.equinox.preferences:3.10.100
+  | | |     +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100
+  | | |     | +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |     | 
+  | | |     +-org.eclipse.platform:org.eclipse.equinox.common:[3.2.0,4.0.0) (e..
+  | | |     +-org.eclipse.platform:org.eclipse.osgi:3.18.300
+  | | |     +-org.eclipse.platform:org.eclipse.osgi:[0.0,) (evicted by: 3.18.3..
+  | | |     +-org.osgi:org.osgi.service.prefs:1.1.2
+  | | |     | +-org.osgi:osgi.annotation:8.0.1
+  | | |     | 
+  | | |     +-org.osgi:org.osgi.service.prefs:[1.1.0,1.2.0) (evicted by: 1.1.2)
+  | | |     
+  | | +-org.eclipse.platform:org.eclipse.jface.text:[3.18.0,4.0.0) (evicted by..
+  | | 
+  | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | |   | | 
+  | | | |   | +-commons-lang:commons-lang:2.6
+  | | | |   | 
+  | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | |   | 
+  | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | |     
+  | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | 
+  | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | 
+  | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+  | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | 
+  | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | 
+  | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | 
+  | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | |   
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+  | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | |   | | 
+  | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | |   | 
+  | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | |   | 
+  | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | |     
+  | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | 
+  | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-org.jline:jline:3.23.0
+  | +-org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4 [S]
+  | +-org.slf4j:slf4j-api:2.0.7
+  | 
+  +-io.joern:javasrc2cpg_2.13:1.1.1731 [S]
+  | +-io.joern:dataflowengineoss_2.13:1.1.1731 [S]
+  | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |   
+  | | +-io.circe:circe-generic_2.13:0.14.5 [S]
+  | | | +-com.chuusai:shapeless_2.13:2.3.10 [S]
+  | | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | |   +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | |   +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |     +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |     
+  | | +-io.circe:circe-parser_2.13:0.14.5 [S]
+  | | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | | |   
+  | | | +-io.circe:circe-jawn_2.13:0.14.5 [S]
+  | | |   +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | |   | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | |   | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |   |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |   |   
+  | | |   +-org.typelevel:jawn-parser_2.13:1.4.0 [S]
+  | | |   
+  | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | |   | | 
+  | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | |   | 
+  | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | |   | 
+  | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | |     
+  | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | 
+  | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+  | | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+  | | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | |   | | 
+  | | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | | |   | 
+  | | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | |   | 
+  | | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | | |     
+  | | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+  | | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | | 
+  | | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | | 
+  | | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | | 
+  | | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | | |   
+  | | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | 
+  | | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | | 
+  | | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.antlr:antlr4-runtime:4.7
+  | | +-org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4 [S]
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-io.joern:javaparser-symbol-solver-core:3.24.3-SL3
+  | | +-com.google.guava:guava:31.1-jre
+  | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | +-com.google.guava:failureaccess:1.0.1
+  | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-wit..
+  | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | 
+  | | +-io.joern:javaparser-core:3.24.3-SL3
+  | | +-org.javassist:javassist:3.29.0-GA
+  | | 
+  | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+  | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | |   | | 
+  | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | |   | 
+  | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | |   | 
+  | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | |     
+  | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | 
+  | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | |   | +-au.com.bytecode:opencsv:2.4
+  | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | |   | +-com.google.guava:guava:31.1-jre
+  | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+  | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | |   | | 
+  | | |   | +-commons-lang:commons-lang:2.6
+  | | |   | 
+  | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | |   | +-net.sf.trove4j:core:3.1.0
+  | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | |   | 
+  | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | |     +-org.javassist:javassist:3.29.0-GA
+  | | |     
+  | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | 
+  | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+  | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | 
+  | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | 
+  | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | |   
+  | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | 
+  | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict..
+  | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | 
+  | | | | +-commons-lang:commons-lang:2.6
+  | | | | 
+  | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | |   +-org.javassist:javassist:3.29.0-GA
+  | | |   
+  | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-net.lingala.zip4j:zip4j:2.11.5
+  | +-org.gradle:gradle-tooling-api:7.6.1
+  | | +-org.slf4j:slf4j-api:1.7.30 (evicted by: 2.0.7)
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-org.projectlombok:lombok:1.18.26
+  | +-org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4 [S]
+  | +-org.scala-lang.modules:scala-parser-combinators_2.13:2.2.0 [S]
+  | +-org.slf4j:slf4j-api:2.0.7
+  | 
+  +-io.joern:jimple2cpg_2.13:1.1.1731 [S]
+  | +-io.joern:dataflowengineoss_2.13:1.1.1731 [S]
+  | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |   
+  | | +-io.circe:circe-generic_2.13:0.14.5 [S]
+  | | | +-com.chuusai:shapeless_2.13:2.3.10 [S]
+  | | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | |   +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | |   +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |     +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |     
+  | | +-io.circe:circe-parser_2.13:0.14.5 [S]
+  | | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | | |   
+  | | | +-io.circe:circe-jawn_2.13:0.14.5 [S]
+  | | |   +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | |   | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | |   | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |   |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |   |   
+  | | |   +-org.typelevel:jawn-parser_2.13:1.4.0 [S]
+  | | |   
+  | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | |   | | 
+  | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | |   | 
+  | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | |   | 
+  | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | |     
+  | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | 
+  | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+  | | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+  | | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | |   | | 
+  | | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | | |   | 
+  | | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | |   | 
+  | | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | | |     
+  | | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+  | | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | | 
+  | | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | | 
+  | | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | | 
+  | | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | | |   
+  | | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | 
+  | | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | | 
+  | | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.antlr:antlr4-runtime:4.7
+  | | +-org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4 [S]
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+  | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | |   | | 
+  | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | |   | 
+  | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | |   | 
+  | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | |     
+  | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | 
+  | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | |   | +-au.com.bytecode:opencsv:2.4
+  | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | |   | +-com.google.guava:guava:31.1-jre
+  | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+  | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | |   | | 
+  | | |   | +-commons-lang:commons-lang:2.6
+  | | |   | 
+  | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | |   | +-net.sf.trove4j:core:3.1.0
+  | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | |   | 
+  | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | |     +-org.javassist:javassist:3.29.0-GA
+  | | |     
+  | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | 
+  | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+  | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | 
+  | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | 
+  | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | |   
+  | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | 
+  | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict..
+  | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | 
+  | | | | +-commons-lang:commons-lang:2.6
+  | | | | 
+  | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | |   +-org.javassist:javassist:3.29.0-GA
+  | | |   
+  | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-org.slf4j:slf4j-api:2.0.7
+  | +-org.soot-oss:soot:4.4.1
+  |   +-ca.mcgill.sable:jasmin:3.0.3
+  |   | +-ca.mcgill.sable:java_cup:0.9.2
+  |   | 
+  |   +-ca.mcgill.sable:polyglot:2006
+  |   +-com.google.protobuf:protobuf-java-util:3.21.2
+  |   | +-com.google.code.findbugs:jsr305:3.0.2
+  |   | +-com.google.code.gson:gson:2.8.9
+  |   | +-com.google.errorprone:error_prone_annotations:2.11.0
+  |   | +-com.google.errorprone:error_prone_annotations:2.5.1 (evicted by: 2.1..
+  |   | +-com.google.guava:guava:31.1-android (evicted by: 31.1-jre)
+  |   | +-com.google.guava:guava:31.1-jre
+  |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  |   | | +-com.google.guava:failureaccess:1.0.1
+  |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-w..
+  |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  |   | | +-org.checkerframework:checker-qual:3.12.0
+  |   | | 
+  |   | +-com.google.j2objc:j2objc-annotations:1.3
+  |   | +-com.google.protobuf:protobuf-java:3.21.2 (evicted by: 3.21.7)
+  |   | +-com.google.protobuf:protobuf-java:3.21.7
+  |   | 
+  |   +-com.google.protobuf:protobuf-java:3.21.7
+  |   +-commons-io:commons-io:2.7
+  |   +-de.upb.cs.swt:axml:2.1.3
+  |   | +-org.slf4j:slf4j-api:1.7.5 (evicted by: 2.0.7)
+  |   | +-org.slf4j:slf4j-api:2.0.7
+  |   | 
+  |   +-de.upb.cs.swt:heros:1.2.3
+  |   | +-com.google.guava:guava:31.1-jre
+  |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  |   | | +-com.google.guava:failureaccess:1.0.1
+  |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-w..
+  |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  |   | | +-org.checkerframework:checker-qual:3.12.0
+  |   | | 
+  |   | +-com.google.guava:guava:[24.1.1,) (evicted by: 31.1-jre)
+  |   | +-org.functionaljava:functionaljava:4.2
+  |   | +-org.slf4j:slf4j-api:1.7.5 (evicted by: 2.0.7)
+  |   | +-org.slf4j:slf4j-api:2.0.7
+  |   | 
+  |   +-javax.annotation:javax.annotation-api:1.3.2
+  |   +-javax.xml.bind:jaxb-api:2.4.0-b180725.0427 (evicted by: 2.4.0-b180830...
+  |   +-javax.xml.bind:jaxb-api:2.4.0-b180830.0359
+  |   | +-javax.activation:javax.activation-api:1.2.0
+  |   | 
+  |   +-org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438
+  |   | +-com.sun.istack:istack-commons-runtime:3.0.7
+  |   | +-com.sun.xml.fastinfoset:FastInfoset:1.2.15
+  |   | +-javax.activation:javax.activation-api:1.2.0
+  |   | +-javax.xml.bind:jaxb-api:2.4.0-b180830.0359
+  |   | | +-javax.activation:javax.activation-api:1.2.0
+  |   | | 
+  |   | +-org.glassfish.jaxb:txw2:2.4.0-b180830.0438
+  |   | +-org.jvnet.staxex:stax-ex:1.8
+  |   | 
+  |   +-org.ow2.asm:asm-commons:9.4
+  |   | +-org.ow2.asm:asm-tree:9.4
+  |   | | +-org.ow2.asm:asm:9.4
+  |   | | 
+  |   | +-org.ow2.asm:asm:9.4
+  |   | 
+  |   +-org.ow2.asm:asm-tree:9.4
+  |   | +-org.ow2.asm:asm:9.4
+  |   | 
+  |   +-org.ow2.asm:asm-util:9.4
+  |   | +-org.ow2.asm:asm-analysis:9.4
+  |   | | +-org.ow2.asm:asm-tree:9.4
+  |   | |   +-org.ow2.asm:asm:9.4
+  |   | |   
+  |   | +-org.ow2.asm:asm-tree:9.4
+  |   | | +-org.ow2.asm:asm:9.4
+  |   | | 
+  |   | +-org.ow2.asm:asm:9.4
+  |   | 
+  |   +-org.ow2.asm:asm:9.4
+  |   +-org.slf4j:slf4j-api:2.0.3 (evicted by: 2.0.7)
+  |   +-org.slf4j:slf4j-api:2.0.7
+  |   +-org.smali:dexlib2:2.5.2
+  |   | +-com.google.code.findbugs:jsr305:3.0.2
+  |   | +-com.google.guava:guava:27.1-android (evicted by: 31.1-jre)
+  |   | +-com.google.guava:guava:31.1-jre
+  |   |   +-com.google.code.findbugs:jsr305:3.0.2
+  |   |   +-com.google.errorprone:error_prone_annotations:2.11.0
+  |   |   +-com.google.guava:failureaccess:1.0.1
+  |   |   +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-w..
+  |   |   +-com.google.j2objc:j2objc-annotations:1.3
+  |   |   +-org.checkerframework:checker-qual:3.12.0
+  |   |   
+  |   +-xmlpull:xmlpull:1.1.3.4d_b4_min
+  |   
+  +-io.joern:jssrc2cpg_2.13:1.1.1731 [S]
+  | +-com.fasterxml.jackson.core:jackson-databind:2.14.2
+  | | +-com.fasterxml.jackson.core:jackson-annotations:2.14.2
+  | | +-com.fasterxml.jackson.core:jackson-core:2.14.2
+  | | 
+  | +-com.lihaoyi:upickle_2.13:2.0.0 [S]
+  | | +-com.lihaoyi:ujson_2.13:2.0.0 [S]
+  | | | +-com.lihaoyi:upickle-core_2.13:2.0.0 [S]
+  | | |   +-com.lihaoyi:geny_2.13:0.7.1 [S]
+  | | |   
+  | | +-com.lihaoyi:upack_2.13:2.0.0 [S]
+  | | | +-com.lihaoyi:upickle-core_2.13:2.0.0 [S]
+  | | |   +-com.lihaoyi:geny_2.13:0.7.1 [S]
+  | | |   
+  | | +-com.lihaoyi:upickle-implicits_2.13:2.0.0 [S]
+  | |   +-com.lihaoyi:upickle-core_2.13:2.0.0 [S]
+  | |     +-com.lihaoyi:geny_2.13:0.7.1 [S]
+  | |     
+  | +-com.michaelpollmeier:versionsort:1.0.11
+  | +-com.typesafe:config:1.4.2
+  | +-io.joern:dataflowengineoss_2.13:1.1.1731 [S]
+  | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |   
+  | | +-io.circe:circe-generic_2.13:0.14.5 [S]
+  | | | +-com.chuusai:shapeless_2.13:2.3.10 [S]
+  | | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | |   +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | |   +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |     +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |     
+  | | +-io.circe:circe-parser_2.13:0.14.5 [S]
+  | | | +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | | |   
+  | | | +-io.circe:circe-jawn_2.13:0.14.5 [S]
+  | | |   +-io.circe:circe-core_2.13:0.14.5 [S]
+  | | |   | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+  | | |   | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+  | | |   |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+  | | |   |   
+  | | |   +-org.typelevel:jawn-parser_2.13:1.4.0 [S]
+  | | |   
+  | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | |   | | 
+  | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | |   | 
+  | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | |   | 
+  | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | |     
+  | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | 
+  | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+  | | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+  | | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | |   | | 
+  | | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | | |   | 
+  | | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | |   | 
+  | | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | | |     
+  | | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+  | | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | | 
+  | | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | | 
+  | | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | | 
+  | | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | | |   
+  | | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | 
+  | | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | | 
+  | | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.antlr:antlr4-runtime:4.7
+  | | +-org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4 [S]
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+  | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+  | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | | | |   | +-au.com.bytecode:opencsv:2.4
+  | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | |   | +-com.google.guava:guava:31.1-jre
+  | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | |   | | 
+  | | | | |   | +-commons-lang:commons-lang:2.6
+  | | | | |   | 
+  | | | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | | | |   | +-net.sf.trove4j:core:3.1.0
+  | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | | | |   | 
+  | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |     +-org.javassist:javassist:3.29.0-GA
+  | | | | |     
+  | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+  | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | | 
+  | | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | | 
+  | | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | | 
+  | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | | |   
+  | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+  | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | | 
+  | | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | | 
+  | | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | | 
+  | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | | |   
+  | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+  | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+  | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+  | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+  | | | | | 
+  | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+  | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+  | | | |   
+  | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | 
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+  | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+  | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+  | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+  | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | |   +-com.massisframework:j-text-utils:0.3.4
+  | | |   | +-au.com.bytecode:opencsv:2.4
+  | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | |   | +-com.google.guava:guava:31.1-jre
+  | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | |   | | +-com.google.guava:failureaccess:1.0.1
+  | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+  | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | |   | | +-org.checkerframework:checker-qual:3.12.0
+  | | |   | | 
+  | | |   | +-commons-lang:commons-lang:2.6
+  | | |   | 
+  | | |   +-io.shiftleft:overflowdb-core:1.171
+  | | |   | +-com.h2database:h2-mvstore:1.4.200
+  | | |   | +-net.sf.trove4j:core:3.1.0
+  | | |   | +-org.msgpack:msgpack-core:0.9.1
+  | | |   | +-org.slf4j:slf4j-api:2.0.7
+  | | |   | 
+  | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+  | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | |     +-org.javassist:javassist:3.29.0-GA
+  | | |     
+  | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+  | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+  | | | +-com.google.protobuf:protobuf-java:3.21.7
+  | | | 
+  | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+  | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+  | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+  | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+  | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | | 
+  | | | | | +-commons-lang:commons-lang:2.6
+  | | | | | 
+  | | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | | 
+  | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | | |   +-org.javassist:javassist:3.29.0-GA
+  | | | |   
+  | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+  | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+  | | | 
+  | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+  | | | +-com.massisframework:j-text-utils:0.3.4
+  | | | | +-au.com.bytecode:opencsv:2.4
+  | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+  | | | | +-com.google.guava:guava:31.1-jre
+  | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+  | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+  | | | | | +-com.google.guava:failureaccess:1.0.1
+  | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict..
+  | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+  | | | | | +-org.checkerframework:checker-qual:3.12.0
+  | | | | | 
+  | | | | +-commons-lang:commons-lang:2.6
+  | | | | 
+  | | | +-io.shiftleft:overflowdb-core:1.171
+  | | | | +-com.h2database:h2-mvstore:1.4.200
+  | | | | +-net.sf.trove4j:core:3.1.0
+  | | | | +-org.msgpack:msgpack-core:0.9.1
+  | | | | +-org.slf4j:slf4j-api:2.0.7
+  | | | | 
+  | | | +-net.oneandone.reflections8:reflections8:0.11.7
+  | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+  | | |   +-org.javassist:javassist:3.29.0-GA
+  | | |   
+  | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+  | | +-org.slf4j:slf4j-api:2.0.7
+  | | 
+  | +-org.slf4j:slf4j-api:2.0.7
+  | 
+  +-io.joern:pysrc2cpg_2.13:1.1.1731 [S]
+    +-io.joern:dataflowengineoss_2.13:1.1.1731 [S]
+    | +-io.circe:circe-core_2.13:0.14.5 [S]
+    | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+    | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+    | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+    | |   
+    | +-io.circe:circe-generic_2.13:0.14.5 [S]
+    | | +-com.chuusai:shapeless_2.13:2.3.10 [S]
+    | | +-io.circe:circe-core_2.13:0.14.5 [S]
+    | |   +-io.circe:circe-numbers_2.13:0.14.5 [S]
+    | |   +-org.typelevel:cats-core_2.13:2.9.0 [S]
+    | |     +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+    | |     
+    | +-io.circe:circe-parser_2.13:0.14.5 [S]
+    | | +-io.circe:circe-core_2.13:0.14.5 [S]
+    | | | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+    | | | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+    | | |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+    | | |   
+    | | +-io.circe:circe-jawn_2.13:0.14.5 [S]
+    | |   +-io.circe:circe-core_2.13:0.14.5 [S]
+    | |   | +-io.circe:circe-numbers_2.13:0.14.5 [S]
+    | |   | +-org.typelevel:cats-core_2.13:2.9.0 [S]
+    | |   |   +-org.typelevel:cats-kernel_2.13:2.9.0 [S]
+    | |   |   
+    | |   +-org.typelevel:jawn-parser_2.13:1.4.0 [S]
+    | |   
+    | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+    | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+    | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+    | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+    | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+    | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | |   +-com.massisframework:j-text-utils:0.3.4
+    | | | |   | +-au.com.bytecode:opencsv:2.4
+    | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | |   | +-com.google.guava:guava:31.1-jre
+    | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | |   | | +-com.google.guava:failureaccess:1.0.1
+    | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+    | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+    | | | |   | | 
+    | | | |   | +-commons-lang:commons-lang:2.6
+    | | | |   | 
+    | | | |   +-io.shiftleft:overflowdb-core:1.171
+    | | | |   | +-com.h2database:h2-mvstore:1.4.200
+    | | | |   | +-net.sf.trove4j:core:3.1.0
+    | | | |   | +-org.msgpack:msgpack-core:0.9.1
+    | | | |   | +-org.slf4j:slf4j-api:2.0.7
+    | | | |   | 
+    | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | |     +-org.javassist:javassist:3.29.0-GA
+    | | | |     
+    | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+    | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+    | | | | +-com.google.protobuf:protobuf-java:3.21.7
+    | | | | 
+    | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+    | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+    | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | | | +-com.massisframework:j-text-utils:0.3.4
+    | | | | | | +-au.com.bytecode:opencsv:2.4
+    | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | | | +-com.google.guava:guava:31.1-jre
+    | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+    | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | | | | 
+    | | | | | | +-commons-lang:commons-lang:2.6
+    | | | | | | 
+    | | | | | +-io.shiftleft:overflowdb-core:1.171
+    | | | | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | | | | +-net.sf.trove4j:core:3.1.0
+    | | | | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | | | 
+    | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | | |   +-org.javassist:javassist:3.29.0-GA
+    | | | | |   
+    | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+    | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+    | | | | 
+    | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | | +-com.massisframework:j-text-utils:0.3.4
+    | | | | | +-au.com.bytecode:opencsv:2.4
+    | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | | +-com.google.guava:guava:31.1-jre
+    | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+    | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | | | 
+    | | | | | +-commons-lang:commons-lang:2.6
+    | | | | | 
+    | | | | +-io.shiftleft:overflowdb-core:1.171
+    | | | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | | | +-net.sf.trove4j:core:3.1.0
+    | | | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | | 
+    | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | |   +-org.javassist:javassist:3.29.0-GA
+    | | | |   
+    | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+    | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | 
+    | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+    | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+    | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+    | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+    | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+    | | | | 
+    | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+    | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+    | | |   
+    | | +-org.slf4j:slf4j-api:2.0.7
+    | | 
+    | +-io.joern:x2cpg_2.13:1.1.1731 [S]
+    | | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+    | | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+    | | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+    | | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+    | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+    | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | | |   +-com.massisframework:j-text-utils:0.3.4
+    | | | | |   | +-au.com.bytecode:opencsv:2.4
+    | | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | |   | +-com.google.guava:guava:31.1-jre
+    | | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | |   | | +-com.google.guava:failureaccess:1.0.1
+    | | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+    | | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | |   | | 
+    | | | | |   | +-commons-lang:commons-lang:2.6
+    | | | | |   | 
+    | | | | |   +-io.shiftleft:overflowdb-core:1.171
+    | | | | |   | +-com.h2database:h2-mvstore:1.4.200
+    | | | | |   | +-net.sf.trove4j:core:3.1.0
+    | | | | |   | +-org.msgpack:msgpack-core:0.9.1
+    | | | | |   | +-org.slf4j:slf4j-api:2.0.7
+    | | | | |   | 
+    | | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | | |     +-org.javassist:javassist:3.29.0-GA
+    | | | | |     
+    | | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+    | | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+    | | | | | +-com.google.protobuf:protobuf-java:3.21.7
+    | | | | | 
+    | | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+    | | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+    | | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | | | | +-com.massisframework:j-text-utils:0.3.4
+    | | | | | | | +-au.com.bytecode:opencsv:2.4
+    | | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | | | | +-com.google.guava:guava:31.1-jre
+    | | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-..
+    | | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | | | | | 
+    | | | | | | | +-commons-lang:commons-lang:2.6
+    | | | | | | | 
+    | | | | | | +-io.shiftleft:overflowdb-core:1.171
+    | | | | | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | | | | | +-net.sf.trove4j:core:3.1.0
+    | | | | | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | | | | 
+    | | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | | | |   +-org.javassist:javassist:3.29.0-GA
+    | | | | | |   
+    | | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+    | | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+    | | | | | 
+    | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | | | +-com.massisframework:j-text-utils:0.3.4
+    | | | | | | +-au.com.bytecode:opencsv:2.4
+    | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | | | +-com.google.guava:guava:31.1-jre
+    | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+    | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | | | | 
+    | | | | | | +-commons-lang:commons-lang:2.6
+    | | | | | | 
+    | | | | | +-io.shiftleft:overflowdb-core:1.171
+    | | | | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | | | | +-net.sf.trove4j:core:3.1.0
+    | | | | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | | | 
+    | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | | |   +-org.javassist:javassist:3.29.0-GA
+    | | | | |   
+    | | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+    | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | 
+    | | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+    | | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+    | | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+    | | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+    | | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+    | | | | | 
+    | | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+    | | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+    | | | |   
+    | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | 
+    | | +-org.slf4j:slf4j-api:2.0.7
+    | | 
+    | +-org.antlr:antlr4-runtime:4.7
+    | +-org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4 [S]
+    | +-org.slf4j:slf4j-api:2.0.7
+    | 
+    +-io.joern:x2cpg_2.13:1.1.1731 [S]
+    | +-io.joern:semanticcpg_2.13:1.1.1731 [S]
+    | | +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+    | | | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+    | | | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+    | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | | | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+    | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | |   +-com.massisframework:j-text-utils:0.3.4
+    | | | |   | +-au.com.bytecode:opencsv:2.4
+    | | | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | |   | +-com.google.guava:guava:31.1-jre
+    | | | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | |   | | +-com.google.guava:failureaccess:1.0.1
+    | | | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+    | | | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | |   | | +-org.checkerframework:checker-qual:3.12.0
+    | | | |   | | 
+    | | | |   | +-commons-lang:commons-lang:2.6
+    | | | |   | 
+    | | | |   +-io.shiftleft:overflowdb-core:1.171
+    | | | |   | +-com.h2database:h2-mvstore:1.4.200
+    | | | |   | +-net.sf.trove4j:core:3.1.0
+    | | | |   | +-org.msgpack:msgpack-core:0.9.1
+    | | | |   | +-org.slf4j:slf4j-api:2.0.7
+    | | | |   | 
+    | | | |   +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | |     +-org.javassist:javassist:3.29.0-GA
+    | | | |     
+    | | | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+    | | | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+    | | | | +-com.google.protobuf:protobuf-java:3.21.7
+    | | | | 
+    | | | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+    | | | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | | | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+    | | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | | | +-com.massisframework:j-text-utils:0.3.4
+    | | | | | | +-au.com.bytecode:opencsv:2.4
+    | | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | | | +-com.google.guava:guava:31.1-jre
+    | | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-co..
+    | | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | | | | 
+    | | | | | | +-commons-lang:commons-lang:2.6
+    | | | | | | 
+    | | | | | +-io.shiftleft:overflowdb-core:1.171
+    | | | | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | | | | +-net.sf.trove4j:core:3.1.0
+    | | | | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | | | 
+    | | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | | |   +-org.javassist:javassist:3.29.0-GA
+    | | | | |   
+    | | | | +-io.spray:spray-json_2.13:1.3.6 [S]
+    | | | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+    | | | | 
+    | | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | | +-com.massisframework:j-text-utils:0.3.4
+    | | | | | +-au.com.bytecode:opencsv:2.4
+    | | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | | +-com.google.guava:guava:31.1-jre
+    | | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conf..
+    | | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | | | 
+    | | | | | +-commons-lang:commons-lang:2.6
+    | | | | | 
+    | | | | +-io.shiftleft:overflowdb-core:1.171
+    | | | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | | | +-net.sf.trove4j:core:3.1.0
+    | | | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | | 
+    | | | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | | |   +-org.javassist:javassist:3.29.0-GA
+    | | | |   
+    | | | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+    | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | 
+    | | +-org.json4s:json4s-native_2.13:4.0.6 [S]
+    | | | +-org.json4s:json4s-core_2.13:4.0.6 [S]
+    | | | | +-com.thoughtworks.paranamer:paranamer:2.8
+    | | | | +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+    | | | | +-org.json4s:json4s-scalap_2.13:4.0.6 [S]
+    | | | | 
+    | | | +-org.json4s:json4s-native-core_2.13:4.0.6 [S]
+    | | |   +-org.json4s:json4s-ast_2.13:4.0.6 [S]
+    | | |   
+    | | +-org.slf4j:slf4j-api:2.0.7
+    | | 
+    | +-org.slf4j:slf4j-api:2.0.7
+    | 
+    +-io.shiftleft:codepropertygraph_2.13:1.3.600 [S]
+    | +-com.github.pathikrit:better-files_2.13:3.9.2 [S]
+    | +-com.github.scopt:scopt_2.13:4.0.1 (evicted by: 4.1.0)
+    | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | +-io.shiftleft:codepropertygraph-domain-classes_2.13:1.3.600 [S]
+    | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | |   +-com.massisframework:j-text-utils:0.3.4
+    | |   | +-au.com.bytecode:opencsv:2.4
+    | |   | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | |   | +-com.google.guava:guava:31.1-jre
+    | |   | | +-com.google.code.findbugs:jsr305:3.0.2
+    | |   | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | |   | | +-com.google.guava:failureaccess:1.0.1
+    | |   | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+    | |   | | +-com.google.j2objc:j2objc-annotations:1.3
+    | |   | | +-org.checkerframework:checker-qual:3.12.0
+    | |   | | 
+    | |   | +-commons-lang:commons-lang:2.6
+    | |   | 
+    | |   +-io.shiftleft:overflowdb-core:1.171
+    | |   | +-com.h2database:h2-mvstore:1.4.200
+    | |   | +-net.sf.trove4j:core:3.1.0
+    | |   | +-org.msgpack:msgpack-core:0.9.1
+    | |   | +-org.slf4j:slf4j-api:2.0.7
+    | |   | 
+    | |   +-net.oneandone.reflections8:reflections8:0.11.7
+    | |     +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | |     +-org.javassist:javassist:3.29.0-GA
+    | |     
+    | +-io.shiftleft:codepropertygraph-protos_2.13:1.3.600 [S]
+    | | +-com.google.protobuf:protobuf-java:3.10.0 (evicted by: 3.21.7)
+    | | +-com.google.protobuf:protobuf-java:3.21.7
+    | | 
+    | +-io.shiftleft:overflowdb-formats_2.13:1.171 [S]
+    | | +-com.github.scopt:scopt_2.13:4.1.0 [S]
+    | | +-com.github.tototoshi:scala-csv_2.13:1.3.10 [S]
+    | | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | | +-com.massisframework:j-text-utils:0.3.4
+    | | | | +-au.com.bytecode:opencsv:2.4
+    | | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | | +-com.google.guava:guava:31.1-jre
+    | | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-confli..
+    | | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | | 
+    | | | | +-commons-lang:commons-lang:2.6
+    | | | | 
+    | | | +-io.shiftleft:overflowdb-core:1.171
+    | | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | | +-net.sf.trove4j:core:3.1.0
+    | | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | | 
+    | | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | | |   +-org.javassist:javassist:3.29.0-GA
+    | | |   
+    | | +-io.spray:spray-json_2.13:1.3.6 [S]
+    | | +-org.scala-lang.modules:scala-xml_2.13:2.1.0 [S]
+    | | 
+    | +-io.shiftleft:overflowdb-traversal_2.13:1.171 [S]
+    | | +-com.massisframework:j-text-utils:0.3.4
+    | | | +-au.com.bytecode:opencsv:2.4
+    | | | +-com.google.guava:guava:21.0 (evicted by: 31.1-jre)
+    | | | +-com.google.guava:guava:31.1-jre
+    | | | | +-com.google.code.findbugs:jsr305:3.0.2
+    | | | | +-com.google.errorprone:error_prone_annotations:2.11.0
+    | | | | +-com.google.guava:failureaccess:1.0.1
+    | | | | +-com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict..
+    | | | | +-com.google.j2objc:j2objc-annotations:1.3
+    | | | | +-org.checkerframework:checker-qual:3.12.0
+    | | | | 
+    | | | +-commons-lang:commons-lang:2.6
+    | | | 
+    | | +-io.shiftleft:overflowdb-core:1.171
+    | | | +-com.h2database:h2-mvstore:1.4.200
+    | | | +-net.sf.trove4j:core:3.1.0
+    | | | +-org.msgpack:msgpack-core:0.9.1
+    | | | +-org.slf4j:slf4j-api:2.0.7
+    | | | 
+    | | +-net.oneandone.reflections8:reflections8:0.11.7
+    | |   +-org.javassist:javassist:3.22.0-GA (evicted by: 3.29.0-GA)
+    | |   +-org.javassist:javassist:3.29.0-GA
+    | |   
+    | +-org.slf4j:slf4j-api:2.0.6 (evicted by: 2.0.7)
+    | +-org.slf4j:slf4j-api:2.0.7
+    | 
+    +-org.scala-lang.modules:scala-parallel-collections_2.13:1.0.4 [S]
+    +-org.slf4j:slf4j-api:2.0.7
+    
