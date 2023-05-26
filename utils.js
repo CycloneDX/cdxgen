@@ -1654,7 +1654,7 @@ const getMvnMetadata = async function (pkgList) {
   if (!pkgList || !pkgList.length) {
     return pkgList;
   }
-  if (DEBUG_MODE) {
+  if (DEBUG_MODE && fetchLicenses) {
     console.log(`About to query maven for ${pkgList.length} packages`);
   }
   for (const p of pkgList) {

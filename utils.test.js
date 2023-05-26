@@ -1652,6 +1652,10 @@ test("parse scala sbt list", async () => {
     fs.readFileSync("./test/data/sbt-dl.list", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(57);
+  deps = utils.parseKVDep(
+    fs.readFileSync("./test/data/atom-sbt-list.txt", { encoding: "utf-8" })
+  );
+  expect(deps.length).toEqual(117);
 });
 
 test("parse scala sbt lock", async () => {

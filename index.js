@@ -1057,7 +1057,7 @@ const createJavaBom = async (path, options) => {
               "Resolve the above maven error. This could be due to the following:\n"
             );
             console.log(
-              "1. Java version requirement: cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
+              "1. Java version requirement: cdxgen container image bundles Java 17 with maven 3.8 which might be incompatible."
             );
             console.log(
               "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
@@ -1580,6 +1580,7 @@ const createJavaBom = async (path, options) => {
           sbtVersion != null &&
           semver.gte(sbtVersion, "1.3.4") &&
           semver.lte(sbtVersion, "1.4.0");
+        const useSlashSyntax = semver.gte(sbtVersion, "1.5.0");
         const isDependencyTreeBuiltIn =
           sbtVersion != null && semver.gte(sbtVersion, "1.4.0");
         let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
@@ -1619,7 +1620,11 @@ const createJavaBom = async (path, options) => {
             ];
           } else {
             // write to the existing plugins file
-            sbtArgs = [`"dependencyList::toFile ${dlFile} --force"`];
+            if (useSlashSyntax) {
+              sbtArgs = [`"dependencyList / toFile ${dlFile} --force"`];
+            } else {
+              sbtArgs = [`"dependencyList::toFile ${dlFile} --force"`];
+            }
             pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
           }
           // Note that the command has to be invoked with `shell: true` to properly execut sbt
@@ -1641,17 +1646,12 @@ const createJavaBom = async (path, options) => {
               "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
             );
             options.failOnError && process.exit(1);
-          } else if (DEBUG_MODE) {
-            console.log(result.stdout);
           }
           if (!standalonePluginFile) {
             utils.cleanupPlugin(basePath, pluginFile);
           }
           if (fs.existsSync(dlFile)) {
             const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
-            if (DEBUG_MODE) {
-              console.log(cmdOutput);
-            }
             const dlist = utils.parseKVDep(cmdOutput);
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
