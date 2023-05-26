@@ -4569,7 +4569,7 @@ exports.createBom = createBom;
  * @param bomContents BOM Xml
  */
 exports.submitBom = async (args, bomContents) => {
-  let serverUrl = args.serverUrl + "/api/v1/bom";
+  let serverUrl = args.serverUrl.replace(/\/$/, "") + "/api/v1/bom";
   let encodedBomContents = Buffer.from(bomContents).toString("base64");
   if (encodedBomContents.startsWith("77u/")) {
     encodedBomContents = encodedBomContents.substring(4);
@@ -4605,12 +4605,12 @@ exports.submitBom = async (args, bomContents) => {
       responseType: "json"
     }).json();
   } catch (error) {
-    if (error.response.statusCode === 401) {
+    if (error.response && error.response.statusCode === 401) {
       // Unauthorized
       console.log(
         "Received Unauthorized error. Check the API key used is valid and has necessary permissions to create projects and upload bom."
       );
-    } else if (error.response.statusCode === 405) {
+    } else if (error.response && error.response.statusCode === 405) {
       // Method not allowed errors
       try {
         return await got(serverUrl, {
@@ -4629,7 +4629,9 @@ exports.submitBom = async (args, bomContents) => {
           responseType: "json"
         }).json();
       } catch (error) {
-        console.log("Unable to submit the SBoM to the Dependency-Track server");
+        console.log(
+          "Unable to submit the SBoM to the Dependency-Track server using POST method"
+        );
         console.log(error);
       }
     } else {
