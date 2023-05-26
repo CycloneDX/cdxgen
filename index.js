@@ -1179,7 +1179,6 @@ const createJavaBom = async (path, options) => {
         };
       }
       // Get the sub-project properties and set the root dependencies
-      // FIXME: Store this in metadata.components.components
       if (allProjectsStr && allProjectsStr.length) {
         for (let spstr of allProjectsStr) {
           retMap = utils.executeGradleProperties(path, null, spstr);
