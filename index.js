@@ -248,6 +248,11 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       if (format == "xml" && firstPComp.component) {
         metadata.component = firstPComp.component;
       } else {
+        // Retain the components of parent component
+        // Bug #317 fix
+        if (parentComponent && parentComponent.components) {
+          firstPComp.components = parentComponent.components;
+        }
         metadata.component = firstPComp;
       }
     } else {
@@ -1158,268 +1163,155 @@ const createJavaBom = async (path, options) => {
       path,
       (options.multiProject ? "**/" : "") + "build.gradle*"
     );
+    let allProjects = [];
+    const rootDependsOn = [];
+    // Execute gradle properties
+    if (gradleFiles && gradleFiles.length) {
+      let retMap = utils.executeGradleProperties(path, null, null);
+      const allProjectsStr = retMap.projects || [];
+      let rootProject = retMap.rootProject;
+      if (rootProject) {
+        parentComponent = {
+          name: rootProject,
+          type: "maven",
+          qualifiers: { type: "jar" },
+          ...(retMap.metadata || {})
+        };
+      }
+      // Get the sub-project properties and set the root dependencies
+      // FIXME: Store this in metadata.components.components
+      if (allProjectsStr && allProjectsStr.length) {
+        for (let spstr of allProjectsStr) {
+          retMap = utils.executeGradleProperties(path, null, spstr);
+          let rootSubProject = retMap.rootProject;
+          if (rootSubProject) {
+            const rootSubProjectObj = {
+              name: rootSubProject,
+              type: "maven",
+              qualifiers: { type: "jar" },
+              ...(retMap.metadata || {})
+            };
+            const rootSubProjectPurl = decodeURIComponent(
+              new PackageURL(
+                rootSubProjectObj.type,
+                rootSubProjectObj.group || "",
+                rootSubProjectObj.name,
+                rootSubProjectObj.version,
+                rootSubProjectObj.qualifiers,
+                null
+              ).toString()
+            );
+            rootSubProjectObj["purl"] = rootSubProjectPurl;
+            rootSubProjectObj["bom-ref"] = rootSubProjectPurl;
+            allProjects.push(rootSubProjectObj);
+            rootDependsOn.push(rootSubProjectPurl);
+          }
+        }
+        // Bug #317 fix
+        parentComponent.components = allProjects.flatMap((s) => {
+          delete s.qualifiers;
+          s.type = "library";
+          return s;
+        });
+        dependencies.push({
+          ref: decodeURIComponent(
+            new PackageURL(
+              "maven",
+              parentComponent.group,
+              parentComponent.name,
+              parentComponent.version,
+              parentComponent.qualifiers,
+              null
+            ).toString()
+          ),
+          dependsOn: rootDependsOn
+        });
+      }
+    }
     if (gradleFiles && gradleFiles.length && options.installDeps) {
       let gradleCmd = utils.getGradleCommand(path, null);
-      const multiProjectMode = process.env.GRADLE_MULTI_PROJECT_MODE || "";
-      // Support for multi-project applications
-      // Let's experiment with defaulting to multi-project mode when multiple gradle files gets detected
-      if (
-        ["true", "1"].includes(multiProjectMode) ||
-        (gradleFiles.length > 1 && !["false", "0"].includes(multiProjectMode))
-      ) {
-        let gradleProjectsArgs = ["projects", "-q", "--console", "plain"];
+      if (!allProjects || !allProjects.length) {
+        allProjects.push(parentComponent);
+      }
+      for (let sp of allProjects) {
+        let gradleDepArgs = [
+          sp.name === parentComponent.name
+            ? "dependencies"
+            : `:${sp.name}:dependencies`,
+          "-q",
+          "--console",
+          "plain"
+        ];
+        // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
         if (process.env.GRADLE_ARGS) {
           const addArgs = process.env.GRADLE_ARGS.split(" ");
-          gradleProjectsArgs = gradleProjectsArgs.concat(addArgs);
+          gradleDepArgs = gradleDepArgs.concat(addArgs);
         }
         console.log(
           "Executing",
           gradleCmd,
-          gradleProjectsArgs.join(" "),
-          "projects in",
+          gradleDepArgs.join(" "),
+          "in",
           path
         );
-        const result = spawnSync(gradleCmd, gradleProjectsArgs, {
+        const sresult = spawnSync(gradleCmd, gradleDepArgs, {
           cwd: path,
           encoding: "utf-8",
           timeout: TIMEOUT_MS
         });
-        if (result.status !== 0 || result.error) {
-          if (result.stderr) {
-            console.error(result.stdout, result.stderr);
+        if (sresult.status !== 0 || sresult.error) {
+          if (options.failOnError || DEBUG_MODE) {
+            console.error(sresult.stdout, sresult.stderr);
           }
-          console.log(
-            "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
-          );
           options.failOnError && process.exit(1);
         }
-        const stdout = result.stdout;
-        if (stdout) {
-          const cmdOutput = Buffer.from(stdout).toString();
-          const retMap = utils.parseGradleProjects(cmdOutput);
-          const allProjects = retMap.projects || [];
-          let rootProject = retMap.rootProject;
-          if (rootProject) {
-            parentComponent = {
-              group: "",
-              name: rootProject,
-              version: "latest",
-              type: "maven",
-              qualifiers: { type: "jar" }
-            };
-          }
-          if (!allProjects) {
-            console.log(
-              "No projects found. Is this a gradle multi-project application?"
+        const sstdout = sresult.stdout;
+        if (sstdout) {
+          const cmdOutput = Buffer.from(sstdout).toString();
+          const parsedList = utils.parseGradleDep(
+            cmdOutput,
+            sp.group,
+            sp.name,
+            sp.version
+          );
+          const dlist = parsedList.pkgList;
+          if (parsedList.dependenciesList && parsedList.dependenciesList) {
+            dependencies = mergeDependencies(
+              dependencies,
+              parsedList.dependenciesList
             );
-            options.failOnError && process.exit(1);
+          }
+          if (dlist && dlist.length) {
+            if (DEBUG_MODE) {
+              console.log(
+                "Found",
+                dlist.length,
+                "packages in gradle project",
+                sp.name
+              );
+            }
+            pkgList = pkgList.concat(dlist);
           } else {
-            console.log(
-              "Found",
-              allProjects.length,
-              "gradle sub-projects. This might take a while ..."
-            );
-            // We need the first dependency between the root project and child projects
-            // See: #249 and #315
-            const rootDependsOn = [];
-            for (let sp of allProjects) {
-              sp = sp.replace(":", "");
-              rootDependsOn.push(
-                decodeURIComponent(
-                  new PackageURL(
-                    "maven",
-                    "",
-                    sp,
-                    parentComponent.version,
-                    parentComponent.qualifiers,
-                    null
-                  ).toString()
-                )
-              );
+            if (options.failOnError || DEBUG_MODE) {
+              console.log("No packages were found in gradle project", sp);
             }
-            dependencies.push({
-              ref: decodeURIComponent(
-                new PackageURL(
-                  "maven",
-                  parentComponent.group,
-                  parentComponent.name,
-                  parentComponent.version,
-                  parentComponent.qualifiers,
-                  null
-                ).toString()
-              ),
-              dependsOn: rootDependsOn
-            });
-            for (let sp of allProjects) {
-              let gradleDepArgs = [
-                sp + ":dependencies",
-                "-q",
-                "--console",
-                "plain"
-              ];
-              // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
-              if (process.env.GRADLE_ARGS) {
-                const addArgs = process.env.GRADLE_ARGS.split(" ");
-                gradleDepArgs = gradleDepArgs.concat(addArgs);
-              }
-              console.log(
-                "Executing",
-                gradleCmd,
-                gradleDepArgs.join(" "),
-                "in",
-                path
-              );
-              const sresult = spawnSync(gradleCmd, gradleDepArgs, {
-                cwd: path,
-                encoding: "utf-8",
-                timeout: TIMEOUT_MS
-              });
-              if (sresult.status !== 0 || sresult.error) {
-                if (options.failOnError || DEBUG_MODE) {
-                  console.error(sresult.stdout, sresult.stderr);
-                }
-                options.failOnError && process.exit(1);
-              }
-              const sstdout = sresult.stdout;
-              if (sstdout) {
-                sp = sp.replace(":", "");
-                const cmdOutput = Buffer.from(sstdout).toString();
-                const parsedList = utils.parseGradleDep(cmdOutput, sp);
-                const dlist = parsedList.pkgList;
-                // Do not overwrite the parentComponent in multi-project mode
-                if (!parentComponent || !Object.keys(parentComponent).length) {
-                  parentComponent = dlist.splice(0, 1)[0];
-                }
-                if (
-                  parsedList.dependenciesList &&
-                  parsedList.dependenciesList
-                ) {
-                  dependencies = mergeDependencies(
-                    dependencies,
-                    parsedList.dependenciesList
-                  );
-                }
-                if (dlist && dlist.length) {
-                  if (DEBUG_MODE) {
-                    console.log(
-                      "Found",
-                      dlist.length,
-                      "packages in gradle project",
-                      sp
-                    );
-                  }
-                  pkgList = pkgList.concat(dlist);
-                } else {
-                  if (options.failOnError || DEBUG_MODE) {
-                    console.log("No packages were found in gradle project", sp);
-                  }
-                  options.failOnError && process.exit(1);
-                }
-              }
-            }
-            if (pkgList.length) {
-              console.log(
-                "Obtained",
-                pkgList.length,
-                "from this gradle multi-project. De-duping this list ..."
-              );
-            } else {
-              console.log(
-                "No packages found. Unset the environment variable GRADLE_MULTI_PROJECT_MODE and try again."
-              );
-              options.failOnError && process.exit(1);
-            }
-          }
-        } else {
-          console.error("Gradle unexpectedly didn't return any output");
-          options.failOnError && process.exit(1);
-        }
-      } else {
-        let gradleDepArgs = ["dependencies", "-q", "--console", "plain"];
-        // Support for overriding the gradle task name. Issue# 90
-        if (process.env.GRADLE_DEPENDENCY_TASK) {
-          gradleDepArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
-        } else if (process.env.GRADLE_ARGS) {
-          // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
-          const addArgs = process.env.GRADLE_ARGS.split(" ");
-          gradleDepArgs = gradleDepArgs.concat(addArgs);
-        }
-        for (let f of gradleFiles) {
-          const basePath = pathLib.dirname(f);
-          // Fixes #157. Look for wrapper script in the nested directory
-          gradleCmd = utils.getGradleCommand(basePath, path);
-          console.log(
-            "Executing",
-            gradleCmd,
-            gradleDepArgs.join(" "),
-            "in",
-            basePath
-          );
-          const result = spawnSync(gradleCmd, gradleDepArgs, {
-            cwd: basePath,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS
-          });
-          if (result.status !== 0 || result.error) {
-            if (result.stderr) {
-              const cmdError = Buffer.from(result.stderr).toString();
-              if (
-                cmdError.includes(
-                  "is not part of the build defined by settings file"
-                ) ||
-                cmdError.includes(
-                  "was not found in any of the following sources"
-                )
-              ) {
-                console.log(
-                  "This is a multi-project gradle application. Set the environment variable GRADLE_MULTI_PROJECT_MODE to true to improve SBoM accuracy."
-                );
-              }
-              if (DEBUG_MODE) {
-                console.log("-----------------------");
-              }
-              console.error(result.stdout, result.stderr);
-              if (DEBUG_MODE) {
-                console.log("-----------------------");
-              }
-              options.failOnError && process.exit(1);
-            }
-
-            if (DEBUG_MODE || !result.stderr || options.failOnError) {
-              console.log(
-                "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
-              );
-              console.log(
-                "2. When using tools such as sdkman, the init script must be invoked to set the PATH variables correctly."
-              );
-              options.failOnError && process.exit(1);
-            }
-          }
-          const stdout = result.stdout;
-          if (stdout) {
-            const cmdOutput = Buffer.from(stdout).toString();
-            const parsedList = utils.parseGradleDep(cmdOutput);
-            const dlist = parsedList.pkgList;
-            if (!parentComponent || !Object.keys(parentComponent).length) {
-              parentComponent = dlist.splice(0, 1)[0];
-            }
-            if (parsedList.dependenciesList && parsedList.dependenciesList) {
-              dependencies = mergeDependencies(
-                dependencies,
-                parsedList.dependenciesList
-              );
-            }
-            if (dlist && dlist.length) {
-              pkgList = pkgList.concat(dlist);
-            } else {
-              console.log(
-                "No packages were detected. If this is a multi-project gradle application set the environment variable GRADLE_MULTI_PROJECT_MODE to true and try again."
-              );
-              options.failOnError && process.exit(1);
-            }
+            options.failOnError && process.exit(1);
           }
         }
       }
+      if (pkgList.length) {
+        console.log(
+          "Obtained",
+          pkgList.length,
+          "from this gradle multi-project. De-duping this list ..."
+        );
+      } else {
+        console.log(
+          "No packages found. Unset the environment variable GRADLE_MULTI_PROJECT_MODE and try again."
+        );
+        options.failOnError && process.exit(1);
+      }
+
       pkgList = await utils.getMvnMetadata(pkgList);
       // Should we attempt to resolve class names
       if (options.resolveClass) {
@@ -3728,7 +3620,12 @@ const createMultiXBom = async (pathList, options) => {
       console.log("Scanning", path);
     }
     bomData = await createNodejsBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} npm packages at ${path}`
@@ -3992,7 +3889,12 @@ const createMultiXBom = async (pathList, options) => {
       );
     }
     bomData = await createSwiftBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} Swift packages at ${path}`

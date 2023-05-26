@@ -76,9 +76,9 @@ test("parse gradle dependencies", () => {
   let parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/gradle-dep.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(34);
+  expect(parsedList.pkgList.length).toEqual(33);
   expect(parsedList.dependenciesList.length).toEqual(34);
-  expect(parsedList.pkgList[1]).toEqual({
+  expect(parsedList.pkgList[0]).toEqual({
     group: "org.ethereum",
     name: "solcJ-all",
     qualifiers: {
@@ -90,9 +90,9 @@ test("parse gradle dependencies", () => {
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-android-dep.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(106);
+  expect(parsedList.pkgList.length).toEqual(105);
   expect(parsedList.dependenciesList.length).toEqual(106);
-  expect(parsedList.pkgList[1]).toEqual({
+  expect(parsedList.pkgList[0]).toEqual({
     group: "com.android.support.test",
     name: "runner",
     qualifiers: {
@@ -107,7 +107,7 @@ test("parse gradle dependencies", () => {
       }
     ]
   });
-  expect(parsedList.pkgList[104]).toEqual({
+  expect(parsedList.pkgList[103]).toEqual({
     group: "androidx.print",
     name: "print",
     qualifiers: {
@@ -125,9 +125,9 @@ test("parse gradle dependencies", () => {
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-out1.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(90);
+  expect(parsedList.pkgList.length).toEqual(89);
   expect(parsedList.dependenciesList.length).toEqual(90);
-  expect(parsedList.pkgList[1]).toEqual({
+  expect(parsedList.pkgList[0]).toEqual({
     group: "org.springframework.boot",
     name: "spring-boot-starter-web",
     version: "2.2.0.RELEASE",
@@ -143,7 +143,7 @@ test("parse gradle dependencies", () => {
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-rich1.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(5);
+  expect(parsedList.pkgList.length).toEqual(4);
   expect(parsedList.pkgList[parsedList.pkgList.length - 1]).toEqual({
     group: "ch.qos.logback",
     name: "logback-core",
@@ -153,15 +153,8 @@ test("parse gradle dependencies", () => {
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-rich2.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(3);
+  expect(parsedList.pkgList.length).toEqual(2);
   expect(parsedList.pkgList).toEqual([
-    {
-      group: "",
-      name: "root",
-      qualifiers: { type: "jar" },
-      type: "maven",
-      version: "latest"
-    },
     {
       group: "io.appium",
       name: "java-client",
@@ -178,15 +171,8 @@ test("parse gradle dependencies", () => {
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-rich3.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(2);
+  expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.pkgList).toEqual([
-    {
-      group: "",
-      name: "root",
-      version: "latest",
-      type: "maven",
-      qualifiers: { type: "jar" }
-    },
     {
       group: "org.seleniumhq.selenium",
       name: "selenium-remote-driver",
@@ -197,15 +183,8 @@ test("parse gradle dependencies", () => {
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-rich4.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(2);
+  expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.pkgList).toEqual([
-    {
-      group: "",
-      name: "root",
-      version: "latest",
-      type: "maven",
-      qualifiers: { type: "jar" }
-    },
     {
       group: "org.seleniumhq.selenium",
       name: "selenium-api",
@@ -216,32 +195,32 @@ test("parse gradle dependencies", () => {
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-rich5.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(68);
+  expect(parsedList.pkgList.length).toEqual(67);
   expect(parsedList.dependenciesList.length).toEqual(68);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(21);
+  expect(parsedList.pkgList.length).toEqual(20);
   expect(parsedList.dependenciesList.length).toEqual(22);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(35);
+  expect(parsedList.pkgList.length).toEqual(34);
   expect(parsedList.dependenciesList.length).toEqual(36);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-s.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(28);
+  expect(parsedList.pkgList.length).toEqual(27);
   expect(parsedList.dependenciesList.length).toEqual(29);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-core.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(19);
+  expect(parsedList.pkgList.length).toEqual(18);
   expect(parsedList.dependenciesList.length).toEqual(19);
   parsedList = utils.parseGradleDep(
     fs.readFileSync("./test/data/gradle-single.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(153);
+  expect(parsedList.pkgList.length).toEqual(152);
   expect(parsedList.dependenciesList.length).toEqual(153);
 });
 
@@ -265,6 +244,72 @@ test("parse gradle projects", () => {
   );
   expect(retMap.rootProject).toEqual("fineract");
   expect(retMap.projects.length).toEqual(22);
+});
+
+test("parse gradle properties", () => {
+  expect(utils.parseGradleProperties(null)).toEqual({
+    projects: [],
+    rootProject: "root",
+    metadata: {
+      group: "",
+      version: "latest",
+      properties: []
+    }
+  });
+  let retMap = utils.parseGradleProperties(
+    fs.readFileSync("./test/data/gradle-properties.txt", { encoding: "utf-8" })
+  );
+  expect(retMap).toEqual({
+    rootProject: "dependency-diff-check",
+    projects: [
+      ":dependency-diff-check-client-starter",
+      ":dependency-diff-check-common-core",
+      ":dependency-diff-check-service"
+    ],
+    metadata: {
+      group: "com.ajmalab",
+      version: "0.0.1-SNAPSHOT",
+      properties: [
+        {
+          name: "buildFile",
+          value:
+            "/home/almalinux/work/sandbox/dependency-diff-check/build.gradle"
+        },
+        {
+          name: "projectDir",
+          value: "/home/almalinux/work/sandbox/dependency-diff-check"
+        },
+        {
+          name: "rootDir",
+          value: "/home/almalinux/work/sandbox/dependency-diff-check"
+        }
+      ]
+    }
+  });
+  retMap = utils.parseGradleProperties(
+    fs.readFileSync("./test/data/gradle-properties-single.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(retMap).toEqual({
+    rootProject: "java-test",
+    projects: [],
+    metadata: {
+      group: "com.ajmalab.demo",
+      version: "latest",
+      properties: [
+        {
+          name: "buildFile",
+          value: "/home/almalinux/work/sandbox/java-test/build.gradle"
+        },
+        {
+          name: "projectDir",
+          value: "/home/almalinux/work/sandbox/java-test"
+        },
+        { name: "rootDir", value: "/home/almalinux/work/sandbox/java-test" }
+      ]
+    }
+  });
 });
 
 test("parse maven tree", () => {
@@ -384,7 +429,6 @@ test("get maven metadata", async () => {
 */
 
 test("get py metadata", async () => {
-  jest.setTimeout(240000);
   const data = await utils.getPyMetadata(
     [
       {
@@ -402,10 +446,9 @@ test("get py metadata", async () => {
       version: "1.1.0"
     }
   ]);
-});
+}, 240000);
 
 test("parseGoModData", async () => {
-  jest.setTimeout(120000);
   let dep_list = await utils.parseGoModData(null);
   expect(dep_list).toEqual([]);
   const gosumMap = {
@@ -455,10 +498,9 @@ test("parseGoModData", async () => {
   dep_list.forEach((d) => {
     expect(d.license);
   });
-});
+}, 120000);
 
 test("parseGoSumData", async () => {
-  jest.setTimeout(120000);
   let dep_list = await utils.parseGoModData(null);
   expect(dep_list).toEqual([]);
   dep_list = await utils.parseGosumData(
@@ -496,7 +538,7 @@ test("parseGoSumData", async () => {
   dep_list.forEach((d) => {
     expect(d.license);
   });
-});
+}, 120000);
 
 test("parse go list dependencies", async () => {
   let dep_list = await utils.parseGoListDep(

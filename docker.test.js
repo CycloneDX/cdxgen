@@ -1,5 +1,5 @@
 const dockerLib = require("./docker");
-const { jest, expect, test } = require("@jest/globals");
+const { expect, test } = require("@jest/globals");
 
 test("docker connection", async () => {
   const dockerConn = await dockerLib.getConnection();
@@ -58,16 +58,14 @@ test("parseImageName tests", () => {
 });
 
 test("docker getImage", async () => {
-  jest.setTimeout(120000);
   const imageData = await dockerLib.getImage("hello-world:latest");
   if (imageData) {
     const removeData = await dockerLib.removeImage("hello-world:latest");
     expect(removeData);
   }
-});
+}, 120000);
 
 test("docker getImage", async () => {
-  jest.setTimeout(120000);
   const imageData = await dockerLib.exportImage("hello-world:latest");
   expect(imageData);
-});
+}, 120000);
