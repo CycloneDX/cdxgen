@@ -2030,7 +2030,7 @@ const createPythonBom = async (path, options) => {
   );
   const reqFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements.txt"
+    (options.multiProject ? "**/" : "") + "*requirements*.txt"
   );
   const reqDirFiles = utils.getAllFiles(
     path,
@@ -2102,7 +2102,7 @@ const createPythonBom = async (path, options) => {
       }
     }
   }
-  if (requirementsMode || pipenvMode || setupPyMode) {
+  if (requirementsMode || pipenvMode) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path, encoding: "utf-8" });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
@@ -2177,21 +2177,19 @@ const createPythonBom = async (path, options) => {
         }
         metadataFilename = reqDirFiles.join(", ");
       }
-    } else if (setupPyMode) {
-      const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
-      dlist = await utils.parseSetupPyFile(setupPyData);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
-      }
     }
   }
-  if (pkgList.length) {
-    return buildBomNSData(options, pkgList, "pypi", {
-      src: path,
-      filename: metadataFilename
-    });
+  if (!pkgList.length && setupPyMode) {
+    const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
+    dlist = await utils.parseSetupPyFile(setupPyData);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
+    }
   }
-  return {};
+  return buildBomNSData(options, pkgList, "pypi", {
+    src: path,
+    filename: metadataFilename
+  });
 };
 
 /**
@@ -4106,7 +4104,7 @@ const createXBom = async (path, options) => {
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements.txt"
+    (options.multiProject ? "**/" : "") + "*requirements*.txt"
   );
   const reqDirFiles = utils.getAllFiles(
     path,

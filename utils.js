@@ -1930,12 +1930,16 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
   const pkgList = [];
   let compScope = undefined;
   reqData.split("\n").forEach((l) => {
+    l = l.trim();
     if (l.includes("# Basic requirements")) {
       compScope = "required";
     } else if (l.includes("added by pip freeze")) {
       compScope = undefined;
     }
-    if (!l.startsWith("#")) {
+    if (!l.startsWith("#") && !l.startsWith("-")) {
+      if (l.includes(" ")) {
+        l = l.split(" ")[0];
+      }
       if (l.indexOf("=") > -1) {
         let tmpA = l.split(/(==|<=|~=|>=)/);
         if (tmpA.includes("#")) {
@@ -1955,6 +1959,19 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
             scope: compScope
           });
         }
+      } else if (l.includes("<") && l.includes(">")) {
+        let tmpA = l.split(">");
+        let name = tmpA[0].trim();
+        let version = undefined;
+        const tmpB = tmpA[1].split("<");
+        if (tmpB && tmpB.length) {
+          version = tmpB[tmpB.length - 1];
+        }
+        pkgList.push({
+          name,
+          version,
+          scope: compScope
+        });
       } else if (/[>|[|@]/.test(l)) {
         let tmpA = l.split(/(>|\[|@)/);
         if (tmpA.includes("#")) {
@@ -1972,7 +1989,14 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
           l = l.split("#")[0];
         }
         l = l.trim();
-        if (!l.includes(" ")) {
+        let tmpA = l.split(/(<|>)/);
+        if (tmpA && tmpA.length === 3) {
+          pkgList.push({
+            name: tmpA[0].trim(),
+            version: tmpA[2].replace(";", ""),
+            scope: compScope
+          });
+        } else if (!l.includes(" ")) {
           pkgList.push({
             name: l,
             version: null,
