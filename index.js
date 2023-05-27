@@ -2122,37 +2122,67 @@ const createPythonBom = async (path, options) => {
         for (let f of reqFiles) {
           const basePath = pathLib.dirname(f);
           let reqData = undefined;
-          // Attempt to pip freeze to improve precision
+          let frozenMode = false;
+          // Attempt to pip freeze to improve precision. First try in venv mode
           if (options.installDeps) {
-            const result = spawnSync(PIP_CMD, ["freeze", "-r", f, "-l"], {
-              cwd: basePath,
-              encoding: "utf-8",
-              timeout: TIMEOUT_MS
-            });
+            const result = spawnSync(
+              PIP_CMD,
+              ["freeze", "-r", f, "-l", "--require-virtualenv"],
+              {
+                cwd: basePath,
+                encoding: "utf-8",
+                timeout: TIMEOUT_MS
+              }
+            );
             if (result.status === 0 && result.stdout) {
               reqData = Buffer.from(result.stdout).toString();
+              const dlist = await utils.parseReqFile(reqData, true);
+              if (dlist && dlist.length) {
+                pkgList = pkgList.concat(dlist);
+              }
+              frozenMode = true;
+            } else if (result.status !== 0 || result.error) {
+              // Fallback to global mode but filter based on the requirements file
+              const fbResult = spawnSync(PIP_CMD, ["freeze", "-r", f, "-l"], {
+                cwd: basePath,
+                encoding: "utf-8",
+                timeout: TIMEOUT_MS
+              });
+              if (fbResult.status === 0 && fbResult.stdout) {
+                const globalReqData = Buffer.from(fbResult.stdout).toString();
+                let gdeplist = await utils.parseReqFile(globalReqData, false);
+                // Rudimentary way to filter the packages
+                const rawReqData = fs.readFileSync(f, { encoding: "utf-8" });
+                gdeplist = gdeplist.filter(
+                  (d) => rawReqData.includes(d.name) && d.version !== null
+                );
+                if (gdeplist && gdeplist.length) {
+                  pkgList = pkgList.concat(gdeplist);
+                  frozenMode = true;
+                }
+              }
             }
           }
-          // Fallback to parsing requirements file
-          if (!reqData) {
+          // Fallback to parsing manually
+          if (!frozenMode) {
             if (DEBUG_MODE) {
               console.log(
                 `Falling back to manually parsing ${f}. The result would be incomplete!`
               );
             }
             reqData = fs.readFileSync(f, { encoding: "utf-8" });
+            const dlist = await utils.parseReqFile(reqData, true);
+            if (dlist && dlist.length) {
+              pkgList = pkgList.concat(dlist);
+            }
           }
-          const dlist = await utils.parseReqFile(reqData);
-          if (dlist && dlist.length) {
-            pkgList = pkgList.concat(dlist);
-          }
-        }
+        } // for
         metadataFilename = reqFiles.join(", ");
       } else if (reqDirFiles && reqDirFiles.length) {
         for (let j in reqDirFiles) {
           const f = reqDirFiles[j];
           const reqData = fs.readFileSync(f, { encoding: "utf-8" });
-          const dlist = await utils.parseReqFile(reqData);
+          const dlist = await utils.parseReqFile(reqData, false);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
