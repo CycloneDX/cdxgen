@@ -2030,7 +2030,7 @@ const createPythonBom = async (path, options) => {
   );
   const reqFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements.txt"
+    (options.multiProject ? "**/" : "") + "*requirements*.txt"
   );
   const reqDirFiles = utils.getAllFiles(
     path,
@@ -2102,7 +2102,7 @@ const createPythonBom = async (path, options) => {
       }
     }
   }
-  if (requirementsMode || pipenvMode || setupPyMode) {
+  if (requirementsMode || pipenvMode) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path, encoding: "utf-8" });
       const piplockFile = pathLib.join(path, "Pipfile.lock");
@@ -2119,61 +2119,77 @@ const createPythonBom = async (path, options) => {
     } else if (requirementsMode) {
       metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
+        let pipWarningShown = false;
         for (let f of reqFiles) {
           const basePath = pathLib.dirname(f);
           let reqData = undefined;
-          // Attempt to pip freeze to improve precision
+          let frozenMode = false;
+          // Attempt to pip freeze to improve precision. First try in venv mode
           if (options.installDeps) {
-            const result = spawnSync(PIP_CMD, ["freeze", "-r", f, "-l"], {
-              cwd: basePath,
-              encoding: "utf-8",
-              timeout: TIMEOUT_MS
-            });
+            const result = spawnSync(
+              PIP_CMD,
+              ["freeze", "-r", f, "-l", "--require-virtualenv"],
+              {
+                cwd: basePath,
+                encoding: "utf-8",
+                timeout: TIMEOUT_MS
+              }
+            );
             if (result.status === 0 && result.stdout) {
               reqData = Buffer.from(result.stdout).toString();
+              const dlist = await utils.parseReqFile(reqData, false);
+              if (dlist && dlist.length) {
+                pkgList = pkgList.concat(dlist);
+              }
+              frozenMode = true;
+            } else if (result.status !== 0 || result.error) {
+              if (DEBUG_MODE && !pipWarningShown) {
+                pipWarningShown = true;
+                console.log(
+                  "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBoM accuracy."
+                );
+              }
             }
           }
-          // Fallback to parsing requirements file
-          if (!reqData) {
+          // Fallback to parsing manually
+          if (!frozenMode) {
             if (DEBUG_MODE) {
               console.log(
-                `Falling back to manually parsing ${f}. The result would be incomplete!`
+                `Manually parsing ${f}. The result would include only direct dependencies.`
               );
             }
             reqData = fs.readFileSync(f, { encoding: "utf-8" });
+            const dlist = await utils.parseReqFile(reqData, true);
+            if (dlist && dlist.length) {
+              pkgList = pkgList.concat(dlist);
+            }
           }
-          const dlist = await utils.parseReqFile(reqData);
-          if (dlist && dlist.length) {
-            pkgList = pkgList.concat(dlist);
-          }
-        }
+        } // for
         metadataFilename = reqFiles.join(", ");
       } else if (reqDirFiles && reqDirFiles.length) {
         for (let j in reqDirFiles) {
           const f = reqDirFiles[j];
           const reqData = fs.readFileSync(f, { encoding: "utf-8" });
-          const dlist = await utils.parseReqFile(reqData);
+          const dlist = await utils.parseReqFile(reqData, false);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
         }
         metadataFilename = reqDirFiles.join(", ");
       }
-    } else if (setupPyMode) {
-      const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
-      dlist = await utils.parseSetupPyFile(setupPyData);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
-      }
     }
   }
-  if (pkgList.length) {
-    return buildBomNSData(options, pkgList, "pypi", {
-      src: path,
-      filename: metadataFilename
-    });
+  if (!pkgList.length && setupPyMode) {
+    const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
+    dlist = await utils.parseSetupPyFile(setupPyData);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
+    }
   }
-  return {};
+  return buildBomNSData(options, pkgList, "pypi", {
+    src: path,
+    filename: metadataFilename
+  });
 };
 
 /**
@@ -4088,7 +4104,7 @@ const createXBom = async (path, options) => {
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
   const reqFiles = utils.getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements.txt"
+    (options.multiProject ? "**/" : "") + "*requirements*.txt"
   );
   const reqDirFiles = utils.getAllFiles(
     path,

@@ -1766,15 +1766,14 @@ exports.parsePyRequiresDist = parsePyRequiresDist;
  * Method to retrieve metadata for python packages by querying pypi
  *
  * @param {Array} pkgList Package list
- * @param {Boolean} fetchIndirectDeps Should we also fetch data about indirect dependencies from pypi
+ * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
  */
-const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
-  if (!fetchLicenses && !fetchIndirectDeps) {
+const getPyMetadata = async function (pkgList, fetchDepsInfo) {
+  if (!fetchLicenses && !fetchDepsInfo) {
     return pkgList;
   }
   const PYPI_URL = "https://pypi.org/pypi/";
   let cdepList = [];
-  let indirectDeps = [];
   for (const p of pkgList) {
     if (!p || !p.name) {
       continue;
@@ -1810,12 +1809,6 @@ const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
       ) {
         p.version = body.info.version;
       }
-      const requires_dist = body.info.requires_dist;
-      if (requires_dist && requires_dist.length) {
-        indirectDeps = indirectDeps.concat(
-          requires_dist.map(parsePyRequiresDist)
-        );
-      }
       if (body.releases && body.releases[p.version]) {
         const digest = body.releases[p.version][0].digests;
         if (digest["sha256"]) {
@@ -1831,13 +1824,6 @@ const getPyMetadata = async function (pkgList, fetchIndirectDeps) {
         console.error(p.name, err);
       }
     }
-  }
-  if (indirectDeps.length && fetchIndirectDeps) {
-    if (DEBUG_MODE) {
-      console.log("Fetching metadata for indirect dependencies");
-    }
-    const extraList = await getPyMetadata(indirectDeps, false);
-    cdepList = cdepList.concat(extraList);
   }
   return cdepList;
 };
@@ -1938,18 +1924,22 @@ exports.parsePoetrylockData = parsePoetrylockData;
  * Method to parse requirements.txt data
  *
  * @param {Object} reqData Requirements.txt data
+ * @param {Boolean} fetchIndirectDeps Should we also fetch data about indirect dependencies from pypi
  */
-const parseReqFile = async function (reqData) {
+async function parseReqFile(reqData, fetchIndirectDeps) {
   const pkgList = [];
-  let fetchIndirectDeps = false;
   let compScope = undefined;
   reqData.split("\n").forEach((l) => {
+    l = l.trim();
     if (l.includes("# Basic requirements")) {
       compScope = "required";
     } else if (l.includes("added by pip freeze")) {
       compScope = undefined;
     }
-    if (!l.startsWith("#")) {
+    if (!l.startsWith("#") && !l.startsWith("-")) {
+      if (l.includes(" ")) {
+        l = l.split(" ")[0];
+      }
       if (l.indexOf("=") > -1) {
         let tmpA = l.split(/(==|<=|~=|>=)/);
         if (tmpA.includes("#")) {
@@ -1964,11 +1954,24 @@ const parseReqFile = async function (reqData) {
         }
         if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
           pkgList.push({
-            name: tmpA[0].trim(),
+            name: tmpA[0].trim().replace(";", ""),
             version: versionStr,
             scope: compScope
           });
         }
+      } else if (l.includes("<") && l.includes(">")) {
+        let tmpA = l.split(">");
+        let name = tmpA[0].trim().replace(";", "");
+        let version = undefined;
+        const tmpB = tmpA[1].split("<");
+        if (tmpB && tmpB.length) {
+          version = tmpB[tmpB.length - 1];
+        }
+        pkgList.push({
+          name,
+          version,
+          scope: compScope
+        });
       } else if (/[>|[|@]/.test(l)) {
         let tmpA = l.split(/(>|\[|@)/);
         if (tmpA.includes("#")) {
@@ -1976,7 +1979,7 @@ const parseReqFile = async function (reqData) {
         }
         if (!tmpA[0].trim().includes(" ")) {
           pkgList.push({
-            name: tmpA[0].trim(),
+            name: tmpA[0].trim().replace(";", ""),
             version: null,
             scope: compScope
           });
@@ -1986,9 +1989,16 @@ const parseReqFile = async function (reqData) {
           l = l.split("#")[0];
         }
         l = l.trim();
-        if (!l.includes(" ")) {
+        let tmpA = l.split(/(<|>)/);
+        if (tmpA && tmpA.length === 3) {
           pkgList.push({
-            name: l,
+            name: tmpA[0].trim().replace(";", ""),
+            version: tmpA[2].replace(";", ""),
+            scope: compScope
+          });
+        } else if (!l.includes(" ")) {
+          pkgList.push({
+            name: l.replace(";", ""),
             version: null,
             scope: compScope
           });
@@ -1997,7 +2007,7 @@ const parseReqFile = async function (reqData) {
     }
   });
   return await getPyMetadata(pkgList, fetchIndirectDeps);
-};
+}
 exports.parseReqFile = parseReqFile;
 
 /**
@@ -2025,7 +2035,7 @@ const parseSetupPyFile = async function (setupPyData) {
       lines = lines.concat(tmpA);
     }
   });
-  return await parseReqFile(lines.join("\n"));
+  return await parseReqFile(lines.join("\n"), false);
 };
 exports.parseSetupPyFile = parseSetupPyFile;
 

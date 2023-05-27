@@ -1563,13 +1563,15 @@ test("parse requirements.txt", async () => {
   let deps = await utils.parseReqFile(
     fs.readFileSync("./test/data/requirements.comments.txt", {
       encoding: "utf-8"
-    })
+    }),
+    false
   );
   expect(deps.length).toEqual(31);
   deps = await utils.parseReqFile(
     fs.readFileSync("./test/data/requirements.freeze.txt", {
       encoding: "utf-8"
-    })
+    }),
+    false
   );
   expect(deps.length).toEqual(113);
   expect(deps[0]).toEqual({

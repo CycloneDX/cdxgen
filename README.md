@@ -53,7 +53,7 @@ NOTE:
 Footnotes:
 
 - [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
-- [2] - Pip freeze is automatically performed to improve precision.
+- [2] - Pip freeze is automatically performed to improve precision. Requires virtual environment.
 - [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file cdxgen would not include indirect dependencies.
 - [4] - See section on plugins
 - [5] - Powered by osquery. See section on plugins
