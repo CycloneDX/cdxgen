@@ -2119,6 +2119,7 @@ const createPythonBom = async (path, options) => {
     } else if (requirementsMode) {
       metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
+        let pipWarningShown = false;
         for (let f of reqFiles) {
           const basePath = pathLib.dirname(f);
           let reqData = undefined;
@@ -2141,13 +2142,20 @@ const createPythonBom = async (path, options) => {
                 pkgList = pkgList.concat(dlist);
               }
               frozenMode = true;
+            } else if (result.status !== 0 || result.error) {
+              if (DEBUG_MODE && !pipWarningShown) {
+                pipWarningShown = true;
+                console.log(
+                  "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBoM accuracy."
+                );
+              }
             }
           }
           // Fallback to parsing manually
           if (!frozenMode) {
             if (DEBUG_MODE) {
               console.log(
-                `Falling back to manually parsing ${f}. The result would be incomplete!`
+                `Manually parsing ${f}. The result would include only direct dependencies.`
               );
             }
             reqData = fs.readFileSync(f, { encoding: "utf-8" });
