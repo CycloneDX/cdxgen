@@ -1954,14 +1954,14 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
         }
         if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
           pkgList.push({
-            name: tmpA[0].trim(),
+            name: tmpA[0].trim().replace(";", ""),
             version: versionStr,
             scope: compScope
           });
         }
       } else if (l.includes("<") && l.includes(">")) {
         let tmpA = l.split(">");
-        let name = tmpA[0].trim();
+        let name = tmpA[0].trim().replace(";", "");
         let version = undefined;
         const tmpB = tmpA[1].split("<");
         if (tmpB && tmpB.length) {
@@ -1979,7 +1979,7 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
         }
         if (!tmpA[0].trim().includes(" ")) {
           pkgList.push({
-            name: tmpA[0].trim(),
+            name: tmpA[0].trim().replace(";", ""),
             version: null,
             scope: compScope
           });
@@ -1992,13 +1992,13 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
         let tmpA = l.split(/(<|>)/);
         if (tmpA && tmpA.length === 3) {
           pkgList.push({
-            name: tmpA[0].trim(),
+            name: tmpA[0].trim().replace(";", ""),
             version: tmpA[2].replace(";", ""),
             scope: compScope
           });
         } else if (!l.includes(" ")) {
           pkgList.push({
-            name: l,
+            name: l.replace(";", ""),
             version: null,
             scope: compScope
           });
