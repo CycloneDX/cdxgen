@@ -238,7 +238,7 @@ test("parse gradle projects", () => {
     fs.readFileSync("./test/data/gradle-projects1.out", { encoding: "utf-8" })
   );
   expect(retMap.rootProject).toEqual("elasticsearch");
-  expect(retMap.projects.length).toEqual(403);
+  expect(retMap.projects.length).toEqual(409);
   retMap = utils.parseGradleProjects(
     fs.readFileSync("./test/data/gradle-projects2.out", { encoding: "utf-8" })
   );
@@ -310,6 +310,13 @@ test("parse gradle properties", () => {
       ]
     }
   });
+  retMap = utils.parseGradleProperties(
+    fs.readFileSync("./test/data/gradle-properties-elastic.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(retMap.rootProject).toEqual("elasticsearch");
+  expect(retMap.projects.length).toEqual(409);
 });
 
 test("parse maven tree", () => {

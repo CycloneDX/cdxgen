@@ -1164,6 +1164,7 @@ const createJavaBom = async (path, options) => {
       (options.multiProject ? "**/" : "") + "build.gradle*"
     );
     let allProjects = [];
+    const allProjectsAddedPurls = [];
     const rootDependsOn = [];
     // Execute gradle properties
     if (gradleFiles && gradleFiles.length) {
@@ -1184,8 +1185,9 @@ const createJavaBom = async (path, options) => {
           retMap = utils.executeGradleProperties(path, null, spstr);
           let rootSubProject = retMap.rootProject;
           if (rootSubProject) {
+            let rspName = rootSubProject.replace(/^:/, "").replace(/:/, "/");
             const rootSubProjectObj = {
-              name: rootSubProject,
+              name: rspName,
               type: "application",
               qualifiers: { type: "jar" },
               ...(retMap.metadata || {})
@@ -1193,7 +1195,7 @@ const createJavaBom = async (path, options) => {
             const rootSubProjectPurl = decodeURIComponent(
               new PackageURL(
                 "maven",
-                rootSubProjectObj.group || "",
+                rootSubProjectObj.group || parentComponent.group || "",
                 rootSubProjectObj.name,
                 rootSubProjectObj.version,
                 rootSubProjectObj.qualifiers,
@@ -1202,8 +1204,11 @@ const createJavaBom = async (path, options) => {
             );
             rootSubProjectObj["purl"] = rootSubProjectPurl;
             rootSubProjectObj["bom-ref"] = rootSubProjectPurl;
-            allProjects.push(rootSubProjectObj);
-            rootDependsOn.push(rootSubProjectPurl);
+            if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
+              allProjects.push(rootSubProjectObj);
+              rootDependsOn.push(rootSubProjectPurl);
+              allProjectsAddedPurls.push(rootSubProjectPurl);
+            }
           }
         }
         // Bug #317 fix
@@ -1238,7 +1243,8 @@ const createJavaBom = async (path, options) => {
             : `:${sp.name}:dependencies`,
           "-q",
           "--console",
-          "plain"
+          "plain",
+          "--build-cache"
         ];
         // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
         if (process.env.GRADLE_ARGS) {
@@ -1289,11 +1295,6 @@ const createJavaBom = async (path, options) => {
               );
             }
             pkgList = pkgList.concat(dlist);
-          } else {
-            if (options.failOnError || DEBUG_MODE) {
-              console.log("No packages were found in gradle project", sp);
-            }
-            options.failOnError && process.exit(1);
           }
         }
       } // for
@@ -1305,7 +1306,7 @@ const createJavaBom = async (path, options) => {
         );
       } else {
         console.log(
-          "No packages found. Unset the environment variable GRADLE_MULTI_PROJECT_MODE and try again."
+          "No packages found. Set the environment variable 'CDXGEN_DEBUG_MODE=debug' to troubleshoot any gradle related errors."
         );
         options.failOnError && process.exit(1);
       }

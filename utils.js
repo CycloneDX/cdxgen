@@ -1511,7 +1511,7 @@ exports.parseGradleProjects = parseGradleProjects;
  */
 const parseGradleProperties = function (rawOutput) {
   let rootProject = "root";
-  let projects = [];
+  let projects = new Set();
   const metadata = { group: "", version: "latest", properties: [] };
   if (typeof rawOutput === "string") {
     const tmpA = rawOutput.split("\n");
@@ -1531,16 +1531,17 @@ const parseGradleProperties = function (rawOutput) {
           metadata.properties.push({ name: tmpB[0], value: tmpB[1].trim() });
         } else if (tmpB[0] === "subprojects") {
           const spStrs = tmpB[1].replace(/[[\]']/g, "").split(", ");
-          projects = spStrs
+          const tmpprojects = spStrs
             .flatMap((s) => s.replace("project ", ""))
             .filter((s) => s !== ":app");
+          tmpprojects.forEach(projects.add, projects);
         }
       }
     });
   }
   return {
     rootProject,
-    projects,
+    projects: Array.from(projects),
     metadata
   };
 };
@@ -1554,11 +1555,24 @@ exports.parseGradleProperties = parseGradleProperties;
  * @param {string} subProject Sub project name
  */
 const executeGradleProperties = function (dir, rootPath, subProject) {
+  const defaultProps = {
+    rootProject: subProject,
+    projects: [],
+    metadata: {
+      version: "latest"
+    }
+  };
+  // To optimize performance and reduce errors do not query for properties
+  // beyond the first level
+  if (subProject && subProject.match(/:/g).length >= 2) {
+    return defaultProps;
+  }
   let gradlePropertiesArgs = [
     subProject ? `${subProject}:properties` : "properties",
     "-q",
     "--console",
-    "plain"
+    "plain",
+    "--build-cache"
   ];
   let gradleCmd = getGradleCommand(dir, rootPath);
   if (process.env.GRADLE_ARGS) {
@@ -1578,11 +1592,15 @@ const executeGradleProperties = function (dir, rootPath, subProject) {
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
-      console.error(result.stdout, result.stderr);
+      if (result.stderr.includes("does not exist")) {
+        return defaultProps;
+      } else {
+        console.error(result.stdout, result.stderr);
+        console.log(
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
+        );
+      }
     }
-    console.log(
-      "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
-    );
   }
   const stdout = result.stdout;
   if (stdout) {
