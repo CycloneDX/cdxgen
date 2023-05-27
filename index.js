@@ -1173,7 +1173,7 @@ const createJavaBom = async (path, options) => {
       if (rootProject) {
         parentComponent = {
           name: rootProject,
-          type: "maven",
+          type: "application",
           qualifiers: { type: "jar" },
           ...(retMap.metadata || {})
         };
@@ -1186,13 +1186,13 @@ const createJavaBom = async (path, options) => {
           if (rootSubProject) {
             const rootSubProjectObj = {
               name: rootSubProject,
-              type: "maven",
+              type: "application",
               qualifiers: { type: "jar" },
               ...(retMap.metadata || {})
             };
             const rootSubProjectPurl = decodeURIComponent(
               new PackageURL(
-                rootSubProjectObj.type,
+                "maven",
                 rootSubProjectObj.group || "",
                 rootSubProjectObj.name,
                 rootSubProjectObj.version,
@@ -1209,7 +1209,6 @@ const createJavaBom = async (path, options) => {
         // Bug #317 fix
         parentComponent.components = allProjects.flatMap((s) => {
           delete s.qualifiers;
-          s.type = "library";
           return s;
         });
         dependencies.push({
@@ -1297,7 +1296,7 @@ const createJavaBom = async (path, options) => {
             options.failOnError && process.exit(1);
           }
         }
-      }
+      } // for
       if (pkgList.length) {
         console.log(
           "Obtained",
