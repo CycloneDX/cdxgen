@@ -2136,31 +2136,11 @@ const createPythonBom = async (path, options) => {
             );
             if (result.status === 0 && result.stdout) {
               reqData = Buffer.from(result.stdout).toString();
-              const dlist = await utils.parseReqFile(reqData, true);
+              const dlist = await utils.parseReqFile(reqData, false);
               if (dlist && dlist.length) {
                 pkgList = pkgList.concat(dlist);
               }
               frozenMode = true;
-            } else if (result.status !== 0 || result.error) {
-              // Fallback to global mode but filter based on the requirements file
-              const fbResult = spawnSync(PIP_CMD, ["freeze", "-r", f, "-l"], {
-                cwd: basePath,
-                encoding: "utf-8",
-                timeout: TIMEOUT_MS
-              });
-              if (fbResult.status === 0 && fbResult.stdout) {
-                const globalReqData = Buffer.from(fbResult.stdout).toString();
-                let gdeplist = await utils.parseReqFile(globalReqData, false);
-                // Rudimentary way to filter the packages
-                const rawReqData = fs.readFileSync(f, { encoding: "utf-8" });
-                gdeplist = gdeplist.filter(
-                  (d) => rawReqData.includes(d.name) && d.version !== null
-                );
-                if (gdeplist && gdeplist.length) {
-                  pkgList = pkgList.concat(gdeplist);
-                  frozenMode = true;
-                }
-              }
             }
           }
           // Fallback to parsing manually
