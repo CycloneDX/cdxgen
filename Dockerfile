@@ -102,7 +102,7 @@ RUN set -e; \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && pip3 install --user pipenv \
+    && python -m pip install --user pipenv \
     && rm -rf /var/cache/yum \
     && microdnf clean all
 
