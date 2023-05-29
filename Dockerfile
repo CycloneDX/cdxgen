@@ -47,7 +47,7 @@ RUN set -e; \
     esac; \
     echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
     && microdnf module enable maven php ruby -y \
-    && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core python3.11 python3.11-pip ruby ruby-devel \
+    && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core python3 python3-devel python3-pip ruby ruby-devel \
         pcre2 which tar gzip zip unzip maven sudo java-17-openjdk-headless nodejs ncurses \
     && cd /opt/cdxgen && npm install --omit=dev \
     && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
