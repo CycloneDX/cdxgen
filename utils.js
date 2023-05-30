@@ -1533,7 +1533,7 @@ const parseGradleProperties = function (rawOutput) {
           const spStrs = tmpB[1].replace(/[[\]']/g, "").split(", ");
           const tmpprojects = spStrs
             .flatMap((s) => s.replace("project ", ""))
-            .filter((s) => s !== ":app");
+            .filter((s) => ![":app", ""].includes(s.trim()));
           tmpprojects.forEach(projects.add, projects);
         }
       }

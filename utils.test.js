@@ -311,6 +311,27 @@ test("parse gradle properties", () => {
     }
   });
   retMap = utils.parseGradleProperties(
+    fs.readFileSync("./test/data/gradle-properties-single2.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(retMap).toEqual({
+    rootProject: "java-test",
+    projects: [],
+    metadata: {
+      group: "com.ajmalab.demo",
+      version: "latest",
+      properties: [
+        {
+          name: "buildFile",
+          value: "/home/almalinux/work/sandbox/java-test/build.gradle"
+        },
+        { name: "projectDir", value: "/home/almalinux/work/sandbox/java-test" },
+        { name: "rootDir", value: "/home/almalinux/work/sandbox/java-test" }
+      ]
+    }
+  });
+  retMap = utils.parseGradleProperties(
     fs.readFileSync("./test/data/gradle-properties-elastic.txt", {
       encoding: "utf-8"
     })

@@ -1178,6 +1178,18 @@ const createJavaBom = async (path, options) => {
           qualifiers: { type: "jar" },
           ...(retMap.metadata || {})
         };
+        const parentPurl = decodeURIComponent(
+          new PackageURL(
+            "maven",
+            parentComponent.group || "",
+            parentComponent.name,
+            parentComponent.version,
+            parentComponent.qualifiers,
+            null
+          ).toString()
+        );
+        parentComponent["purl"] = parentPurl;
+        parentComponent["bom-ref"] = parentPurl;
       }
       // Get the sub-project properties and set the root dependencies
       if (allProjectsStr && allProjectsStr.length) {
@@ -1217,16 +1229,7 @@ const createJavaBom = async (path, options) => {
           return s;
         });
         dependencies.push({
-          ref: decodeURIComponent(
-            new PackageURL(
-              "maven",
-              parentComponent.group,
-              parentComponent.name,
-              parentComponent.version,
-              parentComponent.qualifiers,
-              null
-            ).toString()
-          ),
+          ref: parentComponent["bom-ref"],
           dependsOn: rootDependsOn
         });
       }
@@ -1302,7 +1305,7 @@ const createJavaBom = async (path, options) => {
         console.log(
           "Obtained",
           pkgList.length,
-          "from this gradle multi-project. De-duping this list ..."
+          "from this gradle project. De-duping this list ..."
         );
       } else {
         console.log(
@@ -1693,7 +1696,7 @@ const createNodejsBom = async (path, options) => {
           type: "application"
         };
         ppurl = new PackageURL(
-          "application",
+          "npm",
           parentComponent.group,
           parentComponent.name,
           parentComponent.version,
@@ -1824,7 +1827,7 @@ const createNodejsBom = async (path, options) => {
           type: "application"
         };
         ppurl = new PackageURL(
-          "application",
+          "npm",
           parentComponent.group,
           parentComponent.name,
           parentComponent.version,
@@ -1852,7 +1855,7 @@ const createNodejsBom = async (path, options) => {
         // Fixes: 212. Handle case where there are no package.json to determine the parent package
         if (Object.keys(parentComponent).length && parentComponent.name) {
           const ppurl = new PackageURL(
-            "application",
+            "npm",
             parentComponent.group,
             parentComponent.name,
             parentComponent.version,
