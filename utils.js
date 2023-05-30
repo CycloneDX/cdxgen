@@ -1181,11 +1181,13 @@ exports.parseMavenTree = parseMavenTree;
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
+ * @param {string} rootProjectGroup Root project group
  * @param {string} rootProjectName Root project name
  * @param {string} rootProjectVersion Root project version
  */
 const parseGradleDep = function (
   rawOutput,
+  rootProjectGroup = "",
   rootProjectName = "root",
   rootProjectVersion = "latest"
 ) {
@@ -1205,18 +1207,27 @@ const parseGradleDep = function (
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
-      group: "",
+      group: rootProjectGroup || "",
       name: rootProjectName,
       version: rootProjectVersion,
       type: "maven",
       qualifiers: { type: "jar" }
     };
-    const deps = [rootProject];
+    const deps = [];
     const dependenciesList = [];
     const keys_cache = {};
     const deps_keys_cache = {};
     let last_level = 0;
-    let last_purl = `pkg:maven/${rootProjectName}@${rootProjectVersion}?type=jar`;
+    let last_purl = decodeURIComponent(
+      new PackageURL(
+        "maven",
+        rootProject.group,
+        rootProject.name,
+        rootProject.version,
+        rootProject.qualifiers,
+        null
+      ).toString()
+    );
     const first_purl = last_purl;
     let last_project_purl = first_purl;
     const level_trees = {};
@@ -1230,7 +1241,7 @@ const parseGradleDep = function (
           decodeURIComponent(
             new PackageURL(
               "maven",
-              "",
+              rootProjectGroup,
               sd.replace(":", ""),
               rootProject.version,
               rootProject.qualifiers,
@@ -1452,7 +1463,6 @@ exports.parseLeinMap = parseLeinMap;
 
 /**
  * Parse gradle projects output
- * FIXME: The method needs to be enhanced to capture project dependency tree. See issue #249
  *
  * @param {string} rawOutput Raw string output
  */
@@ -1486,17 +1496,120 @@ const parseGradleProjects = function (rawOutput) {
         }
       }
     });
-    return {
-      rootProject,
-      projects: Array.from(projects)
-    };
   }
   return {
     rootProject,
-    projects: []
+    projects: Array.from(projects)
   };
 };
 exports.parseGradleProjects = parseGradleProjects;
+
+/**
+ * Parse gradle properties output
+ *
+ * @param {string} rawOutput Raw string output
+ */
+const parseGradleProperties = function (rawOutput) {
+  let rootProject = "root";
+  let projects = new Set();
+  const metadata = { group: "", version: "latest", properties: [] };
+  if (typeof rawOutput === "string") {
+    const tmpA = rawOutput.split("\n");
+    tmpA.forEach((l) => {
+      if (l.startsWith("----") || l.startsWith(">") || !l.includes(": ")) {
+        return;
+      }
+      const tmpB = l.split(": ");
+      if (tmpB && tmpB.length === 2) {
+        if (tmpB[0] === "name") {
+          rootProject = tmpB[1].trim();
+        } else if (tmpB[0] === "group") {
+          metadata[tmpB[0]] = tmpB[1];
+        } else if (tmpB[0] === "version") {
+          metadata[tmpB[0]] = tmpB[1].trim().replace("unspecified", "latest");
+        } else if (["buildFile", "projectDir", "rootDir"].includes(tmpB[0])) {
+          metadata.properties.push({ name: tmpB[0], value: tmpB[1].trim() });
+        } else if (tmpB[0] === "subprojects") {
+          const spStrs = tmpB[1].replace(/[[\]']/g, "").split(", ");
+          const tmpprojects = spStrs
+            .flatMap((s) => s.replace("project ", ""))
+            .filter((s) => s !== ":app");
+          tmpprojects.forEach(projects.add, projects);
+        }
+      }
+    });
+  }
+  return {
+    rootProject,
+    projects: Array.from(projects),
+    metadata
+  };
+};
+exports.parseGradleProperties = parseGradleProperties;
+
+/**
+ * Execute gradle properties command and return parsed output
+ *
+ * @param {string} dir Directory to execute the command
+ * @param {string} rootPath Root directory
+ * @param {string} subProject Sub project name
+ */
+const executeGradleProperties = function (dir, rootPath, subProject) {
+  const defaultProps = {
+    rootProject: subProject,
+    projects: [],
+    metadata: {
+      version: "latest"
+    }
+  };
+  // To optimize performance and reduce errors do not query for properties
+  // beyond the first level
+  if (subProject && subProject.match(/:/g).length >= 2) {
+    return defaultProps;
+  }
+  let gradlePropertiesArgs = [
+    subProject ? `${subProject}:properties` : "properties",
+    "-q",
+    "--console",
+    "plain",
+    "--build-cache"
+  ];
+  let gradleCmd = getGradleCommand(dir, rootPath);
+  if (process.env.GRADLE_ARGS) {
+    const addArgs = process.env.GRADLE_ARGS.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
+  console.log(
+    "Executing",
+    gradleCmd,
+    gradlePropertiesArgs.join(" "),
+    "in",
+    dir
+  );
+  const result = spawnSync(gradleCmd, gradlePropertiesArgs, {
+    cwd: dir,
+    encoding: "utf-8"
+  });
+  if (result.status !== 0 || result.error) {
+    if (result.stderr) {
+      if (result.stderr.includes("does not exist")) {
+        return defaultProps;
+      } else {
+        console.error(result.stdout, result.stderr);
+        console.log(
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
+        );
+      }
+    }
+  }
+  const stdout = result.stdout;
+  if (stdout) {
+    const cmdOutput = Buffer.from(stdout).toString();
+    return parseGradleProperties(cmdOutput);
+  }
+  return {};
+};
+exports.executeGradleProperties = executeGradleProperties;
 
 /**
  * Parse bazel skyframe state output

@@ -1,10 +1,10 @@
-FROM almalinux/9-minimal:latest
+FROM almalinux:9.2-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="7.0.0" \
+      org.opencontainers.image.version="8.5.0" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -18,10 +18,10 @@ ARG SWIFT_VERSION=swift-5.8-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 
 ENV GOPATH=/opt/app-root/go \
-    GO_VERSION=1.20.2 \
-    SBT_VERSION=1.8.2 \
-    GRADLE_VERSION=8.0.2 \
-    GRADLE_HOME=/opt/gradle-8.0.2 \
+    GO_VERSION=1.20.4 \
+    SBT_VERSION=1.8.3 \
+    GRADLE_VERSION=8.1.1 \
+    GRADLE_HOME=/opt/gradle-8.1.1 \
     COMPOSER_ALLOW_SUPERUSER=1 \
     ANDROID_HOME=/opt/android-sdk-linux \
     SWIFT_SIGNING_KEY=$SWIFT_SIGNING_KEY \
@@ -45,9 +45,9 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac; \
-    echo -e "[nodejs]\nname=nodejs\nstream=18\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
-    && microdnf module enable maven -y \
-    && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core python3 python3-pip ruby ruby-devel \
+    echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
+    && microdnf module enable maven php ruby -y \
+    && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core python3 python3-devel python3-pip ruby ruby-devel \
         pcre2 which tar gzip zip unzip maven sudo java-17-openjdk-headless nodejs ncurses \
     && cd /opt/cdxgen && npm install --omit=dev \
     && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
@@ -102,7 +102,7 @@ RUN set -e; \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && pip3 install --user pipenv \
+    && python -m pip install --user pipenv \
     && rm -rf /var/cache/yum \
     && microdnf clean all
 
