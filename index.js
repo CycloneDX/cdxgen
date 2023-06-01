@@ -1236,12 +1236,10 @@ const createJavaBom = async (path, options) => {
     }
     if (gradleFiles && gradleFiles.length && options.installDeps) {
       let gradleCmd = utils.getGradleCommand(path, null);
-      if (!allProjects || !allProjects.length) {
-        allProjects.push(parentComponent);
-      }
+      allProjects.push(parentComponent);
       for (let sp of allProjects) {
         let gradleDepArgs = [
-          sp.name === parentComponent.name
+          sp.purl === parentComponent.purl
             ? "dependencies"
             : `:${sp.name}:dependencies`,
           "-q",
