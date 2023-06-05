@@ -1061,9 +1061,21 @@ const createJavaBom = async (path, options) => {
             console.log(
               "Resolve the above maven error. This could be due to the following:\n"
             );
-            console.log(
-              "1. Java version requirement: cdxgen container image bundles Java 17 with maven 3.8 which might be incompatible."
-            );
+            if (
+              result.stderr &&
+              result.stderr.includes(
+                "Could not resolve dependencies" ||
+                  result.stderr.includes("no dependency information available")
+              )
+            ) {
+              console.log(
+                "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."
+              );
+            } else {
+              console.log(
+                "1. Java version requirement: cdxgen container image bundles Java 17 with maven 3.8 which might be incompatible."
+              );
+            }
             console.log(
               "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
             );
