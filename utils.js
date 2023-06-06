@@ -5,10 +5,10 @@ const parsePackageJsonName = require("parse-packagejson-name");
 const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
-const licenseMapping = require("./lic-mapping.json");
-const vendorAliases = require("./vendor-alias.json");
-const spdxLicenses = require("./spdx-licenses.json");
-const knownLicenses = require("./known-licenses.json");
+const licenseMapping = require("./data/lic-mapping.json");
+const vendorAliases = require("./data/vendor-alias.json");
+const spdxLicenses = require("./data/spdx-licenses.json");
+const knownLicenses = require("./data/known-licenses.json");
 const cheerio = require("cheerio");
 const yaml = require("js-yaml");
 const { spawnSync } = require("child_process");
@@ -18,11 +18,20 @@ const StreamZip = require("node-stream-zip");
 const ednDataLib = require("edn-data");
 const { PackageURL } = require("packageurl-js");
 
+// Refer to contrib/py-modules.py for a script to generate this list
+// The script needs to be used once every few months to update this list
+const PYTHON_STD_MODULES = require("./data/python-stdlib.json");
+// Mapping between modules and package names
+const PYPI_MODULE_PACKAGE_MAPPING = require("./data/pypi-pkg-aliases.json");
+
 // Debug mode flag
 const DEBUG_MODE =
   process.env.CDXGEN_DEBUG_MODE === "debug" ||
   process.env.SCAN_DEBUG_MODE === "debug" ||
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
+
+// Timeout milliseconds. Default 10 mins
+const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
 
 // Metadata cache
 let metadata_cache = {};
@@ -39,6 +48,11 @@ const fetchLicenses =
   ["true", "1"].includes(process.env.FETCH_LICENSE);
 
 const MAX_LICENSE_ID_LENGTH = 100;
+
+let PYTHON_CMD = "python";
+if (process.env.PYTHON_CMD) {
+  PYTHON_CMD = process.env.PYTHON_CMD;
+}
 
 /**
  * Method to get files matching a pattern
@@ -1892,7 +1906,8 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       continue;
     }
     try {
-      if (p.name.includes("https")) {
+      // If the package name has a url or already includes license and version skip it
+      if (p.name.includes("https") || (p.license && p.version)) {
         cdepList.push(p);
         continue;
       }
@@ -1904,6 +1919,18 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         responseType: "json"
       });
       const body = res.body;
+      if (body.info.author && body.info.author.trim() !== "") {
+        if (body.info.author_email && body.info.author_email.trim() !== "") {
+          p.author = `${body.info.author.trim()} <${body.info.author_email.trim()}>`;
+        } else {
+          p.author = body.info.author.trim();
+        }
+      } else if (
+        body.info.author_email &&
+        body.info.author_email.trim() !== ""
+      ) {
+        p.author = body.info.author_email.trim();
+      }
       p.description = body.info.summary;
       p.license = findLicenseId(body.info.license);
       if (body.info.home_page) {
@@ -1921,6 +1948,14 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         p.version.includes(">")
       ) {
         p.version = body.info.version;
+      } else if (p.version !== body.info.version) {
+        if (!p.properties) {
+          p.properties = [];
+        }
+        p.properties.push({
+          name: "cdx:pypi:latest_version",
+          value: body.info.version
+        });
       }
       if (body.releases && body.releases[p.version]) {
         const digest = body.releases[p.version][0].digests;
@@ -1932,10 +1967,32 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       }
       cdepList.push(p);
     } catch (err) {
-      cdepList.push(p);
       if (DEBUG_MODE) {
-        console.error(p.name, err);
+        console.error(p.name, "is not found on PyPI.");
+        console.log(
+          "If this package is available from PyPI or a registry, its name might be different to the module name. Raise a ticket at https://github.com/CycloneDX/cdxgen/issues so that this could be added to the mapping file pypi-pkg-aliases.json"
+        );
+        console.log(
+          "Alternatively, if this is a package that gets installed directly in your environment and offers a python binding, then track such packages manually."
+        );
       }
+      if (!p.version) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Assuming the version as latest for the package ${p.name}`
+          );
+        }
+        p.version = "latest";
+      }
+      // Add a property to let the downstream tools know about this assumption
+      if (!p.properties) {
+        p.properties = [];
+      }
+      p.properties.push({
+        name: "cdx:pypi:pedigree",
+        value: "unknown"
+      });
+      cdepList.push(p);
     }
   }
   return cdepList;
@@ -2037,13 +2094,16 @@ exports.parsePoetrylockData = parsePoetrylockData;
  * Method to parse requirements.txt data
  *
  * @param {Object} reqData Requirements.txt data
- * @param {Boolean} fetchIndirectDeps Should we also fetch data about indirect dependencies from pypi
+ * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
  */
-async function parseReqFile(reqData, fetchIndirectDeps) {
+async function parseReqFile(reqData, fetchDepsInfo) {
   const pkgList = [];
   let compScope = undefined;
   reqData.split("\n").forEach((l) => {
     l = l.trim();
+    if (l.startsWith("Skipping line") || l.startsWith("(add")) {
+      return;
+    }
     if (l.includes("# Basic requirements")) {
       compScope = "required";
     } else if (l.includes("added by pip freeze")) {
@@ -2066,11 +2126,14 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
           versionStr = null;
         }
         if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
-          pkgList.push({
-            name: tmpA[0].trim().replace(";", ""),
-            version: versionStr,
-            scope: compScope
-          });
+          let name = tmpA[0].trim().replace(";", "");
+          if (!PYTHON_STD_MODULES.includes(name)) {
+            pkgList.push({
+              name,
+              version: versionStr,
+              scope: compScope
+            });
+          }
         }
       } else if (l.includes("<") && l.includes(">")) {
         let tmpA = l.split(">");
@@ -2080,22 +2143,27 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
         if (tmpB && tmpB.length) {
           version = tmpB[tmpB.length - 1];
         }
-        pkgList.push({
-          name,
-          version,
-          scope: compScope
-        });
+        if (!PYTHON_STD_MODULES.includes(name)) {
+          pkgList.push({
+            name,
+            version,
+            scope: compScope
+          });
+        }
       } else if (/[>|[|@]/.test(l)) {
         let tmpA = l.split(/(>|\[|@)/);
         if (tmpA.includes("#")) {
           tmpA = tmpA.split("#")[0];
         }
         if (!tmpA[0].trim().includes(" ")) {
-          pkgList.push({
-            name: tmpA[0].trim().replace(";", ""),
-            version: null,
-            scope: compScope
-          });
+          let name = tmpA[0].trim().replace(";", "");
+          if (!PYTHON_STD_MODULES.includes(name)) {
+            pkgList.push({
+              name,
+              version: null,
+              scope: compScope
+            });
+          }
         }
       } else if (l) {
         if (l.includes("#")) {
@@ -2104,24 +2172,80 @@ async function parseReqFile(reqData, fetchIndirectDeps) {
         l = l.trim();
         let tmpA = l.split(/(<|>)/);
         if (tmpA && tmpA.length === 3) {
-          pkgList.push({
-            name: tmpA[0].trim().replace(";", ""),
-            version: tmpA[2].replace(";", ""),
-            scope: compScope
-          });
+          let name = tmpA[0].trim().replace(";", "");
+          if (!PYTHON_STD_MODULES.includes(name)) {
+            pkgList.push({
+              name,
+              version: tmpA[2].replace(";", ""),
+              scope: compScope
+            });
+          }
         } else if (!l.includes(" ")) {
-          pkgList.push({
-            name: l.replace(";", ""),
-            version: null,
-            scope: compScope
-          });
+          let name = l.replace(";", "");
+          if (!PYTHON_STD_MODULES.includes(name)) {
+            pkgList.push({
+              name,
+              version: null,
+              scope: compScope
+            });
+          }
         }
       }
     }
   });
-  return await getPyMetadata(pkgList, fetchIndirectDeps);
+  return await getPyMetadata(pkgList, fetchDepsInfo);
 }
 exports.parseReqFile = parseReqFile;
+
+/**
+ * Method to find python modules by parsing the imports and then checking with PyPI to obtain the latest version
+ *
+ * @param {string} src directory
+ * @param {Array} epkgList Existing package list
+ * @returns List of packages
+ */
+const getPyModules = async (src, epkgList) => {
+  const allImports = {};
+  const modList = findAppModules(src, "python");
+  const pyDefaultModules = new Set(PYTHON_STD_MODULES);
+  const filteredModList = modList.filter(
+    (x) =>
+      !pyDefaultModules.has(x.name.toLowerCase()) &&
+      !x.name.startsWith("_") &&
+      !x.name.startsWith(".")
+  );
+  let pkgList = filteredModList.map((p) => {
+    return {
+      name:
+        PYPI_MODULE_PACKAGE_MAPPING[p.name.toLowerCase()] ||
+        p.name.replace(/_/g, "-"),
+      version: p.version && p.version.trim().length ? p.version : undefined,
+      scope: "required",
+      properties: [
+        {
+          name: "cdx.atom.versionSpecifiers",
+          value: p.versionSpecifiers
+        }
+      ]
+    };
+  });
+  pkgList = pkgList.filter(
+    (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index
+  );
+  if (epkgList && epkgList.length) {
+    const pkgMaps = epkgList.map((p) => p.name);
+    pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
+  }
+  pkgList = await getPyMetadata(pkgList, true);
+  // Populate the imports list
+  if (pkgList && pkgList.length) {
+    pkgList.forEach((p) => {
+      allImports[p.name] = true;
+    });
+  }
+  return { allImports, pkgList };
+};
+exports.getPyModules = getPyModules;
 
 /**
  * Method to parse setup.py data
@@ -4823,3 +4947,235 @@ const getMavenCommand = (srcPath, rootPath) => {
   return mavenCmd;
 };
 exports.getMavenCommand = getMavenCommand;
+
+/**
+ * Retrieves the atom command by referring to various environment variables
+ */
+const getAtomCommand = () => {
+  if (process.env.ATOM_CMD) {
+    return process.env.ATOM_CMD;
+  }
+  if (process.env.ATOM_HOME) {
+    return path.join(process.env.ATOM_HOME, "bin", "atom");
+  }
+  const NODE_CMD = process.env.NODE_CMD || "node";
+  const localAtom = path.join(
+    __dirname,
+    "node_modules",
+    "@appthreat",
+    "atom",
+    "index.js"
+  );
+  if (fs.existsSync(localAtom)) {
+    return `${NODE_CMD} ${localAtom}`;
+  }
+  return "atom";
+};
+
+const executeAtom = (src, args) => {
+  let ATOM_BIN = getAtomCommand();
+  if (ATOM_BIN.includes(" ")) {
+    const tmpA = ATOM_BIN.split(" ");
+    if (tmpA && tmpA.length > 1) {
+      ATOM_BIN = tmpA[0];
+      args.unshift(tmpA[1]);
+    }
+  }
+  const freeMemoryGB = Math.floor(os.freemem() / 1024 / 1024 / 1024);
+  if (DEBUG_MODE) {
+    console.log("Execuing", ATOM_BIN, args.join(" "));
+  }
+  const env = {
+    ...process.env,
+    JAVA_OPTS: `-Xms${freeMemoryGB}G -Xmx${freeMemoryGB}G`
+  };
+  const result = spawnSync(ATOM_BIN, args, {
+    cwd: src,
+    encoding: "utf-8",
+    timeout: TIMEOUT_MS,
+    env
+  });
+  if (DEBUG_MODE) {
+    if (result.stdout) {
+      console.log(result.stdout);
+    }
+    if (result.stderr) {
+      console.log(result.stderr);
+    }
+  }
+  return true;
+};
+exports.executeAtom = executeAtom;
+
+/**
+ * Find the imported modules in the application with atom parsedeps command
+ *
+ * @param {string} src
+ * @param {string} language
+ * @returns List of imported modules
+ */
+const findAppModules = function (src, language) {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "atom-deps-"));
+  const atomFile = path.join(tempDir, "app.atom");
+  const slicesFile = path.join(tempDir, "slices.json");
+  let retList = [];
+  const args = [
+    "parsedeps",
+    "-l",
+    language,
+    "-o",
+    path.resolve(atomFile),
+    "--slice-outfile",
+    path.resolve(slicesFile),
+    path.resolve(src)
+  ];
+  executeAtom(src, args);
+  if (fs.existsSync(slicesFile)) {
+    const slicesData = JSON.parse(fs.readFileSync(slicesFile), "utf8");
+    if (slicesData && Object.keys(slicesData) && slicesData.modules) {
+      retList = slicesData.modules;
+    }
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+  return retList;
+};
+exports.findAppModules = findAppModules;
+
+/**
+ * Execute pip freeze by creating a virtual env in a temp directory
+ *
+ * @param {string} basePath Base path
+ * @param {string} reqOrSetupFile Requirements or setup.py file
+ * @returns List of packages from the virtual env
+ */
+const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
+  let pkgList = [];
+  let result = undefined;
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdxgen-venv-"));
+  const env = {
+    ...process.env
+  };
+  /**
+   * Let's start with an attempt to create a new temporary virtual environment in case we aren't in one
+   *
+   * By checking the environment variable "VIRTUAL_ENV" we decide whether to create an env or not
+   */
+  if (!process.env.VIRTUAL_ENV) {
+    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempDir]);
+    if (result.status !== 0 || result.error) {
+      if (DEBUG_MODE) {
+        console.log(result.stderr);
+      }
+    } else {
+      env.VIRTUAL_ENV = tempDir;
+      env.PATH = `${path.join(tempDir, "bin")}${path.delimiter}${
+        process.env.PATH || ""
+      }`;
+    }
+  }
+  /**
+   * We now have a temporary virtual environment so we can attempt to install the project and perform
+   * pip freeze to collect the packages that got installed.
+   * This step is accurate but not reproducible since the resulting list could differ based on various factors
+   * such as the version of python, pip, os, pypi.org availability (and weather?)
+   */
+  if (tempDir === env.VIRTUAL_ENV) {
+    let pipInstallArgs = [
+      "-m",
+      "pip",
+      "install",
+      "--disable-pip-version-check"
+    ];
+    // Requirements.txt could be called with any name so best to check for not setup.py and not pyproject.toml
+    if (
+      !reqOrSetupFile.endsWith("setup.py") &&
+      !reqOrSetupFile.endsWith("pyproject.toml")
+    ) {
+      pipInstallArgs.push("-r");
+      pipInstallArgs.push(path.resolve(reqOrSetupFile));
+    } else {
+      pipInstallArgs.push(path.resolve(basePath));
+    }
+    // Attempt to perform pip install
+    result = spawnSync(PYTHON_CMD, pipInstallArgs, {
+      cwd: basePath,
+      encoding: "utf-8",
+      timeout: TIMEOUT_MS,
+      env
+    });
+    if (result.status !== 0 || result.error) {
+      if (DEBUG_MODE) {
+        console.log(result.stderr, "args used:", pipInstallArgs);
+        console.log(
+          "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
+        );
+        if (os.platform() == "win32") {
+          console.log(
+            "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
+          );
+        } else {
+          console.log(
+            "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager."
+          );
+        }
+        console.log(
+          "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution."
+        );
+        console.log("- Check if any git submodules have to be initialized.");
+      }
+    }
+    /**
+     * At this point, the previous attempt to do a pip install might have failed and we might have an unclean virtual environment with an incomplete list
+     * The position taken by cdxgen is "Some SBoM is better than no SBoM", so we proceed to collecting the dependencies that got installed with pip freeze
+     */
+    let pipFreezeArgs = [
+      "-m",
+      "pip",
+      "freeze",
+      "-l",
+      "--exclude-editable",
+      "--disable-pip-version-check"
+    ];
+    if (
+      !reqOrSetupFile.endsWith("setup.py") &&
+      !reqOrSetupFile.endsWith("pyproject.toml")
+    ) {
+      pipFreezeArgs.push("-r");
+      pipFreezeArgs.push(path.resolve(reqOrSetupFile));
+    }
+    result = spawnSync(PYTHON_CMD, pipFreezeArgs, {
+      cwd: basePath,
+      encoding: "utf-8",
+      timeout: TIMEOUT_MS,
+      env
+    });
+    if (result.status === 0 && result.stdout) {
+      // We now a list from pip freeze that could be parsed to obtain a list
+      // We need to iterate that this list is not reproducible and could vary based on the environment
+      const reqData = Buffer.from(result.stdout).toString();
+      const dlist = await parseReqFile(reqData, false);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    } else if (result.status !== 0 || result.error) {
+      if (DEBUG_MODE) {
+        console.log(result.stderr, "args used:", pipFreezeArgs);
+      }
+    }
+  } else {
+    if (DEBUG_MODE) {
+      console.log(
+        "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBoM accuracy."
+      );
+    }
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+  return pkgList;
+};
+exports.executePipFreezeInVenv = executePipFreezeInVenv;

@@ -38,16 +38,20 @@ jobs:
           path: 'repotests/pyperf'
       - uses: actions/checkout@v3
         with:
-          repository: 'psf/webassembly'
-          path: 'repotests/webassembly'
-      - uses: actions/checkout@v3
-        with:
           repository: 'psf/cachecontrol'
           path: 'repotests/cachecontrol'
       - uses: actions/checkout@v3
         with:
           repository: 'pallets/flask'
           path: 'repotests/flask'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'pallets/click'
+          path: 'repotests/click'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'pallets/jinja'
+          path: 'repotests/jinja'
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
@@ -59,9 +63,17 @@ jobs:
           bin/cdxgen -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-pyperf.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-pyperf.xml --input-format xml --input-version v1_4
-          bin/cdxgen -p -r -t python repotests/webassembly -o bomresults/bom-webassembly.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-webassembly.json --input-format json --input-version v1_4
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-webassembly.xml --input-format xml --input-version v1_4
           bin/cdxgen -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-cachecontrol.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-cachecontrol.xml --input-format xml --input-version v1_4
+          bin/cdxgen -p -r -t python repotests/flask -o bomresults/bom-flask.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-flask.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-flask.xml --input-format xml --input-version v1_4
+          bin/cdxgen -p -r -t python repotests/click -o bomresults/bom-click.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-click.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-click.xml --input-format xml --input-version v1_4
+          bin/cdxgen -p -r -t python repotests/jinja -o bomresults/bom-jinja.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-jinja.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-jinja.xml --input-format xml --input-version v1_4
+        env:
+          CDXGEN_DEBUG_MODE: debug

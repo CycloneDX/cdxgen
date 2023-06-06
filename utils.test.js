@@ -786,7 +786,7 @@ test("get dart metadata", async () => {
       url: "https://github.com/dart-lang/async"
     }
   });
-});
+}, 120000);
 
 test("parse cabal freeze", async () => {
   expect(await utils.parseCabalData(null)).toEqual([]);
@@ -1629,7 +1629,6 @@ test("parseGemspecData", async () => {
 });
 
 test("parse requirements.txt", async () => {
-  jest.setTimeout(120000);
   let deps = await utils.parseReqFile(
     fs.readFileSync("./test/data/requirements.comments.txt", {
       encoding: "utf-8"
@@ -1661,6 +1660,10 @@ test("parse poetry.lock", async () => {
     fs.readFileSync("./test/data/poetry1.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(67);
+  deps = await utils.parsePoetrylockData(
+    fs.readFileSync("./test/data/poetry-cpggen.lock", { encoding: "utf-8" })
+  );
+  expect(deps.length).toEqual(68);
 });
 
 test("parse wheel metadata", () => {

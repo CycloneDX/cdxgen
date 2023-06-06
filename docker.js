@@ -224,6 +224,9 @@ const getConnection = async (options) => {
               "Ensure docker/podman service or Docker for Desktop is running.",
               opts
             );
+            console.log(
+              "Check if the post-installation steps were performed correctly as per this documentation https://docs.docker.com/engine/install/linux-postinstall/"
+            );
           }
         }
       }

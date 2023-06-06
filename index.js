@@ -14,7 +14,7 @@ const { findJSImports } = require("./analyzer");
 const semver = require("semver");
 const dockerLib = require("./docker");
 const binaryLib = require("./binary");
-const osQueries = require("./queries.json");
+const osQueries = require("./data/queries.json");
 const isWin = require("os").platform() === "win32";
 
 const { table } = require("table");
@@ -37,11 +37,6 @@ if (process.env.CLJ_CMD) {
 let LEIN_CMD = "lein";
 if (process.env.LEIN_CMD) {
   LEIN_CMD = process.env.LEIN_CMD;
-}
-
-let PIP_CMD = "pip";
-if (process.env.PIP_CMD) {
-  PIP_CMD = process.env.PIP_CMD;
 }
 
 let SWIFT_CMD = "swift";
@@ -510,6 +505,7 @@ function addComponent(
   }
   if (!isRootPkg) {
     let pkgIdentifier = parsePackageJsonName(pkg.name);
+    let author = pkg.author || "";
     let publisher = pkg.publisher || "";
     let group = pkg.group || pkgIdentifier.scope;
     // Create empty group
@@ -573,6 +569,7 @@ function addComponent(
       return;
     }
     let component = {
+      author,
       publisher,
       group,
       name,
@@ -994,7 +991,7 @@ const createJavaBom = async (path, options) => {
     if (pomFiles && pomFiles.length) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.8";
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.9";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
       let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
       if (utils.includeMavenTestScope) {
@@ -1073,7 +1070,7 @@ const createJavaBom = async (path, options) => {
               );
             } else {
               console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 17 with maven 3.8 which might be incompatible."
+                "1. Java version requirement: cdxgen container image bundles Java 19 with maven 3.9 which might be incompatible."
               );
             }
             console.log(
@@ -1923,8 +1920,7 @@ const createNodejsBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createPythonBom = async (path, options) => {
-  let pkgList = [];
-  let dlist = [];
+  let allImports = {};
   let metadataFilename = "";
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
   const poetryFiles = utils.getAllFiles(
@@ -1951,7 +1947,10 @@ const createPythonBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "*.egg-info"
   );
+  let pkgList = [];
   const setupPy = pathLib.join(path, "setup.py");
+  const pyProjectFile = pathLib.join(path, "pyproject.toml");
+  const pyProjectMode = fs.existsSync(pyProjectFile);
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const poetryMode = poetryFiles && poetryFiles.length;
@@ -1997,7 +1996,7 @@ const createPythonBom = async (path, options) => {
   // .egg-info files
   if (eggInfoFiles && eggInfoFiles.length) {
     for (let ef of eggInfoFiles) {
-      dlist = utils.parseBdistMetadata(
+      const dlist = utils.parseBdistMetadata(
         fs.readFileSync(ef, { encoding: "utf-8" })
       );
       if (dlist && dlist.length) {
@@ -2011,7 +2010,7 @@ const createPythonBom = async (path, options) => {
       const piplockFile = pathLib.join(path, "Pipfile.lock");
       if (fs.existsSync(piplockFile)) {
         const lockData = JSON.parse(fs.readFileSync(piplockFile));
-        dlist = await utils.parsePiplockData(lockData);
+        const dlist = await utils.parsePiplockData(lockData);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
         }
@@ -2022,40 +2021,20 @@ const createPythonBom = async (path, options) => {
     } else if (requirementsMode) {
       metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
-        let pipWarningShown = false;
         for (let f of reqFiles) {
           const basePath = pathLib.dirname(f);
           let reqData = undefined;
-          let frozenMode = false;
-          // Attempt to pip freeze to improve precision. First try in venv mode
+          let frozen = false;
+          // Attempt to pip freeze in a virtualenv to improve precision
           if (options.installDeps) {
-            const result = spawnSync(
-              PIP_CMD,
-              ["freeze", "-r", f, "-l", "--require-virtualenv"],
-              {
-                cwd: basePath,
-                encoding: "utf-8",
-                timeout: TIMEOUT_MS
-              }
-            );
-            if (result.status === 0 && result.stdout) {
-              reqData = Buffer.from(result.stdout).toString();
-              const dlist = await utils.parseReqFile(reqData, false);
-              if (dlist && dlist.length) {
-                pkgList = pkgList.concat(dlist);
-              }
-              frozenMode = true;
-            } else if (result.status !== 0 || result.error) {
-              if (DEBUG_MODE && !pipWarningShown) {
-                pipWarningShown = true;
-                console.log(
-                  "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBoM accuracy."
-                );
-              }
+            const dlist = await utils.executePipFreezeInVenv(basePath, f);
+            if (dlist && dlist.length) {
+              pkgList = pkgList.concat(dlist);
+              frozen = true;
             }
           }
           // Fallback to parsing manually
-          if (!frozenMode) {
+          if (!pkgList.length || !frozen) {
             if (DEBUG_MODE) {
               console.log(
                 `Manually parsing ${f}. The result would include only direct dependencies.`
@@ -2082,14 +2061,42 @@ const createPythonBom = async (path, options) => {
       }
     }
   }
+  // Use atom in requirements, setup.py and pyproject.toml mode
+  if (requirementsMode || setupPyMode || pyProjectMode) {
+    let dlist = undefined;
+    /**
+     * The order of preference is pyproject.toml (newer) and then setup.py
+     */
+    if (options.installDeps) {
+      if (pyProjectMode) {
+        dlist = await utils.executePipFreezeInVenv(path, pyProjectFile);
+      } else if (setupPyMode) {
+        dlist = await utils.executePipFreezeInVenv(path, setupPy);
+      }
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    // Get the imported modules and a dedupe list of packages
+    const retMap = await utils.getPyModules(path, pkgList);
+    if (retMap.pkgList && retMap.pkgList.length) {
+      pkgList = pkgList.concat(retMap.pkgList);
+    }
+    if (retMap.allImports) {
+      allImports = { ...allImports, ...retMap.allImports };
+    }
+  }
+  // Final fallback is to manually parse setup.py if we still
+  // have an empty list
   if (!pkgList.length && setupPyMode) {
     const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
-    dlist = await utils.parseSetupPyFile(setupPyData);
+    const dlist = await utils.parseSetupPyFile(setupPyData);
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
     }
   }
   return buildBomNSData(options, pkgList, "pypi", {
+    allImports,
     src: path,
     filename: metadataFilename
   });
@@ -4015,6 +4022,12 @@ const createXBom = async (path, options) => {
   // python
   const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
   const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
+  const pyProjectMode =
+    !poetryMode && fs.existsSync(pathLib.join(path, "pyproject.toml"));
+  const setupPyMode = fs.existsSync(pathLib.join(path, "setup.py"));
+  if (pipenvMode || poetryMode || pyProjectMode || setupPyMode) {
+    return await createPythonBom(path, options);
+  }
   const reqFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt"
@@ -4023,21 +4036,13 @@ const createXBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "requirements/*.txt"
   );
-  const setupPy = pathLib.join(path, "setup.py");
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const whlFiles = utils.getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.whl"
   );
-  const setupPyMode = fs.existsSync(setupPy);
-  if (
-    requirementsMode ||
-    pipenvMode ||
-    poetryMode ||
-    setupPyMode ||
-    whlFiles.length
-  ) {
+  if (requirementsMode || whlFiles.length) {
     return await createPythonBom(path, options);
   }
   // go
