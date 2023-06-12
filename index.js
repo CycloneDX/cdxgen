@@ -1187,7 +1187,6 @@ const createJavaBom = async (path, options) => {
         parentComponent = {
           name: rootProject,
           type: "application",
-          qualifiers: { type: "jar" },
           ...(retMap.metadata || {})
         };
         const parentPurl = decodeURIComponent(
@@ -1196,7 +1195,7 @@ const createJavaBom = async (path, options) => {
             parentComponent.group || "",
             parentComponent.name,
             parentComponent.version,
-            parentComponent.qualifiers,
+            { type: "jar" },
             null
           ).toString()
         );
