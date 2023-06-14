@@ -1,0 +1,67 @@
+name: Python atom tests
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: "! contains(github.event.head_commit.message, '[ci skip]')"
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: coursier/cache-action@v6
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '19'
+      - name: npm install, build and test
+        run: |
+          npm install
+          npm run build --if-present
+          mkdir -p repotests
+          mkdir -p bomresults
+        env:
+          CI: true
+      - uses: actions/checkout@v3
+        with:
+          repository: 'psf/black'
+          path: 'repotests/black'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'psf/pyperf'
+          path: 'repotests/pyperf'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'psf/webassembly'
+          path: 'repotests/webassembly'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'psf/cachecontrol'
+          path: 'repotests/cachecontrol'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'pallets/flask'
+          path: 'repotests/flask'
+      - name: repotests
+        run: |
+          wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
+          mv cyclonedx-linux-x64 cyclonedx
+          chmod +x cyclonedx
+          bin/cdxgen -p -r -t python repotests/black -o bomresults/bom-black.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-black.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-black.xml --input-format xml --input-version v1_4
+          bin/cdxgen -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-pyperf.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-pyperf.xml --input-format xml --input-version v1_4
+          bin/cdxgen -p -r -t python repotests/webassembly -o bomresults/bom-webassembly.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-webassembly.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-webassembly.xml --input-format xml --input-version v1_4
+          bin/cdxgen -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-cachecontrol.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-cachecontrol.xml --input-format xml --input-version v1_4
