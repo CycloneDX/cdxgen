@@ -4019,6 +4019,7 @@ export const getNugetMetadata = async function (pkgList) {
   const NUGET_URL = "https://api.nuget.org/v3/registration3/";
   const cdepList = [];
   for (const p of pkgList) {
+    let cacheKey = undefined;
     try {
       if (
         (p.group && p.group.toLowerCase() === "system") ||
@@ -4039,7 +4040,13 @@ export const getNugetMetadata = async function (pkgList) {
       } else {
         // If there is a version, we can safely use the cache to retrieve the license
         // See: https://github.com/CycloneDX/cdxgen/issues/352
-        let body = p.version ? metadata_cache[p.group] : undefined;
+        const twoPartName = p.name.split(".").slice(0, 2).join(".");
+        cacheKey = `${p.group}|${twoPartName}`;
+        let body = metadata_cache[cacheKey];
+        if (body && body.error) {
+          cdepList.push(p);
+          continue;
+        }
         if (!body) {
           if (DEBUG_MODE) {
             console.log(`Querying nuget for ${p.name}`);
@@ -4069,7 +4076,7 @@ export const getNugetMetadata = async function (pkgList) {
               body = newBody[0];
             }
           }
-          metadata_cache[p.group] = body;
+          metadata_cache[cacheKey] = body;
         }
         // Set the latest version in case it is missing
         if (!p.version && body.catalogEntry.version) {
@@ -4103,6 +4110,9 @@ export const getNugetMetadata = async function (pkgList) {
       }
       cdepList.push(p);
     } catch (err) {
+      if (cacheKey) {
+        metadata_cache[cacheKey] = { error: err.code };
+      }
       cdepList.push(p);
     }
   }
