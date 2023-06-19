@@ -4020,48 +4020,86 @@ export const getNugetMetadata = async function (pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
     try {
-      if (DEBUG_MODE) {
-        console.log(`Querying nuget for ${p.name}`);
-      }
-      const res = await cdxgenAgent.get(
-        NUGET_URL +
-          p.group.toLowerCase() +
-          (p.group !== "" ? "." : "") +
-          p.name.toLowerCase() +
-          "/index.json",
-        { responseType: "json" }
-      );
-      const items = res.body.items;
-      if (!items || !items[0] || !items[0].items) {
-        continue;
-      }
-      const firstItem = items[0];
-      const body = firstItem.items[firstItem.items.length - 1];
-      // Set the latest version in case it is missing
-      if (!p.version && body.catalogEntry.version) {
-        p.version = body.catalogEntry.version;
-      }
-      p.description = body.catalogEntry.description;
       if (
-        body.catalogEntry.licenseExpression &&
-        body.catalogEntry.licenseExpression !== ""
+        (p.group && p.group.toLowerCase() === "system") ||
+        p.name.toLowerCase().startsWith("system")
       ) {
-        p.license = findLicenseId(body.catalogEntry.licenseExpression);
-      } else if (body.catalogEntry.licenseUrl) {
-        p.license = body.catalogEntry.licenseUrl;
-      }
-      if (body.catalogEntry.projectUrl) {
-        p.repository = { url: body.catalogEntry.projectUrl };
-        p.homepage = {
-          url:
-            "https://www.nuget.org/packages/" +
-            p.group +
-            (p.group !== "" ? "." : "") +
-            p.name +
-            "/" +
-            p.version +
-            "/"
-        };
+        p.license = "http://go.microsoft.com/fwlink/?LinkId=329770";
+      } else if (
+        (p.group && p.group.toLowerCase() === "microsoft") ||
+        p.name.toLowerCase().startsWith("microsoft")
+      ) {
+        p.license =
+          "http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm";
+      } else if (
+        (p.group && p.group.toLowerCase() === "nuget") ||
+        p.name.toLowerCase().startsWith("nuget")
+      ) {
+        p.license = "Apache-2.0";
+      } else {
+        // If there is a version, we can safely use the cache to retrieve the license
+        // See: https://github.com/CycloneDX/cdxgen/issues/352
+        let body = p.version ? metadata_cache[p.group] : undefined;
+        if (!body) {
+          if (DEBUG_MODE) {
+            console.log(`Querying nuget for ${p.name}`);
+          }
+          const res = await cdxgenAgent.get(
+            NUGET_URL +
+              p.group.toLowerCase() +
+              (p.group !== "" ? "." : "") +
+              p.name.toLowerCase() +
+              "/index.json",
+            { responseType: "json" }
+          );
+          const items = res.body.items;
+          if (!items || !items[0] || !items[0].items) {
+            continue;
+          }
+          const firstItem = items[0];
+          // Work backwards to find the body for the matching version
+          body = firstItem.items[firstItem.items.length - 1];
+          if (p.version) {
+            const newBody = firstItem.items
+              .reverse()
+              .filter(
+                (i) => i.catalogEntry && i.catalogEntry.version === p.version
+              );
+            if (newBody && newBody.length) {
+              body = newBody[0];
+            }
+          }
+          metadata_cache[p.group] = body;
+        }
+        // Set the latest version in case it is missing
+        if (!p.version && body.catalogEntry.version) {
+          p.version = body.catalogEntry.version;
+        }
+        p.description = body.catalogEntry.description;
+        if (body.catalogEntry.authors) {
+          p.author = body.catalogEntry.authors.trim();
+        }
+        if (
+          body.catalogEntry.licenseExpression &&
+          body.catalogEntry.licenseExpression !== ""
+        ) {
+          p.license = findLicenseId(body.catalogEntry.licenseExpression);
+        } else if (body.catalogEntry.licenseUrl) {
+          p.license = findLicenseId(body.catalogEntry.licenseUrl);
+        }
+        if (body.catalogEntry.projectUrl) {
+          p.repository = { url: body.catalogEntry.projectUrl };
+          p.homepage = {
+            url:
+              "https://www.nuget.org/packages/" +
+              p.group +
+              (p.group !== "" ? "." : "") +
+              p.name +
+              "/" +
+              p.version +
+              "/"
+          };
+        }
       }
       cdepList.push(p);
     } catch (err) {
