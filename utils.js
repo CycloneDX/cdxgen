@@ -1941,13 +1941,40 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         }
       }
       // Use the latest version if none specified
-      if (
-        !p.version ||
-        p.version.includes("*") ||
-        p.version.includes("<") ||
-        p.version.includes(">")
-      ) {
-        p.version = body.info.version;
+      if (!p.version || !p.version.trim().length) {
+        let versionSpecifiers = undefined;
+        if (p.properties && p.properties.length) {
+          for (const pprop of p.properties) {
+            if (pprop.name === "cdx:pypi:versionSpecifiers") {
+              versionSpecifiers = pprop.value;
+              break;
+            }
+          }
+          if (versionSpecifiers) {
+            versionSpecifiers = versionSpecifiers.replace(/,/g, " ");
+          }
+        } else if (
+          p.version &&
+          (p.version.includes("*") ||
+            p.version.includes("<") ||
+            p.version.includes(">") ||
+            p.version.includes("!"))
+        ) {
+          versionSpecifiers = p.version;
+        }
+        if (versionSpecifiers) {
+          for (const rv of Object.keys(body.releases || {}).reverse()) {
+            if (semver.satisfies(semver.coerce(rv), versionSpecifiers, true)) {
+              p.version = rv;
+              break;
+            }
+          }
+        }
+        // If we have reached here, it means we have not solved the version
+        // So assume latest
+        if (!p.version) {
+          p.version = body.info.version;
+        }
       } else if (p.version !== body.info.version) {
         if (!p.properties) {
           p.properties = [];
@@ -2138,16 +2165,18 @@ async function parseReqFile(reqData, fetchDepsInfo) {
       } else if (l.includes("<") && l.includes(">")) {
         let tmpA = l.split(">");
         let name = tmpA[0].trim().replace(";", "");
-        let version = undefined;
-        const tmpB = tmpA[1].split("<");
-        if (tmpB && tmpB.length) {
-          version = tmpB[tmpB.length - 1];
-        }
+        const versionSpecifiers = l.replace(name, "");
         if (!PYTHON_STD_MODULES.includes(name)) {
           pkgList.push({
             name,
-            version,
-            scope: compScope
+            version: undefined,
+            scope: compScope,
+            properties: [
+              {
+                name: "cdx:pypi:versionSpecifiers",
+                value: versionSpecifiers
+              }
+            ]
           });
         }
       } else if (/[>|[|@]/.test(l)) {
@@ -2157,11 +2186,18 @@ async function parseReqFile(reqData, fetchDepsInfo) {
         }
         if (!tmpA[0].trim().includes(" ")) {
           let name = tmpA[0].trim().replace(";", "");
+          const versionSpecifiers = l.replace(name, "");
           if (!PYTHON_STD_MODULES.includes(name)) {
             pkgList.push({
               name,
-              version: null,
-              scope: compScope
+              version: undefined,
+              scope: compScope,
+              properties: [
+                {
+                  name: "cdx:pypi:versionSpecifiers",
+                  value: versionSpecifiers
+                }
+              ]
             });
           }
         }
@@ -2173,20 +2209,34 @@ async function parseReqFile(reqData, fetchDepsInfo) {
         let tmpA = l.split(/(<|>)/);
         if (tmpA && tmpA.length === 3) {
           let name = tmpA[0].trim().replace(";", "");
+          const versionSpecifiers = l.replace(name, "");
           if (!PYTHON_STD_MODULES.includes(name)) {
             pkgList.push({
               name,
-              version: tmpA[2].replace(";", ""),
-              scope: compScope
+              version: undefined,
+              scope: compScope,
+              properties: [
+                {
+                  name: "cdx:pypi:versionSpecifiers",
+                  value: versionSpecifiers
+                }
+              ]
             });
           }
         } else if (!l.includes(" ")) {
           let name = l.replace(";", "");
+          const versionSpecifiers = l.replace(name, "");
           if (!PYTHON_STD_MODULES.includes(name)) {
             pkgList.push({
               name,
               version: null,
-              scope: compScope
+              scope: compScope,
+              properties: [
+                {
+                  name: "cdx:pypi:versionSpecifiers",
+                  value: versionSpecifiers
+                }
+              ]
             });
           }
         }
@@ -2223,7 +2273,7 @@ const getPyModules = async (src, epkgList) => {
       scope: "required",
       properties: [
         {
-          name: "cdx.atom.versionSpecifiers",
+          name: "cdx:pypi:versionSpecifiers",
           value: p.versionSpecifiers
         }
       ]
