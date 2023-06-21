@@ -87,6 +87,12 @@ const args = require("yargs")
     description: "Listen port",
     default: "9090"
   })
+  .option("install-deps", {
+    type: "boolean",
+    default: true,
+    description:
+      "Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature."
+  })
   .scriptName("cdxgen")
   .version()
   .help("h").argv;
@@ -125,12 +131,11 @@ if (!args.projectName) {
  * multiProject: Boolean to indicate monorepo or multi-module projects
  */
 let options = {
-  dev: true,
   projectType: args.type,
   multiProject: args.recurse,
   output: args.output,
   resolveClass: args.resolveClass,
-  installDeps: true,
+  installDeps: args.installDeps,
   requiredOnly: args.requiredOnly,
   failOnError: args.failOnError,
   noBabel: args.noBabel || args.babel === false,

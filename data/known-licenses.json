@@ -1,0 +1,31 @@
+[
+  { "license": "Apache-2.0", "group": "cloud.google.com", "name": "go" },
+  { "license": "Apache-2.0", "group": "cloud.google.com/go", "name": "*" },
+  { "license": "Apache-2.0", "group": "cuelang.org", "name": "go" },
+  { "license": "MIT", "group": "pack.ag", "name": "amqp" },
+  { "license": "Apache-2.0", "group": "google.golang.org", "name": "*" },
+  { "license": "BSD-3-Clause", "group": "golang.org/x", "name": "*" },
+  {
+    "license": "BSD-3-Clause",
+    "group": "dmitri.shuralyov.com/gpu",
+    "name": "*"
+  },
+  { "license": "Apache-2.0", "group": "contrib.go.opencensus.io", "name": "*" },
+  { "license": "Apache-2.0", "group": "git.apache.org", "name": "*" },
+  { "license": "Apache-2.0", "group": ".", "name": "go.opencensus.io" },
+  { "license": "MIT", "group": "sigs.k8s.io", "name": "*" },
+  { "license": "BSD-3-Clause", "group": "rsc.io", "name": "*" },
+  { "license": "Apache-2.0", "group": "openpitrix.io", "name": "*" },
+  { "license": "BSD-3-Clause", "group": "modernc.org", "name": "*" },
+  { "license": "Apache-2.0", "group": "kubesphere.io", "name": "*" },
+  { "license": "Apache-2.0", "group": "k8s.io", "name": "*" },
+  { "license": "Apache-2.0", "group": "istio.io", "name": "*" },
+  { "license": "MIT", "group": "honnef.co/go", "name": "*" },
+  { "license": "Apache-2.0", "group": ".", "name": "gotest.tools" },
+  { "license": "Apache-2.0", "group": "gopkg.in", "name": "*" },
+  { "license": "Apache-2.0", "group": "code.cloudfoundry.org", "name": "*" },
+  { "license": "BSD-3-Clause", "group": "gonum.org/v1", "name": "*" },
+  { "license": "Apache-2.0", "group": "gomodules.xyz/jsonpatch", "name": "*" },
+  { "license": "MIT", "group": "go.uber.org", "name": "*" },
+  { "license": "MIT", "group": "go.etcd.io", "name": "*" }
+]

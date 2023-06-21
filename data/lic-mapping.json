@@ -22,12 +22,7 @@
   },
   {
     "exp": "0BSD",
-    "names": [
-      "Zero-Clause BSD",
-      "BSD",
-      "BSD License",
-      "BSD-like"
-    ]
+    "names": ["Zero-Clause BSD", "BSD", "BSD License", "BSD-like"]
   },
   {
     "exp": "BSD-2-Clause",
@@ -70,22 +65,15 @@
   },
   {
     "exp": "(CDDL-1.0 OR GPL-2.0-with-classpath-exception)",
-    "names": [
-      "CDDL + GPLv2 with classpath exception",
-      "CDDL/GPLv2+CE"
-    ]
+    "names": ["CDDL + GPLv2 with classpath exception", "CDDL/GPLv2+CE"]
   },
   {
     "exp": "CDDL-1.1",
-    "names": [
-      "CDDL 1.1"
-    ]
+    "names": ["CDDL 1.1"]
   },
   {
     "exp": "(CDDL-1.1 OR GPL-2.0-only)",
-    "names": [
-      "Dual license consisting of the CDDL v1.1 and GPL v2"
-    ]
+    "names": ["Dual license consisting of the CDDL v1.1 and GPL v2"]
   },
   {
     "exp": "EPL-1.0",
@@ -114,15 +102,11 @@
   },
   {
     "exp": "ECL-1.0",
-    "names": [
-      "Educational Community License, Version 1.0"
-    ]
+    "names": ["Educational Community License, Version 1.0"]
   },
   {
     "exp": "ECL-2.0",
-    "names": [
-      "Educational Community License, Version 2.0"
-    ]
+    "names": ["Educational Community License, Version 2.0"]
   },
   {
     "exp": "LGPL-2.0-only",
@@ -261,34 +245,22 @@
   },
   {
     "exp": "MPL-1.1",
-    "names": [
-      "MPL 1.1"
-    ]
+    "names": ["MPL 1.1"]
   },
   {
     "exp": "MPL-2.0",
-    "names": [
-      "MPL 2.0",
-      "Mozilla Public License 2.0"
-    ]
+    "names": ["MPL 2.0", "Mozilla Public License 2.0"]
   },
   {
     "exp": "NetCDF",
-    "names": [
-      "(MIT-style) netCDF C library license"
-    ]
+    "names": ["(MIT-style) netCDF C library license"]
   },
   {
     "exp": "JSON",
-    "names": [
-      "The JSON License",
-      "JSON License"
-    ]
+    "names": ["The JSON License", "JSON License"]
   },
   {
     "exp": "ISC",
-    "names": [
-      "ISC license"
-    ]
+    "names": ["ISC license"]
   }
 ]
