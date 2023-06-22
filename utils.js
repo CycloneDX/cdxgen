@@ -1890,6 +1890,29 @@ const parsePyRequiresDist = function (dist_string) {
 exports.parsePyRequiresDist = parsePyRequiresDist;
 
 /**
+ * Method to mimic pip version solver using node-semver
+ *
+ * @param {Array} versionsList List of version numbers available
+ * @param {*} versionSpecifiers pip version specifier
+ */
+const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
+  versionSpecifiers = versionSpecifiers.replace(/,/g, " ").split(";")[0];
+  // Iterate in the reverse order
+  for (let i = versionsList.length - 1; i > 0; i--) {
+    let rv = versionsList[i];
+    if (semver.satisfies(semver.coerce(rv), versionSpecifiers, true)) {
+      return rv;
+    }
+  }
+  // Let's try to clean and have another go
+  return semver.maxSatisfying(
+    versionsList,
+    semver.clean(versionSpecifiers, { loose: true })
+  );
+};
+exports.guessPypiMatchingVersion = guessPypiMatchingVersion;
+
+/**
  * Method to retrieve metadata for python packages by querying pypi
  *
  * @param {Array} pkgList Package list
@@ -1950,9 +1973,6 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
               break;
             }
           }
-          if (versionSpecifiers) {
-            versionSpecifiers = versionSpecifiers.replace(/,/g, " ");
-          }
         } else if (
           p.version &&
           (p.version.includes("*") ||
@@ -1963,12 +1983,10 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           versionSpecifiers = p.version;
         }
         if (versionSpecifiers) {
-          for (const rv of Object.keys(body.releases || {}).reverse()) {
-            if (semver.satisfies(semver.coerce(rv), versionSpecifiers, true)) {
-              p.version = rv;
-              break;
-            }
-          }
+          p.version = guessPypiMatchingVersion(
+            Object.keys(body.releases || {}),
+            versionSpecifiers
+          );
         }
         // If we have reached here, it means we have not solved the version
         // So assume latest

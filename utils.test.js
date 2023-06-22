@@ -2085,3 +2085,51 @@ test("parse swift deps files", () => {
     repository: { url: "https://github.com/apple/swift-argument-parser.git" }
   });
 });
+
+test("pypi version solver tests", () => {
+  const versionsList = [
+    "1.0.0",
+    "1.0.1",
+    "1.1.0",
+    "1.2.0.dev1+hg.5.b11e5e6f0b0b",
+    "2.0.3",
+    "3.0.12-alpha.12",
+    "4.0.0"
+  ];
+  expect(utils.guessPypiMatchingVersion(versionsList, "<4")).toEqual(
+    "3.0.12-alpha.12"
+  );
+  expect(utils.guessPypiMatchingVersion(versionsList, ">1.0.0 <3.0.0")).toEqual(
+    "2.0.3"
+  );
+  expect(utils.guessPypiMatchingVersion(versionsList, "== 1.0.1")).toEqual(
+    "1.0.1"
+  );
+  expect(utils.guessPypiMatchingVersion(versionsList, "~= 1.0.1")).toEqual(
+    "1.0.1"
+  );
+  expect(
+    utils.guessPypiMatchingVersion(versionsList, ">= 2.0.1, == 2.8.*")
+  ).toEqual(null);
+  expect(
+    utils.guessPypiMatchingVersion(
+      ["2.0.0", "2.0.1", "2.4.0", "2.8.4", "2.9.0", "3.0.1"],
+      ">= 2.0.1, == 2.8.*"
+    )
+  ).toEqual("2.8.4");
+  expect(
+    utils.guessPypiMatchingVersion(
+      versionsList,
+      "== 1.1.0; python_version < '3.8'"
+    )
+  ).toEqual("1.1.0");
+  expect(
+    utils.guessPypiMatchingVersion(versionsList, "<3.6,>1.9,!=1.9.6,<4.0a0")
+  ).toEqual("3.0.12-alpha.12");
+  expect(
+    utils.guessPypiMatchingVersion(versionsList, ">=1.4.2,<2.2,!=1.5.*,!=1.6.*")
+  ).toEqual("2.0.3");
+  expect(utils.guessPypiMatchingVersion(versionsList, ">=1.21.1,<3")).toEqual(
+    "2.0.3"
+  );
+});
