@@ -30,6 +30,10 @@ jobs:
           CI: true
       - uses: actions/checkout@v3
         with:
+          repository: 'scipy/scipy'
+          path: 'repotests/scipy'
+      - uses: actions/checkout@v3
+        with:
           repository: 'psf/black'
           path: 'repotests/black'
       - uses: actions/checkout@v3
@@ -57,6 +61,9 @@ jobs:
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
+          bin/cdxgen -p -r -t python repotests/scipy -o bomresults/bom-scipy.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-scipy.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-scipy.xml --input-format xml --input-version v1_4
           bin/cdxgen -p -r -t python repotests/black -o bomresults/bom-black.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-black.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-black.xml --input-format xml --input-version v1_4
@@ -76,6 +83,9 @@ jobs:
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-jinja.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-jinja.xml --input-format xml --input-version v1_4
 
+          bin/cdxgen --no-install-deps -p -r -t python repotests/scipy -o bomresults/bom-scipy.json
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-scipy.json --input-format json --input-version v1_4
+          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-scipy.xml --input-format xml --input-version v1_4
           bin/cdxgen --no-install-deps -p -r -t python repotests/black -o bomresults/bom-black.json
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-black.json --input-format json --input-version v1_4
           ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-black.xml --input-format xml --input-version v1_4
