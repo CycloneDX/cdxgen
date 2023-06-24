@@ -1,21 +1,87 @@
-const utils = require("./utils");
-const fs = require("fs");
-const ssri = require("ssri");
-const { jest, expect, test } = require("@jest/globals");
+import {
+  parsePyRequiresDist,
+  findLicenseId,
+  parseGradleDep,
+  parseGradleProjects,
+  parseGradleProperties,
+  parseMavenTree,
+  getPyMetadata,
+  parseGoModData,
+  parseGosumData,
+  parseGoListDep,
+  parseGoModWhy,
+  parseGopkgData,
+  parseGoVersionData,
+  parseCargoData,
+  parseCargoTomlData,
+  parseCargoAuditableData,
+  getCratesMetadata,
+  parsePubLockData,
+  parsePubYamlData,
+  getDartMetadata,
+  parseCabalData,
+  parseConanLockData,
+  parseConanData,
+  parseLeiningenData,
+  parseEdnData,
+  parseCljDep,
+  parseLeinDep,
+  parseMixLockData,
+  parseGitHubWorkflowData,
+  parseCsPkgData,
+  parseCsProjData,
+  parseCsProjAssetsData,
+  parseCsPkgLockData,
+  getNugetMetadata,
+  parsePom,
+  getMvnMetadata,
+  getLicenses,
+  parsePkgLock,
+  parseBowerJson,
+  parseNodeShrinkwrap,
+  parseSetupPyFile,
+  parsePnpmLock,
+  yarnLockToIdentMap,
+  parseYarnLock,
+  parseComposerLock,
+  parseGemfileLockData,
+  parseGemspecData,
+  parseReqFile,
+  parsePoetrylockData,
+  parseBdistMetadata,
+  readZipEntry,
+  parsePiplockData,
+  parseKVDep,
+  parseSbtLock,
+  parseNupkg,
+  parseBazelSkyframe,
+  parseBazelBuild,
+  parseHelmYamlData,
+  parseContainerSpecData,
+  parseCloudBuildData,
+  parsePrivadoFile,
+  parseOpenapiSpecData,
+  parseSwiftJsonTree,
+  parseSwiftResolved,
+  guessPypiMatchingVersion
+} from "./utils";
+import { readFileSync } from "fs";
+import { parse } from "ssri";
+import { jest, expect, test } from "@jest/globals";
 
 test("SSRI test", () => {
   // gopkg.lock hash
-  let ss = ssri.parse(
+  let ss = parse(
     "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf"
   );
   expect(ss).toEqual(null);
-  ss = ssri.parse(
+  ss = parse(
     "sha256-2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf"
   );
   expect(ss.sha256[0].digest).toStrictEqual(
     "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf"
   );
-  ss = ssri.parse(
+  ss = parse(
     "sha256-" +
       Buffer.from(
         "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
@@ -28,53 +94,51 @@ test("SSRI test", () => {
 });
 
 test("Parse requires dist string", () => {
-  expect(utils.parsePyRequiresDist("lazy-object-proxy (&gt;=1.4.0)")).toEqual({
+  expect(parsePyRequiresDist("lazy-object-proxy (&gt;=1.4.0)")).toEqual({
     name: "lazy-object-proxy",
     version: "1.4.0"
   });
-  expect(utils.parsePyRequiresDist("wrapt (&lt;1.13,&gt;=1.11)")).toEqual({
+  expect(parsePyRequiresDist("wrapt (&lt;1.13,&gt;=1.11)")).toEqual({
     name: "wrapt",
     version: "1.13"
   });
   expect(
-    utils.parsePyRequiresDist(
+    parsePyRequiresDist(
       'typed-ast (&lt;1.5,&gt;=1.4.0) ; implementation_name == "cpython" and python_version &lt; "3.8"'
     )
   ).toEqual({ name: "typed-ast", version: "1.5" });
-  expect(utils.parsePyRequiresDist("asgiref (&lt;4,&gt;=3.2.10)")).toEqual({
+  expect(parsePyRequiresDist("asgiref (&lt;4,&gt;=3.2.10)")).toEqual({
     name: "asgiref",
     version: "4"
   });
-  expect(utils.parsePyRequiresDist("pytz")).toEqual({
+  expect(parsePyRequiresDist("pytz")).toEqual({
     name: "pytz",
     version: ""
   });
-  expect(utils.parsePyRequiresDist("sqlparse (&gt;=0.2.2)")).toEqual({
+  expect(parsePyRequiresDist("sqlparse (&gt;=0.2.2)")).toEqual({
     name: "sqlparse",
     version: "0.2.2"
   });
   expect(
-    utils.parsePyRequiresDist("argon2-cffi (&gt;=16.1.0) ; extra == 'argon2'")
+    parsePyRequiresDist("argon2-cffi (&gt;=16.1.0) ; extra == 'argon2'")
   ).toEqual({ name: "argon2-cffi", version: "16.1.0" });
-  expect(utils.parsePyRequiresDist("bcrypt ; extra == 'bcrypt'")).toEqual({
+  expect(parsePyRequiresDist("bcrypt ; extra == 'bcrypt'")).toEqual({
     name: "bcrypt",
     version: ""
   });
 });
 
 test("finds license id from name", () => {
-  expect(utils.findLicenseId("Apache License Version 2.0")).toEqual(
-    "Apache-2.0"
+  expect(findLicenseId("Apache License Version 2.0")).toEqual("Apache-2.0");
+  expect(findLicenseId("GNU General Public License (GPL) version 2.0")).toEqual(
+    "GPL-2.0-only"
   );
-  expect(
-    utils.findLicenseId("GNU General Public License (GPL) version 2.0")
-  ).toEqual("GPL-2.0-only");
 });
 
 test("parse gradle dependencies", () => {
-  expect(utils.parseGradleDep(null)).toEqual({});
-  let parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/gradle-dep.out", { encoding: "utf-8" })
+  expect(parseGradleDep(null)).toEqual({});
+  let parsedList = parseGradleDep(
+    readFileSync("./test/gradle-dep.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(33);
   expect(parsedList.dependenciesList.length).toEqual(34);
@@ -87,8 +151,8 @@ test("parse gradle dependencies", () => {
     version: "0.4.25"
   });
 
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-android-dep.out", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-android-dep.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(105);
   expect(parsedList.dependenciesList.length).toEqual(106);
@@ -122,8 +186,8 @@ test("parse gradle dependencies", () => {
       }
     ]
   });
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-out1.dep", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-out1.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(89);
   expect(parsedList.dependenciesList.length).toEqual(90);
@@ -140,8 +204,8 @@ test("parse gradle dependencies", () => {
     ]
   });
 
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-rich1.dep", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-rich1.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(4);
   expect(parsedList.pkgList[parsedList.pkgList.length - 1]).toEqual({
@@ -150,8 +214,8 @@ test("parse gradle dependencies", () => {
     qualifiers: { type: "jar" },
     version: "1.4.5"
   });
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-rich2.dep", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-rich2.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(2);
   expect(parsedList.pkgList).toEqual([
@@ -168,8 +232,8 @@ test("parse gradle dependencies", () => {
       version: "4.5.0"
     }
   ]);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-rich3.dep", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-rich3.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.pkgList).toEqual([
@@ -180,8 +244,8 @@ test("parse gradle dependencies", () => {
       qualifiers: { type: "jar" }
     }
   ]);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-rich4.dep", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-rich4.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.pkgList).toEqual([
@@ -192,62 +256,62 @@ test("parse gradle dependencies", () => {
       qualifiers: { type: "jar" }
     }
   ]);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-rich5.dep", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-rich5.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(67);
   expect(parsedList.dependenciesList.length).toEqual(68);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(20);
   expect(parsedList.dependenciesList.length).toEqual(22);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(34);
   expect(parsedList.dependenciesList.length).toEqual(36);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-s.out", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-s.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(27);
   expect(parsedList.dependenciesList.length).toEqual(29);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-core.out", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-core.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(18);
   expect(parsedList.dependenciesList.length).toEqual(19);
-  parsedList = utils.parseGradleDep(
-    fs.readFileSync("./test/data/gradle-single.out", { encoding: "utf-8" })
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-single.out", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(152);
   expect(parsedList.dependenciesList.length).toEqual(153);
 });
 
 test("parse gradle projects", () => {
-  expect(utils.parseGradleProjects(null)).toEqual({
+  expect(parseGradleProjects(null)).toEqual({
     projects: [],
     rootProject: "root"
   });
-  let retMap = utils.parseGradleProjects(
-    fs.readFileSync("./test/data/gradle-projects.out", { encoding: "utf-8" })
+  let retMap = parseGradleProjects(
+    readFileSync("./test/data/gradle-projects.out", { encoding: "utf-8" })
   );
   expect(retMap.rootProject).toEqual("elasticsearch");
   expect(retMap.projects.length).toEqual(368);
-  retMap = utils.parseGradleProjects(
-    fs.readFileSync("./test/data/gradle-projects1.out", { encoding: "utf-8" })
+  retMap = parseGradleProjects(
+    readFileSync("./test/data/gradle-projects1.out", { encoding: "utf-8" })
   );
   expect(retMap.rootProject).toEqual("elasticsearch");
   expect(retMap.projects.length).toEqual(409);
-  retMap = utils.parseGradleProjects(
-    fs.readFileSync("./test/data/gradle-projects2.out", { encoding: "utf-8" })
+  retMap = parseGradleProjects(
+    readFileSync("./test/data/gradle-projects2.out", { encoding: "utf-8" })
   );
   expect(retMap.rootProject).toEqual("fineract");
   expect(retMap.projects.length).toEqual(22);
 });
 
 test("parse gradle properties", () => {
-  expect(utils.parseGradleProperties(null)).toEqual({
+  expect(parseGradleProperties(null)).toEqual({
     projects: [],
     rootProject: "root",
     metadata: {
@@ -256,8 +320,8 @@ test("parse gradle properties", () => {
       properties: []
     }
   });
-  let retMap = utils.parseGradleProperties(
-    fs.readFileSync("./test/data/gradle-properties.txt", { encoding: "utf-8" })
+  let retMap = parseGradleProperties(
+    readFileSync("./test/data/gradle-properties.txt", { encoding: "utf-8" })
   );
   expect(retMap).toEqual({
     rootProject: "dependency-diff-check",
@@ -286,8 +350,8 @@ test("parse gradle properties", () => {
       ]
     }
   });
-  retMap = utils.parseGradleProperties(
-    fs.readFileSync("./test/data/gradle-properties-single.txt", {
+  retMap = parseGradleProperties(
+    readFileSync("./test/data/gradle-properties-single.txt", {
       encoding: "utf-8"
     })
   );
@@ -310,8 +374,8 @@ test("parse gradle properties", () => {
       ]
     }
   });
-  retMap = utils.parseGradleProperties(
-    fs.readFileSync("./test/data/gradle-properties-single2.txt", {
+  retMap = parseGradleProperties(
+    readFileSync("./test/data/gradle-properties-single2.txt", {
       encoding: "utf-8"
     })
   );
@@ -331,8 +395,8 @@ test("parse gradle properties", () => {
       ]
     }
   });
-  retMap = utils.parseGradleProperties(
-    fs.readFileSync("./test/data/gradle-properties-elastic.txt", {
+  retMap = parseGradleProperties(
+    readFileSync("./test/data/gradle-properties-elastic.txt", {
       encoding: "utf-8"
     })
   );
@@ -341,9 +405,9 @@ test("parse gradle properties", () => {
 });
 
 test("parse maven tree", () => {
-  expect(utils.parseMavenTree(null)).toEqual({});
-  let parsedList = utils.parseMavenTree(
-    fs.readFileSync("./test/data/sample-mvn-tree.txt", { encoding: "utf-8" })
+  expect(parseMavenTree(null)).toEqual({});
+  let parsedList = parseMavenTree(
+    readFileSync("./test/data/sample-mvn-tree.txt", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(61);
   expect(parsedList.dependenciesList.length).toEqual(61);
@@ -377,8 +441,8 @@ test("parse maven tree", () => {
       "pkg:maven/commons-io/commons-io@2.6?type=jar"
     ]
   });
-  parsedList = utils.parseMavenTree(
-    fs.readFileSync("./test/data/mvn-dep-tree-simple.txt", {
+  parsedList = parseMavenTree(
+    readFileSync("./test/data/mvn-dep-tree-simple.txt", {
       encoding: "utf-8"
     })
   );
@@ -457,7 +521,7 @@ test("get maven metadata", async () => {
 */
 
 test("get py metadata", async () => {
-  const data = await utils.getPyMetadata(
+  const data = await getPyMetadata(
     [
       {
         group: "",
@@ -477,7 +541,7 @@ test("get py metadata", async () => {
 }, 240000);
 
 test("parseGoModData", async () => {
-  let dep_list = await utils.parseGoModData(null);
+  let dep_list = await parseGoModData(null);
   expect(dep_list).toEqual([]);
   const gosumMap = {
     "google.golang.org/grpc/v1.21.0":
@@ -490,8 +554,8 @@ test("parseGoModData", async () => {
     "github.com/stretchr/testify/v1.6.1":
       "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg="
   };
-  dep_list = await utils.parseGoModData(
-    fs.readFileSync("./test/gomod/go.mod", { encoding: "utf-8" }),
+  dep_list = await parseGoModData(
+    readFileSync("./test/gomod/go.mod", { encoding: "utf-8" }),
     gosumMap
   );
   expect(dep_list.length).toEqual(4);
@@ -529,10 +593,10 @@ test("parseGoModData", async () => {
 }, 120000);
 
 test("parseGoSumData", async () => {
-  let dep_list = await utils.parseGoModData(null);
+  let dep_list = await parseGoModData(null);
   expect(dep_list).toEqual([]);
-  dep_list = await utils.parseGosumData(
-    fs.readFileSync("./test/gomod/go.sum", { encoding: "utf-8" })
+  dep_list = await parseGosumData(
+    readFileSync("./test/gomod/go.sum", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
@@ -569,8 +633,8 @@ test("parseGoSumData", async () => {
 }, 120000);
 
 test("parse go list dependencies", async () => {
-  let dep_list = await utils.parseGoListDep(
-    fs.readFileSync("./test/data/golist-dep.txt", { encoding: "utf-8" }),
+  let dep_list = await parseGoListDep(
+    readFileSync("./test/data/golist-dep.txt", { encoding: "utf-8" }),
     {}
   );
   expect(dep_list.length).toEqual(4);
@@ -593,22 +657,22 @@ test("parse go list dependencies", async () => {
 });
 
 test("parse go mod why dependencies", () => {
-  let pkg_name = utils.parseGoModWhy(
-    fs.readFileSync("./test/data/gomodwhy.txt", { encoding: "utf-8" })
+  let pkg_name = parseGoModWhy(
+    readFileSync("./test/data/gomodwhy.txt", { encoding: "utf-8" })
   );
   expect(pkg_name).toEqual("github.com/mailgun/mailgun-go/v4");
-  pkg_name = utils.parseGoModWhy(
-    fs.readFileSync("./test/data/gomodwhynot.txt", { encoding: "utf-8" })
+  pkg_name = parseGoModWhy(
+    readFileSync("./test/data/gomodwhynot.txt", { encoding: "utf-8" })
   );
   expect(pkg_name).toBeUndefined();
 });
 
 test("parseGopkgData", async () => {
   jest.setTimeout(120000);
-  let dep_list = await utils.parseGopkgData(null);
+  let dep_list = await parseGopkgData(null);
   expect(dep_list).toEqual([]);
-  dep_list = await utils.parseGopkgData(
-    fs.readFileSync("./test/gopkg/Gopkg.lock", { encoding: "utf-8" })
+  dep_list = await parseGopkgData(
+    readFileSync("./test/gopkg/Gopkg.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(36);
   expect(dep_list[0]).toEqual({
@@ -623,8 +687,8 @@ test("parseGopkgData", async () => {
 });
 
 test("parse go version data", async () => {
-  let dep_list = await utils.parseGoVersionData(
-    fs.readFileSync("./test/data/goversion.txt", { encoding: "utf-8" }),
+  let dep_list = await parseGoVersionData(
+    readFileSync("./test/data/goversion.txt", { encoding: "utf-8" }),
     {}
   );
   expect(dep_list.length).toEqual(125);
@@ -635,8 +699,8 @@ test("parse go version data", async () => {
     _integrity: "",
     license: undefined
   });
-  dep_list = await utils.parseGoVersionData(
-    fs.readFileSync("./test/data/goversion2.txt", { encoding: "utf-8" }),
+  dep_list = await parseGoVersionData(
+    readFileSync("./test/data/goversion2.txt", { encoding: "utf-8" }),
     {}
   );
   expect(dep_list.length).toEqual(149);
@@ -650,9 +714,9 @@ test("parse go version data", async () => {
 });
 
 test("parse cargo lock", async () => {
-  expect(await utils.parseCargoData(null)).toEqual([]);
-  let dep_list = await utils.parseCargoData(
-    fs.readFileSync("./test/Cargo.lock", { encoding: "utf-8" })
+  expect(await parseCargoData(null)).toEqual([]);
+  let dep_list = await parseCargoData(
+    readFileSync("./test/Cargo.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(224);
   expect(dep_list[0]).toEqual({
@@ -662,8 +726,8 @@ test("parse cargo lock", async () => {
     _integrity:
       "sha384-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a"
   });
-  dep_list = await utils.parseCargoData(
-    fs.readFileSync("./test/data/Cargom.lock", { encoding: "utf-8" })
+  dep_list = await parseCargoData(
+    readFileSync("./test/data/Cargom.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(242);
   expect(dep_list[0]).toEqual({
@@ -676,9 +740,9 @@ test("parse cargo lock", async () => {
 });
 
 test("parse cargo toml", async () => {
-  expect(await utils.parseCargoTomlData(null)).toEqual([]);
-  let dep_list = await utils.parseCargoTomlData(
-    fs.readFileSync("./test/data/Cargo1.toml", { encoding: "utf-8" })
+  expect(await parseCargoTomlData(null)).toEqual([]);
+  let dep_list = await parseCargoTomlData(
+    readFileSync("./test/data/Cargo1.toml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
   expect(dep_list).toEqual([
@@ -687,8 +751,8 @@ test("parse cargo toml", async () => {
     { name: "compiler_builtins", version: "0.1.0" },
     { name: "cfg-if", version: "0.1.8" }
   ]);
-  dep_list = await utils.parseCargoTomlData(
-    fs.readFileSync("./test/data/Cargo2.toml", { encoding: "utf-8" })
+  dep_list = await parseCargoTomlData(
+    readFileSync("./test/data/Cargo2.toml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list).toEqual([
@@ -702,9 +766,9 @@ test("parse cargo toml", async () => {
 });
 
 test("parse cargo auditable data", async () => {
-  expect(await utils.parseCargoAuditableData(null)).toEqual([]);
-  let dep_list = await utils.parseCargoAuditableData(
-    fs.readFileSync("./test/data/cargo-auditable.txt", { encoding: "utf-8" })
+  expect(await parseCargoAuditableData(null)).toEqual([]);
+  let dep_list = await parseCargoAuditableData(
+    readFileSync("./test/data/cargo-auditable.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(32);
   expect(dep_list[0]).toEqual({
@@ -715,7 +779,7 @@ test("parse cargo auditable data", async () => {
 });
 
 test("get crates metadata", async () => {
-  const dep_list = await utils.getCratesMetadata([
+  const dep_list = await getCratesMetadata([
     {
       group: "",
       name: "abscissa_core",
@@ -742,17 +806,17 @@ test("get crates metadata", async () => {
 });
 
 test("parse pub lock", async () => {
-  expect(await utils.parsePubLockData(null)).toEqual([]);
-  let dep_list = await utils.parsePubLockData(
-    fs.readFileSync("./test/data/pubspec.lock", { encoding: "utf-8" })
+  expect(await parsePubLockData(null)).toEqual([]);
+  let dep_list = await parsePubLockData(
+    readFileSync("./test/data/pubspec.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(26);
   expect(dep_list[0]).toEqual({
     name: "async",
     version: "2.8.2"
   });
-  dep_list = await utils.parsePubYamlData(
-    fs.readFileSync("./test/data/pubspec.yaml", { encoding: "utf-8" })
+  dep_list = await parsePubYamlData(
+    readFileSync("./test/data/pubspec.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -767,7 +831,7 @@ test("parse pub lock", async () => {
 });
 
 test("get dart metadata", async () => {
-  const dep_list = await utils.getDartMetadata([
+  const dep_list = await getDartMetadata([
     {
       group: "",
       name: "async",
@@ -789,17 +853,17 @@ test("get dart metadata", async () => {
 }, 120000);
 
 test("parse cabal freeze", async () => {
-  expect(await utils.parseCabalData(null)).toEqual([]);
-  let dep_list = await utils.parseCabalData(
-    fs.readFileSync("./test/data/cabal.project.freeze", { encoding: "utf-8" })
+  expect(await parseCabalData(null)).toEqual([]);
+  let dep_list = await parseCabalData(
+    readFileSync("./test/data/cabal.project.freeze", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(24);
   expect(dep_list[0]).toEqual({
     name: "ansi-terminal",
     version: "0.11.3"
   });
-  dep_list = await utils.parseCabalData(
-    fs.readFileSync("./test/data/cabal-2.project.freeze", { encoding: "utf-8" })
+  dep_list = await parseCabalData(
+    readFileSync("./test/data/cabal-2.project.freeze", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(366);
   expect(dep_list[0]).toEqual({
@@ -809,9 +873,9 @@ test("parse cabal freeze", async () => {
 });
 
 test("parse conan data", async () => {
-  expect(await utils.parseConanLockData(null)).toEqual([]);
-  let dep_list = await utils.parseConanLockData(
-    fs.readFileSync("./test/data/conan.lock", { encoding: "utf-8" })
+  expect(await parseConanLockData(null)).toEqual([]);
+  let dep_list = await parseConanLockData(
+    readFileSync("./test/data/conan.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -819,8 +883,8 @@ test("parse conan data", async () => {
     version: "1.4.4"
   });
 
-  dep_list = await utils.parseConanData(
-    fs.readFileSync("./test/data/conanfile.txt", { encoding: "utf-8" })
+  dep_list = await parseConanData(
+    readFileSync("./test/data/conanfile.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -830,9 +894,9 @@ test("parse conan data", async () => {
 });
 
 test("parse clojure data", () => {
-  expect(utils.parseLeiningenData(null)).toEqual([]);
-  let dep_list = utils.parseLeiningenData(
-    fs.readFileSync("./test/data/project.clj", { encoding: "utf-8" })
+  expect(parseLeiningenData(null)).toEqual([]);
+  let dep_list = parseLeiningenData(
+    readFileSync("./test/data/project.clj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(14);
   expect(dep_list[0]).toEqual({
@@ -840,8 +904,8 @@ test("parse clojure data", () => {
     name: "leiningen-core",
     version: "2.9.9-SNAPSHOT"
   });
-  dep_list = utils.parseLeiningenData(
-    fs.readFileSync("./test/data/project.clj.1", { encoding: "utf-8" })
+  dep_list = parseLeiningenData(
+    readFileSync("./test/data/project.clj.1", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(17);
   expect(dep_list[0]).toEqual({
@@ -849,8 +913,8 @@ test("parse clojure data", () => {
     name: "clojure",
     version: "1.9.0"
   });
-  dep_list = utils.parseLeiningenData(
-    fs.readFileSync("./test/data/project.clj.2", { encoding: "utf-8" })
+  dep_list = parseLeiningenData(
+    readFileSync("./test/data/project.clj.2", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(49);
   expect(dep_list[0]).toEqual({
@@ -858,8 +922,8 @@ test("parse clojure data", () => {
     name: "bidi",
     version: "2.1.6"
   });
-  dep_list = utils.parseEdnData(
-    fs.readFileSync("./test/data/deps.edn", { encoding: "utf-8" })
+  dep_list = parseEdnData(
+    readFileSync("./test/data/deps.edn", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(20);
   expect(dep_list[0]).toEqual({
@@ -867,8 +931,8 @@ test("parse clojure data", () => {
     name: "clojure",
     version: "1.10.3"
   });
-  dep_list = utils.parseEdnData(
-    fs.readFileSync("./test/data/deps.edn.1", { encoding: "utf-8" })
+  dep_list = parseEdnData(
+    readFileSync("./test/data/deps.edn.1", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(11);
   expect(dep_list[0]).toEqual({
@@ -876,8 +940,8 @@ test("parse clojure data", () => {
     name: "clojure",
     version: "1.11.0-beta1"
   });
-  dep_list = utils.parseEdnData(
-    fs.readFileSync("./test/data/deps.edn.2", { encoding: "utf-8" })
+  dep_list = parseEdnData(
+    readFileSync("./test/data/deps.edn.2", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
@@ -885,8 +949,8 @@ test("parse clojure data", () => {
     name: "pomegranate",
     version: "1.2.1"
   });
-  dep_list = utils.parseCljDep(
-    fs.readFileSync("./test/data/clj-tree.txt", { encoding: "utf-8" })
+  dep_list = parseCljDep(
+    readFileSync("./test/data/clj-tree.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(253);
   expect(dep_list[0]).toEqual({
@@ -895,8 +959,8 @@ test("parse clojure data", () => {
     version: "1.70"
   });
 
-  dep_list = utils.parseLeinDep(
-    fs.readFileSync("./test/data/lein-tree.txt", { encoding: "utf-8" })
+  dep_list = parseLeinDep(
+    readFileSync("./test/data/lein-tree.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(47);
   expect(dep_list[0]).toEqual({
@@ -907,17 +971,17 @@ test("parse clojure data", () => {
 });
 
 test("parse mix lock data", async () => {
-  expect(await utils.parseMixLockData(null)).toEqual([]);
-  let dep_list = await utils.parseMixLockData(
-    fs.readFileSync("./test/data/mix.lock", { encoding: "utf-8" })
+  expect(await parseMixLockData(null)).toEqual([]);
+  let dep_list = await parseMixLockData(
+    readFileSync("./test/data/mix.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(16);
   expect(dep_list[0]).toEqual({
     name: "absinthe",
     version: "1.7.0"
   });
-  dep_list = await utils.parseMixLockData(
-    fs.readFileSync("./test/data/mix.lock.1", { encoding: "utf-8" })
+  dep_list = await parseMixLockData(
+    readFileSync("./test/data/mix.lock.1", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(23);
   expect(dep_list[0]).toEqual({
@@ -927,9 +991,9 @@ test("parse mix lock data", async () => {
 });
 
 test("parse github actions workflow data", async () => {
-  expect(await utils.parseGitHubWorkflowData(null)).toEqual([]);
-  let dep_list = await utils.parseGitHubWorkflowData(
-    fs.readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
+  expect(await parseGitHubWorkflowData(null)).toEqual([]);
+  let dep_list = await parseGitHubWorkflowData(
+    readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -937,8 +1001,8 @@ test("parse github actions workflow data", async () => {
     name: "checkout",
     version: "v3"
   });
-  dep_list = await utils.parseGitHubWorkflowData(
-    fs.readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
+  dep_list = await parseGitHubWorkflowData(
+    readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
@@ -946,8 +1010,8 @@ test("parse github actions workflow data", async () => {
     name: "checkout",
     version: "v3"
   });
-  dep_list = await utils.parseGitHubWorkflowData(
-    fs.readFileSync("./.github/workflows/app-release.yml", {
+  dep_list = await parseGitHubWorkflowData(
+    readFileSync("./.github/workflows/app-release.yml", {
       encoding: "utf-8"
     })
   );
@@ -955,9 +1019,9 @@ test("parse github actions workflow data", async () => {
 });
 
 test("parse cs pkg data", async () => {
-  expect(await utils.parseCsPkgData(null)).toEqual([]);
-  const dep_list = await utils.parseCsPkgData(
-    fs.readFileSync("./test/data/packages.config", { encoding: "utf-8" })
+  expect(await parseCsPkgData(null)).toEqual([]);
+  const dep_list = await parseCsPkgData(
+    readFileSync("./test/data/packages.config", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(21);
   expect(dep_list[0]).toEqual({
@@ -968,9 +1032,9 @@ test("parse cs pkg data", async () => {
 });
 
 test("parse cs pkg data 2", async () => {
-  expect(await utils.parseCsPkgData(null)).toEqual([]);
-  const dep_list = await utils.parseCsPkgData(
-    fs.readFileSync("./test/data/packages2.config", { encoding: "utf-8" })
+  expect(await parseCsPkgData(null)).toEqual([]);
+  const dep_list = await parseCsPkgData(
+    readFileSync("./test/data/packages2.config", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -981,9 +1045,9 @@ test("parse cs pkg data 2", async () => {
 });
 
 test("parse cs proj", async () => {
-  expect(await utils.parseCsProjData(null)).toEqual([]);
-  const dep_list = await utils.parseCsProjData(
-    fs.readFileSync("./test/sample.csproj", { encoding: "utf-8" })
+  expect(await parseCsProjData(null)).toEqual([]);
+  const dep_list = await parseCsProjData(
+    readFileSync("./test/sample.csproj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
@@ -994,9 +1058,9 @@ test("parse cs proj", async () => {
 });
 
 test("parse project.assets.json", async () => {
-  expect(await utils.parseCsProjAssetsData(null)).toEqual([]);
-  const dep_list = await utils.parseCsProjAssetsData(
-    fs.readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
+  expect(await parseCsProjAssetsData(null)).toEqual([]);
+  const dep_list = await parseCsProjAssetsData(
+    readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(142);
   expect(dep_list[0]).toEqual({
@@ -1009,9 +1073,9 @@ test("parse project.assets.json", async () => {
 });
 
 test("parse packages.lock.json", async () => {
-  expect(await utils.parseCsPkgLockData(null)).toEqual([]);
-  const dep_list = await utils.parseCsPkgLockData(
-    fs.readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" })
+  expect(await parseCsPkgLockData(null)).toEqual([]);
+  const dep_list = await parseCsPkgLockData(
+    readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(14);
   expect(dep_list[0]).toEqual({
@@ -1022,9 +1086,9 @@ test("parse packages.lock.json", async () => {
 });
 
 test("parse .net cs proj", async () => {
-  expect(await utils.parseCsProjData(null)).toEqual([]);
-  const dep_list = await utils.parseCsProjData(
-    fs.readFileSync("./test/data/sample-dotnet.csproj", { encoding: "utf-8" })
+  expect(await parseCsProjData(null)).toEqual([]);
+  const dep_list = await parseCsProjData(
+    readFileSync("./test/data/sample-dotnet.csproj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(19);
   expect(dep_list[0]).toEqual({
@@ -1036,7 +1100,7 @@ test("parse .net cs proj", async () => {
 
 test("get nget metadata", async () => {
   jest.setTimeout(240000);
-  const dep_list = await utils.getNugetMetadata([
+  const dep_list = await getNugetMetadata([
     {
       group: "",
       name: "Castle.Core",
@@ -1061,13 +1125,13 @@ test("get nget metadata", async () => {
 });
 
 test("parsePomFile", () => {
-  const data = utils.parsePom("./test/pom.xml");
+  const data = parsePom("./test/pom.xml");
   expect(data.length).toEqual(13);
 });
 
 test("parsePomMetadata", async () => {
-  const deps = utils.parsePom("./test/pom.xml");
-  const data = await utils.getMvnMetadata(deps);
+  const deps = parsePom("./test/pom.xml");
+  const data = await getMvnMetadata(deps);
   expect(data.length).toEqual(deps.length);
 });
 /*
@@ -1142,7 +1206,7 @@ test("get go pkg license", async () => {
 */
 
 test("get licenses", () => {
-  let licenses = utils.getLicenses({ license: "MIT" });
+  let licenses = getLicenses({ license: "MIT" });
   expect(licenses).toEqual([
     {
       license: {
@@ -1152,7 +1216,7 @@ test("get licenses", () => {
     }
   ]);
 
-  licenses = utils.getLicenses({ license: ["MIT", "GPL-3.0-or-later"] });
+  licenses = getLicenses({ license: ["MIT", "GPL-3.0-or-later"] });
   expect(licenses).toEqual([
     {
       license: {
@@ -1168,7 +1232,7 @@ test("get licenses", () => {
     }
   ]);
 
-  licenses = utils.getLicenses({
+  licenses = getLicenses({
     license: {
       id: "MIT",
       url: "https://opensource.org/licenses/MIT"
@@ -1185,28 +1249,28 @@ test("get licenses", () => {
 });
 
 test("parsePkgLock", async () => {
-  let parsedList = await utils.parsePkgLock("./test/package-lock.json");
+  let parsedList = await parsePkgLock("./test/package-lock.json");
   let deps = parsedList.pkgList;
   expect(deps.length).toEqual(760);
   expect(deps[1]._integrity).toEqual(
     "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
   );
   expect(parsedList.dependenciesList.length).toEqual(621);
-  parsedList = await utils.parsePkgLock("./test/data/package-lock-v1.json");
+  parsedList = await parsePkgLock("./test/data/package-lock-v1.json");
   deps = parsedList.pkgList;
   expect(deps.length).toEqual(639);
   expect(deps[1]._integrity).toEqual(
     "sha512-/r5HiDwOXTjucbBYkrTMpzWQAwil9MH7zSEfKH+RWWZv27r4vDiUd2FiBJItyQoPThLPxaf82IO6gCXyJR0ZnQ=="
   );
   expect(parsedList.dependenciesList.length).toEqual(572);
-  parsedList = await utils.parsePkgLock("./test/data/package-lock2.json");
+  parsedList = await parsePkgLock("./test/data/package-lock2.json");
   deps = parsedList.pkgList;
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
     "bom-ref": "pkg:application/MyProject",
     name: "MyProject"
   });
-  parsedList = await utils.parsePkgLock("./test/data/package-lock-v2.json");
+  parsedList = await parsePkgLock("./test/data/package-lock-v2.json");
   deps = parsedList.pkgList;
   expect(deps.length).toEqual(1467);
   expect(parsedList.dependenciesList.length).toEqual(1280);
@@ -1218,7 +1282,7 @@ test("parsePkgLock", async () => {
     version: "2.0.0"
   });
   expect(deps[deps.length - 1].name).toEqual("zone.js");
-  parsedList = await utils.parsePkgLock("./test/data/package-lock-v3.json");
+  parsedList = await parsePkgLock("./test/data/package-lock-v3.json");
   deps = parsedList.pkgList;
   expect(deps.length).toEqual(879);
   expect(parsedList.dependenciesList.length).toEqual(879);
@@ -1233,13 +1297,13 @@ test("parsePkgLock", async () => {
 });
 
 test("parseBowerJson", async () => {
-  const deps = await utils.parseBowerJson("./test/data/bower.json");
+  const deps = await parseBowerJson("./test/data/bower.json");
   expect(deps.length).toEqual(1);
   expect(deps[0].name).toEqual("jquery");
 });
 
 test("parseNodeShrinkwrap", async () => {
-  const deps = await utils.parseNodeShrinkwrap("./test/shrinkwrap-deps.json");
+  const deps = await parseNodeShrinkwrap("./test/shrinkwrap-deps.json");
   expect(deps.length).toEqual(496);
   expect(deps[0]._integrity).toEqual(
     "sha512-a9gxpmdXtZEInkCSHUJDLHZVBgb1QS0jhss4cPP93EW7s+uC5bikET2twEF3KV+7rDblJcmNvTR7VJejqd2C2g=="
@@ -1247,32 +1311,32 @@ test("parseNodeShrinkwrap", async () => {
 });
 
 test("parseSetupPyFile", async () => {
-  let deps = await utils.parseSetupPyFile(`install_requires=[
+  let deps = await parseSetupPyFile(`install_requires=[
     'colorama>=0.4.3',
     'libsast>=1.0.3',
 ],`);
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
 
-  deps = await utils.parseSetupPyFile(
+  deps = await parseSetupPyFile(
     `install_requires=['colorama>=0.4.3','libsast>=1.0.3',],`
   );
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
 
-  deps = await utils.parseSetupPyFile(
+  deps = await parseSetupPyFile(
     `install_requires=['colorama>=0.4.3','libsast>=1.0.3']`
   );
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
 
-  deps = await utils.parseSetupPyFile(
+  deps = await parseSetupPyFile(
     `install_requires=['colorama>=0.4.3', 'libsast>=1.0.3']`
   );
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
 
-  deps = await utils.parseSetupPyFile(`install_requires=[
+  deps = await parseSetupPyFile(`install_requires=[
 'colorama>=0.4.3',
 'libsast>=1.0.3',
 ]`);
@@ -1281,7 +1345,7 @@ test("parseSetupPyFile", async () => {
 });
 
 test("parsePnpmLock", async () => {
-  let parsedList = await utils.parsePnpmLock("./test/pnpm-lock.yaml");
+  let parsedList = await parsePnpmLock("./test/pnpm-lock.yaml");
   expect(parsedList.pkgList.length).toEqual(1610);
   expect(parsedList.dependenciesList.length).toEqual(1610);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1298,7 +1362,7 @@ test("parsePnpmLock", async () => {
       }
     ]
   });
-  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock.yaml");
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock.yaml");
   expect(parsedList.pkgList.length).toEqual(308);
   expect(parsedList.dependenciesList.length).toEqual(308);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1315,7 +1379,7 @@ test("parsePnpmLock", async () => {
       }
     ]
   });
-  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock2.yaml");
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock2.yaml");
   expect(parsedList.pkgList.length).toEqual(7);
   expect(parsedList.dependenciesList.length).toEqual(7);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1336,7 +1400,7 @@ test("parsePnpmLock", async () => {
       "pkg:npm/supports-color@2.0.0"
     ]
   });
-  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock3.yaml");
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock3.yaml");
   expect(parsedList.pkgList.length).toEqual(448);
   expect(parsedList.dependenciesList.length).toEqual(448);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1353,10 +1417,10 @@ test("parsePnpmLock", async () => {
     dependsOn: ["pkg:npm/@nodelib/fs.scandir@2.1.5", "pkg:npm/fastq@1.13.0"]
   });
 
-  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock4.yaml");
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock4.yaml");
   expect(parsedList.pkgList.length).toEqual(1);
 
-  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock6.yaml");
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock6.yaml");
   expect(parsedList.pkgList.length).toEqual(195);
   expect(parsedList.dependenciesList.length).toEqual(195);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1377,7 +1441,7 @@ test("parsePnpmLock", async () => {
       "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
     properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6.yaml" }]
   });
-  parsedList = await utils.parsePnpmLock("./test/data/pnpm-lock6a.yaml");
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock6a.yaml");
   expect(parsedList.pkgList.length).toEqual(229);
   expect(parsedList.dependenciesList.length).toEqual(229);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1392,11 +1456,9 @@ test("parsePnpmLock", async () => {
 });
 
 test("parseYarnLock", async () => {
-  let identMap = utils.yarnLockToIdentMap(
-    fs.readFileSync("./test/yarn.lock", "utf8")
-  );
+  let identMap = yarnLockToIdentMap(readFileSync("./test/yarn.lock", "utf8"));
   expect(Object.keys(identMap).length).toEqual(62);
-  let parsedList = await utils.parseYarnLock("./test/yarn.lock");
+  let parsedList = await parseYarnLock("./test/yarn.lock");
   expect(parsedList.pkgList.length).toEqual(56);
   expect(parsedList.pkgList[0]).toEqual({
     group: "",
@@ -1411,11 +1473,11 @@ test("parseYarnLock", async () => {
     ]
   });
   expect(parsedList.dependenciesList.length).toEqual(56);
-  identMap = utils.yarnLockToIdentMap(
-    fs.readFileSync("./test/data/yarn_locks/yarn.lock", "utf8")
+  identMap = yarnLockToIdentMap(
+    readFileSync("./test/data/yarn_locks/yarn.lock", "utf8")
   );
   expect(Object.keys(identMap).length).toEqual(2566);
-  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn.lock");
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn.lock");
   expect(parsedList.pkgList.length).toEqual(2029);
   expect(parsedList.dependenciesList.length).toEqual(2029);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1436,9 +1498,7 @@ test("parseYarnLock", async () => {
     expect(d.version).toBeDefined();
   });
 
-  parsedList = await utils.parseYarnLock(
-    "./test/data/yarn_locks/yarn-multi.lock"
-  );
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-multi.lock");
   expect(parsedList.pkgList.length).toEqual(1909);
   expect(parsedList.dependenciesList.length).toEqual(1909);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1455,9 +1515,7 @@ test("parseYarnLock", async () => {
     ]
   });
 
-  parsedList = await utils.parseYarnLock(
-    "./test/data/yarn_locks/yarn-light.lock"
-  );
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-light.lock");
   expect(parsedList.pkgList.length).toEqual(315);
   expect(parsedList.dependenciesList.length).toEqual(315);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1474,7 +1532,7 @@ test("parseYarnLock", async () => {
     ]
   });
 
-  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn3.lock");
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn3.lock");
   expect(parsedList.pkgList.length).toEqual(5);
   expect(parsedList.dependenciesList.length).toEqual(5);
   expect(parsedList.pkgList[1]).toEqual({
@@ -1491,7 +1549,7 @@ test("parseYarnLock", async () => {
     ]
   });
 
-  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
   expect(parsedList.pkgList.length).toEqual(1090);
   expect(parsedList.dependenciesList.length).toEqual(1088);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1507,7 +1565,7 @@ test("parseYarnLock", async () => {
       }
     ]
   });
-  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
   expect(parsedList.pkgList.length).toEqual(325);
   expect(parsedList.dependenciesList.length).toEqual(323);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1523,10 +1581,10 @@ test("parseYarnLock", async () => {
       }
     ]
   });
-  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn4.lock");
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn4.lock");
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.dependenciesList.length).toEqual(1);
-  parsedList = await utils.parseYarnLock("./test/data/yarn_locks/yarn-at.lock");
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-at.lock");
   expect(parsedList.pkgList.length).toEqual(4);
   expect(parsedList.dependenciesList.length).toEqual(4);
   expect(parsedList.pkgList[0]).toEqual({
@@ -1542,7 +1600,7 @@ test("parseYarnLock", async () => {
 });
 
 test("parseComposerLock", () => {
-  let deps = utils.parseComposerLock("./test/data/composer.lock");
+  let deps = parseComposerLock("./test/data/composer.lock");
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
     group: "quickbooks",
@@ -1564,7 +1622,7 @@ test("parseComposerLock", () => {
     ]
   });
 
-  deps = utils.parseComposerLock("./test/data/composer-2.lock");
+  deps = parseComposerLock("./test/data/composer-2.lock");
   expect(deps.length).toEqual(73);
   expect(deps[0]).toEqual({
     group: "amphp",
@@ -1586,7 +1644,7 @@ test("parseComposerLock", () => {
     ]
   });
 
-  deps = utils.parseComposerLock("./test/data/composer-3.lock");
+  deps = parseComposerLock("./test/data/composer-3.lock");
   expect(deps.length).toEqual(62);
   expect(deps[0]).toEqual({
     group: "amphp",
@@ -1605,8 +1663,8 @@ test("parseComposerLock", () => {
 });
 
 test("parseGemfileLockData", async () => {
-  let deps = await utils.parseGemfileLockData(
-    fs.readFileSync("./test/data/Gemfile.lock", { encoding: "utf-8" })
+  let deps = await parseGemfileLockData(
+    readFileSync("./test/data/Gemfile.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(140);
   expect(deps[0]).toEqual({
@@ -1616,8 +1674,8 @@ test("parseGemfileLockData", async () => {
 });
 
 test("parseGemspecData", async () => {
-  let deps = await utils.parseGemspecData(
-    fs.readFileSync("./test/data/xmlrpc.gemspec", { encoding: "utf-8" })
+  let deps = await parseGemspecData(
+    readFileSync("./test/data/xmlrpc.gemspec", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
@@ -1629,15 +1687,15 @@ test("parseGemspecData", async () => {
 });
 
 test("parse requirements.txt", async () => {
-  let deps = await utils.parseReqFile(
-    fs.readFileSync("./test/data/requirements.comments.txt", {
+  let deps = await parseReqFile(
+    readFileSync("./test/data/requirements.comments.txt", {
       encoding: "utf-8"
     }),
     false
   );
   expect(deps.length).toEqual(31);
-  deps = await utils.parseReqFile(
-    fs.readFileSync("./test/data/requirements.freeze.txt", {
+  deps = await parseReqFile(
+    readFileSync("./test/data/requirements.freeze.txt", {
       encoding: "utf-8"
     }),
     false
@@ -1652,23 +1710,23 @@ test("parse requirements.txt", async () => {
 
 test("parse poetry.lock", async () => {
   jest.setTimeout(120000);
-  let deps = await utils.parsePoetrylockData(
-    fs.readFileSync("./test/data/poetry.lock", { encoding: "utf-8" })
+  let deps = await parsePoetrylockData(
+    readFileSync("./test/data/poetry.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(31);
-  deps = await utils.parsePoetrylockData(
-    fs.readFileSync("./test/data/poetry1.lock", { encoding: "utf-8" })
+  deps = await parsePoetrylockData(
+    readFileSync("./test/data/poetry1.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(67);
-  deps = await utils.parsePoetrylockData(
-    fs.readFileSync("./test/data/poetry-cpggen.lock", { encoding: "utf-8" })
+  deps = await parsePoetrylockData(
+    readFileSync("./test/data/poetry-cpggen.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(68);
 });
 
 test("parse wheel metadata", () => {
-  let deps = utils.parseBdistMetadata(
-    fs.readFileSync("./test/data/METADATA", { encoding: "utf-8" })
+  let deps = parseBdistMetadata(
+    readFileSync("./test/data/METADATA", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
@@ -1679,8 +1737,8 @@ test("parse wheel metadata", () => {
     homepage: { url: "https://github.com/adrienverge/yamllint" },
     repository: { url: "https://github.com/adrienverge/yamllint" }
   });
-  deps = utils.parseBdistMetadata(
-    fs.readFileSync("./test/data/mercurial-5.5.2-py3.8.egg-info", {
+  deps = parseBdistMetadata(
+    readFileSync("./test/data/mercurial-5.5.2-py3.8.egg-info", {
       encoding: "utf-8"
     })
   );
@@ -1696,12 +1754,12 @@ test("parse wheel metadata", () => {
 });
 
 test("parse wheel", async () => {
-  let metadata = await utils.readZipEntry(
+  let metadata = await readZipEntry(
     "./test/data/appthreat_depscan-2.0.2-py3-none-any.whl",
     "METADATA"
   );
   expect(metadata);
-  const parsed = utils.parseBdistMetadata(metadata);
+  const parsed = parseBdistMetadata(metadata);
   expect(parsed[0]).toEqual({
     version: "2.0.2",
     name: "appthreat-depscan",
@@ -1714,55 +1772,53 @@ test("parse wheel", async () => {
 
 test("parse pipfile.lock with hashes", async () => {
   jest.setTimeout(120000);
-  let deps = await utils.parsePiplockData(
-    JSON.parse(
-      fs.readFileSync("./test/data/Pipfile.lock", { encoding: "utf-8" })
-    )
+  let deps = await parsePiplockData(
+    JSON.parse(readFileSync("./test/data/Pipfile.lock", { encoding: "utf-8" }))
   );
   expect(deps.length).toEqual(46);
 });
 
 test("parse scala sbt list", async () => {
-  let deps = utils.parseKVDep(
-    fs.readFileSync("./test/data/sbt-dl.list", { encoding: "utf-8" })
+  let deps = parseKVDep(
+    readFileSync("./test/data/sbt-dl.list", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(57);
-  deps = utils.parseKVDep(
-    fs.readFileSync("./test/data/atom-sbt-list.txt", { encoding: "utf-8" })
+  deps = parseKVDep(
+    readFileSync("./test/data/atom-sbt-list.txt", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(117);
 });
 
 test("parse scala sbt lock", async () => {
-  let deps = utils.parseSbtLock("./test/data/build.sbt.lock");
+  let deps = parseSbtLock("./test/data/build.sbt.lock");
   expect(deps.length).toEqual(117);
 });
 
 test("parse nupkg file", async () => {
-  let deps = await utils.parseNupkg("./test/data/jquery.3.6.0.nupkg");
+  let deps = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
   expect(deps.length).toEqual(1);
   expect(deps[0].name).toEqual("jQuery");
 });
 
 test("parse bazel skyframe", () => {
-  let deps = utils.parseBazelSkyframe(
-    fs.readFileSync("./test/data/bazel/bazel-state.txt", { encoding: "utf-8" })
+  let deps = parseBazelSkyframe(
+    readFileSync("./test/data/bazel/bazel-state.txt", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(16);
   expect(deps[0].name).toEqual("guava");
 });
 
 test("parse bazel build", () => {
-  let projs = utils.parseBazelBuild(
-    fs.readFileSync("./test/data/bazel/BUILD", { encoding: "utf-8" })
+  let projs = parseBazelBuild(
+    readFileSync("./test/data/bazel/BUILD", { encoding: "utf-8" })
   );
   expect(projs.length).toEqual(2);
   expect(projs[0]).toEqual("java-maven-lib");
 });
 
 test("parse helm charts", async () => {
-  let dep_list = await utils.parseHelmYamlData(
-    fs.readFileSync("./test/data/Chart.yaml", { encoding: "utf-8" })
+  let dep_list = await parseHelmYamlData(
+    readFileSync("./test/data/Chart.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
@@ -1773,8 +1829,8 @@ test("parse helm charts", async () => {
       url: "https://prometheus.io/"
     }
   });
-  dep_list = await utils.parseHelmYamlData(
-    fs.readFileSync("./test/data/prometheus-community-index.yaml", {
+  dep_list = await parseHelmYamlData(
+    readFileSync("./test/data/prometheus-community-index.yaml", {
       encoding: "utf-8"
     })
   );
@@ -1792,84 +1848,84 @@ test("parse helm charts", async () => {
 });
 
 test("parse container spec like files", async () => {
-  let dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/docker-compose.yml", { encoding: "utf-8" })
+  let dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/docker-compose.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/docker-compose-ng.yml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/docker-compose-ng.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(8);
   expect(dep_list[0]).toEqual({
     service: "frontend"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/docker-compose-cr.yml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/docker-compose-cr.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(14);
   expect(dep_list[0]).toEqual({
     service: "crapi-identity"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/tekton-task.yml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/tekton-task.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image:
       "docker.io/amazon/aws-cli:2.0.52@sha256:1506cec98a7101c935176d440a14302ea528b8f92fcaf4a6f1ea2d7ecef7edc4"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/postgrescluster.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/postgrescluster.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(6);
   expect(dep_list[0]).toEqual({
     image:
       "registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.5-1"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/deployment.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/deployment.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "node-typescript-example"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/skaffold.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/skaffold.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(6);
   expect(dep_list[0]).toEqual({
     image: "leeroy-web"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/skaffold-ms.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/skaffold-ms.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(22);
   expect(dep_list[0]).toEqual({
     image: "emailservice"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/emailservice.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/emailservice.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "emailservice"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/redis.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/redis.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "redis:alpine"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/adservice.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/adservice.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "gcr.io/google-samples/microservices-demo/adservice:v0.4.1"
   });
-  dep_list = await utils.parseContainerSpecData(
-    fs.readFileSync("./test/data/kustomization.yaml", { encoding: "utf-8" })
+  dep_list = await parseContainerSpecData(
+    readFileSync("./test/data/kustomization.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(22);
   expect(dep_list[0]).toEqual({
@@ -1878,9 +1934,9 @@ test("parse container spec like files", async () => {
 });
 
 test("parse cloudbuild data", async () => {
-  expect(await utils.parseCloudBuildData(null)).toEqual([]);
-  let dep_list = await utils.parseCloudBuildData(
-    fs.readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
+  expect(await parseCloudBuildData(null)).toEqual([]);
+  let dep_list = await parseCloudBuildData(
+    readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
@@ -1891,7 +1947,7 @@ test("parse cloudbuild data", async () => {
 });
 
 test("parse privado files", () => {
-  let servList = utils.parsePrivadoFile("./test/data/privado.json");
+  let servList = parsePrivadoFile("./test/data/privado.json");
   expect(servList.length).toEqual(1);
   expect(servList[0].data.length).toEqual(11);
   expect(servList[0].endpoints.length).toEqual(17);
@@ -1899,8 +1955,8 @@ test("parse privado files", () => {
 });
 
 test("parse openapi spec files", async () => {
-  let aservice = await utils.parseOpenapiSpecData(
-    fs.readFileSync("./test/data/openapi/openapi-spec.json", {
+  let aservice = await parseOpenapiSpecData(
+    readFileSync("./test/data/openapi/openapi-spec.json", {
       encoding: "utf-8"
     })
   );
@@ -1953,8 +2009,8 @@ test("parse openapi spec files", async () => {
     ],
     authenticated: true
   });
-  aservice = await utils.parseOpenapiSpecData(
-    fs.readFileSync("./test/data/openapi/openapi-oai.yaml", {
+  aservice = await parseOpenapiSpecData(
+    readFileSync("./test/data/openapi/openapi-oai.yaml", {
       encoding: "utf-8"
     })
   );
@@ -1992,11 +2048,9 @@ test("parse openapi spec files", async () => {
 });
 
 test("parse swift deps files", () => {
-  expect(utils.parseSwiftJsonTree(null, "./test/data/swift-deps.json")).toEqual(
-    {}
-  );
-  let retData = utils.parseSwiftJsonTree(
-    fs.readFileSync("./test/data/swift-deps.json", { encoding: "utf-8" }),
+  expect(parseSwiftJsonTree(null, "./test/data/swift-deps.json")).toEqual({});
+  let retData = parseSwiftJsonTree(
+    readFileSync("./test/data/swift-deps.json", { encoding: "utf-8" }),
     "./test/data/swift-deps.json"
   );
   expect(retData.pkgList.length).toEqual(5);
@@ -2025,8 +2079,8 @@ test("parse swift deps files", () => {
       dependsOn: []
     }
   );
-  retData = utils.parseSwiftJsonTree(
-    fs.readFileSync("./test/data/swift-deps1.json", { encoding: "utf-8" }),
+  retData = parseSwiftJsonTree(
+    readFileSync("./test/data/swift-deps1.json", { encoding: "utf-8" }),
     "./test/data/swift-deps.json"
   );
   expect(retData.pkgList.length).toEqual(5);
@@ -2066,7 +2120,7 @@ test("parse swift deps files", () => {
       dependsOn: []
     }
   ]);
-  let pkgList = utils.parseSwiftResolved("./test/data/Package.resolved");
+  let pkgList = parseSwiftResolved("./test/data/Package.resolved");
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
@@ -2075,7 +2129,7 @@ test("parse swift deps files", () => {
     properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
     repository: { url: "https://github.com/apple/swift-argument-parser" }
   });
-  pkgList = utils.parseSwiftResolved("./test/data/Package2.resolved");
+  pkgList = parseSwiftResolved("./test/data/Package2.resolved");
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
@@ -2096,40 +2150,33 @@ test("pypi version solver tests", () => {
     "3.0.12-alpha.12",
     "4.0.0"
   ];
-  expect(utils.guessPypiMatchingVersion(versionsList, "<4")).toEqual(
+  expect(guessPypiMatchingVersion(versionsList, "<4")).toEqual(
     "3.0.12-alpha.12"
   );
-  expect(utils.guessPypiMatchingVersion(versionsList, ">1.0.0 <3.0.0")).toEqual(
+  expect(guessPypiMatchingVersion(versionsList, ">1.0.0 <3.0.0")).toEqual(
     "2.0.3"
   );
-  expect(utils.guessPypiMatchingVersion(versionsList, "== 1.0.1")).toEqual(
-    "1.0.1"
-  );
-  expect(utils.guessPypiMatchingVersion(versionsList, "~= 1.0.1")).toEqual(
-    "1.0.1"
+  expect(guessPypiMatchingVersion(versionsList, "== 1.0.1")).toEqual("1.0.1");
+  expect(guessPypiMatchingVersion(versionsList, "~= 1.0.1")).toEqual("1.0.1");
+  expect(guessPypiMatchingVersion(versionsList, ">= 2.0.1, == 2.8.*")).toEqual(
+    null
   );
   expect(
-    utils.guessPypiMatchingVersion(versionsList, ">= 2.0.1, == 2.8.*")
-  ).toEqual(null);
-  expect(
-    utils.guessPypiMatchingVersion(
+    guessPypiMatchingVersion(
       ["2.0.0", "2.0.1", "2.4.0", "2.8.4", "2.9.0", "3.0.1"],
       ">= 2.0.1, == 2.8.*"
     )
   ).toEqual("2.8.4");
   expect(
-    utils.guessPypiMatchingVersion(
-      versionsList,
-      "== 1.1.0; python_version < '3.8'"
-    )
+    guessPypiMatchingVersion(versionsList, "== 1.1.0; python_version < '3.8'")
   ).toEqual("1.1.0");
   expect(
-    utils.guessPypiMatchingVersion(versionsList, "<3.6,>1.9,!=1.9.6,<4.0a0")
+    guessPypiMatchingVersion(versionsList, "<3.6,>1.9,!=1.9.6,<4.0a0")
   ).toEqual("3.0.12-alpha.12");
   expect(
-    utils.guessPypiMatchingVersion(versionsList, ">=1.4.2,<2.2,!=1.5.*,!=1.6.*")
+    guessPypiMatchingVersion(versionsList, ">=1.4.2,<2.2,!=1.5.*,!=1.6.*")
   ).toEqual("2.0.3");
-  expect(utils.guessPypiMatchingVersion(versionsList, ">=1.21.1,<3")).toEqual(
+  expect(guessPypiMatchingVersion(versionsList, ">=1.21.1,<3")).toEqual(
     "2.0.3"
   );
 });

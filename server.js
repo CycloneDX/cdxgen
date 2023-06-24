@@ -1,13 +1,13 @@
-const connect = require("connect");
-const http = require("http");
-const bodyParser = require("body-parser");
-const url = require("url");
-const { spawnSync } = require("child_process");
-const os = require("os");
-const fs = require("fs");
-const path = require("path");
-const bom = require("./index.js");
-const compression = require("compression");
+import connect from "connect";
+import http from "node:http";
+import bodyParser from "body-parser";
+import url from "node:url";
+import { spawnSync } from "node:child_process";
+import os from "node:os";
+import fs from "node:fs";
+import path from "node:path";
+import { createBom } from "./index.js";
+import compression from "compression";
 
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS =
@@ -103,7 +103,7 @@ const start = async (options) => {
       cleanup = true;
     }
     console.log("Generating SBoM for", srcDir);
-    const bomNSData = (await bom.createBom(srcDir, options)) || {};
+    const bomNSData = (await createBom(srcDir, options)) || {};
     if (bomNSData.bomJson) {
       if (
         typeof bomNSData.bomJson === "string" ||
@@ -121,4 +121,4 @@ const start = async (options) => {
     }
   });
 };
-exports.start = start;
+export { configureServer, start };

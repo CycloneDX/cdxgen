@@ -1,27 +1,123 @@
-const os = require("os");
-const pathLib = require("path");
-const ssri = require("ssri");
-const fs = require("fs");
-const got = require("got");
-const { v4: uuidv4 } = require("uuid");
-const { PackageURL } = require("packageurl-js");
-const builder = require("xmlbuilder");
-const utils = require("./utils");
-const { spawnSync } = require("child_process");
-const selfPjson = require("./package.json");
-const { findJSImports } = require("./analyzer");
-const semver = require("semver");
-const dockerLib = require("./docker");
-const binaryLib = require("./binary");
-const osQueries = require("./data/queries.json");
-const isWin = require("os").platform() === "win32";
+import { platform as _platform, homedir, tmpdir } from "node:os";
+import { join, dirname, sep } from "node:path";
+import { parse } from "ssri";
+import {
+  mkdtempSync,
+  rmSync,
+  existsSync,
+  readFileSync,
+  unlinkSync,
+  mkdirSync,
+  writeFileSync,
+  statSync,
+  accessSync,
+  constants
+} from "node:fs";
+import got from "got";
+import { v4 as uuidv4 } from "uuid";
+import { PackageURL } from "packageurl-js";
+import { create } from "xmlbuilder";
+import {
+  parsePackageJsonName,
+  getLicenses,
+  encodeForPurl,
+  getAllFiles,
+  extractJarArchive,
+  getMvnMetadata,
+  collectJarNS,
+  includeMavenTestScope,
+  getMavenCommand,
+  collectMvnDependencies,
+  parsePom,
+  parseMavenTree,
+  executeGradleProperties,
+  getGradleCommand,
+  parseGradleDep,
+  parseBazelSkyframe,
+  parseSbtLock,
+  determineSbtVersion,
+  addPlugin,
+  cleanupPlugin,
+  parseKVDep,
+  parsePkgJson,
+  parseMinJs,
+  parseBowerJson,
+  parsePnpmLock,
+  parsePkgLock,
+  parseNodeShrinkwrap,
+  parseYarnLock,
+  parsePoetrylockData,
+  parseBdistMetadata,
+  readZipEntry,
+  parsePiplockData,
+  executePipFreezeInVenv,
+  parseReqFile,
+  getPyModules,
+  parseSetupPyFile,
+  parseGoVersionData,
+  parseGosumData,
+  parseGoListDep,
+  parseGoModWhy,
+  parseGoModData,
+  parseGopkgData,
+  parseCargoAuditableData,
+  parseCargoTomlData,
+  parseCargoData,
+  parsePubLockData,
+  parsePubYamlData,
+  parseConanLockData,
+  parseConanData,
+  parseLeiningenData,
+  parseLeinDep,
+  parseEdnData,
+  parseCljDep,
+  parseCabalData,
+  parseMixLockData,
+  parseGitHubWorkflowData,
+  parseCloudBuildData,
+  convertOSQueryResults,
+  parseHelmYamlData,
+  parseSwiftResolved,
+  parseSwiftJsonTree,
+  parseContainerSpecData,
+  parseOpenapiSpecData,
+  parsePrivadoFile,
+  parseComposerLock,
+  parseGemfileLockData,
+  parseNupkg,
+  parseCsProjAssetsData,
+  parseCsPkgLockData,
+  parseCsPkgData,
+  parseCsProjData
+} from "./utils.js";
+import fs from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+const selfPJson = JSON.parse(await fs.readFile("./package.json"));
+const _version = selfPJson.version;
+import { findJSImports } from "./analyzer.js";
+import { gte, lte } from "semver";
+import {
+  getPkgPathList,
+  parseImageName,
+  exportArchive,
+  exportImage
+} from "./docker.js";
+import {
+  getGoBuildInfo,
+  getCargoAuditableInfo,
+  executeOsQuery,
+  getOSPackages
+} from "./binary.js";
+const osQueries = JSON.parse(await fs.readFile("./data/queries.json"));
 
-const { table } = require("table");
+const isWin = _platform() === "win32";
+
+import { table } from "table";
 
 // Construct gradle cache directory
 let GRADLE_CACHE_DIR =
   process.env.GRADLE_CACHE_DIR ||
-  pathLib.join(os.homedir(), ".gradle", "caches", "modules-2", "files-2.1");
+  join(homedir(), ".gradle", "caches", "modules-2", "files-2.1");
 if (process.env.GRADLE_USER_HOME) {
   GRADLE_CACHE_DIR =
     process.env.GRADLE_USER_HOME + "/caches/modules-2/files-2.1";
@@ -45,7 +141,7 @@ if (process.env.SWIFT_CMD) {
 
 // Construct sbt cache directory
 let SBT_CACHE_DIR =
-  process.env.SBT_CACHE_DIR || pathLib.join(os.homedir(), ".ivy2", "cache");
+  process.env.SBT_CACHE_DIR || join(homedir(), ".ivy2", "cache");
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -63,8 +159,8 @@ const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
 
 const createDefaultParentComponent = (path) => {
   // Create a parent component based on the directory name
-  let dirName = pathLib.dirname(path);
-  const tmpA = dirName.split(pathLib.sep);
+  let dirName = dirname(path);
+  const tmpA = dirName.split(sep);
   dirName = tmpA[tmpA.length - 1];
   const parentComponent = {
     group: "",
@@ -123,7 +219,7 @@ function addGlobalReferences(src, filename, format = "xml") {
   }
   let packageFileMeta = filename;
   if (!filename.includes(src)) {
-    packageFileMeta = pathLib.join(src, filename);
+    packageFileMeta = join(src, filename);
   }
   if (format === "json") {
     externalReferences.push({
@@ -202,7 +298,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
         tool: {
           vendor: "cyclonedx",
           name: "cdxgen",
-          version: selfPjson.version
+          version: _version
         }
       }
     ],
@@ -218,7 +314,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       {
         vendor: "cyclonedx",
         name: "cdxgen",
-        version: selfPjson.version
+        version: _version
       }
     ];
     metadata.authors = [
@@ -463,7 +559,8 @@ function addExternalReferences(opkg, format = "xml") {
  * For all modules in the specified package, creates a list of
  * component objects from each one.
  */
-exports.listComponents = listComponents;
+const _listComponents = listComponents;
+export { _listComponents as listComponents };
 function listComponents(
   options,
   allImports,
@@ -503,7 +600,7 @@ function addComponent(
     return;
   }
   if (!isRootPkg) {
-    let pkgIdentifier = utils.parsePackageJsonName(pkg.name);
+    let pkgIdentifier = parsePackageJsonName(pkg.name);
     let author = pkg.author || "";
     let publisher = pkg.publisher || "";
     let group = pkg.group || pkgIdentifier.scope;
@@ -531,17 +628,17 @@ function addComponent(
     if (!version || ["dummy", "ignore"].includes(version)) {
       return;
     }
-    let licenses = pkg.licenses || utils.getLicenses(pkg, format);
+    let licenses = pkg.licenses || getLicenses(pkg, format);
 
     let purl =
       pkg.purl ||
       new PackageURL(
         ptype,
-        utils.encodeForPurl(group),
-        utils.encodeForPurl(name),
+        encodeForPurl(group),
+        encodeForPurl(name),
         version,
         pkg.qualifiers,
-        utils.encodeForPurl(pkg.subpath)
+        encodeForPurl(pkg.subpath)
       );
     let purlString = purl.toString();
     purlString = decodeURIComponent(purlString);
@@ -719,7 +816,7 @@ function processHashes(pkg, component, format = "xml") {
       });
     }
   } else if (pkg._integrity) {
-    let integrity = ssri.parse(pkg._integrity) || {};
+    let integrity = parse(pkg._integrity) || {};
     // Components may have multiple hashes with various lengths. Check each one
     // that is supported by the CycloneDX specification.
     if (Object.prototype.hasOwnProperty.call(integrity, "sha512")) {
@@ -796,9 +893,10 @@ const buildBomXml = (
   context,
   options = {}
 ) => {
-  const bom = builder
-    .create("bom", { encoding: "utf-8", separateArrayItems: true })
-    .att("xmlns", "http://cyclonedx.org/schema/bom/1.4");
+  const bom = create("bom", {
+    encoding: "utf-8",
+    separateArrayItems: true
+  }).att("xmlns", "http://cyclonedx.org/schema/bom/1.4");
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
   const metadata = addMetadata(parentComponent, "xml", options);
@@ -900,32 +998,32 @@ const createJarBom = (path, options) => {
     `About to create SBoM for all jar files under ${path}. This would take a while ...`
   );
   let pkgList = [];
-  let jarFiles = utils.getAllFiles(
+  let jarFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.[jw]ar"
   );
   // Jenkins plugins
-  const hpiFiles = utils.getAllFiles(
+  const hpiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.hpi"
   );
   if (hpiFiles.length) {
     jarFiles = jarFiles.concat(hpiFiles);
   }
-  let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "jar-deps-"));
+  let tempDir = mkdtempSync(join(tmpdir(), "jar-deps-"));
   for (let jar of jarFiles) {
     if (DEBUG_MODE) {
       console.log(`Parsing ${jar}`);
     }
-    const dlist = utils.extractJarArchive(jar, tempDir);
+    const dlist = extractJarArchive(jar, tempDir);
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
+  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
     console.log(`Cleaning up ${tempDir}`);
-    fs.rmSync(tempDir, { recursive: true, force: true });
+    rmSync(tempDir, { recursive: true, force: true });
   }
   return buildBomNSData(options, pkgList, "maven", {
     src: path,
@@ -950,32 +1048,32 @@ const createJavaBom = async (path, options) => {
   // war/ear mode
   if (path.endsWith(".war")) {
     // Check if the file exists
-    if (fs.existsSync(path)) {
+    if (existsSync(path)) {
       if (DEBUG_MODE) {
         console.log(`Retrieving packages from ${path}`);
       }
-      let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "war-deps-"));
-      pkgList = utils.extractJarArchive(path, tempDir);
+      let tempDir = mkdtempSync(join(tmpdir(), "war-deps-"));
+      pkgList = extractJarArchive(path, tempDir);
       if (pkgList.length) {
-        pkgList = await utils.getMvnMetadata(pkgList);
+        pkgList = await getMvnMetadata(pkgList);
       }
       // Should we attempt to resolve class names
       if (options.resolveClass) {
         console.log(
           "Creating class names list based on available jars. This might take a few mins ..."
         );
-        jarNSMapping = utils.collectJarNS(tempDir);
+        jarNSMapping = collectJarNS(tempDir);
       }
       // Clean up
-      if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
+      if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
         console.log(`Cleaning up ${tempDir}`);
-        fs.rmSync(tempDir, { recursive: true, force: true });
+        rmSync(tempDir, { recursive: true, force: true });
       }
     } else {
       console.log(`${path} doesn't exist`);
     }
     return buildBomNSData(options, pkgList, "maven", {
-      src: pathLib.dirname(path),
+      src: dirname(path),
       filename: path,
       nsMapping: jarNSMapping,
       dependencies,
@@ -983,7 +1081,7 @@ const createJavaBom = async (path, options) => {
     });
   } else {
     // maven - pom.xml
-    const pomFiles = utils.getAllFiles(
+    const pomFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "pom.xml"
     );
@@ -993,7 +1091,7 @@ const createJavaBom = async (path, options) => {
         "org.cyclonedx:cyclonedx-maven-plugin:2.7.9";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
       let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
-      if (utils.includeMavenTestScope) {
+      if (includeMavenTestScope) {
         mvnArgs.push("-DincludeTestScope=true");
       }
       // By using quiet mode we can reduce the maxBuffer used and avoid crashes
@@ -1006,20 +1104,20 @@ const createJavaBom = async (path, options) => {
         mvnArgs = mvnArgs.concat(addArgs);
       }
       for (let f of pomFiles) {
-        const basePath = pathLib.dirname(f);
-        const settingsXml = pathLib.join(basePath, "settings.xml");
-        if (fs.existsSync(settingsXml)) {
+        const basePath = dirname(f);
+        const settingsXml = join(basePath, "settings.xml");
+        if (existsSync(settingsXml)) {
           console.log(
             `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`
           );
         }
-        let mavenCmd = utils.getMavenCommand(basePath, path);
+        let mavenCmd = getMavenCommand(basePath, path);
         // Should we attempt to resolve class names
         if (options.resolveClass) {
           console.log(
             "Creating class names list based on available jars. This might take a few mins ..."
           );
-          jarNSMapping = utils.collectMvnDependencies(mavenCmd, basePath);
+          jarNSMapping = collectMvnDependencies(mavenCmd, basePath);
         }
         console.log(
           `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
@@ -1033,11 +1131,11 @@ const createJavaBom = async (path, options) => {
         });
         // Check if the cyclonedx plugin created the required bom.xml file
         // Sometimes the plugin fails silently for complex maven projects
-        const bomJsonFiles = utils.getAllFiles(path, "**/target/*.json");
+        const bomJsonFiles = getAllFiles(path, "**/target/*.json");
         const bomGenerated = bomJsonFiles.length;
         if (!bomGenerated || result.status !== 0 || result.error) {
-          let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxmvn-"));
-          let tempMvnTree = pathLib.join(tempDir, "mvn-tree.txt");
+          let tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
+          let tempMvnTree = join(tempDir, "mvn-tree.txt");
           let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
           if (process.env.MVN_ARGS) {
             const addArgs = process.env.MVN_ARGS.split(" ");
@@ -1083,16 +1181,16 @@ const createJavaBom = async (path, options) => {
             console.log(
               "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
             );
-            const dlist = utils.parsePom(f);
+            const dlist = parsePom(f);
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             }
           } else {
-            if (fs.existsSync(tempMvnTree)) {
-              const mvnTreeString = fs.readFileSync(tempMvnTree, {
+            if (existsSync(tempMvnTree)) {
+              const mvnTreeString = readFileSync(tempMvnTree, {
                 encoding: "utf-8"
               });
-              const parsedList = utils.parseMavenTree(mvnTreeString);
+              const parsedList = parseMavenTree(mvnTreeString);
               const dlist = parsedList.pkgList;
               parentComponent = dlist.splice(0, 1)[0];
               parentComponent.type = "application";
@@ -1102,13 +1200,13 @@ const createJavaBom = async (path, options) => {
               if (parsedList.dependenciesList && parsedList.dependenciesList) {
                 dependencies = dependencies.concat(parsedList.dependenciesList);
               }
-              fs.unlinkSync(tempMvnTree);
+              unlinkSync(tempMvnTree);
             }
           }
         }
       } // for
-      const bomFiles = utils.getAllFiles(path, "**/target/bom.xml");
-      const bomJsonFiles = utils.getAllFiles(path, "**/target/*.json");
+      const bomFiles = getAllFiles(path, "**/target/bom.xml");
+      const bomJsonFiles = getAllFiles(path, "**/target/*.json");
       for (const abjson of bomJsonFiles) {
         let bomJsonObj = undefined;
         try {
@@ -1116,7 +1214,7 @@ const createJavaBom = async (path, options) => {
             console.log(`Extracting data from generated bom file ${abjson}`);
           }
           bomJsonObj = JSON.parse(
-            fs.readFileSync(abjson, {
+            readFileSync(abjson, {
               encoding: "utf-8"
             })
           );
@@ -1148,7 +1246,7 @@ const createJavaBom = async (path, options) => {
       }
       if (pkgList) {
         pkgList = trimComponents(pkgList, "json");
-        pkgList = await utils.getMvnMetadata(pkgList);
+        pkgList = await getMvnMetadata(pkgList);
         return buildBomNSData(options, pkgList, "maven", {
           src: path,
           filename: pomFiles.join(", "),
@@ -1167,7 +1265,7 @@ const createJavaBom = async (path, options) => {
       }
     }
     // gradle
-    let gradleFiles = utils.getAllFiles(
+    let gradleFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "build.gradle*"
     );
@@ -1176,7 +1274,7 @@ const createJavaBom = async (path, options) => {
     const rootDependsOn = [];
     // Execute gradle properties
     if (gradleFiles && gradleFiles.length) {
-      let retMap = utils.executeGradleProperties(path, null, null);
+      let retMap = executeGradleProperties(path, null, null);
       const allProjectsStr = retMap.projects || [];
       let rootProject = retMap.rootProject;
       if (rootProject) {
@@ -1201,7 +1299,7 @@ const createJavaBom = async (path, options) => {
       // Get the sub-project properties and set the root dependencies
       if (allProjectsStr && allProjectsStr.length) {
         for (let spstr of allProjectsStr) {
-          retMap = utils.executeGradleProperties(path, null, spstr);
+          retMap = executeGradleProperties(path, null, spstr);
           let rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             let rspName = rootSubProject.replace(/^:/, "").replace(/:/, "/");
@@ -1242,7 +1340,7 @@ const createJavaBom = async (path, options) => {
       }
     }
     if (gradleFiles && gradleFiles.length && options.installDeps) {
-      let gradleCmd = utils.getGradleCommand(path, null);
+      let gradleCmd = getGradleCommand(path, null);
       allProjects.push(parentComponent);
       for (let sp of allProjects) {
         let gradleDepArgs = [
@@ -1280,7 +1378,7 @@ const createJavaBom = async (path, options) => {
         const sstdout = sresult.stdout;
         if (sstdout) {
           const cmdOutput = Buffer.from(sstdout).toString();
-          const parsedList = utils.parseGradleDep(
+          const parsedList = parseGradleDep(
             cmdOutput,
             sp.group,
             sp.name,
@@ -1319,13 +1417,13 @@ const createJavaBom = async (path, options) => {
         options.failOnError && process.exit(1);
       }
 
-      pkgList = await utils.getMvnMetadata(pkgList);
+      pkgList = await getMvnMetadata(pkgList);
       // Should we attempt to resolve class names
       if (options.resolveClass) {
         console.log(
           "Creating class names list based on available jars. This might take a few mins ..."
         );
-        jarNSMapping = utils.collectJarNS(GRADLE_CACHE_DIR);
+        jarNSMapping = collectJarNS(GRADLE_CACHE_DIR);
       }
       return buildBomNSData(options, pkgList, "maven", {
         src: path,
@@ -1338,14 +1436,14 @@ const createJavaBom = async (path, options) => {
 
     // Bazel
     // Look for the BUILD file only in the root directory
-    let bazelFiles = utils.getAllFiles(path, "BUILD");
+    let bazelFiles = getAllFiles(path, "BUILD");
     if (bazelFiles && bazelFiles.length) {
       let BAZEL_CMD = "bazel";
       if (process.env.BAZEL_HOME) {
-        BAZEL_CMD = pathLib.join(process.env.BAZEL_HOME, "bin", "bazel");
+        BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
       }
       for (let f of bazelFiles) {
-        const basePath = pathLib.dirname(f);
+        const basePath = dirname(f);
         // Invoke bazel build first
         const bazelTarget = process.env.BAZEL_TARGET || ":all";
         console.log(
@@ -1389,7 +1487,7 @@ const createJavaBom = async (path, options) => {
           let stdout = result.stdout;
           if (stdout) {
             const cmdOutput = Buffer.from(stdout).toString();
-            const dlist = utils.parseBazelSkyframe(cmdOutput);
+            const dlist = parseBazelSkyframe(cmdOutput);
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             } else {
@@ -1405,7 +1503,7 @@ const createJavaBom = async (path, options) => {
             console.log("Bazel unexpectedly didn't produce any output");
             options.failOnError && process.exit(1);
           }
-          pkgList = await utils.getMvnMetadata(pkgList);
+          pkgList = await getMvnMetadata(pkgList);
           return buildBomNSData(options, pkgList, "maven", {
             src: path,
             filename: "BUILD",
@@ -1424,7 +1522,7 @@ const createJavaBom = async (path, options) => {
     // - SBT projects that are still on 0.13.x, can still use the old approach,
     //   where configs are defined via Scala files
     // Detecting one of those should be enough to determine an SBT project.
-    let sbtProjectFiles = utils.getAllFiles(
+    let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
         "project/{build.properties,*.sbt,*.scala}"
@@ -1434,25 +1532,25 @@ const createJavaBom = async (path, options) => {
     for (let i in sbtProjectFiles) {
       // parent dir of sbtProjectFile is the `project` directory
       // parent dir of `project` is the sbt root project directory
-      const baseDir = pathLib.dirname(pathLib.dirname(sbtProjectFiles[i]));
+      const baseDir = dirname(dirname(sbtProjectFiles[i]));
       sbtProjects = sbtProjects.concat(baseDir);
     }
 
     // Fallback in case sbt's project directory is non-existent
     if (!sbtProjects.length) {
-      sbtProjectFiles = utils.getAllFiles(
+      sbtProjectFiles = getAllFiles(
         path,
         (options.multiProject ? "**/" : "") + "*.sbt"
       );
       for (let i in sbtProjectFiles) {
-        const baseDir = pathLib.dirname(sbtProjectFiles[i]);
+        const baseDir = dirname(sbtProjectFiles[i]);
         sbtProjects = sbtProjects.concat(baseDir);
       }
     }
 
     sbtProjects = [...new Set(sbtProjects)]; // eliminate duplicates
 
-    let sbtLockFiles = utils.getAllFiles(
+    let sbtLockFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "build.sbt.lock"
     );
@@ -1462,14 +1560,14 @@ const createJavaBom = async (path, options) => {
       // If the project use sbt lock files
       if (sbtLockFiles && sbtLockFiles.length) {
         for (let f of sbtLockFiles) {
-          const dlist = utils.parseSbtLock(f);
+          const dlist = parseSbtLock(f);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
         }
       } else {
         let SBT_CMD = process.env.SBT_CMD || "sbt";
-        let sbtVersion = utils.determineSbtVersion(path);
+        let sbtVersion = determineSbtVersion(path);
         if (DEBUG_MODE) {
           console.log("Detected sbt version: " + sbtVersion);
         }
@@ -1477,16 +1575,16 @@ const createJavaBom = async (path, options) => {
         // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
         const standalonePluginFile =
           sbtVersion != null &&
-          semver.gte(sbtVersion, "1.3.4") &&
-          semver.lte(sbtVersion, "1.4.0");
-        const useSlashSyntax = semver.gte(sbtVersion, "1.5.0");
+          gte(sbtVersion, "1.3.4") &&
+          lte(sbtVersion, "1.4.0");
+        const useSlashSyntax = gte(sbtVersion, "1.5.0");
         const isDependencyTreeBuiltIn =
-          sbtVersion != null && semver.gte(sbtVersion, "1.4.0");
-        let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbt-"));
-        let tempSbtgDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "cdxsbtg-"));
-        fs.mkdirSync(tempSbtgDir, { recursive: true });
+          sbtVersion != null && gte(sbtVersion, "1.4.0");
+        let tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));
+        let tempSbtgDir = mkdtempSync(join(tmpdir(), "cdxsbtg-"));
+        mkdirSync(tempSbtgDir, { recursive: true });
         // Create temporary plugins file
-        let tempSbtPlugins = pathLib.join(tempSbtgDir, "dep-plugins.sbt");
+        let tempSbtPlugins = join(tempSbtgDir, "dep-plugins.sbt");
 
         // Requires a custom version of `sbt-dependency-graph` that
         // supports `--append` for `toFile` subtask.
@@ -1497,11 +1595,11 @@ const createJavaBom = async (path, options) => {
             console.log("Using addDependencyTreePlugin as the custom plugin");
           }
         }
-        fs.writeFileSync(tempSbtPlugins, sbtPluginDefinition);
+        writeFileSync(tempSbtPlugins, sbtPluginDefinition);
 
         for (let i in sbtProjects) {
           const basePath = sbtProjects[i];
-          let dlFile = pathLib.join(tempDir, "dl-" + i + ".tmp");
+          let dlFile = join(tempDir, "dl-" + i + ".tmp");
           console.log(
             "Executing",
             SBT_CMD,
@@ -1524,7 +1622,7 @@ const createJavaBom = async (path, options) => {
             } else {
               sbtArgs = [`"dependencyList::toFile ${dlFile} --force"`];
             }
-            pluginFile = utils.addPlugin(basePath, sbtPluginDefinition);
+            pluginFile = addPlugin(basePath, sbtPluginDefinition);
           }
           // Note that the command has to be invoked with `shell: true` to properly execut sbt
           const result = spawnSync(SBT_CMD, sbtArgs, {
@@ -1547,11 +1645,11 @@ const createJavaBom = async (path, options) => {
             options.failOnError && process.exit(1);
           }
           if (!standalonePluginFile) {
-            utils.cleanupPlugin(basePath, pluginFile);
+            cleanupPlugin(basePath, pluginFile);
           }
-          if (fs.existsSync(dlFile)) {
-            const cmdOutput = fs.readFileSync(dlFile, { encoding: "utf-8" });
-            const dlist = utils.parseKVDep(cmdOutput);
+          if (existsSync(dlFile)) {
+            const cmdOutput = readFileSync(dlFile, { encoding: "utf-8" });
+            const dlist = parseKVDep(cmdOutput);
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             }
@@ -1564,19 +1662,19 @@ const createJavaBom = async (path, options) => {
         }
 
         // Cleanup
-        fs.unlinkSync(tempSbtPlugins);
+        unlinkSync(tempSbtPlugins);
       } // else
 
       if (DEBUG_MODE) {
         console.log(`Found ${pkgList.length} packages`);
       }
-      pkgList = await utils.getMvnMetadata(pkgList);
+      pkgList = await getMvnMetadata(pkgList);
       // Should we attempt to resolve class names
       if (options.resolveClass) {
         console.log(
           "Creating class names list based on available jars. This might take a few mins ..."
         );
-        jarNSMapping = utils.collectJarNS(SBT_CACHE_DIR);
+        jarNSMapping = collectJarNS(SBT_CACHE_DIR);
       }
       return buildBomNSData(options, pkgList, "maven", {
         src: path,
@@ -1603,11 +1701,11 @@ const createNodejsBom = async (path, options) => {
   let ppurl = "";
   // Docker mode requires special handling
   if (["docker", "oci", "os"].includes(options.projectType)) {
-    const pkgJsonFiles = utils.getAllFiles(path, "**/package.json");
+    const pkgJsonFiles = getAllFiles(path, "**/package.json");
     // Are there any package.json files in the container?
     if (pkgJsonFiles.length) {
       for (let pj of pkgJsonFiles) {
-        const dlist = await utils.parsePkgJson(pj);
+        const dlist = await parsePkgJson(pj);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
         }
@@ -1632,30 +1730,30 @@ const createNodejsBom = async (path, options) => {
     }
     allImports = await findJSImports(path);
   }
-  const yarnLockFiles = utils.getAllFiles(
+  const yarnLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "yarn.lock"
   );
-  const shrinkwrapFiles = utils.getAllFiles(
+  const shrinkwrapFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "npm-shrinkwrap.json"
   );
-  let pkgLockFiles = utils.getAllFiles(
+  let pkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "package-lock.json"
   );
   if (shrinkwrapFiles.length) {
     pkgLockFiles = pkgLockFiles.concat(shrinkwrapFiles);
   }
-  const pnpmLockFiles = utils.getAllFiles(
+  const pnpmLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pnpm-lock.yaml"
   );
-  const minJsFiles = utils.getAllFiles(
+  const minJsFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*min.js"
   );
-  const bowerFiles = utils.getAllFiles(
+  const bowerFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "bower.json"
   );
@@ -1663,7 +1761,7 @@ const createNodejsBom = async (path, options) => {
   if (minJsFiles && minJsFiles.length) {
     manifestFiles = manifestFiles.concat(minJsFiles);
     for (let f of minJsFiles) {
-      const dlist = await utils.parseMinJs(f);
+      const dlist = await parseMinJs(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -1673,7 +1771,7 @@ const createNodejsBom = async (path, options) => {
   if (bowerFiles && bowerFiles.length) {
     manifestFiles = manifestFiles.concat(bowerFiles);
     for (let f of bowerFiles) {
-      const dlist = await utils.parseBowerJson(f);
+      const dlist = await parseBowerJson(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -1682,18 +1780,18 @@ const createNodejsBom = async (path, options) => {
   if (pnpmLockFiles && pnpmLockFiles.length) {
     manifestFiles = manifestFiles.concat(pnpmLockFiles);
     for (let f of pnpmLockFiles) {
-      const basePath = pathLib.dirname(f);
+      const basePath = dirname(f);
       // Determine the parent component
-      const packageJsonF = pathLib.join(basePath, "package.json");
-      if (fs.existsSync(packageJsonF)) {
-        const pcs = await utils.parsePkgJson(packageJsonF);
+      const packageJsonF = join(basePath, "package.json");
+      if (existsSync(packageJsonF)) {
+        const pcs = await parsePkgJson(packageJsonF);
         if (pcs.length) {
           parentComponent = pcs[0];
           parentComponent.type = "application";
         }
       } else {
-        let dirName = pathLib.dirname(f);
-        const tmpA = dirName.split(pathLib.sep);
+        let dirName = dirname(f);
+        const tmpA = dirName.split(sep);
         dirName = tmpA[tmpA.length - 1];
         parentComponent = {
           group: "",
@@ -1712,7 +1810,7 @@ const createNodejsBom = async (path, options) => {
         parentComponent["purl"] = ppurl;
       }
       // Parse the pnpm file
-      const parsedList = await utils.parsePnpmLock(f, parentComponent);
+      const parsedList = await parsePnpmLock(f, parentComponent);
       const dlist = parsedList.pkgList;
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
@@ -1732,7 +1830,7 @@ const createNodejsBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       // Parse package-lock.json if available
-      const parsedList = await utils.parsePkgLock(f);
+      const parsedList = await parsePkgLock(f);
       const dlist = parsedList.pkgList;
       parentComponent = dlist.splice(0, 1)[0] || {};
       parentComponent.type = "application";
@@ -1747,11 +1845,11 @@ const createNodejsBom = async (path, options) => {
       }
     }
   }
-  if (fs.existsSync(pathLib.join(path, "rush.json"))) {
+  if (existsSync(join(path, "rush.json"))) {
     // Rush.js creates node_modules inside common/temp directory
-    const nmDir = pathLib.join(path, "common", "temp", "node_modules");
+    const nmDir = join(path, "common", "temp", "node_modules");
     // Do rush install if we don't have node_modules directory
-    if (!fs.existsSync(nmDir)) {
+    if (!existsSync(nmDir)) {
       console.log("Executing 'rush install --no-link'", path);
       const result = spawnSync(
         "rush",
@@ -1767,7 +1865,7 @@ const createNodejsBom = async (path, options) => {
       }
     }
     // Look for shrinkwrap file
-    const swFile = pathLib.join(
+    const swFile = join(
       path,
       "tools",
       "build-tasks",
@@ -1775,22 +1873,16 @@ const createNodejsBom = async (path, options) => {
       "temp",
       "shrinkwrap-deps.json"
     );
-    const pnpmLock = pathLib.join(
-      path,
-      "common",
-      "config",
-      "rush",
-      "pnpm-lock.yaml"
-    );
-    if (fs.existsSync(swFile)) {
-      const pkgList = await utils.parseNodeShrinkwrap(swFile);
+    const pnpmLock = join(path, "common", "config", "rush", "pnpm-lock.yaml");
+    if (existsSync(swFile)) {
+      const pkgList = await parseNodeShrinkwrap(swFile);
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
         filename: "shrinkwrap-deps.json"
       });
-    } else if (fs.existsSync(pnpmLock)) {
-      const pkgList = await utils.parsePnpmLock(pnpmLock);
+    } else if (existsSync(pnpmLock)) {
+      const pkgList = await parsePnpmLock(pnpmLock);
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
@@ -1813,18 +1905,18 @@ const createNodejsBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const basePath = pathLib.dirname(f);
+      const basePath = dirname(f);
       // Determine the parent component
-      const packageJsonF = pathLib.join(basePath, "package.json");
-      if (fs.existsSync(packageJsonF)) {
-        const pcs = await utils.parsePkgJson(packageJsonF);
+      const packageJsonF = join(basePath, "package.json");
+      if (existsSync(packageJsonF)) {
+        const pcs = await parsePkgJson(packageJsonF);
         if (pcs.length) {
           parentComponent = pcs[0];
           parentComponent.type = "application";
         }
       } else {
-        let dirName = pathLib.dirname(f);
-        const tmpA = dirName.split(pathLib.sep);
+        let dirName = dirname(f);
+        const tmpA = dirName.split(sep);
         dirName = tmpA[tmpA.length - 1];
         parentComponent = {
           group: "",
@@ -1844,7 +1936,7 @@ const createNodejsBom = async (path, options) => {
       }
       // Parse yarn.lock if available. This check is after rush.json since
       // rush.js could include yarn.lock :(
-      const parsedList = await utils.parseYarnLock(f);
+      const parsedList = await parseYarnLock(f);
       const dlist = parsedList.pkgList;
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
@@ -1879,14 +1971,14 @@ const createNodejsBom = async (path, options) => {
       }
     }
   }
-  if (!pkgList.length && fs.existsSync(pathLib.join(path, "node_modules"))) {
-    const pkgJsonFiles = utils.getAllFiles(
-      pathLib.join(path, "node_modules"),
+  if (!pkgList.length && existsSync(join(path, "node_modules"))) {
+    const pkgJsonFiles = getAllFiles(
+      join(path, "node_modules"),
       "**/package.json"
     );
     manifestFiles = manifestFiles.concat(pkgJsonFiles);
     for (let pkgjf of pkgJsonFiles) {
-      const dlist = await utils.parsePkgJson(pkgjf);
+      const dlist = await parsePkgJson(pkgjf);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -1921,45 +2013,45 @@ const createNodejsBom = async (path, options) => {
 const createPythonBom = async (path, options) => {
   let allImports = {};
   let metadataFilename = "";
-  const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
-  const poetryFiles = utils.getAllFiles(
+  const pipenvMode = existsSync(join(path, "Pipfile"));
+  const poetryFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "poetry.lock"
   );
-  const reqFiles = utils.getAllFiles(
+  const reqFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt"
   );
-  const reqDirFiles = utils.getAllFiles(
+  const reqDirFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "requirements/*.txt"
   );
-  const metadataFiles = utils.getAllFiles(
+  const metadataFiles = getAllFiles(
     path,
     (options.multiProject ? "**/site-packages/**/" : "") + "METADATA"
   );
-  const whlFiles = utils.getAllFiles(
+  const whlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.whl"
   );
-  const eggInfoFiles = utils.getAllFiles(
+  const eggInfoFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.egg-info"
   );
   let pkgList = [];
-  const setupPy = pathLib.join(path, "setup.py");
-  const pyProjectFile = pathLib.join(path, "pyproject.toml");
-  const pyProjectMode = fs.existsSync(pyProjectFile);
+  const setupPy = join(path, "setup.py");
+  const pyProjectFile = join(path, "pyproject.toml");
+  const pyProjectMode = existsSync(pyProjectFile);
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const poetryMode = poetryFiles && poetryFiles.length;
-  const setupPyMode = fs.existsSync(setupPy);
+  const setupPyMode = existsSync(setupPy);
   // Poetry sets up its own virtual env containing site-packages so
   // we give preference to poetry lock file. Issue# 129
   if (poetryMode) {
     for (let f of poetryFiles) {
-      const lockData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parsePoetrylockData(lockData);
+      const lockData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parsePoetrylockData(lockData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -1971,10 +2063,10 @@ const createPythonBom = async (path, options) => {
   } else if (metadataFiles && metadataFiles.length) {
     // dist-info directories
     for (let mf of metadataFiles) {
-      const mData = fs.readFileSync(mf, {
+      const mData = readFileSync(mf, {
         encoding: "utf-8"
       });
-      const dlist = utils.parseBdistMetadata(mData);
+      const dlist = parseBdistMetadata(mData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -1983,9 +2075,9 @@ const createPythonBom = async (path, options) => {
   // .whl files. Zip file containing dist-info directory
   if (whlFiles && whlFiles.length) {
     for (let wf of whlFiles) {
-      const mData = await utils.readZipEntry(wf, "METADATA");
+      const mData = await readZipEntry(wf, "METADATA");
       if (mData) {
-        const dlist = utils.parseBdistMetadata(mData);
+        const dlist = parseBdistMetadata(mData);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
         }
@@ -1995,9 +2087,7 @@ const createPythonBom = async (path, options) => {
   // .egg-info files
   if (eggInfoFiles && eggInfoFiles.length) {
     for (let ef of eggInfoFiles) {
-      const dlist = utils.parseBdistMetadata(
-        fs.readFileSync(ef, { encoding: "utf-8" })
-      );
+      const dlist = parseBdistMetadata(readFileSync(ef, { encoding: "utf-8" }));
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2006,10 +2096,10 @@ const createPythonBom = async (path, options) => {
   if (requirementsMode || pipenvMode) {
     if (pipenvMode) {
       spawnSync("pipenv", ["install"], { cwd: path, encoding: "utf-8" });
-      const piplockFile = pathLib.join(path, "Pipfile.lock");
-      if (fs.existsSync(piplockFile)) {
-        const lockData = JSON.parse(fs.readFileSync(piplockFile));
-        const dlist = await utils.parsePiplockData(lockData);
+      const piplockFile = join(path, "Pipfile.lock");
+      if (existsSync(piplockFile)) {
+        const lockData = JSON.parse(readFileSync(piplockFile));
+        const dlist = await parsePiplockData(lockData);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
         }
@@ -2021,12 +2111,12 @@ const createPythonBom = async (path, options) => {
       metadataFilename = "requirements.txt";
       if (reqFiles && reqFiles.length) {
         for (let f of reqFiles) {
-          const basePath = pathLib.dirname(f);
+          const basePath = dirname(f);
           let reqData = undefined;
           let frozen = false;
           // Attempt to pip freeze in a virtualenv to improve precision
           if (options.installDeps) {
-            const dlist = await utils.executePipFreezeInVenv(basePath, f);
+            const dlist = await executePipFreezeInVenv(basePath, f);
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
               frozen = true;
@@ -2039,8 +2129,8 @@ const createPythonBom = async (path, options) => {
                 `Manually parsing ${f}. The result would include only direct dependencies.`
               );
             }
-            reqData = fs.readFileSync(f, { encoding: "utf-8" });
-            const dlist = await utils.parseReqFile(reqData, true);
+            reqData = readFileSync(f, { encoding: "utf-8" });
+            const dlist = await parseReqFile(reqData, true);
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             }
@@ -2050,8 +2140,8 @@ const createPythonBom = async (path, options) => {
       } else if (reqDirFiles && reqDirFiles.length) {
         for (let j in reqDirFiles) {
           const f = reqDirFiles[j];
-          const reqData = fs.readFileSync(f, { encoding: "utf-8" });
-          const dlist = await utils.parseReqFile(reqData, false);
+          const reqData = readFileSync(f, { encoding: "utf-8" });
+          const dlist = await parseReqFile(reqData, false);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
@@ -2068,16 +2158,16 @@ const createPythonBom = async (path, options) => {
      */
     if (options.installDeps) {
       if (pyProjectMode) {
-        dlist = await utils.executePipFreezeInVenv(path, pyProjectFile);
+        dlist = await executePipFreezeInVenv(path, pyProjectFile);
       } else if (setupPyMode) {
-        dlist = await utils.executePipFreezeInVenv(path, setupPy);
+        dlist = await executePipFreezeInVenv(path, setupPy);
       }
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
     // Get the imported modules and a dedupe list of packages
-    const retMap = await utils.getPyModules(path, pkgList);
+    const retMap = await getPyModules(path, pkgList);
     if (retMap.pkgList && retMap.pkgList.length) {
       pkgList = pkgList.concat(retMap.pkgList);
     }
@@ -2088,8 +2178,8 @@ const createPythonBom = async (path, options) => {
   // Final fallback is to manually parse setup.py if we still
   // have an empty list
   if (!pkgList.length && setupPyMode) {
-    const setupPyData = fs.readFileSync(setupPy, { encoding: "utf-8" });
-    const dlist = await utils.parseSetupPyFile(setupPyData);
+    const setupPyData = readFileSync(setupPy, { encoding: "utf-8" });
+    const dlist = await parseSetupPyFile(setupPyData);
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
     }
@@ -2112,13 +2202,13 @@ const createGoBom = async (path, options) => {
   // Is this a binary file
   let maybeBinary = false;
   try {
-    maybeBinary = fs.statSync(path).isFile();
+    maybeBinary = statSync(path).isFile();
   } catch (err) {
     maybeBinary = false;
   }
   if (maybeBinary) {
-    const buildInfoData = binaryLib.getGoBuildInfo(path);
-    const dlist = await utils.parseGoVersionData(buildInfoData);
+    const buildInfoData = getGoBuildInfo(path);
+    const dlist = await parseGoVersionData(buildInfoData);
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
     }
@@ -2136,7 +2226,7 @@ const createGoBom = async (path, options) => {
   }
 
   // Read in go.sum and merge all go.sum files.
-  const gosumFiles = utils.getAllFiles(
+  const gosumFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.sum"
   );
@@ -2153,8 +2243,8 @@ const createGoBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const gosumData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGosumData(gosumData);
+      const gosumData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseGosumData(gosumData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2172,8 +2262,8 @@ const createGoBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const gosumData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGosumData(gosumData);
+      const gosumData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseGosumData(gosumData);
       if (dlist && dlist.length) {
         dlist.forEach((pkg) => {
           gosumMap[`${pkg.group}/${pkg.name}/${pkg.version}`] = pkg._integrity;
@@ -2183,13 +2273,13 @@ const createGoBom = async (path, options) => {
   }
 
   // Read in data from Gopkg.lock files if they exist
-  const gopkgLockFiles = utils.getAllFiles(
+  const gopkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gopkg.lock"
   );
 
   // Read in go.mod files and parse BOM components with checksums from gosumData
-  const gomodFiles = utils.getAllFiles(
+  const gomodFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.mod"
   );
@@ -2198,7 +2288,7 @@ const createGoBom = async (path, options) => {
     // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
     if (!["docker", "oci", "os"].includes(options.projectType)) {
       for (let f of gomodFiles) {
-        const basePath = pathLib.dirname(f);
+        const basePath = dirname(f);
         // Ignore vendor packages
         if (basePath.includes("/vendor/") || basePath.includes("/build/")) {
           continue;
@@ -2225,7 +2315,7 @@ const createGoBom = async (path, options) => {
         const stdout = result.stdout;
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
-          const dlist = await utils.parseGoListDep(cmdOutput, gosumMap);
+          const dlist = await parseGoListDep(cmdOutput, gosumMap);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
@@ -2269,7 +2359,7 @@ const createGoBom = async (path, options) => {
           const mstdout = mresult.stdout;
           if (mstdout) {
             const cmdOutput = Buffer.from(mstdout).toString();
-            let whyPkg = utils.parseGoModWhy(cmdOutput);
+            let whyPkg = parseGoModWhy(cmdOutput);
             if (whyPkg == pkgFullName) {
               allImports[pkgFullName] = true;
             }
@@ -2297,8 +2387,8 @@ const createGoBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const gomodData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGoModData(gomodData, gosumMap);
+      const gomodData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseGoModData(gomodData, gosumMap);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2312,10 +2402,10 @@ const createGoBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const gopkgData = fs.readFileSync(f, {
+      const gopkgData = readFileSync(f, {
         encoding: "utf-8"
       });
-      const dlist = await utils.parseGopkgData(gopkgData);
+      const dlist = await parseGopkgData(gopkgData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2339,13 +2429,13 @@ const createRustBom = async (path, options) => {
   // Is this a binary file
   let maybeBinary = false;
   try {
-    maybeBinary = fs.statSync(path).isFile();
+    maybeBinary = statSync(path).isFile();
   } catch (err) {
     maybeBinary = false;
   }
   if (maybeBinary) {
-    const cargoData = binaryLib.getCargoAuditableInfo(path);
-    const dlist = await utils.parseCargoAuditableData(cargoData);
+    const cargoData = getCargoAuditableInfo(path);
+    const dlist = await parseCargoAuditableData(cargoData);
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
     }
@@ -2361,11 +2451,11 @@ const createRustBom = async (path, options) => {
       filename: path
     });
   }
-  let cargoLockFiles = utils.getAllFiles(
+  let cargoLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock"
   );
-  const cargoFiles = utils.getAllFiles(
+  const cargoFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.toml"
   );
@@ -2376,8 +2466,8 @@ const createRustBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const cargoData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseCargoTomlData(cargoData);
+      const cargoData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseCargoTomlData(cargoData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2388,7 +2478,7 @@ const createRustBom = async (path, options) => {
     });
   }
   // Get the new lock files
-  cargoLockFiles = utils.getAllFiles(
+  cargoLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock"
   );
@@ -2397,8 +2487,8 @@ const createRustBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const cargoData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseCargoData(cargoData);
+      const cargoData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseCargoData(cargoData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2418,11 +2508,11 @@ const createRustBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createDartBom = async (path, options) => {
-  const pubFiles = utils.getAllFiles(
+  const pubFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.lock"
   );
-  const pubSpecYamlFiles = utils.getAllFiles(
+  const pubSpecYamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.yaml"
   );
@@ -2432,8 +2522,8 @@ const createDartBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const pubLockData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parsePubLockData(pubLockData);
+      const pubLockData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parsePubLockData(pubLockData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2447,8 +2537,8 @@ const createDartBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const pubYamlData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parsePubYamlData(pubYamlData);
+      const pubYamlData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parsePubYamlData(pubYamlData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2469,11 +2559,11 @@ const createDartBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createCppBom = async (path, options) => {
-  const conanLockFiles = utils.getAllFiles(
+  const conanLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conan.lock"
   );
-  const conanFiles = utils.getAllFiles(
+  const conanFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conanfile.txt"
   );
@@ -2483,8 +2573,8 @@ const createCppBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const conanLockData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseConanLockData(conanLockData);
+      const conanLockData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseConanLockData(conanLockData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2498,8 +2588,8 @@ const createCppBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const conanData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseConanData(conanData);
+      const conanData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseConanData(conanData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2520,11 +2610,11 @@ const createCppBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createClojureBom = async (path, options) => {
-  const ednFiles = utils.getAllFiles(
+  const ednFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "deps.edn"
   );
-  const leinFiles = utils.getAllFiles(
+  const leinFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "project.clj"
   );
@@ -2538,7 +2628,7 @@ const createClojureBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const basePath = pathLib.dirname(f);
+      const basePath = dirname(f);
       console.log("Executing", LEIN_CMD, LEIN_ARGS.join(" "), "in", basePath);
       const result = spawnSync(LEIN_CMD, LEIN_ARGS, {
         cwd: basePath,
@@ -2556,8 +2646,8 @@ const createClojureBom = async (path, options) => {
         if (DEBUG_MODE) {
           console.log(`Parsing ${f}`);
         }
-        const leinData = fs.readFileSync(f, { encoding: "utf-8" });
-        const dlist = utils.parseLeiningenData(leinData);
+        const leinData = readFileSync(f, { encoding: "utf-8" });
+        const dlist = parseLeiningenData(leinData);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
         }
@@ -2565,7 +2655,7 @@ const createClojureBom = async (path, options) => {
         const stdout = result.stdout;
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
-          const dlist = utils.parseLeinDep(cmdOutput);
+          const dlist = parseLeinDep(cmdOutput);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
@@ -2585,7 +2675,7 @@ const createClojureBom = async (path, options) => {
       CLJ_ARGS = process.env.CLJ_ARGS.split(" ");
     }
     for (let f of ednFiles) {
-      const basePath = pathLib.dirname(f);
+      const basePath = dirname(f);
       console.log("Executing", CLJ_CMD, CLJ_ARGS.join(" "), "in", basePath);
       const result = spawnSync(CLJ_CMD, CLJ_ARGS, {
         cwd: basePath,
@@ -2603,8 +2693,8 @@ const createClojureBom = async (path, options) => {
         if (DEBUG_MODE) {
           console.log(`Parsing ${f}`);
         }
-        const ednData = fs.readFileSync(f, { encoding: "utf-8" });
-        const dlist = utils.parseEdnData(ednData);
+        const ednData = readFileSync(f, { encoding: "utf-8" });
+        const dlist = parseEdnData(ednData);
         if (dlist && dlist.length) {
           pkgList = pkgList.concat(dlist);
         }
@@ -2612,7 +2702,7 @@ const createClojureBom = async (path, options) => {
         const stdout = result.stdout;
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
-          const dlist = utils.parseCljDep(cmdOutput);
+          const dlist = parseCljDep(cmdOutput);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
           }
@@ -2638,7 +2728,7 @@ const createClojureBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createHaskellBom = async (path, options) => {
-  const cabalFiles = utils.getAllFiles(
+  const cabalFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "cabal.project.freeze"
   );
@@ -2648,8 +2738,8 @@ const createHaskellBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const cabalData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseCabalData(cabalData);
+      const cabalData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseCabalData(cabalData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2669,7 +2759,7 @@ const createHaskellBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createElixirBom = async (path, options) => {
-  const mixFiles = utils.getAllFiles(
+  const mixFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "mix.lock"
   );
@@ -2679,8 +2769,8 @@ const createElixirBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const mixData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseMixLockData(mixData);
+      const mixData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseMixLockData(mixData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2700,15 +2790,15 @@ const createElixirBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createGitHubBom = async (path, options) => {
-  const ghactionFiles = utils.getAllFiles(path, ".github/workflows/" + "*.yml");
+  const ghactionFiles = getAllFiles(path, ".github/workflows/" + "*.yml");
   let pkgList = [];
   if (ghactionFiles.length) {
     for (let f of ghactionFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const ghwData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGitHubWorkflowData(ghwData);
+      const ghwData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseGitHubWorkflowData(ghwData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2728,15 +2818,15 @@ const createGitHubBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createCloudBuildBom = async (path, options) => {
-  const cbFiles = utils.getAllFiles(path, "cloudbuild.yml");
+  const cbFiles = getAllFiles(path, "cloudbuild.yml");
   let pkgList = [];
   if (cbFiles.length) {
     for (let f of cbFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const cbwData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseCloudBuildData(cbwData);
+      const cbwData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseCloudBuildData(cbwData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2763,8 +2853,8 @@ const createOSBom = async (path, options) => {
   let bomData = {};
   for (const queryCategory of Object.keys(osQueries)) {
     const queryObj = osQueries[queryCategory];
-    const results = binaryLib.executeOsQuery(queryObj.query);
-    const dlist = utils.convertOSQueryResults(queryCategory, queryObj, results);
+    const results = executeOsQuery(queryObj.query);
+    const dlist = convertOSQueryResults(queryCategory, queryObj, results);
     if (dlist && dlist.length) {
       pkgList = pkgList.concat(dlist);
     }
@@ -2789,7 +2879,7 @@ const createOSBom = async (path, options) => {
   };
   let pkgPathList = [];
   if (options.deep) {
-    dockerLib.getPkgPathList(exportData, undefined);
+    getPkgPathList(exportData, undefined);
   }
   return createMultiXBom(pkgPathList, options);
 };
@@ -2802,38 +2892,38 @@ const createOSBom = async (path, options) => {
  */
 const createJenkinsBom = async (path, options) => {
   let pkgList = [];
-  const hpiFiles = utils.getAllFiles(
+  const hpiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.hpi"
   );
-  let tempDir = fs.mkdtempSync(pathLib.join(os.tmpdir(), "hpi-deps-"));
+  let tempDir = mkdtempSync(join(tmpdir(), "hpi-deps-"));
   if (hpiFiles.length) {
     for (let f of hpiFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = utils.extractJarArchive(f, tempDir);
+      const dlist = extractJarArchive(f, tempDir);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
-  const jsFiles = utils.getAllFiles(tempDir, "**/*.js");
+  const jsFiles = getAllFiles(tempDir, "**/*.js");
   if (jsFiles.length) {
     for (let f of jsFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = await utils.parseMinJs(f);
+      const dlist = await parseMinJs(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
+  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
     console.log(`Cleaning up ${tempDir}`);
-    fs.rmSync(tempDir, { recursive: true, force: true });
+    rmSync(tempDir, { recursive: true, force: true });
   }
   return buildBomNSData(options, pkgList, "maven", {
     src: path,
@@ -2850,7 +2940,7 @@ const createJenkinsBom = async (path, options) => {
  */
 const createHelmBom = async (path, options) => {
   let pkgList = [];
-  const yamlFiles = utils.getAllFiles(
+  const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yaml"
   );
@@ -2859,8 +2949,8 @@ const createHelmBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const helmData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseHelmYamlData(helmData);
+      const helmData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseHelmYamlData(helmData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2880,11 +2970,11 @@ const createHelmBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createSwiftBom = async (path, options) => {
-  const swiftFiles = utils.getAllFiles(
+  const swiftFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift"
   );
-  const pkgResolvedFiles = utils.getAllFiles(
+  const pkgResolvedFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package.resolved"
   );
@@ -2900,7 +2990,7 @@ const createSwiftBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log("Parsing", f);
       }
-      const dlist = utils.parseSwiftResolved(f);
+      const dlist = parseSwiftResolved(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -2908,7 +2998,7 @@ const createSwiftBom = async (path, options) => {
   }
   if (swiftFiles.length) {
     for (let f of swiftFiles) {
-      const basePath = pathLib.dirname(f);
+      const basePath = dirname(f);
       if (completedPath.includes(basePath)) {
         continue;
       }
@@ -2928,7 +3018,7 @@ const createSwiftBom = async (path, options) => {
       if (result.status === 0 && result.stdout) {
         completedPath.push(basePath);
         treeData = Buffer.from(result.stdout).toString();
-        const retData = utils.parseSwiftJsonTree(treeData, f);
+        const retData = parseSwiftJsonTree(treeData, f);
         if (retData.pkgList && retData.pkgList.length) {
           parentComponent = retData.pkgList.splice(0, 1)[0];
           parentComponent.type = "application";
@@ -2975,19 +3065,19 @@ const createContainerSpecLikeBom = async (path, options) => {
   let doneimages = [];
   let doneservices = [];
   let origProjectType = options.projectType;
-  let dcFiles = utils.getAllFiles(
+  let dcFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yml"
   );
-  const yamlFiles = utils.getAllFiles(
+  const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yaml"
   );
-  let oapiFiles = utils.getAllFiles(
+  let oapiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "open*.json"
   );
-  let oapiYamlFiles = utils.getAllFiles(
+  let oapiYamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "open*.yaml"
   );
@@ -2998,15 +3088,15 @@ const createContainerSpecLikeBom = async (path, options) => {
     dcFiles = dcFiles.concat(yamlFiles);
   }
   // Privado.ai json files
-  const privadoFiles = utils.getAllFiles(path, ".privado/" + "*.json");
+  const privadoFiles = getAllFiles(path, ".privado/" + "*.json");
   // parse yaml manifest files
   if (dcFiles.length) {
     for (let f of dcFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dcData = fs.readFileSync(f, { encoding: "utf-8" });
-      const imglist = await utils.parseContainerSpecData(dcData);
+      const dcData = readFileSync(f, { encoding: "utf-8" });
+      const imglist = await parseContainerSpecData(dcData);
       if (imglist && imglist.length) {
         if (DEBUG_MODE) {
           console.log("Images identified in", f, "are", imglist);
@@ -3075,7 +3165,7 @@ const createContainerSpecLikeBom = async (path, options) => {
             if (DEBUG_MODE) {
               console.log(`Parsing image ${img.image}`);
             }
-            const imageObj = dockerLib.parseImageName(img.image);
+            const imageObj = parseImageName(img.image);
             const pkg = {
               name: imageObj.repo,
               version:
@@ -3137,8 +3227,8 @@ const createContainerSpecLikeBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${af}`);
       }
-      const oaData = fs.readFileSync(af, { encoding: "utf-8" });
-      const servlist = await utils.parseOpenapiSpecData(oaData);
+      const oaData = readFileSync(af, { encoding: "utf-8" });
+      const servlist = await parseOpenapiSpecData(oaData);
       if (servlist && servlist.length) {
         // Inject SrcFile property
         for (const se of servlist) {
@@ -3170,7 +3260,7 @@ const createContainerSpecLikeBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const servlist = utils.parsePrivadoFile(f);
+      const servlist = parsePrivadoFile(f);
       services = services.concat(servlist);
       if (servlist.length) {
         const aservice = servlist[0];
@@ -3245,11 +3335,11 @@ const createContainerSpecLikeBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createPHPBom = async (path, options) => {
-  const composerJsonFiles = utils.getAllFiles(
+  const composerJsonFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.json"
   );
-  let composerLockFiles = utils.getAllFiles(
+  let composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock"
   );
@@ -3285,7 +3375,7 @@ const createPHPBom = async (path, options) => {
       composerVersion = tmpV[1];
     }
     for (let f of composerJsonFiles) {
-      const basePath = pathLib.dirname(f);
+      const basePath = dirname(f);
       let args = [];
       if (composerVersion && !composerVersion.startsWith("1")) {
         console.log("Generating composer.lock in", basePath);
@@ -3305,7 +3395,7 @@ const createPHPBom = async (path, options) => {
       }
     }
   }
-  composerLockFiles = utils.getAllFiles(
+  composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock"
   );
@@ -3314,7 +3404,7 @@ const createPHPBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      let dlist = utils.parseComposerLock(f);
+      let dlist = parseComposerLock(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3334,11 +3424,11 @@ const createPHPBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 const createRubyBom = async (path, options) => {
-  const gemFiles = utils.getAllFiles(
+  const gemFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile"
   );
-  let gemLockFiles = utils.getAllFiles(
+  let gemLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile.lock"
   );
@@ -3347,7 +3437,7 @@ const createRubyBom = async (path, options) => {
   let gemLockMode = gemLockFiles.length;
   if (gemFileMode && !gemLockMode && options.installDeps) {
     for (let f of gemFiles) {
-      const basePath = pathLib.dirname(f);
+      const basePath = dirname(f);
       console.log("Executing 'bundle install' in", basePath);
       const result = spawnSync("bundle", ["install"], {
         cwd: basePath,
@@ -3362,7 +3452,7 @@ const createRubyBom = async (path, options) => {
       }
     }
   }
-  gemLockFiles = utils.getAllFiles(
+  gemLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile.lock"
   );
@@ -3371,8 +3461,8 @@ const createRubyBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      let gemLockData = fs.readFileSync(f, { encoding: "utf-8" });
-      const dlist = await utils.parseGemfileLockData(gemLockData);
+      let gemLockData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parseGemfileLockData(gemLockData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3393,23 +3483,23 @@ const createRubyBom = async (path, options) => {
  */
 const createCsharpBom = async (path, options) => {
   let manifestFiles = [];
-  const csProjFiles = utils.getAllFiles(
+  const csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj"
   );
-  const pkgConfigFiles = utils.getAllFiles(
+  const pkgConfigFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "packages.config"
   );
-  const projAssetsFiles = utils.getAllFiles(
+  const projAssetsFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "project.assets.json"
   );
-  const pkgLockFiles = utils.getAllFiles(
+  const pkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "packages.lock.json"
   );
-  const nupkgFiles = utils.getAllFiles(
+  const nupkgFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.nupkg"
   );
@@ -3420,7 +3510,7 @@ const createCsharpBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${nf}`);
       }
-      const dlist = await utils.parseNupkg(nf);
+      const dlist = await parseNupkg(nf);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3433,8 +3523,8 @@ const createCsharpBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${af}`);
       }
-      let pkgData = fs.readFileSync(af, { encoding: "utf-8" });
-      const dlist = await utils.parseCsProjAssetsData(pkgData);
+      let pkgData = readFileSync(af, { encoding: "utf-8" });
+      const dlist = await parseCsProjAssetsData(pkgData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3446,8 +3536,8 @@ const createCsharpBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${af}`);
       }
-      let pkgData = fs.readFileSync(af, { encoding: "utf-8" });
-      const dlist = await utils.parseCsPkgLockData(pkgData);
+      let pkgData = readFileSync(af, { encoding: "utf-8" });
+      const dlist = await parseCsPkgLockData(pkgData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3459,12 +3549,12 @@ const createCsharpBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      let pkgData = fs.readFileSync(f, { encoding: "utf-8" });
+      let pkgData = readFileSync(f, { encoding: "utf-8" });
       // Remove byte order mark
       if (pkgData.charCodeAt(0) === 0xfeff) {
         pkgData = pkgData.slice(1);
       }
-      const dlist = await utils.parseCsPkgData(pkgData);
+      const dlist = await parseCsPkgData(pkgData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3476,12 +3566,12 @@ const createCsharpBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      let csProjData = fs.readFileSync(f, { encoding: "utf-8" });
+      let csProjData = readFileSync(f, { encoding: "utf-8" });
       // Remove byte order mark
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const dlist = await utils.parseCsProjData(csProjData);
+      const dlist = await parseCsProjData(csProjData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3516,7 +3606,8 @@ const mergeDependencies = (dependencies, newDependencies) => {
   }
   return retlist;
 };
-exports.mergeDependencies = mergeDependencies;
+const _mergeDependencies = mergeDependencies;
+export { _mergeDependencies as mergeDependencies };
 
 const trimComponents = (components, format) => {
   const keyCache = {};
@@ -3536,7 +3627,8 @@ const trimComponents = (components, format) => {
   }
   return filteredComponents;
 };
-exports.trimComponents = trimComponents;
+const _trimComponents = trimComponents;
+export { _trimComponents as trimComponents };
 
 const dedupeBom = (
   options,
@@ -3586,7 +3678,8 @@ const dedupeBom = (
     }
   };
 };
-exports.dedupeBom = dedupeBom;
+const _dedupeBom = dedupeBom;
+export { _dedupeBom as dedupeBom };
 
 /**
  * Function to create bom string for all languages
@@ -3604,7 +3697,7 @@ const createMultiXBom = async (pathList, options) => {
     ["docker", "oci", "container"].includes(options.projectType) &&
     options.allLayersExplodedDir
   ) {
-    const { osPackages, allTypes } = binaryLib.getOSPackages(
+    const { osPackages, allTypes } = getOSPackages(
       options.allLayersExplodedDir
     );
     if (DEBUG_MODE) {
@@ -3987,31 +4080,31 @@ const createMultiXBom = async (pathList, options) => {
  */
 const createXBom = async (path, options) => {
   try {
-    fs.accessSync(path, fs.constants.R_OK);
+    accessSync(path, constants.R_OK);
   } catch (err) {
     console.error(path, "is invalid");
     process.exit(1);
   }
   // node.js - package.json
   if (
-    fs.existsSync(pathLib.join(path, "package.json")) ||
-    fs.existsSync(pathLib.join(path, "rush.json")) ||
-    fs.existsSync(pathLib.join(path, "yarn.lock"))
+    existsSync(join(path, "package.json")) ||
+    existsSync(join(path, "rush.json")) ||
+    existsSync(join(path, "yarn.lock"))
   ) {
     return await createNodejsBom(path, options);
   }
   // maven - pom.xml
-  const pomFiles = utils.getAllFiles(
+  const pomFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pom.xml"
   );
   // gradle
-  let gradleFiles = utils.getAllFiles(
+  let gradleFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "build.gradle*"
   );
   // scala sbt
-  let sbtFiles = utils.getAllFiles(
+  let sbtFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "{build.sbt,Build.scala}*"
   );
@@ -4019,25 +4112,24 @@ const createXBom = async (path, options) => {
     return await createJavaBom(path, options);
   }
   // python
-  const pipenvMode = fs.existsSync(pathLib.join(path, "Pipfile"));
-  const poetryMode = fs.existsSync(pathLib.join(path, "poetry.lock"));
-  const pyProjectMode =
-    !poetryMode && fs.existsSync(pathLib.join(path, "pyproject.toml"));
-  const setupPyMode = fs.existsSync(pathLib.join(path, "setup.py"));
+  const pipenvMode = existsSync(join(path, "Pipfile"));
+  const poetryMode = existsSync(join(path, "poetry.lock"));
+  const pyProjectMode = !poetryMode && existsSync(join(path, "pyproject.toml"));
+  const setupPyMode = existsSync(join(path, "setup.py"));
   if (pipenvMode || poetryMode || pyProjectMode || setupPyMode) {
     return await createPythonBom(path, options);
   }
-  const reqFiles = utils.getAllFiles(
+  const reqFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt"
   );
-  const reqDirFiles = utils.getAllFiles(
+  const reqDirFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "requirements/*.txt"
   );
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
-  const whlFiles = utils.getAllFiles(
+  const whlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.whl"
   );
@@ -4045,15 +4137,15 @@ const createXBom = async (path, options) => {
     return await createPythonBom(path, options);
   }
   // go
-  const gosumFiles = utils.getAllFiles(
+  const gosumFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.sum"
   );
-  const gomodFiles = utils.getAllFiles(
+  const gomodFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.mod"
   );
-  const gopkgLockFiles = utils.getAllFiles(
+  const gopkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gopkg.lock"
   );
@@ -4062,11 +4154,11 @@ const createXBom = async (path, options) => {
   }
 
   // rust
-  const cargoLockFiles = utils.getAllFiles(
+  const cargoLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock"
   );
-  const cargoFiles = utils.getAllFiles(
+  const cargoFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.toml"
   );
@@ -4075,11 +4167,11 @@ const createXBom = async (path, options) => {
   }
 
   // php
-  const composerJsonFiles = utils.getAllFiles(
+  const composerJsonFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.json"
   );
-  const composerLockFiles = utils.getAllFiles(
+  const composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock"
   );
@@ -4088,11 +4180,11 @@ const createXBom = async (path, options) => {
   }
 
   // Ruby
-  const gemFiles = utils.getAllFiles(
+  const gemFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile"
   );
-  const gemLockFiles = utils.getAllFiles(
+  const gemLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile.lock"
   );
@@ -4101,7 +4193,7 @@ const createXBom = async (path, options) => {
   }
 
   // .Net
-  const csProjFiles = utils.getAllFiles(
+  const csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj"
   );
@@ -4110,11 +4202,11 @@ const createXBom = async (path, options) => {
   }
 
   // Dart
-  const pubFiles = utils.getAllFiles(
+  const pubFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.lock"
   );
-  const pubSpecFiles = utils.getAllFiles(
+  const pubSpecFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.yaml"
   );
@@ -4123,7 +4215,7 @@ const createXBom = async (path, options) => {
   }
 
   // Haskell
-  const hackageFiles = utils.getAllFiles(
+  const hackageFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "cabal.project.freeze"
   );
@@ -4132,7 +4224,7 @@ const createXBom = async (path, options) => {
   }
 
   // Elixir
-  const mixFiles = utils.getAllFiles(
+  const mixFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "mix.lock"
   );
@@ -4141,11 +4233,11 @@ const createXBom = async (path, options) => {
   }
 
   // cpp
-  const conanLockFiles = utils.getAllFiles(
+  const conanLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conan.lock"
   );
-  const conanFiles = utils.getAllFiles(
+  const conanFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conanfile.txt"
   );
@@ -4154,11 +4246,11 @@ const createXBom = async (path, options) => {
   }
 
   // clojure
-  const ednFiles = utils.getAllFiles(
+  const ednFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "deps.edn"
   );
-  const leinFiles = utils.getAllFiles(
+  const leinFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "project.clj"
   );
@@ -4167,13 +4259,13 @@ const createXBom = async (path, options) => {
   }
 
   // GitHub actions
-  const ghactionFiles = utils.getAllFiles(path, ".github/workflows/" + "*.yml");
+  const ghactionFiles = getAllFiles(path, ".github/workflows/" + "*.yml");
   if (ghactionFiles.length) {
     return await createGitHubBom(path, options);
   }
 
   // Jenkins plugins
-  const hpiFiles = utils.getAllFiles(
+  const hpiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.hpi"
   );
@@ -4182,11 +4274,11 @@ const createXBom = async (path, options) => {
   }
 
   // Helm charts
-  const chartFiles = utils.getAllFiles(
+  const chartFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Chart.yaml"
   );
-  const yamlFiles = utils.getAllFiles(
+  const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "values.yaml"
   );
@@ -4195,15 +4287,15 @@ const createXBom = async (path, options) => {
   }
 
   // Docker compose, kubernetes and skaffold
-  const dcFiles = utils.getAllFiles(
+  const dcFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "docker-compose*.yml"
   );
-  const skFiles = utils.getAllFiles(
+  const skFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "skaffold.yaml"
   );
-  const deplFiles = utils.getAllFiles(
+  const deplFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "deployment.yaml"
   );
@@ -4212,7 +4304,7 @@ const createXBom = async (path, options) => {
   }
 
   // Google CloudBuild
-  const cbFiles = utils.getAllFiles(
+  const cbFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "cloudbuild.yaml"
   );
@@ -4221,11 +4313,11 @@ const createXBom = async (path, options) => {
   }
 
   // Swift
-  const swiftFiles = utils.getAllFiles(
+  const swiftFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift"
   );
-  const pkgResolvedFiles = utils.getAllFiles(
+  const pkgResolvedFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package.resolved"
   );
@@ -4250,7 +4342,7 @@ const createBom = async (path, options) => {
   let isContainerMode = false;
   // Docker and image archive support
   if (path.endsWith(".tar") || path.endsWith(".tar.gz")) {
-    exportData = await dockerLib.exportArchive(path);
+    exportData = await exportArchive(path);
     if (!exportData) {
       console.log(
         `OS BOM generation has failed due to problems with exporting the image ${path}`
@@ -4269,7 +4361,7 @@ const createBom = async (path, options) => {
     path.includes("@sha256") ||
     path.includes(":latest")
   ) {
-    exportData = await dockerLib.exportImage(path);
+    exportData = await exportImage(path);
     if (!exportData) {
       console.log(
         "BOM generation has failed due to problems with exporting the image"
@@ -4286,10 +4378,10 @@ const createBom = async (path, options) => {
       allLayersDir: path,
       allLayersExplodedDir: path
     };
-    if (fs.existsSync(pathLib.join(path, "all-layers"))) {
-      exportData.allLayersDir = pathLib.join(path, "all-layers");
+    if (existsSync(join(path, "all-layers"))) {
+      exportData.allLayersDir = join(path, "all-layers");
     }
-    exportData.pkgPathList = dockerLib.getPkgPathList(exportData, undefined);
+    exportData.pkgPathList = getPkgPathList(exportData, undefined);
   }
   if (isContainerMode) {
     options.multiProject = true;
@@ -4334,14 +4426,14 @@ const createBom = async (path, options) => {
     );
     if (
       exportData.allLayersDir &&
-      exportData.allLayersDir.startsWith(os.tmpdir())
+      exportData.allLayersDir.startsWith(tmpdir())
     ) {
       if (DEBUG_MODE) {
         console.log(`Cleaning up ${exportData.allLayersDir}`);
       }
       try {
-        if (fs.rmSync) {
-          fs.rmSync(exportData.allLayersDir, { recursive: true, force: true });
+        if (rmSync) {
+          rmSync(exportData.allLayersDir, { recursive: true, force: true });
         }
       } catch (err) {
         // continue regardless of error
@@ -4379,10 +4471,7 @@ const createBom = async (path, options) => {
     case "maven-cache":
     case "maven-repo":
       options.multiProject = true;
-      return await createJarBom(
-        pathLib.join(os.homedir(), ".m2", "repository"),
-        options
-      );
+      return await createJarBom(join(homedir(), ".m2", "repository"), options);
     case "nodejs":
     case "js":
     case "javascript":
@@ -4462,7 +4551,7 @@ const createBom = async (path, options) => {
     case "helm-repo":
       options.multiProject = true;
       return await createHelmBom(
-        pathLib.join(os.homedir(), ".cache", "helm", "repository"),
+        join(homedir(), ".cache", "helm", "repository"),
         options
       );
     case "universal":
@@ -4493,7 +4582,8 @@ const createBom = async (path, options) => {
       }
   }
 };
-exports.createBom = createBom;
+const _createBom = createBom;
+export { _createBom as createBom };
 
 /**
  * Method to submit the generated bom to dependency-track or cyclonedx server
@@ -4501,7 +4591,7 @@ exports.createBom = createBom;
  * @param args CLI args
  * @param bomContents BOM Xml
  */
-exports.submitBom = async (args, bomContents) => {
+export async function submitBom(args, bomContents) {
   let serverUrl = args.serverUrl.replace(/\/$/, "") + "/api/v1/bom";
   let encodedBomContents = Buffer.from(bomContents).toString("base64");
   if (encodedBomContents.startsWith("77u/")) {
@@ -4572,4 +4662,4 @@ exports.submitBom = async (args, bomContents) => {
       console.log(error);
     }
   }
-};
+}

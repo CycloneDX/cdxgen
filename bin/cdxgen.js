@@ -1,13 +1,21 @@
 #!/usr/bin/env node
 
-const bom = require("../index.js");
-const fs = require("fs");
-const path = require("path");
-const jws = require("jws");
-const crypto = require("crypto");
-const bomServer = require("../server.js");
+import { createBom, submitBom } from "../index.js";
+import fs from "node:fs";
+import path from "node:path";
+import jws from "jws";
+import crypto from "crypto";
+import { start as _serverStart } from "../server.js";
+import { fileURLToPath } from "node:url";
+import globalAgent from "global-agent";
+import { table } from "table";
 
-const args = require("yargs")
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+const args = yargs(hideBin(process.argv))
   .option("output", {
     alias: "o",
     description: "Output file for bom.xml or bom.json. Default bom.json"
@@ -113,7 +121,6 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
   if (!process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE) {
     process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE = "";
   }
-  const globalAgent = require("global-agent");
   globalAgent.bootstrap();
 }
 
@@ -156,9 +163,9 @@ let options = {
 (async () => {
   // Start SBoM server
   if (args.server) {
-    return await bomServer.start(options);
+    return await _serverStart(options);
   }
-  const bomNSData = (await bom.createBom(filePath, options)) || {};
+  const bomNSData = (await createBom(filePath, options)) || {};
   if (!args.output) {
     args.output = "bom.json";
     args.print = true;
@@ -297,7 +304,7 @@ let options = {
   if (args.serverUrl && args.serverUrl != true && args.apiKey) {
     try {
       // TODO: Need to use json format for v9
-      const dbody = await bom.submitBom(args, bomNSData.bomXml);
+      const dbody = await submitBom(args, bomNSData.bomXml);
       console.log("Response from server", dbody);
     } catch (err) {
       console.log(err);
@@ -305,7 +312,6 @@ let options = {
   }
 
   if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
-    const { table } = require("table");
     const data = [["Group", "Name", "Version", "Scope"]];
     for (let comp of bomNSData.bomJson.components) {
       data.push([comp.group || "", comp.name, comp.version, comp.scope || ""]);

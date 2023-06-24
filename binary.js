@@ -1,9 +1,15 @@
-const os = require("os");
-const fs = require("fs");
-const path = require("path");
-const { spawnSync } = require("child_process");
-const { PackageURL } = require("packageurl-js");
-const isWin = require("os").platform() === "win32";
+import { platform as _platform, arch as _arch, tmpdir } from "node:os";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { join, dirname, basename } from "node:path";
+import { spawnSync } from "node:child_process";
+import { PackageURL } from "packageurl-js";
+
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const isWin = _platform() === "win32";
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -12,14 +18,14 @@ const DEBUG_MODE =
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
   process.env.NODE_ENV === "development";
 
-let platform = os.platform();
+let platform = _platform();
 let extn = "";
 if (platform == "win32") {
   platform = "windows";
   extn = ".exe";
 }
 
-let arch = os.arch();
+let arch = _arch();
 switch (arch) {
   case "x32":
     arch = "386";
@@ -34,16 +40,16 @@ let CDXGEN_PLUGINS_DIR = process.env.CDXGEN_PLUGINS_DIR;
 // Is there a non-empty local plugins directory
 if (
   !CDXGEN_PLUGINS_DIR &&
-  fs.existsSync(path.join(__dirname, "plugins")) &&
-  fs.existsSync(path.join(__dirname, "plugins", "goversion"))
+  existsSync(join(__dirname, "plugins")) &&
+  existsSync(join(__dirname, "plugins", "goversion"))
 ) {
-  CDXGEN_PLUGINS_DIR = path.join(__dirname, "plugins");
+  CDXGEN_PLUGINS_DIR = join(__dirname, "plugins");
 }
 // Is there a non-empty local node_modules directory
 if (
   !CDXGEN_PLUGINS_DIR &&
-  fs.existsSync(
-    path.join(
+  existsSync(
+    join(
       __dirname,
       "node_modules",
       "@cyclonedx",
@@ -51,8 +57,8 @@ if (
       "plugins"
     )
   ) &&
-  fs.existsSync(
-    path.join(
+  existsSync(
+    join(
       __dirname,
       "node_modules",
       "@cyclonedx",
@@ -62,7 +68,7 @@ if (
     )
   )
 ) {
-  CDXGEN_PLUGINS_DIR = path.join(
+  CDXGEN_PLUGINS_DIR = join(
     __dirname,
     "node_modules",
     "@cyclonedx",
@@ -88,13 +94,13 @@ if (!CDXGEN_PLUGINS_DIR) {
       }
     }
   }
-  const globalPlugins = path.join(
+  const globalPlugins = join(
     globalNodePath,
     "@cyclonedx",
     "cdxgen-plugins-bin",
     "plugins"
   );
-  if (fs.existsSync(globalPlugins)) {
+  if (existsSync(globalPlugins)) {
     CDXGEN_PLUGINS_DIR = globalPlugins;
     if (DEBUG_MODE) {
       console.log("Found global plugins", CDXGEN_PLUGINS_DIR);
@@ -111,16 +117,16 @@ if (!CDXGEN_PLUGINS_DIR) {
   CDXGEN_PLUGINS_DIR = "";
 }
 let GOVERSION_BIN = null;
-if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "goversion"))) {
-  GOVERSION_BIN = path.join(
+if (existsSync(join(CDXGEN_PLUGINS_DIR, "goversion"))) {
+  GOVERSION_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "goversion",
     "goversion-" + platform + "-" + arch + extn
   );
 }
 let TRIVY_BIN = null;
-if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "trivy"))) {
-  TRIVY_BIN = path.join(
+if (existsSync(join(CDXGEN_PLUGINS_DIR, "trivy"))) {
+  TRIVY_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "trivy",
     "trivy-cdxgen-" + platform + "-" + arch + extn
@@ -129,8 +135,8 @@ if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "trivy"))) {
   TRIVY_BIN = process.env.TRIVY_CMD;
 }
 let CARGO_AUDITABLE_BIN = null;
-if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "cargo-auditable"))) {
-  CARGO_AUDITABLE_BIN = path.join(
+if (existsSync(join(CDXGEN_PLUGINS_DIR, "cargo-auditable"))) {
+  CARGO_AUDITABLE_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "cargo-auditable",
     "cargo-auditable-cdxgen-" + platform + "-" + arch + extn
@@ -139,8 +145,8 @@ if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "cargo-auditable"))) {
   CARGO_AUDITABLE_BIN = process.env.CARGO_AUDITABLE_CMD;
 }
 let OSQUERY_BIN = null;
-if (fs.existsSync(path.join(CDXGEN_PLUGINS_DIR, "osquery"))) {
-  OSQUERY_BIN = path.join(
+if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
+  OSQUERY_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "osquery",
     "osqueryi-" + platform + "-" + arch + extn
@@ -244,7 +250,8 @@ const getGoBuildInfo = (src) => {
   }
   return undefined;
 };
-exports.getGoBuildInfo = getGoBuildInfo;
+const _getGoBuildInfo = getGoBuildInfo;
+export { _getGoBuildInfo as getGoBuildInfo };
 
 const getCargoAuditableInfo = (src) => {
   if (CARGO_AUDITABLE_BIN) {
@@ -266,18 +273,19 @@ const getCargoAuditableInfo = (src) => {
   }
   return undefined;
 };
-exports.getCargoAuditableInfo = getCargoAuditableInfo;
+const _getCargoAuditableInfo = getCargoAuditableInfo;
+export { _getCargoAuditableInfo as getCargoAuditableInfo };
 
 const getOSPackages = (src) => {
   const pkgList = [];
   const allTypes = new Set();
   if (TRIVY_BIN) {
     let imageType = "image";
-    if (fs.existsSync(src)) {
+    if (existsSync(src)) {
       imageType = "rootfs";
     }
-    let tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "trivy-cdxgen-"));
-    const bomJsonFile = path.join(tempDir, "trivy-bom.json");
+    let tempDir = mkdtempSync(join(tmpdir(), "trivy-cdxgen-"));
+    const bomJsonFile = join(tempDir, "trivy-bom.json");
     const args = [
       imageType,
       "--skip-db-update",
@@ -305,11 +313,11 @@ const getOSPackages = (src) => {
         console.error(result.stdout, result.stderr);
       }
     }
-    if (fs.existsSync(bomJsonFile)) {
+    if (existsSync(bomJsonFile)) {
       let tmpBom = {};
       try {
         tmpBom = JSON.parse(
-          fs.readFileSync(bomJsonFile, {
+          readFileSync(bomJsonFile, {
             encoding: "utf-8"
           })
         );
@@ -317,12 +325,12 @@ const getOSPackages = (src) => {
         // ignore errors
       }
       // Clean up
-      if (tempDir && tempDir.startsWith(os.tmpdir())) {
+      if (tempDir && tempDir.startsWith(tmpdir())) {
         if (DEBUG_MODE) {
           console.log(`Cleaning up ${tempDir}`);
         }
-        if (fs.rmSync) {
-          fs.rmSync(tempDir, { recursive: true, force: true });
+        if (rmSync) {
+          rmSync(tempDir, { recursive: true, force: true });
         }
       }
       if (tmpBom && tmpBom.components) {
@@ -347,8 +355,8 @@ const getOSPackages = (src) => {
               continue;
             }
             // Fix the group
-            let group = path.dirname(comp.name);
-            let name = path.basename(comp.name);
+            let group = dirname(comp.name);
+            let name = basename(comp.name);
             let purlObj = undefined;
             let distro_codename = "";
             if (group === ".") {
@@ -483,7 +491,8 @@ const getOSPackages = (src) => {
   }
   return { osPackages: pkgList, allTypes: Array.from(allTypes) };
 };
-exports.getOSPackages = getOSPackages;
+const _getOSPackages = getOSPackages;
+export { _getOSPackages as getOSPackages };
 
 const executeOsQuery = (query) => {
   if (OSQUERY_BIN) {
@@ -515,4 +524,5 @@ const executeOsQuery = (query) => {
   }
   return undefined;
 };
-exports.executeOsQuery = executeOsQuery;
+const _executeOsQuery = executeOsQuery;
+export { _executeOsQuery as executeOsQuery };

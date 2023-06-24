@@ -1,27 +1,56 @@
-const { globSync } = require("glob");
-const os = require("os");
-const path = require("path");
-const fs = require("fs");
-const got = require("got");
-const convert = require("xml-js");
-const licenseMapping = require("./data/lic-mapping.json");
-const vendorAliases = require("./data/vendor-alias.json");
-const spdxLicenses = require("./data/spdx-licenses.json");
-const knownLicenses = require("./data/known-licenses.json");
-const cheerio = require("cheerio");
-const yaml = require("js-yaml");
-const { spawnSync } = require("child_process");
-const propertiesReader = require("properties-reader");
-const semver = require("semver");
-const StreamZip = require("node-stream-zip");
-const ednDataLib = require("edn-data");
-const { PackageURL } = require("packageurl-js");
+import { globSync } from "glob";
+import { tmpdir, platform, freemem } from "node:os";
+import {
+  dirname,
+  sep as _sep,
+  basename,
+  join,
+  resolve,
+  delimiter as _delimiter
+} from "node:path";
+import {
+  existsSync,
+  readFileSync,
+  mkdtempSync,
+  rmSync,
+  copyFileSync,
+  constants,
+  writeFileSync,
+  unlinkSync,
+  chmodSync
+} from "node:fs";
+import fs from "node:fs/promises";
+import got from "got";
+import { xml2js } from "xml-js";
+const licenseMapping = JSON.parse(await fs.readFile("./data/lic-mapping.json"));
+const vendorAliases = JSON.parse(await fs.readFile("./data/vendor-alias.json"));
+const spdxLicenses = JSON.parse(await fs.readFile("./data/spdx-licenses.json"));
+const knownLicenses = JSON.parse(
+  await fs.readFile("./data/known-licenses.json")
+);
+import { load } from "cheerio";
+import { load as _load } from "js-yaml";
+import { spawnSync } from "node:child_process";
+import propertiesReader from "properties-reader";
+import { satisfies, coerce, maxSatisfying, clean, valid } from "semver";
+import StreamZip from "node-stream-zip";
+import { parseEDNString } from "edn-data";
+import { PackageURL } from "packageurl-js";
+
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Refer to contrib/py-modules.py for a script to generate this list
 // The script needs to be used once every few months to update this list
-const PYTHON_STD_MODULES = require("./data/python-stdlib.json");
+const PYTHON_STD_MODULES = JSON.parse(
+  await fs.readFile("./data/python-stdlib.json")
+);
 // Mapping between modules and package names
-const PYPI_MODULE_PACKAGE_MAPPING = require("./data/pypi-pkg-aliases.json");
+const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
+  await fs.readFile("./data/pypi-pkg-aliases.json")
+);
 
 // Debug mode flag
 const DEBUG_MODE =
@@ -39,7 +68,8 @@ let metadata_cache = {};
 const includeMavenTestScope =
   !process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE ||
   ["true", "1"].includes(process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE);
-exports.includeMavenTestScope = includeMavenTestScope;
+const _includeMavenTestScope = includeMavenTestScope;
+export { _includeMavenTestScope as includeMavenTestScope };
 
 // Whether license information should be fetched
 const fetchLicenses =
@@ -90,7 +120,8 @@ const getAllFiles = function (dirPath, pattern) {
     return [];
   }
 };
-exports.getAllFiles = getAllFiles;
+const _getAllFiles = getAllFiles;
+export { _getAllFiles as getAllFiles };
 
 const toBase64 = (hexString) => {
   return Buffer.from(hexString, "hex").toString("base64");
@@ -144,7 +175,8 @@ function getLicenses(pkg, format = "xml") {
   }
   return [];
 }
-exports.getLicenses = getLicenses;
+const _getLicenses = getLicenses;
+export { _getLicenses as getLicenses };
 
 /**
  * Tries to find a file containing the license text based on commonly
@@ -177,7 +209,7 @@ function addLicenseText(pkg, l, licenseContent, format = "xml") {
         licenseContentTypes
       )) {
         let licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
-        if (fs.existsSync(licenseFilepath)) {
+        if (existsSync(licenseFilepath)) {
           licenseContent.text = readLicenseText(
             licenseFilepath,
             licenseContentType,
@@ -195,7 +227,7 @@ function addLicenseText(pkg, l, licenseContent, format = "xml") {
  * content-type attribute, if not default. Returns the license text object.
  */
 function readLicenseText(licenseFilepath, licenseContentType, format = "xml") {
-  let licenseText = fs.readFileSync(licenseFilepath, "utf8");
+  let licenseText = readFileSync(licenseFilepath, "utf8");
   if (licenseText) {
     if (format === "xml") {
       let licenseContentText = { "#cdata": licenseText };
@@ -260,7 +292,8 @@ const getNpmMetadata = async function (pkgList) {
   }
   return cdepList;
 };
-exports.getNpmMetadata = getNpmMetadata;
+const _getNpmMetadata = getNpmMetadata;
+export { _getNpmMetadata as getNpmMetadata };
 
 const _getDepPkgList = async function (
   pkgLockFile,
@@ -363,9 +396,9 @@ const _getDepPkgList = async function (
  */
 const parsePkgJson = async (pkgJsonFile) => {
   const pkgList = [];
-  if (fs.existsSync(pkgJsonFile)) {
+  if (existsSync(pkgJsonFile)) {
     try {
-      const pkgData = JSON.parse(fs.readFileSync(pkgJsonFile, "utf8"));
+      const pkgData = JSON.parse(readFileSync(pkgJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
       pkgList.push({
         name: pkgIdentifier.fullName || pkgData.name,
@@ -392,7 +425,8 @@ const parsePkgJson = async (pkgJsonFile) => {
   }
   return pkgList;
 };
-exports.parsePkgJson = parsePkgJson;
+const _parsePkgJson = parsePkgJson;
+export { _parsePkgJson as parsePkgJson };
 
 /**
  * Parse nodejs package lock file
@@ -404,8 +438,8 @@ const parsePkgLock = async (pkgLockFile) => {
   let dependenciesList = [];
   let depKeys = {};
   let rootPkg = {};
-  if (fs.existsSync(pkgLockFile)) {
-    const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+  if (existsSync(pkgLockFile)) {
+    const lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
     rootPkg.name = lockData.name || "";
     // lockfile v2 onwards
     if (lockData.name && lockData.packages && lockData.packages[""]) {
@@ -417,8 +451,8 @@ const parsePkgLock = async (pkgLockFile) => {
         type: "application"
       };
     } else if (lockData.lockfileVersion === 1) {
-      let dirName = path.dirname(pkgLockFile);
-      const tmpA = dirName.split(path.sep);
+      let dirName = dirname(pkgLockFile);
+      const tmpA = dirName.split(_sep);
       dirName = tmpA[tmpA.length - 1];
       // v1 lock file
       rootPkg = {
@@ -503,7 +537,8 @@ const parsePkgLock = async (pkgLockFile) => {
     dependenciesList
   };
 };
-exports.parsePkgLock = parsePkgLock;
+const _parsePkgLock = parsePkgLock;
+export { _parsePkgLock as parsePkgLock };
 
 /**
  * Given a lock file this method would return an Object with the identiy as the key and parsed name and value
@@ -556,7 +591,8 @@ const yarnLockToIdentMap = function (lockData) {
   });
   return identMap;
 };
-exports.yarnLockToIdentMap = yarnLockToIdentMap;
+const _yarnLockToIdentMap = yarnLockToIdentMap;
+export { _yarnLockToIdentMap as yarnLockToIdentMap };
 
 /**
  * Parse nodejs yarn lock file
@@ -567,8 +603,8 @@ const parseYarnLock = async function (yarnLockFile) {
   let pkgList = [];
   const dependenciesList = [];
   const depKeys = {};
-  if (fs.existsSync(yarnLockFile)) {
-    const lockData = fs.readFileSync(yarnLockFile, "utf8");
+  if (existsSync(yarnLockFile)) {
+    const lockData = readFileSync(yarnLockFile, "utf8");
     let name = "";
     let group = "";
     let version = "";
@@ -712,7 +748,8 @@ const parseYarnLock = async function (yarnLockFile) {
     dependenciesList
   };
 };
-exports.parseYarnLock = parseYarnLock;
+const _parseYarnLock = parseYarnLock;
+export { _parseYarnLock as parseYarnLock };
 
 /**
  * Parse nodejs shrinkwrap deps file
@@ -721,8 +758,8 @@ exports.parseYarnLock = parseYarnLock;
  */
 const parseNodeShrinkwrap = async function (swFile) {
   const pkgList = [];
-  if (fs.existsSync(swFile)) {
-    const lockData = JSON.parse(fs.readFileSync(swFile, "utf8"));
+  if (existsSync(swFile)) {
+    const lockData = JSON.parse(readFileSync(swFile, "utf8"));
     const pkgKeys = Object.keys(lockData);
     for (var k in pkgKeys) {
       const fullName = pkgKeys[k];
@@ -772,7 +809,8 @@ const parseNodeShrinkwrap = async function (swFile) {
   }
   return pkgList;
 };
-exports.parseNodeShrinkwrap = parseNodeShrinkwrap;
+const _parseNodeShrinkwrap = parseNodeShrinkwrap;
+export { _parseNodeShrinkwrap as parseNodeShrinkwrap };
 
 /**
  * Parse nodejs pnpm lock file
@@ -795,9 +833,9 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
         null
       ).toString();
   }
-  if (fs.existsSync(pnpmLock)) {
-    const lockData = fs.readFileSync(pnpmLock, "utf8");
-    const yamlObj = yaml.load(lockData);
+  if (existsSync(pnpmLock)) {
+    const lockData = readFileSync(pnpmLock, "utf8");
+    const yamlObj = _load(lockData);
     if (!yamlObj) {
       return {};
     }
@@ -934,7 +972,8 @@ const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
     dependenciesList
   };
 };
-exports.parsePnpmLock = parsePnpmLock;
+const _parsePnpmLock = parsePnpmLock;
+export { _parsePnpmLock as parsePnpmLock };
 
 /**
  * Parse bower json file
@@ -943,9 +982,9 @@ exports.parsePnpmLock = parsePnpmLock;
  */
 const parseBowerJson = async (bowerJsonFile) => {
   const pkgList = [];
-  if (fs.existsSync(bowerJsonFile)) {
+  if (existsSync(bowerJsonFile)) {
     try {
-      const pkgData = JSON.parse(fs.readFileSync(bowerJsonFile, "utf8"));
+      const pkgData = JSON.parse(readFileSync(bowerJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
       pkgList.push({
         name: pkgIdentifier.fullName || pkgData.name,
@@ -974,7 +1013,8 @@ const parseBowerJson = async (bowerJsonFile) => {
   }
   return pkgList;
 };
-exports.parseBowerJson = parseBowerJson;
+const _parseBowerJson = parseBowerJson;
+export { _parseBowerJson as parseBowerJson };
 
 /**
  * Parse minified js file
@@ -983,9 +1023,9 @@ exports.parseBowerJson = parseBowerJson;
  */
 const parseMinJs = async (minJsFile) => {
   const pkgList = [];
-  if (fs.existsSync(minJsFile)) {
+  if (existsSync(minJsFile)) {
     try {
-      const rawData = fs.readFileSync(minJsFile, { encoding: "utf-8" });
+      const rawData = readFileSync(minJsFile, { encoding: "utf-8" });
       const tmpA = rawData.split("\n");
       tmpA.forEach((l) => {
         if ((l.startsWith("/*!") || l.startsWith("  * ")) && l.length < 500) {
@@ -1048,7 +1088,8 @@ const parseMinJs = async (minJsFile) => {
   }
   return pkgList;
 };
-exports.parseMinJs = parseMinJs;
+const _parseMinJs = parseMinJs;
+export { _parseMinJs as parseMinJs };
 
 /**
  * Parse pom file
@@ -1057,8 +1098,8 @@ exports.parseMinJs = parseMinJs;
  */
 const parsePom = function (pomFile) {
   const deps = [];
-  const xmlData = fs.readFileSync(pomFile);
-  const project = convert.xml2js(xmlData, {
+  const xmlData = readFileSync(pomFile);
+  const project = xml2js(xmlData, {
     compact: true,
     spaces: 4,
     textKey: "_",
@@ -1096,7 +1137,8 @@ const parsePom = function (pomFile) {
   }
   return deps;
 };
-exports.parsePom = parsePom;
+const _parsePom = parsePom;
+export { _parsePom as parsePom };
 
 /**
  * Parse maven tree output
@@ -1188,7 +1230,8 @@ const parseMavenTree = function (rawOutput) {
     dependenciesList
   };
 };
-exports.parseMavenTree = parseMavenTree;
+const _parseMavenTree = parseMavenTree;
+export { _parseMavenTree as parseMavenTree };
 
 /**
  * Parse gradle dependencies output
@@ -1385,7 +1428,8 @@ const parseGradleDep = function (
   }
   return {};
 };
-exports.parseGradleDep = parseGradleDep;
+const _parseGradleDep = parseGradleDep;
+export { _parseGradleDep as parseGradleDep };
 
 /**
  * Parse clojure cli dependencies output
@@ -1404,11 +1448,11 @@ const parseCljDep = function (rawOutput) {
         }
         const tmpArr = l.split(" ");
         if (tmpArr.length == 2) {
-          let group = path.dirname(tmpArr[0]);
+          let group = dirname(tmpArr[0]);
           if (group === ".") {
             group = "";
           }
-          const name = path.basename(tmpArr[0]);
+          const name = basename(tmpArr[0]);
           const version = tmpArr[1];
           const cacheKey = group + "-" + name + "-" + version;
           if (!keys_cache[cacheKey]) {
@@ -1426,7 +1470,8 @@ const parseCljDep = function (rawOutput) {
   }
   return [];
 };
-exports.parseCljDep = parseCljDep;
+const _parseCljDep = parseCljDep;
+export { _parseCljDep as parseCljDep };
 
 /**
  * Parse lein dependency tree output
@@ -1439,12 +1484,13 @@ const parseLeinDep = function (rawOutput) {
     if (rawOutput.includes("{[") && !rawOutput.startsWith("{[")) {
       rawOutput = "{[" + rawOutput.split("{[")[1];
     }
-    const ednData = ednDataLib.parseEDNString(rawOutput);
+    const ednData = parseEDNString(rawOutput);
     return parseLeinMap(ednData, keys_cache, deps);
   }
   return [];
 };
-exports.parseLeinDep = parseLeinDep;
+const _parseLeinDep = parseLeinDep;
+export { _parseLeinDep as parseLeinDep };
 
 const parseLeinMap = function (node, keys_cache, deps) {
   if (node["map"]) {
@@ -1453,11 +1499,11 @@ const parseLeinMap = function (node, keys_cache, deps) {
         const rootNode = n[0];
         let psym = rootNode[0].sym;
         let version = rootNode[1];
-        let group = path.dirname(psym);
+        let group = dirname(psym);
         if (group === ".") {
           group = "";
         }
-        let name = path.basename(psym);
+        let name = basename(psym);
         let cacheKey = group + "-" + name + "-" + version;
         if (!keys_cache[cacheKey]) {
           keys_cache[cacheKey] = true;
@@ -1471,7 +1517,8 @@ const parseLeinMap = function (node, keys_cache, deps) {
   }
   return deps;
 };
-exports.parseLeinMap = parseLeinMap;
+const _parseLeinMap = parseLeinMap;
+export { _parseLeinMap as parseLeinMap };
 
 /**
  * Parse gradle projects output
@@ -1514,7 +1561,8 @@ const parseGradleProjects = function (rawOutput) {
     projects: Array.from(projects)
   };
 };
-exports.parseGradleProjects = parseGradleProjects;
+const _parseGradleProjects = parseGradleProjects;
+export { _parseGradleProjects as parseGradleProjects };
 
 /**
  * Parse gradle properties output
@@ -1557,7 +1605,8 @@ const parseGradleProperties = function (rawOutput) {
     metadata
   };
 };
-exports.parseGradleProperties = parseGradleProperties;
+const _parseGradleProperties = parseGradleProperties;
+export { _parseGradleProperties as parseGradleProperties };
 
 /**
  * Execute gradle properties command and return parsed output
@@ -1621,7 +1670,8 @@ const executeGradleProperties = function (dir, rootPath, subProject) {
   }
   return {};
 };
-exports.executeGradleProperties = executeGradleProperties;
+const _executeGradleProperties = executeGradleProperties;
+export { _executeGradleProperties as executeGradleProperties };
 
 /**
  * Parse bazel skyframe state output
@@ -1678,7 +1728,8 @@ const parseBazelSkyframe = function (rawOutput) {
   }
   return [];
 };
-exports.parseBazelSkyframe = parseBazelSkyframe;
+const _parseBazelSkyframe = parseBazelSkyframe;
+export { _parseBazelSkyframe as parseBazelSkyframe };
 
 /**
  * Parse bazel BUILD file
@@ -1700,7 +1751,8 @@ const parseBazelBuild = function (rawOutput) {
   }
   return [];
 };
-exports.parseBazelBuild = parseBazelBuild;
+const _parseBazelBuild = parseBazelBuild;
+export { _parseBazelBuild as parseBazelBuild };
 
 /**
  * Parse dependencies in Key:Value format
@@ -1730,7 +1782,8 @@ const parseKVDep = function (rawOutput) {
   }
   return [];
 };
-exports.parseKVDep = parseKVDep;
+const _parseKVDep = parseKVDep;
+export { _parseKVDep as parseKVDep };
 
 /**
  * Method to find the spdx license id from name
@@ -1747,7 +1800,8 @@ const findLicenseId = function (name) {
     ? guessLicenseId(name)
     : name;
 };
-exports.findLicenseId = findLicenseId;
+const _findLicenseId = findLicenseId;
+export { _findLicenseId as findLicenseId };
 
 /**
  * Method to guess the spdx license id from license contents
@@ -1765,7 +1819,8 @@ const guessLicenseId = function (content) {
   }
   return undefined;
 };
-exports.guessLicenseId = guessLicenseId;
+const _guessLicenseId = guessLicenseId;
+export { _guessLicenseId as guessLicenseId };
 
 /**
  * Method to retrieve metadata for maven packages by querying maven central
@@ -1816,7 +1871,7 @@ const getMvnMetadata = async function (pkgList) {
         console.log(`Querying ${fullUrl}`);
       }
       const res = await got.get(fullUrl);
-      const bodyJson = convert.xml2js(res.body, {
+      const bodyJson = xml2js(res.body, {
         compact: true,
         spaces: 4,
         textKey: "_",
@@ -1857,7 +1912,8 @@ const getMvnMetadata = async function (pkgList) {
   }
   return cdepList;
 };
-exports.getMvnMetadata = getMvnMetadata;
+const _getMvnMetadata = getMvnMetadata;
+export { _getMvnMetadata as getMvnMetadata };
 
 /**
  * Method to parse python requires_dist attribute found in pypi setup.py
@@ -1885,7 +1941,8 @@ const parsePyRequiresDist = function (dist_string) {
     version
   };
 };
-exports.parsePyRequiresDist = parsePyRequiresDist;
+const _parsePyRequiresDist = parsePyRequiresDist;
+export { _parsePyRequiresDist as parsePyRequiresDist };
 
 /**
  * Method to mimic pip version solver using node-semver
@@ -1898,17 +1955,15 @@ const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
   // Iterate in the reverse order
   for (let i = versionsList.length - 1; i > 0; i--) {
     let rv = versionsList[i];
-    if (semver.satisfies(semver.coerce(rv), versionSpecifiers, true)) {
+    if (satisfies(coerce(rv), versionSpecifiers, true)) {
       return rv;
     }
   }
   // Let's try to clean and have another go
-  return semver.maxSatisfying(
-    versionsList,
-    semver.clean(versionSpecifiers, { loose: true })
-  );
+  return maxSatisfying(versionsList, clean(versionSpecifiers, { loose: true }));
 };
-exports.guessPypiMatchingVersion = guessPypiMatchingVersion;
+const _guessPypiMatchingVersion = guessPypiMatchingVersion;
+export { _guessPypiMatchingVersion as guessPypiMatchingVersion };
 
 /**
  * Method to retrieve metadata for python packages by querying pypi
@@ -2040,7 +2095,8 @@ const getPyMetadata = async function (pkgList, fetchDepsInfo) {
   }
   return cdepList;
 };
-exports.getPyMetadata = getPyMetadata;
+const _getPyMetadata = getPyMetadata;
+export { _getPyMetadata as getPyMetadata };
 
 /**
  * Method to parse bdist_wheel metadata
@@ -2066,7 +2122,8 @@ const parseBdistMetadata = function (mData) {
   });
   return [pkg];
 };
-exports.parseBdistMetadata = parseBdistMetadata;
+const _parseBdistMetadata = parseBdistMetadata;
+export { _parseBdistMetadata as parseBdistMetadata };
 
 /**
  * Method to parse pipfile.lock data
@@ -2089,7 +2146,8 @@ const parsePiplockData = async function (lockData) {
     });
   return await getPyMetadata(pkgList, false);
 };
-exports.parsePiplockData = parsePiplockData;
+const _parsePiplockData = parsePiplockData;
+export { _parsePiplockData as parsePiplockData };
 
 /**
  * Method to parse poetry.lock data
@@ -2131,7 +2189,8 @@ const parsePoetrylockData = async function (lockData) {
   });
   return await getPyMetadata(pkgList, false);
 };
-exports.parsePoetrylockData = parsePoetrylockData;
+const _parsePoetrylockData = parsePoetrylockData;
+export { _parsePoetrylockData as parsePoetrylockData };
 
 /**
  * Method to parse requirements.txt data
@@ -2261,7 +2320,8 @@ async function parseReqFile(reqData, fetchDepsInfo) {
   });
   return await getPyMetadata(pkgList, fetchDepsInfo);
 }
-exports.parseReqFile = parseReqFile;
+const _parseReqFile = parseReqFile;
+export { _parseReqFile as parseReqFile };
 
 /**
  * Method to find python modules by parsing the imports and then checking with PyPI to obtain the latest version
@@ -2311,7 +2371,8 @@ const getPyModules = async (src, epkgList) => {
   pkgList = await getPyMetadata(pkgList, true);
   return { allImports, pkgList };
 };
-exports.getPyModules = getPyModules;
+const _getPyModules = getPyModules;
+export { _getPyModules as getPyModules };
 
 /**
  * Method to parse setup.py data
@@ -2340,7 +2401,8 @@ const parseSetupPyFile = async function (setupPyData) {
   });
   return await parseReqFile(lines.join("\n"), false);
 };
-exports.parseSetupPyFile = parseSetupPyFile;
+const _parseSetupPyFile = parseSetupPyFile;
+export { _parseSetupPyFile as parseSetupPyFile };
 
 /**
  * Method to construct a github url for the given repo
@@ -2360,7 +2422,8 @@ const toGitHubUrl = function (repoMetadata) {
     return undefined;
   }
 };
-exports.toGitHubUrl = toGitHubUrl;
+const _toGitHubUrl = toGitHubUrl;
+export { _toGitHubUrl as toGitHubUrl };
 
 /**
  * Method to retrieve repo license by querying github api
@@ -2432,7 +2495,8 @@ const getRepoLicense = async function (repoUrl, repoMetadata) {
   }
   return undefined;
 };
-exports.getRepoLicense = getRepoLicense;
+const _getRepoLicense = getRepoLicense;
+export { _getRepoLicense as getRepoLicense };
 
 /**
  * Method to get go pkg license from go.dev site.
@@ -2454,7 +2518,7 @@ const getGoPkgLicense = async function (repoMetadata) {
   try {
     const res = await got.get(pkgUrlPrefix);
     if (res && res.body) {
-      const $ = cheerio.load(res.body);
+      const $ = load(res.body);
       let licenses = $("#LICENSE > h2").text().trim();
       if (licenses === "") {
         licenses = $("section.License > h2").text().trim();
@@ -2479,7 +2543,8 @@ const getGoPkgLicense = async function (repoMetadata) {
   }
   return undefined;
 };
-exports.getGoPkgLicense = getGoPkgLicense;
+const _getGoPkgLicense = getGoPkgLicense;
+export { _getGoPkgLicense as getGoPkgLicense };
 
 const getGoPkgComponent = async function (group, name, version, hash) {
   let pkg = {};
@@ -2504,7 +2569,8 @@ const getGoPkgComponent = async function (group, name, version, hash) {
   };
   return pkg;
 };
-exports.getGoPkgComponent = getGoPkgComponent;
+const _getGoPkgComponent = getGoPkgComponent;
+export { _getGoPkgComponent as getGoPkgComponent };
 
 const parseGoModData = async function (goModData, gosumMap) {
   const pkgComponentsList = [];
@@ -2570,7 +2636,8 @@ const parseGoModData = async function (goModData, gosumMap) {
   metadata_cache = {};
   return pkgComponentsList;
 };
-exports.parseGoModData = parseGoModData;
+const _parseGoModData = parseGoModData;
+export { _parseGoModData as parseGoModData };
 
 /**
  * Parse go list output
@@ -2622,7 +2689,8 @@ const parseGoListDep = async function (rawOutput, gosumMap) {
   }
   return [];
 };
-exports.parseGoListDep = parseGoListDep;
+const _parseGoListDep = parseGoListDep;
+export { _parseGoListDep as parseGoListDep };
 
 /**
  * Parse go mod why output
@@ -2642,7 +2710,8 @@ const parseGoModWhy = function (rawOutput) {
   }
   return undefined;
 };
-exports.parseGoModWhy = parseGoModWhy;
+const _parseGoModWhy = parseGoModWhy;
+export { _parseGoModWhy as parseGoModWhy };
 
 const parseGosumData = async function (gosumData) {
   const pkgList = [];
@@ -2680,7 +2749,8 @@ const parseGosumData = async function (gosumData) {
   }
   return pkgList;
 };
-exports.parseGosumData = parseGosumData;
+const _parseGosumData = parseGosumData;
+export { _parseGosumData as parseGosumData };
 
 const parseGopkgData = async function (gopkgData) {
   const pkgList = [];
@@ -2730,7 +2800,8 @@ const parseGopkgData = async function (gopkgData) {
   }
   return pkgList;
 };
-exports.parseGopkgData = parseGopkgData;
+const _parseGopkgData = parseGopkgData;
+export { _parseGopkgData as parseGopkgData };
 
 const parseGoVersionData = async function (buildInfoData) {
   const pkgList = [];
@@ -2757,7 +2828,8 @@ const parseGoVersionData = async function (buildInfoData) {
   }
   return pkgList;
 };
-exports.parseGoVersionData = parseGoVersionData;
+const _parseGoVersionData = parseGoVersionData;
+export { _parseGoVersionData as parseGoVersionData };
 
 /**
  * Method to query rubygems api for gems details
@@ -2808,7 +2880,8 @@ const getRubyGemsMetadata = async function (pkgList) {
   }
   return rdepList;
 };
-exports.getRubyGemsMetadata = getRubyGemsMetadata;
+const _getRubyGemsMetadata = getRubyGemsMetadata;
+export { _getRubyGemsMetadata as getRubyGemsMetadata };
 
 /**
  * Method to parse Gemspec
@@ -2847,7 +2920,8 @@ const parseGemspecData = async function (gemspecData) {
     return pkgList;
   }
 };
-exports.parseGemspecData = parseGemspecData;
+const _parseGemspecData = parseGemspecData;
+export { _parseGemspecData as parseGemspecData };
 
 /**
  * Method to parse Gemfile.lock
@@ -2896,7 +2970,8 @@ const parseGemfileLockData = async function (gemLockData) {
     return pkgList;
   }
 };
-exports.parseGemfileLockData = parseGemfileLockData;
+const _parseGemfileLockData = parseGemfileLockData;
+export { _parseGemfileLockData as parseGemfileLockData };
 
 /**
  * Method to retrieve metadata for rust packages by querying crates
@@ -2935,7 +3010,8 @@ const getCratesMetadata = async function (pkgList) {
   }
   return cdepList;
 };
-exports.getCratesMetadata = getCratesMetadata;
+const _getCratesMetadata = getCratesMetadata;
+export { _getCratesMetadata as getCratesMetadata };
 
 /**
  * Method to retrieve metadata for dart packages by querying pub.dev
@@ -2952,7 +3028,9 @@ const getDartMetadata = async function (pkgList) {
       }
       const res = await got.get(PUB_DEV_URL + p.name, {
         responseType: "json",
-        Accept: "application/vnd.pub.v2+json"
+        headers: {
+          Accept: "application/vnd.pub.v2+json"
+        }
       });
       if (res && res.body) {
         const versions = res.body.versions;
@@ -2978,7 +3056,8 @@ const getDartMetadata = async function (pkgList) {
   }
   return cdepList;
 };
-exports.getDartMetadata = getDartMetadata;
+const _getDartMetadata = getDartMetadata;
+export { _getDartMetadata as getDartMetadata };
 
 const parseCargoTomlData = async function (cargoData) {
   let pkgList = [];
@@ -3015,11 +3094,11 @@ const parseCargoTomlData = async function (cargoData) {
           pkg._integrity = "sha384-" + value;
           break;
         case "name":
-          pkg.group = path.dirname(value);
+          pkg.group = dirname(value);
           if (pkg.group === ".") {
             pkg.group = "";
           }
-          pkg.name = path.basename(value);
+          pkg.name = basename(value);
           break;
         case "version":
           pkg.version = value;
@@ -3063,7 +3142,8 @@ const parseCargoTomlData = async function (cargoData) {
     return pkgList;
   }
 };
-exports.parseCargoTomlData = parseCargoTomlData;
+const _parseCargoTomlData = parseCargoTomlData;
+export { _parseCargoTomlData as parseCargoTomlData };
 
 const parseCargoData = async function (cargoData) {
   const pkgList = [];
@@ -3093,11 +3173,11 @@ const parseCargoData = async function (cargoData) {
           pkg._integrity = "sha384-" + value;
           break;
         case "name":
-          pkg.group = path.dirname(value);
+          pkg.group = dirname(value);
           if (pkg.group === ".") {
             pkg.group = "";
           }
-          pkg.name = path.basename(value);
+          pkg.name = basename(value);
           break;
         case "version":
           pkg.version = value;
@@ -3111,7 +3191,8 @@ const parseCargoData = async function (cargoData) {
     return pkgList;
   }
 };
-exports.parseCargoData = parseCargoData;
+const _parseCargoData = parseCargoData;
+export { _parseCargoData as parseCargoData };
 
 const parseCargoAuditableData = async function (cargoData) {
   const pkgList = [];
@@ -3121,8 +3202,8 @@ const parseCargoAuditableData = async function (cargoData) {
   cargoData.split("\n").forEach((l) => {
     const tmpA = l.split("\t");
     if (tmpA && tmpA.length > 2) {
-      let group = path.dirname(tmpA[0].trim());
-      const name = path.basename(tmpA[0].trim());
+      let group = dirname(tmpA[0].trim());
+      const name = basename(tmpA[0].trim());
       if (group === ".") {
         group = "";
       }
@@ -3140,7 +3221,8 @@ const parseCargoAuditableData = async function (cargoData) {
     return pkgList;
   }
 };
-exports.parseCargoAuditableData = parseCargoAuditableData;
+const _parseCargoAuditableData = parseCargoAuditableData;
+export { _parseCargoAuditableData as parseCargoAuditableData };
 
 const parsePubLockData = async function (pubLockData) {
   const pkgList = [];
@@ -3180,13 +3262,14 @@ const parsePubLockData = async function (pubLockData) {
     return pkgList;
   }
 };
-exports.parsePubLockData = parsePubLockData;
+const _parsePubLockData = parsePubLockData;
+export { _parsePubLockData as parsePubLockData };
 
 const parsePubYamlData = async function (pubYamlData) {
   const pkgList = [];
   let yamlObj = undefined;
   try {
-    yamlObj = yaml.load(pubYamlData);
+    yamlObj = _load(pubYamlData);
   } catch (err) {
     // continue regardless of error
   }
@@ -3201,13 +3284,14 @@ const parsePubYamlData = async function (pubYamlData) {
   });
   return pkgList;
 };
-exports.parsePubYamlData = parsePubYamlData;
+const _parsePubYamlData = parsePubYamlData;
+export { _parsePubYamlData as parsePubYamlData };
 
 const parseHelmYamlData = async function (helmData) {
   const pkgList = [];
   let yamlObj = undefined;
   try {
-    yamlObj = yaml.load(helmData);
+    yamlObj = _load(helmData);
   } catch (err) {
     // continue regardless of error
   }
@@ -3267,7 +3351,8 @@ const parseHelmYamlData = async function (helmData) {
   }
   return pkgList;
 };
-exports.parseHelmYamlData = parseHelmYamlData;
+const _parseHelmYamlData = parseHelmYamlData;
+export { _parseHelmYamlData as parseHelmYamlData };
 
 const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
   if (typeof keyValueObj === "string" || keyValueObj instanceof String) {
@@ -3331,7 +3416,8 @@ const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
   }
   return imgList;
 };
-exports.recurseImageNameLookup = recurseImageNameLookup;
+const _recurseImageNameLookup = recurseImageNameLookup;
+export { _recurseImageNameLookup as recurseImageNameLookup };
 
 const parseContainerSpecData = async function (dcData) {
   const pkgList = [];
@@ -3346,7 +3432,7 @@ const parseContainerSpecData = async function (dcData) {
   for (const dcData of dcDataList) {
     let yamlObj = undefined;
     try {
-      yamlObj = yaml.load(dcData);
+      yamlObj = _load(dcData);
     } catch (err) {
       // ignore errors
     }
@@ -3399,7 +3485,8 @@ const parseContainerSpecData = async function (dcData) {
   }
   return pkgList;
 };
-exports.parseContainerSpecData = parseContainerSpecData;
+const _parseContainerSpecData = parseContainerSpecData;
+export { _parseContainerSpecData as parseContainerSpecData };
 
 const identifyFlow = function (processingObj) {
   let flow = "unknown";
@@ -3428,7 +3515,7 @@ const convertProcessing = function (processing_list) {
 };
 
 const parsePrivadoFile = function (f) {
-  const pData = fs.readFileSync(f, { encoding: "utf-8" });
+  const pData = readFileSync(f, { encoding: "utf-8" });
   const servlist = [];
   if (!pData) {
     return servlist;
@@ -3511,7 +3598,8 @@ const parsePrivadoFile = function (f) {
   }
   return servlist;
 };
-exports.parsePrivadoFile = parsePrivadoFile;
+const _parsePrivadoFile = parsePrivadoFile;
+export { _parsePrivadoFile as parsePrivadoFile };
 
 const parseOpenapiSpecData = async function (oaData) {
   const servlist = [];
@@ -3520,7 +3608,7 @@ const parseOpenapiSpecData = async function (oaData) {
   }
   try {
     if (oaData.startsWith("openapi:")) {
-      oaData = yaml.load(oaData);
+      oaData = _load(oaData);
     } else {
       oaData = JSON.parse(oaData);
     }
@@ -3562,7 +3650,8 @@ const parseOpenapiSpecData = async function (oaData) {
   servlist.push(aservice);
   return servlist;
 };
-exports.parseOpenapiSpecData = parseOpenapiSpecData;
+const _parseOpenapiSpecData = parseOpenapiSpecData;
+export { _parseOpenapiSpecData as parseOpenapiSpecData };
 
 const parseCabalData = async function (cabalData) {
   const pkgList = [];
@@ -3590,7 +3679,8 @@ const parseCabalData = async function (cabalData) {
   });
   return pkgList;
 };
-exports.parseCabalData = parseCabalData;
+const _parseCabalData = parseCabalData;
+export { _parseCabalData as parseCabalData };
 
 const parseMixLockData = async function (mixData) {
   const pkgList = [];
@@ -3617,7 +3707,8 @@ const parseMixLockData = async function (mixData) {
   });
   return pkgList;
 };
-exports.parseMixLockData = parseMixLockData;
+const _parseMixLockData = parseMixLockData;
+export { _parseMixLockData as parseMixLockData };
 
 const parseGitHubWorkflowData = async function (ghwData) {
   const pkgList = [];
@@ -3625,7 +3716,7 @@ const parseGitHubWorkflowData = async function (ghwData) {
   if (!ghwData) {
     return pkgList;
   }
-  const yamlObj = yaml.load(ghwData);
+  const yamlObj = _load(ghwData);
   if (!yamlObj) {
     return pkgList;
   }
@@ -3660,7 +3751,8 @@ const parseGitHubWorkflowData = async function (ghwData) {
   }
   return pkgList;
 };
-exports.parseGitHubWorkflowData = parseGitHubWorkflowData;
+const _parseGitHubWorkflowData = parseGitHubWorkflowData;
+export { _parseGitHubWorkflowData as parseGitHubWorkflowData };
 
 const parseCloudBuildData = async function (cbwData) {
   const pkgList = [];
@@ -3668,7 +3760,7 @@ const parseCloudBuildData = async function (cbwData) {
   if (!cbwData) {
     return pkgList;
   }
-  const yamlObj = yaml.load(cbwData);
+  const yamlObj = _load(cbwData);
   if (!yamlObj) {
     return pkgList;
   }
@@ -3677,8 +3769,8 @@ const parseCloudBuildData = async function (cbwData) {
       if (step.name) {
         const tmpA = step.name.split(":");
         if (tmpA.length === 2) {
-          let group = path.dirname(tmpA[0]);
-          let name = path.basename(tmpA[0]);
+          let group = dirname(tmpA[0]);
+          let name = basename(tmpA[0]);
           if (group === ".") {
             group = "";
           }
@@ -3698,7 +3790,8 @@ const parseCloudBuildData = async function (cbwData) {
   }
   return pkgList;
 };
-exports.parseCloudBuildData = parseCloudBuildData;
+const _parseCloudBuildData = parseCloudBuildData;
+export { _parseCloudBuildData as parseCloudBuildData };
 
 const parseConanLockData = async function (conanLockData) {
   const pkgList = [];
@@ -3720,7 +3813,8 @@ const parseConanLockData = async function (conanLockData) {
   }
   return pkgList;
 };
-exports.parseConanLockData = parseConanLockData;
+const _parseConanLockData = parseConanLockData;
+export { _parseConanLockData as parseConanLockData };
 
 const parseConanData = async function (conanData) {
   const pkgList = [];
@@ -3740,7 +3834,8 @@ const parseConanData = async function (conanData) {
   });
   return pkgList;
 };
-exports.parseConanData = parseConanData;
+const _parseConanData = parseConanData;
+export { _parseConanData as parseConanData };
 
 const parseLeiningenData = function (leinData) {
   const pkgList = [];
@@ -3751,7 +3846,7 @@ const parseLeiningenData = function (leinData) {
   if (tmpArr.length > 1) {
     leinData = "(defproject" + tmpArr[1];
   }
-  const ednData = ednDataLib.parseEDNString(leinData);
+  const ednData = parseEDNString(leinData);
   for (let k of Object.keys(ednData)) {
     if (k === "list") {
       ednData[k].forEach((jk) => {
@@ -3760,11 +3855,11 @@ const parseLeiningenData = function (leinData) {
             if (Array.isArray(pobjl) && pobjl.length > 1) {
               const psym = pobjl[0].sym;
               if (psym) {
-                let group = path.dirname(psym) || "";
+                let group = dirname(psym) || "";
                 if (group === ".") {
                   group = "";
                 }
-                const name = path.basename(psym);
+                const name = basename(psym);
                 pkgList.push({ group, name, version: pobjl[1] });
               }
             }
@@ -3775,14 +3870,15 @@ const parseLeiningenData = function (leinData) {
   }
   return pkgList;
 };
-exports.parseLeiningenData = parseLeiningenData;
+const _parseLeiningenData = parseLeiningenData;
+export { _parseLeiningenData as parseLeiningenData };
 
 const parseEdnData = function (rawEdnData) {
   const pkgList = [];
   if (!rawEdnData) {
     return pkgList;
   }
-  const ednData = ednDataLib.parseEDNString(rawEdnData);
+  const ednData = parseEDNString(rawEdnData);
   const pkgCache = {};
   for (let k of Object.keys(ednData)) {
     if (k === "map") {
@@ -3803,11 +3899,11 @@ const parseEdnData = function (rawEdnData) {
                         if (e["map"]) {
                           if (e["map"][0].length > 1) {
                             const version = e["map"][0][1];
-                            let group = path.dirname(psym) || "";
+                            let group = dirname(psym) || "";
                             if (group === ".") {
                               group = "";
                             }
-                            const name = path.basename(psym);
+                            const name = basename(psym);
                             const cacheKey = group + "-" + name + "-" + version;
                             if (!pkgCache[cacheKey]) {
                               pkgList.push({ group, name, version });
@@ -3828,7 +3924,8 @@ const parseEdnData = function (rawEdnData) {
   }
   return pkgList;
 };
-exports.parseEdnData = parseEdnData;
+const _parseEdnData = parseEdnData;
+export { _parseEdnData as parseEdnData };
 
 const parseNupkg = async function (nupkgFile) {
   const pkgList = [];
@@ -3840,7 +3937,7 @@ const parseNupkg = async function (nupkgFile) {
   }
   let npkg = undefined;
   try {
-    npkg = convert.xml2js(nuspecData, {
+    npkg = xml2js(nuspecData, {
       compact: true,
       alwaysArray: false,
       spaces: 4,
@@ -3874,14 +3971,15 @@ const parseNupkg = async function (nupkgFile) {
     return pkgList;
   }
 };
-exports.parseNupkg = parseNupkg;
+const _parseNupkg = parseNupkg;
+export { _parseNupkg as parseNupkg };
 
 const parseCsPkgData = async function (pkgData) {
   const pkgList = [];
   if (!pkgData) {
     return pkgList;
   }
-  let packages = convert.xml2js(pkgData, {
+  let packages = xml2js(pkgData, {
     compact: true,
     alwaysArray: true,
     spaces: 4,
@@ -3906,14 +4004,15 @@ const parseCsPkgData = async function (pkgData) {
     return pkgList;
   }
 };
-exports.parseCsPkgData = parseCsPkgData;
+const _parseCsPkgData = parseCsPkgData;
+export { _parseCsPkgData as parseCsPkgData };
 
 const parseCsProjData = async function (csProjData) {
   const pkgList = [];
   if (!csProjData) {
     return pkgList;
   }
-  const projects = convert.xml2js(csProjData, {
+  const projects = xml2js(csProjData, {
     compact: true,
     alwaysArray: true,
     spaces: 4,
@@ -3961,7 +4060,8 @@ const parseCsProjData = async function (csProjData) {
     return pkgList;
   }
 };
-exports.parseCsProjData = parseCsProjData;
+const _parseCsProjData = parseCsProjData;
+export { _parseCsProjData as parseCsProjData };
 
 const parseCsProjAssetsData = async function (csProjData) {
   const pkgList = [];
@@ -4001,7 +4101,8 @@ const parseCsProjAssetsData = async function (csProjData) {
     return pkgList;
   }
 };
-exports.parseCsProjAssetsData = parseCsProjAssetsData;
+const _parseCsProjAssetsData = parseCsProjAssetsData;
+export { _parseCsProjAssetsData as parseCsProjAssetsData };
 
 const parseCsPkgLockData = async function (csLockData) {
   const pkgList = [];
@@ -4030,7 +4131,8 @@ const parseCsPkgLockData = async function (csLockData) {
     return pkgList;
   }
 };
-exports.parseCsPkgLockData = parseCsPkgLockData;
+const _parseCsPkgLockData = parseCsPkgLockData;
+export { _parseCsPkgLockData as parseCsPkgLockData };
 
 /**
  * Method to retrieve metadata for nuget packages
@@ -4092,7 +4194,8 @@ const getNugetMetadata = async function (pkgList) {
   }
   return cdepList;
 };
-exports.getNugetMetadata = getNugetMetadata;
+const _getNugetMetadata = getNugetMetadata;
+export { _getNugetMetadata as getNugetMetadata };
 
 /**
  * Parse composer lock file
@@ -4101,10 +4204,10 @@ exports.getNugetMetadata = getNugetMetadata;
  */
 const parseComposerLock = function (pkgLockFile) {
   const pkgList = [];
-  if (fs.existsSync(pkgLockFile)) {
+  if (existsSync(pkgLockFile)) {
     let lockData = {};
     try {
-      lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+      lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
     } catch (e) {
       console.error("Invalid composer.lock file:", pkgLockFile);
       return [];
@@ -4124,11 +4227,11 @@ const parseComposerLock = function (pkgLockFile) {
           if (!pkg || !pkg.name || !pkg.version) {
             continue;
           }
-          let group = path.dirname(pkg.name);
+          let group = dirname(pkg.name);
           if (group === ".") {
             group = "";
           }
-          let name = path.basename(pkg.name);
+          let name = basename(pkg.name);
           pkgList.push({
             group: group,
             name: name,
@@ -4154,7 +4257,8 @@ const parseComposerLock = function (pkgLockFile) {
   }
   return pkgList;
 };
-exports.parseComposerLock = parseComposerLock;
+const _parseComposerLock = parseComposerLock;
+export { _parseComposerLock as parseComposerLock };
 
 /**
  * Parse sbt lock file
@@ -4163,8 +4267,8 @@ exports.parseComposerLock = parseComposerLock;
  */
 const parseSbtLock = function (pkgLockFile) {
   const pkgList = [];
-  if (fs.existsSync(pkgLockFile)) {
-    const lockData = JSON.parse(fs.readFileSync(pkgLockFile, "utf8"));
+  if (existsSync(pkgLockFile)) {
+    const lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
     if (lockData && lockData.dependencies) {
       for (let pkg of lockData.dependencies) {
         const artifacts = pkg.artifacts || undefined;
@@ -4198,7 +4302,8 @@ const parseSbtLock = function (pkgLockFile) {
   }
   return pkgList;
 };
-exports.parseSbtLock = parseSbtLock;
+const _parseSbtLock = parseSbtLock;
+export { _parseSbtLock as parseSbtLock };
 
 /**
  * Convert OS query results
@@ -4258,7 +4363,8 @@ const convertOSQueryResults = function (queryCategory, queryObj, results) {
   }
   return pkgList;
 };
-exports.convertOSQueryResults = convertOSQueryResults;
+const _convertOSQueryResults = convertOSQueryResults;
+export { _convertOSQueryResults as convertOSQueryResults };
 
 const _swiftDepPkgList = (pkgList, dependenciesList, depKeys, jsonData) => {
   if (jsonData && jsonData.dependencies) {
@@ -4418,7 +4524,8 @@ const parseSwiftJsonTree = (rawOutput, pkgFile) => {
     dependenciesList
   };
 };
-exports.parseSwiftJsonTree = parseSwiftJsonTree;
+const _parseSwiftJsonTree = parseSwiftJsonTree;
+export { _parseSwiftJsonTree as parseSwiftJsonTree };
 
 /**
  * Parse swift package resolved file
@@ -4426,9 +4533,9 @@ exports.parseSwiftJsonTree = parseSwiftJsonTree;
  */
 const parseSwiftResolved = (resolvedFile) => {
   const pkgList = [];
-  if (fs.existsSync(resolvedFile)) {
+  if (existsSync(resolvedFile)) {
     try {
-      const pkgData = JSON.parse(fs.readFileSync(resolvedFile, "utf8"));
+      const pkgData = JSON.parse(readFileSync(resolvedFile, "utf8"));
       let resolvedList = [];
       if (pkgData.pins) {
         resolvedList = pkgData.pins;
@@ -4459,7 +4566,8 @@ const parseSwiftResolved = (resolvedFile) => {
   }
   return pkgList;
 };
-exports.parseSwiftResolved = parseSwiftResolved;
+const _parseSwiftResolved = parseSwiftResolved;
+export { _parseSwiftResolved as parseSwiftResolved };
 
 /**
  * Collect maven dependencies
@@ -4468,7 +4576,7 @@ exports.parseSwiftResolved = parseSwiftResolved;
  * @param {string} basePath Path to the maven project
  */
 const collectMvnDependencies = function (mavenCmd, basePath) {
-  let tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "mvn-deps-"));
+  let tempDir = mkdtempSync(join(tmpdir(), "mvn-deps-"));
   console.log(
     `Executing 'mvn dependency:copy-dependencies -DoutputDirectory=${tempDir} -DexcludeTransitive=true -DincludeScope=runtime' in ${basePath}`
   );
@@ -4504,13 +4612,14 @@ const collectMvnDependencies = function (mavenCmd, basePath) {
     jarNSMapping = collectJarNS(tempDir);
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
+  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
     console.log(`Cleaning up ${tempDir}`);
-    fs.rmSync(tempDir, { recursive: true, force: true });
+    rmSync(tempDir, { recursive: true, force: true });
   }
   return jarNSMapping;
 };
-exports.collectMvnDependencies = collectMvnDependencies;
+const _collectMvnDependencies = collectMvnDependencies;
+export { _collectMvnDependencies as collectMvnDependencies };
 
 /**
  * Method to collect class names from all jars in a directory
@@ -4528,7 +4637,7 @@ const collectJarNS = function (jarPath) {
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
   if (jarFiles && jarFiles.length) {
     for (let jf of jarFiles) {
-      const jarname = path.basename(jf);
+      const jarname = basename(jf);
       if (DEBUG_MODE) {
         console.log(`Executing 'jar tf ${jf}'`);
       }
@@ -4565,13 +4674,14 @@ const collectJarNS = function (jarPath) {
   }
   return jarNSMapping;
 };
-exports.collectJarNS = collectJarNS;
+const _collectJarNS = collectJarNS;
+export { _collectJarNS as collectJarNS };
 
 const parsePomXml = function (pomXmlData) {
   if (!pomXmlData) {
     return undefined;
   }
-  const project = convert.xml2js(pomXmlData, {
+  const project = xml2js(pomXmlData, {
     compact: true,
     spaces: 4,
     textKey: "_",
@@ -4598,7 +4708,8 @@ const parsePomXml = function (pomXmlData) {
   }
   return undefined;
 };
-exports.parsePomXml = parsePomXml;
+const _parsePomXml = parsePomXml;
+export { _parsePomXml as parsePomXml };
 
 const parseJarManifest = function (jarMetadata) {
   const metadata = {};
@@ -4615,14 +4726,16 @@ const parseJarManifest = function (jarMetadata) {
   });
   return metadata;
 };
-exports.parseJarManifest = parseJarManifest;
+const _parseJarManifest = parseJarManifest;
+export { _parseJarManifest as parseJarManifest };
 
 const encodeForPurl = (s) => {
   return s
     ? encodeURIComponent(s).replace(/%3A/g, ":").replace(/%2F/g, "/")
     : s;
 };
-exports.encodeForPurl = encodeForPurl;
+const _encodeForPurl = encodeForPurl;
+export { _encodeForPurl as encodeForPurl };
 
 /**
  * Method to extract a war or ear file
@@ -4635,24 +4748,20 @@ exports.encodeForPurl = encodeForPurl;
 const extractJarArchive = function (jarFile, tempDir) {
   let pkgList = [];
   let jarFiles = [];
-  const fname = path.basename(jarFile);
+  const fname = basename(jarFile);
   let pomname = undefined;
   // If there is a pom file in the same directory, try to use it
   if (jarFile.endsWith(".jar")) {
     pomname = jarFile.replace(".jar", ".pom");
   }
-  if (pomname && fs.existsSync(pomname)) {
-    tempDir = path.dirname(jarFile);
-  } else if (!fs.existsSync(path.join(tempDir, fname))) {
+  if (pomname && existsSync(pomname)) {
+    tempDir = dirname(jarFile);
+  } else if (!existsSync(join(tempDir, fname))) {
     // Only copy if the file doesn't exist
-    fs.copyFileSync(
-      jarFile,
-      path.join(tempDir, fname),
-      fs.constants.COPYFILE_FICLONE
-    );
+    copyFileSync(jarFile, join(tempDir, fname), constants.COPYFILE_FICLONE);
   }
   if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
-    let jarResult = spawnSync("jar", ["-xf", path.join(tempDir, fname)], {
+    let jarResult = spawnSync("jar", ["-xf", join(tempDir, fname)], {
       encoding: "utf-8",
       cwd: tempDir
     });
@@ -4663,17 +4772,17 @@ const extractJarArchive = function (jarFile, tempDir) {
       );
       return pkgList;
     }
-    jarFiles = getAllFiles(path.join(tempDir, "WEB-INF", "lib"), "**/*.jar");
+    jarFiles = getAllFiles(join(tempDir, "WEB-INF", "lib"), "**/*.jar");
     if (jarFile.endsWith(".hpi")) {
       jarFiles.push(jarFile);
     }
   } else {
-    jarFiles = [path.join(tempDir, fname)];
+    jarFiles = [join(tempDir, fname)];
   }
   if (jarFiles && jarFiles.length) {
     for (let jf of jarFiles) {
       pomname = jf.replace(".jar", ".pom");
-      const jarname = path.basename(jf);
+      const jarname = basename(jf);
       // Ignore test jars
       if (
         jarname.endsWith("-tests.jar") ||
@@ -4681,12 +4790,12 @@ const extractJarArchive = function (jarFile, tempDir) {
       ) {
         continue;
       }
-      let manifestDir = path.join(tempDir, "META-INF");
-      const manifestFile = path.join(manifestDir, "MANIFEST.MF");
+      let manifestDir = join(tempDir, "META-INF");
+      const manifestFile = join(manifestDir, "MANIFEST.MF");
       let jarResult = {
         status: 1
       };
-      if (fs.existsSync(pomname)) {
+      if (existsSync(pomname)) {
         jarResult = { status: 0 };
       } else {
         jarResult = spawnSync("jar", ["-xf", jf], {
@@ -4697,9 +4806,9 @@ const extractJarArchive = function (jarFile, tempDir) {
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
       } else {
-        if (fs.existsSync(manifestFile)) {
+        if (existsSync(manifestFile)) {
           const jarMetadata = parseJarManifest(
-            fs.readFileSync(manifestFile, {
+            readFileSync(manifestFile, {
               encoding: "utf-8"
             })
           );
@@ -4730,9 +4839,9 @@ const extractJarArchive = function (jarFile, tempDir) {
             version = version.split(" ")[0];
           }
           if (!name && group) {
-            name = path.basename(group.replace(/\./g, "/"));
+            name = basename(group.replace(/\./g, "/"));
             if (!group.startsWith("javax")) {
-              group = path.dirname(group.replace(/\./g, "/"));
+              group = dirname(group.replace(/\./g, "/"));
               group = group.replace(/\//g, ".");
             }
           }
@@ -4792,9 +4901,9 @@ const extractJarArchive = function (jarFile, tempDir) {
           }
         }
         try {
-          if (fs.rmSync && fs.existsSync(path.join(tempDir, "META-INF"))) {
+          if (rmSync && existsSync(join(tempDir, "META-INF"))) {
             // Clean up META-INF
-            fs.rmSync(path.join(tempDir, "META-INF"), {
+            rmSync(join(tempDir, "META-INF"), {
               recursive: true,
               force: true
             });
@@ -4807,7 +4916,8 @@ const extractJarArchive = function (jarFile, tempDir) {
   } // if
   return pkgList;
 };
-exports.extractJarArchive = extractJarArchive;
+const _extractJarArchive = extractJarArchive;
+export { _extractJarArchive as extractJarArchive };
 
 /**
  * Determine the version of SBT used in compilation of this project.
@@ -4818,17 +4928,18 @@ exports.extractJarArchive = extractJarArchive;
  * @param {string} projectPath Path to the SBT project
  */
 const determineSbtVersion = function (projectPath) {
-  const buildPropFile = path.join(projectPath, "project", "build.properties");
-  if (fs.existsSync(buildPropFile)) {
+  const buildPropFile = join(projectPath, "project", "build.properties");
+  if (existsSync(buildPropFile)) {
     let properties = propertiesReader(buildPropFile);
     let property = properties.get("sbt.version");
-    if (property != null && semver.valid(property)) {
+    if (property != null && valid(property)) {
       return property;
     }
   }
   return null;
 };
-exports.determineSbtVersion = determineSbtVersion;
+const _determineSbtVersion = determineSbtVersion;
+export { _determineSbtVersion as determineSbtVersion };
 
 /**
  * Adds a new plugin to the SBT project by amending its plugins list.
@@ -4845,19 +4956,16 @@ exports.determineSbtVersion = determineSbtVersion;
 const addPlugin = function (projectPath, plugin) {
   const pluginsFile = sbtPluginsPath(projectPath);
   var originalPluginsFile = null;
-  if (fs.existsSync(pluginsFile)) {
+  if (existsSync(pluginsFile)) {
     originalPluginsFile = pluginsFile + ".cdxgen";
-    fs.copyFileSync(
-      pluginsFile,
-      originalPluginsFile,
-      fs.constants.COPYFILE_FICLONE
-    );
+    copyFileSync(pluginsFile, originalPluginsFile, constants.COPYFILE_FICLONE);
   }
 
-  fs.writeFileSync(pluginsFile, plugin, { flag: "a" });
+  writeFileSync(pluginsFile, plugin, { flag: "a" });
   return originalPluginsFile;
 };
-exports.addPlugin = addPlugin;
+const _addPlugin = addPlugin;
+export { _addPlugin as addPlugin };
 
 /**
  * Cleans up modifications to the project's plugins' file made by the
@@ -4868,26 +4976,27 @@ exports.addPlugin = addPlugin;
  */
 const cleanupPlugin = function (projectPath, originalPluginsFile) {
   const pluginsFile = sbtPluginsPath(projectPath);
-  if (fs.existsSync(pluginsFile)) {
+  if (existsSync(pluginsFile)) {
     if (!originalPluginsFile) {
       // just remove the file, it was never there
-      fs.unlinkSync(pluginsFile);
-      return !fs.existsSync(pluginsFile);
+      unlinkSync(pluginsFile);
+      return !existsSync(pluginsFile);
     } else {
       // Bring back the original file
-      fs.copyFileSync(
+      copyFileSync(
         originalPluginsFile,
         pluginsFile,
-        fs.constants.COPYFILE_FICLONE
+        constants.COPYFILE_FICLONE
       );
-      fs.unlinkSync(originalPluginsFile);
+      unlinkSync(originalPluginsFile);
       return true;
     }
   } else {
     return false;
   }
 };
-exports.cleanupPlugin = cleanupPlugin;
+const _cleanupPlugin = cleanupPlugin;
+export { _cleanupPlugin as cleanupPlugin };
 
 /**
  * Returns a default location of the plugins file.
@@ -4895,9 +5004,10 @@ exports.cleanupPlugin = cleanupPlugin;
  * @param {string} projectPath Path to the SBT project
  */
 const sbtPluginsPath = function (projectPath) {
-  return path.join(projectPath, "project", "plugins.sbt");
+  return join(projectPath, "project", "plugins.sbt");
 };
-exports.sbtPluginsPath = sbtPluginsPath;
+const _sbtPluginsPath = sbtPluginsPath;
+export { _sbtPluginsPath as sbtPluginsPath };
 
 /**
  * Method to read a single file entry from a zip file
@@ -4932,7 +5042,8 @@ const readZipEntry = async function (zipFile, filePattern) {
   }
   return retData;
 };
-exports.readZipEntry = readZipEntry;
+const _readZipEntry = readZipEntry;
+export { _readZipEntry as readZipEntry };
 
 /**
  * Method to return the gradle command to use.
@@ -4944,35 +5055,36 @@ const getGradleCommand = (srcPath, rootPath) => {
   let gradleCmd = "gradle";
 
   let findGradleFile = "gradlew";
-  if (os.platform() == "win32") {
+  if (platform() == "win32") {
     findGradleFile = "gradlew.bat";
   }
 
-  if (fs.existsSync(path.join(srcPath, findGradleFile))) {
+  if (existsSync(join(srcPath, findGradleFile))) {
     // Use local gradle wrapper if available
     // Enable execute permission
     try {
-      fs.chmodSync(path.join(srcPath, findGradleFile), 0o775);
+      chmodSync(join(srcPath, findGradleFile), 0o775);
     } catch (e) {
       // continue regardless of error
     }
-    gradleCmd = path.resolve(path.join(srcPath, findGradleFile));
-  } else if (rootPath && fs.existsSync(path.join(rootPath, findGradleFile))) {
+    gradleCmd = resolve(join(srcPath, findGradleFile));
+  } else if (rootPath && existsSync(join(rootPath, findGradleFile))) {
     // Check if the root directory has a wrapper script
     try {
-      fs.chmodSync(path.join(rootPath, findGradleFile), 0o775);
+      chmodSync(join(rootPath, findGradleFile), 0o775);
     } catch (e) {
       // continue regardless of error
     }
-    gradleCmd = path.resolve(path.join(rootPath, findGradleFile));
+    gradleCmd = resolve(join(rootPath, findGradleFile));
   } else if (process.env.GRADLE_CMD) {
     gradleCmd = process.env.GRADLE_CMD;
   } else if (process.env.GRADLE_HOME) {
-    gradleCmd = path.join(process.env.GRADLE_HOME, "bin", "gradle");
+    gradleCmd = join(process.env.GRADLE_HOME, "bin", "gradle");
   }
   return gradleCmd;
 };
-exports.getGradleCommand = getGradleCommand;
+const _getGradleCommand = getGradleCommand;
+export { _getGradleCommand as getGradleCommand };
 
 /**
  * Method to return the maven command to use.
@@ -4984,35 +5096,36 @@ const getMavenCommand = (srcPath, rootPath) => {
   let mavenCmd = "mvn";
 
   let findMavenFile = "mvnw";
-  if (os.platform() == "win32") {
+  if (platform() == "win32") {
     findMavenFile = "mvnw.bat";
   }
 
-  if (fs.existsSync(path.join(srcPath, findMavenFile))) {
+  if (existsSync(join(srcPath, findMavenFile))) {
     // Use local maven wrapper if available
     // Enable execute permission
     try {
-      fs.chmodSync(path.join(srcPath, findMavenFile), 0o775);
+      chmodSync(join(srcPath, findMavenFile), 0o775);
     } catch (e) {
       // continue regardless of error
     }
-    mavenCmd = path.resolve(path.join(srcPath, findMavenFile));
-  } else if (rootPath && fs.existsSync(path.join(rootPath, findMavenFile))) {
+    mavenCmd = resolve(join(srcPath, findMavenFile));
+  } else if (rootPath && existsSync(join(rootPath, findMavenFile))) {
     // Check if the root directory has a wrapper script
     try {
-      fs.chmodSync(path.join(rootPath, findMavenFile), 0o775);
+      chmodSync(join(rootPath, findMavenFile), 0o775);
     } catch (e) {
       // continue regardless of error
     }
-    mavenCmd = path.resolve(path.join(rootPath, findMavenFile));
+    mavenCmd = resolve(join(rootPath, findMavenFile));
   } else if (process.env.MVN_CMD || process.env.MAVEN_CMD) {
     mavenCmd = process.env.MVN_CMD || process.env.MAVEN_CMD;
   } else if (process.env.MAVEN_HOME) {
-    mavenCmd = path.join(process.env.MAVEN_HOME, "bin", "mvn");
+    mavenCmd = join(process.env.MAVEN_HOME, "bin", "mvn");
   }
   return mavenCmd;
 };
-exports.getMavenCommand = getMavenCommand;
+const _getMavenCommand = getMavenCommand;
+export { _getMavenCommand as getMavenCommand };
 
 /**
  * Retrieves the atom command by referring to various environment variables
@@ -5022,17 +5135,17 @@ const getAtomCommand = () => {
     return process.env.ATOM_CMD;
   }
   if (process.env.ATOM_HOME) {
-    return path.join(process.env.ATOM_HOME, "bin", "atom");
+    return join(process.env.ATOM_HOME, "bin", "atom");
   }
   const NODE_CMD = process.env.NODE_CMD || "node";
-  const localAtom = path.join(
+  const localAtom = join(
     __dirname,
     "node_modules",
     "@appthreat",
     "atom",
     "index.js"
   );
-  if (fs.existsSync(localAtom)) {
+  if (existsSync(localAtom)) {
     return `${NODE_CMD} ${localAtom}`;
   }
   return "atom";
@@ -5047,7 +5160,7 @@ const executeAtom = (src, args) => {
       args.unshift(tmpA[1]);
     }
   }
-  const freeMemoryGB = Math.floor(os.freemem() / 1024 / 1024 / 1024);
+  const freeMemoryGB = Math.floor(freemem() / 1024 / 1024 / 1024);
   if (DEBUG_MODE) {
     console.log("Execuing", ATOM_BIN, args.join(" "));
   }
@@ -5071,7 +5184,8 @@ const executeAtom = (src, args) => {
   }
   return true;
 };
-exports.executeAtom = executeAtom;
+const _executeAtom = executeAtom;
+export { _executeAtom as executeAtom };
 
 /**
  * Find the imported modules in the application with atom parsedeps command
@@ -5081,34 +5195,35 @@ exports.executeAtom = executeAtom;
  * @returns List of imported modules
  */
 const findAppModules = function (src, language) {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "atom-deps-"));
-  const atomFile = path.join(tempDir, "app.atom");
-  const slicesFile = path.join(tempDir, "slices.json");
+  const tempDir = mkdtempSync(join(tmpdir(), "atom-deps-"));
+  const atomFile = join(tempDir, "app.atom");
+  const slicesFile = join(tempDir, "slices.json");
   let retList = [];
   const args = [
     "parsedeps",
     "-l",
     language,
     "-o",
-    path.resolve(atomFile),
+    resolve(atomFile),
     "--slice-outfile",
-    path.resolve(slicesFile),
-    path.resolve(src)
+    resolve(slicesFile),
+    resolve(src)
   ];
   executeAtom(src, args);
-  if (fs.existsSync(slicesFile)) {
-    const slicesData = JSON.parse(fs.readFileSync(slicesFile), "utf8");
+  if (existsSync(slicesFile)) {
+    const slicesData = JSON.parse(readFileSync(slicesFile), "utf8");
     if (slicesData && Object.keys(slicesData) && slicesData.modules) {
       retList = slicesData.modules;
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
-    fs.rmSync(tempDir, { recursive: true, force: true });
+  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+    rmSync(tempDir, { recursive: true, force: true });
   }
   return retList;
 };
-exports.findAppModules = findAppModules;
+const _findAppModules = findAppModules;
+export { _findAppModules as findAppModules };
 
 /**
  * Execute pip freeze by creating a virtual env in a temp directory
@@ -5120,7 +5235,7 @@ exports.findAppModules = findAppModules;
 const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
   let pkgList = [];
   let result = undefined;
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdxgen-venv-"));
+  const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
   const env = {
     ...process.env
   };
@@ -5137,7 +5252,7 @@ const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
       }
     } else {
       env.VIRTUAL_ENV = tempDir;
-      env.PATH = `${path.join(tempDir, "bin")}${path.delimiter}${
+      env.PATH = `${join(tempDir, "bin")}${_delimiter}${
         process.env.PATH || ""
       }`;
     }
@@ -5161,9 +5276,9 @@ const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
       !reqOrSetupFile.endsWith("pyproject.toml")
     ) {
       pipInstallArgs.push("-r");
-      pipInstallArgs.push(path.resolve(reqOrSetupFile));
+      pipInstallArgs.push(resolve(reqOrSetupFile));
     } else {
-      pipInstallArgs.push(path.resolve(basePath));
+      pipInstallArgs.push(resolve(basePath));
     }
     // Attempt to perform pip install
     result = spawnSync(PYTHON_CMD, pipInstallArgs, {
@@ -5178,7 +5293,7 @@ const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
         console.log(
           "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
         );
-        if (os.platform() == "win32") {
+        if (platform() == "win32") {
           console.log(
             "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
           );
@@ -5210,7 +5325,7 @@ const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
       !reqOrSetupFile.endsWith("pyproject.toml")
     ) {
       pipFreezeArgs.push("-r");
-      pipFreezeArgs.push(path.resolve(reqOrSetupFile));
+      pipFreezeArgs.push(resolve(reqOrSetupFile));
     }
     result = spawnSync(PYTHON_CMD, pipFreezeArgs, {
       cwd: basePath,
@@ -5239,12 +5354,13 @@ const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(os.tmpdir()) && fs.rmSync) {
-    fs.rmSync(tempDir, { recursive: true, force: true });
+  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+    rmSync(tempDir, { recursive: true, force: true });
   }
   return pkgList;
 };
-exports.executePipFreezeInVenv = executePipFreezeInVenv;
+const _executePipFreezeInVenv = executePipFreezeInVenv;
+export { _executePipFreezeInVenv as executePipFreezeInVenv };
 
 // taken from a very old package https://github.com/keithamus/parse-packagejson-name/blob/master/index.js
 const parsePackageJsonName = (name) => {
@@ -5266,4 +5382,5 @@ const parsePackageJsonName = (name) => {
   }
   return returnObject;
 };
-exports.parsePackageJsonName = parsePackageJsonName;
+const _parsePackageJsonName = parsePackageJsonName;
+export { _parsePackageJsonName as parsePackageJsonName };

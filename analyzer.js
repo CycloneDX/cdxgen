@@ -1,8 +1,8 @@
-const babelParser = require("@babel/parser");
-const babelTraverse = require("@babel/traverse").default;
-const { join } = require("path");
-const fs = require("fs");
-const path = require("path");
+import { parse } from "@babel/parser";
+import babelTraverse from "@babel/traverse";
+import { join } from "path";
+import { readdirSync, statSync, readFileSync } from "fs";
+import { basename, resolve, isAbsolute } from "path";
 
 const IGNORE_DIRS = [
   "node_modules",
@@ -28,7 +28,7 @@ const IGNORE_FILE_PATTERN = new RegExp(
 );
 
 const getAllFiles = (dir, extn, files, result, regex) => {
-  files = files || fs.readdirSync(dir);
+  files = files || readdirSync(dir);
   result = result || [];
   regex = regex || new RegExp(`\\${extn}$`);
 
@@ -37,9 +37,9 @@ const getAllFiles = (dir, extn, files, result, regex) => {
       continue;
     }
     let file = join(dir, files[i]);
-    if (fs.statSync(file).isDirectory()) {
+    if (statSync(file).isDirectory()) {
       // Ignore directories
-      const dirName = path.basename(file);
+      const dirName = basename(file);
       if (
         dirName.startsWith(".") ||
         IGNORE_DIRS.includes(dirName.toLowerCase())
@@ -47,7 +47,7 @@ const getAllFiles = (dir, extn, files, result, regex) => {
         continue;
       }
       try {
-        result = getAllFiles(file, extn, fs.readdirSync(file), result, regex);
+        result = getAllFiles(file, extn, readdirSync(file), result, regex);
       } catch (error) {
         continue;
       }
@@ -95,7 +95,7 @@ const setFileRef = (allImports, file, pathway) => {
   // replace relative imports with full path
   let module = pathway;
   if (/\.\//g.test(pathway) || /\.\.\//g.test(pathway)) {
-    module = path.resolve(file, "..", pathway);
+    module = resolve(file, "..", pathway);
   }
 
   // initialise or increase reference count for file
@@ -107,7 +107,7 @@ const setFileRef = (allImports, file, pathway) => {
 
   // Handle module package name
   // Eg: zone.js/dist/zone will be referred to as zone.js in package.json
-  if (!path.isAbsolute(module) && module.includes("/")) {
+  if (!isAbsolute(module) && module.includes("/")) {
     const modPkg = module.split("/")[0];
     if (allImports.hasOwnProperty(modPkg)) {
       allImports[modPkg] = allImports[modPkg] + 1;
@@ -122,10 +122,7 @@ const setFileRef = (allImports, file, pathway) => {
  * references for any import, require or dynamic import files.
  */
 const parseFileASTTree = (file, allImports) => {
-  const ast = babelParser.parse(
-    fs.readFileSync(file, "utf-8"),
-    babelParserOptions
-  );
+  const ast = parse(readFileSync(file, "utf-8"), babelParserOptions);
   babelTraverse(ast, {
     // Used for all ES6 import statements
     ImportDeclaration: (path) => {
@@ -195,4 +192,5 @@ const findJSImports = async (src) => {
     return allImports;
   }
 };
-exports.findJSImports = findJSImports;
+const _findJSImports = findJSImports;
+export { _findJSImports as findJSImports };
