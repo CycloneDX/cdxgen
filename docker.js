@@ -34,10 +34,10 @@ const DEBUG_MODE =
 const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
     return fg.sync([recurse ? "**/" : "" + dirName], {
-      cwd: dirPath,
+      cwd: fg.escapePath(dirPath),
       absolute: true,
       caseSensitiveMatch: false,
-      onlyFiles: true,
+      onlyDirectories: true,
       followSymbolicLinks: false,
       dot: hidden
     });

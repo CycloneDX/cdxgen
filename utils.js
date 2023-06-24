@@ -74,7 +74,7 @@ const getAllFiles = function (dirPath, pattern) {
       ignoreList.push("**/node_modules/**");
     }
     return fg.sync([pattern], {
-      cwd: dirPath,
+      cwd: fg.escapePath(dirPath),
       absolute: true,
       caseSensitiveMatch: false,
       onlyFiles: true,
