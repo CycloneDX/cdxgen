@@ -1,4 +1,3 @@
-const parsePackageJsonName = require("parse-packagejson-name");
 const os = require("os");
 const pathLib = require("path");
 const ssri = require("ssri");
@@ -504,7 +503,7 @@ function addComponent(
     return;
   }
   if (!isRootPkg) {
-    let pkgIdentifier = parsePackageJsonName(pkg.name);
+    let pkgIdentifier = utils.parsePackageJsonName(pkg.name);
     let author = pkg.author || "";
     let publisher = pkg.publisher || "";
     let group = pkg.group || pkgIdentifier.scope;

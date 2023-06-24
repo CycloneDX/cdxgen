@@ -1,7 +1,6 @@
-const glob = require("glob");
+const { globSync } = require("glob");
 const os = require("os");
 const path = require("path");
-const parsePackageJsonName = require("parse-packagejson-name");
 const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
@@ -74,9 +73,8 @@ const getAllFiles = function (dirPath, pattern) {
     if (!pattern.includes("package.json")) {
       ignoreList.push("**/node_modules/**");
     }
-    return glob.sync(pattern, {
+    return globSync(pattern, {
       cwd: dirPath,
-      silent: true,
       absolute: true,
       nocase: true,
       nodir: true,
@@ -2300,17 +2298,17 @@ const getPyModules = async (src, epkgList) => {
   pkgList = pkgList.filter(
     (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index
   );
-  if (epkgList && epkgList.length) {
-    const pkgMaps = epkgList.map((p) => p.name);
-    pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
-  }
-  pkgList = await getPyMetadata(pkgList, true);
   // Populate the imports list
   if (pkgList && pkgList.length) {
     pkgList.forEach((p) => {
       allImports[p.name] = true;
     });
   }
+  if (epkgList && epkgList.length) {
+    const pkgMaps = epkgList.map((p) => p.name);
+    pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
+  }
+  pkgList = await getPyMetadata(pkgList, true);
   return { allImports, pkgList };
 };
 exports.getPyModules = getPyModules;
@@ -5247,3 +5245,25 @@ const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
   return pkgList;
 };
 exports.executePipFreezeInVenv = executePipFreezeInVenv;
+
+// taken from a very old package https://github.com/keithamus/parse-packagejson-name/blob/master/index.js
+const parsePackageJsonName = (name) => {
+  const nameRegExp = /^(?:@([^/]+)\/)?(([^.]+)(?:\.(.*))?)$/;
+  const returnObject = {
+    scope: null,
+    fullName: "",
+    projectName: "",
+    moduleName: ""
+  };
+  const match = (typeof name === "object" ? name.name || "" : name || "").match(
+    nameRegExp
+  );
+  if (match) {
+    returnObject.scope = match[1] || null;
+    returnObject.fullName = match[2] || match[0];
+    returnObject.projectName = match[3] === match[2] ? null : match[3];
+    returnObject.moduleName = match[4] || match[2] || null;
+  }
+  return returnObject;
+};
+exports.parsePackageJsonName = parsePackageJsonName;
