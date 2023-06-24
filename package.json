@@ -39,7 +39,7 @@
     "pretty": "prettier --write *.js data/*.json bin/cdxgen --trailing-comma=none"
   },
   "engines": {
-    "node": ">=16 || 14 >=14.17"
+    "node": ">=12"
   },
   "repository": {
     "type": "git",
