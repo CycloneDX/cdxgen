@@ -8,6 +8,8 @@
   "bb_jekyll_hook": "bitbucket_jekyll_hook",
   "banzai": "banzai_ngs",
   "beautifulsouptests": "beautifulsoup",
+  "blackd": "black",
+  "blib2to3": "black",
   "biosql": "biopython",
   "buildbotstatusshields": "buildboteightstatusshields",
   "computedattribute": "extensionclass",

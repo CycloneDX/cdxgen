@@ -303,5 +303,6 @@
   "pkg_resources",
   "setuptools",
   "_info",
-  "_registry"
+  "_registry",
+  "tomllib"
 ]
