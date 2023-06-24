@@ -1,4 +1,4 @@
-const { globSync } = require("glob");
+const fg = require("fast-glob");
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
@@ -73,14 +73,13 @@ const getAllFiles = function (dirPath, pattern) {
     if (!pattern.includes("package.json")) {
       ignoreList.push("**/node_modules/**");
     }
-    return globSync(pattern, {
+    return fg.sync([pattern], {
       cwd: dirPath,
       absolute: true,
-      nocase: true,
-      nodir: true,
-      strict: true,
+      caseSensitiveMatch: false,
+      onlyFiles: true,
       dot: pattern.startsWith(".") ? true : false,
-      follow: false,
+      followSymbolicLinks: false,
       ignore: ignoreList
     });
   } catch (err) {

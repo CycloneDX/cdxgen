@@ -1,6 +1,6 @@
 const isWin = require("os").platform() === "win32";
 const got = require("got");
-const { globSync } = require("glob");
+const fg = require("fast-glob");
 const url = require("url");
 const util = require("util");
 const stream = require("stream");
@@ -33,12 +33,12 @@ const DEBUG_MODE =
  */
 const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
-    return globSync(recurse ? "**/" : "" + dirName, {
+    return fg.sync([recurse ? "**/" : "" + dirName], {
       cwd: dirPath,
       absolute: true,
-      nocase: true,
-      nodir: false,
-      follow: false,
+      caseSensitiveMatch: false,
+      onlyFiles: true,
+      followSymbolicLinks: false,
       dot: hidden
     });
   } catch (err) {

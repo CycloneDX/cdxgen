@@ -53,7 +53,7 @@
     "@babel/traverse": "^7.22.5",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "^1.0.0",
-    "glob": "^10.3.0",
+    "fast-glob": "^3.2.12",
     "global-agent": "^3.0.0",
     "got": "^11.8.5",
     "js-yaml": "^4.1.0",
