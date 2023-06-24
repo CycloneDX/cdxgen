@@ -1,13 +1,27 @@
 #!/usr/bin/env node
 
-const bom = require("../index.js");
-const fs = require("fs");
-const path = require("path");
-const jws = require("jws");
-const crypto = require("crypto");
-const bomServer = require("../server.js");
+import { createBom, submitBom } from "../index.js";
+import fs from "node:fs";
+import { tmpdir } from "node:os";
+import { basename, dirname, join, resolve } from "node:path";
+import jws from "jws";
+import crypto from "crypto";
+import { start as _serverStart } from "../server.js";
+import { fileURLToPath } from "node:url";
+import globalAgent from "global-agent";
+import { table } from "table";
+import process from "node:process";
 
-const args = require("yargs")
+let url = import.meta.url;
+if (!url.startsWith("file://")) {
+  url = new URL(`file://${import.meta.url}`).toString();
+}
+const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+const args = yargs(hideBin(process.argv))
   .option("output", {
     alias: "o",
     description: "Output file for bom.xml or bom.json. Default bom.json"
@@ -99,7 +113,7 @@ const args = require("yargs")
 
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
-    path.join(__dirname, "../", "package.json"),
+    join(dirName, "..", "package.json"),
     "utf-8"
   );
   const packageJson = JSON.parse(packageJsonAsString);
@@ -113,16 +127,15 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
   if (!process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE) {
     process.env.GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE = "";
   }
-  const globalAgent = require("global-agent");
   globalAgent.bootstrap();
 }
 
 let filePath = args._[0] || ".";
 if (!args.projectName) {
   if (filePath !== ".") {
-    args.projectName = path.basename(filePath);
+    args.projectName = basename(filePath);
   } else {
-    args.projectName = path.basename(path.resolve(filePath));
+    args.projectName = basename(resolve(filePath));
   }
 }
 
@@ -151,14 +164,50 @@ let options = {
 };
 
 /**
+ * Check for node >= 20 permissions
+ *
+ * @param {string} filePath File path
+ * @returns
+ */
+const checkPermissions = (filePath) => {
+  if (!process.permission) {
+    return true;
+  }
+  if (!process.permission.has("fs.read", filePath)) {
+    console.log(
+      `FileSystemRead permission required. Please invoke with the argument --allow-fs-read="${resolve(
+        filePath
+      )}"`
+    );
+    return false;
+  }
+  if (!process.permission.has("fs.write", tmpdir())) {
+    console.log(
+      `FileSystemWrite permission required. Please invoke with the argument --allow-fs-write="${tmpdir()}"`
+    );
+    return false;
+  }
+  if (!process.permission.has("child")) {
+    console.log(
+      "ChildProcess permission is missing. This is required to spawn commands for some languages. Please invoke with the argument --allow-child-process"
+    );
+  }
+  return true;
+};
+
+/**
  * Method to start the bom creation process
  */
 (async () => {
   // Start SBoM server
   if (args.server) {
-    return await bomServer.start(options);
+    return await _serverStart(options);
   }
-  const bomNSData = (await bom.createBom(filePath, options)) || {};
+  // Check if cdxgen has the required permissions
+  if (!checkPermissions(filePath)) {
+    return;
+  }
+  const bomNSData = (await createBom(filePath, options)) || {};
   if (!args.output) {
     args.output = "bom.json";
     args.print = true;
@@ -172,7 +221,7 @@ let options = {
     } else {
       const jsonFile = args.output.replace(".xml", ".json");
       // Create bom json file
-      if (bomNSData.bomJson) {
+      if (!args.output.endsWith(".xml") && bomNSData.bomJson) {
         let jsonPayload = undefined;
         if (
           typeof bomNSData.bomJson === "string" ||
@@ -199,9 +248,9 @@ let options = {
           let privateKeyToUse = undefined;
           let jwkPublicKey = undefined;
           if (args.generateKeyAndSign) {
-            const dirName = path.dirname(jsonFile);
-            const publicKeyFile = path.join(dirName, "public.key");
-            const privateKeyFile = path.join(dirName, "private.key");
+            const jdirName = dirname(jsonFile);
+            const publicKeyFile = join(jdirName, "public.key");
+            const privateKeyFile = join(jdirName, "private.key");
             const { privateKey, publicKey } = crypto.generateKeyPairSync(
               "rsa",
               {
@@ -271,9 +320,8 @@ let options = {
         }
       }
       // Create bom xml file
-      if (bomNSData.bomXml) {
-        const xmlFile = args.output.replace(".json", ".xml");
-        fs.writeFileSync(xmlFile, bomNSData.bomXml);
+      if (args.output.endsWith(".xml") && bomNSData.bomXml) {
+        fs.writeFileSync(args.output, bomNSData.bomXml);
       }
       //
       if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
@@ -296,8 +344,7 @@ let options = {
   // Automatically submit the bom data
   if (args.serverUrl && args.serverUrl != true && args.apiKey) {
     try {
-      // TODO: Need to use json format for v9
-      const dbody = await bom.submitBom(args, bomNSData.bomXml);
+      const dbody = await submitBom(args, bomNSData.bomJson);
       console.log("Response from server", dbody);
     } catch (err) {
       console.log(err);
@@ -305,7 +352,6 @@ let options = {
   }
 
   if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
-    const { table } = require("table");
     const data = [["Group", "Name", "Version", "Scope"]];
     for (let comp of bomNSData.bomJson.components) {
       data.push([comp.group || "", comp.name, comp.version, comp.scope || ""]);

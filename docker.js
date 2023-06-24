@@ -1,16 +1,29 @@
-const isWin = require("os").platform() === "win32";
-const got = require("got");
-const glob = require("glob");
-const url = require("url");
-const util = require("util");
-const stream = require("stream");
-const fs = require("fs");
-const path = require("path");
-const os = require("os");
-const tar = require("tar");
-const { spawnSync } = require("child_process");
+import got from "got";
+import { globSync } from "glob";
+import { parse } from "url";
+import stream from "node:stream/promises";
+import {
+  existsSync,
+  readdirSync,
+  statSync,
+  lstatSync,
+  readFileSync,
+  createReadStream,
+  mkdtempSync,
+  mkdirSync,
+  rmSync
+} from "node:fs";
+import { join } from "node:path";
+import {
+  userInfo as _userInfo,
+  homedir,
+  platform as _platform,
+  tmpdir
+} from "node:os";
+import { x } from "tar";
+import { spawnSync } from "node:child_process";
 
-const pipeline = util.promisify(stream.pipeline);
+const isWin = _platform() === "win32";
 
 let dockerConn = undefined;
 let isPodman = false;
@@ -31,11 +44,10 @@ const DEBUG_MODE =
  * @param {string} dirPath Root directory for search
  * @param {string} dirName Directory name
  */
-const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
+export const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
-    return glob.sync(recurse ? "**/" : "" + dirName, {
+    return globSync(recurse ? "**/" : "" + dirName, {
       cwd: dirPath,
-      silent: true,
       absolute: true,
       nocase: true,
       nodir: false,
@@ -46,20 +58,18 @@ const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
     return [];
   }
 };
-exports.getDirs = getDirs;
 
 function flatten(lists) {
   return lists.reduce((a, b) => a.concat(b), []);
 }
 
 function getDirectories(srcpath) {
-  if (fs.existsSync(srcpath)) {
-    return fs
-      .readdirSync(srcpath)
-      .map((file) => path.join(srcpath, file))
+  if (existsSync(srcpath)) {
+    return readdirSync(srcpath)
+      .map((file) => join(srcpath, file))
       .filter((path) => {
         try {
-          return fs.statSync(path).isDirectory();
+          return statSync(path).isDirectory();
         } catch (e) {
           return false;
         }
@@ -68,15 +78,15 @@ function getDirectories(srcpath) {
   return [];
 }
 
-const getOnlyDirs = (srcpath, dirName) => {
+export const getOnlyDirs = (srcpath, dirName) => {
   return [
     srcpath,
     ...flatten(
       getDirectories(srcpath)
         .map((p) => {
           try {
-            if (fs.existsSync(p)) {
-              if (fs.lstatSync(p).isDirectory()) {
+            if (existsSync(p)) {
+              if (lstatSync(p).isDirectory()) {
                 return getOnlyDirs(p, dirName);
               }
             }
@@ -88,20 +98,20 @@ const getOnlyDirs = (srcpath, dirName) => {
     )
   ].filter((d) => d.endsWith(dirName));
 };
-exports.getOnlyDirs = getOnlyDirs;
 
 const getDefaultOptions = () => {
   let opts = {
+    enableUnixSockets: true,
     throwHttpErrors: true,
-    "hooks.beforeError": [],
     method: "GET",
-    isPodman
+    hooks: { beforeError: [] },
+    mutableDefaults: true
   };
-  const userInfo = os.userInfo();
-  opts.podmanPrefixUrl = isWin ? "" : `unix:/run/podman/podman.sock:`;
+  const userInfo = _userInfo();
+  opts.podmanPrefixUrl = isWin ? "" : `http://unix:/run/podman/podman.sock:`;
   opts.podmanRootlessPrefixUrl = isWin
     ? ""
-    : `unix:/run/user/${userInfo.uid}/podman/podman.sock:`;
+    : `http://unix:/run/user/${userInfo.uid}/podman/podman.sock:`;
   if (!process.env.DOCKER_HOST) {
     if (isPodman) {
       opts.prefixUrl = isPodmanRootless
@@ -121,14 +131,14 @@ const getDefaultOptions = () => {
         opts.prefixUrl = isWin
           ? WIN_LOCAL_TLS
           : isDockerRootless
-          ? `unix:${os.homedir()}/.docker/run/docker.sock:`
-          : "unix:/var/run/docker.sock:";
+          ? `http://unix:${homedir()}/.docker/run/docker.sock:`
+          : "http://unix:/var/run/docker.sock:";
       }
     }
   } else {
     let hostStr = process.env.DOCKER_HOST;
     if (hostStr.startsWith("unix:///")) {
-      hostStr = hostStr.replace("unix:///", "unix:/");
+      hostStr = hostStr.replace("unix:///", "http://unix:/");
       if (hostStr.includes("docker.sock")) {
         hostStr = hostStr.replace("docker.sock", "docker.sock:");
         isDockerRootless = true;
@@ -137,14 +147,11 @@ const getDefaultOptions = () => {
     opts.prefixUrl = hostStr;
     if (process.env.DOCKER_CERT_PATH) {
       opts.https = {
-        certificate: fs.readFileSync(
-          path.join(process.env.DOCKER_CERT_PATH, "cert.pem"),
+        certificate: readFileSync(
+          join(process.env.DOCKER_CERT_PATH, "cert.pem"),
           "utf8"
         ),
-        key: fs.readFileSync(
-          path.join(process.env.DOCKER_CERT_PATH, "key.pem"),
-          "utf8"
-        )
+        key: readFileSync(join(process.env.DOCKER_CERT_PATH, "key.pem"), "utf8")
       };
     }
   }
@@ -152,9 +159,19 @@ const getDefaultOptions = () => {
   return opts;
 };
 
-const getConnection = async (options) => {
+export const getConnection = async (options) => {
   if (!dockerConn) {
-    const opts = Object.assign({}, getDefaultOptions(), options);
+    const defaultOptions = getDefaultOptions();
+    const opts = Object.assign(
+      {},
+      {
+        enableUnixSockets: defaultOptions.enableUnixSockets,
+        throwHttpErrors: defaultOptions.throwHttpErrors,
+        method: defaultOptions.method,
+        prefixUrl: defaultOptions.prefixUrl
+      },
+      options
+    );
     try {
       await got.get("_ping", opts);
       dockerConn = got.extend(opts);
@@ -168,8 +185,7 @@ const getConnection = async (options) => {
         }
       }
     } catch (err) {
-      // console.log(err, opts);
-      opts.prefixUrl = `unix:${os.homedir()}/.docker/run/docker.sock:`;
+      opts.prefixUrl = `http://unix:${homedir()}/.docker/run/docker.sock:`;
       try {
         await got.get("_ping", opts);
         dockerConn = got.extend(opts);
@@ -214,7 +230,8 @@ const getConnection = async (options) => {
             "Podman in root mode detected. Consider switching to rootless mode to improve security. See https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md"
           );
         } catch (err) {
-          if (os.platform() === "win32") {
+          // console.log(err);
+          if (_platform() === "win32") {
             console.warn(
               "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
               opts
@@ -234,22 +251,31 @@ const getConnection = async (options) => {
   }
   return dockerConn;
 };
-exports.getConnection = getConnection;
 
-const makeRequest = async (path, method = "GET") => {
+export const makeRequest = async (path, method = "GET") => {
   let client = await getConnection();
   if (!client) {
     return undefined;
   }
   const extraOptions = {
-    responseType: method === "GET" ? "json" : "text",
+    responseType: method === "GET" ? "json" : "buffer",
     resolveBodyOnly: true,
+    enableUnixSockets: true,
     method
   };
-  const opts = Object.assign({}, getDefaultOptions(), extraOptions);
+  const defaultOptions = getDefaultOptions();
+  const opts = Object.assign(
+    {},
+    {
+      enableUnixSockets: defaultOptions.enableUnixSockets,
+      throwHttpErrors: defaultOptions.throwHttpErrors,
+      method: defaultOptions.method,
+      prefixUrl: defaultOptions.prefixUrl
+    },
+    extraOptions
+  );
   return await client(path, opts);
 };
-exports.makeRequest = makeRequest;
 
 /**
  * Parse image name
@@ -259,7 +285,7 @@ exports.makeRequest = makeRequest;
  * docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
  * docker pull myregistry.local:5000/testing/test-image
  */
-const parseImageName = (fullImageName) => {
+export const parseImageName = (fullImageName) => {
   const nameObj = {
     registry: "",
     repo: "",
@@ -275,7 +301,7 @@ const parseImageName = (fullImageName) => {
     fullImageName.includes("/") &&
     (fullImageName.includes(".") || fullImageName.includes(":"))
   ) {
-    const urlObj = url.parse(fullImageName);
+    const urlObj = parse(fullImageName);
     const tmpA = fullImageName.split("/");
     if (
       urlObj.path !== fullImageName ||
@@ -306,12 +332,11 @@ const parseImageName = (fullImageName) => {
   nameObj.repo = fullImageName;
   return nameObj;
 };
-exports.parseImageName = parseImageName;
 
 /**
  * Method to get image to the local registry by pulling from the remote if required
  */
-const getImage = async (fullImageName) => {
+export const getImage = async (fullImageName) => {
   let localData = undefined;
   const { repo, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
@@ -353,6 +378,14 @@ const getImage = async (fullImageName) => {
       console.log(localData);
     }
   } catch (err) {
+    try {
+      localData = await makeRequest(`images/${fullImageName}/json`);
+      if (localData) {
+        return localData;
+      }
+    } catch (err) {
+      // ignore
+    }
     if (DEBUG_MODE) {
       console.log(
         `Trying to pull the image ${fullImageName} from registry. This might take a while ...`
@@ -407,18 +440,17 @@ const getImage = async (fullImageName) => {
       `Unable to pull ${fullImageName}. Check if the name is valid. Perform any authentication prior to invoking cdxgen.`
     );
     console.log(
-      `Trying to manually pulling this image using docker pull ${fullImageName}`
+      `Try manually pulling this image using docker pull ${fullImageName}`
     );
   }
   return localData;
 };
-exports.getImage = getImage;
 
-const extractTar = async (fullImageName, dir) => {
+export const extractTar = async (fullImageName, dir) => {
   try {
-    await pipeline(
-      fs.createReadStream(fullImageName),
-      tar.x({
+    await stream.pipeline(
+      createReadStream(fullImageName),
+      x({
         sync: true,
         preserveOwner: false,
         noMtime: true,
@@ -455,27 +487,26 @@ const extractTar = async (fullImageName, dir) => {
     return false;
   }
 };
-exports.extractTar = extractTar;
 
 /**
  * Method to export a container image archive.
  * Returns the location of the layers with additional packages related metadata
  */
-const exportArchive = async (fullImageName) => {
-  if (!fs.existsSync(fullImageName)) {
+export const exportArchive = async (fullImageName) => {
+  if (!existsSync(fullImageName)) {
     console.log(`Unable to find container image archive ${fullImageName}`);
     return undefined;
   }
   let manifest = {};
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
-  const allLayersExplodedDir = path.join(tempDir, "all-layers");
-  const blobsDir = path.join(tempDir, "blobs", "sha256");
-  fs.mkdirSync(allLayersExplodedDir);
-  const manifestFile = path.join(tempDir, "manifest.json");
+  const tempDir = mkdtempSync(join(tmpdir(), "docker-images-"));
+  const allLayersExplodedDir = join(tempDir, "all-layers");
+  const blobsDir = join(tempDir, "blobs", "sha256");
+  mkdirSync(allLayersExplodedDir);
+  const manifestFile = join(tempDir, "manifest.json");
   try {
     await extractTar(fullImageName, tempDir);
     // podman use blobs dir
-    if (fs.existsSync(blobsDir)) {
+    if (existsSync(blobsDir)) {
       if (DEBUG_MODE) {
         console.log(
           `Image archive ${fullImageName} successfully exported to directory ${tempDir}`
@@ -499,7 +530,7 @@ const exportArchive = async (fullImageName) => {
       };
       exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
       return exportData;
-    } else if (fs.existsSync(manifestFile)) {
+    } else if (existsSync(manifestFile)) {
       // docker manifest file
       return await extractFromManifest(
         manifestFile,
@@ -515,9 +546,8 @@ const exportArchive = async (fullImageName) => {
   }
   return undefined;
 };
-exports.exportArchive = exportArchive;
 
-const extractFromManifest = async (
+export const extractFromManifest = async (
   manifestFile,
   localData,
   tempDir,
@@ -527,7 +557,7 @@ const extractFromManifest = async (
   // [{"Config":"blobs/sha256/dedc100afa8d6718f5ac537730dd4a5ceea3563e695c90f1a8ac6df32c4cb291","RepoTags":["shiftleft/core:latest"],"Layers":["blobs/sha256/eaead16dc43bb8811d4ff450935d607f9ba4baffda4fc110cc402fa43f601d83","blobs/sha256/2039af03c0e17a3025b989335e9414149577fa09e7d0dcbee80155333639d11f"]}]
   // {"schemaVersion":2,"manifests":[{"mediaType":"application/vnd.docker.distribution.manifest.list.v2+json","digest":"sha256:7706ac20c7587081dc7a00e0ec65a6633b0bb3788e0048a3e971d3eae492db63","size":318,"annotations":{"io.containerd.image.name":"docker.io/shiftleft/scan-slim:latest","org.opencontainers.image.ref.name":"latest"}}]}
   let manifest = JSON.parse(
-    fs.readFileSync(manifestFile, {
+    readFileSync(manifestFile, {
       encoding: "utf-8"
     })
   );
@@ -548,11 +578,11 @@ const extractFromManifest = async (
       }
     }
     let layers = manifest[manifest.length - 1]["Layers"] || [];
-    if (!layers.length && fs.existsSync(tempDir)) {
-      const blobFiles = fs.readdirSync(path.join(tempDir, "blobs", "sha256"));
+    if (!layers.length && existsSync(tempDir)) {
+      const blobFiles = readdirSync(join(tempDir, "blobs", "sha256"));
       if (blobFiles && blobFiles.length) {
         for (const blobf of blobFiles) {
-          layers.push(path.join("blobs", "sha256", blobf));
+          layers.push(join("blobs", "sha256", blobf));
         }
       }
     }
@@ -562,30 +592,30 @@ const extractFromManifest = async (
         console.log(`Extracting layer ${layer} to ${allLayersExplodedDir}`);
       }
       try {
-        await extractTar(path.join(tempDir, layer), allLayersExplodedDir);
+        await extractTar(join(tempDir, layer), allLayersExplodedDir);
       } catch (err) {
         console.log(err);
       }
     }
     if (manifest.Config) {
-      lastLayerConfigFile = path.join(tempDir, manifest.Config);
+      lastLayerConfigFile = join(tempDir, manifest.Config);
     }
     if (lastLayer.includes("layer.tar")) {
-      lastLayerConfigFile = path.join(
+      lastLayerConfigFile = join(
         tempDir,
         lastLayer.replace("layer.tar", "json")
       );
     }
-    if (lastLayerConfigFile && fs.existsSync(lastLayerConfigFile)) {
+    if (lastLayerConfigFile && existsSync(lastLayerConfigFile)) {
       try {
         lastLayerConfig = JSON.parse(
-          fs.readFileSync(lastLayerConfigFile, {
+          readFileSync(lastLayerConfigFile, {
             encoding: "utf-8"
           })
         );
         lastWorkingDir =
           lastLayerConfig.config && lastLayerConfig.config.WorkingDir
-            ? path.join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
+            ? join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
             : "";
       } catch (err) {
         console.log(err);
@@ -608,7 +638,7 @@ const extractFromManifest = async (
  * Method to export a container image by using the export feature in docker or podman service.
  * Returns the location of the layers with additional packages related metadata
  */
-const exportImage = async (fullImageName) => {
+export const exportImage = async (fullImageName) => {
   // Try to get the data locally first
   const localData = await getImage(fullImageName);
   if (!localData) {
@@ -619,14 +649,14 @@ const exportImage = async (fullImageName) => {
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
   }
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "docker-images-"));
-  const allLayersExplodedDir = path.join(tempDir, "all-layers");
-  let manifestFile = path.join(tempDir, "manifest.json");
+  const tempDir = mkdtempSync(join(tmpdir(), "docker-images-"));
+  const allLayersExplodedDir = join(tempDir, "all-layers");
+  let manifestFile = join(tempDir, "manifest.json");
   // Windows containers use index.json
-  const manifestIndexFile = path.join(tempDir, "index.json");
+  const manifestIndexFile = join(tempDir, "index.json");
   // On Windows, fallback to invoking cli
   if (isWin) {
-    const imageTarFile = path.join(tempDir, "image.tar");
+    const imageTarFile = join(tempDir, "image.tar");
     console.log(
       `About to export image ${fullImageName} to ${imageTarFile} using docker cli`
     );
@@ -647,8 +677,8 @@ const exportImage = async (fullImageName) => {
       if (DEBUG_MODE) {
         console.log(`Cleaning up ${imageTarFile}`);
       }
-      if (fs.rmSync) {
-        fs.rmSync(imageTarFile, { force: true });
+      if (rmSync) {
+        rmSync(imageTarFile, { force: true });
       }
     }
   } else {
@@ -657,9 +687,9 @@ const exportImage = async (fullImageName) => {
       if (DEBUG_MODE) {
         console.log(`About to export image ${fullImageName} to ${tempDir}`);
       }
-      await pipeline(
+      await stream.pipeline(
         client.stream(`images/${fullImageName}/get`),
-        tar.x({
+        x({
           sync: true,
           preserveOwner: false,
           noMtime: true,
@@ -675,10 +705,10 @@ const exportImage = async (fullImageName) => {
     }
   }
   // Continue with extracting the layers
-  if (fs.existsSync(tempDir)) {
-    if (fs.existsSync(manifestFile)) {
+  if (existsSync(tempDir)) {
+    if (existsSync(manifestFile)) {
       // This is fine
-    } else if (fs.existsSync(manifestIndexFile)) {
+    } else if (existsSync(manifestIndexFile)) {
       manifestFile = manifestIndexFile;
     } else {
       console.log(
@@ -691,7 +721,7 @@ const exportImage = async (fullImageName) => {
         `Image ${fullImageName} successfully exported to directory ${tempDir}`
       );
     }
-    fs.mkdirSync(allLayersExplodedDir);
+    mkdirSync(allLayersExplodedDir);
     return await extractFromManifest(
       manifestFile,
       localData,
@@ -703,43 +733,42 @@ const exportImage = async (fullImageName) => {
   }
   return undefined;
 };
-exports.exportImage = exportImage;
 
 /**
  * Method to retrieve path list for system-level packages
  */
-const getPkgPathList = (exportData, lastWorkingDir) => {
+export const getPkgPathList = (exportData, lastWorkingDir) => {
   const allLayersExplodedDir = exportData.allLayersExplodedDir;
   const allLayersDir = exportData.allLayersDir;
   let pathList = [];
   let knownSysPaths = [];
   if (allLayersExplodedDir && allLayersExplodedDir !== "") {
     knownSysPaths = [
-      path.join(allLayersExplodedDir, "/usr/local/go"),
-      path.join(allLayersExplodedDir, "/usr/local/lib"),
-      path.join(allLayersExplodedDir, "/usr/local/lib64"),
-      path.join(allLayersExplodedDir, "/opt"),
-      path.join(allLayersExplodedDir, "/home"),
-      path.join(allLayersExplodedDir, "/usr/share"),
-      path.join(allLayersExplodedDir, "/usr/src"),
-      path.join(allLayersExplodedDir, "/var/www/html"),
-      path.join(allLayersExplodedDir, "/var/lib"),
-      path.join(allLayersExplodedDir, "/mnt")
+      join(allLayersExplodedDir, "/usr/local/go"),
+      join(allLayersExplodedDir, "/usr/local/lib"),
+      join(allLayersExplodedDir, "/usr/local/lib64"),
+      join(allLayersExplodedDir, "/opt"),
+      join(allLayersExplodedDir, "/home"),
+      join(allLayersExplodedDir, "/usr/share"),
+      join(allLayersExplodedDir, "/usr/src"),
+      join(allLayersExplodedDir, "/var/www/html"),
+      join(allLayersExplodedDir, "/var/lib"),
+      join(allLayersExplodedDir, "/mnt")
     ];
   } else if (allLayersExplodedDir === "") {
     knownSysPaths = [
-      path.join(allLayersExplodedDir, "/usr/local/go"),
-      path.join(allLayersExplodedDir, "/usr/local/lib"),
-      path.join(allLayersExplodedDir, "/usr/local/lib64"),
-      path.join(allLayersExplodedDir, "/opt"),
-      path.join(allLayersExplodedDir, "/usr/share"),
-      path.join(allLayersExplodedDir, "/usr/src"),
-      path.join(allLayersExplodedDir, "/var/www/html"),
-      path.join(allLayersExplodedDir, "/var/lib")
+      join(allLayersExplodedDir, "/usr/local/go"),
+      join(allLayersExplodedDir, "/usr/local/lib"),
+      join(allLayersExplodedDir, "/usr/local/lib64"),
+      join(allLayersExplodedDir, "/opt"),
+      join(allLayersExplodedDir, "/usr/share"),
+      join(allLayersExplodedDir, "/usr/src"),
+      join(allLayersExplodedDir, "/var/www/html"),
+      join(allLayersExplodedDir, "/var/lib")
     ];
   }
-  if (fs.existsSync(path.join(allLayersDir, "Files"))) {
-    knownSysPaths.push(path.join(allLayersDir, "Files"));
+  if (existsSync(join(allLayersDir, "Files"))) {
+    knownSysPaths.push(join(allLayersDir, "Files"));
   }
   /*
   // Too slow
@@ -747,8 +776,8 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
     knownSysPaths.push(path.join(allLayersDir, "Users"));
   }
   */
-  if (fs.existsSync(path.join(allLayersDir, "ProgramData"))) {
-    knownSysPaths.push(path.join(allLayersDir, "ProgramData"));
+  if (existsSync(join(allLayersDir, "ProgramData"))) {
+    knownSysPaths.push(join(allLayersDir, "ProgramData"));
   }
   const pyInstalls = getDirs(allLayersDir, "Python*/", false, false);
   if (pyInstalls && pyInstalls.length) {
@@ -763,18 +792,18 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
     knownSysPaths.push(lastWorkingDir);
     // Some more common app dirs
     if (!lastWorkingDir.startsWith("/app")) {
-      knownSysPaths.push(path.join(allLayersExplodedDir, "/app"));
+      knownSysPaths.push(join(allLayersExplodedDir, "/app"));
     }
     if (!lastWorkingDir.startsWith("/data")) {
-      knownSysPaths.push(path.join(allLayersExplodedDir, "/data"));
+      knownSysPaths.push(join(allLayersExplodedDir, "/data"));
     }
     if (!lastWorkingDir.startsWith("/srv")) {
-      knownSysPaths.push(path.join(allLayersExplodedDir, "/srv"));
+      knownSysPaths.push(join(allLayersExplodedDir, "/srv"));
     }
   }
   // Known to cause EACCESS error
-  knownSysPaths.push(path.join(allLayersExplodedDir, "/usr/lib"));
-  knownSysPaths.push(path.join(allLayersExplodedDir, "/usr/lib64"));
+  knownSysPaths.push(join(allLayersExplodedDir, "/usr/lib"));
+  knownSysPaths.push(join(allLayersExplodedDir, "/usr/lib64"));
   // Build path list
   for (let wpath of knownSysPaths) {
     pathList = pathList.concat(wpath);
@@ -800,9 +829,8 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   }
   return pathList;
 };
-exports.getPkgPathList = getPkgPathList;
 
-const removeImage = async (fullImageName, force = false) => {
+export const removeImage = async (fullImageName, force = false) => {
   const removeData = await makeRequest(
     `images/${fullImageName}?force=${force}`,
     "DELETE"
@@ -812,4 +840,3 @@ const removeImage = async (fullImageName, force = false) => {
   }
   return removeData;
 };
-exports.removeImage = removeImage;

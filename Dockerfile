@@ -127,4 +127,4 @@ RUN set -e; \
     && rm -rf /var/cache/yum \
     && microdnf clean all
 
-ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen"]
+ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
