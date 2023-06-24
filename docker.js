@@ -46,7 +46,7 @@ const DEBUG_MODE =
  * @param {string} dirPath Root directory for search
  * @param {string} dirName Directory name
  */
-const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
+export const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
     return globSync(recurse ? "**/" : "" + dirName, {
       cwd: dirPath,
@@ -60,8 +60,6 @@ const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
     return [];
   }
 };
-const _getDirs = getDirs;
-export { _getDirs as getDirs };
 
 function flatten(lists) {
   return lists.reduce((a, b) => a.concat(b), []);
@@ -82,7 +80,7 @@ function getDirectories(srcpath) {
   return [];
 }
 
-const getOnlyDirs = (srcpath, dirName) => {
+export const getOnlyDirs = (srcpath, dirName) => {
   return [
     srcpath,
     ...flatten(
@@ -102,8 +100,6 @@ const getOnlyDirs = (srcpath, dirName) => {
     )
   ].filter((d) => d.endsWith(dirName));
 };
-const _getOnlyDirs = getOnlyDirs;
-export { _getOnlyDirs as getOnlyDirs };
 
 const getDefaultOptions = () => {
   let opts = {
@@ -165,7 +161,7 @@ const getDefaultOptions = () => {
   return opts;
 };
 
-const getConnection = async (options) => {
+export const getConnection = async (options) => {
   if (!dockerConn) {
     const opts = Object.assign({}, getDefaultOptions(), options);
     try {
@@ -247,10 +243,8 @@ const getConnection = async (options) => {
   }
   return dockerConn;
 };
-const _getConnection = getConnection;
-export { _getConnection as getConnection };
 
-const makeRequest = async (path, method = "GET") => {
+export const makeRequest = async (path, method = "GET") => {
   let client = await getConnection();
   if (!client) {
     return undefined;
@@ -263,8 +257,6 @@ const makeRequest = async (path, method = "GET") => {
   const opts = Object.assign({}, getDefaultOptions(), extraOptions);
   return await client(path, opts);
 };
-const _makeRequest = makeRequest;
-export { _makeRequest as makeRequest };
 
 /**
  * Parse image name
@@ -274,7 +266,7 @@ export { _makeRequest as makeRequest };
  * docker pull ubuntu@sha256:45b23dee08af5e43a7fea6c4cf9c25ccf269ee113168c19722f87876677c5cb2
  * docker pull myregistry.local:5000/testing/test-image
  */
-const parseImageName = (fullImageName) => {
+export const parseImageName = (fullImageName) => {
   const nameObj = {
     registry: "",
     repo: "",
@@ -321,13 +313,11 @@ const parseImageName = (fullImageName) => {
   nameObj.repo = fullImageName;
   return nameObj;
 };
-const _parseImageName = parseImageName;
-export { _parseImageName as parseImageName };
 
 /**
  * Method to get image to the local registry by pulling from the remote if required
  */
-const getImage = async (fullImageName) => {
+export const getImage = async (fullImageName) => {
   let localData = undefined;
   const { repo, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
@@ -428,10 +418,8 @@ const getImage = async (fullImageName) => {
   }
   return localData;
 };
-const _getImage = getImage;
-export { _getImage as getImage };
 
-const extractTar = async (fullImageName, dir) => {
+export const extractTar = async (fullImageName, dir) => {
   try {
     await pipeline(
       createReadStream(fullImageName),
@@ -472,14 +460,12 @@ const extractTar = async (fullImageName, dir) => {
     return false;
   }
 };
-const _extractTar = extractTar;
-export { _extractTar as extractTar };
 
 /**
  * Method to export a container image archive.
  * Returns the location of the layers with additional packages related metadata
  */
-const exportArchive = async (fullImageName) => {
+export const exportArchive = async (fullImageName) => {
   if (!existsSync(fullImageName)) {
     console.log(`Unable to find container image archive ${fullImageName}`);
     return undefined;
@@ -533,10 +519,8 @@ const exportArchive = async (fullImageName) => {
   }
   return undefined;
 };
-const _exportArchive = exportArchive;
-export { _exportArchive as exportArchive };
 
-const extractFromManifest = async (
+export const extractFromManifest = async (
   manifestFile,
   localData,
   tempDir,
@@ -627,7 +611,7 @@ const extractFromManifest = async (
  * Method to export a container image by using the export feature in docker or podman service.
  * Returns the location of the layers with additional packages related metadata
  */
-const exportImage = async (fullImageName) => {
+export const exportImage = async (fullImageName) => {
   // Try to get the data locally first
   const localData = await getImage(fullImageName);
   if (!localData) {
@@ -722,13 +706,11 @@ const exportImage = async (fullImageName) => {
   }
   return undefined;
 };
-const _exportImage = exportImage;
-export { _exportImage as exportImage };
 
 /**
  * Method to retrieve path list for system-level packages
  */
-const getPkgPathList = (exportData, lastWorkingDir) => {
+export const getPkgPathList = (exportData, lastWorkingDir) => {
   const allLayersExplodedDir = exportData.allLayersExplodedDir;
   const allLayersDir = exportData.allLayersDir;
   let pathList = [];
@@ -820,10 +802,8 @@ const getPkgPathList = (exportData, lastWorkingDir) => {
   }
   return pathList;
 };
-const _getPkgPathList = getPkgPathList;
-export { _getPkgPathList as getPkgPathList };
 
-const removeImage = async (fullImageName, force = false) => {
+export const removeImage = async (fullImageName, force = false) => {
   const removeData = await makeRequest(
     `images/${fullImageName}?force=${force}`,
     "DELETE"
@@ -833,5 +813,3 @@ const removeImage = async (fullImageName, force = false) => {
   }
   return removeData;
 };
-const _removeImage = removeImage;
-export { _removeImage as removeImage };

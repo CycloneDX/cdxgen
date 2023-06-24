@@ -219,7 +219,7 @@ const OS_DISTRO_ALIAS = {
   "debian-1.1": "buzz"
 };
 
-const getGoBuildInfo = (src) => {
+export const getGoBuildInfo = (src) => {
   if (GOVERSION_BIN) {
     let result = spawnSync(GOVERSION_BIN, [src], {
       encoding: "utf-8"
@@ -250,10 +250,8 @@ const getGoBuildInfo = (src) => {
   }
   return undefined;
 };
-const _getGoBuildInfo = getGoBuildInfo;
-export { _getGoBuildInfo as getGoBuildInfo };
 
-const getCargoAuditableInfo = (src) => {
+export const getCargoAuditableInfo = (src) => {
   if (CARGO_AUDITABLE_BIN) {
     let result = spawnSync(CARGO_AUDITABLE_BIN, [src], {
       encoding: "utf-8"
@@ -273,10 +271,8 @@ const getCargoAuditableInfo = (src) => {
   }
   return undefined;
 };
-const _getCargoAuditableInfo = getCargoAuditableInfo;
-export { _getCargoAuditableInfo as getCargoAuditableInfo };
 
-const getOSPackages = (src) => {
+export const getOSPackages = (src) => {
   const pkgList = [];
   const allTypes = new Set();
   if (TRIVY_BIN) {
@@ -491,10 +487,8 @@ const getOSPackages = (src) => {
   }
   return { osPackages: pkgList, allTypes: Array.from(allTypes) };
 };
-const _getOSPackages = getOSPackages;
-export { _getOSPackages as getOSPackages };
 
-const executeOsQuery = (query) => {
+export const executeOsQuery = (query) => {
   if (OSQUERY_BIN) {
     if (!query.endsWith(";")) {
       query = query + ";";
@@ -524,5 +518,3 @@ const executeOsQuery = (query) => {
   }
   return undefined;
 };
-const _executeOsQuery = executeOsQuery;
-export { _executeOsQuery as executeOsQuery };

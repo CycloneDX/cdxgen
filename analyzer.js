@@ -174,7 +174,7 @@ const getAllSrcJSAndTSFiles = (src) =>
 /**
  * Where Node CLI runs from.
  */
-const findJSImports = async (src) => {
+export const findJSImports = async (src) => {
   const allImports = {};
   const errFiles = [];
   try {
@@ -192,5 +192,3 @@ const findJSImports = async (src) => {
     return allImports;
   }
 };
-const _findJSImports = findJSImports;
-export { _findJSImports as findJSImports };

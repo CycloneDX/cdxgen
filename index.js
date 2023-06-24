@@ -4332,7 +4332,7 @@ const createXBom = async (path, options) => {
  * @param path to the project
  * @param options Parse options from the cli
  */
-const createBom = async (path, options) => {
+export const createBom = async (path, options) => {
   let { projectType } = options;
   if (!projectType) {
     projectType = "";
@@ -4582,8 +4582,6 @@ const createBom = async (path, options) => {
       }
   }
 };
-const _createBom = createBom;
-export { _createBom as createBom };
 
 /**
  * Method to submit the generated bom to dependency-track or cyclonedx server
