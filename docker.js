@@ -36,6 +36,7 @@ const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
     return fg.sync([recurse ? "**/" : "" + dirName], {
       cwd: fg.escapePath(dirPath),
       absolute: true,
+      suppressErrors: true,
       caseSensitiveMatch: false,
       onlyDirectories: true,
       followSymbolicLinks: false,

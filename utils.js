@@ -76,10 +76,14 @@ const getAllFiles = function (dirPath, pattern) {
     return fg.sync([pattern], {
       cwd: fg.escapePath(dirPath),
       absolute: true,
+      suppressErrors: true,
       caseSensitiveMatch: false,
       onlyFiles: true,
       dot: pattern.startsWith(".") ? true : false,
       followSymbolicLinks: false,
+      baseNameMatch: true,
+      braceExpansion: false,
+      unique: true,
       ignore: ignoreList
     });
   } catch (err) {
