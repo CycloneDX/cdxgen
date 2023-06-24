@@ -1,8 +1,7 @@
 import got from "got";
 import { globSync } from "glob";
 import { parse } from "url";
-import { promisify } from "util";
-import { pipeline as _pipeline } from "stream";
+import stream from "node:stream/promises";
 import {
   existsSync,
   readdirSync,
@@ -25,7 +24,6 @@ import { x } from "tar";
 import { spawnSync } from "node:child_process";
 
 const isWin = _platform() === "win32";
-const pipeline = promisify(_pipeline);
 
 let dockerConn = undefined;
 let isPodman = false;
@@ -105,15 +103,15 @@ const getDefaultOptions = () => {
   let opts = {
     enableUnixSockets: true,
     throwHttpErrors: true,
-    "hooks.beforeError": [],
     method: "GET",
-    isPodman
+    hooks: { beforeError: [] },
+    mutableDefaults: true
   };
   const userInfo = _userInfo();
-  opts.podmanPrefixUrl = isWin ? "" : `unix:/run/podman/podman.sock:`;
+  opts.podmanPrefixUrl = isWin ? "" : `http://unix:/run/podman/podman.sock:`;
   opts.podmanRootlessPrefixUrl = isWin
     ? ""
-    : `unix:/run/user/${userInfo.uid}/podman/podman.sock:`;
+    : `http://unix:/run/user/${userInfo.uid}/podman/podman.sock:`;
   if (!process.env.DOCKER_HOST) {
     if (isPodman) {
       opts.prefixUrl = isPodmanRootless
@@ -133,14 +131,14 @@ const getDefaultOptions = () => {
         opts.prefixUrl = isWin
           ? WIN_LOCAL_TLS
           : isDockerRootless
-          ? `unix:${homedir()}/.docker/run/docker.sock:`
-          : "unix:/var/run/docker.sock:";
+          ? `http://unix:${homedir()}/.docker/run/docker.sock:`
+          : "http://unix:/var/run/docker.sock:";
       }
     }
   } else {
     let hostStr = process.env.DOCKER_HOST;
     if (hostStr.startsWith("unix:///")) {
-      hostStr = hostStr.replace("unix:///", "unix:/");
+      hostStr = hostStr.replace("unix:///", "http://unix:/");
       if (hostStr.includes("docker.sock")) {
         hostStr = hostStr.replace("docker.sock", "docker.sock:");
         isDockerRootless = true;
@@ -163,7 +161,17 @@ const getDefaultOptions = () => {
 
 export const getConnection = async (options) => {
   if (!dockerConn) {
-    const opts = Object.assign({}, getDefaultOptions(), options);
+    const defaultOptions = getDefaultOptions();
+    const opts = Object.assign(
+      {},
+      {
+        enableUnixSockets: defaultOptions.enableUnixSockets,
+        throwHttpErrors: defaultOptions.throwHttpErrors,
+        method: defaultOptions.method,
+        prefixUrl: defaultOptions.prefixUrl
+      },
+      options
+    );
     try {
       await got.get("_ping", opts);
       dockerConn = got.extend(opts);
@@ -177,8 +185,7 @@ export const getConnection = async (options) => {
         }
       }
     } catch (err) {
-      // console.log(err, opts);
-      opts.prefixUrl = `unix:${homedir()}/.docker/run/docker.sock:`;
+      opts.prefixUrl = `http://unix:${homedir()}/.docker/run/docker.sock:`;
       try {
         await got.get("_ping", opts);
         dockerConn = got.extend(opts);
@@ -223,6 +230,7 @@ export const getConnection = async (options) => {
             "Podman in root mode detected. Consider switching to rootless mode to improve security. See https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md"
           );
         } catch (err) {
+          // console.log(err);
           if (_platform() === "win32") {
             console.warn(
               "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
@@ -250,11 +258,22 @@ export const makeRequest = async (path, method = "GET") => {
     return undefined;
   }
   const extraOptions = {
-    responseType: method === "GET" ? "json" : "text",
+    responseType: method === "GET" ? "json" : "buffer",
     resolveBodyOnly: true,
+    enableUnixSockets: true,
     method
   };
-  const opts = Object.assign({}, getDefaultOptions(), extraOptions);
+  const defaultOptions = getDefaultOptions();
+  const opts = Object.assign(
+    {},
+    {
+      enableUnixSockets: defaultOptions.enableUnixSockets,
+      throwHttpErrors: defaultOptions.throwHttpErrors,
+      method: defaultOptions.method,
+      prefixUrl: defaultOptions.prefixUrl
+    },
+    extraOptions
+  );
   return await client(path, opts);
 };
 
@@ -359,6 +378,14 @@ export const getImage = async (fullImageName) => {
       console.log(localData);
     }
   } catch (err) {
+    try {
+      localData = await makeRequest(`images/${fullImageName}/json`);
+      if (localData) {
+        return localData;
+      }
+    } catch (err) {
+      // ignore
+    }
     if (DEBUG_MODE) {
       console.log(
         `Trying to pull the image ${fullImageName} from registry. This might take a while ...`
@@ -413,7 +440,7 @@ export const getImage = async (fullImageName) => {
       `Unable to pull ${fullImageName}. Check if the name is valid. Perform any authentication prior to invoking cdxgen.`
     );
     console.log(
-      `Trying to manually pulling this image using docker pull ${fullImageName}`
+      `Try manually pulling this image using docker pull ${fullImageName}`
     );
   }
   return localData;
@@ -421,7 +448,7 @@ export const getImage = async (fullImageName) => {
 
 export const extractTar = async (fullImageName, dir) => {
   try {
-    await pipeline(
+    await stream.pipeline(
       createReadStream(fullImageName),
       x({
         sync: true,
@@ -660,7 +687,7 @@ export const exportImage = async (fullImageName) => {
       if (DEBUG_MODE) {
         console.log(`About to export image ${fullImageName} to ${tempDir}`);
       }
-      await pipeline(
+      await stream.pipeline(
         client.stream(`images/${fullImageName}/get`),
         x({
           sync: true,

@@ -67,7 +67,7 @@ import {
 } from "./utils";
 import { readFileSync } from "fs";
 import { parse } from "ssri";
-import { jest, expect, test } from "@jest/globals";
+import { expect, test } from "@jest/globals";
 
 test("SSRI test", () => {
   // gopkg.lock hash
@@ -668,7 +668,6 @@ test("parse go mod why dependencies", () => {
 });
 
 test("parseGopkgData", async () => {
-  jest.setTimeout(120000);
   let dep_list = await parseGopkgData(null);
   expect(dep_list).toEqual([]);
   dep_list = await parseGopkgData(
@@ -684,7 +683,7 @@ test("parseGopkgData", async () => {
   dep_list.forEach((d) => {
     expect(d.license);
   });
-});
+}, 120000);
 
 test("parse go version data", async () => {
   let dep_list = await parseGoVersionData(
@@ -1099,7 +1098,6 @@ test("parse .net cs proj", async () => {
 });
 
 test("get nget metadata", async () => {
-  jest.setTimeout(240000);
   const dep_list = await getNugetMetadata([
     {
       group: "",
@@ -1122,7 +1120,7 @@ test("get nget metadata", async () => {
       url: "http://www.castleproject.org/"
     }
   });
-});
+}, 240000);
 
 test("parsePomFile", () => {
   const data = parsePom("./test/pom.xml");
@@ -1709,7 +1707,6 @@ test("parse requirements.txt", async () => {
 });
 
 test("parse poetry.lock", async () => {
-  jest.setTimeout(120000);
   let deps = await parsePoetrylockData(
     readFileSync("./test/data/poetry.lock", { encoding: "utf-8" })
   );
@@ -1722,7 +1719,7 @@ test("parse poetry.lock", async () => {
     readFileSync("./test/data/poetry-cpggen.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(68);
-});
+}, 120000);
 
 test("parse wheel metadata", () => {
   let deps = parseBdistMetadata(
@@ -1771,12 +1768,11 @@ test("parse wheel", async () => {
 });
 
 test("parse pipfile.lock with hashes", async () => {
-  jest.setTimeout(120000);
   let deps = await parsePiplockData(
     JSON.parse(readFileSync("./test/data/Pipfile.lock", { encoding: "utf-8" }))
   );
   expect(deps.length).toEqual(46);
-});
+}, 120000);
 
 test("parse scala sbt list", async () => {
   let deps = parseKVDep(
