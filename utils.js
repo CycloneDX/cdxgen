@@ -75,7 +75,6 @@ const getAllFiles = function (dirPath, pattern) {
     }
     return glob.sync(pattern, {
       cwd: dirPath,
-      silent: true,
       absolute: true,
       nocase: true,
       nodir: true,

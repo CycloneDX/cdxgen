@@ -35,7 +35,6 @@ const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
     return glob.sync(recurse ? "**/" : "" + dirName, {
       cwd: dirPath,
-      silent: true,
       absolute: true,
       nocase: true,
       nodir: false,
