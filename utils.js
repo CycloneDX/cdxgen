@@ -1,7 +1,6 @@
 const glob = require("glob");
 const os = require("os");
 const path = require("path");
-const parsePackageJsonName = require("parse-packagejson-name");
 const fs = require("fs");
 const got = require("got");
 const convert = require("xml-js");
@@ -5247,3 +5246,25 @@ const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
   return pkgList;
 };
 exports.executePipFreezeInVenv = executePipFreezeInVenv;
+
+// taken from a very old package https://github.com/keithamus/parse-packagejson-name/blob/master/index.js
+const parsePackageJsonName = (name) => {
+  var nameRegExp = /^(?:@([^/]+)\/)?(([^.]+)(?:\.(.*))?)$/;
+  var returnObject = {
+    scope: null,
+    fullName: "",
+    projectName: "",
+    moduleName: ""
+  };
+  var match = (typeof name === "object" ? name.name || "" : name || "").match(
+    nameRegExp
+  );
+  if (match) {
+    returnObject.scope = match[1] || null;
+    returnObject.fullName = match[2] || match[0];
+    returnObject.projectName = match[3] === match[2] ? null : match[3];
+    returnObject.moduleName = match[4] || match[2] || null;
+  }
+  return returnObject;
+};
+exports.parsePackageJsonName = parsePackageJsonName;
