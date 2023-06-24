@@ -1,4 +1,4 @@
-const glob = require("glob");
+const { globSync } = require("glob");
 const os = require("os");
 const path = require("path");
 const fs = require("fs");
@@ -73,7 +73,7 @@ const getAllFiles = function (dirPath, pattern) {
     if (!pattern.includes("package.json")) {
       ignoreList.push("**/node_modules/**");
     }
-    return glob.sync(pattern, {
+    return globSync(pattern, {
       cwd: dirPath,
       absolute: true,
       nocase: true,
@@ -2298,17 +2298,17 @@ const getPyModules = async (src, epkgList) => {
   pkgList = pkgList.filter(
     (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index
   );
-  if (epkgList && epkgList.length) {
-    const pkgMaps = epkgList.map((p) => p.name);
-    pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
-  }
-  pkgList = await getPyMetadata(pkgList, true);
   // Populate the imports list
   if (pkgList && pkgList.length) {
     pkgList.forEach((p) => {
       allImports[p.name] = true;
     });
   }
+  if (epkgList && epkgList.length) {
+    const pkgMaps = epkgList.map((p) => p.name);
+    pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
+  }
+  pkgList = await getPyMetadata(pkgList, true);
   return { allImports, pkgList };
 };
 exports.getPyModules = getPyModules;
@@ -5248,14 +5248,14 @@ exports.executePipFreezeInVenv = executePipFreezeInVenv;
 
 // taken from a very old package https://github.com/keithamus/parse-packagejson-name/blob/master/index.js
 const parsePackageJsonName = (name) => {
-  var nameRegExp = /^(?:@([^/]+)\/)?(([^.]+)(?:\.(.*))?)$/;
-  var returnObject = {
+  const nameRegExp = /^(?:@([^/]+)\/)?(([^.]+)(?:\.(.*))?)$/;
+  const returnObject = {
     scope: null,
     fullName: "",
     projectName: "",
     moduleName: ""
   };
-  var match = (typeof name === "object" ? name.name || "" : name || "").match(
+  const match = (typeof name === "object" ? name.name || "" : name || "").match(
     nameRegExp
   );
   if (match) {

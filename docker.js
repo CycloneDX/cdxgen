@@ -1,6 +1,6 @@
 const isWin = require("os").platform() === "win32";
 const got = require("got");
-const glob = require("glob");
+const { globSync } = require("glob");
 const url = require("url");
 const util = require("util");
 const stream = require("stream");
@@ -33,7 +33,7 @@ const DEBUG_MODE =
  */
 const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
-    return glob.sync(recurse ? "**/" : "" + dirName, {
+    return globSync(recurse ? "**/" : "" + dirName, {
       cwd: dirPath,
       absolute: true,
       nocase: true,
