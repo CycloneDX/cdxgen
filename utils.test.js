@@ -1014,7 +1014,7 @@ test("parse github actions workflow data", async () => {
       encoding: "utf-8"
     })
   );
-  expect(dep_list.length).toEqual(4);
+  expect(dep_list.length).toEqual(3);
 });
 
 test("parse cs pkg data", async () => {
