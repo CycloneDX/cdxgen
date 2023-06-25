@@ -350,6 +350,20 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 [license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [cyclonedx-homepage]: https://cyclonedx.org
 
+## Integration as library
+
+This project is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and requires Node.js >= 16
+
+Minimal example:
+
+```javascript
+import { createBom, submitBom } from "@cyclonedx/cdxgen";
+// bomNSData would contain bomJson, bomXml
+const bomNSData = await createBom(filePath, options);
+// Submission to dependency track server
+const dbody = await submitBom(args, bomNSData.bomXml);
+```
+
 ## Contributing
 
 Follow the usual PR process but prior to raising a PR run the following commands.

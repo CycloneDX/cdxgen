@@ -5,8 +5,6 @@ on:
     branches:
       - master
       - feature/*
-      - release/*
-      - fix/*
   workflow_dispatch:
 jobs:
   build:
@@ -30,25 +28,39 @@ jobs:
           npm test
         env:
           CI: true
-  pkg:
-    runs-on: ubuntu-latest
+  sae-builds:
+    strategy:
+      matrix:
+        os: [windows, macos, ubuntu]
+        include:
+          - os: windows
+            build: |
+              npx caxa --input . --output "dist/cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              .\dist\cdxgen.exe --verion
+            artifact: .\dist\cdxgen.exe
+          - os: macos
+            build: |
+              npx caxa --input . --output "dist/cdxgen.app" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+            artifact: ./dist/cdxgen.app
+          - os: ubuntu
+            build: |
+              npx caxa --input . --output "dist/cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x ./dist/cdxgen
+              ./dist/cdxgen --version
+            artifact: ./dist/cdxgen
+    runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 20.x
       - name: Produce pkg - lts
         run: |
-          sudo npm install -g pkg
-          npm install
-          pkg -t node18-linux,node18-win,node18-mac package.json --out-path dist
-      - name: Test pkg
-        run: |
-          chmod +x dist/cdxgen*
-          ./dist/cdxgen-linux -v
-          ./dist/cdxgen-linux . -p
-      - uses: actions/upload-artifact@v1
+          npm ci
+          mkdir -p dist
+          ${{ matrix.build }}
+      - uses: actions/upload-artifact@v2
         with:
-          name: dist
-          path: dist
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
