@@ -37,6 +37,9 @@ import { PackageURL } from "packageurl-js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
+const selfPJson = JSON.parse(readFileSync("./package.json"));
+const _version = selfPJson.version;
+
 let url = import.meta.url;
 if (!url.startsWith("file://"))
   url = new URL(`file://${import.meta.url}`).toString();
@@ -80,6 +83,13 @@ let PYTHON_CMD = "python";
 if (process.env.PYTHON_CMD) {
   PYTHON_CMD = process.env.PYTHON_CMD;
 }
+
+// Custom user-agent for cdxgen
+const cdxgenAgent = got.extend({
+  headers: {
+    "user-agent": `@CycloneDX/cdxgen ${_version}`
+  }
+});
 
 /**
  * Method to get files matching a pattern
@@ -266,7 +276,7 @@ export const getNpmMetadata = async function (pkgList) {
       if (metadata_cache[key]) {
         body = metadata_cache[key];
       } else {
-        const res = await got.get(NPM_URL + key, {
+        const res = await cdxgenAgent.get(NPM_URL + key, {
           responseType: "json"
         });
         body = res.body;
@@ -1822,7 +1832,7 @@ export const getMvnMetadata = async function (pkgList) {
       if (DEBUG_MODE) {
         console.log(`Querying ${fullUrl}`);
       }
-      const res = await got.get(fullUrl);
+      const res = await cdxgenAgent.get(fullUrl);
       const bodyJson = xml2js(res.body, {
         compact: true,
         spaces: 4,
@@ -1937,7 +1947,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       if (p.name.includes("[")) {
         p.name = p.name.split("[")[0];
       }
-      const res = await got.get(PYPI_URL + p.name + "/json", {
+      const res = await cdxgenAgent.get(PYPI_URL + p.name + "/json", {
         responseType: "json"
       });
       const body = res.body;
@@ -2029,6 +2039,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         p.version = "latest";
       }
       // Add a property to let the downstream tools know about this assumption
+      // FIXME: Do this correctly with 1.5
       if (!p.properties) {
         p.properties = [];
       }
@@ -2378,7 +2389,7 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
       headers["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
     }
     try {
-      const res = await got.get(apiUrl, {
+      const res = await cdxgenAgent.get(apiUrl, {
         responseType: "json",
         headers: headers
       });
@@ -2444,7 +2455,7 @@ export const getGoPkgLicense = async function (repoMetadata) {
     return metadata_cache[pkgUrlPrefix];
   }
   try {
-    const res = await got.get(pkgUrlPrefix);
+    const res = await cdxgenAgent.get(pkgUrlPrefix);
     if (res && res.body) {
       const $ = load(res.body);
       let licenses = $("#LICENSE > h2").text().trim();
@@ -2756,7 +2767,7 @@ export const getRubyGemsMetadata = async function (pkgList) {
       if (DEBUG_MODE) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
-      const res = await got.get(RUBYGEMS_URL + p.name + ".json", {
+      const res = await cdxgenAgent.get(RUBYGEMS_URL + p.name + ".json", {
         responseType: "json"
       });
       let body = res.body;
@@ -2892,7 +2903,9 @@ export const getCratesMetadata = async function (pkgList) {
       if (DEBUG_MODE) {
         console.log(`Querying crates.io for ${p.name}`);
       }
-      const res = await got.get(CRATES_URL + p.name, { responseType: "json" });
+      const res = await cdxgenAgent.get(CRATES_URL + p.name, {
+        responseType: "json"
+      });
       const body = res.body.crate;
       p.description = body.description;
       if (res.body.versions) {
@@ -2930,7 +2943,7 @@ export const getDartMetadata = async function (pkgList) {
       if (DEBUG_MODE) {
         console.log(`Querying pub.dev for ${p.name}`);
       }
-      const res = await got.get(PUB_DEV_URL + p.name, {
+      const res = await cdxgenAgent.get(PUB_DEV_URL + p.name, {
         responseType: "json",
         headers: {
           Accept: "application/vnd.pub.v2+json"
@@ -4003,7 +4016,7 @@ export const getNugetMetadata = async function (pkgList) {
       if (DEBUG_MODE) {
         console.log(`Querying nuget for ${p.name}`);
       }
-      const res = await got.get(
+      const res = await cdxgenAgent.get(
         NUGET_URL +
           p.group.toLowerCase() +
           (p.group !== "" ? "." : "") +

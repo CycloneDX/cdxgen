@@ -4619,7 +4619,8 @@ export async function submitBom(args, bomContents) {
       method: "PUT",
       headers: {
         "X-Api-Key": args.apiKey,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "user-agent": `@CycloneDX/cdxgen ${_version}`
       },
       json: bomPayload,
       responseType: "json"
@@ -4637,7 +4638,8 @@ export async function submitBom(args, bomContents) {
           method: "POST",
           headers: {
             "X-Api-Key": args.apiKey,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "user-agent": `@CycloneDX/cdxgen ${_version}`
           },
           json: {
             project: args.projectId,
