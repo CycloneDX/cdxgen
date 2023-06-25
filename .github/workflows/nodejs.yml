@@ -44,8 +44,9 @@ jobs:
           - os: macos
             build: |
               npx caxa --input . --output "cdxgen.app" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-              shasum -a 256 cdxgen.app > cdxgen.app.sha256
-            artifact: cdxgen.app
+              tar -czf "cdxgen.app.tgz" cdxgen.app
+              shasum -a 256 cdxgen.app.tgz > cdxgen.app.tgz.sha256
+            artifact: cdxgen.app.tgz
           - os: ubuntu
             build: |
               npx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
