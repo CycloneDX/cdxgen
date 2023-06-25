@@ -994,7 +994,7 @@ test("parse github actions workflow data", async () => {
   let dep_list = await parseGitHubWorkflowData(
     readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(3);
+  expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
