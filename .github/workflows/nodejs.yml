@@ -35,19 +35,19 @@ jobs:
         include:
           - os: windows
             build: |
-              npx caxa --input . --output "dist/cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-              .\dist\cdxgen.exe --verion
-            artifact: .\dist\cdxgen.exe
+              npx caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              .\cdxgen.exe --verion
+            artifact: cdxgen.exe
           - os: macos
             build: |
-              npx caxa --input . --output "dist/cdxgen.app" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-            artifact: ./dist/cdxgen.app
+              npx caxa --input . --output "cdxgen.app" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+            artifact: cdxgen.app
           - os: ubuntu
             build: |
-              npx caxa --input . --output "dist/cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-              chmod +x ./dist/cdxgen
-              ./dist/cdxgen --version
-            artifact: ./dist/cdxgen
+              npx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              chmod +x cdxgen
+              ./cdxgen --version
+            artifact: cdxgen
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v3
@@ -58,7 +58,6 @@ jobs:
       - name: Produce pkg - lts
         run: |
           npm ci
-          mkdir -p dist
           ${{ matrix.build }}
       - uses: actions/upload-artifact@v2
         with:
