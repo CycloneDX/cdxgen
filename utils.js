@@ -19,15 +19,12 @@ import {
   unlinkSync,
   chmodSync
 } from "node:fs";
-import fs from "node:fs/promises";
 import got from "got";
 import { xml2js } from "xml-js";
-const licenseMapping = JSON.parse(await fs.readFile("./data/lic-mapping.json"));
-const vendorAliases = JSON.parse(await fs.readFile("./data/vendor-alias.json"));
-const spdxLicenses = JSON.parse(await fs.readFile("./data/spdx-licenses.json"));
-const knownLicenses = JSON.parse(
-  await fs.readFile("./data/known-licenses.json")
-);
+const licenseMapping = JSON.parse(readFileSync("./data/lic-mapping.json"));
+const vendorAliases = JSON.parse(readFileSync("./data/vendor-alias.json"));
+const spdxLicenses = JSON.parse(readFileSync("./data/spdx-licenses.json"));
+const knownLicenses = JSON.parse(readFileSync("./data/known-licenses.json"));
 import { load } from "cheerio";
 import { load as _load } from "js-yaml";
 import { spawnSync } from "node:child_process";
@@ -40,16 +37,19 @@ import { PackageURL } from "packageurl-js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let url = import.meta.url;
+if (!url.startsWith("file://"))
+  url = new URL(`file://${import.meta.url}`).toString();
+const dirName = import.meta ? path.dirname(fileURLToPath(url)) : __dirname;
 
 // Refer to contrib/py-modules.py for a script to generate this list
 // The script needs to be used once every few months to update this list
 const PYTHON_STD_MODULES = JSON.parse(
-  await fs.readFile("./data/python-stdlib.json")
+  readFileSync("./data/python-stdlib.json")
 );
 // Mapping between modules and package names
 const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
-  await fs.readFile("./data/pypi-pkg-aliases.json")
+  readFileSync("./data/pypi-pkg-aliases.json")
 );
 
 // Debug mode flag
@@ -4968,7 +4968,7 @@ export const getAtomCommand = () => {
   }
   const NODE_CMD = process.env.NODE_CMD || "node";
   const localAtom = join(
-    __dirname,
+    dirName,
     "node_modules",
     "@appthreat",
     "atom",

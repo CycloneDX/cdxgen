@@ -90,9 +90,8 @@ import {
   parseCsPkgData,
   parseCsProjData
 } from "./utils.js";
-import fs from "node:fs/promises";
 import { spawnSync } from "node:child_process";
-const selfPJson = JSON.parse(await fs.readFile("./package.json"));
+const selfPJson = JSON.parse(readFileSync("./package.json"));
 const _version = selfPJson.version;
 import { findJSImports } from "./analyzer.js";
 import { gte, lte } from "semver";
@@ -108,7 +107,7 @@ import {
   executeOsQuery,
   getOSPackages
 } from "./binary.js";
-const osQueries = JSON.parse(await fs.readFile("./data/queries.json"));
+const osQueries = JSON.parse(readFileSync("./data/queries.json"));
 
 const isWin = _platform() === "win32";
 

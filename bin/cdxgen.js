@@ -10,7 +10,10 @@ import { fileURLToPath } from "node:url";
 import globalAgent from "global-agent";
 import { table } from "table";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let url = import.meta.url;
+if (!url.startsWith("file://"))
+  url = new URL(`file://${import.meta.url}`).toString();
+const dirName = import.meta ? path.dirname(fileURLToPath(url)) : __dirname;
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -107,7 +110,7 @@ const args = yargs(hideBin(process.argv))
 
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
-    path.join(__dirname, "../", "package.json"),
+    path.join(dirName, "../", "package.json"),
     "utf-8"
   );
   const packageJson = JSON.parse(packageJsonAsString);

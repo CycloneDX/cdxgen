@@ -7,7 +7,10 @@ import { PackageURL } from "packageurl-js";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let url = import.meta.url;
+if (!url.startsWith("file://"))
+  url = new URL(`file://${import.meta.url}`).toString();
+const dirName = import.meta ? path.dirname(fileURLToPath(url)) : __dirname;
 
 const isWin = _platform() === "win32";
 
@@ -40,26 +43,20 @@ let CDXGEN_PLUGINS_DIR = process.env.CDXGEN_PLUGINS_DIR;
 // Is there a non-empty local plugins directory
 if (
   !CDXGEN_PLUGINS_DIR &&
-  existsSync(join(__dirname, "plugins")) &&
-  existsSync(join(__dirname, "plugins", "goversion"))
+  existsSync(join(dirName, "plugins")) &&
+  existsSync(join(dirName, "plugins", "goversion"))
 ) {
-  CDXGEN_PLUGINS_DIR = join(__dirname, "plugins");
+  CDXGEN_PLUGINS_DIR = join(dirName, "plugins");
 }
 // Is there a non-empty local node_modules directory
 if (
   !CDXGEN_PLUGINS_DIR &&
   existsSync(
-    join(
-      __dirname,
-      "node_modules",
-      "@cyclonedx",
-      "cdxgen-plugins-bin",
-      "plugins"
-    )
+    join(dirName, "node_modules", "@cyclonedx", "cdxgen-plugins-bin", "plugins")
   ) &&
   existsSync(
     join(
-      __dirname,
+      dirName,
       "node_modules",
       "@cyclonedx",
       "cdxgen-plugins-bin",
@@ -69,7 +66,7 @@ if (
   )
 ) {
   CDXGEN_PLUGINS_DIR = join(
-    __dirname,
+    dirName,
     "node_modules",
     "@cyclonedx",
     "cdxgen-plugins-bin",
