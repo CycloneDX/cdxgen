@@ -912,7 +912,7 @@ const buildBomXml = (
   const bom = create("bom", {
     encoding: "utf-8",
     separateArrayItems: true
-  }).att("xmlns", "http://cyclonedx.org/schema/bom/1.4");
+  }).att("xmlns", "http://cyclonedx.org/schema/bom/1.5");
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
   const metadata = addMetadata(parentComponent, "xml", options);
@@ -977,7 +977,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       context,
       options
     );
-    // CycloneDX 1.4 Json Template
+    // CycloneDX 1.5 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
       specVersion: "1.5",
