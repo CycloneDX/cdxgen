@@ -125,6 +125,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: npm install, build
         run: |
           npm install
@@ -137,7 +141,8 @@ jobs:
         run: |
           Invoke-WebRequest -Uri https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-win-x64.exe -UseBasicParsing -OutFile cyclonedx.exe
           node bin/cdxgen.js -t os -o bomresults/bom-win.json
-          .\cyclonedx.exe validate --fail-on-errors --input-file bomresults\\bom-win.json --input-format json --input-version v1_4
+          python -m pip install -r contrib/requirements.txt
+          python contrib/bom-validate.py --json bomresults/bom-win.json
           dir bomresults
         env:
           CDXGEN_DEBUG_MODE: debug
