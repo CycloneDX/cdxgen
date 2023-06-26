@@ -6,6 +6,10 @@ This tool creates a valid and compliant [CycloneDX][cyclonedx-homepage] Software
 
 When used with plugins, cdxgen could generate an SBoM for Linux docker images and even VMs running Linux or Windows operating system.
 
+NOTE:
+
+CycloneDX 1.5 specification is brand new and unsupported by many downstream tools. Use version 8.6.0 for 1.4 compatibility.
+
 ## Supported languages and package format
 
 | Language/Platform               | Package format                                                                                          | Transitive dependencies                                                                           |
@@ -73,12 +77,17 @@ For go, `go mod why` command is used to identify required packages. For php, com
 
 ```shell
 sudo npm install -g @cyclonedx/cdxgen
+
+# For CycloneDX 1.4 compatibility use version 8.6.0
+sudo npm install -g @cyclonedx/cdxgen@8.6.0
 ```
 
 You can also use the cdxgen container image
 
 ```bash
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
+
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:v8.6.0 -r /app -o /app/bom.json
 ```
 
 ## Getting Help
