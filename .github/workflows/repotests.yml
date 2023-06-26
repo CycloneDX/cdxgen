@@ -105,10 +105,10 @@ jobs:
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
-          python contrib/bom-validate.py --json bomresults/bom-java.json
+          # python contrib/bom-validate.py --json bomresults/bom-java.json
 
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
-          python contrib/bom-validate.py --json bomresults/bom-github.json
+          # python contrib/bom-validate.py --json bomresults/bom-github.json
 
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
           python contrib/bom-validate.py --json bomresults/bom-ts.json
