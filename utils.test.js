@@ -1107,6 +1107,7 @@ test("get nget metadata", async () => {
   ]);
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
+    author: "Castle Project Contributors",
     group: "",
     name: "Castle.Core",
     version: "4.4.0",
@@ -1115,7 +1116,7 @@ test("get nget metadata", async () => {
     homepage: {
       url: "https://www.nuget.org/packages/Castle.Core/4.4.0/"
     },
-    license: "http://www.apache.org/licenses/LICENSE-2.0.html",
+    license: "Apache-2.0",
     repository: {
       url: "http://www.castleproject.org/"
     }
