@@ -110,3 +110,6 @@ dist
 .idea/
 test/obj
 .vscode/
+./cdxgen
+./cdxgen.exe
+./cdxgen.app

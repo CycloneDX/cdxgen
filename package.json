@@ -28,18 +28,19 @@
       "url": "https://about.me/stevespringett"
     }
   ],
-  "main": "index.js",
+  "type": "module",
+  "exports": "./index.js",
   "bin": {
-    "cdxgen": "./bin/cdxgen"
+    "cdxgen": "./bin/cdxgen.js"
   },
   "scripts": {
-    "test": "jest --inject-globals false",
-    "watch": "jest --watch --inject-globals false",
-    "lint": "eslint index.js utils.js binary.js server.js docker.js *.test.js bin/cdxgen",
-    "pretty": "prettier --write *.js data/*.json bin/cdxgen --trailing-comma=none"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false",
+    "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
+    "lint": "eslint index.js utils.js binary.js server.js docker.js *.test.js bin/cdxgen.js",
+    "pretty": "prettier --write *.js data/*.json bin/cdxgen.js --trailing-comma=none"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=16"
   },
   "repository": {
     "type": "git",
@@ -53,17 +54,16 @@
     "@babel/traverse": "^7.22.5",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "^1.0.0",
-    "glob": "^8.1.0",
+    "glob": "^10.3.0",
     "global-agent": "^3.0.0",
-    "got": "^11.8.5",
+    "got": "^13.0.0",
     "js-yaml": "^4.1.0",
     "jws": "^4.0.0",
     "node-stream-zip": "^1.15.0",
     "packageurl-js": "^1.0.2",
-    "parse-packagejson-name": "^1.0.1",
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.2.0",
-    "semver": "^7.5.1",
+    "semver": "^7.5.3",
     "ssri": "^8.0.1",
     "table": "^6.8.1",
     "tar": "^6.1.15",
@@ -74,7 +74,7 @@
   },
   "optionalDependencies": {
     "@appthreat/atom": "^0.10.1",
-    "@cyclonedx/cdxgen-plugins-bin": "^1.1.0",
+    "@cyclonedx/cdxgen-plugins-bin": "^1.2.0",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "connect": "^3.7.0"
@@ -85,7 +85,8 @@
     "data/"
   ],
   "devDependencies": {
-    "eslint": "^8.42.0",
+    "caxa": "^3.0.1",
+    "eslint": "^8.43.0",
     "jest": "^29.5.0"
   }
 }
