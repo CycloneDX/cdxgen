@@ -105,52 +105,52 @@ jobs:
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-java.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-java.json
 
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-github.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-github.json
 
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-ts.json
 
           FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ts.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-ts.json
 
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-go.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-go.json
 
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp2.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-csharp2.json
 
           FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-csharp3.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-csharp3.json
 
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-python.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-python.json
 
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-php.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-php.json
 
           bin/cdxgen.js -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-ruby.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-ruby.json
 
           bin/cdxgen.js -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-bazel.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-bazel.json
 
           bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-pub.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-pub.json
 
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-clj.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-clj.json
 
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-swift.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-swift.json
 
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-msd.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-msd.json
 
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-yaml.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-yaml.json
 
           mkdir -p jenkins
           wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
@@ -160,7 +160,7 @@ jobs:
 
           mv *.hpi jenkins
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json
-          ./cyclonedx validate --fail-on-errors --input-file bomresults/bom-jenkins.json --input-format json --input-version v1_4
+          python contrib/bom-validate.py --json bomresults/bom-jenkins.json
           ls -ltr bomresults
       - uses: actions/upload-artifact@v1
         with:

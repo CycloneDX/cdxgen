@@ -301,15 +301,18 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
   // Try to contribute to this project by sending PR or filing issues
   let metadata = {
     timestamp: new Date().toISOString(),
-    tools: [
-      {
-        tool: {
-          vendor: "cyclonedx",
+    tools: {
+      components: [
+        {
+          group: "@cyclonedx",
           name: "cdxgen",
-          version: _version
+          version: _version,
+          purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
+          type: "application",
+          "bom-ref": `pkg:npm/%40cyclonedx/cdxgen@${_version}`
         }
-      }
-    ],
+      ]
+    },
     authors: [
       {
         author: { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
@@ -318,13 +321,18 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     supplier: undefined
   };
   if (format === "json") {
-    metadata.tools = [
-      {
-        vendor: "cyclonedx",
-        name: "cdxgen",
-        version: _version
-      }
-    ];
+    metadata.tools = {
+      components: [
+        {
+          group: "@cyclonedx",
+          name: "cdxgen",
+          version: _version,
+          purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
+          type: "application",
+          "bom-ref": `pkg:npm/%40cyclonedx/cdxgen@${_version}`
+        }
+      ]
+    };
     metadata.authors = [
       { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
     ];
@@ -972,7 +980,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     // CycloneDX 1.4 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
-      specVersion: "1.4",
+      specVersion: "1.5",
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
@@ -3676,7 +3684,7 @@ const dedupeBom = (
     ),
     bomJson: {
       bomFormat: "CycloneDX",
-      specVersion: "1.4",
+      specVersion: "1.5",
       serialNumber: serialNum,
       version: 1,
       metadata: addMetadata(parentComponent, "json", options),
