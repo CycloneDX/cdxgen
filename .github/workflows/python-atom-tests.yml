@@ -61,6 +61,7 @@ jobs:
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
           mv cyclonedx-linux-x64 cyclonedx
           chmod +x cyclonedx
+          pip install -r contrib/requirements.txt
           bin/cdxgen.js -p -r -t python repotests/scipy -o bomresults/bom-scipy.json
           python contrib/bom-validate.py --json bomresults/bom-scipy.json
           bin/cdxgen.js -p -r -t python repotests/black -o bomresults/bom-black.json
