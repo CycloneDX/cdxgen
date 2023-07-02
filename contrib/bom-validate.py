@@ -24,8 +24,8 @@ def build_args():
 
 def vsbom(bom_json):
     schema = os.path.join(os.path.dirname(__file__), "bom-1.5.schema.json")
-    with open(schema, mode="r") as sp:
-        with open(bom_json, mode="r") as vp:
+    with open(schema, mode="r", encoding="utf-8") as sp:
+        with open(bom_json, mode="r", encoding="utf-8") as vp:
             vex_obj = json.load(vp)
             try:
                 validate(instance=vex_obj, schema=json.load(sp))

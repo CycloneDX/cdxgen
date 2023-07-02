@@ -5225,6 +5225,9 @@ export const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
         console.log("- Check if any git submodules have to be initialized.");
       }
     }
+  }
+  // Bug #375. Attempt pip freeze on existing and new virtual environments
+  if (env.VIRTUAL_ENV) {
     /**
      * At this point, the previous attempt to do a pip install might have failed and we might have an unclean virtual environment with an incomplete list
      * The position taken by cdxgen is "Some SBoM is better than no SBoM", so we proceed to collecting the dependencies that got installed with pip freeze
