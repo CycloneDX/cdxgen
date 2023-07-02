@@ -36,7 +36,7 @@ const getAllFiles = (dir, extn, files, result, regex) => {
     if (IGNORE_FILE_PATTERN.test(files[i])) {
       continue;
     }
-    let file = join(dir, files[i]);
+    const file = join(dir, files[i]);
     if (statSync(file).isDirectory()) {
       // Ignore directories
       const dirName = basename(file);
