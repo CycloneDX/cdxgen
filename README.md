@@ -2,7 +2,7 @@
 
 ![cdxgen logo](cdxgen.png)
 
-This tool creates a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in XML and JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
+cdxgen is a cli tool and a library to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
 
 When used with plugins, cdxgen could generate an SBoM for Linux docker images and even VMs running Linux or Windows operating system.
 
@@ -88,6 +88,12 @@ You can also use the cdxgen container image
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
 
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:v8.6.0 -r /app -o /app/bom.json
+```
+
+In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as library](#integration-as-library)
+
+```ts
+import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 ```
 
 ## Getting Help
@@ -357,16 +363,22 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 
 ## Integration as library
 
-This project is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and requires Node.js >= 16
+cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 16
 
 Minimal example:
+
+```ts
+import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
+```
+
+See the [Deno Readme](./contrib/deno/README.md) for detailed instruction.
 
 ```javascript
 import { createBom, submitBom } from "@cyclonedx/cdxgen";
 // bomNSData would contain bomJson, bomXml
 const bomNSData = await createBom(filePath, options);
 // Submission to dependency track server
-const dbody = await submitBom(args, bomNSData.bomXml);
+const dbody = await submitBom(args, bomNSData.bomJson);
 ```
 
 ## Node.js >= 20 permission model
