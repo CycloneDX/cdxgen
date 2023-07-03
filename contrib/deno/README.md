@@ -10,5 +10,5 @@ Install deno by following the [instructions](https://deno.land/manual@v1.34.3/ge
 
 ```shell
 cd contrib/deno
-deno run --allow-read --allow-env --allow-run --allow-sys=uid --allow-write main.ts <path to repo>
+deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo --allow-write --allow-net main.ts <path to repo>
 ```

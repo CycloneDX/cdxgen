@@ -62,43 +62,22 @@ jobs:
           path: 'repotests/bandersnatch'
       - name: repotests
         run: |
-          wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
-          mv cyclonedx-linux-x64 cyclonedx
-          chmod +x cyclonedx
-          pip install -r contrib/requirements.txt
-          bin/cdxgen.js -p -r -t python repotests/scipy -o bomresults/bom-scipy.json
-          python contrib/bom-validate.py --json bomresults/bom-scipy.json
-          bin/cdxgen.js -p -r -t python repotests/black -o bomresults/bom-black.json
-          python contrib/bom-validate.py --json bomresults/bom-black.json
-          bin/cdxgen.js -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json
-          python contrib/bom-validate.py --json bomresults/bom-pyperf.json
-          bin/cdxgen.js -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json
-          python contrib/bom-validate.py --json bomresults/bom-cachecontrol.json
-          bin/cdxgen.js -p -r -t python repotests/flask -o bomresults/bom-flask.json
-          python contrib/bom-validate.py --json bomresults/bom-flask.json
-          bin/cdxgen.js -p -r -t python repotests/click -o bomresults/bom-click.json
-          python contrib/bom-validate.py --json bomresults/bom-click.json
-          bin/cdxgen.js -p -r -t python repotests/jinja -o bomresults/bom-jinja.json
-          python contrib/bom-validate.py --json bomresults/bom-jinja.json
-          bin/cdxgen.js -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json
-          python contrib/bom-validate.py --json bomresults/bom-bandersnatch.json
-
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/scipy -o bomresults/bom-scipy.json
-          python contrib/bom-validate.py --json bomresults/bom-scipy.json
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/black -o bomresults/bom-black.json
-          python contrib/bom-validate.py --json bomresults/bom-black.json
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json
-          python contrib/bom-validate.py --json bomresults/bom-pyperf.json
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json
-          python contrib/bom-validate.py --json bomresults/bom-cachecontrol.json
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/flask -o bomresults/bom-flask.json
-          python contrib/bom-validate.py --json bomresults/bom-flask.json
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/click -o bomresults/bom-click.json
-          python contrib/bom-validate.py --json bomresults/bom-click.json
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/jinja -o bomresults/bom-jinja.json
-          python contrib/bom-validate.py --json bomresults/bom-jinja.json
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json
-          python contrib/bom-validate.py --json bomresults/bom-bandersnatch.json
+          bin/cdxgen.js -p -r -t python repotests/scipy -o bomresults/bom-scipy.json --validate
+          bin/cdxgen.js -p -r -t python repotests/black -o bomresults/bom-black.json --validate
+          bin/cdxgen.js -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json --validate
+          bin/cdxgen.js -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json --validate
+          bin/cdxgen.js -p -r -t python repotests/flask -o bomresults/bom-flask.json --validate
+          bin/cdxgen.js -p -r -t python repotests/click -o bomresults/bom-click.json --validate
+          bin/cdxgen.js -p -r -t python repotests/jinja -o bomresults/bom-jinja.json --validate
+          bin/cdxgen.js -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/scipy -o bomresults/bom-scipy.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/black -o bomresults/bom-black.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/flask -o bomresults/bom-flask.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/click -o bomresults/bom-click.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/jinja -o bomresults/bom-jinja.json --validate
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
 
           # virtualenv tests
           python -m venv venv
@@ -108,8 +87,7 @@ jobs:
           pip install -r repotests/bandersnatch/requirements_swift.txt
           pip install -r repotests/bandersnatch/requirements_test.txt
           pip install -r repotests/bandersnatch/requirements_docs.txt
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json
-          python contrib/bom-validate.py --json bomresults/bom-bandersnatch.json
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
           rm -rf venv
         env:
           CDXGEN_DEBUG_MODE: debug

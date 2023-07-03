@@ -100,7 +100,7 @@ export const getOnlyDirs = (srcpath, dirName) => {
 };
 
 const getDefaultOptions = () => {
-  let opts = {
+  const opts = {
     enableUnixSockets: true,
     throwHttpErrors: true,
     method: "GET",
@@ -253,7 +253,7 @@ export const getConnection = async (options) => {
 };
 
 export const makeRequest = async (path, method = "GET") => {
-  let client = await getConnection();
+  const client = await getConnection();
   if (!client) {
     return undefined;
   }
@@ -374,9 +374,6 @@ export const getImage = async (fullImageName) => {
   }
   try {
     localData = await makeRequest(`images/${repo}/json`);
-    if (DEBUG_MODE && localData) {
-      console.log(localData);
-    }
   } catch (err) {
     try {
       localData = await makeRequest(`images/${fullImageName}/json`);
@@ -418,18 +415,9 @@ export const getImage = async (fullImageName) => {
         console.log(`Trying with ${repo}`);
       }
       localData = await makeRequest(`images/${repo}/json`);
-      if (DEBUG_MODE) {
-        console.log(localData);
-      }
     } catch (err) {
-      if (DEBUG_MODE) {
-        console.log(`Retrying with ${fullImageName} due to`, err);
-      }
       try {
         localData = await makeRequest(`images/${fullImageName}/json`);
-        if (DEBUG_MODE) {
-          console.log(localData);
-        }
       } catch (err) {
         // continue regardless of error
       }
@@ -497,7 +485,7 @@ export const exportArchive = async (fullImageName) => {
     console.log(`Unable to find container image archive ${fullImageName}`);
     return undefined;
   }
-  let manifest = {};
+  const manifest = {};
   const tempDir = mkdtempSync(join(tmpdir(), "docker-images-"));
   const allLayersExplodedDir = join(tempDir, "all-layers");
   const blobsDir = join(tempDir, "blobs", "sha256");
@@ -513,14 +501,14 @@ export const exportArchive = async (fullImageName) => {
         );
       }
       const allBlobs = getDirs(blobsDir, "*", false, true);
-      for (let ablob of allBlobs) {
+      for (const ablob of allBlobs) {
         if (DEBUG_MODE) {
           console.log(`Extracting ${ablob} to ${allLayersExplodedDir}`);
         }
         await extractTar(ablob, allLayersExplodedDir);
       }
-      let lastLayerConfig = {};
-      let lastWorkingDir = "";
+      const lastLayerConfig = {};
+      const lastWorkingDir = "";
       const exportData = {
         manifest,
         allLayersDir: tempDir,
@@ -577,7 +565,7 @@ export const extractFromManifest = async (
         console.log(manifest[manifest.length - 1]);
       }
     }
-    let layers = manifest[manifest.length - 1]["Layers"] || [];
+    const layers = manifest[manifest.length - 1]["Layers"] || [];
     if (!layers.length && existsSync(tempDir)) {
       const blobFiles = readdirSync(join(tempDir, "blobs", "sha256"));
       if (blobFiles && blobFiles.length) {
@@ -587,7 +575,7 @@ export const extractFromManifest = async (
       }
     }
     const lastLayer = layers[layers.length - 1];
-    for (let layer of layers) {
+    for (const layer of layers) {
       if (DEBUG_MODE) {
         console.log(`Extracting layer ${layer} to ${allLayersExplodedDir}`);
       }
@@ -660,7 +648,7 @@ export const exportImage = async (fullImageName) => {
     console.log(
       `About to export image ${fullImageName} to ${imageTarFile} using docker cli`
     );
-    let result = spawnSync(
+    const result = spawnSync(
       "docker",
       ["save", "-o", imageTarFile, fullImageName],
       {
@@ -682,7 +670,7 @@ export const exportImage = async (fullImageName) => {
       }
     }
   } else {
-    let client = await getConnection();
+    const client = await getConnection();
     try {
       if (DEBUG_MODE) {
         console.log(`About to export image ${fullImageName} to ${tempDir}`);
@@ -781,7 +769,7 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
   }
   const pyInstalls = getDirs(allLayersDir, "Python*/", false, false);
   if (pyInstalls && pyInstalls.length) {
-    for (let pyiPath of pyInstalls) {
+    for (const pyiPath of pyInstalls) {
       const pyDirs = getOnlyDirs(pyiPath, "site-packages");
       if (pyDirs && pyDirs.length) {
         pathList = pathList.concat(pyDirs);
@@ -805,7 +793,7 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
   knownSysPaths.push(join(allLayersExplodedDir, "/usr/lib"));
   knownSysPaths.push(join(allLayersExplodedDir, "/usr/lib64"));
   // Build path list
-  for (let wpath of knownSysPaths) {
+  for (const wpath of knownSysPaths) {
     pathList = pathList.concat(wpath);
     const pyDirs = getOnlyDirs(wpath, "site-packages");
     if (pyDirs && pyDirs.length) {

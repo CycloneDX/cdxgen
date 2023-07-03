@@ -4,7 +4,7 @@ import {
   getImage,
   removeImage,
   exportImage
-} from "./docker";
+} from "./docker.js";
 import { expect, test } from "@jest/globals";
 
 test("docker connection", async () => {

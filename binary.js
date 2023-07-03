@@ -78,7 +78,7 @@ if (
 if (!CDXGEN_PLUGINS_DIR) {
   let globalNodePath = process.env.GLOBAL_NODE_MODULES_PATH || undefined;
   if (!globalNodePath) {
-    let result = spawnSync(
+    const result = spawnSync(
       isWin ? "npm.cmd" : "npm",
       ["root", "--quiet", "-g"],
       {
@@ -251,7 +251,7 @@ export const getGoBuildInfo = (src) => {
 
 export const getCargoAuditableInfo = (src) => {
   if (CARGO_AUDITABLE_BIN) {
-    let result = spawnSync(CARGO_AUDITABLE_BIN, [src], {
+    const result = spawnSync(CARGO_AUDITABLE_BIN, [src], {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
@@ -278,7 +278,7 @@ export const getOSPackages = (src) => {
     if (existsSync(src)) {
       imageType = "rootfs";
     }
-    let tempDir = mkdtempSync(join(tmpdir(), "trivy-cdxgen-"));
+    const tempDir = mkdtempSync(join(tmpdir(), "trivy-cdxgen-"));
     const bomJsonFile = join(tempDir, "trivy-bom.json");
     const args = [
       imageType,
@@ -299,7 +299,7 @@ export const getOSPackages = (src) => {
     if (DEBUG_MODE) {
       console.log("Executing", TRIVY_BIN, args.join(" "));
     }
-    let result = spawnSync(TRIVY_BIN, args, {
+    const result = spawnSync(TRIVY_BIN, args, {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
@@ -350,7 +350,7 @@ export const getOSPackages = (src) => {
             }
             // Fix the group
             let group = dirname(comp.name);
-            let name = basename(comp.name);
+            const name = basename(comp.name);
             let purlObj = undefined;
             let distro_codename = "";
             if (group === ".") {
@@ -461,7 +461,7 @@ export const getOSPackages = (src) => {
             pkgList.push(comp);
             // If there is a source package defined include it as well
             if (srcName && srcVersion && srcName !== comp.name) {
-              let newComp = Object.assign({}, comp);
+              const newComp = Object.assign({}, comp);
               newComp.name = srcName;
               newComp.version = srcVersion;
               if (purlObj) {
@@ -495,7 +495,7 @@ export const executeOsQuery = (query) => {
     if (DEBUG_MODE) {
       console.log("Execuing", OSQUERY_BIN, args.join(" "));
     }
-    let result = spawnSync(OSQUERY_BIN, args, {
+    const result = spawnSync(OSQUERY_BIN, args, {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
