@@ -113,3 +113,6 @@ test/obj
 ./cdxgen
 ./cdxgen.exe
 ./cdxgen.app
+.stacker/
+oci/
+roots/

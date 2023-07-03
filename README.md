@@ -61,6 +61,8 @@ Footnotes:
 - [4] - See section on plugins
 - [5] - Powered by osquery. See section on plugins
 
+![cdxgen tree](./docs/cdxgen-tree.jpg)
+
 ### Automatic usage detection
 
 For node.js projects, lock files are parsed initially so the SBoM would include all dependencies including dev dependencies. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically have their `scope` property set to `required` in the resulting SBoM. By passing the argument `--no-babel`, you can disable this analysis. Scope property would then be set based on the `dev` attribute in the lock file.
@@ -85,7 +87,7 @@ sudo npm install -g @cyclonedx/cdxgen@8.6.0
 Deno install is also supported.
 
 ```shell
-deno install --allow-read --allow-env --allow-run --allow-sys=uid --allow-write -n cdxgen "npm:@cyclonedx/cdxgen@^9.0.1"
+deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen"
 ```
 
 You can also use the cdxgen container image
@@ -94,6 +96,12 @@ You can also use the cdxgen container image
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
 
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:v8.6.0 -r /app -o /app/bom.json
+```
+
+To use the deno version, use `ghcr.io/cyclonedx/cdxgen-deno` as the image name.
+
+```bash
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-deno -r /app -o /app/bom.json
 ```
 
 In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as library](#integration-as-library)
@@ -107,40 +115,43 @@ import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 ```text
 $ cdxgen -h
 Options:
-  -o, --output                 Output file for bom.xml or bom.json. Default
-                               bom.json
+  -o, --output                 Output file for bom.xml or bom.json. Default bom.
+                               json
   -t, --type                   Project type
   -r, --recurse                Recurse mode suitable for mono-repos    [boolean]
-  -p, --print                  Print the SBoM as a table. Defaults to true if
-                               output file is not specified with -o    [boolean]
-  -c, --resolve-class          Resolve class names for packages. jars only for
-                               now.                                    [boolean]
-      --deep                   Perform deep searches for components. Useful
-                               while scanning live OS and oci images.  [boolean]
-      --server-url             Dependency track url. Eg:
-                               https://deptrack.cyclonedx.io
+  -p, --print                  Print the SBoM as a table with tree. Defaults to
+                               true if output file is not specified with -o
+                                                                       [boolean]
+  -c, --resolve-class          Resolve class names for packages. jars only for n
+                               ow.                                     [boolean]
+      --deep                   Perform deep searches for components. Useful whil
+                               e scanning live OS and oci images.      [boolean]
+      --server-url             Dependency track url. Eg: https://deptrack.cyclon
+                               edx.io
       --api-key                Dependency track api key
       --project-group          Dependency track project group
-      --project-name           Dependency track project name. Default use the
-                               directory name
+      --project-name           Dependency track project name. Default use the di
+                               rectory name
       --project-version        Dependency track project version    [default: ""]
-      --project-id             Dependency track project id. Either provide the
-                               id or the project name and version together
+      --project-id             Dependency track project id. Either provide the i
+                               d or the project name and version together
       --required-only          Include only the packages with required scope on
                                the SBoM.                               [boolean]
       --fail-on-error          Fail if any dependency extractor fails. [boolean]
-      --no-babel               Do not use babel to perform usage analysis for
-                               JavaScript/TypeScript projects.         [boolean]
+      --no-babel               Do not use babel to perform usage analysis for Ja
+                               vaScript/TypeScript projects.           [boolean]
       --generate-key-and-sign  Generate an RSA public/private key pair and then
-                               sign the generated SBoM using JSON Web
-                               Signatures.                             [boolean]
+                               sign the generated SBoM using JSON Web Signatures
+                               .                                       [boolean]
       --server                 Run cdxgen as a server                  [boolean]
       --server-host            Listen address             [default: "127.0.0.1"]
       --server-port            Listen port                     [default: "9090"]
-      --install-deps           Install dependencies automatically for some
-                               projects. Defaults to true but disabled for
-                               containers and oci scans. Use --no-install-deps
-                               to disable this feature.[boolean] [default: true]
+      --install-deps           Install dependencies automatically for some proje
+                               cts. Defaults to true but disabled for containers
+                                and oci scans. Use --no-install-deps to disable
+                               this feature.           [boolean] [default: true]
+      --validate               Validate the generated SBoM using json schema.
+                                                      [boolean] [default: false]
       --version                Show version number                     [boolean]
   -h                           Show help                               [boolean]
 ```

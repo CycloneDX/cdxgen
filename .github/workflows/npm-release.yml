@@ -54,10 +54,25 @@ jobs:
         images: |
           ghcr.io/cyclonedx/cdxgen
     - name: Build and push Docker images
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v4
       with:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta2
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ghcr.io/cyclonedx/cdxgen-deno
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: Dockerfile-deno
+        platforms: linux/amd64
+        push: true
+        tags: ${{ steps.meta2.outputs.tags }}
+        labels: ${{ steps.meta2.outputs.labels }}
