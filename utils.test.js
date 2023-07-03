@@ -91,6 +91,12 @@ test("SSRI test", () => {
   expect(ss.sha256[0].digest).toStrictEqual(
     "LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78="
   );
+  ss = parse(
+    "sha512-Vn0lE2mprXEFPcRoI89xjw1fk1VJiyVbwfaPnVnvCXxEieByioO8Mj6sMwa6ON9PRuqbAjIxaQpkzccu41sYlw=="
+  );
+  expect(ss.sha512[0].digest).toStrictEqual(
+    "Vn0lE2mprXEFPcRoI89xjw1fk1VJiyVbwfaPnVnvCXxEieByioO8Mj6sMwa6ON9PRuqbAjIxaQpkzccu41sYlw=="
+  );
 });
 
 test("Parse requires dist string", () => {
