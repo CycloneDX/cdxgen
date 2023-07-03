@@ -56,6 +56,10 @@ jobs:
         with:
           repository: 'pallets/jinja'
           path: 'repotests/jinja'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'pypa/bandersnatch'
+          path: 'repotests/bandersnatch'
       - name: repotests
         run: |
           wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
@@ -76,6 +80,8 @@ jobs:
           python contrib/bom-validate.py --json bomresults/bom-click.json
           bin/cdxgen.js -p -r -t python repotests/jinja -o bomresults/bom-jinja.json
           python contrib/bom-validate.py --json bomresults/bom-jinja.json
+          bin/cdxgen.js -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json
+          python contrib/bom-validate.py --json bomresults/bom-bandersnatch.json
 
           bin/cdxgen.js --no-install-deps -p -r -t python repotests/scipy -o bomresults/bom-scipy.json
           python contrib/bom-validate.py --json bomresults/bom-scipy.json
@@ -91,5 +97,19 @@ jobs:
           python contrib/bom-validate.py --json bomresults/bom-click.json
           bin/cdxgen.js --no-install-deps -p -r -t python repotests/jinja -o bomresults/bom-jinja.json
           python contrib/bom-validate.py --json bomresults/bom-jinja.json
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json
+          python contrib/bom-validate.py --json bomresults/bom-bandersnatch.json
+
+          # virtualenv tests
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r repotests/bandersnatch/requirements.txt
+          pip install -r repotests/bandersnatch/requirements_s3.txt
+          pip install -r repotests/bandersnatch/requirements_swift.txt
+          pip install -r repotests/bandersnatch/requirements_test.txt
+          pip install -r repotests/bandersnatch/requirements_docs.txt
+          bin/cdxgen.js --no-install-deps -p -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json
+          python contrib/bom-validate.py --json bomresults/bom-bandersnatch.json
+          rm -rf venv
         env:
           CDXGEN_DEBUG_MODE: debug
