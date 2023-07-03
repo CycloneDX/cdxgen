@@ -130,7 +130,7 @@ if (process.env.GLOBAL_AGENT_HTTP_PROXY || process.env.HTTP_PROXY) {
   globalAgent.bootstrap();
 }
 
-let filePath = args._[0] || ".";
+const filePath = args._[0] || ".";
 if (!args.projectName) {
   if (filePath !== ".") {
     args.projectName = basename(filePath);
@@ -143,7 +143,7 @@ if (!args.projectName) {
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
  */
-let options = {
+const options = {
   projectType: args.type,
   multiProject: args.recurse,
   output: args.output,
@@ -353,7 +353,7 @@ const checkPermissions = (filePath) => {
 
   if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     const data = [["Group", "Name", "Version", "Scope"]];
-    for (let comp of bomNSData.bomJson.components) {
+    for (const comp of bomNSData.bomJson.components) {
       data.push([comp.group || "", comp.name, comp.version, comp.scope || ""]);
     }
     const config = {

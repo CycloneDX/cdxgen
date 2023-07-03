@@ -79,7 +79,7 @@ const configureServer = (cdxgenServer) => {
   cdxgenServer.keepAliveTimeout = 0;
 };
 
-const start = async (options) => {
+const start = (options) => {
   console.log("Listening on", options.serverHost, options.serverPort);
   const cdxgenServer = http
     .createServer(app)
@@ -89,7 +89,7 @@ const start = async (options) => {
     const q = url.parse(req.url, true).query;
     let cleanup = false;
     options = parseQueryString(q, req.body, options);
-    let filePath = q.path || q.url || req.body.path || req.body.url;
+    const filePath = q.path || q.url || req.body.path || req.body.url;
     if (!filePath) {
       res.writeHead(500, { "Content-Type": "application/json" });
       return res.end(

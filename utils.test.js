@@ -633,7 +633,7 @@ test("parseGoSumData", async () => {
 }, 120000);
 
 test("parse go list dependencies", async () => {
-  let dep_list = await parseGoListDep(
+  const dep_list = await parseGoListDep(
     readFileSync("./test/data/golist-dep.txt", { encoding: "utf-8" }),
     {}
   );
@@ -766,7 +766,7 @@ test("parse cargo toml", async () => {
 
 test("parse cargo auditable data", async () => {
   expect(await parseCargoAuditableData(null)).toEqual([]);
-  let dep_list = await parseCargoAuditableData(
+  const dep_list = await parseCargoAuditableData(
     readFileSync("./test/data/cargo-auditable.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(32);
@@ -1662,7 +1662,7 @@ test("parseComposerLock", () => {
 });
 
 test("parseGemfileLockData", async () => {
-  let deps = await parseGemfileLockData(
+  const deps = await parseGemfileLockData(
     readFileSync("./test/data/Gemfile.lock", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(140);
@@ -1673,7 +1673,7 @@ test("parseGemfileLockData", async () => {
 });
 
 test("parseGemspecData", async () => {
-  let deps = await parseGemspecData(
+  const deps = await parseGemspecData(
     readFileSync("./test/data/xmlrpc.gemspec", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(1);
@@ -1752,7 +1752,7 @@ test("parse wheel metadata", () => {
 });
 
 test("parse wheel", async () => {
-  let metadata = await readZipEntry(
+  const metadata = await readZipEntry(
     "./test/data/appthreat_depscan-2.0.2-py3-none-any.whl",
     "METADATA"
   );
@@ -1769,13 +1769,13 @@ test("parse wheel", async () => {
 });
 
 test("parse pipfile.lock with hashes", async () => {
-  let deps = await parsePiplockData(
+  const deps = await parsePiplockData(
     JSON.parse(readFileSync("./test/data/Pipfile.lock", { encoding: "utf-8" }))
   );
   expect(deps.length).toEqual(46);
 }, 120000);
 
-test("parse scala sbt list", async () => {
+test("parse scala sbt list", () => {
   let deps = parseKVDep(
     readFileSync("./test/data/sbt-dl.list", { encoding: "utf-8" })
   );
@@ -1786,19 +1786,19 @@ test("parse scala sbt list", async () => {
   expect(deps.length).toEqual(117);
 });
 
-test("parse scala sbt lock", async () => {
-  let deps = parseSbtLock("./test/data/build.sbt.lock");
+test("parse scala sbt lock", () => {
+  const deps = parseSbtLock("./test/data/build.sbt.lock");
   expect(deps.length).toEqual(117);
 });
 
 test("parse nupkg file", async () => {
-  let deps = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
+  const deps = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
   expect(deps.length).toEqual(1);
   expect(deps[0].name).toEqual("jQuery");
 });
 
 test("parse bazel skyframe", () => {
-  let deps = parseBazelSkyframe(
+  const deps = parseBazelSkyframe(
     readFileSync("./test/data/bazel/bazel-state.txt", { encoding: "utf-8" })
   );
   expect(deps.length).toEqual(16);
@@ -1806,7 +1806,7 @@ test("parse bazel skyframe", () => {
 });
 
 test("parse bazel build", () => {
-  let projs = parseBazelBuild(
+  const projs = parseBazelBuild(
     readFileSync("./test/data/bazel/BUILD", { encoding: "utf-8" })
   );
   expect(projs.length).toEqual(2);
@@ -1932,7 +1932,7 @@ test("parse container spec like files", async () => {
 
 test("parse cloudbuild data", async () => {
   expect(await parseCloudBuildData(null)).toEqual([]);
-  let dep_list = await parseCloudBuildData(
+  const dep_list = await parseCloudBuildData(
     readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
@@ -1944,7 +1944,7 @@ test("parse cloudbuild data", async () => {
 });
 
 test("parse privado files", () => {
-  let servList = parsePrivadoFile("./test/data/privado.json");
+  const servList = parsePrivadoFile("./test/data/privado.json");
   expect(servList.length).toEqual(1);
   expect(servList[0].data.length).toEqual(11);
   expect(servList[0].endpoints.length).toEqual(17);
