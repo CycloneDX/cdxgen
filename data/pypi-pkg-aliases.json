@@ -1,4 +1,5 @@
 {
+  "absl": "absl-py",
   "afq": "pyafq",
   "ag_fft_tools": "agpy",
   "ansi": "pexpect",
