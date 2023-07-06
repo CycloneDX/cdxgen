@@ -129,7 +129,7 @@ jobs:
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
       - name: denotests
-        # if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         run: |
           docker build -t ghcr.io/cyclonedx/cdxgen-deno -f Dockerfile-deno .
           docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t java /app/repotests/shiftleft-java-example -o /app/denoresults/bom-java.json
