@@ -374,9 +374,6 @@ export const getImage = async (fullImageName) => {
   }
   try {
     localData = await makeRequest(`images/${repo}/json`);
-    if (DEBUG_MODE && localData) {
-      console.log(localData);
-    }
   } catch (err) {
     try {
       localData = await makeRequest(`images/${fullImageName}/json`);
@@ -418,18 +415,9 @@ export const getImage = async (fullImageName) => {
         console.log(`Trying with ${repo}`);
       }
       localData = await makeRequest(`images/${repo}/json`);
-      if (DEBUG_MODE) {
-        console.log(localData);
-      }
     } catch (err) {
-      if (DEBUG_MODE) {
-        console.log(`Retrying with ${fullImageName} due to`, err);
-      }
       try {
         localData = await makeRequest(`images/${fullImageName}/json`);
-        if (DEBUG_MODE) {
-          console.log(localData);
-        }
       } catch (err) {
         // continue regardless of error
       }
