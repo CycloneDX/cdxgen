@@ -2464,7 +2464,7 @@ export const getPyModules = async (src, epkgList) => {
   pkgList = await getPyMetadata(pkgList, true);
   for (const p of pkgList) {
     dependenciesList.push({
-      ref: `pkg:pypi/${p.name}@${p.version}`,
+      ref: `pkg:pypi/${p.name}@${p.version}`.toLowerCase(),
       dependsOn: []
     });
   }
@@ -5296,6 +5296,16 @@ export const executeAtom = (src, args) => {
     timeout: TIMEOUT_MS,
     env
   });
+  if (
+    result.stderr &&
+    result.stderr.includes(
+      "has been compiled by a more recent version of the Java Runtime"
+    )
+  ) {
+    console.log(
+      "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image."
+    );
+  }
   if (DEBUG_MODE) {
     if (result.stdout) {
       console.log(result.stdout);
@@ -5343,9 +5353,19 @@ export const findAppModules = function (src, language) {
   return retList;
 };
 
-const flattenDeps = (dependsOn, pkgList, reqOrSetupFile, t) => {
+const flattenDeps = (
+  dependsOn,
+  dependenciesList,
+  pkgList,
+  reqOrSetupFile,
+  t
+) => {
   for (const d of t.dependencies) {
-    dependsOn.push(`pkg:pypi/${d.name}@${d.version}`);
+    const pkgRef = `pkg:pypi/${d.name}@${d.version}`
+      .replace(/_/g, "-")
+      .toLowerCase();
+    dependsOn.push(pkgRef);
+    dependenciesList.push({ ref: pkgRef, dependsOn: [] });
     pkgList.push({
       name: d.name,
       version: d.version,
@@ -5371,7 +5391,7 @@ const flattenDeps = (dependsOn, pkgList, reqOrSetupFile, t) => {
     });
     // Recurse and flatten
     if (d.dependencies && d.dependencies) {
-      flattenDeps(dependsOn, pkgList, reqOrSetupFile, d);
+      flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, d);
     }
   }
 };
@@ -5505,17 +5525,17 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         continue;
       }
       pkgList.push({
-        name: t.name,
+        name: t.name.replace(/_/g, "-"),
         version: t.version
       });
       rootList.push({
-        name: t.name,
+        name: t.name.replace(/_/g, "-"),
         version: t.version
       });
       const dependsOn = [];
-      flattenDeps(dependsOn, pkgList, reqOrSetupFile, t);
+      flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, t);
       dependenciesList.push({
-        ref: `pkg:pypi/${t.name}@${t.version}`,
+        ref: `pkg:pypi/${t.name}@${t.version}`.replace(/_/g, "-").toLowerCase(),
         dependsOn
       });
     }

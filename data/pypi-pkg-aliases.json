@@ -54,6 +54,7 @@
   "ztutils": "zope2",
   "aadb": "auto_adjust_display_brightness",
   "abakaffe": "abakaffe_cli",
+  "absl": "absl-py",
   "abiosgaming": "abiosgaming.py",
   "abiquo": "abiquo_api",
   "abl": "abl.cssprocessor",
@@ -1217,8 +1218,12 @@
   "z3c": "z3c.traverser",
   "z3c": "z3c.zcmlhook",
   "zmq": "pyzmq",
-  "zopyx": "zopyx.textindexng3"
+  "zopyx": "zopyx.textindexng3",
   "zpublisher": "zope2",
   "zserver": "zope2",
+<<<<<<< HEAD
   "ztutils": "zope2",
+=======
+  "ztutils": "zope2"
+>>>>>>> 74a284f (Review comments)
 }

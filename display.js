@@ -48,6 +48,16 @@ export const printDependencyTree = (bomJson) => {
     treeGraphics[treeGraphics.length - 1] = treeGraphics[
       treeGraphics.length - 1
     ].replace(SYMBOLS_ANSI.BRANCH, SYMBOLS_ANSI.LAST_BRANCH);
+    if (treeGraphics[treeGraphics.length - 1].includes(SYMBOLS_ANSI.VERTICAL)) {
+      treeGraphics[treeGraphics.length - 1] = treeGraphics[
+        treeGraphics.length - 1
+      ]
+        .replace(SYMBOLS_ANSI.VERTICAL, SYMBOLS_ANSI.LAST_BRANCH)
+        .replace(
+          SYMBOLS_ANSI.INDENT + SYMBOLS_ANSI.LAST_BRANCH,
+          SYMBOLS_ANSI.LAST_BRANCH
+        );
+    }
   }
   const config = {
     header: {
@@ -73,8 +83,8 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
   const listToUse = Array.isArray(subtree) ? subtree : [subtree];
   for (const l of listToUse) {
     const refStr = l.ref || l;
-    if (!shownList.includes(refStr)) {
-      shownList.push(refStr);
+    if (!shownList.includes(refStr.toLowerCase())) {
+      shownList.push(refStr.toLowerCase());
       treeGraphics.push(`${levelPrefix(level)}${refStr}`);
       if (l && depMap[refStr]) {
         if (level < 3) {
