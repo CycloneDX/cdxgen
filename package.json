@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "9.0.2",
+  "version": "9.1.0",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
@@ -36,7 +36,7 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
-    "lint": "eslint index.js utils.js binary.js server.js docker.js *.test.js bin/cdxgen.js",
+    "lint": "eslint *.js *.test.js bin/cdxgen.js",
     "pretty": "prettier --write *.js data/*.json bin/cdxgen.js --trailing-comma=none"
   },
   "engines": {
@@ -52,6 +52,8 @@
   "dependencies": {
     "@babel/parser": "^7.22.5",
     "@babel/traverse": "^7.22.5",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "^1.0.0",
     "glob": "^10.3.0",

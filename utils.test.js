@@ -64,8 +64,8 @@ import {
   parseSwiftJsonTree,
   parseSwiftResolved,
   guessPypiMatchingVersion
-} from "./utils";
-import { readFileSync } from "fs";
+} from "./utils.js";
+import { readFileSync } from "node:fs";
 import { parse } from "ssri";
 import { expect, test } from "@jest/globals";
 
@@ -1009,7 +1009,7 @@ test("parse github actions workflow data", async () => {
   dep_list = await parseGitHubWorkflowData(
     readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(5);
+  expect(dep_list.length).toEqual(6);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
@@ -1365,7 +1365,20 @@ test("parsePnpmLock", async () => {
         name: "SrcFile",
         value: "./test/pnpm-lock.yaml"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/pnpm-lock.yaml"
+          }
+        ]
+      }
+    }
   });
   parsedList = await parsePnpmLock("./test/data/pnpm-lock.yaml");
   expect(parsedList.pkgList.length).toEqual(308);
@@ -1382,7 +1395,20 @@ test("parsePnpmLock", async () => {
         name: "SrcFile",
         value: "./test/data/pnpm-lock.yaml"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/pnpm-lock.yaml"
+          }
+        ]
+      }
+    }
   });
   parsedList = await parsePnpmLock("./test/data/pnpm-lock2.yaml");
   expect(parsedList.pkgList.length).toEqual(7);
@@ -1393,7 +1419,20 @@ test("parsePnpmLock", async () => {
     version: "2.1.1",
     scope: undefined,
     _integrity: "sha1-w7M6te42DYbg5ijwRorn7yfWVN8=",
-    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock2.yaml" }]
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock2.yaml" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/pnpm-lock2.yaml"
+          }
+        ]
+      }
+    }
   });
   expect(parsedList.dependenciesList[2]).toEqual({
     ref: "pkg:npm/chalk@1.1.3",
@@ -1415,7 +1454,20 @@ test("parsePnpmLock", async () => {
     scope: undefined,
     _integrity:
       "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==",
-    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock3.yaml" }]
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock3.yaml" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/pnpm-lock3.yaml"
+          }
+        ]
+      }
+    }
   });
   expect(parsedList.dependenciesList[2]).toEqual({
     ref: "pkg:npm/@nodelib/fs.walk@1.2.8",
@@ -1435,7 +1487,20 @@ test("parsePnpmLock", async () => {
     scope: "optional",
     _integrity:
       "sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==",
-    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6.yaml" }]
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6.yaml" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/pnpm-lock6.yaml"
+          }
+        ]
+      }
+    }
   });
   expect(parsedList.pkgList[parsedList.pkgList.length - 1]).toEqual({
     group: "",
@@ -1444,7 +1509,20 @@ test("parsePnpmLock", async () => {
     scope: "optional",
     _integrity:
       "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
-    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6.yaml" }]
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6.yaml" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/pnpm-lock6.yaml"
+          }
+        ]
+      }
+    }
   });
   parsedList = await parsePnpmLock("./test/data/pnpm-lock6a.yaml");
   expect(parsedList.pkgList.length).toEqual(229);
@@ -1456,7 +1534,20 @@ test("parsePnpmLock", async () => {
     scope: "optional",
     _integrity:
       "sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==",
-    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6a.yaml" }]
+    properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock6a.yaml" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/pnpm-lock6a.yaml"
+          }
+        ]
+      }
+    }
   });
 });
 
@@ -1475,7 +1566,20 @@ test("parseYarnLock", async () => {
         name: "SrcFile",
         value: "./test/yarn.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/yarn.lock"
+          }
+        ]
+      }
+    }
   });
   expect(parsedList.dependenciesList.length).toEqual(56);
   identMap = yarnLockToIdentMap(
@@ -1496,7 +1600,20 @@ test("parseYarnLock", async () => {
         name: "SrcFile",
         value: "./test/data/yarn_locks/yarn.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/yarn_locks/yarn.lock"
+          }
+        ]
+      }
+    }
   });
   parsedList.pkgList.forEach((d) => {
     expect(d.name).toBeDefined();
@@ -1517,7 +1634,20 @@ test("parseYarnLock", async () => {
         name: "SrcFile",
         value: "./test/data/yarn_locks/yarn-multi.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/yarn_locks/yarn-multi.lock"
+          }
+        ]
+      }
+    }
   });
 
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-light.lock");
@@ -1534,7 +1664,20 @@ test("parseYarnLock", async () => {
         name: "SrcFile",
         value: "./test/data/yarn_locks/yarn-light.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/yarn_locks/yarn-light.lock"
+          }
+        ]
+      }
+    }
   });
 
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn3.lock");
@@ -1551,7 +1694,20 @@ test("parseYarnLock", async () => {
         name: "SrcFile",
         value: "./test/data/yarn_locks/yarn3.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/yarn_locks/yarn3.lock"
+          }
+        ]
+      }
+    }
   });
 
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
@@ -1568,7 +1724,20 @@ test("parseYarnLock", async () => {
         name: "SrcFile",
         value: "./test/data/yarn_locks/yarnv2.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/yarn_locks/yarnv2.lock"
+          }
+        ]
+      }
+    }
   });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
   expect(parsedList.pkgList.length).toEqual(325);
@@ -1584,7 +1753,20 @@ test("parseYarnLock", async () => {
         name: "SrcFile",
         value: "./test/data/yarn_locks/yarnv3.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/yarn_locks/yarnv3.lock"
+          }
+        ]
+      }
+    }
   });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn4.lock");
   expect(parsedList.pkgList.length).toEqual(1);
@@ -1600,7 +1782,20 @@ test("parseYarnLock", async () => {
       "sha512-JE93VWVyVa07xkK1wJ5ogjSZ30Nn4ptUuUXdPnu8MsKme1xFHLFFD3UtnHxnxnNDSnGx+WLlhuyHdIFfSCYqYg==",
     properties: [
       { name: "SrcFile", value: "./test/data/yarn_locks/yarn-at.lock" }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/yarn_locks/yarn-at.lock"
+          }
+        ]
+      }
+    }
   });
 });
 
@@ -1624,7 +1819,20 @@ test("parseComposerLock", () => {
         name: "SrcFile",
         value: "./test/data/composer.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/composer.lock"
+          }
+        ]
+      }
+    }
   });
 
   deps = parseComposerLock("./test/data/composer-2.lock");
@@ -1646,7 +1854,20 @@ test("parseComposerLock", () => {
         name: "SrcFile",
         value: "./test/data/composer-2.lock"
       }
-    ]
+    ],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/composer-2.lock"
+          }
+        ]
+      }
+    }
   });
 
   deps = parseComposerLock("./test/data/composer-3.lock");
@@ -1663,7 +1884,20 @@ test("parseComposerLock", () => {
     license: ["MIT"],
     description: "A non-blocking concurrency framework for PHP applications.",
     scope: "required",
-    properties: [{ name: "SrcFile", value: "./test/data/composer-3.lock" }]
+    properties: [{ name: "SrcFile", value: "./test/data/composer-3.lock" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/composer-3.lock"
+          }
+        ]
+      }
+    }
   });
 });
 
@@ -2130,6 +2364,19 @@ test("parse swift deps files", () => {
     group: "",
     version: "1.0.3",
     properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/Package.resolved"
+          }
+        ]
+      }
+    },
     repository: { url: "https://github.com/apple/swift-argument-parser" }
   });
   pkgList = parseSwiftResolved("./test/data/Package2.resolved");
@@ -2139,6 +2386,19 @@ test("parse swift deps files", () => {
     group: "",
     version: "1.2.2",
     properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/Package2.resolved"
+          }
+        ]
+      }
+    },
     repository: { url: "https://github.com/apple/swift-argument-parser.git" }
   });
 });

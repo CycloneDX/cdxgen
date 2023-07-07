@@ -19,10 +19,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 8 and SBT
+      - name: Set up SBT
         uses: olafurpg/setup-scala@v11
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          java-version: adopt@1.8
+          distribution: 'temurin'
+          java-version: '19'
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -39,7 +42,7 @@ jobs:
           npm run lint
           npm test
           mkdir -p repotests
-          mkdir -p bomresults
+          mkdir -p bomresults denoresults
         env:
           CI: true
       - uses: swift-actions/setup-swift@v1
@@ -101,68 +104,37 @@ jobs:
           path: 'repotests/microservices-demo'
       - name: repotests
         run: |
-          wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
-          mv cyclonedx-linux-x64 cyclonedx
-          chmod +x cyclonedx
-          pip install -r contrib/requirements.txt
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
-          # python contrib/bom-validate.py --json bomresults/bom-java.json
-
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
-          # python contrib/bom-validate.py --json bomresults/bom-github.json
-
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json
-          python contrib/bom-validate.py --json bomresults/bom-ts.json
-
-          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json
-          python contrib/bom-validate.py --json bomresults/bom-ts.json
-
-          FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json
-          python contrib/bom-validate.py --json bomresults/bom-go.json
-
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json
-          python contrib/bom-validate.py --json bomresults/bom-csharp2.json
-
-          FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json
-          python contrib/bom-validate.py --json bomresults/bom-csharp3.json
-
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json
-          python contrib/bom-validate.py --json bomresults/bom-python.json
-
-          bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json
-          python contrib/bom-validate.py --json bomresults/bom-php.json
-
-          bin/cdxgen.js -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json
-          python contrib/bom-validate.py --json bomresults/bom-ruby.json
-
-          bin/cdxgen.js -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json
-          python contrib/bom-validate.py --json bomresults/bom-bazel.json
-
-          bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json
-          python contrib/bom-validate.py --json bomresults/bom-pub.json
-
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json
-          python contrib/bom-validate.py --json bomresults/bom-clj.json
-
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json
-          python contrib/bom-validate.py --json bomresults/bom-swift.json
-
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json
-          python contrib/bom-validate.py --json bomresults/bom-msd.json
-
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json
-          python contrib/bom-validate.py --json bomresults/bom-yaml.json
-
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
+          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json --validate
+          FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --validate
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --validate
+          FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate
+          bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate
+          bin/cdxgen.js -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --validate
+          bin/cdxgen.js -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json --validate
+          bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --validate
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --validate
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --validate
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json --validate
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
           mkdir -p jenkins
           wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
           wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
           wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
           wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
-
           mv *.hpi jenkins
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json
-          python contrib/bom-validate.py --json bomresults/bom-jenkins.json
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
+      - name: denotests
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker build -t ghcr.io/cyclonedx/cdxgen-deno -f Dockerfile-deno .
+          docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t java /app/repotests/shiftleft-java-example -o /app/denoresults/bom-java.json
+          docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t python /app/repotests/DjanGoat -o /app/denoresults/bom-python.json
+          ls -ltr denoresults
       - uses: actions/upload-artifact@v1
         with:
           name: bomresults

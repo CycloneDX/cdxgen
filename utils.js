@@ -48,6 +48,7 @@ import { satisfies, coerce, maxSatisfying, clean, valid } from "semver";
 import StreamZip from "node-stream-zip";
 import { parseEDNString } from "edn-data";
 import { PackageURL } from "packageurl-js";
+import { getTreeWithPlugin } from "./piptree.js";
 
 const selfPJson = JSON.parse(readFileSync(join(dirName, "package.json")));
 const _version = selfPJson.version;
@@ -348,7 +349,20 @@ const _getDepPkgList = async function (
             name: "SrcFile",
             value: pkgLockFile
           }
-        ]
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgLockFile
+              }
+            ]
+          }
+        }
       };
       pkgList.push(apkg);
       if (pkgDependencies[name].dependencies) {
@@ -422,7 +436,20 @@ export const parsePkgJson = async (pkgJsonFile) => {
             name: "SrcFile",
             value: pkgJsonFile
           }
-        ]
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgJsonFile
+              }
+            ]
+          }
+        }
       });
     } catch (err) {
       // continue regardless of error
@@ -652,7 +679,20 @@ export const parseYarnLock = async function (yarnLockFile) {
                 name: "SrcFile",
                 value: yarnLockFile
               }
-            ]
+            ],
+            evidence: {
+              identity: {
+                field: "purl",
+                confidence: 1,
+                methods: [
+                  {
+                    technique: "manifest-analysis",
+                    confidence: 1,
+                    value: yarnLockFile
+                  }
+                ]
+              }
+            }
           });
           // Reset all the variables
           group = "";
@@ -798,7 +838,20 @@ export const parseNodeShrinkwrap = async function (swFile) {
                 name: "SrcFile",
                 value: swFile
               }
-            ]
+            ],
+            evidence: {
+              identity: {
+                field: "purl",
+                confidence: 1,
+                methods: [
+                  {
+                    technique: "manifest-analysis",
+                    confidence: 1,
+                    value: swFile
+                  }
+                ]
+              }
+            }
           });
         }
       }
@@ -952,7 +1005,20 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
                 name: "SrcFile",
                 value: pnpmLock
               }
-            ]
+            ],
+            evidence: {
+              identity: {
+                field: "purl",
+                confidence: 1,
+                methods: [
+                  {
+                    technique: "manifest-analysis",
+                    confidence: 1,
+                    value: pnpmLock
+                  }
+                ]
+              }
+            }
           });
         }
       }
@@ -998,7 +1064,20 @@ export const parseBowerJson = async (bowerJsonFile) => {
             name: "SrcFile",
             value: bowerJsonFile
           }
-        ]
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: bowerJsonFile
+              }
+            ]
+          }
+        }
       });
     } catch (err) {
       // continue regardless of error
@@ -1066,7 +1145,20 @@ export const parseMinJs = async (minJsFile) => {
                     name: "SrcFile",
                     value: minJsFile
                   }
-                ]
+                ],
+                evidence: {
+                  identity: {
+                    field: "purl",
+                    confidence: 0.25,
+                    methods: [
+                      {
+                        technique: "filename",
+                        confidence: 0.25,
+                        value: minJsFile
+                      }
+                    ]
+                  }
+                }
               });
             }
             return;
@@ -1127,7 +1219,20 @@ export const parsePom = function (pomFile) {
                 name: "SrcFile",
                 value: pomFile
               }
-            ]
+            ],
+            evidence: {
+              identity: {
+                field: "purl",
+                confidence: 1,
+                methods: [
+                  {
+                    technique: "manifest-analysis",
+                    confidence: 1,
+                    value: pomFile
+                  }
+                ]
+              }
+            }
           });
       }
     }
@@ -1973,7 +2078,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       p.description = body.info.summary;
       p.license = findLicenseId(body.info.license);
       if (body.info.home_page) {
-        if (body.info.home_page.indexOf("git") > -1) {
+        if (body.info.home_page.includes("git")) {
           p.repository = { url: body.info.home_page };
         } else {
           p.homepage = { url: body.info.home_page };
@@ -2003,11 +2108,39 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
             Object.keys(body.releases || {}),
             versionSpecifiers
           );
+          // Indicate the confidence with our guess
+          p.evidence = {
+            identity: {
+              field: "version",
+              confidence: 0.75,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.75,
+                  value: `Version specifiers: ${versionSpecifiers}`
+                }
+              ]
+            }
+          };
         }
         // If we have reached here, it means we have not solved the version
         // So assume latest
         if (!p.version) {
           p.version = body.info.version;
+          // Indicate the low confidence
+          p.evidence = {
+            identity: {
+              field: "version",
+              confidence: 0.5,
+              methods: [
+                {
+                  technique: "source-code-analysis",
+                  confidence: 0.5,
+                  value: `PyPI package: ${p.name}`
+                }
+              ]
+            }
+          };
         }
       } else if (p.version !== body.info.version) {
         if (!p.properties) {
@@ -2044,16 +2177,21 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           );
         }
         p.version = "latest";
+        // Indicate the low confidence
+        p.evidence = {
+          identity: {
+            field: "version",
+            confidence: 0,
+            methods: [
+              {
+                technique: "source-code-analysis",
+                confidence: 0,
+                value: `Module ${p.name}`
+              }
+            ]
+          }
+        };
       }
-      // Add a property to let the downstream tools know about this assumption
-      // FIXME: Do this correctly with 1.5
-      if (!p.properties) {
-        p.properties = [];
-      }
-      p.properties.push({
-        name: "cdx:pypi:pedigree",
-        value: "unknown"
-      });
       cdepList.push(p);
     }
   }
@@ -2286,6 +2424,7 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
  */
 export const getPyModules = async (src, epkgList) => {
   const allImports = {};
+  const dependenciesList = [];
   const modList = findAppModules(src, "python");
   const pyDefaultModules = new Set(PYTHON_STD_MODULES);
   const filteredModList = modList.filter(
@@ -2323,7 +2462,13 @@ export const getPyModules = async (src, epkgList) => {
     pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
   }
   pkgList = await getPyMetadata(pkgList, true);
-  return { allImports, pkgList };
+  for (const p of pkgList) {
+    dependenciesList.push({
+      ref: `pkg:pypi/${p.name}@${p.version}`.toLowerCase(),
+      dependsOn: []
+    });
+  }
+  return { allImports, pkgList, dependenciesList };
 };
 
 /**
@@ -3860,6 +4005,19 @@ export const parseNupkg = async function (nupkgFile) {
       value: nupkgFile
     }
   ];
+  pkg.evidence = {
+    identity: {
+      field: "purl",
+      confidence: 1,
+      methods: [
+        {
+          technique: "binary-analysis",
+          confidence: 1,
+          value: nupkgFile
+        }
+      ]
+    }
+  };
   pkgList.push(pkg);
   if (fetchLicenses) {
     return await getNugetMetadata(pkgList);
@@ -4181,7 +4339,20 @@ export const parseComposerLock = function (pkgLockFile) {
                 name: "SrcFile",
                 value: pkgLockFile
               }
-            ]
+            ],
+            evidence: {
+              identity: {
+                field: "purl",
+                confidence: 1,
+                methods: [
+                  {
+                    technique: "manifest-analysis",
+                    confidence: 1,
+                    value: pkgLockFile
+                  }
+                ]
+              }
+            }
           });
         }
       }
@@ -4225,7 +4396,20 @@ export const parseSbtLock = function (pkgLockFile) {
               name: "SrcFile",
               value: pkgLockFile
             }
-          ]
+          ],
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence: 1,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 1,
+                  value: pkgLockFile
+                }
+              ]
+            }
+          }
         });
       }
     }
@@ -4485,7 +4669,20 @@ export const parseSwiftResolved = (resolvedFile) => {
               name: "SrcFile",
               value: resolvedFile
             }
-          ]
+          ],
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence: 1,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 1,
+                  value: resolvedFile
+                }
+              ]
+            }
+          }
         };
         const repLocation = adep.location || adep.repositoryURL;
         if (repLocation) {
@@ -4742,18 +4939,6 @@ export const extractJarArchive = function (jarFile, tempDir) {
             jarMetadata["Bundle-Vendor"] ||
             jarMetadata["Automatic-Module-Name"] ||
             "";
-          let name = "";
-          if (
-            jarMetadata["Bundle-Name"] &&
-            !jarMetadata["Bundle-Name"].includes(" ")
-          ) {
-            name = jarMetadata["Bundle-Name"];
-          } else if (
-            jarMetadata["Implementation-Title"] &&
-            !jarMetadata["Implementation-Title"].includes(" ")
-          ) {
-            name = jarMetadata["Implementation-Title"];
-          }
           let version =
             jarMetadata["Bundle-Version"] ||
             jarMetadata["Implementation-Version"] ||
@@ -4761,12 +4946,34 @@ export const extractJarArchive = function (jarFile, tempDir) {
           if (version && version.includes(" ")) {
             version = version.split(" ")[0];
           }
-          if (!name && group) {
-            name = basename(group.replace(/\./g, "/"));
-            if (!group.startsWith("javax")) {
-              group = dirname(group.replace(/\./g, "/"));
-              group = group.replace(/\//g, ".");
+          let name = "";
+          // Prefer jar filename to construct name and version
+          if (!name || !version || name === "" || version === "") {
+            const tmpA = jarname.split("-");
+            if (tmpA && tmpA.length > 1) {
+              const lastPart = tmpA[tmpA.length - 1];
+              if (!version || version === "") {
+                version = lastPart.replace(".jar", "");
+              }
+              if (!name || name === "") {
+                name = jarname.replace("-" + lastPart, "") || "";
+              }
+            } else {
+              name = jarname.replace(".jar", "");
             }
+          }
+          if (
+            !name.length &&
+            jarMetadata["Bundle-Name"] &&
+            !jarMetadata["Bundle-Name"].includes(" ")
+          ) {
+            name = jarMetadata["Bundle-Name"];
+          } else if (
+            !name.length &&
+            jarMetadata["Implementation-Title"] &&
+            !jarMetadata["Implementation-Title"].includes(" ")
+          ) {
+            name = jarMetadata["Implementation-Title"];
           }
           // Sometimes the group might already contain the name
           // Eg: group: org.checkerframework.checker.qual name: checker-qual
@@ -4783,21 +4990,6 @@ export const extractJarArchive = function (jarFile, tempDir) {
               );
             }
           }
-          // Fallback to parsing jar filename
-          if (!name || !version || name === "" || version === "") {
-            const tmpA = jarname.split("-");
-            if (tmpA && tmpA.length > 1) {
-              const lastPart = tmpA[tmpA.length - 1];
-              if (!version || version === "") {
-                version = lastPart.replace(".jar", "");
-              }
-              if (!name || name === "") {
-                name = jarname.replace("-" + lastPart, "") || "";
-              }
-            } else {
-              name = jarname.replace(".jar", "");
-            }
-          }
           // Patch the group string
           for (const aprefix in vendorAliases) {
             if (name && name.startsWith(aprefix)) {
@@ -4806,10 +4998,27 @@ export const extractJarArchive = function (jarFile, tempDir) {
             }
           }
           if (name && version) {
+            // If group and name are the same we only need the name
+            if (group == name) {
+              group = "";
+            }
             pkgList.push({
               group: group === "." ? "" : encodeForPurl(group || "") || "",
               name: name ? encodeForPurl(name) : "",
               version,
+              evidence: {
+                identity: {
+                  field: "purl",
+                  confidence: 0.5,
+                  methods: [
+                    {
+                      technique: "filename",
+                      confidence: 0.5,
+                      value: jarname
+                    }
+                  ]
+                }
+              },
               properties: [
                 {
                   name: "SrcFile",
@@ -5007,6 +5216,12 @@ export const getMavenCommand = (srcPath, rootPath) => {
   let findMavenFile = "mvnw";
   if (platform() == "win32") {
     findMavenFile = "mvnw.bat";
+    if (
+      !existsSync(join(srcPath, findMavenFile)) &&
+      existsSync(join(srcPath, "mvnw.cmd"))
+    ) {
+      findMavenFile = "mvnw.cmd";
+    }
   }
 
   if (existsSync(join(srcPath, findMavenFile))) {
@@ -5081,6 +5296,16 @@ export const executeAtom = (src, args) => {
     timeout: TIMEOUT_MS,
     env
   });
+  if (
+    result.stderr &&
+    result.stderr.includes(
+      "has been compiled by a more recent version of the Java Runtime"
+    )
+  ) {
+    console.log(
+      "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image."
+    );
+  }
   if (DEBUG_MODE) {
     if (result.stdout) {
       console.log(result.stdout);
@@ -5128,17 +5353,62 @@ export const findAppModules = function (src, language) {
   return retList;
 };
 
+const flattenDeps = (
+  dependsOn,
+  dependenciesList,
+  pkgList,
+  reqOrSetupFile,
+  t
+) => {
+  for (const d of t.dependencies) {
+    const pkgRef = `pkg:pypi/${d.name}@${d.version}`
+      .replace(/_/g, "-")
+      .toLowerCase();
+    dependsOn.push(pkgRef);
+    dependenciesList.push({ ref: pkgRef, dependsOn: [] });
+    pkgList.push({
+      name: d.name,
+      version: d.version,
+      properties: [
+        {
+          name: "SrcFile",
+          value: reqOrSetupFile
+        }
+      ],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 1,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 1,
+              value: reqOrSetupFile
+            }
+          ]
+        }
+      }
+    });
+    // Recurse and flatten
+    if (d.dependencies && d.dependencies) {
+      flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, d);
+    }
+  }
+};
+
 /**
- * Execute pip freeze by creating a virtual env in a temp directory
+ * Execute pip freeze by creating a virtual env in a temp directory and construct the dependency tree
  *
  * @param {string} basePath Base path
  * @param {string} reqOrSetupFile Requirements or setup.py file
+ * @param {string} tempVenvDir Temp venv dir
  * @returns List of packages from the virtual env
  */
-export const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
-  let pkgList = [];
+export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
+  const pkgList = [];
+  const rootList = [];
+  const dependenciesList = [];
   let result = undefined;
-  const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
   const env = {
     ...process.env
   };
@@ -5148,16 +5418,22 @@ export const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
    * By checking the environment variable "VIRTUAL_ENV" we decide whether to create an env or not
    */
   if (!process.env.VIRTUAL_ENV) {
-    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempDir]);
+    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir]);
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
-        console.log(result.stderr);
+        console.log("Virtual env creation has failed");
+        if (!result.stderr) {
+          console.log(
+            "Ensure the virtualenv package is installed using pip. `python -m pip install virtualenv`"
+          );
+        }
       }
     } else {
-      env.VIRTUAL_ENV = tempDir;
-      env.PATH = `${join(tempDir, "bin")}${_delimiter}${
-        process.env.PATH || ""
-      }`;
+      env.VIRTUAL_ENV = tempVenvDir;
+      env.PATH = `${join(
+        tempVenvDir,
+        platform() == "win32" ? "Scripts" : "bin"
+      )}${_delimiter}${process.env.PATH || ""}`;
     }
   }
   /**
@@ -5166,7 +5442,7 @@ export const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
    * This step is accurate but not reproducible since the resulting list could differ based on various factors
    * such as the version of python, pip, os, pypi.org availability (and weather?)
    */
-  if (tempDir === env.VIRTUAL_ENV) {
+  if (tempVenvDir === env.VIRTUAL_ENV && reqOrSetupFile) {
     const pipInstallArgs = [
       "-m",
       "pip",
@@ -5207,6 +5483,7 @@ export const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
       }
       if (!versionRelatedError && DEBUG_MODE) {
         console.log("args used:", pipInstallArgs);
+        console.log(result.stdout, result.stderr);
         console.log(
           "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
         );
@@ -5227,44 +5504,40 @@ export const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
     }
   }
   // Bug #375. Attempt pip freeze on existing and new virtual environments
-  if (env.VIRTUAL_ENV) {
+  if (env.VIRTUAL_ENV && env.VIRTUAL_ENV.length) {
     /**
      * At this point, the previous attempt to do a pip install might have failed and we might have an unclean virtual environment with an incomplete list
      * The position taken by cdxgen is "Some SBoM is better than no SBoM", so we proceed to collecting the dependencies that got installed with pip freeze
      */
-    const pipFreezeArgs = [
-      "-m",
-      "pip",
-      "freeze",
-      "-l",
-      "--exclude-editable",
-      "--disable-pip-version-check"
-    ];
-    if (
-      !reqOrSetupFile.endsWith("setup.py") &&
-      !reqOrSetupFile.endsWith("pyproject.toml")
-    ) {
-      pipFreezeArgs.push("-r");
-      pipFreezeArgs.push(resolve(reqOrSetupFile));
+    if (DEBUG_MODE) {
+      console.log(
+        "About to construct the pip dependency tree. Please wait ..."
+      );
     }
-    result = spawnSync(PYTHON_CMD, pipFreezeArgs, {
-      cwd: basePath,
-      encoding: "utf-8",
-      timeout: TIMEOUT_MS,
-      env
-    });
-    if (result.status === 0 && result.stdout) {
-      // We now a list from pip freeze that could be parsed to obtain a list
-      // We need to iterate that this list is not reproducible and could vary based on the environment
-      const reqData = Buffer.from(result.stdout).toString();
-      const dlist = await parseReqFile(reqData, false);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+    const tree = getTreeWithPlugin(env, PYTHON_CMD, basePath);
+    if (DEBUG_MODE && !tree.length) {
+      console.log(
+        "Dependency tree generation has failed. Please check for any errors or version incompatibilities reported in the logs."
+      );
+    }
+    for (const t of tree) {
+      if (!t.version.length) {
+        continue;
       }
-    } else if (result.status !== 0 || result.error) {
-      if (DEBUG_MODE) {
-        console.log(result.stderr, "args used:", pipFreezeArgs);
-      }
+      pkgList.push({
+        name: t.name.replace(/_/g, "-"),
+        version: t.version
+      });
+      rootList.push({
+        name: t.name.replace(/_/g, "-"),
+        version: t.version
+      });
+      const dependsOn = [];
+      flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, t);
+      dependenciesList.push({
+        ref: `pkg:pypi/${t.name}@${t.version}`.replace(/_/g, "-").toLowerCase(),
+        dependsOn
+      });
     }
   } else {
     if (DEBUG_MODE) {
@@ -5273,11 +5546,11 @@ export const executePipFreezeInVenv = async (basePath, reqOrSetupFile) => {
       );
     }
   }
-  // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
-    rmSync(tempDir, { recursive: true, force: true });
-  }
-  return pkgList;
+  return {
+    pkgList,
+    rootList,
+    dependenciesList
+  };
 };
 
 // taken from a very old package https://github.com/keithamus/parse-packagejson-name/blob/master/index.js
