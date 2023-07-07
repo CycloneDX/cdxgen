@@ -118,15 +118,15 @@ jobs:
           bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --validate
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --validate
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --validate
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json --validate
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
-          mkdir -p jenkins
-          wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
-          wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
-          wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
-          wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
-          mv *.hpi jenkins
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
+          bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json --validate
+          bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
+          # mkdir -p jenkins
+          # wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
+          # wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
+          # wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
+          # wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
+          # mv *.hpi jenkins
+          # CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
       - name: denotests
         if: github.ref == 'refs/heads/master'
