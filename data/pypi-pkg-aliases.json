@@ -1221,9 +1221,5 @@
   "zopyx": "zopyx.textindexng3",
   "zpublisher": "zope2",
   "zserver": "zope2",
-<<<<<<< HEAD
   "ztutils": "zope2",
-=======
-  "ztutils": "zope2"
->>>>>>> 74a284f (Review comments)
 }
