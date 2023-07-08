@@ -1722,10 +1722,6 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
     "--build-cache"
   ];
   const gradleCmd = getGradleCommand(dir, rootPath);
-  if (process.env.GRADLE_ARGS) {
-    const addArgs = process.env.GRADLE_ARGS.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
   console.log(
     "Executing",
     gradleCmd,
