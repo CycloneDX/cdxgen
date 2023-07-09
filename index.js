@@ -1316,17 +1316,26 @@ export const createJavaBom = async (path, options) => {
     }
     if (gradleFiles && gradleFiles.length && options.installDeps) {
       const gradleCmd = getGradleCommand(path, null);
+      const defaultDepTaskArgs = [
+        "-q",
+        "--console",
+        "plain",
+        "--build-cache"
+      ];
       allProjects.push(parentComponent);
+      let depTaskWithArgs = [
+        "dependencies"
+      ];
+      if (process.env.GRADLE_DEPENDENCY_TASK) {
+        depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
+      }
       for (const sp of allProjects) {
         let gradleDepArgs = [
           sp.purl === parentComponent.purl
-            ? "dependencies"
-            : `:${sp.name}:dependencies`,
-          "-q",
-          "--console",
-          "plain",
-          "--build-cache"
+            ? depTaskWithArgs[0]
+            : `:${sp.name}:${depTaskWithArgs[0]}`
         ];
+        gradleDepArgs = gradleDepArgs.concat(depTaskWithArgs.slice(1)).concat(defaultDepTaskArgs)
         // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
         if (process.env.GRADLE_ARGS) {
           const addArgs = process.env.GRADLE_ARGS.split(" ");
