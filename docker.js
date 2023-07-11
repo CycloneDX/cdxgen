@@ -823,8 +823,5 @@ export const removeImage = async (fullImageName, force = false) => {
     `images/${fullImageName}?force=${force}`,
     "DELETE"
   );
-  if (DEBUG_MODE) {
-    console.log(removeData);
-  }
   return removeData;
 };

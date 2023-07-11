@@ -388,7 +388,7 @@ export const getOSPackages = (src) => {
                     purlObj.qualifiers,
                     purlObj.subpath
                   ).toString();
-                  comp["bom-ref"] = comp.purl;
+                  comp["bom-ref"] = decodeURIComponent(comp.purl);
                 }
                 if (purlObj.type !== "none") {
                   allTypes.add(purlObj.type);
@@ -430,7 +430,7 @@ export const getOSPackages = (src) => {
                       purlObj.qualifiers,
                       purlObj.subpath
                     ).toString();
-                    comp["bom-ref"] = comp.purl;
+                    comp["bom-ref"] = decodeURIComponent(comp.purl);
                   }
                 }
               } catch (err) {
@@ -474,7 +474,7 @@ export const getOSPackages = (src) => {
                   purlObj.subpath
                 ).toString();
               }
-              newComp["bom-ref"] = newComp.purl;
+              newComp["bom-ref"] = decodeURIComponent(newComp.purl);
               pkgList.push(newComp);
             }
           }

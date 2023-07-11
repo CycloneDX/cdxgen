@@ -106,7 +106,7 @@ jobs:
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
+          FETCH_LICENSE=false bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
           FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json --validate
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --validate
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --validate
@@ -120,6 +120,7 @@ jobs:
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --validate
           bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json --validate
           bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
           # mkdir -p jenkins
           # wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
           # wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { createBom, submitBom, validateBom } from "../index.js";
+import { createBom, submitBom } from "../index.js";
+import { validateBom } from "../validator.js";
 import fs from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";

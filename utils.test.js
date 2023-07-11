@@ -63,7 +63,9 @@ import {
   parseOpenapiSpecData,
   parseSwiftJsonTree,
   parseSwiftResolved,
-  guessPypiMatchingVersion
+  guessPypiMatchingVersion,
+  encodeForPurl,
+  parsePackageJsonName
 } from "./utils.js";
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
@@ -1299,6 +1301,9 @@ test("parsePkgLock", async () => {
     version: "8.4.3"
   });
   expect(deps[deps.length - 1].name).toEqual("yocto-queue");
+  parsedList = await parsePkgLock("./test/data/package-lock4.json");
+  deps = parsedList.pkgList;
+  expect(deps.length).toEqual(356);
 });
 
 test("parseBowerJson", async () => {
@@ -2442,4 +2447,25 @@ test("pypi version solver tests", () => {
   expect(guessPypiMatchingVersion(versionsList, ">=1.21.1,<3")).toEqual(
     "2.0.3"
   );
+});
+
+test("purl encode tests", () => {
+  expect(encodeForPurl("org.apache.commons")).toEqual("org.apache.commons");
+  expect(encodeForPurl("@angular")).toEqual("%40angular");
+  expect(encodeForPurl("%40angular")).toEqual("%40angular");
+});
+
+test("parsePackageJsonName tests", () => {
+  expect(parsePackageJsonName("foo")).toEqual({
+    fullName: "foo",
+    moduleName: "foo",
+    projectName: null,
+    scope: null
+  });
+  expect(parsePackageJsonName("@babel/code-frame")).toEqual({
+    fullName: "code-frame",
+    moduleName: "code-frame",
+    projectName: null,
+    scope: "@babel"
+  });
 });
