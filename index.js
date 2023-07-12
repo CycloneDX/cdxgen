@@ -340,31 +340,8 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
         }
       }
     }
-    const allPComponents = listComponents(
-      {},
-      {},
-      parentComponent,
-      parentComponent.type,
-      format
-    );
-    if (allPComponents.length) {
-      const firstPComp = allPComponents[0];
-      if (format == "xml" && firstPComp.component) {
-        metadata.component = firstPComp.component;
-      } else {
-        // Retain the components of parent component
-        // Bug #317 fix
-        // Ensure there are no evidence fields in the metadata.component.components
-        if (firstPComp.evidence) {
-          delete firstPComp.evidence;
-        }
-        metadata.component = firstPComp;
-      }
-    } else {
-      // As a fallback, retain the parent component
-      if (format === "json") {
-        metadata.component = parentComponent;
-      }
+    if (format === "json") {
+      metadata.component = parentComponent;
     }
   }
   if (options) {
@@ -3825,7 +3802,12 @@ export const createMultiXBom = async (pathList, options) => {
       );
     }
     bomData = await createJavaBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} java packages at ${path}`
@@ -3844,7 +3826,12 @@ export const createMultiXBom = async (pathList, options) => {
       );
     }
     bomData = await createPythonBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} python packages at ${path}`
@@ -3863,7 +3850,12 @@ export const createMultiXBom = async (pathList, options) => {
       );
     }
     bomData = await createGoBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} go packages at ${path}`
@@ -4155,12 +4147,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      if (
-        !parentComponent ||
-        bomData.parentComponent["bom-ref"] !== parentComponent["bom-ref"]
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
       componentsXmls = componentsXmls.concat(
         listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
       );
@@ -4187,10 +4173,6 @@ export const createMultiXBom = async (pathList, options) => {
       );
     }
   }
-  console.log("---------------");
-  console.log(parentComponent);
-  console.log(parentSubComponents);
-  console.log("---------------");
   // Retain the components of parent component
   if (parentSubComponents.length) {
     if (!parentComponent || !Object.keys(parentComponent).length) {
