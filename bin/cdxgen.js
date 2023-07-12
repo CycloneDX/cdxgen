@@ -150,6 +150,11 @@ if (!args.projectName) {
   }
 }
 
+// To help dependency track users, we downgrade the spec version to 1.4 automatically
+if (args.serverUrl || args.apiKey) {
+  args.specVersion = 1.4;
+}
+
 /**
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
@@ -174,11 +179,6 @@ const options = {
   serverPort: args.serverPort,
   specVersion: args.specVersion
 };
-
-// To help dependency track users, we downgrade the spec version to 1.4 automatically
-if (args.serverUrl || args.apiKey) {
-  options.specVersion = "1.4";
-}
 
 /**
  * Check for node >= 20 permissions
