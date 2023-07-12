@@ -3754,7 +3754,7 @@ export const createMultiXBom = async (pathList, options) => {
   let dependencies = [];
   let componentsXmls = [];
   let bomData = undefined;
-  let parentComponent = determineParentComponent(options);
+  let parentComponent = determineParentComponent(options) || {};
   let parentSubComponents = [];
   if (
     ["docker", "oci", "container"].includes(options.projectType) &&
