@@ -46,7 +46,55 @@ export const validateBom = (bomJson) => {
     return false;
   }
   // Deep validation tests
-  return validatePurls(bomJson) && validateRefs(bomJson);
+  return (
+    validateMetadata(bomJson) && validatePurls(bomJson) && validateRefs(bomJson)
+  );
+};
+
+/**
+ * Validate the metadata object
+ *
+ * @param {object} bomJson Bom json object
+ */
+export const validateMetadata = (bomJson) => {
+  const errorList = [];
+  const warningsList = [];
+  if (bomJson && bomJson.metadata) {
+    if (bomJson.metadata.component) {
+      // Do we have a version for metadata.component
+      if (!bomJson.metadata.component.version) {
+        warningsList.push(
+          `Version is missing for metadata.component with ref ${bomJson.metadata.component["bom-ref"]}`
+        );
+      }
+      // Is the same component getting repeated inside the components block
+      if (
+        bomJson.metadata.component.components &&
+        bomJson.metadata.component.components.length
+      ) {
+        for (const comp of bomJson.metadata.component.components) {
+          if (comp["bom-ref"] === bomJson.metadata.component["bom-ref"]) {
+            warningsList.push(
+              `Found parent component with ref ${comp["bom-ref"]} in metadata.component.components`
+            );
+          } else if (comp["name"] === bomJson.metadata.component["name"]) {
+            warningsList.push(
+              `Found parent component with name ${comp["name"]} in metadata.component.components`
+            );
+          }
+        }
+      }
+    }
+  }
+  if (warningsList.length !== 0) {
+    console.log("===== WARNINGS =====");
+    console.log(warningsList);
+  }
+  if (errorList.length != 0) {
+    console.log(errorList);
+    return false;
+  }
+  return true;
 };
 
 /**
