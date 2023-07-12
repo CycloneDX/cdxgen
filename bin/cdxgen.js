@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { createBom, submitBom, validateBom } from "../index.js";
+import { createBom, submitBom } from "../index.js";
+import { validateBom } from "../validator.js";
 import fs from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
@@ -109,8 +110,13 @@ const args = yargs(hideBin(process.argv))
   })
   .option("validate", {
     type: "boolean",
-    default: false,
-    description: "Validate the generated SBoM using json schema."
+    default: true,
+    description:
+      "Validate the generated SBoM using json schema. Defaults to true."
+  })
+  .option("spec-version", {
+    description: "CycloneDX Specification version to use. Defaults to 1.5",
+    default: "1.5"
   })
   .scriptName("cdxgen")
   .version()
@@ -144,6 +150,11 @@ if (!args.projectName) {
   }
 }
 
+// To help dependency track users, we downgrade the spec version to 1.4 automatically
+if (args.serverUrl || args.apiKey) {
+  args.specVersion = 1.4;
+}
+
 /**
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
@@ -165,7 +176,8 @@ const options = {
   projectVersion: args.projectVersion,
   server: args.server,
   serverHost: args.serverHost,
-  serverPort: args.serverPort
+  serverPort: args.serverPort,
+  specVersion: args.specVersion
 };
 
 /**

@@ -3,6 +3,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
+import { DEBUG_MODE } from "./utils.js";
 
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -14,13 +15,6 @@ if (!url.startsWith("file://")) {
 const dirName = import.meta ? path.dirname(fileURLToPath(url)) : __dirname;
 
 const isWin = _platform() === "win32";
-
-// Debug mode flag
-const DEBUG_MODE =
-  process.env.CDXGEN_DEBUG_MODE === "debug" ||
-  process.env.SCAN_DEBUG_MODE === "debug" ||
-  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
-  process.env.NODE_ENV === "development";
 
 let platform = _platform();
 let extn = "";
@@ -388,7 +382,7 @@ export const getOSPackages = (src) => {
                     purlObj.qualifiers,
                     purlObj.subpath
                   ).toString();
-                  comp["bom-ref"] = comp.purl;
+                  comp["bom-ref"] = decodeURIComponent(comp.purl);
                 }
                 if (purlObj.type !== "none") {
                   allTypes.add(purlObj.type);
@@ -430,7 +424,7 @@ export const getOSPackages = (src) => {
                       purlObj.qualifiers,
                       purlObj.subpath
                     ).toString();
-                    comp["bom-ref"] = comp.purl;
+                    comp["bom-ref"] = decodeURIComponent(comp.purl);
                   }
                 }
               } catch (err) {
@@ -474,7 +468,7 @@ export const getOSPackages = (src) => {
                   purlObj.subpath
                 ).toString();
               }
-              newComp["bom-ref"] = newComp.purl;
+              newComp["bom-ref"] = decodeURIComponent(newComp.purl);
               pkgList.push(newComp);
             }
           }

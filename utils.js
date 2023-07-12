@@ -64,10 +64,11 @@ const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
 );
 
 // Debug mode flag
-const DEBUG_MODE =
+export const DEBUG_MODE =
   process.env.CDXGEN_DEBUG_MODE === "debug" ||
   process.env.SCAN_DEBUG_MODE === "debug" ||
-  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
+  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
+  process.env.NODE_ENV === "development";
 
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
@@ -302,7 +303,7 @@ export const getNpmMetadata = async function (pkgList) {
     } catch (err) {
       cdepList.push(p);
       if (DEBUG_MODE) {
-        console.error(err, p);
+        console.error(p, "was not found on npm");
       }
     }
   }
@@ -320,6 +321,16 @@ const _getDepPkgList = async function (
     pkg.lockfileVersion && pkg.lockfileVersion >= 3
       ? pkg.packages
       : pkg.dependencies;
+  const versionCache = {};
+  if (pkg.packages) {
+    for (const k in pkg.packages) {
+      if (k === "") {
+        continue;
+      }
+      const pl = pkg.packages[k];
+      versionCache[k.replace("node_modules/", "")] = pl.version;
+    }
+  }
   if (pkg && pkgDependencies) {
     const pkgKeys = Object.keys(pkgDependencies);
     for (const k of pkgKeys) {
@@ -372,7 +383,12 @@ const _getDepPkgList = async function (
         const deplist = [];
         for (const j in pkgDepKeys) {
           const depName = pkgDepKeys[j];
-          const depVersion = dependencies[depName].version;
+          const depVersion =
+            versionCache[depName] || dependencies[depName].version;
+          if (!depVersion) {
+            console.log(depName, "has no version");
+            continue;
+          }
           const deppurl = new PackageURL(
             "npm",
             "",
@@ -486,7 +502,17 @@ export const parsePkgLock = async (pkgLockFile) => {
         group: "",
         name: lockData.name,
         version: lockData.version,
-        type: "application"
+        type: "application",
+        "bom-ref": decodeURIComponent(
+          new PackageURL(
+            "npm",
+            "",
+            lockData.name,
+            lockData.version,
+            null,
+            null
+          ).toString()
+        )
       };
     } else if (lockData.lockfileVersion === 1) {
       let dirName = dirname(pkgLockFile);
@@ -502,7 +528,7 @@ export const parsePkgLock = async (pkgLockFile) => {
     }
     if (rootPkg && rootPkg.name) {
       const purl = new PackageURL(
-        "application",
+        "npm",
         "",
         rootPkg.name,
         rootPkg.version,
@@ -881,7 +907,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
     ppurl =
       parentComponent.purl ||
       new PackageURL(
-        "application",
+        "npm",
         parentComponent.group,
         parentComponent.name,
         parentComponent.version,
@@ -1740,7 +1766,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       } else {
         console.error(result.stdout, result.stderr);
         console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 17 with gradle 8 which might be incompatible."
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 19 with gradle 8 which might be incompatible."
         );
       }
     }
@@ -2433,7 +2459,8 @@ export const getPyModules = async (src, epkgList) => {
     return {
       name:
         PYPI_MODULE_PACKAGE_MAPPING[p.name.toLowerCase()] ||
-        p.name.replace(/_/g, "-"),
+        PYPI_MODULE_PACKAGE_MAPPING[p.name.replace(/_/g, "-").toLowerCase()] ||
+        p.name.replace(/_/g, "-").toLowerCase(),
       version: p.version && p.version.trim().length ? p.version : undefined,
       scope: "required",
       properties: [
@@ -2447,22 +2474,24 @@ export const getPyModules = async (src, epkgList) => {
   pkgList = pkgList.filter(
     (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index
   );
-  // Populate the imports list
-  if (pkgList && pkgList.length) {
-    pkgList.forEach((p) => {
-      allImports[p.name] = true;
-    });
-  }
   if (epkgList && epkgList.length) {
     const pkgMaps = epkgList.map((p) => p.name);
     pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
   }
   pkgList = await getPyMetadata(pkgList, true);
-  for (const p of pkgList) {
-    dependenciesList.push({
-      ref: `pkg:pypi/${p.name}@${p.version}`.toLowerCase(),
-      dependsOn: []
+  // Populate the imports list after dealiasing
+  if (pkgList && pkgList.length) {
+    pkgList.forEach((p) => {
+      allImports[p.name] = true;
     });
+  }
+  for (const p of pkgList) {
+    if (p.version) {
+      dependenciesList.push({
+        ref: `pkg:pypi/${p.name.replace(/_/g, "-")}@${p.version}`.toLowerCase(),
+        dependsOn: []
+      });
+    }
   }
   return { allImports, pkgList, dependenciesList };
 };
@@ -4599,7 +4628,7 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
         }
       }
       const purl = new PackageURL(
-        "application",
+        "swift",
         rootPkg.group,
         rootPkg.name,
         rootPkg.version,
@@ -4845,13 +4874,11 @@ export const parseJarManifest = function (jarMetadata) {
   return metadata;
 };
 
-const encodeForPurl = (s) => {
-  return s
+export const encodeForPurl = (s) => {
+  return s && !s.includes("%40")
     ? encodeURIComponent(s).replace(/%3A/g, ":").replace(/%2F/g, "/")
     : s;
 };
-const _encodeForPurl = encodeForPurl;
-export { _encodeForPurl as encodeForPurl };
 
 /**
  * Method to extract a war or ear file
@@ -5357,9 +5384,9 @@ const flattenDeps = (
   t
 ) => {
   for (const d of t.dependencies) {
-    const pkgRef = `pkg:pypi/${d.name}@${d.version}`
-      .replace(/_/g, "-")
-      .toLowerCase();
+    const pkgRef = `pkg:pypi/${d.name.replace(/_/g, "-")}@${
+      d.version
+    }`.toLowerCase();
     dependsOn.push(pkgRef);
     dependenciesList.push({ ref: pkgRef, dependsOn: [] });
     pkgList.push({
@@ -5433,12 +5460,13 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     }
   }
   /**
-   * We now have a temporary virtual environment so we can attempt to install the project and perform
+   * We now have a virtual environment so we can attempt to install the project and perform
    * pip freeze to collect the packages that got installed.
    * This step is accurate but not reproducible since the resulting list could differ based on various factors
    * such as the version of python, pip, os, pypi.org availability (and weather?)
    */
-  if (tempVenvDir === env.VIRTUAL_ENV && reqOrSetupFile) {
+  // Bug #388. Perform pip install in all virtualenv to make the experience consistent
+  if (reqOrSetupFile) {
     const pipInstallArgs = [
       "-m",
       "pip",
@@ -5517,21 +5545,39 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       );
     }
     for (const t of tree) {
+      const dependsOn = [];
       if (!t.version.length) {
+        // Don't leave out any local dependencies
+        if (t.dependencies.length) {
+          flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, t);
+        }
         continue;
       }
+      const name = t.name.replace(/_/g, "-").toLowerCase();
       pkgList.push({
-        name: t.name.replace(/_/g, "-"),
-        version: t.version
+        name,
+        version: t.version,
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "instrumentation",
+                confidence: 1,
+                value: env.VIRTUAL_ENV
+              }
+            ]
+          }
+        }
       });
       rootList.push({
-        name: t.name.replace(/_/g, "-"),
+        name,
         version: t.version
       });
-      const dependsOn = [];
       flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, t);
       dependenciesList.push({
-        ref: `pkg:pypi/${t.name}@${t.version}`.replace(/_/g, "-").toLowerCase(),
+        ref: `pkg:pypi/${name}@${t.version}`,
         dependsOn
       });
     }
@@ -5562,7 +5608,8 @@ export const parsePackageJsonName = (name) => {
     nameRegExp
   );
   if (match) {
-    returnObject.scope = match[1] || null;
+    returnObject.scope =
+      (match[1] && name.includes("@") ? "@" + match[1] : match[1]) || null;
     returnObject.fullName = match[2] || match[0];
     returnObject.projectName = match[3] === match[2] ? null : match[3];
     returnObject.moduleName = match[4] || match[2] || null;

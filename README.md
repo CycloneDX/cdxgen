@@ -8,7 +8,7 @@ When used with plugins, cdxgen could generate an SBoM for Linux docker images an
 
 NOTE:
 
-CycloneDX 1.5 specification is brand new and unsupported by many downstream tools. Use version 8.6.0 for 1.4 compatibility.
+CycloneDX 1.5 specification is brand new and unsupported by many downstream tools. Use version 8.6.0 for 1.4 compatibility or pass the argument `--spec-version 1.4`.
 
 ## Supported languages and package format
 
@@ -80,7 +80,7 @@ For go, `go mod why` command is used to identify required packages. For php, com
 ```shell
 sudo npm install -g @cyclonedx/cdxgen
 
-# For CycloneDX 1.4 compatibility use version 8.6.0
+# For CycloneDX 1.4 compatibility use version 8.6.0 or pass the argument `--spec-version 1.4`
 sudo npm install -g @cyclonedx/cdxgen@8.6.0
 ```
 
@@ -150,8 +150,10 @@ Options:
                                cts. Defaults to true but disabled for containers
                                 and oci scans. Use --no-install-deps to disable
                                this feature.           [boolean] [default: true]
-      --validate               Validate the generated SBoM using json schema.
-                                                      [boolean] [default: false]
+      --validate               Validate the generated SBoM using json schema. De
+                               faults to true.         [boolean] [default: true]
+      --spec-version           CycloneDX Specification version to use. Defaults
+                               to 1.5                           [default: "1.5"]
       --version                Show version number                     [boolean]
   -h                           Show help                               [boolean]
 ```
@@ -180,6 +182,12 @@ To recursively generate a single BoM for all languages pass `-r` argument.
 
 ```shell
 cdxgen -r -o bom.json
+```
+
+To generate SBoM for an older specification version such as 1.4, pass the version using the `--spec-version` argument.
+
+```shell
+cdxgen -r -o bom.json --spec-version 1.4
 ```
 
 ## Universal SBoM
