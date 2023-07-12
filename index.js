@@ -1927,28 +1927,38 @@ export const createNodejsBom = async (path, options) => {
       if (existsSync(packageJsonF)) {
         const pcs = await parsePkgJson(packageJsonF);
         if (pcs.length) {
-          parentComponent = pcs[0];
-          parentComponent.type = "application";
+          const tmpParentComponent = pcs[0];
+          tmpParentComponent.type = "application";
+          if (!Object.keys(parentComponent).length) {
+            parentComponent = tmpParentComponent;
+          } else {
+            parentSubComponents.push(tmpParentComponent);
+          }
         }
       } else {
         let dirName = dirname(f);
         const tmpA = dirName.split(sep);
         dirName = tmpA[tmpA.length - 1];
-        parentComponent = {
+        const tmpParentComponent = {
           group: "",
           name: dirName,
           type: "application"
         };
         ppurl = new PackageURL(
           "npm",
-          parentComponent.group,
-          parentComponent.name,
-          parentComponent.version,
+          tmpParentComponent.group,
+          tmpParentComponent.name,
+          tmpParentComponent.version,
           null,
           null
         ).toString();
-        parentComponent["bom-ref"] = ppurl;
-        parentComponent["purl"] = ppurl;
+        tmpParentComponent["bom-ref"] = ppurl;
+        tmpParentComponent["purl"] = ppurl;
+        if (!Object.keys(parentComponent).length) {
+          parentComponent = tmpParentComponent;
+        } else {
+          parentSubComponents.push(tmpParentComponent);
+        }
       }
       // Parse yarn.lock if available. This check is after rush.json since
       // rush.js could include yarn.lock :(

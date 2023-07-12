@@ -60,6 +60,12 @@ export const validateMetadata = (bomJson) => {
   const errorList = [];
   const warningsList = [];
   if (bomJson && bomJson.metadata) {
+    if (
+      !bomJson.metadata.component ||
+      !Object.keys(bomJson.metadata.component).length
+    ) {
+      warningsList.push("metadata.component is missing.");
+    }
     if (bomJson.metadata.component) {
       // Do we have a version for metadata.component
       if (!bomJson.metadata.component.version) {
