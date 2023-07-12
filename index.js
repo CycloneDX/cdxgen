@@ -1,5 +1,5 @@
 import { platform as _platform, homedir, tmpdir } from "node:os";
-import { basename, join, dirname, sep } from "node:path";
+import { basename, join, dirname, sep, resolve } from "node:path";
 import { parse } from "ssri";
 import {
   lstatSync,
@@ -160,7 +160,16 @@ const HASH_PATTERN =
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
 
-const createDefaultParentComponent = (path) => {
+/**
+ * Creates a default parent component based on the directory name.
+ *
+ * @param {string} path Directory or file name
+ * @param {string} type Package type
+ * @returns component object
+ */
+const createDefaultParentComponent = (path, type = "application") => {
+  // Expands any relative path such as dot
+  path = resolve(path);
   // Create a parent component based on the directory name
   let dirName =
     existsSync(path) && lstatSync(path).isDirectory()
@@ -174,7 +183,7 @@ const createDefaultParentComponent = (path) => {
     type: "application"
   };
   const ppurl = new PackageURL(
-    "application",
+    type,
     parentComponent.group,
     parentComponent.name,
     parentComponent.version,
@@ -1836,19 +1845,11 @@ export const createNodejsBom = async (path, options) => {
       const dlist = parsedList.pkgList;
       const tmpParentComponent = dlist.splice(0, 1)[0] || {};
       tmpParentComponent.type = "application";
-      if (
-        pkgLockFiles.length > 1 ||
-        (parentComponent &&
-          Object.keys(parentComponent).length &&
-          tmpParentComponent.name !== parentComponent.name)
-      ) {
-        // Create a default parent component based on directory name
-        if (!Object.keys(parentComponent).length) {
-          parentComponent = createDefaultParentComponent(path);
-        }
-        parentSubComponents.push(tmpParentComponent);
-      } else {
+      // Create a default parent component based on directory name
+      if (!Object.keys(parentComponent).length) {
         parentComponent = tmpParentComponent;
+      } else {
+        parentSubComponents.push(tmpParentComponent);
       }
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
@@ -1978,7 +1979,7 @@ export const createNodejsBom = async (path, options) => {
         // Fixes: 212. Handle case where there are no package.json to determine the parent package
         if (Object.keys(parentComponent).length && parentComponent.name) {
           const ppurl = new PackageURL(
-            "application",
+            "npm",
             parentComponent.group,
             parentComponent.name,
             parentComponent.version,
@@ -2042,7 +2043,7 @@ export const createPythonBom = async (path, options) => {
   let dependencies = [];
   let pkgList = [];
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
-  const parentComponent = createDefaultParentComponent(path);
+  const parentComponent = createDefaultParentComponent(path, "pypi");
   const pipenvMode = existsSync(join(path, "Pipfile"));
   const poetryFiles = getAllFiles(
     path,
@@ -3049,7 +3050,7 @@ export const createSwiftBom = (path, options) => {
   if (pkgResolvedFiles.length) {
     for (const f of pkgResolvedFiles) {
       if (!parentComponent || !Object.keys(parentComponent).length) {
-        parentComponent = createDefaultParentComponent(f);
+        parentComponent = createDefaultParentComponent(f, "swift");
       }
       if (DEBUG_MODE) {
         console.log("Parsing", f);
@@ -3791,9 +3792,6 @@ export const createMultiXBom = async (pathList, options) => {
     if (DEBUG_MODE) {
       console.log("Scanning", path);
     }
-    if (!parentComponent || !Object.keys(parentComponent).length) {
-      parentComponent = createDefaultParentComponent(path);
-    }
     bomData = await createNodejsBom(path, options);
     if (
       bomData &&
@@ -3812,17 +3810,15 @@ export const createMultiXBom = async (pathList, options) => {
         bomData.parentComponent &&
         Object.keys(bomData.parentComponent).length
       ) {
-        if (
-          bomData.parentComponent.components &&
-          bomData.parentComponent.components.length
-        ) {
-          parentSubComponents = parentSubComponents.concat(
-            bomData.parentComponent.components
-          );
-        }
-        if (bomData.parentComponent["bom-ref"] !== parentComponent["bom-ref"]) {
-          parentSubComponents.push(bomData.parentComponent);
-        }
+        parentSubComponents.push(bomData.parentComponent);
+      }
+      if (
+        bomData.parentComponent.components &&
+        bomData.parentComponent.components.length
+      ) {
+        parentSubComponents = parentSubComponents.concat(
+          bomData.parentComponent.components
+        );
       }
       componentsXmls = componentsXmls.concat(
         listComponents(options, {}, bomData.bomJson.components, "npm", "xml")
@@ -4159,6 +4155,12 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
+      if (
+        !parentComponent ||
+        bomData.parentComponent["bom-ref"] !== parentComponent["bom-ref"]
+      ) {
+        parentSubComponents.push(bomData.parentComponent);
+      }
       componentsXmls = componentsXmls.concat(
         listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
       );
@@ -4185,8 +4187,15 @@ export const createMultiXBom = async (pathList, options) => {
       );
     }
   }
+  console.log("---------------");
+  console.log(parentComponent);
+  console.log(parentSubComponents);
+  console.log("---------------");
   // Retain the components of parent component
   if (parentSubComponents.length) {
+    if (!parentComponent || !Object.keys(parentComponent).length) {
+      parentComponent = parentSubComponents[0];
+    }
     // Our naive approach to appending to sub-components could result in same parent being included as a child
     // This is filtered out here
     parentSubComponents = parentSubComponents.filter(

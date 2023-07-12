@@ -502,7 +502,17 @@ export const parsePkgLock = async (pkgLockFile) => {
         group: "",
         name: lockData.name,
         version: lockData.version,
-        type: "application"
+        type: "application",
+        "bom-ref": decodeURIComponent(
+          new PackageURL(
+            "npm",
+            "",
+            lockData.name,
+            lockData.version,
+            null,
+            null
+          ).toString()
+        )
       };
     } else if (lockData.lockfileVersion === 1) {
       let dirName = dirname(pkgLockFile);
@@ -518,7 +528,7 @@ export const parsePkgLock = async (pkgLockFile) => {
     }
     if (rootPkg && rootPkg.name) {
       const purl = new PackageURL(
-        "application",
+        "npm",
         "",
         rootPkg.name,
         rootPkg.version,
@@ -897,7 +907,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
     ppurl =
       parentComponent.purl ||
       new PackageURL(
-        "application",
+        "npm",
         parentComponent.group,
         parentComponent.name,
         parentComponent.version,
@@ -4618,7 +4628,7 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
         }
       }
       const purl = new PackageURL(
-        "application",
+        "swift",
         rootPkg.group,
         rootPkg.name,
         rootPkg.version,

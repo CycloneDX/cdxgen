@@ -1274,7 +1274,7 @@ test("parsePkgLock", async () => {
   deps = parsedList.pkgList;
   expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
-    "bom-ref": "pkg:application/MyProject",
+    "bom-ref": "pkg:npm/MyProject",
     name: "MyProject"
   });
   parsedList = await parsePkgLock("./test/data/package-lock-v2.json");
@@ -1282,7 +1282,7 @@ test("parsePkgLock", async () => {
   expect(deps.length).toEqual(1467);
   expect(parsedList.dependenciesList.length).toEqual(1280);
   expect(deps[0]).toEqual({
-    "bom-ref": "pkg:application/flink-dashboard@2.0.0",
+    "bom-ref": "pkg:npm/flink-dashboard@2.0.0",
     group: "",
     name: "flink-dashboard",
     type: "application",
@@ -1294,7 +1294,7 @@ test("parsePkgLock", async () => {
   expect(deps.length).toEqual(879);
   expect(parsedList.dependenciesList.length).toEqual(879);
   expect(deps[0]).toEqual({
-    "bom-ref": "pkg:application/@cyclonedx/cdxgen@8.4.3",
+    "bom-ref": "pkg:npm/@cyclonedx/cdxgen@8.4.3",
     group: "",
     name: "@cyclonedx/cdxgen",
     type: "application",
@@ -2304,11 +2304,11 @@ test("parse swift deps files", () => {
       { name: "SrcPath", value: "/Volumes/Work/sandbox/swift-markdown" },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref": "pkg:application/swift-markdown/swift-markdown@unspecified"
+    "bom-ref": "pkg:swift/swift-markdown/swift-markdown@unspecified"
   });
   expect(retData.dependenciesList.length).toEqual(5);
   expect(retData.dependenciesList[0]).toEqual({
-    ref: "pkg:application/swift-markdown/swift-markdown@unspecified",
+    ref: "pkg:swift/swift-markdown/swift-markdown@unspecified",
     dependsOn: [
       "pkg:swift/swift-cmark/cmark-gfm@unspecified",
       "pkg:swift/swift-argument-parser/swift-argument-parser@1.0.3",
@@ -2337,12 +2337,11 @@ test("parse swift deps files", () => {
       },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref":
-      "pkg:application/swift-certificates/swift-certificates@unspecified"
+    "bom-ref": "pkg:swift/swift-certificates/swift-certificates@unspecified"
   });
   expect(retData.dependenciesList).toEqual([
     {
-      ref: "pkg:application/swift-certificates/swift-certificates@unspecified",
+      ref: "pkg:swift/swift-certificates/swift-certificates@unspecified",
       dependsOn: ["pkg:swift/swift-crypto/swift-crypto@2.4.0"]
     },
     {
