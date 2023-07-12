@@ -3,6 +3,7 @@ import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { PackageURL } from "packageurl-js";
+import { DEBUG_MODE } from "./utils.js";
 
 import { fileURLToPath } from "node:url";
 let url = import.meta.url;
@@ -92,7 +93,7 @@ export const validateMetadata = (bomJson) => {
       }
     }
   }
-  if (warningsList.length !== 0) {
+  if (DEBUG_MODE && warningsList.length !== 0) {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
@@ -125,7 +126,7 @@ export const validatePurls = (bomJson) => {
       }
     }
   }
-  if (warningsList.length !== 0) {
+  if (DEBUG_MODE && warningsList.length !== 0) {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
@@ -165,6 +166,7 @@ const buildRefs = (bomJson) => {
  */
 export const validateRefs = (bomJson) => {
   const errorList = [];
+  const warningsList = [];
   const refMap = buildRefs(bomJson);
   if (bomJson && bomJson.dependencies) {
     for (const dep of bomJson.dependencies) {
@@ -184,6 +186,10 @@ export const validateRefs = (bomJson) => {
         }
       }
     }
+  }
+  if (DEBUG_MODE && warningsList.length !== 0) {
+    console.log("===== WARNINGS =====");
+    console.log(warningsList);
   }
   if (errorList.length != 0) {
     console.log(errorList);

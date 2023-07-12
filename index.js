@@ -89,7 +89,8 @@ import {
   parseCsProjAssetsData,
   parseCsPkgLockData,
   parseCsPkgData,
-  parseCsProjData
+  parseCsProjData,
+  DEBUG_MODE
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -151,13 +152,6 @@ if (process.env.SWIFT_CMD) {
 // Construct sbt cache directory
 const SBT_CACHE_DIR =
   process.env.SBT_CACHE_DIR || join(homedir(), ".ivy2", "cache");
-
-// Debug mode flag
-const DEBUG_MODE =
-  process.env.CDXGEN_DEBUG_MODE === "debug" ||
-  process.env.SCAN_DEBUG_MODE === "debug" ||
-  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
-  process.env.NODE_ENV === "development";
 
 // CycloneDX Hash pattern
 const HASH_PATTERN =
@@ -1153,6 +1147,13 @@ export const createJavaBom = async (path, options) => {
               "Resolve the above maven error. This could be due to the following:\n"
             );
             if (
+              result.stderr &&
+              result.stderr.includes("Non-resolvable parent POM")
+            ) {
+              console.log(
+                "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory."
+              );
+            } else if (
               result.stderr &&
               result.stderr.includes(
                 "Could not resolve dependencies" ||
@@ -3819,9 +3820,8 @@ export const createMultiXBom = async (pathList, options) => {
           parentSubComponents = parentSubComponents.concat(
             bomData.parentComponent.components
           );
-        } else if (
-          bomData.parentComponent["bom-ref"] !== parentComponent["bom-ref"]
-        ) {
+        }
+        if (bomData.parentComponent["bom-ref"] !== parentComponent["bom-ref"]) {
           parentSubComponents.push(bomData.parentComponent);
         }
       }

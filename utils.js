@@ -64,10 +64,11 @@ const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
 );
 
 // Debug mode flag
-const DEBUG_MODE =
+export const DEBUG_MODE =
   process.env.CDXGEN_DEBUG_MODE === "debug" ||
   process.env.SCAN_DEBUG_MODE === "debug" ||
-  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug";
+  process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
+  process.env.NODE_ENV === "development";
 
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
