@@ -3639,7 +3639,7 @@ export const trimComponents = (components, format) => {
         filteredComponents.push(comp);
       }
     } else {
-      const key = comp.purl;
+      const key = comp.purl || comp["bom-ref"];
       if (!keyCache[key]) {
         keyCache[key] = true;
         filteredComponents.push(comp);
