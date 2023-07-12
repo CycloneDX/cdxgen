@@ -1147,18 +1147,17 @@ export const createJavaBom = async (path, options) => {
               "Resolve the above maven error. This could be due to the following:\n"
             );
             if (
-              result.stderr &&
-              result.stderr.includes("Non-resolvable parent POM")
+              result.stdout &&
+              (result.stdout.includes("Non-resolvable parent POM") ||
+                result.stdout.includes("points at wrong local POM"))
             ) {
               console.log(
                 "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory."
               );
             } else if (
-              result.stderr &&
-              result.stderr.includes(
-                "Could not resolve dependencies" ||
-                  result.stderr.includes("no dependency information available")
-              )
+              result.stdout &&
+              (result.stdout.includes("Could not resolve dependencies") ||
+                result.stdout.includes("no dependency information available"))
             ) {
               console.log(
                 "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."

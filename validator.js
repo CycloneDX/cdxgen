@@ -178,11 +178,11 @@ export const validateRefs = (bomJson) => {
         errorList.push(`Invalid encoded ref in dependencies ${dep.ref}`);
       }
       if (!refMap[dep.ref]) {
-        errorList.push(`Invalid ref in dependencies ${dep.ref}`);
+        warningsList.push(`Invalid ref in dependencies ${dep.ref}`);
       }
       for (const don of dep.dependsOn) {
         if (!refMap[don]) {
-          errorList.push(`Invalid ref in dependencies.dependsOn ${don}`);
+          warningsList.push(`Invalid ref in dependencies.dependsOn ${don}`);
         }
       }
     }
