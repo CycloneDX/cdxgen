@@ -317,17 +317,15 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
     ];
   }
-  if (
-    parentComponent &&
-    Object.keys(parentComponent) &&
-    Object.keys(parentComponent).length
-  ) {
-    if (parentComponent && parentComponent.evidence) {
+  if (parentComponent && Object.keys(parentComponent).length) {
+    if (parentComponent) {
       delete parentComponent.evidence;
+      delete parentComponent._integrity;
     }
     if (parentComponent && parentComponent.components) {
       for (const comp of parentComponent.components) {
         delete comp.evidence;
+        delete comp._integrity;
         if (!comp["bom-ref"] && comp.name && comp.type) {
           let fullName =
             comp.group && comp.group.length
