@@ -319,6 +319,24 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     Object.keys(parentComponent) &&
     Object.keys(parentComponent).length
   ) {
+    if (parentComponent && parentComponent.evidence) {
+      delete parentComponent.evidence;
+    }
+    if (parentComponent && parentComponent.components) {
+      for (const comp of parentComponent.components) {
+        delete comp.evidence;
+        if (!comp["bom-ref"] && comp.name && comp.type) {
+          let fullName =
+            comp.group && comp.group.length
+              ? `${comp.group}/${comp.name}`
+              : comp.name;
+          if (comp.version && comp.version.length) {
+            fullName = `${fullName}@${comp.version}`;
+          }
+          comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
+        }
+      }
+    }
     const allPComponents = listComponents(
       {},
       {},
@@ -333,9 +351,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       } else {
         // Retain the components of parent component
         // Bug #317 fix
-        if (parentComponent && parentComponent.components) {
-          firstPComp.components = parentComponent.components;
-        }
+        // Ensure there are no evidence fields in the metadata.component.components
         if (firstPComp.evidence) {
           delete firstPComp.evidence;
         }
@@ -344,9 +360,6 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     } else {
       // As a fallback, retain the parent component
       if (format === "json") {
-        if (parentComponent.evidence) {
-          delete parentComponent.evidence;
-        }
         metadata.component = parentComponent;
       }
     }
@@ -1955,7 +1968,7 @@ export const createNodejsBom = async (path, options) => {
         // Fixes: 212. Handle case where there are no package.json to determine the parent package
         if (Object.keys(parentComponent).length && parentComponent.name) {
           const ppurl = new PackageURL(
-            "npm",
+            "application",
             parentComponent.group,
             parentComponent.name,
             parentComponent.version,
@@ -4171,6 +4184,13 @@ export const createMultiXBom = async (pathList, options) => {
       (c) => c["bom-ref"] !== parentComponent["bom-ref"]
     );
     parentComponent.components = trimComponents(parentSubComponents, "json");
+    if (
+      parentComponent.components.length == 1 &&
+      parentComponent.components[0].name == parentComponent.name
+    ) {
+      parentComponent = parentComponent.components[0];
+      delete parentComponent.components;
+    }
   }
   return dedupeBom(
     options,
