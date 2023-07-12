@@ -110,8 +110,13 @@ const args = yargs(hideBin(process.argv))
   })
   .option("validate", {
     type: "boolean",
-    default: false,
-    description: "Validate the generated SBoM using json schema."
+    default: true,
+    description:
+      "Validate the generated SBoM using json schema. Defaults to true."
+  })
+  .option("spec-version", {
+    description: "CycloneDX Specification version to use. Defaults to 1.5",
+    default: "1.5"
   })
   .scriptName("cdxgen")
   .version()
@@ -166,8 +171,14 @@ const options = {
   projectVersion: args.projectVersion,
   server: args.server,
   serverHost: args.serverHost,
-  serverPort: args.serverPort
+  serverPort: args.serverPort,
+  specVersion: args.specVersion
 };
+
+// To help dependency track users, we downgrade the spec version to 1.4 automatically
+if (args.serverUrl || args.apiKey) {
+  options.specVersion = "1.4";
+}
 
 /**
  * Check for node >= 20 permissions

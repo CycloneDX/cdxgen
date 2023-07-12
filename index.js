@@ -255,6 +255,41 @@ function addDependencies(dependencies) {
   return deps_list;
 }
 
+const addToolsSection = (options, format) => {
+  if (options.specVersion === 1.4) {
+    if (format === "json") {
+      return [
+        {
+          vendor: "cyclonedx",
+          name: "cdxgen",
+          version: _version
+        }
+      ];
+    } else {
+      return [
+        {
+          tool: {
+            vendor: "cyclonedx",
+            name: "cdxgen",
+            version: _version
+          }
+        }
+      ];
+    }
+  }
+  return {
+    components: [
+      {
+        group: "@cyclonedx",
+        name: "cdxgen",
+        version: _version,
+        purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
+        type: "application",
+        "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`
+      }
+    ]
+  };
+};
 /**
  * Function to create metadata block
  *
@@ -262,20 +297,10 @@ function addDependencies(dependencies) {
 function addMetadata(parentComponent = {}, format = "xml", options = {}) {
   // DO NOT fork this project to just change the vendor or author's name
   // Try to contribute to this project by sending PR or filing issues
+  const tools = addToolsSection(options, format);
   const metadata = {
     timestamp: new Date().toISOString(),
-    tools: {
-      components: [
-        {
-          group: "@cyclonedx",
-          name: "cdxgen",
-          version: _version,
-          purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
-          type: "application",
-          "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`
-        }
-      ]
-    },
+    tools,
     authors: [
       {
         author: { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
@@ -284,18 +309,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     supplier: undefined
   };
   if (format === "json") {
-    metadata.tools = {
-      components: [
-        {
-          group: "@cyclonedx",
-          name: "cdxgen",
-          version: _version,
-          purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
-          type: "application",
-          "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`
-        }
-      ]
-    };
+    metadata.tools = tools;
     metadata.authors = [
       { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
     ];
@@ -668,7 +682,11 @@ function addComponent(
     // Retain any component properties
     if (format === "json") {
       // Retain evidence
-      if (pkg.evidence && Object.keys(pkg.evidence).length) {
+      if (
+        options.specVersion >= 1.5 &&
+        pkg.evidence &&
+        Object.keys(pkg.evidence).length
+      ) {
         component.evidence = pkg.evidence;
       }
       if (pkg.properties && pkg.properties.length) {
@@ -875,7 +893,10 @@ const buildBomXml = (
   const bom = create("bom", {
     encoding: "utf-8",
     separateArrayItems: true
-  }).att("xmlns", "http://cyclonedx.org/schema/bom/1.5");
+  }).att(
+    "xmlns",
+    `http://cyclonedx.org/schema/bom/${"" + (options.specVersion || 1.5)}`
+  );
   bom.att("serialNumber", serialNum);
   bom.att("version", 1);
   const metadata = addMetadata(parentComponent, "xml", options);
@@ -938,7 +959,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     // CycloneDX 1.5 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
-      specVersion: "1.5",
+      specVersion: "" + (options.specVersion || "1.5"),
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
@@ -3687,7 +3708,7 @@ export const dedupeBom = (
     ),
     bomJson: {
       bomFormat: "CycloneDX",
-      specVersion: "1.5",
+      specVersion: "" + (options.specVersion || 1.5),
       serialNumber: serialNum,
       version: 1,
       metadata: addMetadata(parentComponent, "json", options),

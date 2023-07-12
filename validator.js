@@ -21,7 +21,9 @@ export const validateBom = (bomJson) => {
     return true;
   }
   const schema = JSON.parse(
-    readFileSync(join(dirName, "data", "bom-1.5.schema.json"))
+    readFileSync(
+      join(dirName, "data", `bom-${bomJson.specVersion}.schema.json`)
+    )
   );
   const defsSchema = JSON.parse(
     readFileSync(join(dirName, "data", "jsf-0.82.schema.json"))
@@ -36,7 +38,7 @@ export const validateBom = (bomJson) => {
   });
   addFormats(ajv);
   const validate = ajv.getSchema(
-    "http://cyclonedx.org/schema/bom-1.5.schema.json"
+    `http://cyclonedx.org/schema/bom-${bomJson.specVersion}.schema.json`
   );
   const isValid = validate(bomJson);
   if (!isValid) {
