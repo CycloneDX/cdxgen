@@ -68,11 +68,16 @@ export const validateMetadata = (bomJson) => {
       warningsList.push("metadata.component is missing.");
     }
     if (bomJson.metadata.component) {
+      // Do we have a purl and bom-ref for metadata.component
+      if (!bomJson.metadata.component.purl) {
+        warningsList.push(`purl is missing for metadata.component`);
+      }
+      if (!bomJson.metadata.component["bom-ref"]) {
+        warningsList.push(`bom-ref is missing for metadata.component`);
+      }
       // Do we have a version for metadata.component
       if (!bomJson.metadata.component.version) {
-        warningsList.push(
-          `Version is missing for metadata.component with ref ${bomJson.metadata.component["bom-ref"]}`
-        );
+        warningsList.push(`Version is missing for metadata.component`);
       }
       // Is the same component getting repeated inside the components block
       if (

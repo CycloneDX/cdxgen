@@ -443,10 +443,22 @@ export const parsePkgJson = async (pkgJsonFile) => {
     try {
       const pkgData = JSON.parse(readFileSync(pkgJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
+      const name = pkgIdentifier.fullName || pkgData.name;
+      const group = pkgIdentifier.scope || "";
+      const purl = new PackageURL(
+        "npm",
+        encodeForPurl(group),
+        encodeForPurl(name),
+        pkgData.version,
+        null,
+        null
+      ).toString();
       pkgList.push({
-        name: pkgIdentifier.fullName || pkgData.name,
-        group: pkgIdentifier.scope || "",
+        name,
+        group,
         version: pkgData.version,
+        purl,
+        "bom-ref": decodeURIComponent(purl),
         properties: [
           {
             name: "SrcFile",
@@ -1740,7 +1752,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
   if (subProject && subProject.match(/:/g).length >= 2) {
     return defaultProps;
   }
-  let gradlePropertiesArgs = [
+  const gradlePropertiesArgs = [
     subProject ? `${subProject}:properties` : "properties",
     "-q",
     "--console",
