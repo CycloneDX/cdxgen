@@ -34,7 +34,9 @@ const args = yargs(hideBin(process.argv))
   .option("recurse", {
     alias: "r",
     type: "boolean",
-    description: "Recurse mode suitable for mono-repos"
+    default: true,
+    description:
+      "Recurse mode suitable for mono-repos. Defaults to true. Pass --no-recurse to disable."
   })
   .option("print", {
     alias: "p",
@@ -112,11 +114,11 @@ const args = yargs(hideBin(process.argv))
     type: "boolean",
     default: true,
     description:
-      "Validate the generated SBoM using json schema. Defaults to true."
+      "Validate the generated SBoM using json schema. Defaults to true. Pass --no-validate to disable."
   })
   .option("spec-version", {
     description: "CycloneDX Specification version to use. Defaults to 1.5",
-    default: "1.5"
+    default: 1.5
   })
   .scriptName("cdxgen")
   .version()
