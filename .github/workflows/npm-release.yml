@@ -61,6 +61,8 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha,scope=cdxgen
+        cache-to: type=gha,mode=max,scope=cdxgen
     - name: Extract metadata (tags, labels) for Docker
       id: meta2
       uses: docker/metadata-action@v4
@@ -76,3 +78,5 @@ jobs:
         push: true
         tags: ${{ steps.meta2.outputs.tags }}
         labels: ${{ steps.meta2.outputs.labels }}
+        cache-from: type=gha,scope=cdxgen-deno
+        cache-to: type=gha,mode=max,scope=cdxgen-deno
