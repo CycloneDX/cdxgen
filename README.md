@@ -118,7 +118,9 @@ Options:
   -o, --output                 Output file for bom.xml or bom.json. Default bom.
                                json
   -t, --type                   Project type
-  -r, --recurse                Recurse mode suitable for mono-repos    [boolean]
+  -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
+                                true. Pass --no-recurse to disable.
+                                                       [boolean] [default: true]
   -p, --print                  Print the SBoM as a table with tree. Defaults to
                                true if output file is not specified with -o
                                                                        [boolean]
@@ -151,12 +153,15 @@ Options:
                                 and oci scans. Use --no-install-deps to disable
                                this feature.           [boolean] [default: true]
       --validate               Validate the generated SBoM using json schema. De
-                               faults to true.         [boolean] [default: true]
+                               faults to true. Pass --no-validate to disable.
+                                                       [boolean] [default: true]
       --spec-version           CycloneDX Specification version to use. Defaults
-                               to 1.5                           [default: "1.5"]
+                               to 1.5                             [default: 1.5]
       --version                Show version number                     [boolean]
   -h                           Show help                               [boolean]
 ```
+
+All boolean arguments accepts `--no` prefix to toggle the behavior.
 
 ## Example
 

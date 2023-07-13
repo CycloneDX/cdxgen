@@ -4581,23 +4581,18 @@ export const createBom = async (path, options) => {
     case "mvn":
     case "maven":
     case "sbt":
-      options.multiProject = true;
       return await createJavaBom(path, options);
     case "jar":
-      options.multiProject = true;
       return createJarBom(path, options);
     case "gradle-index":
     case "gradle-cache":
-      options.multiProject = true;
       return createJarBom(GRADLE_CACHE_DIR, options);
     case "sbt-index":
     case "sbt-cache":
-      options.multiProject = true;
       return createJarBom(SBT_CACHE_DIR, options);
     case "maven-index":
     case "maven-cache":
     case "maven-repo":
-      options.multiProject = true;
       return createJarBom(join(homedir(), ".m2", "repository"), options);
     case "nodejs":
     case "js":
@@ -4605,78 +4600,61 @@ export const createBom = async (path, options) => {
     case "typescript":
     case "ts":
     case "tsx":
-      options.multiProject = true;
       return await createNodejsBom(path, options);
     case "python":
     case "py":
-      options.multiProject = true;
       return await createPythonBom(path, options);
     case "go":
     case "golang":
-      options.multiProject = true;
       return await createGoBom(path, options);
     case "rust":
     case "rust-lang":
-      options.multiProject = true;
       return await createRustBom(path, options);
     case "php":
-      options.multiProject = true;
       return createPHPBom(path, options);
     case "ruby":
-      options.multiProject = true;
       return await createRubyBom(path, options);
     case "csharp":
     case "netcore":
     case "dotnet":
-      options.multiProject = true;
       return await createCsharpBom(path, options);
     case "dart":
     case "flutter":
     case "pub":
-      options.multiProject = true;
       return await createDartBom(path, options);
     case "haskell":
     case "hackage":
     case "cabal":
-      options.multiProject = true;
       return createHaskellBom(path, options);
     case "elixir":
     case "hex":
     case "mix":
-      options.multiProject = true;
       return createElixirBom(path, options);
     case "c":
     case "cpp":
     case "c++":
     case "conan":
-      options.multiProject = true;
       return createCppBom(path, options);
     case "clojure":
     case "edn":
     case "clj":
     case "leiningen":
-      options.multiProject = true;
       return createClojureBom(path, options);
     case "github":
     case "actions":
-      options.multiProject = true;
       return createGitHubBom(path, options);
     case "os":
     case "osquery":
     case "windows":
     case "linux":
-      options.multiProject = true;
       return await createOSBom(path, options);
     case "jenkins":
-      options.multiProject = true;
       return await createJenkinsBom(path, options);
     case "helm":
     case "charts":
-      options.multiProject = true;
       return createHelmBom(path, options);
     case "helm-index":
     case "helm-repo":
-      options.multiProject = true;
       return createHelmBom(
         join(homedir(), ".cache", "helm", "repository"),
         options
@@ -4691,13 +4669,10 @@ export const createBom = async (path, options) => {
     case "kubernetes":
     case "openshift":
     case "yaml-manifest":
-      options.multiProject = true;
       return await createContainerSpecLikeBom(path, options);
     case "cloudbuild":
-      options.multiProject = true;
       return createCloudBuildBom(path, options);
     case "swift":
-      options.multiProject = true;
       return createSwiftBom(path, options);
     default:
       // In recurse mode return multi-language Bom
