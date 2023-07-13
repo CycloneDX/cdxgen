@@ -1312,6 +1312,7 @@ export const createJavaBom = async (path, options) => {
         // Bug #317 fix
         parentComponent.components = allProjects.flatMap((s) => {
           delete s.qualifiers;
+          delete s.evidence;
           return s;
         });
         dependencies.push({
@@ -3787,6 +3788,7 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
+      // Retain metadata.component.components
       if (
         bomData.parentComponent.components &&
         bomData.parentComponent.components.length
@@ -3818,6 +3820,15 @@ export const createMultiXBom = async (pathList, options) => {
         Object.keys(bomData.parentComponent).length
       ) {
         parentSubComponents.push(bomData.parentComponent);
+      }
+      // Retain metadata.component.components
+      if (
+        bomData.parentComponent.components &&
+        bomData.parentComponent.components.length
+      ) {
+        parentSubComponents = parentSubComponents.concat(
+          bomData.parentComponent.components
+        );
       }
       componentsXmls = componentsXmls.concat(
         listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
