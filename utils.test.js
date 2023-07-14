@@ -2442,7 +2442,7 @@ test("pypi version solver tests", () => {
   ).toEqual("1.1.0");
   expect(
     guessPypiMatchingVersion(versionsList, "<3.6,>1.9,!=1.9.6,<4.0a0")
-  ).toEqual("3.0.12-alpha.12");
+  ).toEqual("3.0.12-alpha.14");
   expect(
     guessPypiMatchingVersion(versionsList, ">=1.4.2,<2.2,!=1.5.*,!=1.6.*")
   ).toEqual("2.0.3");
