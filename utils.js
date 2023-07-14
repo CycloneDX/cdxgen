@@ -2056,9 +2056,16 @@ export const parsePyRequiresDist = function (dist_string) {
  */
 export const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
   versionSpecifiers = versionSpecifiers.replace(/,/g, " ").split(";")[0];
-  // Iterate in the reverse order
-  for (let i = versionsList.length - 1; i > 0; i--) {
-    const rv = versionsList[i];
+  const comparator = (a, b) => {
+    let c = coerce(a).compare(coerce(b));
+    // if coerced versions are "equal", compare them as strings
+    if (c === 0) {
+      c = a < b ? -1 : 1;
+    }
+    return -c;
+  };
+  // Iterate in the "reverse" order
+  for (let rv of versionsList.sort(comparator)) {
     if (satisfies(coerce(rv), versionSpecifiers, true)) {
       return rv;
     }
