@@ -2414,11 +2414,14 @@ test("pypi version solver tests", () => {
     "1.1.0",
     "1.2.0.dev1+hg.5.b11e5e6f0b0b",
     "2.0.3",
+    "2.0b1",
+    "3.0.12-alpha.13",
     "3.0.12-alpha.12",
+    "3.0.12-alpha.14",
     "4.0.0"
   ];
   expect(guessPypiMatchingVersion(versionsList, "<4")).toEqual(
-    "3.0.12-alpha.12"
+    "3.0.12-alpha.14"
   );
   expect(guessPypiMatchingVersion(versionsList, ">1.0.0 <3.0.0")).toEqual(
     "2.0.3"
