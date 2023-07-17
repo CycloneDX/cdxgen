@@ -1794,7 +1794,7 @@ export const createNodejsBom = async (path, options) => {
           null
         ).toString();
         parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-        parentComponent["purl"] = decodeURIComponent(ppurl);
+        parentComponent["purl"] = ppurl;
       }
       // Parse the pnpm file
       const parsedList = await parsePnpmLock(f, parentComponent);
