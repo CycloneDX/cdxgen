@@ -447,7 +447,7 @@ export const parsePkgJson = async (pkgJsonFile) => {
       const group = pkgIdentifier.scope || "";
       const purl = new PackageURL(
         "npm",
-        encodeForPurl(group),
+        group,
         encodeForPurl(name),
         pkgData.version,
         null,
