@@ -448,7 +448,7 @@ export const parsePkgJson = async (pkgJsonFile) => {
       const purl = new PackageURL(
         "npm",
         group,
-        encodeForPurl(name),
+        name,
         pkgData.version,
         null,
         null
@@ -457,7 +457,6 @@ export const parsePkgJson = async (pkgJsonFile) => {
         name,
         group,
         version: pkgData.version,
-        purl,
         "bom-ref": decodeURIComponent(purl),
         properties: [
           {
@@ -865,33 +864,31 @@ export const parseNodeShrinkwrap = async function (swFile) {
           }
           version = parts[2];
         }
-        if (group !== "@types") {
-          pkgList.push({
-            group: group,
-            name: name,
-            version: version,
-            _integrity: integrity,
-            properties: [
-              {
-                name: "SrcFile",
-                value: swFile
-              }
-            ],
-            evidence: {
-              identity: {
-                field: "purl",
-                confidence: 1,
-                methods: [
-                  {
-                    technique: "manifest-analysis",
-                    confidence: 1,
-                    value: swFile
-                  }
-                ]
-              }
+        pkgList.push({
+          group: group,
+          name: name,
+          version: version,
+          _integrity: integrity,
+          properties: [
+            {
+              name: "SrcFile",
+              value: swFile
             }
-          });
-        }
+          ],
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence: 1,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 1,
+                  value: swFile
+                }
+              ]
+            }
+          }
+        });
       }
     }
   }
@@ -1007,7 +1004,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
           );
           continue;
         }
-        if (group !== "@types" && name.indexOf("file:") !== 0) {
+        if (name.indexOf("file:") !== 0) {
           const purlString = new PackageURL(
             "npm",
             group,

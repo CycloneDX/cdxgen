@@ -1356,8 +1356,8 @@ test("parseSetupPyFile", async () => {
 
 test("parsePnpmLock", async () => {
   let parsedList = await parsePnpmLock("./test/pnpm-lock.yaml");
-  expect(parsedList.pkgList.length).toEqual(1610);
-  expect(parsedList.dependenciesList.length).toEqual(1610);
+  expect(parsedList.pkgList.length).toEqual(1706);
+  expect(parsedList.dependenciesList.length).toEqual(1706);
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==",
@@ -1386,8 +1386,8 @@ test("parsePnpmLock", async () => {
     }
   });
   parsedList = await parsePnpmLock("./test/data/pnpm-lock.yaml");
-  expect(parsedList.pkgList.length).toEqual(308);
-  expect(parsedList.dependenciesList.length).toEqual(308);
+  expect(parsedList.pkgList.length).toEqual(318);
+  expect(parsedList.dependenciesList.length).toEqual(318);
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-iAXqUn8IIeBTNd72xsFlgaXHkMBMt6y4HJp1tIaK465CWLT/fG1aqB7ykr95gHHmlBdGbFeWWfyB4NJJ0nmeIg==",
@@ -1450,8 +1450,8 @@ test("parsePnpmLock", async () => {
     ]
   });
   parsedList = await parsePnpmLock("./test/data/pnpm-lock3.yaml");
-  expect(parsedList.pkgList.length).toEqual(448);
-  expect(parsedList.dependenciesList.length).toEqual(448);
+  expect(parsedList.pkgList.length).toEqual(449);
+  expect(parsedList.dependenciesList.length).toEqual(449);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@nodelib",
     name: "fs.scandir",
@@ -1483,8 +1483,8 @@ test("parsePnpmLock", async () => {
   expect(parsedList.pkgList.length).toEqual(1);
 
   parsedList = await parsePnpmLock("./test/data/pnpm-lock6.yaml");
-  expect(parsedList.pkgList.length).toEqual(195);
-  expect(parsedList.dependenciesList.length).toEqual(195);
+  expect(parsedList.pkgList.length).toEqual(200);
+  expect(parsedList.dependenciesList.length).toEqual(200);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@babel",
     name: "code-frame",
@@ -1530,8 +1530,8 @@ test("parsePnpmLock", async () => {
     }
   });
   parsedList = await parsePnpmLock("./test/data/pnpm-lock6a.yaml");
-  expect(parsedList.pkgList.length).toEqual(229);
-  expect(parsedList.dependenciesList.length).toEqual(229);
+  expect(parsedList.pkgList.length).toEqual(234);
+  expect(parsedList.dependenciesList.length).toEqual(234);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@babel",
     name: "code-frame",
