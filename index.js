@@ -4762,7 +4762,7 @@ export async function submitBom(args, bomContents) {
             projectName: args.projectName,
             projectVersion: projectVersion,
             autoCreate: "true",
-            bom: Buffer.from(bomContents).toString()
+            bom: encodedBomContents
           },
           responseType: "json"
         }).json();
