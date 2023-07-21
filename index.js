@@ -1775,6 +1775,16 @@ export const createNodejsBom = async (path, options) => {
         if (pcs.length) {
           parentComponent = pcs[0];
           parentComponent.type = "application";
+          ppurl = new PackageURL(
+            "npm",
+            parentComponent.group,
+            parentComponent.name,
+            parentComponent.version,
+            null,
+            null
+          ).toString();
+          parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+          parentComponent["purl"] = ppurl;
         }
       } else {
         let dirName = dirname(f);
@@ -1906,6 +1916,16 @@ export const createNodejsBom = async (path, options) => {
         if (pcs.length) {
           const tmpParentComponent = pcs[0];
           tmpParentComponent.type = "application";
+          ppurl = new PackageURL(
+            "npm",
+            tmpParentComponent.group,
+            tmpParentComponent.name,
+            tmpParentComponent.version,
+            null,
+            null
+          ).toString();
+          tmpParentComponent["bom-ref"] = decodeURIComponent(ppurl);
+          tmpParentComponent["purl"] = ppurl;
           if (!Object.keys(parentComponent).length) {
             parentComponent = tmpParentComponent;
           } else {

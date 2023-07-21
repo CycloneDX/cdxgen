@@ -32,19 +32,23 @@ def get_installed_distributions():
     return [d._dist for d in dists]
 
 
-def find_deps(idx, reqs):
+def find_deps(idx, visited, reqs):
     freqs = []
     for r in reqs:
         d = idx.get(r.key)
         r.project_name = d.project_name if d is not None else r.project_name
+        if visited.get(r.project_name):
+            return freqs
         specs = sorted(r.specs, reverse=True)
         specs_str = ",".join(["".join(sp) for sp in specs]) if specs else ""
+        visited[r.project_name] = True
+        dreqs = d.requires()
         freqs.append(
             {
                 "name": r.project_name,
                 "version": importlib_metadata.version(r.key),
                 "versionSpecifiers": specs_str,
-                "dependencies": find_deps(idx, d.requires()),
+                "dependencies": find_deps(idx, visited, dreqs) if dreqs else [],
             }
         )
     return freqs
@@ -55,6 +59,7 @@ def main(argv):
     tree = []
     pkgs = get_installed_distributions()
     idx = {p.key: p for p in pkgs}
+    visited = {}
     for p in pkgs:
         fr = frozen_req_from_dist(p)
         tmpA = fr.split("==")
@@ -68,7 +73,7 @@ def main(argv):
             {
                 "name": name,
                 "version": version,
-                "dependencies": find_deps(idx, p.requires()),
+                "dependencies": find_deps(idx, visited, p.requires()),
             }
         )
     all_deps = {}
