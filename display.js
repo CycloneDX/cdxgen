@@ -68,15 +68,15 @@ const levelPrefix = (level, isLast) => {
 };
 
 const isReallyRoot = (depMap, refStr) => {
-    for (const k of Object.keys(depMap)) {
-      const dependsOn = depMap[k] || [];
-      if (
-        dependsOn.includes(refStr) ||
-        dependsOn.includes(refStr.toLowerCase())
-      ) {
-        return false;
-      }
+  for (const k of Object.keys(depMap)) {
+    const dependsOn = depMap[k] || [];
+    if (
+      dependsOn.includes(refStr) ||
+      dependsOn.includes(refStr.toLowerCase())
+    ) {
+      return false;
     }
+  }
   return true;
 };
 
@@ -86,10 +86,8 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
     const l = listToUse[i];
     const refStr = l.ref || l;
     if (
-      (level == 0 &&
+      (level === 0 &&
         isReallyRoot(depMap, refStr) &&
-        depMap[refStr] &&
-        depMap[refStr].length &&
         !shownList.includes(refStr.toLowerCase())) ||
       level > 0
     ) {
@@ -98,7 +96,7 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
       );
       shownList.push(refStr.toLowerCase());
       if (l && depMap[refStr]) {
-        if (level < 4) {
+        if (level < 5) {
           recursePrint(
             depMap,
             depMap[refStr],
@@ -108,6 +106,6 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
           );
         }
       }
-    }    
+    }
   }
 };

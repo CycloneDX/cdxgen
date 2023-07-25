@@ -2115,6 +2115,16 @@ export const createPythonBom = async (path, options) => {
       if (pkgMap.dependenciesList) {
         dependencies = mergeDependencies(dependencies, pkgMap.dependenciesList);
       }
+      const parentDependsOn = [];
+      // Complete the dependency tree by making parent component depend on the first level
+      for (const p of pkgMap.rootList) {
+        parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
+      }
+      const pdependencies = {
+        ref: parentComponent["bom-ref"],
+        dependsOn: parentDependsOn
+      };
+      dependencies.splice(0, 0, pdependencies);
     }
     return buildBomNSData(options, pkgList, "pypi", {
       src: path,
@@ -2260,7 +2270,7 @@ export const createPythonBom = async (path, options) => {
         dependencies = mergeDependencies(dependencies, pkgMap.dependenciesList);
       }
       const pdependencies = {
-        ref: parentComponent.purl,
+        ref: parentComponent["bom-ref"],
         dependsOn: parentDependsOn
       };
       dependencies.splice(0, 0, pdependencies);
