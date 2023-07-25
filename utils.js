@@ -2378,6 +2378,9 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
         case "version":
           pkg.version = value;
           break;
+        case "optional":
+          pkg.scope = value == "true" ? "optional" : undefined;
+          break;
       }
     }
   });

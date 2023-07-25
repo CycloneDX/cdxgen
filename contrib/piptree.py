@@ -36,6 +36,8 @@ def find_deps(idx, visited, reqs):
     freqs = []
     for r in reqs:
         d = idx.get(r.key)
+        if not d:
+            continue
         r.project_name = d.project_name if d is not None else r.project_name
         if len(visited) > 100 and visited.get(r.project_name):
             return freqs
@@ -65,7 +67,7 @@ def main(argv):
         tmpA = fr.split("==")
         name = tmpA[0]
         if name.startswith("-e"):
-            name = name.split("#egg=")[-1].split(" ")[0]
+            name = name.split("#egg=")[-1].split(" ")[0].split("&")[0]
         version = "latest"
         if len(tmpA) == 2:
             version = tmpA[1]
