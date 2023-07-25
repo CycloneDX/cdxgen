@@ -65,13 +65,13 @@ def main(argv):
         tmpA = fr.split("==")
         name = tmpA[0]
         if name.startswith("-e"):
-            name = name.split("#egg=")[-1]
-        version = ""
+            name = name.split("#egg=")[-1].split(" ")[0]
+        version = "latest"
         if len(tmpA) == 2:
             version = tmpA[1]
         tree.append(
             {
-                "name": name,
+                "name": name.split(" ")[0],
                 "version": version,
                 "dependencies": find_deps(idx, visited, p.requires()),
             }

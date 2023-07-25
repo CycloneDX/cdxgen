@@ -811,7 +811,7 @@ test("get crates metadata", async () => {
     },
     homepage: { url: "https://github.com/iqlusioninc/abscissa/" }
   });
-});
+}, 5000);
 
 test("parse pub lock", async () => {
   expect(await parsePubLockData(null)).toEqual([]);

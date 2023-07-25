@@ -181,6 +181,7 @@ const createDefaultParentComponent = (path, type = "application") => {
   const parentComponent = {
     group: "",
     name: dirName,
+    version: "latest",
     type: "application"
   };
   const ppurl = new PackageURL(
@@ -2077,16 +2078,17 @@ export const createPythonBom = async (path, options) => {
   const pyProjectFile = join(path, "pyproject.toml");
   const pyProjectMode = existsSync(pyProjectFile);
   if (pyProjectMode) {
-    parentComponent = parsePyProjectToml(pyProjectFile);
-    if (parentComponent) {
+    const tmpParentComponent = parsePyProjectToml(pyProjectFile);
+    if (tmpParentComponent && tmpParentComponent.name) {
+      parentComponent = tmpParentComponent;
       delete parentComponent.homepage;
       delete parentComponent.repository;
       parentComponent.type = "application";
       const ppurl = new PackageURL(
         "pypi",
-        parentComponent.group,
+        parentComponent.group || "",
         parentComponent.name,
-        parentComponent.version,
+        parentComponent.version || "latest",
         null,
         null
       ).toString();
