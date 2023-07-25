@@ -90,7 +90,8 @@ import {
   parseCsPkgLockData,
   parseCsPkgData,
   parseCsProjData,
-  DEBUG_MODE
+  DEBUG_MODE,
+  parsePyProjectToml
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -2039,12 +2040,19 @@ export const createPythonBom = async (path, options) => {
   let dependencies = [];
   let pkgList = [];
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
-  const parentComponent = createDefaultParentComponent(path, "pypi");
+  let parentComponent = createDefaultParentComponent(path, "pypi");
   const pipenvMode = existsSync(join(path, "Pipfile"));
-  const poetryFiles = getAllFiles(
+  let poetryFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "poetry.lock"
   );
+  const pdmLockFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pdm.lock"
+  );
+  if (pdmLockFiles && pdmLockFiles.length) {
+    poetryFiles = poetryFiles.concat(pdmLockFiles);
+  }
   const reqFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt"
@@ -2068,6 +2076,24 @@ export const createPythonBom = async (path, options) => {
   const setupPy = join(path, "setup.py");
   const pyProjectFile = join(path, "pyproject.toml");
   const pyProjectMode = existsSync(pyProjectFile);
+  if (pyProjectMode) {
+    parentComponent = parsePyProjectToml(pyProjectFile);
+    if (parentComponent) {
+      delete parentComponent.homepage;
+      delete parentComponent.repository;
+      parentComponent.type = "application";
+      const ppurl = new PackageURL(
+        "pypi",
+        parentComponent.group,
+        parentComponent.name,
+        parentComponent.version,
+        null,
+        null
+      ).toString();
+      parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+      parentComponent["purl"] = ppurl;
+    }
+  }
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const poetryMode = poetryFiles && poetryFiles.length;
@@ -2076,15 +2102,25 @@ export const createPythonBom = async (path, options) => {
   // we give preference to poetry lock file. Issue# 129
   if (poetryMode) {
     for (const f of poetryFiles) {
+      const basePath = dirname(f);
       const lockData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parsePoetrylockData(lockData);
+      const dlist = await parsePoetrylockData(lockData, f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
+      }
+      const pkgMap = getPipFrozenTree(basePath, f, tempDir);
+      if (pkgMap.pkgList && pkgMap.pkgList.length) {
+        pkgList = pkgList.concat(pkgMap.pkgList);
+      }
+      if (pkgMap.dependenciesList) {
+        dependencies = mergeDependencies(dependencies, pkgMap.dependenciesList);
       }
     }
     return buildBomNSData(options, pkgList, "pypi", {
       src: path,
-      filename: poetryFiles.join(", ")
+      filename: poetryFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   } else if (metadataFiles && metadataFiles.length) {
     // dist-info directories
