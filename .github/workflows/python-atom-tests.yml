@@ -67,7 +67,7 @@ jobs:
           bin/cdxgen.js -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json --validate
           bin/cdxgen.js -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json --validate
           bin/cdxgen.js -p -r -t python repotests/flask -o bomresults/bom-flask.json --validate
-          bin/cdxgen.js -p -r -t python repotests/click -o bomresults/bom-click.json --validate
+          bin/cdxgen.js -r -t python repotests/click -o bomresults/bom-click.json --validate
           bin/cdxgen.js -p -r -t python repotests/jinja -o bomresults/bom-jinja.json --validate
           bin/cdxgen.js -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
           bin/cdxgen.js --no-install-deps -p -r -t python repotests/scipy -o bomresults/bom-scipy.json --validate
@@ -75,7 +75,7 @@ jobs:
           bin/cdxgen.js --no-install-deps -p -r -t python repotests/pyperf -o bomresults/bom-pyperf.json --validate
           bin/cdxgen.js --no-install-deps -p -r -t python repotests/cachecontrol -o bomresults/bom-cachecontrol.json --validate
           bin/cdxgen.js --no-install-deps -p -r -t python repotests/flask -o bomresults/bom-flask.json --validate
-          bin/cdxgen.js --no-install-deps -p -r -t python repotests/click -o bomresults/bom-click.json --validate
+          bin/cdxgen.js --no-install-deps -r -t python repotests/click -o bomresults/bom-click.json --validate
           bin/cdxgen.js --no-install-deps -p -r -t python repotests/jinja -o bomresults/bom-jinja.json --validate
           bin/cdxgen.js --no-install-deps -r -t python repotests/bandersnatch -o bomresults/bom-bandersnatch.json --validate
 

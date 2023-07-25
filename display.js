@@ -9,6 +9,8 @@ const SYMBOLS_ANSI = {
   VERTICAL: "│ "
 };
 
+const MAX_TREE_DEPTH = 3;
+
 export const printTable = (bomJson) => {
   const data = [["Group", "Name", "Version", "Scope"]];
   for (const comp of bomJson.components) {
@@ -96,7 +98,7 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
       );
       shownList.push(refStr.toLowerCase());
       if (l && depMap[refStr]) {
-        if (level < 5) {
+        if (level < MAX_TREE_DEPTH) {
           recursePrint(
             depMap,
             depMap[refStr],

@@ -2115,7 +2115,11 @@ export const createPythonBom = async (path, options) => {
         pkgList = pkgList.concat(pkgMap.pkgList);
       }
       if (pkgMap.dependenciesList) {
-        dependencies = mergeDependencies(dependencies, pkgMap.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          pkgMap.dependenciesList,
+          parentComponent
+        );
       }
       const parentDependsOn = [];
       // Complete the dependency tree by making parent component depend on the first level
@@ -2198,7 +2202,8 @@ export const createPythonBom = async (path, options) => {
             if (pkgMap.dependenciesList) {
               dependencies = mergeDependencies(
                 dependencies,
-                pkgMap.dependenciesList
+                pkgMap.dependenciesList,
+                parentComponent
               );
             }
           }
@@ -2256,24 +2261,41 @@ export const createPythonBom = async (path, options) => {
         }
       }
       if (retMap.dependenciesList) {
-        dependencies = mergeDependencies(dependencies, retMap.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependenciesList,
+          parentComponent
+        );
       }
       if (retMap.allImports) {
         allImports = { ...allImports, ...retMap.allImports };
       }
       // Complete the dependency tree by making parent component depend on the first level
       for (const p of pkgMap.rootList) {
+        if (
+          parentComponent &&
+          p.name === parentComponent.name &&
+          p.version === parentComponent.version
+        ) {
+          continue;
+        }
         parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
       }
       if (pkgMap.pkgList && pkgMap.pkgList.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
       }
       if (pkgMap.dependenciesList) {
-        dependencies = mergeDependencies(dependencies, pkgMap.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          pkgMap.dependenciesList,
+          parentComponent
+        );
       }
       const pdependencies = {
         ref: parentComponent["bom-ref"],
-        dependsOn: parentDependsOn
+        dependsOn: parentDependsOn.filter(
+          (r) => parentComponent && r !== parentComponent["bom-ref"]
+        )
       };
       dependencies.splice(0, 0, pdependencies);
     }
@@ -3696,15 +3718,25 @@ export const createCsharpBom = async (path, options) => {
   return {};
 };
 
-export const mergeDependencies = (dependencies, newDependencies) => {
+export const mergeDependencies = (
+  dependencies,
+  newDependencies,
+  parentComponent = {}
+) => {
   const deps_map = {};
+  const parentRef =
+    parentComponent && parentComponent["bom-ref"]
+      ? parentComponent["bom-ref"]
+      : undefined;
   const combinedDeps = dependencies.concat(newDependencies || []);
   for (const adep of combinedDeps) {
     if (!deps_map[adep.ref]) {
       deps_map[adep.ref] = new Set();
     }
     for (const eachDepends of adep["dependsOn"]) {
-      deps_map[adep.ref].add(eachDepends);
+      if (parentRef && eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
+        deps_map[adep.ref].add(eachDepends);
+      }
     }
   }
   const retlist = [];
