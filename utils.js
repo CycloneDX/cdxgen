@@ -1450,6 +1450,14 @@ export const parseGradleDep = function (
       if (!rline) {
         continue;
       }
+      if ((
+        rline.startsWith("+--- ") || 
+        rline.startsWith("\\--- ")) && 
+        rline.includes("{strictly") && 
+        rline.includes("(c)")
+      ) {
+          continue;
+        }
       if (
         rline.trim() === "" ||
         rline.startsWith("+--- ") ||
