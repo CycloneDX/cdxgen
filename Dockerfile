@@ -119,7 +119,7 @@ RUN set -e; \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && python3 -m pip install --user pipenv
+    && python3 -m pip install --user pipenv poetry
 
 COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && npm install --omit=dev \
