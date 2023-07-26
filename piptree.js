@@ -83,7 +83,11 @@ def main(argv):
     traverse_count = 0
     for p in pkgs:
         fr = frozen_req_from_dist(p)
-        tmpA = fr.split("==")
+        if not fr.startswith('# Editable'):
+            tmpA = fr.split("==")
+        else:
+            fr = p.key
+            tmpA = [fr,p.version]
         name = tmpA[0]
         if name.startswith("-e"):
             name = name.split("#egg=")[-1].split(" ")[0].split("&")[0]
