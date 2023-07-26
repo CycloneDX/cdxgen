@@ -5523,7 +5523,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    * By checking the environment variable "VIRTUAL_ENV" we decide whether to create an env or not
    */
   if (!process.env.VIRTUAL_ENV) {
-    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir]);
+    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {encoding: "utf-8"});
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
@@ -5571,10 +5571,13 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           if (result.status !== 0 || result.error) {
             console.log("poetry install has failed.");
             console.log(
-              "1. Install the poetry command using python -m pip install poetry"
+              "1. Install the poetry command using python -m pip install poetry."
             );
             console.log(
-              "2. Setup and activate the poetry virtual environment and re-run cdxgen."
+              "2. Check the version of python supported by the project. Poetry is strict about the version used."
+            );
+            console.log(
+              "3. Setup and activate the poetry virtual environment and re-run cdxgen."
             );
           }
         } else {
