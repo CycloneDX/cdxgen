@@ -90,7 +90,8 @@ import {
   parseCsPkgLockData,
   parseCsPkgData,
   parseCsProjData,
-  DEBUG_MODE
+  DEBUG_MODE,
+  parsePyProjectToml
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -180,6 +181,7 @@ const createDefaultParentComponent = (path, type = "application") => {
   const parentComponent = {
     group: "",
     name: dirName,
+    version: "latest",
     type: "application"
   };
   const ppurl = new PackageURL(
@@ -2039,12 +2041,19 @@ export const createPythonBom = async (path, options) => {
   let dependencies = [];
   let pkgList = [];
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
-  const parentComponent = createDefaultParentComponent(path, "pypi");
+  let parentComponent = createDefaultParentComponent(path, "pypi");
   const pipenvMode = existsSync(join(path, "Pipfile"));
-  const poetryFiles = getAllFiles(
+  let poetryFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "poetry.lock"
   );
+  const pdmLockFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "pdm.lock"
+  );
+  if (pdmLockFiles && pdmLockFiles.length) {
+    poetryFiles = poetryFiles.concat(pdmLockFiles);
+  }
   const reqFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt"
@@ -2068,6 +2077,25 @@ export const createPythonBom = async (path, options) => {
   const setupPy = join(path, "setup.py");
   const pyProjectFile = join(path, "pyproject.toml");
   const pyProjectMode = existsSync(pyProjectFile);
+  if (pyProjectMode) {
+    const tmpParentComponent = parsePyProjectToml(pyProjectFile);
+    if (tmpParentComponent && tmpParentComponent.name) {
+      parentComponent = tmpParentComponent;
+      delete parentComponent.homepage;
+      delete parentComponent.repository;
+      parentComponent.type = "application";
+      const ppurl = new PackageURL(
+        "pypi",
+        parentComponent.group || "",
+        parentComponent.name,
+        parentComponent.version || "latest",
+        null,
+        null
+      ).toString();
+      parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+      parentComponent["purl"] = ppurl;
+    }
+  }
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const poetryMode = poetryFiles && poetryFiles.length;
@@ -2076,15 +2104,39 @@ export const createPythonBom = async (path, options) => {
   // we give preference to poetry lock file. Issue# 129
   if (poetryMode) {
     for (const f of poetryFiles) {
+      const basePath = dirname(f);
       const lockData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parsePoetrylockData(lockData);
+      const dlist = await parsePoetrylockData(lockData, f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
+      const pkgMap = getPipFrozenTree(basePath, f, tempDir);
+      if (pkgMap.pkgList && pkgMap.pkgList.length) {
+        pkgList = pkgList.concat(pkgMap.pkgList);
+      }
+      if (pkgMap.dependenciesList) {
+        dependencies = mergeDependencies(
+          dependencies,
+          pkgMap.dependenciesList,
+          parentComponent
+        );
+      }
+      const parentDependsOn = [];
+      // Complete the dependency tree by making parent component depend on the first level
+      for (const p of pkgMap.rootList) {
+        parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
+      }
+      const pdependencies = {
+        ref: parentComponent["bom-ref"],
+        dependsOn: parentDependsOn
+      };
+      dependencies.splice(0, 0, pdependencies);
     }
     return buildBomNSData(options, pkgList, "pypi", {
       src: path,
-      filename: poetryFiles.join(", ")
+      filename: poetryFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   } else if (metadataFiles && metadataFiles.length) {
     // dist-info directories
@@ -2150,7 +2202,8 @@ export const createPythonBom = async (path, options) => {
             if (pkgMap.dependenciesList) {
               dependencies = mergeDependencies(
                 dependencies,
-                pkgMap.dependenciesList
+                pkgMap.dependenciesList,
+                parentComponent
               );
             }
           }
@@ -2208,24 +2261,41 @@ export const createPythonBom = async (path, options) => {
         }
       }
       if (retMap.dependenciesList) {
-        dependencies = mergeDependencies(dependencies, retMap.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependenciesList,
+          parentComponent
+        );
       }
       if (retMap.allImports) {
         allImports = { ...allImports, ...retMap.allImports };
       }
       // Complete the dependency tree by making parent component depend on the first level
       for (const p of pkgMap.rootList) {
+        if (
+          parentComponent &&
+          p.name === parentComponent.name &&
+          p.version === parentComponent.version
+        ) {
+          continue;
+        }
         parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
       }
       if (pkgMap.pkgList && pkgMap.pkgList.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
       }
       if (pkgMap.dependenciesList) {
-        dependencies = mergeDependencies(dependencies, pkgMap.dependenciesList);
+        dependencies = mergeDependencies(
+          dependencies,
+          pkgMap.dependenciesList,
+          parentComponent
+        );
       }
       const pdependencies = {
-        ref: parentComponent.purl,
-        dependsOn: parentDependsOn
+        ref: parentComponent["bom-ref"],
+        dependsOn: parentDependsOn.filter(
+          (r) => parentComponent && r !== parentComponent["bom-ref"]
+        )
       };
       dependencies.splice(0, 0, pdependencies);
     }
@@ -3648,15 +3718,25 @@ export const createCsharpBom = async (path, options) => {
   return {};
 };
 
-export const mergeDependencies = (dependencies, newDependencies) => {
+export const mergeDependencies = (
+  dependencies,
+  newDependencies,
+  parentComponent = {}
+) => {
   const deps_map = {};
+  const parentRef =
+    parentComponent && parentComponent["bom-ref"]
+      ? parentComponent["bom-ref"]
+      : undefined;
   const combinedDeps = dependencies.concat(newDependencies || []);
   for (const adep of combinedDeps) {
     if (!deps_map[adep.ref]) {
       deps_map[adep.ref] = new Set();
     }
     for (const eachDepends of adep["dependsOn"]) {
-      deps_map[adep.ref].add(eachDepends);
+      if (parentRef && eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
+        deps_map[adep.ref].add(eachDepends);
+      }
     }
   }
   const retlist = [];

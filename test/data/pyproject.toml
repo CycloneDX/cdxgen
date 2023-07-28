@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "cpggen"
+version = "1.9.0"
+description = "Generate CPG for multiple languages for code and threat analysis"
+authors = ["Team AppThreat <cloud@appthreat.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+packages = [{include = "cpggen"}]
+homepage = "https://github.com/AppThreat/cpggen"
+repository = "https://github.com/AppThreat/cpggen"
+keywords = ["joern", "code analysis", "static analysis", "cpg", "code property graph", "atom", "threat analysis"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Topic :: Utilities",
+    "Topic :: Security",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+]
+exclude = ["contrib", "tests"]
+include = ["cpggen/atom/*"]
+
+[tool.poetry.scripts]
+atomgen = 'cpggen.cli:main'
+cpggen = 'cpggen.cli:main'
+cpg = 'cpggen.cli:main'
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.12"
+rich = "^13.4.2"
+gitpython = "^3.1.31"
+quart = "^0.18.4"
+psutil = "^5.9.5"
+packageurl-python = "^0.11.1"
+httpx = "^0.24.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+black = "^23.3.0"
+flake8 = "^6.0.0"
+pytest-cov = "^4.0.0"
+pyinstaller = "^5.12.0"
+bandit = "^1.7.5"
+pylint = "^2.17.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
