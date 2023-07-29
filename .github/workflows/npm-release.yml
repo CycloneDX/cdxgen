@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - fix/*
     tags:
     - 'v*'
 
@@ -24,6 +25,10 @@ jobs:
       with:
         node-version: 18.x
         registry-url: https://registry.npmjs.org/
+    - name: Trim CI agent
+      run: |
+        chmod +x contrib/free_disk_space.sh
+        ./contrib/free_disk_space.sh
     - name: Release npm package
       if: startsWith(github.ref, 'refs/tags/')
       run: |
