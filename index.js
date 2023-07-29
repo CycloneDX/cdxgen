@@ -1150,7 +1150,7 @@ export const createJavaBom = async (path, options) => {
               );
             } else {
               console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 19 with maven 3.9 which might be incompatible."
+                "1. Java version requirement: cdxgen container image bundles Java 20 with maven 3.9 which might be incompatible."
               );
             }
             console.log(

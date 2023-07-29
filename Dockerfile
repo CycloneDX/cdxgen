@@ -16,13 +16,14 @@ ARG SWIFT_PLATFORM=ubi9
 ARG SWIFT_BRANCH=swift-5.8-release
 ARG SWIFT_VERSION=swift-5.8-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
-ARG JAVA_VERSION=22.3.r19-grl
-ARG SBT_VERSION=1.9.1
-ARG MAVEN_VERSION=3.9.2
-ARG GRADLE_VERSION=8.1.1
+ARG JAVA_VERSION=20.0.2-graalce
+ARG SBT_VERSION=1.9.3
+ARG MAVEN_VERSION=3.9.3
+ARG GRADLE_VERSION=8.2.1
+ARG GO_VERSION=1.20.6
+ARG CLJ_VERSION=1.11.1.1347
 
 ENV GOPATH=/opt/app-root/go \
-    GO_VERSION=1.20.4 \
     JAVA_VERSION=$JAVA_VERSION \
     SBT_VERSION=$SBT_VERSION \
     MAVEN_VERSION=$MAVEN_VERSION \
@@ -109,9 +110,9 @@ RUN set -e; \
     && chmod +x lein \
     && mv lein /usr/local/bin/ \
     && /usr/local/bin/lein \
-    && curl -O https://download.clojure.org/install/linux-install-1.11.1.1273.sh \
-    && chmod +x linux-install-1.11.1.1273.sh \
-    && sudo ./linux-install-1.11.1.1273.sh \
+    && curl -O https://download.clojure.org/install/linux-install-$CLJ_VERSION.sh \
+    && chmod +x linux-install-$CLJ_VERSION.sh \
+    && sudo ./linux-install-$CLJ_VERSION.sh \
     && useradd -ms /bin/bash cyclonedx \
     && npm install --unsafe-perm -g @microsoft/rush --omit=dev \
     && pecl channel-update pecl.php.net \
