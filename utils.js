@@ -1749,7 +1749,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
   if (subProject && subProject.match(/:/g).length >= 2) {
     return defaultProps;
   }
-  const gradlePropertiesArgs = [
+  let gradlePropertiesArgs = [
     subProject ? `${subProject}:properties` : "properties",
     "-q",
     "--console",
@@ -1757,6 +1757,16 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
     "--build-cache"
   ];
   const gradleCmd = getGradleCommand(dir, rootPath);
+  // common gradle args, used for all tasks
+  if (process.env.GRADLE_ARGS) {
+    const addArgs = process.env.GRADLE_ARGS.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
+  // gradle args only for the properties task
+  if (process.env.GRADLE_ARGS_PROPERTIES) {
+    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
   console.log(
     "Executing",
     gradleCmd,

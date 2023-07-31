@@ -1340,9 +1340,14 @@ export const createJavaBom = async (path, options) => {
         gradleDepArgs = gradleDepArgs
           .concat(depTaskWithArgs.slice(1))
           .concat(defaultDepTaskArgs);
-        // Support custom GRADLE_ARGS such as --configuration runtimeClassPath
+        // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
         if (process.env.GRADLE_ARGS) {
           const addArgs = process.env.GRADLE_ARGS.split(" ");
+          gradleDepArgs = gradleDepArgs.concat(addArgs);
+        }
+        // gradle args only for the dependencies task
+        if (process.env.GRADLE_ARGS_DEPENDENCIES) {
+          const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
           gradleDepArgs = gradleDepArgs.concat(addArgs);
         }
         console.log(
