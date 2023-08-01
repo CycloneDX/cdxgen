@@ -1287,11 +1287,12 @@ export const parseMavenTree = function (rawOutput) {
   const dependenciesList = [];
   const keys_cache = {};
   const level_trees = {};
-  const tmpA = rawOutput.split("\r\n");
+  const tmpA = rawOutput.split("\n");
   let last_level = 0;
   let last_purl = "";
   const stack = [];
   tmpA.forEach((l) => {
+    l = l.replace("\r", "");
     if (!includeMavenTestScope && l.trim().endsWith(":test")) {
       return;
     }
@@ -1447,9 +1448,8 @@ export const parseGradleDep = function (
       if (!rline) {
         continue;
       }
-      if ((
-        rline.startsWith("+--- ") ||
-        rline.startsWith("\\--- ")) &&
+      if (
+        (rline.startsWith("+--- ") || rline.startsWith("\\--- ")) &&
         rline.includes("{strictly") &&
         rline.includes("(c)")
       ) {
@@ -1706,8 +1706,9 @@ export const parseGradleProperties = function (rawOutput) {
   const projects = new Set();
   const metadata = { group: "", version: "latest", properties: [] };
   if (typeof rawOutput === "string") {
-    const tmpA = rawOutput.split("\r\n");
+    const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
+      l = l.replace("\r", "");
       if (l.startsWith("----") || l.startsWith(">") || !l.includes(": ")) {
         return;
       }
@@ -1815,8 +1816,9 @@ export const parseBazelSkyframe = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const keys_cache = {};
-    const tmpA = rawOutput.split("\r\n");
+    const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
+      l = l.replace("\r", "");
       if (l.indexOf("external/maven") >= 0) {
         l = l.replace("arguments: ", "").replace(/"/g, "");
         // Skyframe could have duplicate entries
@@ -2315,7 +2317,8 @@ export const parsePyProjectToml = (tomlFile) => {
   if (!tomlData) {
     return pkg;
   }
-  tomlData.split("\r\n").forEach((l) => {
+  tomlData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       let key = tmpA[0].trim();
@@ -2933,11 +2936,12 @@ export const parseGosumData = async function (gosumData) {
   if (!gosumData) {
     return pkgList;
   }
-  const pkgs = gosumData.split("\r\n");
+  const pkgs = gosumData.split("\n");
   for (const l of pkgs) {
+    let m = l.replace("\r", "");
     // look for lines containing go.mod
-    if (l.indexOf("go.mod") > -1) {
-      const tmpA = l.split(" ");
+    if (m.indexOf("go.mod") > -1) {
+      const tmpA = m.split(" ");
       const name = tmpA[0];
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
@@ -3268,9 +3272,10 @@ export const parseCargoTomlData = async function (cargoData) {
   let pkg = null;
   let dependencyMode = false;
   let packageMode = false;
-  cargoData.split("\r\n").forEach((l) => {
+  cargoData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
+    l = l.replace("\r", "");
     if (l.indexOf("[package]") > -1) {
       packageMode = true;
       if (pkg) {
@@ -3992,7 +3997,8 @@ export const parseConanData = function (conanData) {
   if (!conanData) {
     return pkgList;
   }
-  conanData.split("\r\n").forEach((l) => {
+  conanData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     if (!l.includes("/")) {
       return;
     }
