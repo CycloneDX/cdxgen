@@ -2263,7 +2263,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
 export const parseBdistMetadata = function (mData) {
   const pkg = {};
   mData.split("\n").forEach((l) => {
-    l.replace("\r", "");
+    l = l.replace("\r", "");
     if (l.indexOf("Name: ") > -1) {
       pkg.name = l.split("Name: ")[1];
     } else if (l.indexOf("Version: ") > -1) {
