@@ -448,7 +448,7 @@ export const parsePkgJson = async (pkgJsonFile) => {
       const purl = new PackageURL(
         "npm",
         group,
-        encodeForPurl(name),
+        name,
         pkgData.version,
         null,
         null
@@ -457,7 +457,6 @@ export const parsePkgJson = async (pkgJsonFile) => {
         name,
         group,
         version: pkgData.version,
-        purl,
         "bom-ref": decodeURIComponent(purl),
         properties: [
           {
@@ -865,33 +864,31 @@ export const parseNodeShrinkwrap = async function (swFile) {
           }
           version = parts[2];
         }
-        if (group !== "@types") {
-          pkgList.push({
-            group: group,
-            name: name,
-            version: version,
-            _integrity: integrity,
-            properties: [
-              {
-                name: "SrcFile",
-                value: swFile
-              }
-            ],
-            evidence: {
-              identity: {
-                field: "purl",
-                confidence: 1,
-                methods: [
-                  {
-                    technique: "manifest-analysis",
-                    confidence: 1,
-                    value: swFile
-                  }
-                ]
-              }
+        pkgList.push({
+          group: group,
+          name: name,
+          version: version,
+          _integrity: integrity,
+          properties: [
+            {
+              name: "SrcFile",
+              value: swFile
             }
-          });
-        }
+          ],
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence: 1,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 1,
+                  value: swFile
+                }
+              ]
+            }
+          }
+        });
       }
     }
   }
@@ -1007,7 +1004,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
           );
           continue;
         }
-        if (group !== "@types" && name.indexOf("file:") !== 0) {
+        if (name.indexOf("file:") !== 0) {
           const purlString = new PackageURL(
             "npm",
             group,
@@ -1450,6 +1447,14 @@ export const parseGradleDep = function (
       if (!rline) {
         continue;
       }
+      if ((
+        rline.startsWith("+--- ") || 
+        rline.startsWith("\\--- ")) && 
+        rline.includes("{strictly") && 
+        rline.includes("(c)")
+      ) {
+          continue;
+        }
       if (
         rline.trim() === "" ||
         rline.startsWith("+--- ") ||
@@ -1752,7 +1757,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
   if (subProject && subProject.match(/:/g).length >= 2) {
     return defaultProps;
   }
-  const gradlePropertiesArgs = [
+  let gradlePropertiesArgs = [
     subProject ? `${subProject}:properties` : "properties",
     "-q",
     "--console",
@@ -1760,6 +1765,16 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
     "--build-cache"
   ];
   const gradleCmd = getGradleCommand(dir, rootPath);
+  // common gradle args, used for all tasks
+  if (process.env.GRADLE_ARGS) {
+    const addArgs = process.env.GRADLE_ARGS.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
+  // gradle args only for the properties task
+  if (process.env.GRADLE_ARGS_PROPERTIES) {
+    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
   console.log(
     "Executing",
     gradleCmd,
@@ -1778,7 +1793,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       } else {
         console.error(result.stdout, result.stderr);
         console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 19 with gradle 8 which might be incompatible."
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible."
         );
       }
     }
@@ -2287,11 +2302,58 @@ export const parsePiplockData = async function (lockData) {
 };
 
 /**
+ * Method to parse python pyproject.toml file
+ *
+ * @param {string} tomlFile Toml file
+ */
+export const parsePyProjectToml = (tomlFile) => {
+  // Do we need a toml npm package at some point?
+  const tomlData = readFileSync(tomlFile, { encoding: "utf-8" });
+  let pkg = {};
+  if (!tomlData) {
+    return pkg;
+  }
+  tomlData.split("\n").forEach((l) => {
+    if (l.indexOf("=") > -1) {
+      const tmpA = l.split("=");
+      let key = tmpA[0].trim();
+      let value = tmpA[1].trim().replace(/"/g, "");
+      switch (key) {
+        case "description":
+          pkg.description = value;
+          break;
+        case "name":
+          pkg.name = value;
+          break;
+        case "version":
+          pkg.version = value;
+          break;
+        case "authors":
+          try {
+            pkg.author = JSON.parse(value)[0];
+          } catch (e) {
+            pkg.author = value.replace("[", "").replace("]", "");
+          }
+          break;
+        case "homepage":
+          pkg.homepage = { url: value };
+          break;
+        case "repository":
+          pkg.repository = { url: value };
+          break;
+      }
+    }
+  });
+  return pkg;
+};
+
+/**
  * Method to parse poetry.lock data
  *
  * @param {Object} lockData JSON data from poetry.lock
+ * @param {string} lockFile Lock file name for evidence
  */
-export const parsePoetrylockData = async function (lockData) {
+export const parsePoetrylockData = async function (lockData, lockFile) {
   const pkgList = [];
   let pkg = null;
   if (!lockData) {
@@ -2303,6 +2365,19 @@ export const parsePoetrylockData = async function (lockData) {
     // Package section starts with this marker
     if (l.indexOf("[[package]]") > -1) {
       if (pkg && pkg.name && pkg.version) {
+        pkg.evidence = {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: lockFile
+              }
+            ]
+          }
+        };
         pkgList.push(pkg);
       }
       pkg = {};
@@ -2320,6 +2395,9 @@ export const parsePoetrylockData = async function (lockData) {
           break;
         case "version":
           pkg.version = value;
+          break;
+        case "optional":
+          pkg.scope = value == "true" ? "optional" : undefined;
           break;
       }
     }
@@ -5395,19 +5473,19 @@ export const findAppModules = function (src, language) {
   return retList;
 };
 
-const flattenDeps = (
-  dependsOn,
-  dependenciesList,
-  pkgList,
-  reqOrSetupFile,
-  t
-) => {
+const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
+  const tRef = `pkg:pypi/${t.name.replace(/_/g, "-").toLowerCase()}@${
+    t.version
+  }`;
+  const dependsOn = [];
   for (const d of t.dependencies) {
-    const pkgRef = `pkg:pypi/${d.name.replace(/_/g, "-")}@${
+    const pkgRef = `pkg:pypi/${d.name.replace(/_/g, "-").toLowerCase()}@${
       d.version
-    }`.toLowerCase();
+    }`;
     dependsOn.push(pkgRef);
-    dependenciesList.push({ ref: pkgRef, dependsOn: [] });
+    if (!dependenciesMap[pkgRef]) {
+      dependenciesMap[pkgRef] = [];
+    }
     pkgList.push({
       name: d.name,
       version: d.version,
@@ -5433,9 +5511,12 @@ const flattenDeps = (
     });
     // Recurse and flatten
     if (d.dependencies && d.dependencies) {
-      flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, d);
+      flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, d);
     }
   }
+  dependenciesMap[tRef] = (dependenciesMap[tRef] || [])
+    .concat(dependsOn)
+    .sort();
 };
 
 /**
@@ -5460,7 +5541,9 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    * By checking the environment variable "VIRTUAL_ENV" we decide whether to create an env or not
    */
   if (!process.env.VIRTUAL_ENV) {
-    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir]);
+    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
+      encoding: "utf-8"
+    });
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
@@ -5486,63 +5569,102 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    */
   // Bug #388. Perform pip install in all virtualenv to make the experience consistent
   if (reqOrSetupFile) {
-    const pipInstallArgs = [
-      "-m",
-      "pip",
-      "install",
-      "--disable-pip-version-check"
-    ];
-    // Requirements.txt could be called with any name so best to check for not setup.py and not pyproject.toml
-    if (
-      !reqOrSetupFile.endsWith("setup.py") &&
-      !reqOrSetupFile.endsWith("pyproject.toml")
-    ) {
-      pipInstallArgs.push("-r");
-      pipInstallArgs.push(resolve(reqOrSetupFile));
-    } else {
-      pipInstallArgs.push(resolve(basePath));
-    }
-    // Attempt to perform pip install
-    result = spawnSync(PYTHON_CMD, pipInstallArgs, {
-      cwd: basePath,
-      encoding: "utf-8",
-      timeout: TIMEOUT_MS,
-      env
-    });
-    if (result.status !== 0 || result.error) {
-      let versionRelatedError = false;
-      if (
-        result.stderr &&
-        (result.stderr.includes(
-          "Could not find a version that satisfies the requirement"
-        ) ||
-          result.stderr.includes("No matching distribution found for"))
-      ) {
-        versionRelatedError = true;
-        console.log(
-          "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBoM accuracy."
-        );
-        console.log(result.stderr);
-      }
-      if (!versionRelatedError && DEBUG_MODE) {
-        console.log("args used:", pipInstallArgs);
-        console.log(result.stdout, result.stderr);
-        console.log(
-          "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
-        );
-        if (platform() == "win32") {
-          console.log(
-            "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
-          );
+    if (reqOrSetupFile.endsWith("poetry.lock")) {
+      let poetryInstallArgs = ["-m", "poetry", "install", "-n", "--no-root"];
+      // Attempt to perform poetry install
+      result = spawnSync(PYTHON_CMD, poetryInstallArgs, {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        env
+      });
+      if (result.status !== 0 || result.error) {
+        if (result.stderr && result.stderr.includes("No module named poetry")) {
+          poetryInstallArgs = ["install", "-n", "--no-root"];
+          // Attempt to perform poetry install
+          result = spawnSync("poetry", poetryInstallArgs, {
+            cwd: basePath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            env
+          });
+          if (result.status !== 0 || result.error) {
+            console.log("poetry install has failed.");
+            console.log(
+              "1. Install the poetry command using python -m pip install poetry."
+            );
+            console.log(
+              "2. Check the version of python supported by the project. Poetry is strict about the version used."
+            );
+            console.log(
+              "3. Setup and activate the poetry virtual environment and re-run cdxgen."
+            );
+          }
         } else {
           console.log(
-            "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager."
+            "poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen."
           );
         }
-        console.log(
-          "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution."
-        );
-        console.log("- Check if any git submodules have to be initialized.");
+      }
+    } else if (!reqOrSetupFile.endsWith(".lock")) {
+      const pipInstallArgs = [
+        "-m",
+        "pip",
+        "install",
+        "--disable-pip-version-check"
+      ];
+      // Requirements.txt could be called with any name so best to check for not setup.py and not pyproject.toml
+      if (
+        !reqOrSetupFile.endsWith("setup.py") &&
+        !reqOrSetupFile.endsWith("pyproject.toml")
+      ) {
+        pipInstallArgs.push("-r");
+        pipInstallArgs.push(resolve(reqOrSetupFile));
+      } else {
+        pipInstallArgs.push(resolve(basePath));
+      }
+      // Attempt to perform pip install
+      result = spawnSync(PYTHON_CMD, pipInstallArgs, {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        env
+      });
+      if (result.status !== 0 || result.error) {
+        let versionRelatedError = false;
+        if (
+          result.stderr &&
+          (result.stderr.includes(
+            "Could not find a version that satisfies the requirement"
+          ) ||
+            result.stderr.includes("No matching distribution found for"))
+        ) {
+          versionRelatedError = true;
+          console.log(
+            "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBoM accuracy."
+          );
+          console.log(result.stderr);
+        }
+        if (!versionRelatedError && DEBUG_MODE) {
+          console.log("args used:", pipInstallArgs);
+          console.log(result.stdout, result.stderr);
+          console.log(
+            "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
+          );
+          if (platform() == "win32") {
+            console.log(
+              "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
+            );
+          } else {
+            console.log(
+              "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager."
+            );
+          }
+          console.log(
+            "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution."
+          );
+          console.log("- Check if any git submodules have to be initialized.");
+        }
       }
     }
   }
@@ -5563,12 +5685,12 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         "Dependency tree generation has failed. Please check for any errors or version incompatibilities reported in the logs."
       );
     }
+    const dependenciesMap = {};
     for (const t of tree) {
-      const dependsOn = [];
       if (!t.version.length) {
         // Don't leave out any local dependencies
         if (t.dependencies.length) {
-          flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, t);
+          flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
         }
         continue;
       }
@@ -5594,11 +5716,10 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         name,
         version: t.version
       });
-      flattenDeps(dependsOn, dependenciesList, pkgList, reqOrSetupFile, t);
-      dependenciesList.push({
-        ref: `pkg:pypi/${name}@${t.version}`,
-        dependsOn
-      });
+      flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
+    } // end for
+    for (const k of Object.keys(dependenciesMap)) {
+      dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
     }
   } else {
     if (DEBUG_MODE) {

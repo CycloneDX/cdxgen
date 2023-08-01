@@ -116,3 +116,4 @@ test/obj
 .stacker/
 oci/
 roots/
+.python-version

@@ -9,6 +9,8 @@ const SYMBOLS_ANSI = {
   VERTICAL: "│ "
 };
 
+const MAX_TREE_DEPTH = 3;
+
 export const printTable = (bomJson) => {
   const data = [["Group", "Name", "Version", "Scope"]];
   for (const comp of bomJson.components) {
@@ -37,28 +39,12 @@ export const printDependencyTree = (bomJson) => {
   const depMap = {};
   for (const d of dependencies) {
     if (d.dependsOn && d.dependsOn.length) {
-      depMap[d.ref] = d.dependsOn;
+      depMap[d.ref] = d.dependsOn.sort();
     }
   }
   const shownList = [];
   const treeGraphics = [];
   recursePrint(depMap, dependencies, 0, shownList, treeGraphics);
-  if (treeGraphics && treeGraphics.length) {
-    // Patch up the last line
-    treeGraphics[treeGraphics.length - 1] = treeGraphics[
-      treeGraphics.length - 1
-    ].replace(SYMBOLS_ANSI.BRANCH, SYMBOLS_ANSI.LAST_BRANCH);
-    if (treeGraphics[treeGraphics.length - 1].includes(SYMBOLS_ANSI.VERTICAL)) {
-      treeGraphics[treeGraphics.length - 1] = treeGraphics[
-        treeGraphics.length - 1
-      ]
-        .replace(SYMBOLS_ANSI.VERTICAL, SYMBOLS_ANSI.LAST_BRANCH)
-        .replace(
-          SYMBOLS_ANSI.INDENT + SYMBOLS_ANSI.LAST_BRANCH,
-          SYMBOLS_ANSI.LAST_BRANCH
-        );
-    }
-  }
   const config = {
     header: {
       alignment: "center",
@@ -68,26 +54,51 @@ export const printDependencyTree = (bomJson) => {
   console.log(table([[treeGraphics.join("\n")]], config));
 };
 
-const levelPrefix = (level) => {
+const levelPrefix = (level, isLast) => {
   if (level === 0) {
     return SYMBOLS_ANSI.EMPTY;
   }
-  let prefix = `${SYMBOLS_ANSI.BRANCH}`;
+  let prefix = `${isLast ? SYMBOLS_ANSI.LAST_BRANCH : SYMBOLS_ANSI.BRANCH}`;
   for (let i = 0; i < level - 1; i++) {
-    prefix = `${SYMBOLS_ANSI.VERTICAL}${SYMBOLS_ANSI.INDENT}${prefix}`;
+    prefix = `${
+      isLast
+        ? SYMBOLS_ANSI.LAST_BRANCH.replace(" ", "─")
+        : SYMBOLS_ANSI.VERTICAL
+    }${isLast ? "" : SYMBOLS_ANSI.INDENT}${prefix}`;
   }
   return prefix;
 };
 
+const isReallyRoot = (depMap, refStr) => {
+  for (const k of Object.keys(depMap)) {
+    const dependsOn = depMap[k] || [];
+    if (
+      dependsOn.includes(refStr) ||
+      dependsOn.includes(refStr.toLowerCase())
+    ) {
+      return false;
+    }
+  }
+  return true;
+};
+
 const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
   const listToUse = Array.isArray(subtree) ? subtree : [subtree];
-  for (const l of listToUse) {
+  for (let i = 0; i < listToUse.length; i++) {
+    const l = listToUse[i];
     const refStr = l.ref || l;
-    if (!shownList.includes(refStr.toLowerCase())) {
+    if (
+      (level === 0 &&
+        isReallyRoot(depMap, refStr) &&
+        !shownList.includes(refStr.toLowerCase())) ||
+      level > 0
+    ) {
+      treeGraphics.push(
+        `${levelPrefix(level, i == listToUse.length - 1)}${refStr}`
+      );
       shownList.push(refStr.toLowerCase());
-      treeGraphics.push(`${levelPrefix(level)}${refStr}`);
       if (l && depMap[refStr]) {
-        if (level < 3) {
+        if (level < MAX_TREE_DEPTH) {
           recursePrint(
             depMap,
             depMap[refStr],

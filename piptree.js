@@ -50,19 +50,25 @@ def get_installed_distributions():
     return [d._dist for d in dists]
 
 
-def find_deps(idx, reqs):
+def find_deps(idx, visited, reqs, traverse_count):
     freqs = []
     for r in reqs:
         d = idx.get(r.key)
+        if not d:
+            continue
         r.project_name = d.project_name if d is not None else r.project_name
+        if len(visited) > 100 and visited.get(r.project_name):
+            return freqs
         specs = sorted(r.specs, reverse=True)
         specs_str = ",".join(["".join(sp) for sp in specs]) if specs else ""
+        dreqs = d.requires()
+        visited[r.project_name] = True
         freqs.append(
             {
                 "name": r.project_name,
                 "version": importlib_metadata.version(r.key),
                 "versionSpecifiers": specs_str,
-                "dependencies": find_deps(idx, d.requires()),
+                "dependencies": find_deps(idx, visited, dreqs, traverse_count + 1) if dreqs and traverse_count < 200 else [],
             }
         )
     return freqs
@@ -73,20 +79,26 @@ def main(argv):
     tree = []
     pkgs = get_installed_distributions()
     idx = {p.key: p for p in pkgs}
+    visited = {}
+    traverse_count = 0
     for p in pkgs:
         fr = frozen_req_from_dist(p)
-        tmpA = fr.split("==")
+        if not fr.startswith('# Editable'):
+            tmpA = fr.split("==")
+        else:
+            fr = p.key
+            tmpA = [fr,p.version]
         name = tmpA[0]
         if name.startswith("-e"):
-            continue
-        version = ""
+            name = name.split("#egg=")[-1].split(" ")[0].split("&")[0]
+        version = "latest"
         if len(tmpA) == 2:
             version = tmpA[1]
         tree.append(
             {
-                "name": name,
+                "name": name.split(" ")[0],
                 "version": version,
-                "dependencies": find_deps(idx, p.requires()),
+                "dependencies": find_deps(idx, visited, p.requires(), traverse_count + 1),
             }
         )
     all_deps = {}
@@ -108,7 +120,7 @@ if __name__ == "__main__":
  * Execute the piptree plugin and return the generated tree as json object
  */
 export const getTreeWithPlugin = (env, python_cmd, basePath) => {
-  let tree = undefined;
+  let tree = [];
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-piptree-"));
   const pipPlugin = join(tempDir, "piptree.py");
   const pipTreeJson = join(tempDir, "piptree.json");
