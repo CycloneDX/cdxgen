@@ -289,7 +289,9 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | MAVEN_HOME                   | Specify maven home                                                                                                          |
 | GRADLE_CACHE_DIR             | Specify gradle cache directory. Useful for class name resolving                                                             |
 | GRADLE_MULTI_PROJECT_MODE    | Unused. Automatically handled                                                                                               |
-| GRADLE_ARGS                  | Set to pass additional arguments such as profile or settings to gradle. Eg: --configuration runtimeClassPath                |
+| GRADLE_ARGS                  | Set to pass additional arguments such as profile or settings to gradle (all tasks). Eg: --configuration runtimeClassPath    |
+| GRADLE_ARGS_PROPERTIES       | Set to pass additional arguments only to the `gradle properties` task, used for collecting metadata about the project       |
+| GRADLE_ARGS_DEPENDENCIES     | Set to pass additional arguments only to the `gradle dependencies` task, used for listing actual project dependencies       |
 | GRADLE_HOME                  | Specify gradle home                                                                                                         |
 | GRADLE_CMD                   | Set to override gradle command                                                                                              |
 | GRADLE_DEPENDENCY_TASK       | By default cdxgen use the task "dependencies" to collect packages. Set to override the task name.                           |
