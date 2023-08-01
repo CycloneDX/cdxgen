@@ -1287,7 +1287,7 @@ export const parseMavenTree = function (rawOutput) {
   const dependenciesList = [];
   const keys_cache = {};
   const level_trees = {};
-  const tmpA = rawOutput.split("\n");
+  const tmpA = rawOutput.split("\r\n");
   let last_level = 0;
   let last_purl = "";
   const stack = [];
@@ -1395,7 +1395,7 @@ export const parseGradleDep = function (
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
-      group: rootProjectGroup || "",
+      group: rootProjectGroup.replace("\r", "") || "",
       name: rootProjectName,
       version: rootProjectVersion,
       type: "maven",
@@ -1448,13 +1448,13 @@ export const parseGradleDep = function (
         continue;
       }
       if ((
-        rline.startsWith("+--- ") || 
-        rline.startsWith("\\--- ")) && 
-        rline.includes("{strictly") && 
+        rline.startsWith("+--- ") ||
+        rline.startsWith("\\--- ")) &&
+        rline.includes("{strictly") &&
         rline.includes("(c)")
       ) {
-          continue;
-        }
+        continue;
+      }
       if (
         rline.trim() === "" ||
         rline.startsWith("+--- ") ||
@@ -1668,7 +1668,8 @@ export const parseGradleProjects = function (rawOutput) {
         rootProject = l
           .split("Root project ")[1]
           .split(" ")[0]
-          .replace(/'/g, "");
+          .replace(/'/g, "")
+          .replace(/\r/g, "");
       } else if (l.includes("--- Project")) {
         const tmpB = l.split("Project ");
         if (tmpB && tmpB.length > 1) {
@@ -1705,7 +1706,7 @@ export const parseGradleProperties = function (rawOutput) {
   const projects = new Set();
   const metadata = { group: "", version: "latest", properties: [] };
   if (typeof rawOutput === "string") {
-    const tmpA = rawOutput.split("\n");
+    const tmpA = rawOutput.split("\r\n");
     tmpA.forEach((l) => {
       if (l.startsWith("----") || l.startsWith(">") || !l.includes(": ")) {
         return;
@@ -1715,7 +1716,7 @@ export const parseGradleProperties = function (rawOutput) {
         if (tmpB[0] === "name") {
           rootProject = tmpB[1].trim();
         } else if (tmpB[0] === "group") {
-          metadata[tmpB[0]] = tmpB[1];
+          metadata[tmpB[0]] = tmpB[1].trim();
         } else if (tmpB[0] === "version") {
           metadata[tmpB[0]] = tmpB[1].trim().replace("unspecified", "latest");
         } else if (["buildFile", "projectDir", "rootDir"].includes(tmpB[0])) {
@@ -1814,7 +1815,7 @@ export const parseBazelSkyframe = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const keys_cache = {};
-    const tmpA = rawOutput.split("\n");
+    const tmpA = rawOutput.split("\r\n");
     tmpA.forEach((l) => {
       if (l.indexOf("external/maven") >= 0) {
         l = l.replace("arguments: ", "").replace(/"/g, "");
@@ -2262,6 +2263,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
 export const parseBdistMetadata = function (mData) {
   const pkg = {};
   mData.split("\n").forEach((l) => {
+    l.replace("\r", "");
     if (l.indexOf("Name: ") > -1) {
       pkg.name = l.split("Name: ")[1];
     } else if (l.indexOf("Version: ") > -1) {
@@ -2313,7 +2315,7 @@ export const parsePyProjectToml = (tomlFile) => {
   if (!tomlData) {
     return pkg;
   }
-  tomlData.split("\n").forEach((l) => {
+  tomlData.split("\r\n").forEach((l) => {
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       let key = tmpA[0].trim();
@@ -2931,7 +2933,7 @@ export const parseGosumData = async function (gosumData) {
   if (!gosumData) {
     return pkgList;
   }
-  const pkgs = gosumData.split("\n");
+  const pkgs = gosumData.split("\r\n");
   for (const l of pkgs) {
     // look for lines containing go.mod
     if (l.indexOf("go.mod") > -1) {
@@ -3266,7 +3268,7 @@ export const parseCargoTomlData = async function (cargoData) {
   let pkg = null;
   let dependencyMode = false;
   let packageMode = false;
-  cargoData.split("\n").forEach((l) => {
+  cargoData.split("\r\n").forEach((l) => {
     let key = null;
     let value = null;
     if (l.indexOf("[package]") > -1) {
@@ -3990,7 +3992,7 @@ export const parseConanData = function (conanData) {
   if (!conanData) {
     return pkgList;
   }
-  conanData.split("\n").forEach((l) => {
+  conanData.split("\r\n").forEach((l) => {
     if (!l.includes("/")) {
       return;
     }
