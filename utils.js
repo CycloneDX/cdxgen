@@ -1664,12 +1664,12 @@ export const parseGradleProjects = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
+      l = l.replace("\r", "")
       if (l.startsWith("Root project ")) {
         rootProject = l
           .split("Root project ")[1]
           .split(" ")[0]
-          .replace(/'/g, "")
-          .replace(/\r/g, "");
+          .replace(/'/g, "");
       } else if (l.includes("--- Project")) {
         const tmpB = l.split("Project ");
         if (tmpB && tmpB.length > 1) {
