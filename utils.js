@@ -1292,6 +1292,7 @@ export const parseMavenTree = function (rawOutput) {
   let last_purl = "";
   const stack = [];
   tmpA.forEach((l) => {
+    l = l.replace("\r", "");
     if (!includeMavenTestScope && l.trim().endsWith(":test")) {
       return;
     }
@@ -1395,7 +1396,7 @@ export const parseGradleDep = function (
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
-      group: rootProjectGroup || "",
+      group: rootProjectGroup.replace("\r", "") || "",
       name: rootProjectName,
       version: rootProjectVersion,
       type: "maven",
@@ -1447,14 +1448,13 @@ export const parseGradleDep = function (
       if (!rline) {
         continue;
       }
-      if ((
-        rline.startsWith("+--- ") || 
-        rline.startsWith("\\--- ")) && 
-        rline.includes("{strictly") && 
+      if (
+        (rline.startsWith("+--- ") || rline.startsWith("\\--- ")) &&
+        rline.includes("{strictly") &&
         rline.includes("(c)")
       ) {
-          continue;
-        }
+        continue;
+      }
       if (
         rline.trim() === "" ||
         rline.startsWith("+--- ") ||
@@ -1664,6 +1664,7 @@ export const parseGradleProjects = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
+      l = l.replace("\r", "")
       if (l.startsWith("Root project ")) {
         rootProject = l
           .split("Root project ")[1]
@@ -1707,6 +1708,7 @@ export const parseGradleProperties = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
+      l = l.replace("\r", "");
       if (l.startsWith("----") || l.startsWith(">") || !l.includes(": ")) {
         return;
       }
@@ -1715,7 +1717,7 @@ export const parseGradleProperties = function (rawOutput) {
         if (tmpB[0] === "name") {
           rootProject = tmpB[1].trim();
         } else if (tmpB[0] === "group") {
-          metadata[tmpB[0]] = tmpB[1];
+          metadata[tmpB[0]] = tmpB[1].trim();
         } else if (tmpB[0] === "version") {
           metadata[tmpB[0]] = tmpB[1].trim().replace("unspecified", "latest");
         } else if (["buildFile", "projectDir", "rootDir"].includes(tmpB[0])) {
@@ -1816,6 +1818,7 @@ export const parseBazelSkyframe = function (rawOutput) {
     const keys_cache = {};
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
+      l = l.replace("\r", "");
       if (l.indexOf("external/maven") >= 0) {
         l = l.replace("arguments: ", "").replace(/"/g, "");
         // Skyframe could have duplicate entries
@@ -2262,6 +2265,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
 export const parseBdistMetadata = function (mData) {
   const pkg = {};
   mData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     if (l.indexOf("Name: ") > -1) {
       pkg.name = l.split("Name: ")[1];
     } else if (l.indexOf("Version: ") > -1) {
@@ -2314,6 +2318,7 @@ export const parsePyProjectToml = (tomlFile) => {
     return pkg;
   }
   tomlData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       let key = tmpA[0].trim();
@@ -2933,9 +2938,10 @@ export const parseGosumData = async function (gosumData) {
   }
   const pkgs = gosumData.split("\n");
   for (const l of pkgs) {
+    let m = l.replace("\r", "");
     // look for lines containing go.mod
-    if (l.indexOf("go.mod") > -1) {
-      const tmpA = l.split(" ");
+    if (m.indexOf("go.mod") > -1) {
+      const tmpA = m.split(" ");
       const name = tmpA[0];
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
@@ -3269,6 +3275,7 @@ export const parseCargoTomlData = async function (cargoData) {
   cargoData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
+    l = l.replace("\r", "");
     if (l.indexOf("[package]") > -1) {
       packageMode = true;
       if (pkg) {
@@ -3991,6 +3998,7 @@ export const parseConanData = function (conanData) {
     return pkgList;
   }
   conanData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     if (!l.includes("/")) {
       return;
     }
