@@ -1396,7 +1396,7 @@ export const parseGradleDep = function (
     let match = "";
     // To render dependency tree we need a root project
     const rootProject = {
-      group: rootProjectGroup.replace("\r", "") || "",
+      group: rootProjectGroup || "",
       name: rootProjectName,
       version: rootProjectVersion,
       type: "maven",
@@ -1717,7 +1717,7 @@ export const parseGradleProperties = function (rawOutput) {
         if (tmpB[0] === "name") {
           rootProject = tmpB[1].trim();
         } else if (tmpB[0] === "group") {
-          metadata[tmpB[0]] = tmpB[1].trim();
+          metadata[tmpB[0]] = tmpB[1];
         } else if (tmpB[0] === "version") {
           metadata[tmpB[0]] = tmpB[1].trim().replace("unspecified", "latest");
         } else if (["buildFile", "projectDir", "rootDir"].includes(tmpB[0])) {

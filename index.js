@@ -1216,7 +1216,8 @@ export const createJavaBom = async (path, options) => {
             if (bomJsonObj.dependencies && !options.requiredOnly) {
               dependencies = mergeDependencies(
                 dependencies,
-                bomJsonObj.dependencies
+                bomJsonObj.dependencies,
+                parentComponent
               );
             }
           }
@@ -1381,7 +1382,8 @@ export const createJavaBom = async (path, options) => {
           if (parsedList.dependenciesList && parsedList.dependenciesList) {
             dependencies = mergeDependencies(
               dependencies,
-              parsedList.dependenciesList
+              parsedList.dependenciesList,
+              parentComponent
             );
           }
           if (dlist && dlist.length) {
@@ -1822,7 +1824,8 @@ export const createNodejsBom = async (path, options) => {
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
         dependencies = mergeDependencies(
           dependencies,
-          parsedList.dependenciesList
+          parsedList.dependenciesList,
+          parentComponent
         );
       }
     }
@@ -1850,7 +1853,8 @@ export const createNodejsBom = async (path, options) => {
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
         dependencies = mergeDependencies(
           dependencies,
-          parsedList.dependenciesList
+          parsedList.dependenciesList,
+          parentComponent
         );
       }
     }
@@ -1996,7 +2000,8 @@ export const createNodejsBom = async (path, options) => {
         }
         dependencies = mergeDependencies(
           dependencies,
-          parsedList.dependenciesList
+          parsedList.dependenciesList,
+          parentComponent
         );
       }
     }
@@ -3163,7 +3168,8 @@ export const createSwiftBom = (path, options) => {
         if (retData.dependenciesList) {
           dependencies = mergeDependencies(
             dependencies,
-            retData.dependenciesList
+            retData.dependenciesList,
+            parentComponent
           );
         }
       } else {
@@ -3439,7 +3445,8 @@ export const createContainerSpecLikeBom = async (path, options) => {
         if (mbomData.bomJson.dependencies) {
           dependencies = mergeDependencies(
             dependencies,
-            mbomData.bomJson.dependencies
+            mbomData.bomJson.dependencies,
+            parentComponent
           );
         }
         if (mbomData.bomJson.services) {
@@ -3728,6 +3735,9 @@ export const mergeDependencies = (
   newDependencies,
   parentComponent = {}
 ) => {
+  if (!parentComponent && DEBUG_MODE) {
+    console.log("Unable to determine parent component. Dependencies will be flattened.");
+  }
   const deps_map = {};
   const parentRef =
     parentComponent && parentComponent["bom-ref"]
