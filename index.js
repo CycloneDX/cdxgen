@@ -3735,6 +3735,9 @@ export const mergeDependencies = (
   newDependencies,
   parentComponent = {}
 ) => {
+  if (!parentComponent && DEBUG_MODE) {
+    console.log("Unable to determine parent component. Dependencies will be flattened.");
+  }
   const deps_map = {};
   const parentRef =
     parentComponent && parentComponent["bom-ref"]
