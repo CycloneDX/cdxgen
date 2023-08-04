@@ -687,6 +687,7 @@ export const parseYarnLock = async function (yarnLockFile) {
     const identMap = yarnLockToIdentMap(lockData);
     let prefixAtSymbol = false;
     lockData.split("\n").forEach((l) => {
+      l = l.replaceAll("\r", "");
       if (l === "\n" || l.startsWith("#")) {
         return;
       }
@@ -1710,6 +1711,7 @@ export const parseGradleProperties = function (rawOutput) {
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
       l = l.replace("\r", "");
+      // l = l.trim();
       if (l.startsWith("----") || l.startsWith(">") || !l.includes(": ")) {
         return;
       }
@@ -1718,7 +1720,7 @@ export const parseGradleProperties = function (rawOutput) {
         if (tmpB[0] === "name") {
           rootProject = tmpB[1].trim();
         } else if (tmpB[0] === "group") {
-          metadata[tmpB[0]] = tmpB[1];
+          metadata[tmpB[0]] = tmpB[1].trim();
         } else if (tmpB[0] === "version") {
           metadata[tmpB[0]] = tmpB[1].trim().replace("unspecified", "latest");
         } else if (["buildFile", "projectDir", "rootDir"].includes(tmpB[0])) {
@@ -5561,7 +5563,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    *
    * By checking the environment variable "VIRTUAL_ENV" we decide whether to create an env or not
    */
-  if (!process.env.VIRTUAL_ENV) {
+  if (!process.env.VIRTUAL_ENV && !reqOrSetupFile.endsWith("poetry.lock")) {
     result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
       encoding: "utf-8"
     });
@@ -5578,7 +5580,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       env.VIRTUAL_ENV = tempVenvDir;
       env.PATH = `${join(
         tempVenvDir,
-        platform() == "win32" ? "Scripts" : "bin"
+        platform() === "win32" ? "Scripts" : "bin"
       )}${_delimiter}${process.env.PATH || ""}`;
     }
   }
@@ -5591,7 +5593,15 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   // Bug #388. Perform pip install in all virtualenv to make the experience consistent
   if (reqOrSetupFile) {
     if (reqOrSetupFile.endsWith("poetry.lock")) {
+      let poetryEnvArgs = ["-m", "poetry", "env", "remove", "--all"];
+      result = spawnSync(PYTHON_CMD, poetryEnvArgs, {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        env
+      });
       let poetryInstallArgs = ["-m", "poetry", "install", "-n", "--no-root"];
+      // let poetryInstallArgs = ["-m", "poetry", "env list"];
       // Attempt to perform poetry install
       result = spawnSync(PYTHON_CMD, poetryInstallArgs, {
         cwd: basePath,
@@ -5599,6 +5609,23 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         timeout: TIMEOUT_MS,
         env
       });
+      if (
+        result.stderr.substring(
+          result.stderr.search("(?<=Creating virtualenv )(.+)")
+        )
+      ) {
+        let venv = result.stderr.substring(
+          result.stderr.search("(?<=Creating virtualenv )(.+)")
+        );
+        if (venv) {
+          venv = venv.split(" in ");
+          env.VIRTUAL_ENV = join(venv[1].replace("\r\n", "\\"), venv[0]);
+          env.PATH = `${join(
+            env.VIRTUAL_ENV,
+            platform() === "win32" ? "Scripts" : "bin"
+          )}${_delimiter}${process.env.PATH || ""}`;
+        }
+      }
       if (result.status !== 0 || result.error) {
         if (result.stderr && result.stderr.includes("No module named poetry")) {
           poetryInstallArgs = ["install", "-n", "--no-root"];
