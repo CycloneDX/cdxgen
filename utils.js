@@ -6,7 +6,7 @@ import {
   basename,
   join,
   resolve,
-  delimiter as _delimiter,
+  delimiter as _delimiter
 } from "node:path";
 import {
   existsSync,
@@ -17,7 +17,7 @@ import {
   constants,
   writeFileSync,
   unlinkSync,
-  chmodSync,
+  chmodSync
 } from "node:fs";
 import got from "got";
 import { xml2js } from "xml-js";
@@ -29,16 +29,16 @@ if (!url.startsWith("file://")) {
 const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
 const licenseMapping = JSON.parse(
-  readFileSync(join(dirName, "data", "lic-mapping.json")),
+  readFileSync(join(dirName, "data", "lic-mapping.json"))
 );
 const vendorAliases = JSON.parse(
-  readFileSync(join(dirName, "data", "vendor-alias.json")),
+  readFileSync(join(dirName, "data", "vendor-alias.json"))
 );
 const spdxLicenses = JSON.parse(
-  readFileSync(join(dirName, "data", "spdx-licenses.json")),
+  readFileSync(join(dirName, "data", "spdx-licenses.json"))
 );
 const knownLicenses = JSON.parse(
-  readFileSync(join(dirName, "data", "known-licenses.json")),
+  readFileSync(join(dirName, "data", "known-licenses.json"))
 );
 import { load } from "cheerio";
 import { load as _load } from "js-yaml";
@@ -56,11 +56,11 @@ const _version = selfPJson.version;
 // Refer to contrib/py-modules.py for a script to generate this list
 // The script needs to be used once every few months to update this list
 const PYTHON_STD_MODULES = JSON.parse(
-  readFileSync(join(dirName, "data", "python-stdlib.json")),
+  readFileSync(join(dirName, "data", "python-stdlib.json"))
 );
 // Mapping between modules and package names
 const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
-  readFileSync(join(dirName, "data", "pypi-pkg-aliases.json")),
+  readFileSync(join(dirName, "data", "pypi-pkg-aliases.json"))
 );
 
 // Debug mode flag
@@ -96,8 +96,8 @@ if (process.env.PYTHON_CMD) {
 // Custom user-agent for cdxgen
 const cdxgenAgent = got.extend({
   headers: {
-    "user-agent": `@CycloneDX/cdxgen ${_version}`,
-  },
+    "user-agent": `@CycloneDX/cdxgen ${_version}`
+  }
 });
 
 /**
@@ -114,7 +114,7 @@ export const getAllFiles = function (dirPath, pattern) {
       "**/venv/**",
       "**/docs/**",
       "**/examples/**",
-      "**/site-packages/**",
+      "**/site-packages/**"
     ];
     // Only ignore node_modules if the caller is not looking for package.json
     if (!pattern.includes("package.json")) {
@@ -128,7 +128,7 @@ export const getAllFiles = function (dirPath, pattern) {
       strict: true,
       dot: pattern.startsWith(".") ? true : false,
       follow: false,
-      ignore: ignoreList,
+      ignore: ignoreList
     });
   } catch (err) {
     if (DEBUG_MODE) {
@@ -206,27 +206,27 @@ export function addLicenseText(pkg, l, licenseContent, format = "xml") {
     "licence",
     "NOTICE",
     "Notice",
-    "notice",
+    "notice"
   ];
   const licenseContentTypes = {
     "text/plain": "",
     "text/txt": ".txt",
     "text/markdown": ".md",
-    "text/xml": ".xml",
+    "text/xml": ".xml"
   };
   /* Loops over different name combinations starting from the license specified
        naming (e.g., 'LICENSE.Apache-2.0') and proceeding towards more generic names. */
   for (const licenseName of [`.${l}`, ""]) {
     for (const licenseFilename of licenseFilenames) {
       for (const [licenseContentType, fileExtension] of Object.entries(
-        licenseContentTypes,
+        licenseContentTypes
       )) {
         const licenseFilepath = `${pkg.realPath}/${licenseFilename}${licenseName}${fileExtension}`;
         if (existsSync(licenseFilepath)) {
           licenseContent.text = readLicenseText(
             licenseFilepath,
             licenseContentType,
-            format,
+            format
           );
           return;
         }
@@ -242,7 +242,7 @@ export function addLicenseText(pkg, l, licenseContent, format = "xml") {
 export function readLicenseText(
   licenseFilepath,
   licenseContentType,
-  format = "xml",
+  format = "xml"
 ) {
   const licenseText = readFileSync(licenseFilepath, "utf8");
   if (licenseText) {
@@ -286,7 +286,7 @@ export const getNpmMetadata = async function (pkgList) {
         body = metadata_cache[key];
       } else {
         const res = await cdxgenAgent.get(NPM_URL + key, {
-          responseType: "json",
+          responseType: "json"
         });
         body = res.body;
         metadata_cache[key] = body;
@@ -315,7 +315,7 @@ const _getDepPkgList = async function (
   pkgList,
   dependenciesList,
   depKeys,
-  pkg,
+  pkg
 ) {
   const pkgDependencies =
     pkg.lockfileVersion && pkg.lockfileVersion >= 3
@@ -346,7 +346,7 @@ const _getDepPkgList = async function (
         name.replace("node_modules/", ""),
         version,
         null,
-        null,
+        null
       );
       const purlString = decodeURIComponent(purl.toString());
       const scope = pkgDependencies[name].dev === true ? "optional" : undefined;
@@ -358,8 +358,8 @@ const _getDepPkgList = async function (
         properties: [
           {
             name: "SrcFile",
-            value: pkgLockFile,
-          },
+            value: pkgLockFile
+          }
         ],
         evidence: {
           identity: {
@@ -369,11 +369,11 @@ const _getDepPkgList = async function (
               {
                 technique: "manifest-analysis",
                 confidence: 1,
-                value: pkgLockFile,
-              },
-            ],
-          },
-        },
+                value: pkgLockFile
+              }
+            ]
+          }
+        }
       };
       pkgList.push(apkg);
       if (pkgDependencies[name].dependencies) {
@@ -395,7 +395,7 @@ const _getDepPkgList = async function (
             depName.replace("node_modules/", ""),
             depVersion,
             null,
-            null,
+            null
           );
           const deppurlString = decodeURIComponent(deppurl.toString());
           deplist.push(deppurlString);
@@ -403,7 +403,7 @@ const _getDepPkgList = async function (
         if (!depKeys[purlString]) {
           dependenciesList.push({
             ref: purlString,
-            dependsOn: deplist,
+            dependsOn: deplist
           });
           depKeys[purlString] = true;
         }
@@ -415,14 +415,14 @@ const _getDepPkgList = async function (
             pkgList,
             dependenciesList,
             depKeys,
-            pkgDependencies[name],
+            pkgDependencies[name]
           );
         }
       } else {
         if (!depKeys[purlString]) {
           dependenciesList.push({
             ref: purlString,
-            dependsOn: [],
+            dependsOn: []
           });
           depKeys[purlString] = true;
         }
@@ -451,7 +451,7 @@ export const parsePkgJson = async (pkgJsonFile) => {
         name,
         pkgData.version,
         null,
-        null,
+        null
       ).toString();
       pkgList.push({
         name,
@@ -461,8 +461,8 @@ export const parsePkgJson = async (pkgJsonFile) => {
         properties: [
           {
             name: "SrcFile",
-            value: pkgJsonFile,
-          },
+            value: pkgJsonFile
+          }
         ],
         evidence: {
           identity: {
@@ -472,11 +472,11 @@ export const parsePkgJson = async (pkgJsonFile) => {
               {
                 technique: "manifest-analysis",
                 confidence: 1,
-                value: pkgJsonFile,
-              },
-            ],
-          },
-        },
+                value: pkgJsonFile
+              }
+            ]
+          }
+        }
       });
     } catch (err) {
       // continue regardless of error
@@ -485,7 +485,7 @@ export const parsePkgJson = async (pkgJsonFile) => {
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages in parsePkgJson`,
+        `About to fetch license information for ${pkgList.length} packages in parsePkgJson`
       );
     }
     return await getNpmMetadata(pkgList);
@@ -521,9 +521,9 @@ export const parsePkgLock = async (pkgLockFile) => {
             lockData.name,
             lockData.version,
             null,
-            null,
-          ).toString(),
-        ),
+            null
+          ).toString()
+        )
       };
     } else if (lockData.lockfileVersion === 1) {
       let dirName = dirname(pkgLockFile);
@@ -534,7 +534,7 @@ export const parsePkgLock = async (pkgLockFile) => {
         group: "",
         name: lockData.name || dirName,
         version: lockData.version || "",
-        type: "application",
+        type: "application"
       };
     }
     if (rootPkg && rootPkg.name) {
@@ -544,7 +544,7 @@ export const parsePkgLock = async (pkgLockFile) => {
         rootPkg.name,
         rootPkg.version,
         null,
-        null,
+        null
       );
       const purlString = decodeURIComponent(purl.toString());
       rootPkg["bom-ref"] = purlString;
@@ -579,15 +579,15 @@ export const parsePkgLock = async (pkgLockFile) => {
               rd,
               resolvedVersion,
               null,
-              null,
-            ).toString(),
+              null
+            ).toString()
           );
           deplist.push(dpurl);
         }
       }
       dependenciesList.push({
         ref: purlString,
-        dependsOn: deplist,
+        dependsOn: deplist
       });
     }
     pkgList = await _getDepPkgList(
@@ -595,13 +595,13 @@ export const parsePkgLock = async (pkgLockFile) => {
       pkgList,
       dependenciesList,
       depKeys,
-      lockData,
+      lockData
     );
   }
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages in parsePkgLock`,
+        `About to fetch license information for ${pkgList.length} packages in parsePkgLock`
       );
     }
     pkgList = await getNpmMetadata(pkgList);
@@ -609,7 +609,7 @@ export const parsePkgLock = async (pkgLockFile) => {
   }
   return {
     pkgList,
-    dependenciesList,
+    dependenciesList
   };
 };
 
@@ -706,7 +706,7 @@ export const parseYarnLock = async function (yarnLockFile) {
             name,
             version,
             null,
-            null,
+            null
           ).toString();
           pkgList.push({
             group: group || "",
@@ -716,8 +716,8 @@ export const parseYarnLock = async function (yarnLockFile) {
             properties: [
               {
                 name: "SrcFile",
-                value: yarnLockFile,
-              },
+                value: yarnLockFile
+              }
             ],
             evidence: {
               identity: {
@@ -727,11 +727,11 @@ export const parseYarnLock = async function (yarnLockFile) {
                   {
                     technique: "manifest-analysis",
                     confidence: 1,
-                    value: yarnLockFile,
-                  },
-                ],
-              },
-            },
+                    value: yarnLockFile
+                  }
+                ]
+              }
+            }
           });
           // Reset all the variables
           group = "";
@@ -743,7 +743,7 @@ export const parseYarnLock = async function (yarnLockFile) {
           // Create an entry for dependencies
           dependenciesList.push({
             ref: decodeURIComponent(purlString),
-            dependsOn: deplist,
+            dependsOn: deplist
           });
           depKeys[purlString] = true;
           deplist = [];
@@ -786,7 +786,7 @@ export const parseYarnLock = async function (yarnLockFile) {
             dgroupname,
             resolvedVersion,
             null,
-            null,
+            null
           ).toString();
           deplist.push(decodeURIComponent(depPurlString));
         }
@@ -820,18 +820,18 @@ export const parseYarnLock = async function (yarnLockFile) {
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages in parseYarnLock`,
+        `About to fetch license information for ${pkgList.length} packages in parseYarnLock`
       );
     }
     pkgList = await getNpmMetadata(pkgList);
     return {
       pkgList,
-      dependenciesList,
+      dependenciesList
     };
   }
   return {
     pkgList,
-    dependenciesList,
+    dependenciesList
   };
 };
 
@@ -874,8 +874,8 @@ export const parseNodeShrinkwrap = async function (swFile) {
           properties: [
             {
               name: "SrcFile",
-              value: swFile,
-            },
+              value: swFile
+            }
           ],
           evidence: {
             identity: {
@@ -885,11 +885,11 @@ export const parseNodeShrinkwrap = async function (swFile) {
                 {
                   technique: "manifest-analysis",
                   confidence: 1,
-                  value: swFile,
-                },
-              ],
-            },
-          },
+                  value: swFile
+                }
+              ]
+            }
+          }
         });
       }
     }
@@ -897,7 +897,7 @@ export const parseNodeShrinkwrap = async function (swFile) {
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages in parseNodeShrinkwrap`,
+        `About to fetch license information for ${pkgList.length} packages in parseNodeShrinkwrap`
       );
     }
     return await getNpmMetadata(pkgList);
@@ -923,7 +923,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
         parentComponent.name,
         parentComponent.version,
         null,
-        null,
+        null
       ).toString();
   }
   if (existsSync(pnpmLock)) {
@@ -947,13 +947,13 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
           dk,
           version,
           null,
-          null,
+          null
         ).toString();
         ddeplist.push(decodeURIComponent(dpurl));
       }
       dependenciesList.push({
         ref: decodeURIComponent(ppurl),
-        dependsOn: ddeplist,
+        dependsOn: ddeplist
       });
     }
     let lockfileVersion = yamlObj.lockfileVersion;
@@ -1002,7 +1002,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
         // Let's have some warnings till we fully support pnpm 8
         if (!name) {
           console.warn(
-            `Unable to extract name and version for string ${pkgKeys[k]}`,
+            `Unable to extract name and version for string ${pkgKeys[k]}`
           );
           continue;
         }
@@ -1013,7 +1013,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
             name,
             version,
             null,
-            null,
+            null
           ).toString();
           const deplist = [];
           for (const dpkgName of Object.keys(deps)) {
@@ -1023,13 +1023,13 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
               dpkgName,
               deps[dpkgName],
               null,
-              null,
+              null
             ).toString();
             deplist.push(decodeURIComponent(dpurlString));
           }
           dependenciesList.push({
             ref: decodeURIComponent(purlString),
-            dependsOn: deplist,
+            dependsOn: deplist
           });
           pkgList.push({
             group: group,
@@ -1040,8 +1040,8 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
             properties: [
               {
                 name: "SrcFile",
-                value: pnpmLock,
-              },
+                value: pnpmLock
+              }
             ],
             evidence: {
               identity: {
@@ -1051,11 +1051,11 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
                   {
                     technique: "manifest-analysis",
                     confidence: 1,
-                    value: pnpmLock,
-                  },
-                ],
-              },
-            },
+                    value: pnpmLock
+                  }
+                ]
+              }
+            }
           });
         }
       }
@@ -1064,18 +1064,18 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages in parsePnpmLock`,
+        `About to fetch license information for ${pkgList.length} packages in parsePnpmLock`
       );
     }
     pkgList = await getNpmMetadata(pkgList);
     return {
       pkgList,
-      dependenciesList,
+      dependenciesList
     };
   }
   return {
     pkgList,
-    dependenciesList,
+    dependenciesList
   };
 };
 
@@ -1099,8 +1099,8 @@ export const parseBowerJson = async (bowerJsonFile) => {
         properties: [
           {
             name: "SrcFile",
-            value: bowerJsonFile,
-          },
+            value: bowerJsonFile
+          }
         ],
         evidence: {
           identity: {
@@ -1110,11 +1110,11 @@ export const parseBowerJson = async (bowerJsonFile) => {
               {
                 technique: "manifest-analysis",
                 confidence: 1,
-                value: bowerJsonFile,
-              },
-            ],
-          },
-        },
+                value: bowerJsonFile
+              }
+            ]
+          }
+        }
       });
     } catch (err) {
       // continue regardless of error
@@ -1123,7 +1123,7 @@ export const parseBowerJson = async (bowerJsonFile) => {
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages in parseBowerJson`,
+        `About to fetch license information for ${pkgList.length} packages in parseBowerJson`
       );
     }
     return await getNpmMetadata(pkgList);
@@ -1180,8 +1180,8 @@ export const parseMinJs = async (minJsFile) => {
                 properties: [
                   {
                     name: "SrcFile",
-                    value: minJsFile,
-                  },
+                    value: minJsFile
+                  }
                 ],
                 evidence: {
                   identity: {
@@ -1191,11 +1191,11 @@ export const parseMinJs = async (minJsFile) => {
                       {
                         technique: "filename",
                         confidence: 0.25,
-                        value: minJsFile,
-                      },
-                    ],
-                  },
-                },
+                        value: minJsFile
+                      }
+                    ]
+                  }
+                }
               });
             }
             return;
@@ -1209,7 +1209,7 @@ export const parseMinJs = async (minJsFile) => {
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch license information for ${pkgList.length} packages in parseMinJs`,
+        `About to fetch license information for ${pkgList.length} packages in parseMinJs`
       );
     }
     return await getNpmMetadata(pkgList);
@@ -1230,7 +1230,7 @@ export const parsePom = function (pomFile) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).project;
   if (project && project.dependencies) {
     let dependencies = project.dependencies.dependency;
@@ -1254,8 +1254,8 @@ export const parsePom = function (pomFile) {
             properties: [
               {
                 name: "SrcFile",
-                value: pomFile,
-              },
+                value: pomFile
+              }
             ],
             evidence: {
               identity: {
@@ -1265,11 +1265,11 @@ export const parsePom = function (pomFile) {
                   {
                     technique: "manifest-analysis",
                     confidence: 1,
-                    value: pomFile,
-                  },
-                ],
-              },
-            },
+                    value: pomFile
+                  }
+                ]
+              }
+            }
           });
       }
     }
@@ -1320,14 +1320,14 @@ export const parseMavenTree = function (rawOutput) {
             pkgArr[1],
             versionStr,
             { type: "jar" },
-            null,
+            null
           ).toString();
           purlString = decodeURIComponent(purlString);
           deps.push({
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
-            qualifiers: { type: "jar" },
+            qualifiers: { type: "jar" }
           });
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
@@ -1360,12 +1360,12 @@ export const parseMavenTree = function (rawOutput) {
   for (const lk of Object.keys(level_trees)) {
     dependenciesList.push({
       ref: lk,
-      dependsOn: level_trees[lk],
+      dependsOn: level_trees[lk]
     });
   }
   return {
     pkgList: deps,
-    dependenciesList,
+    dependenciesList
   };
 };
 
@@ -1380,7 +1380,7 @@ export const parseGradleDep = function (
   rawOutput,
   rootProjectGroup = "",
   rootProjectName = "root",
-  rootProjectVersion = "latest",
+  rootProjectVersion = "latest"
 ) {
   if (typeof rawOutput === "string") {
     // Bug: 249. Get any sub-projects refered here
@@ -1402,7 +1402,7 @@ export const parseGradleDep = function (
       name: rootProjectName,
       version: rootProjectVersion,
       type: "maven",
-      qualifiers: { type: "jar" },
+      qualifiers: { type: "jar" }
     };
     const deps = [];
     const dependenciesList = [];
@@ -1416,8 +1416,8 @@ export const parseGradleDep = function (
         rootProject.name,
         rootProject.version,
         rootProject.qualifiers,
-        null,
-      ).toString(),
+        null
+      ).toString()
     );
     const first_purl = last_purl;
     let last_project_purl = first_purl;
@@ -1436,9 +1436,9 @@ export const parseGradleDep = function (
               sd.replace(":", ""),
               rootProject.version,
               rootProject.qualifiers,
-              null,
-            ).toString(),
-          ),
+              null
+            ).toString()
+          )
         );
       }
       level_trees[last_purl] = subDependsOn;
@@ -1495,7 +1495,7 @@ export const parseGradleDep = function (
             name,
             version,
             { type: "jar" },
-            null,
+            null
           ).toString();
           purlString = decodeURIComponent(purlString);
           keys_cache[purlString + "_" + last_purl] = true;
@@ -1507,7 +1507,7 @@ export const parseGradleDep = function (
                 group,
                 name: name,
                 version: version,
-                qualifiers: { type: "jar" },
+                qualifiers: { type: "jar" }
               };
               if (scope) {
                 adep["scope"] = scope;
@@ -1516,8 +1516,8 @@ export const parseGradleDep = function (
                 adep.properties = [
                   {
                     name: "GradleProfileName",
-                    value: profileName,
-                  },
+                    value: profileName
+                  }
                 ];
               }
               deps.push(adep);
@@ -1561,12 +1561,12 @@ export const parseGradleDep = function (
     for (const lk of Object.keys(level_trees)) {
       dependenciesList.push({
         ref: lk,
-        dependsOn: level_trees[lk],
+        dependsOn: level_trees[lk]
       });
     }
     return {
       pkgList: deps,
-      dependenciesList,
+      dependenciesList
     };
   }
   return {};
@@ -1601,7 +1601,7 @@ export const parseCljDep = function (rawOutput) {
             deps.push({
               group,
               name,
-              version,
+              version
             });
           }
         }
@@ -1695,7 +1695,7 @@ export const parseGradleProjects = function (rawOutput) {
   }
   return {
     rootProject,
-    projects: Array.from(projects),
+    projects: Array.from(projects)
   };
 };
 
@@ -1738,7 +1738,7 @@ export const parseGradleProperties = function (rawOutput) {
   return {
     rootProject,
     projects: Array.from(projects),
-    metadata,
+    metadata
   };
 };
 
@@ -1754,8 +1754,8 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
     rootProject: subProject,
     projects: [],
     metadata: {
-      version: "latest",
-    },
+      version: "latest"
+    }
   };
   // To optimize performance and reduce errors do not query for properties
   // beyond the first level
@@ -1767,7 +1767,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
     "-q",
     "--console",
     "plain",
-    "--build-cache",
+    "--build-cache"
   ];
   const gradleCmd = getGradleCommand(dir, rootPath);
   // common gradle args, used for all tasks
@@ -1785,11 +1785,11 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
     gradleCmd,
     gradlePropertiesArgs.join(" "),
     "in",
-    dir,
+    dir
   );
   const result = spawnSync(gradleCmd, gradlePropertiesArgs, {
     cwd: dir,
-    encoding: "utf-8",
+    encoding: "utf-8"
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
@@ -1798,7 +1798,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       } else {
         console.error(result.stdout, result.stderr);
         console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible.",
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible."
         );
       }
     }
@@ -1856,7 +1856,7 @@ export const parseBazelSkyframe = function (rawOutput) {
                 group,
                 name,
                 version,
-                qualifiers: { type: "jar" },
+                qualifiers: { type: "jar" }
               });
             }
           }
@@ -1903,14 +1903,14 @@ export const parseKVDep = function (rawOutput) {
           group: tmpA[0],
           name: tmpA[1],
           version: tmpA[2],
-          qualifiers: { type: "jar" },
+          qualifiers: { type: "jar" }
         });
       } else if (tmpA.length === 2) {
         deps.push({
           group: "",
           name: tmpA[0],
           version: tmpA[1],
-          qualifiers: { type: "jar" },
+          qualifiers: { type: "jar" }
         });
       }
     });
@@ -2006,7 +2006,7 @@ export const getMvnMetadata = async function (pkgList) {
         spaces: 4,
         textKey: "_",
         attributesKey: "$",
-        commentKey: "value",
+        commentKey: "value"
       }).project;
       if (bodyJson && bodyJson.licenses && bodyJson.licenses.license) {
         if (Array.isArray(bodyJson.licenses.license)) {
@@ -2034,7 +2034,7 @@ export const getMvnMetadata = async function (pkgList) {
           p.group,
           p.name,
           p.version,
-          fullUrl,
+          fullUrl
         );
       }
       cdepList.push(p);
@@ -2066,7 +2066,7 @@ export const parsePyRequiresDist = function (dist_string) {
   }
   return {
     name,
-    version,
+    version
   };
 };
 
@@ -2123,7 +2123,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         p.name = p.name.split("[")[0];
       }
       const res = await cdxgenAgent.get(PYPI_URL + p.name + "/json", {
-        responseType: "json",
+        responseType: "json"
       });
       const body = res.body;
       if (body.info.author && body.info.author.trim() !== "") {
@@ -2169,7 +2169,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         if (versionSpecifiers) {
           p.version = guessPypiMatchingVersion(
             Object.keys(body.releases || {}),
-            versionSpecifiers,
+            versionSpecifiers
           );
           // Indicate the confidence with our guess
           p.evidence = {
@@ -2180,10 +2180,10 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
                 {
                   technique: "manifest-analysis",
                   confidence: 0.75,
-                  value: `Version specifiers: ${versionSpecifiers}`,
-                },
-              ],
-            },
+                  value: `Version specifiers: ${versionSpecifiers}`
+                }
+              ]
+            }
           };
         }
         // If we have reached here, it means we have not solved the version
@@ -2199,10 +2199,10 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
                 {
                   technique: "source-code-analysis",
                   confidence: 0.5,
-                  value: `PyPI package: ${p.name}`,
-                },
-              ],
-            },
+                  value: `PyPI package: ${p.name}`
+                }
+              ]
+            }
           };
         }
       } else if (p.version !== body.info.version) {
@@ -2211,7 +2211,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         }
         p.properties.push({
           name: "cdx:pypi:latest_version",
-          value: body.info.version,
+          value: body.info.version
         });
       }
       if (body.releases && body.releases[p.version]) {
@@ -2227,16 +2227,16 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       if (DEBUG_MODE) {
         console.error(p.name, "is not found on PyPI.");
         console.log(
-          "If this package is available from PyPI or a registry, its name might be different to the module name. Raise a ticket at https://github.com/CycloneDX/cdxgen/issues so that this could be added to the mapping file pypi-pkg-aliases.json",
+          "If this package is available from PyPI or a registry, its name might be different to the module name. Raise a ticket at https://github.com/CycloneDX/cdxgen/issues so that this could be added to the mapping file pypi-pkg-aliases.json"
         );
         console.log(
-          "Alternatively, if this is a package that gets installed directly in your environment and offers a python binding, then track such packages manually.",
+          "Alternatively, if this is a package that gets installed directly in your environment and offers a python binding, then track such packages manually."
         );
       }
       if (!p.version) {
         if (DEBUG_MODE) {
           console.log(
-            `Assuming the version as latest for the package ${p.name}`,
+            `Assuming the version as latest for the package ${p.name}`
           );
         }
         p.version = "latest";
@@ -2249,10 +2249,10 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
               {
                 technique: "source-code-analysis",
                 confidence: 0,
-                value: `Module ${p.name}`,
-              },
-            ],
-          },
+                value: `Module ${p.name}`
+              }
+            ]
+          }
         };
       }
       cdepList.push(p);
@@ -2386,10 +2386,10 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
               {
                 technique: "manifest-analysis",
                 confidence: 1,
-                value: lockFile,
-              },
-            ],
-          },
+                value: lockFile
+              }
+            ]
+          }
         };
         pkgList.push(pkg);
       }
@@ -2460,7 +2460,7 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
             pkgList.push({
               name,
               version: versionStr,
-              scope: compScope,
+              scope: compScope
             });
           }
         }
@@ -2476,9 +2476,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
             properties: [
               {
                 name: "cdx:pypi:versionSpecifiers",
-                value: versionSpecifiers,
-              },
-            ],
+                value: versionSpecifiers
+              }
+            ]
           });
         }
       } else if (/[>|[|@]/.test(l)) {
@@ -2497,9 +2497,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
               properties: [
                 {
                   name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers,
-                },
-              ],
+                  value: versionSpecifiers
+                }
+              ]
             });
           }
         }
@@ -2520,9 +2520,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
               properties: [
                 {
                   name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers,
-                },
-              ],
+                  value: versionSpecifiers
+                }
+              ]
             });
           }
         } else if (!l.includes(" ")) {
@@ -2536,9 +2536,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
               properties: [
                 {
                   name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers,
-                },
-              ],
+                  value: versionSpecifiers
+                }
+              ]
             });
           }
         }
@@ -2564,7 +2564,7 @@ export const getPyModules = async (src, epkgList) => {
     (x) =>
       !pyDefaultModules.has(x.name.toLowerCase()) &&
       !x.name.startsWith("_") &&
-      !x.name.startsWith("."),
+      !x.name.startsWith(".")
   );
   let pkgList = filteredModList.map((p) => {
     return {
@@ -2577,13 +2577,13 @@ export const getPyModules = async (src, epkgList) => {
       properties: [
         {
           name: "cdx:pypi:versionSpecifiers",
-          value: p.versionSpecifiers,
-        },
-      ],
+          value: p.versionSpecifiers
+        }
+      ]
     };
   });
   pkgList = pkgList.filter(
-    (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index,
+    (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index
   );
   if (epkgList && epkgList.length) {
     const pkgMaps = epkgList.map((p) => p.name);
@@ -2600,7 +2600,7 @@ export const getPyModules = async (src, epkgList) => {
     if (p.version) {
       dependenciesList.push({
         ref: `pkg:pypi/${p.name.replace(/_/g, "-")}@${p.version}`.toLowerCase(),
-        dependsOn: [],
+        dependsOn: []
       });
     }
   }
@@ -2669,7 +2669,7 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
   if (repoUrl.indexOf("github.com") > -1) {
     let apiUrl = repoUrl.replace(
       "https://github.com",
-      "https://api.github.com/repos",
+      "https://api.github.com/repos"
     );
     apiUrl += "/license";
     const headers = {};
@@ -2679,18 +2679,18 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
     try {
       const res = await cdxgenAgent.get(apiUrl, {
         responseType: "json",
-        headers: headers,
+        headers: headers
       });
       if (res && res.body) {
         const license = res.body.license;
         let licenseId = license.spdx_id;
         const licObj = {
-          url: res.body.html_url,
+          url: res.body.html_url
         };
         if (license.spdx_id === "NOASSERTION") {
           if (res.body.content) {
             const content = Buffer.from(res.body.content, "base64").toString(
-              "ascii",
+              "ascii"
             );
             licenseId = guessLicenseId(content);
           }
@@ -2754,7 +2754,7 @@ export const getGoPkgLicense = async function (repoMetadata) {
       const licList = [];
       for (const id of licenseIds) {
         const alicense = {
-          id: id,
+          id: id
         };
         alicense["url"] = pkgUrlPrefix;
         licList.push(alicense);
@@ -2777,12 +2777,12 @@ export const getGoPkgComponent = async function (group, name, version, hash) {
   if (fetchLicenses) {
     if (DEBUG_MODE) {
       console.log(
-        `About to fetch go package license information for ${group}:${name}`,
+        `About to fetch go package license information for ${group}:${name}`
       );
     }
     license = await getGoPkgLicense({
       group: group,
-      name: name,
+      name: name
     });
   }
   pkg = {
@@ -2790,7 +2790,7 @@ export const getGoPkgComponent = async function (group, name, version, hash) {
     name: name,
     version: version,
     _integrity: hash,
-    license: license,
+    license: license
   };
   return pkg;
 };
@@ -2844,7 +2844,7 @@ export const parseGoModData = async function (goModData, gosumMap) {
         "",
         tmpA[0],
         version,
-        gosumHash,
+        gosumHash
       );
       pkgComponentsList.push(component);
     } else {
@@ -2860,7 +2860,7 @@ export const parseGoModData = async function (goModData, gosumMap) {
         "",
         tmpA[2],
         version,
-        gosumHash,
+        gosumHash
       );
       pkgComponentsList.push(component);
     }
@@ -2895,7 +2895,7 @@ export const parseGoListDep = async function (rawOutput, gosumMap) {
             "",
             verArr[0],
             version,
-            gosumHash,
+            gosumHash
           );
           if (verArr[2] === "false") {
             component.scope = "required";
@@ -2905,12 +2905,12 @@ export const parseGoListDep = async function (rawOutput, gosumMap) {
           component.properties = [
             {
               name: "SrcGoMod",
-              value: verArr[3] || "",
+              value: verArr[3] || ""
             },
             {
               name: "ModuleGoVersion",
-              value: verArr[4] || "",
-            },
+              value: verArr[4] || ""
+            }
           ];
           deps.push(component);
         }
@@ -2958,12 +2958,12 @@ export const parseGosumData = async function (gosumData) {
       if (fetchLicenses) {
         if (DEBUG_MODE) {
           console.log(
-            `About to fetch go package license information for ${name}`,
+            `About to fetch go package license information for ${name}`
           );
         }
         license = await getGoPkgLicense({
           group: "",
-          name: name,
+          name: name
         });
       }
       pkgList.push({
@@ -2971,7 +2971,7 @@ export const parseGosumData = async function (gosumData) {
         name: name,
         version: version,
         _integrity: hash,
-        license: license,
+        license: license
       });
     }
   }
@@ -3010,7 +3010,7 @@ export const parseGopkgData = async function (gopkgData) {
           if (fetchLicenses) {
             pkg.license = await getGoPkgLicense({
               group: pkg.group,
-              name: pkg.name,
+              name: pkg.name
             });
           }
           break;
@@ -3067,7 +3067,7 @@ export const getRubyGemsMetadata = async function (pkgList) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
       const res = await cdxgenAgent.get(RUBYGEMS_URL + p.name + ".json", {
-        responseType: "json",
+        responseType: "json"
       });
       let body = res.body;
       if (body && body.length) {
@@ -3165,7 +3165,7 @@ export const parseGemfileLockData = async function (gemLockData) {
           version = version.replace(/[(>=<)~ ]/g, "");
           pkgList.push({
             name,
-            version,
+            version
           });
           pkgnames[name] = true;
         }
@@ -3204,7 +3204,7 @@ export const getCratesMetadata = async function (pkgList) {
         console.log(`Querying crates.io for ${p.name}`);
       }
       const res = await cdxgenAgent.get(CRATES_URL + p.name, {
-        responseType: "json",
+        responseType: "json"
       });
       const body = res.body.crate;
       p.description = body.description;
@@ -3246,8 +3246,8 @@ export const getDartMetadata = async function (pkgList) {
       const res = await cdxgenAgent.get(PUB_DEV_URL + p.name, {
         responseType: "json",
         headers: {
-          Accept: "application/vnd.pub.v2+json",
-        },
+          Accept: "application/vnd.pub.v2+json"
+        }
       });
       if (res && res.body) {
         const versions = res.body.versions;
@@ -3425,7 +3425,7 @@ export const parseCargoAuditableData = async function (cargoData) {
       pkgList.push({
         group,
         name,
-        version,
+        version
       });
     }
   });
@@ -3451,7 +3451,7 @@ export const parsePubLockData = async function (pubLockData) {
     }
     if (l.startsWith("  ") && !l.startsWith("    ")) {
       pkg = {
-        name: l.trim().replace(":", ""),
+        name: l.trim().replace(":", "")
       };
     }
     if (l.startsWith("    ")) {
@@ -3491,7 +3491,7 @@ export const parsePubYamlData = function (pubYamlData) {
     name: yamlObj.name,
     description: yamlObj.description,
     version: yamlObj.version,
-    homepage: { url: yamlObj.homepage },
+    homepage: { url: yamlObj.homepage }
   });
   return pkgList;
 };
@@ -3511,7 +3511,7 @@ export const parseHelmYamlData = function (helmData) {
     const pkg = {
       name: yamlObj.name,
       description: yamlObj.description || "",
-      version: yamlObj.version,
+      version: yamlObj.version
     };
     if (yamlObj.home) {
       pkg["homepage"] = { url: yamlObj.home };
@@ -3522,7 +3522,7 @@ export const parseHelmYamlData = function (helmData) {
     for (const hd of yamlObj.dependencies) {
       const pkg = {
         name: hd.name,
-        version: hd.version, // This could have * so not precise
+        version: hd.version // This could have * so not precise
       };
       if (hd.repository) {
         pkg["repository"] = { url: hd.repository };
@@ -3538,7 +3538,7 @@ export const parseHelmYamlData = function (helmData) {
           const pkg = {
             name: hd.name,
             version: hd.version,
-            description: hd.description || "",
+            description: hd.description || ""
           };
           if (hd.sources && Array.isArray(hd.sources) && hd.sources.length) {
             pkg["repository"] = { url: hd.sources[0] };
@@ -3647,23 +3647,23 @@ export const parseContainerSpecData = function (dcData) {
     if (yamlObj.services) {
       for (const serv of Object.keys(yamlObj.services)) {
         pkgList.push({
-          service: serv,
+          service: serv
         });
         const aservice = yamlObj.services[serv];
         // Track locally built images
         if (aservice.build) {
           if (Object.keys(aservice.build).length && aservice.build.dockerfile) {
             pkgList.push({
-              ociSpec: aservice.build.dockerfile,
+              ociSpec: aservice.build.dockerfile
             });
           } else {
             if (aservice.build === "." || aservice.build === "./") {
               pkgList.push({
-                ociSpec: "Dockerfile",
+                ociSpec: "Dockerfile"
               });
             } else {
               pkgList.push({
-                ociSpec: aservice.build,
+                ociSpec: aservice.build
               });
             }
           }
@@ -3676,7 +3676,7 @@ export const parseContainerSpecData = function (dcData) {
               .replace("}", "");
           }
           pkgList.push({
-            image: imgFullName,
+            image: imgFullName
           });
           imgList.push(imgFullName);
         }
@@ -3711,7 +3711,7 @@ const convertProcessing = function (processing_list) {
   for (const p of processing_list) {
     data_list.push({
       classification: p.sourceId || p.sinkId,
-      flow: identifyFlow(p),
+      flow: identifyFlow(p)
     });
   }
   return data_list;
@@ -3728,42 +3728,42 @@ export const parsePrivadoFile = function (f) {
     "x-trust-boundary": false,
     properties: [],
     data: [],
-    endpoints: [],
+    endpoints: []
   };
   if (jsonData.repoName) {
     aservice.name = jsonData.repoName;
     aservice.properties = [
       {
         name: "SrcFile",
-        value: f,
-      },
+        value: f
+      }
     ];
     // Capture git metadata info
     if (jsonData.gitMetadata) {
       aservice.version = jsonData.gitMetadata.commitId || "";
       aservice.properties.push({
         name: "privadoCoreVersion",
-        value: jsonData.privadoCoreVersion || "",
+        value: jsonData.privadoCoreVersion || ""
       });
       aservice.properties.push({
         name: "privadoCLIVersion",
-        value: jsonData.privadoCLIVersion || "",
+        value: jsonData.privadoCLIVersion || ""
       });
       aservice.properties.push({
         name: "localScanPath",
-        value: jsonData.localScanPath || "",
+        value: jsonData.localScanPath || ""
       });
     }
     // Capture processing
     if (jsonData.processing && jsonData.processing.length) {
       aservice.data = aservice.data.concat(
-        convertProcessing(jsonData.processing),
+        convertProcessing(jsonData.processing)
       );
     }
     // Capture sink processing
     if (jsonData.sinkProcessing && jsonData.sinkProcessing.length) {
       aservice.data = aservice.data.concat(
-        convertProcessing(jsonData.sinkProcessing),
+        convertProcessing(jsonData.sinkProcessing)
       );
     }
     // Find endpoints
@@ -3785,7 +3785,7 @@ export const parsePrivadoFile = function (f) {
       for (const v of jsonData.violations) {
         aservice.properties.push({
           name: "privado_violations",
-          value: v.policyId,
+          value: v.policyId
         });
       }
     }
@@ -3823,7 +3823,7 @@ export const parseOpenapiSpecData = function (oaData) {
     "bom-ref": `urn:service:${name}:${version}`,
     name,
     description: oaData.description || "",
-    version,
+    version
   };
   let serverName = [];
   if (oaData.servers && oaData.servers.length && oaData.servers[0].url) {
@@ -3872,7 +3872,7 @@ export const parseCabalData = function (cabalData) {
       if (name && version) {
         pkgList.push({
           name,
-          version,
+          version
         });
       }
     }
@@ -3898,7 +3898,7 @@ export const parseMixLockData = function (mixData) {
         if (name && version) {
           pkgList.push({
             name,
-            version,
+            version
           });
         }
       }
@@ -3938,7 +3938,7 @@ export const parseGitHubWorkflowData = function (ghwData) {
               pkgList.push({
                 group,
                 name,
-                version,
+                version
               });
             }
           }
@@ -3976,7 +3976,7 @@ export const parseCloudBuildData = function (cbwData) {
             pkgList.push({
               group,
               name,
-              version,
+              version
             });
           }
         }
@@ -4129,7 +4129,7 @@ export const parseNupkg = async function (nupkgFile) {
       spaces: 4,
       textKey: "_",
       attributesKey: "$",
-      commentKey: "value",
+      commentKey: "value"
     }).package;
   } catch (e) {
     // If we are parsing with invalid encoding unicode replacement character is used
@@ -4147,8 +4147,8 @@ export const parseNupkg = async function (nupkgFile) {
   pkg.properties = [
     {
       name: "SrcFile",
-      value: nupkgFile,
-    },
+      value: nupkgFile
+    }
   ];
   pkg.evidence = {
     identity: {
@@ -4158,10 +4158,10 @@ export const parseNupkg = async function (nupkgFile) {
         {
           technique: "binary-analysis",
           confidence: 1,
-          value: nupkgFile,
-        },
-      ],
-    },
+          value: nupkgFile
+        }
+      ]
+    }
   };
   pkgList.push(pkg);
   if (fetchLicenses) {
@@ -4182,7 +4182,7 @@ export const parseCsPkgData = async function (pkgData) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).packages;
   if (packages.length == 0) {
     return pkgList;
@@ -4213,7 +4213,7 @@ export const parseCsProjData = async function (csProjData) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).Project;
   if (projects.length == 0) {
     return pkgList;
@@ -4277,7 +4277,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
       pkg = {
         group: "",
         name: tmpA[0],
-        version: tmpA[tmpA.length - 1],
+        version: tmpA[tmpA.length - 1]
       };
       if (libData.sha256) {
         pkg._integrity = "sha256-" + libData.sha256;
@@ -4311,7 +4311,7 @@ export const parseCsPkgLockData = async function (csLockData) {
       pkg = {
         group: "",
         name: alib,
-        version: libData.resolved,
+        version: libData.resolved
       };
       pkgList.push(pkg);
     }
@@ -4370,7 +4370,7 @@ export const getNugetMetadata = async function (pkgList) {
               (p.group !== "" ? "." : "") +
               p.name.toLowerCase() +
               "/index.json",
-            { responseType: "json" },
+            { responseType: "json" }
           );
           const items = res.body.items;
           if (!items || !items[0] || !items[0].items) {
@@ -4383,7 +4383,7 @@ export const getNugetMetadata = async function (pkgList) {
             const newBody = firstItem.items
               .reverse()
               .filter(
-                (i) => i.catalogEntry && i.catalogEntry.version === p.version,
+                (i) => i.catalogEntry && i.catalogEntry.version === p.version
               );
             if (newBody && newBody.length) {
               body = newBody[0];
@@ -4417,7 +4417,7 @@ export const getNugetMetadata = async function (pkgList) {
               p.name +
               "/" +
               p.version +
-              "/",
+              "/"
           };
         }
       }
@@ -4482,8 +4482,8 @@ export const parseComposerLock = function (pkgLockFile) {
             properties: [
               {
                 name: "SrcFile",
-                value: pkgLockFile,
-              },
+                value: pkgLockFile
+              }
             ],
             evidence: {
               identity: {
@@ -4493,11 +4493,11 @@ export const parseComposerLock = function (pkgLockFile) {
                   {
                     technique: "manifest-analysis",
                     confidence: 1,
-                    value: pkgLockFile,
-                  },
-                ],
-              },
-            },
+                    value: pkgLockFile
+                  }
+                ]
+              }
+            }
           });
         }
       }
@@ -4539,8 +4539,8 @@ export const parseSbtLock = function (pkgLockFile) {
           properties: [
             {
               name: "SrcFile",
-              value: pkgLockFile,
-            },
+              value: pkgLockFile
+            }
           ],
           evidence: {
             identity: {
@@ -4550,11 +4550,11 @@ export const parseSbtLock = function (pkgLockFile) {
                 {
                   technique: "manifest-analysis",
                   confidence: 1,
-                  value: pkgLockFile,
-                },
-              ],
-            },
-          },
+                  value: pkgLockFile
+                }
+              ]
+            }
+          }
         });
       }
     }
@@ -4571,7 +4571,7 @@ export const parseSbtLock = function (pkgLockFile) {
 export const convertOSQueryResults = function (
   queryCategory,
   queryObj,
-  results,
+  results
 ) {
   const pkgList = [];
   if (results && results.length) {
@@ -4607,7 +4607,7 @@ export const convertOSQueryResults = function (
             name,
             version,
             undefined,
-            subpath,
+            subpath
           );
           pkgList.push({
             name,
@@ -4616,7 +4616,7 @@ export const convertOSQueryResults = function (
             description,
             publisher,
             purl,
-            scope,
+            scope
           });
         }
       }
@@ -4629,7 +4629,7 @@ export const _swiftDepPkgList = (
   pkgList,
   dependenciesList,
   depKeys,
-  jsonData,
+  jsonData
 ) => {
   if (jsonData && jsonData.dependencies) {
     for (const adep of jsonData.dependencies) {
@@ -4637,7 +4637,7 @@ export const _swiftDepPkgList = (
       const apkg = {
         group: adep.identity || "",
         name: adep.name,
-        version: adep.version,
+        version: adep.version
       };
       const purl = new PackageURL(
         "swift",
@@ -4645,7 +4645,7 @@ export const _swiftDepPkgList = (
         apkg.name,
         apkg.version,
         null,
-        null,
+        null
       );
       const purlString = decodeURIComponent(purl.toString());
       if (urlOrPath) {
@@ -4655,16 +4655,16 @@ export const _swiftDepPkgList = (
             apkg.properties = [
               {
                 name: "SrcPath",
-                value: apkg.path,
-              },
+                value: apkg.path
+              }
             ];
           }
         } else {
           apkg.properties = [
             {
               name: "SrcPath",
-              value: urlOrPath,
-            },
+              value: urlOrPath
+            }
           ];
         }
       }
@@ -4679,7 +4679,7 @@ export const _swiftDepPkgList = (
             cdep.name,
             cdep.version,
             null,
-            null,
+            null
           );
           const deppurlString = decodeURIComponent(deppurl.toString());
           deplist.push(deppurlString);
@@ -4687,7 +4687,7 @@ export const _swiftDepPkgList = (
         if (!depKeys[purlString]) {
           dependenciesList.push({
             ref: purlString,
-            dependsOn: deplist,
+            dependsOn: deplist
           });
           depKeys[purlString] = true;
         }
@@ -4698,7 +4698,7 @@ export const _swiftDepPkgList = (
         if (!depKeys[purlString]) {
           dependenciesList.push({
             ref: purlString,
-            dependsOn: [],
+            dependsOn: []
           });
           depKeys[purlString] = true;
         }
@@ -4728,7 +4728,7 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
       rootPkg = {
         group: jsonData.identity || "",
         name: jsonData.name,
-        version: jsonData.version,
+        version: jsonData.version
       };
       const urlOrPath = jsonData.url || jsonData.path;
       if (urlOrPath) {
@@ -4738,12 +4738,12 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
           rootPkg.properties = [
             {
               name: "SrcPath",
-              value: urlOrPath,
+              value: urlOrPath
             },
             {
               name: "SrcFile",
-              value: pkgFile,
-            },
+              value: pkgFile
+            }
           ];
         }
       }
@@ -4753,7 +4753,7 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
         rootPkg.name,
         rootPkg.version,
         null,
-        null,
+        null
       );
       const purlString = decodeURIComponent(purl.toString());
       rootPkg["bom-ref"] = purlString;
@@ -4766,14 +4766,14 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
           rd.name,
           rd.version,
           null,
-          null,
+          null
         );
         const deppurlString = decodeURIComponent(deppurl.toString());
         deplist.push(deppurlString);
       }
       dependenciesList.push({
         ref: purlString,
-        dependsOn: deplist,
+        dependsOn: deplist
       });
       _swiftDepPkgList(pkgList, dependenciesList, depKeys, jsonData);
     }
@@ -4785,7 +4785,7 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
   }
   return {
     pkgList,
-    dependenciesList,
+    dependenciesList
   };
 };
 
@@ -4812,8 +4812,8 @@ export const parseSwiftResolved = (resolvedFile) => {
           properties: [
             {
               name: "SrcFile",
-              value: resolvedFile,
-            },
+              value: resolvedFile
+            }
           ],
           evidence: {
             identity: {
@@ -4823,11 +4823,11 @@ export const parseSwiftResolved = (resolvedFile) => {
                 {
                   technique: "manifest-analysis",
                   confidence: 1,
-                  value: resolvedFile,
-                },
-              ],
-            },
-          },
+                  value: resolvedFile
+                }
+              ]
+            }
+          }
         };
         const repLocation = adep.location || adep.repositoryURL;
         if (repLocation) {
@@ -4851,7 +4851,7 @@ export const parseSwiftResolved = (resolvedFile) => {
 export const collectMvnDependencies = function (mavenCmd, basePath) {
   const tempDir = mkdtempSync(join(tmpdir(), "mvn-deps-"));
   console.log(
-    `Executing 'mvn dependency:copy-dependencies -DoutputDirectory=${tempDir} -DexcludeTransitive=true -DincludeScope=runtime' in ${basePath}`,
+    `Executing 'mvn dependency:copy-dependencies -DoutputDirectory=${tempDir} -DexcludeTransitive=true -DincludeScope=runtime' in ${basePath}`
   );
   const result = spawnSync(
     mavenCmd,
@@ -4862,24 +4862,24 @@ export const collectMvnDependencies = function (mavenCmd, basePath) {
       "-DincludeScope=runtime",
       "-U",
       "-Dmdep.prependGroupId=" + (process.env.MAVEN_PREPEND_GROUP || "false"),
-      "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false"),
+      "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false")
     ],
-    { cwd: basePath, encoding: "utf-8" },
+    { cwd: basePath, encoding: "utf-8" }
   );
   let jarNSMapping = {};
   if (result.status !== 0 || result.error) {
     console.error(result.stdout, result.stderr);
     console.log(
-      "Resolve the above maven error. You can try the following remediation tips:\n",
+      "Resolve the above maven error. You can try the following remediation tips:\n"
     );
     console.log(
-      "1. Check if the correct version of maven is installed and available in the PATH.",
+      "1. Check if the correct version of maven is installed and available in the PATH."
     );
     console.log(
-      "2. Perform 'mvn compile package' before invoking this command. Fix any errors found during this invocation.",
+      "2. Perform 'mvn compile package' before invoking this command. Fix any errors found during this invocation."
     );
     console.log(
-      "3. Ensure the temporary directory is available and has sufficient disk space to copy all the artifacts.",
+      "3. Ensure the temporary directory is available and has sufficient disk space to copy all the artifacts."
     );
   } else {
     jarNSMapping = collectJarNS(tempDir);
@@ -4902,7 +4902,7 @@ export const collectMvnDependencies = function (mavenCmd, basePath) {
 export const collectJarNS = function (jarPath) {
   const jarNSMapping = {};
   console.log(
-    `About to identify class names for all jars in the path ${jarPath}`,
+    `About to identify class names for all jars in the path ${jarPath}`
   );
   // Execute jar tvf to get class names
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
@@ -4916,7 +4916,7 @@ export const collectJarNS = function (jarPath) {
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
         console.log(
-          "Check if JRE is installed and the jar command is available in the PATH.",
+          "Check if JRE is installed and the jar command is available in the PATH."
         );
         break;
       } else {
@@ -4955,7 +4955,7 @@ export const parsePomXml = function (pomXmlData) {
     spaces: 4,
     textKey: "_",
     attributesKey: "$",
-    commentKey: "value",
+    commentKey: "value"
   }).project;
   if (project) {
     let version = project.version ? project.version._ : undefined;
@@ -4972,7 +4972,7 @@ export const parsePomXml = function (pomXmlData) {
       version,
       description: project.description ? project.description._ : "",
       url: project.url ? project.url._ : "",
-      scm: project.scm && project.scm.url ? project.scm.url._ : "",
+      scm: project.scm && project.scm.url ? project.scm.url._ : ""
     };
   }
   return undefined;
@@ -5036,12 +5036,12 @@ export const extractJarArchive = function (jarFile, tempDir) {
   if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
     const jarResult = spawnSync("jar", ["-xf", join(tempDir, fname)], {
       encoding: "utf-8",
-      cwd: tempDir,
+      cwd: tempDir
     });
     if (jarResult.status !== 0) {
       console.error(jarResult.stdout, jarResult.stderr);
       console.log(
-        "Check if JRE is installed and the jar command is available in the PATH.",
+        "Check if JRE is installed and the jar command is available in the PATH."
       );
       return pkgList;
     }
@@ -5066,14 +5066,14 @@ export const extractJarArchive = function (jarFile, tempDir) {
       const manifestDir = join(tempDir, "META-INF");
       const manifestFile = join(manifestDir, "MANIFEST.MF");
       let jarResult = {
-        status: 1,
+        status: 1
       };
       if (existsSync(pomname)) {
         jarResult = { status: 0 };
       } else {
         jarResult = spawnSync("jar", ["-xf", jf], {
           encoding: "utf-8",
-          cwd: tempDir,
+          cwd: tempDir
         });
       }
       if (jarResult.status !== 0) {
@@ -5082,8 +5082,8 @@ export const extractJarArchive = function (jarFile, tempDir) {
         if (existsSync(manifestFile)) {
           const jarMetadata = parseJarManifest(
             readFileSync(manifestFile, {
-              encoding: "utf-8",
-            }),
+              encoding: "utf-8"
+            })
           );
           let group =
             jarMetadata["Extension-Name"] ||
@@ -5134,12 +5134,12 @@ export const extractJarArchive = function (jarFile, tempDir) {
             if (group.includes("." + name.toLowerCase().replace(/-/g, "."))) {
               group = group.replace(
                 new RegExp("." + name.toLowerCase().replace(/-/g, ".") + "$"),
-                "",
+                ""
               );
             } else if (group.includes("." + name.toLowerCase())) {
               group = group.replace(
                 new RegExp("." + name.toLowerCase() + "$"),
-                "",
+                ""
               );
             }
           }
@@ -5167,17 +5167,17 @@ export const extractJarArchive = function (jarFile, tempDir) {
                     {
                       technique: "filename",
                       confidence: 0.5,
-                      value: jarname,
-                    },
-                  ],
-                },
+                      value: jarname
+                    }
+                  ]
+                }
               },
               properties: [
                 {
                   name: "SrcFile",
-                  value: jarname,
-                },
-              ],
+                  value: jarname
+                }
+              ]
             });
           } else {
             if (DEBUG_MODE) {
@@ -5190,7 +5190,7 @@ export const extractJarArchive = function (jarFile, tempDir) {
             // Clean up META-INF
             rmSync(join(tempDir, "META-INF"), {
               recursive: true,
-              force: true,
+              force: true
             });
           }
         } catch (err) {
@@ -5265,7 +5265,7 @@ export const cleanupPlugin = function (projectPath, originalPluginsFile) {
       copyFileSync(
         originalPluginsFile,
         pluginsFile,
-        constants.COPYFILE_FICLONE,
+        constants.COPYFILE_FICLONE
       );
       unlinkSync(originalPluginsFile);
       return true;
@@ -5418,7 +5418,7 @@ export const getAtomCommand = () => {
     "node_modules",
     "@appthreat",
     "atom",
-    "index.js",
+    "index.js"
   );
   if (existsSync(localAtom)) {
     return `${NODE_CMD} ${localAtom}`;
@@ -5441,22 +5441,22 @@ export const executeAtom = (src, args) => {
   }
   const env = {
     ...process.env,
-    JAVA_OPTS: `-Xms${freeMemoryGB}G -Xmx${freeMemoryGB}G`,
+    JAVA_OPTS: `-Xms${freeMemoryGB}G -Xmx${freeMemoryGB}G`
   };
   const result = spawnSync(ATOM_BIN, args, {
     cwd: src,
     encoding: "utf-8",
     timeout: TIMEOUT_MS,
-    env,
+    env
   });
   if (
     result.stderr &&
     result.stderr.includes(
-      "has been compiled by a more recent version of the Java Runtime",
+      "has been compiled by a more recent version of the Java Runtime"
     )
   ) {
     console.log(
-      "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image.",
+      "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image."
     );
   }
   if (DEBUG_MODE) {
@@ -5490,7 +5490,7 @@ export const findAppModules = function (src, language) {
     resolve(atomFile),
     "--slice-outfile",
     resolve(slicesFile),
-    resolve(src),
+    resolve(src)
   ];
   executeAtom(src, args);
   if (existsSync(slicesFile)) {
@@ -5525,8 +5525,8 @@ const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
       properties: [
         {
           name: "SrcFile",
-          value: reqOrSetupFile,
-        },
+          value: reqOrSetupFile
+        }
       ],
       evidence: {
         identity: {
@@ -5536,11 +5536,11 @@ const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
             {
               technique: "manifest-analysis",
               confidence: 1,
-              value: reqOrSetupFile,
-            },
-          ],
-        },
-      },
+              value: reqOrSetupFile
+            }
+          ]
+        }
+      }
     });
     // Recurse and flatten
     if (d.dependencies && d.dependencies) {
@@ -5566,7 +5566,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   const dependenciesList = [];
   let result = undefined;
   const env = {
-    ...process.env,
+    ...process.env
   };
   /**
    * Let's start with an attempt to create a new temporary virtual environment in case we aren't in one
@@ -5575,25 +5575,25 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    */
   if (!process.env.VIRTUAL_ENV && !reqOrSetupFile.endsWith("poetry.lock")) {
     result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
-      encoding: "utf-8",
+      encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
         if (!result.stderr) {
           console.log(
-            "Ensure the virtualenv package is installed using pip. `python -m pip install virtualenv`",
+            "Ensure the virtualenv package is installed using pip. `python -m pip install virtualenv`"
           );
         }
       }
     } else {
       if (DEBUG_MODE) {
-        console.log(join("Using virtual environment in", tempVenvDir))
+        console.log(join("Using virtual environment in ", tempVenvDir));
       }
       env.VIRTUAL_ENV = tempVenvDir;
       env.PATH = `${join(
         tempVenvDir,
-        platform() === "win32" ? "Scripts" : "bin",
+        platform() === "win32" ? "Scripts" : "bin"
       )}${_delimiter}${process.env.PATH || ""}`;
     }
   }
@@ -5611,19 +5611,19 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         "config",
         "virtualenvs.options.no-setuptools",
         "true",
-        "--local",
+        "--local"
       ];
       result = spawnSync("poetry", poetryConfigArgs, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS,
+        timeout: TIMEOUT_MS
       });
       let poetryInstallArgs = ["install", "-n", "--no-root"];
       // Attempt to perform poetry install
       result = spawnSync("poetry", poetryInstallArgs, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS,
+        timeout: TIMEOUT_MS
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr && result.stderr.includes("No module named poetry")) {
@@ -5633,36 +5633,36 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
-            env,
+            env
           });
           if (result.status !== 0 || result.error) {
             console.log("poetry install has failed.");
             console.log(
-              "1. Install the poetry command using python -m pip install poetry.",
+              "1. Install the poetry command using python -m pip install poetry."
             );
             console.log(
-              "2. Check the version of python supported by the project. Poetry is strict about the version used.",
+              "2. Check the version of python supported by the project. Poetry is strict about the version used."
             );
             console.log(
-              "3. Setup and activate the poetry virtual environment and re-run cdxgen.",
+              "3. Setup and activate the poetry virtual environment and re-run cdxgen."
             );
           }
         } else {
           console.log(
-            "Poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen.",
+            "Poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen."
           );
         }
       } else {
         let poetryEnvArgs = ["env info", "--path"];
         result = spawnSync("poetry", poetryEnvArgs, {
           encoding: "utf-8",
-          timeout: TIMEOUT_MS,
+          timeout: TIMEOUT_MS
         });
         tempVenvDir = result.stdout.replaceAll(/[\r\n]+/g, "");
         env.VIRTUAL_ENV = tempVenvDir;
         env.PATH = `${join(
           tempVenvDir,
-          platform() === "win32" ? "Scripts" : "bin",
+          platform() === "win32" ? "Scripts" : "bin"
         )}${_delimiter}${process.env.PATH || ""}`;
       }
     } else {
@@ -5670,7 +5670,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         "-m",
         "pip",
         "install",
-        "--disable-pip-version-check",
+        "--disable-pip-version-check"
       ];
       // Requirements.txt could be called with any name so best to check for not setup.py and not pyproject.toml
       if (
@@ -5687,20 +5687,20 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
-        env,
+        env
       });
       if (result.status !== 0 || result.error) {
         let versionRelatedError = false;
         if (
           result.stderr &&
           (result.stderr.includes(
-            "Could not find a version that satisfies the requirement",
+            "Could not find a version that satisfies the requirement"
           ) ||
             result.stderr.includes("No matching distribution found for"))
         ) {
           versionRelatedError = true;
           console.log(
-            "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBoM accuracy.",
+            "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBoM accuracy."
           );
           console.log(result.stderr);
         }
@@ -5708,19 +5708,19 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           console.log("args used:", pipInstallArgs);
           console.log(result.stdout, result.stderr);
           console.log(
-            "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy.",
+            "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
           );
           if (platform() === "win32") {
             console.log(
-              "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers",
+              "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
             );
           } else {
             console.log(
-              "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager.",
+              "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager."
             );
           }
           console.log(
-            "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution.",
+            "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution."
           );
           console.log("- Check if any git submodules have to be initialized.");
         }
@@ -5735,13 +5735,13 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
      */
     if (DEBUG_MODE) {
       console.log(
-        "About to construct the pip dependency tree. Please wait ...",
+        "About to construct the pip dependency tree. Please wait ..."
       );
     }
     const tree = getTreeWithPlugin(env, PYTHON_CMD, basePath);
     if (DEBUG_MODE && !tree.length) {
       console.log(
-        "Dependency tree generation has failed. Please check for any errors or version incompatibilities reported in the logs.",
+        "Dependency tree generation has failed. Please check for any errors or version incompatibilities reported in the logs."
       );
     }
     const dependenciesMap = {};
@@ -5768,11 +5768,11 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
                 {
                   technique: "instrumentation",
                   confidence: 1,
-                  value: env.VIRTUAL_ENV,
-                },
-              ],
-            },
-          },
+                  value: env.VIRTUAL_ENV
+                }
+              ]
+            }
+          }
         });
         rootList.push({
           name,
@@ -5787,14 +5787,14 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   } else {
     if (DEBUG_MODE) {
       console.log(
-        "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBoM accuracy.",
+        "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBoM accuracy."
       );
     }
   }
   return {
     pkgList,
     rootList,
-    dependenciesList,
+    dependenciesList
   };
 };
 
@@ -5805,10 +5805,10 @@ export const parsePackageJsonName = (name) => {
     scope: null,
     fullName: "",
     projectName: "",
-    moduleName: "",
+    moduleName: ""
   };
   const match = (typeof name === "object" ? name.name || "" : name || "").match(
-    nameRegExp,
+    nameRegExp
   );
   if (match) {
     returnObject.scope =
