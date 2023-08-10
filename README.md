@@ -10,6 +10,12 @@ NOTE:
 
 CycloneDX 1.5 specification is brand new and unsupported by many downstream tools. Use version 8.6.0 for 1.4 compatibility or pass the argument `--spec-version 1.4`.
 
+## Why cdxgen?
+
+A typical application might comprise of several repos, components, and libraries linked together. Traditional techniques to generate a single SBoM per language or package manifest do not work in enterprise environments. So we built cdxgen - the universal polyglot SBoM generator!
+
+<img src="./docs/why-cdxgen.jpg" alt="why cdxgen" width="256">
+
 ## Supported languages and package format
 
 | Language/Platform               | Package format                                                                                                    | Transitive dependencies                                                                           |
@@ -61,7 +67,7 @@ Footnotes:
 - [4] - See section on plugins
 - [5] - Powered by osquery. See section on plugins
 
-![cdxgen tree](./docs/cdxgen-tree.jpg)
+<img src="./docs/cdxgen-tree.jpg" alt="cdxgen tree" width="256">
 
 ### Automatic usage detection
 
@@ -427,3 +433,7 @@ npm run lint
 npm run pretty
 npm test
 ```
+
+## Enterprise support
+
+Enterprise support including custom development and integration services are available via AppThreat Ltd. Free community support is also available via [discord](https://discord.gg/tmmtjCEHNV).
