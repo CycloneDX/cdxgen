@@ -4999,10 +4999,19 @@ export const extractJarArchive = function (jarFile, tempDir) {
   const fname = basename(jarFile);
   let pomname = undefined;
   // If there is a pom file in the same directory, try to use it
+  let manifestname = join(dirname(jarFile), "META-INF", "MANIFEST.MF");
+  // Issue 439: Current implementation checks for existance of a .pom file, but .pom file is not used.
+  // Instead code expects to find META-INF/MANIFEST.MF in the same folder as a .jar file.
+  // For now check for presence of both .pom and MANIFEST.MF files.
   if (jarFile.endsWith(".jar")) {
     pomname = jarFile.replace(".jar", ".pom");
   }
-  if (pomname && existsSync(pomname)) {
+  if (
+    pomname &&
+    existsSync(pomname) &&
+    manifestname &&
+    existsSync(manifestname)
+  ) {
     tempDir = dirname(jarFile);
   } else if (!existsSync(join(tempDir, fname))) {
     // Only copy if the file doesn't exist
