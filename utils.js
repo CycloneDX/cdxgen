@@ -5587,6 +5587,9 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         }
       }
     } else {
+      if (DEBUG_MODE) {
+        console.log(join("Using virtual environment in", tempVenvDir))
+      }
       env.VIRTUAL_ENV = tempVenvDir;
       env.PATH = `${join(
         tempVenvDir,
@@ -5605,32 +5608,19 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   if (reqOrSetupFile) {
     if (reqOrSetupFile.endsWith("poetry.lock")) {
       let poetryConfigArgs = [
-        "-m",
-        "poetry",
-        "config",
-        "virtualenvs.options.no-pip",
-        "false",
-        "--local",
-      ];
-      result = spawnSync(PYTHON_CMD, poetryConfigArgs, {
-        encoding: "utf-8",
-        timeout: TIMEOUT_MS,
-      });
-      poetryConfigArgs = [
-        "-m",
-        "poetry",
         "config",
         "virtualenvs.options.no-setuptools",
         "true",
         "--local",
       ];
-      result = spawnSync(PYTHON_CMD, poetryConfigArgs, {
+      result = spawnSync("poetry", poetryConfigArgs, {
+        cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
       });
-      let poetryInstallArgs = ["-m", "poetry", "install", "-n", "--no-root"];
+      let poetryInstallArgs = ["install", "-n", "--no-root"];
       // Attempt to perform poetry install
-      result = spawnSync(PYTHON_CMD, poetryInstallArgs, {
+      result = spawnSync("poetry", poetryInstallArgs, {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
@@ -5659,7 +5649,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           }
         } else {
           console.log(
-            "poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen.",
+            "Poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen.",
           );
         }
       } else {
@@ -5675,7 +5665,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           platform() === "win32" ? "Scripts" : "bin",
         )}${_delimiter}${process.env.PATH || ""}`;
       }
-    } else if (!reqOrSetupFile.endsWith(".lock")) {
+    } else {
       const pipInstallArgs = [
         "-m",
         "pip",
