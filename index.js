@@ -323,11 +323,13 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     if (parentComponent) {
       delete parentComponent.evidence;
       delete parentComponent._integrity;
+      delete parentComponent.license;
     }
     if (parentComponent && parentComponent.components) {
       for (const comp of parentComponent.components) {
         delete comp.evidence;
         delete comp._integrity;
+        delete comp.license;
         if (!comp["bom-ref"] && comp.name && comp.type) {
           let fullName =
             comp.group && comp.group.length
