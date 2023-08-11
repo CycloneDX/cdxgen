@@ -266,9 +266,10 @@ const checkPermissions = (filePath) => {
           }
           let privateKeyToUse = undefined;
           let jwkPublicKey = undefined;
+          let publicKeyFile = undefined;
           if (args.generateKeyAndSign) {
             const jdirName = dirname(jsonFile);
-            const publicKeyFile = join(jdirName, "public.key");
+            publicKeyFile = join(jdirName, "public.key");
             const privateKeyFile = join(jdirName, "private.key");
             const { privateKey, publicKey } = crypto.generateKeyPairSync(
               "rsa",
@@ -331,6 +332,26 @@ const checkPermissions = (filePath) => {
                 jsonFile,
                 JSON.stringify(bomJsonUnsignedObj, null, 2)
               );
+              if (publicKeyFile) {
+                // Verifying this signature
+                const signatureVerification = jws.verify(
+                  signature,
+                  alg,
+                  fs.readFileSync(publicKeyFile, "utf8")
+                );
+                if (signatureVerification) {
+                  console.log(
+                    "SBoM signature is verifiable with the public key and the algorithm",
+                    publicKeyFile,
+                    alg
+                  );
+                } else {
+                  console.log("SBoM signature verification was unsuccessful");
+                  console.log(
+                    "Check if the public key was exported in PEM format"
+                  );
+                }
+              }
             }
           } catch (ex) {
             console.log("SBoM signing was unsuccessful", ex);
