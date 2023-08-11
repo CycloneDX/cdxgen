@@ -11,12 +11,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     if: "! contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
+      fail-fast: false
       matrix:
         node-version: [18.x]
-
+        os: ['ubuntu-latest', 'windows-latest']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up SBT
@@ -30,11 +31,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install bazelisk
+      - name: Install bazelisk - linux
+        if: matrix.os == 'ubuntu-latest'
         run: |
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.15.0/bazelisk-linux-amd64"
           sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
-          sudo chmod +x /usr/local/bin/bazel
+      - name: Install bazelisk - windows
+        if: matrix.os == 'windows-latest'
+        run: choco install -y bazel
       - name: npm install, build and test
         run: |
           npm install
@@ -42,7 +46,8 @@ jobs:
           npm run lint
           npm test
           mkdir -p repotests
-          mkdir -p bomresults denoresults
+          mkdir -p bomresults 
+          mkdir -p denoresults
         env:
           CI: true
       - uses: swift-actions/setup-swift@v1
@@ -143,7 +148,7 @@ jobs:
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate --spec-version 1.4
       - name: denotests
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         run: |
           docker build -t ghcr.io/cyclonedx/cdxgen-deno -f Dockerfile-deno .
           docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t java /app/repotests/shiftleft-java-example -o /app/denoresults/bom-java.json
