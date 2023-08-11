@@ -2332,6 +2332,9 @@ export const parsePyProjectToml = (tomlFile) => {
           pkg.name = value;
           break;
         case "version":
+          if (value.includes("{")) {
+            value = "latest";
+          }
           pkg.version = value;
           break;
         case "authors":
@@ -5713,9 +5716,10 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         continue;
       }
       const name = t.name.replace(/_/g, "-").toLowerCase();
+      const version = t.version;
       pkgList.push({
         name,
-        version: t.version,
+        version,
         evidence: {
           identity: {
             field: "purl",
@@ -5732,7 +5736,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       });
       rootList.push({
         name,
-        version: t.version
+        version
       });
       flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
     } // end for

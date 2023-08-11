@@ -2262,14 +2262,20 @@ export const createPythonBom = async (path, options) => {
         pkgMap = getPipFrozenTree(path, undefined, tempDir);
       }
       // Get the imported modules and a dedupe list of packages
-      const parentDependsOn = [];
+      const parentDependsOn = new Set();
       const retMap = await getPyModules(path, pkgList);
       if (retMap.pkgList && retMap.pkgList.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         for (const p of retMap.pkgList) {
-          if (p.version) {
-            parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
+          if (
+            !p.version ||
+            (parentComponent &&
+              p.name === parentComponent.name &&
+              (p.version === parentComponent.version || p.version === "latest"))
+          ) {
+            continue;
           }
+          parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
         }
       }
       if (retMap.dependenciesList) {
@@ -2287,11 +2293,11 @@ export const createPythonBom = async (path, options) => {
         if (
           parentComponent &&
           p.name === parentComponent.name &&
-          p.version === parentComponent.version
+          (p.version === parentComponent.version || p.version === "latest")
         ) {
           continue;
         }
-        parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
+        parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
       }
       if (pkgMap.pkgList && pkgMap.pkgList.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
@@ -2305,7 +2311,7 @@ export const createPythonBom = async (path, options) => {
       }
       const pdependencies = {
         ref: parentComponent["bom-ref"],
-        dependsOn: parentDependsOn.filter(
+        dependsOn: Array.from(parentDependsOn).filter(
           (r) => parentComponent && r !== parentComponent["bom-ref"]
         )
       };
