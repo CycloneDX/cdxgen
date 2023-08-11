@@ -199,18 +199,28 @@ const createDefaultParentComponent = (path, type = "application") => {
 
 const determineParentComponent = (options) => {
   let parentComponent = undefined;
-  if (options.projectName && options.projectVersion) {
+  if (
+    options.parentComponent &&
+    Object.keys(options.parentComponent).length
+  ) {
+    return options.parentComponent;
+  } else if (options.projectName && options.projectVersion) {
     parentComponent = {
       group: options.projectGroup || "",
       name: options.projectName,
       version: "" + options.projectVersion || "",
       type: "application"
     };
-  } else if (
-    options.parentComponent &&
-    Object.keys(options.parentComponent).length
-  ) {
-    return options.parentComponent;
+    const ppurl = new PackageURL(
+      parentComponent.type,
+      parentComponent.group,
+      parentComponent.name,
+      parentComponent.version,
+      null,
+      null
+    ).toString();
+    parentComponent["bom-ref"] = ppurl;
+    parentComponent["purl"] = decodeURIComponent(ppurl);
   }
   return parentComponent;
 };
@@ -1788,9 +1798,9 @@ export const createNodejsBom = async (path, options) => {
           parentComponent.type = "application";
           ppurl = new PackageURL(
             "npm",
-            parentComponent.group,
-            parentComponent.name,
-            parentComponent.version,
+            options.projectGroup || parentComponent.group,
+            options.projectName || parentComponent.name,
+            options.projectVersion || parentComponent.version,
             null,
             null
           ).toString();
@@ -1808,9 +1818,9 @@ export const createNodejsBom = async (path, options) => {
         };
         ppurl = new PackageURL(
           "npm",
-          parentComponent.group,
-          parentComponent.name,
-          parentComponent.version,
+          options.projectGroup || parentComponent.group,
+          options.projectName || parentComponent.name,
+          options.projectVersion || parentComponent.version,
           null,
           null
         ).toString();
@@ -1843,7 +1853,6 @@ export const createNodejsBom = async (path, options) => {
       const dlist = parsedList.pkgList;
       const tmpParentComponent = dlist.splice(0, 1)[0] || {};
       tmpParentComponent.type = "application";
-      // Create a default parent component based on directory name
       if (!Object.keys(parentComponent).length) {
         parentComponent = tmpParentComponent;
       } else {
@@ -1931,9 +1940,9 @@ export const createNodejsBom = async (path, options) => {
           tmpParentComponent.type = "application";
           ppurl = new PackageURL(
             "npm",
-            tmpParentComponent.group,
-            tmpParentComponent.name,
-            tmpParentComponent.version,
+            options.projectGroup || tmpParentComponent.group,
+            options.projectName || tmpParentComponent.name,
+            options.projectVersion || tmpParentComponent.version,
             null,
             null
           ).toString();
@@ -1950,15 +1959,15 @@ export const createNodejsBom = async (path, options) => {
         const tmpA = dirName.split(sep);
         dirName = tmpA[tmpA.length - 1];
         const tmpParentComponent = {
-          group: "",
-          name: dirName,
+          group: options.projectGroup || "",
+          name: options.projectName || dirName,
           type: "application"
         };
         ppurl = new PackageURL(
           "npm",
           tmpParentComponent.group,
           tmpParentComponent.name,
-          tmpParentComponent.version,
+          options.projectVersion || tmpParentComponent.version,
           null,
           null
         ).toString();
