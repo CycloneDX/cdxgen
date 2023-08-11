@@ -625,6 +625,7 @@ export const yarnLockToIdentMap = function (lockData) {
   const identMap = {};
   let currentIdents = [];
   lockData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     if (l === "\n" || l.startsWith("#")) {
       return;
     }
@@ -687,6 +688,7 @@ export const parseYarnLock = async function (yarnLockFile) {
     const identMap = yarnLockToIdentMap(lockData);
     let prefixAtSymbol = false;
     lockData.split("\n").forEach((l) => {
+      l = l.replace("\r", "");
       if (l === "\n" || l.startsWith("#")) {
         return;
       }
@@ -1894,6 +1896,7 @@ export const parseKVDep = function (rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     rawOutput.split("\n").forEach((l) => {
+      l = l.replace("\r", "");
       const tmpA = l.split(":");
       if (tmpA.length === 3) {
         deps.push({
@@ -2369,6 +2372,7 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
     return pkgList;
   }
   lockData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     let key = null;
     let value = null;
     // Package section starts with this marker
@@ -2424,6 +2428,7 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
   const pkgList = [];
   let compScope = undefined;
   reqData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     l = l.trim();
     if (l.startsWith("Skipping line") || l.startsWith("(add")) {
       return;
@@ -3150,6 +3155,7 @@ export const parseGemfileLockData = async function (gemLockData) {
   let specsFound = false;
   gemLockData.split("\n").forEach((l) => {
     l = l.trim();
+    l = l.replace("\r", "");
     if (specsFound) {
       const tmpA = l.split(" ");
       if (tmpA && tmpA.length == 2) {
@@ -3362,6 +3368,7 @@ export const parseCargoData = async function (cargoData) {
   cargoData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
+    l = l.replace("\r", "");
     // Ignore version = 3 found at the top of newer lock files
     if (!pkg && l.startsWith("version =")) {
       return;
@@ -3406,6 +3413,7 @@ export const parseCargoAuditableData = async function (cargoData) {
     return pkgList;
   }
   cargoData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     const tmpA = l.split("\t");
     if (tmpA && tmpA.length > 2) {
       let group = dirname(tmpA[0].trim());
@@ -3437,6 +3445,7 @@ export const parsePubLockData = async function (pubLockData) {
   pubLockData.split("\n").forEach((l) => {
     let key = null;
     let value = null;
+    l = l.replace("\r", "");
     if (!pkg && (l.startsWith("sdks:") || !l.startsWith("  "))) {
       return;
     }
@@ -3852,6 +3861,7 @@ export const parseCabalData = function (cabalData) {
     if (!l.includes(" ==")) {
       return;
     }
+    l = l.replace("\r", "");
     if (l.includes(" ==")) {
       const tmpA = l.split(" ==");
       const name = tmpA[0]
@@ -3879,6 +3889,7 @@ export const parseMixLockData = function (mixData) {
     if (!l.includes(":hex")) {
       return;
     }
+    l = l.replace("\r", "");
     if (l.includes(":hex")) {
       const tmpA = l.split(",");
       if (tmpA.length > 3) {
@@ -4973,6 +4984,7 @@ export const parseJarManifest = function (jarMetadata) {
     return metadata;
   }
   jarMetadata.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
     if (l.includes(": ")) {
       const tmpA = l.split(": ");
       if (tmpA && tmpA.length === 2) {
@@ -5561,7 +5573,11 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    *
    * By checking the environment variable "VIRTUAL_ENV" we decide whether to create an env or not
    */
-  if (!process.env.VIRTUAL_ENV) {
+  if (
+    !process.env.VIRTUAL_ENV &&
+    reqOrSetupFile &&
+    !reqOrSetupFile.endsWith("poetry.lock")
+  ) {
     result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
       encoding: "utf-8"
     });
@@ -5575,29 +5591,43 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         }
       }
     } else {
+      if (DEBUG_MODE) {
+        console.log(join("Using virtual environment in ", tempVenvDir));
+      }
       env.VIRTUAL_ENV = tempVenvDir;
       env.PATH = `${join(
         tempVenvDir,
-        platform() == "win32" ? "Scripts" : "bin"
+        platform() === "win32" ? "Scripts" : "bin"
       )}${_delimiter}${process.env.PATH || ""}`;
     }
   }
   /**
    * We now have a virtual environment so we can attempt to install the project and perform
    * pip freeze to collect the packages that got installed.
+   * Note that we did not create a virtual environment for poetry because poetry will do this when we run the install.
    * This step is accurate but not reproducible since the resulting list could differ based on various factors
    * such as the version of python, pip, os, pypi.org availability (and weather?)
    */
   // Bug #388. Perform pip install in all virtualenv to make the experience consistent
   if (reqOrSetupFile) {
     if (reqOrSetupFile.endsWith("poetry.lock")) {
-      let poetryInstallArgs = ["-m", "poetry", "install", "-n", "--no-root"];
-      // Attempt to perform poetry install
-      result = spawnSync(PYTHON_CMD, poetryInstallArgs, {
+      let poetryConfigArgs = [
+        "config",
+        "virtualenvs.options.no-setuptools",
+        "true",
+        "--local"
+      ];
+      result = spawnSync("poetry", poetryConfigArgs, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS,
-        env
+        timeout: TIMEOUT_MS
+      });
+      let poetryInstallArgs = ["install", "-n", "--no-root"];
+      // Attempt to perform poetry install
+      result = spawnSync("poetry", poetryInstallArgs, {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr && result.stderr.includes("No module named poetry")) {
@@ -5610,6 +5640,9 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
             env
           });
           if (result.status !== 0 || result.error) {
+            if (DEBUG_MODE && result.stderr) {
+              console.log(result.stderr);
+            }
             console.log("poetry install has failed.");
             console.log(
               "1. Install the poetry command using python -m pip install poetry."
@@ -5623,11 +5656,27 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           }
         } else {
           console.log(
-            "poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen."
+            "Poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen."
           );
         }
+      } else {
+        let poetryEnvArgs = ["env info", "--path"];
+        result = spawnSync("poetry", poetryEnvArgs, {
+          cwd: basePath,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          env
+        });
+        tempVenvDir = result.stdout.replaceAll(/[\r\n]+/g, "");
+        if (tempVenvDir && tempVenvDir.length) {
+          env.VIRTUAL_ENV = tempVenvDir;
+          env.PATH = `${join(
+            tempVenvDir,
+            platform() === "win32" ? "Scripts" : "bin"
+          )}${_delimiter}${process.env.PATH || ""}`;
+        }
       }
-    } else if (!reqOrSetupFile.endsWith(".lock")) {
+    } else {
       const pipInstallArgs = [
         "-m",
         "pip",
@@ -5672,7 +5721,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           console.log(
             "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
           );
-          if (platform() == "win32") {
+          if (platform() === "win32") {
             console.log(
               "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
             );
@@ -5717,28 +5766,31 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       }
       const name = t.name.replace(/_/g, "-").toLowerCase();
       const version = t.version;
-      pkgList.push({
-        name,
-        version,
-        evidence: {
-          identity: {
-            field: "purl",
-            confidence: 1,
-            methods: [
-              {
-                technique: "instrumentation",
-                confidence: 1,
-                value: env.VIRTUAL_ENV
-              }
-            ]
+      let exclude = ["pip", "setuptools", "wheel"];
+      if (!exclude.includes(name)) {
+        pkgList.push({
+          name,
+          version,
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence: 1,
+              methods: [
+                {
+                  technique: "instrumentation",
+                  confidence: 1,
+                  value: env.VIRTUAL_ENV
+                }
+              ]
+            }
           }
-        }
-      });
-      rootList.push({
-        name,
-        version
-      });
-      flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
+        });
+        rootList.push({
+          name,
+          version
+        });
+        flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
+      }
     } // end for
     for (const k of Object.keys(dependenciesMap)) {
       dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
