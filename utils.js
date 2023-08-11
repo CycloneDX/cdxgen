@@ -5787,7 +5787,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         });
         rootList.push({
           name,
-          version,
+          version
         });
         flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
       }
