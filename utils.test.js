@@ -1306,16 +1306,19 @@ test("parsePkgLock", async () => {
     version: "2.0.0"
   });
   expect(deps[deps.length - 1].name).toEqual("zone.js");
-  parsedList = await parsePkgLock("./test/data/package-lock-v3.json");
+  parsedList = await parsePkgLock("./test/data/package-lock-v3.json", {
+    projectVersion: "latest",
+    projectName: "cdxgen"
+  });
   deps = parsedList.pkgList;
   expect(deps.length).toEqual(879);
   expect(parsedList.dependenciesList.length).toEqual(879);
   expect(deps[0]).toEqual({
-    "bom-ref": "pkg:npm/@cyclonedx/cdxgen@8.4.3",
+    "bom-ref": "pkg:npm/cdxgen@latest",
     group: "",
-    name: "@cyclonedx/cdxgen",
+    name: "cdxgen",
     type: "application",
-    version: "8.4.3"
+    version: "latest"
   });
   expect(deps[deps.length - 1].name).toEqual("yocto-queue");
   parsedList = await parsePkgLock("./test/data/package-lock4.json");

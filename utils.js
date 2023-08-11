@@ -497,12 +497,16 @@ export const parsePkgJson = async (pkgJsonFile) => {
  * Parse nodejs package lock file
  *
  * @param {string} pkgLockFile package-lock.json file
+ * @param {object} options Command line options
  */
-export const parsePkgLock = async (pkgLockFile) => {
+export const parsePkgLock = async (pkgLockFile, options = {}) => {
   let pkgList = [];
   const dependenciesList = [];
   const depKeys = {};
   let rootPkg = {};
+  if (!options) {
+    options = {};
+  }
   if (existsSync(pkgLockFile)) {
     const lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
     rootPkg.name = lockData.name || "";
@@ -510,16 +514,16 @@ export const parsePkgLock = async (pkgLockFile) => {
     if (lockData.name && lockData.packages && lockData.packages[""]) {
       // Build the initial dependency tree for the root package
       rootPkg = {
-        group: "",
-        name: lockData.name,
-        version: lockData.version,
+        group: options.projectGroup || "",
+        name: options.projectName || lockData.name,
+        version: options.projectVersion || lockData.version,
         type: "application",
         "bom-ref": decodeURIComponent(
           new PackageURL(
             "npm",
-            "",
-            lockData.name,
-            lockData.version,
+            options.projectGroup || "",
+            options.projectName || lockData.name,
+            options.projectVersion || lockData.version,
             null,
             null
           ).toString()
@@ -531,10 +535,10 @@ export const parsePkgLock = async (pkgLockFile) => {
       dirName = tmpA[tmpA.length - 1];
       // v1 lock file
       rootPkg = {
-        group: "",
-        name: lockData.name || dirName,
-        version: lockData.version || "",
-        type: "application"
+        group: options.projectGroup || "",
+        name: options.projectName || lockData.name || dirName,
+        version: options.projectVersion || lockData.version || "",
+        type: "npm"
       };
     }
     if (rootPkg && rootPkg.name) {
