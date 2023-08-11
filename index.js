@@ -2309,13 +2309,21 @@ export const createPythonBom = async (path, options) => {
           parentComponent
         );
       }
-      const pdependencies = {
-        ref: parentComponent["bom-ref"],
-        dependsOn: Array.from(parentDependsOn).filter(
-          (r) => parentComponent && r !== parentComponent["bom-ref"]
-        )
-      };
-      dependencies.splice(0, 0, pdependencies);
+      let parentPresent = false;
+      for (const d of dependencies) {
+        if (d.ref === parentComponent["bom-ref"]) {
+          parentPresent = true;
+        }
+      }
+      if (!parentPresent) {
+        const pdependencies = {
+          ref: parentComponent["bom-ref"],
+          dependsOn: Array.from(parentDependsOn).filter(
+            (r) => parentComponent && r !== parentComponent["bom-ref"]
+          )
+        };
+        dependencies.splice(0, 0, pdependencies);
+      }
     }
   }
   // Final fallback is to manually parse setup.py if we still
