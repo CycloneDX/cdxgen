@@ -295,6 +295,10 @@ test("parse gradle dependencies", () => {
   );
   expect(parsedList.pkgList.length).toEqual(152);
   expect(parsedList.dependenciesList.length).toEqual(153);
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-android-app.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(101);
 });
 
 test("parse gradle projects", () => {
@@ -317,6 +321,11 @@ test("parse gradle projects", () => {
   );
   expect(retMap.rootProject).toEqual("fineract");
   expect(retMap.projects.length).toEqual(22);
+  retMap = parseGradleProjects(
+    readFileSync("./test/data/gradle-android-app.dep", { encoding: "utf-8" })
+  );
+  expect(retMap.rootProject).toEqual("root");
+  expect(retMap.projects).toEqual([":app"]);
 });
 
 test("parse gradle properties", () => {
@@ -366,7 +375,7 @@ test("parse gradle properties", () => {
   );
   expect(retMap).toEqual({
     rootProject: "java-test",
-    projects: [],
+    projects: [":app"],
     metadata: {
       group: "com.ajmalab.demo",
       version: "latest",
@@ -411,6 +420,13 @@ test("parse gradle properties", () => {
   );
   expect(retMap.rootProject).toEqual("elasticsearch");
   expect(retMap.projects.length).toEqual(409);
+  retMap = parseGradleProperties(
+    readFileSync("./test/data/gradle-properties-android.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(retMap.rootProject).toEqual("CdxgenAndroidTest");
+  expect(retMap.projects.length).toEqual(2);
 });
 
 test("parse maven tree", () => {

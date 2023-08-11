@@ -1676,7 +1676,8 @@ export const parseGradleProjects = function (rawOutput) {
           const projName = tmpB[1].split(" ")[0].replace(/'/g, "");
           // Include all projects including test projects
           if (projName.startsWith(":")) {
-            projects.add(projName);
+            // Handle the case where the project name could have a space. Eg: +--- project :app (*)
+            projects.add(projName.split(" ")[0]);
           }
         }
       } else if (l.includes("--- project ")) {
@@ -1684,7 +1685,7 @@ export const parseGradleProjects = function (rawOutput) {
         if (tmpB && tmpB.length > 1) {
           const projName = tmpB[1];
           if (projName.startsWith(":")) {
-            projects.add(projName);
+            projects.add(projName.split(" ")[0]);
           }
         }
       }
@@ -1726,7 +1727,7 @@ export const parseGradleProperties = function (rawOutput) {
           const spStrs = tmpB[1].replace(/[[\]']/g, "").split(", ");
           const tmpprojects = spStrs
             .flatMap((s) => s.replace("project ", ""))
-            .filter((s) => ![":app", ""].includes(s.trim()));
+            .filter((s) => ![""].includes(s.trim()));
           tmpprojects.forEach(projects.add, projects);
         }
       }
