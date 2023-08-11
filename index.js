@@ -1338,7 +1338,7 @@ export const createJavaBom = async (path, options) => {
         let gradleDepArgs = [
           sp.purl === parentComponent.purl
             ? depTaskWithArgs[0]
-            : `:${sp.name}:${depTaskWithArgs[0]}`
+            : `:${sp.name.replace(/\//, ":")}:${depTaskWithArgs[0]}`
         ];
         gradleDepArgs = gradleDepArgs
           .concat(depTaskWithArgs.slice(1))
