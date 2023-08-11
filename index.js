@@ -199,10 +199,7 @@ const createDefaultParentComponent = (path, type = "application") => {
 
 const determineParentComponent = (options) => {
   let parentComponent = undefined;
-  if (
-    options.parentComponent &&
-    Object.keys(options.parentComponent).length
-  ) {
+  if (options.parentComponent && Object.keys(options.parentComponent).length) {
     return options.parentComponent;
   } else if (options.projectName && options.projectVersion) {
     parentComponent = {
@@ -334,6 +331,11 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       delete parentComponent.evidence;
       delete parentComponent._integrity;
       delete parentComponent.license;
+      if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
+        parentComponent["purl"] = decodeURIComponent(
+          parentComponent["bom-ref"]
+        );
+      }
     }
     if (parentComponent && parentComponent.components) {
       for (const comp of parentComponent.components) {
@@ -1849,7 +1851,7 @@ export const createNodejsBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       // Parse package-lock.json if available
-      const parsedList = await parsePkgLock(f);
+      const parsedList = await parsePkgLock(f, options);
       const dlist = parsedList.pkgList;
       const tmpParentComponent = dlist.splice(0, 1)[0] || {};
       tmpParentComponent.type = "application";
@@ -2041,6 +2043,8 @@ export const createNodejsBom = async (path, options) => {
   if (parentSubComponents.length) {
     parentComponent.components = parentSubComponents;
   }
+  // We need to set this to force our version to be used rather than the directory name based one.
+  options.parentComponent = parentComponent;
   return buildBomNSData(options, pkgList, "npm", {
     allImports,
     src: path,
