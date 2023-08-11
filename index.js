@@ -2313,6 +2313,7 @@ export const createPythonBom = async (path, options) => {
       for (const d of dependencies) {
         if (d.ref === parentComponent["bom-ref"]) {
           parentPresent = true;
+          break;
         }
       }
       if (!parentPresent) {
