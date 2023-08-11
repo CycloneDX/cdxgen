@@ -5573,7 +5573,11 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    *
    * By checking the environment variable "VIRTUAL_ENV" we decide whether to create an env or not
    */
-  if (!process.env.VIRTUAL_ENV && !reqOrSetupFile.endsWith("poetry.lock")) {
+  if (
+    !process.env.VIRTUAL_ENV &&
+    reqOrSetupFile &&
+    !reqOrSetupFile.endsWith("poetry.lock")
+  ) {
     result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
       encoding: "utf-8"
     });
@@ -5636,6 +5640,9 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
             env
           });
           if (result.status !== 0 || result.error) {
+            if (DEBUG_MODE && result.stderr) {
+              console.log(result.stderr);
+            }
             console.log("poetry install has failed.");
             console.log(
               "1. Install the poetry command using python -m pip install poetry."
@@ -5655,15 +5662,19 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       } else {
         let poetryEnvArgs = ["env info", "--path"];
         result = spawnSync("poetry", poetryEnvArgs, {
+          cwd: basePath,
           encoding: "utf-8",
-          timeout: TIMEOUT_MS
+          timeout: TIMEOUT_MS,
+          env
         });
         tempVenvDir = result.stdout.replaceAll(/[\r\n]+/g, "");
-        env.VIRTUAL_ENV = tempVenvDir;
-        env.PATH = `${join(
-          tempVenvDir,
-          platform() === "win32" ? "Scripts" : "bin"
-        )}${_delimiter}${process.env.PATH || ""}`;
+        if (tempVenvDir && tempVenvDir.length) {
+          env.VIRTUAL_ENV = tempVenvDir;
+          env.PATH = `${join(
+            tempVenvDir,
+            platform() === "win32" ? "Scripts" : "bin"
+          )}${_delimiter}${process.env.PATH || ""}`;
+        }
       }
     } else {
       const pipInstallArgs = [
