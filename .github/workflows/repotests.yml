@@ -161,6 +161,7 @@ jobs:
           FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate --spec-version 1.4
+        if: matrix.os == 'ubuntu-latest'
       - name: denotests
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         run: |
