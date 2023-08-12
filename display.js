@@ -13,6 +13,9 @@ const MAX_TREE_DEPTH = 3;
 
 export const printTable = (bomJson) => {
   const data = [["Group", "Name", "Version", "Scope"]];
+  if (!bomJson || !bomJson.components) {
+    return;
+  }
   for (const comp of bomJson.components) {
     data.push([comp.group || "", comp.name, comp.version, comp.scope || ""]);
   }

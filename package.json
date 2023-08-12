@@ -31,13 +31,14 @@
   "type": "module",
   "exports": "./index.js",
   "bin": {
-    "cdxgen": "./bin/cdxgen.js"
+    "cdxgen": "./bin/cdxgen.js",
+    "cdxi": "./bin/repl.js"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
-    "lint": "eslint *.js *.test.js bin/cdxgen.js",
-    "pretty": "prettier --write *.js data/*.json bin/cdxgen.js --trailing-comma=none"
+    "lint": "eslint *.js *.test.js bin/*.js",
+    "pretty": "prettier --write *.js data/*.json bin/*.js --trailing-comma=none"
   },
   "engines": {
     "node": ">=16"
@@ -79,7 +80,8 @@
     "@cyclonedx/cdxgen-plugins-bin": "^1.2.0",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
-    "connect": "^3.7.0"
+    "connect": "^3.7.0",
+    "jsonata": "^2.0.3"
   },
   "files": [
     "*.js",

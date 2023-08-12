@@ -443,6 +443,27 @@ const bomNSData = await createBom(filePath, options);
 const dbody = await submitBom(args, bomNSData.bomJson);
 ```
 
+## Interactive mode
+
+`cdxi` is a new interactive REPL server to interactively create, import and search an SBoM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
+
+### Custom commands
+
+| Command   | Description                                                                     |
+| --------- | ------------------------------------------------------------------------------- |
+| .create   | Create an SBoM from a path                                                      |
+| .import   | Import an existing SBoM from a path. Any SBoM in CycloneDX format is supported. |
+| .search   | Search the given string in the components name, group, purl and description     |
+| .query    | Pass a raw query in [jsonata](http://docs.jsonata.org/) format                  |
+| .print    | Print the SBoM as a table                                                       |
+| .tree     | Print the dependency tree if available                                          |
+| .validate | Validate the SBoM                                                               |
+| .exit     | To exit the shell                                                               |
+
+### REPL History
+
+Repl history will get persisted under `$HOME/.config/.cdxgen` directory. To override this location, use the environment variable `CDXGEN_REPL_HISTORY`.
+
 ## Node.js >= 20 permission model
 
 Refer to the [permissions document](./docs/PERMISSIONS.md)
