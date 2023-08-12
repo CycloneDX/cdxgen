@@ -51,6 +51,7 @@ jobs:
         env:
           CI: true
       - uses: swift-actions/setup-swift@v1
+        if: matrix.os == 'ubuntu-latest'
       - uses: actions/checkout@v3
         with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
