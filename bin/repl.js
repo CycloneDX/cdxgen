@@ -158,7 +158,37 @@ cdxgenRepl.defineCommand("search", {
       }
     } else {
       console.log(
-        "⚠ No SBoM is loaded. Use .importSbom command to import an existing SBoM"
+        "⚠ No SBoM is loaded. Use .import command to import an existing SBoM"
+      );
+    }
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("sort", {
+  help: "sort the current sbom based on the attribute",
+  async action(sortStr) {
+    if (sbom) {
+      if (sortStr) {
+        try {
+          if (!sortStr.includes("^")) {
+            sortStr = `components^(${sortStr})`;
+          }
+          const expression = jsonata(sortStr);
+          let components = await expression.evaluate(sbom);
+          if (!components) {
+            console.log("No results found!");
+          } else {
+            printTable({ components, dependencies: [] });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        console.log("⚠ Specify the attribute to sort by. Eg: .sort name");
+      }
+    } else {
+      console.log(
+        "⚠ No SBoM is loaded. Use .import command to import an existing SBoM"
       );
     }
     this.displayPrompt();
