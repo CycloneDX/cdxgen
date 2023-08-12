@@ -179,6 +179,10 @@ cdxgenRepl.defineCommand("sort", {
             console.log("No results found!");
           } else {
             printTable({ components, dependencies: [] });
+            // Store the sorted list in memory
+            if (components.length === sbom.components.length) {
+              sbom.components = components;
+            }
           }
         } catch (e) {
           console.log(e);
@@ -252,6 +256,51 @@ cdxgenRepl.defineCommand("validate", {
       if (result) {
         console.log("SBoM is valid!");
       }
+    } else {
+      console.log(
+        "⚠ No SBoM is loaded. Use .import command to import an existing SBoM"
+      );
+    }
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("save", {
+  help: "save the sbom to a new file",
+  action(saveToFile) {
+    if (sbom) {
+      if (!saveToFile) {
+        saveToFile = "bom.json";
+      }
+      fs.writeFileSync(saveToFile, JSON.stringify(sbom, null, 2));
+      console.log(`SBoM saved successfully to ${saveToFile}`);
+    } else {
+      console.log(
+        "⚠ No SBoM is loaded. Use .import command to import an existing SBoM"
+      );
+    }
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("update", {
+  help: "update the sbom components based on the given query",
+  async action(updateSpec) {
+    if (sbom) {
+      if (!updateSpec) {
+        return;
+      }
+      if (!updateSpec.startsWith("|")) {
+        updateSpec = "|" + updateSpec;
+      }
+      if (!updateSpec.endsWith("|")) {
+        updateSpec = updateSpec + "|";
+      }
+      updateSpec = "$ ~> " + updateSpec;
+      const expression = jsonata(updateSpec);
+      const newSbom = await expression.evaluate(sbom);
+      if (newSbom && newSbom.components.length <= sbom.components.length) {
+        sbom = newSbom;
+      }
+      console.log("SBoM updated successfully.");
     } else {
       console.log(
         "⚠ No SBoM is loaded. Use .import command to import an existing SBoM"

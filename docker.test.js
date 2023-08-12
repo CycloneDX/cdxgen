@@ -10,7 +10,7 @@ import { expect, test } from "@jest/globals";
 test("docker connection", async () => {
   const dockerConn = await getConnection();
   expect(dockerConn);
-});
+}, 120000);
 
 test("parseImageName tests", () => {
   expect(parseImageName("debian")).toEqual({
@@ -59,7 +59,7 @@ test("parseImageName tests", () => {
     digest: "5d008306a7c5d09ba0161a3408fa3839dc2c9dd991ffb68adecc1040399fe9e1",
     platform: ""
   });
-});
+}, 120000);
 
 test("docker getImage", async () => {
   const imageData = await getImage("hello-world:latest");

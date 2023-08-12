@@ -460,6 +460,8 @@ const dbody = await submitBom(args, bomNSData.bomJson);
 | .tree     | Print the dependency tree if available                                                                                                                                                                         |
 | .validate | Validate the SBoM                                                                                                                                                                                              |
 | .exit     | To exit the shell                                                                                                                                                                                              |
+| .save     | To save the modified SBoM to a new file                                                                                                                                                                        |
+| .update   | Update components based on query expression. Use syntax `\| query \| new object \|`. See example.                                                                                                              |
 
 ### Sample REPL usage
 
@@ -478,6 +480,7 @@ Below are some example commands to create an SBoM for a spring application and p
 .query components[name ~> /spring/ and scope = "required"]
 .sort name
 .sort components^(>name)
+.update | components[name ~> /spring/] | {'publisher': "foo"} |
 ```
 
 ### REPL History
