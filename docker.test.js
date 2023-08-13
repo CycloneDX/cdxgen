@@ -3,13 +3,16 @@ import {
   parseImageName,
   getImage,
   removeImage,
-  exportImage
+  exportImage,
+  isWin
 } from "./docker.js";
 import { expect, test } from "@jest/globals";
 
 test("docker connection", async () => {
-  const dockerConn = await getConnection();
-  expect(dockerConn);
+  if (!(isWin && process.env.CI === "true")) {
+    const dockerConn = await getConnection();
+    expect(dockerConn);
+  }
 }, 120000);
 
 test("parseImageName tests", () => {

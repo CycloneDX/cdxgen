@@ -24,7 +24,7 @@ import { x } from "tar";
 import { spawnSync } from "node:child_process";
 import { DEBUG_MODE } from "./utils.js";
 
-const isWin = _platform() === "win32";
+export const isWin = _platform() === "win32";
 
 let dockerConn = undefined;
 let isPodman = false;
