@@ -443,6 +443,50 @@ const bomNSData = await createBom(filePath, options);
 const dbody = await submitBom(args, bomNSData.bomJson);
 ```
 
+## Interactive mode
+
+`cdxi` is a new interactive REPL server to interactively create, import and search an SBoM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
+
+### Custom commands
+
+| Command   | Description                                                                                                                                                                                                    |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| .create   | Create an SBoM from a path                                                                                                                                                                                     |
+| .import   | Import an existing SBoM from a path. Any SBoM in CycloneDX format is supported.                                                                                                                                |
+| .search   | Search the given string in the components name, group, purl and description                                                                                                                                    |
+| .sort     | Sort the components based on the given attribute. Eg: .sort name to sort by name. Accepts full jsonata [order by](http://docs.jsonata.org/path-operators#order-by-) clause too. Eg: `.sort components^(>name)` |
+| .query    | Pass a raw query in [jsonata](http://docs.jsonata.org/) format                                                                                                                                                 |
+| .print    | Print the SBoM as a table                                                                                                                                                                                      |
+| .tree     | Print the dependency tree if available                                                                                                                                                                         |
+| .validate | Validate the SBoM                                                                                                                                                                                              |
+| .exit     | To exit the shell                                                                                                                                                                                              |
+| .save     | To save the modified SBoM to a new file                                                                                                                                                                        |
+| .update   | Update components based on query expression. Use syntax `\| query \| new object \|`. See example.                                                                                                              |
+
+### Sample REPL usage
+
+Start the REPL server.
+
+```shell
+cdxi
+```
+
+Below are some example commands to create an SBoM for a spring application and perform searches and queries.
+
+```
+.create /mnt/work/vuln-spring
+.print
+.search spring
+.query components[name ~> /spring/ and scope = "required"]
+.sort name
+.sort components^(>name)
+.update | components[name ~> /spring/] | {'publisher': "foo"} |
+```
+
+### REPL History
+
+Repl history will get persisted under `$HOME/.config/.cdxgen` directory. To override this location, use the environment variable `CDXGEN_REPL_HISTORY`.
+
 ## Node.js >= 20 permission model
 
 Refer to the [permissions document](./docs/PERMISSIONS.md)

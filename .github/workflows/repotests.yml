@@ -51,6 +51,7 @@ jobs:
         env:
           CI: true
       - uses: swift-actions/setup-swift@v1
+        if: matrix.os == 'ubuntu-latest'
       - uses: actions/checkout@v3
         with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
@@ -136,6 +137,7 @@ jobs:
           # mv *.hpi jenkins
           # CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
+        shell: bash      
       - name: repotests 1.4
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign --spec-version 1.4
@@ -147,6 +149,7 @@ jobs:
           FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate --spec-version 1.4
+        shell: bash
       - name: denotests
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         run: |
