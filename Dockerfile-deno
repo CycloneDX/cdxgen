@@ -4,7 +4,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="9.1.0" \
+      org.opencontainers.image.version="9.5.0" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -64,7 +64,7 @@ RUN set -e; \
     microdnf module enable php ruby -y \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python3.11 python3.11-devel python3.11-pip ruby ruby-devel \
-        pcre2 which tar gzip zip unzip sudo ncurses \
+        pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
