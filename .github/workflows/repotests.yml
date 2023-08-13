@@ -137,19 +137,7 @@ jobs:
           # mv *.hpi jenkins
           # CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
-        if: matrix.os == 'ubuntu-latest'
-      - name: repotests
-        run: |
-          bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
-          bin/cdxgen.js -p -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate
-          bin/cdxgen.js -p -t php --no-recurse repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate
-          bin/cdxgen.js -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --validate
-          bin/cdxgen.js -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json --validate
-          bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --validate
-          bin/cdxgen.js --no-recurse repotests/microservices-demo -o bomresults/bom-msd.json --validate
-          bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json --validate
-          bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
-        if: matrix.os == 'windows-latest'
+        shell: bash      
       - name: repotests 1.4
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign --spec-version 1.4
@@ -161,7 +149,7 @@ jobs:
           FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate --spec-version 1.4
-        if: matrix.os == 'ubuntu-latest'
+        shell: bash
       - name: denotests
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         run: |
