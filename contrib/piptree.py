@@ -1,15 +1,12 @@
+from typing import List
 import importlib.metadata as importlib_metadata
 import json
 import sys
 
 from pip._internal.metadata import pkg_resources
-
+from pip._internal.operations.freeze import FrozenRequirement
 
 def frozen_req_from_dist(dist):
-    try:
-        from pip._internal.operations.freeze import FrozenRequirement
-    except ImportError:
-        from pip import FrozenRequirement
     try:
         from pip._internal import metadata
 
@@ -23,7 +20,12 @@ def frozen_req_from_dist(dist):
         pass
 
 
-def get_installed_distributions():
+def get_installed_distributions() -> List[pkg_resources.Distribution]:
+    """
+    Get a list of installed distributions.
+    Returns:
+        A list of installed distributions.
+    """
     dists = pkg_resources.Environment.from_paths(None).iter_installed_distributions(
         local_only=False,
         skip=(),
@@ -76,6 +78,9 @@ def main(argv):
         version = "latest"
         if len(tmpA) == 2:
             version = tmpA[1]
+        elif len(tmpA) == 1:
+            if p.version:
+                version = p.version
         tree.append(
             {
                 "name": name.split(" ")[0],
