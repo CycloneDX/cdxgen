@@ -385,7 +385,16 @@ To generate test public/private key pairs, you can run cdxgen by passing the arg
 
 ![SBoM signing](sbom-sign.jpg)
 
-### Verifying the signature (Node.js example)
+### Verifying the signature
+
+Use the bundled `cdx-verify` command which supports verifying a single signature added at the bom level.
+
+```shell
+npm install -g @cyclonedx/cdxgen
+cdx-verify -i bom.json --public-key public.key
+```
+
+### Custom verification tool (Node.js example)
 
 There are many [libraries](https://jwt.io/#libraries-io) available to validate JSON Web Tokens. Below is a javascript example.
 
