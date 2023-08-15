@@ -299,6 +299,18 @@ test("parse gradle dependencies", () => {
     readFileSync("./test/data/gradle-android-app.dep", { encoding: "utf-8" })
   );
   expect(parsedList.pkgList.length).toEqual(101);
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-android-jetify.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(1);
+  expect(parsedList.pkgList).toEqual([
+    {
+      group: "androidx.appcompat",
+      name: "appcompat",
+      version: "1.2.0",
+      qualifiers: { type: "jar" }
+    }
+  ]);
 });
 
 test("parse gradle projects", () => {
