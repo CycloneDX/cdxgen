@@ -93,7 +93,7 @@ sudo npm install -g @cyclonedx/cdxgen@8.6.0
 Deno install is also supported.
 
 ```shell
-deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen"
+deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen"
 ```
 
 You can also use the cdxgen container image
