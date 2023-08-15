@@ -1489,7 +1489,15 @@ export const parseGradleDep = function (
         }
       }
       while ((match = depRegex.exec(rline))) {
-        const [line, groupspecified, namespecified, versionspecified, groupoverride, nameoverride, versionoverride] = match;
+        const [
+          line,
+          groupspecified,
+          namespecified,
+          versionspecified,
+          groupoverride,
+          nameoverride,
+          versionoverride
+        ] = match;
         const group = groupoverride || groupspecified;
         const name = nameoverride || namespecified;
         const version = versionoverride || versionspecified;
