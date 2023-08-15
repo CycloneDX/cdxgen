@@ -1449,7 +1449,7 @@ export const parseGradleDep = function (
     }
     let stack = [last_purl];
     const depRegex =
-      /^.*?--- +(?<group>[^\s:]+):(?<name>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?<versionoverride>[^\s:]+))?/gm;
+      /^.*?--- +(?<groupspecified>[^\s:]+):(?<namespecified>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?:(?<groupoverride>[^\s:]+):(?<nameoverride>[^\s:]+):)?(?<versionoverride>[^\s:]+))?/gm;
     for (const rline of rawOutput.split("\n")) {
       if (!rline) {
         continue;
@@ -1489,9 +1489,11 @@ export const parseGradleDep = function (
         }
       }
       while ((match = depRegex.exec(rline))) {
-        const [line, group, name, versionspecified, versionoverride] = match;
+        const [line, groupspecified, namespecified, versionspecified, groupoverride, nameoverride, versionoverride] = match;
+        const group = groupoverride || groupspecified;
+        const name = nameoverride || namespecified;
         const version = versionoverride || versionspecified;
-        const level = line.split(group)[0].length / 5;
+        const level = line.split(groupspecified)[0].length / 5;
         if (version !== undefined) {
           let purlString = new PackageURL(
             "maven",
