@@ -130,8 +130,12 @@ let GRADLE_CACHE_DIR =
   process.env.GRADLE_CACHE_DIR ||
   join(homedir(), ".gradle", "caches", "modules-2", "files-2.1");
 if (process.env.GRADLE_USER_HOME) {
-  GRADLE_CACHE_DIR =
-    process.env.GRADLE_USER_HOME + "/caches/modules-2/files-2.1";
+  GRADLE_CACHE_DIR = join(
+    process.env.GRADLE_USER_HOME,
+    "caches",
+    "modules-2",
+    "files-2.1"
+  );
 }
 
 // Clojure CLI
@@ -1108,7 +1112,12 @@ export const createJavaBom = async (path, options) => {
           console.log(
             "Creating class names list based on available jars. This might take a few mins ..."
           );
-          jarNSMapping = collectMvnDependencies(mavenCmd, basePath);
+          jarNSMapping = collectMvnDependencies(
+            mavenCmd,
+            basePath,
+            true,
+            false
+          );
         }
         console.log(
           `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,

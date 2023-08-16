@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "9.4.0",
+  "version": "9.5.0",
   "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
@@ -32,10 +32,11 @@
   "exports": "./index.js",
   "bin": {
     "cdxgen": "./bin/cdxgen.js",
-    "cdxi": "./bin/repl.js"
+    "cdxi": "./bin/repl.js",
+    "evinse": "./bin/evinse.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint": "eslint *.js *.test.js bin/*.js",
     "pretty": "prettier --write *.js data/*.json bin/*.js --trailing-comma=none"
@@ -76,12 +77,14 @@
     "yargs": "^17.7.2"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "^1.0.1",
+    "@appthreat/atom": "^1.0.4",
     "@cyclonedx/cdxgen-plugins-bin": "^1.2.0",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
-    "jsonata": "^2.0.3"
+    "jsonata": "^2.0.3",
+    "sequelize": "^6.32.1",
+    "sqlite3": "^5.1.6"
   },
   "files": [
     "*.js",

@@ -7,18 +7,25 @@ import process from "node:process";
 
 import { createBom } from "../index.js";
 import { validateBom } from "../validator.js";
-import { printTable, printDependencyTree } from "../display.js";
+import {
+  printCallStack,
+  printOccurrences,
+  printTable,
+  printDependencyTree,
+  printServices
+} from "../display.js";
 
 const options = {
   useColors: true,
   breakEvalOnSigint: true,
   preview: true,
-  prompt: "↝ ",
+  prompt: "cdx ↝ ",
   ignoreUndefined: true,
   useGlobal: true
 };
 
-const cdxArt = ` ██████╗██████╗ ██╗  ██╗
+const cdxArt = `
+ ██████╗██████╗ ██╗  ██╗
 ██╔════╝██╔══██╗╚██╗██╔╝
 ██║     ██║  ██║ ╚███╔╝ 
 ██║     ██║  ██║ ██╔██╗ 
@@ -26,7 +33,7 @@ const cdxArt = ` ██████╗██████╗ ██╗  ██╗
  ╚═════╝╚═════╝ ╚═╝  ╚═╝
 `;
 
-console.log("\n" + cdxArt);
+console.log(cdxArt);
 
 // The current sbom is stored here
 let sbom = undefined;
@@ -133,7 +140,7 @@ cdxgenRepl.defineCommand("sbom", {
   }
 });
 cdxgenRepl.defineCommand("search", {
-  help: "search the current sbom",
+  help: "search the current sbom. performs case insensitive search on various attributes.",
   async action(searchStr) {
     if (sbom) {
       if (searchStr) {
@@ -199,7 +206,7 @@ cdxgenRepl.defineCommand("sort", {
   }
 });
 cdxgenRepl.defineCommand("query", {
-  help: "query the current sbom",
+  help: "query the current sbom using jsonata expression",
   async action(querySpec) {
     if (sbom) {
       if (querySpec) {
@@ -249,7 +256,7 @@ cdxgenRepl.defineCommand("tree", {
   }
 });
 cdxgenRepl.defineCommand("validate", {
-  help: "validate the sbom",
+  help: "validate the sbom using jsonschema",
   action() {
     if (sbom) {
       const result = validateBom(sbom);
@@ -304,6 +311,110 @@ cdxgenRepl.defineCommand("update", {
     } else {
       console.log(
         "⚠ No SBoM is loaded. Use .import command to import an existing SBoM"
+      );
+    }
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("occurrences", {
+  help: "view components with evidence.occurrences",
+  async action() {
+    if (sbom) {
+      try {
+        const expression = jsonata(
+          "components[$count(evidence.occurrences) > 0]"
+        );
+        let components = await expression.evaluate(sbom);
+        if (!components) {
+          console.log(
+            "No results found. Use evinse command to generate an SBoM with evidence."
+          );
+        } else {
+          if (!Array.isArray(components)) {
+            components = [components];
+          }
+          printOccurrences({ components });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log(
+        "⚠ No SBoM is loaded. Use .import command to import an evinse SBoM"
+      );
+    }
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("discord", {
+  help: "display the discord invite link for support",
+  async action() {
+    console.log("Head to https://discord.gg/pF4BYWEJcS for support");
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("sponsor", {
+  help: "display the sponsorship link to fund this project",
+  async action() {
+    console.log(
+      "Hey, thanks a lot for considering! https://github.com/sponsors/prabhu"
+    );
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("callstack", {
+  help: "view components with evidence.callstack",
+  async action() {
+    if (sbom) {
+      try {
+        const expression = jsonata(
+          "components[$count(evidence.callstack.frames) > 0]"
+        );
+        let components = await expression.evaluate(sbom);
+        if (!components) {
+          console.log(
+            "callstack evidence was not found. Use evinse command to generate an SBoM with evidence."
+          );
+        } else {
+          if (!Array.isArray(components)) {
+            components = [components];
+          }
+          printCallStack({ components });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log(
+        "⚠ No SBoM is loaded. Use .import command to import an evinse SBoM"
+      );
+    }
+    this.displayPrompt();
+  }
+});
+cdxgenRepl.defineCommand("services", {
+  help: "view services",
+  async action() {
+    if (sbom) {
+      try {
+        const expression = jsonata("services");
+        let services = await expression.evaluate(sbom);
+        if (!services) {
+          console.log(
+            "No services found. Use evinse command to generate an SBoM with evidence."
+          );
+        } else {
+          if (!Array.isArray(services)) {
+            services = [services];
+          }
+          printServices({ services });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log(
+        "⚠ No SBoM is loaded. Use .import command to import an evinse SBoM"
       );
     }
     this.displayPrompt();
