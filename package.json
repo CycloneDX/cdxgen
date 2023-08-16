@@ -33,7 +33,8 @@
   "bin": {
     "cdxgen": "./bin/cdxgen.js",
     "cdxi": "./bin/repl.js",
-    "evinse": "./bin/evinse.js"
+    "evinse": "./bin/evinse.js",
+    "cdx-verify": "./bin/verify.js"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js",
