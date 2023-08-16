@@ -273,17 +273,17 @@ test("parse gradle dependencies", () => {
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(20);
+  expect(parsedList.pkgList.length).toEqual(21);
   expect(parsedList.dependenciesList.length).toEqual(22);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(34);
+  expect(parsedList.pkgList.length).toEqual(35);
   expect(parsedList.dependenciesList.length).toEqual(36);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-s.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(27);
+  expect(parsedList.pkgList.length).toEqual(28);
   expect(parsedList.dependenciesList.length).toEqual(29);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-core.out", { encoding: "utf-8" })
@@ -298,7 +298,7 @@ test("parse gradle dependencies", () => {
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-android-app.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(101);
+  expect(parsedList.pkgList.length).toEqual(102);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-android-jetify.dep", { encoding: "utf-8" })
   );
