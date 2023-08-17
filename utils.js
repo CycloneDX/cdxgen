@@ -1516,6 +1516,8 @@ export const parseGradleDep = function (
               version: version !== undefined ? version : rootProjectVersion,
               qualifiers: { type: "jar" }
             };
+            adep["purl"] = purlString;
+            adep["bom-ref"] = purlString;
             if (scope) {
               adep["scope"] = scope;
             }
