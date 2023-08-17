@@ -53,7 +53,9 @@ export const printServices = (bomJson) => {
       content: "List of Services\nGenerated with \u2665 by cdxgen"
     }
   };
-  console.log(table(data, config));
+  if (data.length > 1) {
+    console.log(table(data, config));
+  }
 };
 
 export const printOccurrences = (bomJson) => {
@@ -81,7 +83,9 @@ export const printOccurrences = (bomJson) => {
       content: "Component Evidence\nGenerated with \u2665 by cdxgen"
     }
   };
-  console.log(table(data, config));
+  if (data.length > 1) {
+    console.log(table(data, config));
+  }
 };
 export const printCallStack = (bomJson) => {
   const data = [["Group", "Name", "Version", "Call Stack"]];
@@ -125,7 +129,9 @@ export const printCallStack = (bomJson) => {
       content: "Component Call Stack Evidence\nGenerated with \u2665 by cdxgen"
     }
   };
-  console.log(table(data, config));
+  if (data.length > 1) {
+    console.log(table(data, config));
+  }
 };
 export const printDependencyTree = (bomJson) => {
   const dependencies = bomJson.dependencies || [];

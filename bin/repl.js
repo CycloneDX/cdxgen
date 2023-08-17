@@ -24,6 +24,9 @@ const options = {
   useGlobal: true
 };
 
+// Use canonical terminal settings to support custom readlines
+process.env.NODE_NO_READLINE = 1;
+
 const cdxArt = `
  ██████╗██████╗ ██╗  ██╗
 ██╔════╝██╔══██╗╚██╗██╔╝

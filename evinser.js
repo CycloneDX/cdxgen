@@ -1,6 +1,9 @@
 import {
   executeAtom,
+  getAllFiles,
+  getGradleCommand,
   getMavenCommand,
+  collectGradleDependencies,
   collectMvnDependencies
 } from "./utils.js";
 import { tmpdir } from "node:os";
@@ -10,15 +13,14 @@ import * as db from "./db.js";
 import { PackageURL } from "packageurl-js";
 import { Op } from "sequelize";
 const DB_NAME = "evinser.db";
-const typesPurlCache = {};
+const typePurlsCache = {};
 
 /**
  * Function to create the db for the libraries referred in the sbom.
  *
- * @param {string} dbPath DB Path
  * @param {object} Command line options
  */
-export const prepareDB = async (dbPath, options) => {
+export const prepareDB = async (options) => {
   const dirPath = options._[0] || ".";
   const bomJsonFile = options.input;
   if (!fs.existsSync(bomJsonFile)) {
@@ -29,7 +31,7 @@ export const prepareDB = async (dbPath, options) => {
   const components = bomJson.components || [];
   const { sequelize, Namespaces, Usages, DataFlows } = await db.createOrLoad(
     DB_NAME,
-    dbPath
+    options.dbPath
   );
   let hasMavenPkgs = false;
   // We need to slice only non-maven packages
@@ -52,39 +54,86 @@ export const prepareDB = async (dbPath, options) => {
   }
   // If there are maven packages we collect and store the namespaces
   if (!options.skipMavenCollector && hasMavenPkgs) {
-    console.log("About to collect dependencies from maven for", dirPath);
-    const mavenCmd = getMavenCommand(dirPath, dirPath);
-    // collect all jars including from the cache if data-flow mode is enabled
-    const jarNSMapping = collectMvnDependencies(
-      mavenCmd,
-      dirPath,
-      false,
-      options.withDeepJarCollector
-    );
-    if (jarNSMapping) {
-      for (const purl of Object.keys(jarNSMapping)) {
-        purlsJars[purl] = jarNSMapping[purl].jarFile;
-        await Namespaces.findOrCreate({
-          where: { purl },
-          defaults: {
-            purl,
-            data: JSON.stringify(
-              {
-                pom: jarNSMapping[purl].pom,
-                namespaces: jarNSMapping[purl].namespaces
-              },
-              null,
-              2
-            )
-          }
-        });
-      }
+    const pomXmlFiles = getAllFiles(dirPath, "**/" + "pom.xml");
+    const gradleFiles = getAllFiles(dirPath, "**/" + "build.gradle*");
+    if (pomXmlFiles && pomXmlFiles.length) {
+      await catalogMavenDeps(dirPath, purlsJars, Namespaces, options);
+    }
+    if (gradleFiles && gradleFiles.length) {
+      await catalogGradleDeps(dirPath, purlsJars, Namespaces);
     }
   }
   for (const purl of Object.keys(purlsToSlice)) {
     await createAndStoreSlice(purl, purlsJars, Usages);
   }
   return { sequelize, Namespaces, Usages, DataFlows };
+};
+
+export const catalogMavenDeps = async (
+  dirPath,
+  purlsJars,
+  Namespaces,
+  options = {}
+) => {
+  console.log("About to collect jar dependencies for the path", dirPath);
+  const mavenCmd = getMavenCommand(dirPath, dirPath);
+  // collect all jars including from the cache if data-flow mode is enabled
+  const jarNSMapping = collectMvnDependencies(
+    mavenCmd,
+    dirPath,
+    false,
+    options.withDeepJarCollector
+  );
+  if (jarNSMapping) {
+    for (const purl of Object.keys(jarNSMapping)) {
+      purlsJars[purl] = jarNSMapping[purl].jarFile;
+      await Namespaces.findOrCreate({
+        where: { purl },
+        defaults: {
+          purl,
+          data: JSON.stringify(
+            {
+              pom: jarNSMapping[purl].pom,
+              namespaces: jarNSMapping[purl].namespaces
+            },
+            null,
+            2
+          )
+        }
+      });
+    }
+  }
+};
+
+export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
+  console.log("About to collect jar dependencies for the path", dirPath);
+  const gradleCmd = getGradleCommand(dirPath, dirPath);
+  // collect all jars including from the cache if data-flow mode is enabled
+  const jarNSMapping = collectGradleDependencies(
+    gradleCmd,
+    dirPath,
+    false,
+    true
+  );
+  if (jarNSMapping) {
+    for (const purl of Object.keys(jarNSMapping)) {
+      purlsJars[purl] = jarNSMapping[purl].jarFile;
+      await Namespaces.findOrCreate({
+        where: { purl },
+        defaults: {
+          purl,
+          data: JSON.stringify(
+            {
+              pom: jarNSMapping[purl].pom,
+              namespaces: jarNSMapping[purl].namespaces
+            },
+            null,
+            2
+          )
+        }
+      });
+    }
+  }
 };
 
 export const createAndStoreSlice = async (purl, purlsJars, Usages) => {
@@ -118,7 +167,7 @@ export const createSlice = (purlOrLanguage, filePath, sliceType = "usages") => {
   }
   const tempDir = fs.mkdtempSync(path.join(tmpdir(), `atom-${sliceType}-`));
   const atomFile = path.join(tempDir, "app.atom");
-  const slicesFile = path.join(tempDir, `${sliceType}.json`);
+  const slicesFile = path.join(tempDir, `${sliceType}.slices.json`);
   const args = [
     sliceType,
     "-l",
@@ -172,14 +221,23 @@ export const analyzeProject = async (dbObjMap, options) => {
   let usageSlice = undefined;
   let dataFlowSlice = undefined;
   let usagesSlicesFile = undefined;
-  let dataFlowsSlicesFile = undefined;
+  let dataFlowSlicesFile = undefined;
   let purlLocationMap = {};
   let dataFlowFrames = {};
   let servicesMap = {};
-  let retMap = createSlice(language, dirPath, "usages");
-  if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
-    usageSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
-    usagesSlicesFile = retMap.slicesFile;
+  let retMap = {};
+  let userDefinedTypesMap = {};
+  // Reuse existing usages slices
+  if (options.usagesSlicesFile && fs.existsSync(options.usagesSlicesFile)) {
+    usageSlice = JSON.parse(fs.readFileSync(options.usagesSlicesFile, "utf-8"));
+    usagesSlicesFile = options.usagesSlicesFile;
+  } else {
+    // Generate our own slices
+    retMap = createSlice(language, dirPath, "usages");
+    if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+      usageSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
+      usagesSlicesFile = retMap.slicesFile;
+    }
   }
   if (usageSlice && Object.keys(usageSlice).length) {
     const retMap = await parseObjectSlices(
@@ -190,17 +248,29 @@ export const analyzeProject = async (dbObjMap, options) => {
     );
     purlLocationMap = retMap.purlLocationMap;
     servicesMap = retMap.servicesMap;
+    userDefinedTypesMap = retMap.userDefinedTypesMap;
   }
   if (options.withDataFlow) {
-    retMap = createSlice(language, dirPath, "data-flow");
-    if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
-      dataFlowsSlicesFile = retMap.slicesFile;
-      dataFlowSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
+    if (
+      options.dataFlowSlicesFile &&
+      fs.existsSync(options.dataFlowSlicesFile)
+    ) {
+      dataFlowSlicesFile = options.dataFlowSlicesFile;
+      dataFlowSlice = JSON.parse(
+        fs.readFileSync(options.dataFlowSlicesFile, "utf-8")
+      );
+    } else {
+      retMap = createSlice(language, dirPath, "data-flow");
+      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+        dataFlowSlicesFile = retMap.slicesFile;
+        dataFlowSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
+      }
     }
   }
   if (dataFlowSlice && Object.keys(dataFlowSlice).length) {
     dataFlowFrames = await collectDataFlowFrames(
       language,
+      userDefinedTypesMap,
       dataFlowSlice,
       dbObjMap
     );
@@ -208,11 +278,12 @@ export const analyzeProject = async (dbObjMap, options) => {
   return {
     atomFile: retMap.atomFile,
     usagesSlicesFile,
-    dataFlowsSlicesFile,
+    dataFlowSlicesFile,
     purlLocationMap,
     servicesMap,
     dataFlowFrames,
-    tempDir: retMap.tempDir
+    tempDir: retMap.tempDir,
+    userDefinedTypesMap
   };
 };
 
@@ -226,6 +297,10 @@ export const parseObjectSlices = async (
   if (!usageSlice || !Object.keys(usageSlice).length) {
     return purlLocationMap;
   }
+  const userDefinedTypesMap = {};
+  (usageSlice.userDefinedTypes || []).forEach((ut) => {
+    userDefinedTypesMap[ut.name] = true;
+  });
   for (const slice of [
     ...(usageSlice.objectSlices || []),
     ...(usageSlice.userDefinedTypes || [])
@@ -241,24 +316,20 @@ export const parseObjectSlices = async (
     const locationKey = `${slice.fileName}${
       slice.lineNumber ? "#" + slice.lineNumber : ""
     }`;
-    const purlsSet = await parseSliceUsages(language, slice.usages, dbObjMap);
-    if (purlsSet && purlsSet.length) {
-      for (const apurl of purlsSet) {
-        if (!purlLocationMap[apurl]) {
-          purlLocationMap[apurl] = new Set();
-        }
-        purlLocationMap[apurl].add(locationKey);
-      }
-    }
-    servicesMap = Object.assign(
-      {},
-      servicesMap,
-      detectServicesFromUsages(language, slice, servicesMap)
+    await parseSliceUsages(
+      language,
+      userDefinedTypesMap,
+      slice.usages,
+      dbObjMap,
+      locationKey,
+      purlLocationMap
     );
+    detectServicesFromUsages(language, slice, servicesMap);
   }
   return {
     purlLocationMap,
-    servicesMap
+    servicesMap,
+    userDefinedTypesMap
   };
 };
 
@@ -267,11 +338,21 @@ export const parseObjectSlices = async (
  * https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#use
  *
  * @param {string} language Application language
+ * @param {object} userDefinedTypesMap User Defined types in the application
  * @param {array} usages Usages array for each objectSlice
  * @param {object} dbObjMap DB Models
+ * @param {string} locationKey Filename with line number to be used in occurrences evidence
+ * @param {object} purlLocationMap Object to track locations where purls are used
  * @returns
  */
-export const parseSliceUsages = async (language, usages, dbObjMap) => {
+export const parseSliceUsages = async (
+  language,
+  userDefinedTypesMap,
+  usages,
+  dbObjMap,
+  locationKey,
+  purlLocationMap
+) => {
   if (!usages || !usages.length) {
     return undefined;
   }
@@ -280,15 +361,20 @@ export const parseSliceUsages = async (language, usages, dbObjMap) => {
   for (const ausage of usages) {
     // First capture the types in the targetObj and definedBy
     for (const atype of [
-      ausage?.targetObj?.typeFullName,
-      ausage?.targetObj?.resolvedMethod,
-      ausage?.definedBy?.typeFullName,
-      ausage?.definedBy?.resolvedMethod,
-      ...(ausage?.fields || []).map((f) => f?.typeFullName)
+      [ausage?.targetObj?.isExternal, ausage?.targetObj?.typeFullName],
+      [ausage?.targetObj?.isExternal, ausage?.targetObj?.resolvedMethod],
+      [ausage?.definedBy?.isExternal, ausage?.definedBy?.typeFullName],
+      [ausage?.definedBy?.isExternal, ausage?.definedBy?.resolvedMethod],
+      ...(ausage?.fields || []).map((f) => [f?.isExternal, f?.typeFullName])
     ]) {
-      if (!isFilterableType(language, atype)) {
-        typesToLookup.add(atype);
-        typesToLookup.add(getClassTypeFromSignature(language, atype));
+      if (
+        atype[0] !== false &&
+        !isFilterableType(language, userDefinedTypesMap, atype[1])
+      ) {
+        if (!atype[1].includes("(")) {
+          typesToLookup.add(atype[1]);
+        }
+        typesToLookup.add(getClassTypeFromSignature(language, atype[1]));
       }
     }
     // Now capture full method signatures from invokedCalls, argToCalls including the paramtypes
@@ -296,49 +382,65 @@ export const parseSliceUsages = async (language, usages, dbObjMap) => {
       .concat(ausage?.invokedCalls || [])
       .concat(ausage?.argToCalls || [])
       .concat(ausage?.procedures || [])) {
-      if (!isFilterableType(language, acall?.resolvedMethod)) {
-        typesToLookup.add(acall?.resolvedMethod);
+      if (acall.isExternal == false) {
+        continue;
+      }
+      if (
+        !isFilterableType(language, userDefinedTypesMap, acall?.resolvedMethod)
+      ) {
+        if (!acall?.resolvedMethod.includes("(")) {
+          typesToLookup.add(acall?.resolvedMethod);
+        }
         typesToLookup.add(
           getClassTypeFromSignature(language, acall?.resolvedMethod)
         );
       }
       for (const aparamType of acall?.paramTypes || []) {
-        if (!isFilterableType(language, aparamType)) {
-          typesToLookup.add(aparamType);
+        if (!isFilterableType(language, userDefinedTypesMap, aparamType)) {
+          if (!aparamType.includes("(")) {
+            typesToLookup.add(aparamType);
+          }
           typesToLookup.add(getClassTypeFromSignature(language, aparamType));
         }
       }
     }
   }
   for (const atype of typesToLookup) {
-    if (isFilterableType(language, atype)) {
-      continue;
-    }
-    // Hit the cache first
-    if (typesPurlCache[atype]) {
-      purlsSet.add(typesPurlCache[atype]);
+    if (isFilterableType(language, userDefinedTypesMap, atype)) {
       continue;
     }
     // Check the namespaces db
-    const nsHits = await dbObjMap.Namespaces.findAll({
-      attributes: ["purl"],
-      where: {
-        data: {
-          [Op.like]: `%${atype}%`
+    const nsHits =
+      typePurlsCache[atype] ||
+      (await dbObjMap.Namespaces.findAll({
+        attributes: ["purl"],
+        where: {
+          data: {
+            [Op.like]: `%${atype}%`
+          }
         }
-      }
-    });
+      }));
     if (nsHits && nsHits.length) {
       for (const ns of nsHits) {
         purlsSet.add(ns.purl);
-        typesPurlCache[atype] = ns.purl;
       }
+      typePurlsCache[atype] = nsHits;
     }
   }
-  return Array.from(purlsSet);
+  // Update the purlLocationMap
+  for (const apurl of purlsSet) {
+    if (!purlLocationMap[apurl]) {
+      purlLocationMap[apurl] = new Set();
+    }
+    purlLocationMap[apurl].add(locationKey);
+  }
 };
 
-export const isFilterableType = (language, typeFullName) => {
+export const isFilterableType = (
+  language,
+  userDefinedTypesMap,
+  typeFullName
+) => {
   if (
     !typeFullName ||
     ["ANY", "UNKNOWN", "VOID"].includes(typeFullName.toUpperCase())
@@ -364,6 +466,9 @@ export const isFilterableType = (language, typeFullName) => {
     ) {
       return true;
     }
+  }
+  if (userDefinedTypesMap[typeFullName]) {
+    return true;
   }
   return false;
 };
@@ -418,7 +523,6 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
       }
     }
   }
-  return servicesMap;
 };
 
 export const constructServiceName = (language, slice) => {
@@ -442,7 +546,11 @@ export const extractEndpoints = (language, code) => {
   switch (language) {
     case "java":
     case "jar":
-      if (code.startsWith("@") && code.includes("(")) {
+      if (
+        code.startsWith("@") &&
+        code.includes("Mapping") &&
+        code.includes("(")
+      ) {
         let tmpA = code.split("(");
         if (tmpA.length > 1) {
           tmpA = tmpA[1].split(")")[0];
@@ -490,7 +598,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   const {
     tempDir,
     usagesSlicesFile,
-    dataFlowsSlicesFile,
+    dataFlowSlicesFile,
     purlLocationMap,
     servicesMap,
     dataFlowFrames
@@ -545,7 +653,8 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         "x-trust-boundary": servicesMap[serviceName].xTrustBoundary
       });
     }
-    bomJson.services = services;
+    // Add to existing services
+    bomJson.services = (bomJson.services || []).concat(services);
   }
   if (options.annotate) {
     if (!bomJson.annotations) {
@@ -559,12 +668,12 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         text: fs.readFileSync(usagesSlicesFile, "utf8")
       });
     }
-    if (dataFlowsSlicesFile && fs.existsSync(dataFlowsSlicesFile)) {
+    if (dataFlowSlicesFile && fs.existsSync(dataFlowSlicesFile)) {
       bomJson.annotations.push({
         subjects: [bomJson.serialNumber],
         annotator: { component: bomJson.metadata.tools.components[0] },
         timestamp: new Date().toISOString(),
-        text: fs.readFileSync(dataFlowsSlicesFile, "utf8")
+        text: fs.readFileSync(dataFlowSlicesFile, "utf8")
       });
     }
   }
@@ -591,11 +700,13 @@ export const createEvinseFile = (sliceArtefacts, options) => {
  * Implemented based on the logic proposed here - https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#data-flow-slice
  *
  * @param {string} language Application language
+ * @param {object} userDefinedTypesMap User Defined types in the application
  * @param {object} dataFlowSlice Data flow slice object from atom
  * @param {object} dbObjMap DB models
  */
 export const collectDataFlowFrames = async (
   language,
+  userDefinedTypesMap,
   dataFlowSlice,
   dbObjMap
 ) => {
@@ -623,28 +734,25 @@ export const collectDataFlowFrames = async (
         continue;
       }
       const typeFullName = theNode.typeFullName;
-      if (!isFilterableType(language, typeFullName)) {
-        // Hit the cache first
-        if (typesPurlCache[typeFullName]) {
-          referredPurls.add(typesPurlCache[typeFullName]);
-        } else {
-          // Check the namespaces db
-          const nsHits = await dbObjMap.Namespaces.findAll({
+      if (!isFilterableType(language, userDefinedTypesMap, typeFullName)) {
+        // Check the namespaces db
+        const nsHits =
+          typePurlsCache[typeFullName] ||
+          (await dbObjMap.Namespaces.findAll({
             attributes: ["purl"],
             where: {
               data: {
                 [Op.like]: `%${typeFullName}%`
               }
             }
-          });
-          if (nsHits && nsHits.length) {
-            for (const ns of nsHits) {
-              referredPurls.add(ns.purl);
-              typesPurlCache[typeFullName] = ns.purl;
-            }
-          } else {
-            console.log("Unable to identify purl for", typeFullName);
+          }));
+        if (nsHits && nsHits.length) {
+          for (const ns of nsHits) {
+            referredPurls.add(ns.purl);
           }
+          typePurlsCache[typeFullName] = nsHits;
+        } else {
+          console.log("Unable to identify purl for", typeFullName);
         }
       }
       aframe.push({
