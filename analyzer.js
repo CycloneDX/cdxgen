@@ -1,5 +1,5 @@
 import { parse } from "@babel/parser";
-import babelTraverse from "@babel/traverse";
+import traverse from "@babel/traverse";
 import { join } from "path";
 import { readdirSync, statSync, readFileSync } from "fs";
 import { basename, resolve, isAbsolute } from "path";
@@ -23,7 +23,7 @@ const IGNORE_DIRS = [
 ];
 
 const IGNORE_FILE_PATTERN = new RegExp(
-  "(conf|test|spec|mock|\\.d)\\.(js|ts|tsx)$",
+  "(conf|config|test|spec|mock|\\.d)\\.(js|ts|tsx)$",
   "i"
 );
 
@@ -64,6 +64,7 @@ const babelParserOptions = {
   sourceType: "unambiguous",
   allowImportExportEverywhere: true,
   allowAwaitOutsideFunction: true,
+  allowNewTargetOutsideFunction: true,
   allowReturnOutsideFunction: true,
   allowSuperOutsideMethod: true,
   errorRecovery: true,
@@ -123,8 +124,32 @@ const setFileRef = (allImports, file, pathway) => {
  */
 const parseFileASTTree = (file, allImports) => {
   const ast = parse(readFileSync(file, "utf-8"), babelParserOptions);
-  babelTraverse(ast, {
-    // Used for all ES6 import statements
+  traverse.default(ast, {
+    Import: (path) => {
+      if (path && path.node) {
+        setFileRef(allImports, file, path.node.source.value);
+      }
+    },
+    ImportDefaultSpecifier: (path) => {
+      if (path && path.node) {
+        setFileRef(allImports, file, path.node.source.value);
+      }
+    },
+    ImportNamespaceSpecifier: (path) => {
+      if (path && path.node) {
+        setFileRef(allImports, file, path.node.source.value);
+      }
+    },
+    ImportAttribute: (path) => {
+      if (path && path.node) {
+        setFileRef(allImports, file, path.node.source.value);
+      }
+    },
+    ImportOrExportDeclaration: (path) => {
+      if (path && path.node) {
+        setFileRef(allImports, file, path.node.source.value);
+      }
+    },
     ImportDeclaration: (path) => {
       if (path && path.node) {
         setFileRef(allImports, file, path.node.source.value);
