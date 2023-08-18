@@ -162,7 +162,7 @@ export function getLicenses(pkg, format = "xml") {
         if (typeof l === "string" || l instanceof String) {
           if (
             spdxLicenses.some((v) => {
-              return l === v || l.endsWith(v.toLowerCase());
+              return l === v;
             })
           ) {
             licenseContent.id = l;
@@ -171,9 +171,14 @@ export function getLicenses(pkg, format = "xml") {
             if (!l.includes("opensource.org")) {
               licenseContent.name = "CUSTOM";
             } else {
-              licenseContent.id = l
+              const possibleId = l
                 .replace("http://www.opensource.org/licenses/", "")
                 .toUpperCase();
+              spdxLicenses.forEach((v) => {
+                if (v.toUpperCase() === possibleId) {
+                  licenseContent.id = v;
+                }
+              });
             }
             if (l.includes("mit-license")) {
               licenseContent.id = "MIT";
