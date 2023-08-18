@@ -217,7 +217,8 @@ test("parse gradle dependencies", () => {
         value: "compileClasspath"
       }
     ],
-    "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.2.0.RELEASE?type=jar",
+    "bom-ref":
+      "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.2.0.RELEASE?type=jar",
     purl: "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.2.0.RELEASE?type=jar"
   });
 
@@ -251,7 +252,8 @@ test("parse gradle dependencies", () => {
       name: "selenium-support",
       qualifiers: { type: "jar" },
       version: "4.5.0",
-      "bom-ref": "pkg:maven/org.seleniumhq.selenium/selenium-support@4.5.0?type=jar",
+      "bom-ref":
+        "pkg:maven/org.seleniumhq.selenium/selenium-support@4.5.0?type=jar",
       purl: "pkg:maven/org.seleniumhq.selenium/selenium-support@4.5.0?type=jar"
     }
   ]);
@@ -265,7 +267,8 @@ test("parse gradle dependencies", () => {
       name: "selenium-remote-driver",
       version: "4.5.0",
       qualifiers: { type: "jar" },
-      "bom-ref": "pkg:maven/org.seleniumhq.selenium/selenium-remote-driver@4.5.0?type=jar",
+      "bom-ref":
+        "pkg:maven/org.seleniumhq.selenium/selenium-remote-driver@4.5.0?type=jar",
       purl: "pkg:maven/org.seleniumhq.selenium/selenium-remote-driver@4.5.0?type=jar"
     }
   ]);
@@ -279,7 +282,8 @@ test("parse gradle dependencies", () => {
       name: "selenium-api",
       version: "4.5.0",
       qualifiers: { type: "jar" },
-      "bom-ref": "pkg:maven/org.seleniumhq.selenium/selenium-api@4.5.0?type=jar",
+      "bom-ref":
+        "pkg:maven/org.seleniumhq.selenium/selenium-api@4.5.0?type=jar",
       purl: "pkg:maven/org.seleniumhq.selenium/selenium-api@4.5.0?type=jar"
     }
   ]);
