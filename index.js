@@ -1448,6 +1448,11 @@ export const createJavaBom = async (path, options) => {
         }
       } // for
       if (pkgList.length) {
+        if (parentComponent.components && parentComponent.components.length) {
+          for (const subProj of parentComponent.components) {
+            pkgList = pkgList.filter(pkg => pkg["bom-ref"] !== subProj["bom-ref"]);
+          }
+        }
         console.log(
           "Obtained",
           pkgList.length,

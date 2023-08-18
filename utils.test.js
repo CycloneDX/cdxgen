@@ -157,7 +157,9 @@ test("parse gradle dependencies", () => {
     qualifiers: {
       type: "jar"
     },
-    version: "0.4.25"
+    version: "0.4.25",
+    "bom-ref": "pkg:maven/org.ethereum/solcJ-all@0.4.25?type=jar",
+    purl: "pkg:maven/org.ethereum/solcJ-all@0.4.25?type=jar"
   });
 
   parsedList = parseGradleDep(
@@ -178,7 +180,9 @@ test("parse gradle dependencies", () => {
         name: "GradleProfileName",
         value: "androidTestImplementation"
       }
-    ]
+    ],
+    "bom-ref": "pkg:maven/com.android.support.test/runner@1.0.2?type=jar",
+    purl: "pkg:maven/com.android.support.test/runner@1.0.2?type=jar"
   });
   expect(parsedList.pkgList[103]).toEqual({
     group: "androidx.core",
@@ -193,7 +197,9 @@ test("parse gradle dependencies", () => {
         name: "GradleProfileName",
         value: "releaseUnitTestRuntimeClasspath"
       }
-    ]
+    ],
+    "bom-ref": "pkg:maven/androidx.core/core@1.7.0?type=jar",
+    purl: "pkg:maven/androidx.core/core@1.7.0?type=jar"
   });
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-out1.dep", { encoding: "utf-8" })
@@ -210,7 +216,9 @@ test("parse gradle dependencies", () => {
         name: "GradleProfileName",
         value: "compileClasspath"
       }
-    ]
+    ],
+    "bom-ref": "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.2.0.RELEASE?type=jar",
+    purl: "pkg:maven/org.springframework.boot/spring-boot-starter-web@2.2.0.RELEASE?type=jar"
   });
 
   parsedList = parseGradleDep(
@@ -221,7 +229,9 @@ test("parse gradle dependencies", () => {
     group: "ch.qos.logback",
     name: "logback-core",
     qualifiers: { type: "jar" },
-    version: "1.4.5"
+    version: "1.4.5",
+    "bom-ref": "pkg:maven/ch.qos.logback/logback-core@1.4.5?type=jar",
+    purl: "pkg:maven/ch.qos.logback/logback-core@1.4.5?type=jar"
   });
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-rich2.dep", { encoding: "utf-8" })
@@ -232,13 +242,17 @@ test("parse gradle dependencies", () => {
       group: "io.appium",
       name: "java-client",
       qualifiers: { type: "jar" },
-      version: "8.1.1"
+      version: "8.1.1",
+      "bom-ref": "pkg:maven/io.appium/java-client@8.1.1?type=jar",
+      purl: "pkg:maven/io.appium/java-client@8.1.1?type=jar"
     },
     {
       group: "org.seleniumhq.selenium",
       name: "selenium-support",
       qualifiers: { type: "jar" },
-      version: "4.5.0"
+      version: "4.5.0",
+      "bom-ref": "pkg:maven/org.seleniumhq.selenium/selenium-support@4.5.0?type=jar",
+      purl: "pkg:maven/org.seleniumhq.selenium/selenium-support@4.5.0?type=jar"
     }
   ]);
   parsedList = parseGradleDep(
@@ -250,7 +264,9 @@ test("parse gradle dependencies", () => {
       group: "org.seleniumhq.selenium",
       name: "selenium-remote-driver",
       version: "4.5.0",
-      qualifiers: { type: "jar" }
+      qualifiers: { type: "jar" },
+      "bom-ref": "pkg:maven/org.seleniumhq.selenium/selenium-remote-driver@4.5.0?type=jar",
+      purl: "pkg:maven/org.seleniumhq.selenium/selenium-remote-driver@4.5.0?type=jar"
     }
   ]);
   parsedList = parseGradleDep(
@@ -262,7 +278,9 @@ test("parse gradle dependencies", () => {
       group: "org.seleniumhq.selenium",
       name: "selenium-api",
       version: "4.5.0",
-      qualifiers: { type: "jar" }
+      qualifiers: { type: "jar" },
+      "bom-ref": "pkg:maven/org.seleniumhq.selenium/selenium-api@4.5.0?type=jar",
+      purl: "pkg:maven/org.seleniumhq.selenium/selenium-api@4.5.0?type=jar"
     }
   ]);
   parsedList = parseGradleDep(
@@ -273,17 +291,17 @@ test("parse gradle dependencies", () => {
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(20);
+  expect(parsedList.pkgList.length).toEqual(21);
   expect(parsedList.dependenciesList.length).toEqual(22);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(34);
+  expect(parsedList.pkgList.length).toEqual(35);
   expect(parsedList.dependenciesList.length).toEqual(36);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-s.out", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(27);
+  expect(parsedList.pkgList.length).toEqual(28);
   expect(parsedList.dependenciesList.length).toEqual(29);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-core.out", { encoding: "utf-8" })
@@ -298,7 +316,7 @@ test("parse gradle dependencies", () => {
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-android-app.dep", { encoding: "utf-8" })
   );
-  expect(parsedList.pkgList.length).toEqual(101);
+  expect(parsedList.pkgList.length).toEqual(102);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-android-jetify.dep", { encoding: "utf-8" })
   );
@@ -308,7 +326,9 @@ test("parse gradle dependencies", () => {
       group: "androidx.appcompat",
       name: "appcompat",
       version: "1.2.0",
-      qualifiers: { type: "jar" }
+      qualifiers: { type: "jar" },
+      "bom-ref": "pkg:maven/androidx.appcompat/appcompat@1.2.0?type=jar",
+      purl: "pkg:maven/androidx.appcompat/appcompat@1.2.0?type=jar"
     }
   ]);
 });

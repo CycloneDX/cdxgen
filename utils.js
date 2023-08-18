@@ -1450,7 +1450,7 @@ export const parseGradleDep = function (
     }
     let stack = [last_purl];
     const depRegex =
-      /^.*?--- +(?<groupspecified>[^\s:]+):(?<namespecified>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?:(?<groupoverride>[^\s:]+):(?<nameoverride>[^\s:]+):)?(?<versionoverride>[^\s:]+))?/gm;
+      /^.*?--- +(?<groupspecified>[^\s:]+) ?:(?<namespecified>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?:(?<groupoverride>[^\s:]+):(?<nameoverride>[^\s:]+):)?(?<versionoverride>[^\s:]+))?/gm;
     for (const rline of rawOutput.split("\n")) {
       if (!rline) {
         continue;
@@ -1468,16 +1468,9 @@ export const parseGradleDep = function (
         rline.startsWith("\\--- ")
       ) {
         last_level = 1;
-        if (rline.startsWith("+--- project :")) {
-          const tmpProj = rline.split("+--- project :");
-          last_project_purl = `pkg:maven/${tmpProj[1].trim()}@${rootProjectVersion}?type=jar`;
-          stack = [last_project_purl];
-          last_purl = last_project_purl;
-        } else {
-          last_project_purl = first_purl;
-          last_purl = last_project_purl;
-          stack = [first_purl];
-        }
+        last_project_purl = first_purl;
+        last_purl = last_project_purl;
+        stack = [first_purl];
       }
       if (rline.includes(" - ")) {
         profileName = rline.split(" - ")[0];
@@ -1503,73 +1496,73 @@ export const parseGradleDep = function (
         const name = nameoverride || namespecified;
         const version = versionoverride || versionspecified;
         const level = line.split(groupspecified)[0].length / 5;
-        if (version !== undefined) {
+        if (version !== undefined || group === "project") {
           let purlString = new PackageURL(
             "maven",
-            group,
+            group !== "project" ? group : rootProjectGroup,
             name,
-            version,
+            version !== undefined ? version : rootProjectVersion,
             { type: "jar" },
             null
           ).toString();
           purlString = decodeURIComponent(purlString);
           keys_cache[purlString + "_" + last_purl] = true;
-          if (group !== "project") {
-            // Filter duplicates
-            if (!deps_keys_cache[purlString]) {
-              deps_keys_cache[purlString] = true;
-              const adep = {
-                group,
-                name: name,
-                version: version,
-                qualifiers: { type: "jar" }
-              };
-              if (scope) {
-                adep["scope"] = scope;
-              }
-              if (profileName) {
-                adep.properties = [
-                  {
-                    name: "GradleProfileName",
-                    value: profileName
-                  }
-                ];
-              }
-              deps.push(adep);
+          // Filter duplicates
+          if (!deps_keys_cache[purlString]) {
+            deps_keys_cache[purlString] = true;
+            const adep = {
+              group: group !== "project" ? group : rootProjectGroup,
+              name: name,
+              version: version !== undefined ? version : rootProjectVersion,
+              qualifiers: { type: "jar" }
+            };
+            adep["purl"] = purlString;
+            adep["bom-ref"] = purlString;
+            if (scope) {
+              adep["scope"] = scope;
             }
-            if (!level_trees[purlString]) {
-              level_trees[purlString] = [];
+            if (profileName) {
+              adep.properties = [
+                {
+                  name: "GradleProfileName",
+                  value: profileName
+                }
+              ];
             }
-            if (level == 0) {
-              stack = [first_purl];
-              stack.push(purlString);
-            } else if (last_purl === "") {
-              stack.push(purlString);
-            } else if (level > last_level) {
-              const cnodes = level_trees[last_purl] || [];
-              if (!cnodes.includes(purlString)) {
-                cnodes.push(purlString);
-              }
-              level_trees[last_purl] = cnodes;
-              if (stack[stack.length - 1] !== purlString) {
-                stack.push(purlString);
-              }
-            } else {
-              for (let i = level; i <= last_level; i++) {
-                stack.pop();
-              }
-              const last_stack =
-                stack.length > 0 ? stack[stack.length - 1] : last_project_purl;
-              const cnodes = level_trees[last_stack] || [];
-              if (!cnodes.includes(purlString)) {
-                cnodes.push(purlString);
-              }
-              level_trees[last_stack] = cnodes;
-              stack.push(purlString);
-            }
-            last_level = level;
-            last_purl = purlString;
+            deps.push(adep);
           }
+          if (!level_trees[purlString]) {
+            level_trees[purlString] = [];
+          }
+          if (level == 0) {
+            stack = [first_purl];
+            stack.push(purlString);
+          } else if (last_purl === "") {
+            stack.push(purlString);
+          } else if (level > last_level) {
+            const cnodes = level_trees[last_purl] || [];
+            if (!cnodes.includes(purlString)) {
+              cnodes.push(purlString);
+            }
+            level_trees[last_purl] = cnodes;
+            if (stack[stack.length - 1] !== purlString) {
+              stack.push(purlString);
+            }
+          } else {
+            for (let i = level; i <= last_level; i++) {
+              stack.pop();
+            }
+            const last_stack =
+              stack.length > 0 ? stack[stack.length - 1] : last_project_purl;
+            const cnodes = level_trees[last_stack] || [];
+            if (!cnodes.includes(purlString)) {
+              cnodes.push(purlString);
+            }
+            level_trees[last_stack] = cnodes;
+            stack.push(purlString);
+          }
+          last_level = level;
+          last_purl = purlString;
         }
       }
     }
