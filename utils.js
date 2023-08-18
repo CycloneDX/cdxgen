@@ -50,6 +50,7 @@ import StreamZip from "node-stream-zip";
 import { parseEDNString } from "edn-data";
 import { PackageURL } from "packageurl-js";
 import { getTreeWithPlugin } from "./piptree.js";
+import iconv from "iconv-lite";
 
 const selfPJson = JSON.parse(readFileSync(join(dirNameStr, "package.json")));
 const _version = selfPJson.version;
@@ -161,7 +162,7 @@ export function getLicenses(pkg, format = "xml") {
         if (typeof l === "string" || l instanceof String) {
           if (
             spdxLicenses.some((v) => {
-              return l === v;
+              return l === v || l.endsWith(v.toLowerCase());
             })
           ) {
             licenseContent.id = l;
@@ -169,9 +170,18 @@ export function getLicenses(pkg, format = "xml") {
           } else if (l.startsWith("http")) {
             if (!l.includes("opensource.org")) {
               licenseContent.name = "CUSTOM";
+            } else {
+              licenseContent.id = l
+                .replace("http://www.opensource.org/licenses/", "")
+                .toUpperCase();
             }
             if (l.includes("mit-license")) {
               licenseContent.id = "MIT";
+            }
+            // We always need a name to avoid validation errors
+            // Issue: #469
+            if (!licenseContent.name) {
+              licenseContent.name = "CUSTOM";
             }
             licenseContent.url = l;
           } else {
@@ -4129,13 +4139,19 @@ export const parseEdnData = function (rawEdnData) {
 };
 
 export const parseNupkg = async function (nupkgFile) {
+  let nuspecData = await readZipEntry(nupkgFile, ".nuspec");
+  if (!nuspecData) {
+    return [];
+  }
+  if (nuspecData.charCodeAt(0) === 65533) {
+    nuspecData = await readZipEntry(nupkgFile, ".nuspec", "ucs2");
+  }
+  return await parseNuspecData(nupkgFile, nuspecData);
+};
+
+export const parseNuspecData = async function (nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
-  let nuspecData = await readZipEntry(nupkgFile, ".nuspec");
-  // Remove byte order mark
-  if (nuspecData.charCodeAt(0) === 0xfeff) {
-    nuspecData = nuspecData.slice(1);
-  }
   let npkg = undefined;
   try {
     npkg = xml2js(nuspecData, {
@@ -4147,9 +4163,13 @@ export const parseNupkg = async function (nupkgFile) {
       commentKey: "value"
     }).package;
   } catch (e) {
-    // If we are parsing with invalid encoding unicode replacement character is used
+    // If we are parsing with invalid encoding, unicode replacement character is used
     if (nuspecData.charCodeAt(0) === 65533) {
       console.log(`Unable to parse ${nupkgFile} in utf-8 mode`);
+    } else {
+      console.log(
+        "Unable to parse this package. Tried utf-8 and ucs2 encoding."
+      );
     }
   }
   if (!npkg) {
@@ -5455,10 +5475,15 @@ export const sbtPluginsPath = function (projectPath) {
  *
  * @param {string} zipFile Zip file to read
  * @param {string} filePattern File pattern
+ * @param {string} contentEncoding Encoding. Defaults to utf-8
  *
  * @returns File contents
  */
-export const readZipEntry = async function (zipFile, filePattern) {
+export const readZipEntry = async function (
+  zipFile,
+  filePattern,
+  contentEncoding = "utf-8"
+) {
   let retData = undefined;
   try {
     const zip = new StreamZip.async({ file: zipFile });
@@ -5473,7 +5498,7 @@ export const readZipEntry = async function (zipFile, filePattern) {
       }
       if (entry.name.endsWith(filePattern)) {
         const fileData = await zip.entryData(entry.name);
-        retData = Buffer.from(fileData).toString();
+        retData = iconv.decode(Buffer.from(fileData), contentEncoding);
         break;
       }
     }

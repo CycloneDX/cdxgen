@@ -54,6 +54,7 @@ import {
   parseKVDep,
   parseSbtLock,
   parseNupkg,
+  parseNuspecData,
   parseBazelSkyframe,
   parseBazelBuild,
   parseHelmYamlData,
@@ -2090,7 +2091,21 @@ test("parse scala sbt lock", () => {
 });
 
 test("parse nupkg file", async () => {
-  const deps = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
+  let deps = await parseNupkg(
+    "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nupkg"
+  );
+  expect(deps.length).toEqual(1);
+  expect(deps[0].name).toEqual("Microsoft.Web.Infrastructure");
+  deps = await parseNuspecData(
+    "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
+    readFileSync(
+      "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
+      "ascii"
+    )
+  );
+  expect(deps.length).toEqual(1);
+  expect(deps[0].name).toEqual("Microsoft.Web.Infrastructure");
+  deps = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
   expect(deps.length).toEqual(1);
   expect(deps[0].name).toEqual("jQuery");
 });
