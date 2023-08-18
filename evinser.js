@@ -106,7 +106,9 @@ export const catalogMavenDeps = async (
 };
 
 export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
-  console.log("About to collect jar dependencies for the path", dirPath);
+  console.log(
+    "About to collect jar dependencies from the gradle cache. This would take a while ..."
+  );
   const gradleCmd = getGradleCommand(dirPath, dirPath);
   // collect all jars including from the cache if data-flow mode is enabled
   const jarNSMapping = collectGradleDependencies(
@@ -134,6 +136,9 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
       });
     }
   }
+  console.log(
+    "To speed up successive re-runs, pass the argument --skip-maven-collector to evinse command."
+  );
 };
 
 export const createAndStoreSlice = async (purl, purlsJars, Usages) => {
@@ -237,6 +242,9 @@ export const analyzeProject = async (dbObjMap, options) => {
     if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
       usageSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
       usagesSlicesFile = retMap.slicesFile;
+      console.log(
+        `To speed up this step, cache ${usagesSlicesFile} and invoke evinse with the --usages-slices-file argument.`
+      );
     }
   }
   if (usageSlice && Object.keys(usageSlice).length) {
@@ -264,6 +272,9 @@ export const analyzeProject = async (dbObjMap, options) => {
       if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
         dataFlowSlicesFile = retMap.slicesFile;
         dataFlowSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
+        console.log(
+          `To speed up this step, cache ${dataFlowSlicesFile} and invoke evinse with the --data-flow-slices-file argument.`
+        );
       }
     }
   }
