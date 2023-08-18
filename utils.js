@@ -180,7 +180,7 @@ export function getLicenses(pkg, format = "xml") {
             }
             // We always need a name to avoid validation errors
             // Issue: #469
-            if (!licenseContent.name) {
+            if (!licenseContent.name && !licenseContent.id) {
               licenseContent.name = "CUSTOM";
             }
             licenseContent.url = l;
