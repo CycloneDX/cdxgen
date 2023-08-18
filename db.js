@@ -13,10 +13,20 @@ export const createOrLoad = async (dbName, dbPath, logging = false) => {
     },
     dialect: "sqlite",
     dialectOptions: {
-      mode: SQLite.OPEN_READWRITE | SQLite.OPEN_CREATE | SQLite.OPEN_FULLMUTEX
+      mode:
+        SQLite.OPEN_READWRITE |
+        SQLite.OPEN_CREATE |
+        SQLite.OPEN_NOMUTEX |
+        SQLite.OPEN_SHAREDCACHE
     },
-    storage: path.join(dbPath, dbName),
-    logging
+    storage: dbPath.includes("memory") ? dbPath : path.join(dbPath, dbName),
+    logging,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
   });
   Namespaces.init(
     {

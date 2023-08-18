@@ -28,11 +28,13 @@ import {
   collectJarNS,
   includeMavenTestScope,
   getMavenCommand,
+  collectGradleDependencies,
   collectMvnDependencies,
   parsePom,
   parseMavenTree,
   executeGradleProperties,
   getGradleCommand,
+  convertJarNSToPackages,
   parseGradleDep,
   parseBazelSkyframe,
   parseSbtLock,
@@ -172,20 +174,24 @@ const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
  * @param {string} type Package type
  * @returns component object
  */
-const createDefaultParentComponent = (path, type = "application") => {
+const createDefaultParentComponent = (
+  path,
+  type = "application",
+  options = {}
+) => {
   // Expands any relative path such as dot
   path = resolve(path);
   // Create a parent component based on the directory name
-  let dirName =
+  let dirNameStr =
     existsSync(path) && lstatSync(path).isDirectory()
       ? basename(path)
       : dirname(path);
-  const tmpA = dirName.split(sep);
-  dirName = tmpA[tmpA.length - 1];
+  const tmpA = dirNameStr.split(sep);
+  dirNameStr = tmpA[tmpA.length - 1];
   const parentComponent = {
-    group: "",
-    name: dirName,
-    version: "latest",
+    group: options.projectGroup || "",
+    name: options.projectName || dirNameStr,
+    version: "" + options.projectVersion || "latest",
     type: "application"
   };
   const ppurl = new PackageURL(
@@ -994,36 +1000,55 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
  */
 export const createJarBom = (path, options) => {
   let pkgList = [];
-  let jarFiles = getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "*.[jw]ar"
-  );
-  // Jenkins plugins
-  const hpiFiles = getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "*.hpi"
-  );
-  if (hpiFiles.length) {
-    jarFiles = jarFiles.concat(hpiFiles);
-  }
-  const tempDir = mkdtempSync(join(tmpdir(), "jar-deps-"));
-  for (const jar of jarFiles) {
-    if (DEBUG_MODE) {
-      console.log(`Parsing ${jar}`);
+  let jarFiles = [];
+  let nsMapping = {};
+  const parentComponent = createDefaultParentComponent(path, "maven", options);
+  if (options.useGradleCache) {
+    nsMapping = collectGradleDependencies(
+      getGradleCommand(path, null),
+      path,
+      false,
+      true
+    );
+  } else if (options.useMavenCache) {
+    nsMapping = collectMvnDependencies(
+      getMavenCommand(path, null),
+      null,
+      false,
+      true
+    );
+  } else {
+    jarFiles = getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "*.[jw]ar"
+    );
+    // Jenkins plugins
+    const hpiFiles = getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "*.hpi"
+    );
+    if (hpiFiles.length) {
+      jarFiles = jarFiles.concat(hpiFiles);
     }
-    const dlist = extractJarArchive(jar, tempDir);
-    if (dlist && dlist.length) {
-      pkgList = pkgList.concat(dlist);
+    const tempDir = mkdtempSync(join(tmpdir(), "jar-deps-"));
+    for (const jar of jarFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${jar}`);
+      }
+      const dlist = extractJarArchive(jar, tempDir);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    // Clean up
+    if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+      rmSync(tempDir, { recursive: true, force: true });
     }
   }
-  // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
-    rmSync(tempDir, { recursive: true, force: true });
-  }
+  pkgList = pkgList.concat(convertJarNSToPackages(nsMapping));
   return buildBomNSData(options, pkgList, "maven", {
     src: path,
-    filename: jarFiles.join(", "),
-    nsMapping: {}
+    parentComponent
   });
 };
 
@@ -2075,7 +2100,7 @@ export const createPythonBom = async (path, options) => {
   let dependencies = [];
   let pkgList = [];
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
-  let parentComponent = createDefaultParentComponent(path, "pypi");
+  let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pipenvMode = existsSync(join(path, "Pipfile"));
   let poetryFiles = getAllFiles(
     path,
@@ -3165,7 +3190,7 @@ export const createSwiftBom = (path, options) => {
   if (pkgResolvedFiles.length) {
     for (const f of pkgResolvedFiles) {
       if (!parentComponent || !Object.keys(parentComponent).length) {
-        parentComponent = createDefaultParentComponent(f, "swift");
+        parentComponent = createDefaultParentComponent(f, "swift", options);
       }
       if (DEBUG_MODE) {
         console.log("Parsing", f);
@@ -4753,14 +4778,20 @@ export const createBom = async (path, options) => {
       return createJarBom(path, options);
     case "gradle-index":
     case "gradle-cache":
+      options.useGradleCache = true;
       return createJarBom(GRADLE_CACHE_DIR, options);
     case "sbt-index":
     case "sbt-cache":
+      options.useSbtCache = true;
       return createJarBom(SBT_CACHE_DIR, options);
     case "maven-index":
     case "maven-cache":
     case "maven-repo":
-      return createJarBom(join(homedir(), ".m2", "repository"), options);
+      options.useMavenCache = true;
+      return createJarBom(
+        process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository"),
+        options
+      );
     case "nodejs":
     case "js":
     case "javascript":
