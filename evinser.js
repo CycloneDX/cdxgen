@@ -312,7 +312,9 @@ export const analyzeProject = async (dbObjMap, options) => {
       language,
       userDefinedTypesMap,
       dataFlowSlice,
-      dbObjMap
+      dbObjMap,
+      purlLocationMap,
+      purlImportsMap
     );
   }
   return {
@@ -584,6 +586,7 @@ export const isFilterableType = (
   if (language === "javascript") {
     if (
       typeFullName.includes(".js") ||
+      typeFullName.includes("=>") ||
       typeFullName.startsWith("__") ||
       typeFullName.startsWith("{ ") ||
       typeFullName.startsWith("JSON") ||
@@ -829,12 +832,16 @@ export const createEvinseFile = (sliceArtefacts, options) => {
  * @param {object} userDefinedTypesMap User Defined types in the application
  * @param {object} dataFlowSlice Data flow slice object from atom
  * @param {object} dbObjMap DB models
+ * @param {object} purlLocationMap Object to track locations where purls are used
+ * @param {object} purlImportsMap Object to track package urls and their import aliases
  */
 export const collectDataFlowFrames = async (
   language,
   userDefinedTypesMap,
   dataFlowSlice,
-  dbObjMap
+  dbObjMap,
+  purlLocationMap,
+  purlImportsMap
 ) => {
   const nodes = dataFlowSlice?.graph?.nodes || [];
   // Cache the nodes based on the id to improve lookup
@@ -861,32 +868,54 @@ export const collectDataFlowFrames = async (
       }
       const typeFullName = theNode.typeFullName;
       if (!isFilterableType(language, userDefinedTypesMap, typeFullName)) {
-        // Check the namespaces db
-        const nsHits =
-          typePurlsCache[typeFullName] ||
-          (await dbObjMap.Namespaces.findAll({
-            attributes: ["purl"],
-            where: {
-              data: {
-                [Op.like]: `%${typeFullName}%`
-              }
+        if (purlImportsMap && Object.keys(purlImportsMap).length) {
+          for (const apurl of Object.keys(purlImportsMap)) {
+            const apurlImports = purlImportsMap[apurl];
+            if (apurlImports && apurlImports.includes(typeFullName)) {
+              referredPurls.add(apurl);
             }
-          }));
-        if (nsHits && nsHits.length) {
-          for (const ns of nsHits) {
-            referredPurls.add(ns.purl);
           }
-          typePurlsCache[typeFullName] = nsHits;
         } else {
-          console.log("Unable to identify purl for", typeFullName);
+          // Check the namespaces db
+          const nsHits =
+            typePurlsCache[typeFullName] ||
+            (await dbObjMap.Namespaces.findAll({
+              attributes: ["purl"],
+              where: {
+                data: {
+                  [Op.like]: `%${typeFullName}%`
+                }
+              }
+            }));
+          if (nsHits && nsHits.length) {
+            for (const ns of nsHits) {
+              referredPurls.add(ns.purl);
+            }
+            typePurlsCache[typeFullName] = nsHits;
+          } else {
+            console.log("Unable to identify purl for", typeFullName);
+          }
+        }
+      }
+      let parentPackageName = theNode.parentPackageName || "";
+      if (
+        parentPackageName == "<global>" &&
+        theNode.parentClassName &&
+        theNode.parentClassName.includes("::")
+      ) {
+        parentPackageName = theNode.parentClassName.split("::")[0];
+        if (parentPackageName.includes(".js")) {
+          const tmpA = parentPackageName.split("/");
+          tmpA.pop();
+          parentPackageName = tmpA.join("/");
         }
       }
       aframe.push({
-        package: theNode.parentPackageName || "",
+        package: parentPackageName,
         module: theNode.parentClassName || "",
         function: theNode.parentMethodName || "",
-        line: theNode.lineNumber || "",
-        column: theNode.columnNumber || "",
+        line: theNode.lineNumber || undefined,
+        column: theNode.columnNumber || undefined,
         fullFilename: theNode.parentFileName || ""
       });
     }
