@@ -1314,18 +1314,16 @@ export const createJavaBom = async (path, options) => {
           type: "application",
           ...(retMap.metadata || {})
         };
-        const parentPurl = decodeURIComponent(
-          new PackageURL(
-            "maven",
-            parentComponent.group || "",
-            parentComponent.name,
-            parentComponent.version,
-            { type: "jar" },
-            null
-          ).toString()
-        );
+        const parentPurl = new PackageURL(
+          "maven",
+          parentComponent.group || "",
+          parentComponent.name,
+          parentComponent.version,
+          { type: "jar" },
+          null
+        ).toString();
         parentComponent["purl"] = parentPurl;
-        parentComponent["bom-ref"] = parentPurl;
+        parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
       }
       // Get the sub-project properties and set the root dependencies
       if (allProjectsStr && allProjectsStr.length) {
@@ -1333,25 +1331,24 @@ export const createJavaBom = async (path, options) => {
           retMap = executeGradleProperties(path, null, spstr);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
-            const rspName = rootSubProject.replace(/^:/, "").replace(/:/, "/");
+            const rspName = rootSubProject.replace(/^:/, "");
             const rootSubProjectObj = {
               name: rspName,
               type: "application",
               qualifiers: { type: "jar" },
               ...(retMap.metadata || {})
             };
-            const rootSubProjectPurl = decodeURIComponent(
-              new PackageURL(
-                "maven",
-                rootSubProjectObj.group || parentComponent.group || "",
-                rootSubProjectObj.name,
-                rootSubProjectObj.version,
-                rootSubProjectObj.qualifiers,
-                null
-              ).toString()
-            );
+            const rootSubProjectPurl = new PackageURL(
+              "maven",
+              rootSubProjectObj.group || parentComponent.group || "",
+              rootSubProjectObj.name,
+              rootSubProjectObj.version,
+              rootSubProjectObj.qualifiers,
+              null
+            ).toString();
             rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] = rootSubProjectPurl;
+            rootSubProjectObj["bom-ref"] =
+              decodeURIComponent(rootSubProjectPurl);
             if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
               allProjects.push(rootSubProjectObj);
               rootDependsOn.push(rootSubProjectPurl);
@@ -1383,7 +1380,7 @@ export const createJavaBom = async (path, options) => {
         let gradleDepArgs = [
           sp.purl === parentComponent.purl
             ? depTaskWithArgs[0]
-            : `:${sp.name.replace(/\//, ":")}:${depTaskWithArgs[0]}`
+            : `:${sp.name}:${depTaskWithArgs[0]}`
         ];
         gradleDepArgs = gradleDepArgs
           .concat(depTaskWithArgs.slice(1))
