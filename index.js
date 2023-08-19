@@ -203,7 +203,7 @@ const createDefaultParentComponent = (
     null,
     null
   ).toString();
-  parentComponent["bom-ref"] = ppurl;
+  parentComponent["bom-ref"] = decodeURIComponent(ppurl);
   parentComponent["purl"] = ppurl;
   return parentComponent;
 };
@@ -227,8 +227,8 @@ const determineParentComponent = (options) => {
       null,
       null
     ).toString();
-    parentComponent["bom-ref"] = ppurl;
-    parentComponent["purl"] = decodeURIComponent(ppurl);
+    parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+    parentComponent["purl"] = ppurl;
   }
   return parentComponent;
 };
@@ -343,9 +343,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       delete parentComponent._integrity;
       delete parentComponent.license;
       if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
-        parentComponent["purl"] = decodeURIComponent(
-          parentComponent["bom-ref"]
-        );
+        parentComponent["purl"] = parentComponent["bom-ref"];
       }
     }
     if (parentComponent && parentComponent.components) {
