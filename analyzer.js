@@ -2,7 +2,7 @@ import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import { join } from "path";
 import { readdirSync, statSync, readFileSync } from "fs";
-import { basename, resolve, isAbsolute } from "path";
+import { basename, resolve, isAbsolute, relative } from "path";
 
 const IGNORE_DIRS = [
   "node_modules",
@@ -19,7 +19,8 @@ const IGNORE_DIRS = [
   "dev_docs",
   "types",
   "mock",
-  "mocks"
+  "mocks",
+  "__tests__"
 ];
 
 const IGNORE_FILE_PATTERN = new RegExp(
@@ -87,34 +88,43 @@ const babelParserOptions = {
  * Filter only references to (t|jsx?) or (less|scss) files for now.
  * Opt to use our relative paths.
  */
-const setFileRef = (allImports, file, pathway) => {
+const setFileRef = (allImports, src, file, pathnode) => {
+  const pathway = pathnode.value || pathnode.name;
+  const sourceLoc = pathnode.loc?.start;
+  if (!pathway) {
+    return;
+  }
+  const fileRelativeLoc = relative(src, file);
   // remove unexpected extension imports
   if (/\.(svg|png|jpg|d\.ts)/.test(pathway)) {
     return;
   }
-
+  const occurrence = {
+    importedAs: pathway,
+    isExternal: true,
+    fileName: fileRelativeLoc,
+    lineNumber: sourceLoc && sourceLoc.line ? sourceLoc.line : undefined,
+    columnNumber: sourceLoc && sourceLoc.column ? sourceLoc.column : undefined
+  };
   // replace relative imports with full path
-  let module = pathway;
+  let moduleFullPath = pathway;
+  let wasAbsolute = false;
   if (/\.\//g.test(pathway) || /\.\.\//g.test(pathway)) {
-    module = resolve(file, "..", pathway);
+    moduleFullPath = resolve(file, "..", pathway);
+    if (isAbsolute(moduleFullPath)) {
+      moduleFullPath = relative(src, moduleFullPath);
+      wasAbsolute = true;
+    }
+    occurrence.isExternal = false;
   }
-
-  // initialise or increase reference count for file
-  if (Object.prototype.hasOwnProperty.call(allImports, module)) {
-    allImports[module] = allImports[module] + 1;
-  } else {
-    allImports[module] = 1;
-  }
-
+  allImports[moduleFullPath] = allImports[moduleFullPath] || new Set();
+  allImports[moduleFullPath].add(occurrence);
   // Handle module package name
   // Eg: zone.js/dist/zone will be referred to as zone.js in package.json
-  if (!isAbsolute(module) && module.includes("/")) {
-    const modPkg = module.split("/")[0];
-    if (Object.prototype.hasOwnProperty.call(allImports, modPkg)) {
-      allImports[modPkg] = allImports[modPkg] + 1;
-    } else {
-      allImports[modPkg] = 1;
-    }
+  if (!wasAbsolute && moduleFullPath.includes("/")) {
+    const modPkg = moduleFullPath.split("/")[0];
+    allImports[modPkg] = allImports[modPkg] || new Set();
+    allImports[modPkg].add(occurrence);
   }
 };
 
@@ -122,37 +132,12 @@ const setFileRef = (allImports, file, pathway) => {
  * Check AST tree for any (j|tsx?) files and set a file
  * references for any import, require or dynamic import files.
  */
-const parseFileASTTree = (file, allImports) => {
+const parseFileASTTree = (src, file, allImports) => {
   const ast = parse(readFileSync(file, "utf-8"), babelParserOptions);
   traverse.default(ast, {
-    Import: (path) => {
-      if (path && path.node) {
-        setFileRef(allImports, file, path.node.source.value);
-      }
-    },
-    ImportDefaultSpecifier: (path) => {
-      if (path && path.node) {
-        setFileRef(allImports, file, path.node.source.value);
-      }
-    },
-    ImportNamespaceSpecifier: (path) => {
-      if (path && path.node) {
-        setFileRef(allImports, file, path.node.source.value);
-      }
-    },
-    ImportAttribute: (path) => {
-      if (path && path.node) {
-        setFileRef(allImports, file, path.node.source.value);
-      }
-    },
-    ImportOrExportDeclaration: (path) => {
-      if (path && path.node) {
-        setFileRef(allImports, file, path.node.source.value);
-      }
-    },
     ImportDeclaration: (path) => {
       if (path && path.node) {
-        setFileRef(allImports, file, path.node.source.value);
+        setFileRef(allImports, src, file, path.node.source);
       }
     },
     // For require('') statements
@@ -163,23 +148,23 @@ const parseFileASTTree = (file, allImports) => {
         path.node.name === "require" &&
         path.parent.type === "CallExpression"
       ) {
-        setFileRef(allImports, file, path.parent.arguments[0].value);
+        setFileRef(allImports, src, file, path.parent.arguments[0]);
       }
     },
     // Use for dynamic imports like routes.jsx
     CallExpression: (path) => {
       if (path && path.node && path.node.callee.type === "Import") {
-        setFileRef(allImports, file, path.node.arguments[0].value);
+        setFileRef(allImports, src, file, path.node.arguments[0]);
       }
     },
     // Use for export barrells
     ExportAllDeclaration: (path) => {
-      setFileRef(allImports, file, path.node.source.value);
+      setFileRef(allImports, src, file, path.node.source);
     },
     ExportNamedDeclaration: (path) => {
       // ensure there is a path export
       if (path && path.node && path.node.source) {
-        setFileRef(allImports, file, path.node.source.value);
+        setFileRef(allImports, src, file, path.node.source);
       }
     }
   });
@@ -207,7 +192,7 @@ export const findJSImports = async (src) => {
     const srcFiles = promiseMap.flatMap((d) => d);
     for (const file of srcFiles) {
       try {
-        parseFileASTTree(file, allImports);
+        parseFileASTTree(src, file, allImports);
       } catch (err) {
         errFiles.push(file);
       }

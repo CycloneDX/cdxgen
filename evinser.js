@@ -214,6 +214,28 @@ export const purlToLanguage = (purl, filePath) => {
   return language;
 };
 
+export const initFromSbom = (components) => {
+  const purlLocationMap = {};
+  const purlImportsMap = {};
+  for (const comp of components) {
+    if (!comp || !comp.evidence || !comp.evidence.occurrences) {
+      continue;
+    }
+    purlLocationMap[comp.purl] = new Set(
+      comp.evidence.occurrences.map((v) => v.location)
+    );
+    (comp.properties || [])
+      .filter((v) => v.name === "ImportedModules")
+      .forEach((v) => {
+        purlImportsMap[comp.purl] = (v.value || "").split(",");
+      });
+  }
+  return {
+    purlLocationMap,
+    purlImportsMap
+  };
+};
+
 /**
  * Function to analyze the project
  *
@@ -227,11 +249,16 @@ export const analyzeProject = async (dbObjMap, options) => {
   let dataFlowSlice = undefined;
   let usagesSlicesFile = undefined;
   let dataFlowSlicesFile = undefined;
-  let purlLocationMap = {};
   let dataFlowFrames = {};
   let servicesMap = {};
   let retMap = {};
   let userDefinedTypesMap = {};
+  const bomFile = options.input;
+  const bomJson = JSON.parse(fs.readFileSync(bomFile, "utf8"));
+  const components = bomJson.components || [];
+  // Load any existing purl-location information from the sbom.
+  // For eg: cdxgen populates this information for javascript projects
+  let { purlLocationMap, purlImportsMap } = initFromSbom(components);
   // Reuse existing usages slices
   if (options.usagesSlicesFile && fs.existsSync(options.usagesSlicesFile)) {
     usageSlice = JSON.parse(fs.readFileSync(options.usagesSlicesFile, "utf-8"));
@@ -252,7 +279,9 @@ export const analyzeProject = async (dbObjMap, options) => {
       language,
       usageSlice,
       dbObjMap,
-      servicesMap
+      servicesMap,
+      purlLocationMap,
+      purlImportsMap
     );
     purlLocationMap = retMap.purlLocationMap;
     servicesMap = retMap.servicesMap;
@@ -302,9 +331,10 @@ export const parseObjectSlices = async (
   language,
   usageSlice,
   dbObjMap,
-  servicesMap = {}
+  servicesMap = {},
+  purlLocationMap = {},
+  purlImportsMap = {}
 ) => {
-  const purlLocationMap = {};
   if (!usageSlice || !Object.keys(usageSlice).length) {
     return purlLocationMap;
   }
@@ -330,10 +360,11 @@ export const parseObjectSlices = async (
     await parseSliceUsages(
       language,
       userDefinedTypesMap,
-      slice.usages,
+      slice,
       dbObjMap,
       locationKey,
-      purlLocationMap
+      purlLocationMap,
+      purlImportsMap
     );
     detectServicesFromUsages(language, slice, servicesMap);
   }
@@ -354,22 +385,29 @@ export const parseObjectSlices = async (
  * @param {object} dbObjMap DB Models
  * @param {string} locationKey Filename with line number to be used in occurrences evidence
  * @param {object} purlLocationMap Object to track locations where purls are used
+ * @param {object} purlImportsMap Object to track package urls and their import aliases
  * @returns
  */
 export const parseSliceUsages = async (
   language,
   userDefinedTypesMap,
-  usages,
+  slice,
   dbObjMap,
   locationKey,
-  purlLocationMap
+  purlLocationMap,
+  purlImportsMap
 ) => {
+  const usages = slice.usages;
   if (!usages || !usages.length) {
     return undefined;
   }
+  const fileName = slice.fileName;
   const purlsSet = new Set();
   const typesToLookup = new Set();
+  const lKeyOverrides = {};
   for (const ausage of usages) {
+    const ausageLine =
+      ausage?.targetObj?.lineNumber || ausage?.definedBy?.lineNumber;
     // First capture the types in the targetObj and definedBy
     for (const atype of [
       [ausage?.targetObj?.isExternal, ausage?.targetObj?.typeFullName],
@@ -384,8 +422,16 @@ export const parseSliceUsages = async (
       ) {
         if (!atype[1].includes("(")) {
           typesToLookup.add(atype[1]);
+          // Javascript calls can be resolved to a precise line number only from the call nodes
+          if (language == "javascript" && ausageLine) {
+            addToOverrides(lKeyOverrides, atype[1], fileName, ausageLine);
+          }
         }
-        typesToLookup.add(getClassTypeFromSignature(language, atype[1]));
+        const maybeClassType = getClassTypeFromSignature(language, atype[1]);
+        typesToLookup.add(maybeClassType);
+        if (language == "javascript" && ausageLine) {
+          addToOverrides(lKeyOverrides, maybeClassType, fileName, ausageLine);
+        }
       }
     }
     // Now capture full method signatures from invokedCalls, argToCalls including the paramtypes
@@ -401,17 +447,56 @@ export const parseSliceUsages = async (
       ) {
         if (!acall?.resolvedMethod.includes("(")) {
           typesToLookup.add(acall?.resolvedMethod);
+          // Javascript calls can be resolved to a precise line number only from the call nodes
+          if (language == "javascript" && acall.lineNumber) {
+            addToOverrides(
+              lKeyOverrides,
+              acall?.resolvedMethod,
+              fileName,
+              acall.lineNumber
+            );
+          }
         }
-        typesToLookup.add(
-          getClassTypeFromSignature(language, acall?.resolvedMethod)
+        const maybeClassType = getClassTypeFromSignature(
+          language,
+          acall?.resolvedMethod
         );
+        typesToLookup.add(maybeClassType);
+        if (language == "javascript" && acall.lineNumber) {
+          addToOverrides(
+            lKeyOverrides,
+            maybeClassType,
+            fileName,
+            acall.lineNumber
+          );
+        }
       }
       for (const aparamType of acall?.paramTypes || []) {
         if (!isFilterableType(language, userDefinedTypesMap, aparamType)) {
           if (!aparamType.includes("(")) {
             typesToLookup.add(aparamType);
+            if (language == "javascript" && acall.lineNumber) {
+              addToOverrides(
+                lKeyOverrides,
+                aparamType,
+                fileName,
+                acall.lineNumber
+              );
+            }
           }
-          typesToLookup.add(getClassTypeFromSignature(language, aparamType));
+          const maybeClassType = getClassTypeFromSignature(
+            language,
+            aparamType
+          );
+          typesToLookup.add(maybeClassType);
+          if (language == "javascript" && acall.lineNumber) {
+            addToOverrides(
+              lKeyOverrides,
+              maybeClassType,
+              fileName,
+              acall.lineNumber
+            );
+          }
         }
       }
     }
@@ -420,22 +505,40 @@ export const parseSliceUsages = async (
     if (isFilterableType(language, userDefinedTypesMap, atype)) {
       continue;
     }
-    // Check the namespaces db
-    const nsHits =
-      typePurlsCache[atype] ||
-      (await dbObjMap.Namespaces.findAll({
-        attributes: ["purl"],
-        where: {
-          data: {
-            [Op.like]: `%${atype}%`
+    if (purlImportsMap && Object.keys(purlImportsMap).length) {
+      for (const apurl of Object.keys(purlImportsMap)) {
+        const apurlImports = purlImportsMap[apurl];
+        if (apurlImports && apurlImports.includes(atype)) {
+          // For javasript, we set all the additional places where a call gets made
+          if (language == "javascript") {
+            if (!purlLocationMap[apurl]) {
+              purlLocationMap[apurl] = new Set();
+            }
+            purlLocationMap[apurl].add(...(lKeyOverrides[atype] || []));
+          } else {
+            // This would work well for java since each call node could be mapped to a method
+            purlsSet.add(apurl);
           }
         }
-      }));
-    if (nsHits && nsHits.length) {
-      for (const ns of nsHits) {
-        purlsSet.add(ns.purl);
       }
-      typePurlsCache[atype] = nsHits;
+    } else {
+      // Check the namespaces db
+      const nsHits =
+        typePurlsCache[atype] ||
+        (await dbObjMap.Namespaces.findAll({
+          attributes: ["purl"],
+          where: {
+            data: {
+              [Op.like]: `%${atype}%`
+            }
+          }
+        }));
+      if (nsHits && nsHits.length) {
+        for (const ns of nsHits) {
+          purlsSet.add(ns.purl);
+        }
+        typePurlsCache[atype] = nsHits;
+      }
     }
   }
   // Update the purlLocationMap
@@ -474,6 +577,18 @@ export const isFilterableType = (
       typeFullName.startsWith("org.w3c.") ||
       typeFullName.startsWith("org.xml.") ||
       typeFullName.startsWith("javax.xml.")
+    ) {
+      return true;
+    }
+  }
+  if (language === "javascript") {
+    if (
+      typeFullName.includes(".js") ||
+      typeFullName.startsWith("__") ||
+      typeFullName.startsWith("{ ") ||
+      typeFullName.startsWith("JSON") ||
+      typeFullName.startsWith("void:") ||
+      typeFullName.startsWith("LAMBDA")
     ) {
       return true;
     }
@@ -595,7 +710,7 @@ export const extractEndpoints = (language, code) => {
  */
 export const isSlicingRequired = (purl) => {
   const language = purlToLanguage(purl);
-  return ["javascript", "python"].includes(language);
+  return ["python"].includes(language);
 };
 
 /**
@@ -631,14 +746,14 @@ export const createEvinseFile = (sliceArtefacts, options) => {
       if (!comp.evidence) {
         comp.evidence = {};
       }
-      if (!comp.evidence.occurrences) {
-        comp.evidence.occurrences = locationOccurrences
-          .filter((l) => !!l)
-          .map((l) => ({
-            location: l
-          }));
-        occEvidencePresent = true;
-      }
+      // This step would replace any existing occurrences
+      // This is fine as long as the input sbom was also generated by cdxgen
+      comp.evidence.occurrences = locationOccurrences
+        .filter((l) => !!l)
+        .map((l) => ({
+          location: l
+        }));
+      occEvidencePresent = true;
     }
     const dfFrames = dataFlowFrames[comp.purl];
     if (dfFrames && dfFrames.length) {
@@ -816,6 +931,9 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
     const tmpA = typeFullName.split(".");
     tmpA.pop();
     typeFullName = tmpA.join(".");
+  } else if (language === "javascript") {
+    typeFullName = typeFullName.replace("new: ", "");
+    typeFullName = typeFullName.split(":")[0];
   }
   if (typeFullName.startsWith("<unresolved")) {
     return undefined;
@@ -824,4 +942,11 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
     typeFullName = typeFullName.split("$")[0];
   }
   return typeFullName;
+};
+
+const addToOverrides = (lKeyOverrides, atype, fileName, ausageLineNumber) => {
+  if (!lKeyOverrides[atype]) {
+    lKeyOverrides[atype] = new Set();
+  }
+  lKeyOverrides[atype].add(`${fileName}#${ausageLineNumber}`);
 };

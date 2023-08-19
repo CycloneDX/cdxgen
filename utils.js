@@ -6021,3 +6021,57 @@ export const parsePackageJsonName = (name) => {
   }
   return returnObject;
 };
+
+/**
+ * Method to add occurrence evidence for components based on import statements. Currently useful for js
+ *
+ * @param {array} pkgList List of package
+ * @param {object} allImports Import statements object with package name as key and an object with file and location details
+ */
+export const addEvidenceForImports = (pkgList, allImports) => {
+  const impPkgs = Object.keys(allImports);
+  for (const pkg of pkgList) {
+    const { group, name } = pkg;
+    let aliases =
+      group && group.length
+        ? [
+            name,
+            group + "/" + name,
+            "@" + group + "/" + name,
+            group,
+            "@" + group
+          ]
+        : [name];
+    for (const alias of aliases) {
+      if (impPkgs.includes(alias)) {
+        const evidences = allImports[alias];
+        if (evidences) {
+          pkg.scope = "required";
+          let importedModules = new Set();
+          for (const evidence of evidences) {
+            if (evidence && Object.keys(evidence).length && evidence.fileName) {
+              pkg.evidence = pkg.evidence || {};
+              pkg.evidence.occurrences = pkg.evidence.occurrences || [];
+              pkg.evidence.occurrences.push({
+                location: `${evidence.fileName}${
+                  evidence.lineNumber ? "#" + evidence.lineNumber : ""
+                }`
+              });
+              importedModules.add(evidence.importedAs);
+            }
+          }
+          importedModules = Array.from(importedModules);
+          if (importedModules.length) {
+            pkg.properties = pkg.properties || [];
+            pkg.properties.push({
+              name: "ImportedModules",
+              value: importedModules.join(",")
+            });
+          }
+        }
+        break;
+      }
+    }
+  }
+  return pkgList;
+};

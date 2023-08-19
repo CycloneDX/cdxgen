@@ -93,7 +93,8 @@ import {
   parseCsPkgData,
   parseCsProjData,
   DEBUG_MODE,
-  parsePyProjectToml
+  parsePyProjectToml,
+  addEvidenceForImports
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -2086,8 +2087,10 @@ export const createNodejsBom = async (path, options) => {
   }
   // We need to set this to force our version to be used rather than the directory name based one.
   options.parentComponent = parentComponent;
+  if (allImports && Object.keys(allImports).length) {
+    pkgList = addEvidenceForImports(pkgList, allImports);
+  }
   return buildBomNSData(options, pkgList, "npm", {
-    allImports,
     src: path,
     filename: manifestFiles.join(", "),
     dependencies,
