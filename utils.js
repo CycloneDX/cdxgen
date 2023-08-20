@@ -344,7 +344,7 @@ const _getDepPkgList = async function (
         continue;
       }
       const pl = pkg.packages[k];
-      versionCache[k.replace("node_modules/", "")] = pl.version;
+      versionCache[k.replaceAll("node_modules/", "")] = pl.version;
     }
   }
   if (pkg && pkgDependencies) {
@@ -359,7 +359,7 @@ const _getDepPkgList = async function (
       const purl = new PackageURL(
         "npm",
         "",
-        name.replace("node_modules/", ""),
+        name.replaceAll("node_modules/", ""),
         version,
         null,
         null
@@ -367,7 +367,7 @@ const _getDepPkgList = async function (
       const purlString = decodeURIComponent(purl.toString());
       const scope = pkgDependencies[name].dev === true ? "optional" : undefined;
       const apkg = {
-        name: name.replace("node_modules/", ""),
+        name: name.replaceAll("node_modules/", ""),
         version,
         _integrity: pkgDependencies[name].integrity,
         scope,
@@ -402,13 +402,12 @@ const _getDepPkgList = async function (
           const depVersion =
             versionCache[depName] || dependencies[depName].version;
           if (!depVersion) {
-            console.log(depName, "has no version");
             continue;
           }
           const deppurl = new PackageURL(
             "npm",
             "",
-            depName.replace("node_modules/", ""),
+            depName.replaceAll("node_modules/", ""),
             depVersion,
             null,
             null
@@ -6058,6 +6057,12 @@ export const addEvidenceForImports = (pkgList, allImports) => {
                 }`
               });
               importedModules.add(evidence.importedAs);
+              for (const importedSm of evidence.importedModules || []) {
+                if (!importedSm) {
+                  continue;
+                }
+                importedModules.add(`${evidence.importedAs}/${importedSm}`);
+              }
             }
           }
           importedModules = Array.from(importedModules);

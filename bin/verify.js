@@ -21,7 +21,10 @@ const args = yargs(hideBin(process.argv))
   .help("h").argv;
 
 const bomJson = JSON.parse(fs.readFileSync(args.input, "utf8"));
-const bomSignature = bomJson?.signature?.value;
+const bomSignature =
+  bomJson.signature && bomJson.signature.value
+    ? bomJson.signature.value
+    : undefined;
 if (!bomSignature) {
   console.log("No signature was found!");
 } else {

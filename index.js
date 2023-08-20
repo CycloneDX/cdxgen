@@ -1939,14 +1939,20 @@ export const createNodejsBom = async (path, options) => {
     );
     const pnpmLock = join(path, "common", "config", "rush", "pnpm-lock.yaml");
     if (existsSync(swFile)) {
-      const pkgList = await parseNodeShrinkwrap(swFile);
+      let pkgList = await parseNodeShrinkwrap(swFile);
+      if (allImports && Object.keys(allImports).length) {
+        pkgList = addEvidenceForImports(pkgList, allImports);
+      }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
         filename: "shrinkwrap-deps.json"
       });
     } else if (existsSync(pnpmLock)) {
-      const pkgList = await parsePnpmLock(pnpmLock);
+      let pkgList = await parsePnpmLock(pnpmLock);
+      if (allImports && Object.keys(allImports).length) {
+        pkgList = addEvidenceForImports(pkgList, allImports);
+      }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
@@ -2056,6 +2062,8 @@ export const createNodejsBom = async (path, options) => {
       }
     }
   }
+  // We might reach here if the project has no lock files
+  // Eg: juice-shop
   if (!pkgList.length && existsSync(join(path, "node_modules"))) {
     const pkgJsonFiles = getAllFiles(
       join(path, "node_modules"),
@@ -2068,13 +2076,25 @@ export const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(options, pkgList, "npm", {
-      allImports,
-      src: path,
-      filename: manifestFiles.join(", "),
-      dependencies,
-      parentComponent
-    });
+    if (!parentComponent || !Object.keys(parentComponent).length) {
+      if (existsSync(join(path, "package.json"))) {
+        const pcs = await parsePkgJson(join(path, "package.json"));
+        if (pcs.length) {
+          parentComponent = pcs[0];
+          parentComponent.type = "application";
+          ppurl = new PackageURL(
+            "npm",
+            options.projectGroup || parentComponent.group,
+            options.projectName || parentComponent.name,
+            options.projectVersion || parentComponent.version,
+            null,
+            null
+          ).toString();
+          parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+          parentComponent["purl"] = ppurl;
+        }
+      }
+    }
   }
   // Retain the components of parent component
   if (parentSubComponents.length) {

@@ -426,6 +426,9 @@ export const parseSliceUsages = async (
           typesToLookup.add(atype[1]);
           // Javascript calls can be resolved to a precise line number only from the call nodes
           if (language == "javascript" && ausageLine) {
+            if (atype[1].includes(":")) {
+              typesToLookup.add(atype[1].split("::")[0].replace(/:/g, "/"));
+            }
             addToOverrides(lKeyOverrides, atype[1], fileName, ausageLine);
           }
         }
@@ -478,6 +481,9 @@ export const parseSliceUsages = async (
           if (!aparamType.includes("(")) {
             typesToLookup.add(aparamType);
             if (language == "javascript" && acall.lineNumber) {
+              if (aparamType.includes(":")) {
+                typesToLookup.add(aparamType.split("::")[0].replace(/:/g, "/"));
+              }
               addToOverrides(
                 lKeyOverrides,
                 aparamType,
@@ -591,7 +597,8 @@ export const isFilterableType = (
       typeFullName.startsWith("{ ") ||
       typeFullName.startsWith("JSON") ||
       typeFullName.startsWith("void:") ||
-      typeFullName.startsWith("LAMBDA")
+      typeFullName.startsWith("LAMBDA") ||
+      typeFullName.startsWith("../")
     ) {
       return true;
     }
@@ -866,12 +873,24 @@ export const collectDataFlowFrames = async (
       if (!theNode) {
         continue;
       }
-      const typeFullName = theNode.typeFullName;
+      let typeFullName = theNode.typeFullName;
+      if (
+        language === "javascript" &&
+        theNode.label === "CALL" &&
+        typeFullName == "ANY"
+      ) {
+        typeFullName = theNode.fullName || theNode.name;
+      }
+      const maybeClassType = getClassTypeFromSignature(language, typeFullName);
       if (!isFilterableType(language, userDefinedTypesMap, typeFullName)) {
         if (purlImportsMap && Object.keys(purlImportsMap).length) {
           for (const apurl of Object.keys(purlImportsMap)) {
             const apurlImports = purlImportsMap[apurl];
-            if (apurlImports && apurlImports.includes(typeFullName)) {
+            if (
+              apurlImports &&
+              (apurlImports.includes(typeFullName) ||
+                apurlImports.includes(maybeClassType))
+            ) {
               referredPurls.add(apurl);
             }
           }
@@ -906,7 +925,9 @@ export const collectDataFlowFrames = async (
         parentPackageName = theNode.parentClassName.split("::")[0];
         if (parentPackageName.includes(".js")) {
           const tmpA = parentPackageName.split("/");
-          tmpA.pop();
+          if (tmpA.length > 1) {
+            tmpA.pop();
+          }
           parentPackageName = tmpA.join("/");
         }
       }
@@ -961,8 +982,14 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
     tmpA.pop();
     typeFullName = tmpA.join(".");
   } else if (language === "javascript") {
-    typeFullName = typeFullName.replace("new: ", "");
-    typeFullName = typeFullName.split(":")[0];
+    typeFullName = typeFullName.replace("new: ", "").replace("await ", "");
+    if (typeFullName.includes(":")) {
+      const tmpA = typeFullName.split("::")[0].replace(/:/g, "/").split("/");
+      if (tmpA.length > 1) {
+        tmpA.pop();
+      }
+      typeFullName = tmpA.join("/");
+    }
   }
   if (typeFullName.startsWith("<unresolved")) {
     return undefined;

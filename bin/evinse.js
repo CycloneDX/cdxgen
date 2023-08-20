@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Evinse (Evinse Verification Is Nearly SBoM Evidence)
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
