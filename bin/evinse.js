@@ -65,7 +65,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("annotate", {
     description: "Include contents of atom slices as annotations",
-    default: true,
+    default: false,
     type: "boolean"
   })
   .option("with-data-flow", {

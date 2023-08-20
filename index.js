@@ -93,7 +93,8 @@ import {
   parseCsPkgData,
   parseCsProjData,
   DEBUG_MODE,
-  parsePyProjectToml
+  parsePyProjectToml,
+  addEvidenceForImports
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -202,7 +203,7 @@ const createDefaultParentComponent = (
     null,
     null
   ).toString();
-  parentComponent["bom-ref"] = ppurl;
+  parentComponent["bom-ref"] = decodeURIComponent(ppurl);
   parentComponent["purl"] = ppurl;
   return parentComponent;
 };
@@ -226,8 +227,8 @@ const determineParentComponent = (options) => {
       null,
       null
     ).toString();
-    parentComponent["bom-ref"] = ppurl;
-    parentComponent["purl"] = decodeURIComponent(ppurl);
+    parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+    parentComponent["purl"] = ppurl;
   }
   return parentComponent;
 };
@@ -342,9 +343,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       delete parentComponent._integrity;
       delete parentComponent.license;
       if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
-        parentComponent["purl"] = decodeURIComponent(
-          parentComponent["bom-ref"]
-        );
+        parentComponent["purl"] = parentComponent["bom-ref"];
       }
     }
     if (parentComponent && parentComponent.components) {
@@ -1315,18 +1314,16 @@ export const createJavaBom = async (path, options) => {
           type: "application",
           ...(retMap.metadata || {})
         };
-        const parentPurl = decodeURIComponent(
-          new PackageURL(
-            "maven",
-            parentComponent.group || "",
-            parentComponent.name,
-            parentComponent.version,
-            { type: "jar" },
-            null
-          ).toString()
-        );
+        const parentPurl = new PackageURL(
+          "maven",
+          parentComponent.group || "",
+          parentComponent.name,
+          parentComponent.version,
+          { type: "jar" },
+          null
+        ).toString();
         parentComponent["purl"] = parentPurl;
-        parentComponent["bom-ref"] = parentPurl;
+        parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
       }
       // Get the sub-project properties and set the root dependencies
       if (allProjectsStr && allProjectsStr.length) {
@@ -1334,25 +1331,24 @@ export const createJavaBom = async (path, options) => {
           retMap = executeGradleProperties(path, null, spstr);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
-            const rspName = rootSubProject.replace(/^:/, "").replace(/:/, "/");
+            const rspName = rootSubProject.replace(/^:/, "");
             const rootSubProjectObj = {
               name: rspName,
               type: "application",
               qualifiers: { type: "jar" },
               ...(retMap.metadata || {})
             };
-            const rootSubProjectPurl = decodeURIComponent(
-              new PackageURL(
-                "maven",
-                rootSubProjectObj.group || parentComponent.group || "",
-                rootSubProjectObj.name,
-                rootSubProjectObj.version,
-                rootSubProjectObj.qualifiers,
-                null
-              ).toString()
-            );
+            const rootSubProjectPurl = new PackageURL(
+              "maven",
+              rootSubProjectObj.group || parentComponent.group || "",
+              rootSubProjectObj.name,
+              rootSubProjectObj.version,
+              rootSubProjectObj.qualifiers,
+              null
+            ).toString();
             rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] = rootSubProjectPurl;
+            rootSubProjectObj["bom-ref"] =
+              decodeURIComponent(rootSubProjectPurl);
             if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
               allProjects.push(rootSubProjectObj);
               rootDependsOn.push(rootSubProjectPurl);
@@ -1384,7 +1380,7 @@ export const createJavaBom = async (path, options) => {
         let gradleDepArgs = [
           sp.purl === parentComponent.purl
             ? depTaskWithArgs[0]
-            : `:${sp.name.replace(/\//, ":")}:${depTaskWithArgs[0]}`
+            : `:${sp.name}:${depTaskWithArgs[0]}`
         ];
         gradleDepArgs = gradleDepArgs
           .concat(depTaskWithArgs.slice(1))
@@ -2086,8 +2082,10 @@ export const createNodejsBom = async (path, options) => {
   }
   // We need to set this to force our version to be used rather than the directory name based one.
   options.parentComponent = parentComponent;
+  if (allImports && Object.keys(allImports).length) {
+    pkgList = addEvidenceForImports(pkgList, allImports);
+  }
   return buildBomNSData(options, pkgList, "npm", {
-    allImports,
     src: path,
     filename: manifestFiles.join(", "),
     dependencies,
