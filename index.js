@@ -41,7 +41,6 @@ import {
   determineSbtVersion,
   addPlugin,
   cleanupPlugin,
-  parseKVDep,
   parsePkgJson,
   parseMinJs,
   parseBowerJson,
@@ -94,7 +93,8 @@ import {
   parseCsProjData,
   DEBUG_MODE,
   parsePyProjectToml,
-  addEvidenceForImports
+  addEvidenceForImports,
+  parseSbtTree
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -380,7 +380,6 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
           }
         }
       } // for
-      parentComponent.components = subComponents;
     }
     if (format === "json") {
       metadata.component = parentComponent;
@@ -1123,7 +1122,12 @@ export const createJavaBom = async (path, options) => {
       path,
       (options.multiProject ? "**/" : "") + "pom.xml"
     );
-    if (pomFiles && pomFiles.length) {
+    let bomJsonFiles = [];
+    if (
+      pomFiles &&
+      pomFiles.length &&
+      !["scala", "sbt", "gradle"].includes(options.projectType)
+    ) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
         "org.cyclonedx:cyclonedx-maven-plugin:2.7.9";
@@ -1174,7 +1178,11 @@ export const createJavaBom = async (path, options) => {
         });
         // Check if the cyclonedx plugin created the required bom.xml file
         // Sometimes the plugin fails silently for complex maven projects
-        const bomJsonFiles = getAllFiles(path, "**/target/*.json");
+        bomJsonFiles = getAllFiles(path, "**/target/*.json");
+        // Check if the bom json files got created in a directory other than target
+        if (!bomJsonFiles.length) {
+          bomJsonFiles = getAllFiles(path, "**/bom*.json");
+        }
         const bomGenerated = bomJsonFiles.length;
         if (!bomGenerated || result.status !== 0 || result.error) {
           const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
@@ -1255,7 +1263,6 @@ export const createJavaBom = async (path, options) => {
         }
       } // for
       const bomFiles = getAllFiles(path, "**/target/bom.xml");
-      const bomJsonFiles = getAllFiles(path, "**/target/*.json");
       for (const abjson of bomJsonFiles) {
         let bomJsonObj = undefined;
         try {
@@ -1323,7 +1330,11 @@ export const createJavaBom = async (path, options) => {
     const allProjectsAddedPurls = [];
     const rootDependsOn = [];
     // Execute gradle properties
-    if (gradleFiles && gradleFiles.length) {
+    if (
+      gradleFiles &&
+      gradleFiles.length &&
+      !["scala", "sbt"].includes(options.projectType)
+    ) {
       let retMap = executeGradleProperties(path, null, null);
       const allProjectsStr = retMap.projects || [];
       const rootProject = retMap.rootProject;
@@ -1391,7 +1402,12 @@ export const createJavaBom = async (path, options) => {
         });
       }
     }
-    if (gradleFiles && gradleFiles.length && options.installDeps) {
+    if (
+      gradleFiles &&
+      gradleFiles.length &&
+      options.installDeps &&
+      !["scala", "sbt"].includes(options.projectType)
+    ) {
       const gradleCmd = getGradleCommand(path, null);
       const defaultDepTaskArgs = ["-q", "--console", "plain", "--build-cache"];
       allProjects.push(parentComponent);
@@ -1508,7 +1524,11 @@ export const createJavaBom = async (path, options) => {
     // Bazel
     // Look for the BUILD file only in the root directory
     const bazelFiles = getAllFiles(path, "BUILD");
-    if (bazelFiles && bazelFiles.length) {
+    if (
+      bazelFiles &&
+      bazelFiles.length &&
+      !["scala", "sbt"].includes(options.projectType)
+    ) {
       let BAZEL_CMD = "bazel";
       if (process.env.BAZEL_HOME) {
         BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
@@ -1618,9 +1638,10 @@ export const createJavaBom = async (path, options) => {
         sbtProjects = sbtProjects.concat(baseDir);
       }
     }
-
-    sbtProjects = [...new Set(sbtProjects)]; // eliminate duplicates
-
+    // eliminate duplicates and ignore project directories
+    sbtProjects = [...new Set(sbtProjects)].filter(
+      (p) => !p.endsWith("project") && !p.includes("target" + sep)
+    );
     const sbtLockFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "build.sbt.lock"
@@ -1667,18 +1688,9 @@ export const createJavaBom = async (path, options) => {
           }
         }
         writeFileSync(tempSbtPlugins, sbtPluginDefinition);
-
         for (const i in sbtProjects) {
           const basePath = sbtProjects[i];
           const dlFile = join(tempDir, "dl-" + i + ".tmp");
-          console.log(
-            "Executing",
-            SBT_CMD,
-            "dependencyList in",
-            basePath,
-            "using plugins",
-            tempSbtgDir
-          );
           let sbtArgs = [];
           let pluginFile = null;
           if (standalonePluginFile) {
@@ -1689,12 +1701,25 @@ export const createJavaBom = async (path, options) => {
           } else {
             // write to the existing plugins file
             if (useSlashSyntax) {
-              sbtArgs = [`"dependencyList / toFile ${dlFile} --force"`];
+              sbtArgs = [
+                `'set asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`
+              ];
             } else {
-              sbtArgs = [`"dependencyList::toFile ${dlFile} --force"`];
+              sbtArgs = [
+                `'set asciiGraphWidth := 400' "dependencyTree::toFile ${dlFile} --force"`
+              ];
             }
             pluginFile = addPlugin(basePath, sbtPluginDefinition);
           }
+          console.log(
+            "Executing",
+            SBT_CMD,
+            sbtArgs.join(" "),
+            "in",
+            basePath,
+            "using plugins",
+            tempSbtgDir
+          );
           // Note that the command has to be invoked with `shell: true` to properly execut sbt
           const result = spawnSync(SBT_CMD, sbtArgs, {
             cwd: basePath,
@@ -1719,10 +1744,21 @@ export const createJavaBom = async (path, options) => {
             cleanupPlugin(basePath, pluginFile);
           }
           if (existsSync(dlFile)) {
-            const cmdOutput = readFileSync(dlFile, { encoding: "utf-8" });
-            const dlist = parseKVDep(cmdOutput);
-            if (dlist && dlist.length) {
-              pkgList = pkgList.concat(dlist);
+            const retMap = parseSbtTree(dlFile);
+            if (retMap.pkgList && retMap.pkgList.length) {
+              const tmpParentComponent = retMap.pkgList.splice(0, 1)[0];
+              tmpParentComponent.type = "application";
+              pkgList = pkgList.concat(retMap.pkgList);
+              if (!parentComponent || !Object.keys(parentComponent).length) {
+                parentComponent = tmpParentComponent;
+              }
+            }
+            if (retMap.dependenciesList) {
+              dependencies = mergeDependencies(
+                dependencies,
+                retMap.dependenciesList,
+                parentComponent
+              );
             }
           } else {
             if (options.failOnError || DEBUG_MODE) {

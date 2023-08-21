@@ -67,7 +67,8 @@ import {
   guessPypiMatchingVersion,
   encodeForPurl,
   parsePackageJsonName,
-  parsePyProjectToml
+  parsePyProjectToml,
+  parseSbtTree
 } from "./utils.js";
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
@@ -2130,7 +2131,13 @@ test("parse scala sbt list", () => {
   deps = parseKVDep(
     readFileSync("./test/data/atom-sbt-list.txt", { encoding: "utf-8" })
   );
-  expect(deps.length).toEqual(117);
+  expect(deps.length).toEqual(153);
+});
+
+test("parse scala sbt tree", () => {
+  let retMap = parseSbtTree("./test/data/atom-sbt-tree.txt");
+  expect(retMap.pkgList.length).toEqual(153);
+  expect(retMap.dependenciesList.length).toEqual(153);
 });
 
 test("parse scala sbt lock", () => {

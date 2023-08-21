@@ -1835,7 +1835,9 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
         );
       }
       if (result.stderr.includes("not get unknown property")) {
-        console.log("2. Check if the SBoM is generated for the correct root project for your application.");
+        console.log(
+          "2. Check if the SBoM is generated for the correct root project for your application."
+        );
       }
     }
   }
@@ -1934,21 +1936,32 @@ export const parseKVDep = function (rawOutput) {
     rawOutput.split("\n").forEach((l) => {
       l = l.replace("\r", "");
       const tmpA = l.split(":");
+      let group = "";
+      let name = "";
+      let version = "";
       if (tmpA.length === 3) {
-        deps.push({
-          group: tmpA[0],
-          name: tmpA[1],
-          version: tmpA[2],
-          qualifiers: { type: "jar" }
-        });
+        group = tmpA[0];
+        name = tmpA[1];
+        version = tmpA[2];
       } else if (tmpA.length === 2) {
-        deps.push({
-          group: "",
-          name: tmpA[0],
-          version: tmpA[1],
-          qualifiers: { type: "jar" }
-        });
+        name = tmpA[0];
+        version = tmpA[1];
       }
+      const purlString = new PackageURL(
+        "maven",
+        group,
+        name,
+        version,
+        { type: "jar" },
+        null
+      ).toString();
+      deps.push({
+        group,
+        name,
+        version,
+        purl: decodeURIComponent(purlString),
+        "bom-ref": purlString
+      });
     });
     return deps;
   }
@@ -4550,6 +4563,135 @@ export const parseComposerLock = function (pkgLockFile) {
     }
   }
   return pkgList;
+};
+
+export const parseSbtTree = (sbtTreeFile) => {
+  const pkgList = [];
+  const dependenciesList = [];
+  const keys_cache = {};
+  const level_trees = {};
+  const tmpA = readFileSync(sbtTreeFile, "utf-8").split("\n");
+  let last_level = 0;
+  let last_purl = "";
+  let stack = [];
+  let first_purl = "";
+  tmpA.forEach((l) => {
+    l = l.replace("\r", "");
+    // Ignore evicted packages and packages with multiple version matches indicated with a comma
+    // | +-org.scala-lang:scala3-library_3:3.1.3 (evicted by: 3.3.0)
+    // | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:[3.15.100,4.0...
+    // | | | | | | | +-org.eclipse.platform:org.eclipse.equinox.common:3.17.100 (ev..
+    if (l.includes("(evicted") || l.includes(",")) {
+      return;
+    }
+    let level = 0;
+    let isLibrary = false;
+    if (l.startsWith("  ")) {
+      level = l.split("|").length;
+    }
+    // This will skip blank lines such as "| | | | | | | "
+    if (level > 0 && !l.includes("+-")) {
+      return;
+    }
+    if (l.endsWith("[S]")) {
+      isLibrary = true;
+    }
+    const tmpB = l.split("+-");
+    const pkgLine = tmpB[tmpB.length - 1].split(" ")[0];
+    if (!pkgLine.includes(":")) {
+      return;
+    }
+    const pkgParts = pkgLine.split(":");
+    let group = "";
+    let name = "";
+    let version = "";
+    if (pkgParts.length === 3) {
+      group = pkgParts[0];
+      name = pkgParts[1];
+      version = pkgParts[2];
+    } else if (pkgParts.length === 2) {
+      // unlikely for scala
+      name = pkgParts[0];
+      version = pkgParts[1];
+    }
+    const purlString = new PackageURL(
+      "maven",
+      group,
+      name,
+      version,
+      { type: "jar" },
+      null
+    ).toString();
+    // Filter duplicates
+    if (!keys_cache[purlString]) {
+      const adep = {
+        group,
+        name,
+        version,
+        purl: decodeURIComponent(purlString),
+        "bom-ref": purlString,
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: sbtTreeFile
+              }
+            ]
+          }
+        }
+      };
+      if (isLibrary) {
+        adep["type"] = "library";
+      }
+      pkgList.push(adep);
+      keys_cache[purlString] = true;
+    }
+    // From here the logic is similar to parsing gradle tree
+    if (!level_trees[purlString]) {
+      level_trees[purlString] = [];
+    }
+    if (level == 0) {
+      first_purl = purlString;
+      stack = [first_purl];
+      stack.push(purlString);
+    } else if (last_purl === "") {
+      stack.push(purlString);
+    } else if (level > last_level) {
+      const cnodes = level_trees[last_purl] || [];
+      if (!cnodes.includes(purlString)) {
+        cnodes.push(purlString);
+      }
+      level_trees[last_purl] = cnodes;
+      if (stack[stack.length - 1] !== purlString) {
+        stack.push(purlString);
+      }
+    } else {
+      for (let i = level; i <= last_level; i++) {
+        stack.pop();
+      }
+      const last_stack =
+        stack.length > 0 ? stack[stack.length - 1] : first_purl;
+      const cnodes = level_trees[last_stack] || [];
+      if (!cnodes.includes(purlString)) {
+        cnodes.push(purlString);
+      }
+      level_trees[last_stack] = cnodes;
+      stack.push(purlString);
+    }
+    last_level = level;
+    last_purl = purlString;
+  });
+  for (const lk of Object.keys(level_trees)) {
+    dependenciesList.push({
+      ref: lk,
+      dependsOn: level_trees[lk]
+    });
+  }
+  return { pkgList, dependenciesList };
 };
 
 /**

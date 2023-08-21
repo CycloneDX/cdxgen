@@ -126,3 +126,7 @@ Below are some example commands to create an SBoM for a spring application and p
 ### REPL History
 
 Repl history will get persisted under `$HOME/.config/.cdxgen` directory. To override this location, use the environment variable `CDXGEN_REPL_HISTORY`.
+
+## Mixed Java Projects
+
+If a java project use both maven and gradle, maven is selected for SBoM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
