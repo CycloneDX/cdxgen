@@ -650,7 +650,7 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
         if (acall.resolvedMethod) {
           const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
           if (tmpEndpoints && tmpEndpoints.length) {
-            endpoints = endpoints.concat(tmpEndpoints);
+            endpoints = (endpoints || []).concat(tmpEndpoints);
           }
         }
       }
