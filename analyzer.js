@@ -4,32 +4,35 @@ import { join } from "path";
 import { readdirSync, statSync, readFileSync } from "fs";
 import { basename, resolve, isAbsolute, relative } from "path";
 
-const IGNORE_DIRS = [
-  "node_modules",
-  "venv",
-  "docs",
-  "test",
-  "tests",
-  "e2e",
-  "examples",
-  "cypress",
-  "site-packages",
-  "typings",
-  "api_docs",
-  "dev_docs",
-  "types",
-  "mock",
-  "mocks",
-  "jest-cache",
-  "eslint-rules",
-  "codemods",
-  "flow-typed",
-  "i18n",
-  "__tests__"
-];
+const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
+  ? process.env.ASTGEN_IGNORE_DIRS.split(",")
+  : [
+      "node_modules",
+      "venv",
+      "docs",
+      "test",
+      "tests",
+      "e2e",
+      "examples",
+      "cypress",
+      "site-packages",
+      "typings",
+      "api_docs",
+      "dev_docs",
+      "types",
+      "mock",
+      "mocks",
+      "jest-cache",
+      "eslint-rules",
+      "codemods",
+      "flow-typed",
+      "i18n",
+      "__tests__"
+    ];
 
 const IGNORE_FILE_PATTERN = new RegExp(
-  "(conf|config|test|spec|mock|\\.d)\\.(js|ts|tsx)$",
+  process.env.ASTGEN_IGNORE_FILE_PATTERN ||
+    "(conf|config|test|spec|mock|\\.d)\\.(js|ts|tsx)$",
   "i"
 );
 
