@@ -6033,7 +6033,7 @@ export const addEvidenceForImports = (pkgList, allImports) => {
     const { group, name } = pkg;
     let aliases =
       group && group.length
-        ? [name, group + "/" + name, "@" + group + "/" + name]
+        ? [name, `${group}/${name}`, `@${group}/${name}`]
         : [name];
     for (const alias of aliases) {
       if (impPkgs.includes(alias)) {

@@ -874,12 +874,12 @@ export const collectDataFlowFrames = async (
         continue;
       }
       let typeFullName = theNode.typeFullName;
-      if (
-        language === "javascript" &&
-        theNode.label === "CALL" &&
-        typeFullName == "ANY"
-      ) {
-        if (theNode.code && theNode.code.startsWith("new ")) {
+      if (language === "javascript" && typeFullName == "ANY") {
+        if (
+          theNode.code &&
+          (theNode.code.startsWith("new ") ||
+            theNode.label === "METHOD_PARAMETER_IN")
+        ) {
           typeFullName = theNode.code.split("(")[0].replace("new ", "");
         } else {
           typeFullName = theNode.fullName || theNode.name;
