@@ -112,6 +112,10 @@ jobs:
         with:
           repository: 'zoom/meetingsdk-vuejs-sample'
           path: 'repotests/meetingsdk-vuejs-sample'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'sveltejs/examples'
+          path: 'repotests/sveltejs-examples'          
       - name: repotests
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
@@ -121,6 +125,8 @@ jobs:
           node bin/evinse.js -i bomresults/bom-ts.json -o bomresults/bom-ts.evinse.json -l javascript --with-data-flow -p repotests/shiftleft-ts-example
           FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/meetingsdk-vuejs-sample -o bomresults/bom-vue.json
           node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l javascript --with-data-flow -p repotests/meetingsdk-vuejs-sample
+          ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
+          ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-data-flow -p repotests/sveltejs-examples          
           FETCH_LICENSE=1 bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json --validate
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --validate
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --validate
