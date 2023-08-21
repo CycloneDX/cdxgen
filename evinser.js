@@ -426,6 +426,9 @@ export const parseSliceUsages = async (
           typesToLookup.add(atype[1]);
           // Javascript calls can be resolved to a precise line number only from the call nodes
           if (language == "javascript" && ausageLine) {
+            if (atype[1].includes(":")) {
+              typesToLookup.add(atype[1].split("::")[0].replace(/:/g, "/"));
+            }
             addToOverrides(lKeyOverrides, atype[1], fileName, ausageLine);
           }
         }
@@ -478,6 +481,9 @@ export const parseSliceUsages = async (
           if (!aparamType.includes("(")) {
             typesToLookup.add(aparamType);
             if (language == "javascript" && acall.lineNumber) {
+              if (aparamType.includes(":")) {
+                typesToLookup.add(aparamType.split("::")[0].replace(/:/g, "/"));
+              }
               addToOverrides(
                 lKeyOverrides,
                 aparamType,
@@ -516,7 +522,9 @@ export const parseSliceUsages = async (
             if (!purlLocationMap[apurl]) {
               purlLocationMap[apurl] = new Set();
             }
-            purlLocationMap[apurl].add(...(lKeyOverrides[atype] || []));
+            if (lKeyOverrides[atype]) {
+              purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+            }
           } else {
             // This would work well for java since each call node could be mapped to a method
             purlsSet.add(apurl);
@@ -565,7 +573,8 @@ export const isFilterableType = (
   }
   if (
     typeFullName.startsWith("<operator") ||
-    typeFullName.startsWith("<unresolved")
+    typeFullName.startsWith("<unresolved") ||
+    typeFullName.startsWith("<unknownFullName")
   ) {
     return true;
   }
@@ -591,7 +600,9 @@ export const isFilterableType = (
       typeFullName.startsWith("{ ") ||
       typeFullName.startsWith("JSON") ||
       typeFullName.startsWith("void:") ||
-      typeFullName.startsWith("LAMBDA")
+      typeFullName.startsWith("LAMBDA") ||
+      typeFullName.startsWith("../") ||
+      typeFullName.startsWith("node:")
     ) {
       return true;
     }
@@ -611,34 +622,40 @@ export const isFilterableType = (
  */
 export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
   const usages = slice.usages;
-  if (!usages || !["java", "jar"].includes(language)) {
+  if (!usages) {
     return [];
   }
   for (const usage of usages) {
     const targetObj = usage?.targetObj;
     const definedBy = usage?.definedBy;
-    let endpoints = undefined;
+    let endpoints = [];
     let authenticated = undefined;
-    if (
-      targetObj &&
-      targetObj?.label === "ANNOTATION" &&
-      targetObj?.resolvedMethod
-    ) {
+    if (targetObj && targetObj?.resolvedMethod) {
       endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
-      if (targetObj?.resolvedMethod.includes("auth")) {
+      if (targetObj?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
-    } else if (
-      definedBy &&
-      definedBy?.label === "ANNOTATION" &&
-      definedBy?.resolvedMethod
-    ) {
+    } else if (definedBy && definedBy?.resolvedMethod) {
       endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
-      if (definedBy?.resolvedMethod.includes("auth")) {
+      if (definedBy?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
     }
-    if (endpoints) {
+    if (
+      (!endpoints || !endpoints.length) &&
+      language === "javascript" &&
+      usage.invokedCalls
+    ) {
+      for (const acall of usage.invokedCalls) {
+        if (acall.resolvedMethod) {
+          const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
+          if (tmpEndpoints && tmpEndpoints.length) {
+            endpoints = (endpoints || []).concat(tmpEndpoints);
+          }
+        }
+      }
+    }
+    if (endpoints && endpoints.length) {
       const serviceName = constructServiceName(language, slice);
       if (!servicesMap[serviceName]) {
         servicesMap[serviceName] = {
@@ -696,6 +713,20 @@ export const extractEndpoints = (language, code) => {
           endpoints = tmpA.split(",");
           return endpoints;
         }
+      }
+      break;
+    case "javascript":
+      if (code.includes("app.") || code.includes("route")) {
+        const matches = code.match(/['"](.*?)['"]/gi) || [];
+        endpoints = matches
+          .map((v) => v.replace(/["']/g, ""))
+          .filter(
+            (v) =>
+              v.length &&
+              !v.startsWith(".") &&
+              v.includes("/") &&
+              !v.startsWith("@")
+          );
       }
       break;
     default:
@@ -851,10 +882,6 @@ export const collectDataFlowFrames = async (
   // so this method is more future-proof
   const dfFrames = {};
   for (const n of nodes) {
-    // Skip operator calls
-    if (n.name && n.name.startsWith("<operator")) {
-      continue;
-    }
     nodeCache[n.id] = n;
   }
   const paths = dataFlowSlice?.paths || [];
@@ -866,12 +893,28 @@ export const collectDataFlowFrames = async (
       if (!theNode) {
         continue;
       }
-      const typeFullName = theNode.typeFullName;
+      let typeFullName = theNode.typeFullName;
+      if (language === "javascript" && typeFullName == "ANY") {
+        if (
+          theNode.code &&
+          (theNode.code.startsWith("new ") ||
+            ["METHOD_PARAMETER_IN", "IDENTIFIER"].includes(theNode.label))
+        ) {
+          typeFullName = theNode.code.split("(")[0].replace("new ", "");
+        } else {
+          typeFullName = theNode.fullName || theNode.name;
+        }
+      }
+      const maybeClassType = getClassTypeFromSignature(language, typeFullName);
       if (!isFilterableType(language, userDefinedTypesMap, typeFullName)) {
         if (purlImportsMap && Object.keys(purlImportsMap).length) {
           for (const apurl of Object.keys(purlImportsMap)) {
             const apurlImports = purlImportsMap[apurl];
-            if (apurlImports && apurlImports.includes(typeFullName)) {
+            if (
+              apurlImports &&
+              (apurlImports.includes(typeFullName) ||
+                apurlImports.includes(maybeClassType))
+            ) {
               referredPurls.add(apurl);
             }
           }
@@ -906,7 +949,9 @@ export const collectDataFlowFrames = async (
         parentPackageName = theNode.parentClassName.split("::")[0];
         if (parentPackageName.includes(".js")) {
           const tmpA = parentPackageName.split("/");
-          tmpA.pop();
+          if (tmpA.length > 1) {
+            tmpA.pop();
+          }
           parentPackageName = tmpA.join("/");
         }
       }
@@ -961,10 +1006,20 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
     tmpA.pop();
     typeFullName = tmpA.join(".");
   } else if (language === "javascript") {
-    typeFullName = typeFullName.replace("new: ", "");
-    typeFullName = typeFullName.split(":")[0];
+    typeFullName = typeFullName.replace("new: ", "").replace("await ", "");
+    if (typeFullName.includes(":")) {
+      const tmpA = typeFullName.split("::")[0].replace(/:/g, "/").split("/");
+      if (tmpA.length > 1) {
+        tmpA.pop();
+      }
+      typeFullName = tmpA.join("/");
+    }
   }
-  if (typeFullName.startsWith("<unresolved")) {
+  if (
+    typeFullName.startsWith("<unresolved") ||
+    typeFullName.startsWith("<operator") ||
+    typeFullName.startsWith("<unknownFullName")
+  ) {
     return undefined;
   }
   if (typeFullName.includes("$")) {

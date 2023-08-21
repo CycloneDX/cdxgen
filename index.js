@@ -313,6 +313,16 @@ const addToolsSection = (options, format) => {
     ]
   };
 };
+
+const componentToSimpleFullName = (comp) => {
+  let fullName =
+    comp.group && comp.group.length ? `${comp.group}/${comp.name}` : comp.name;
+  if (comp.version && comp.version.length) {
+    fullName = `${fullName}@${comp.version}`;
+  }
+  return fullName;
+};
+
 /**
  * Function to create metadata block
  *
@@ -347,21 +357,26 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       }
     }
     if (parentComponent && parentComponent.components) {
+      let parentFullName = componentToSimpleFullName(parentComponent);
+      const subComponents = [];
       for (const comp of parentComponent.components) {
         delete comp.evidence;
         delete comp._integrity;
         delete comp.license;
         if (!comp["bom-ref"] && comp.name && comp.type) {
-          let fullName =
-            comp.group && comp.group.length
-              ? `${comp.group}/${comp.name}`
-              : comp.name;
-          if (comp.version && comp.version.length) {
-            fullName = `${fullName}@${comp.version}`;
+          let fullName = componentToSimpleFullName(comp);
+          // Fixes #479
+          // Prevent the parent component from also appearing as a sub-component
+          // We cannot use purl or bom-ref here since they would not match
+          // purl - could have application on one side and a different type
+          // bom-ref could have qualifiers on one side
+          if (fullName !== parentFullName) {
+            comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
+            subComponents.push(comp);
           }
-          comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
         }
-      }
+      } // for
+      parentComponent.components = subComponents;
     }
     if (format === "json") {
       metadata.component = parentComponent;
@@ -1939,14 +1954,20 @@ export const createNodejsBom = async (path, options) => {
     );
     const pnpmLock = join(path, "common", "config", "rush", "pnpm-lock.yaml");
     if (existsSync(swFile)) {
-      const pkgList = await parseNodeShrinkwrap(swFile);
+      let pkgList = await parseNodeShrinkwrap(swFile);
+      if (allImports && Object.keys(allImports).length) {
+        pkgList = addEvidenceForImports(pkgList, allImports);
+      }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
         filename: "shrinkwrap-deps.json"
       });
     } else if (existsSync(pnpmLock)) {
-      const pkgList = await parsePnpmLock(pnpmLock);
+      let pkgList = await parsePnpmLock(pnpmLock);
+      if (allImports && Object.keys(allImports).length) {
+        pkgList = addEvidenceForImports(pkgList, allImports);
+      }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
@@ -2056,6 +2077,8 @@ export const createNodejsBom = async (path, options) => {
       }
     }
   }
+  // We might reach here if the project has no lock files
+  // Eg: juice-shop
   if (!pkgList.length && existsSync(join(path, "node_modules"))) {
     const pkgJsonFiles = getAllFiles(
       join(path, "node_modules"),
@@ -2068,13 +2091,25 @@ export const createNodejsBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(options, pkgList, "npm", {
-      allImports,
-      src: path,
-      filename: manifestFiles.join(", "),
-      dependencies,
-      parentComponent
-    });
+    if (!parentComponent || !Object.keys(parentComponent).length) {
+      if (existsSync(join(path, "package.json"))) {
+        const pcs = await parsePkgJson(join(path, "package.json"));
+        if (pcs.length) {
+          parentComponent = pcs[0];
+          parentComponent.type = "application";
+          ppurl = new PackageURL(
+            "npm",
+            options.projectGroup || parentComponent.group,
+            options.projectName || parentComponent.name,
+            options.projectVersion || parentComponent.version,
+            null,
+            null
+          ).toString();
+          parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+          parentComponent["purl"] = ppurl;
+        }
+      }
+    }
   }
   // Retain the components of parent component
   if (parentSubComponents.length) {

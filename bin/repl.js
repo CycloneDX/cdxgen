@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import repl from "node:repl";
 import jsonata from "jsonata";
 import fs from "node:fs";

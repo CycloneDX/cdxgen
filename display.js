@@ -58,6 +58,19 @@ export const printServices = (bomJson) => {
   }
 };
 
+const locationComparator = (a, b) => {
+  if (a && b && a.includes("#") && b.includes("#")) {
+    const tmpA = a.split("#");
+    const tmpB = b.split("#");
+    if (tmpA.length === 2 && tmpB.length === 2) {
+      if (tmpA[0] == tmpB[0]) {
+        return tmpA[1] - tmpB[1];
+      }
+    }
+  }
+  return a.localeCompare(b);
+};
+
 export const printOccurrences = (bomJson) => {
   const data = [["Group", "Name", "Version", "Occurrences"]];
   if (!bomJson || !bomJson.components) {
@@ -73,7 +86,7 @@ export const printOccurrences = (bomJson) => {
       comp.version,
       comp.evidence.occurrences
         .map((l) => l.location)
-        .sort()
+        .sort(locationComparator)
         .join("\n")
     ]);
   }
@@ -106,7 +119,7 @@ export const printCallStack = (bomJson) => {
           (c) => `${c.fullFilename}${c.line ? "#" + c.line : ""}`
         )
       )
-    ).sort();
+    ).sort(locationComparator);
     let frameDisplay = [frames[0]];
     if (frames.length > 1) {
       for (let i = 1; i < frames.length - 1; i++) {
