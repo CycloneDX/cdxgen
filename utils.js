@@ -6033,13 +6033,7 @@ export const addEvidenceForImports = (pkgList, allImports) => {
     const { group, name } = pkg;
     let aliases =
       group && group.length
-        ? [
-            name,
-            group + "/" + name,
-            "@" + group + "/" + name,
-            group,
-            "@" + group
-          ]
+        ? [name, group + "/" + name, "@" + group + "/" + name]
         : [name];
     for (const alias of aliases) {
       if (impPkgs.includes(alias)) {
@@ -6061,6 +6055,8 @@ export const addEvidenceForImports = (pkgList, allImports) => {
                 if (!importedSm) {
                   continue;
                 }
+                // Store both the short and long form of the imported sub modules
+                importedModules.add(importedSm);
                 importedModules.add(`${evidence.importedAs}/${importedSm}`);
               }
             }

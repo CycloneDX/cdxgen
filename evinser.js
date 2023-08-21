@@ -573,7 +573,8 @@ export const isFilterableType = (
   }
   if (
     typeFullName.startsWith("<operator") ||
-    typeFullName.startsWith("<unresolved")
+    typeFullName.startsWith("<unresolved") ||
+    typeFullName.startsWith("<unknownFullName")
   ) {
     return true;
   }
@@ -861,10 +862,6 @@ export const collectDataFlowFrames = async (
   // so this method is more future-proof
   const dfFrames = {};
   for (const n of nodes) {
-    // Skip operator calls
-    if (n.name && n.name.startsWith("<operator")) {
-      continue;
-    }
     nodeCache[n.id] = n;
   }
   const paths = dataFlowSlice?.paths || [];
@@ -882,7 +879,11 @@ export const collectDataFlowFrames = async (
         theNode.label === "CALL" &&
         typeFullName == "ANY"
       ) {
-        typeFullName = theNode.fullName || theNode.name;
+        if (theNode.code && theNode.code.startsWith("new ")) {
+          typeFullName = theNode.code.split("(")[0].replace("new ", "");
+        } else {
+          typeFullName = theNode.fullName || theNode.name;
+        }
       }
       const maybeClassType = getClassTypeFromSignature(language, typeFullName);
       if (!isFilterableType(language, userDefinedTypesMap, typeFullName)) {
@@ -996,7 +997,8 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
   }
   if (
     typeFullName.startsWith("<unresolved") ||
-    typeFullName.startsWith("<operator")
+    typeFullName.startsWith("<operator") ||
+    typeFullName.startsWith("<unknownFullName")
   ) {
     return undefined;
   }
