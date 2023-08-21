@@ -522,7 +522,9 @@ export const parseSliceUsages = async (
             if (!purlLocationMap[apurl]) {
               purlLocationMap[apurl] = new Set();
             }
-            purlLocationMap[apurl].add(...(lKeyOverrides[atype] || []));
+            if (lKeyOverrides[atype]) {
+              purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+            }
           } else {
             // This would work well for java since each call node could be mapped to a method
             purlsSet.add(apurl);
@@ -598,7 +600,8 @@ export const isFilterableType = (
       typeFullName.startsWith("JSON") ||
       typeFullName.startsWith("void:") ||
       typeFullName.startsWith("LAMBDA") ||
-      typeFullName.startsWith("../")
+      typeFullName.startsWith("../") ||
+      typeFullName.startsWith("node:")
     ) {
       return true;
     }
@@ -991,7 +994,10 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
       typeFullName = tmpA.join("/");
     }
   }
-  if (typeFullName.startsWith("<unresolved")) {
+  if (
+    typeFullName.startsWith("<unresolved") ||
+    typeFullName.startsWith("<operator")
+  ) {
     return undefined;
   }
   if (typeFullName.includes("$")) {
