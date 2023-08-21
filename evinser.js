@@ -622,34 +622,40 @@ export const isFilterableType = (
  */
 export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
   const usages = slice.usages;
-  if (!usages || !["java", "jar"].includes(language)) {
+  if (!usages) {
     return [];
   }
   for (const usage of usages) {
     const targetObj = usage?.targetObj;
     const definedBy = usage?.definedBy;
-    let endpoints = undefined;
+    let endpoints = [];
     let authenticated = undefined;
-    if (
-      targetObj &&
-      targetObj?.label === "ANNOTATION" &&
-      targetObj?.resolvedMethod
-    ) {
+    if (targetObj && targetObj?.resolvedMethod) {
       endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
-      if (targetObj?.resolvedMethod.includes("auth")) {
+      if (targetObj?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
-    } else if (
-      definedBy &&
-      definedBy?.label === "ANNOTATION" &&
-      definedBy?.resolvedMethod
-    ) {
+    } else if (definedBy && definedBy?.resolvedMethod) {
       endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
-      if (definedBy?.resolvedMethod.includes("auth")) {
+      if (definedBy?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
     }
-    if (endpoints) {
+    if (
+      (!endpoints || !endpoints.length) &&
+      language === "javascript" &&
+      usage.invokedCalls
+    ) {
+      for (const acall of usage.invokedCalls) {
+        if (acall.resolvedMethod) {
+          const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
+          if (tmpEndpoints && tmpEndpoints.length) {
+            endpoints = endpoints.concat(tmpEndpoints);
+          }
+        }
+      }
+    }
+    if (endpoints && endpoints.length) {
       const serviceName = constructServiceName(language, slice);
       if (!servicesMap[serviceName]) {
         servicesMap[serviceName] = {
@@ -707,6 +713,20 @@ export const extractEndpoints = (language, code) => {
           endpoints = tmpA.split(",");
           return endpoints;
         }
+      }
+      break;
+    case "javascript":
+      if (code.includes("app.") || code.includes("route")) {
+        const matches = code.match(/['"](.*?)['"]/gi) || [];
+        endpoints = matches
+          .map((v) => v.replace(/["']/g, ""))
+          .filter(
+            (v) =>
+              v.length &&
+              !v.startsWith(".") &&
+              v.includes("/") &&
+              !v.startsWith("@")
+          );
       }
       break;
     default:
@@ -878,7 +898,7 @@ export const collectDataFlowFrames = async (
         if (
           theNode.code &&
           (theNode.code.startsWith("new ") ||
-            theNode.label === "METHOD_PARAMETER_IN")
+            ["METHOD_PARAMETER_IN", "IDENTIFIER"].includes(theNode.label))
         ) {
           typeFullName = theNode.code.split("(")[0].replace("new ", "");
         } else {
