@@ -313,6 +313,16 @@ const addToolsSection = (options, format) => {
     ]
   };
 };
+
+const componentToSimpleFullName = (comp) => {
+  let fullName =
+    comp.group && comp.group.length ? `${comp.group}/${comp.name}` : comp.name;
+  if (comp.version && comp.version.length) {
+    fullName = `${fullName}@${comp.version}`;
+  }
+  return fullName;
+};
+
 /**
  * Function to create metadata block
  *
@@ -347,21 +357,26 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       }
     }
     if (parentComponent && parentComponent.components) {
+      let parentFullName = componentToSimpleFullName(parentComponent);
+      const subComponents = [];
       for (const comp of parentComponent.components) {
         delete comp.evidence;
         delete comp._integrity;
         delete comp.license;
         if (!comp["bom-ref"] && comp.name && comp.type) {
-          let fullName =
-            comp.group && comp.group.length
-              ? `${comp.group}/${comp.name}`
-              : comp.name;
-          if (comp.version && comp.version.length) {
-            fullName = `${fullName}@${comp.version}`;
+          let fullName = componentToSimpleFullName(comp);
+          // Fixes #479
+          // Prevent the parent component from also appearing as a sub-component
+          // We cannot use purl or bom-ref here since they would not match
+          // purl - could have application on one side and a different type
+          // bom-ref could have qualifiers on one side
+          if (fullName !== parentFullName) {
+            comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
+            subComponents.push(comp);
           }
-          comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
         }
-      }
+      } // for
+      parentComponent.components = subComponents;
     }
     if (format === "json") {
       metadata.component = parentComponent;
