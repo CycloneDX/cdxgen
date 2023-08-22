@@ -352,6 +352,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       delete parentComponent.evidence;
       delete parentComponent._integrity;
       delete parentComponent.license;
+      delete parentComponent.qualifiers;
       if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
         parentComponent["purl"] = parentComponent["bom-ref"];
       }
@@ -363,6 +364,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
         delete comp.evidence;
         delete comp._integrity;
         delete comp.license;
+        delete comp.qualifiers;
         if (comp.name && comp.type) {
           let fullName = componentToSimpleFullName(comp);
           // Fixes #479
