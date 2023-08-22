@@ -75,4 +75,19 @@ test("extract endpoints test", () => {
       'router.post("/convert",async(ctx:Context):Promise<void>=>{constparameters=ctx.request.body;constbatchClient=newBatchClient({region:"us-west-1"});constcommand=newSubmitJobCommand({jobName:parameters?.jobName,jobQueue:"FOO-ARN",jobDefinition:"BAR-ARN",parameters,});try{constobjectsOutput=awaitbatchClient.send(command);ctx.response.body=objectsOutput;}catch(err){//Poorexceptionhandlingctx.response.body=err;}})'
     )
   ).toEqual(["/convert"]);
+  expect(
+    extractEndpoints(
+      "java",
+      '@RequestMapping(path = "/{name}", method = RequestMethod.GET)'
+    )
+  ).toEqual(["/{name}"]);
+  expect(
+    extractEndpoints("java", "@RequestMapping(method = RequestMethod.POST)")
+  ).toEqual([]);
+  expect(
+    extractEndpoints(
+      "java",
+      '@RequestMapping(value = "/{accountName}", method = RequestMethod.GET)'
+    )
+  ).toEqual(["/{accountName}"]);
 });
