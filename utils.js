@@ -1465,10 +1465,11 @@ export const parseGradleDep = function (
     let stack = [last_purl];
     const depRegex =
       /^.*?--- +(?<groupspecified>[^\s:]+) ?:(?<namespecified>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?:(?<groupoverride>[^\s:]+):(?<nameoverride>[^\s:]+):)?(?<versionoverride>[^\s:]+))?/gm;
-    for (const rline of rawOutput.split("\n")) {
+    for (let rline of rawOutput.split("\n")) {
       if (!rline) {
         continue;
       }
+      rline = rline.replace("\r", "");
       if (
         (rline.startsWith("+--- ") || rline.startsWith("\\--- ")) &&
         rline.includes("{strictly") &&
