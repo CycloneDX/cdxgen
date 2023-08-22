@@ -641,14 +641,13 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
         authenticated = true;
       }
     }
-    if (
-      (!endpoints || !endpoints.length) &&
-      language === "javascript" &&
-      usage.invokedCalls
-    ) {
+    if (usage.invokedCalls) {
       for (const acall of usage.invokedCalls) {
         if (acall.resolvedMethod) {
           const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
+          if (acall.resolvedMethod.toLowerCase().includes("auth")) {
+            authenticated = true;
+          }
           if (tmpEndpoints && tmpEndpoints.length) {
             endpoints = (endpoints || []).concat(tmpEndpoints);
           }
