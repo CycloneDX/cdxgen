@@ -21,7 +21,7 @@ jobs:
         appimage-builder --recipe appimage-builder.yml --skip-test
       env:
         UPDATE_INFO: gh-releases-zsync|cyclonedx|cdxgen|latest|*x86_64.AppImage.zsync
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: AppImage
         path: './*.AppImage*'
