@@ -1506,11 +1506,21 @@ export const parseGradleDep = function (
           nameoverride,
           versionoverride
         ] = match;
-        const group = groupoverride || groupspecified;
-        const name = nameoverride || namespecified;
-        const version = versionoverride || versionspecified;
+        let group = groupoverride || groupspecified;
+        let name = nameoverride || namespecified;
+        let version = versionoverride || versionspecified;
         const level = line.split(groupspecified)[0].length / 5;
         if (version !== undefined || group === "project") {
+          // Project line has no version
+          // For multi sub-module projects such as :module:dummy:starter the regex is producing incorrect values
+          if (rline.includes("project ")) {
+            const tmpA = rline.split("project ");
+            if (tmpA && tmpA.length > 1) {
+              group = rootProjectGroup;
+              name = tmpA[1].split(" ")[0].replace(/^:/, "");
+              version = undefined;
+            }
+          }
           let purlString = new PackageURL(
             "maven",
             group !== "project" ? group : rootProjectGroup,
