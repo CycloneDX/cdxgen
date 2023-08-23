@@ -5,6 +5,14 @@ import { hideBin } from "yargs/helpers";
 import fs from "node:fs";
 import jws from "jws";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+
+let url = import.meta.url;
+if (!url.startsWith("file://")) {
+  url = new URL(`file://${import.meta.url}`).toString();
+}
+const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
 const args = yargs(hideBin(process.argv))
   .option("input", {
@@ -19,6 +27,17 @@ const args = yargs(hideBin(process.argv))
   .scriptName("cdx-verify")
   .version()
   .help("h").argv;
+
+if (args.version) {
+  const packageJsonAsString = fs.readFileSync(
+    join(dirName, "..", "package.json"),
+    "utf-8"
+  );
+  const packageJson = JSON.parse(packageJsonAsString);
+
+  console.log(packageJson.version);
+  process.exit(0);
+}
 
 const bomJson = JSON.parse(fs.readFileSync(args.input, "utf8"));
 const bomSignature =

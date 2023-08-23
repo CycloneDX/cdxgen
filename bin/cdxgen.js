@@ -313,13 +313,30 @@ const checkPermissions = (filePath) => {
             }
           }
           try {
+            // Sign the individual components
+            // Let's leave the services unsigned for now since it might require additional cleansing
+            const bomJsonUnsignedObj = JSON.parse(jsonPayload);
+            for (const comp of bomJsonUnsignedObj.components) {
+              const compSignature = jws.sign({
+                header: { alg },
+                payload: comp,
+                privateKey: privateKeyToUse
+              });
+              const compSignatureBlock = {
+                algorithm: alg,
+                value: compSignature
+              };
+              if (jwkPublicKey) {
+                compSignatureBlock.publicKey = jwkPublicKey;
+              }
+              comp.signature = compSignatureBlock;
+            }
             const signature = jws.sign({
               header: { alg },
-              payload: jsonPayload,
+              payload: JSON.stringify(bomJsonUnsignedObj, null, 2),
               privateKey: privateKeyToUse
             });
             if (signature) {
-              const bomJsonUnsignedObj = JSON.parse(jsonPayload);
               const signatureBlock = {
                 algorithm: alg,
                 value: signature

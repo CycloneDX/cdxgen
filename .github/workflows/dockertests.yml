@@ -54,7 +54,7 @@ jobs:
           bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --validate
           bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --validate
           ls -ltr bomresults
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v3
         with:
           name: bomresults
           path: bomresults
@@ -89,7 +89,7 @@ jobs:
           bin/cdxgen.js -t os -o bomresults/bom-os.json --validate
         env:
           CDXGEN_DEBUG_MODE: debug
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v3
         with:
           name: bomresults-os
           path: bomresults
@@ -125,7 +125,7 @@ jobs:
           dir bomresults
         env:
           CDXGEN_DEBUG_MODE: debug
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v3
         with:
           name: bomresults-win
           path: bomresults

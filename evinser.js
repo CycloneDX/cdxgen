@@ -12,6 +12,7 @@ import fs from "node:fs";
 import * as db from "./db.js";
 import { PackageURL } from "packageurl-js";
 import { Op } from "sequelize";
+import process from "node:process";
 const DB_NAME = "evinser.db";
 const typePurlsCache = {};
 
@@ -28,6 +29,12 @@ export const prepareDB = async (options) => {
     return;
   }
   const bomJson = JSON.parse(fs.readFileSync(bomJsonFile, "utf8"));
+  if (bomJson.specVersion < 1.5) {
+    console.log(
+      "Evinse requires the input SBoM in CycloneDX 1.5 format or above. You can generate one by invoking cdxgen without any --spec-version argument."
+    );
+    process.exit(0);
+  }
   const components = bomJson.components || [];
   const { sequelize, Namespaces, Usages, DataFlows } = await db.createOrLoad(
     DB_NAME,
@@ -766,6 +773,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     if (!comp.purl) {
       continue;
     }
+    delete comp.signature;
     const locationOccurrences = Array.from(
       purlLocationMap[comp.purl] || []
     ).sort();
@@ -834,6 +842,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   bomJson.version = (bomJson.version || 1) + 1;
   // Set the current timestamp to indicate this is newer
   bomJson.metadata.timestamp = new Date().toISOString();
+  delete bomJson.signature;
   fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, 2));
   if (occEvidencePresent || csEvidencePresent) {
     console.log(evinseOutFile, "created successfully.");
