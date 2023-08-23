@@ -282,6 +282,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - pnpm-lock.yaml
 - Maven (pom.xml)
 - Gradle
+- Scala SBT
 - Python (requirements.txt, setup.py, pyproject.toml, poetry.lock)
 
 ## Environment variables
