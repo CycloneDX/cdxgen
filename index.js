@@ -1640,7 +1640,7 @@ export const createJavaBom = async (path, options) => {
     }
     // eliminate duplicates and ignore project directories
     sbtProjects = [...new Set(sbtProjects)].filter(
-      (p) => !p.endsWith("project") && !p.includes("target" + sep)
+      (p) => !p.endsWith(sep + "project") && !p.includes("target" + sep)
     );
     const sbtLockFiles = getAllFiles(
       path,
