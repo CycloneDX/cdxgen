@@ -641,14 +641,13 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
         authenticated = true;
       }
     }
-    if (
-      (!endpoints || !endpoints.length) &&
-      language === "javascript" &&
-      usage.invokedCalls
-    ) {
+    if (usage.invokedCalls) {
       for (const acall of usage.invokedCalls) {
         if (acall.resolvedMethod) {
           const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
+          if (acall.resolvedMethod.toLowerCase().includes("auth")) {
+            authenticated = true;
+          }
           if (tmpEndpoints && tmpEndpoints.length) {
             endpoints = (endpoints || []).concat(tmpEndpoints);
           }
@@ -697,22 +696,16 @@ export const extractEndpoints = (language, code) => {
         code.includes("Mapping") &&
         code.includes("(")
       ) {
-        let tmpA = code.split("(");
-        if (tmpA.length > 1) {
-          tmpA = tmpA[1].split(")")[0];
-          if (tmpA.includes("{")) {
-            tmpA = tmpA.split("{");
-            tmpA = tmpA[tmpA.length - 1].split("}")[0];
-          } else if (tmpA.includes(",")) {
-            tmpA = tmpA.split(",")[0];
-          }
-          if (tmpA.includes("=")) {
-            tmpA = tmpA.split("=").reverse()[0];
-          }
-          tmpA = tmpA.replace(/"/g, "").replace(/ /g, "");
-          endpoints = tmpA.split(",");
-          return endpoints;
-        }
+        const matches = code.match(/['"](.*?)['"]/gi) || [];
+        endpoints = matches
+          .map((v) => v.replace(/["']/g, ""))
+          .filter(
+            (v) =>
+              v.length &&
+              !v.startsWith(".") &&
+              v.includes("/") &&
+              !v.startsWith("@")
+          );
       }
       break;
     case "javascript":

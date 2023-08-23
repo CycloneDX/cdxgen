@@ -336,6 +336,11 @@ test("parse gradle dependencies", () => {
       purl: "pkg:maven/androidx.appcompat/appcompat@1.2.0?type=jar"
     }
   ]);
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-sm.dep", { encoding: "utf-8" })
+  );
+  expect(parsedList.pkgList.length).toEqual(6);
+  expect(parsedList.dependenciesList.length).toEqual(7);
 });
 
 test("parse gradle projects", () => {
@@ -363,6 +368,18 @@ test("parse gradle projects", () => {
   );
   expect(retMap.rootProject).toEqual("root");
   expect(retMap.projects).toEqual([":app"]);
+  retMap = parseGradleProjects(
+    readFileSync("./test/data/gradle-properties-sm.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(retMap.rootProject).toEqual("root");
+  expect(retMap.projects).toEqual([
+    ":module:dummy:core",
+    ":module:dummy:service",
+    ":module:dummy:starter",
+    ":custom:foo:service"
+  ]);
 });
 
 test("parse gradle properties", () => {
@@ -464,6 +481,13 @@ test("parse gradle properties", () => {
   );
   expect(retMap.rootProject).toEqual("CdxgenAndroidTest");
   expect(retMap.projects.length).toEqual(2);
+  retMap = parseGradleProperties(
+    readFileSync("./test/data/gradle-properties-sm.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(retMap.rootProject).toEqual("root");
+  expect(retMap.projects).toEqual([]);
 });
 
 test("parse maven tree", () => {

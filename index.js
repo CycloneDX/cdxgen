@@ -352,6 +352,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       delete parentComponent.evidence;
       delete parentComponent._integrity;
       delete parentComponent.license;
+      delete parentComponent.qualifiers;
       if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
         parentComponent["purl"] = parentComponent["bom-ref"];
       }
@@ -363,7 +364,8 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
         delete comp.evidence;
         delete comp._integrity;
         delete comp.license;
-        if (!comp["bom-ref"] && comp.name && comp.type) {
+        delete comp.qualifiers;
+        if (comp.name && comp.type) {
           let fullName = componentToSimpleFullName(comp);
           // Fixes #479
           // Prevent the parent component from also appearing as a sub-component
@@ -371,7 +373,9 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
           // purl - could have application on one side and a different type
           // bom-ref could have qualifiers on one side
           if (fullName !== parentFullName) {
-            comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
+            if (!comp["bom-ref"]) {
+              comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
+            }
             subComponents.push(comp);
           }
         }
@@ -1355,9 +1359,13 @@ export const createJavaBom = async (path, options) => {
             };
             const rootSubProjectPurl = new PackageURL(
               "maven",
-              rootSubProjectObj.group || parentComponent.group || "",
+              rootSubProjectObj.group && rootSubProjectObj.group.length
+                ? rootSubProjectObj.group
+                : parentComponent.group,
               rootSubProjectObj.name,
-              rootSubProjectObj.version,
+              retMap.metadata.version && retMap.metadata.version !== "latest"
+                ? retMap.metadata.version
+                : parentComponent.version,
               rootSubProjectObj.qualifiers,
               null
             ).toString();
@@ -1433,9 +1441,11 @@ export const createJavaBom = async (path, options) => {
           const cmdOutput = Buffer.from(sstdout).toString();
           const parsedList = parseGradleDep(
             cmdOutput,
-            sp.group,
+            sp.group || parentComponent.group,
             sp.name,
-            sp.version
+            sp.version && sp.version.length && sp.version !== "latest"
+              ? sp.version
+              : parentComponent.version
           );
           const dlist = parsedList.pkgList;
           if (parsedList.dependenciesList && parsedList.dependenciesList) {

@@ -1465,10 +1465,11 @@ export const parseGradleDep = function (
     let stack = [last_purl];
     const depRegex =
       /^.*?--- +(?<groupspecified>[^\s:]+) ?:(?<namespecified>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?:(?<groupoverride>[^\s:]+):(?<nameoverride>[^\s:]+):)?(?<versionoverride>[^\s:]+))?/gm;
-    for (const rline of rawOutput.split("\n")) {
+    for (let rline of rawOutput.split("\n")) {
       if (!rline) {
         continue;
       }
+      rline = rline.replace("\r", "");
       if (
         (rline.startsWith("+--- ") || rline.startsWith("\\--- ")) &&
         rline.includes("{strictly") &&
@@ -1506,11 +1507,21 @@ export const parseGradleDep = function (
           nameoverride,
           versionoverride
         ] = match;
-        const group = groupoverride || groupspecified;
-        const name = nameoverride || namespecified;
-        const version = versionoverride || versionspecified;
+        let group = groupoverride || groupspecified;
+        let name = nameoverride || namespecified;
+        let version = versionoverride || versionspecified;
         const level = line.split(groupspecified)[0].length / 5;
         if (version !== undefined || group === "project") {
+          // Project line has no version
+          // For multi sub-module projects such as :module:dummy:starter the regex is producing incorrect values
+          if (rline.includes("project ")) {
+            const tmpA = rline.split("project ");
+            if (tmpA && tmpA.length > 1) {
+              group = rootProjectGroup;
+              name = tmpA[1].split(" ")[0].replace(/^:/, "");
+              version = undefined;
+            }
+          }
           let purlString = new PackageURL(
             "maven",
             group !== "project" ? group : rootProjectGroup,
@@ -1822,6 +1833,9 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
         console.log(
           "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible."
         );
+      }
+      if (result.stderr.includes("not get unknown property")) {
+        console.log("2. Check if the SBoM is generated for the correct root project for your application.");
       }
     }
   }
