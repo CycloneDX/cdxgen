@@ -3285,14 +3285,15 @@ export const getCratesMetadata = async function (pkgList) {
  * @param {Array} pkgList Package list
  */
 export const getDartMetadata = async function (pkgList) {
-  const PUB_DEV_URL = "https://pub.dev/api/packages/";
+  const PUB_DEV_URL = process.env.PUB_DEV_URL || "https://pub.dev";
+  const PUB_PACKAGES_URL = PUB_DEV_URL + "/api/packages/";
   const cdepList = [];
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
-        console.log(`Querying pub.dev for ${p.name}`);
+        console.log("Querying " + PUB_DEV_URL + " for ${p.name}");
       }
-      const res = await cdxgenAgent.get(PUB_DEV_URL + p.name, {
+      const res = await cdxgenAgent.get(PUB_PACKAGES_URL + p.name, {
         responseType: "json",
         headers: {
           Accept: "application/vnd.pub.v2+json"
@@ -3310,7 +3311,7 @@ export const getDartMetadata = async function (pkgList) {
             if (pubspec.homepage) {
               p.homepage = { url: pubspec.homepage };
             }
-            p.license = "https://pub.dev/packages/" + p.name + "/license";
+            p.license = PUB_DEV_URL + "/packages/" + p.name + "/license";
             cdepList.push(p);
             break;
           }
