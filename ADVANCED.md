@@ -1,8 +1,14 @@
 # Advanced usage
 
-## Evinse Mode
+## Evinse Mode / SaaSBoM
 
-Evinse (Evinse Verification Is Nearly SBoM Evidence) is a new command with cdxgen to generate component evidence for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom)
+Evinse (Evinse Verification Is Nearly SBoM Evidence) is a new command with cdxgen to generate component evidence and SaaSBoM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom)
+
+<img src="./docs/occurrence-evidence.png" alt="occurrence evidence" width="256">
+
+<img src="./docs/callstack-evidence.png" alt="occurrence evidence" width="256">
+
+<img src="./docs/saasbom-services.png" alt="occurrence evidence" width="256">
 
 ### Pre-requisites
 
@@ -52,6 +58,18 @@ To generate an SBoM with evidence for a java project.
 evinse -i bom.json -o bom.evinse.json <path to the application>
 ```
 
+By default, only occurrence evidences are determined by creating usages slices. To generate callstack evidence, pass `--with-data-flow`
+
+```shell
+evinse -i bom.json -o bom.evinse.json --with-data-flow <path to the application>
+```
+
+To improve performance, you can cache the generated usages and data-flow slices file along with the bom file.
+
+```shell
+evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-flow-slices-file data-flow.json --with-data-flow <path to the application>
+```
+
 ## Generate SBoM from maven or gradle cache
 
 There could be java applications with complex dependency requirements. Or you might be interested in cataloging your maven or gradle cache.
@@ -77,6 +95,8 @@ evinse -i <bom from cache> -o bom.evinse.json <application path>
 ```
 
 Evinse would populate component.evidence object with occurrences (default) and callstack (in data-flow mode). Those without evidence are either transitive or unused dependencies.
+
+To improve performance for re-runs, pass the argument `--skip-maven-collector` to use the data cached in the SQLite database from the previous runs.
 
 ## Interactive mode
 

@@ -372,7 +372,12 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
           // We cannot use purl or bom-ref here since they would not match
           // purl - could have application on one side and a different type
           // bom-ref could have qualifiers on one side
-          if (fullName !== parentFullName) {
+          // Ignore components that have the same name as the parent component but with latest as the version.
+          // These are default components created based on directory names
+          if (
+            fullName !== parentFullName &&
+            !(comp.name === parentComponent.name && comp.version === "latest")
+          ) {
             if (!comp["bom-ref"]) {
               comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
             }
@@ -380,6 +385,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
           }
         }
       } // for
+      parentComponent.components = subComponents;
     }
     if (format === "json") {
       metadata.component = parentComponent;
