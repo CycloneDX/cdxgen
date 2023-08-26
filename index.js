@@ -376,7 +376,11 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
           // These are default components created based on directory names
           if (
             fullName !== parentFullName &&
-            !(comp.name === parentComponent.name && comp.version === "latest")
+            !(
+              (comp.name === parentComponent.name ||
+                comp.name === parentComponent.name + ":latest") &&
+              comp.version === "latest"
+            )
           ) {
             if (!comp["bom-ref"]) {
               comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
@@ -2205,9 +2209,12 @@ export const createPythonBom = async (path, options) => {
   if (pdmLockFiles && pdmLockFiles.length) {
     poetryFiles = poetryFiles.concat(pdmLockFiles);
   }
-  const reqFiles = getAllFiles(
+  let reqFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt"
+  );
+  reqFiles = reqFiles.filter(
+    (f) => !f.includes(join("mercurial", "helptext", "internals"))
   );
   const reqDirFiles = getAllFiles(
     path,
@@ -3916,7 +3923,7 @@ export const mergeDependencies = (
   for (const akey of Object.keys(deps_map)) {
     retlist.push({
       ref: akey,
-      dependsOn: Array.from(deps_map[akey])
+      dependsOn: Array.from(deps_map[akey]).sort()
     });
   }
   return retlist;
@@ -4009,7 +4016,7 @@ export const createMultiXBom = async (pathList, options) => {
     ["docker", "oci", "container"].includes(options.projectType) &&
     options.allLayersExplodedDir
   ) {
-    const { osPackages, allTypes } = getOSPackages(
+    const { osPackages, dependenciesList, allTypes } = getOSPackages(
       options.allLayersExplodedDir
     );
     if (DEBUG_MODE) {
@@ -4024,6 +4031,17 @@ export const createMultiXBom = async (pathList, options) => {
     componentsXmls = componentsXmls.concat(
       listComponents(options, {}, osPackages, "", "xml")
     );
+    if (dependenciesList && dependenciesList.length) {
+      dependencies = dependencies.concat(dependenciesList);
+    }
+    if (parentComponent && Object.keys(parentComponent).length) {
+      // Make the parent oci image depend on all os components
+      const parentDependsOn = new Set(osPackages.map((p) => p["bom-ref"]));
+      dependencies.splice(0, 0, {
+        ref: parentComponent["bom-ref"],
+        dependsOn: Array.from(parentDependsOn).sort()
+      });
+    }
   }
   if (options.projectType === "os" && options.bomData) {
     bomData = options.bomData;
@@ -4415,7 +4433,12 @@ export const createMultiXBom = async (pathList, options) => {
     // Jar scanning is enabled by default
     // See #330
     bomData = createJarBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} jar packages at ${path}`
@@ -4436,7 +4459,12 @@ export const createMultiXBom = async (pathList, options) => {
   } // for
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
     bomData = createJarBom(options.lastWorkingDir, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} jar packages at ${options.lastWorkingDir}`
@@ -4824,8 +4852,26 @@ export const createBom = async (path, options) => {
             purl: "pkg:oci/" + inspectData.RepoDigests[0],
             _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
           };
+          options.parentComponent["bom-ref"] = options.parentComponent.purl;
         }
+      } else if (inspectData.Id) {
+        options.parentComponent = {
+          name: inspectData.RepoDigests[0].split("@")[0],
+          version: inspectData.RepoDigests[0]
+            .split("@")[1]
+            .replace("sha256:", ""),
+          type: "container",
+          purl: "pkg:oci/" + inspectData.RepoDigests[0],
+          _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
+        };
+        options.parentComponent["bom-ref"] = options.parentComponent.purl;
       }
+    } else {
+      options.parentComponent = createDefaultParentComponent(
+        path,
+        "container",
+        options
+      );
     }
     // Pass the entire export data about the image layers
     options.exportData = exportData;

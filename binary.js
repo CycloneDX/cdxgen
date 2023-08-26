@@ -6,13 +6,12 @@ import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE } from "./utils.js";
 
 import { fileURLToPath } from "node:url";
-import path from "node:path";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirName = import.meta ? path.dirname(fileURLToPath(url)) : __dirname;
+const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
 const isWin = _platform() === "win32";
 
@@ -181,6 +180,7 @@ const OS_DISTRO_ALIAS = {
   "ubuntu-19.10": "eoan",
   "ubuntu-20.04": "focal",
   "ubuntu-20.10": "groovy",
+  "ubuntu-22.04": "jammy",
   "ubuntu-23.04": "lunar",
   "debian-14": "forky",
   "debian-14.5": "forky",
@@ -266,6 +266,7 @@ export const getCargoAuditableInfo = (src) => {
 
 export const getOSPackages = (src) => {
   const pkgList = [];
+  const dependenciesList = [];
   const allTypes = new Set();
   if (TRIVY_BIN) {
     let imageType = "image";
@@ -321,6 +322,54 @@ export const getOSPackages = (src) => {
           rmSync(tempDir, { recursive: true, force: true });
         }
       }
+      const osReleaseData = {};
+      // Let's try to read the os-release file
+      if (existsSync(join(src, "usr", "lib", "os-release"))) {
+        const osReleaseInfo = readFileSync(
+          join(src, "usr", "lib", "os-release"),
+          "utf-8"
+        );
+        if (osReleaseInfo) {
+          osReleaseInfo.split("\n").forEach((l) => {
+            if (l.includes("=")) {
+              const tmpA = l.split("=");
+              osReleaseData[tmpA[0]] = tmpA[1].replace(/"/g, "");
+            }
+          });
+        }
+      }
+      if (DEBUG_MODE) {
+        console.log(osReleaseData);
+      }
+      let distro_codename = osReleaseData["VERSION_CODENAME"] || "";
+      let distro_id = osReleaseData["ID"] || "";
+      let distro_id_like = osReleaseData["ID_LIKE"] || "";
+      let purl_type = "rpm";
+      switch (distro_id) {
+        case "debian":
+        case "ubuntu":
+        case "pop":
+          purl_type = "deb";
+          break;
+        default:
+          if (distro_id_like.includes("debian")) {
+            purl_type = "deb";
+          } else if (
+            distro_id_like.includes("rhel") ||
+            distro_id_like.includes("centos") ||
+            distro_id_like.includes("fedora")
+          ) {
+            purl_type = "rpm";
+          }
+          break;
+      }
+      if (osReleaseData["VERSION_ID"]) {
+        distro_id = distro_id + "-" + osReleaseData["VERSION_ID"];
+      }
+      const tmpDependencies = {};
+      (tmpBom.dependencies || []).forEach((d) => {
+        tmpDependencies[d.ref] = d.dependsOn;
+      });
       if (tmpBom && tmpBom.components) {
         for (const comp of tmpBom.components) {
           if (comp.purl) {
@@ -342,11 +391,11 @@ export const getOSPackages = (src) => {
             ) {
               continue;
             }
+            const origBomRef = comp["bom-ref"];
             // Fix the group
             let group = dirname(comp.name);
             const name = basename(comp.name);
             let purlObj = undefined;
-            let distro_codename = "";
             if (group === ".") {
               group = "";
             }
@@ -360,19 +409,23 @@ export const getOSPackages = (src) => {
                   comp.group = group;
                   purlObj.namespace = group;
                 }
+                if (distro_id && distro_id.length) {
+                  purlObj.qualifiers["distro"] = distro_id;
+                }
+                if (distro_codename && distro_codename.length) {
+                  purlObj.qualifiers["distro_name"] = distro_codename;
+                }
                 // Bug fix for mageia and oracle linux
+                // Type is being returned as none for ubuntu as well!
                 if (purlObj.type === "none") {
-                  purlObj["type"] = "rpm";
+                  purlObj["type"] = purl_type;
                   purlObj["namespace"] = "";
                   comp.group = "";
-                  distro_codename = undefined;
                   if (comp.purl && comp.purl.includes(".mga")) {
                     purlObj["namespace"] = "mageia";
                     comp.group = "mageia";
                     purlObj.qualifiers["distro"] = "mageia";
                     distro_codename = "mga";
-                  } else if (comp.purl && comp.purl.includes(".el8")) {
-                    purlObj.qualifiers["distro"] = "el8";
                   }
                   comp.purl = new PackageURL(
                     purlObj.type,
@@ -412,31 +465,42 @@ export const getOSPackages = (src) => {
                       );
                     }
                   }
-                  if (distro_codename !== "") {
-                    allTypes.add(distro_codename);
-                    allTypes.add(purlObj.namespace);
-                    purlObj.qualifiers["distro_name"] = distro_codename;
-                    comp.purl = new PackageURL(
-                      purlObj.type,
-                      purlObj.namespace,
-                      name,
-                      purlObj.version,
-                      purlObj.qualifiers,
-                      purlObj.subpath
-                    ).toString();
-                    comp["bom-ref"] = decodeURIComponent(comp.purl);
-                  }
+                }
+                if (distro_codename !== "") {
+                  allTypes.add(distro_codename);
+                  allTypes.add(purlObj.namespace);
+                  comp.purl = new PackageURL(
+                    purlObj.type,
+                    purlObj.namespace,
+                    name,
+                    purlObj.version,
+                    purlObj.qualifiers,
+                    purlObj.subpath
+                  ).toString();
+                  comp["bom-ref"] = decodeURIComponent(comp.purl);
                 }
               } catch (err) {
                 // continue regardless of error
               }
             }
+            // Fix licenses
             if (
               comp.licenses &&
               Array.isArray(comp.licenses) &&
               comp.licenses.length
             ) {
               comp.licenses = [comp.licenses[0]];
+            }
+            // Fix hashes
+            if (
+              comp.hashes &&
+              Array.isArray(comp.hashes) &&
+              comp.hashes.length
+            ) {
+              const hashContent = comp.hashes[0].content;
+              if (!hashContent || hashContent.length < 32) {
+                delete comp.hashes;
+              }
             }
             const compProperties = comp.properties;
             let srcName = undefined;
@@ -453,6 +517,14 @@ export const getOSPackages = (src) => {
             }
             delete comp.properties;
             pkgList.push(comp);
+            const compDeps = retrieveDependencies(
+              tmpDependencies,
+              origBomRef,
+              comp
+            );
+            if (compDeps) {
+              dependenciesList.push(compDeps);
+            }
             // If there is a source package defined include it as well
             if (srcName && srcVersion && srcName !== comp.name) {
               const newComp = Object.assign({}, comp);
@@ -474,10 +546,43 @@ export const getOSPackages = (src) => {
           }
         }
       }
-      return { osPackages: pkgList, allTypes: Array.from(allTypes) };
     }
   }
-  return { osPackages: pkgList, allTypes: Array.from(allTypes) };
+  return {
+    osPackages: pkgList,
+    dependenciesList,
+    allTypes: Array.from(allTypes)
+  };
+};
+
+const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
+  try {
+    const tmpDependsOn = tmpDependencies[origBomRef] || [];
+    const dependsOn = new Set();
+    tmpDependsOn.forEach((d) => {
+      try {
+        const compPurl = PackageURL.fromString(comp.purl);
+        const tmpPurl = PackageURL.fromString(d.replace("none", compPurl.type));
+        tmpPurl.type = compPurl.type;
+        tmpPurl.namespace = compPurl.namespace;
+        if (compPurl.qualifiers) {
+          if (compPurl.qualifiers.distro_name) {
+            tmpPurl.qualifiers.distro_name = compPurl.qualifiers.distro_name;
+          }
+          if (compPurl.qualifiers.distro) {
+            tmpPurl.qualifiers.distro = compPurl.qualifiers.distro;
+          }
+        }
+        dependsOn.add(decodeURIComponent(tmpPurl.toString()));
+      } catch (e) {
+        // ignore
+      }
+    });
+    return { ref: comp["bom-ref"], dependsOn: Array.from(dependsOn).sort() };
+  } catch (e) {
+    // ignore
+  }
+  return undefined;
 };
 
 export const executeOsQuery = (query) => {
