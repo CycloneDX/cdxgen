@@ -4034,12 +4034,14 @@ export const createMultiXBom = async (pathList, options) => {
     if (dependenciesList && dependenciesList.length) {
       dependencies = dependencies.concat(dependenciesList);
     }
-    // Make the parent oci image depend on all os components
-    const parentDependsOn = new Set(osPackages.map((p) => p["bom-ref"]));
-    dependencies.splice(0, 0, {
-      ref: parentComponent["bom-ref"],
-      dependsOn: Array.from(parentDependsOn).sort()
-    });
+    if (parentComponent && Object.keys(parentComponent).length) {
+      // Make the parent oci image depend on all os components
+      const parentDependsOn = new Set(osPackages.map((p) => p["bom-ref"]));
+      dependencies.splice(0, 0, {
+        ref: parentComponent["bom-ref"],
+        dependsOn: Array.from(parentDependsOn).sort()
+      });
+    }
   }
   if (options.projectType === "os" && options.bomData) {
     bomData = options.bomData;
@@ -4852,7 +4854,24 @@ export const createBom = async (path, options) => {
           };
           options.parentComponent["bom-ref"] = options.parentComponent.purl;
         }
+      } else if (inspectData.Id) {
+        options.parentComponent = {
+          name: inspectData.RepoDigests[0].split("@")[0],
+          version: inspectData.RepoDigests[0]
+            .split("@")[1]
+            .replace("sha256:", ""),
+          type: "container",
+          purl: "pkg:oci/" + inspectData.RepoDigests[0],
+          _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
+        };
+        options.parentComponent["bom-ref"] = options.parentComponent.purl;
       }
+    } else {
+      options.parentComponent = createDefaultParentComponent(
+        path,
+        "container",
+        options
+      );
     }
     // Pass the entire export data about the image layers
     options.exportData = exportData;
