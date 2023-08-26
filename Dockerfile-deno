@@ -68,6 +68,7 @@ RUN set -e; \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
+    && python3 -m pip install --user pipenv poetry \
     && curl -fsSL https://deno.land/x/install/install.sh | sh \
     && deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen" \
     && curl -s "https://get.sdkman.io" | bash \
@@ -122,7 +123,6 @@ RUN set -e; \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
     && mv composer.phar /usr/local/bin/composer \
-    && python3 -m pip install --user pipenv poetry \
     && chmod a-w -R /opt \
     && rm -rf /var/cache/yum \
     && microdnf clean all
