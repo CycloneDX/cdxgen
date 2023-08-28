@@ -67,6 +67,7 @@ RUN set -e; \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
+    && python3 -m pip install --user pipenv poetry \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \
@@ -119,9 +120,7 @@ RUN set -e; \
     && pecl install timezonedb \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
     && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
-    && mv composer.phar /usr/local/bin/composer \
-    && python3 -m pip install --user pipenv poetry
-
+    && mv composer.phar /usr/local/bin/composer
 COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && npm install --omit=dev \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen \

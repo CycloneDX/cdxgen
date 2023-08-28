@@ -376,7 +376,7 @@ cdxgen -t os
 
 This feature is powered by osquery which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
 
-## Generating component evidence
+## Generating SaaSBoM and component evidences
 
 See [evinse mode](./ADVANCED.md) in the advanced documentation.
 
