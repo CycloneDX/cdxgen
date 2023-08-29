@@ -3291,7 +3291,7 @@ export const getDartMetadata = async function (pkgList) {
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
-        console.log('Querying ${PUB_DEV_URL} for ${p.name}');
+        console.log(`Querying ${PUB_DEV_URL} for ${p.name}`);
       }
       const res = await cdxgenAgent.get(PUB_PACKAGES_URL + p.name, {
         responseType: "json",
@@ -3311,7 +3311,7 @@ export const getDartMetadata = async function (pkgList) {
             if (pubspec.homepage) {
               p.homepage = { url: pubspec.homepage };
             }
-            p.license = '${PUB_DEV_URL}/packages/${p.name}/license';
+            p.license = `${PUB_DEV_URL}/packages/${p.name}/license`;
             cdepList.push(p);
             break;
           }
