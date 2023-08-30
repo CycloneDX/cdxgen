@@ -22,9 +22,29 @@
     "description": "Retrieves the list of addons for Firefox in the target system.",
     "purlType": "swid"
   },
-  "backdoored_python_packages": {
-    "query": "select name as package_name, version as package_version, path as package_path from python_packages where package_name = 'acqusition' or package_name = 'apidev-coop' or package_name = 'bzip' or package_name = 'crypt' or package_name = 'django-server' or package_name = 'pwd' or package_name = 'setup-tools' or package_name = 'telnet' or package_name = 'urlib3' or package_name = 'urllib';",
-    "description": "Watches for the backdoored Python packages installed on system.",
+  "browser_plugins": {
+    "query": "select browser_plugins.* from users join browser_plugins using (uid);",
+    "description": "Retrieves the list of C/NPAPI browser plugin in the target system.",
+    "purlType": "swid"
+  },
+  "ie_extensions": {
+    "query": "select ie_extensions.* from users join ie_extensions using (uid);",
+    "description": "Retrieves the list of extensions for IE in the target system.",
+    "purlType": "swid"
+  },
+  "opera_extensions": {
+    "query": "select opera_extensions.* from users join opera_extensions using (uid);",
+    "description": "Retrieves the list of extensions for opera in the target system.",
+    "purlType": "swid"
+  },
+  "safari_extensions": {
+    "query": "select safari_extensions.* from users join safari_extensions using (uid);",
+    "description": "Retrieves the list of extensions for safari in the target system.",
+    "purlType": "swid"
+  },
+  "python_packages": {
+    "query": "select * from python_packages;",
+    "description": "Python packages installed on system.",
     "purlType": "pypi"
   },
   "windows_programs": {
@@ -123,7 +143,16 @@
   "chocolatey_packages": {
     "query": "SELECT * FROM chocolatey_packages;",
     "description": "List all chocolatey_packages.",
-    "purlType": "swid",
-    "componentType": "data"
+    "purlType": "chocolatey"
+  },
+  "npm_packages": {
+    "query": "SELECT * FROM npm_packages;",
+    "description": "List all npm_packages.",
+    "purlType": "npm"
+  },
+  "atom_packages": {
+    "query": "SELECT * FROM atom_packages;",
+    "description": "List all atom_packages.",
+    "purlType": "atom"
   }
 }

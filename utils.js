@@ -4800,6 +4800,7 @@ export const convertOSQueryResults = function (
       }
       const description =
         res.description ||
+        res.summary ||
         res.arguments ||
         res.device ||
         res.codename ||
@@ -4812,13 +4813,19 @@ export const convertOSQueryResults = function (
       if (!name && results.length === 1 && queryObj.name) {
         name = queryObj.name;
       }
+      let qualifiers = undefined;
+      if (res.identifying_number && res.identifying_number.length) {
+        qualifiers = {
+          tag_id: res.identifying_number.replace("{", "").replace("}", "")
+        };
+      }
       if (name) {
         const purl = new PackageURL(
           queryObj.purlType || "swid",
           group,
           name,
           version || "",
-          undefined,
+          qualifiers,
           subpath
         ).toString();
         const apkg = {
