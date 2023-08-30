@@ -4800,6 +4800,7 @@ export const convertOSQueryResults = function (
       }
       const description =
         res.description ||
+        res.summary ||
         res.arguments ||
         res.device ||
         res.codename ||
