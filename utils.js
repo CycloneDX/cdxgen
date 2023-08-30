@@ -4812,10 +4812,6 @@ export const convertOSQueryResults = function (
       if (!name && results.length === 1 && queryObj.name) {
         name = queryObj.name;
       }
-      if (queryObj.name === "win_version" && !name.startsWith("Microsoft")) {
-        name = "Microsoft ".concat(name);
-        publisher = "Microsoft";
-      }
       if (name) {
         const purl = new PackageURL(
           queryObj.purlType || "swid",
