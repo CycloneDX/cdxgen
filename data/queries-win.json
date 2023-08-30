@@ -1,6 +1,6 @@
 {
   "win_version": {
-    "query": "select tb1.name, tb1.build_version, (case when (arch like '%-bit') then concat('x', replace(arch,'-bit', '')) else arch end) as arch, 'Microsoft' as publisher, tb2.version from (select name, version as build_version, arch from os_version) tb1,(select data as version from registry where path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DisplayVersion') tb2;",
+    "query": "select tb1.name, concat(tb1.build, '.', tb3.UBR) as build, (case when (arch like '%-bit') then concat('x', replace(arch,'-bit', '')) else arch end) as arch, 'Microsoft' as publisher, tb2.version from (select name, version as build, arch from os_version) tb1, (select data as version from registry where path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DisplayVersion') tb2, (select data as UBR from registry where path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\UBR') tb3;",
     "name": "win_version",
     "description": "Retrieves the name, version number, build version, and arch of the target Windows system.",
     "purlType": "swid",
