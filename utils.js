@@ -3285,14 +3285,15 @@ export const getCratesMetadata = async function (pkgList) {
  * @param {Array} pkgList Package list
  */
 export const getDartMetadata = async function (pkgList) {
-  const PUB_DEV_URL = "https://pub.dev/api/packages/";
+  const PUB_DEV_URL = process.env.PUB_DEV_URL || "https://pub.dev";
+  const PUB_PACKAGES_URL = PUB_DEV_URL + "/api/packages/";
   const cdepList = [];
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
-        console.log(`Querying pub.dev for ${p.name}`);
+        console.log(`Querying ${PUB_DEV_URL} for ${p.name}`);
       }
-      const res = await cdxgenAgent.get(PUB_DEV_URL + p.name, {
+      const res = await cdxgenAgent.get(PUB_PACKAGES_URL + p.name, {
         responseType: "json",
         headers: {
           Accept: "application/vnd.pub.v2+json"
@@ -3310,7 +3311,7 @@ export const getDartMetadata = async function (pkgList) {
             if (pubspec.homepage) {
               p.homepage = { url: pubspec.homepage };
             }
-            p.license = "https://pub.dev/packages/" + p.name + "/license";
+            p.license = `${PUB_DEV_URL}/packages/${p.name}/license`;
             cdepList.push(p);
             break;
           }
@@ -4764,49 +4765,90 @@ export const convertOSQueryResults = function (
   const pkgList = [];
   if (results && results.length) {
     for (const res of results) {
-      if (res.version) {
-        const version = res.version;
-        let name = res.name || res.device_id;
-        const group = "";
-        const subpath = res.path || res.admindir || res.source;
-        const publisher = res.maintainer || res.creator;
-        let scope = undefined;
-        const compScope = res.priority;
-        if (["required", "optional", "excluded"].includes(compScope)) {
-          scope = compScope;
+      const version =
+        res.version ||
+        res.hotfix_id ||
+        res.hardware_version ||
+        res.pid ||
+        res.subject_key_id ||
+        res.interface ||
+        res.instance_id;
+      let name =
+        res.name ||
+        res.device_id ||
+        res.hotfix_id ||
+        res.uuid ||
+        res.serial ||
+        res.address ||
+        res.ami_id;
+      const group = "";
+      const subpath = res.path || res.admindir || res.source;
+      let publisher =
+        res.publisher ||
+        res.maintainer ||
+        res.creator ||
+        res.manufacturer ||
+        res.provider ||
+        "";
+      if (publisher === "null") {
+        publisher = "";
+      }
+      let scope = undefined;
+      const compScope = res.priority;
+      if (["required", "optional", "excluded"].includes(compScope)) {
+        scope = compScope;
+      }
+      const description =
+        res.description ||
+        res.arguments ||
+        res.device ||
+        res.codename ||
+        res.section ||
+        res.status ||
+        res.identifier ||
+        res.components ||
+        "";
+      // Re-use the name from query obj
+      if (!name && results.length === 1 && queryObj.name) {
+        name = queryObj.name;
+      }
+      if (queryObj.name === "win_version" && !name.startsWith("Microsoft")) {
+        name = "Microsoft ".concat(name);
+        publisher = "Microsoft";
+      }
+      if (name) {
+        const purl = new PackageURL(
+          queryObj.purlType || "swid",
+          group,
+          name,
+          version || "",
+          undefined,
+          subpath
+        ).toString();
+        const apkg = {
+          name,
+          group,
+          version: version || "",
+          description,
+          publisher,
+          "bom-ref": decodeURIComponent(purl),
+          purl,
+          scope,
+          type: queryObj.componentType
+        };
+        const props = [{ name: "cdx:osquery:category", value: queryCategory }];
+        for (const k of Object.keys(res).filter(
+          (p) => !["name", "version", "description", "publisher"].includes(p)
+        )) {
+          if (res[k] && res[k] !== "null") {
+            props.push({
+              name: k,
+              value: res[k]
+            });
+          }
         }
-        const description =
-          res.description ||
-          res.arguments ||
-          res.device ||
-          res.codename ||
-          res.section ||
-          res.status ||
-          res.identifier ||
-          res.components;
-        // Re-use the name from query obj
-        if (!name && results.length === 1 && queryObj.name) {
-          name = queryObj.name;
-        }
-        if (name && version) {
-          const purl = new PackageURL(
-            queryObj.purlType || "swid",
-            group,
-            name,
-            version,
-            undefined,
-            subpath
-          );
-          pkgList.push({
-            name,
-            group,
-            version,
-            description,
-            publisher,
-            purl,
-            scope
-          });
-        }
+        apkg.properties = props;
+        pkgList.push(apkg);
       }
     }
   }

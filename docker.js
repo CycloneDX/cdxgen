@@ -343,12 +343,23 @@ export const getImage = async (fullImageName) => {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
+      if (
+        result.stderr &&
+        result.stderr.includes("docker daemon is not running")
+      ) {
+        console.log(
+          "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on."
+        );
+      } else {
+        console.log(result.stderr);
+      }
       return localData;
     } else {
       result = spawnSync("docker", ["inspect", fullImageName], {
         encoding: "utf-8"
       });
       if (result.status !== 0 || result.error) {
+        console.log(result.stderr);
         return localData;
       } else {
         try {
@@ -363,6 +374,7 @@ export const getImage = async (fullImageName) => {
           }
         } catch (err) {
           // continue regardless of error
+          console.log(err);
         }
       }
     }
@@ -459,7 +471,12 @@ export const extractTar = async (fullImageName, dir) => {
     );
     return true;
   } catch (err) {
-    if (err.code !== "TAR_BAD_ARCHIVE") {
+    if (err.code === "EPERM" && err.syscall === "symlink") {
+      console.log(
+        "Please run cdxgen from a powershell terminal with admin privileges to create symlinks."
+      );
+      console.log(err);
+    } else if (err.code !== "TAR_BAD_ARCHIVE") {
       console.log(
         `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`
       );

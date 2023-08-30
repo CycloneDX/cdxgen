@@ -17,6 +17,7 @@ const isWin = _platform() === "win32";
 
 let platform = _platform();
 let extn = "";
+let pluginsBinSuffix = "";
 if (platform == "win32") {
   platform = "windows";
   extn = ".exe";
@@ -29,6 +30,13 @@ switch (arch) {
     break;
   case "x64":
     arch = "amd64";
+    break;
+  case "arm64":
+    pluginsBinSuffix = "-arm64";
+    break;
+  case "ppc64":
+    arch = "ppc64le";
+    pluginsBinSuffix = "-ppc64";
     break;
 }
 
@@ -46,14 +54,20 @@ if (
 if (
   !CDXGEN_PLUGINS_DIR &&
   existsSync(
-    join(dirName, "node_modules", "@cyclonedx", "cdxgen-plugins-bin", "plugins")
+    join(
+      dirName,
+      "node_modules",
+      "@cyclonedx",
+      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      "plugins"
+    )
   ) &&
   existsSync(
     join(
       dirName,
       "node_modules",
       "@cyclonedx",
-      "cdxgen-plugins-bin",
+      "cdxgen-plugins-bin" + pluginsBinSuffix,
       "plugins",
       "goversion"
     )
@@ -63,7 +77,7 @@ if (
     dirName,
     "node_modules",
     "@cyclonedx",
-    "cdxgen-plugins-bin",
+    "cdxgen-plugins-bin" + pluginsBinSuffix,
     "plugins"
   );
 }
@@ -88,7 +102,7 @@ if (!CDXGEN_PLUGINS_DIR) {
   const globalPlugins = join(
     globalNodePath,
     "@cyclonedx",
-    "cdxgen-plugins-bin",
+    "cdxgen-plugins-bin" + pluginsBinSuffix,
     "plugins"
   );
   if (existsSync(globalPlugins)) {
@@ -323,15 +337,21 @@ export const getOSPackages = (src) => {
         }
       }
       const osReleaseData = {};
-      // Let's try to read the os-release file
-      if (existsSync(join(src, "usr", "lib", "os-release"))) {
+      let osReleaseFile = undefined;
+      // Let's try to read the os-release file from various locations
+      if (existsSync(join(src, "etc", "os-release"))) {
+        osReleaseFile = join(src, "etc", "os-release");
+      } else if (existsSync(join(src, "usr", "lib", "os-release"))) {
+        osReleaseFile = join(src, "usr", "lib", "os-release");
+      }
+      if (osReleaseFile) {
         const osReleaseInfo = readFileSync(
           join(src, "usr", "lib", "os-release"),
           "utf-8"
         );
         if (osReleaseInfo) {
           osReleaseInfo.split("\n").forEach((l) => {
-            if (l.includes("=")) {
+            if (!l.startsWith("#") && l.includes("=")) {
               const tmpA = l.split("=");
               osReleaseData[tmpA[0]] = tmpA[1].replace(/"/g, "");
             }
@@ -592,7 +612,7 @@ export const executeOsQuery = (query) => {
     }
     const args = ["--json", query];
     if (DEBUG_MODE) {
-      console.log("Execuing", OSQUERY_BIN, args.join(" "));
+      console.log("Executing", OSQUERY_BIN, args.join(" "));
     }
     const result = spawnSync(OSQUERY_BIN, args, {
       encoding: "utf-8"
@@ -607,7 +627,17 @@ export const executeOsQuery = (query) => {
       if (stdout) {
         const cmdOutput = Buffer.from(stdout).toString();
         if (cmdOutput !== "") {
-          return JSON.parse(cmdOutput);
+          try {
+            return JSON.parse(cmdOutput);
+          } catch (err) {
+            // ignore
+            if (DEBUG_MODE) {
+              console.log("Unable to parse the output from query", query);
+              console.log(
+                "This could be due to the amount of data returned or the query being invalid for the given platform."
+              );
+            }
+          }
         }
         return undefined;
       }

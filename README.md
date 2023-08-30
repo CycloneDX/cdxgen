@@ -4,7 +4,7 @@
 
 cdxgen is a cli tool, library, [REPL](./ADVANCED.md) and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
 
-When used with plugins, cdxgen could generate an SBoM for Linux docker images and even VMs running Linux or Windows operating system. cdxgen also includes a tool called `evinse` that can generate component evidences for some languages.
+When used with plugins, cdxgen could generate an OBoM for Linux docker images and even VMs running Linux or Windows operating system. cdxgen also includes a tool called `evinse` that can generate component evidences and SaaSBoM for some languages.
 
 NOTE:
 
@@ -127,9 +127,7 @@ Options:
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
                                                        [boolean] [default: true]
-  -p, --print                  Print the SBoM as a table with tree. Defaults to
-                               true if output file is not specified with -o
-                                                                       [boolean]
+  -p, --print                  Print the SBoM as a table with tree.    [boolean]
   -c, --resolve-class          Resolve class names for packages. jars only for n
                                ow.                                     [boolean]
       --deep                   Perform deep searches for components. Useful whil
@@ -366,15 +364,15 @@ systemctl --user start podman.socket
 podman system service -t 0 &
 ```
 
-### Generate SBoM for a live system
+### Generate OBoM for a live system
 
-You can use cdxgen to generate SBoM for a live system or a VM for compliance and vulnerability management purposes by passing the argument `-t os`.
+You can use cdxgen to generate an OBoM for a live system or a VM for compliance and vulnerability management purposes by passing the argument `-t os`. Windows and Linux operating systems are supported in this mode.
 
 ```shell
 cdxgen -t os
 ```
 
-This feature is powered by osquery which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components.
+This feature is powered by osquery which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components of various types such as operating-system, device-drivers, files, and data.
 
 ## Generating SaaSBoM and component evidences
 
