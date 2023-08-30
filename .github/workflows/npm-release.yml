@@ -6,6 +6,7 @@ on:
       - master
     tags:
     - 'v*'
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
@@ -61,6 +62,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        file: ci/Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
@@ -77,10 +79,27 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        file: Dockerfile-deno
+        file: ci/Dockerfile-deno
         platforms: linux/amd64
         push: true
         tags: ${{ steps.meta2.outputs.tags }}
         labels: ${{ steps.meta2.outputs.labels }}
         cache-from: type=gha,scope=cdxgen-deno
         cache-to: type=gha,mode=max,scope=cdxgen-deno
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta3
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ghcr.io/cyclonedx/cdxgen-ppc64
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: ci/Dockerfile-ppc64
+        platforms: linux/ppc64le
+        push: true
+        tags: ${{ steps.meta3.outputs.tags }}
+        labels: ${{ steps.meta3.outputs.labels }}
+        cache-from: type=gha,scope=cdxgen-ppc64
+        cache-to: type=gha,mode=max,scope=cdxgen-ppc64

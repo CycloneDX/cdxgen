@@ -41,8 +41,7 @@ const args = yargs(hideBin(process.argv))
   .option("print", {
     alias: "p",
     type: "boolean",
-    description:
-      "Print the SBoM as a table with tree. Defaults to true if output file is not specified with -o"
+    description: "Print the SBoM as a table with tree."
   })
   .option("resolve-class", {
     alias: "c",
@@ -229,7 +228,6 @@ const checkPermissions = (filePath) => {
   const bomNSData = (await createBom(filePath, options)) || {};
   if (!args.output) {
     args.output = "bom.json";
-    args.print = true;
   }
   if (
     args.output &&

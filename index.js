@@ -120,11 +120,12 @@ import {
   executeOsQuery,
   getOSPackages
 } from "./binary.js";
-const osQueries = JSON.parse(
-  readFileSync(join(dirName, "data", "queries.json"))
-);
 
 const isWin = _platform() === "win32";
+
+const osQueries = !isWin
+  ? JSON.parse(readFileSync(join(dirName, "data", "queries.json")))
+  : JSON.parse(readFileSync(join(dirName, "data", "queries-win.json")));
 
 import { table } from "table";
 
@@ -660,7 +661,6 @@ function addComponent(
       return;
     }
     const licenses = pkg.licenses || getLicenses(pkg, format);
-
     const purl =
       pkg.purl ||
       new PackageURL(
@@ -755,8 +755,22 @@ function addComponent(
  * word for it, otherwise, identify the module as a 'library'.
  */
 function determinePackageType(pkg) {
-  if (pkg.type === "application") {
-    return "application";
+  // Retain the exact component type in certain cases.
+  if (
+    [
+      "application",
+      "container",
+      "platform",
+      "operating-system",
+      "device",
+      "device-driver",
+      "firmware",
+      "file",
+      "machine-learning-model",
+      "data"
+    ].includes(pkg.type)
+  ) {
+    return pkg.type;
   }
   if (pkg.purl) {
     try {
@@ -3144,34 +3158,44 @@ export const createCloudBuildBom = (path, options) => {
 };
 
 /**
- * Function to create bom string for the current OS using osquery
+ * Function to create obom string for the current OS using osquery
  *
  * @param path to the project
  * @param options Parse options from the cli
  */
 export const createOSBom = (path, options) => {
   console.warn(
-    "About to generate SBoM for the current OS installation. This would take several minutes ..."
+    "About to generate OBoM for the current OS installation. This will take several minutes ..."
   );
   let pkgList = [];
   let bomData = {};
+  let parentComponent = {};
   for (const queryCategory of Object.keys(osQueries)) {
     const queryObj = osQueries[queryCategory];
     const results = executeOsQuery(queryObj.query);
     const dlist = convertOSQueryResults(queryCategory, queryObj, results);
     if (dlist && dlist.length) {
-      pkgList = pkgList.concat(dlist);
+      if (!Object.keys(parentComponent).length) {
+        parentComponent = dlist.splice(0, 1)[0];
+      }
+      pkgList = pkgList.concat(
+        dlist.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        })
+      );
     }
   } // for
   if (pkgList.length) {
     bomData = buildBomNSData(options, pkgList, "", {
       src: "",
-      filename: ""
+      filename: "",
+      parentComponent
     });
   }
   options.bomData = bomData;
   options.multiProject = true;
   options.installDeps = false;
+  options.parentComponent = parentComponent;
   // Force the project type to os
   options.projectType = "os";
   options.lastWorkingDir = undefined;
@@ -4496,7 +4520,8 @@ export const createMultiXBom = async (pathList, options) => {
     parentComponent.components = trimComponents(parentSubComponents, "json");
     if (
       parentComponent.components.length == 1 &&
-      parentComponent.components[0].name == parentComponent.name
+      parentComponent.components[0].name == parentComponent.name &&
+      !parentComponent.purl.startsWith("pkg:container")
     ) {
       parentComponent = parentComponent.components[0];
       delete parentComponent.components;

@@ -138,6 +138,8 @@ Below are some example commands to create an SBoM for a spring application and p
 .print
 .search spring
 .query components[name ~> /spring/ and scope = "required"]
+// Supplier names
+.query $distinct(components.supplier.name)
 .sort name
 .sort components^(>name)
 .update | components[name ~> /spring/] | {'publisher': "foo"} |
@@ -150,3 +152,21 @@ Repl history will get persisted under `$HOME/.config/.cdxgen` directory. To over
 ## Mixed Java Projects
 
 If a java project use both maven and gradle, maven is selected for SBoM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
+
+## Generating container SBoM on Windows
+
+cdxgen supports generating container SBoM for linux images on Windows. Follow the steps listed below.
+
+- Ensure cdxgen-plugins-bin > 1.4.0 is installed.
+
+```shell
+npm install -g @cyclonedx/cdxgen-plugins-bin
+```
+
+- Run "Docker for Desktop" as administrator with 'Exposing daemon on TCP without TLS' setting turned on.
+- Run powershell terminal as administrator. Without this, cdxgen would fail while extracting symlinks.
+- Invoke cdxgen with `-t docker`
+
+```shell
+cdxgen -t docker -o bom.json <image name>
+```

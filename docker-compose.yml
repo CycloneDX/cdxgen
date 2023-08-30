@@ -1,7 +1,9 @@
 version: "3.9"
 services:
   cdxgen:
-    build: .
+    build:
+      dockerfile: ./ci/Dockerfile
+      context: .
     # image: ghcr.io/cyclonedx/cdxgen
     ports:
       - "9090:9090"
