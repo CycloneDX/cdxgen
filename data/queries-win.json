@@ -1,14 +1,8 @@
 {
   "win_version": {
-    "query": "select MAX(CASE WHEN (name = 'DisplayVersion') then data else null end) as version, MAX(CASE WHEN (name = 'ProductName') then data else null end) as 'name' from (select * from registry where path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DisplayVersion' UNION select * from registry where path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\ProductName');",
-    "name": "win_registry",
-    "description": "Retrieves the four character version number of the target Windows system.",
-    "purlType": "swid",
-    "componentType": "operating-system"
-  },
-  "os_version": {
-    "query": "select * from os_version;",
-    "description": "Retrieves the current version of the running osquery in the target system and where the configuration was loaded from.",
+    "query": "select tb1.name, tb1.build_version, (case when (arch like '%-bit') then concat('x', replace(arch,'-bit', '')) else arch end) as arch, tb2.version from (select name, version as build_version, arch from os_version) tb1,(select data as version from registry where path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DisplayVersion') tb2;",
+    "name": "win_version",
+    "description": "Retrieves the name, version number, build version, and arch of the target Windows system.",
     "purlType": "swid",
     "componentType": "operating-system"
   },
