@@ -40,6 +40,25 @@ if (args.version) {
 }
 
 const bomJson = JSON.parse(fs.readFileSync(args.input, "utf8"));
+let hasInvalidComp = false;
+// Validate any component signature
+for (const comp of bomJson.components) {
+  if (comp.signature) {
+    const compSignature = comp.signature.value;
+    const validationResult = jws.verify(
+      compSignature,
+      comp.signature.algorithm,
+      fs.readFileSync(args.publicKey, "utf8")
+    );
+    if (!validationResult) {
+      console.log(`${comp["bom-ref"]} signature is invalid!`);
+      hasInvalidComp = true;
+    }
+  }
+}
+if (hasInvalidComp) {
+  process.exit(1);
+}
 const bomSignature =
   bomJson.signature && bomJson.signature.value
     ? bomJson.signature.value
