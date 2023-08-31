@@ -122,12 +122,6 @@
     "purlType": "swid",
     "componentType": "data"
   },
-  "pipes": {
-    "query": "SELECT processes.path, processes.cmdline, processes.uid, processes.on_disk, pipes.name, pid FROM pipes JOIN processes USING (pid);",
-    "description": "Named and Anonymous pipes.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
   "etc_hosts": {
     "query": "SELECT * FROM etc_hosts;",
     "description": "List the contents of the Windows hosts file.",
@@ -154,5 +148,53 @@
     "query": "SELECT * FROM atom_packages;",
     "description": "List all atom_packages.",
     "purlType": "atom"
+  },
+  "startup_items": {
+    "query": "SELECT * FROM startup_items;",
+    "description": "List all startup_items.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "routes": {
+    "query": "SELECT * FROM routes;",
+    "description": "List all routes.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "listening_ports": {
+    "query": "SELECT * FROM listening_ports;",
+    "description": "List all listening_ports.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "processes": {
+    "query": "SELECT * FROM processes;",
+    "description": "List all processes.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "process_open_sockets": {
+    "query": "SELECT * FROM process_open_sockets;",
+    "description": "List all process_open_sockets.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "windows_update_history": {
+    "query": "SELECT * FROM windows_update_history;",
+    "description": "List all windows_update_history.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "windows_optional_features": {
+    "query": "SELECT * FROM windows_optional_features;",
+    "description": "List all windows_optional_features.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "windows_firewall_rules": {
+    "query": "SELECT * FROM windows_firewall_rules;",
+    "description": "List all windows_firewall_rules.",
+    "purlType": "swid",
+    "componentType": "data"
   }
 }

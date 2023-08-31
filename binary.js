@@ -615,7 +615,8 @@ export const executeOsQuery = (query) => {
       console.log("Executing", OSQUERY_BIN, args.join(" "));
     }
     const result = spawnSync(OSQUERY_BIN, args, {
-      encoding: "utf-8"
+      encoding: "utf-8",
+      maxBuffer: 50 * 1024 * 1024
     });
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE && result.error) {

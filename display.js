@@ -9,7 +9,7 @@ const SYMBOLS_ANSI = {
   VERTICAL: "│ "
 };
 
-const MAX_TREE_DEPTH = 3;
+const MAX_TREE_DEPTH = 6;
 
 export const printTable = (bomJson) => {
   const data = [["Group", "Name", "Version", "Scope"]];
@@ -160,13 +160,19 @@ export const printDependencyTree = (bomJson) => {
   const shownList = [];
   const treeGraphics = [];
   recursePrint(depMap, dependencies, 0, shownList, treeGraphics);
-  const config = {
-    header: {
-      alignment: "center",
-      content: "Dependency Tree\nGenerated with \u2665 by cdxgen"
-    }
-  };
-  console.log(table([[treeGraphics.join("\n")]], config));
+  // table library is too slow for display large lists.
+  // Fixes #491
+  if (treeGraphics.length < 100) {
+    const config = {
+      header: {
+        alignment: "center",
+        content: "Dependency Tree\nGenerated with \u2665 by cdxgen"
+      }
+    };
+    console.log(table([[treeGraphics.join("\n")]], config));
+  } else {
+    console.log(treeGraphics.join("\n"));
+  }
 };
 
 const levelPrefix = (level, isLast) => {

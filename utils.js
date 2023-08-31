@@ -329,21 +329,21 @@ export const getNpmMetadata = async function (pkgList) {
 const _getDepPkgList = async function (
   pkgLockFile,
   pkgList,
-  dependenciesList,
   depKeys,
-  pkg
+  pkg,
+  versionCache
 ) {
-  const pkgDependencies =
-    pkg.lockfileVersion && pkg.lockfileVersion >= 3
-      ? pkg.packages
-      : pkg.dependencies;
-  const versionCache = {};
+  const pkgDependencies = {
+    ...(pkg.packages || {}),
+    ...(pkg.dependencies || {})
+  };
   if (pkg.packages) {
     for (const k in pkg.packages) {
       if (k === "") {
         continue;
       }
       const pl = pkg.packages[k];
+      versionCache[k] = pl.version;
       versionCache[k.replaceAll("node_modules/", "")] = pl.version;
     }
   }
@@ -355,7 +355,13 @@ const _getDepPkgList = async function (
         continue;
       }
       const name = k;
-      const version = pkgDependencies[name].version;
+      let version = pkgDependencies[name].version;
+      if (!version && versionCache[k]) {
+        version = versionCache[k];
+      }
+      if (!version && pkgDependencies["node_modules/" + name]) {
+        version = pkgDependencies["node_modules/" + name].version;
+      }
       const purl = new PackageURL(
         "npm",
         "",
@@ -415,32 +421,20 @@ const _getDepPkgList = async function (
           const deppurlString = decodeURIComponent(deppurl.toString());
           deplist.push(deppurlString);
         }
-        if (!depKeys[purlString]) {
-          dependenciesList.push({
-            ref: purlString,
-            dependsOn: deplist
-          });
-          depKeys[purlString] = true;
-        }
+        depKeys[purlString] = (depKeys[purlString] || []).concat(deplist);
         if (pkg.lockfileVersion && pkg.lockfileVersion >= 3) {
           // Do not recurse for lock file v3 and above
         } else {
           await _getDepPkgList(
             pkgLockFile,
             pkgList,
-            dependenciesList,
             depKeys,
-            pkgDependencies[name]
+            pkgDependencies[name],
+            versionCache
           );
         }
-      } else {
-        if (!depKeys[purlString]) {
-          dependenciesList.push({
-            ref: purlString,
-            dependsOn: []
-          });
-          depKeys[purlString] = true;
-        }
+      } else if (!depKeys[purlString]) {
+        depKeys[purlString] = [];
       }
     }
   }
@@ -519,6 +513,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
   const dependenciesList = [];
   const depKeys = {};
   let rootPkg = {};
+  const versionCache = {};
   if (!options) {
     options = {};
   }
@@ -612,10 +607,16 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     pkgList = await _getDepPkgList(
       pkgLockFile,
       pkgList,
-      dependenciesList,
       depKeys,
-      lockData
+      lockData,
+      versionCache
     );
+  }
+  for (const dk of Object.keys(depKeys)) {
+    dependenciesList.push({
+      ref: dk,
+      dependsOn: depKeys[dk] || []
+    });
   }
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
@@ -4769,6 +4770,7 @@ export const convertOSQueryResults = function (
         res.version ||
         res.hotfix_id ||
         res.hardware_version ||
+        res.port ||
         res.pid ||
         res.subject_key_id ||
         res.interface ||
@@ -4779,9 +4781,12 @@ export const convertOSQueryResults = function (
         res.hotfix_id ||
         res.uuid ||
         res.serial ||
+        res.pid ||
         res.address ||
-        res.ami_id;
-      const group = "";
+        res.ami_id ||
+        res.interface ||
+        res.client_app_id;
+      let group = "";
       const subpath = res.path || res.admindir || res.source;
       let publisher =
         res.publisher ||
@@ -4820,6 +4825,8 @@ export const convertOSQueryResults = function (
         };
       }
       if (name) {
+        name = name.replace(/ /g, "+");
+        group = group.replace(/ /g, "+");
         const purl = new PackageURL(
           queryObj.purlType || "swid",
           group,
@@ -6276,4 +6283,15 @@ export const addEvidenceForImports = (pkgList, allImports) => {
     }
   }
   return pkgList;
+};
+
+export const componentSorter = (a, b) => {
+  if (a && b) {
+    for (const k of ["bom-ref", "purl", "name"]) {
+      if (a[k] && b[k]) {
+        return a[k].localeCompare(b[k]);
+      }
+    }
+  }
+  return a.localeCompare(b);
 };

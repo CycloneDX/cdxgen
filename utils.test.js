@@ -1358,8 +1358,8 @@ test("parsePkgLock", async () => {
   });
   parsedList = await parsePkgLock("./test/data/package-lock-v2.json");
   deps = parsedList.pkgList;
-  expect(deps.length).toEqual(1467);
-  expect(parsedList.dependenciesList.length).toEqual(1280);
+  expect(deps.length).toEqual(5433);
+  expect(parsedList.dependenciesList.length).toEqual(1616);
   expect(deps[0]).toEqual({
     "bom-ref": "pkg:npm/flink-dashboard@2.0.0",
     group: "",
