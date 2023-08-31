@@ -2008,7 +2008,8 @@ export const guessLicenseId = function (content) {
  * @param {Array} pkgList Package list
  */
 export const getMvnMetadata = async function (pkgList) {
-  const MAVEN_CENTRAL_URL = process.env.MAVEN_CENTRAL_URL || "https://repo1.maven.org/maven2/";
+  const MAVEN_CENTRAL_URL =
+    process.env.MAVEN_CENTRAL_URL || "https://repo1.maven.org/maven2/";
   const ANDROID_MAVEN = "https://maven.google.com/";
   const cdepList = [];
   if (!pkgList || !pkgList.length) {
@@ -4824,7 +4825,7 @@ export const convertOSQueryResults = function (
           tag_id: res.identifying_number.replace("{", "").replace("}", "")
         };
       }
-      if (name) {
+      if (name && !name.includes("::")) {
         name = name.replace(/ /g, "+");
         group = group.replace(/ /g, "+");
         const purl = new PackageURL(

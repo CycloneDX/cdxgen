@@ -179,5 +179,41 @@
     "description": "List all startup_items.",
     "purlType": "swid",
     "componentType": "data"
+  },
+  "listening_ports": {
+    "query": "SELECT * FROM listening_ports;",
+    "description": "List all listening_ports.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "interface_addresses": {
+    "query": "SELECT * FROM interface_addresses;",
+    "description": "List all interface_addresses.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_container_ports": {
+    "query": "SELECT * FROM docker_container_ports;",
+    "description": "List all docker_container_ports.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_containers": {
+    "query": "SELECT * FROM docker_containers;",
+    "description": "List all docker_containers.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_networks": {
+    "query": "SELECT * FROM docker_networks;",
+    "description": "List all docker_networks.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_volumes": {
+    "query": "SELECT * FROM docker_volumes;",
+    "description": "List all docker_volumes.",
+    "purlType": "swid",
+    "componentType": "data"
   }
 }
