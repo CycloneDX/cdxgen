@@ -5204,11 +5204,18 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
       const jarname = jf;
-      const pomname =
+      let pomname =
         pomPathMap[basename(jf).replace(".jar", ".pom")] ||
         jarname.replace(".jar", ".pom");
       let pomData = undefined;
       let purl = undefined;
+      // In some cases, the pom name might be slightly different to the jar name
+      if (!existsSync(pomname)) {
+        const pomSearch = getAllFiles(dirname(jf), "*.pom");
+        if (pomSearch && pomSearch.length === 1) {
+          pomname = pomSearch[0];
+        }
+      }
       if (existsSync(pomname)) {
         pomData = parsePomXml(readFileSync(pomname, "utf-8"));
         if (pomData) {
@@ -5222,6 +5229,29 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
           );
           purl = purlObj.toString();
         }
+      } else if (jf.includes(join(".m2", "repository"))) {
+        // Let's try our best to construct a purl for .m2 cache entries of the form
+        // .m2/repository/org/apache/logging/log4j/log4j-web/3.0.0-SNAPSHOT/log4j-web-3.0.0-SNAPSHOT.jar
+        const tmpA = jf.split(join(".m2", "repository", ""));
+        if (tmpA && tmpA.length) {
+          let tmpJarPath = tmpA[tmpA.length - 1];
+          // This would yield log4j-web-3.0.0-SNAPSHOT.jar
+          const jarFileName = basename(tmpJarPath).replace(".jar", "");
+          let tmpDirParts = dirname(tmpJarPath).split(_sep);
+          // Retrieve the version
+          const jarVersion = tmpDirParts.pop();
+          // The result would form the group name
+          const jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          const purlObj = new PackageURL(
+            "maven",
+            jarGroupName,
+            jarFileName.replace(`-${jarVersion}`, ""),
+            jarVersion,
+            { type: "jar" },
+            null
+          );
+          purl = purlObj.toString();
+        }
       } else if (jf.includes(join(".gradle", "caches"))) {
         // Let's try our best to construct a purl for gradle cache entries of the form
         // .gradle/caches/modules-2/files-2.1/org.xmlresolver/xmlresolver/4.2.0/f4dbdaa83d636dcac91c9003ffa7fb173173fe8d/xmlresolver-4.2.0-data.jar
@@ -5229,7 +5259,7 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         if (tmpA && tmpA.length) {
           let tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield xmlresolver-4.2.0-data.jar
-          const jarFileName = basename(tmpJarPath);
+          const jarFileName = basename(tmpJarPath).replace(".jar", "");
           let tmpDirParts = dirname(tmpJarPath).split(_sep);
           // This would remove the hash from the end of the directory name
           tmpDirParts.pop();
@@ -5247,6 +5277,8 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
           );
           purl = purlObj.toString();
         }
+      } else {
+        console.log(jf, "more likely to be skipped");
       }
       if (DEBUG_MODE) {
         console.log(`Executing 'jar tf ${jf}'`);
@@ -5295,6 +5327,9 @@ export const convertJarNSToPackages = (jarNSMapping) => {
     }
     const name = pom.artifactId || purlObj.name;
     if (!name) {
+      console.warn(
+        `Unable to identify the metadata for ${purl}. This will be skipped.`
+      );
       continue;
     }
     const apackage = {
