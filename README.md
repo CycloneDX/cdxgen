@@ -292,6 +292,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | MVN_CMD                      | Set to override maven command                                                                                                        |
 | MVN_ARGS                     | Set to pass additional arguments such as profile or settings to maven                                                                |
 | MAVEN_HOME                   | Specify maven home                                                                                                                   |
+| MAVEN_CENTRAL_URL            | Specify URL of Maven Central for metadata fetching (e.g. when private repo is used)                                                  |
 | GRADLE_CACHE_DIR             | Specify gradle cache directory. Useful for class name resolving                                                                      |
 | GRADLE_MULTI_PROJECT_MODE    | Unused. Automatically handled                                                                                                        |
 | GRADLE_ARGS                  | Set to pass additional arguments such as profile or settings to gradle (all tasks). Eg: --configuration runtimeClassPath             |
