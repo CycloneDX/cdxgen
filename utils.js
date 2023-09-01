@@ -4825,9 +4825,9 @@ export const convertOSQueryResults = function (
           tag_id: res.identifying_number.replace("{", "").replace("}", "")
         };
       }
-      if (name && !name.includes("::")) {
-        name = name.replace(/ /g, "+");
-        group = group.replace(/ /g, "+");
+      if (name) {
+        name = name.replace(/ /g, "+").replace(/[:%]/g, "-");
+        group = group.replace(/ /g, "+").replace(/[:%]/g, "-");
         const purl = new PackageURL(
           queryObj.purlType || "swid",
           group,
@@ -5836,27 +5836,37 @@ export const executeAtom = (src, args) => {
   }
   const freeMemoryGB = Math.floor(freemem() / 1024 / 1024 / 1024);
   if (DEBUG_MODE) {
-    console.log("Execuing", ATOM_BIN, args.join(" "));
+    console.log("Executing", ATOM_BIN, args.join(" "));
   }
   const env = {
     ...process.env,
     JAVA_OPTS: `-Xms${freeMemoryGB}G -Xmx${freeMemoryGB}G`
   };
+  env.PATH = `${env.PATH}${_delimiter}${join(
+    dirNameStr,
+    "node_modules",
+    ".bin"
+  )}`;
   const result = spawnSync(ATOM_BIN, args, {
     cwd,
     encoding: "utf-8",
     timeout: TIMEOUT_MS,
     env
   });
-  if (
-    result.stderr &&
-    result.stderr.includes(
-      "has been compiled by a more recent version of the Java Runtime"
-    )
-  ) {
-    console.log(
-      "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image."
-    );
+  if (result.stderr) {
+    if (
+      result.stderr.includes(
+        "has been compiled by a more recent version of the Java Runtime"
+      )
+    ) {
+      console.log(
+        "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image."
+      );
+    } else if (result.stderr.includes("astgen")) {
+      console.warn(
+        "WARN: Unable to locate astgen command. Install atom globally using sudo npm install -g @appthreat/atom to resolve this issue."
+      );
+    }
   }
   if (DEBUG_MODE) {
     if (result.stdout) {
@@ -5866,7 +5876,7 @@ export const executeAtom = (src, args) => {
       console.log(result.stderr);
     }
   }
-  return true;
+  return !result.error;
 };
 
 /**

@@ -196,7 +196,13 @@ export const createSlice = (purlOrLanguage, filePath, sliceType = "usages") => {
     args.push(process.env.ATOM_SLICE_DEPTH);
   }
   args.push(path.resolve(filePath));
-  executeAtom(filePath, args);
+  const result = executeAtom(filePath, args);
+  if (!result || !fs.existsSync(slicesFile)) {
+    console.warn(`Unable to generate ${sliceType} slice using atom.`);
+    console.log(
+      "Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
+    );
+  }
   return {
     tempDir,
     slicesFile,
