@@ -1198,7 +1198,8 @@ export const createJavaBom = async (path, options) => {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
-          timeout: TIMEOUT_MS
+          timeout: TIMEOUT_MS,
+          maxBuffer: 50 * 1024 * 1024
         });
         // Check if the cyclonedx plugin created the required bom.xml file
         // Sometimes the plugin fails silently for complex maven projects

@@ -196,7 +196,13 @@ export const createSlice = (purlOrLanguage, filePath, sliceType = "usages") => {
     args.push(process.env.ATOM_SLICE_DEPTH);
   }
   args.push(path.resolve(filePath));
-  executeAtom(filePath, args);
+  const result = executeAtom(filePath, args);
+  if (!result || !fs.existsSync(slicesFile)) {
+    console.warn(`Unable to generate ${sliceType} slice using atom.`);
+    console.log(
+      "Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
+    );
+  }
   return {
     tempDir,
     slicesFile,
@@ -363,15 +369,11 @@ export const parseObjectSlices = async (
     ) {
       continue;
     }
-    const locationKey = `${slice.fileName}${
-      slice.lineNumber ? "#" + slice.lineNumber : ""
-    }`;
     await parseSliceUsages(
       language,
       userDefinedTypesMap,
       slice,
       dbObjMap,
-      locationKey,
       purlLocationMap,
       purlImportsMap
     );
@@ -392,7 +394,6 @@ export const parseObjectSlices = async (
  * @param {object} userDefinedTypesMap User Defined types in the application
  * @param {array} usages Usages array for each objectSlice
  * @param {object} dbObjMap DB Models
- * @param {string} locationKey Filename with line number to be used in occurrences evidence
  * @param {object} purlLocationMap Object to track locations where purls are used
  * @param {object} purlImportsMap Object to track package urls and their import aliases
  * @returns
@@ -402,7 +403,6 @@ export const parseSliceUsages = async (
   userDefinedTypesMap,
   slice,
   dbObjMap,
-  locationKey,
   purlLocationMap,
   purlImportsMap
 ) => {
@@ -411,7 +411,6 @@ export const parseSliceUsages = async (
     return undefined;
   }
   const fileName = slice.fileName;
-  const purlsSet = new Set();
   const typesToLookup = new Set();
   const lKeyOverrides = {};
   for (const ausage of usages) {
@@ -441,7 +440,7 @@ export const parseSliceUsages = async (
         }
         const maybeClassType = getClassTypeFromSignature(language, atype[1]);
         typesToLookup.add(maybeClassType);
-        if (language == "javascript" && ausageLine) {
+        if (ausageLine) {
           addToOverrides(lKeyOverrides, maybeClassType, fileName, ausageLine);
         }
       }
@@ -460,7 +459,7 @@ export const parseSliceUsages = async (
         if (!acall?.resolvedMethod.includes("(")) {
           typesToLookup.add(acall?.resolvedMethod);
           // Javascript calls can be resolved to a precise line number only from the call nodes
-          if (language == "javascript" && acall.lineNumber) {
+          if (acall.lineNumber) {
             addToOverrides(
               lKeyOverrides,
               acall?.resolvedMethod,
@@ -474,7 +473,7 @@ export const parseSliceUsages = async (
           acall?.resolvedMethod
         );
         typesToLookup.add(maybeClassType);
-        if (language == "javascript" && acall.lineNumber) {
+        if (acall.lineNumber) {
           addToOverrides(
             lKeyOverrides,
             maybeClassType,
@@ -487,7 +486,7 @@ export const parseSliceUsages = async (
         if (!isFilterableType(language, userDefinedTypesMap, aparamType)) {
           if (!aparamType.includes("(")) {
             typesToLookup.add(aparamType);
-            if (language == "javascript" && acall.lineNumber) {
+            if (acall.lineNumber) {
               if (aparamType.includes(":")) {
                 typesToLookup.add(aparamType.split("::")[0].replace(/:/g, "/"));
               }
@@ -504,7 +503,7 @@ export const parseSliceUsages = async (
             aparamType
           );
           typesToLookup.add(maybeClassType);
-          if (language == "javascript" && acall.lineNumber) {
+          if (acall.lineNumber) {
             addToOverrides(
               lKeyOverrides,
               maybeClassType,
@@ -524,17 +523,11 @@ export const parseSliceUsages = async (
       for (const apurl of Object.keys(purlImportsMap)) {
         const apurlImports = purlImportsMap[apurl];
         if (apurlImports && apurlImports.includes(atype)) {
-          // For javasript, we set all the additional places where a call gets made
-          if (language == "javascript") {
-            if (!purlLocationMap[apurl]) {
-              purlLocationMap[apurl] = new Set();
-            }
-            if (lKeyOverrides[atype]) {
-              purlLocationMap[apurl].add(...lKeyOverrides[atype]);
-            }
-          } else {
-            // This would work well for java since each call node could be mapped to a method
-            purlsSet.add(apurl);
+          if (!purlLocationMap[apurl]) {
+            purlLocationMap[apurl] = new Set();
+          }
+          if (lKeyOverrides[atype]) {
+            purlLocationMap[apurl].add(...lKeyOverrides[atype]);
           }
         }
       }
@@ -552,18 +545,16 @@ export const parseSliceUsages = async (
         }));
       if (nsHits && nsHits.length) {
         for (const ns of nsHits) {
-          purlsSet.add(ns.purl);
+          if (!purlLocationMap[ns.purl]) {
+            purlLocationMap[ns.purl] = new Set();
+          }
+          if (lKeyOverrides[atype]) {
+            purlLocationMap[ns.purl].add(...lKeyOverrides[atype]);
+          }
         }
         typePurlsCache[atype] = nsHits;
       }
     }
-  }
-  // Update the purlLocationMap
-  for (const apurl of purlsSet) {
-    if (!purlLocationMap[apurl]) {
-      purlLocationMap[apurl] = new Set();
-    }
-    purlLocationMap[apurl].add(locationKey);
   }
 };
 

@@ -70,6 +70,12 @@ To improve performance, you can cache the generated usages and data-flow slices 
 evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-flow-slices-file data-flow.json --with-data-flow <path to the application>
 ```
 
+For JavaScript or TypeScript projects, pass `-l javascript`.
+
+```shell
+evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-flow-slices-file data-flow.json -l javascript --with-data-flow <path to the application>
+```
+
 ## Generate SBoM from maven or gradle cache
 
 There could be java applications with complex dependency requirements. Or you might be interested in cataloging your maven or gradle cache.

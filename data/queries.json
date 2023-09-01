@@ -49,11 +49,10 @@
     "description": "Retrieves all the installed RPM packages in the target Linux system.",
     "purlType": "rpm"
   },
-  "backdoored_python_packages": {
-    "query": "select name as package_name, version as package_version, path as package_path from python_packages where package_name = 'acqusition' or package_name = 'apidev-coop' or package_name = 'bzip' or package_name = 'crypt' or package_name = 'django-server' or package_name = 'pwd' or package_name = 'setup-tools' or package_name = 'telnet' or package_name = 'urlib3' or package_name = 'urllib';",
-    "description": "Watches for the backdoored Python packages installed on system.",
-    "purlType": "pypi",
-    "componentType": "application"
+  "python_packages": {
+    "query": "select * from python_packages;",
+    "description": "Python packages installed on system.",
+    "purlType": "pypi"
   },
   "windows_programs": {
     "query": "select * from programs;",
@@ -76,12 +75,6 @@
   "windows_shared_resources": {
     "query": "select * from shared_resources;",
     "description": "Retrieves the list of shared resources in the target Windows system.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
-  "appcompat_shims": {
-    "query": "SELECT * FROM appcompat_shims WHERE description!='EMET_Database' AND executable NOT IN ('setuphost.exe','setupprep.exe','iisexpress.exe');",
-    "description": "Appcompat shims (.sdb files) installed on Windows hosts.",
     "purlType": "swid",
     "componentType": "data"
   },
@@ -166,6 +159,60 @@
   "ld_preload": {
     "query": "SELECT process_envs.pid, process_envs.key, process_envs.value, processes.name, processes.path, processes.cmdline, processes.cwd FROM process_envs join processes USING (pid) WHERE key = 'LD_PRELOAD';",
     "description": "Any processes that run with an LD_PRELOAD environment variable.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "certificates": {
+    "query": "SELECT * FROM certificates WHERE path != 'Other People';",
+    "description": "List all certificates in the trust store.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "processes": {
+    "query": "SELECT * FROM processes;",
+    "description": "List all processes.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "startup_items": {
+    "query": "SELECT * FROM startup_items;",
+    "description": "List all startup_items.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "listening_ports": {
+    "query": "SELECT * FROM listening_ports;",
+    "description": "List all listening_ports.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "interface_addresses": {
+    "query": "SELECT * FROM interface_addresses;",
+    "description": "List all interface_addresses.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_container_ports": {
+    "query": "SELECT * FROM docker_container_ports;",
+    "description": "List all docker_container_ports.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_containers": {
+    "query": "SELECT * FROM docker_containers;",
+    "description": "List all docker_containers.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_networks": {
+    "query": "SELECT * FROM docker_networks;",
+    "description": "List all docker_networks.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_volumes": {
+    "query": "SELECT * FROM docker_volumes;",
+    "description": "List all docker_volumes.",
     "purlType": "swid",
     "componentType": "data"
   }
