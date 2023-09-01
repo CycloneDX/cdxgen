@@ -1851,6 +1851,51 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
 };
 
 /**
+ * Parse bazel action graph output
+ * @param {string} rawOutput Raw string output
+ */
+export const parseBazelActionGraph = function (rawOutput) {
+  const regex = RegExp(
+    `^.*v1/https/[^/]*(?:${process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/"})?(.*)/(.*)/(.*)/(.*.jar)(?:"| \\\\)?$`,
+    "g"
+  );
+
+  if (typeof rawOutput === "string") {
+    const deps = [];
+    const keys_cache = {};
+    const tmpA = rawOutput.split("\n");
+    tmpA.forEach((l) => {
+      if (
+        l.trim().startsWith("arguments") ||
+        l.trim().startsWith("bazel-out")
+      ) {
+        const matches = Array.from(l.matchAll(regex));
+
+        if (matches[0] && matches[0][1]) {
+          const group = matches[0][1].split("/").join(".");
+          const name = matches[0][2];
+          const version = matches[0][3];
+
+          const key = `${group}:${name}:${version}`;
+
+          if (!keys_cache[key]) {
+            keys_cache[key] = true;
+            deps.push({
+              group,
+              name,
+              version,
+              qualifiers: { type: "jar" }
+            });
+          }
+        }
+      }
+    });
+    return deps;
+  }
+  return [];
+};
+
+/**
  * Parse bazel skyframe state output
  * @param {string} rawOutput Raw string output
  */
