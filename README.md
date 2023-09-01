@@ -90,6 +90,12 @@ sudo npm install -g @cyclonedx/cdxgen
 sudo npm install -g @cyclonedx/cdxgen@8.6.0
 ```
 
+If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:
+
+```shell
+$ brew install cdxgen
+```
+
 Deno install is also supported.
 
 ```shell
