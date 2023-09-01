@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-    if: "! contains(github.event.head_commit.message, '[ci skip]')"
     strategy:
       fail-fast: false
       matrix:
@@ -46,7 +45,7 @@ jobs:
           npm run lint
           npm test
           mkdir -p repotests
-          mkdir -p bomresults 
+          mkdir -p bomresults
           mkdir -p denoresults
         env:
           CI: true
@@ -115,7 +114,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: 'sveltejs/examples'
-          path: 'repotests/sveltejs-examples'          
+          path: 'repotests/sveltejs-examples'
       - name: repotests
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
@@ -151,7 +150,7 @@ jobs:
           # mv *.hpi jenkins
           # CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
-        shell: bash      
+        shell: bash
       - name: repotests 1.4
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign --spec-version 1.4
