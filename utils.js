@@ -1878,8 +1878,9 @@ export const parseBazelSkyframe = function (rawOutput) {
             // Remove the protocol, registry url and then file name
             let prefix_slice_count = 2;
             // Bug: #169
-            if (l.includes("/maven2/")) {
-              prefix_slice_count = 3;
+            const prefix = process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/";
+            if (l.includes(prefix)) {
+              prefix_slice_count = prefix.split("/").length;
             }
             jarPathParts = jarPathParts.slice(prefix_slice_count, -1);
             // The last part would be the version
