@@ -161,8 +161,8 @@ Options:
                                                        [boolean] [default: true]
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
-      --version                Show version number                     [boolean]
-  -h                           Show help                               [boolean]
+  -h, --help                   Show help                               [boolean]
+  -v, --version                Show version number                     [boolean]
 ```
 
 All boolean arguments accepts `--no` prefix to toggle the behavior.
