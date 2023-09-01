@@ -4,6 +4,7 @@ on: [workflow_dispatch]
 
 jobs:
   build:
+    # use ubuntu-20.04 due to avoid glic errors
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
