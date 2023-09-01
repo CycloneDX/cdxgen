@@ -1594,7 +1594,12 @@ export const createJavaBom = async (path, options) => {
           result = spawnSync(
             BAZEL_CMD,
             ["aquery", "--output=textproto", "--skyframe_state"],
-            { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
+            {
+              cwd: basePath,
+              encoding: "utf-8",
+              timeout: TIMEOUT_MS,
+              maxBuffer: 1024 * 1024 * 100
+            }
           );
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
