@@ -121,7 +121,9 @@ const args = yargs(hideBin(process.argv))
   })
   .scriptName("cdxgen")
   .version()
-  .help("h").argv;
+  .alias("v", "version")
+  .help("h")
+  .alias("h", "help").argv;
 
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
