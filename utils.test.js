@@ -502,10 +502,10 @@ test("parse maven tree", () => {
     group: "com.pogeyan.cmis",
     name: "copper-server",
     version: "1.15.2",
-    qualifiers: { type: "jar" }
+    qualifiers: { type: "war" }
   });
   expect(parsedList.dependenciesList[0]).toEqual({
-    ref: "pkg:maven/com.pogeyan.cmis/copper-server@1.15.2?type=jar",
+    ref: "pkg:maven/com.pogeyan.cmis/copper-server@1.15.2?type=war",
     dependsOn: [
       "pkg:maven/javax/javaee-web-api@7.0?type=jar",
       "pkg:maven/org.apache.chemistry.opencmis/chemistry-opencmis-server-support@1.0.0?type=jar",
@@ -551,6 +551,35 @@ test("parse maven tree", () => {
       "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.2?type=jar",
       "pkg:maven/org.mozilla/rhino@1.7.10?type=jar",
       "pkg:maven/org.apache.geode/geode-core@1.1.1?type=jar"
+    ]
+  });
+  parsedList = parseMavenTree(
+    readFileSync("./test/data/mvn-p2-plugin.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(parsedList.pkgList.length).toEqual(79);
+  expect(parsedList.pkgList[0]).toEqual({
+    group: "example.group",
+    name: "eclipse-repository",
+    version: "1.0.0-SNAPSHOT",
+    qualifiers: { type: "eclipse-repository" }
+  });
+  expect(parsedList.pkgList[4]).toEqual({
+    group: "p2.eclipse.plugin",
+    name: "com.ibm.icu",
+    version: "67.1.0.v20200706-1749",
+    qualifiers: { type: "eclipse-plugin" }
+  });
+  expect(parsedList.dependenciesList.length).toEqual(79);
+  expect(parsedList.dependenciesList[0]).toEqual({
+    ref: "pkg:maven/example.group/eclipse-repository@1.0.0-SNAPSHOT?type=eclipse-repository",
+    dependsOn: [
+      "pkg:maven/example.group/example-feature@0.1.0-SNAPSHOT?type=eclipse-feature",
+      "pkg:maven/example.group/example-feature-2@0.2.0-SNAPSHOT?type=eclipse-feature",
+      "pkg:maven/example.group/example-bundle@0.1.0-SNAPSHOT?type=eclipse-plugin",
+      "pkg:maven/example.group/org.tycho.demo.rootfiles@1.0.0?type=p2-installable-unit",
+      "pkg:maven/example.group/org.tycho.demo.rootfiles.win@1.0.0-SNAPSHOT?type=p2-installable-unit"
     ]
   });
 });

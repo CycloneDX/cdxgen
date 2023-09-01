@@ -1339,7 +1339,7 @@ export const parseMavenTree = function (rawOutput) {
             pkgArr[0],
             pkgArr[1],
             versionStr,
-            { type: "jar" },
+            { type: pkgArr[2] },
             null
           ).toString();
           purlString = decodeURIComponent(purlString);
@@ -1347,7 +1347,7 @@ export const parseMavenTree = function (rawOutput) {
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
-            qualifiers: { type: "jar" }
+            qualifiers: { type: pkgArr[2] }
           });
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
@@ -5239,15 +5239,38 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
           const jarFileName = basename(tmpJarPath).replace(".jar", "");
           let tmpDirParts = dirname(tmpJarPath).split(_sep);
           // Retrieve the version
-          const jarVersion = tmpDirParts.pop();
+          let jarVersion = tmpDirParts.pop();
+          if (jarVersion === "plugins") {
+            jarVersion = tmpDirParts.pop();
+            if (jarVersion === "eclipse") {
+              jarVersion = tmpDirParts.pop();
+            }
+          }
           // The result would form the group name
-          const jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          let jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          let qualifierType = "jar";
+          // Support for p2 bundles and plugins
+          // See https://github.com/CycloneDX/cyclonedx-maven-plugin/issues/137
+          // See https://github.com/CycloneDX/cdxgen/pull/510#issuecomment-1702551615
+          if (jarGroupName.startsWith("p2.osgi.bundle")) {
+            jarGroupName = "p2.osgi.bundle";
+            qualifierType = "osgi-bundle";
+          } else if (jarGroupName.startsWith("p2.eclipse.plugin")) {
+            jarGroupName = "p2.eclipse.plugin";
+            qualifierType = "eclipse-plugin";
+          } else if (jarGroupName.startsWith("p2.binary")) {
+            jarGroupName = "p2.binary";
+            qualifierType = "eclipse-executable";
+          } else if (jarGroupName.startsWith("p2.org.eclipse.update.feature")) {
+            jarGroupName = "p2.org.eclipse.update.feature";
+            qualifierType = "eclipse-feature";
+          }
           const purlObj = new PackageURL(
             "maven",
             jarGroupName,
             jarFileName.replace(`-${jarVersion}`, ""),
             jarVersion,
-            { type: "jar" },
+            { type: qualifierType },
             null
           );
           purl = purlObj.toString();
@@ -5277,8 +5300,6 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
           );
           purl = purlObj.toString();
         }
-      } else {
-        console.log(jf, "more likely to be skipped");
       }
       if (DEBUG_MODE) {
         console.log(`Executing 'jar tf ${jf}'`);
