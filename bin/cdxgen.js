@@ -158,6 +158,11 @@ if (args.serverUrl || args.apiKey) {
   args.specVersion = 1.4;
 }
 
+// Support for obom aliases
+if (process.argv[1].includes("obom") && !args.type) {
+  args.type = "os";
+}
+
 /**
  * projectType: python, nodejs, java, golang
  * multiProject: Boolean to indicate monorepo or multi-module projects
