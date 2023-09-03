@@ -129,6 +129,8 @@ To improve performance for re-runs, pass the argument `--skip-maven-collector` t
 | .callstack   | View components with evidence.callstack.frames as a table. Use evinse command to generate such an SBoM                                                                                                         |
 | .services    | View services as a table                                                                                                                                                                                       |
 
+In addition, all the keys from [queries.json](./data/queries.json) are also valid commands. Example: `processes`, `apt_sources`,  etc. Type `.help` to view the full list of commands.
+
 ### Sample REPL usage
 
 Start the REPL server.
