@@ -196,5 +196,11 @@
     "description": "List all windows_firewall_rules.",
     "purlType": "swid",
     "componentType": "data"
+  },
+  "logical_drives": {
+    "query": "SELECT * FROM logical_drives;",
+    "description": "List all logical_drives.",
+    "purlType": "swid",
+    "componentType": "device"
   }
 }
