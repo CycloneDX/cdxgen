@@ -1247,6 +1247,15 @@ export const createJavaBom = async (path, options) => {
               console.log(
                 "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."
               );
+            } else if (
+              result.stdout &&
+              result.stdout.includes(
+                "Could not resolve target platform specification"
+              )
+            ) {
+              console.log(
+                "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option"
+              );
             } else {
               console.log(
                 "1. Java version requirement: cdxgen container image bundles Java 20 with maven 3.9 which might be incompatible."

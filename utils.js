@@ -1339,7 +1339,7 @@ export const parseMavenTree = function (rawOutput) {
             pkgArr[0],
             pkgArr[1],
             versionStr,
-            { type: "jar" },
+            { type: pkgArr[2] },
             null
           ).toString();
           purlString = decodeURIComponent(purlString);
@@ -1347,7 +1347,7 @@ export const parseMavenTree = function (rawOutput) {
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
-            qualifiers: { type: "jar" }
+            qualifiers: { type: pkgArr[2] }
           });
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
@@ -5204,11 +5204,18 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
       const jarname = jf;
-      const pomname =
+      let pomname =
         pomPathMap[basename(jf).replace(".jar", ".pom")] ||
         jarname.replace(".jar", ".pom");
       let pomData = undefined;
       let purl = undefined;
+      // In some cases, the pom name might be slightly different to the jar name
+      if (!existsSync(pomname)) {
+        const pomSearch = getAllFiles(dirname(jf), "*.pom");
+        if (pomSearch && pomSearch.length === 1) {
+          pomname = pomSearch[0];
+        }
+      }
       if (existsSync(pomname)) {
         pomData = parsePomXml(readFileSync(pomname, "utf-8"));
         if (pomData) {
@@ -5222,6 +5229,52 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
           );
           purl = purlObj.toString();
         }
+      } else if (jf.includes(join(".m2", "repository"))) {
+        // Let's try our best to construct a purl for .m2 cache entries of the form
+        // .m2/repository/org/apache/logging/log4j/log4j-web/3.0.0-SNAPSHOT/log4j-web-3.0.0-SNAPSHOT.jar
+        const tmpA = jf.split(join(".m2", "repository", ""));
+        if (tmpA && tmpA.length) {
+          let tmpJarPath = tmpA[tmpA.length - 1];
+          // This would yield log4j-web-3.0.0-SNAPSHOT.jar
+          const jarFileName = basename(tmpJarPath).replace(".jar", "");
+          let tmpDirParts = dirname(tmpJarPath).split(_sep);
+          // Retrieve the version
+          let jarVersion = tmpDirParts.pop();
+          if (jarVersion === "plugins") {
+            jarVersion = tmpDirParts.pop();
+            if (jarVersion === "eclipse") {
+              jarVersion = tmpDirParts.pop();
+            }
+          }
+          // The result would form the group name
+          let jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          let qualifierType = "jar";
+          // Support for p2 bundles and plugins
+          // See https://github.com/CycloneDX/cyclonedx-maven-plugin/issues/137
+          // See https://github.com/CycloneDX/cdxgen/pull/510#issuecomment-1702551615
+          if (jarGroupName.startsWith("p2.osgi.bundle")) {
+            jarGroupName = "p2.osgi.bundle";
+            qualifierType = "osgi-bundle";
+          } else if (jarGroupName.startsWith("p2.eclipse.plugin")) {
+            jarGroupName = "p2.eclipse.plugin";
+            qualifierType = "eclipse-plugin";
+          } else if (jarGroupName.startsWith("p2.binary")) {
+            jarGroupName = "p2.binary";
+            qualifierType = "eclipse-executable";
+          } else if (jarGroupName.startsWith("p2.org.eclipse.update.feature")) {
+            jarGroupName = "p2.org.eclipse.update.feature";
+            qualifierType = "eclipse-feature";
+          }
+          const purlObj = new PackageURL(
+            "maven",
+            jarGroupName,
+            jarFileName.replace(`-${jarVersion}`, ""),
+            jarVersion,
+            { type: qualifierType },
+            null
+          );
+          purl = purlObj.toString();
+        }
       } else if (jf.includes(join(".gradle", "caches"))) {
         // Let's try our best to construct a purl for gradle cache entries of the form
         // .gradle/caches/modules-2/files-2.1/org.xmlresolver/xmlresolver/4.2.0/f4dbdaa83d636dcac91c9003ffa7fb173173fe8d/xmlresolver-4.2.0-data.jar
@@ -5229,7 +5282,7 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         if (tmpA && tmpA.length) {
           let tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield xmlresolver-4.2.0-data.jar
-          const jarFileName = basename(tmpJarPath);
+          const jarFileName = basename(tmpJarPath).replace(".jar", "");
           let tmpDirParts = dirname(tmpJarPath).split(_sep);
           // This would remove the hash from the end of the directory name
           tmpDirParts.pop();
@@ -5295,6 +5348,9 @@ export const convertJarNSToPackages = (jarNSMapping) => {
     }
     const name = pom.artifactId || purlObj.name;
     if (!name) {
+      console.warn(
+        `Unable to identify the metadata for ${purl}. This will be skipped.`
+      );
       continue;
     }
     const apackage = {
