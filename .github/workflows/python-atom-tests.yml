@@ -10,7 +10,7 @@ jobs:
       matrix:
         node-version: [18.x]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: coursier/cache-action@v6
@@ -27,35 +27,35 @@ jobs:
           mkdir -p bomresults
         env:
           CI: true
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'scipy/scipy'
           path: 'repotests/scipy'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'psf/black'
           path: 'repotests/black'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'psf/pyperf'
           path: 'repotests/pyperf'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'psf/cachecontrol'
           path: 'repotests/cachecontrol'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'pallets/flask'
           path: 'repotests/flask'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'pallets/click'
           path: 'repotests/click'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'pallets/jinja'
           path: 'repotests/jinja'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'pypa/bandersnatch'
           path: 'repotests/bandersnatch'

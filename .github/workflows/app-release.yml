@@ -10,7 +10,7 @@ jobs:
     # use ubuntu-20.04 due to avoid glic errors
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
