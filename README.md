@@ -31,7 +31,7 @@ A typical application might comprise of several repos, components, and libraries
 | dart                            | pubspec.lock, pubspec.yaml                                                                                        | Only for pubspec.lock                                                                             |
 | haskell                         | cabal.project.freeze                                                                                              | Yes                                                                                               |
 | elixir                          | mix.lock                                                                                                          | Yes                                                                                               |
-| c/c++                           | conan.lock, conanfile.txt                                                                                         | Yes only for conan.lock                                                                           |
+| c/c++                           | conan.lock, conanfile.txt, \*.cmake, CMakeLists.txt, meson.build                                                               | Yes only for conan.lock. Best effort basis for cmake without version numbers.                     |
 | clojure                         | Clojure CLI (deps.edn), Leiningen (project.clj)                                                                   | Yes unless the files are parsed manually due to lack of clojure cli or leiningen command          |
 | swift                           | Package.resolved, Package.swift (swiftpm)                                                                         | Yes                                                                                               |
 | docker / oci image              | All supported languages. Linux OS packages with plugins [4]                                                       | Best effort based on lock files                                                                   |
@@ -204,6 +204,15 @@ To generate SBoM for an older specification version such as 1.4, pass the versio
 ```shell
 cdxgen -r -o bom.json --spec-version 1.4
 ```
+
+To generate SBoM for C or Python, ensure Java >= 17 is installed.
+
+```shell
+# Install java >= 17
+cdxgen -t c -o bom.json
+```
+
+NOTE: cdxgen is known to freeze with Java 8 or 11 so ensure >= 17 is installed and JAVA_HOME environment variable configured correctly. If in doubt, use the cdxgen container image.
 
 ## Universal SBoM
 
@@ -484,4 +493,4 @@ npm test
 
 ## Enterprise support
 
-Enterprise support including custom development and integration services are available via AppThreat Ltd. Free community support is also available via [discord](https://discord.gg/tmmtjCEHNV).
+Enterprise support including custom development and integration services are available via [AppThreat Ltd](https://www.appthreat.com). Free community support is also available via [discord](https://discord.gg/tmmtjCEHNV).

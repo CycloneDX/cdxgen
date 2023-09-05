@@ -1,0 +1,1490 @@
+digraph "tensorflow-lite" {
+node [
+  fontsize = "12"
+];
+subgraph clusterLegend {
+  label = "Legend";
+  color = black;
+  edge [ style = invis ];
+  legendNode0 [ label = "Executable", shape = egg ];
+  legendNode1 [ label = "Static Library", shape = octagon ];
+  legendNode2 [ label = "Shared Library", shape = doubleoctagon ];
+  legendNode3 [ label = "Module Library", shape = tripleoctagon ];
+  legendNode4 [ label = "Interface Library", shape = pentagon ];
+  legendNode5 [ label = "Object Library", shape = hexagon ];
+  legendNode6 [ label = "Unknown Library", shape = septagon ];
+  legendNode7 [ label = "Custom Target", shape = box ];
+  legendNode0 -> legendNode1 [ style = solid ];
+  legendNode0 -> legendNode2 [ style = solid ];
+  legendNode0 -> legendNode3;
+  legendNode1 -> legendNode4 [ label = "Interface", style = dashed ];
+  legendNode2 -> legendNode5 [ label = "Private", style = dotted ];
+  legendNode3 -> legendNode6 [ style = solid ];
+  legendNode0 -> legendNode7;
+}
+    "node0" [ label = "FlatBuffers\n(FlatBuffers::FlatBuffers)", shape = pentagon ];
+    "node1" [ label = "NEON_2_SSE\n(NEON_2_SSE::NEON_2_SSE)", shape = pentagon ];
+    "node2" [ label = "ProjectConfig", shape = pentagon ];
+    "node3" [ label = "XNNPACK", shape = octagon ];
+    "node4" [ label = "/usr/lib/x86_64-linux-gnu/libm.so", shape = septagon ];
+    "node3" -> "node4"  // XNNPACK -> /usr/lib/x86_64-linux-gnu/libm.so
+    "node5" [ label = "allocator", shape = hexagon ];
+    "node6" [ label = "pthreadpool", shape = octagon ];
+    "node7" [ label = "fxdiv", shape = pentagon ];
+    "node6" -> "node7" [ style = dotted ] // pthreadpool -> fxdiv
+    "node8" [ label = "pthreadpool_interface", shape = pentagon ];
+    "node6" -> "node8"  // pthreadpool -> pthreadpool_interface
+    "node5" -> "node6" [ style = dotted ] // allocator -> pthreadpool
+    "node3" -> "node5" [ style = dotted ] // XNNPACK -> allocator
+    "node9" [ label = "cache", shape = hexagon ];
+    "node10" [ label = "memory", shape = hexagon ];
+    "node11" [ label = "logging", shape = hexagon ];
+    "node11" -> "node6" [ style = dotted ] // logging -> pthreadpool
+    "node10" -> "node11" [ style = dotted ] // memory -> logging
+    "node10" -> "node6" [ style = dotted ] // memory -> pthreadpool
+    "node9" -> "node10" [ style = dotted ] // cache -> memory
+    "node9" -> "node6" [ style = dotted ] // cache -> pthreadpool
+    "node3" -> "node9" [ style = dotted ] // XNNPACK -> cache
+    "node12" [ label = "cpuinfo\n(cpuinfo::cpuinfo)", shape = octagon ];
+    "node3" -> "node12" [ style = dotted ] // XNNPACK -> cpuinfo
+    "node13" [ label = "fp16", shape = pentagon ];
+    "node3" -> "node13" [ style = dotted ] // XNNPACK -> fp16
+    "node3" -> "node7" [ style = dotted ] // XNNPACK -> fxdiv
+    "node14" [ label = "hardware-config", shape = hexagon ];
+    "node14" -> "node4"  // hardware-config -> /usr/lib/x86_64-linux-gnu/libm.so
+    "node14" -> "node12" [ style = dotted ] // hardware-config -> cpuinfo
+    "node14" -> "node11" [ style = dotted ] // hardware-config -> logging
+    "node14" -> "node6" [ style = dotted ] // hardware-config -> pthreadpool
+    "node3" -> "node14" [ style = dotted ] // XNNPACK -> hardware-config
+    "node15" [ label = "indirection", shape = hexagon ];
+    "node15" -> "node4"  // indirection -> /usr/lib/x86_64-linux-gnu/libm.so
+    "node15" -> "node13" [ style = dotted ] // indirection -> fp16
+    "node15" -> "node7" [ style = dotted ] // indirection -> fxdiv
+    "node15" -> "node6" [ style = dotted ] // indirection -> pthreadpool
+    "node3" -> "node15" [ style = dotted ] // XNNPACK -> indirection
+    "node16" [ label = "jit", shape = hexagon ];
+    "node16" -> "node11" [ style = dotted ] // jit -> logging
+    "node16" -> "node6" [ style = dotted ] // jit -> pthreadpool
+    "node3" -> "node16" [ style = dotted ] // XNNPACK -> jit
+    "node3" -> "node11" [ style = dotted ] // XNNPACK -> logging
+    "node3" -> "node10" [ style = dotted ] // XNNPACK -> memory
+    "node17" [ label = "microkernel-utils", shape = hexagon ];
+    "node3" -> "node17" [ style = dotted ] // XNNPACK -> microkernel-utils
+    "node18" [ label = "microkernels-prod", shape = hexagon ];
+    "node18" -> "node4"  // microkernels-prod -> /usr/lib/x86_64-linux-gnu/libm.so
+    "node18" -> "node13" [ style = dotted ] // microkernels-prod -> fp16
+    "node18" -> "node7" [ style = dotted ] // microkernels-prod -> fxdiv
+    "node18" -> "node6" [ style = dotted ] // microkernels-prod -> pthreadpool
+    "node3" -> "node18" [ style = dotted ] // XNNPACK -> microkernels-prod
+    "node19" [ label = "microparams-init", shape = hexagon ];
+    "node19" -> "node13" [ style = dotted ] // microparams-init -> fp16
+    "node19" -> "node6" [ style = dotted ] // microparams-init -> pthreadpool
+    "node3" -> "node19" [ style = dotted ] // XNNPACK -> microparams-init
+    "node20" [ label = "mutex", shape = hexagon ];
+    "node20" -> "node11" [ style = dotted ] // mutex -> logging
+    "node20" -> "node6" [ style = dotted ] // mutex -> pthreadpool
+    "node3" -> "node20" [ style = dotted ] // XNNPACK -> mutex
+    "node21" [ label = "normalization", shape = hexagon ];
+    "node21" -> "node6" [ style = dotted ] // normalization -> pthreadpool
+    "node3" -> "node21" [ style = dotted ] // XNNPACK -> normalization
+    "node22" [ label = "operator-run", shape = hexagon ];
+    "node22" -> "node13" [ style = dotted ] // operator-run -> fp16
+    "node22" -> "node11" [ style = dotted ] // operator-run -> logging
+    "node22" -> "node6" [ style = dotted ] // operator-run -> pthreadpool
+    "node3" -> "node22" [ style = dotted ] // XNNPACK -> operator-run
+    "node23" [ label = "operator-utils", shape = hexagon ];
+    "node23" -> "node11" [ style = dotted ] // operator-utils -> logging
+    "node23" -> "node6" [ style = dotted ] // operator-utils -> pthreadpool
+    "node3" -> "node23" [ style = dotted ] // XNNPACK -> operator-utils
+    "node24" [ label = "operators", shape = hexagon ];
+    "node24" -> "node5" [ style = dotted ] // operators -> allocator
+    "node24" -> "node13" [ style = dotted ] // operators -> fp16
+    "node24" -> "node15" [ style = dotted ] // operators -> indirection
+    "node24" -> "node11" [ style = dotted ] // operators -> logging
+    "node24" -> "node17" [ style = dotted ] // operators -> microkernel-utils
+    "node24" -> "node21" [ style = dotted ] // operators -> normalization
+    "node24" -> "node23" [ style = dotted ] // operators -> operator-utils
+    "node25" [ label = "packing", shape = hexagon ];
+    "node25" -> "node13" [ style = dotted ] // packing -> fp16
+    "node25" -> "node6" [ style = dotted ] // packing -> pthreadpool
+    "node24" -> "node25" [ style = dotted ] // operators -> packing
+    "node26" [ label = "post-operation", shape = hexagon ];
+    "node26" -> "node5"  // post-operation -> allocator
+    "node26" -> "node11" [ style = dotted ] // post-operation -> logging
+    "node26" -> "node6"  // post-operation -> pthreadpool
+    "node24" -> "node26" [ style = dotted ] // operators -> post-operation
+    "node24" -> "node6" [ style = dotted ] // operators -> pthreadpool
+    "node3" -> "node24" [ style = dotted ] // XNNPACK -> operators
+    "node3" -> "node25" [ style = dotted ] // XNNPACK -> packing
+    "node3" -> "node26" [ style = dotted ] // XNNPACK -> post-operation
+    "node3" -> "node6"  // XNNPACK -> pthreadpool
+    "node27" [ label = "subgraph", shape = hexagon ];
+    "node27" -> "node5" [ style = dotted ] // subgraph -> allocator
+    "node27" -> "node13" [ style = dotted ] // subgraph -> fp16
+    "node27" -> "node11" [ style = dotted ] // subgraph -> logging
+    "node27" -> "node10" [ style = dotted ] // subgraph -> memory
+    "node27" -> "node20" [ style = dotted ] // subgraph -> mutex
+    "node27" -> "node22" [ style = dotted ] // subgraph -> operator-run
+    "node27" -> "node24" [ style = dotted ] // subgraph -> operators
+    "node27" -> "node6" [ style = dotted ] // subgraph -> pthreadpool
+    "node3" -> "node27" [ style = dotted ] // XNNPACK -> subgraph
+    "node28" [ label = "_pywrap_tensorflow_interpreter_wrapper", shape = doubleoctagon ];
+    "node29" [ label = "dl", shape = septagon ];
+    "node28" -> "node29"  // _pywrap_tensorflow_interpreter_wrapper -> dl
+    "node30" [ label = "tensorflow-lite\n(tensorflow-lite::tensorflowlite)", shape = octagon ];
+    "node30" -> "node1"  // tensorflow-lite -> NEON_2_SSE
+    "node30" -> "node3"  // tensorflow-lite -> XNNPACK
+    "node31" [ label = "absl_flags\n(absl::flags)", shape = octagon ];
+    "node32" [ label = "absl_base\n(absl::base)", shape = octagon ];
+    "node33" [ label = "-lrt", shape = septagon ];
+    "node32" -> "node33" [ style = dotted ] // absl_base -> -lrt
+    "node34" [ label = "Threads::Threads", shape = pentagon ];
+    "node32" -> "node34"  // absl_base -> Threads::Threads
+    "node35" [ label = "absl_atomic_hook\n(absl::atomic_hook)", shape = pentagon ];
+    "node36" [ label = "absl_config\n(absl::config)", shape = pentagon ];
+    "node35" -> "node36" [ style = dashed ] // absl_atomic_hook -> absl_config
+    "node37" [ label = "absl_core_headers\n(absl::core_headers)", shape = pentagon ];
+    "node37" -> "node36" [ style = dashed ] // absl_core_headers -> absl_config
+    "node35" -> "node37" [ style = dashed ] // absl_atomic_hook -> absl_core_headers
+    "node32" -> "node35"  // absl_base -> absl_atomic_hook
+    "node38" [ label = "absl_base_internal\n(absl::base_internal)", shape = pentagon ];
+    "node38" -> "node36" [ style = dashed ] // absl_base_internal -> absl_config
+    "node39" [ label = "absl_type_traits\n(absl::type_traits)", shape = pentagon ];
+    "node39" -> "node36" [ style = dashed ] // absl_type_traits -> absl_config
+    "node38" -> "node39" [ style = dashed ] // absl_base_internal -> absl_type_traits
+    "node32" -> "node38"  // absl_base -> absl_base_internal
+    "node32" -> "node36"  // absl_base -> absl_config
+    "node32" -> "node37"  // absl_base -> absl_core_headers
+    "node40" [ label = "absl_dynamic_annotations\n(absl::dynamic_annotations)", shape = pentagon ];
+    "node40" -> "node36" [ style = dashed ] // absl_dynamic_annotations -> absl_config
+    "node32" -> "node40"  // absl_base -> absl_dynamic_annotations
+    "node41" [ label = "absl_log_severity\n(absl::log_severity)", shape = octagon ];
+    "node41" -> "node37"  // absl_log_severity -> absl_core_headers
+    "node32" -> "node41"  // absl_base -> absl_log_severity
+    "node42" [ label = "absl_raw_logging_internal\n(absl::raw_logging_internal)", shape = octagon ];
+    "node42" -> "node35"  // absl_raw_logging_internal -> absl_atomic_hook
+    "node42" -> "node36"  // absl_raw_logging_internal -> absl_config
+    "node42" -> "node37"  // absl_raw_logging_internal -> absl_core_headers
+    "node43" [ label = "absl_errno_saver\n(absl::errno_saver)", shape = pentagon ];
+    "node43" -> "node36" [ style = dashed ] // absl_errno_saver -> absl_config
+    "node42" -> "node43"  // absl_raw_logging_internal -> absl_errno_saver
+    "node42" -> "node41"  // absl_raw_logging_internal -> absl_log_severity
+    "node32" -> "node42"  // absl_base -> absl_raw_logging_internal
+    "node44" [ label = "absl_spinlock_wait\n(absl::spinlock_wait)", shape = octagon ];
+    "node44" -> "node38"  // absl_spinlock_wait -> absl_base_internal
+    "node44" -> "node37"  // absl_spinlock_wait -> absl_core_headers
+    "node44" -> "node43"  // absl_spinlock_wait -> absl_errno_saver
+    "node32" -> "node44"  // absl_base -> absl_spinlock_wait
+    "node32" -> "node39"  // absl_base -> absl_type_traits
+    "node31" -> "node32"  // absl_flags -> absl_base
+    "node31" -> "node36"  // absl_flags -> absl_config
+    "node31" -> "node37"  // absl_flags -> absl_core_headers
+    "node45" [ label = "absl_flags_commandlineflag\n(absl::flags_commandlineflag)", shape = octagon ];
+    "node45" -> "node36"  // absl_flags_commandlineflag -> absl_config
+    "node46" [ label = "absl_fast_type_id\n(absl::fast_type_id)", shape = pentagon ];
+    "node46" -> "node36" [ style = dashed ] // absl_fast_type_id -> absl_config
+    "node45" -> "node46"  // absl_flags_commandlineflag -> absl_fast_type_id
+    "node47" [ label = "absl_flags_commandlineflag_internal\n(absl::flags_commandlineflag_internal)", shape = octagon ];
+    "node47" -> "node36"  // absl_flags_commandlineflag_internal -> absl_config
+    "node47" -> "node40"  // absl_flags_commandlineflag_internal -> absl_dynamic_annotations
+    "node47" -> "node46"  // absl_flags_commandlineflag_internal -> absl_fast_type_id
+    "node45" -> "node47"  // absl_flags_commandlineflag -> absl_flags_commandlineflag_internal
+    "node48" [ label = "absl_optional\n(absl::optional)", shape = pentagon ];
+    "node49" [ label = "absl_bad_optional_access\n(absl::bad_optional_access)", shape = octagon ];
+    "node49" -> "node36"  // absl_bad_optional_access -> absl_config
+    "node49" -> "node42"  // absl_bad_optional_access -> absl_raw_logging_internal
+    "node48" -> "node49" [ style = dashed ] // absl_optional -> absl_bad_optional_access
+    "node48" -> "node38" [ style = dashed ] // absl_optional -> absl_base_internal
+    "node48" -> "node36" [ style = dashed ] // absl_optional -> absl_config
+    "node48" -> "node37" [ style = dashed ] // absl_optional -> absl_core_headers
+    "node50" [ label = "absl_memory\n(absl::memory)", shape = pentagon ];
+    "node50" -> "node37" [ style = dashed ] // absl_memory -> absl_core_headers
+    "node51" [ label = "absl_meta\n(absl::meta)", shape = pentagon ];
+    "node51" -> "node39" [ style = dashed ] // absl_meta -> absl_type_traits
+    "node50" -> "node51" [ style = dashed ] // absl_memory -> absl_meta
+    "node48" -> "node50" [ style = dashed ] // absl_optional -> absl_memory
+    "node48" -> "node39" [ style = dashed ] // absl_optional -> absl_type_traits
+    "node52" [ label = "absl_utility\n(absl::utility)", shape = pentagon ];
+    "node52" -> "node38" [ style = dashed ] // absl_utility -> absl_base_internal
+    "node52" -> "node36" [ style = dashed ] // absl_utility -> absl_config
+    "node52" -> "node39" [ style = dashed ] // absl_utility -> absl_type_traits
+    "node48" -> "node52" [ style = dashed ] // absl_optional -> absl_utility
+    "node45" -> "node48"  // absl_flags_commandlineflag -> absl_optional
+    "node53" [ label = "absl_strings\n(absl::strings)", shape = octagon ];
+    "node53" -> "node32"  // absl_strings -> absl_base
+    "node54" [ label = "absl_bits\n(absl::bits)", shape = pentagon ];
+    "node54" -> "node37" [ style = dashed ] // absl_bits -> absl_core_headers
+    "node53" -> "node54"  // absl_strings -> absl_bits
+    "node53" -> "node36"  // absl_strings -> absl_config
+    "node53" -> "node37"  // absl_strings -> absl_core_headers
+    "node55" [ label = "absl_endian\n(absl::endian)", shape = pentagon ];
+    "node55" -> "node32" [ style = dashed ] // absl_endian -> absl_base
+    "node55" -> "node36" [ style = dashed ] // absl_endian -> absl_config
+    "node55" -> "node37" [ style = dashed ] // absl_endian -> absl_core_headers
+    "node53" -> "node55"  // absl_strings -> absl_endian
+    "node56" [ label = "absl_int128\n(absl::int128)", shape = octagon ];
+    "node56" -> "node54"  // absl_int128 -> absl_bits
+    "node56" -> "node36"  // absl_int128 -> absl_config
+    "node56" -> "node37"  // absl_int128 -> absl_core_headers
+    "node53" -> "node56"  // absl_strings -> absl_int128
+    "node53" -> "node50"  // absl_strings -> absl_memory
+    "node53" -> "node42"  // absl_strings -> absl_raw_logging_internal
+    "node57" [ label = "absl_strings_internal\n(absl::strings_internal)", shape = octagon ];
+    "node57" -> "node36"  // absl_strings_internal -> absl_config
+    "node57" -> "node37"  // absl_strings_internal -> absl_core_headers
+    "node57" -> "node55"  // absl_strings_internal -> absl_endian
+    "node57" -> "node42"  // absl_strings_internal -> absl_raw_logging_internal
+    "node57" -> "node39"  // absl_strings_internal -> absl_type_traits
+    "node53" -> "node57"  // absl_strings -> absl_strings_internal
+    "node58" [ label = "absl_throw_delegate\n(absl::throw_delegate)", shape = octagon ];
+    "node58" -> "node36"  // absl_throw_delegate -> absl_config
+    "node58" -> "node42"  // absl_throw_delegate -> absl_raw_logging_internal
+    "node53" -> "node58"  // absl_strings -> absl_throw_delegate
+    "node53" -> "node39"  // absl_strings -> absl_type_traits
+    "node45" -> "node53"  // absl_flags_commandlineflag -> absl_strings
+    "node31" -> "node45"  // absl_flags -> absl_flags_commandlineflag
+    "node59" [ label = "absl_flags_config\n(absl::flags_config)", shape = octagon ];
+    "node59" -> "node36"  // absl_flags_config -> absl_config
+    "node59" -> "node37"  // absl_flags_config -> absl_core_headers
+    "node60" [ label = "absl_flags_path_util\n(absl::flags_path_util)", shape = pentagon ];
+    "node60" -> "node36" [ style = dashed ] // absl_flags_path_util -> absl_config
+    "node60" -> "node53" [ style = dashed ] // absl_flags_path_util -> absl_strings
+    "node59" -> "node60"  // absl_flags_config -> absl_flags_path_util
+    "node61" [ label = "absl_flags_program_name\n(absl::flags_program_name)", shape = octagon ];
+    "node61" -> "node36"  // absl_flags_program_name -> absl_config
+    "node61" -> "node37"  // absl_flags_program_name -> absl_core_headers
+    "node61" -> "node60"  // absl_flags_program_name -> absl_flags_path_util
+    "node61" -> "node53"  // absl_flags_program_name -> absl_strings
+    "node62" [ label = "absl_synchronization\n(absl::synchronization)", shape = octagon ];
+    "node62" -> "node34"  // absl_synchronization -> Threads::Threads
+    "node62" -> "node35"  // absl_synchronization -> absl_atomic_hook
+    "node62" -> "node32"  // absl_synchronization -> absl_base
+    "node62" -> "node38"  // absl_synchronization -> absl_base_internal
+    "node62" -> "node36"  // absl_synchronization -> absl_config
+    "node62" -> "node37"  // absl_synchronization -> absl_core_headers
+    "node62" -> "node40"  // absl_synchronization -> absl_dynamic_annotations
+    "node63" [ label = "absl_graphcycles_internal\n(absl::graphcycles_internal)", shape = octagon ];
+    "node63" -> "node32"  // absl_graphcycles_internal -> absl_base
+    "node63" -> "node38"  // absl_graphcycles_internal -> absl_base_internal
+    "node63" -> "node36"  // absl_graphcycles_internal -> absl_config
+    "node63" -> "node37"  // absl_graphcycles_internal -> absl_core_headers
+    "node64" [ label = "absl_malloc_internal\n(absl::malloc_internal)", shape = octagon ];
+    "node64" -> "node34"  // absl_malloc_internal -> Threads::Threads
+    "node64" -> "node32"  // absl_malloc_internal -> absl_base
+    "node64" -> "node38"  // absl_malloc_internal -> absl_base_internal
+    "node64" -> "node36"  // absl_malloc_internal -> absl_config
+    "node64" -> "node37"  // absl_malloc_internal -> absl_core_headers
+    "node64" -> "node40"  // absl_malloc_internal -> absl_dynamic_annotations
+    "node64" -> "node42"  // absl_malloc_internal -> absl_raw_logging_internal
+    "node63" -> "node64"  // absl_graphcycles_internal -> absl_malloc_internal
+    "node63" -> "node42"  // absl_graphcycles_internal -> absl_raw_logging_internal
+    "node62" -> "node63"  // absl_synchronization -> absl_graphcycles_internal
+    "node65" [ label = "absl_kernel_timeout_internal\n(absl::kernel_timeout_internal)", shape = pentagon ];
+    "node65" -> "node37" [ style = dashed ] // absl_kernel_timeout_internal -> absl_core_headers
+    "node65" -> "node42" [ style = dashed ] // absl_kernel_timeout_internal -> absl_raw_logging_internal
+    "node66" [ label = "absl_time\n(absl::time)", shape = octagon ];
+    "node66" -> "node32"  // absl_time -> absl_base
+    "node67" [ label = "absl_civil_time\n(absl::civil_time)", shape = octagon ];
+    "node66" -> "node67"  // absl_time -> absl_civil_time
+    "node66" -> "node37"  // absl_time -> absl_core_headers
+    "node66" -> "node56"  // absl_time -> absl_int128
+    "node66" -> "node42"  // absl_time -> absl_raw_logging_internal
+    "node66" -> "node53"  // absl_time -> absl_strings
+    "node68" [ label = "absl_time_zone\n(absl::time_zone)", shape = octagon ];
+    "node66" -> "node68"  // absl_time -> absl_time_zone
+    "node65" -> "node66" [ style = dashed ] // absl_kernel_timeout_internal -> absl_time
+    "node62" -> "node65"  // absl_synchronization -> absl_kernel_timeout_internal
+    "node62" -> "node64"  // absl_synchronization -> absl_malloc_internal
+    "node62" -> "node42"  // absl_synchronization -> absl_raw_logging_internal
+    "node69" [ label = "absl_stacktrace\n(absl::stacktrace)", shape = octagon ];
+    "node69" -> "node36"  // absl_stacktrace -> absl_config
+    "node69" -> "node37"  // absl_stacktrace -> absl_core_headers
+    "node70" [ label = "absl_debugging_internal\n(absl::debugging_internal)", shape = octagon ];
+    "node70" -> "node36"  // absl_debugging_internal -> absl_config
+    "node70" -> "node37"  // absl_debugging_internal -> absl_core_headers
+    "node70" -> "node40"  // absl_debugging_internal -> absl_dynamic_annotations
+    "node70" -> "node43"  // absl_debugging_internal -> absl_errno_saver
+    "node70" -> "node42"  // absl_debugging_internal -> absl_raw_logging_internal
+    "node69" -> "node70"  // absl_stacktrace -> absl_debugging_internal
+    "node69" -> "node42"  // absl_stacktrace -> absl_raw_logging_internal
+    "node62" -> "node69"  // absl_synchronization -> absl_stacktrace
+    "node71" [ label = "absl_symbolize\n(absl::symbolize)", shape = octagon ];
+    "node71" -> "node32"  // absl_symbolize -> absl_base
+    "node71" -> "node36"  // absl_symbolize -> absl_config
+    "node71" -> "node37"  // absl_symbolize -> absl_core_headers
+    "node71" -> "node70"  // absl_symbolize -> absl_debugging_internal
+    "node72" [ label = "absl_demangle_internal\n(absl::demangle_internal)", shape = octagon ];
+    "node72" -> "node32"  // absl_demangle_internal -> absl_base
+    "node72" -> "node37"  // absl_demangle_internal -> absl_core_headers
+    "node71" -> "node72"  // absl_symbolize -> absl_demangle_internal
+    "node71" -> "node40"  // absl_symbolize -> absl_dynamic_annotations
+    "node71" -> "node64"  // absl_symbolize -> absl_malloc_internal
+    "node71" -> "node42"  // absl_symbolize -> absl_raw_logging_internal
+    "node71" -> "node53"  // absl_symbolize -> absl_strings
+    "node62" -> "node71"  // absl_synchronization -> absl_symbolize
+    "node62" -> "node66"  // absl_synchronization -> absl_time
+    "node61" -> "node62"  // absl_flags_program_name -> absl_synchronization
+    "node59" -> "node61"  // absl_flags_config -> absl_flags_program_name
+    "node59" -> "node53"  // absl_flags_config -> absl_strings
+    "node59" -> "node62"  // absl_flags_config -> absl_synchronization
+    "node31" -> "node59"  // absl_flags -> absl_flags_config
+    "node73" [ label = "absl_flags_internal\n(absl::flags_internal)", shape = octagon ];
+    "node73" -> "node32"  // absl_flags_internal -> absl_base
+    "node73" -> "node36"  // absl_flags_internal -> absl_config
+    "node73" -> "node45"  // absl_flags_internal -> absl_flags_commandlineflag
+    "node73" -> "node47"  // absl_flags_internal -> absl_flags_commandlineflag_internal
+    "node73" -> "node59"  // absl_flags_internal -> absl_flags_config
+    "node74" [ label = "absl_flags_marshalling\n(absl::flags_marshalling)", shape = octagon ];
+    "node74" -> "node36"  // absl_flags_marshalling -> absl_config
+    "node74" -> "node37"  // absl_flags_marshalling -> absl_core_headers
+    "node74" -> "node41"  // absl_flags_marshalling -> absl_log_severity
+    "node74" -> "node48"  // absl_flags_marshalling -> absl_optional
+    "node75" [ label = "absl_str_format\n(absl::str_format)", shape = pentagon ];
+    "node76" [ label = "absl_str_format_internal\n(absl::str_format_internal)", shape = octagon ];
+    "node76" -> "node54"  // absl_str_format_internal -> absl_bits
+    "node76" -> "node36"  // absl_str_format_internal -> absl_config
+    "node76" -> "node37"  // absl_str_format_internal -> absl_core_headers
+    "node76" -> "node56"  // absl_str_format_internal -> absl_int128
+    "node77" [ label = "absl_numeric_representation\n(absl::numeric_representation)", shape = pentagon ];
+    "node77" -> "node36" [ style = dashed ] // absl_numeric_representation -> absl_config
+    "node76" -> "node77"  // absl_str_format_internal -> absl_numeric_representation
+    "node78" [ label = "absl_span\n(absl::span)", shape = pentagon ];
+    "node79" [ label = "absl_algorithm\n(absl::algorithm)", shape = pentagon ];
+    "node79" -> "node36" [ style = dashed ] // absl_algorithm -> absl_config
+    "node78" -> "node79" [ style = dashed ] // absl_span -> absl_algorithm
+    "node78" -> "node37" [ style = dashed ] // absl_span -> absl_core_headers
+    "node78" -> "node58" [ style = dashed ] // absl_span -> absl_throw_delegate
+    "node78" -> "node39" [ style = dashed ] // absl_span -> absl_type_traits
+    "node76" -> "node78"  // absl_str_format_internal -> absl_span
+    "node76" -> "node53"  // absl_str_format_internal -> absl_strings
+    "node76" -> "node39"  // absl_str_format_internal -> absl_type_traits
+    "node76" -> "node52"  // absl_str_format_internal -> absl_utility
+    "node75" -> "node76" [ style = dashed ] // absl_str_format -> absl_str_format_internal
+    "node74" -> "node75"  // absl_flags_marshalling -> absl_str_format
+    "node74" -> "node53"  // absl_flags_marshalling -> absl_strings
+    "node73" -> "node74"  // absl_flags_internal -> absl_flags_marshalling
+    "node73" -> "node51"  // absl_flags_internal -> absl_meta
+    "node73" -> "node62"  // absl_flags_internal -> absl_synchronization
+    "node73" -> "node52"  // absl_flags_internal -> absl_utility
+    "node31" -> "node73"  // absl_flags -> absl_flags_internal
+    "node80" [ label = "absl_flags_reflection\n(absl::flags_reflection)", shape = octagon ];
+    "node80" -> "node36"  // absl_flags_reflection -> absl_config
+    "node80" -> "node45"  // absl_flags_reflection -> absl_flags_commandlineflag
+    "node80" -> "node59"  // absl_flags_reflection -> absl_flags_config
+    "node81" [ label = "absl_flags_private_handle_accessor\n(absl::flags_private_handle_accessor)", shape = octagon ];
+    "node81" -> "node36"  // absl_flags_private_handle_accessor -> absl_config
+    "node81" -> "node45"  // absl_flags_private_handle_accessor -> absl_flags_commandlineflag
+    "node81" -> "node47"  // absl_flags_private_handle_accessor -> absl_flags_commandlineflag_internal
+    "node81" -> "node53"  // absl_flags_private_handle_accessor -> absl_strings
+    "node80" -> "node81"  // absl_flags_reflection -> absl_flags_private_handle_accessor
+    "node82" [ label = "absl_flat_hash_map\n(absl::flat_hash_map)", shape = pentagon ];
+    "node83" [ label = "absl_algorithm_container\n(absl::algorithm_container)", shape = pentagon ];
+    "node83" -> "node79" [ style = dashed ] // absl_algorithm_container -> absl_algorithm
+    "node83" -> "node37" [ style = dashed ] // absl_algorithm_container -> absl_core_headers
+    "node83" -> "node51" [ style = dashed ] // absl_algorithm_container -> absl_meta
+    "node82" -> "node83" [ style = dashed ] // absl_flat_hash_map -> absl_algorithm_container
+    "node84" [ label = "absl_container_memory\n(absl::container_memory)", shape = pentagon ];
+    "node84" -> "node36" [ style = dashed ] // absl_container_memory -> absl_config
+    "node84" -> "node50" [ style = dashed ] // absl_container_memory -> absl_memory
+    "node84" -> "node39" [ style = dashed ] // absl_container_memory -> absl_type_traits
+    "node84" -> "node52" [ style = dashed ] // absl_container_memory -> absl_utility
+    "node82" -> "node84" [ style = dashed ] // absl_flat_hash_map -> absl_container_memory
+    "node82" -> "node37" [ style = dashed ] // absl_flat_hash_map -> absl_core_headers
+    "node85" [ label = "absl_hash_function_defaults\n(absl::hash_function_defaults)", shape = pentagon ];
+    "node85" -> "node36" [ style = dashed ] // absl_hash_function_defaults -> absl_config
+    "node86" [ label = "absl_cord\n(absl::cord)", shape = octagon ];
+    "node86" -> "node32"  // absl_cord -> absl_base
+    "node86" -> "node36"  // absl_cord -> absl_config
+    "node87" [ label = "absl_cord_internal\n(absl::cord_internal)", shape = octagon ];
+    "node87" -> "node38"  // absl_cord_internal -> absl_base_internal
+    "node88" [ label = "absl_compressed_tuple\n(absl::compressed_tuple)", shape = pentagon ];
+    "node88" -> "node52" [ style = dashed ] // absl_compressed_tuple -> absl_utility
+    "node87" -> "node88"  // absl_cord_internal -> absl_compressed_tuple
+    "node87" -> "node36"  // absl_cord_internal -> absl_config
+    "node87" -> "node84"  // absl_cord_internal -> absl_container_memory
+    "node87" -> "node37"  // absl_cord_internal -> absl_core_headers
+    "node89" [ label = "absl_crc_cord_state\n(absl::crc_cord_state)", shape = octagon ];
+    "node89" -> "node36"  // absl_crc_cord_state -> absl_config
+    "node90" [ label = "absl_crc32c\n(absl::crc32c)", shape = octagon ];
+    "node90" -> "node36"  // absl_crc32c -> absl_config
+    "node90" -> "node37"  // absl_crc32c -> absl_core_headers
+    "node91" [ label = "absl_crc_cpu_detect\n(absl::crc_cpu_detect)", shape = octagon ];
+    "node91" -> "node32"  // absl_crc_cpu_detect -> absl_base
+    "node91" -> "node36"  // absl_crc_cpu_detect -> absl_config
+    "node90" -> "node91"  // absl_crc32c -> absl_crc_cpu_detect
+    "node92" [ label = "absl_crc_internal\n(absl::crc_internal)", shape = octagon ];
+    "node92" -> "node32"  // absl_crc_internal -> absl_base
+    "node92" -> "node54"  // absl_crc_internal -> absl_bits
+    "node92" -> "node36"  // absl_crc_internal -> absl_config
+    "node92" -> "node37"  // absl_crc_internal -> absl_core_headers
+    "node92" -> "node91"  // absl_crc_internal -> absl_crc_cpu_detect
+    "node92" -> "node40"  // absl_crc_internal -> absl_dynamic_annotations
+    "node92" -> "node55"  // absl_crc_internal -> absl_endian
+    "node92" -> "node50"  // absl_crc_internal -> absl_memory
+    "node93" [ label = "absl_prefetch\n(absl::prefetch)", shape = pentagon ];
+    "node93" -> "node36" [ style = dashed ] // absl_prefetch -> absl_config
+    "node92" -> "node93"  // absl_crc_internal -> absl_prefetch
+    "node92" -> "node42"  // absl_crc_internal -> absl_raw_logging_internal
+    "node90" -> "node92"  // absl_crc32c -> absl_crc_internal
+    "node90" -> "node40"  // absl_crc32c -> absl_dynamic_annotations
+    "node90" -> "node55"  // absl_crc32c -> absl_endian
+    "node94" [ label = "absl_non_temporal_memcpy\n(absl::non_temporal_memcpy)", shape = pentagon ];
+    "node94" -> "node36" [ style = dashed ] // absl_non_temporal_memcpy -> absl_config
+    "node94" -> "node37" [ style = dashed ] // absl_non_temporal_memcpy -> absl_core_headers
+    "node95" [ label = "absl_non_temporal_arm_intrinsics\n(absl::non_temporal_arm_intrinsics)", shape = pentagon ];
+    "node95" -> "node36" [ style = dashed ] // absl_non_temporal_arm_intrinsics -> absl_config
+    "node94" -> "node95" [ style = dashed ] // absl_non_temporal_memcpy -> absl_non_temporal_arm_intrinsics
+    "node90" -> "node94"  // absl_crc32c -> absl_non_temporal_memcpy
+    "node90" -> "node93"  // absl_crc32c -> absl_prefetch
+    "node90" -> "node53"  // absl_crc32c -> absl_strings
+    "node89" -> "node90"  // absl_crc_cord_state -> absl_crc32c
+    "node89" -> "node53"  // absl_crc_cord_state -> absl_strings
+    "node87" -> "node89"  // absl_cord_internal -> absl_crc_cord_state
+    "node87" -> "node55"  // absl_cord_internal -> absl_endian
+    "node96" [ label = "absl_inlined_vector\n(absl::inlined_vector)", shape = pentagon ];
+    "node96" -> "node79" [ style = dashed ] // absl_inlined_vector -> absl_algorithm
+    "node96" -> "node37" [ style = dashed ] // absl_inlined_vector -> absl_core_headers
+    "node97" [ label = "absl_inlined_vector_internal\n(absl::inlined_vector_internal)", shape = pentagon ];
+    "node97" -> "node88" [ style = dashed ] // absl_inlined_vector_internal -> absl_compressed_tuple
+    "node97" -> "node37" [ style = dashed ] // absl_inlined_vector_internal -> absl_core_headers
+    "node97" -> "node50" [ style = dashed ] // absl_inlined_vector_internal -> absl_memory
+    "node97" -> "node78" [ style = dashed ] // absl_inlined_vector_internal -> absl_span
+    "node97" -> "node39" [ style = dashed ] // absl_inlined_vector_internal -> absl_type_traits
+    "node96" -> "node97" [ style = dashed ] // absl_inlined_vector -> absl_inlined_vector_internal
+    "node96" -> "node50" [ style = dashed ] // absl_inlined_vector -> absl_memory
+    "node96" -> "node58" [ style = dashed ] // absl_inlined_vector -> absl_throw_delegate
+    "node96" -> "node39" [ style = dashed ] // absl_inlined_vector -> absl_type_traits
+    "node87" -> "node96"  // absl_cord_internal -> absl_inlined_vector
+    "node98" [ label = "absl_layout\n(absl::layout)", shape = pentagon ];
+    "node98" -> "node36" [ style = dashed ] // absl_layout -> absl_config
+    "node98" -> "node37" [ style = dashed ] // absl_layout -> absl_core_headers
+    "node98" -> "node51" [ style = dashed ] // absl_layout -> absl_meta
+    "node98" -> "node78" [ style = dashed ] // absl_layout -> absl_span
+    "node98" -> "node53" [ style = dashed ] // absl_layout -> absl_strings
+    "node98" -> "node52" [ style = dashed ] // absl_layout -> absl_utility
+    "node87" -> "node98"  // absl_cord_internal -> absl_layout
+    "node87" -> "node42"  // absl_cord_internal -> absl_raw_logging_internal
+    "node87" -> "node53"  // absl_cord_internal -> absl_strings
+    "node87" -> "node58"  // absl_cord_internal -> absl_throw_delegate
+    "node87" -> "node39"  // absl_cord_internal -> absl_type_traits
+    "node86" -> "node87"  // absl_cord -> absl_cord_internal
+    "node99" [ label = "absl_cordz_functions\n(absl::cordz_functions)", shape = octagon ];
+    "node99" -> "node36"  // absl_cordz_functions -> absl_config
+    "node99" -> "node37"  // absl_cordz_functions -> absl_core_headers
+    "node100" [ label = "absl_exponential_biased\n(absl::exponential_biased)", shape = octagon ];
+    "node100" -> "node36"  // absl_exponential_biased -> absl_config
+    "node100" -> "node37"  // absl_exponential_biased -> absl_core_headers
+    "node99" -> "node100"  // absl_cordz_functions -> absl_exponential_biased
+    "node99" -> "node42"  // absl_cordz_functions -> absl_raw_logging_internal
+    "node86" -> "node99"  // absl_cord -> absl_cordz_functions
+    "node101" [ label = "absl_cordz_info\n(absl::cordz_info)", shape = octagon ];
+    "node101" -> "node32"  // absl_cordz_info -> absl_base
+    "node101" -> "node36"  // absl_cordz_info -> absl_config
+    "node101" -> "node87"  // absl_cordz_info -> absl_cord_internal
+    "node101" -> "node99"  // absl_cordz_info -> absl_cordz_functions
+    "node102" [ label = "absl_cordz_handle\n(absl::cordz_handle)", shape = octagon ];
+    "node102" -> "node32"  // absl_cordz_handle -> absl_base
+    "node102" -> "node36"  // absl_cordz_handle -> absl_config
+    "node102" -> "node42"  // absl_cordz_handle -> absl_raw_logging_internal
+    "node102" -> "node62"  // absl_cordz_handle -> absl_synchronization
+    "node101" -> "node102"  // absl_cordz_info -> absl_cordz_handle
+    "node103" [ label = "absl_cordz_statistics\n(absl::cordz_statistics)", shape = pentagon ];
+    "node103" -> "node36" [ style = dashed ] // absl_cordz_statistics -> absl_config
+    "node104" [ label = "absl_cordz_update_tracker\n(absl::cordz_update_tracker)", shape = pentagon ];
+    "node104" -> "node36" [ style = dashed ] // absl_cordz_update_tracker -> absl_config
+    "node103" -> "node104" [ style = dashed ] // absl_cordz_statistics -> absl_cordz_update_tracker
+    "node103" -> "node37" [ style = dashed ] // absl_cordz_statistics -> absl_core_headers
+    "node103" -> "node62" [ style = dashed ] // absl_cordz_statistics -> absl_synchronization
+    "node101" -> "node103"  // absl_cordz_info -> absl_cordz_statistics
+    "node101" -> "node104"  // absl_cordz_info -> absl_cordz_update_tracker
+    "node101" -> "node37"  // absl_cordz_info -> absl_core_headers
+    "node101" -> "node96"  // absl_cordz_info -> absl_inlined_vector
+    "node101" -> "node42"  // absl_cordz_info -> absl_raw_logging_internal
+    "node101" -> "node78"  // absl_cordz_info -> absl_span
+    "node101" -> "node69"  // absl_cordz_info -> absl_stacktrace
+    "node101" -> "node62"  // absl_cordz_info -> absl_synchronization
+    "node86" -> "node101"  // absl_cord -> absl_cordz_info
+    "node105" [ label = "absl_cordz_update_scope\n(absl::cordz_update_scope)", shape = pentagon ];
+    "node105" -> "node36" [ style = dashed ] // absl_cordz_update_scope -> absl_config
+    "node105" -> "node87" [ style = dashed ] // absl_cordz_update_scope -> absl_cord_internal
+    "node105" -> "node101" [ style = dashed ] // absl_cordz_update_scope -> absl_cordz_info
+    "node105" -> "node104" [ style = dashed ] // absl_cordz_update_scope -> absl_cordz_update_tracker
+    "node105" -> "node37" [ style = dashed ] // absl_cordz_update_scope -> absl_core_headers
+    "node86" -> "node105"  // absl_cord -> absl_cordz_update_scope
+    "node86" -> "node104"  // absl_cord -> absl_cordz_update_tracker
+    "node86" -> "node37"  // absl_cord -> absl_core_headers
+    "node86" -> "node89"  // absl_cord -> absl_crc_cord_state
+    "node86" -> "node55"  // absl_cord -> absl_endian
+    "node106" [ label = "absl_fixed_array\n(absl::fixed_array)", shape = pentagon ];
+    "node106" -> "node79" [ style = dashed ] // absl_fixed_array -> absl_algorithm
+    "node106" -> "node88" [ style = dashed ] // absl_fixed_array -> absl_compressed_tuple
+    "node106" -> "node36" [ style = dashed ] // absl_fixed_array -> absl_config
+    "node106" -> "node37" [ style = dashed ] // absl_fixed_array -> absl_core_headers
+    "node106" -> "node40" [ style = dashed ] // absl_fixed_array -> absl_dynamic_annotations
+    "node106" -> "node50" [ style = dashed ] // absl_fixed_array -> absl_memory
+    "node106" -> "node58" [ style = dashed ] // absl_fixed_array -> absl_throw_delegate
+    "node86" -> "node106"  // absl_cord -> absl_fixed_array
+    "node107" [ label = "absl_function_ref\n(absl::function_ref)", shape = pentagon ];
+    "node107" -> "node38" [ style = dashed ] // absl_function_ref -> absl_base_internal
+    "node107" -> "node37" [ style = dashed ] // absl_function_ref -> absl_core_headers
+    "node107" -> "node51" [ style = dashed ] // absl_function_ref -> absl_meta
+    "node86" -> "node107"  // absl_cord -> absl_function_ref
+    "node86" -> "node96"  // absl_cord -> absl_inlined_vector
+    "node86" -> "node48"  // absl_cord -> absl_optional
+    "node86" -> "node42"  // absl_cord -> absl_raw_logging_internal
+    "node86" -> "node78"  // absl_cord -> absl_span
+    "node86" -> "node53"  // absl_cord -> absl_strings
+    "node86" -> "node39"  // absl_cord -> absl_type_traits
+    "node85" -> "node86" [ style = dashed ] // absl_hash_function_defaults -> absl_cord
+    "node108" [ label = "absl_hash\n(absl::hash)", shape = octagon ];
+    "node108" -> "node54"  // absl_hash -> absl_bits
+    "node109" [ label = "absl_city\n(absl::city)", shape = octagon ];
+    "node109" -> "node36"  // absl_city -> absl_config
+    "node109" -> "node37"  // absl_city -> absl_core_headers
+    "node109" -> "node55"  // absl_city -> absl_endian
+    "node108" -> "node109"  // absl_hash -> absl_city
+    "node108" -> "node36"  // absl_hash -> absl_config
+    "node108" -> "node37"  // absl_hash -> absl_core_headers
+    "node108" -> "node55"  // absl_hash -> absl_endian
+    "node108" -> "node106"  // absl_hash -> absl_fixed_array
+    "node108" -> "node107"  // absl_hash -> absl_function_ref
+    "node108" -> "node56"  // absl_hash -> absl_int128
+    "node110" [ label = "absl_low_level_hash\n(absl::low_level_hash)", shape = octagon ];
+    "node110" -> "node36"  // absl_low_level_hash -> absl_config
+    "node110" -> "node55"  // absl_low_level_hash -> absl_endian
+    "node110" -> "node56"  // absl_low_level_hash -> absl_int128
+    "node108" -> "node110"  // absl_hash -> absl_low_level_hash
+    "node108" -> "node51"  // absl_hash -> absl_meta
+    "node108" -> "node48"  // absl_hash -> absl_optional
+    "node108" -> "node53"  // absl_hash -> absl_strings
+    "node108" -> "node52"  // absl_hash -> absl_utility
+    "node111" [ label = "absl_variant\n(absl::variant)", shape = pentagon ];
+    "node112" [ label = "absl_bad_variant_access\n(absl::bad_variant_access)", shape = octagon ];
+    "node112" -> "node36"  // absl_bad_variant_access -> absl_config
+    "node112" -> "node42"  // absl_bad_variant_access -> absl_raw_logging_internal
+    "node111" -> "node112" [ style = dashed ] // absl_variant -> absl_bad_variant_access
+    "node111" -> "node38" [ style = dashed ] // absl_variant -> absl_base_internal
+    "node111" -> "node36" [ style = dashed ] // absl_variant -> absl_config
+    "node111" -> "node37" [ style = dashed ] // absl_variant -> absl_core_headers
+    "node111" -> "node39" [ style = dashed ] // absl_variant -> absl_type_traits
+    "node111" -> "node52" [ style = dashed ] // absl_variant -> absl_utility
+    "node108" -> "node111"  // absl_hash -> absl_variant
+    "node85" -> "node108" [ style = dashed ] // absl_hash_function_defaults -> absl_hash
+    "node85" -> "node53" [ style = dashed ] // absl_hash_function_defaults -> absl_strings
+    "node82" -> "node85" [ style = dashed ] // absl_flat_hash_map -> absl_hash_function_defaults
+    "node82" -> "node50" [ style = dashed ] // absl_flat_hash_map -> absl_memory
+    "node113" [ label = "absl_raw_hash_map\n(absl::raw_hash_map)", shape = pentagon ];
+    "node113" -> "node84" [ style = dashed ] // absl_raw_hash_map -> absl_container_memory
+    "node114" [ label = "absl_raw_hash_set\n(absl::raw_hash_set)", shape = octagon ];
+    "node114" -> "node54"  // absl_raw_hash_set -> absl_bits
+    "node114" -> "node88"  // absl_raw_hash_set -> absl_compressed_tuple
+    "node114" -> "node36"  // absl_raw_hash_set -> absl_config
+    "node115" [ label = "absl_container_common\n(absl::container_common)", shape = pentagon ];
+    "node115" -> "node39" [ style = dashed ] // absl_container_common -> absl_type_traits
+    "node114" -> "node115"  // absl_raw_hash_set -> absl_container_common
+    "node114" -> "node84"  // absl_raw_hash_set -> absl_container_memory
+    "node114" -> "node37"  // absl_raw_hash_set -> absl_core_headers
+    "node114" -> "node55"  // absl_raw_hash_set -> absl_endian
+    "node116" [ label = "absl_hash_policy_traits\n(absl::hash_policy_traits)", shape = pentagon ];
+    "node117" [ label = "absl_common_policy_traits\n(absl::common_policy_traits)", shape = pentagon ];
+    "node117" -> "node51" [ style = dashed ] // absl_common_policy_traits -> absl_meta
+    "node116" -> "node117" [ style = dashed ] // absl_hash_policy_traits -> absl_common_policy_traits
+    "node116" -> "node51" [ style = dashed ] // absl_hash_policy_traits -> absl_meta
+    "node114" -> "node116"  // absl_raw_hash_set -> absl_hash_policy_traits
+    "node118" [ label = "absl_hashtable_debug_hooks\n(absl::hashtable_debug_hooks)", shape = pentagon ];
+    "node118" -> "node36" [ style = dashed ] // absl_hashtable_debug_hooks -> absl_config
+    "node114" -> "node118"  // absl_raw_hash_set -> absl_hashtable_debug_hooks
+    "node119" [ label = "absl_hashtablez_sampler\n(absl::hashtablez_sampler)", shape = octagon ];
+    "node119" -> "node32"  // absl_hashtablez_sampler -> absl_base
+    "node119" -> "node36"  // absl_hashtablez_sampler -> absl_config
+    "node119" -> "node100"  // absl_hashtablez_sampler -> absl_exponential_biased
+    "node120" [ label = "absl_sample_recorder\n(absl::sample_recorder)", shape = pentagon ];
+    "node120" -> "node32" [ style = dashed ] // absl_sample_recorder -> absl_base
+    "node120" -> "node62" [ style = dashed ] // absl_sample_recorder -> absl_synchronization
+    "node119" -> "node120"  // absl_hashtablez_sampler -> absl_sample_recorder
+    "node119" -> "node62"  // absl_hashtablez_sampler -> absl_synchronization
+    "node114" -> "node119"  // absl_raw_hash_set -> absl_hashtablez_sampler
+    "node114" -> "node50"  // absl_raw_hash_set -> absl_memory
+    "node114" -> "node51"  // absl_raw_hash_set -> absl_meta
+    "node114" -> "node48"  // absl_raw_hash_set -> absl_optional
+    "node114" -> "node93"  // absl_raw_hash_set -> absl_prefetch
+    "node114" -> "node42"  // absl_raw_hash_set -> absl_raw_logging_internal
+    "node114" -> "node52"  // absl_raw_hash_set -> absl_utility
+    "node113" -> "node114" [ style = dashed ] // absl_raw_hash_map -> absl_raw_hash_set
+    "node113" -> "node58" [ style = dashed ] // absl_raw_hash_map -> absl_throw_delegate
+    "node82" -> "node113" [ style = dashed ] // absl_flat_hash_map -> absl_raw_hash_map
+    "node80" -> "node82"  // absl_flags_reflection -> absl_flat_hash_map
+    "node80" -> "node53"  // absl_flags_reflection -> absl_strings
+    "node80" -> "node62"  // absl_flags_reflection -> absl_synchronization
+    "node31" -> "node80"  // absl_flags -> absl_flags_reflection
+    "node31" -> "node53"  // absl_flags -> absl_strings
+    "node30" -> "node31"  // tensorflow-lite -> absl_flags
+    "node30" -> "node108"  // tensorflow-lite -> absl_hash
+    "node121" [ label = "absl_status\n(absl::status)", shape = octagon ];
+    "node121" -> "node35"  // absl_status -> absl_atomic_hook
+    "node121" -> "node36"  // absl_status -> absl_config
+    "node121" -> "node86"  // absl_status -> absl_cord
+    "node121" -> "node37"  // absl_status -> absl_core_headers
+    "node121" -> "node107"  // absl_status -> absl_function_ref
+    "node121" -> "node96"  // absl_status -> absl_inlined_vector
+    "node121" -> "node48"  // absl_status -> absl_optional
+    "node121" -> "node42"  // absl_status -> absl_raw_logging_internal
+    "node121" -> "node69"  // absl_status -> absl_stacktrace
+    "node121" -> "node75"  // absl_status -> absl_str_format
+    "node122" [ label = "absl_strerror\n(absl::strerror)", shape = octagon ];
+    "node122" -> "node36"  // absl_strerror -> absl_config
+    "node122" -> "node37"  // absl_strerror -> absl_core_headers
+    "node122" -> "node43"  // absl_strerror -> absl_errno_saver
+    "node121" -> "node122"  // absl_status -> absl_strerror
+    "node121" -> "node53"  // absl_status -> absl_strings
+    "node121" -> "node71"  // absl_status -> absl_symbolize
+    "node30" -> "node121"  // tensorflow-lite -> absl_status
+    "node30" -> "node53"  // tensorflow-lite -> absl_strings
+    "node30" -> "node62"  // tensorflow-lite -> absl_synchronization
+    "node30" -> "node111"  // tensorflow-lite -> absl_variant
+    "node30" -> "node29"  // tensorflow-lite -> dl
+    "node123" [ label = "eigen\n(Eigen3::Eigen)", shape = pentagon ];
+    "node30" -> "node123"  // tensorflow-lite -> eigen
+    "node124" [ label = "farmhash\n(farmhash::farmhash)", shape = octagon ];
+    "node30" -> "node124"  // tensorflow-lite -> farmhash
+    "node125" [ label = "fft2d_fftsg2d\n(fft2d)", shape = octagon ];
+    "node126" [ label = "fft2d_fftsg", shape = octagon ];
+    "node127" [ label = "m", shape = septagon ];
+    "node126" -> "node127"  // fft2d_fftsg -> m
+    "node125" -> "node126"  // fft2d_fftsg2d -> fft2d_fftsg
+    "node30" -> "node125"  // tensorflow-lite -> fft2d_fftsg2d
+    "node128" [ label = "flatbuffers\n(flatbuffers::flatbuffers)", shape = octagon ];
+    "node128" -> "node2" [ style = dotted ] // flatbuffers -> ProjectConfig
+    "node30" -> "node128"  // tensorflow-lite -> flatbuffers
+    "node129" [ label = "gemmlowp\n(gemmlowp::gemmlowp)", shape = pentagon ];
+    "node130" [ label = "eight_bit_int_gemm", shape = octagon ];
+    "node131" [ label = "pthread", shape = septagon ];
+    "node130" -> "node131"  // eight_bit_int_gemm -> pthread
+    "node129" -> "node130" [ style = dashed ] // gemmlowp -> eight_bit_int_gemm
+    "node30" -> "node129"  // tensorflow-lite -> gemmlowp
+    "node132" [ label = "ml_dtypes\n(ml_dtypes::ml_dtypes)", shape = pentagon ];
+    "node30" -> "node132"  // tensorflow-lite -> ml_dtypes
+    "node30" -> "node6"  // tensorflow-lite -> pthreadpool
+    "node133" [ label = "ruy\n(ruy::ruy)", shape = pentagon ];
+    "node134" [ label = "ruy_check_macros\n(ruy::ruy_check_macros)", shape = pentagon ];
+    "node133" -> "node134" [ style = dashed ] // ruy -> ruy_check_macros
+    "node135" [ label = "ruy_context\n(ruy::ruy_context)", shape = octagon ];
+    "node136" [ label = "ruy_allocator\n(ruy::ruy_allocator)", shape = octagon ];
+    "node137" [ label = "ruy_opt_set\n(ruy::ruy_opt_set)", shape = pentagon ];
+    "node136" -> "node137"  // ruy_allocator -> ruy_opt_set
+    "node138" [ label = "ruy_size_util\n(ruy::ruy_size_util)", shape = pentagon ];
+    "node138" -> "node134" [ style = dashed ] // ruy_size_util -> ruy_check_macros
+    "node136" -> "node138"  // ruy_allocator -> ruy_size_util
+    "node139" [ label = "ruy_system_aligned_alloc\n(ruy::ruy_system_aligned_alloc)", shape = octagon ];
+    "node136" -> "node139"  // ruy_allocator -> ruy_system_aligned_alloc
+    "node135" -> "node136"  // ruy_context -> ruy_allocator
+    "node135" -> "node134"  // ruy_context -> ruy_check_macros
+    "node140" [ label = "ruy_ctx\n(ruy::ruy_ctx)", shape = octagon ];
+    "node140" -> "node136"  // ruy_ctx -> ruy_allocator
+    "node140" -> "node134"  // ruy_ctx -> ruy_check_macros
+    "node141" [ label = "ruy_cpuinfo\n(ruy::ruy_cpuinfo)", shape = octagon ];
+    "node141" -> "node12"  // ruy_cpuinfo -> cpuinfo
+    "node141" -> "node134"  // ruy_cpuinfo -> ruy_check_macros
+    "node142" [ label = "ruy_cpu_cache_params\n(ruy::ruy_cpu_cache_params)", shape = pentagon ];
+    "node141" -> "node142"  // ruy_cpuinfo -> ruy_cpu_cache_params
+    "node143" [ label = "ruy_platform\n(ruy::ruy_platform)", shape = pentagon ];
+    "node141" -> "node143"  // ruy_cpuinfo -> ruy_platform
+    "node140" -> "node141"  // ruy_ctx -> ruy_cpuinfo
+    "node144" [ label = "ruy_have_built_path_for\n(ruy::ruy_have_built_path_for)", shape = pentagon ];
+    "node145" [ label = "ruy_have_built_path_for_avx\n(ruy::ruy_have_built_path_for_avx)", shape = octagon ];
+    "node145" -> "node137"  // ruy_have_built_path_for_avx -> ruy_opt_set
+    "node145" -> "node143"  // ruy_have_built_path_for_avx -> ruy_platform
+    "node144" -> "node145" [ style = dashed ] // ruy_have_built_path_for -> ruy_have_built_path_for_avx
+    "node146" [ label = "ruy_have_built_path_for_avx2_fma\n(ruy::ruy_have_built_path_for_avx2_fma)", shape = octagon ];
+    "node146" -> "node137"  // ruy_have_built_path_for_avx2_fma -> ruy_opt_set
+    "node146" -> "node143"  // ruy_have_built_path_for_avx2_fma -> ruy_platform
+    "node144" -> "node146" [ style = dashed ] // ruy_have_built_path_for -> ruy_have_built_path_for_avx2_fma
+    "node147" [ label = "ruy_have_built_path_for_avx512\n(ruy::ruy_have_built_path_for_avx512)", shape = octagon ];
+    "node147" -> "node137"  // ruy_have_built_path_for_avx512 -> ruy_opt_set
+    "node147" -> "node143"  // ruy_have_built_path_for_avx512 -> ruy_platform
+    "node144" -> "node147" [ style = dashed ] // ruy_have_built_path_for -> ruy_have_built_path_for_avx512
+    "node144" -> "node143" [ style = dashed ] // ruy_have_built_path_for -> ruy_platform
+    "node140" -> "node144"  // ruy_ctx -> ruy_have_built_path_for
+    "node148" [ label = "ruy_path\n(ruy::ruy_path)", shape = pentagon ];
+    "node148" -> "node143" [ style = dashed ] // ruy_path -> ruy_platform
+    "node148" -> "node138" [ style = dashed ] // ruy_path -> ruy_size_util
+    "node140" -> "node148"  // ruy_ctx -> ruy_path
+    "node149" [ label = "ruy_performance_advisory\n(ruy::ruy_performance_advisory)", shape = pentagon ];
+    "node140" -> "node149"  // ruy_ctx -> ruy_performance_advisory
+    "node140" -> "node143"  // ruy_ctx -> ruy_platform
+    "node150" [ label = "ruy_prepacked_cache\n(ruy::ruy_prepacked_cache)", shape = octagon ];
+    "node151" [ label = "ruy_mat\n(ruy::ruy_mat)", shape = pentagon ];
+    "node151" -> "node134" [ style = dashed ] // ruy_mat -> ruy_check_macros
+    "node152" [ label = "ruy_matrix\n(ruy::ruy_matrix)", shape = pentagon ];
+    "node152" -> "node134" [ style = dashed ] // ruy_matrix -> ruy_check_macros
+    "node151" -> "node152" [ style = dashed ] // ruy_mat -> ruy_matrix
+    "node151" -> "node138" [ style = dashed ] // ruy_mat -> ruy_size_util
+    "node150" -> "node151"  // ruy_prepacked_cache -> ruy_mat
+    "node153" [ label = "ruy_profiler_instrumentation\n(ruy::ruy_profiler_instrumentation)", shape = octagon ];
+    "node154" [ label = "-pthread", shape = septagon ];
+    "node153" -> "node154" [ style = dotted ] // ruy_profiler_instrumentation -> -pthread
+    "node150" -> "node153"  // ruy_prepacked_cache -> ruy_profiler_instrumentation
+    "node150" -> "node139"  // ruy_prepacked_cache -> ruy_system_aligned_alloc
+    "node140" -> "node150"  // ruy_ctx -> ruy_prepacked_cache
+    "node155" [ label = "ruy_thread_pool\n(ruy::ruy_thread_pool)", shape = octagon ];
+    "node155" -> "node154" [ style = dotted ] // ruy_thread_pool -> -pthread
+    "node156" [ label = "ruy_blocking_counter\n(ruy::ruy_blocking_counter)", shape = octagon ];
+    "node156" -> "node154" [ style = dotted ] // ruy_blocking_counter -> -pthread
+    "node156" -> "node134"  // ruy_blocking_counter -> ruy_check_macros
+    "node157" [ label = "ruy_time\n(ruy::ruy_time)", shape = pentagon ];
+    "node156" -> "node157"  // ruy_blocking_counter -> ruy_time
+    "node158" [ label = "ruy_wait\n(ruy::ruy_wait)", shape = octagon ];
+    "node158" -> "node154" [ style = dotted ] // ruy_wait -> -pthread
+    "node158" -> "node157"  // ruy_wait -> ruy_time
+    "node156" -> "node158"  // ruy_blocking_counter -> ruy_wait
+    "node155" -> "node156"  // ruy_thread_pool -> ruy_blocking_counter
+    "node155" -> "node134"  // ruy_thread_pool -> ruy_check_macros
+    "node159" [ label = "ruy_denormal\n(ruy::ruy_denormal)", shape = octagon ];
+    "node155" -> "node159"  // ruy_thread_pool -> ruy_denormal
+    "node155" -> "node157"  // ruy_thread_pool -> ruy_time
+    "node160" [ label = "ruy_trace\n(ruy::ruy_trace)", shape = pentagon ];
+    "node160" -> "node151" [ style = dashed ] // ruy_trace -> ruy_mat
+    "node160" -> "node152" [ style = dashed ] // ruy_trace -> ruy_matrix
+    "node160" -> "node148" [ style = dashed ] // ruy_trace -> ruy_path
+    "node160" -> "node143" [ style = dashed ] // ruy_trace -> ruy_platform
+    "node161" [ label = "ruy_side_pair\n(ruy::ruy_side_pair)", shape = pentagon ];
+    "node161" -> "node134" [ style = dashed ] // ruy_side_pair -> ruy_check_macros
+    "node160" -> "node161" [ style = dashed ] // ruy_trace -> ruy_side_pair
+    "node155" -> "node160"  // ruy_thread_pool -> ruy_trace
+    "node155" -> "node158"  // ruy_thread_pool -> ruy_wait
+    "node140" -> "node155"  // ruy_ctx -> ruy_thread_pool
+    "node140" -> "node160"  // ruy_ctx -> ruy_trace
+    "node162" [ label = "ruy_tune\n(ruy::ruy_tune)", shape = octagon ];
+    "node162" -> "node142"  // ruy_tune -> ruy_cpu_cache_params
+    "node162" -> "node141"  // ruy_tune -> ruy_cpuinfo
+    "node162" -> "node137"  // ruy_tune -> ruy_opt_set
+    "node162" -> "node143"  // ruy_tune -> ruy_platform
+    "node162" -> "node157"  // ruy_tune -> ruy_time
+    "node140" -> "node162"  // ruy_ctx -> ruy_tune
+    "node135" -> "node140"  // ruy_context -> ruy_ctx
+    "node135" -> "node148"  // ruy_context -> ruy_path
+    "node135" -> "node149"  // ruy_context -> ruy_performance_advisory
+    "node135" -> "node143"  // ruy_context -> ruy_platform
+    "node135" -> "node150"  // ruy_context -> ruy_prepacked_cache
+    "node135" -> "node155"  // ruy_context -> ruy_thread_pool
+    "node135" -> "node162"  // ruy_context -> ruy_tune
+    "node133" -> "node135" [ style = dashed ] // ruy -> ruy_context
+    "node163" [ label = "ruy_context_get_ctx\n(ruy::ruy_context_get_ctx)", shape = octagon ];
+    "node163" -> "node135"  // ruy_context_get_ctx -> ruy_context
+    "node163" -> "node140"  // ruy_context_get_ctx -> ruy_ctx
+    "node133" -> "node163" [ style = dashed ] // ruy -> ruy_context_get_ctx
+    "node164" [ label = "ruy_frontend\n(ruy::ruy_frontend)", shape = octagon ];
+    "node164" -> "node136"  // ruy_frontend -> ruy_allocator
+    "node165" [ label = "ruy_create_trmul_params\n(ruy::ruy_create_trmul_params)", shape = pentagon ];
+    "node165" -> "node136" [ style = dashed ] // ruy_create_trmul_params -> ruy_allocator
+    "node165" -> "node134" [ style = dashed ] // ruy_create_trmul_params -> ruy_check_macros
+    "node165" -> "node140" [ style = dashed ] // ruy_create_trmul_params -> ruy_ctx
+    "node166" [ label = "ruy_kernel\n(ruy::ruy_kernel)", shape = pentagon ];
+    "node167" [ label = "ruy_apply_multiplier\n(ruy::ruy_apply_multiplier)", shape = octagon ];
+    "node167" -> "node134"  // ruy_apply_multiplier -> ruy_check_macros
+    "node168" [ label = "ruy_mul_params\n(ruy::ruy_mul_params)", shape = pentagon ];
+    "node168" -> "node134" [ style = dashed ] // ruy_mul_params -> ruy_check_macros
+    "node168" -> "node138" [ style = dashed ] // ruy_mul_params -> ruy_size_util
+    "node167" -> "node168"  // ruy_apply_multiplier -> ruy_mul_params
+    "node166" -> "node167" [ style = dashed ] // ruy_kernel -> ruy_apply_multiplier
+    "node166" -> "node134" [ style = dashed ] // ruy_kernel -> ruy_check_macros
+    "node169" [ label = "ruy_kernel_arm\n(ruy::ruy_kernel_arm)", shape = octagon ];
+    "node170" [ label = "ruy_asm_helpers\n(ruy::ruy_asm_helpers)", shape = pentagon ];
+    "node170" -> "node137" [ style = dashed ] // ruy_asm_helpers -> ruy_opt_set
+    "node169" -> "node170"  // ruy_kernel_arm -> ruy_asm_helpers
+    "node169" -> "node134"  // ruy_kernel_arm -> ruy_check_macros
+    "node171" [ label = "ruy_kernel_common\n(ruy::ruy_kernel_common)", shape = pentagon ];
+    "node171" -> "node167" [ style = dashed ] // ruy_kernel_common -> ruy_apply_multiplier
+    "node171" -> "node134" [ style = dashed ] // ruy_kernel_common -> ruy_check_macros
+    "node171" -> "node151" [ style = dashed ] // ruy_kernel_common -> ruy_mat
+    "node171" -> "node152" [ style = dashed ] // ruy_kernel_common -> ruy_matrix
+    "node171" -> "node168" [ style = dashed ] // ruy_kernel_common -> ruy_mul_params
+    "node171" -> "node137" [ style = dashed ] // ruy_kernel_common -> ruy_opt_set
+    "node171" -> "node148" [ style = dashed ] // ruy_kernel_common -> ruy_path
+    "node171" -> "node143" [ style = dashed ] // ruy_kernel_common -> ruy_platform
+    "node171" -> "node153" [ style = dashed ] // ruy_kernel_common -> ruy_profiler_instrumentation
+    "node171" -> "node161" [ style = dashed ] // ruy_kernel_common -> ruy_side_pair
+    "node171" -> "node138" [ style = dashed ] // ruy_kernel_common -> ruy_size_util
+    "node171" -> "node162" [ style = dashed ] // ruy_kernel_common -> ruy_tune
+    "node169" -> "node171"  // ruy_kernel_arm -> ruy_kernel_common
+    "node169" -> "node151"  // ruy_kernel_arm -> ruy_mat
+    "node169" -> "node168"  // ruy_kernel_arm -> ruy_mul_params
+    "node169" -> "node137"  // ruy_kernel_arm -> ruy_opt_set
+    "node169" -> "node148"  // ruy_kernel_arm -> ruy_path
+    "node169" -> "node143"  // ruy_kernel_arm -> ruy_platform
+    "node169" -> "node153"  // ruy_kernel_arm -> ruy_profiler_instrumentation
+    "node169" -> "node161"  // ruy_kernel_arm -> ruy_side_pair
+    "node169" -> "node138"  // ruy_kernel_arm -> ruy_size_util
+    "node169" -> "node162"  // ruy_kernel_arm -> ruy_tune
+    "node166" -> "node169" [ style = dashed ] // ruy_kernel -> ruy_kernel_arm
+    "node172" [ label = "ruy_kernel_avx\n(ruy::ruy_kernel_avx)", shape = octagon ];
+    "node172" -> "node134"  // ruy_kernel_avx -> ruy_check_macros
+    "node172" -> "node171"  // ruy_kernel_avx -> ruy_kernel_common
+    "node172" -> "node151"  // ruy_kernel_avx -> ruy_mat
+    "node172" -> "node168"  // ruy_kernel_avx -> ruy_mul_params
+    "node172" -> "node137"  // ruy_kernel_avx -> ruy_opt_set
+    "node172" -> "node148"  // ruy_kernel_avx -> ruy_path
+    "node172" -> "node143"  // ruy_kernel_avx -> ruy_platform
+    "node172" -> "node153"  // ruy_kernel_avx -> ruy_profiler_instrumentation
+    "node172" -> "node162"  // ruy_kernel_avx -> ruy_tune
+    "node166" -> "node172" [ style = dashed ] // ruy_kernel -> ruy_kernel_avx
+    "node173" [ label = "ruy_kernel_avx2_fma\n(ruy::ruy_kernel_avx2_fma)", shape = octagon ];
+    "node173" -> "node134"  // ruy_kernel_avx2_fma -> ruy_check_macros
+    "node173" -> "node171"  // ruy_kernel_avx2_fma -> ruy_kernel_common
+    "node173" -> "node151"  // ruy_kernel_avx2_fma -> ruy_mat
+    "node173" -> "node168"  // ruy_kernel_avx2_fma -> ruy_mul_params
+    "node173" -> "node137"  // ruy_kernel_avx2_fma -> ruy_opt_set
+    "node173" -> "node148"  // ruy_kernel_avx2_fma -> ruy_path
+    "node173" -> "node143"  // ruy_kernel_avx2_fma -> ruy_platform
+    "node173" -> "node153"  // ruy_kernel_avx2_fma -> ruy_profiler_instrumentation
+    "node173" -> "node162"  // ruy_kernel_avx2_fma -> ruy_tune
+    "node166" -> "node173" [ style = dashed ] // ruy_kernel -> ruy_kernel_avx2_fma
+    "node174" [ label = "ruy_kernel_avx512\n(ruy::ruy_kernel_avx512)", shape = octagon ];
+    "node174" -> "node134"  // ruy_kernel_avx512 -> ruy_check_macros
+    "node174" -> "node171"  // ruy_kernel_avx512 -> ruy_kernel_common
+    "node174" -> "node151"  // ruy_kernel_avx512 -> ruy_mat
+    "node174" -> "node168"  // ruy_kernel_avx512 -> ruy_mul_params
+    "node174" -> "node137"  // ruy_kernel_avx512 -> ruy_opt_set
+    "node174" -> "node148"  // ruy_kernel_avx512 -> ruy_path
+    "node174" -> "node143"  // ruy_kernel_avx512 -> ruy_platform
+    "node174" -> "node153"  // ruy_kernel_avx512 -> ruy_profiler_instrumentation
+    "node174" -> "node162"  // ruy_kernel_avx512 -> ruy_tune
+    "node166" -> "node174" [ style = dashed ] // ruy_kernel -> ruy_kernel_avx512
+    "node166" -> "node171" [ style = dashed ] // ruy_kernel -> ruy_kernel_common
+    "node166" -> "node151" [ style = dashed ] // ruy_kernel -> ruy_mat
+    "node166" -> "node152" [ style = dashed ] // ruy_kernel -> ruy_matrix
+    "node166" -> "node168" [ style = dashed ] // ruy_kernel -> ruy_mul_params
+    "node166" -> "node137" [ style = dashed ] // ruy_kernel -> ruy_opt_set
+    "node166" -> "node148" [ style = dashed ] // ruy_kernel -> ruy_path
+    "node166" -> "node143" [ style = dashed ] // ruy_kernel -> ruy_platform
+    "node166" -> "node153" [ style = dashed ] // ruy_kernel -> ruy_profiler_instrumentation
+    "node166" -> "node161" [ style = dashed ] // ruy_kernel -> ruy_side_pair
+    "node166" -> "node138" [ style = dashed ] // ruy_kernel -> ruy_size_util
+    "node166" -> "node160" [ style = dashed ] // ruy_kernel -> ruy_trace
+    "node166" -> "node162" [ style = dashed ] // ruy_kernel -> ruy_tune
+    "node165" -> "node166" [ style = dashed ] // ruy_create_trmul_params -> ruy_kernel
+    "node165" -> "node151" [ style = dashed ] // ruy_create_trmul_params -> ruy_mat
+    "node165" -> "node168" [ style = dashed ] // ruy_create_trmul_params -> ruy_mul_params
+    "node175" [ label = "ruy_pack\n(ruy::ruy_pack)", shape = pentagon ];
+    "node175" -> "node134" [ style = dashed ] // ruy_pack -> ruy_check_macros
+    "node175" -> "node151" [ style = dashed ] // ruy_pack -> ruy_mat
+    "node175" -> "node152" [ style = dashed ] // ruy_pack -> ruy_matrix
+    "node175" -> "node137" [ style = dashed ] // ruy_pack -> ruy_opt_set
+    "node176" [ label = "ruy_pack_arm\n(ruy::ruy_pack_arm)", shape = octagon ];
+    "node176" -> "node170"  // ruy_pack_arm -> ruy_asm_helpers
+    "node176" -> "node134"  // ruy_pack_arm -> ruy_check_macros
+    "node176" -> "node151"  // ruy_pack_arm -> ruy_mat
+    "node176" -> "node137"  // ruy_pack_arm -> ruy_opt_set
+    "node177" [ label = "ruy_pack_common\n(ruy::ruy_pack_common)", shape = pentagon ];
+    "node177" -> "node134" [ style = dashed ] // ruy_pack_common -> ruy_check_macros
+    "node177" -> "node151" [ style = dashed ] // ruy_pack_common -> ruy_mat
+    "node177" -> "node152" [ style = dashed ] // ruy_pack_common -> ruy_matrix
+    "node177" -> "node137" [ style = dashed ] // ruy_pack_common -> ruy_opt_set
+    "node177" -> "node148" [ style = dashed ] // ruy_pack_common -> ruy_path
+    "node177" -> "node143" [ style = dashed ] // ruy_pack_common -> ruy_platform
+    "node177" -> "node153" [ style = dashed ] // ruy_pack_common -> ruy_profiler_instrumentation
+    "node177" -> "node162" [ style = dashed ] // ruy_pack_common -> ruy_tune
+    "node176" -> "node177"  // ruy_pack_arm -> ruy_pack_common
+    "node176" -> "node148"  // ruy_pack_arm -> ruy_path
+    "node176" -> "node143"  // ruy_pack_arm -> ruy_platform
+    "node176" -> "node153"  // ruy_pack_arm -> ruy_profiler_instrumentation
+    "node176" -> "node162"  // ruy_pack_arm -> ruy_tune
+    "node175" -> "node176" [ style = dashed ] // ruy_pack -> ruy_pack_arm
+    "node178" [ label = "ruy_pack_avx\n(ruy::ruy_pack_avx)", shape = octagon ];
+    "node178" -> "node134"  // ruy_pack_avx -> ruy_check_macros
+    "node178" -> "node151"  // ruy_pack_avx -> ruy_mat
+    "node178" -> "node137"  // ruy_pack_avx -> ruy_opt_set
+    "node178" -> "node177"  // ruy_pack_avx -> ruy_pack_common
+    "node178" -> "node148"  // ruy_pack_avx -> ruy_path
+    "node178" -> "node143"  // ruy_pack_avx -> ruy_platform
+    "node178" -> "node153"  // ruy_pack_avx -> ruy_profiler_instrumentation
+    "node178" -> "node162"  // ruy_pack_avx -> ruy_tune
+    "node175" -> "node178" [ style = dashed ] // ruy_pack -> ruy_pack_avx
+    "node179" [ label = "ruy_pack_avx2_fma\n(ruy::ruy_pack_avx2_fma)", shape = octagon ];
+    "node179" -> "node134"  // ruy_pack_avx2_fma -> ruy_check_macros
+    "node179" -> "node151"  // ruy_pack_avx2_fma -> ruy_mat
+    "node179" -> "node137"  // ruy_pack_avx2_fma -> ruy_opt_set
+    "node179" -> "node177"  // ruy_pack_avx2_fma -> ruy_pack_common
+    "node179" -> "node148"  // ruy_pack_avx2_fma -> ruy_path
+    "node179" -> "node143"  // ruy_pack_avx2_fma -> ruy_platform
+    "node179" -> "node153"  // ruy_pack_avx2_fma -> ruy_profiler_instrumentation
+    "node179" -> "node162"  // ruy_pack_avx2_fma -> ruy_tune
+    "node175" -> "node179" [ style = dashed ] // ruy_pack -> ruy_pack_avx2_fma
+    "node180" [ label = "ruy_pack_avx512\n(ruy::ruy_pack_avx512)", shape = octagon ];
+    "node180" -> "node134"  // ruy_pack_avx512 -> ruy_check_macros
+    "node180" -> "node151"  // ruy_pack_avx512 -> ruy_mat
+    "node180" -> "node137"  // ruy_pack_avx512 -> ruy_opt_set
+    "node180" -> "node177"  // ruy_pack_avx512 -> ruy_pack_common
+    "node180" -> "node148"  // ruy_pack_avx512 -> ruy_path
+    "node180" -> "node143"  // ruy_pack_avx512 -> ruy_platform
+    "node180" -> "node153"  // ruy_pack_avx512 -> ruy_profiler_instrumentation
+    "node180" -> "node162"  // ruy_pack_avx512 -> ruy_tune
+    "node175" -> "node180" [ style = dashed ] // ruy_pack -> ruy_pack_avx512
+    "node175" -> "node177" [ style = dashed ] // ruy_pack -> ruy_pack_common
+    "node175" -> "node148" [ style = dashed ] // ruy_pack -> ruy_path
+    "node175" -> "node143" [ style = dashed ] // ruy_pack -> ruy_platform
+    "node175" -> "node153" [ style = dashed ] // ruy_pack -> ruy_profiler_instrumentation
+    "node175" -> "node160" [ style = dashed ] // ruy_pack -> ruy_trace
+    "node175" -> "node162" [ style = dashed ] // ruy_pack -> ruy_tune
+    "node165" -> "node175" [ style = dashed ] // ruy_create_trmul_params -> ruy_pack
+    "node165" -> "node148" [ style = dashed ] // ruy_create_trmul_params -> ruy_path
+    "node165" -> "node149" [ style = dashed ] // ruy_create_trmul_params -> ruy_performance_advisory
+    "node165" -> "node143" [ style = dashed ] // ruy_create_trmul_params -> ruy_platform
+    "node165" -> "node161" [ style = dashed ] // ruy_create_trmul_params -> ruy_side_pair
+    "node165" -> "node160" [ style = dashed ] // ruy_create_trmul_params -> ruy_trace
+    "node181" [ label = "ruy_trmul_params\n(ruy::ruy_trmul_params)", shape = pentagon ];
+    "node181" -> "node151" [ style = dashed ] // ruy_trmul_params -> ruy_mat
+    "node181" -> "node168" [ style = dashed ] // ruy_trmul_params -> ruy_mul_params
+    "node181" -> "node148" [ style = dashed ] // ruy_trmul_params -> ruy_path
+    "node181" -> "node161" [ style = dashed ] // ruy_trmul_params -> ruy_side_pair
+    "node181" -> "node162" [ style = dashed ] // ruy_trmul_params -> ruy_tune
+    "node165" -> "node181" [ style = dashed ] // ruy_create_trmul_params -> ruy_trmul_params
+    "node164" -> "node165"  // ruy_frontend -> ruy_create_trmul_params
+    "node164" -> "node140"  // ruy_frontend -> ruy_ctx
+    "node164" -> "node151"  // ruy_frontend -> ruy_mat
+    "node164" -> "node168"  // ruy_frontend -> ruy_mul_params
+    "node182" [ label = "ruy_prepare_packed_matrices\n(ruy::ruy_prepare_packed_matrices)", shape = octagon ];
+    "node182" -> "node136"  // ruy_prepare_packed_matrices -> ruy_allocator
+    "node182" -> "node140"  // ruy_prepare_packed_matrices -> ruy_ctx
+    "node182" -> "node152"  // ruy_prepare_packed_matrices -> ruy_matrix
+    "node182" -> "node150"  // ruy_prepare_packed_matrices -> ruy_prepacked_cache
+    "node182" -> "node161"  // ruy_prepare_packed_matrices -> ruy_side_pair
+    "node182" -> "node160"  // ruy_prepare_packed_matrices -> ruy_trace
+    "node182" -> "node181"  // ruy_prepare_packed_matrices -> ruy_trmul_params
+    "node164" -> "node182"  // ruy_frontend -> ruy_prepare_packed_matrices
+    "node164" -> "node153"  // ruy_frontend -> ruy_profiler_instrumentation
+    "node164" -> "node160"  // ruy_frontend -> ruy_trace
+    "node183" [ label = "ruy_trmul\n(ruy::ruy_trmul)", shape = octagon ];
+    "node183" -> "node136"  // ruy_trmul -> ruy_allocator
+    "node184" [ label = "ruy_block_map\n(ruy::ruy_block_map)", shape = octagon ];
+    "node184" -> "node134"  // ruy_block_map -> ruy_check_macros
+    "node184" -> "node142"  // ruy_block_map -> ruy_cpu_cache_params
+    "node184" -> "node137"  // ruy_block_map -> ruy_opt_set
+    "node184" -> "node153"  // ruy_block_map -> ruy_profiler_instrumentation
+    "node184" -> "node161"  // ruy_block_map -> ruy_side_pair
+    "node184" -> "node138"  // ruy_block_map -> ruy_size_util
+    "node184" -> "node160"  // ruy_block_map -> ruy_trace
+    "node183" -> "node184"  // ruy_trmul -> ruy_block_map
+    "node183" -> "node134"  // ruy_trmul -> ruy_check_macros
+    "node183" -> "node142"  // ruy_trmul -> ruy_cpu_cache_params
+    "node183" -> "node141"  // ruy_trmul -> ruy_cpuinfo
+    "node183" -> "node140"  // ruy_trmul -> ruy_ctx
+    "node183" -> "node159"  // ruy_trmul -> ruy_denormal
+    "node183" -> "node151"  // ruy_trmul -> ruy_mat
+    "node183" -> "node152"  // ruy_trmul -> ruy_matrix
+    "node183" -> "node168"  // ruy_trmul -> ruy_mul_params
+    "node183" -> "node137"  // ruy_trmul -> ruy_opt_set
+    "node183" -> "node153"  // ruy_trmul -> ruy_profiler_instrumentation
+    "node183" -> "node161"  // ruy_trmul -> ruy_side_pair
+    "node183" -> "node138"  // ruy_trmul -> ruy_size_util
+    "node183" -> "node155"  // ruy_trmul -> ruy_thread_pool
+    "node183" -> "node160"  // ruy_trmul -> ruy_trace
+    "node183" -> "node181"  // ruy_trmul -> ruy_trmul_params
+    "node183" -> "node162"  // ruy_trmul -> ruy_tune
+    "node164" -> "node183"  // ruy_frontend -> ruy_trmul
+    "node164" -> "node181"  // ruy_frontend -> ruy_trmul_params
+    "node185" [ label = "ruy_validate\n(ruy::ruy_validate)", shape = pentagon ];
+    "node185" -> "node134" [ style = dashed ] // ruy_validate -> ruy_check_macros
+    "node185" -> "node151" [ style = dashed ] // ruy_validate -> ruy_mat
+    "node185" -> "node168" [ style = dashed ] // ruy_validate -> ruy_mul_params
+    "node185" -> "node161" [ style = dashed ] // ruy_validate -> ruy_side_pair
+    "node164" -> "node185"  // ruy_frontend -> ruy_validate
+    "node133" -> "node164" [ style = dashed ] // ruy -> ruy_frontend
+    "node133" -> "node151" [ style = dashed ] // ruy -> ruy_mat
+    "node133" -> "node152" [ style = dashed ] // ruy -> ruy_matrix
+    "node133" -> "node168" [ style = dashed ] // ruy -> ruy_mul_params
+    "node133" -> "node148" [ style = dashed ] // ruy -> ruy_path
+    "node133" -> "node143" [ style = dashed ] // ruy -> ruy_platform
+    "node133" -> "node138" [ style = dashed ] // ruy -> ruy_size_util
+    "node133" -> "node160" [ style = dashed ] // ruy -> ruy_trace
+    "node30" -> "node133"  // tensorflow-lite -> ruy
+    "node28" -> "node30"  // _pywrap_tensorflow_interpreter_wrapper -> tensorflow-lite
+    "node186" [ label = "absl_absl_check\n(absl::absl_check)", shape = pentagon ];
+    "node187" [ label = "absl_log_internal_check_impl\n(absl::log_internal_check_impl)", shape = pentagon ];
+    "node187" -> "node37" [ style = dashed ] // absl_log_internal_check_impl -> absl_core_headers
+    "node188" [ label = "absl_log_internal_check_op\n(absl::log_internal_check_op)", shape = octagon ];
+    "node188" -> "node36"  // absl_log_internal_check_op -> absl_config
+    "node188" -> "node37"  // absl_log_internal_check_op -> absl_core_headers
+    "node189" [ label = "absl_log_internal_nullguard\n(absl::log_internal_nullguard)", shape = octagon ];
+    "node189" -> "node36"  // absl_log_internal_nullguard -> absl_config
+    "node189" -> "node37"  // absl_log_internal_nullguard -> absl_core_headers
+    "node188" -> "node189"  // absl_log_internal_check_op -> absl_log_internal_nullguard
+    "node190" [ label = "absl_log_internal_nullstream\n(absl::log_internal_nullstream)", shape = pentagon ];
+    "node190" -> "node36" [ style = dashed ] // absl_log_internal_nullstream -> absl_config
+    "node190" -> "node37" [ style = dashed ] // absl_log_internal_nullstream -> absl_core_headers
+    "node190" -> "node41" [ style = dashed ] // absl_log_internal_nullstream -> absl_log_severity
+    "node190" -> "node53" [ style = dashed ] // absl_log_internal_nullstream -> absl_strings
+    "node188" -> "node190"  // absl_log_internal_check_op -> absl_log_internal_nullstream
+    "node191" [ label = "absl_log_internal_strip\n(absl::log_internal_strip)", shape = pentagon ];
+    "node192" [ label = "absl_log_internal_message\n(absl::log_internal_message)", shape = octagon ];
+    "node192" -> "node32"  // absl_log_internal_message -> absl_base
+    "node192" -> "node36"  // absl_log_internal_message -> absl_config
+    "node192" -> "node37"  // absl_log_internal_message -> absl_core_headers
+    "node192" -> "node43"  // absl_log_internal_message -> absl_errno_saver
+    "node193" [ label = "absl_examine_stack\n(absl::examine_stack)", shape = octagon ];
+    "node193" -> "node36"  // absl_examine_stack -> absl_config
+    "node193" -> "node37"  // absl_examine_stack -> absl_core_headers
+    "node193" -> "node42"  // absl_examine_stack -> absl_raw_logging_internal
+    "node193" -> "node69"  // absl_examine_stack -> absl_stacktrace
+    "node193" -> "node71"  // absl_examine_stack -> absl_symbolize
+    "node192" -> "node193"  // absl_log_internal_message -> absl_examine_stack
+    "node192" -> "node96"  // absl_log_internal_message -> absl_inlined_vector
+    "node194" [ label = "absl_log_entry\n(absl::log_entry)", shape = octagon ];
+    "node194" -> "node36"  // absl_log_entry -> absl_config
+    "node194" -> "node37"  // absl_log_entry -> absl_core_headers
+    "node195" [ label = "absl_log_internal_config\n(absl::log_internal_config)", shape = pentagon ];
+    "node195" -> "node36" [ style = dashed ] // absl_log_internal_config -> absl_config
+    "node195" -> "node37" [ style = dashed ] // absl_log_internal_config -> absl_core_headers
+    "node194" -> "node195"  // absl_log_entry -> absl_log_internal_config
+    "node194" -> "node41"  // absl_log_entry -> absl_log_severity
+    "node194" -> "node78"  // absl_log_entry -> absl_span
+    "node194" -> "node53"  // absl_log_entry -> absl_strings
+    "node194" -> "node66"  // absl_log_entry -> absl_time
+    "node192" -> "node194"  // absl_log_internal_message -> absl_log_entry
+    "node196" [ label = "absl_log_globals\n(absl::log_globals)", shape = octagon ];
+    "node196" -> "node35"  // absl_log_globals -> absl_atomic_hook
+    "node196" -> "node36"  // absl_log_globals -> absl_config
+    "node196" -> "node37"  // absl_log_globals -> absl_core_headers
+    "node196" -> "node108"  // absl_log_globals -> absl_hash
+    "node196" -> "node41"  // absl_log_globals -> absl_log_severity
+    "node196" -> "node53"  // absl_log_globals -> absl_strings
+    "node192" -> "node196"  // absl_log_internal_message -> absl_log_globals
+    "node197" [ label = "absl_log_internal_append_truncated\n(absl::log_internal_append_truncated)", shape = pentagon ];
+    "node197" -> "node36" [ style = dashed ] // absl_log_internal_append_truncated -> absl_config
+    "node197" -> "node78" [ style = dashed ] // absl_log_internal_append_truncated -> absl_span
+    "node197" -> "node53" [ style = dashed ] // absl_log_internal_append_truncated -> absl_strings
+    "node192" -> "node197"  // absl_log_internal_message -> absl_log_internal_append_truncated
+    "node198" [ label = "absl_log_internal_format\n(absl::log_internal_format)", shape = octagon ];
+    "node198" -> "node36"  // absl_log_internal_format -> absl_config
+    "node198" -> "node37"  // absl_log_internal_format -> absl_core_headers
+    "node198" -> "node197"  // absl_log_internal_format -> absl_log_internal_append_truncated
+    "node198" -> "node195"  // absl_log_internal_format -> absl_log_internal_config
+    "node199" [ label = "absl_log_internal_globals\n(absl::log_internal_globals)", shape = octagon ];
+    "node199" -> "node36"  // absl_log_internal_globals -> absl_config
+    "node199" -> "node37"  // absl_log_internal_globals -> absl_core_headers
+    "node199" -> "node41"  // absl_log_internal_globals -> absl_log_severity
+    "node199" -> "node42"  // absl_log_internal_globals -> absl_raw_logging_internal
+    "node199" -> "node53"  // absl_log_internal_globals -> absl_strings
+    "node199" -> "node66"  // absl_log_internal_globals -> absl_time
+    "node198" -> "node199"  // absl_log_internal_format -> absl_log_internal_globals
+    "node198" -> "node41"  // absl_log_internal_format -> absl_log_severity
+    "node198" -> "node78"  // absl_log_internal_format -> absl_span
+    "node198" -> "node75"  // absl_log_internal_format -> absl_str_format
+    "node198" -> "node53"  // absl_log_internal_format -> absl_strings
+    "node198" -> "node66"  // absl_log_internal_format -> absl_time
+    "node192" -> "node198"  // absl_log_internal_message -> absl_log_internal_format
+    "node192" -> "node199"  // absl_log_internal_message -> absl_log_internal_globals
+    "node200" [ label = "absl_log_internal_log_sink_set\n(absl::log_internal_log_sink_set)", shape = octagon ];
+    "node200" -> "node32"  // absl_log_internal_log_sink_set -> absl_base
+    "node201" [ label = "absl_cleanup\n(absl::cleanup)", shape = pentagon ];
+    "node202" [ label = "absl_cleanup_internal\n(absl::cleanup_internal)", shape = pentagon ];
+    "node202" -> "node38" [ style = dashed ] // absl_cleanup_internal -> absl_base_internal
+    "node202" -> "node37" [ style = dashed ] // absl_cleanup_internal -> absl_core_headers
+    "node202" -> "node52" [ style = dashed ] // absl_cleanup_internal -> absl_utility
+    "node201" -> "node202" [ style = dashed ] // absl_cleanup -> absl_cleanup_internal
+    "node201" -> "node36" [ style = dashed ] // absl_cleanup -> absl_config
+    "node201" -> "node37" [ style = dashed ] // absl_cleanup -> absl_core_headers
+    "node200" -> "node201"  // absl_log_internal_log_sink_set -> absl_cleanup
+    "node200" -> "node36"  // absl_log_internal_log_sink_set -> absl_config
+    "node200" -> "node37"  // absl_log_internal_log_sink_set -> absl_core_headers
+    "node200" -> "node194"  // absl_log_internal_log_sink_set -> absl_log_entry
+    "node200" -> "node196"  // absl_log_internal_log_sink_set -> absl_log_globals
+    "node200" -> "node195"  // absl_log_internal_log_sink_set -> absl_log_internal_config
+    "node200" -> "node199"  // absl_log_internal_log_sink_set -> absl_log_internal_globals
+    "node200" -> "node41"  // absl_log_internal_log_sink_set -> absl_log_severity
+    "node203" [ label = "absl_log_sink\n(absl::log_sink)", shape = octagon ];
+    "node203" -> "node36"  // absl_log_sink -> absl_config
+    "node203" -> "node194"  // absl_log_sink -> absl_log_entry
+    "node200" -> "node203"  // absl_log_internal_log_sink_set -> absl_log_sink
+    "node200" -> "node42"  // absl_log_internal_log_sink_set -> absl_raw_logging_internal
+    "node200" -> "node78"  // absl_log_internal_log_sink_set -> absl_span
+    "node200" -> "node53"  // absl_log_internal_log_sink_set -> absl_strings
+    "node200" -> "node62"  // absl_log_internal_log_sink_set -> absl_synchronization
+    "node192" -> "node200"  // absl_log_internal_message -> absl_log_internal_log_sink_set
+    "node192" -> "node189"  // absl_log_internal_message -> absl_log_internal_nullguard
+    "node204" [ label = "absl_log_internal_proto\n(absl::log_internal_proto)", shape = octagon ];
+    "node204" -> "node32"  // absl_log_internal_proto -> absl_base
+    "node204" -> "node36"  // absl_log_internal_proto -> absl_config
+    "node204" -> "node37"  // absl_log_internal_proto -> absl_core_headers
+    "node204" -> "node78"  // absl_log_internal_proto -> absl_span
+    "node204" -> "node53"  // absl_log_internal_proto -> absl_strings
+    "node192" -> "node204"  // absl_log_internal_message -> absl_log_internal_proto
+    "node192" -> "node41"  // absl_log_internal_message -> absl_log_severity
+    "node192" -> "node203"  // absl_log_internal_message -> absl_log_sink
+    "node205" [ label = "absl_log_sink_registry\n(absl::log_sink_registry)", shape = pentagon ];
+    "node205" -> "node36" [ style = dashed ] // absl_log_sink_registry -> absl_config
+    "node205" -> "node200" [ style = dashed ] // absl_log_sink_registry -> absl_log_internal_log_sink_set
+    "node205" -> "node203" [ style = dashed ] // absl_log_sink_registry -> absl_log_sink
+    "node192" -> "node205"  // absl_log_internal_message -> absl_log_sink_registry
+    "node192" -> "node50"  // absl_log_internal_message -> absl_memory
+    "node192" -> "node42"  // absl_log_internal_message -> absl_raw_logging_internal
+    "node192" -> "node78"  // absl_log_internal_message -> absl_span
+    "node192" -> "node122"  // absl_log_internal_message -> absl_strerror
+    "node192" -> "node53"  // absl_log_internal_message -> absl_strings
+    "node192" -> "node66"  // absl_log_internal_message -> absl_time
+    "node191" -> "node192" [ style = dashed ] // absl_log_internal_strip -> absl_log_internal_message
+    "node191" -> "node190" [ style = dashed ] // absl_log_internal_strip -> absl_log_internal_nullstream
+    "node191" -> "node41" [ style = dashed ] // absl_log_internal_strip -> absl_log_severity
+    "node188" -> "node191"  // absl_log_internal_check_op -> absl_log_internal_strip
+    "node188" -> "node53"  // absl_log_internal_check_op -> absl_strings
+    "node187" -> "node188" [ style = dashed ] // absl_log_internal_check_impl -> absl_log_internal_check_op
+    "node206" [ label = "absl_log_internal_conditions\n(absl::log_internal_conditions)", shape = octagon ];
+    "node206" -> "node32"  // absl_log_internal_conditions -> absl_base
+    "node206" -> "node36"  // absl_log_internal_conditions -> absl_config
+    "node206" -> "node37"  // absl_log_internal_conditions -> absl_core_headers
+    "node207" [ label = "absl_log_internal_voidify\n(absl::log_internal_voidify)", shape = pentagon ];
+    "node207" -> "node36" [ style = dashed ] // absl_log_internal_voidify -> absl_config
+    "node206" -> "node207"  // absl_log_internal_conditions -> absl_log_internal_voidify
+    "node187" -> "node206" [ style = dashed ] // absl_log_internal_check_impl -> absl_log_internal_conditions
+    "node187" -> "node192" [ style = dashed ] // absl_log_internal_check_impl -> absl_log_internal_message
+    "node187" -> "node191" [ style = dashed ] // absl_log_internal_check_impl -> absl_log_internal_strip
+    "node186" -> "node187" [ style = dashed ] // absl_absl_check -> absl_log_internal_check_impl
+    "node208" [ label = "absl_absl_log\n(absl::absl_log)", shape = pentagon ];
+    "node209" [ label = "absl_log_internal_log_impl\n(absl::log_internal_log_impl)", shape = pentagon ];
+    "node209" -> "node206" [ style = dashed ] // absl_log_internal_log_impl -> absl_log_internal_conditions
+    "node209" -> "node192" [ style = dashed ] // absl_log_internal_log_impl -> absl_log_internal_message
+    "node209" -> "node191" [ style = dashed ] // absl_log_internal_log_impl -> absl_log_internal_strip
+    "node208" -> "node209" [ style = dashed ] // absl_absl_log -> absl_log_internal_log_impl
+    "node210" [ label = "absl_any\n(absl::any)", shape = pentagon ];
+    "node211" [ label = "absl_bad_any_cast\n(absl::bad_any_cast)", shape = pentagon ];
+    "node212" [ label = "absl_bad_any_cast_impl\n(absl::bad_any_cast_impl)", shape = octagon ];
+    "node212" -> "node36"  // absl_bad_any_cast_impl -> absl_config
+    "node212" -> "node42"  // absl_bad_any_cast_impl -> absl_raw_logging_internal
+    "node211" -> "node212" [ style = dashed ] // absl_bad_any_cast -> absl_bad_any_cast_impl
+    "node211" -> "node36" [ style = dashed ] // absl_bad_any_cast -> absl_config
+    "node210" -> "node211" [ style = dashed ] // absl_any -> absl_bad_any_cast
+    "node210" -> "node36" [ style = dashed ] // absl_any -> absl_config
+    "node210" -> "node37" [ style = dashed ] // absl_any -> absl_core_headers
+    "node210" -> "node46" [ style = dashed ] // absl_any -> absl_fast_type_id
+    "node210" -> "node39" [ style = dashed ] // absl_any -> absl_type_traits
+    "node210" -> "node52" [ style = dashed ] // absl_any -> absl_utility
+    "node213" [ label = "absl_any_invocable\n(absl::any_invocable)", shape = pentagon ];
+    "node213" -> "node38" [ style = dashed ] // absl_any_invocable -> absl_base_internal
+    "node213" -> "node36" [ style = dashed ] // absl_any_invocable -> absl_config
+    "node213" -> "node37" [ style = dashed ] // absl_any_invocable -> absl_core_headers
+    "node213" -> "node39" [ style = dashed ] // absl_any_invocable -> absl_type_traits
+    "node213" -> "node52" [ style = dashed ] // absl_any_invocable -> absl_utility
+    "node214" [ label = "absl_bind_front\n(absl::bind_front)", shape = pentagon ];
+    "node214" -> "node38" [ style = dashed ] // absl_bind_front -> absl_base_internal
+    "node214" -> "node88" [ style = dashed ] // absl_bind_front -> absl_compressed_tuple
+    "node215" [ label = "absl_btree\n(absl::btree)", shape = pentagon ];
+    "node215" -> "node117" [ style = dashed ] // absl_btree -> absl_common_policy_traits
+    "node216" [ label = "absl_compare\n(absl::compare)", shape = pentagon ];
+    "node216" -> "node37" [ style = dashed ] // absl_compare -> absl_core_headers
+    "node216" -> "node39" [ style = dashed ] // absl_compare -> absl_type_traits
+    "node215" -> "node216" [ style = dashed ] // absl_btree -> absl_compare
+    "node215" -> "node88" [ style = dashed ] // absl_btree -> absl_compressed_tuple
+    "node215" -> "node115" [ style = dashed ] // absl_btree -> absl_container_common
+    "node215" -> "node84" [ style = dashed ] // absl_btree -> absl_container_memory
+    "node215" -> "node86" [ style = dashed ] // absl_btree -> absl_cord
+    "node215" -> "node37" [ style = dashed ] // absl_btree -> absl_core_headers
+    "node215" -> "node98" [ style = dashed ] // absl_btree -> absl_layout
+    "node215" -> "node50" [ style = dashed ] // absl_btree -> absl_memory
+    "node215" -> "node42" [ style = dashed ] // absl_btree -> absl_raw_logging_internal
+    "node215" -> "node53" [ style = dashed ] // absl_btree -> absl_strings
+    "node215" -> "node58" [ style = dashed ] // absl_btree -> absl_throw_delegate
+    "node215" -> "node39" [ style = dashed ] // absl_btree -> absl_type_traits
+    "node215" -> "node52" [ style = dashed ] // absl_btree -> absl_utility
+    "node217" [ label = "absl_check\n(absl::check)", shape = pentagon ];
+    "node217" -> "node37" [ style = dashed ] // absl_check -> absl_core_headers
+    "node217" -> "node187" [ style = dashed ] // absl_check -> absl_log_internal_check_impl
+    "node217" -> "node188" [ style = dashed ] // absl_check -> absl_log_internal_check_op
+    "node217" -> "node206" [ style = dashed ] // absl_check -> absl_log_internal_conditions
+    "node217" -> "node192" [ style = dashed ] // absl_check -> absl_log_internal_message
+    "node217" -> "node191" [ style = dashed ] // absl_check -> absl_log_internal_strip
+    "node218" [ label = "absl_cordz_sample_token\n(absl::cordz_sample_token)", shape = octagon ];
+    "node218" -> "node36"  // absl_cordz_sample_token -> absl_config
+    "node218" -> "node102"  // absl_cordz_sample_token -> absl_cordz_handle
+    "node218" -> "node101"  // absl_cordz_sample_token -> absl_cordz_info
+    "node219" [ label = "absl_counting_allocator\n(absl::counting_allocator)", shape = pentagon ];
+    "node219" -> "node36" [ style = dashed ] // absl_counting_allocator -> absl_config
+    "node220" [ label = "absl_debugging\n(absl::debugging)", shape = pentagon ];
+    "node221" [ label = "absl_leak_check\n(absl::leak_check)", shape = octagon ];
+    "node221" -> "node36"  // absl_leak_check -> absl_config
+    "node221" -> "node37"  // absl_leak_check -> absl_core_headers
+    "node220" -> "node221" [ style = dashed ] // absl_debugging -> absl_leak_check
+    "node220" -> "node69" [ style = dashed ] // absl_debugging -> absl_stacktrace
+    "node222" [ label = "absl_die_if_null\n(absl::die_if_null)", shape = octagon ];
+    "node222" -> "node36"  // absl_die_if_null -> absl_config
+    "node222" -> "node37"  // absl_die_if_null -> absl_core_headers
+    "node223" [ label = "absl_log\n(absl::log)", shape = pentagon ];
+    "node223" -> "node209" [ style = dashed ] // absl_log -> absl_log_internal_log_impl
+    "node222" -> "node223"  // absl_die_if_null -> absl_log
+    "node222" -> "node53"  // absl_die_if_null -> absl_strings
+    "node224" [ label = "absl_failure_signal_handler\n(absl::failure_signal_handler)", shape = octagon ];
+    "node224" -> "node32"  // absl_failure_signal_handler -> absl_base
+    "node224" -> "node36"  // absl_failure_signal_handler -> absl_config
+    "node224" -> "node37"  // absl_failure_signal_handler -> absl_core_headers
+    "node224" -> "node193"  // absl_failure_signal_handler -> absl_examine_stack
+    "node224" -> "node42"  // absl_failure_signal_handler -> absl_raw_logging_internal
+    "node224" -> "node69"  // absl_failure_signal_handler -> absl_stacktrace
+    "node225" [ label = "absl_flags_parse\n(absl::flags_parse)", shape = octagon ];
+    "node225" -> "node83"  // absl_flags_parse -> absl_algorithm_container
+    "node225" -> "node36"  // absl_flags_parse -> absl_config
+    "node225" -> "node37"  // absl_flags_parse -> absl_core_headers
+    "node225" -> "node31"  // absl_flags_parse -> absl_flags
+    "node225" -> "node45"  // absl_flags_parse -> absl_flags_commandlineflag
+    "node225" -> "node47"  // absl_flags_parse -> absl_flags_commandlineflag_internal
+    "node225" -> "node59"  // absl_flags_parse -> absl_flags_config
+    "node225" -> "node73"  // absl_flags_parse -> absl_flags_internal
+    "node225" -> "node81"  // absl_flags_parse -> absl_flags_private_handle_accessor
+    "node225" -> "node61"  // absl_flags_parse -> absl_flags_program_name
+    "node225" -> "node80"  // absl_flags_parse -> absl_flags_reflection
+    "node226" [ label = "absl_flags_usage\n(absl::flags_usage)", shape = octagon ];
+    "node226" -> "node36"  // absl_flags_usage -> absl_config
+    "node226" -> "node37"  // absl_flags_usage -> absl_core_headers
+    "node227" [ label = "absl_flags_usage_internal\n(absl::flags_usage_internal)", shape = octagon ];
+    "node227" -> "node36"  // absl_flags_usage_internal -> absl_config
+    "node227" -> "node31"  // absl_flags_usage_internal -> absl_flags
+    "node227" -> "node45"  // absl_flags_usage_internal -> absl_flags_commandlineflag
+    "node227" -> "node59"  // absl_flags_usage_internal -> absl_flags_config
+    "node227" -> "node73"  // absl_flags_usage_internal -> absl_flags_internal
+    "node227" -> "node60"  // absl_flags_usage_internal -> absl_flags_path_util
+    "node227" -> "node81"  // absl_flags_usage_internal -> absl_flags_private_handle_accessor
+    "node227" -> "node61"  // absl_flags_usage_internal -> absl_flags_program_name
+    "node227" -> "node80"  // absl_flags_usage_internal -> absl_flags_reflection
+    "node227" -> "node82"  // absl_flags_usage_internal -> absl_flat_hash_map
+    "node227" -> "node53"  // absl_flags_usage_internal -> absl_strings
+    "node227" -> "node62"  // absl_flags_usage_internal -> absl_synchronization
+    "node226" -> "node227"  // absl_flags_usage -> absl_flags_usage_internal
+    "node226" -> "node53"  // absl_flags_usage -> absl_strings
+    "node226" -> "node62"  // absl_flags_usage -> absl_synchronization
+    "node225" -> "node226"  // absl_flags_parse -> absl_flags_usage
+    "node225" -> "node53"  // absl_flags_parse -> absl_strings
+    "node225" -> "node62"  // absl_flags_parse -> absl_synchronization
+    "node228" [ label = "absl_flat_hash_set\n(absl::flat_hash_set)", shape = pentagon ];
+    "node228" -> "node83" [ style = dashed ] // absl_flat_hash_set -> absl_algorithm_container
+    "node228" -> "node84" [ style = dashed ] // absl_flat_hash_set -> absl_container_memory
+    "node228" -> "node37" [ style = dashed ] // absl_flat_hash_set -> absl_core_headers
+    "node228" -> "node85" [ style = dashed ] // absl_flat_hash_set -> absl_hash_function_defaults
+    "node228" -> "node50" [ style = dashed ] // absl_flat_hash_set -> absl_memory
+    "node228" -> "node114" [ style = dashed ] // absl_flat_hash_set -> absl_raw_hash_set
+    "node229" [ label = "absl_hashtable_debug\n(absl::hashtable_debug)", shape = pentagon ];
+    "node229" -> "node118" [ style = dashed ] // absl_hashtable_debug -> absl_hashtable_debug_hooks
+    "node230" [ label = "absl_log_flags\n(absl::log_flags)", shape = octagon ];
+    "node230" -> "node36"  // absl_log_flags -> absl_config
+    "node230" -> "node37"  // absl_log_flags -> absl_core_headers
+    "node230" -> "node31"  // absl_log_flags -> absl_flags
+    "node230" -> "node74"  // absl_log_flags -> absl_flags_marshalling
+    "node230" -> "node196"  // absl_log_flags -> absl_log_globals
+    "node230" -> "node195"  // absl_log_flags -> absl_log_internal_config
+    "node231" [ label = "absl_log_internal_flags\n(absl::log_internal_flags)", shape = pentagon ];
+    "node231" -> "node31" [ style = dashed ] // absl_log_internal_flags -> absl_flags
+    "node230" -> "node231"  // absl_log_flags -> absl_log_internal_flags
+    "node230" -> "node41"  // absl_log_flags -> absl_log_severity
+    "node230" -> "node53"  // absl_log_flags -> absl_strings
+    "node232" [ label = "absl_log_initialize\n(absl::log_initialize)", shape = octagon ];
+    "node232" -> "node36"  // absl_log_initialize -> absl_config
+    "node232" -> "node196"  // absl_log_initialize -> absl_log_globals
+    "node232" -> "node199"  // absl_log_initialize -> absl_log_internal_globals
+    "node232" -> "node66"  // absl_log_initialize -> absl_time
+    "node233" [ label = "absl_log_internal_structured\n(absl::log_internal_structured)", shape = pentagon ];
+    "node233" -> "node36" [ style = dashed ] // absl_log_internal_structured -> absl_config
+    "node233" -> "node192" [ style = dashed ] // absl_log_internal_structured -> absl_log_internal_message
+    "node233" -> "node53" [ style = dashed ] // absl_log_internal_structured -> absl_strings
+    "node234" [ label = "absl_log_streamer\n(absl::log_streamer)", shape = pentagon ];
+    "node234" -> "node208" [ style = dashed ] // absl_log_streamer -> absl_absl_log
+    "node234" -> "node36" [ style = dashed ] // absl_log_streamer -> absl_config
+    "node234" -> "node41" [ style = dashed ] // absl_log_streamer -> absl_log_severity
+    "node234" -> "node48" [ style = dashed ] // absl_log_streamer -> absl_optional
+    "node234" -> "node53" [ style = dashed ] // absl_log_streamer -> absl_strings
+    "node234" -> "node57" [ style = dashed ] // absl_log_streamer -> absl_strings_internal
+    "node234" -> "node52" [ style = dashed ] // absl_log_streamer -> absl_utility
+    "node235" [ label = "absl_log_structured\n(absl::log_structured)", shape = pentagon ];
+    "node235" -> "node36" [ style = dashed ] // absl_log_structured -> absl_config
+    "node235" -> "node233" [ style = dashed ] // absl_log_structured -> absl_log_internal_structured
+    "node235" -> "node53" [ style = dashed ] // absl_log_structured -> absl_strings
+    "node236" [ label = "absl_node_hash_map\n(absl::node_hash_map)", shape = pentagon ];
+    "node236" -> "node83" [ style = dashed ] // absl_node_hash_map -> absl_algorithm_container
+    "node236" -> "node84" [ style = dashed ] // absl_node_hash_map -> absl_container_memory
+    "node236" -> "node37" [ style = dashed ] // absl_node_hash_map -> absl_core_headers
+    "node236" -> "node85" [ style = dashed ] // absl_node_hash_map -> absl_hash_function_defaults
+    "node236" -> "node50" [ style = dashed ] // absl_node_hash_map -> absl_memory
+    "node237" [ label = "absl_node_slot_policy\n(absl::node_slot_policy)", shape = pentagon ];
+    "node237" -> "node36" [ style = dashed ] // absl_node_slot_policy -> absl_config
+    "node236" -> "node237" [ style = dashed ] // absl_node_hash_map -> absl_node_slot_policy
+    "node236" -> "node113" [ style = dashed ] // absl_node_hash_map -> absl_raw_hash_map
+    "node238" [ label = "absl_node_hash_set\n(absl::node_hash_set)", shape = pentagon ];
+    "node238" -> "node83" [ style = dashed ] // absl_node_hash_set -> absl_algorithm_container
+    "node238" -> "node37" [ style = dashed ] // absl_node_hash_set -> absl_core_headers
+    "node238" -> "node85" [ style = dashed ] // absl_node_hash_set -> absl_hash_function_defaults
+    "node238" -> "node50" [ style = dashed ] // absl_node_hash_set -> absl_memory
+    "node238" -> "node237" [ style = dashed ] // absl_node_hash_set -> absl_node_slot_policy
+    "node238" -> "node114" [ style = dashed ] // absl_node_hash_set -> absl_raw_hash_set
+    "node239" [ label = "absl_numeric\n(absl::numeric)", shape = pentagon ];
+    "node239" -> "node56" [ style = dashed ] // absl_numeric -> absl_int128
+    "node240" [ label = "absl_periodic_sampler\n(absl::periodic_sampler)", shape = octagon ];
+    "node240" -> "node37"  // absl_periodic_sampler -> absl_core_headers
+    "node240" -> "node100"  // absl_periodic_sampler -> absl_exponential_biased
+    "node241" [ label = "absl_pretty_function\n(absl::pretty_function)", shape = pentagon ];
+    "node242" [ label = "absl_random_bit_gen_ref\n(absl::random_bit_gen_ref)", shape = pentagon ];
+    "node242" -> "node37" [ style = dashed ] // absl_random_bit_gen_ref -> absl_core_headers
+    "node243" [ label = "absl_random_internal_distribution_caller\n(absl::random_internal_distribution_caller)", shape = pentagon ];
+    "node243" -> "node36" [ style = dashed ] // absl_random_internal_distribution_caller -> absl_config
+    "node243" -> "node46" [ style = dashed ] // absl_random_internal_distribution_caller -> absl_fast_type_id
+    "node243" -> "node52" [ style = dashed ] // absl_random_internal_distribution_caller -> absl_utility
+    "node242" -> "node243" [ style = dashed ] // absl_random_bit_gen_ref -> absl_random_internal_distribution_caller
+    "node244" [ label = "absl_random_internal_fast_uniform_bits\n(absl::random_internal_fast_uniform_bits)", shape = pentagon ];
+    "node244" -> "node36" [ style = dashed ] // absl_random_internal_fast_uniform_bits -> absl_config
+    "node242" -> "node244" [ style = dashed ] // absl_random_bit_gen_ref -> absl_random_internal_fast_uniform_bits
+    "node242" -> "node39" [ style = dashed ] // absl_random_bit_gen_ref -> absl_type_traits
+    "node245" [ label = "absl_random_distributions\n(absl::random_distributions)", shape = octagon ];
+    "node245" -> "node38"  // absl_random_distributions -> absl_base_internal
+    "node245" -> "node36"  // absl_random_distributions -> absl_config
+    "node245" -> "node37"  // absl_random_distributions -> absl_core_headers
+    "node245" -> "node243"  // absl_random_distributions -> absl_random_internal_distribution_caller
+    "node245" -> "node244"  // absl_random_distributions -> absl_random_internal_fast_uniform_bits
+    "node246" [ label = "absl_random_internal_fastmath\n(absl::random_internal_fastmath)", shape = pentagon ];
+    "node246" -> "node54" [ style = dashed ] // absl_random_internal_fastmath -> absl_bits
+    "node245" -> "node246"  // absl_random_distributions -> absl_random_internal_fastmath
+    "node247" [ label = "absl_random_internal_generate_real\n(absl::random_internal_generate_real)", shape = pentagon ];
+    "node247" -> "node54" [ style = dashed ] // absl_random_internal_generate_real -> absl_bits
+    "node247" -> "node246" [ style = dashed ] // absl_random_internal_generate_real -> absl_random_internal_fastmath
+    "node248" [ label = "absl_random_internal_traits\n(absl::random_internal_traits)", shape = pentagon ];
+    "node248" -> "node36" [ style = dashed ] // absl_random_internal_traits -> absl_config
+    "node247" -> "node248" [ style = dashed ] // absl_random_internal_generate_real -> absl_random_internal_traits
+    "node247" -> "node39" [ style = dashed ] // absl_random_internal_generate_real -> absl_type_traits
+    "node245" -> "node247"  // absl_random_distributions -> absl_random_internal_generate_real
+    "node249" [ label = "absl_random_internal_iostream_state_saver\n(absl::random_internal_iostream_state_saver)", shape = pentagon ];
+    "node249" -> "node56" [ style = dashed ] // absl_random_internal_iostream_state_saver -> absl_int128
+    "node249" -> "node39" [ style = dashed ] // absl_random_internal_iostream_state_saver -> absl_type_traits
+    "node245" -> "node249"  // absl_random_distributions -> absl_random_internal_iostream_state_saver
+    "node245" -> "node248"  // absl_random_distributions -> absl_random_internal_traits
+    "node250" [ label = "absl_random_internal_uniform_helper\n(absl::random_internal_uniform_helper)", shape = pentagon ];
+    "node250" -> "node36" [ style = dashed ] // absl_random_internal_uniform_helper -> absl_config
+    "node250" -> "node248" [ style = dashed ] // absl_random_internal_uniform_helper -> absl_random_internal_traits
+    "node250" -> "node39" [ style = dashed ] // absl_random_internal_uniform_helper -> absl_type_traits
+    "node245" -> "node250"  // absl_random_distributions -> absl_random_internal_uniform_helper
+    "node251" [ label = "absl_random_internal_wide_multiply\n(absl::random_internal_wide_multiply)", shape = pentagon ];
+    "node251" -> "node54" [ style = dashed ] // absl_random_internal_wide_multiply -> absl_bits
+    "node251" -> "node36" [ style = dashed ] // absl_random_internal_wide_multiply -> absl_config
+    "node251" -> "node56" [ style = dashed ] // absl_random_internal_wide_multiply -> absl_int128
+    "node245" -> "node251"  // absl_random_distributions -> absl_random_internal_wide_multiply
+    "node245" -> "node53"  // absl_random_distributions -> absl_strings
+    "node245" -> "node39"  // absl_random_distributions -> absl_type_traits
+    "node252" [ label = "absl_random_internal_distribution_test_util\n(absl::random_internal_distribution_test_util)", shape = octagon ];
+    "node252" -> "node36"  // absl_random_internal_distribution_test_util -> absl_config
+    "node252" -> "node37"  // absl_random_internal_distribution_test_util -> absl_core_headers
+    "node252" -> "node42"  // absl_random_internal_distribution_test_util -> absl_raw_logging_internal
+    "node252" -> "node78"  // absl_random_internal_distribution_test_util -> absl_span
+    "node252" -> "node75"  // absl_random_internal_distribution_test_util -> absl_str_format
+    "node252" -> "node53"  // absl_random_internal_distribution_test_util -> absl_strings
+    "node253" [ label = "absl_random_internal_mock_helpers\n(absl::random_internal_mock_helpers)", shape = pentagon ];
+    "node253" -> "node46" [ style = dashed ] // absl_random_internal_mock_helpers -> absl_fast_type_id
+    "node253" -> "node48" [ style = dashed ] // absl_random_internal_mock_helpers -> absl_optional
+    "node254" [ label = "absl_random_internal_nonsecure_base\n(absl::random_internal_nonsecure_base)", shape = pentagon ];
+    "node254" -> "node37" [ style = dashed ] // absl_random_internal_nonsecure_base -> absl_core_headers
+    "node254" -> "node96" [ style = dashed ] // absl_random_internal_nonsecure_base -> absl_inlined_vector
+    "node255" [ label = "absl_random_internal_pool_urbg\n(absl::random_internal_pool_urbg)", shape = octagon ];
+    "node255" -> "node32"  // absl_random_internal_pool_urbg -> absl_base
+    "node255" -> "node36"  // absl_random_internal_pool_urbg -> absl_config
+    "node255" -> "node37"  // absl_random_internal_pool_urbg -> absl_core_headers
+    "node255" -> "node55"  // absl_random_internal_pool_urbg -> absl_endian
+    "node256" [ label = "absl_random_internal_randen\n(absl::random_internal_randen)", shape = octagon ];
+    "node257" [ label = "absl_random_internal_platform\n(absl::random_internal_platform)", shape = octagon ];
+    "node257" -> "node36"  // absl_random_internal_platform -> absl_config
+    "node256" -> "node257"  // absl_random_internal_randen -> absl_random_internal_platform
+    "node258" [ label = "absl_random_internal_randen_hwaes\n(absl::random_internal_randen_hwaes)", shape = octagon ];
+    "node258" -> "node36"  // absl_random_internal_randen_hwaes -> absl_config
+    "node258" -> "node257"  // absl_random_internal_randen_hwaes -> absl_random_internal_platform
+    "node259" [ label = "absl_random_internal_randen_hwaes_impl\n(absl::random_internal_randen_hwaes_impl)", shape = octagon ];
+    "node259" -> "node36"  // absl_random_internal_randen_hwaes_impl -> absl_config
+    "node259" -> "node257"  // absl_random_internal_randen_hwaes_impl -> absl_random_internal_platform
+    "node258" -> "node259"  // absl_random_internal_randen_hwaes -> absl_random_internal_randen_hwaes_impl
+    "node256" -> "node258"  // absl_random_internal_randen -> absl_random_internal_randen_hwaes
+    "node260" [ label = "absl_random_internal_randen_slow\n(absl::random_internal_randen_slow)", shape = octagon ];
+    "node260" -> "node36"  // absl_random_internal_randen_slow -> absl_config
+    "node260" -> "node257"  // absl_random_internal_randen_slow -> absl_random_internal_platform
+    "node256" -> "node260"  // absl_random_internal_randen -> absl_random_internal_randen_slow
+    "node255" -> "node256"  // absl_random_internal_pool_urbg -> absl_random_internal_randen
+    "node261" [ label = "absl_random_internal_seed_material\n(absl::random_internal_seed_material)", shape = octagon ];
+    "node261" -> "node37"  // absl_random_internal_seed_material -> absl_core_headers
+    "node261" -> "node48"  // absl_random_internal_seed_material -> absl_optional
+    "node261" -> "node244"  // absl_random_internal_seed_material -> absl_random_internal_fast_uniform_bits
+    "node261" -> "node42"  // absl_random_internal_seed_material -> absl_raw_logging_internal
+    "node261" -> "node78"  // absl_random_internal_seed_material -> absl_span
+    "node261" -> "node53"  // absl_random_internal_seed_material -> absl_strings
+    "node255" -> "node261"  // absl_random_internal_pool_urbg -> absl_random_internal_seed_material
+    "node255" -> "node248"  // absl_random_internal_pool_urbg -> absl_random_internal_traits
+    "node262" [ label = "absl_random_seed_gen_exception\n(absl::random_seed_gen_exception)", shape = octagon ];
+    "node262" -> "node36"  // absl_random_seed_gen_exception -> absl_config
+    "node255" -> "node262"  // absl_random_internal_pool_urbg -> absl_random_seed_gen_exception
+    "node255" -> "node42"  // absl_random_internal_pool_urbg -> absl_raw_logging_internal
+    "node255" -> "node78"  // absl_random_internal_pool_urbg -> absl_span
+    "node254" -> "node255" [ style = dashed ] // absl_random_internal_nonsecure_base -> absl_random_internal_pool_urbg
+    "node263" [ label = "absl_random_internal_salted_seed_seq\n(absl::random_internal_salted_seed_seq)", shape = pentagon ];
+    "node263" -> "node96" [ style = dashed ] // absl_random_internal_salted_seed_seq -> absl_inlined_vector
+    "node263" -> "node48" [ style = dashed ] // absl_random_internal_salted_seed_seq -> absl_optional
+    "node263" -> "node261" [ style = dashed ] // absl_random_internal_salted_seed_seq -> absl_random_internal_seed_material
+    "node263" -> "node78" [ style = dashed ] // absl_random_internal_salted_seed_seq -> absl_span
+    "node263" -> "node39" [ style = dashed ] // absl_random_internal_salted_seed_seq -> absl_type_traits
+    "node254" -> "node263" [ style = dashed ] // absl_random_internal_nonsecure_base -> absl_random_internal_salted_seed_seq
+    "node254" -> "node261" [ style = dashed ] // absl_random_internal_nonsecure_base -> absl_random_internal_seed_material
+    "node254" -> "node78" [ style = dashed ] // absl_random_internal_nonsecure_base -> absl_span
+    "node254" -> "node39" [ style = dashed ] // absl_random_internal_nonsecure_base -> absl_type_traits
+    "node264" [ label = "absl_random_internal_pcg_engine\n(absl::random_internal_pcg_engine)", shape = pentagon ];
+    "node264" -> "node36" [ style = dashed ] // absl_random_internal_pcg_engine -> absl_config
+    "node264" -> "node56" [ style = dashed ] // absl_random_internal_pcg_engine -> absl_int128
+    "node264" -> "node246" [ style = dashed ] // absl_random_internal_pcg_engine -> absl_random_internal_fastmath
+    "node264" -> "node249" [ style = dashed ] // absl_random_internal_pcg_engine -> absl_random_internal_iostream_state_saver
+    "node264" -> "node39" [ style = dashed ] // absl_random_internal_pcg_engine -> absl_type_traits
+    "node265" [ label = "absl_random_internal_randen_engine\n(absl::random_internal_randen_engine)", shape = pentagon ];
+    "node265" -> "node55" [ style = dashed ] // absl_random_internal_randen_engine -> absl_endian
+    "node265" -> "node249" [ style = dashed ] // absl_random_internal_randen_engine -> absl_random_internal_iostream_state_saver
+    "node265" -> "node256" [ style = dashed ] // absl_random_internal_randen_engine -> absl_random_internal_randen
+    "node265" -> "node42" [ style = dashed ] // absl_random_internal_randen_engine -> absl_raw_logging_internal
+    "node265" -> "node39" [ style = dashed ] // absl_random_internal_randen_engine -> absl_type_traits
+    "node266" [ label = "absl_random_random\n(absl::random_random)", shape = pentagon ];
+    "node266" -> "node245" [ style = dashed ] // absl_random_random -> absl_random_distributions
+    "node266" -> "node254" [ style = dashed ] // absl_random_random -> absl_random_internal_nonsecure_base
+    "node266" -> "node264" [ style = dashed ] // absl_random_random -> absl_random_internal_pcg_engine
+    "node266" -> "node255" [ style = dashed ] // absl_random_random -> absl_random_internal_pool_urbg
+    "node266" -> "node265" [ style = dashed ] // absl_random_random -> absl_random_internal_randen_engine
+    "node267" [ label = "absl_random_seed_sequences\n(absl::random_seed_sequences)", shape = octagon ];
+    "node267" -> "node36"  // absl_random_seed_sequences -> absl_config
+    "node267" -> "node96"  // absl_random_seed_sequences -> absl_inlined_vector
+    "node267" -> "node255"  // absl_random_seed_sequences -> absl_random_internal_pool_urbg
+    "node267" -> "node263"  // absl_random_seed_sequences -> absl_random_internal_salted_seed_seq
+    "node267" -> "node261"  // absl_random_seed_sequences -> absl_random_internal_seed_material
+    "node267" -> "node262"  // absl_random_seed_sequences -> absl_random_seed_gen_exception
+    "node267" -> "node78"  // absl_random_seed_sequences -> absl_span
+    "node266" -> "node267" [ style = dashed ] // absl_random_random -> absl_random_seed_sequences
+    "node268" [ label = "absl_scoped_set_env\n(absl::scoped_set_env)", shape = octagon ];
+    "node268" -> "node36"  // absl_scoped_set_env -> absl_config
+    "node268" -> "node42"  // absl_scoped_set_env -> absl_raw_logging_internal
+    "node269" [ label = "absl_statusor\n(absl::statusor)", shape = octagon ];
+    "node269" -> "node32"  // absl_statusor -> absl_base
+    "node269" -> "node37"  // absl_statusor -> absl_core_headers
+    "node269" -> "node42"  // absl_statusor -> absl_raw_logging_internal
+    "node269" -> "node121"  // absl_statusor -> absl_status
+    "node269" -> "node53"  // absl_statusor -> absl_strings
+    "node269" -> "node39"  // absl_statusor -> absl_type_traits
+    "node269" -> "node52"  // absl_statusor -> absl_utility
+    "node269" -> "node111"  // absl_statusor -> absl_variant
+    "node270" [ label = "benchmark_model", shape = egg ];
+    "node270" -> "node30" [ style = dotted ] // benchmark_model -> tensorflow-lite
+    "node271" [ label = "convolution-test-helpers", shape = hexagon ];
+    "node272" [ label = "cpuinfo_internals", shape = octagon ];
+    "node273" [ label = "fft2d_alloc", shape = octagon ];
+    "node274" [ label = "fft2d_fft4f2d", shape = octagon ];
+    "node275" [ label = "fft2d_fftsg3d", shape = octagon ];
+    "node275" -> "node126"  // fft2d_fftsg3d -> fft2d_fftsg
+    "node276" [ label = "fft2d_shrtdct", shape = octagon ];
+    "node277" [ label = "flatc", shape = egg ];
+    "node277" -> "node2" [ style = dotted ] // flatc -> ProjectConfig
+    "node278" [ label = "label_image", shape = egg ];
+    "node278" -> "node30" [ style = dotted ] // label_image -> tensorflow-lite
+    "node279" [ label = "microkernels-all", shape = hexagon ];
+    "node279" -> "node4"  // microkernels-all -> /usr/lib/x86_64-linux-gnu/libm.so
+    "node279" -> "node13" [ style = dotted ] // microkernels-all -> fp16
+    "node279" -> "node7" [ style = dotted ] // microkernels-all -> fxdiv
+    "node279" -> "node6" [ style = dotted ] // microkernels-all -> pthreadpool
+    "node280" [ label = "psimd", shape = pentagon ];
+    "node281" [ label = "ruy_profiler_profiler\n(ruy::ruy_profiler_profiler)", shape = octagon ];
+    "node281" -> "node154" [ style = dotted ] // ruy_profiler_profiler -> -pthread
+    "node281" -> "node153"  // ruy_profiler_profiler -> ruy_profiler_instrumentation
+    "node282" [ label = "ruy_reference_mul\n(ruy::ruy_reference_mul)", shape = pentagon ];
+    "node282" -> "node167" [ style = dashed ] // ruy_reference_mul -> ruy_apply_multiplier
+    "node282" -> "node152" [ style = dashed ] // ruy_reference_mul -> ruy_matrix
+    "node282" -> "node168" [ style = dashed ] // ruy_reference_mul -> ruy_mul_params
+}

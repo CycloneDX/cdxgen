@@ -95,7 +95,9 @@ import {
   DEBUG_MODE,
   parsePyProjectToml,
   addEvidenceForImports,
-  parseSbtTree
+  parseSbtTree,
+  parseCmakeLikeFile,
+  getCppModules
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -127,6 +129,9 @@ const isWin = _platform() === "win32";
 const osQueries = !isWin
   ? JSON.parse(readFileSync(join(dirName, "data", "queries.json")))
   : JSON.parse(readFileSync(join(dirName, "data", "queries-win.json")));
+const cosDbQueries = JSON.parse(
+  readFileSync(join(dirName, "data", "cosdb-queries.json"))
+);
 
 import { table } from "table";
 
@@ -362,6 +367,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     if (parentComponent && parentComponent.components) {
       let parentFullName = componentToSimpleFullName(parentComponent);
       const subComponents = [];
+      const addedSubComponents = {};
       for (const comp of parentComponent.components) {
         delete comp.evidence;
         delete comp._integrity;
@@ -387,7 +393,10 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
             if (!comp["bom-ref"]) {
               comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
             }
-            subComponents.push(comp);
+            if (!addedSubComponents[comp["bom-ref"]]) {
+              subComponents.push(comp);
+              addedSubComponents[comp["bom-ref"]] = true;
+            }
           }
         }
       } // for
@@ -657,10 +666,7 @@ function addComponent(
     if (!ptype && pkg.qualifiers && pkg.qualifiers.type === "jar") {
       ptype = "maven";
     }
-    const version = pkg.version;
-    if (!version || ["dummy", "ignore"].includes(version)) {
-      return;
-    }
+    const version = pkg.version || "";
     const licenses = pkg.licenses || getLicenses(pkg, format);
     const purl =
       pkg.purl ||
@@ -2901,6 +2907,8 @@ export const createDartBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 export const createCppBom = (path, options) => {
+  let parentComponent = undefined;
+  const addedParentComponentsMap = {};
   const conanLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conan.lock"
@@ -2909,6 +2917,24 @@ export const createCppBom = (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "conanfile.txt"
   );
+  let cmakeLikeFiles = [];
+  const mesonBuildFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "meson.build"
+  );
+  if (mesonBuildFiles && mesonBuildFiles.length) {
+    cmakeLikeFiles = cmakeLikeFiles.concat(mesonBuildFiles);
+  }
+  cmakeLikeFiles = cmakeLikeFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "CMakeLists.txt")
+  );
+  const cmakeFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.cmake"
+  );
+  if (cmakeFiles && cmakeFiles.length) {
+    cmakeLikeFiles = cmakeLikeFiles.concat(cmakeFiles);
+  }
   let pkgList = [];
   if (conanLockFiles.length) {
     for (const f of conanLockFiles) {
@@ -2921,10 +2947,6 @@ export const createCppBom = (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(options, pkgList, "conan", {
-      src: path,
-      filename: conanLockFiles.join(", ")
-    });
   } else if (conanFiles.length) {
     for (const f of conanFiles) {
       if (DEBUG_MODE) {
@@ -2936,13 +2958,66 @@ export const createCppBom = (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-    return buildBomNSData(options, pkgList, "conan", {
-      src: path,
-      filename: conanFiles.join(", ")
-    });
+  } else if (cmakeLikeFiles.length) {
+    for (const f of cmakeLikeFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      const retMap = parseCmakeLikeFile(f, "conan");
+      if (retMap.pkgList && retMap.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+      }
+      if (
+        retMap.parentComponent &&
+        Object.keys(retMap.parentComponent).length
+      ) {
+        if (!parentComponent) {
+          parentComponent = retMap.parentComponent;
+        } else {
+          parentComponent.components = parentComponent.components || [];
+          if (!addedParentComponentsMap[retMap.parentComponent.name]) {
+            parentComponent.components.push(retMap.parentComponent);
+            addedParentComponentsMap[retMap.parentComponent.name] = true;
+          }
+        }
+      }
+    }
   }
-
-  return {};
+  if (!["docker", "oci", "os"].includes(options.projectType)) {
+    let osPkgsList = [];
+    // Case 1: Development libraries installed in this OS environment might be used for build
+    // We collect OS packages with the word dev in the name using osquery here
+    // rpm, deb and ebuild are supported
+    // TODO: For archlinux and alpine users we need a different mechanism to collect this information
+    for (const queryCategory of Object.keys(cosDbQueries)) {
+      const queryObj = cosDbQueries[queryCategory];
+      const results = executeOsQuery(queryObj.query);
+      const dlist = convertOSQueryResults(
+        queryCategory,
+        queryObj,
+        results,
+        true
+      );
+      if (dlist && dlist.length) {
+        osPkgsList = osPkgsList.concat(dlist);
+      }
+    }
+    // Now we check with atom and attempt to detect all external modules via usages
+    // We pass the current list of packages so that we enhance the current list and replace
+    // components inadvertently. For example, we might resolved a name, version and url information already via cmake
+    const dlist = getCppModules(path, options, osPkgsList, pkgList);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
+    }
+  }
+  if (!parentComponent) {
+    parentComponent = createDefaultParentComponent(path, "conan", options);
+  }
+  options.parentComponent = parentComponent;
+  return buildBomNSData(options, pkgList, "conan", {
+    src: path,
+    parentComponent
+  });
 };
 
 /**
@@ -3197,7 +3272,12 @@ export const createOSBom = (path, options) => {
   for (const queryCategory of Object.keys(osQueries)) {
     const queryObj = osQueries[queryCategory];
     const results = executeOsQuery(queryObj.query);
-    const dlist = convertOSQueryResults(queryCategory, queryObj, results);
+    const dlist = convertOSQueryResults(
+      queryCategory,
+      queryObj,
+      results,
+      false
+    );
     if (dlist && dlist.length) {
       if (!Object.keys(parentComponent).length) {
         parentComponent = dlist.splice(0, 1)[0];
@@ -4733,7 +4813,20 @@ export const createXBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "conanfile.txt"
   );
-  if (conanLockFiles.length || conanFiles.length) {
+  const cmakeListFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "CMakeLists.txt"
+  );
+  const mesonBuildFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "meson.build"
+  );
+  if (
+    conanLockFiles.length ||
+    conanFiles.length ||
+    cmakeListFiles.length ||
+    mesonBuildFiles.length
+  ) {
     return createCppBom(path, options);
   }
 
@@ -4833,6 +4926,7 @@ export const createBom = async (path, options) => {
   let exportData = undefined;
   let isContainerMode = false;
   // Docker and image archive support
+  // TODO: Support any source archive
   if (path.endsWith(".tar") || path.endsWith(".tar.gz")) {
     exportData = await exportArchive(path);
     if (!exportData) {

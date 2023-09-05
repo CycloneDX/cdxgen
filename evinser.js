@@ -716,7 +716,9 @@ export const extractEndpoints = (language, code) => {
               v.length &&
               !v.startsWith(".") &&
               v.includes("/") &&
-              !v.startsWith("@")
+              !v.startsWith("@") &&
+              !v.startsWith("application/") &&
+              !v.startsWith("text/")
           );
       }
       break;
