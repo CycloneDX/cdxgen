@@ -4,6 +4,7 @@ import {
   dirname,
   sep as _sep,
   basename,
+  extname,
   join,
   resolve,
   delimiter as _delimiter
@@ -40,6 +41,9 @@ const spdxLicenses = JSON.parse(
 );
 const knownLicenses = JSON.parse(
   readFileSync(join(dirNameStr, "data", "known-licenses.json"))
+);
+const mesonWrapDB = JSON.parse(
+  readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"))
 );
 import { load } from "cheerio";
 import { load as _load } from "js-yaml";
@@ -2656,7 +2660,7 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
 export const getPyModules = async (src, epkgList) => {
   const allImports = {};
   const dependenciesList = [];
-  const modList = findAppModules(src, "python");
+  const modList = findAppModules(src, "python", "parsedeps");
   const pyDefaultModules = new Set(PYTHON_STD_MODULES);
   const filteredModList = modList.filter(
     (x) =>
@@ -4800,16 +4804,107 @@ export const parseSbtLock = function (pkgLockFile) {
   return pkgList;
 };
 
+const convertStdoutToList = (result) => {
+  if (result.status !== 0 || result.error) {
+    return undefined;
+  }
+  const stdout = result.stdout;
+  if (stdout) {
+    const cmdOutput = Buffer.from(stdout).toString();
+    return cmdOutput
+      .trim()
+      .toLowerCase()
+      .split("\n")
+      .filter((p) => p.length > 2 && p.includes("."))
+      .sort();
+  }
+  return undefined;
+};
+
+/**
+ * Method to execute dpkg --listfiles to determine the files provided by a given package
+ *
+ * @param {string} pkgName deb package name
+ * @returns
+ */
+export const executeDpkgList = (pkgName) => {
+  const result = spawnSync("dpkg", ["--listfiles", "--no-pager", pkgName], {
+    encoding: "utf-8"
+  });
+  return convertStdoutToList(result);
+};
+
+/**
+ * Method to execute dnf repoquery to determine the files provided by a given package
+ *
+ * @param {string} pkgName deb package name
+ * @returns
+ */
+export const executeRpmList = (pkgName) => {
+  let result = spawnSync("dnf", ["repoquery", "-l", pkgName], {
+    encoding: "utf-8"
+  });
+  // Fallback to rpm
+  if (result.status !== 0 || result.error) {
+    result = spawnSync("rpm", ["-ql", pkgName], {
+      encoding: "utf-8"
+    });
+  }
+  return convertStdoutToList(result);
+};
+
+/**
+ * Method to execute apk -L info to determine the files provided by a given package
+ *
+ * @param {string} pkgName deb package name
+ * @returns
+ */
+export const executeApkList = (pkgName) => {
+  const result = spawnSync("apk", ["-L", "info", pkgName], {
+    encoding: "utf-8"
+  });
+  return convertStdoutToList(result);
+};
+
+/**
+ * Method to execute alpm -Ql to determine the files provided by a given package
+ *
+ * @param {string} pkgName deb package name
+ * @returns
+ */
+export const executeAlpmList = (pkgName) => {
+  const result = spawnSync("pacman", ["-Ql", pkgName], {
+    encoding: "utf-8"
+  });
+  return convertStdoutToList(result);
+};
+
+/**
+ * Method to execute equery files to determine the files provided by a given package
+ *
+ * @param {string} pkgName deb package name
+ * @returns
+ */
+export const executeEqueryList = (pkgName) => {
+  const result = spawnSync("equery", ["files", pkgName], {
+    encoding: "utf-8"
+  });
+  return convertStdoutToList(result);
+};
+
 /**
  * Convert OS query results
  *
+ * @param {string} Query category
  * @param {Object} queryObj Query Object from the queries.json configuration
  * @param {Array} results Query Results
+ * @param {Boolean} enhance Optionally enhance results by invoking additional package manager commands
  */
 export const convertOSQueryResults = function (
   queryCategory,
   queryObj,
-  results
+  results,
+  enhance = false
 ) {
   const pkgList = [];
   if (results && results.length) {
@@ -4873,8 +4968,16 @@ export const convertOSQueryResults = function (
         };
       }
       if (name) {
-        name = name.replace(/ /g, "+").replace(/[:%]/g, "-");
-        group = group.replace(/ /g, "+").replace(/[:%]/g, "-");
+        name = name
+          .replace(/ /g, "+")
+          .replace(/[:%]/g, "-")
+          .replace(/^[@{]/g, "")
+          .replace(/[}]$/g, "");
+        group = group
+          .replace(/ /g, "+")
+          .replace(/[:%]/g, "-")
+          .replace(/^[@{]/g, "")
+          .replace(/[}]$/g, "");
         const purl = new PackageURL(
           queryObj.purlType || "swid",
           group,
@@ -4883,6 +4986,32 @@ export const convertOSQueryResults = function (
           qualifiers,
           subpath
         ).toString();
+        const props = [{ name: "cdx:osquery:category", value: queryCategory }];
+        let providesList = undefined;
+        if (enhance) {
+          switch (queryObj.purlType) {
+            case "deb":
+              providesList = executeDpkgList(name);
+              break;
+            case "rpm":
+              providesList = executeRpmList(name);
+              break;
+            case "apk":
+              providesList = executeApkList(name);
+              break;
+            case "ebuild":
+              providesList = executeEqueryList(name);
+              break;
+            case "alpm":
+              providesList = executeAlpmList(name);
+              break;
+            default:
+              break;
+          }
+        }
+        if (providesList) {
+          props.push({ name: "PkgProvides", value: providesList.join(", ") });
+        }
         const apkg = {
           name,
           group,
@@ -4894,7 +5023,6 @@ export const convertOSQueryResults = function (
           scope,
           type: queryObj.componentType
         };
-        const props = [{ name: "cdx:osquery:category", value: queryCategory }];
         for (const k of Object.keys(res).filter(
           (p) => !["name", "version", "description", "publisher"].includes(p)
         )) {
@@ -5960,11 +6088,13 @@ export const executeAtom = (src, args) => {
     if (
       result.stderr.includes(
         "has been compiled by a more recent version of the Java Runtime"
-      )
+      ) ||
+      result.stderr.includes("Error: Could not create the Java Virtual Machine")
     ) {
       console.log(
         "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image."
       );
+      console.log(`Current JAVA_HOME: ${env["JAVA_HOME"]}`);
     } else if (result.stderr.includes("astgen")) {
       console.warn(
         "WARN: Unable to locate astgen command. Install atom globally using sudo npm install -g @appthreat/atom to resolve this issue."
@@ -5987,15 +6117,24 @@ export const executeAtom = (src, args) => {
  *
  * @param {string} src
  * @param {string} language
+ * @param {string} methodology
+ * @param {string} slicesFile
  * @returns List of imported modules
  */
-export const findAppModules = function (src, language) {
+export const findAppModules = function (
+  src,
+  language,
+  methodology = "usages",
+  slicesFile = undefined
+) {
   const tempDir = mkdtempSync(join(tmpdir(), "atom-deps-"));
   const atomFile = join(tempDir, "app.atom");
-  const slicesFile = join(tempDir, "slices.json");
+  if (!slicesFile) {
+    slicesFile = join(tempDir, "slices.json");
+  }
   let retList = [];
   const args = [
-    "parsedeps",
+    methodology,
     "-l",
     language,
     "-o",
@@ -6009,6 +6148,8 @@ export const findAppModules = function (src, language) {
     const slicesData = JSON.parse(readFileSync(slicesFile), "utf8");
     if (slicesData && Object.keys(slicesData) && slicesData.modules) {
       retList = slicesData.modules;
+    } else {
+      retList = slicesData;
     }
   }
   // Clean up
@@ -6408,4 +6549,528 @@ export const componentSorter = (a, b) => {
     }
   }
   return a.localeCompare(b);
+};
+
+export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
+  const dotGraphData = readFileSync(dotFile, "utf-8");
+  const pkgList = [];
+  const dependenciesMap = {};
+  const pkgBomRefMap = {};
+  let parentComponent = {};
+  dotGraphData.split("\n").forEach((l) => {
+    l = l.replace("\r", "").trim();
+    if (l === "\n" || l.startsWith("#")) {
+      return;
+    }
+    let name = "";
+    let group = "";
+    let version = "";
+    let path = undefined;
+    if (l.startsWith("digraph")) {
+      const tmpA = l.split(" ");
+      if (tmpA && tmpA.length > 1) {
+        name = tmpA[1].replace(/"/g, "");
+      }
+    } else if (l.startsWith('"node')) {
+      // Direct dependencies are represented as nodes
+      if (l.includes("label =")) {
+        const tmpA = l.split('label = "');
+        if (tmpA && tmpA.length > 1) {
+          name = tmpA[1].split('"')[0];
+        }
+        if (name.includes("\\n")) {
+          name = name.split("\\n")[0];
+        } else if (name.includes(_sep)) {
+          path = name;
+          name = basename(name);
+        }
+      } else if (l.includes("// ")) {
+        // Indirect dependencies are represented with comments
+        const tmpA = l.split("// ");
+        if (tmpA && tmpA.length) {
+          const relationship = tmpA[1];
+          if (relationship.includes("->")) {
+            let tmpB = relationship.split(" -> ");
+            if (tmpB && tmpB.length === 2) {
+              if (tmpB[0].includes(_sep)) {
+                tmpB[0] = basename(tmpB[0]);
+              }
+              if (tmpB[1].includes(_sep)) {
+                tmpB[1] = basename(tmpB[1]);
+              }
+              const ref = pkgBomRefMap[tmpB[0]];
+              const depends = pkgBomRefMap[tmpB[1]];
+              if (ref && depends) {
+                if (!dependenciesMap[ref]) {
+                  dependenciesMap[ref] = new Set();
+                }
+                dependenciesMap[ref].add(depends);
+              }
+            }
+          }
+        }
+      }
+    }
+    if (!Object.keys(parentComponent).length) {
+      parentComponent = {
+        group: options.projectGroup || "",
+        name: options.projectName || name,
+        version: options.projectVersion || "",
+        type: "application"
+      };
+      parentComponent["purl"] = new PackageURL(
+        pkgType,
+        parentComponent.group,
+        parentComponent.name,
+        parentComponent.version,
+        null,
+        path
+      ).toString();
+      parentComponent["bom-ref"] = decodeURIComponent(parentComponent["purl"]);
+    } else if (name) {
+      const apkg = {
+        name: name,
+        type: pkgType,
+        purl: new PackageURL(
+          pkgType,
+          group,
+          name,
+          version,
+          null,
+          path
+        ).toString()
+      };
+      apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
+      pkgList.push(apkg);
+      pkgBomRefMap[name] = apkg["bom-ref"];
+    }
+  });
+  const dependenciesList = [];
+  for (const pk of Object.keys(dependenciesMap)) {
+    const dependsOn = Array.from(dependenciesMap[pk] || []);
+    dependenciesList.push({
+      ref: pk,
+      dependsOn
+    });
+  }
+  return {
+    parentComponent,
+    pkgList,
+    dependenciesList
+  };
+};
+
+export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
+  let cmakeListData = readFileSync(cmakeListFile, "utf-8");
+  const pkgList = [];
+  const pkgAddedMap = {};
+  const versionSpecifiersMap = {};
+  const versionsMap = {};
+  let parentComponent = {};
+  cmakeListData = cmakeListData
+    .replace(/^ {2}/g, "")
+    .replace(/\(\r\n/g, "(")
+    .replace(/\(\n/g, "(")
+    .replace(/,\r\n/g, ",")
+    .replace(/,\n/g, ",");
+  cmakeListData.split("\n").forEach((l) => {
+    l = l.replace("\r", "").trim();
+    if (l === "\n" || l.startsWith("#")) {
+      return;
+    }
+    let group = "";
+    let path = undefined;
+    let name_list = [];
+    if (l.startsWith("project(") && !Object.keys(parentComponent).length) {
+      const tmpA = l.split("project(");
+      if (tmpA && tmpA.length) {
+        const tmpB = tmpA[1]
+          .trim()
+          .replace(/["']/g, "")
+          .replace(/[ ]/g, ",")
+          .split(")")[0]
+          .split(",")
+          .filter((v) => v.length > 1);
+        const parentName = tmpB[0];
+        let parentVersion = undefined;
+        // In case of meson.build we can find the version number after the word version
+        // thanks to our replaces and splits
+        const versionIndex = tmpB.findIndex((v) => v === "version");
+        if (versionIndex > -1 && tmpB.length > versionIndex) {
+          parentVersion = tmpB[versionIndex + 1];
+        }
+        if (parentName && parentName.length) {
+          parentComponent = {
+            group: options.projectGroup || "",
+            name: parentName,
+            version: parentVersion || options.projectVersion || "",
+            type: "application"
+          };
+          parentComponent["purl"] = new PackageURL(
+            pkgType,
+            parentComponent.group,
+            parentComponent.name,
+            parentComponent.version,
+            null,
+            path
+          ).toString();
+          parentComponent["bom-ref"] = decodeURIComponent(
+            parentComponent["purl"]
+          );
+        }
+      }
+    } else if (l.startsWith("find_")) {
+      let tmpA = [];
+      for (const fm of [
+        "find_package(",
+        "find_library(",
+        "find_dependency(",
+        "find_file(",
+        "FetchContent_MakeAvailable("
+      ]) {
+        if (l.startsWith(fm)) {
+          tmpA = l.split(fm);
+          break;
+        }
+      }
+      if (tmpA && tmpA.length > 1) {
+        let tmpB = tmpA[1].split(")")[0].split(" ");
+        tmpB = tmpB.filter(
+          (v) =>
+            ![
+              "REQUIRED",
+              "COMPONENTS",
+              "QUIET",
+              "NAMES",
+              "PATHS",
+              "ENV",
+              "NO_MODULE",
+              "NO_DEFAULT_PATH"
+            ].includes(v) &&
+            !v.includes("$") &&
+            !v.includes("LIB") &&
+            !v.startsWith("CMAKE_") &&
+            v.length
+        );
+        // find_package(Catch2)
+        // find_package(GTest REQUIRED)
+        // find_package(Boost 1.79 COMPONENTS date_time)
+        // find_library(PTHREADPOOL_LIB pthreadpool REQUIRED)
+        if (tmpB) {
+          let working_name = undefined;
+          if (l.startsWith("find_library")) {
+            name_list.push(tmpB[1]);
+            working_name = tmpB[1];
+          } else {
+            name_list.push(tmpB[0]);
+            working_name = tmpB[0];
+          }
+          if (l.startsWith("find_package") && tmpB.length > 1) {
+            versionsMap[working_name] = tmpB[1];
+          } else {
+            for (const n of tmpB) {
+              if (n.match(/^\d/)) {
+                continue;
+              }
+              if (n.includes(_sep)) {
+                if (
+                  n.includes(".so") ||
+                  n.includes(".a") ||
+                  n.includes(".dll")
+                ) {
+                  name_list.push(basename(n));
+                }
+              } else {
+                name_list.push(n);
+              }
+            }
+          }
+        }
+      }
+    } else if (l.includes("dependency(")) {
+      let tmpA = l.split("dependency(");
+      if (tmpA && tmpA.length) {
+        if (!l.includes("_dependency") && !l.includes(".dependency")) {
+          tmpA = tmpA[tmpA.length - 1]
+            .split(", ")
+            .map((v) => v.replace(/['" )]/g, ""));
+          if (tmpA.length) {
+            name_list.push(tmpA[0]);
+            if (tmpA.length > 2 && tmpA[1].startsWith("version")) {
+              const tmpB = tmpA[1].split("version:");
+              if (tmpB && tmpB.length === 2) {
+                if (tmpB[1].includes(">") || tmpB[1].includes("<")) {
+                  // We have a version specifier
+                  versionSpecifiersMap[tmpA[0]] = tmpB[1];
+                } else {
+                  // We have a valid version
+                  versionsMap[tmpA[0]] = tmpB[1];
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    for (let n of name_list) {
+      let props = [];
+      let confidence = 0;
+      if (n && n.length > 1 && !pkgAddedMap[n]) {
+        n = n.replace(/"/g, "");
+        for (const wrapkey of Object.keys(mesonWrapDB)) {
+          const awrap = mesonWrapDB[wrapkey];
+          if (
+            awrap.PkgProvides.includes(n) ||
+            awrap.PkgProvides.includes(n.toLowerCase())
+          ) {
+            // Use the new name
+            n = wrapkey;
+            for (const eprop of Object.keys(awrap)) {
+              props.push({
+                name: eprop,
+                value: Array.isArray(awrap[eprop])
+                  ? awrap[eprop].join(", ")
+                  : awrap[eprop]
+              });
+            }
+            // Our confidence has improved from 0 since there is a matching wrap so we know the correct name
+            // and url. We lack the version details.
+            confidence = 0.5;
+            break;
+          }
+        }
+        if (versionSpecifiersMap[n]) {
+          props.push({
+            name: "cdx:conan:versionSpecifiers",
+            value: versionSpecifiersMap[n]
+          });
+        }
+        const apkg = {
+          name: n,
+          version: versionsMap[n] || "",
+          type: pkgType,
+          purl: new PackageURL(
+            pkgType,
+            group,
+            n,
+            versionsMap[n] || "",
+            null,
+            path
+          ).toString(),
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence,
+              methods: [
+                {
+                  technique: "source-code-analysis",
+                  confidence: 0,
+                  value: `Filename ${cmakeListFile}`
+                }
+              ]
+            }
+          },
+          properties: props
+        };
+        apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
+        pkgList.push(apkg);
+        pkgAddedMap[n] = true;
+      }
+    }
+  });
+  return {
+    parentComponent,
+    pkgList
+  };
+};
+
+export const getOSPackageForFile = (afile, osPkgsList) => {
+  for (const ospkg of osPkgsList) {
+    for (const props of ospkg.properties || []) {
+      if (
+        props.name === "PkgProvides" &&
+        props.value.includes(afile.toLowerCase())
+      ) {
+        // dev packages are libraries
+        ospkg.type = "library";
+        // Set the evidence to indicate how we identified this package from the header or .so file
+        ospkg.evidence = {
+          identity: {
+            field: "purl",
+            confidence: 0,
+            methods: [
+              {
+                technique: "filename",
+                confidence: 0.8,
+                value: `PkgProvides ${afile}`
+              }
+            ]
+          }
+        };
+        return ospkg;
+      }
+    }
+  }
+  return undefined;
+};
+
+/**
+ * Method to find c/c++ modules by collecting usages with atom
+ *
+ * @param {string} src directory
+ * @param {object} options Command line options
+ * @param {array} osPkgsList Array of OS pacakges represented as components
+ * @param {array} epkgList Existing packages list
+ */
+export const getCppModules = (src, options, osPkgsList, epkgList) => {
+  let pkgType = "conan";
+  const pkgList = [];
+  const pkgAddedMap = {};
+  let sliceData = {};
+  const epkgMap = {};
+  (epkgList || []).forEach((p) => {
+    epkgMap[p.name] = p;
+  });
+  if (options.usagesSlicesFile && existsSync(options.usagesSlicesFile)) {
+    sliceData = JSON.parse(readFileSync(options.usagesSlicesFile));
+    if (DEBUG_MODE) {
+      console.log("Re-use existing slices file", options.usagesSlicesFile);
+    }
+  } else {
+    sliceData = findAppModules(src, "c", "usages", options.usagesSlicesFile);
+  }
+  const usageData = parseCUsageSlice(sliceData);
+  for (const afile of Object.keys(usageData)) {
+    let fileName = basename(afile);
+    let extn = extname(fileName);
+    // To avoid false positives, we focus only on header files and not source code.
+    // However, some sources could belong to external libraries without an associated .h file
+    // File a bug if you can create a public example for this scenario
+    if ([".c", ".cpp", ".cc"].includes(extn)) {
+      continue;
+    }
+    let group = "";
+    let version = "";
+    // We need to resolve the name to an os package here
+    let name = fileName.replace(extn, "");
+    let apkg = getOSPackageForFile(afile, osPkgsList) ||
+      epkgMap[name] || {
+        name,
+        group: "",
+        version: "",
+        type: pkgType
+      };
+    let isExternal = false;
+    // If this is a relative file, there is a good chance we can reuse the project group
+    if (!afile.startsWith(_sep)) {
+      group = options.projectGroup || "";
+    } else {
+      isExternal = true;
+    }
+    if (!apkg.purl) {
+      apkg.purl = new PackageURL(
+        pkgType,
+        group,
+        name,
+        version,
+        null,
+        afile
+      ).toString();
+      apkg.evidence = {
+        identity: {
+          field: "purl",
+          confidence: 0,
+          methods: [
+            {
+              technique: "source-code-analysis",
+              confidence: 0,
+              value: `Filename ${afile}`
+            }
+          ]
+        }
+      };
+      apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
+    }
+    if (usageData[afile]) {
+      const usymbols = Array.from(usageData[afile]).filter(
+        (v) => !v.startsWith("<operator")
+      );
+      if (!apkg["properties"]) {
+        apkg["properties"] = [
+          { name: "ImportedSymbols", value: usymbols.join(", ") },
+          { name: "isExternal", value: "" + isExternal }
+        ];
+      }
+      const newProps = [];
+      let symbolsPropertyFound = false;
+      for (const prop of apkg["properties"]) {
+        if (prop.name === "ImportedSymbols") {
+          symbolsPropertyFound = true;
+          let existingSymbols = prop.value.split(", ");
+          existingSymbols = existingSymbols.concat(usymbols);
+          prop.value = Array.from(new Set(existingSymbols)).sort().join(", ");
+        }
+        newProps.push(prop);
+      }
+      if (!symbolsPropertyFound) {
+        apkg["properties"].push({
+          name: "ImportedSymbols",
+          value: usymbols.join(", ")
+        });
+      }
+      apkg["properties"] = newProps;
+    }
+    pkgList.push(apkg);
+    pkgAddedMap[name] = true;
+  }
+  return pkgList;
+};
+
+export const parseCUsageSlice = (sliceData) => {
+  if (!sliceData) {
+    return undefined;
+  }
+  const usageData = {};
+  try {
+    const objectSlices = sliceData.objectSlices || [];
+    for (const slice of objectSlices) {
+      if (!slice.fileName || slice.fileName.startsWith("<includes")) {
+        continue;
+      }
+      const slFileName = slice.fileName;
+      let headerFileMode = slFileName.match(new RegExp(".(h|hh|hpp)$")) != null;
+      const slLineNumber = slice.lineNumber;
+      const allLines = usageData[slFileName] || new Set();
+      for (const ausage of slice.usages) {
+        if (ausage?.targetObj?.isExternal === true) {
+          let lineNumberToUse = headerFileMode
+            ? slLineNumber
+            : ausage.targetObj.lineNumber;
+          allLines.add(ausage.targetObj.resolvedMethod + "|" + lineNumberToUse);
+        }
+        if (ausage?.definedBy?.isExternal === true) {
+          let lineNumberToUse = headerFileMode
+            ? slLineNumber
+            : ausage.definedBy.lineNumber;
+          allLines.add(ausage.definedBy.resolvedMethod + "|" + lineNumberToUse);
+        }
+        let calls = ausage?.invokedCalls || [];
+        calls = calls.concat(ausage?.argToCalls || []);
+        for (const acall of calls) {
+          let lineNumberToUse = headerFileMode
+            ? slLineNumber
+            : acall.lineNumber;
+          if (acall.isExternal === true) {
+            allLines.add(acall.resolvedMethod + "|" + lineNumberToUse);
+          }
+        }
+      }
+      if (Array.from(allLines).length) {
+        usageData[slFileName] = allLines;
+      }
+    }
+  } catch (err) {
+    // ignore
+  }
+  return usageData;
 };

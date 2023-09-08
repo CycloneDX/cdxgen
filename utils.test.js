@@ -69,7 +69,9 @@ import {
   encodeForPurl,
   parsePackageJsonName,
   parsePyProjectToml,
-  parseSbtTree
+  parseSbtTree,
+  parseCmakeDotFile,
+  parseCmakeLikeFile
 } from "./utils.js";
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
@@ -919,7 +921,7 @@ test("get crates metadata", async () => {
     },
     homepage: { url: "https://github.com/iqlusioninc/abscissa/" }
   });
-}, 5000);
+}, 20000);
 
 test("parse pub lock", async () => {
   expect(await parsePubLockData(null)).toEqual([]);
@@ -1120,7 +1122,7 @@ test("parse github actions workflow data", async () => {
   dep_list = await parseGitHubWorkflowData(
     readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(6);
+  expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
@@ -2638,4 +2640,51 @@ test("parsePackageJsonName tests", () => {
     projectName: null,
     scope: "@babel"
   });
+});
+
+test("parseDot tests", () => {
+  const retMap = parseCmakeDotFile("./test/data/tslite.dot", "conan");
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:conan/tensorflow-lite",
+    group: "",
+    name: "tensorflow-lite",
+    purl: "pkg:conan/tensorflow-lite",
+    type: "application",
+    version: ""
+  });
+  expect(retMap.pkgList.length).toEqual(283);
+  expect(retMap.dependenciesList.length).toEqual(247);
+});
+
+test("parseCmakeLikeFile tests", () => {
+  let retMap = parseCmakeLikeFile("./test/data/CMakeLists.txt", "conan");
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:conan/tensorflow-lite",
+    group: "",
+    name: "tensorflow-lite",
+    purl: "pkg:conan/tensorflow-lite",
+    type: "application",
+    version: ""
+  });
+  expect(retMap.pkgList.length).toEqual(20);
+  retMap = parseCmakeLikeFile("./test/data/meson.build", "conan");
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:conan/mtxclient@0.9.2",
+    group: "",
+    name: "mtxclient",
+    purl: "pkg:conan/mtxclient@0.9.2",
+    type: "application",
+    version: "0.9.2"
+  });
+  expect(retMap.pkgList.length).toEqual(7);
+  retMap = parseCmakeLikeFile("./test/data/meson-1.build", "conan");
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:conan/abseil-cpp@20230125.1",
+    group: "",
+    name: "abseil-cpp",
+    purl: "pkg:conan/abseil-cpp@20230125.1",
+    type: "application",
+    version: "20230125.1"
+  });
+  expect(retMap.pkgList.length).toEqual(2);
 });

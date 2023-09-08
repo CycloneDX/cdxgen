@@ -129,7 +129,7 @@ To improve performance for re-runs, pass the argument `--skip-maven-collector` t
 | .callstack   | View components with evidence.callstack.frames as a table. Use evinse command to generate such an SBoM                                                                                                         |
 | .services    | View services as a table                                                                                                                                                                                       |
 
-In addition, all the keys from [queries.json](./data/queries.json) are also valid commands. Example: `processes`, `apt_sources`,  etc. Type `.help` to view the full list of commands.
+In addition, all the keys from [queries.json](./data/queries.json) are also valid commands. Example: `processes`, `apt_sources`, etc. Type `.help` to view the full list of commands.
 
 ### Sample REPL usage
 
@@ -178,3 +178,16 @@ npm install -g @cyclonedx/cdxgen-plugins-bin
 ```shell
 cdxgen -t docker -o bom.json <image name>
 ```
+
+## Generate SBoM with evidence for cdxgen repo
+
+Why not?
+
+```shell
+cdxgen -t js -o bom.json -p --no-recurse
+evinse -i bom.json -o bom.evinse.json -l javascript
+
+# Don't be surprised to see the service endpoint offered by cdxgen!
+```
+
+It is currently not possible to generate data-flow evidence for cdxgen in constant time since the graph is too large for pre-computation. If you have experience with source code analysis, please suggest some improvements on the [atom](https://github.com/AppThreat/atom) project.

@@ -19,8 +19,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - name: Set up SBT
-        uses: olafurpg/setup-scala@v11
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -115,6 +113,10 @@ jobs:
         with:
           repository: 'sveltejs/examples'
           path: 'repotests/sveltejs-examples'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'openpbs/openpbs'
+          path: 'repotests/openpbs'
       - name: repotests
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
@@ -142,6 +144,7 @@ jobs:
           bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json --validate
           bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
+          bin/cdxgen.js -r -t c repotests/openpbs -o bomresults/bom-openpbs.json
           # mkdir -p jenkins
           # wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
           # wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi

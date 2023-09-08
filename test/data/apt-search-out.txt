@@ -1,0 +1,26 @@
+Package: xhk
+Architecture: amd64
+Version: 1.2-2
+Priority: optional
+Section: universe/x11
+Origin: Ubuntu
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Original-Maintainer: Kentaro Hayashi <kenhys@xdump.org>
+Bugs: https://bugs.launchpad.net/ubuntu/+filebug
+Installed-Size: 37
+Depends: libc6 (>= 2.4), libx11-6 (>= 2:1.2.99.901), libxi6 (>= 2:1.2.99.4), libxtst6
+Filename: pool/universe/x/xhk/xhk_1.2-2_amd64.deb
+Size: 9904
+MD5sum: df577920a2db03d5adcc2ea8dc759fc6
+SHA1: 04a4c1eb2a2091b7ae060a6686b0cad5ddab373a
+SHA256: 601d598e549e292113b42835aac9b2bf1fc5da3356e2a7e36d9224232ba672cf
+SHA512: 92cd6a46e7b3742696545f04c0f74b7a1be66db688d35a787032fa34aae69087b7cfa176f7df4e0cc7beb2b8d466c2d01a1223200347bc590abca36172f98ffd
+Homepage: https://github.com/kbingham/xhk
+Description-en: XLib halfkey implementation
+ Running xhk detaches the keyboard, and intercepts all input; processing it for
+ space bar pushes as it goes. The space bar acts as a modifier if it is held at
+ the same time as a standard letter. Modifying acts to mirror the input such
+ that key presses are mirrored down the middle of the home row.
+ Pressing space, and then releasing will still provide a single space character.
+Description-md5: 3424a1e9d03826a06be34491a8f7e93b
+

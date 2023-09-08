@@ -115,6 +115,17 @@ const args = yargs(hideBin(process.argv))
     description:
       "Validate the generated SBoM using json schema. Defaults to true. Pass --no-validate to disable."
   })
+  .option("evidence", {
+    type: "boolean",
+    default: false,
+    description: "Generate SBoM with evidence for supported languages."
+  })
+  .option("usages-slices-file", {
+    description: "Path for the usages slice file created by atom."
+  })
+  .option("data-flow-slices-file", {
+    description: "Path for the data-flow slice file created by atom."
+  })
   .option("spec-version", {
     description: "CycloneDX Specification version to use. Defaults to 1.5",
     default: 1.5
@@ -185,7 +196,10 @@ const options = {
   server: args.server,
   serverHost: args.serverHost,
   serverPort: args.serverPort,
-  specVersion: args.specVersion
+  specVersion: args.specVersion,
+  evidence: args.evidence,
+  usagesSlicesFile: args.usagesSlicesFile,
+  dataFlowSlicesFile: args.dataFlowSlicesFile
 };
 
 /**
@@ -231,6 +245,10 @@ const checkPermissions = (filePath) => {
   // Check if cdxgen has the required permissions
   if (!checkPermissions(filePath)) {
     return;
+  }
+  // This will prevent people from accidentally using the usages slices belonging to a different project
+  if (!options.usagesSlicesFile) {
+    options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   const bomNSData = (await createBom(filePath, options)) || {};
   if (!args.output) {
