@@ -3913,6 +3913,32 @@ export const createRubyBom = async (path, options) => {
   return {};
 };
 
+const removeDuplicates = (pkgList, dependencies) => {
+  const uniqueItems = {};
+  const uniqueRefs = new Set();
+  const newPkgList = []
+  const newDependencies = [];
+
+  for (const item of pkgList) {
+    if (item) {
+      const {name, version} = item;
+      const key = `${name}-${version}`;
+      if (!uniqueItems[key] && key) {
+        uniqueItems[key] = item;
+        newPkgList.push(item)
+      }
+    }
+  }
+
+  for (const item of dependencies) {
+    const {ref} = item;
+    if (!uniqueRefs.has(ref)) {
+      uniqueRefs.add(ref);
+      newDependencies.push(item);
+    }
+  }
+  return [newPkgList, newDependencies];
+};
 /**
  * Function to create bom string for csharp projects
  *
@@ -3922,6 +3948,7 @@ export const createRubyBom = async (path, options) => {
 export const createCsharpBom = async (path, options) => {
   let manifestFiles = [];
   let pkgData = undefined;
+  let dependencies = []
   const csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj"
@@ -3963,9 +3990,14 @@ export const createCsharpBom = async (path, options) => {
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      const dlist = await parseCsProjAssetsData(pkgData);
+      let results = await parseCsProjAssetsData(pkgData);
+      let deps = results["dependenciesList"];
+      let dlist = results["pkgList"];
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
+      }
+      if (deps && deps.length) {
+        dependencies = dependencies.concat(deps);
       }
     }
   } else if (pkgLockFiles.length) {
@@ -4017,9 +4049,13 @@ export const createCsharpBom = async (path, options) => {
     }
   }
   if (pkgList.length) {
+    const uniquePkg = removeDuplicates(pkgList,dependencies);
+    dependencies = uniquePkg[1];
+    pkgList = uniquePkg[0];
     return buildBomNSData(options, pkgList, "nuget", {
       src: path,
-      filename: manifestFiles.join(", ")
+      filename: manifestFiles.join(", "),
+      dependencies
     });
   }
   return {};
