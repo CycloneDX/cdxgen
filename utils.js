@@ -1855,7 +1855,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
  * @param {string} rawOutput Raw string output
  */
 export const parseBazelActionGraph = function (rawOutput) {
-  const regex = RegExp(
+  const mavenPrefixRegex = RegExp(
     `^.*v1/https/[^/]*(?:${process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/"})?(.*)/(.*)/(.*)/(.*.jar)(?:"| \\\\)?$`,
     "g"
   );
@@ -1865,11 +1865,12 @@ export const parseBazelActionGraph = function (rawOutput) {
     const keys_cache = {};
     const tmpA = rawOutput.split("\n");
     tmpA.forEach((l) => {
+      l = l.replace("\r", "");
       if (
         l.trim().startsWith("arguments") ||
         l.trim().startsWith("bazel-out")
       ) {
-        const matches = Array.from(l.matchAll(regex));
+        const matches = Array.from(l.matchAll(mavenPrefixRegex));
 
         if (matches[0] && matches[0][1]) {
           const group = matches[0][1].split("/").join(".");

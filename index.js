@@ -1599,7 +1599,7 @@ export const createJavaBom = async (path, options) => {
           const target = process.env.BAZEL_TARGET || "//...";
           let query;
           let bazelParser;
-          if (process.env.BAZEL_USE_ACTION_GRAPH === "true") {
+          if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
             query = ["aquery", `outputs('.*.jar',deps(${target}))`];
             bazelParser = parseBazelActionGraph;
           } else {
