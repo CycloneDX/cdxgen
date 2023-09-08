@@ -56,6 +56,7 @@ import {
   parseNupkg,
   parseNuspecData,
   parseBazelSkyframe,
+  parseBazelActionGraph,
   parseBazelBuild,
   parseHelmYamlData,
   parseContainerSpecData,
@@ -2200,6 +2201,21 @@ test("parse bazel skyframe", () => {
   );
   expect(deps.length).toEqual(16);
   expect(deps[0].name).toEqual("guava");
+});
+
+test("parse bazel action graph", () => {
+  const deps = parseBazelActionGraph(
+    readFileSync("./test/data/bazel/bazel-action-graph.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(deps.length).toEqual(10);
+  expect(deps[0].group).toEqual("org.scala-lang");
+  expect(deps[0].name).toEqual("scala-library");
+  expect(deps[0].version).toEqual("2.13.11");
+  expect(deps[1].group).toEqual("org.jline");
+  expect(deps[1].name).toEqual("jline");
+  expect(deps[1].version).toEqual("3.21.0");
 });
 
 test("parse bazel build", () => {

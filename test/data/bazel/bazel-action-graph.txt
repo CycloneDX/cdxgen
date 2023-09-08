@@ -1,0 +1,32 @@
+action 'Merging Scala jar: @//sample-server:sample_server'
+  Mnemonic: ScalaDeployJar
+  Target: //sample-server:sample_server
+  Configuration: darwin-fastbuild
+  Execution platform: @local_config_platform//:host
+  ActionKey: 235ecf3133dfaad53e67dd646f67989ad4c391ec82198df20ddfc19370d4f092
+  Inputs: [bazel-out/darwin-fastbuild/bin/buildinfo/buildinfo.jar, bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/ch/qos/logback/logback-classic/1.2.11/logback-classic-1.2.11.jar, bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/ch/qos/logback/logback-core/1.2.11/logback-core-1.2.11.jar]
+  Outputs: [bazel-out/darwin-fastbuild/bin/sample-server/sample_server_deploy.jar]
+  Command Line: (exec external/remote_java_tools_darwin_x86_64/java_tools/src/tools/singlejar/singlejar_local \
+    --compression \
+    --normalize \
+    --sources \
+    bazel-out/darwin-fastbuild/bin/organization-common/organization-common.jar \
+    bazel-out/darwin-fastbuild/bin/auth-common/auth-common.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/org/scala-lang/scala-library/2.13.11/scala-library-2.13.11.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/org/jline/jline/3.21.0/jline-3.21.0.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/org/scala-lang/scala-compiler/2.13.10/scala-compiler-2.13.10.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/org/scala-lang/scala-reflect/2.13.11/scala-reflect-2.13.11.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/io/github/java-diff-utils/java-diff-utils/4.12/java-diff-utils-4.12.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/net/java/dev/jna/jna/5.9.0/jna-5.9.0.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/com/ongres/scram/client/2.1/client-2.1.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/com/ongres/scram/common/2.1/common-2.1.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar \
+    external/io_bazel_rules_scala_scala_library/scala-library-2.13.6.jar \
+    external/io_bazel_rules_scala_scala_reflect/scala-reflect-2.13.6.jar \
+    bazel-out/darwin-fastbuild/bin/external/maven/v1/https/repo.example.com/maven2/io/netty/netty-codec-http/4.1.96.Final/netty-codec-http-4.1.96.Final.jar \
+    --main_class \
+    com.example.Main \
+    --output \
+    bazel-out/darwin-fastbuild/bin/example/example.jar)
+# Configuration: 32de4b8fbdfa2010647ac18109e7b57ecdb06135383d12b8c871d9b6a28a29c4
+# Execution platform: @local_config_platform//:host

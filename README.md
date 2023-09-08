@@ -299,7 +299,9 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | MVN_ARGS                     | Set to pass additional arguments such as profile or settings to maven                                                                |
 | MAVEN_HOME                   | Specify maven home                                                                                                                   |
 | MAVEN_CENTRAL_URL            | Specify URL of Maven Central for metadata fetching (e.g. when private repo is used)                                                  |
+| BAZEL_TARGET                 | Bazel target to build. Default :all (Eg: //java-maven)                                                                               |
 | BAZEL_STRIP_MAVEN_PREFIX     | Strip Maven group prefix (e.g. useful when private repo is used, defaults to `/maven2/`)                                             |
+| BAZEL_USE_ACTION_GRAPH       | SBOM for specific Bazel target, uses `bazel aquery 'outputs(".*.jar", deps(<BAZEL_TARGET>))'` (defaults to `false`)                  |
 | GRADLE_CACHE_DIR             | Specify gradle cache directory. Useful for class name resolving                                                                      |
 | GRADLE_MULTI_PROJECT_MODE    | Unused. Automatically handled                                                                                                        |
 | GRADLE_ARGS                  | Set to pass additional arguments such as profile or settings to gradle (all tasks). Eg: --configuration runtimeClassPath             |
@@ -313,7 +315,6 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | USE_GOSUM                    | Set to `true` or `1` to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod          |
 | CDXGEN_TIMEOUT_MS            | Default timeout for known execution involving maven, gradle or sbt                                                                   |
 | CDXGEN_SERVER_TIMEOUT_MS     | Default timeout in server mode                                                                                                       |
-| BAZEL_TARGET                 | Bazel target to build. Default :all (Eg: //java-maven)                                                                               |
 | CLJ_CMD                      | Set to override the clojure cli command                                                                                              |
 | LEIN_CMD                     | Set to override the leiningen command                                                                                                |
 | SBOM_SIGN_ALGORITHM          | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                                       |

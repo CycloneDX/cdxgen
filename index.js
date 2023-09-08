@@ -37,6 +37,7 @@ import {
   convertJarNSToPackages,
   parseGradleDep,
   parseBazelSkyframe,
+  parseBazelActionGraph,
   parseSbtLock,
   determineSbtVersion,
   addPlugin,
@@ -1595,22 +1596,29 @@ export const createJavaBom = async (path, options) => {
           );
           options.failOnError && process.exit(1);
         } else {
+          const target = process.env.BAZEL_TARGET || "//...";
+          let query;
+          let bazelParser;
+          if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
+            query = ["aquery", `outputs('.*.jar',deps(${target}))`];
+            bazelParser = parseBazelActionGraph;
+          } else {
+            query = ["aquery", "--output=textproto", "--skyframe_state"];
+            bazelParser = parseBazelSkyframe;
+          }
+
           console.log(
             "Executing",
             BAZEL_CMD,
-            "aquery --output=textproto --skyframe_state in",
+            `${query.join(" ")} in`,
             basePath
           );
-          result = spawnSync(
-            BAZEL_CMD,
-            ["aquery", "--output=textproto", "--skyframe_state"],
-            {
-              cwd: basePath,
-              encoding: "utf-8",
-              timeout: TIMEOUT_MS,
-              maxBuffer: 1024 * 1024 * 100
-            }
-          );
+          result = spawnSync(BAZEL_CMD, query, {
+            cwd: basePath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            maxBuffer: 1024 * 1024 * 100
+          });
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
             options.failOnError && process.exit(1);
@@ -1618,7 +1626,7 @@ export const createJavaBom = async (path, options) => {
           const stdout = result.stdout;
           if (stdout) {
             const cmdOutput = Buffer.from(stdout).toString();
-            const dlist = parseBazelSkyframe(cmdOutput);
+            const dlist = bazelParser(cmdOutput);
             if (dlist && dlist.length) {
               pkgList = pkgList.concat(dlist);
             } else {
