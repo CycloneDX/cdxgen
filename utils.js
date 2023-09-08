@@ -1860,7 +1860,9 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
  */
 export const parseBazelActionGraph = function (rawOutput) {
   const mavenPrefixRegex = RegExp(
-    `^.*v1/https/[^/]*(?:${process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/"})?(.*)/(.*)/(.*)/(.*.jar)(?:"| \\\\)?$`,
+    `^.*v1/https/[^/]*(?:${
+      process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/"
+    })?(.*)/(.*)/(.*)/(.*.jar)(?:"| \\\\)?$`,
     "g"
   );
 
