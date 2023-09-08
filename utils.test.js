@@ -1180,14 +1180,30 @@ test("parse project.assets.json", async () => {
   const dep_list = await parseCsProjAssetsData(
     readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(142);
-  expect(dep_list[0]).toEqual({
-    group: "",
-    name: "Castle.Core",
-    version: "4.4.1",
-    _integrity:
-      "sha512-zanbjWC0Y05gbx4eGXkzVycOQqVOFVeCjVsDSyuao9P4mtN1w3WxxTo193NGC7j3o2u3AJRswaoC6hEbnGACnQ=="
+  expect(dep_list["pkgList"].length).toEqual(812);
+  expect(dep_list["pkgList"][0]).toEqual({
+    "bom-ref": "pkg:nuget/GoatlyCore@1.0.0",
+    "group": "",
+    "name": "GoatlyCore",
+    "type": "application",
+    "version": "1.0.0"
   });
+  expect(dep_list["dependenciesList"].length).toEqual(163);
+  expect(dep_list["dependenciesList"][0]).toEqual({
+    "dependsOn": [
+    "pkg:nuget/NETStandard.Library@1.6.1",
+    "pkg:nuget/System.Collections.Specialized@4.3.0",
+    "pkg:nuget/System.ComponentModel@4.3.0",
+    "pkg:nuget/System.ComponentModel.TypeConverter@4.3.0",
+    "pkg:nuget/System.Diagnostics.TraceSource@4.3.0",
+    "pkg:nuget/System.Dynamic.Runtime@4.3.0",
+    "pkg:nuget/System.Reflection@4.3.0",
+    "pkg:nuget/System.Reflection.Emit@4.3.0",
+    "pkg:nuget/System.Reflection.TypeExtensions@4.3.0",
+    "pkg:nuget/System.Xml.XmlDocument@4.3.0"
+  ],
+    "ref": "pkg:nuget/Castle.Core@4.4.1"
+  })
 });
 
 test("parse packages.lock.json", async () => {

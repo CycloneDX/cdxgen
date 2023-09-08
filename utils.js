@@ -4373,42 +4373,122 @@ export const parseCsProjData = async function (csProjData) {
 
 export const parseCsProjAssetsData = async function (csProjData) {
   const pkgList = [];
-  let pkg = null;
-  if (!csProjData) {
-    return pkgList;
+  let dependenciesList = [];
+  let rootPkg = {};
+
+  if (!csProjData){
+    return pkgList, dependenciesList
   }
-  const assetData = JSON.parse(csProjData);
-  if (!assetData || !assetData.libraries) {
-    return pkgList;
-  }
-  for (const alib of Object.keys(assetData.libraries)) {
-    // Skip os runtime packages
-    if (alib.startsWith("runtime")) {
-      continue;
+
+  csProjData = JSON.parse(csProjData);
+  rootPkg =
+    {
+      group: "",
+      name: csProjData.project.restore.projectName,
+      version: csProjData.project.version || "latest",
+      type: "application",
+      "bom-ref": decodeURIComponent(
+        new PackageURL(
+          "nuget",
+          "",
+          csProjData.project.restore.projectName,
+          csProjData.project.version || "latest",
+          null,
+          null
+        ).toString()
+      )
     }
-    const tmpA = alib.split("/");
-    const libData = assetData.libraries[alib];
-    if (tmpA.length > 1) {
-      pkg = {
-        group: "",
-        name: tmpA[0],
-        version: tmpA[tmpA.length - 1]
-      };
-      if (libData.sha256) {
-        pkg._integrity = "sha256-" + libData.sha256;
+
+  const purlString = decodeURIComponent(rootPkg["bom-ref"].toString());
+  pkgList.push(rootPkg);
+  let rootPkgDeps = new Set();
+
+  if (
+    csProjData.libraries &&
+    csProjData.targets
+  ) {
+    const lib = csProjData.libraries;
+    for (const framework in csProjData.targets) {
+      for (const rootDep of Object.keys(csProjData.targets[framework])) {
+        // if (rootDep.startsWith("runtime")){
+        //   continue;
+        // }
+        const depList = new Set();
+        const [name, version] = rootDep.split("/");
+        const dpurl = decodeURIComponent(
+          new PackageURL(
+            "nuget",
+            "",
+            name,
+            version,
+            null,
+            null
+          ).toString()
+        );
+        let pkg = {
+            group: "",
+            name: name,
+            version: version,
+            description: "",
+            type: csProjData.targets[framework][rootDep].type,
+            "bom-ref": dpurl,
+          }
+        if (lib[rootDep]) {
+          if (lib[rootDep].sha512){
+            pkg["_integrity"] = "sha512-" + lib[rootDep].sha512;
+          }
+          else if (lib[rootDep].sha256){
+            pkg["_integrity"] = "sha256-" + lib[rootDep].sha256;
+          }
+        }
+        pkgList.push(pkg);
+        rootPkgDeps.add(dpurl);
+
+        const dependencies = csProjData.targets[framework][rootDep].dependencies;
+        if (dependencies) {
+          for (const p of Object.keys(dependencies)) {
+            const ipurl = decodeURIComponent(
+              new PackageURL(
+                "nuget",
+                "",
+                p,
+                dependencies[p],
+                null,
+                null
+              ).toString()
+            );
+            depList.add(ipurl);
+            pkgList.push(
+              {
+                group: "",
+                name: p,
+                version: dependencies[p],
+                description: "",
+                "bom-ref": ipurl
+              }
+            )
+          }
+        }
+        dependenciesList.push({
+          ref: dpurl,
+          dependsOn: Array.from(depList)
+        });
       }
-      if (libData.sha512) {
-        pkg._integrity = "sha512-" + libData.sha512;
-      }
-      pkgList.push(pkg);
+      dependenciesList.push({
+        ref: purlString,
+        dependsOn: Array.from(rootPkgDeps)
+      })
     }
   }
   if (fetchLicenses) {
     return await getNugetMetadata(pkgList);
   } else {
-    return pkgList;
+    return {
+      pkgList,
+      dependenciesList
+    }
   }
-};
+}
 
 export const parseCsPkgLockData = async function (csLockData) {
   const pkgList = [];
