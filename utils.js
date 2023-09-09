@@ -4462,6 +4462,9 @@ export const parseCsProjAssetsData = async function (csProjData) {
         let pkg = {
             group: "",
             name: name,
+            // .NET ecosystem has no distinction between dev and prod dependencies
+            // like other ecosystems do, so we set scope to required for all packages
+            scope: "required",
             version: version,
             description: "",
             type: csProjData.targets[framework][rootDep].type,
