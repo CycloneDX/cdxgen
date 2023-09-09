@@ -1191,18 +1191,18 @@ test("parse project.assets.json", async () => {
   expect(dep_list["dependenciesList"].length).toEqual(163);
   expect(dep_list["dependenciesList"][0]).toEqual({
     "dependsOn": [
-    "pkg:nuget/NETStandard.Library@1.6.1",
-    "pkg:nuget/System.Collections.Specialized@4.3.0",
-    "pkg:nuget/System.ComponentModel@4.3.0",
-    "pkg:nuget/System.ComponentModel.TypeConverter@4.3.0",
-    "pkg:nuget/System.Diagnostics.TraceSource@4.3.0",
-    "pkg:nuget/System.Dynamic.Runtime@4.3.0",
-    "pkg:nuget/System.Reflection@4.3.0",
-    "pkg:nuget/System.Reflection.Emit@4.3.0",
-    "pkg:nuget/System.Reflection.TypeExtensions@4.3.0",
-    "pkg:nuget/System.Xml.XmlDocument@4.3.0"
+    "pkg:nuget/Json.Net@1.0.23",
+    "pkg:nuget/Microsoft.AspNetCore.Identity.EntityFrameworkCore@5.0.0",
+    "pkg:nuget/Microsoft.AspNetCore.Identity.UI@5.0.0",
+    "pkg:nuget/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation@5.0.0",
+    "pkg:nuget/Microsoft.EntityFrameworkCore.Proxies@5.0.0",
+    "pkg:nuget/Microsoft.EntityFrameworkCore.Tools@5.0.0",
+    "pkg:nuget/Microsoft.Extensions.Identity.Core@5.0.0",
+    "pkg:nuget/Microsoft.Extensions.Logging.Debug@5.0.0",
+    "pkg:nuget/Microsoft.VisualStudio.Web.CodeGeneration.Design@5.0.0",
+    "pkg:nuget/System.Data.SqlClient@4.8.2",
   ],
-    "ref": "pkg:nuget/Castle.Core@4.4.1"
+    "ref": "pkg:nuget/GoatlyCore@1.0.0"
   })
 });
 

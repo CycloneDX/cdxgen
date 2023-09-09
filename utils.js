@@ -4398,10 +4398,44 @@ export const parseCsProjAssetsData = async function (csProjData) {
         ).toString()
       )
     }
-
   const purlString = decodeURIComponent(rootPkg["bom-ref"].toString());
   pkgList.push(rootPkg);
   let rootPkgDeps = new Set();
+
+  // create root pkg deps
+  if (csProjData.targets && csProjData.project.frameworks) {
+    const versionRegex = /[\d.]+/g;
+    for (const frameworkTarget in csProjData.project.frameworks) {
+      for (const dependencyName in csProjData.project.frameworks[frameworkTarget].dependencies) {
+
+        const versionsRaw = csProjData.project.frameworks[frameworkTarget].dependencies[dependencyName].version
+        const versionsList = versionsRaw.match(versionRegex)
+
+        for (const dependencyVersion of versionsList) {
+          const pkgNodeName = `${dependencyName}/${dependencyVersion}`
+
+          if (csProjData.targets[frameworkTarget][pkgNodeName]) {
+            const dpurl = decodeURIComponent(
+              new PackageURL(
+                "nuget",
+                "",
+                dependencyName,
+                dependencyVersion,
+                null,
+                null
+              ).toString()
+            );
+            rootPkgDeps.add(dpurl);
+          }
+        }
+      }
+    }
+
+    dependenciesList.push({
+      ref: purlString,
+      dependsOn: Array.from(rootPkgDeps)
+    })
+  }
 
   if (
     csProjData.libraries &&
@@ -4442,7 +4476,8 @@ export const parseCsProjAssetsData = async function (csProjData) {
           }
         }
         pkgList.push(pkg);
-        rootPkgDeps.add(dpurl);
+        // rootPkgDeps.add(dpurl);
+
 
         const dependencies = csProjData.targets[framework][rootDep].dependencies;
         if (dependencies) {
@@ -4474,10 +4509,10 @@ export const parseCsProjAssetsData = async function (csProjData) {
           dependsOn: Array.from(depList)
         });
       }
-      dependenciesList.push({
-        ref: purlString,
-        dependsOn: Array.from(rootPkgDeps)
-      })
+      // dependenciesList.push({
+      //   ref: purlString,
+      //   dependsOn: Array.from(rootPkgDeps)
+      // })
     }
   }
   if (fetchLicenses) {
