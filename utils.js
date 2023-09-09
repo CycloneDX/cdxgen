@@ -4476,8 +4476,6 @@ export const parseCsProjAssetsData = async function (csProjData) {
           }
         }
         pkgList.push(pkg);
-        // rootPkgDeps.add(dpurl);
-
 
         const dependencies = csProjData.targets[framework][rootDep].dependencies;
         if (dependencies) {
@@ -4509,10 +4507,6 @@ export const parseCsProjAssetsData = async function (csProjData) {
           dependsOn: Array.from(depList)
         });
       }
-      // dependenciesList.push({
-      //   ref: purlString,
-      //   dependsOn: Array.from(rootPkgDeps)
-      // })
     }
   }
   if (fetchLicenses) {
