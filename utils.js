@@ -4372,6 +4372,23 @@ export const parseCsProjData = async function (csProjData) {
 };
 
 export const parseCsProjAssetsData = async function (csProjData) {
+  // extract name, operator, version from .NET package representation
+  // like "NLog >= 4.5.0"
+  function extractNameOperatorVersion(inputStr) {
+    const extractNameOperatorVersion = /([\w.]+)\s*([><=!]+)\s*([\d.]+)/
+    const match = inputStr.match(extractNameOperatorVersion);
+
+    if (match) {
+      return {
+        name: match[1],
+        operator: match[2],
+        version: match[3],
+      };
+    } else {
+      return null;
+    }
+  }
+
   const pkgList = [];
   let dependenciesList = [];
   let rootPkg = {};
@@ -4398,10 +4415,44 @@ export const parseCsProjAssetsData = async function (csProjData) {
         ).toString()
       )
     }
-
   const purlString = decodeURIComponent(rootPkg["bom-ref"].toString());
   pkgList.push(rootPkg);
   let rootPkgDeps = new Set();
+
+  // create root pkg deps
+  if (csProjData.targets && csProjData.projectFileDependencyGroups) {
+    for (const frameworkTarget in csProjData.projectFileDependencyGroups) {
+      for (const dependencyName of csProjData.projectFileDependencyGroups[frameworkTarget]) {
+        const nameOperatorVersion = extractNameOperatorVersion(dependencyName)
+        if (nameOperatorVersion == null) {
+          continue;
+        }
+        const targetNameVersion = `${nameOperatorVersion.name}/${nameOperatorVersion.version}`
+
+        // skip if the dep is not in the targets for whatever reason
+        if (!csProjData.targets[frameworkTarget][targetNameVersion]) {
+          continue;
+        }
+
+        const dpurl = decodeURIComponent(
+          new PackageURL(
+            "nuget",
+            "",
+            nameOperatorVersion.name,
+            nameOperatorVersion.version,
+            null,
+            null
+          ).toString()
+        );
+        rootPkgDeps.add(dpurl);
+      }
+    }
+
+    dependenciesList.push({
+      ref: purlString,
+      dependsOn: Array.from(rootPkgDeps)
+    })
+  }
 
   if (
     csProjData.libraries &&
@@ -4442,7 +4493,6 @@ export const parseCsProjAssetsData = async function (csProjData) {
           }
         }
         pkgList.push(pkg);
-        rootPkgDeps.add(dpurl);
 
         const dependencies = csProjData.targets[framework][rootDep].dependencies;
         if (dependencies) {
@@ -4474,10 +4524,6 @@ export const parseCsProjAssetsData = async function (csProjData) {
           dependsOn: Array.from(depList)
         });
       }
-      dependenciesList.push({
-        ref: purlString,
-        dependsOn: Array.from(rootPkgDeps)
-      })
     }
   }
   if (fetchLicenses) {
