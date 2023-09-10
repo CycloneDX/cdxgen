@@ -31,7 +31,7 @@ A typical application might comprise of several repos, components, and libraries
 | dart                            | pubspec.lock, pubspec.yaml                                                                                        | Only for pubspec.lock                                                                             |
 | haskell                         | cabal.project.freeze                                                                                              | Yes                                                                                               |
 | elixir                          | mix.lock                                                                                                          | Yes                                                                                               |
-| c/c++                           | conan.lock, conanfile.txt, \*.cmake, CMakeLists.txt, meson.build                                                               | Yes only for conan.lock. Best effort basis for cmake without version numbers.                     |
+| c/c++                           | conan.lock, conanfile.txt, \*.cmake, CMakeLists.txt, meson.build                                                  | Yes only for conan.lock. Best effort basis for cmake without version numbers.                     |
 | clojure                         | Clojure CLI (deps.edn), Leiningen (project.clj)                                                                   | Yes unless the files are parsed manually due to lack of clojure cli or leiningen command          |
 | swift                           | Package.resolved, Package.swift (swiftpm)                                                                         | Yes                                                                                               |
 | docker / oci image              | All supported languages. Linux OS packages with plugins [4]                                                       | Best effort based on lock files                                                                   |
@@ -126,7 +126,6 @@ import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 
 ```text
 $ cdxgen -h
-Options:
   -o, --output                 Output file for bom.xml or bom.json. Default bom.
                                json
   -t, --type                   Project type
@@ -137,7 +136,8 @@ Options:
   -c, --resolve-class          Resolve class names for packages. jars only for n
                                ow.                                     [boolean]
       --deep                   Perform deep searches for components. Useful whil
-                               e scanning live OS and oci images.      [boolean]
+                               e scanning C/C++ apps, live OS and oci images.
+                                                                       [boolean]
       --server-url             Dependency track url. Eg: https://deptrack.cyclon
                                edx.io
       --api-key                Dependency track api key
@@ -165,6 +165,9 @@ Options:
       --validate               Validate the generated SBoM using json schema. De
                                faults to true. Pass --no-validate to disable.
                                                        [boolean] [default: true]
+      --usages-slices-file     Path for the usages slice file created by atom.
+      --data-flow-slices-file  Path for the data-flow slice file created by atom
+                               .
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
   -h, --help                   Show help                               [boolean]
