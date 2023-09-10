@@ -1180,29 +1180,35 @@ test("parse project.assets.json", async () => {
   const dep_list = await parseCsProjAssetsData(
     readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
   );
-  expect(dep_list["pkgList"].length).toEqual(812);
+  expect(dep_list["pkgList"].length).toEqual(1460);
   expect(dep_list["pkgList"][0]).toEqual({
-    "bom-ref": "pkg:nuget/GoatlyCore@1.0.0",
+    "bom-ref": "pkg:nuget/Castle.Core.Tests@0.0.0",
     "group": "",
-    "name": "GoatlyCore",
+    "name": "Castle.Core.Tests",
     "type": "application",
-    "version": "1.0.0"
+    "version": "0.0.0"
   });
-  expect(dep_list["dependenciesList"].length).toEqual(163);
+  expect(dep_list["dependenciesList"].length).toEqual(302);
   expect(dep_list["dependenciesList"][0]).toEqual({
     "dependsOn": [
-    "pkg:nuget/Json.Net@1.0.23",
-    "pkg:nuget/Microsoft.AspNetCore.Identity.EntityFrameworkCore@5.0.0",
-    "pkg:nuget/Microsoft.AspNetCore.Identity.UI@5.0.0",
-    "pkg:nuget/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation@5.0.0",
-    "pkg:nuget/Microsoft.EntityFrameworkCore.Proxies@5.0.0",
-    "pkg:nuget/Microsoft.EntityFrameworkCore.Tools@5.0.0",
-    "pkg:nuget/Microsoft.Extensions.Identity.Core@5.0.0",
-    "pkg:nuget/Microsoft.Extensions.Logging.Debug@5.0.0",
-    "pkg:nuget/Microsoft.VisualStudio.Web.CodeGeneration.Design@5.0.0",
-    "pkg:nuget/System.Data.SqlClient@4.8.2",
-  ],
-    "ref": "pkg:nuget/GoatlyCore@1.0.0"
+      "pkg:nuget/Castle.Core@0.0.0",
+      "pkg:nuget/Microsoft.NET.Test.Sdk@17.1.0",
+      "pkg:nuget/Microsoft.NETCore.App@2.1.0",
+      "pkg:nuget/Microsoft.NETFramework.ReferenceAssemblies@1.0.0",
+      "pkg:nuget/NLog@4.5.0",
+      "pkg:nuget/NUnit.Console@3.11.1",
+      "pkg:nuget/NUnit3TestAdapter@3.16.1",
+      "pkg:nuget/NUnitLite@3.13.3",
+      "pkg:nuget/Serilog@2.0.0",
+      "pkg:nuget/Serilog.Sinks.TextWriter@2.0.0",
+      "pkg:nuget/System.Security.Permissions@4.7.0",
+      "pkg:nuget/log4net@2.0.13",
+      "pkg:nuget/System.Net.NameResolution@4.3.0",
+      "pkg:nuget/System.Net.Primitives@4.3.0",
+      "pkg:nuget/PublicApiGenerator@10.1.2",
+      "pkg:nuget/System.Security.Permissions@6.0.0",
+    ],
+    "ref": "pkg:nuget/Castle.Core.Tests@0.0.0"
   })
 });
 

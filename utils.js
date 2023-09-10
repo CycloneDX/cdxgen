@@ -4372,6 +4372,23 @@ export const parseCsProjData = async function (csProjData) {
 };
 
 export const parseCsProjAssetsData = async function (csProjData) {
+  // extract name, operator, version from .NET package representation
+  // like "NLog >= 4.5.0"
+  function extractNameOperatorVersion(inputStr) {
+    const extractNameOperatorVersion = /([\w.]+)\s*([><=!]+)\s*([\d.]+)/
+    const match = inputStr.match(extractNameOperatorVersion);
+
+    if (match) {
+      return {
+        name: match[1],
+        operator: match[2],
+        version: match[3],
+      };
+    } else {
+      return null;
+    }
+  }
+
   const pkgList = [];
   let dependenciesList = [];
   let rootPkg = {};
@@ -4403,31 +4420,28 @@ export const parseCsProjAssetsData = async function (csProjData) {
   let rootPkgDeps = new Set();
 
   // create root pkg deps
-  if (csProjData.targets && csProjData.project.frameworks) {
-    const versionRegex = /[\d.]+/g;
-    for (const frameworkTarget in csProjData.project.frameworks) {
-      for (const dependencyName in csProjData.project.frameworks[frameworkTarget].dependencies) {
+  if (csProjData.targets && csProjData.projectFileDependencyGroups) {
+    for (const frameworkTarget in csProjData.projectFileDependencyGroups) {
+      for (const dependencyName of csProjData.projectFileDependencyGroups[frameworkTarget]) {
+        const nameOperatorVersion = extractNameOperatorVersion(dependencyName)
+        const targetNameVersion = `${nameOperatorVersion.name}/${nameOperatorVersion.version}`
 
-        const versionsRaw = csProjData.project.frameworks[frameworkTarget].dependencies[dependencyName].version
-        const versionsList = versionsRaw.match(versionRegex)
-
-        for (const dependencyVersion of versionsList) {
-          const pkgNodeName = `${dependencyName}/${dependencyVersion}`
-
-          if (csProjData.targets[frameworkTarget][pkgNodeName]) {
-            const dpurl = decodeURIComponent(
-              new PackageURL(
-                "nuget",
-                "",
-                dependencyName,
-                dependencyVersion,
-                null,
-                null
-              ).toString()
-            );
-            rootPkgDeps.add(dpurl);
-          }
+        // skip if the dep is not in the targets for whatever reason
+        if (!csProjData.targets[frameworkTarget][targetNameVersion]) {
+          continue;
         }
+
+        const dpurl = decodeURIComponent(
+          new PackageURL(
+            "nuget",
+            "",
+            nameOperatorVersion.name,
+            nameOperatorVersion.version,
+            null,
+            null
+          ).toString()
+        );
+        rootPkgDeps.add(dpurl);
       }
     }
 
