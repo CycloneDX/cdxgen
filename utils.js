@@ -4424,6 +4424,9 @@ export const parseCsProjAssetsData = async function (csProjData) {
     for (const frameworkTarget in csProjData.projectFileDependencyGroups) {
       for (const dependencyName of csProjData.projectFileDependencyGroups[frameworkTarget]) {
         const nameOperatorVersion = extractNameOperatorVersion(dependencyName)
+        if (nameOperatorVersion == null) {
+          continue;
+        }
         const targetNameVersion = `${nameOperatorVersion.name}/${nameOperatorVersion.version}`
 
         // skip if the dep is not in the targets for whatever reason
