@@ -416,7 +416,6 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
   const parseArboristNode = (
     node,
     rootNode,
-    workspaceNodes = new Set(),
     parentRef = null,
     visited = new Set(),
     options = {},
@@ -487,16 +486,35 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     pkgList.push(pkg);
 
     // retrieve workspace node pkglists
+    let workspaceDependsOn = [];
     if (node.fsChildren && node.fsChildren.size > 0) {
-      for (let child of node.fsChildren) {
+      for (let workspaceNode of node.fsChildren) {
         const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
-          parseArboristNode(child, rootNode, workspaceNodes, purlString, visited);
+          parseArboristNode(
+            workspaceNode,
+            rootNode,
+            purlString,
+            visited,
+          );
         pkgList = pkgList.concat(childPkgList);
         dependenciesList = dependenciesList.concat(childDependenciesList);
+
+        const depWorkspacePurlString = decodeURIComponent(
+          new PackageURL(
+            "npm",
+            "",
+            workspaceNode.name,
+            workspaceNode.version,
+            null,
+            null,
+          ).toString(),
+        );
+
+        workspaceDependsOn.push(depWorkspacePurlString);
       }
     }
 
-    const dependsOn = [];
+    const pkgDependsOn = [];
     for (const edge of node.edgesOut.values()) {
       let targetVersion;
       let targetName;
@@ -549,17 +567,17 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         ).toString(),
       );
 
-      dependsOn.push(depPurlString);
+      pkgDependsOn.push(depPurlString);
       if (edge.to == null) continue;
       const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
-        parseArboristNode(edge.to, rootNode, workspaceNodes, purlString, visited);
+        parseArboristNode(edge.to, rootNode, purlString, visited);
       pkgList = pkgList.concat(childPkgList);
       dependenciesList = dependenciesList.concat(childDependenciesList);
     }
 
     dependenciesList.push({
       ref: purlString,
-      dependsOn: dependsOn,
+      dependsOn: workspaceDependsOn.concat(pkgDependsOn),
     });
 
     return { pkgList, dependenciesList };
@@ -571,7 +589,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     legacyPeerDeps: false,
   });
   const tree = await arb.loadVirtual();
-  ({pkgList, dependenciesList} = parseArboristNode(tree, tree, new Set(), null, new Set(), options));
+  ({pkgList, dependenciesList} = parseArboristNode(tree, tree, null, new Set(), options));
 
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
