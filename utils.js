@@ -466,6 +466,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           null,
         ).toString(),
       );
+      const pkgLockFile = `${srcFilePath}/package-lock.json`
       pkg = {
         group: "",
         name: node.packageName,
@@ -476,9 +477,22 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         properties: [
           {
             name: "SrcFile",
-            value: `${srcFilePath}/package-lock.json`,
+            value: pkgLockFile,
           },
         ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgLockFile
+              }
+            ]
+          }
+        },
         type: parentRef ? "npm" : "application",
         "bom-ref": purlString,
       };

@@ -1421,6 +1421,21 @@ test("parsePkgLock v2", async () => {
     version: "2.2.1"
   });
   expect(deps[deps.length - 1].name).toEqual("rollup");
+
+  const pkgFilePath = new URL('test/data/package-json/v2/package-lock.json', import.meta.url).pathname;
+  expect(deps[deps.length - 1].evidence).toEqual({
+    identity: {
+      field: "purl",
+      confidence: 1,
+      methods: [
+        {
+          technique: "manifest-analysis",
+          confidence: 1,
+          value: pkgFilePath
+        }
+      ]
+    }
+  })
   expect(parsedList.dependenciesList.length).toEqual(134);
 });
 
