@@ -428,27 +428,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     let pkgList = [];
     let dependenciesList = [];
 
-    // update workspace nodes if they exist
-    if (node.fsChildren && node.fsChildren.size > 0) {
-      for (let child of node.fsChildren) {
-        workspaceNodes.add(child);
-      }
-    }
-
-    // if node is a workspace, find the corresponding node obj
-    // in the workspaceNodes set
-    if (node.isWorkspace) {
-      for (const workspaceNode of workspaceNodes) {
-        if (workspaceNode.name == node.name) {
-          node = workspaceNode;
-        }
-      }
-    }
-
     // Create the package entry
-    const purlString = decodeURIComponent(
-      new PackageURL("npm", "", node.name, node.version, null, null).toString(),
-    );
     const srcFilePath = node.path.includes("/node_modules")
       ? node.path.split("/node_modules")[0]
       : node.path;
@@ -456,25 +436,37 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     const integrity = node.integrity ? node.integrity : undefined;
 
     let pkg = {};
+    let purlString = "";
     if (node == rootNode) {
+      purlString = decodeURIComponent(
+        new PackageURL(
+          "npm",
+          options.projectGroup || "",
+          options.projectName || node.packageName,
+          options.projectVersion || node.version,
+          null,
+          null,
+        ).toString(),
+      );
       pkg = {
+        author: node.package.author,
         group: options.projectGroup || "",
         name: options.projectName || node.packageName,
         version: options.projectVersion || node.version,
-        author: node.package.author,
         type: "application",
-        "bom-ref": decodeURIComponent(
-          new PackageURL(
-            "npm",
-            options.projectGroup || "",
-            options.projectName || node.packageName,
-            options.projectVersion || node.version,
-            null,
-            null,
-          ).toString(),
-        ),
+        "bom-ref": purlString,
       };
     } else {
+      purlString = decodeURIComponent(
+        new PackageURL(
+          "npm",
+          "",
+          node.packageName,
+          node.version,
+          null,
+          null,
+        ).toString(),
+      );
       pkg = {
         group: "",
         name: node.packageName,
@@ -494,6 +486,16 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     }
     pkgList.push(pkg);
 
+    // retrieve workspace node pkglists
+    if (node.fsChildren && node.fsChildren.size > 0) {
+      for (let child of node.fsChildren) {
+        const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
+          parseArboristNode(child, rootNode, workspaceNodes, purlString, visited);
+        pkgList = pkgList.concat(childPkgList);
+        dependenciesList = dependenciesList.concat(childDependenciesList);
+      }
+    }
+
     const dependsOn = [];
     for (const edge of node.edgesOut.values()) {
       let targetVersion;
@@ -502,6 +504,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
       // if the edge doesn't have an integrity, it's likely a peer dependency
       // which isn't installed
       let edgeToIntegrity = edge.to ? edge.to.integrity : null;
+      // let packageName = node.packageName;
+      // let edgeName = edge.name;
       if (!edgeToIntegrity) {
         continue;
       }
@@ -548,17 +552,15 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
       dependsOn.push(depPurlString);
       if (edge.to == null) continue;
       const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
-        parseArboristNode(edge.to, rootNode, workspaceNodes, purlString, visited, options);
+        parseArboristNode(edge.to, rootNode, workspaceNodes, purlString, visited);
       pkgList = pkgList.concat(childPkgList);
       dependenciesList = dependenciesList.concat(childDependenciesList);
     }
 
-    if (parentRef) {
-      dependenciesList.push({
-        ref: purlString,
-        dependsOn: dependsOn,
-      });
-    }
+    dependenciesList.push({
+      ref: purlString,
+      dependsOn: dependsOn,
+    });
 
     return { pkgList, dependenciesList };
   };
