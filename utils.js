@@ -2072,17 +2072,18 @@ export const getMvnMetadata = async function (pkgList) {
     console.log(`About to query maven for ${pkgList.length} packages`);
   }
   for (const p of pkgList) {
+    let group = p.group || "";
     // If the package already has key metadata skip querying maven
-    if (p.group && p.name && p.version && !fetchLicenses) {
+    if (group && p.name && p.version && !fetchLicenses) {
       cdepList.push(p);
       continue;
     }
     let urlPrefix = MAVEN_CENTRAL_URL;
     // Ideally we should try one resolver after the other. But it increases the time taken
-    if (p.group.indexOf("android") !== -1) {
+    if (group.indexOf("android") !== -1) {
       urlPrefix = ANDROID_MAVEN;
     }
-    const groupPart = p.group.replace(/\./g, "/");
+    const groupPart = group.replace(/\./g, "/");
     // Querying maven requires a valid group name
     if (!groupPart || groupPart === "") {
       cdepList.push(p);
@@ -2135,7 +2136,7 @@ export const getMvnMetadata = async function (pkgList) {
       if (DEBUG_MODE) {
         console.log(
           "Unable to find metadata for",
-          p.group,
+          group,
           p.name,
           p.version,
           fullUrl
