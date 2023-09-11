@@ -7092,7 +7092,7 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     let fileName = basename(afile);
     let extn = extname(fileName);
     let group = dirname(afile);
-    if (group.startsWith(".") || existsSync(afile)) {
+    if (group.startsWith(".") || group.startsWith(_sep) || existsSync(afile)) {
       group = "";
     }
     let version = "";
