@@ -7090,6 +7090,9 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
   const usageData = parseCUsageSlice(sliceData);
   for (const afile of Object.keys(usageData)) {
     let fileName = basename(afile);
+    if (!fileName || !fileName.length) {
+      continue;
+    }
     let extn = extname(fileName);
     let group = dirname(afile);
     if (group.startsWith(".") || group.startsWith(_sep) || existsSync(afile)) {
