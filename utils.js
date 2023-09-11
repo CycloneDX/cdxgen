@@ -7179,7 +7179,7 @@ export const parseCUsageSlice = (sliceData) => {
     const objectSlices = sliceData.objectSlices || [];
     for (const slice of objectSlices) {
       if (
-        !slice.fileName ||
+        (!slice.fileName && !slice.code.startsWith("#include")) ||
         slice.fileName.startsWith("<includes") ||
         slice.fileName.startsWith("<global") ||
         slice.fileName.includes("__")
