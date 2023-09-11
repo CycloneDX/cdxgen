@@ -1,5 +1,5 @@
 import { globSync } from "glob";
-import { homedir, tmpdir, platform, freemem } from "node:os";
+import { homedir, tmpdir, platform } from "node:os";
 import {
   dirname,
   sep as _sep,
@@ -76,8 +76,8 @@ export const DEBUG_MODE =
   process.env.SHIFTLEFT_LOGGING_LEVEL === "debug" ||
   process.env.NODE_ENV === "development";
 
-// Timeout milliseconds. Default 10 mins
-const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
+// Timeout milliseconds. Default 20 mins
+const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 20 * 60 * 1000;
 
 // Metadata cache
 let metadata_cache = {};
@@ -4123,8 +4123,8 @@ export const parseConanData = function (conanData) {
       return;
     }
     if (l.includes("/")) {
-      const tmpA = l.split("/");
-      if (tmpA.length === 2) {
+      const tmpA = l.trim().split("#")[0].split("/");
+      if (tmpA.length === 2 && /^\d+/.test(tmpA[1])) {
         pkgList.push({ name: tmpA[0], version: tmpA[1] });
       }
     }
@@ -4375,14 +4375,14 @@ export const parseCsProjAssetsData = async function (csProjData) {
   // extract name, operator, version from .NET package representation
   // like "NLog >= 4.5.0"
   function extractNameOperatorVersion(inputStr) {
-    const extractNameOperatorVersion = /([\w.]+)\s*([><=!]+)\s*([\d.]+)/
+    const extractNameOperatorVersion = /([\w.]+)\s*([><=!]+)\s*([\d.]+)/;
     const match = inputStr.match(extractNameOperatorVersion);
 
     if (match) {
       return {
         name: match[1],
         operator: match[2],
-        version: match[3],
+        version: match[3]
       };
     } else {
       return null;
@@ -4393,28 +4393,27 @@ export const parseCsProjAssetsData = async function (csProjData) {
   let dependenciesList = [];
   let rootPkg = {};
 
-  if (!csProjData){
-    return pkgList, dependenciesList
+  if (!csProjData) {
+    return pkgList, dependenciesList;
   }
 
   csProjData = JSON.parse(csProjData);
-  rootPkg =
-    {
-      group: "",
-      name: csProjData.project.restore.projectName,
-      version: csProjData.project.version || "latest",
-      type: "application",
-      "bom-ref": decodeURIComponent(
-        new PackageURL(
-          "nuget",
-          "",
-          csProjData.project.restore.projectName,
-          csProjData.project.version || "latest",
-          null,
-          null
-        ).toString()
-      )
-    }
+  rootPkg = {
+    group: "",
+    name: csProjData.project.restore.projectName,
+    version: csProjData.project.version || "latest",
+    type: "application",
+    "bom-ref": decodeURIComponent(
+      new PackageURL(
+        "nuget",
+        "",
+        csProjData.project.restore.projectName,
+        csProjData.project.version || "latest",
+        null,
+        null
+      ).toString()
+    )
+  };
   const purlString = decodeURIComponent(rootPkg["bom-ref"].toString());
   pkgList.push(rootPkg);
   let rootPkgDeps = new Set();
@@ -4422,12 +4421,14 @@ export const parseCsProjAssetsData = async function (csProjData) {
   // create root pkg deps
   if (csProjData.targets && csProjData.projectFileDependencyGroups) {
     for (const frameworkTarget in csProjData.projectFileDependencyGroups) {
-      for (const dependencyName of csProjData.projectFileDependencyGroups[frameworkTarget]) {
-        const nameOperatorVersion = extractNameOperatorVersion(dependencyName)
+      for (const dependencyName of csProjData.projectFileDependencyGroups[
+        frameworkTarget
+      ]) {
+        const nameOperatorVersion = extractNameOperatorVersion(dependencyName);
         if (nameOperatorVersion == null) {
           continue;
         }
-        const targetNameVersion = `${nameOperatorVersion.name}/${nameOperatorVersion.version}`
+        const targetNameVersion = `${nameOperatorVersion.name}/${nameOperatorVersion.version}`;
 
         // skip if the dep is not in the targets for whatever reason
         if (!csProjData.targets[frameworkTarget][targetNameVersion]) {
@@ -4451,13 +4452,10 @@ export const parseCsProjAssetsData = async function (csProjData) {
     dependenciesList.push({
       ref: purlString,
       dependsOn: Array.from(rootPkgDeps)
-    })
+    });
   }
 
-  if (
-    csProjData.libraries &&
-    csProjData.targets
-  ) {
+  if (csProjData.libraries && csProjData.targets) {
     const lib = csProjData.libraries;
     for (const framework in csProjData.targets) {
       for (const rootDep of Object.keys(csProjData.targets[framework])) {
@@ -4467,34 +4465,27 @@ export const parseCsProjAssetsData = async function (csProjData) {
         const depList = new Set();
         const [name, version] = rootDep.split("/");
         const dpurl = decodeURIComponent(
-          new PackageURL(
-            "nuget",
-            "",
-            name,
-            version,
-            null,
-            null
-          ).toString()
+          new PackageURL("nuget", "", name, version, null, null).toString()
         );
         let pkg = {
-            group: "",
-            name: name,
-            version: version,
-            description: "",
-            type: csProjData.targets[framework][rootDep].type,
-            "bom-ref": dpurl,
-          }
+          group: "",
+          name: name,
+          version: version,
+          description: "",
+          type: csProjData.targets[framework][rootDep].type,
+          "bom-ref": dpurl
+        };
         if (lib[rootDep]) {
-          if (lib[rootDep].sha512){
+          if (lib[rootDep].sha512) {
             pkg["_integrity"] = "sha512-" + lib[rootDep].sha512;
-          }
-          else if (lib[rootDep].sha256){
+          } else if (lib[rootDep].sha256) {
             pkg["_integrity"] = "sha256-" + lib[rootDep].sha256;
           }
         }
         pkgList.push(pkg);
 
-        const dependencies = csProjData.targets[framework][rootDep].dependencies;
+        const dependencies =
+          csProjData.targets[framework][rootDep].dependencies;
         if (dependencies) {
           for (const p of Object.keys(dependencies)) {
             const ipurl = decodeURIComponent(
@@ -4508,15 +4499,13 @@ export const parseCsProjAssetsData = async function (csProjData) {
               ).toString()
             );
             depList.add(ipurl);
-            pkgList.push(
-              {
-                group: "",
-                name: p,
-                version: dependencies[p],
-                description: "",
-                "bom-ref": ipurl
-              }
-            )
+            pkgList.push({
+              group: "",
+              name: p,
+              version: dependencies[p],
+              description: "",
+              "bom-ref": ipurl
+            });
           }
         }
         dependenciesList.push({
@@ -4532,9 +4521,9 @@ export const parseCsProjAssetsData = async function (csProjData) {
     return {
       pkgList,
       dependenciesList
-    }
+    };
   }
-}
+};
 
 export const parseCsPkgLockData = async function (csLockData) {
   const pkgList = [];
@@ -6193,13 +6182,11 @@ export const executeAtom = (src, args) => {
       args.unshift(tmpA[1]);
     }
   }
-  const freeMemoryGB = Math.floor(freemem() / 1024 / 1024 / 1024);
   if (DEBUG_MODE) {
     console.log("Executing", ATOM_BIN, args.join(" "));
   }
   const env = {
-    ...process.env,
-    JAVA_OPTS: `-Xms${freeMemoryGB}G -Xmx${freeMemoryGB}G`
+    ...process.env
   };
   env.PATH = `${env.PATH}${_delimiter}${join(
     dirNameStr,
@@ -6210,6 +6197,7 @@ export const executeAtom = (src, args) => {
     cwd,
     encoding: "utf-8",
     timeout: TIMEOUT_MS,
+    detached: true,
     env
   });
   if (result.stderr) {
@@ -6220,9 +6208,9 @@ export const executeAtom = (src, args) => {
       result.stderr.includes("Error: Could not create the Java Virtual Machine")
     ) {
       console.log(
-        "Atom requires Java 17 or above. Please install a suitable version and re-run cdxgen to improve the SBoM accuracy.\nAlternatively, use the cdxgen container image."
+        "Atom requires Java 17 or above. To improve the SBoM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
       );
-      console.log(`Current JAVA_HOME: ${env["JAVA_HOME"]}`);
+      console.log(`Current JAVA_HOME: ${env["JAVA_HOME"] || ""}`);
     } else if (result.stderr.includes("astgen")) {
       console.warn(
         "WARN: Unable to locate astgen command. Install atom globally using sudo npm install -g @appthreat/atom to resolve this issue."
@@ -6279,6 +6267,13 @@ export const findAppModules = function (
     } else {
       retList = slicesData;
     }
+  } else {
+    console.log(
+      "Slicing was not successful. For large projects (> 1 million lines of code), try running atom cli externally in Java mode. Please refer to the instructions in https://github.com/CycloneDX/cdxgen/blob/master/ADVANCED.md."
+    );
+    console.log(
+      "NOTE: Atom is in detached mode and will continue to run in the background with max CPU and memory unless it's killed."
+    );
   }
   // Clean up
   if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
@@ -6809,10 +6804,10 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
     let group = "";
     let path = undefined;
     let name_list = [];
-    if (l.startsWith("project(") && !Object.keys(parentComponent).length) {
-      const tmpA = l.split("project(");
-      if (tmpA && tmpA.length) {
-        const tmpB = tmpA[1]
+    if (l.startsWith("project") && !Object.keys(parentComponent).length) {
+      const tmpA = l.replace("project (", "project(").split("project(");
+      if (tmpA && tmpA.length > 1) {
+        const tmpB = (tmpA[1] || "")
           .trim()
           .replace(/["']/g, "")
           .replace(/[ ]/g, ",")
@@ -6894,7 +6889,13 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
             working_name = tmpB[0];
           }
           if (l.startsWith("find_package") && tmpB.length > 1) {
-            versionsMap[working_name] = tmpB[1];
+            if (
+              /^\d+/.test(tmpB[1]) &&
+              !tmpB[1].includes("${") &&
+              !tmpB[1].startsWith("@")
+            ) {
+              versionsMap[working_name] = tmpB[1];
+            }
           } else {
             for (const n of tmpB) {
               if (n.match(/^\d/)) {
@@ -6930,7 +6931,11 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
                 if (tmpB[1].includes(">") || tmpB[1].includes("<")) {
                   // We have a version specifier
                   versionSpecifiersMap[tmpA[0]] = tmpB[1];
-                } else {
+                } else if (
+                  /^\d+/.test(tmpB[1]) &&
+                  !tmpB[1].includes("${") &&
+                  !tmpB[1].startsWith("@")
+                ) {
                   // We have a valid version
                   versionsMap[tmpA[0]] = tmpB[1];
                 }
@@ -6943,7 +6948,13 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
     for (let n of name_list) {
       let props = [];
       let confidence = 0;
-      if (n && n.length > 1 && !pkgAddedMap[n]) {
+      if (
+        n &&
+        n.length > 1 &&
+        !pkgAddedMap[n] &&
+        !n.startsWith(_sep) &&
+        !n.startsWith("@")
+      ) {
         n = n.replace(/"/g, "");
         for (const wrapkey of Object.keys(mesonWrapDB)) {
           const awrap = mesonWrapDB[wrapkey];
@@ -7019,6 +7030,7 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
         props.name === "PkgProvides" &&
         props.value.includes(afile.toLowerCase())
       ) {
+        delete ospkg.scope;
         // dev packages are libraries
         ospkg.type = "library";
         // Set the evidence to indicate how we identified this package from the header or .so file
@@ -7061,39 +7073,44 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
   });
   if (options.usagesSlicesFile && existsSync(options.usagesSlicesFile)) {
     sliceData = JSON.parse(readFileSync(options.usagesSlicesFile));
-    if (DEBUG_MODE) {
-      console.log("Re-use existing slices file", options.usagesSlicesFile);
-    }
+    console.log("Re-using existing slices file", options.usagesSlicesFile);
   } else {
-    sliceData = findAppModules(src, "c", "usages", options.usagesSlicesFile);
+    if (!options.deep) {
+      console.log(
+        "By default, cdxgen parses c/c++ header files only which might miss system libraries and dependencies used directly in code. Pass the argument --deep to parse both source and header files. Please refer to the instructions in https://github.com/CycloneDX/cdxgen/blob/master/ADVANCED.md"
+      );
+    }
+    sliceData = findAppModules(
+      src,
+      options.deep ? "c" : "h",
+      "usages",
+      options.usagesSlicesFile
+    );
   }
   const usageData = parseCUsageSlice(sliceData);
   for (const afile of Object.keys(usageData)) {
     let fileName = basename(afile);
-    let extn = extname(fileName);
-    // To avoid false positives, we focus only on header files and not source code.
-    // However, some sources could belong to external libraries without an associated .h file
-    // File a bug if you can create a public example for this scenario
-    if ([".c", ".cpp", ".cc"].includes(extn)) {
+    if (!fileName || !fileName.length) {
       continue;
     }
-    let group = "";
+    let extn = extname(fileName);
+    let group = dirname(afile);
+    if (group.startsWith(".") || group.startsWith(_sep) || existsSync(afile)) {
+      group = "";
+    }
     let version = "";
     // We need to resolve the name to an os package here
     let name = fileName.replace(extn, "");
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
       epkgMap[name] || {
         name,
-        group: "",
+        group,
         version: "",
         type: pkgType
       };
-    let isExternal = false;
     // If this is a relative file, there is a good chance we can reuse the project group
     if (!afile.startsWith(_sep)) {
       group = options.projectGroup || "";
-    } else {
-      isExternal = true;
     }
     if (!apkg.purl) {
       apkg.purl = new PackageURL(
@@ -7121,12 +7138,14 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     }
     if (usageData[afile]) {
       const usymbols = Array.from(usageData[afile]).filter(
-        (v) => !v.startsWith("<operator")
+        (v) =>
+          !v.startsWith("<operator") &&
+          !v.startsWith("<global") &&
+          !v.startsWith("<empty")
       );
       if (!apkg["properties"]) {
         apkg["properties"] = [
-          { name: "ImportedSymbols", value: usymbols.join(", ") },
-          { name: "isExternal", value: "" + isExternal }
+          { name: "ImportedSymbols", value: usymbols.join(", ") }
         ];
       }
       const newProps = [];
@@ -7162,35 +7181,43 @@ export const parseCUsageSlice = (sliceData) => {
   try {
     const objectSlices = sliceData.objectSlices || [];
     for (const slice of objectSlices) {
-      if (!slice.fileName || slice.fileName.startsWith("<includes")) {
+      if (
+        (!slice.fileName && !slice.code.startsWith("#include")) ||
+        slice.fileName.startsWith("<includes") ||
+        slice.fileName.startsWith("<global") ||
+        slice.fileName.includes("__")
+      ) {
         continue;
       }
       const slFileName = slice.fileName;
-      let headerFileMode = slFileName.match(new RegExp(".(h|hh|hpp)$")) != null;
-      const slLineNumber = slice.lineNumber;
+      const slLineNumber = slice.lineNumber || 0;
       const allLines = usageData[slFileName] || new Set();
-      for (const ausage of slice.usages) {
-        if (ausage?.targetObj?.isExternal === true) {
-          let lineNumberToUse = headerFileMode
-            ? slLineNumber
-            : ausage.targetObj.lineNumber;
-          allLines.add(ausage.targetObj.resolvedMethod + "|" + lineNumberToUse);
+      if (slice.fullName && slice.fullName.length > 3) {
+        allLines.add(slice.fullName + "|" + slLineNumber);
+        if (slice.code && slice.code.startsWith("#include")) {
+          usageData[slice.fullName] = new Set();
         }
-        if (ausage?.definedBy?.isExternal === true) {
-          let lineNumberToUse = headerFileMode
-            ? slLineNumber
-            : ausage.definedBy.lineNumber;
-          allLines.add(ausage.definedBy.resolvedMethod + "|" + lineNumberToUse);
+      }
+      for (const ausage of slice.usages) {
+        if (ausage.targetObj.resolvedMethod) {
+          allLines.add(ausage.targetObj.resolvedMethod + "|" + slLineNumber);
+        } else {
+          const targetObjName = ausage.targetObj.name.replace(/\n/g, " ");
+          // We need to still filter out <global>, <clinit> style targets
+          if (
+            ausage.targetObj.lineNumber === slLineNumber ||
+            targetObjName.startsWith("<") ||
+            (slice.fullName.length > 3 &&
+              targetObjName.includes(slice.fullName))
+          ) {
+            continue;
+          }
+          allLines.add(targetObjName + "|" + slLineNumber);
         }
         let calls = ausage?.invokedCalls || [];
         calls = calls.concat(ausage?.argToCalls || []);
         for (const acall of calls) {
-          let lineNumberToUse = headerFileMode
-            ? slLineNumber
-            : acall.lineNumber;
-          if (acall.isExternal === true) {
-            allLines.add(acall.resolvedMethod + "|" + lineNumberToUse);
-          }
+          allLines.add(acall.resolvedMethod + "|" + slLineNumber);
         }
       }
       if (Array.from(allLines).length) {

@@ -933,7 +933,7 @@ test("parse pub lock", async () => {
     name: "async",
     version: "2.8.2"
   });
-  dep_list = await parsePubYamlData(
+  dep_list = parsePubYamlData(
     readFileSync("./test/data/pubspec.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
@@ -970,9 +970,9 @@ test("get dart metadata", async () => {
   });
 }, 120000);
 
-test("parse cabal freeze", async () => {
-  expect(await parseCabalData(null)).toEqual([]);
-  let dep_list = await parseCabalData(
+test("parse cabal freeze", () => {
+  expect(parseCabalData(null)).toEqual([]);
+  let dep_list = parseCabalData(
     readFileSync("./test/data/cabal.project.freeze", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(24);
@@ -980,7 +980,7 @@ test("parse cabal freeze", async () => {
     name: "ansi-terminal",
     version: "0.11.3"
   });
-  dep_list = await parseCabalData(
+  dep_list = parseCabalData(
     readFileSync("./test/data/cabal-2.project.freeze", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(366);
@@ -990,9 +990,9 @@ test("parse cabal freeze", async () => {
   });
 });
 
-test("parse conan data", async () => {
-  expect(await parseConanLockData(null)).toEqual([]);
-  let dep_list = await parseConanLockData(
+test("parse conan data", () => {
+  expect(parseConanLockData(null)).toEqual([]);
+  let dep_list = parseConanLockData(
     readFileSync("./test/data/conan.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
@@ -1000,14 +1000,21 @@ test("parse conan data", async () => {
     name: "zstd",
     version: "1.4.4"
   });
-
-  dep_list = await parseConanData(
+  dep_list = parseConanData(
     readFileSync("./test/data/conanfile.txt", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
     name: "zstd",
     version: "1.4.4"
+  });
+  dep_list = parseConanData(
+    readFileSync("./test/data/cmakes/conanfile.txt", { encoding: "utf-8" })
+  );
+  expect(dep_list.length).toEqual(1);
+  expect(dep_list[0]).toEqual({
+    name: "qr-code-generator",
+    version: "1.8.0"
   });
 });
 
@@ -1089,8 +1096,8 @@ test("parse clojure data", () => {
 });
 
 test("parse mix lock data", async () => {
-  expect(await parseMixLockData(null)).toEqual([]);
-  let dep_list = await parseMixLockData(
+  expect(parseMixLockData(null)).toEqual([]);
+  let dep_list = parseMixLockData(
     readFileSync("./test/data/mix.lock", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(16);
@@ -1098,7 +1105,7 @@ test("parse mix lock data", async () => {
     name: "absinthe",
     version: "1.7.0"
   });
-  dep_list = await parseMixLockData(
+  dep_list = parseMixLockData(
     readFileSync("./test/data/mix.lock.1", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(23);
@@ -1109,8 +1116,8 @@ test("parse mix lock data", async () => {
 });
 
 test("parse github actions workflow data", async () => {
-  expect(await parseGitHubWorkflowData(null)).toEqual([]);
-  let dep_list = await parseGitHubWorkflowData(
+  expect(parseGitHubWorkflowData(null)).toEqual([]);
+  let dep_list = parseGitHubWorkflowData(
     readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
@@ -1119,7 +1126,7 @@ test("parse github actions workflow data", async () => {
     name: "checkout",
     version: "v4"
   });
-  dep_list = await parseGitHubWorkflowData(
+  dep_list = parseGitHubWorkflowData(
     readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
@@ -1128,7 +1135,7 @@ test("parse github actions workflow data", async () => {
     name: "checkout",
     version: "v4"
   });
-  dep_list = await parseGitHubWorkflowData(
+  dep_list = parseGitHubWorkflowData(
     readFileSync("./.github/workflows/app-release.yml", {
       encoding: "utf-8"
     })
@@ -1183,14 +1190,14 @@ test("parse project.assets.json", async () => {
   expect(dep_list["pkgList"].length).toEqual(1460);
   expect(dep_list["pkgList"][0]).toEqual({
     "bom-ref": "pkg:nuget/Castle.Core.Tests@0.0.0",
-    "group": "",
-    "name": "Castle.Core.Tests",
-    "type": "application",
-    "version": "0.0.0"
+    group: "",
+    name: "Castle.Core.Tests",
+    type: "application",
+    version: "0.0.0"
   });
   expect(dep_list["dependenciesList"].length).toEqual(302);
   expect(dep_list["dependenciesList"][0]).toEqual({
-    "dependsOn": [
+    dependsOn: [
       "pkg:nuget/Castle.Core@0.0.0",
       "pkg:nuget/Microsoft.NET.Test.Sdk@17.1.0",
       "pkg:nuget/Microsoft.NETCore.App@2.1.0",
@@ -1206,10 +1213,10 @@ test("parse project.assets.json", async () => {
       "pkg:nuget/System.Net.NameResolution@4.3.0",
       "pkg:nuget/System.Net.Primitives@4.3.0",
       "pkg:nuget/PublicApiGenerator@10.1.2",
-      "pkg:nuget/System.Security.Permissions@6.0.0",
+      "pkg:nuget/System.Security.Permissions@6.0.0"
     ],
-    "ref": "pkg:nuget/Castle.Core.Tests@0.0.0"
-  })
+    ref: "pkg:nuget/Castle.Core.Tests@0.0.0"
+  });
 });
 
 test("parse packages.lock.json", async () => {
@@ -2251,7 +2258,7 @@ test("parse bazel build", () => {
 });
 
 test("parse helm charts", async () => {
-  let dep_list = await parseHelmYamlData(
+  let dep_list = parseHelmYamlData(
     readFileSync("./test/data/Chart.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(3);
@@ -2263,7 +2270,7 @@ test("parse helm charts", async () => {
       url: "https://prometheus.io/"
     }
   });
-  dep_list = await parseHelmYamlData(
+  dep_list = parseHelmYamlData(
     readFileSync("./test/data/prometheus-community-index.yaml", {
       encoding: "utf-8"
     })
@@ -2282,25 +2289,25 @@ test("parse helm charts", async () => {
 });
 
 test("parse container spec like files", async () => {
-  let dep_list = await parseContainerSpecData(
+  let dep_list = parseContainerSpecData(
     readFileSync("./test/data/docker-compose.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(4);
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/docker-compose-ng.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(8);
   expect(dep_list[0]).toEqual({
     service: "frontend"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/docker-compose-cr.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(14);
   expect(dep_list[0]).toEqual({
     service: "crapi-identity"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/tekton-task.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
@@ -2308,7 +2315,7 @@ test("parse container spec like files", async () => {
     image:
       "docker.io/amazon/aws-cli:2.0.52@sha256:1506cec98a7101c935176d440a14302ea528b8f92fcaf4a6f1ea2d7ecef7edc4"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/postgrescluster.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(6);
@@ -2316,49 +2323,49 @@ test("parse container spec like files", async () => {
     image:
       "registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-14.5-1"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/deployment.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "node-typescript-example"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/skaffold.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(6);
   expect(dep_list[0]).toEqual({
     image: "leeroy-web"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/skaffold-ms.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(22);
   expect(dep_list[0]).toEqual({
     image: "emailservice"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/emailservice.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "emailservice"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/redis.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "redis:alpine"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/adservice.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
     image: "gcr.io/google-samples/microservices-demo/adservice:v0.4.1"
   });
-  dep_list = await parseContainerSpecData(
+  dep_list = parseContainerSpecData(
     readFileSync("./test/data/kustomization.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(22);
@@ -2368,8 +2375,8 @@ test("parse container spec like files", async () => {
 });
 
 test("parse cloudbuild data", async () => {
-  expect(await parseCloudBuildData(null)).toEqual([]);
-  const dep_list = await parseCloudBuildData(
+  expect(parseCloudBuildData(null)).toEqual([]);
+  const dep_list = parseCloudBuildData(
     readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
@@ -2389,7 +2396,7 @@ test("parse privado files", () => {
 });
 
 test("parse openapi spec files", async () => {
-  let aservice = await parseOpenapiSpecData(
+  let aservice = parseOpenapiSpecData(
     readFileSync("./test/data/openapi/openapi-spec.json", {
       encoding: "utf-8"
     })
@@ -2443,7 +2450,7 @@ test("parse openapi spec files", async () => {
     ],
     authenticated: true
   });
-  aservice = await parseOpenapiSpecData(
+  aservice = parseOpenapiSpecData(
     readFileSync("./test/data/openapi/openapi-oai.yaml", {
       encoding: "utf-8"
     })
@@ -2688,7 +2695,20 @@ test("parseCmakeLikeFile tests", () => {
     type: "application",
     version: ""
   });
-  expect(retMap.pkgList.length).toEqual(20);
+  retMap = parseCmakeLikeFile("./test/data/cmakes/CMakeLists.txt", "conan");
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:conan/mongo-c-driver",
+    group: "",
+    name: "mongo-c-driver",
+    purl: "pkg:conan/mongo-c-driver",
+    type: "application",
+    version: ""
+  });
+  retMap = parseCmakeLikeFile(
+    "./test/data/cmakes/mongoc-config.cmake",
+    "conan"
+  );
+  expect(retMap.pkgList.length).toEqual(2);
   retMap = parseCmakeLikeFile("./test/data/meson.build", "conan");
   expect(retMap.parentComponent).toEqual({
     "bom-ref": "pkg:conan/mtxclient@0.9.2",

@@ -28,9 +28,9 @@ export const printTable = (bomJson) => {
     },
     columnCount: 4,
     columns: [
-      { width: 20 },
-      { width: 30 },
-      { width: 15, alignment: "right" },
+      { width: 25 },
+      { width: 35 },
+      { width: 25, alignment: "right" },
       { width: 15 }
     ]
   };

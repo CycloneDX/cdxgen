@@ -191,3 +191,18 @@ evinse -i bom.json -o bom.evinse.json -l javascript
 ```
 
 It is currently not possible to generate data-flow evidence for cdxgen in constant time since the graph is too large for pre-computation. If you have experience with source code analysis, please suggest some improvements on the [atom](https://github.com/AppThreat/atom) project.
+
+## Use Atom in Java mode
+
+For large projects (> 1 million lines of code), atom must be invoked separately for the slicing operation to perform. Follow the instructions below.
+
+- Download the latest [atom.zip release](https://github.com/AppThreat/atom/releases)
+
+```shell
+unzip atom.zip
+cd atom-1.0.0/bin
+./atom -J-Xmx16g usages -o app.atom --slice-outfile usages.json -l c <path to repo>
+node bin/cdxgen.js -o bom.json -t c --usages-slices-file usages.json <path to repo>
+```
+
+Change 16g to 32g etc for very large projects. For linux kernel, a minimum of 128GB is required.

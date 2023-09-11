@@ -51,7 +51,7 @@ const args = yargs(hideBin(process.argv))
   .option("deep", {
     type: "boolean",
     description:
-      "Perform deep searches for components. Useful while scanning live OS and oci images."
+      "Perform deep searches for components. Useful while scanning C/C++ apps, live OS and oci images."
   })
   .option("server-url", {
     description: "Dependency track url. Eg: https://deptrack.cyclonedx.io"
@@ -118,7 +118,7 @@ const args = yargs(hideBin(process.argv))
   .option("evidence", {
     type: "boolean",
     default: false,
-    description: "Generate SBoM with evidence for supported languages."
+    description: "Generate SBoM with evidence for supported languages. WIP"
   })
   .option("usages-slices-file", {
     description: "Path for the usages slice file created by atom."
