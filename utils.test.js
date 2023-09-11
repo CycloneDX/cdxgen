@@ -1395,59 +1395,56 @@ test("get licenses", () => {
   ]);
 });
 
-test("parsePkgLock", async () => {
-  let parsedList = await parsePkgLock("./test/package-lock.json");
+test("parsePkgLock v1", async () => {
+  let parsedList = await parsePkgLock("./test/data/package-json/v1/package-lock.json");
   let deps = parsedList.pkgList;
-  expect(deps.length).toEqual(760);
+  expect(deps.length).toEqual(753);
   expect(deps[1]._integrity).toEqual(
-    "sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q=="
+    "sha512-ZmIomM7EE1DvPEnSFAHZn9Vs9zJl5A9H7el0EGTE6ZbW9FKe/14IYAlPbC8iH25YarEQxZL+E8VW7Mi7kfQrDQ=="
   );
-  expect(parsedList.dependenciesList.length).toEqual(621);
-  parsedList = await parsePkgLock("./test/data/package-lock-v1.json");
-  deps = parsedList.pkgList;
-  expect(deps.length).toEqual(639);
+  expect(parsedList.dependenciesList.length).toEqual(752);
+})
+
+test("parsePkgLock v2", async () => {
+  let parsedList = await parsePkgLock("./test/data/package-json/v2/package-lock.json");
+  let deps = parsedList.pkgList;
+  expect(deps.length).toEqual(134);
   expect(deps[1]._integrity).toEqual(
-    "sha512-/r5HiDwOXTjucbBYkrTMpzWQAwil9MH7zSEfKH+RWWZv27r4vDiUd2FiBJItyQoPThLPxaf82IO6gCXyJR0ZnQ=="
+    "sha512-x9yaMvEh5BEaZKeVQC4vp3l+QoFj3BXcd4aYfuKSzIIyihjdVARAadYy3SMNIz0WCCdS2vB9JL/U6GQk5PaxQw=="
   );
-  expect(parsedList.dependenciesList.length).toEqual(572);
-  parsedList = await parsePkgLock("./test/data/package-lock2.json");
-  deps = parsedList.pkgList;
-  expect(deps.length).toEqual(1);
   expect(deps[0]).toEqual({
-    "bom-ref": "pkg:npm/MyProject",
-    name: "MyProject"
-  });
-  parsedList = await parsePkgLock("./test/data/package-lock-v2.json");
-  deps = parsedList.pkgList;
-  expect(deps.length).toEqual(5433);
-  expect(parsedList.dependenciesList.length).toEqual(1616);
-  expect(deps[0]).toEqual({
-    "bom-ref": "pkg:npm/flink-dashboard@2.0.0",
+    "bom-ref": "pkg:npm/shopify-theme-tailwindcss@2.2.1",
+    author: "Wessel van Ree <hello@wesselvanree.com>",
     group: "",
-    name: "flink-dashboard",
+    name: "shopify-theme-tailwindcss",
     type: "application",
-    version: "2.0.0"
+    version: "2.2.1"
   });
-  expect(deps[deps.length - 1].name).toEqual("zone.js");
-  parsedList = await parsePkgLock("./test/data/package-lock-v3.json", {
+  expect(deps[deps.length - 1].name).toEqual("rollup");
+  expect(parsedList.dependenciesList.length).toEqual(133);
+});
+
+test("parsePkgLock v3", async () => {
+  let parsedList = await parsePkgLock("./test/data/package-json/v3/package-lock.json", {
     projectVersion: "latest",
     projectName: "cdxgen"
   });
-  deps = parsedList.pkgList;
-  expect(deps.length).toEqual(879);
-  expect(parsedList.dependenciesList.length).toEqual(879);
+  let deps = parsedList.pkgList;
+  expect(deps.length).toEqual(156);
+  expect(deps[1]._integrity).toEqual(
+    "sha512-s93jiP6GkRApn5duComx6RLwtP23YrulPxShz+8peX7svd6Q+MS8nKLhKCCazbP92C13eTVaIOxgeLt0ezIiCg=="
+  );
   expect(deps[0]).toEqual({
     "bom-ref": "pkg:npm/cdxgen@latest",
     group: "",
+    author: "",
     name: "cdxgen",
     type: "application",
     version: "latest"
   });
-  expect(deps[deps.length - 1].name).toEqual("yocto-queue");
-  parsedList = await parsePkgLock("./test/data/package-lock4.json");
-  deps = parsedList.pkgList;
-  expect(deps.length).toEqual(356);
-});
+  expect(deps[deps.length - 1].name).toEqual("uid2");
+  expect(parsedList.dependenciesList.length).toEqual(155);
+})
 
 test("parseBowerJson", async () => {
   const deps = await parseBowerJson("./test/data/bower.json");

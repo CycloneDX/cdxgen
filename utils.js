@@ -22,6 +22,8 @@ import {
   chmodSync
 } from "node:fs";
 import got from "got";
+import Arborist from "@npmcli/arborist";
+import path from "path";
 import { xml2js } from "xml-js";
 import { fileURLToPath } from "node:url";
 let url = import.meta.url;
@@ -330,121 +332,6 @@ export const getNpmMetadata = async function (pkgList) {
   return cdepList;
 };
 
-const _getDepPkgList = async function (
-  pkgLockFile,
-  pkgList,
-  depKeys,
-  pkg,
-  versionCache
-) {
-  const pkgDependencies = {
-    ...(pkg.packages || {}),
-    ...(pkg.dependencies || {})
-  };
-  if (pkg.packages) {
-    for (const k in pkg.packages) {
-      if (k === "") {
-        continue;
-      }
-      const pl = pkg.packages[k];
-      versionCache[k] = pl.version;
-      versionCache[k.replaceAll("node_modules/", "")] = pl.version;
-    }
-  }
-  if (pkg && pkgDependencies) {
-    const pkgKeys = Object.keys(pkgDependencies);
-    for (const k of pkgKeys) {
-      // Skip the root package in lockFileVersion 3 and above
-      if (k === "") {
-        continue;
-      }
-      const name = k;
-      let version = pkgDependencies[name].version;
-      if (!version && versionCache[k]) {
-        version = versionCache[k];
-      }
-      if (!version && pkgDependencies["node_modules/" + name]) {
-        version = pkgDependencies["node_modules/" + name].version;
-      }
-      const purl = new PackageURL(
-        "npm",
-        "",
-        name.replaceAll("node_modules/", ""),
-        version,
-        null,
-        null
-      );
-      const purlString = decodeURIComponent(purl.toString());
-      const scope = pkgDependencies[name].dev === true ? "optional" : undefined;
-      const apkg = {
-        name: name.replaceAll("node_modules/", ""),
-        version,
-        _integrity: pkgDependencies[name].integrity,
-        scope,
-        properties: [
-          {
-            name: "SrcFile",
-            value: pkgLockFile
-          }
-        ],
-        evidence: {
-          identity: {
-            field: "purl",
-            confidence: 1,
-            methods: [
-              {
-                technique: "manifest-analysis",
-                confidence: 1,
-                value: pkgLockFile
-              }
-            ]
-          }
-        }
-      };
-      pkgList.push(apkg);
-      if (pkgDependencies[name].dependencies) {
-        // Include child dependencies
-        const dependencies = pkgDependencies[name].dependencies;
-        const pkgDepKeys = Object.keys(dependencies);
-        const deplist = [];
-        for (const j in pkgDepKeys) {
-          const depName = pkgDepKeys[j];
-          const depVersion =
-            versionCache[depName] || dependencies[depName].version;
-          if (!depVersion) {
-            continue;
-          }
-          const deppurl = new PackageURL(
-            "npm",
-            "",
-            depName.replaceAll("node_modules/", ""),
-            depVersion,
-            null,
-            null
-          );
-          const deppurlString = decodeURIComponent(deppurl.toString());
-          deplist.push(deppurlString);
-        }
-        depKeys[purlString] = (depKeys[purlString] || []).concat(deplist);
-        if (pkg.lockfileVersion && pkg.lockfileVersion >= 3) {
-          // Do not recurse for lock file v3 and above
-        } else {
-          await _getDepPkgList(
-            pkgLockFile,
-            pkgList,
-            depKeys,
-            pkgDependencies[name],
-            versionCache
-          );
-        }
-      } else if (!depKeys[purlString]) {
-        depKeys[purlString] = [];
-      }
-    }
-  }
-  return pkgList;
-};
-
 /**
  * Parse nodejs package json file
  *
@@ -514,114 +401,176 @@ export const parsePkgJson = async (pkgJsonFile) => {
  */
 export const parsePkgLock = async (pkgLockFile, options = {}) => {
   let pkgList = [];
-  const dependenciesList = [];
-  const depKeys = {};
-  let rootPkg = {};
-  const versionCache = {};
+  let dependenciesList = [];
   if (!options) {
     options = {};
   }
-  if (existsSync(pkgLockFile)) {
-    const lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
-    rootPkg.name = lockData.name || "";
-    // lockfile v2 onwards
-    if (lockData.name && lockData.packages && lockData.packages[""]) {
-      // Build the initial dependency tree for the root package
-      rootPkg = {
+
+  if (!existsSync(pkgLockFile)) {
+    return {
+      pkgList,
+      dependenciesList
+    };
+  }
+
+  const parseArboristNode = (
+    node,
+    rootNode,
+    workspaceNodes = new Set(),
+    parentRef = null,
+    visited = new Set(),
+    options = {},
+  ) => {
+    if (visited.has(node)) {
+      return { pkgList: [], dependenciesList: [] };
+    }
+    visited.add(node);
+    let pkgList = [];
+    let dependenciesList = [];
+
+    // update workspace nodes if they exist
+    if (node.fsChildren && node.fsChildren.size > 0) {
+      for (let child of node.fsChildren) {
+        workspaceNodes.add(child);
+      }
+    }
+
+    // if node is a workspace, find the corresponding node obj
+    // in the workspaceNodes set
+    if (node.isWorkspace) {
+      for (const workspaceNode of workspaceNodes) {
+        if (workspaceNode.name == node.name) {
+          node = workspaceNode;
+        }
+      }
+    }
+
+    // Create the package entry
+    const purlString = decodeURIComponent(
+      new PackageURL("npm", "", node.name, node.version, null, null).toString(),
+    );
+    const srcFilePath = node.path.includes("/node_modules")
+      ? node.path.split("/node_modules")[0]
+      : node.path;
+    const scope = node.dev === true ? "optional" : undefined;
+    const integrity = node.integrity ? node.integrity : undefined;
+
+    let pkg = {};
+    if (node == rootNode) {
+      pkg = {
         group: options.projectGroup || "",
-        name: options.projectName || lockData.name,
-        version: options.projectVersion || lockData.version,
+        name: options.projectName || node.packageName,
+        version: options.projectVersion || node.version,
+        author: node.package.author,
         type: "application",
         "bom-ref": decodeURIComponent(
           new PackageURL(
             "npm",
             options.projectGroup || "",
-            options.projectName || lockData.name,
-            options.projectVersion || lockData.version,
+            options.projectName || node.packageName,
+            options.projectVersion || node.version,
             null,
-            null
-          ).toString()
-        )
+            null,
+          ).toString(),
+        ),
       };
-    } else if (lockData.lockfileVersion === 1) {
-      let dirName = dirname(pkgLockFile);
-      const tmpA = dirName.split(_sep);
-      dirName = tmpA[tmpA.length - 1];
-      // v1 lock file
-      rootPkg = {
-        group: options.projectGroup || "",
-        name: options.projectName || lockData.name || dirName,
-        version: options.projectVersion || lockData.version || "",
-        type: "npm"
+    } else {
+      pkg = {
+        group: "",
+        name: node.packageName,
+        version: node.version,
+        author: node.package.author,
+        scope: scope,
+        _integrity: integrity,
+        properties: [
+          {
+            name: "SrcFile",
+            value: `${srcFilePath}/package-lock.json`,
+          },
+        ],
+        type: parentRef ? "npm" : "application",
+        "bom-ref": purlString,
       };
     }
-    if (rootPkg && rootPkg.name) {
-      const purl = new PackageURL(
-        "npm",
-        "",
-        rootPkg.name,
-        rootPkg.version,
-        null,
-        null
+    pkgList.push(pkg);
+
+    const dependsOn = [];
+    for (const edge of node.edgesOut.values()) {
+      let targetVersion;
+      let targetName;
+
+      // if the edge doesn't have an integrity, it's likely a peer dependency
+      // which isn't installed
+      let edgeToIntegrity = edge.to ? edge.to.integrity : null;
+      if (!edgeToIntegrity) {
+        continue;
+      }
+
+      // the edges don't actually contain a version, so we need to search the root node
+      // children to find the correct version. we check the node children first, then
+      // we check the root node children
+      let foundMatch = false;
+      for (const child of node.children) {
+        if (child[1].integrity == edgeToIntegrity) {
+          targetName = child[0].replace(/node_modules\//g, "");
+          targetVersion = child[1].version;
+          foundMatch = true;
+          break;
+        }
+      }
+      if (!foundMatch) {
+        for (const child of rootNode.children) {
+          if (child[1].integrity == edgeToIntegrity) {
+            targetName = child[0].replace(/node_modules\//g, "");
+            targetVersion = child[1].version;
+            break;
+          }
+        }
+      }
+
+      // if we can't find the version of the edge, continue
+      // it may be an optional peer dependency
+      if (!targetVersion || !targetName) {
+        continue;
+      }
+
+      const depPurlString = decodeURIComponent(
+        new PackageURL(
+          "npm",
+          "",
+          targetName,
+          targetVersion,
+          null,
+          null,
+        ).toString(),
       );
-      const purlString = decodeURIComponent(purl.toString());
-      rootPkg["bom-ref"] = purlString;
-      pkgList.push(rootPkg);
-      // npm ls command seems to include both dependencies and devDependencies
-      // For tree purposes, including only the dependencies should be enough
-      let rootPkgDeps = [];
-      if (
-        lockData.packages &&
-        lockData.packages[""] &&
-        lockData.packages[""].dependencies
-      ) {
-        rootPkgDeps =
-          Object.keys(lockData.packages[""].dependencies || {}) || [];
-      } else if (lockData.dependencies) {
-        rootPkgDeps = Object.keys(lockData.dependencies || {}) || [];
-      }
-      const deplist = [];
-      for (const rd of rootPkgDeps) {
-        let resolvedVersion = undefined;
-        if (lockData.packages) {
-          resolvedVersion = (lockData.packages[`node_modules/${rd}`] || {})
-            .version;
-        } else if (lockData.dependencies) {
-          resolvedVersion = lockData.dependencies[rd].version;
-        }
-        if (resolvedVersion) {
-          const dpurl = decodeURIComponent(
-            new PackageURL(
-              "npm",
-              "",
-              rd,
-              resolvedVersion,
-              null,
-              null
-            ).toString()
-          );
-          deplist.push(dpurl);
-        }
-      }
+
+      dependsOn.push(depPurlString);
+      if (edge.to == null) continue;
+      const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
+        parseArboristNode(edge.to, rootNode, workspaceNodes, purlString, visited, options);
+      pkgList = pkgList.concat(childPkgList);
+      dependenciesList = dependenciesList.concat(childDependenciesList);
+    }
+
+    if (parentRef) {
       dependenciesList.push({
         ref: purlString,
-        dependsOn: deplist
+        dependsOn: dependsOn,
       });
     }
-    pkgList = await _getDepPkgList(
-      pkgLockFile,
-      pkgList,
-      depKeys,
-      lockData,
-      versionCache
-    );
-  }
-  for (const dk of Object.keys(depKeys)) {
-    dependenciesList.push({
-      ref: dk,
-      dependsOn: depKeys[dk] || []
-    });
-  }
+
+    return { pkgList, dependenciesList };
+  };
+
+  const arb = new Arborist({
+    path: path.dirname(pkgLockFile),
+    // legacyPeerDeps=false enables npm >v3 package dependency resolution
+    legacyPeerDeps: false,
+  });
+  const tree = await arb.loadVirtual();
+  ({pkgList, dependenciesList} = parseArboristNode(tree, tree, new Set(), null, new Set(), options));
+
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(

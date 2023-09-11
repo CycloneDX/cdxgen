@@ -56,6 +56,7 @@
   "dependencies": {
     "@babel/parser": "^7.22.16",
     "@babel/traverse": "^7.22.17",
+    "@npmcli/arborist": "^7.1.0",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "cheerio": "^1.0.0-rc.12",
