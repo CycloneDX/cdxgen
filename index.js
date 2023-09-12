@@ -2984,17 +2984,6 @@ export const createCppBom = (path, options) => {
     }
   }
   if (!["docker", "oci", "os"].includes(options.projectType)) {
-    console.log(
-      "Thank you for trying the new C/C++ analyzer. This feature is a work-in-progress intended for early testing purposes.\nPlease regularly report any performance issues, false positives, and false negatives to help us improve this capability."
-    );
-    if (options.deep) {
-      console.log(
-        "Deep analysis can take several hours to complete depending on the size of the project. cdxgen would timeout after 20 minutes, however, the atom tool would continue to run in the background consuming resources."
-      );
-      console.log(
-        "During this testing phase, the recommended approach is to run atom cli in Java mode to generate usages slice which could be subsequently passed to cdxgen. Refer to the instructions in https://github.com/CycloneDX/cdxgen/blob/master/ADVANCED.md."
-      );
-    }
     let osPkgsList = [];
     // Case 1: Development libraries installed in this OS environment might be used for build
     // We collect OS packages with the word dev in the name using osquery here
