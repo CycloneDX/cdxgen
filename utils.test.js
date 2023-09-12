@@ -1398,11 +1398,11 @@ test("get licenses", () => {
 test("parsePkgLock v1", async () => {
   let parsedList = await parsePkgLock("./test/data/package-json/v1/package-lock.json");
   let deps = parsedList.pkgList;
-  expect(deps.length).toEqual(753);
+  expect(deps.length).toEqual(910);
   expect(deps[1]._integrity).toEqual(
     "sha512-ZmIomM7EE1DvPEnSFAHZn9Vs9zJl5A9H7el0EGTE6ZbW9FKe/14IYAlPbC8iH25YarEQxZL+E8VW7Mi7kfQrDQ=="
   );
-  expect(parsedList.dependenciesList.length).toEqual(753);
+  expect(parsedList.dependenciesList.length).toEqual(910);
 })
 
 test("parsePkgLock v2", async () => {
@@ -1443,7 +1443,7 @@ test("parsePkgLock v2 workspace", async () => {
   let parsedList = await parsePkgLock("./test/data/package-json/v2-workspace/package-lock.json");
   let pkgs = parsedList.pkgList;
   let deps = parsedList.dependenciesList;
-  expect(pkgs.length).toEqual(970);
+  expect(pkgs.length).toEqual(1032);
   let hasAppWorkspacePkg = pkgs.some(obj => obj["bom-ref"] === "pkg:npm/app@0.0.0");
   let hasAppWorkspaceDeps = deps.some(obj => obj.ref === "pkg:npm/app@0.0.0");
   expect(hasAppWorkspacePkg).toEqual(true);
@@ -1464,7 +1464,7 @@ test("parsePkgLock v3", async () => {
     projectName: "cdxgen"
   });
   let deps = parsedList.pkgList;
-  expect(deps.length).toEqual(156);
+  expect(deps.length).toEqual(161);
   expect(deps[1]._integrity).toEqual(
     "sha512-s93jiP6GkRApn5duComx6RLwtP23YrulPxShz+8peX7svd6Q+MS8nKLhKCCazbP92C13eTVaIOxgeLt0ezIiCg=="
   );
@@ -1477,7 +1477,7 @@ test("parsePkgLock v3", async () => {
     version: "latest"
   });
   expect(deps[deps.length - 1].name).toEqual("uid2");
-  expect(parsedList.dependenciesList.length).toEqual(156);
+  expect(parsedList.dependenciesList.length).toEqual(161);
 })
 
 test("parseBowerJson", async () => {

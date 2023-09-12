@@ -528,6 +528,36 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
       }
     }
 
+    // this handles the case when a node has ["dependencies"] key in a package-lock.json
+    // for a node. We exclude the root node because it's already been handled
+    let childrenDependsOn = [];
+    if (node != rootNode) {
+      for (const child of node.children) {
+        let childNode = child[1];
+        const { pkgList: childPkgList, dependenciesList: childDependenciesList } = parseArboristNode(
+            childNode,
+            rootNode,
+            purlString,
+            visited,
+          );
+        pkgList = pkgList.concat(childPkgList);
+        dependenciesList = dependenciesList.concat(childDependenciesList);
+
+        const depChildString = decodeURIComponent(
+          new PackageURL(
+            "npm",
+            "",
+            childNode.name,
+            childNode.version,
+            null,
+            null,
+          ).toString(),
+        );
+        childrenDependsOn.push(depChildString);
+      }
+    }
+
+    // this handles the case when a node has a ["requires"] key
     const pkgDependsOn = [];
     for (const edge of node.edgesOut.values()) {
       let targetVersion;
@@ -591,7 +621,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
 
     dependenciesList.push({
       ref: purlString,
-      dependsOn: workspaceDependsOn.concat(pkgDependsOn),
+      dependsOn: workspaceDependsOn.concat(childrenDependsOn).concat(pkgDependsOn),
     });
 
     return { pkgList, dependenciesList };
