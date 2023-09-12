@@ -1,0 +1,29 @@
+{
+  "name": "shopify-theme-tailwindcss",
+  "version": "2.2.1",
+  "description": "A starting point for an Online Store 2.0 theme using Tailwind CSS",
+  "private": true,
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc && vite build",
+    "shopify": "cd shopify && shopify theme dev",
+    "install-theme": "ts-node scripts/install-theme.ts --repo=https://github.com/Shopify/dawn.git"
+  },
+  "keywords": [
+    "Shopify Theme",
+    "Online Store 2.0"
+  ],
+  "author": "Wessel van Ree <hello@wesselvanree.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/shelljs": "^0.8.11",
+    "autoprefixer": "^10.4.13",
+    "fast-glob": "^3.2.12",
+    "postcss": "^8.4.18",
+    "shelljs": "^0.8.5",
+    "tailwindcss": "^3.2.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4",
+    "vite": "^3.2.1"
+  }
+}
