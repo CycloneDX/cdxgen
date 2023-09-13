@@ -1,0 +1,46 @@
+{
+  "name": "app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "vite serve",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest --coverage",
+    "deploy": "yarn workspace edge deploy",
+    "app:start": "yarn workspace app start",
+    "app:build": "yarn workspace app build",
+    "app:preview": "yarn workspace app preview",
+    "app:deploy": "yarn workspace app deploy"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.22.15",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/lab": "^5.0.0-alpha.142",
+    "@mui/material": "^5.14.7",
+    "firebase": "^10.3.1",
+    "localforage": "^1.10.0",
+    "notistack": "^3.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "recoil": "^0.7.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.15",
+    "@emotion/babel-plugin": "^11.11.0",
+    "@types/node": "^20.5.9",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.4",
+    "envars": "^0.4.0",
+    "happy-dom": "^10.11.2",
+    "typescript": "~5.2.2",
+    "vite": "~4.4.9",
+    "vitest": "~0.33.0"
+  }
+}

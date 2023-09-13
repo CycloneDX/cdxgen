@@ -1,0 +1,33 @@
+{
+  "name": "jsforwp-blocks",
+  "version": "2.0.0",
+  "license": "MIT",
+  "main": "blocks/index.js",
+  "scripts": {
+    "dev": "cross-env BABEL_ENV=default webpack --watch",
+    "build": "cross-env BABEL_ENV=default NODE_ENV=production webpack -p"
+  },
+  "dependencies": {
+    "react": "16.2.0",
+    "react-autosize-textarea": "2.0.0",
+    "react-dom": "16.2.0",
+    "react-sortable-hoc": "^0.6.8"
+  },
+  "devDependencies": {
+    "@wordpress/babel-preset-default": "^1.2.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
+    "classnames": "^2.2.5",
+    "cross-env": "^5.1.5",
+    "css-loader": "^0.28.11",
+    "eslint": "^4.19.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "node-sass": "^4.9.0",
+    "postcss-loader": "^2.1.5",
+    "raw-loader": "^0.5.1",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.19.1",
+    "webpack": "^3.11.0"
+  }
+}
