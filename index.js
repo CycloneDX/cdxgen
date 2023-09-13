@@ -5222,24 +5222,15 @@ export async function submitBom(args, bomContents) {
   if (projectVersion == true) {
     projectVersion = "master";
   }
+  const bomPayload = {
+    project: args.projectId,
+    projectName: args.projectName,
+    projectVersion: projectVersion,
+    autoCreate: "true",
+    bom: encodedBomContents
+  };
   if (typeof(args.parentProjectId) !== "undefined") {
-		var bomPayload = {
-		project: args.projectId,
-		projectName: args.projectName,
-		projectVersion: projectVersion,
-		parentUUID: args.parentProjectId,
-		autoCreate: "true",
-		bom: encodedBomContents
-	  };
-  } else {
-	  var bomPayload = {
-		project: args.projectId,
-		projectName: args.projectName,
-		projectVersion: projectVersion,
-		autoCreate: "true",
-		bom: encodedBomContents
-	  };
-  }
+    bomPayload.parentUUID = args.parentProjectId
   if (DEBUG_MODE) {
     console.log(
       "Submitting BOM to",
