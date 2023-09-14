@@ -5230,7 +5230,8 @@ export async function submitBom(args, bomContents) {
     bom: encodedBomContents
   };
   if (typeof(args.parentProjectId) !== "undefined") {
-    bomPayload.parentUUID = args.parentProjectId
+    bomPayload.parentUUID = args.parentProjectId;
+  }
   if (DEBUG_MODE) {
     console.log(
       "Submitting BOM to",
