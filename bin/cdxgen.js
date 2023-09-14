@@ -73,6 +73,10 @@ const args = yargs(hideBin(process.argv))
     description:
       "Dependency track project id. Either provide the id or the project name and version together"
   })
+  .option("parent-project-id", {
+    description:
+      "Dependency track parent project id"
+  })
   .option("required-only", {
     type: "boolean",
     description: "Include only the packages with required scope on the SBoM."
