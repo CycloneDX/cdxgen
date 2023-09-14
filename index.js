@@ -5229,7 +5229,7 @@ export async function submitBom(args, bomContents) {
     autoCreate: "true",
     bom: encodedBomContents
   };
-  if (typeof(args.parentProjectId) !== "undefined") {
+  if (typeof args.parentProjectId !== "undefined") {
     bomPayload.parentUUID = args.parentProjectId;
   }
   if (DEBUG_MODE) {

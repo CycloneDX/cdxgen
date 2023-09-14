@@ -418,7 +418,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     rootNode,
     parentRef = null,
     visited = new Set(),
-    options = {},
+    options = {}
   ) => {
     if (visited.has(node)) {
       return { pkgList: [], dependenciesList: [] };
@@ -444,8 +444,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           options.projectName || node.packageName,
           options.projectVersion || node.version,
           null,
-          null,
-        ).toString(),
+          null
+        ).toString()
       );
       pkg = {
         author: node.package.author,
@@ -453,7 +453,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         name: options.projectName || node.packageName,
         version: options.projectVersion || node.version,
         type: "application",
-        "bom-ref": purlString,
+        "bom-ref": purlString
       };
     } else {
       purlString = decodeURIComponent(
@@ -463,10 +463,10 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           node.packageName,
           node.version,
           null,
-          null,
-        ).toString(),
+          null
+        ).toString()
       );
-      const pkgLockFile = `${srcFilePath}/package-lock.json`
+      const pkgLockFile = `${srcFilePath}/package-lock.json`;
       pkg = {
         group: "",
         name: node.packageName,
@@ -477,8 +477,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         properties: [
           {
             name: "SrcFile",
-            value: pkgLockFile,
-          },
+            value: pkgLockFile
+          }
         ],
         evidence: {
           identity: {
@@ -494,7 +494,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           }
         },
         type: parentRef ? "npm" : "application",
-        "bom-ref": purlString,
+        "bom-ref": purlString
       };
     }
     pkgList.push(pkg);
@@ -503,13 +503,10 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     let workspaceDependsOn = [];
     if (node.fsChildren && node.fsChildren.size > 0) {
       for (let workspaceNode of node.fsChildren) {
-        const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
-          parseArboristNode(
-            workspaceNode,
-            rootNode,
-            purlString,
-            visited,
-          );
+        const {
+          pkgList: childPkgList,
+          dependenciesList: childDependenciesList
+        } = parseArboristNode(workspaceNode, rootNode, purlString, visited);
         pkgList = pkgList.concat(childPkgList);
         dependenciesList = dependenciesList.concat(childDependenciesList);
 
@@ -520,8 +517,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
             workspaceNode.name,
             workspaceNode.version,
             null,
-            null,
-          ).toString(),
+            null
+          ).toString()
         );
 
         workspaceDependsOn.push(depWorkspacePurlString);
@@ -534,12 +531,10 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     if (node != rootNode) {
       for (const child of node.children) {
         let childNode = child[1];
-        const { pkgList: childPkgList, dependenciesList: childDependenciesList } = parseArboristNode(
-            childNode,
-            rootNode,
-            purlString,
-            visited,
-          );
+        const {
+          pkgList: childPkgList,
+          dependenciesList: childDependenciesList
+        } = parseArboristNode(childNode, rootNode, purlString, visited);
         pkgList = pkgList.concat(childPkgList);
         dependenciesList = dependenciesList.concat(childDependenciesList);
 
@@ -550,8 +545,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
             childNode.name,
             childNode.version,
             null,
-            null,
-          ).toString(),
+            null
+          ).toString()
         );
         childrenDependsOn.push(depChildString);
       }
@@ -607,8 +602,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           targetName,
           targetVersion,
           null,
-          null,
-        ).toString(),
+          null
+        ).toString()
       );
 
       pkgDependsOn.push(depPurlString);
@@ -621,7 +616,9 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
 
     dependenciesList.push({
       ref: purlString,
-      dependsOn: workspaceDependsOn.concat(childrenDependsOn).concat(pkgDependsOn),
+      dependsOn: workspaceDependsOn
+        .concat(childrenDependsOn)
+        .concat(pkgDependsOn)
     });
 
     return { pkgList, dependenciesList };
@@ -630,10 +627,16 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
   const arb = new Arborist({
     path: path.dirname(pkgLockFile),
     // legacyPeerDeps=false enables npm >v3 package dependency resolution
-    legacyPeerDeps: false,
+    legacyPeerDeps: false
   });
   const tree = await arb.loadVirtual();
-  ({pkgList, dependenciesList} = parseArboristNode(tree, tree, null, new Set(), options));
+  ({ pkgList, dependenciesList } = parseArboristNode(
+    tree,
+    tree,
+    null,
+    new Set(),
+    options
+  ));
 
   if (fetchLicenses && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
