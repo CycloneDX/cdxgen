@@ -1,31 +1,34 @@
-import { globSync } from "glob";
-import { homedir, tmpdir, platform } from "node:os";
+import {globSync} from "glob";
+import {homedir, platform, tmpdir} from "node:os";
+import {basename, delimiter as _delimiter, dirname, extname, join, resolve, sep as _sep} from "node:path";
 import {
-  dirname,
-  sep as _sep,
-  basename,
-  extname,
-  join,
-  resolve,
-  delimiter as _delimiter
-} from "node:path";
-import {
+  chmodSync,
+  constants,
+  copyFileSync,
   existsSync,
-  readFileSync,
   lstatSync,
   mkdtempSync,
+  readFileSync,
   rmSync,
-  copyFileSync,
-  constants,
-  writeFileSync,
   unlinkSync,
-  chmodSync
+  writeFileSync
 } from "node:fs";
 import got from "got";
 import Arborist from "@npmcli/arborist";
 import path from "path";
-import { xml2js } from "xml-js";
-import { fileURLToPath } from "node:url";
+import {xml2js} from "xml-js";
+import {fileURLToPath} from "node:url";
+import {load} from "cheerio";
+import {load as _load} from "js-yaml";
+import {spawnSync} from "node:child_process";
+import propertiesReader from "properties-reader";
+import {clean, coerce, compare, maxSatisfying, satisfies, valid, parse} from "semver";
+import StreamZip from "node-stream-zip";
+import {parseEDNString} from "edn-data";
+import {PackageURL} from "packageurl-js";
+import {getTreeWithPlugin} from "./piptree.js";
+import iconv from "iconv-lite";
+
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
@@ -47,16 +50,6 @@ const knownLicenses = JSON.parse(
 const mesonWrapDB = JSON.parse(
   readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"))
 );
-import { load } from "cheerio";
-import { load as _load } from "js-yaml";
-import { spawnSync } from "node:child_process";
-import propertiesReader from "properties-reader";
-import { satisfies, coerce, maxSatisfying, clean, valid } from "semver";
-import StreamZip from "node-stream-zip";
-import { parseEDNString } from "edn-data";
-import { PackageURL } from "packageurl-js";
-import { getTreeWithPlugin } from "./piptree.js";
-import iconv from "iconv-lite";
 
 const selfPJson = JSON.parse(readFileSync(join(dirNameStr, "package.json")));
 const _version = selfPJson.version;
@@ -82,7 +75,7 @@ export const DEBUG_MODE =
 const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 20 * 60 * 1000;
 
 // Metadata cache
-let metadata_cache = {};
+export let metadata_cache = {};
 
 // Whether test scope shall be included for java/maven projects; default, if unset shall be 'true'
 export const includeMavenTestScope =
@@ -90,7 +83,7 @@ export const includeMavenTestScope =
   ["true", "1"].includes(process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE);
 
 // Whether license information should be fetched
-const fetchLicenses =
+export const FETCH_LICENSE =
   process.env.FETCH_LICENSE &&
   ["true", "1"].includes(process.env.FETCH_LICENSE);
 
@@ -102,7 +95,7 @@ if (process.env.PYTHON_CMD) {
 }
 
 // Custom user-agent for cdxgen
-const cdxgenAgent = got.extend({
+export const cdxgenAgent = got.extend({
   headers: {
     "user-agent": `@CycloneDX/cdxgen ${_version}`
   }
@@ -382,7 +375,7 @@ export const parsePkgJson = async (pkgJsonFile) => {
       // continue regardless of error
     }
   }
-  if (fetchLicenses && pkgList && pkgList.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePkgJson`
@@ -638,7 +631,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     options
   ));
 
-  if (fetchLicenses && pkgList && pkgList.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePkgLock`
@@ -857,7 +850,7 @@ export const parseYarnLock = async function (yarnLockFile) {
       }
     });
   }
-  if (fetchLicenses && pkgList && pkgList.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseYarnLock`
@@ -934,7 +927,7 @@ export const parseNodeShrinkwrap = async function (swFile) {
       }
     }
   }
-  if (fetchLicenses && pkgList && pkgList.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseNodeShrinkwrap`
@@ -1101,7 +1094,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
       }
     }
   }
-  if (fetchLicenses && pkgList && pkgList.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePnpmLock`
@@ -1160,7 +1153,7 @@ export const parseBowerJson = async (bowerJsonFile) => {
       // continue regardless of error
     }
   }
-  if (fetchLicenses && pkgList && pkgList.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseBowerJson`
@@ -1246,7 +1239,7 @@ export const parseMinJs = async (minJsFile) => {
       // continue regardless of error
     }
   }
-  if (fetchLicenses && pkgList && pkgList.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseMinJs`
@@ -2084,13 +2077,13 @@ export const getMvnMetadata = async function (pkgList) {
   if (!pkgList || !pkgList.length) {
     return pkgList;
   }
-  if (DEBUG_MODE && fetchLicenses) {
+  if (DEBUG_MODE && FETCH_LICENSE) {
     console.log(`About to query maven for ${pkgList.length} packages`);
   }
   for (const p of pkgList) {
     let group = p.group || "";
     // If the package already has key metadata skip querying maven
-    if (group && p.name && p.version && !fetchLicenses) {
+    if (group && p.name && p.version && !FETCH_LICENSE) {
       cdepList.push(p);
       continue;
     }
@@ -2224,7 +2217,7 @@ export const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
  */
 export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
-  if (!fetchLicenses && !fetchDepsInfo) {
+  if (!FETCH_LICENSE && !fetchDepsInfo) {
     return pkgList;
   }
   const PYPI_URL = "https://pypi.org/pypi/";
@@ -2895,7 +2888,7 @@ export const getGoPkgLicense = async function (repoMetadata) {
 export const getGoPkgComponent = async function (group, name, version, hash) {
   let pkg = {};
   let license = undefined;
-  if (fetchLicenses) {
+  if (FETCH_LICENSE) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch go package license information for ${group}:${name}`
@@ -3076,7 +3069,7 @@ export const parseGosumData = async function (gosumData) {
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
       let license = undefined;
-      if (fetchLicenses) {
+      if (FETCH_LICENSE) {
         if (DEBUG_MODE) {
           console.log(
             `About to fetch go package license information for ${name}`
@@ -3128,7 +3121,7 @@ export const parseGopkgData = async function (gopkgData) {
         case "name":
           pkg.group = "";
           pkg.name = value;
-          if (fetchLicenses) {
+          if (FETCH_LICENSE) {
             pkg.license = await getGoPkgLicense({
               group: pkg.group,
               name: pkg.name
@@ -3255,7 +3248,7 @@ export const parseGemspecData = async function (gemspecData) {
     }
   });
   pkgList = [pkg];
-  if (fetchLicenses) {
+  if (FETCH_LICENSE) {
     return await getRubyGemsMetadata(pkgList);
   } else {
     return pkgList;
@@ -3304,7 +3297,7 @@ export const parseGemfileLockData = async function (gemLockData) {
       specsFound = false;
     }
   });
-  if (fetchLicenses) {
+  if (FETCH_LICENSE) {
     return await getRubyGemsMetadata(pkgList);
   } else {
     return pkgList;
@@ -3474,7 +3467,7 @@ export const parseCargoTomlData = async function (cargoData) {
   if (pkg) {
     pkgList.push(pkg);
   }
-  if (fetchLicenses) {
+  if (FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
     return pkgList;
@@ -3522,7 +3515,7 @@ export const parseCargoData = async function (cargoData) {
       }
     }
   });
-  if (fetchLicenses) {
+  if (FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
     return pkgList;
@@ -3551,7 +3544,7 @@ export const parseCargoAuditableData = async function (cargoData) {
       });
     }
   });
-  if (fetchLicenses) {
+  if (FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
     return pkgList;
@@ -3591,7 +3584,7 @@ export const parsePubLockData = async function (pubLockData) {
       }
     }
   });
-  if (fetchLicenses) {
+  if (FETCH_LICENSE) {
     return await getDartMetadata(pkgList);
   } else {
     return pkgList;
@@ -4296,11 +4289,7 @@ export const parseNuspecData = async function (nupkgFile, nuspecData) {
     }
   };
   pkgList.push(pkg);
-  if (fetchLicenses) {
-    return await getNugetMetadata(pkgList);
-  } else {
-    return pkgList;
-  }
+  return pkgList;
 };
 
 export const parseCsPkgData = async function (pkgData) {
@@ -4327,11 +4316,7 @@ export const parseCsPkgData = async function (pkgData) {
     pkg.version = p.version;
     pkgList.push(pkg);
   }
-  if (fetchLicenses) {
-    return await getNugetMetadata(pkgList);
-  } else {
-    return pkgList;
-  }
+  return pkgList;
 };
 
 export const parseCsProjData = async function (csProjData) {
@@ -4381,11 +4366,7 @@ export const parseCsProjData = async function (csProjData) {
       }
     }
   }
-  if (fetchLicenses) {
-    return await getNugetMetadata(pkgList);
-  } else {
-    return pkgList;
-  }
+  return pkgList;
 };
 
 export const parseCsProjAssetsData = async function (csProjData) {
@@ -4532,14 +4513,10 @@ export const parseCsProjAssetsData = async function (csProjData) {
       }
     }
   }
-  if (fetchLicenses) {
-    return await getNugetMetadata(pkgList);
-  } else {
-    return {
+  return {
       pkgList,
       dependenciesList
     };
-  }
 };
 
 export const parseCsPkgLockData = async function (csLockData) {
@@ -4563,120 +4540,7 @@ export const parseCsPkgLockData = async function (csLockData) {
       pkgList.push(pkg);
     }
   }
-  if (fetchLicenses) {
-    return await getNugetMetadata(pkgList);
-  } else {
-    return pkgList;
-  }
-};
-
-/**
- * Method to retrieve metadata for nuget packages
- *
- * @param {Array} pkgList Package list
- */
-export const getNugetMetadata = async function (pkgList) {
-  const NUGET_URL = "https://api.nuget.org/v3/registration3/";
-  const cdepList = [];
-  for (const p of pkgList) {
-    let cacheKey = undefined;
-    try {
-      if (
-        (p.group && p.group.toLowerCase() === "system") ||
-        p.name.toLowerCase().startsWith("system")
-      ) {
-        p.license = "http://go.microsoft.com/fwlink/?LinkId=329770";
-      } else if (
-        (p.group && p.group.toLowerCase() === "microsoft") ||
-        p.name.toLowerCase().startsWith("microsoft")
-      ) {
-        p.license =
-          "http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm";
-      } else if (
-        (p.group && p.group.toLowerCase() === "nuget") ||
-        p.name.toLowerCase().startsWith("nuget")
-      ) {
-        p.license = "Apache-2.0";
-      } else {
-        // If there is a version, we can safely use the cache to retrieve the license
-        // See: https://github.com/CycloneDX/cdxgen/issues/352
-        const twoPartName = p.name.split(".").slice(0, 2).join(".");
-        cacheKey = `${p.group}|${twoPartName}`;
-        let body = metadata_cache[cacheKey];
-        if (body && body.error) {
-          cdepList.push(p);
-          continue;
-        }
-        if (!body) {
-          if (DEBUG_MODE) {
-            console.log(`Querying nuget for ${p.name}`);
-          }
-          const res = await cdxgenAgent.get(
-            NUGET_URL +
-              p.group.toLowerCase() +
-              (p.group !== "" ? "." : "") +
-              p.name.toLowerCase() +
-              "/index.json",
-            { responseType: "json" }
-          );
-          const items = res.body.items;
-          if (!items || !items[0] || !items[0].items) {
-            continue;
-          }
-          const firstItem = items[0];
-          // Work backwards to find the body for the matching version
-          body = firstItem.items[firstItem.items.length - 1];
-          if (p.version) {
-            const newBody = firstItem.items
-              .reverse()
-              .filter(
-                (i) => i.catalogEntry && i.catalogEntry.version === p.version
-              );
-            if (newBody && newBody.length) {
-              body = newBody[0];
-            }
-          }
-          metadata_cache[cacheKey] = body;
-        }
-        // Set the latest version in case it is missing
-        if (!p.version && body.catalogEntry.version) {
-          p.version = body.catalogEntry.version;
-        }
-        p.description = body.catalogEntry.description;
-        if (body.catalogEntry.authors) {
-          p.author = body.catalogEntry.authors.trim();
-        }
-        if (
-          body.catalogEntry.licenseExpression &&
-          body.catalogEntry.licenseExpression !== ""
-        ) {
-          p.license = findLicenseId(body.catalogEntry.licenseExpression);
-        } else if (body.catalogEntry.licenseUrl) {
-          p.license = findLicenseId(body.catalogEntry.licenseUrl);
-        }
-        if (body.catalogEntry.projectUrl) {
-          p.repository = { url: body.catalogEntry.projectUrl };
-          p.homepage = {
-            url:
-              "https://www.nuget.org/packages/" +
-              p.group +
-              (p.group !== "" ? "." : "") +
-              p.name +
-              "/" +
-              p.version +
-              "/"
-          };
-        }
-      }
-      cdepList.push(p);
-    } catch (err) {
-      if (cacheKey) {
-        metadata_cache[cacheKey] = { error: err.code };
-      }
-      cdepList.push(p);
-    }
-  }
-  return cdepList;
+  return pkgList;
 };
 
 /**
@@ -7245,4 +7109,192 @@ export const parseCUsageSlice = (sliceData) => {
     // ignore
   }
   return usageData;
+};
+
+async function getNugetUrl() {
+  const req = "https://api.nuget.org/v3/index.json";
+  const res = await cdxgenAgent.get(req, {
+    responseType: "json"
+  });
+  const urls = res.body.resources;
+  for (const resource of urls) {
+    if (resource["@type"] === "RegistrationsBaseUrl/3.6.0") {
+      return resource["@id"];
+    }
+  }
+  return "https://api.nuget.org/v3/registration3/";
+}
+
+async function queryNuget(p, NUGET_URL) {
+  if (DEBUG_MODE) {
+    console.log(`Querying nuget for ${p.name}`);
+  }
+  const np = JSON.parse(JSON.stringify(p));
+  const body = []
+  const newBody = []
+  let res = await cdxgenAgent.get(
+    NUGET_URL +
+    np.name.toLowerCase() +
+    "/index.json",
+    {responseType: "json"}
+  );
+  let items = res.body.items;
+  if (!items || !items[0]) {
+    return [np, newBody, body]
+  }
+  if (items[0] && !items[0].items) {
+    if (!p.version || p.version === "0.0.0" || p.version === "latest") {
+      const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
+      np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+    }
+    for (const item of items) {
+      if (!p.version || p.version === "0.0.0" || p.version === "latest") {
+        const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
+        np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+        if (compare(np.version, res.body.items[res.body.items.length - 1].upper) === 1) {
+          if (tmpVersion.patch > 0) {
+            np.version = tmpVersion.major + "." + tmpVersion.minor + "." + (tmpVersion.patch - 1).toString();
+          }
+        }
+      }
+      if (np.version && valid(np.version)) {
+        let lower = compare(item.lower, np.version);
+        let upper = compare(item.upper, np.version);
+        if (lower !== 1 && upper !== -1) {
+          res = await cdxgenAgent.get(item["@id"], {responseType: "json"});
+          newBody.push(res.body.items
+            .reverse()
+            .filter(
+              (i) => i.catalogEntry && i.catalogEntry.version === np.version
+            ));
+          break;
+        }
+      }
+    }
+  } else {
+    if (!p.version || p.version === "0.0.0" || p.version === "latest") {
+      const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
+      np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+    }
+    const firstItem = items[0];
+    // Work backwards to find the body for the matching version
+    body.concat(firstItem.items[firstItem.items.length - 1])
+    if (np.version) {
+      newBody.push(firstItem.items
+        .reverse()
+        .filter(
+          (i) => i.catalogEntry && i.catalogEntry.version === np.version
+        ));
+    }
+  }
+  return [np, newBody, body]
+}
+
+/**
+ * Method to retrieve metadata for nuget packages
+ *
+ * @param {Array} pkgList Package list
+ */
+export const getNugetMetadata = async function (pkgList, dependencies = undefined) {
+  const NUGET_URL = await getNugetUrl();
+  const cdepList = [];
+  const depRepList = {};
+  for (const p of pkgList) {
+    let cacheKey = undefined;
+    try {
+      // If there is a version, we can safely use the cache to retrieve the license
+      // See: https://github.com/CycloneDX/cdxgen/issues/352
+      cacheKey = `${p.group}|${p.name}`;
+      let body = metadata_cache[cacheKey];
+
+      if (body && body.error) {
+        cdepList.push(p);
+        continue;
+      }
+      if (!body) {
+        let newBody = {};
+        let np = {};
+        [np, newBody, body] = await queryNuget(p, NUGET_URL)
+        if (p.version !== np.version) {
+          const oldRef = decodeURIComponent(
+              new PackageURL(
+                "nuget",
+                "",
+                p.name,
+                p.version,
+                null,
+                null
+              ).toString()
+            );
+          depRepList[oldRef] = decodeURIComponent(
+            new PackageURL(
+              "nuget",
+              "",
+              np.name,
+              np.version,
+              null,
+              null
+            ).toString()
+          );
+          p.version = np.version;
+        }
+        if (newBody && newBody[0].length > 0) {
+          body = newBody[0][0];
+        }
+        if (body) {
+          metadata_cache[cacheKey] = body;
+          // Set the latest version in case it is missing
+          if (!p.version && body.catalogEntry.version) {
+            p.version = body.catalogEntry.version;
+          }
+          p.description = body.catalogEntry.description;
+          if (body.catalogEntry.authors) {
+            p.author = body.catalogEntry.authors.trim();
+          }
+          if (
+            body.catalogEntry.licenseExpression &&
+            body.catalogEntry.licenseExpression !== ""
+          ) {
+            p.license = findLicenseId(body.catalogEntry.licenseExpression);
+          } else if (body.catalogEntry.licenseUrl) {
+            p.license = findLicenseId(body.catalogEntry.licenseUrl);
+          }
+          if (body.catalogEntry.projectUrl) {
+            p.repository = {url: body.catalogEntry.projectUrl};
+            p.homepage = {
+              url:
+                "https://www.nuget.org/packages/" +
+                p.name +
+                "/" +
+                p.version +
+                "/"
+            };
+          }
+          cdepList.push(p);
+        }
+      }
+    } catch
+      (err) {
+      if (cacheKey) {
+        metadata_cache[cacheKey] = {error: err.code};
+      }
+      cdepList.push(p);
+    }
+  }
+  const newDependencies = [].concat(dependencies);
+  if (depRepList && newDependencies.length) {
+    const changed = Object.keys(depRepList);
+    for (const d of newDependencies) {
+      if (changed.length > 0 && changed.includes(d["ref"])) {
+        d["ref"] = depRepList[d["ref"]];
+      }
+      for (const dd in d["dependsOn"]) {
+        if (changed.includes(d["dependsOn"][dd])) {
+          const replace = d["dependsOn"][dd];
+          d["dependsOn"][dd] = depRepList[replace];
+        }
+      }
+    }
+  }
+  return cdepList, newDependencies;
 };

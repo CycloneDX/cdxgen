@@ -97,7 +97,8 @@ import {
   addEvidenceForImports,
   parseSbtTree,
   parseCmakeLikeFile,
-  getCppModules
+  getCppModules,
+  FETCH_LICENSE, getNugetMetadata,
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -3913,39 +3914,17 @@ export const createRubyBom = async (path, options) => {
   return {};
 };
 
-const removeDuplicates = (pkgList, dependencies) => {
-  const uniqueItems = {};
-  const uniqueRefs = new Set();
-  const newPkgList = [];
-  const newDependencies = [];
-
-  for (const item of pkgList) {
-    if (item) {
-      const { name, version } = item;
-      const key = `${name}-${version}`;
-      if (!uniqueItems[key] && key) {
-        uniqueItems[key] = item;
-        newPkgList.push(item);
-      }
-    }
-  }
-
-  for (const item of dependencies) {
-    const { ref } = item;
-    if (!uniqueRefs.has(ref)) {
-      uniqueRefs.add(ref);
-      newDependencies.push(item);
-    }
-  }
-  return [newPkgList, newDependencies];
-};
 /**
  * Function to create bom string for csharp projects
  *
  * @param path to the project
  * @param options Parse options from the cli
  */
-export const createCsharpBom = async (path, options) => {
+export const createCsharpBom = async (
+  path,
+  options,
+  parentComponent = undefined
+) => {
   let manifestFiles = [];
   let pkgData = undefined;
   let dependencies = [];
@@ -4048,17 +4027,24 @@ export const createCsharpBom = async (path, options) => {
       }
     }
   }
-  if (pkgList.length) {
-    const uniquePkg = removeDuplicates(pkgList, dependencies);
-    dependencies = uniquePkg[1];
-    pkgList = uniquePkg[0];
-    return buildBomNSData(options, pkgList, "nuget", {
-      src: path,
-      filename: manifestFiles.join(", "),
-      dependencies
-    });
+  if (!parentComponent) {
+    parentComponent = createDefaultParentComponent(path, options.type, options);
   }
-  return {};
+  if (pkgList.length) {
+    dependencies = mergeDependencies(dependencies, [], parentComponent);
+    pkgList = trimComponents(pkgList, "json");
+  }
+  if (FETCH_LICENSE) {
+    pkgList, dependencies = await getNugetMetadata(pkgList, dependencies);
+    dependencies = mergeDependencies(dependencies, [], parentComponent);
+    pkgList = trimComponents(pkgList, "json");
+  }
+  return buildBomNSData(options, pkgList, "nuget", {
+    src: path,
+    filename: manifestFiles.join(", "),
+    dependencies,
+    parentComponent
+  });
 };
 
 export const mergeDependencies = (
@@ -4404,7 +4390,7 @@ export const createMultiXBom = async (pathList, options) => {
         listComponents(options, {}, bomData.bomJson.components, "gem", "xml")
       );
     }
-    bomData = await createCsharpBom(path, options);
+    bomData = await createCsharpBom(path, options, parentComponent);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
