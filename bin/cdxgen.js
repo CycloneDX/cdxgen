@@ -74,8 +74,7 @@ const args = yargs(hideBin(process.argv))
       "Dependency track project id. Either provide the id or the project name and version together"
   })
   .option("parent-project-id", {
-    description:
-      "Dependency track parent project id"
+    description: "Dependency track parent project id"
   })
   .option("required-only", {
     type: "boolean",
