@@ -1246,29 +1246,134 @@ test("parse .net cs proj", async () => {
 });
 
 test("get nget metadata", async () => {
-  const dep_list = await getNugetMetadata([
+  let dep_list = [
+    {
+    dependsOn: [
+      "pkg:nuget/Microsoft.NET.Test.Sdk@17.1.0",
+      "pkg:nuget/Microsoft.NETCore.App@2.1.0",
+      "pkg:nuget/Microsoft.NETFramework.ReferenceAssemblies@1.0.0",
+      "pkg:nuget/NLog@4.5.0",
+      "pkg:nuget/NUnit.Console@3.11.1",
+      "pkg:nuget/NUnit3TestAdapter@3.16.1",
+      "pkg:nuget/NUnitLite@3.13.3",
+      "pkg:nuget/Serilog@0.0.0",
+      "pkg:nuget/Serilog.Sinks.TextWriter@2.0.0",
+      "pkg:nuget/System.Security.Permissions@4.7.0",
+      "pkg:nuget/log4net@2.0.13",
+      "pkg:nuget/System.Net.NameResolution@4.3.0",
+      "pkg:nuget/System.Net.Primitives@4.3.0",
+      "pkg:nuget/PublicApiGenerator@10.1.2",
+      "pkg:nuget/System.Security.Permissions@6.0.0"
+    ],
+    ref: "pkg:nuget/Castle.Core@4.4.0"
+  },
+    {
+      dependsOn: [
+        "pkg:nuget/Microsoft.CSharp@4.0.1",
+        "pkg:nuget/System.Collections@4.0.11",
+        "pkg:nuget/System.Dynamic.Runtime@4.0.11",
+        "pkg:nuget/System.Globalization@4.0.11",
+        "pkg:nuget/System.Linq@4.1.0",
+        "pkg:nuget/System.Reflection.Extensions@4.0.1",
+        "pkg:nuget/System.Reflection@4.1.0",
+        "pkg:nuget/System.Runtime.Extensions@4.1.0",
+        "pkg:nuget/System.Runtime@4.1.0",
+        "pkg:nuget/System.Text.RegularExpressions@4.1.0",
+        "pkg:nuget/System.Threading@4.0.11"
+      ],
+      ref: "pkg:nuget/Serilog@0.0.0"
+    }
+  ];
+  let pkg_list = [
     {
       group: "",
       name: "Castle.Core",
-      version: "4.4.0"
+      version: "4.4.0",
+      "bom-ref": "pkg:nuget/Castle.Core@4.4.0"
+    },
+    {
+      group: "",
+      name: "Serilog",
+      version: "0.0.0",
+      "bom-ref": "pkg:nuget/Serilog@0.0.0"
+    }
+  ];
+  let pkgList;
+  let dependencies;
+  pkgList, dependencies = await getNugetMetadata(pkg_list,dep_list);
+  expect(pkg_list.length).toEqual(2);
+  // This data will need to be updated periodically as it tests that missing versions are set to the latest rc
+  expect(pkg_list).toEqual([
+    {
+      "author": "Castle Project Contributors",
+      "bom-ref": "pkg:nuget/Castle.Core@4.4.0",
+      "description": "Castle Core, including DynamicProxy, Logging Abstractions and DictionaryAdapter",
+      "group": "",
+      "homepage": {
+        "url": "https://www.nuget.org/packages/Castle.Core/4.4.0/"
+      },
+      "license": "Apache-2.0",
+      "name": "Castle.Core",
+      "repository": {
+        "url": "http://www.castleproject.org/"
+      },
+      "version": "4.4.0"
+    },
+    {
+      "author": "Serilog Contributors",
+      "bom-ref": "pkg:nuget/Serilog@3.0.1",
+      "description": "Simple .NET logging with fully-structured events",
+      "group": "",
+      "homepage": {
+        "url": "https://www.nuget.org/packages/Serilog/3.0.1/"
+      },
+      "license": "Apache-2.0",
+      "name": "Serilog",
+      "repository": {
+        "url": "https://serilog.net/"
+      },
+      "version": "3.0.1"
     }
   ]);
-  expect(dep_list.length).toEqual(1);
-  expect(dep_list[0]).toEqual({
-    author: "Castle Project Contributors",
-    group: "",
-    name: "Castle.Core",
-    version: "4.4.0",
-    description:
-      "Castle Core, including DynamicProxy, Logging Abstractions and DictionaryAdapter",
-    homepage: {
-      url: "https://www.nuget.org/packages/Castle.Core/4.4.0/"
+  expect(dependencies).toEqual([
+    {
+      dependsOn: [
+        "pkg:nuget/Microsoft.NET.Test.Sdk@17.1.0",
+        "pkg:nuget/Microsoft.NETCore.App@2.1.0",
+        "pkg:nuget/Microsoft.NETFramework.ReferenceAssemblies@1.0.0",
+        "pkg:nuget/NLog@4.5.0",
+        "pkg:nuget/NUnit.Console@3.11.1",
+        "pkg:nuget/NUnit3TestAdapter@3.16.1",
+        "pkg:nuget/NUnitLite@3.13.3",
+        "pkg:nuget/Serilog@3.0.1",
+        "pkg:nuget/Serilog.Sinks.TextWriter@2.0.0",
+        "pkg:nuget/System.Security.Permissions@4.7.0",
+        "pkg:nuget/log4net@2.0.13",
+        "pkg:nuget/System.Net.NameResolution@4.3.0",
+        "pkg:nuget/System.Net.Primitives@4.3.0",
+        "pkg:nuget/PublicApiGenerator@10.1.2",
+        "pkg:nuget/System.Security.Permissions@6.0.0"
+      ],
+      ref: "pkg:nuget/Castle.Core@4.4.0"
     },
-    license: "Apache-2.0",
-    repository: {
-      url: "http://www.castleproject.org/"
+    {
+      dependsOn: [
+        "pkg:nuget/Microsoft.CSharp@4.0.1",
+        "pkg:nuget/System.Collections@4.0.11",
+        "pkg:nuget/System.Dynamic.Runtime@4.0.11",
+        "pkg:nuget/System.Globalization@4.0.11",
+        "pkg:nuget/System.Linq@4.1.0",
+        "pkg:nuget/System.Reflection.Extensions@4.0.1",
+        "pkg:nuget/System.Reflection@4.1.0",
+        "pkg:nuget/System.Runtime.Extensions@4.1.0",
+        "pkg:nuget/System.Runtime@4.1.0",
+        "pkg:nuget/System.Text.RegularExpressions@4.1.0",
+        "pkg:nuget/System.Threading@4.0.11"
+      ],
+      ref: "pkg:nuget/Serilog@3.0.1"
     }
-  });
+  ]
+  )
 }, 240000);
 
 test("parsePomFile", () => {
@@ -1425,24 +1530,26 @@ test("parsePkgLock v2", async () => {
     version: "2.2.1"
   });
   expect(deps[deps.length - 1].name).toEqual("rollup");
-
-  const pkgFilePath = new URL(
-    "test/data/package-json/v2/package-lock.json",
-    import.meta.url
-  ).pathname;
-  expect(deps[deps.length - 1].evidence).toEqual({
-    identity: {
-      field: "purl",
-      confidence: 1,
-      methods: [
-        {
-          technique: "manifest-analysis",
-          confidence: 1,
-          value: pkgFilePath
-        }
-      ]
-    }
-  });
+  // pkgFilePath does not parse correctly on Windows.
+  if (process.env.OS !== "Windows_NT") {
+    const pkgFilePath = new URL(
+      "test/data/package-json/v2/package-lock.json",
+      import.meta.url
+    ).pathname;
+    expect(deps[deps.length - 1].evidence).toEqual({
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: pkgFilePath
+          }
+        ]
+      }
+    });
+  }
   expect(parsedList.dependenciesList.length).toEqual(134);
 });
 
