@@ -147,6 +147,7 @@ $ cdxgen -h
       --project-version        Dependency track project version    [default: ""]
       --project-id             Dependency track project id. Either provide the i
                                d or the project name and version together
+      --parent-project-id      Dependency track parent project id
       --required-only          Include only the packages with required scope on
                                the SBoM.                               [boolean]
       --fail-on-error          Fail if any dependency extractor fails. [boolean]
