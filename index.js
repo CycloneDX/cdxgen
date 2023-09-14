@@ -3949,7 +3949,7 @@ export const createCsharpBom = async (
     (options.multiProject ? "**/" : "") + "*.nupkg"
   );
   let pkgList = [];
-  if (nupkgFiles.length) {
+  if (nupkgFiles.length && projAssetsFiles.length === 0) {
     manifestFiles = manifestFiles.concat(nupkgFiles);
     for (const nf of nupkgFiles) {
       if (DEBUG_MODE) {

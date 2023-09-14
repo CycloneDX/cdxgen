@@ -1288,12 +1288,14 @@ test("get nget metadata", async () => {
     {
       group: "",
       name: "Castle.Core",
-      version: "4.4.0"
+      version: "4.4.0",
+      "bom-ref": "pkg:nuget/Castle.Core@4.4.0"
     },
     {
       group: "",
       name: "Serilog",
-      version: "0.0.0"
+      version: "0.0.0",
+      "bom-ref": "pkg:nuget/Serilog@0.0.0"
     }
   ];
   let pkgList;
@@ -1304,6 +1306,7 @@ test("get nget metadata", async () => {
   expect(pkg_list).toEqual([
     {
       "author": "Castle Project Contributors",
+      "bom-ref": "pkg:nuget/Castle.Core@4.4.0",
       "description": "Castle Core, including DynamicProxy, Logging Abstractions and DictionaryAdapter",
       "group": "",
       "homepage": {
@@ -1318,6 +1321,7 @@ test("get nget metadata", async () => {
     },
     {
       "author": "Serilog Contributors",
+      "bom-ref": "pkg:nuget/Serilog@3.0.1",
       "description": "Simple .NET logging with fully-structured events",
       "group": "",
       "homepage": {

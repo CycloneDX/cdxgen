@@ -7146,17 +7146,18 @@ async function queryNuget(p, NUGET_URL) {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
       const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
       np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
-    }
-    for (const item of items) {
-      if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-        const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
-        np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
-        if (compare(np.version, res.body.items[res.body.items.length - 1].upper) === 1) {
-          if (tmpVersion.patch > 0) {
-            np.version = tmpVersion.major + "." + tmpVersion.minor + "." + (tmpVersion.patch - 1).toString();
-          }
+      if (compare(np.version, res.body.items[res.body.items.length - 1].upper) === 1) {
+        if (tmpVersion.patch > 0) {
+          np.version = tmpVersion.major + "." + tmpVersion.minor + "." + (tmpVersion.patch - 1).toString();
         }
       }
+    }
+    for (const item of items) {
+      // if (!p.version || p.version === "0.0.0" || p.version === "latest") {
+      //   const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
+      //   np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+      //
+      // }
       if (np.version && valid(np.version)) {
         let lower = compare(item.lower, np.version);
         let upper = compare(item.upper, np.version);
@@ -7178,7 +7179,7 @@ async function queryNuget(p, NUGET_URL) {
     }
     const firstItem = items[0];
     // Work backwards to find the body for the matching version
-    body.concat(firstItem.items[firstItem.items.length - 1])
+    // body.push(firstItem.items[firstItem.items.length - 1])
     if (np.version) {
       newBody.push(firstItem.items
         .reverse()
@@ -7187,7 +7188,7 @@ async function queryNuget(p, NUGET_URL) {
         ));
     }
   }
-  return [np, newBody, body]
+  return [np, newBody]
 }
 
 /**
@@ -7204,7 +7205,7 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
     try {
       // If there is a version, we can safely use the cache to retrieve the license
       // See: https://github.com/CycloneDX/cdxgen/issues/352
-      cacheKey = `${p.group}|${p.name}`;
+      cacheKey = `${p.name}|${p.version}`;
       let body = metadata_cache[cacheKey];
 
       if (body && body.error) {
@@ -7214,19 +7215,10 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
       if (!body) {
         let newBody = {};
         let np = {};
-        [np, newBody, body] = await queryNuget(p, NUGET_URL)
+        [np, newBody] = await queryNuget(p, NUGET_URL)
         if (p.version !== np.version) {
-          const oldRef = decodeURIComponent(
-              new PackageURL(
-                "nuget",
-                "",
-                p.name,
-                p.version,
-                null,
-                null
-              ).toString()
-            );
-          depRepList[oldRef] = decodeURIComponent(
+          const oldRef = p["bom-ref"];
+          p["bom-ref"] = decodeURIComponent(
             new PackageURL(
               "nuget",
               "",
@@ -7236,6 +7228,7 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
               null
             ).toString()
           );
+          depRepList[oldRef] = p["bom-ref"];
           p.version = np.version;
         }
         if (newBody && newBody[0].length > 0) {
@@ -7283,7 +7276,13 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
   }
   const newDependencies = [].concat(dependencies);
   if (depRepList && newDependencies.length) {
+
     const changed = Object.keys(depRepList);
+    // if (!parentComponent.version || parentComponent.version === "latest" || parentComponent.version === "0.0.0"){
+    //   if (changed.includes(parentComponent["bom-ref"])) {
+    //     parentComponent["bom-ref"] = depRepList[parentComponent["bom-ref"]["ref"]];
+    //   }
+    // }
     for (const d of newDependencies) {
       if (changed.length > 0 && changed.includes(d["ref"])) {
         d["ref"] = depRepList[d["ref"]];
