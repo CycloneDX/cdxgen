@@ -1531,7 +1531,6 @@ test("parsePkgLock v2", async () => {
     version: "2.2.1"
   });
   expect(deps[deps.length - 1].name).toEqual("rollup");
-
   const pkgFilePath = path.resolve(
     path.join("test", "data", "package-json", "v2", "package-lock.json")
   );
