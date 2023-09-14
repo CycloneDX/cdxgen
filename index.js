@@ -5268,13 +5268,7 @@ export async function submitBom(args, bomContents) {
             "Content-Type": "application/json",
             "user-agent": `@CycloneDX/cdxgen ${_version}`
           },
-          json: {
-            project: args.projectId,
-            projectName: args.projectName,
-            projectVersion: projectVersion,
-            autoCreate: "true",
-            bom: encodedBomContents
-          },
+          json: bomPayload,
           responseType: "json"
         }).json();
       } catch (error) {
