@@ -421,8 +421,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     let dependenciesList = [];
 
     // Create the package entry
-    const srcFilePath = node.path.includes("/node_modules")
-      ? node.path.split("/node_modules")[0]
+    const srcFilePath = node.path.includes(`${_sep}node_modules`)
+      ? node.path.split(`${_sep}node_modules`)[0]
       : node.path;
     const scope = node.dev === true ? "optional" : undefined;
     const integrity = node.integrity ? node.integrity : undefined;
@@ -459,7 +459,10 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           null
         ).toString()
       );
-      const pkgLockFile = `${srcFilePath}/package-lock.json`;
+      const pkgLockFile = join(
+        srcFilePath.replace("/", _sep),
+        "package-lock.json"
+      );
       pkg = {
         group: "",
         name: node.packageName,
@@ -6954,13 +6957,10 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
   });
   if (options.usagesSlicesFile && existsSync(options.usagesSlicesFile)) {
     sliceData = JSON.parse(readFileSync(options.usagesSlicesFile));
-    console.log("Re-using existing slices file", options.usagesSlicesFile);
-  } else {
-    if (!options.deep) {
-      console.log(
-        "By default, cdxgen parses c/c++ header files only which might miss system libraries and dependencies used directly in code. Pass the argument --deep to parse both source and header files. Please refer to the instructions in https://github.com/CycloneDX/cdxgen/blob/master/ADVANCED.md"
-      );
+    if (DEBUG_MODE) {
+      console.log("Re-using existing slices file", options.usagesSlicesFile);
     }
+  } else {
     sliceData = findAppModules(
       src,
       options.deep ? "c" : "h",
@@ -6976,7 +6976,12 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     }
     let extn = extname(fileName);
     let group = dirname(afile);
-    if (group.startsWith(".") || group.startsWith(_sep) || existsSync(afile)) {
+    if (
+      group.startsWith(".") ||
+      group.startsWith(_sep) ||
+      existsSync(resolve(afile)) ||
+      existsSync(resolve(src, afile))
+    ) {
       group = "";
     }
     let version = "";

@@ -1,0 +1,582 @@
+[
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++ -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock/include -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/include -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest -O3 -DNDEBUG -fPIC -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++17 -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock/src/gmock-all.cc"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++ -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_main_EXPORTS -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock/include -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/include -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest -O3 -DNDEBUG -fPIC -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++17 -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googlemock/src/gmock_main.cc"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++ -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgtest_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/include -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest -O3 -DNDEBUG -fPIC -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++17 -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++ -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgtest_main_EXPORTS -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/include -isystem /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest -O3 -DNDEBUG -fPIC -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -std=c++17 -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/googletest-src/googletest/src/gtest_main.cc"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/benchmark/catch_chronometer.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/catch_chronometer.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/catch_chronometer.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_benchmark_function.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/detail/catch_benchmark_function.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/detail/catch_benchmark_function.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_run_for_at_least.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/detail/catch_run_for_at_least.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/detail/catch_run_for_at_least.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/benchmark/detail/catch_stats.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/detail/catch_stats.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/benchmark/detail/catch_stats.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/generators/catch_generator_exception.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/generators/catch_generator_exception.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/generators/catch_generator_exception.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/generators/catch_generators.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/generators/catch_generators.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/generators/catch_generators.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/generators/catch_generators_random.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/generators/catch_generators_random.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/generators/catch_generators_random.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_automake.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_automake.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_automake.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_common_base.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_common_base.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_common_base.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_compact.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_compact.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_compact.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_console.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_console.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_console.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_cumulative_base.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_cumulative_base.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_cumulative_base.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_event_listener.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_event_listener.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_event_listener.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_helpers.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_helpers.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_helpers.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_junit.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_junit.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_junit.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_multi.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_multi.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_multi.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_registrars.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_registrars.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_registrars.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_sonarqube.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_sonarqube.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_sonarqube.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_streaming_base.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_streaming_base.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_streaming_base.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_tap.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_tap.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_tap.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_teamcity.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_teamcity.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_teamcity.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/reporters/catch_reporter_xml.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_xml.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/reporters/catch_reporter_xml.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_capture.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_capture.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_capture.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_config.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_config.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_config.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_exception.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_exception.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_exception.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_generatortracker.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_generatortracker.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_generatortracker.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_registry_hub.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_registry_hub.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_registry_hub.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_reporter.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_reporter.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_reporter.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_reporter_factory.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_reporter_factory.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_reporter_factory.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/interfaces/catch_interfaces_testcase.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_testcase.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/interfaces/catch_interfaces_testcase.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_approx.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_approx.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_approx.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_assertion_result.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_assertion_result.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_assertion_result.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_config.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_config.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_config.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_get_random_seed.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_get_random_seed.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_get_random_seed.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_message.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_message.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_message.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_registry_hub.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_registry_hub.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_registry_hub.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_session.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_session.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_session.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_tag_alias_autoregistrar.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_tag_alias_autoregistrar.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_tag_alias_autoregistrar.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_test_case_info.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_test_case_info.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_test_case_info.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_test_spec.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_test_spec.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_test_spec.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_timer.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_timer.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_timer.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_tostring.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_tostring.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_tostring.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_totals.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_totals.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_totals.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_translate_exception.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_translate_exception.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_translate_exception.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/catch_version.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_version.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/catch_version.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_assertion_handler.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_assertion_handler.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_assertion_handler.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_case_insensitive_comparisons.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_case_insensitive_comparisons.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_case_insensitive_comparisons.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_clara.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_clara.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_clara.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_commandline.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_commandline.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_commandline.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_console_colour.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_console_colour.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_console_colour.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_context.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_context.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_context.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_debug_console.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_debug_console.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_debug_console.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_debugger.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_debugger.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_debugger.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_decomposer.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_decomposer.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_decomposer.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_enforce.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_enforce.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_enforce.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_enum_values_registry.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_enum_values_registry.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_enum_values_registry.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_errno_guard.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_errno_guard.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_errno_guard.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_exception_translator_registry.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_exception_translator_registry.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_exception_translator_registry.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_fatal_condition_handler.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_fatal_condition_handler.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_fatal_condition_handler.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_floating_point_helpers.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_floating_point_helpers.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_floating_point_helpers.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_getenv.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_getenv.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_getenv.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_istream.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_istream.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_istream.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_lazy_expr.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_lazy_expr.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_lazy_expr.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_leak_detector.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_leak_detector.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_leak_detector.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_list.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_list.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_list.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_message_info.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_message_info.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_message_info.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_output_redirect.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_output_redirect.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_output_redirect.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_parse_numbers.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_parse_numbers.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_parse_numbers.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_polyfills.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_polyfills.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_polyfills.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_random_number_generator.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_random_number_generator.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_random_number_generator.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_random_seed_generation.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_random_seed_generation.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_random_seed_generation.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_reporter_registry.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_reporter_registry.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_reporter_registry.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_reporter_spec_parser.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_reporter_spec_parser.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_reporter_spec_parser.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_result_type.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_result_type.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_result_type.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_reusable_string_stream.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_reusable_string_stream.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_reusable_string_stream.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_run_context.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_run_context.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_run_context.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_section.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_section.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_section.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_singletons.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_singletons.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_singletons.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_source_line_info.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_source_line_info.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_source_line_info.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_startup_exception_registry.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_startup_exception_registry.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_startup_exception_registry.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_stdstreams.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_stdstreams.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_stdstreams.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_string_manip.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_string_manip.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_string_manip.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_stringref.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_stringref.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_stringref.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_tag_alias_registry.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_tag_alias_registry.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_tag_alias_registry.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_test_case_info_hasher.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_case_info_hasher.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_case_info_hasher.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_test_case_registry_impl.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_case_registry_impl.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_case_registry_impl.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_test_case_tracker.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_case_tracker.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_case_tracker.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_test_failure_exception.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_failure_exception.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_failure_exception.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_test_registry.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_registry.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_registry.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_test_spec_parser.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_spec_parser.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_test_spec_parser.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_textflow.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_textflow.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_textflow.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_uncaught_exceptions.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_uncaught_exceptions.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_uncaught_exceptions.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_wildcard_pattern.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_wildcard_pattern.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_wildcard_pattern.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/internal/catch_xmlwriter.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_xmlwriter.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_xmlwriter.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_container_properties.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_container_properties.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_container_properties.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_exception.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_exception.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_exception.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_floating_point.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_floating_point.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_floating_point.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_predicate.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_predicate.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_predicate.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_quantifiers.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_quantifiers.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_quantifiers.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_string.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_string.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_string.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/catch_matchers_templated.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_templated.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/catch_matchers_templated.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2.dir/catch2/matchers/internal/catch_matchers_impl.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/internal/catch_matchers_impl.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/matchers/internal/catch_matchers_impl.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/src",
+  "command": "/usr/bin/c++ -DCatch2WithMain_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -O3 -DNDEBUG -fPIC -ffile-prefix-map=/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/= -std=c++17 -o CMakeFiles/Catch2WithMain.dir/catch2/internal/catch_main.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_main.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/internal/catch_main.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/Foo",
+  "command": "/usr/bin/c++ -DFoo_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/include -O3 -DNDEBUG -fPIC -std=c++17 -o CMakeFiles/Foo.dir/src/Foo.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/Foo/src/Foo.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/Foo/src/Foo.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/Foo/tests",
+  "command": "/usr/bin/c++  -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/tests -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/include -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/include -I/mnt/work/sandbox/letsc/cmake-cpp/FooBar/include -O3 -DNDEBUG -std=c++17 -o CMakeFiles/foo_test.dir/foo_test.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/Foo/tests/foo_test.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/Foo/tests/foo_test.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/Bar",
+  "command": "/usr/bin/c++ -DBar_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/include -O3 -DNDEBUG -fPIC -std=c++17 -o CMakeFiles/Bar.dir/src/Bar.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/Bar/src/Bar.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/Bar/src/Bar.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/Bar/tests",
+  "command": "/usr/bin/c++  -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/tests -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/include -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/include -I/mnt/work/sandbox/letsc/cmake-cpp/FooBar/include -O3 -DNDEBUG -std=c++17 -o CMakeFiles/bar_test.dir/bar_test.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/Bar/tests/bar_test.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/Bar/tests/bar_test.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/FooBar",
+  "command": "/usr/bin/c++ -DFooBar_EXPORTS -I/mnt/work/sandbox/letsc/cmake-cpp/FooBar/include -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/include -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/include -O3 -DNDEBUG -fPIC -std=c++17 -o CMakeFiles/FooBar.dir/src/FooBar.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/FooBar/src/FooBar.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/FooBar/src/FooBar.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/FooBar/tests",
+  "command": "/usr/bin/c++  -I/mnt/work/sandbox/letsc/cmake-cpp/FooBar/tests -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-src/src/catch2/.. -I/mnt/work/sandbox/letsc/cmake-cpp/_deps/catch2-build/generated-includes -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/include -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/include -I/mnt/work/sandbox/letsc/cmake-cpp/FooBar/include -O3 -DNDEBUG -std=c++17 -o CMakeFiles/foobar_test.dir/foobar_test.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/FooBar/tests/foobar_test.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/FooBar/tests/foobar_test.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/FooBarApp",
+  "command": "/usr/bin/c++  -I/mnt/work/sandbox/letsc/cmake-cpp/FooBar/include -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/include -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/include -O3 -DNDEBUG -std=c++17 -o CMakeFiles/FooBarApp.dir/src/main.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/FooBarApp/src/main.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/FooBarApp/src/main.cpp"
+},
+{
+  "directory": "/mnt/work/sandbox/letsc/cmake-cpp/examples",
+  "command": "/usr/bin/c++  -I/mnt/work/sandbox/letsc/cmake-cpp/examples -I/mnt/work/sandbox/letsc/cmake-cpp/Foo/include -I/mnt/work/sandbox/letsc/cmake-cpp/Bar/include -I/mnt/work/sandbox/letsc/cmake-cpp/FooBar/include -O3 -DNDEBUG -std=c++17 -o CMakeFiles/example.dir/example.cpp.o -c /mnt/work/sandbox/letsc/cmake-cpp/examples/example.cpp",
+  "file": "/mnt/work/sandbox/letsc/cmake-cpp/examples/example.cpp"
+}
+]

@@ -76,6 +76,7 @@ import {
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
 import { expect, test } from "@jest/globals";
+import path from "path";
 
 test("SSRI test", () => {
   // gopkg.lock hash
@@ -1530,26 +1531,22 @@ test("parsePkgLock v2", async () => {
     version: "2.2.1"
   });
   expect(deps[deps.length - 1].name).toEqual("rollup");
-  // pkgFilePath does not parse correctly on Windows.
-  if (process.env.OS !== "Windows_NT") {
-    const pkgFilePath = new URL(
-      "test/data/package-json/v2/package-lock.json",
-      import.meta.url
-    ).pathname;
-    expect(deps[deps.length - 1].evidence).toEqual({
-      identity: {
-        field: "purl",
-        confidence: 1,
-        methods: [
-          {
-            technique: "manifest-analysis",
-            confidence: 1,
-            value: pkgFilePath
-          }
-        ]
-      }
-    });
-  }
+  const pkgFilePath = path.resolve(
+    path.join("test", "data", "package-json", "v2", "package-lock.json")
+  );
+  expect(deps[deps.length - 1].evidence).toEqual({
+    identity: {
+      field: "purl",
+      confidence: 1,
+      methods: [
+        {
+          technique: "manifest-analysis",
+          confidence: 1,
+          value: pkgFilePath
+        }
+      ]
+    }
+  });
   expect(parsedList.dependenciesList.length).toEqual(134);
 });
 
