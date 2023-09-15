@@ -1,6 +1,14 @@
-import {globSync} from "glob";
-import {homedir, platform, tmpdir} from "node:os";
-import {basename, delimiter as _delimiter, dirname, extname, join, resolve, sep as _sep} from "node:path";
+import { globSync } from "glob";
+import { homedir, platform, tmpdir } from "node:os";
+import {
+  basename,
+  delimiter as _delimiter,
+  dirname,
+  extname,
+  join,
+  resolve,
+  sep as _sep
+} from "node:path";
 import {
   chmodSync,
   constants,
@@ -16,17 +24,25 @@ import {
 import got from "got";
 import Arborist from "@npmcli/arborist";
 import path from "path";
-import {xml2js} from "xml-js";
-import {fileURLToPath} from "node:url";
-import {load} from "cheerio";
-import {load as _load} from "js-yaml";
-import {spawnSync} from "node:child_process";
+import { xml2js } from "xml-js";
+import { fileURLToPath } from "node:url";
+import { load } from "cheerio";
+import { load as _load } from "js-yaml";
+import { spawnSync } from "node:child_process";
 import propertiesReader from "properties-reader";
-import {clean, coerce, compare, maxSatisfying, satisfies, valid, parse} from "semver";
+import {
+  clean,
+  coerce,
+  compare,
+  maxSatisfying,
+  satisfies,
+  valid,
+  parse
+} from "semver";
 import StreamZip from "node-stream-zip";
-import {parseEDNString} from "edn-data";
-import {PackageURL} from "packageurl-js";
-import {getTreeWithPlugin} from "./piptree.js";
+import { parseEDNString } from "edn-data";
+import { PackageURL } from "packageurl-js";
+import { getTreeWithPlugin } from "./piptree.js";
 import iconv from "iconv-lite";
 
 let url = import.meta.url;
@@ -4517,9 +4533,9 @@ export const parseCsProjAssetsData = async function (csProjData) {
     }
   }
   return {
-      pkgList,
-      dependenciesList
-    };
+    pkgList,
+    dependenciesList
+  };
 };
 
 export const parseCsPkgLockData = async function (csLockData) {
@@ -7135,25 +7151,32 @@ async function queryNuget(p, NUGET_URL) {
     console.log(`Querying nuget for ${p.name}`);
   }
   const np = JSON.parse(JSON.stringify(p));
-  const body = []
-  const newBody = []
+  const body = [];
+  const newBody = [];
   let res = await cdxgenAgent.get(
-    NUGET_URL +
-    np.name.toLowerCase() +
-    "/index.json",
-    {responseType: "json"}
+    NUGET_URL + np.name.toLowerCase() + "/index.json",
+    { responseType: "json" }
   );
   let items = res.body.items;
   if (!items || !items[0]) {
-    return [np, newBody, body]
+    return [np, newBody, body];
   }
   if (items[0] && !items[0].items) {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
       const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
-      np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
-      if (compare(np.version, res.body.items[res.body.items.length - 1].upper) === 1) {
+      np.version =
+        tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+      if (
+        compare(np.version, res.body.items[res.body.items.length - 1].upper) ===
+        1
+      ) {
         if (tmpVersion.patch > 0) {
-          np.version = tmpVersion.major + "." + tmpVersion.minor + "." + (tmpVersion.patch - 1).toString();
+          np.version =
+            tmpVersion.major +
+            "." +
+            tmpVersion.minor +
+            "." +
+            (tmpVersion.patch - 1).toString();
         }
       }
     }
@@ -7167,12 +7190,14 @@ async function queryNuget(p, NUGET_URL) {
         let lower = compare(item.lower, np.version);
         let upper = compare(item.upper, np.version);
         if (lower !== 1 && upper !== -1) {
-          res = await cdxgenAgent.get(item["@id"], {responseType: "json"});
-          newBody.push(res.body.items
-            .reverse()
-            .filter(
-              (i) => i.catalogEntry && i.catalogEntry.version === np.version
-            ));
+          res = await cdxgenAgent.get(item["@id"], { responseType: "json" });
+          newBody.push(
+            res.body.items
+              .reverse()
+              .filter(
+                (i) => i.catalogEntry && i.catalogEntry.version === np.version
+              )
+          );
           break;
         }
       }
@@ -7180,20 +7205,23 @@ async function queryNuget(p, NUGET_URL) {
   } else {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
       const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
-      np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+      np.version =
+        tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
     }
     const firstItem = items[0];
     // Work backwards to find the body for the matching version
     // body.push(firstItem.items[firstItem.items.length - 1])
     if (np.version) {
-      newBody.push(firstItem.items
-        .reverse()
-        .filter(
-          (i) => i.catalogEntry && i.catalogEntry.version === np.version
-        ));
+      newBody.push(
+        firstItem.items
+          .reverse()
+          .filter(
+            (i) => i.catalogEntry && i.catalogEntry.version === np.version
+          )
+      );
     }
   }
-  return [np, newBody]
+  return [np, newBody];
 }
 
 /**
@@ -7201,7 +7229,10 @@ async function queryNuget(p, NUGET_URL) {
  *
  * @param {Array} pkgList Package list
  */
-export const getNugetMetadata = async function (pkgList, dependencies = undefined) {
+export const getNugetMetadata = async function (
+  pkgList,
+  dependencies = undefined
+) {
   const NUGET_URL = await getNugetUrl();
   const cdepList = [];
   const depRepList = {};
@@ -7220,7 +7251,7 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
       if (!body) {
         let newBody = {};
         let np = {};
-        [np, newBody] = await queryNuget(p, NUGET_URL)
+        [np, newBody] = await queryNuget(p, NUGET_URL);
         if (p.version !== np.version) {
           const oldRef = p["bom-ref"];
           p["bom-ref"] = decodeURIComponent(
@@ -7258,7 +7289,7 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
             p.license = findLicenseId(body.catalogEntry.licenseUrl);
           }
           if (body.catalogEntry.projectUrl) {
-            p.repository = {url: body.catalogEntry.projectUrl};
+            p.repository = { url: body.catalogEntry.projectUrl };
             p.homepage = {
               url:
                 "https://www.nuget.org/packages/" +
@@ -7271,17 +7302,15 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
           cdepList.push(p);
         }
       }
-    } catch
-      (err) {
+    } catch (err) {
       if (cacheKey) {
-        metadata_cache[cacheKey] = {error: err.code};
+        metadata_cache[cacheKey] = { error: err.code };
       }
       cdepList.push(p);
     }
   }
   const newDependencies = [].concat(dependencies);
   if (depRepList && newDependencies.length) {
-
     const changed = Object.keys(depRepList);
     // if (!parentComponent.version || parentComponent.version === "latest" || parentComponent.version === "0.0.0"){
     //   if (changed.includes(parentComponent["bom-ref"])) {
@@ -7300,5 +7329,8 @@ export const getNugetMetadata = async function (pkgList, dependencies = undefine
       }
     }
   }
-  return cdepList, newDependencies;
+  return {
+    pkgList: cdepList,
+    dependencies: newDependencies
+  };
 };
