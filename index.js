@@ -98,7 +98,8 @@ import {
   parseSbtTree,
   parseCmakeLikeFile,
   getCppModules,
-  FETCH_LICENSE, getNugetMetadata,
+  FETCH_LICENSE,
+  getNugetMetadata
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -4035,7 +4036,10 @@ export const createCsharpBom = async (
     pkgList = trimComponents(pkgList, "json");
   }
   if (FETCH_LICENSE) {
-    pkgList, dependencies = await getNugetMetadata(pkgList, dependencies);
+    const retMap = await getNugetMetadata(pkgList, dependencies);
+    if (retMap.dependencies && retMap.dependencies.length) {
+      dependencies = dependencies.concat(retMap.dependencies);
+    }
     dependencies = mergeDependencies(dependencies, [], parentComponent);
     pkgList = trimComponents(pkgList, "json");
   }
