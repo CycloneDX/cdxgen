@@ -2,17 +2,16 @@
 
 ![cdxgen logo](cdxgen.png)
 
-cdxgen is a cli tool, library, [REPL](./ADVANCED.md) and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
+cdxgen is a cli tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
 
-When used with plugins, cdxgen could generate an OBoM for Linux docker images and even VMs running Linux or Windows operating system. cdxgen also includes a tool called `evinse` that can generate component evidences and SaaSBoM for some languages.
+When used with plugins, cdxgen could generate an OBoM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBoM for some languages.
 
 NOTE:
 
 CycloneDX 1.5 specification is new and unsupported by many downstream tools. Use version 8.6.0 for 1.4 compatibility or pass the argument `--spec-version 1.4`.
 
 ## Why cdxgen?
-
-A typical application might comprise of several repos, components, and libraries linked together. Traditional techniques to generate a single SBoM per language or package manifest do not work in enterprise environments. So we built cdxgen - the universal polyglot SBoM generator!
+A typical application might have several repos, components, and libraries. Traditional techniques to generate a single SBoM per language or package manifest do not work in enterprise environments. So we built cdxgen - the universal polyglot SBoM generator!
 
 <img src="./docs/why-cdxgen.jpg" alt="why cdxgen" width="256">
 
@@ -56,28 +55,27 @@ NOTE:
 
 - Apache maven 3.x is required for parsing pom.xml
 - gradle or gradlew is required to parse gradle projects
-- sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.
+- sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ are currently supported.
   - Alternatively, create a lock file using sbt-dependency-lock [plugin](https://github.com/stringbean/sbt-dependency-lock)
 
 Footnotes:
 
-- [1] - For multi-module application, the BoM file could include components that may not be included in the packaged war or ear file.
+- [1] - For multi-module applications, the BoM file could include components not included in the packaged war or ear file.
 - [2] - Pip freeze is automatically performed to improve precision. Requires virtual environment.
-- [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file cdxgen would not include indirect dependencies.
-- [4] - See section on plugins
-- [5] - Powered by osquery. See section on plugins
+- [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file, cdxgen would not include indirect dependencies.
+- [4] - See the section on plugins
+- [5] - Powered by osquery. See the section on plugins
 
 <img src="./docs/cdxgen-tree.jpg" alt="cdxgen tree" width="256">
 
 ### Automatic usage detection
+For node.js projects, lock files are parsed initially, so the SBoM would include all dependencies, including dev ones. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically set their scope property to `required` in the resulting SBoM. You can turn off this analysis by passing the argument `--no-babel`. Scope property would then be set based on the `dev` attribute in the lock file.
 
-For node.js projects, lock files are parsed initially so the SBoM would include all dependencies including dev dependencies. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically have their `scope` property set to `required` in the resulting SBoM. By passing the argument `--no-babel`, you can disable this analysis. Scope property would then be set based on the `dev` attribute in the lock file.
+This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/cyclonedx/dep-scan) uses this attribute to prioritize vulnerabilities. Unfortunately, tools such as dependency track, do not include this feature and might over-report the CVEs.
 
-This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/cyclonedx/dep-scan) use this attribute to prioritize vulnerabilities. Tools such dependency track, unfortunately, do not include this feature and hence might over-report the CVEs.
+By passing the argument `--required-only`, you can limit the SBoM only to include packages with the scope "required", commonly called production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
 
-By passing the argument `--required-only`, you can limit the SBoM to only include packages with the scope "required", commonly referred to as production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
-
-For go, `go mod why` command is used to identify required packages. For php, composer lock file is used to distinguish required (packages) from optional (packages-dev).
+For go, `go mod why` command is used to identify required packages. For php, composer lock file is parsed to distinguish required (packages) from optional (packages-dev).
 
 ## Usage
 
@@ -175,7 +173,7 @@ $ cdxgen -h
   -v, --version                Show version number                     [boolean]
 ```
 
-All boolean arguments accepts `--no` prefix to toggle the behavior.
+All boolean arguments accept `--no` prefix to toggle the behavior.
 
 ## Example
 
@@ -185,7 +183,7 @@ Minimal example.
 cdxgen -o bom.json
 ```
 
-For a java project. This would automatically detect maven, gradle or sbt and build bom accordingly
+For a java project. cdxgen would automatically detect maven, gradle, or sbt and build bom accordingly
 
 ```shell
 cdxgen -t java -o bom.json
@@ -203,7 +201,7 @@ To recursively generate a single BoM for all languages pass `-r` argument.
 cdxgen -r -o bom.json
 ```
 
-To generate SBoM for an older specification version such as 1.4, pass the version using the `--spec-version` argument.
+To generate SBoM for an older specification version, such as 1.4, pass the version number using the `--spec-version` argument.
 
 ```shell
 cdxgen -r -o bom.json --spec-version 1.4
@@ -216,15 +214,15 @@ To generate SBoM for C or Python, ensure Java >= 17 is installed.
 cdxgen -t c -o bom.json
 ```
 
-NOTE: cdxgen is known to freeze with Java 8 or 11 so ensure >= 17 is installed and JAVA_HOME environment variable configured correctly. If in doubt, use the cdxgen container image.
+NOTE: cdxgen is known to freeze with Java 8 or 11, so ensure >= 17 is installed and JAVA_HOME environment variable is configured correctly. If in doubt, use the cdxgen container image.
 
 ## Universal SBoM
 
-By passing the type `-t universal`, cdxgen could be forced to opportunistically collect as many components and services as possible by scanning all package, container and kubernetes manifests. The resulting SBoM could have over thousand components thus requiring additional triaging before use with traditional SCA tools.
+By passing the type argument `-t universal`, cdxgen could be forced to opportunistically collect as many components and services as possible by scanning all package, container, and Kubernetes manifests. The resulting SBoM could have over a thousand components, thus requiring additional triaging before use with traditional SCA tools.
 
 ## SBoM server
 
-Invoke cdxgen with `--server` argument to run it in a server mode. By default, it listens to port `9090` which can be customized with the arguments `--server-host` and `--server-port`.
+Invoke cdxgen with `--server` argument to run it in server mode. By default, it listens to port `9090`, which can be customized with the arguments `--server-host` and `--server-port`.
 
 ```shell
 cdxgen --server
@@ -236,7 +234,7 @@ Or use the container image.
 docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server --server-host 0.0.0.0
 ```
 
-Use curl or your favourite tool to pass arguments to the `/sbom` route.
+Use curl or your favorite tool to pass arguments to the `/sbom` route.
 
 ### Scanning a local path
 
@@ -274,7 +272,7 @@ cdxgen app.war
 
 ## Resolving class names
 
-Sometimes it is necessary to resolve class names contained in jar files. By passing an optional argument `--resolve-class`, it is possible to get cdxgen create a separate mapping file with the jar name (including the version) as the key and class names list as a value.
+Sometimes, it is necessary to resolve class names contained in jar files. By passing an optional argument `--resolve-class`, it is possible to get cdxgen to create a separate mapping file with the jar name (including the version) as the key and class names list as a value.
 
 ```shell
 cdxgen -t java --resolve-class -o bom.json
@@ -284,7 +282,7 @@ This would create a bom.json.map file with the jar - class name mapping. Refer t
 
 ## Resolving licenses
 
-cdxgen can automatically query the public registries such as maven or npm or nuget to resolve the package licenses. This is a time consuming operation and is disabled by default. To enable, set the environment variable `FETCH_LICENSE` to `true` as shown.
+cdxgen can automatically query public registries such as maven, npm, or nuget to resolve the package licenses. This is a time-consuming operation and is disabled by default. To enable, set the environment variable `FETCH_LICENSE` to `true`, as shown.
 
 ```bash
 export FETCH_LICENSE=true
@@ -301,6 +299,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Gradle
 - Scala SBT
 - Python (requirements.txt, setup.py, pyproject.toml, poetry.lock)
+- csharp (projects.assets.json)
 
 ## Environment variables
 
@@ -370,15 +369,11 @@ podman save -q --format oci-archive -o /tmp/slim.tar shiftleft/scan-slim
 cdxgen /tmp/slim.tar -o /tmp/bom.json -t docker
 ```
 
-NOTE:
-
-- Only application related packages are collected by cdxgen. Support for OS installed packages is coming soon.
-
 ### Podman in rootless mode
 
 Setup podman in either [rootless](https://github.com/containers/podman/blob/master/docs/tutorials/rootless_tutorial.md) or [remote](https://github.com/containers/podman/blob/master/docs/tutorials/mac_win_client.md) mode
 
-On Linux, do not forget to start the podman socket which is required for API access.
+Do not forget to start the podman socket required for API access on Linux.
 
 ```shell
 systemctl --user enable --now podman.socket
@@ -396,27 +391,27 @@ obom
 # cdxgen -t os
 ```
 
-This feature is powered by osquery which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components of various types such as operating-system, device-drivers, files, and data.
+This feature is powered by osquery, which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps, and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBoM file with thousands of components of various types, such as operating-system, device-drivers, files, and data.
 
 ## Generating SaaSBoM and component evidences
 
 See [evinse mode](./ADVANCED.md) in the advanced documentation.
 
-## SBoM signing
+## BoM signing
 
-cdxgen can sign the generated SBoM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
+cdxgen can sign the generated BoM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
 
 - SBOM_SIGN_ALGORITHM: Algorithm. Example: RS512
 - SBOM_SIGN_PRIVATE_KEY: Location to the RSA private key
 - SBOM_SIGN_PUBLIC_KEY: Optional. Location to the RSA public key
 
-To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature` which could be used for validation. [jwt.io](https://jwt.io) is a known site that could be used for such signature validation.
+To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature`, which could be used for validation. [jwt.io](https://jwt.io) is a known site that could be used for such signature validation.
 
 ![SBoM signing](sbom-sign.jpg)
 
 ### Verifying the signature
 
-Use the bundled `cdx-verify` command which supports verifying a single signature added at the bom level.
+Use the bundled `cdx-verify` command, which supports verifying a single signature added at the bom level.
 
 ```shell
 npm install -g @cyclonedx/cdxgen
@@ -448,7 +443,7 @@ if (validationResult) {
 
 ## Automatic services detection
 
-cdxgen can automatically detect names of services from YAML manifests such as docker-compose or Kubernetes or Skaffold manifests. These would be populated under the `services` attribute in the generated SBoM. With [evinse](./ADVANCED.md), additional services could be detected by parsing common annotations from the source code.
+cdxgen can automatically detect names of services from YAML manifests such as docker-compose, Kubernetes, or Skaffold manifests. These would be populated under the `services` attribute in the generated SBoM. With [evinse](./ADVANCED.md), additional services could be detected by parsing common annotations from the source code.
 
 ## Conversion to SPDX format
 
@@ -471,7 +466,7 @@ Minimal example:
 import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 ```
 
-See the [Deno Readme](./contrib/deno/README.md) for detailed instruction.
+See the [Deno Readme](./contrib/deno/README.md) for detailed instructions.
 
 ```javascript
 import { createBom, submitBom } from "@cyclonedx/cdxgen";
@@ -487,7 +482,7 @@ Refer to the [permissions document](./docs/PERMISSIONS.md)
 
 ## Contributing
 
-Follow the usual PR process but prior to raising a PR run the following commands.
+Follow the usual PR process, but before raising a PR, run the following commands.
 
 ```bash
 npm run lint
@@ -497,4 +492,4 @@ npm test
 
 ## Enterprise support
 
-Enterprise support including custom development and integration services are available via [AppThreat Ltd](https://www.appthreat.com). Free community support is also available via [discord](https://discord.gg/tmmtjCEHNV).
+Enterprise support, including custom development and integration services, is available via [AppThreat Ltd](https://www.appthreat.com). Free community support is also available via [Discord](https://discord.gg/tmmtjCEHNV).

@@ -1,4 +1,4 @@
-# Advanced usage
+# Advanced Usage
 
 ## Evinse Mode / SaaSBoM
 
@@ -78,16 +78,8 @@ evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-fl
 
 ## Generate SBoM from maven or gradle cache
 
-There could be java applications with complex dependency requirements. Or you might be interested in cataloging your maven or gradle cache.
-
-```shell
-# export MAVEN_CACHE_DIR=<custom path>
-cdxgen -t maven-cache -o <bom json>
-# export GRADLE_CACHE_DIR=<custom path>
-cdxgen -t gradle-cache -o <bom json>
-```
-
-An added bonus of this mode is that the resulting SBoM would have a property called `Namespaces` with a list of class names belonging to each jar.
+There could be Java applications with complex dependency requirements. Or you might be interested in cataloging your Maven or gradle cache.
+A bonus of this mode is that the resulting SBoM would have a property called `Namespaces` with a list of class names belonging to each jar.
 
 ### Generate evidence of usage
 
@@ -106,7 +98,7 @@ To improve performance for re-runs, pass the argument `--skip-maven-collector` t
 
 ## Interactive mode
 
-`cdxi` is a new interactive REPL server to interactively create, import and search an SBoM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
+`cdxi` is a new interactive REPL server to create, import, and search a BoM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
 
 [![cdxi demo](https://asciinema.org/a/602361.svg)](https://asciinema.org/a/602361)
 
@@ -155,15 +147,15 @@ Below are some example commands to create an SBoM for a spring application and p
 
 ### REPL History
 
-Repl history will get persisted under `$HOME/.config/.cdxgen` directory. To override this location, use the environment variable `CDXGEN_REPL_HISTORY`.
+Repl history will persist under the `$`HOME/.config/.cdxgen` directory. To override this location, use the environment variable `CDXGEN_REPL_HISTORY`.
 
 ## Mixed Java Projects
 
-If a java project use both maven and gradle, maven is selected for SBoM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
+If a java project uses Maven and gradle, maven is selected for SBoM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
 
 ## Generating container SBoM on Windows
 
-cdxgen supports generating container SBoM for linux images on Windows. Follow the steps listed below.
+cdxgen supports generating container SBoM for Linux images on Windows. Follow the steps listed below.
 
 - Ensure cdxgen-plugins-bin > 1.4.0 is installed.
 
@@ -171,15 +163,15 @@ cdxgen supports generating container SBoM for linux images on Windows. Follow th
 npm install -g @cyclonedx/cdxgen-plugins-bin
 ```
 
-- Run "Docker for Desktop" as administrator with 'Exposing daemon on TCP without TLS' setting turned on.
-- Run powershell terminal as administrator. Without this, cdxgen would fail while extracting symlinks.
+- Run "Docker for Desktop" as an administrator with the 'Exposing daemon on TCP without TLS' setting turned on.
+Run Powershell terminal as administrator. Without this, cdxgen would fail while extracting symlinks.
 - Invoke cdxgen with `-t docker`
 
 ```shell
 cdxgen -t docker -o bom.json <image name>
 ```
 
-## Generate SBoM with evidence for cdxgen repo
+## Generate SBoM with evidence for the cdxgen repo
 
 Why not?
 
@@ -194,7 +186,7 @@ It is currently not possible to generate data-flow evidence for cdxgen in consta
 
 ## Use Atom in Java mode
 
-For large projects (> 1 million lines of code), atom must be invoked separately for the slicing operation to perform. Follow the instructions below.
+For large projects (> 1 million lines of code), atom must be invoked separately for the slicing operation. Follow the instructions below.
 
 - Download the latest [atom.zip release](https://github.com/AppThreat/atom/releases)
 
@@ -205,4 +197,4 @@ cd atom-1.0.0/bin
 node bin/cdxgen.js -o bom.json -t c --usages-slices-file usages.json <path to repo>
 ```
 
-Change 16g to 32g etc for very large projects. For linux kernel, a minimum of 128GB is required.
+Change 16g to 32g or above for very large projects. For the Linux kernel, a minimum of 128GB is required.
