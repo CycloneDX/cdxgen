@@ -346,6 +346,12 @@ test("parse gradle dependencies", () => {
   );
   expect(parsedList.pkgList.length).toEqual(6);
   expect(parsedList.dependenciesList.length).toEqual(7);
+  parsedList = parseGradleDep(
+    readFileSync("./test/data/gradle-dependencies-559.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(parsedList.pkgList.length).toEqual(372);
 });
 
 test("parse gradle projects", () => {
@@ -492,6 +498,13 @@ test("parse gradle properties", () => {
     })
   );
   expect(retMap.rootProject).toEqual("root");
+  expect(retMap.projects).toEqual([]);
+  retMap = parseGradleProperties(
+    readFileSync("./test/data/gradle-properties-559.txt", {
+      encoding: "utf-8"
+    })
+  );
+  expect(retMap.rootProject).toEqual("failing-project");
   expect(retMap.projects).toEqual([]);
 });
 

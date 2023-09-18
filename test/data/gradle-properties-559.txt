@@ -1,0 +1,139 @@
+
+------------------------------------------------------------
+Root project 'failing-project'
+------------------------------------------------------------
+
+_kgp_internal_kotlin_compile_transforms_registered: true
+allOpen: extension 'allOpen'
+allprojects: [root project 'failing-project']
+ant: org.gradle.api.internal.project.DefaultAntBuilder@73497a94
+antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@44bd8576
+archivesBaseName: failing-project
+artifacts: org.gradle.api.internal.artifacts.dsl.DefaultArtifactHandler_Decorated@20ba6323
+asDynamicObject: DynamicObject for root project 'failing-project'
+autoTargetJvmDisabled: false
+base: extension 'base'
+baseClassLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@70592eb3
+bootJar: task ':bootJar'
+buildDir: /home/heubeck/w/sbom-test/failing-project/build
+buildFile: /home/heubeck/w/sbom-test/failing-project/build.gradle.kts
+buildPath: :
+buildScriptSource: org.gradle.groovy.scripts.TextResourceScriptSource@50e8de6b
+buildscript: org.gradle.api.internal.initialization.DefaultScriptHandler@684d9338
+childProjects: {}
+class: class org.gradle.api.internal.project.DefaultProject_Decorated
+classLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@30fea6a9
+clean: task ':clean'
+compileAotKotlin: task ':compileAotKotlin'
+compileAotTestKotlin: task ':compileAotTestKotlin'
+compileKotlin: task ':compileKotlin'
+compileTestKotlin: task ':compileTestKotlin'
+components: SoftwareComponentInternal set
+configurationActions: org.gradle.configuration.project.DefaultProjectConfigurationActionContainer@40f33d72
+configurationTargetIdentifier: org.gradle.configuration.ConfigurationTargetIdentifier$1@33a3ed34
+configurations: configuration container
+convention: org.gradle.internal.extensibility.DefaultConvention@25ae66ad
+crossProjectModelAccess: org.gradle.api.internal.project.DefaultCrossProjectModelAccess@217ef573
+defaultArtifacts: extension 'defaultArtifacts'
+defaultTasks: []
+deferredProjectConfiguration: org.gradle.api.internal.project.DeferredProjectConfiguration@78bf5483
+dependencies: org.gradle.api.internal.artifacts.dsl.dependencies.DefaultDependencyHandler_Decorated@54d9dced
+dependencyLocking: org.gradle.internal.locking.DefaultDependencyLockingHandler_Decorated@29453d5
+dependencyManagement: io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension@5417eb99
+dependencyMetaDataProvider: org.gradle.internal.service.scopes.ProjectScopeServices$ProjectBackedModuleMetaDataProvider@568eb6d4
+depth: 0
+description: null
+detachedState: false
+displayName: root project 'failing-project'
+distsDirName: distributions
+distsDirectory: extension 'base' property 'distsDirectory'
+docsDir: /home/heubeck/w/sbom-test/failing-project/build/docs
+docsDirName: docs
+ext: org.gradle.internal.extensibility.DefaultExtraPropertiesExtension@4caa265c
+extensions: org.gradle.internal.extensibility.DefaultConvention@25ae66ad
+fileOperations: org.gradle.api.internal.file.DefaultFileOperations@6c00cee7
+fileResolver: org.gradle.api.internal.file.BaseDirFileResolver@7a0abdd
+gcpProjectId: xyz
+githubSHA: zyx
+graalvmNative: extension 'graalvmNative'
+gradle: build 'failing-project'
+gradleKotlinDsl.projectAccessorsClassPath: AccessorsClassPath(bin=[/home/heubeck/.gradle/caches/7.4.1/kotlin-dsl/accessors/b21bee84c15524cfa3862a0de08b2b25/classes], src=[/home/heubeck/.gradle/caches/7.4.1/kotlin-dsl/accessors/b21bee84c15524cfa3862a0de08b2b25/sources])
+graphql: extension 'graphql'
+graphqlGenerateClient: task ':graphqlGenerateClient'
+group: com.mediamarktsaturn
+identityPath: :
+inheritedScope: org.gradle.internal.extensibility.ExtensibleDynamicObject$InheritedDynamicObject@243b95eb
+internalStatus: property(java.lang.Object, fixed(class java.lang.String, integration))
+jacoco: extension 'jacoco'
+java: extension 'java'
+javaToolchains: extension 'javaToolchains'
+kotlin: extension 'kotlin'
+kotlin.plugin.loaded.in.projects.1.9.10: :
+kotlin.properties.provider: org.jetbrains.kotlin.gradle.plugin.PropertiesProvider@393ecff6
+kotlin.version: 1.9.10
+kotlinScripting: extension 'kotlinScripting'
+kotlinTestRegistry: org.jetbrains.kotlin.gradle.testing.internal.KotlinTestsRegistry@532359c0
+ktlint: extension 'ktlint'
+layout: org.gradle.api.internal.file.DefaultProjectLayout@515ffe3a
+libsDirName: libs
+libsDirectory: extension 'base' property 'libsDirectory'
+listenerBuildOperationDecorator: org.gradle.configuration.internal.DefaultListenerBuildOperationDecorator@2933ad37
+logger: org.gradle.internal.logging.slf4j.OutputEventListenerBackedLogger@1be05a61
+logging: org.gradle.internal.logging.services.DefaultLoggingManager@663d8698
+model: root project 'failing-project'
+modelIdentityDisplayName: null
+name: failing-project
+normalization: org.gradle.normalization.internal.DefaultInputNormalizationHandler_Decorated@119ab31
+objects: org.gradle.api.internal.model.DefaultObjectFactory@3577f430
+openApiGenerate: extension 'openApiGenerate'
+openApiGenerators: extension 'openApiGenerators'
+openApiMeta: extension 'openApiMeta'
+openApiValidate: extension 'openApiValidate'
+org.jetbrains.kotlin.gradle.plugin.KotlinPluginLifecycle: Kotlin Plugin Lifecycle: (root project 'failing-project') stage 'ReadyForExecution' *finished*
+org.jetbrains.kotlin.whenEvaluated: [() -> kotlin.Unit, () -> kotlin.Unit, () -> kotlin.Unit, () -> kotlin.Unit, () -> kotlin.Unit, () -> kotlin.Unit, () -> kotlin.Unit]
+owner: root project 'failing-project'
+parent: null
+parentIdentifier: null
+path: :
+pluginContext: false
+pluginManager: org.gradle.api.internal.plugins.DefaultPluginManager_Decorated@15f1a35b
+plugins: [org.gradle.api.plugins.HelpTasksPlugin@1f2d03a1, org.gradle.buildinit.plugins.BuildInitPlugin@529b3a9, org.gradle.buildinit.plugins.WrapperPlugin@32386e01, org.gradle.api.plugins.ReportingBasePlugin@2a4be866, org.gradle.testing.jacoco.plugins.JacocoPlugin@5d0cd685, org.springframework.boot.gradle.plugin.SpringBootPlugin@15f09276, org.graalvm.buildtools.gradle.NativeImagePlugin$Inject@64c9beaf, org.springframework.boot.gradle.plugin.SpringBootAotPlugin@11b46288, io.spring.gradle.dependencymanagement.DependencyManagementPlugin@2a3726c5, org.openapitools.generator.gradle.plugin.OpenApiGeneratorPlugin@3bc562d7, com.expediagroup.graphql.plugin.gradle.GraphQLGradlePlugin@12d08fc6, org.jlleitschuh.gradle.ktlint.KtlintBasePlugin@20c21f36, org.jlleitschuh.gradle.ktlint.KtlintIdeaPlugin@335014e5, org.jlleitschuh.gradle.ktlint.KtlintPlugin@23130b82, org.gradle.language.base.plugins.LifecycleBasePlugin@35ab1e99, org.gradle.api.plugins.BasePlugin@5a08cb5, org.gradle.api.plugins.JvmEcosystemPlugin@366447d8, org.gradle.api.plugins.JavaBasePlugin$Inject@d90158d, org.gradle.testing.base.plugins.TestSuiteBasePlugin@60a28d70, org.gradle.api.plugins.JvmTestSuitePlugin@616670f5, org.gradle.api.plugins.JavaPlugin@7528b186, org.jetbrains.kotlin.gradle.scripting.internal.ScriptingKotlinGradleSubplugin@7819eed3, org.jetbrains.kotlin.gradle.scripting.internal.ScriptingGradleSubplugin@c2435ad, org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper@5e170d04, org.jetbrains.kotlin.allopen.gradle.AllOpenGradleSubplugin@6e0333c1, org.jetbrains.kotlin.allopen.gradle.SpringGradleSubplugin@595b27a4, org.gradle.kotlin.dsl.provider.plugins.KotlinScriptRootPlugin@74fff87f, org.gradle.kotlin.dsl.provider.plugins.KotlinScriptBasePlugin@12e6a4c9]
+processOperations: org.gradle.process.internal.DefaultExecActionFactory$DecoratingExecActionFactory@650c006f
+project: root project 'failing-project'
+projectConfigurator: org.gradle.api.internal.project.BuildOperationCrossProjectConfigurator@65ea6d6d
+projectDir: /home/heubeck/w/sbom-test/failing-project
+projectEvaluationBroadcaster: ProjectEvaluationListener broadcast
+projectEvaluator: org.gradle.configuration.project.LifecycleProjectEvaluator@6e5d4daf
+projectPath: :
+properties: {...}
+providers: org.gradle.api.internal.provider.DefaultProviderFactory_Decorated@49ba6c41
+publicType: org.gradle.api.plugins.BasePluginConvention
+reporting: extension 'reporting'
+reportsDir: /home/heubeck/w/sbom-test/failing-project/build/reports
+repositories: repository container
+resources: org.gradle.api.internal.resources.DefaultResourceHandler@4cb01261
+rootDir: /home/heubeck/w/sbom-test/failing-project
+rootProject: root project 'failing-project'
+rootScript: false
+script: false
+scriptHandlerFactory: org.gradle.api.internal.initialization.DefaultScriptHandlerFactory@7a879f9f
+scriptPluginFactory: org.gradle.configuration.ScriptPluginFactorySelector@7e338555
+serviceRegistryFactory: org.gradle.internal.service.scopes.ProjectScopeServices$$Lambda$1490/0x00007fc8c3f5a920@2bdd2fad
+services: ProjectScopeServices
+sourceCompatibility: 17
+sourceSets: SourceSet container
+springBoot: extension 'springBoot'
+standardOutputCapture: org.gradle.internal.logging.services.DefaultLoggingManager@663d8698
+state: project state 'EXECUTED'
+status: integration
+subprojects: []
+targetCompatibility: 17
+taskThatOwnsThisObject: null
+tasks: task set
+test: task ':test'
+testReportDir: /home/heubeck/w/sbom-test/failing-project/build/reports/tests
+testReportDirName: tests
+testResultsDir: /home/heubeck/w/sbom-test/failing-project/build/test-results
+testResultsDirName: test-results
+testing: extension 'testing'
+version: 1.9.1
