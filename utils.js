@@ -1745,7 +1745,10 @@ export const parseGradleProjects = function (rawOutput) {
           // Include all projects including test projects
           if (projName.startsWith(":")) {
             // Handle the case where the project name could have a space. Eg: +--- project :app (*)
-            projects.add(projName.split(" ")[0]);
+            const tmpName = projName.split(" ")[0];
+            if (tmpName.length > 1) {
+              projects.add(tmpName);
+            }
           }
         }
       } else if (l.includes("--- project ")) {
@@ -1753,7 +1756,10 @@ export const parseGradleProjects = function (rawOutput) {
         if (tmpB && tmpB.length > 1) {
           const projName = tmpB[1];
           if (projName.startsWith(":")) {
-            projects.add(projName.split(" ")[0]);
+            const tmpName = projName.split(" ")[0];
+            if (tmpName.length > 1) {
+              projects.add(tmpName);
+            }
           }
         }
       }
