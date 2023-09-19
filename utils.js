@@ -6016,7 +6016,9 @@ export const getGradleCommand = (srcPath, rootPath) => {
  */
 export const getMavenCommand = (srcPath, rootPath) => {
   let mavenCmd = "mvn";
-
+  // Check if the wrapper script is both available and functional
+  let isWrapperReady = false;
+  let isWrapperFound = false;
   let findMavenFile = "mvnw";
   if (platform() == "win32") {
     findMavenFile = "mvnw.bat";
@@ -6037,6 +6039,7 @@ export const getMavenCommand = (srcPath, rootPath) => {
       // continue regardless of error
     }
     mavenCmd = resolve(join(srcPath, findMavenFile));
+    isWrapperFound = true;
   } else if (rootPath && existsSync(join(rootPath, findMavenFile))) {
     // Check if the root directory has a wrapper script
     try {
@@ -6045,10 +6048,35 @@ export const getMavenCommand = (srcPath, rootPath) => {
       // continue regardless of error
     }
     mavenCmd = resolve(join(rootPath, findMavenFile));
-  } else if (process.env.MVN_CMD || process.env.MAVEN_CMD) {
-    mavenCmd = process.env.MVN_CMD || process.env.MAVEN_CMD;
-  } else if (process.env.MAVEN_HOME) {
-    mavenCmd = join(process.env.MAVEN_HOME, "bin", "mvn");
+    isWrapperFound = true;
+  }
+  if (isWrapperFound) {
+    if (DEBUG_MODE) {
+      console.log(
+        "Testing the wrapper script by invoking wrapper:wrapper task"
+      );
+    }
+    const result = spawnSync(mavenCmd, ["wrapper:wrapper"], {
+      encoding: "utf-8",
+      cwd: rootPath,
+      timeout: TIMEOUT_MS
+    });
+    if (!result.error) {
+      isWrapperReady = true;
+    } else {
+      if (DEBUG_MODE) {
+        console.log(
+          "Maven wrapper script test has failed. Will use the installed version of maven."
+        );
+      }
+    }
+  }
+  if (!isWrapperFound || !isWrapperReady) {
+    if (process.env.MVN_CMD || process.env.MAVEN_CMD) {
+      mavenCmd = process.env.MVN_CMD || process.env.MAVEN_CMD;
+    } else if (process.env.MAVEN_HOME) {
+      mavenCmd = join(process.env.MAVEN_HOME, "bin", "mvn");
+    }
   }
   return mavenCmd;
 };
