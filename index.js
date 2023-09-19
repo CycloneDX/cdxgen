@@ -655,8 +655,8 @@ function addComponent(
   }
   if (!isRootPkg) {
     const pkgIdentifier = parsePackageJsonName(pkg.name);
-    const author = pkg.author || "";
-    const publisher = pkg.publisher || "";
+    const author = pkg.author || undefined;
+    const publisher = pkg.publisher || undefined;
     let group = pkg.group || pkgIdentifier.scope;
     // Create empty group
     group = group || "";
@@ -684,7 +684,7 @@ function addComponent(
     purlString = decodeURIComponent(purlString);
     let description = { "#cdata": pkg.description };
     if (format === "json") {
-      description = pkg.description || "";
+      description = pkg.description || undefined;
     }
     let compScope = pkg.scope;
     if (allImports) {
