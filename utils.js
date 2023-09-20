@@ -3954,7 +3954,6 @@ export const parseOpenapiSpecData = function (oaData) {
       oaData = JSON.parse(oaData);
     }
   } catch (e) {
-    console.error(e);
     return servlist;
   }
   const name = oaData.info.title.replace(/ /g, "-");

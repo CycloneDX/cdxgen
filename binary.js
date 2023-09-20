@@ -510,11 +510,11 @@ export const getOSPackages = (src) => {
               comp.licenses.length
             ) {
               const newLicenses = [];
-              let nameIdMode = false;
               for (const alic of comp.licenses) {
                 if (alic.license.name) {
+                  // Licenses array can either be made of expressions or id/name but not both
                   if (
-                    !nameIdMode &&
+                    comp.licenses.length == 1 &&
                     (alic.license.name.toUpperCase().includes(" AND ") ||
                       alic.license.name.toUpperCase().includes(" OR "))
                   ) {
@@ -523,15 +523,16 @@ export const getOSPackages = (src) => {
                     const possibleId = findLicenseId(alic.license.name);
                     if (possibleId !== alic.license.name) {
                       newLicenses.push({ license: { id: possibleId } });
-                      nameIdMode = true;
                     } else {
                       newLicenses.push({
                         license: { name: alic.license.name }
                       });
-                      nameIdMode = true;
                     }
                   }
-                } else {
+                } else if (
+                  Object.keys(alic).length &&
+                  Object.keys(alic.license).length
+                ) {
                   newLicenses.push(alic);
                 }
               }
