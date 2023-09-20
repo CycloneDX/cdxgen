@@ -3018,10 +3018,12 @@ export const createCppBom = (path, options) => {
       pkgList = pkgList.concat(dlist);
     }
   }
-  if (!parentComponent) {
-    parentComponent = createDefaultParentComponent(path, "conan", options);
+  if (!options.createMultiXBom) {
+    if (!parentComponent) {
+      parentComponent = createDefaultParentComponent(path, "conan", options);
+    }
+    options.parentComponent = parentComponent;
   }
-  options.parentComponent = parentComponent;
   return buildBomNSData(options, pkgList, "conan", {
     src: path,
     parentComponent
