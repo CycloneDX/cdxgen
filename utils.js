@@ -2063,7 +2063,7 @@ export const parseKVDep = function (rawOutput) {
  */
 export const findLicenseId = function (name) {
   for (const l of licenseMapping) {
-    if (l.names.includes(name)) {
+    if (l.names.includes(name) || l.exp.toUpperCase() === name.toUpperCase()) {
       return l.exp;
     }
   }

@@ -59,6 +59,18 @@
     ]
   },
   {
+    "exp": "BSD-4-Clause",
+    "names": [
+      "BSD 4 Clause",
+      "BSD 4-Clause",
+      "BSD-4-Clause",
+      "BSD 4-Clause License",
+      "The BSD 4-Clause License",
+      "BSD 4-Clause \"New\" or \"Revised\" License (BSD-4-Clause)",
+      "BSD (4-clause)"
+    ]
+  },
+  {
     "exp": "CDDL-1.0",
     "names": [
       "CDDL",
@@ -177,6 +189,8 @@
   {
     "exp": "GPL-2.0-only",
     "names": [
+      "GPLv2",
+      "GPL-2.0",
       "GNU General Public License (GPL) version 2",
       "GNU General Public License (GPL) version 2.0",
       "GNU General Public License v2",
@@ -216,12 +230,14 @@
       "GNU General Public License v3",
       "GNU General Public License v3.0",
       "GNU General Public License as published by the Free Software Foundation, version 3.",
-      "GPL-3"
+      "GPL-3",
+      "GPL-3.0"
     ]
   },
   {
     "exp": "GPL-3.0-or-later",
     "names": [
+      "GPLv3+",
       "GNU General Public License (GPL) version 3, or any later version",
       "GNU General Public License (GPL) version 3.0, or any later version",
       "GNU General Public License v3 or later",
