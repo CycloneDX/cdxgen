@@ -1267,7 +1267,7 @@ export const createJavaBom = async (path, options) => {
               );
             } else {
               console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 20 with maven 3.9 which might be incompatible."
+                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible."
               );
             }
             console.log(
@@ -2985,7 +2985,13 @@ export const createCppBom = (path, options) => {
       }
     }
   }
-  if (!["docker", "oci", "os"].includes(options.projectType)) {
+  // The need for java >= 17 with atom is causing confusions since there could be C projects
+  // inside of other project types. So we currently limit this analyis only when -t argument
+  // is used.
+  if (
+    !["docker", "oci", "os"].includes(options.projectType) &&
+    (!options.createMultiXBom || options.deep)
+  ) {
     let osPkgsList = [];
     // Case 1: Development libraries installed in this OS environment might be used for build
     // We collect OS packages with the word dev in the name using osquery here
@@ -4170,6 +4176,7 @@ export const createMultiXBom = async (pathList, options) => {
   let bomData = undefined;
   let parentComponent = determineParentComponent(options) || {};
   let parentSubComponents = [];
+  options.createMultiXBom = true;
   if (
     ["docker", "oci", "container"].includes(options.projectType) &&
     options.allLayersExplodedDir
