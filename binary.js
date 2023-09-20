@@ -510,21 +510,25 @@ export const getOSPackages = (src) => {
               comp.licenses.length
             ) {
               const newLicenses = [];
+              let nameIdMode = false;
               for (const alic of comp.licenses) {
                 if (alic.license.name) {
                   if (
-                    alic.license.name.toUpperCase().includes(" AND ") ||
-                    alic.license.name.toUpperCase().includes(" OR ")
+                    !nameIdMode &&
+                    (alic.license.name.toUpperCase().includes(" AND ") ||
+                      alic.license.name.toUpperCase().includes(" OR "))
                   ) {
                     newLicenses.push({ expression: alic.license.name });
                   } else {
                     const possibleId = findLicenseId(alic.license.name);
                     if (possibleId !== alic.license.name) {
                       newLicenses.push({ license: { id: possibleId } });
+                      nameIdMode = true;
                     } else {
                       newLicenses.push({
                         license: { name: alic.license.name }
                       });
+                      nameIdMode = true;
                     }
                   }
                 } else {
