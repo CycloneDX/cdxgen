@@ -1870,7 +1870,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       } else {
         console.error(result.stdout, result.stderr);
         console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible."
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible."
         );
       }
       if (result.stderr.includes("not get unknown property")) {
@@ -2063,7 +2063,7 @@ export const parseKVDep = function (rawOutput) {
  */
 export const findLicenseId = function (name) {
   for (const l of licenseMapping) {
-    if (l.names.includes(name)) {
+    if (l.names.includes(name) || l.exp.toUpperCase() === name.toUpperCase()) {
       return l.exp;
     }
   }
@@ -3954,7 +3954,6 @@ export const parseOpenapiSpecData = function (oaData) {
       oaData = JSON.parse(oaData);
     }
   } catch (e) {
-    console.error(e);
     return servlist;
   }
   const name = oaData.info.title.replace(/ /g, "-");

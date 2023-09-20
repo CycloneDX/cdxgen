@@ -3,7 +3,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
-import { DEBUG_MODE } from "./utils.js";
+import { DEBUG_MODE, findLicenseId } from "./utils.js";
 
 import { fileURLToPath } from "node:url";
 
@@ -509,7 +509,34 @@ export const getOSPackages = (src) => {
               Array.isArray(comp.licenses) &&
               comp.licenses.length
             ) {
-              comp.licenses = [comp.licenses[0]];
+              const newLicenses = [];
+              for (const alic of comp.licenses) {
+                if (alic.license.name) {
+                  // Licenses array can either be made of expressions or id/name but not both
+                  if (
+                    comp.licenses.length == 1 &&
+                    (alic.license.name.toUpperCase().includes(" AND ") ||
+                      alic.license.name.toUpperCase().includes(" OR "))
+                  ) {
+                    newLicenses.push({ expression: alic.license.name });
+                  } else {
+                    const possibleId = findLicenseId(alic.license.name);
+                    if (possibleId !== alic.license.name) {
+                      newLicenses.push({ license: { id: possibleId } });
+                    } else {
+                      newLicenses.push({
+                        license: { name: alic.license.name }
+                      });
+                    }
+                  }
+                } else if (
+                  Object.keys(alic).length &&
+                  Object.keys(alic.license).length
+                ) {
+                  newLicenses.push(alic);
+                }
+              }
+              comp.licenses = newLicenses;
             }
             // Fix hashes
             if (
