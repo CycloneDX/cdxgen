@@ -1874,7 +1874,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       } else {
         console.error(result.stdout, result.stderr);
         console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible."
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible."
         );
       }
       if (result.stderr.includes("not get unknown property")) {
@@ -2896,11 +2896,20 @@ export const getGoPkgLicense = async function (repoMetadata) {
       const licenseIds = licenses.split(", ");
       const licList = [];
       for (const id of licenseIds) {
-        const alicense = {
-          id: id
-        };
-        alicense["url"] = pkgUrlPrefix;
-        licList.push(alicense);
+        if (id.trim().length) {
+          const alicense = {};
+          if (id.includes(" ")) {
+            alicense.name = id
+              .trim()
+              .replace(/ {2}/g, "")
+              .replace("\n", " ")
+              .replace("\n", " OR ");
+          } else {
+            alicense.id = id.trim();
+          }
+          alicense["url"] = pkgUrlPrefix;
+          licList.push(alicense);
+        }
       }
       metadata_cache[pkgUrlPrefix] = licList;
       return licList;

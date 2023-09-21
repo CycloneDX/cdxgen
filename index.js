@@ -332,6 +332,17 @@ const componentToSimpleFullName = (comp) => {
   return fullName;
 };
 
+// Remove unwanted properties from parent component
+const cleanParentComponent = (comp) => {
+  delete comp.evidence;
+  delete comp._integrity;
+  delete comp.license;
+  delete comp.qualifiers;
+  delete comp.repository;
+  delete comp.homepage;
+  return comp;
+};
+
 /**
  * Function to create metadata block
  *
@@ -358,10 +369,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
   }
   if (parentComponent && Object.keys(parentComponent).length) {
     if (parentComponent) {
-      delete parentComponent.evidence;
-      delete parentComponent._integrity;
-      delete parentComponent.license;
-      delete parentComponent.qualifiers;
+      cleanParentComponent(parentComponent);
       if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
         parentComponent["purl"] = parentComponent["bom-ref"];
       }
@@ -371,10 +379,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       const subComponents = [];
       const addedSubComponents = {};
       for (const comp of parentComponent.components) {
-        delete comp.evidence;
-        delete comp._integrity;
-        delete comp.license;
-        delete comp.qualifiers;
+        cleanParentComponent(comp);
         if (comp.name && comp.type) {
           let fullName = componentToSimpleFullName(comp);
           // Fixes #479
@@ -1267,7 +1272,7 @@ export const createJavaBom = async (path, options) => {
               );
             } else {
               console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible."
+                "1. Java version requirement: cdxgen container image bundles Java 20 with maven 3.9 which might be incompatible."
               );
             }
             console.log(
@@ -2659,7 +2664,12 @@ export const createGoBom = async (path, options) => {
         );
         if (result.status !== 0 || result.error) {
           shouldManuallyParse = true;
-          console.error(result.stdout, result.stderr);
+          if (result.stdout) {
+            console.log(result.stdout);
+          }
+          if (result.stderr) {
+            console.log(result.stderr);
+          }
           options.failOnError && process.exit(1);
         }
         const stdout = result.stdout;
@@ -2702,7 +2712,12 @@ export const createGoBom = async (path, options) => {
         );
         if (mresult.status !== 0 || mresult.error) {
           if (DEBUG_MODE) {
-            console.log(mresult.stdout, mresult.stderr);
+            if (mresult.stdout) {
+              console.log(mresult.stdout);
+            }
+            if (mresult.stderr) {
+              console.log(mresult.stderr);
+            }
           }
           circuitBreak = true;
         } else {
