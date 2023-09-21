@@ -50,6 +50,7 @@ if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
 const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+const isWin = platform() === "win32";
 
 const licenseMapping = JSON.parse(
   readFileSync(join(dirNameStr, "data", "lic-mapping.json"))
@@ -1870,7 +1871,8 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
   );
   const result = spawnSync(gradleCmd, gradlePropertiesArgs, {
     cwd: dir,
-    encoding: "utf-8"
+    encoding: "utf-8",
+    shell: isWin
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
@@ -5334,7 +5336,8 @@ export const collectMvnDependencies = function (
     );
     const result = spawnSync(mavenCmd, copyArgs, {
       cwd: basePath,
-      encoding: "utf-8"
+      encoding: "utf-8",
+      shell: isWin
     });
     if (result.status !== 0 || result.error) {
       console.error(result.stdout, result.stderr);
@@ -5413,10 +5416,24 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
   console.log(
     `About to identify class names for all jars in the path ${jarPath}`
   );
+  const env = {
+    ...process.env
+  };
+  // jar command usually would not be available in the PATH for windows
+  if (isWin && env.JAVA_HOME) {
+    env.PATH = `${env.PATH || env.Path}${_delimiter}${join(
+      env.JAVA_HOME,
+      "bin"
+    )}`;
+  }
+  let jarCommandAvailable = true;
   // Execute jar tvf to get class names
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
+      if (!jarCommandAvailable) {
+        break;
+      }
       const jarname = jf;
       let pomname =
         pomPathMap[basename(jf).replace(".jar", ".pom")] ||
@@ -5518,18 +5535,42 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
       if (DEBUG_MODE) {
         console.log(`Executing 'jar tf ${jf}'`);
       }
-      const jarResult = spawnSync("jar", ["-tf", jf], { encoding: "utf-8" });
+
+      const jarResult = spawnSync("jar", ["-tf", jf], {
+        encoding: "utf-8",
+        shell: isWin,
+        maxBuffer: 50 * 1024 * 1024,
+        env
+      });
+      if (
+        jarResult &&
+        jarResult.stderr &&
+        jarResult.stderr.includes(
+          "is not recognized as an internal or external command"
+        )
+      ) {
+        jarCommandAvailable = false;
+        console.log(
+          "jar command is not available in PATH. Ensure JDK >= 17 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
+        );
+      }
       const consolelines = (jarResult.stdout || "").split("\n");
       const nsList = consolelines
         .filter((l) => {
           return (
-            l.includes(".class") &&
+            (l.includes(".class") ||
+              l.includes(".java") ||
+              l.includes(".kt")) &&
             !l.includes("-INF") &&
             !l.includes("module-info")
           );
         })
         .map((e) => {
-          return e.replace(".class", "").replace(/\/$/, "").replace(/\//g, ".");
+          return e
+            .replace("\r", "")
+            .replace(/.(class|java|kt)/, "")
+            .replace(/\/$/, "")
+            .replace(/\//g, ".");
         });
       jarNSMapping[purl || jf] = {
         jarFile: jf,
@@ -5696,10 +5737,22 @@ export const extractJarArchive = function (jarFile, tempDir) {
     // Only copy if the file doesn't exist
     copyFileSync(jarFile, join(tempDir, fname), constants.COPYFILE_FICLONE);
   }
+  const env = {
+    ...process.env
+  };
+  // jar command usually would not be available in the PATH for windows
+  if (isWin && env.JAVA_HOME) {
+    env.PATH = `${env.PATH || env.Path}${_delimiter}${join(
+      env.JAVA_HOME,
+      "bin"
+    )}`;
+  }
   if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
     const jarResult = spawnSync("jar", ["-xf", join(tempDir, fname)], {
       encoding: "utf-8",
-      cwd: tempDir
+      cwd: tempDir,
+      shell: isWin,
+      env
     });
     if (jarResult.status !== 0) {
       console.error(jarResult.stdout, jarResult.stderr);
@@ -5736,7 +5789,9 @@ export const extractJarArchive = function (jarFile, tempDir) {
       } else {
         jarResult = spawnSync("jar", ["-xf", jf], {
           encoding: "utf-8",
-          cwd: tempDir
+          cwd: tempDir,
+          shell: isWin,
+          env
         });
       }
       if (jarResult.status !== 0) {
@@ -6076,7 +6131,8 @@ export const getMavenCommand = (srcPath, rootPath) => {
     const result = spawnSync(mavenCmd, ["wrapper:wrapper"], {
       encoding: "utf-8",
       cwd: rootPath,
-      timeout: TIMEOUT_MS
+      timeout: TIMEOUT_MS,
+      shell: isWin
     });
     if (!result.error) {
       isWrapperReady = true;
@@ -6139,16 +6195,26 @@ export const executeAtom = (src, args) => {
   const env = {
     ...process.env
   };
-  env.PATH = `${env.PATH}${_delimiter}${join(
-    dirNameStr,
-    "node_modules",
-    ".bin"
-  )}`;
+
+  if (isWin) {
+    env.PATH = `${env.PATH || env.Path}${_delimiter}${join(
+      dirNameStr,
+      "node_modules",
+      ".bin"
+    )}`;
+  } else {
+    env.PATH = `${env.PATH}${_delimiter}${join(
+      dirNameStr,
+      "node_modules",
+      ".bin"
+    )}`;
+  }
   const result = spawnSync(ATOM_BIN, args, {
     cwd,
     encoding: "utf-8",
     timeout: TIMEOUT_MS,
-    detached: true,
+    detached: !isWin && !process.env.CI,
+    shell: isWin,
     env
   });
   if (result.stderr) {
@@ -6306,7 +6372,8 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     !reqOrSetupFile.endsWith("poetry.lock")
   ) {
     result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
-      encoding: "utf-8"
+      encoding: "utf-8",
+      shell: isWin
     });
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
@@ -6347,14 +6414,16 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       result = spawnSync("poetry", poetryConfigArgs, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS
+        timeout: TIMEOUT_MS,
+        shell: isWin
       });
       let poetryInstallArgs = ["install", "-n", "--no-root"];
       // Attempt to perform poetry install
       result = spawnSync("poetry", poetryInstallArgs, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS
+        timeout: TIMEOUT_MS,
+        shell: isWin
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr && result.stderr.includes("No module named poetry")) {
@@ -6364,6 +6433,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
+            shell: isWin,
             env
           });
           if (result.status !== 0 || result.error) {
@@ -6392,6 +6462,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           cwd: basePath,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
+          shell: isWin,
           env
         });
         tempVenvDir = result.stdout.replaceAll(/[\r\n]+/g, "");
@@ -6425,6 +6496,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
+        shell: isWin,
         env
       });
       if (result.status !== 0 || result.error) {
