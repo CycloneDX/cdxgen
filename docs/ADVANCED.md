@@ -151,3 +151,18 @@ node bin/cdxgen.js -o bom.json -t c --usages-slices-file usages.json <path to re
 ```
 
 Change 16g to 32g or above for very large projects. For the Linux kernel, a minimum of 128GB is required.
+
+## Remove the SQLite cache db used by evinse
+
+If you face a situation where the namespaces cached by evinse are outdated or incorrect, you can try deleting the file `.atomdb` to recreate it. Below are the locations where this file gets stored by default. This can be overridden by setting the environment variable `ATOM_DB`.
+
+```javascript
+// linux
+let ATOM_DB = join(homedir(), ".local", "share", ".atomdb");
+
+// Windows
+ATOM_DB = join(homedir(), "AppData", "Local", ".atomdb");
+
+// Mac
+ATOM_DB = join(homedir(), "Library", "Application Support", ".atomdb");
+```
