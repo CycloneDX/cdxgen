@@ -11,6 +11,7 @@ NOTE:
 CycloneDX 1.5 specification is new and unsupported by many downstream tools. Use version 8.6.0 for 1.4 compatibility or pass the argument `--spec-version 1.4`.
 
 ## Why cdxgen?
+
 A typical application might have several repos, components, and libraries. Traditional techniques to generate a single SBoM per language or package manifest do not work in enterprise environments. So we built cdxgen - the universal polyglot SBoM generator!
 
 <img src="./docs/why-cdxgen.jpg" alt="why cdxgen" width="256">
@@ -69,6 +70,7 @@ Footnotes:
 <img src="./docs/cdxgen-tree.jpg" alt="cdxgen tree" width="256">
 
 ### Automatic usage detection
+
 For node.js projects, lock files are parsed initially, so the SBoM would include all dependencies, including dev ones. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically set their scope property to `required` in the resulting SBoM. You can turn off this analysis by passing the argument `--no-babel`. Scope property would then be set based on the `dev` attribute in the lock file.
 
 This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/cyclonedx/dep-scan) uses this attribute to prioritize vulnerabilities. Unfortunately, tools such as dependency track, do not include this feature and might over-report the CVEs.

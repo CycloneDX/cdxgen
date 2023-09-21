@@ -2893,14 +2893,19 @@ export const getGoPkgLicense = async function (repoMetadata) {
       if (licenses === "") {
         licenses = $("section.License > h2").text().trim();
       }
-      const licenseIds = licenses.split(", ");
+      const licenseIds = licenses.split(", ").split("\\n");
       const licList = [];
       for (const id of licenseIds) {
-        const alicense = {
-          id: id
-        };
-        alicense["url"] = pkgUrlPrefix;
-        licList.push(alicense);
+        if (id.trim().length) {
+          const alicense = {};
+          if (id.includes(" ")) {
+            alicense.name = id.trim();
+          } else {
+            alicense.id = id.trim();
+          }
+          alicense["url"] = pkgUrlPrefix;
+          licList.push(alicense);
+        }
       }
       metadata_cache[pkgUrlPrefix] = licList;
       return licList;
