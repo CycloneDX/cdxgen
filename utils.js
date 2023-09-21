@@ -513,6 +513,11 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         "bom-ref": purlString
       };
     }
+    const packageLicense = node.package.license;
+    if (packageLicense) {
+      // License will be overridden if FETCH_LICENSE is enabled
+      pkg.license = packageLicense;
+    }
     pkgList.push(pkg);
 
     // retrieve workspace node pkglists

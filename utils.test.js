@@ -1533,11 +1533,13 @@ test("parsePkgLock v2", async () => {
   expect(deps[1]._integrity).toEqual(
     "sha512-x9yaMvEh5BEaZKeVQC4vp3l+QoFj3BXcd4aYfuKSzIIyihjdVARAadYy3SMNIz0WCCdS2vB9JL/U6GQk5PaxQw=="
   );
+  expect(deps[1].license).toEqual("Apache-2.0");
   expect(deps[0]).toEqual({
     "bom-ref": "pkg:npm/shopify-theme-tailwindcss@2.2.1",
     author: "Wessel van Ree <hello@wesselvanree.com>",
     group: "",
     name: "shopify-theme-tailwindcss",
+    license: "MIT",
     type: "application",
     version: "2.2.1"
   });
@@ -1568,6 +1570,7 @@ test("parsePkgLock v2 workspace", async () => {
   let pkgs = parsedList.pkgList;
   let deps = parsedList.dependenciesList;
   expect(pkgs.length).toEqual(1032);
+  expect(pkgs[0].license).toEqual("MIT");
   let hasAppWorkspacePkg = pkgs.some(
     (obj) => obj["bom-ref"] === "pkg:npm/app@0.0.0"
   );
@@ -1605,6 +1608,7 @@ test("parsePkgLock v3", async () => {
     "bom-ref": "pkg:npm/cdxgen@latest",
     group: "",
     author: "",
+    license: "ISC",
     name: "cdxgen",
     type: "application",
     version: "latest"
