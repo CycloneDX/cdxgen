@@ -2899,7 +2899,11 @@ export const getGoPkgLicense = async function (repoMetadata) {
         if (id.trim().length) {
           const alicense = {};
           if (id.includes(" ")) {
-            alicense.name = id.trim().replace(/ {4}/g, "").replace("\n", " ");
+            alicense.name = id
+              .trim()
+              .replace(/ {2}/g, "")
+              .replace("\n", " ")
+              .replace("\n", " OR ");
           } else {
             alicense.id = id.trim();
           }
