@@ -111,7 +111,7 @@ npm install -g @cyclonedx/cdxgen-plugins-bin
 ```
 
 - Run "Docker for Desktop" as an administrator with the 'Exposing daemon on TCP without TLS' setting turned on.
-Run Powershell terminal as administrator. Without this, cdxgen would fail while extracting symlinks.
+  Run Powershell terminal as administrator. Without this, cdxgen would fail while extracting symlinks.
 - Invoke cdxgen with `-t docker`
 
 ```shell
@@ -140,7 +140,13 @@ For large projects (> 1 million lines of code), atom must be invoked separately 
 ```shell
 unzip atom.zip
 cd atom-1.0.0/bin
+
+# Java project
+./atom -J-Xmx16g usages -o app.atom --slice-outfile usages.json -l java <path to repo>
+
+# C project
 ./atom -J-Xmx16g usages -o app.atom --slice-outfile usages.json -l c <path to repo>
+
 node bin/cdxgen.js -o bom.json -t c --usages-slices-file usages.json <path to repo>
 ```
 
