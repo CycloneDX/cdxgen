@@ -345,8 +345,9 @@ export const getNpmMetadata = async function (pkgList) {
  * Parse nodejs package json file
  *
  * @param {string} pkgJsonFile package.json file
+ * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
  */
-export const parsePkgJson = async (pkgJsonFile) => {
+export const parsePkgJson = async (pkgJsonFile, simple = false) => {
   const pkgList = [];
   if (existsSync(pkgJsonFile)) {
     try {
@@ -362,18 +363,20 @@ export const parsePkgJson = async (pkgJsonFile) => {
         null,
         null
       ).toString();
-      pkgList.push({
+      const apkg = {
         name,
         group,
         version: pkgData.version,
-        "bom-ref": decodeURIComponent(purl),
-        properties: [
+        "bom-ref": decodeURIComponent(purl)
+      };
+      if (!simple) {
+        apkg.properties = [
           {
             name: "SrcFile",
             value: pkgJsonFile
           }
-        ],
-        evidence: {
+        ];
+        apkg.evidence = {
           identity: {
             field: "purl",
             confidence: 1,
@@ -385,13 +388,14 @@ export const parsePkgJson = async (pkgJsonFile) => {
               }
             ]
           }
-        }
-      });
+        };
+      }
+      pkgList.push(apkg);
     } catch (err) {
       // continue regardless of error
     }
   }
-  if (FETCH_LICENSE && pkgList && pkgList.length) {
+  if (!simple && FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePkgJson`

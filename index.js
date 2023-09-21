@@ -1948,7 +1948,7 @@ export const createNodejsBom = async (path, options) => {
       // Determine the parent component
       const packageJsonF = join(basePath, "package.json");
       if (existsSync(packageJsonF)) {
-        const pcs = await parsePkgJson(packageJsonF);
+        const pcs = await parsePkgJson(packageJsonF, true);
         if (pcs.length) {
           parentComponent = pcs[0];
           parentComponent.type = "application";
@@ -2096,7 +2096,7 @@ export const createNodejsBom = async (path, options) => {
       // Determine the parent component
       const packageJsonF = join(basePath, "package.json");
       if (existsSync(packageJsonF)) {
-        const pcs = await parsePkgJson(packageJsonF);
+        const pcs = await parsePkgJson(packageJsonF, true);
         if (pcs.length) {
           const tmpParentComponent = pcs[0];
           tmpParentComponent.type = "application";
@@ -2195,7 +2195,7 @@ export const createNodejsBom = async (path, options) => {
     }
     if (!parentComponent || !Object.keys(parentComponent).length) {
       if (existsSync(join(path, "package.json"))) {
-        const pcs = await parsePkgJson(join(path, "package.json"));
+        const pcs = await parsePkgJson(join(path, "package.json"), true);
         if (pcs.length) {
           parentComponent = pcs[0];
           parentComponent.type = "application";
