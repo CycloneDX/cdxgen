@@ -2893,13 +2893,13 @@ export const getGoPkgLicense = async function (repoMetadata) {
       if (licenses === "") {
         licenses = $("section.License > h2").text().trim();
       }
-      const licenseIds = licenses.split(", ").split("\\n");
+      const licenseIds = licenses.split(", ");
       const licList = [];
       for (const id of licenseIds) {
         if (id.trim().length) {
           const alicense = {};
           if (id.includes(" ")) {
-            alicense.name = id.trim();
+            alicense.name = id.trim().replace(/ {4}/g, "").replace("\n", " ");
           } else {
             alicense.id = id.trim();
           }
