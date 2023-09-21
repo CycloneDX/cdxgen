@@ -323,9 +323,7 @@ export const getNpmMetadata = async function (pkgList) {
         metadata_cache[key] = body;
       }
       p.description = body.description;
-      if (!p.license) {
-        p.license = body.license;
-      }
+      p.license = body.license;
       if (body.repository && body.repository.url) {
         p.repository = { url: body.repository.url };
       }
@@ -517,6 +515,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     }
     const packageLicense = node.package.license;
     if (packageLicense) {
+      // License will be overridden if FETCH_LICENSE is enabled
       pkg.license = packageLicense;
     }
     pkgList.push(pkg);
@@ -660,7 +659,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     options
   ));
 
-  if (FETCH_LICENSE && pkgList?.length) {
+  if (FETCH_LICENSE && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePkgLock`
