@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
-import { createBom } from "./index.js";
+import { createBom, submitBom } from "./index.js";
 import compression from "compression";
 
 // Timeout milliseconds. Default 10 mins
@@ -42,33 +42,27 @@ const parseQueryString = (q, body, options = {}) => {
   if (body && Object.keys(body).length) {
     options = Object.assign(options, body);
   }
-  if (q.type) {
-    options.projectType = q.type;
+
+  const queryParams = [
+    'type', 'multiProject', 'requiredOnly', 'noBabel', 'installDeps',
+    'project', 'projectName', 'projectGroup', 'projectVersion', 'parentUUID',
+    'serverUrl', 'apiKey'
+  ];
+
+  for (const param of queryParams) {
+    if (q[param]) {
+      options[param] = q[param];
+    }
   }
-  if (q.multiProject && q.multiProject !== "false") {
-    options.multiProject = true;
+
+  // To help dependency track users, we downgrade the spec version to 1.4 automatically
+  if (options.serverUrl || options.apiKey) {
+    options.specVersion = 1.4;
   }
-  if (q.requiredOnly && q.requiredOnly !== "false") {
-    options.requiredOnly = true;
-  }
-  if (q.noBabel) {
-    options.noBabel = q.noBabel;
-  }
-  if (q.installDeps) {
-    options.installDeps = q.installDeps;
-  }
-  if (q.project) {
-    options.project = q.project;
-  }
-  if (q.projectName) {
-    options.projectName = q.projectName;
-  }
-  if (q.projectGroup) {
-    options.projectGroup = q.projectGroup;
-  }
-  if (q.projectVersion) {
-    options.projectVersion = q.projectVersion;
-  }
+
+  options.projectType == options.type
+  delete options.type
+
   return options;
 };
 
@@ -113,6 +107,10 @@ const start = (options) => {
       } else {
         res.write(JSON.stringify(bomNSData.bomJson, null, 2));
       }
+    }
+    if (options.serverUrl && options.apiKey) {
+      console.log("Publishing SBoM to Dependency Track");
+      submitBom(options, bomNSData.bomJson)
     }
     res.end("\n");
     if (cleanup && srcDir && srcDir.startsWith(os.tmpdir()) && fs.rmSync) {
