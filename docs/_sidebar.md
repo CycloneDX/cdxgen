@@ -1,5 +1,6 @@
 - [Home](/)
 - [CLI Usage](CLI.md)
+- [Server Usage](SERVER.md)
 - [Configuration](ENV.md)
 - [Advanced Usage](ADVANCED.md)
 - [Enterprise Support](SUPPORT.md)
