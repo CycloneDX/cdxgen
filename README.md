@@ -238,6 +238,21 @@ docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx
 
 Use curl or your favorite tool to pass arguments to the `/sbom` route.
 
+### Server arguments
+
+Arguments can be passed either via the query string or as a JSON body. The following arguments are supported.
+| Argument | Description |
+| --- | --- |
+| type | Project type |
+| multiProject | |
+| requiredOnly | |
+| noBabel | |
+| installDeps | |
+| project | |
+| projectName | Dependency track project name. Default use the directory name |
+| projectGroup | Dependency track project group |
+| projectVersion | Dependency track project version [default: ""] |
+
 ### Scanning a local path
 
 ```shell
