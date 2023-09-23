@@ -45,8 +45,8 @@ const parseQueryString = (q, body, options = {}) => {
 
   const queryParams = [
     'type', 'multiProject', 'requiredOnly', 'noBabel', 'installDeps',
-    'project', 'projectName', 'projectGroup', 'projectVersion',
-    'serverUrl', 'apiKey', 'parentUUID'
+    'project', 'projectName', 'projectGroup', 'projectVersion', 'parentUUID',
+    'serverUrl', 'apiKey'
   ];
 
   for (const param of queryParams) {
