@@ -41,6 +41,7 @@ const gitClone = (repoUrl) => {
 const parseQueryString = (q, body, options = {}) => {
   if (body && Object.keys(body).length) {
     options = Object.assign(options, body);
+    options.projectType = options.type;
   }
   if (q.type) {
     options.projectType = q.type;
