@@ -7,7 +7,7 @@ on:
       - release/*
       - fix/*
   workflow_dispatch:
-
+  pull_request:
 jobs:
   build:
     strategy:

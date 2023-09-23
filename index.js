@@ -4419,7 +4419,12 @@ export const createMultiXBom = async (pathList, options) => {
       );
     }
     bomData = await createCsharpBom(path, options, parentComponent);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} csharp packages at ${path}`

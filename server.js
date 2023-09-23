@@ -44,9 +44,18 @@ const parseQueryString = (q, body, options = {}) => {
   }
 
   const queryParams = [
-    'type', 'multiProject', 'requiredOnly', 'noBabel', 'installDeps',
-    'project', 'projectName', 'projectGroup', 'projectVersion', 'parentUUID',
-    'serverUrl', 'apiKey'
+    "type",
+    "multiProject",
+    "requiredOnly",
+    "noBabel",
+    "installDeps",
+    "project",
+    "projectName",
+    "projectGroup",
+    "projectVersion",
+    "parentUUID",
+    "serverUrl",
+    "apiKey"
   ];
 
   for (const param of queryParams) {
@@ -60,8 +69,8 @@ const parseQueryString = (q, body, options = {}) => {
     options.specVersion = 1.4;
   }
 
-  options.projectType == options.type
-  delete options.type
+  options.projectType == options.type;
+  delete options.type;
 
   return options;
 };
@@ -110,7 +119,7 @@ const start = (options) => {
     }
     if (options.serverUrl && options.apiKey) {
       console.log("Publishing SBoM to Dependency Track");
-      submitBom(options, bomNSData.bomJson)
+      submitBom(options, bomNSData.bomJson);
     }
     res.end("\n");
     if (cleanup && srcDir && srcDir.startsWith(os.tmpdir()) && fs.rmSync) {
