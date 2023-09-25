@@ -2681,7 +2681,9 @@ export const createGoBom = async (path, options) => {
           }
         } else {
           shouldManuallyParse = true;
-          console.error("go unexpectedly didn't return any output");
+          console.error(
+            "go unexpectedly didn't return any output. Check if the correct version of golang is installed."
+          );
           options.failOnError && process.exit(1);
         }
       }
