@@ -122,6 +122,23 @@ jobs:
         with:
           repository: 'home-assistant/android'
           path: 'repotests/ha-android'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'rust-lang/rust'
+          path: 'repotests/rs-rust'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'rust-lang/cargo'
+          path: 'repotests/rs-cargo'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'Keats/validator'
+          path: 'repotests/rs-validator'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'tokio-rs/axum'
+          path: 'repotests/rs-axum'
+      - uses: dtolnay/rust-toolchain@stable
       - name: repotests
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
@@ -153,6 +170,11 @@ jobs:
           cd repotests/ha-android && ./gradlew assembleDebug || true && cd ../..
           bin/cdxgen.js -r -t java repotests/ha-android -o bomresults/bom-android.json
           CDXGEN_DEBUG_MODE=debug bin/evinse.js -i bomresults/bom-android.json -o bomresults/bom-android.evinse.json -l java repotests/ha-android
+          bin/cdxgen.js -r -t rust repotests/rs-rust -o bomresults/bom-rs-rust.json --validate
+          bin/cdxgen.js -r -t rust repotests/rs-cargo -o bomresults/bom-rs-cargo.json --validate
+          cargo generate-lockfile --manifest-path repotests/rs-validator/validator/Cargo.toml
+          bin/cdxgen.js -r -t rust repotests/rs-validator -o bomresults/bom-rs-validator.json --validate
+          bin/cdxgen.js -r -t rust repotests/rs-axum -o bomresults/bom-rs-axum.json --validate
           # mkdir -p jenkins
           # wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
           # wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
