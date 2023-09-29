@@ -686,7 +686,6 @@ function addComponent(
         encodeForPurl(pkg.subpath)
       );
     let purlString = purl.toString();
-    purlString = decodeURIComponent(purlString);
     let description = { "#cdata": pkg.description };
     if (format === "json") {
       description = pkg.description || undefined;
