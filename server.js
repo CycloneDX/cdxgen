@@ -18,7 +18,7 @@ const app = connect();
 app.use(
   bodyParser.json({
     deflate: true,
-    limit: "1mb",
+    limit: "1mb"
   })
 );
 app.use(compression());
@@ -30,7 +30,7 @@ const gitClone = (repoUrl) => {
   console.log("Cloning", repoUrl, "to", tempDir);
   const result = spawnSync("git", ["clone", repoUrl, "--depth", "1", tempDir], {
     encoding: "utf-8",
-    shell: false,
+    shell: false
   });
   if (result.status !== 0 || result.error) {
     console.log(result.error);
@@ -55,7 +55,7 @@ const parseQueryString = (q, body, options = {}) => {
     "projectVersion",
     "parentUUID",
     "serverUrl",
-    "apiKey",
+    "apiKey"
   ];
 
   for (const param of queryParams) {
