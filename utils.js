@@ -2609,11 +2609,11 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
   const pkgList = [];
   let compScope = undefined;
   reqData
+    .replace(/\r/g, "")
     .replace(/ [\\]\n/g, "")
     .replace(/ {4}/g, " ")
     .split("\n")
     .forEach((l) => {
-      l = l.replace("\r", "");
       l = l.trim();
       let markers = undefined;
       if (l.includes(" ; ")) {
