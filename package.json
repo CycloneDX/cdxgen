@@ -69,7 +69,7 @@
     "js-yaml": "^4.1.0",
     "jws": "^4.0.0",
     "node-stream-zip": "^1.15.0",
-    "packageurl-js": "^1.1.1",
+    "packageurl-js": "1.0.2",
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.3.0",
     "semver": "^7.5.3",
