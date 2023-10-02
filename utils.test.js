@@ -1270,7 +1270,7 @@ test("get nget metadata", async () => {
         "pkg:nuget/NUnit.Console@3.11.1",
         "pkg:nuget/NUnit3TestAdapter@3.16.1",
         "pkg:nuget/NUnitLite@3.13.3",
-        "pkg:nuget/Serilog@0.0.0",
+        "pkg:nuget/Serilog@3.0.1",
         "pkg:nuget/Serilog.Sinks.TextWriter@2.0.0",
         "pkg:nuget/System.Security.Permissions@4.7.0",
         "pkg:nuget/log4net@2.0.13",
@@ -1295,7 +1295,7 @@ test("get nget metadata", async () => {
         "pkg:nuget/System.Text.RegularExpressions@4.1.0",
         "pkg:nuget/System.Threading@4.0.11"
       ],
-      ref: "pkg:nuget/Serilog@0.0.0"
+      ref: "pkg:nuget/Serilog@3.0.1"
     }
   ];
   let pkg_list = [
@@ -1308,8 +1308,8 @@ test("get nget metadata", async () => {
     {
       group: "",
       name: "Serilog",
-      version: "0.0.0",
-      "bom-ref": "pkg:nuget/Serilog@0.0.0"
+      version: "3.0.1",
+      "bom-ref": "pkg:nuget/Serilog@3.0.1"
     }
   ];
   const { pkgList, dependencies } = await getNugetMetadata(pkg_list, dep_list);
