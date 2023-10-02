@@ -55,7 +55,8 @@ const parseQueryString = (q, body, options = {}) => {
     "projectVersion",
     "parentUUID",
     "serverUrl",
-    "apiKey"
+    "apiKey",
+    "specVersion"
   ];
 
   for (const param of queryParams) {
