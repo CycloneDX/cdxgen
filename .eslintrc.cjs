@@ -3,7 +3,8 @@ module.exports = {
         "node": true,
         "es2021": true
     },
-    "extends": "eslint:recommended",
+    "plugins": ["prettier"],
+    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
     "overrides": [
     ],
     "parserOptions": {
@@ -11,5 +12,6 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
+        "prettier/prettier": "error",
     }
 }
