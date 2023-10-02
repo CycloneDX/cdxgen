@@ -2261,6 +2261,25 @@ test("parse requirements.txt", async () => {
     version: "8.6.2",
     scope: "required"
   });
+  deps = await parseReqFile(
+    readFileSync("./test/data/chen-science-requirements.txt", {
+      encoding: "utf-8"
+    }),
+    false
+  );
+  expect(deps.length).toEqual(87);
+  expect(deps[0]).toEqual({
+    name: "aiofiles",
+    version: "23.2.1",
+    scope: undefined,
+    properties: [
+      {
+        name: "cdx:pip:markers",
+        value:
+          'python_full_version >= "3.8.1" and python_version < "3.12" --hash=sha256:19297512c647d4b27a2cf7c34caa7e405c0d60b5560618a29a9fe027b18b0107 --hash=sha256:84ec2218d8419404abcb9f0c02df3f34c6e0a68ed41072acfb1cef5cbc29051a'
+      }
+    ]
+  });
 });
 
 test("parse pyproject.toml", async () => {

@@ -2608,66 +2608,66 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
 export async function parseReqFile(reqData, fetchDepsInfo) {
   const pkgList = [];
   let compScope = undefined;
-  reqData.split("\n").forEach((l) => {
-    l = l.replace("\r", "");
-    l = l.trim();
-    if (l.startsWith("Skipping line") || l.startsWith("(add")) {
-      return;
-    }
-    if (l.includes("# Basic requirements")) {
-      compScope = "required";
-    } else if (l.includes("added by pip freeze")) {
-      compScope = undefined;
-    }
-    if (!l.startsWith("#") && !l.startsWith("-")) {
-      if (l.includes(" ")) {
-        l = l.split(" ")[0];
+  reqData
+    .replace(/ [\\]\n/g, "")
+    .replace(/ {4}/g, " ")
+    .split("\n")
+    .forEach((l) => {
+      l = l.replace("\r", "");
+      l = l.trim();
+      let markers = undefined;
+      if (l.includes(" ; ")) {
+        const tmpA = l.split(" ; ");
+        if (tmpA && tmpA.length === 2) {
+          l = tmpA[0];
+          markers = tmpA[1];
+        }
       }
-      if (l.indexOf("=") > -1) {
-        let tmpA = l.split(/(==|<=|~=|>=)/);
-        if (tmpA.includes("#")) {
-          tmpA = tmpA.split("#")[0];
+      if (l.startsWith("Skipping line") || l.startsWith("(add")) {
+        return;
+      }
+      if (l.includes("# Basic requirements")) {
+        compScope = "required";
+      } else if (l.includes("added by pip freeze")) {
+        compScope = undefined;
+      }
+      if (!l.startsWith("#") && !l.startsWith("-")) {
+        if (l.includes(" ")) {
+          l = l.split(" ")[0];
         }
-        let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
-        if (versionStr.indexOf(" ") > -1) {
-          versionStr = versionStr.split(" ")[0];
-        }
-        if (versionStr === "0") {
-          versionStr = null;
-        }
-        if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
-          const name = tmpA[0].trim().replace(";", "");
-          if (!PYTHON_STD_MODULES.includes(name)) {
-            pkgList.push({
-              name,
-              version: versionStr,
-              scope: compScope
-            });
+        if (l.indexOf("=") > -1) {
+          let tmpA = l.split(/(==|<=|~=|>=)/);
+          if (tmpA.includes("#")) {
+            tmpA = tmpA.split("#")[0];
           }
-        }
-      } else if (l.includes("<") && l.includes(">")) {
-        const tmpA = l.split(">");
-        const name = tmpA[0].trim().replace(";", "");
-        const versionSpecifiers = l.replace(name, "");
-        if (!PYTHON_STD_MODULES.includes(name)) {
-          pkgList.push({
-            name,
-            version: undefined,
-            scope: compScope,
-            properties: [
-              {
-                name: "cdx:pypi:versionSpecifiers",
-                value: versionSpecifiers
+          let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
+          if (versionStr.indexOf(" ") > -1) {
+            versionStr = versionStr.split(" ")[0];
+          }
+          if (versionStr === "0") {
+            versionStr = null;
+          }
+          if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
+            const name = tmpA[0].trim().replace(";", "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              const apkg = {
+                name,
+                version: versionStr,
+                scope: compScope
+              };
+              if (markers) {
+                apkg.properties = [
+                  {
+                    name: "cdx:pip:markers",
+                    value: markers
+                  }
+                ];
               }
-            ]
-          });
-        }
-      } else if (/[>|[|@]/.test(l)) {
-        let tmpA = l.split(/(>|\[|@)/);
-        if (tmpA.includes("#")) {
-          tmpA = tmpA.split("#")[0];
-        }
-        if (!tmpA[0].trim().includes(" ")) {
+              pkgList.push(apkg);
+            }
+          }
+        } else if (l.includes("<") && l.includes(">")) {
+          const tmpA = l.split(">");
           const name = tmpA[0].trim().replace(";", "");
           const versionSpecifiers = l.replace(name, "");
           if (!PYTHON_STD_MODULES.includes(name)) {
@@ -2683,49 +2683,70 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
               ]
             });
           }
-        }
-      } else if (l) {
-        if (l.includes("#")) {
-          l = l.split("#")[0];
-        }
-        l = l.trim();
-        const tmpA = l.split(/(<|>)/);
-        if (tmpA && tmpA.length === 3) {
-          const name = tmpA[0].trim().replace(";", "");
-          const versionSpecifiers = l.replace(name, "");
-          if (!PYTHON_STD_MODULES.includes(name)) {
-            pkgList.push({
-              name,
-              version: undefined,
-              scope: compScope,
-              properties: [
-                {
-                  name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers
-                }
-              ]
-            });
+        } else if (/[>|[|@]/.test(l)) {
+          let tmpA = l.split(/(>|\[|@)/);
+          if (tmpA.includes("#")) {
+            tmpA = tmpA.split("#")[0];
           }
-        } else if (!l.includes(" ")) {
-          const name = l.replace(";", "");
-          const versionSpecifiers = l.replace(name, "");
-          if (!PYTHON_STD_MODULES.includes(name)) {
-            pkgList.push({
-              name,
-              version: null,
-              scope: compScope,
-              properties: [
-                {
-                  name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers
-                }
-              ]
-            });
+          if (!tmpA[0].trim().includes(" ")) {
+            const name = tmpA[0].trim().replace(";", "");
+            const versionSpecifiers = l.replace(name, "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              pkgList.push({
+                name,
+                version: undefined,
+                scope: compScope,
+                properties: [
+                  {
+                    name: "cdx:pypi:versionSpecifiers",
+                    value: versionSpecifiers
+                  }
+                ]
+              });
+            }
+          }
+        } else if (l) {
+          if (l.includes("#")) {
+            l = l.split("#")[0];
+          }
+          l = l.trim();
+          const tmpA = l.split(/(<|>)/);
+          if (tmpA && tmpA.length === 3) {
+            const name = tmpA[0].trim().replace(";", "");
+            const versionSpecifiers = l.replace(name, "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              pkgList.push({
+                name,
+                version: undefined,
+                scope: compScope,
+                properties: [
+                  {
+                    name: "cdx:pypi:versionSpecifiers",
+                    value: versionSpecifiers
+                  }
+                ]
+              });
+            }
+          } else if (!l.includes(" ")) {
+            const name = l.replace(";", "");
+            const versionSpecifiers = l.replace(name, "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              pkgList.push({
+                name,
+                version: null,
+                scope: compScope,
+                properties: [
+                  {
+                    name: "cdx:pypi:versionSpecifiers",
+                    value: versionSpecifiers
+                  }
+                ]
+              });
+            }
           }
         }
       }
-    }
-  });
+    });
   return await getPyMetadata(pkgList, fetchDepsInfo);
 }
 
