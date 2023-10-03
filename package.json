@@ -42,7 +42,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint": "eslint *.js *.test.js bin/*.js",
-    "pretty": "prettier --write *.js data/*.json bin/*.js --trailing-comma=none"
+    "pretty": "prettier --write *.js data/*.json bin/*.js"
   },
   "engines": {
     "node": ">=16"
@@ -102,6 +102,8 @@
     "caxa": "^3.0.1",
     "docsify-cli": "^4.4.4",
     "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.7.0",
     "prettier": "3.0.3"
   }
