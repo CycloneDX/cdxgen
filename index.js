@@ -686,7 +686,6 @@ function addComponent(
         encodeForPurl(pkg.subpath)
       );
     let purlString = purl.toString();
-    purlString = decodeURIComponent(purlString);
     let description = { "#cdata": pkg.description };
     if (format === "json") {
       description = pkg.description || undefined;
@@ -1128,16 +1127,10 @@ export const createJavaBom = async (path, options) => {
         console.log(`Retrieving packages from ${path}`);
       }
       const tempDir = mkdtempSync(join(tmpdir(), "war-deps-"));
-      pkgList = extractJarArchive(path, tempDir);
+      jarNSMapping = collectJarNS(tempDir);
+      pkgList = extractJarArchive(path, tempDir, jarNSMapping);
       if (pkgList.length) {
         pkgList = await getMvnMetadata(pkgList);
-      }
-      // Should we attempt to resolve class names
-      if (options.resolveClass) {
-        console.log(
-          "Creating class names list based on available jars. This might take a few mins ..."
-        );
-        jarNSMapping = collectJarNS(tempDir);
       }
       // Clean up
       if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
@@ -1193,7 +1186,7 @@ export const createJavaBom = async (path, options) => {
         }
         const mavenCmd = getMavenCommand(basePath, path);
         // Should we attempt to resolve class names
-        if (options.resolveClass) {
+        if (options.resolveClass || options.deep) {
           console.log(
             "Creating class names list based on available jars. This might take a few mins ..."
           );
@@ -1352,7 +1345,7 @@ export const createJavaBom = async (path, options) => {
       }
       if (pkgList) {
         pkgList = trimComponents(pkgList, "json");
-        pkgList = await getMvnMetadata(pkgList);
+        pkgList = await getMvnMetadata(pkgList, jarNSMapping);
         return buildBomNSData(options, pkgList, "maven", {
           src: path,
           filename: pomFiles.join(", "),
@@ -1552,15 +1545,14 @@ export const createJavaBom = async (path, options) => {
         );
         options.failOnError && process.exit(1);
       }
-
-      pkgList = await getMvnMetadata(pkgList);
       // Should we attempt to resolve class names
-      if (options.resolveClass) {
+      if (options.resolveClass || options.deep) {
         console.log(
           "Creating class names list based on available jars. This might take a few mins ..."
         );
         jarNSMapping = collectJarNS(GRADLE_CACHE_DIR);
       }
+      pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
         src: path,
         filename: gradleFiles.join(", "),
@@ -1655,7 +1647,8 @@ export const createJavaBom = async (path, options) => {
             console.log("Bazel unexpectedly didn't produce any output");
             options.failOnError && process.exit(1);
           }
-          pkgList = await getMvnMetadata(pkgList);
+          // FIXME: How do we retrieve jarNSMapping for bazel projects?
+          pkgList = await getMvnMetadata(pkgList, jarNSMapping);
           return buildBomNSData(options, pkgList, "maven", {
             src: path,
             filename: "BUILD",
@@ -1836,14 +1829,14 @@ export const createJavaBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Found ${pkgList.length} packages`);
       }
-      pkgList = await getMvnMetadata(pkgList);
       // Should we attempt to resolve class names
-      if (options.resolveClass) {
+      if (options.resolveClass || options.deep) {
         console.log(
           "Creating class names list based on available jars. This might take a few mins ..."
         );
         jarNSMapping = collectJarNS(SBT_CACHE_DIR);
       }
+      pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
         src: path,
         filename: sbtProjects.join(", "),
