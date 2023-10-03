@@ -89,6 +89,12 @@ const start = (options) => {
     .createServer(app)
     .listen(options.serverPort, options.serverHost);
   configureServer(cdxgenServer);
+
+  app.use("/health", async function (req, res) {
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ status: "OK" }, null, 2));
+  });
+
   app.use("/sbom", async function (req, res) {
     const q = url.parse(req.url, true).query;
     let cleanup = false;
