@@ -2104,8 +2104,9 @@ export const guessLicenseId = function (content) {
  * Method to retrieve metadata for maven packages by querying maven central
  *
  * @param {Array} pkgList Package list
+ * @param {Object} jarNSMapping Jar Namespace mapping object
  */
-export const getMvnMetadata = async function (pkgList) {
+export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
   const MAVEN_CENTRAL_URL =
     process.env.MAVEN_CENTRAL_URL || "https://repo1.maven.org/maven2/";
   const ANDROID_MAVEN = "https://maven.google.com/";
@@ -2117,6 +2118,36 @@ export const getMvnMetadata = async function (pkgList) {
     console.log(`About to query maven for ${pkgList.length} packages`);
   }
   for (const p of pkgList) {
+    // Reuse any namespace data from jarNSMapping
+    if (jarNSMapping && p.purl && jarNSMapping[p.purl]) {
+      if (jarNSMapping[p.purl].jarFile) {
+        p.evidence = {
+          identity: {
+            field: "purl",
+            confidence: 0.8,
+            methods: [
+              {
+                technique: "binary-analysis",
+                confidence: 0.8,
+                value: jarNSMapping[p.purl].jarFile
+              }
+            ]
+          }
+        };
+      }
+      if (
+        jarNSMapping[p.purl].namespaces &&
+        jarNSMapping[p.purl].namespaces.length
+      ) {
+        if (!p.properties) {
+          p.properties = [];
+        }
+        p.properties.push({
+          name: "Namespaces",
+          value: jarNSMapping[p.purl].namespaces.join("\n")
+        });
+      }
+    }
     let group = p.group || "";
     // If the package already has key metadata skip querying maven
     if (group && p.name && p.version && !FETCH_LICENSE) {
@@ -2577,66 +2608,66 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
 export async function parseReqFile(reqData, fetchDepsInfo) {
   const pkgList = [];
   let compScope = undefined;
-  reqData.split("\n").forEach((l) => {
-    l = l.replace("\r", "");
-    l = l.trim();
-    if (l.startsWith("Skipping line") || l.startsWith("(add")) {
-      return;
-    }
-    if (l.includes("# Basic requirements")) {
-      compScope = "required";
-    } else if (l.includes("added by pip freeze")) {
-      compScope = undefined;
-    }
-    if (!l.startsWith("#") && !l.startsWith("-")) {
-      if (l.includes(" ")) {
-        l = l.split(" ")[0];
+  reqData
+    .replace(/\r/g, "")
+    .replace(/ [\\]\n/g, "")
+    .replace(/ {4}/g, " ")
+    .split("\n")
+    .forEach((l) => {
+      l = l.trim();
+      let markers = undefined;
+      if (l.includes(" ; ")) {
+        const tmpA = l.split(" ; ");
+        if (tmpA && tmpA.length === 2) {
+          l = tmpA[0];
+          markers = tmpA[1];
+        }
       }
-      if (l.indexOf("=") > -1) {
-        let tmpA = l.split(/(==|<=|~=|>=)/);
-        if (tmpA.includes("#")) {
-          tmpA = tmpA.split("#")[0];
+      if (l.startsWith("Skipping line") || l.startsWith("(add")) {
+        return;
+      }
+      if (l.includes("# Basic requirements")) {
+        compScope = "required";
+      } else if (l.includes("added by pip freeze")) {
+        compScope = undefined;
+      }
+      if (!l.startsWith("#") && !l.startsWith("-")) {
+        if (l.includes(" ")) {
+          l = l.split(" ")[0];
         }
-        let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
-        if (versionStr.indexOf(" ") > -1) {
-          versionStr = versionStr.split(" ")[0];
-        }
-        if (versionStr === "0") {
-          versionStr = null;
-        }
-        if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
-          const name = tmpA[0].trim().replace(";", "");
-          if (!PYTHON_STD_MODULES.includes(name)) {
-            pkgList.push({
-              name,
-              version: versionStr,
-              scope: compScope
-            });
+        if (l.indexOf("=") > -1) {
+          let tmpA = l.split(/(==|<=|~=|>=)/);
+          if (tmpA.includes("#")) {
+            tmpA = tmpA.split("#")[0];
           }
-        }
-      } else if (l.includes("<") && l.includes(">")) {
-        const tmpA = l.split(">");
-        const name = tmpA[0].trim().replace(";", "");
-        const versionSpecifiers = l.replace(name, "");
-        if (!PYTHON_STD_MODULES.includes(name)) {
-          pkgList.push({
-            name,
-            version: undefined,
-            scope: compScope,
-            properties: [
-              {
-                name: "cdx:pypi:versionSpecifiers",
-                value: versionSpecifiers
+          let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
+          if (versionStr.indexOf(" ") > -1) {
+            versionStr = versionStr.split(" ")[0];
+          }
+          if (versionStr === "0") {
+            versionStr = null;
+          }
+          if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
+            const name = tmpA[0].trim().replace(";", "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              const apkg = {
+                name,
+                version: versionStr,
+                scope: compScope
+              };
+              if (markers) {
+                apkg.properties = [
+                  {
+                    name: "cdx:pip:markers",
+                    value: markers
+                  }
+                ];
               }
-            ]
-          });
-        }
-      } else if (/[>|[|@]/.test(l)) {
-        let tmpA = l.split(/(>|\[|@)/);
-        if (tmpA.includes("#")) {
-          tmpA = tmpA.split("#")[0];
-        }
-        if (!tmpA[0].trim().includes(" ")) {
+              pkgList.push(apkg);
+            }
+          }
+        } else if (l.includes("<") && l.includes(">")) {
+          const tmpA = l.split(">");
           const name = tmpA[0].trim().replace(";", "");
           const versionSpecifiers = l.replace(name, "");
           if (!PYTHON_STD_MODULES.includes(name)) {
@@ -2652,49 +2683,70 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
               ]
             });
           }
-        }
-      } else if (l) {
-        if (l.includes("#")) {
-          l = l.split("#")[0];
-        }
-        l = l.trim();
-        const tmpA = l.split(/(<|>)/);
-        if (tmpA && tmpA.length === 3) {
-          const name = tmpA[0].trim().replace(";", "");
-          const versionSpecifiers = l.replace(name, "");
-          if (!PYTHON_STD_MODULES.includes(name)) {
-            pkgList.push({
-              name,
-              version: undefined,
-              scope: compScope,
-              properties: [
-                {
-                  name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers
-                }
-              ]
-            });
+        } else if (/[>|[|@]/.test(l)) {
+          let tmpA = l.split(/(>|\[|@)/);
+          if (tmpA.includes("#")) {
+            tmpA = tmpA.split("#")[0];
           }
-        } else if (!l.includes(" ")) {
-          const name = l.replace(";", "");
-          const versionSpecifiers = l.replace(name, "");
-          if (!PYTHON_STD_MODULES.includes(name)) {
-            pkgList.push({
-              name,
-              version: null,
-              scope: compScope,
-              properties: [
-                {
-                  name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers
-                }
-              ]
-            });
+          if (!tmpA[0].trim().includes(" ")) {
+            const name = tmpA[0].trim().replace(";", "");
+            const versionSpecifiers = l.replace(name, "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              pkgList.push({
+                name,
+                version: undefined,
+                scope: compScope,
+                properties: [
+                  {
+                    name: "cdx:pypi:versionSpecifiers",
+                    value: versionSpecifiers
+                  }
+                ]
+              });
+            }
+          }
+        } else if (l) {
+          if (l.includes("#")) {
+            l = l.split("#")[0];
+          }
+          l = l.trim();
+          const tmpA = l.split(/(<|>)/);
+          if (tmpA && tmpA.length === 3) {
+            const name = tmpA[0].trim().replace(";", "");
+            const versionSpecifiers = l.replace(name, "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              pkgList.push({
+                name,
+                version: undefined,
+                scope: compScope,
+                properties: [
+                  {
+                    name: "cdx:pypi:versionSpecifiers",
+                    value: versionSpecifiers
+                  }
+                ]
+              });
+            }
+          } else if (!l.includes(" ")) {
+            const name = l.replace(";", "");
+            const versionSpecifiers = l.replace(name, "");
+            if (!PYTHON_STD_MODULES.includes(name)) {
+              pkgList.push({
+                name,
+                version: null,
+                scope: compScope,
+                properties: [
+                  {
+                    name: "cdx:pypi:versionSpecifiers",
+                    value: versionSpecifiers
+                  }
+                ]
+              });
+            }
           }
         }
       }
-    }
-  });
+    });
   return await getPyMetadata(pkgList, fetchDepsInfo);
 }
 
@@ -5710,10 +5762,15 @@ export const encodeForPurl = (s) => {
  *
  * @param {string} jarFile Path to jar file
  * @param {string} tempDir Temporary directory to use for extraction
+ * @param {object} jarNSMapping Jar class names mapping object
  *
  * @return pkgList Package list
  */
-export const extractJarArchive = function (jarFile, tempDir) {
+export const extractJarArchive = function (
+  jarFile,
+  tempDir,
+  jarNSMapping = {}
+) {
   const pkgList = [];
   let jarFiles = [];
   const fname = basename(jarFile);
@@ -5873,10 +5930,19 @@ export const extractJarArchive = function (jarFile, tempDir) {
             if (group == name) {
               group = "";
             }
-            pkgList.push({
-              group: group === "." ? "" : encodeForPurl(group || "") || "",
+            group = group === "." ? "" : encodeForPurl(group || "") || "";
+            let apkg = {
+              group,
               name: name ? encodeForPurl(name) : "",
               version,
+              purl: new PackageURL(
+                "maven",
+                group,
+                name,
+                version,
+                { type: "jar" },
+                null
+              ).toString(),
               evidence: {
                 identity: {
                   field: "purl",
@@ -5896,7 +5962,18 @@ export const extractJarArchive = function (jarFile, tempDir) {
                   value: jarname
                 }
               ]
-            });
+            };
+            if (
+              jarNSMapping &&
+              jarNSMapping[apkg.purl] &&
+              jarNSMapping[apkg.purl].namespaces
+            ) {
+              apkg.properties.push({
+                name: "Namespaces",
+                value: jarNSMapping[apkg.purl].namespaces.join("\n")
+              });
+            }
+            pkgList.push(apkg);
           } else {
             if (DEBUG_MODE) {
               console.log(`Ignored jar ${jarname}`, jarMetadata, name, version);
