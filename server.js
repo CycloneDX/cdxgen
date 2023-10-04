@@ -89,6 +89,12 @@ const start = (options) => {
     .createServer(app)
     .listen(options.serverPort, options.serverHost);
   configureServer(cdxgenServer);
+
+  app.use("/health", async function (req, res) {
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ status: "OK" }, null, 2));
+  });
+
   app.use("/sbom", async function (req, res) {
     const q = url.parse(req.url, true).query;
     let cleanup = false;
@@ -106,7 +112,7 @@ const start = (options) => {
       srcDir = gitClone(filePath);
       cleanup = true;
     }
-    console.log("Generating SBoM for", srcDir);
+    console.log("Generating SBOM for", srcDir);
     const bomNSData = (await createBom(srcDir, options)) || {};
     if (bomNSData.bomJson) {
       if (
@@ -119,7 +125,7 @@ const start = (options) => {
       }
     }
     if (options.serverUrl && options.apiKey) {
-      console.log("Publishing SBoM to Dependency Track");
+      console.log("Publishing SBOM to Dependency Track");
       submitBom(options, bomNSData.bomJson);
     }
     res.end("\n");

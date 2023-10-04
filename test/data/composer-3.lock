@@ -1292,7 +1292,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Work with CycloneDX Software Bill-of-Materials (SBOM)",
+            "description": "Work with CycloneDX Software Bil -of Materials (SBOM)",
             "homepage": "https://github.com/CycloneDX/cyclonedx-php-library/#readme",
             "keywords": [
                 "CycloneDX",

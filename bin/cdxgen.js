@@ -41,7 +41,7 @@ const args = yargs(hideBin(process.argv))
   .option("print", {
     alias: "p",
     type: "boolean",
-    description: "Print the SBoM as a table with tree."
+    description: "Print the SBOM as a table with tree."
   })
   .option("resolve-class", {
     alias: "c",
@@ -78,7 +78,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("required-only", {
     type: "boolean",
-    description: "Include only the packages with required scope on the SBoM."
+    description: "Include only the packages with required scope on the SBOM."
   })
   .option("fail-on-error", {
     type: "boolean",
@@ -92,7 +92,7 @@ const args = yargs(hideBin(process.argv))
   .option("generate-key-and-sign", {
     type: "boolean",
     description:
-      "Generate an RSA public/private key pair and then sign the generated SBoM using JSON Web Signatures."
+      "Generate an RSA public/private key pair and then sign the generated SBOM using JSON Web Signatures."
   })
   .option("server", {
     type: "boolean",
@@ -116,12 +116,12 @@ const args = yargs(hideBin(process.argv))
     type: "boolean",
     default: true,
     description:
-      "Validate the generated SBoM using json schema. Defaults to true. Pass --no-validate to disable."
+      "Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to disable."
   })
   .option("evidence", {
     type: "boolean",
     default: false,
-    description: "Generate SBoM with evidence for supported languages. WIP"
+    description: "Generate SBOM with evidence for supported languages. WIP"
   })
   .option("usages-slices-file", {
     description: "Path for the usages slice file created by atom."
@@ -241,7 +241,7 @@ const checkPermissions = (filePath) => {
  * Method to start the bom creation process
  */
 (async () => {
-  // Start SBoM server
+  // Start SBOM server
   if (args.server) {
     return await _serverStart(options);
   }
@@ -384,12 +384,12 @@ const checkPermissions = (filePath) => {
                 );
                 if (signatureVerification) {
                   console.log(
-                    "SBoM signature is verifiable with the public key and the algorithm",
+                    "SBOM signature is verifiable with the public key and the algorithm",
                     publicKeyFile,
                     alg
                   );
                 } else {
-                  console.log("SBoM signature verification was unsuccessful");
+                  console.log("SBOM signature verification was unsuccessful");
                   console.log(
                     "Check if the public key was exported in PEM format"
                   );
@@ -397,7 +397,7 @@ const checkPermissions = (filePath) => {
               }
             }
           } catch (ex) {
-            console.log("SBoM signing was unsuccessful", ex);
+            console.log("SBOM signing was unsuccessful", ex);
             console.log("Check if the private key was exported in PEM format");
           }
         }
