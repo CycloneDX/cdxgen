@@ -112,7 +112,7 @@ const start = (options) => {
       srcDir = gitClone(filePath);
       cleanup = true;
     }
-    console.log("Generating SBoM for", srcDir);
+    console.log("Generating SBOM for", srcDir);
     const bomNSData = (await createBom(srcDir, options)) || {};
     if (bomNSData.bomJson) {
       if (
@@ -125,7 +125,7 @@ const start = (options) => {
       }
     }
     if (options.serverUrl && options.apiKey) {
-      console.log("Publishing SBoM to Dependency Track");
+      console.log("Publishing SBOM to Dependency Track");
       submitBom(options, bomNSData.bomJson);
     }
     res.end("\n");

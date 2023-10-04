@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Evinse (Evinse Verification Is Nearly SBoM Evidence)
+// Evinse (Evinse Verification Is Nearly SBOM Evidence)
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { join } from "node:path";
@@ -30,7 +30,7 @@ if (!process.env.ATOM_DB && !fs.existsSync(ATOM_DB)) {
 const args = yargs(hideBin(process.argv))
   .option("input", {
     alias: "i",
-    description: "Input SBoM file. Default bom.json",
+    description: "Input SBOM file. Default bom.json",
     default: "bom.json"
   })
   .option("output", {
@@ -108,9 +108,9 @@ console.log(evinseArt);
   if (dbObjMap) {
     // Analyze the project using atom. Convert package namespaces to purl using the db
     const sliceArtefacts = await analyzeProject(dbObjMap, args);
-    // Create the SBoM with Evidence
+    // Create the SBOM with Evidence
     const bomJson = createEvinseFile(sliceArtefacts, args);
-    // Validate our final SBoM
+    // Validate our final SBOM
     if (!validateBom(bomJson)) {
       process.exit(1);
     }
