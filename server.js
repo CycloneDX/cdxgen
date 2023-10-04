@@ -27,12 +27,7 @@ app.use(compression());
 const gitClone = (repoUrl) => {
   const parsedUrl = new URL(repoUrl);
 
-  const userInfo =
-    parsedUrl.username && parsedUrl.password
-      ? `${parsedUrl.username}:*****`
-      : parsedUrl.username || "";
-
-  const sanitizedRepoUrl = `${parsedUrl.protocol}//${userInfo}${parsedUrl.host}${parsedUrl.pathname}`;
+  const sanitizedRepoUrl = `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}`;
 
   const tempDir = fs.mkdtempSync(
     path.join(os.tmpdir(), path.basename(parsedUrl.pathname))
