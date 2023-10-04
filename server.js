@@ -35,7 +35,7 @@ const gitClone = (repoUrl) => {
   const sanitizedRepoUrl = `${parsedUrl.protocol}//${userInfo}${parsedUrl.host}${parsedUrl.pathname}`;
 
   const tempDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), path.basename(repoUrl))
+    path.join(os.tmpdir(), path.basename(parsedUrl.pathname))
   );
   console.log("Cloning", sanitizedRepoUrl, "to", tempDir);
   const result = spawnSync("git", ["clone", repoUrl, "--depth", "1", tempDir], {
