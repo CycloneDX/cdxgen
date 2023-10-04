@@ -1886,7 +1886,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       }
       if (result.stderr.includes("not get unknown property")) {
         console.log(
-          "2. Check if the SBoM is generated for the correct root project for your application."
+          "2. Check if the SBOM is generated for the correct root project for your application."
         );
       }
     }
@@ -6324,7 +6324,7 @@ export const executeAtom = (src, args) => {
       result.stderr.includes("Error: Could not create the Java Virtual Machine")
     ) {
       console.log(
-        "Atom requires Java 17 or above. To improve the SBoM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
+        "Atom requires Java 17 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
       );
       console.log(`Current JAVA_HOME: ${env["JAVA_HOME"] || ""}`);
     } else if (result.stderr.includes("astgen")) {
@@ -6609,7 +6609,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         ) {
           versionRelatedError = true;
           console.log(
-            "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBoM accuracy."
+            "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBOM accuracy."
           );
           console.log(result.stderr);
         }
@@ -6617,7 +6617,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           console.log("args used:", pipInstallArgs);
           console.log(result.stdout, result.stderr);
           console.log(
-            "Possible build errors detected. The resulting list in the SBoM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
+            "Possible build errors detected. The resulting list in the SBOM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
           );
           if (platform() === "win32") {
             console.log(
@@ -6640,7 +6640,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   if (env.VIRTUAL_ENV && env.VIRTUAL_ENV.length) {
     /**
      * At this point, the previous attempt to do a pip install might have failed and we might have an unclean virtual environment with an incomplete list
-     * The position taken by cdxgen is "Some SBoM is better than no SBoM", so we proceed to collecting the dependencies that got installed with pip freeze
+     * The position taken by cdxgen is "Some SBOM is better than no SBOM", so we proceed to collecting the dependencies that got installed with pip freeze
      */
     if (DEBUG_MODE) {
       console.log(
@@ -6696,7 +6696,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   } else {
     if (DEBUG_MODE) {
       console.log(
-        "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBoM accuracy."
+        "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBOM accuracy."
       );
     }
   }

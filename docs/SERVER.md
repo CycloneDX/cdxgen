@@ -24,7 +24,7 @@ Arguments can be passed either via the query string or as a JSON body. The follo
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | type           | Project type                                                                                                                                |
 | multiProject   | [boolean]                                                                                                                                   |
-| requiredOnly   | Include only the packages with required scope on the SBoM. [boolean]                                                                        |
+| requiredOnly   | Include only the packages with required scope on the SBOM. [boolean]                                                                        |
 | noBabel        | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                    |
 | installDeps    | Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. [boolean] [default: true] |
 | project        |                                                                                                                                             |

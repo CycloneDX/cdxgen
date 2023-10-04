@@ -8,6 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { createBom, submitBom } from "./index.js";
 import compression from "compression";
+import { URL } from "url";
 
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS =
@@ -24,10 +25,14 @@ app.use(
 app.use(compression());
 
 const gitClone = (repoUrl) => {
+  const parsedUrl = new URL(repoUrl);
+
+  const sanitizedRepoUrl = `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}`;
+
   const tempDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), path.basename(repoUrl))
+    path.join(os.tmpdir(), path.basename(parsedUrl.pathname))
   );
-  console.log("Cloning", repoUrl, "to", tempDir);
+  console.log("Cloning", sanitizedRepoUrl, "to", tempDir);
   const result = spawnSync("git", ["clone", repoUrl, "--depth", "1", tempDir], {
     encoding: "utf-8",
     shell: false
@@ -112,7 +117,7 @@ const start = (options) => {
       srcDir = gitClone(filePath);
       cleanup = true;
     }
-    console.log("Generating SBoM for", srcDir);
+    console.log("Generating SBOM for", srcDir);
     const bomNSData = (await createBom(srcDir, options)) || {};
     if (bomNSData.bomJson) {
       if (
@@ -125,7 +130,7 @@ const start = (options) => {
       }
     }
     if (options.serverUrl && options.apiKey) {
-      console.log("Publishing SBoM to Dependency Track");
+      console.log("Publishing SBOM to Dependency Track");
       submitBom(options, bomNSData.bomJson);
     }
     res.end("\n");
