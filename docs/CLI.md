@@ -51,7 +51,7 @@ $ cdxgen -h
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
                                                        [boolean] [default: true]
-  -p, --print                  Print the SBoM as a table with tree.    [boolean]
+  -p, --print                  Print the SBOM as a table with tree.    [boolean]
   -c, --resolve-class          Resolve class names for packages. jars only for n
                                ow.                                     [boolean]
       --deep                   Perform deep searches for components. Useful whil
@@ -68,12 +68,12 @@ $ cdxgen -h
                                d or the project name and version together
       --parent-project-id      Dependency track parent project id
       --required-only          Include only the packages with required scope on
-                               the SBoM.                               [boolean]
+                               the SBOM.                               [boolean]
       --fail-on-error          Fail if any dependency extractor fails. [boolean]
       --no-babel               Do not use babel to perform usage analysis for Ja
                                vaScript/TypeScript projects.           [boolean]
       --generate-key-and-sign  Generate an RSA public/private key pair and then
-                               sign the generated SBoM using JSON Web Signatures
+                               sign the generated SBOM using JSON Web Signatures
                                .                                       [boolean]
       --server                 Run cdxgen as a server                  [boolean]
       --server-host            Listen address             [default: "127.0.0.1"]
@@ -82,7 +82,7 @@ $ cdxgen -h
                                cts. Defaults to true but disabled for containers
                                 and oci scans. Use --no-install-deps to disable
                                this feature.           [boolean] [default: true]
-      --validate               Validate the generated SBoM using json schema. De
+      --validate               Validate the generated SBOM using json schema. De
                                faults to true. Pass --no-validate to disable.
                                                        [boolean] [default: true]
       --usages-slices-file     Path for the usages slice file created by atom.

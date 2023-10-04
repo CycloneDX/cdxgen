@@ -74,7 +74,7 @@ if (!bomSignature) {
   if (validationResult) {
     console.log("Signature is valid!");
   } else {
-    console.log("SBoM signature is invalid!");
+    console.log("SBOM signature is invalid!");
     process.exit(1);
   }
 }

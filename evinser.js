@@ -31,7 +31,7 @@ export const prepareDB = async (options) => {
   const bomJson = JSON.parse(fs.readFileSync(bomJsonFile, "utf8"));
   if (bomJson.specVersion < 1.5) {
     console.log(
-      "Evinse requires the input SBoM in CycloneDX 1.5 format or above. You can generate one by invoking cdxgen without any --spec-version argument."
+      "Evinse requires the input SBOM in CycloneDX 1.5 format or above. You can generate one by invoking cdxgen without any --spec-version argument."
     );
     process.exit(0);
   }
@@ -741,7 +741,7 @@ export const isSlicingRequired = (purl) => {
 };
 
 /**
- * Method to create the SBoM with evidence file called evinse file.
+ * Method to create the SBOM with evidence file called evinse file.
  *
  * @param {object} sliceArtefacts Various artefacts from the slice operation
  * @param {object} options Command line options
@@ -841,7 +841,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     console.log(evinseOutFile, "created successfully.");
   } else {
     console.log(
-      "Unable to identify component evidence for the input SBoM. Only java, javascript and python projects are supported by evinse."
+      "Unable to identify component evidence for the input SBOM. Only java, javascript and python projects are supported by evinse."
     );
   }
   if (tempDir && tempDir.startsWith(tmpdir())) {

@@ -1,7 +1,7 @@
 {
   "name": "@cyclonedx/cdxgen",
   "version": "9.8.5",
-  "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from source or container image",
+  "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
   "license": "Apache-2.0",
