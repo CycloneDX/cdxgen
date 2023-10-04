@@ -61,10 +61,10 @@ export const importSbom = (sbomOrPath) => {
   if (sbomOrPath && sbomOrPath.endsWith(".json") && fs.existsSync(sbomOrPath)) {
     try {
       sbom = JSON.parse(fs.readFileSync(sbomOrPath, "utf-8"));
-      console.log(`✅ SBoM imported successfully from ${sbomOrPath}`);
+      console.log(`✅ SBOM imported successfully from ${sbomOrPath}`);
     } catch (e) {
       console.log(
-        `⚠ Unable to import the SBoM from ${sbomOrPath} due to ${e}`
+        `⚠ Unable to import the SBOM from ${sbomOrPath} due to ${e}`
       );
     }
   } else {
@@ -74,13 +74,13 @@ export const importSbom = (sbomOrPath) => {
 // Load any sbom passed from the command line
 if (process.argv.length > 2) {
   importSbom(process.argv[process.argv.length - 1]);
-  console.log("💭 Type .print to view the SBoM as a table");
+  console.log("💭 Type .print to view the SBOM as a table");
 } else if (fs.existsSync("bom.json")) {
   // If the current directory has a bom.json load it
   importSbom("bom.json");
 } else {
-  console.log("💭 Use .create <path> to create an SBoM for the given path.");
-  console.log("💭 Use .import <json> to import an existing SBoM.");
+  console.log("💭 Use .create <path> to create an SBOM for the given path.");
+  console.log("💭 Use .import <json> to import an existing SBOM.");
   console.log("💭 Type .exit or press ctrl+d to close.");
 }
 
@@ -98,7 +98,7 @@ if (historyFile) {
   );
 }
 cdxgenRepl.defineCommand("create", {
-  help: "create an SBoM for the given path",
+  help: "create an SBOM for the given path",
   async action(sbomOrPath) {
     this.clearBufferedCommand();
     const tempDir = fs.mkdtempSync(join(tmpdir(), "cdxgen-repl-"));
@@ -267,7 +267,7 @@ cdxgenRepl.defineCommand("validate", {
     if (sbom) {
       const result = validateBom(sbom);
       if (result) {
-        console.log("SBoM is valid!");
+        console.log("SBOM is valid!");
       }
     } else {
       console.log(
@@ -379,7 +379,7 @@ cdxgenRepl.defineCommand("callstack", {
         let components = await expression.evaluate(sbom);
         if (!components) {
           console.log(
-            "callstack evidence was not found. Use evinse command to generate an SBoM with evidence."
+            "callstack evidence was not found. Use evinse command to generate an SBOM with evidence."
           );
         } else {
           if (!Array.isArray(components)) {
@@ -392,7 +392,7 @@ cdxgenRepl.defineCommand("callstack", {
       }
     } else {
       console.log(
-        "⚠ No SBoM is loaded. Use .import command to import an evinse SBoM"
+        "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM"
       );
     }
     this.displayPrompt();
@@ -407,7 +407,7 @@ cdxgenRepl.defineCommand("services", {
         let services = await expression.evaluate(sbom);
         if (!services) {
           console.log(
-            "No services found. Use evinse command to generate an SBoM with evidence."
+            "No services found. Use evinse command to generate an SBOM with evidence."
           );
         } else {
           if (!Array.isArray(services)) {
@@ -420,7 +420,7 @@ cdxgenRepl.defineCommand("services", {
       }
     } else {
       console.log(
-        "⚠ No SBoM is loaded. Use .import command to import an evinse SBoM"
+        "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM"
       );
     }
     this.displayPrompt();

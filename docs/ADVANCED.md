@@ -1,8 +1,8 @@
 # Advanced Usage
 
-## Evinse Mode / SaaSBoM
+## Evinse Mode / SaaSBOM
 
-Evinse (Evinse Verification Is Nearly SBoM Evidence) is a new command with cdxgen to generate component evidence and SaaSBoM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom).
+Evinse (Evinse Verification Is Nearly SBOM Evidence) is a new command with cdxgen to generate component evidence and SaaSBOM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom).
 
 <img src="_media/occurrence-evidence.png" alt="occurrence evidence" width="256">
 
@@ -14,14 +14,14 @@ Evinse (Evinse Verification Is Nearly SBoM Evidence) is a new command with cdxge
 
 - Java > 17 installed
 - Application source code
-- Input SBoM in CycloneDX >1.5 format. Use cdxgen to generate one.
+- Input SBOM in CycloneDX >1.5 format. Use cdxgen to generate one.
 
 ### Usage
 
 ```shell
 evinse -h
 Options:
-  -i, --input                    Input SBoM file. Default bom.json
+  -i, --input                    Input SBOM file. Default bom.json
                                                            [default: "bom.json"]
   -o, --output                   Output file. Default bom.evinse.json
                                                     [default: "bom.evinse.json"]
@@ -52,7 +52,7 @@ Options:
   -h                             Show help                             [boolean]
 ```
 
-To generate an SBoM with evidence for a java project.
+To generate an SBOM with evidence for a java project.
 
 ```shell
 evinse -i bom.json -o bom.evinse.json <path to the application>
@@ -76,14 +76,14 @@ For JavaScript or TypeScript projects, pass `-l javascript`.
 evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-flow-slices-file data-flow.json -l javascript --with-data-flow <path to the application>
 ```
 
-## Generate SBoM from maven or gradle cache
+## Generate SBOM from maven or gradle cache
 
 There could be Java applications with complex dependency requirements. Or you might be interested in cataloging your Maven or gradle cache.
-A bonus of this mode is that the resulting SBoM would have a property called `Namespaces` with a list of class names belonging to each jar.
+A bonus of this mode is that the resulting SBOM would have a property called `Namespaces` with a list of class names belonging to each jar.
 
 ### Generate evidence of usage
 
-After generating an SBoM from a cache, we can now look for evidence of direct usage with evinse!
+After generating an SBOM from a cache, we can now look for evidence of direct usage with evinse!
 
 ```shell
 # compile or build your application
@@ -98,11 +98,11 @@ To improve performance for re-runs, pass the argument `--skip-maven-collector` t
 
 ## Mixed Java Projects
 
-If a java project uses maven and gradle, maven is selected for SBoM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
+If a java project uses maven and gradle, maven is selected for SBOM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
 
-## Generating container SBoM on Windows
+## Generating container SBOM on Windows
 
-cdxgen supports generating container SBoM for Linux images on Windows. Follow the steps listed below.
+cdxgen supports generating container SBOM for Linux images on Windows. Follow the steps listed below.
 
 - Ensure cdxgen-plugins-bin > 1.4.0 is installed.
 
@@ -118,7 +118,7 @@ npm install -g @cyclonedx/cdxgen-plugins-bin
 cdxgen -t docker -o bom.json <image name>
 ```
 
-## Generate SBoM with evidence for the cdxgen repo
+## Generate SBOM with evidence for the cdxgen repo
 
 Why not?
 

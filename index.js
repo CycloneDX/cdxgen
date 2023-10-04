@@ -1670,7 +1670,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}"
+      "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
@@ -3577,7 +3577,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
           // img could have .service, .ociSpec or .image
           if (img.ociSpec) {
             console.log(
-              `NOTE: ${img.ociSpec} needs to built using docker or podman and referred with a name to get included in this SBoM.`
+              `NOTE: ${img.ociSpec} needs to built using docker or podman and referred with a name to get included in this SBOM.`
             );
             ociSpecs.push({
               group: "",
@@ -3699,7 +3699,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
   // Parse privado files
   if (privadoFiles.length) {
     console.log(
-      "Enriching your SBoM with information from privado.ai scan reports"
+      "Enriching your SBOM with information from privado.ai scan reports"
     );
     let rows = [["Classification", "Flow"]];
     const config = {
@@ -5287,12 +5287,12 @@ export async function submitBom(args, bomContents) {
         }).json();
       } catch (error) {
         console.log(
-          "Unable to submit the SBoM to the Dependency-Track server using POST method"
+          "Unable to submit the SBOM to the Dependency-Track server using POST method"
         );
         console.log(error);
       }
     } else {
-      console.log("Unable to submit the SBoM to the Dependency-Track server");
+      console.log("Unable to submit the SBOM to the Dependency-Track server");
       console.log(error);
     }
   }
