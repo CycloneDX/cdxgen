@@ -138,6 +138,10 @@ jobs:
         with:
           repository: 'tokio-rs/axum'
           path: 'repotests/rs-axum'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'fsprojects/FAKE'
+          path: 'repotests/dotnet-paket'
       - uses: dtolnay/rust-toolchain@stable
       - name: repotests
         run: |
@@ -175,6 +179,7 @@ jobs:
           cargo generate-lockfile --manifest-path repotests/rs-validator/validator/Cargo.toml
           bin/cdxgen.js -r -t rust repotests/rs-validator -o bomresults/bom-rs-validator.json --validate
           bin/cdxgen.js -r -t rust repotests/rs-axum -o bomresults/bom-rs-axum.json --validate
+          bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
           # mkdir -p jenkins
           # wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
           # wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
