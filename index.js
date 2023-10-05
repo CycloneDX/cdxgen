@@ -92,6 +92,7 @@ import {
   parseCsPkgLockData,
   parseCsPkgData,
   parseCsProjData,
+  parsePaketLockData,
   DEBUG_MODE,
   parsePyProjectToml,
   addEvidenceForImports,
@@ -3963,6 +3964,10 @@ export const createCsharpBom = async (
     path,
     (options.multiProject ? "**/" : "") + "packages.lock.json"
   );
+  const paketLockFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "paket.lock"
+  );
   const nupkgFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.nupkg"
@@ -4041,6 +4046,20 @@ export const createCsharpBom = async (
         csProjData = csProjData.slice(1);
       }
       const dlist = await parseCsProjData(csProjData);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+  }
+  if (paketLockFiles.length) {
+    manifestFiles = manifestFiles.concat(paketLockFiles);
+    // paket.lock parsing
+    for (const f of paketLockFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      pkgData = readFileSync(f, { encoding: "utf-8" });
+      const dlist = await parsePaketLockData(pkgData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }

@@ -4639,6 +4639,28 @@ export const parseCsPkgLockData = async function (csLockData) {
   return pkgList;
 };
 
+export const parsePaketLockData = async function (paketLockData) {
+  const pkgList = [];
+  let pkg = null;
+  if (!paketLockData) {
+    return pkgList;
+  }
+  const pkgRegex = /\s+([a-zA-Z0-9-.]+) \(((?=.*?\.)[a-zA-Z0-9-.]+)\)/g;
+  for (const [, name, version] of paketLockData.matchAll(pkgRegex)) {
+    const purl = decodeURIComponent(
+      new PackageURL("nuget", "", name, version, null, null).toString()
+    );
+    pkg = {
+      group: "",
+      name: name,
+      version: version,
+      purl: purl
+    };
+    pkgList.push(pkg);
+  }
+  return pkgList;
+};
+
 /**
  * Parse composer lock file
  *
