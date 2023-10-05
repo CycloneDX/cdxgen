@@ -4129,13 +4129,16 @@ export const trimComponents = (components, format) => {
   const filteredComponents = [];
   for (const comp of components) {
     if (format === "xml" && comp.component) {
-      const key = comp.component.purl || comp.component["bom-ref"];
+      const key =
+        comp.component.purl ||
+        comp.component["bom-ref"] ||
+        comp.name + comp.version;
       if (!keyCache[key]) {
         keyCache[key] = true;
         filteredComponents.push(comp);
       }
     } else {
-      const key = comp.purl || comp["bom-ref"];
+      const key = comp.purl || comp["bom-ref"] || comp.name + comp.version;
       if (!keyCache[key]) {
         keyCache[key] = true;
         filteredComponents.push(comp);
