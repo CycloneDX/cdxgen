@@ -4109,6 +4109,9 @@ export const trimComponents = (components, format) => {
   const keyCache = {};
   const filteredComponents = [];
   for (const comp of components) {
+    if (!comp.version)
+      continue;
+
     if (format === "xml" && comp.component) {
       const key =
         comp.component.purl ||
