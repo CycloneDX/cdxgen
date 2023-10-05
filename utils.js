@@ -5403,11 +5403,7 @@ export const collectMvnDependencies = function (
     "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false")
   ];
   if (basePath && basePath !== MAVEN_CACHE_DIR) {
-    console.log(
-      `Executing '${mavenCmd} dependency:copy-dependencies ${copyArgs.join(
-        " "
-      )}' in ${basePath}`
-    );
+    console.log(`Executing '${mavenCmd} ${copyArgs.join(" ")}' in ${basePath}`);
     const result = spawnSync(mavenCmd, copyArgs, {
       cwd: basePath,
       encoding: "utf-8",
