@@ -31,11 +31,11 @@
   "type": "module",
   "exports": "./index.js",
   "bin": {
-    "cdxgen": "./bin/cdxgen.js",
-    "obom": "./bin/cdxgen.js",
-    "cdxi": "./bin/repl.js",
-    "evinse": "./bin/evinse.js",
-    "cdx-verify": "./bin/verify.js"
+    "cdxgen": "bin/cdxgen.js",
+    "obom": "bin/cdxgen.js",
+    "cdxi": "bin/repl.js",
+    "evinse": "bin/evinse.js",
+    "cdx-verify": "bin/verify.js"
   },
   "scripts": {
     "docs": "docsify serve docs",
@@ -49,7 +49,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CycloneDX/cdxgen"
+    "url": "git+https://github.com/CycloneDX/cdxgen.git"
   },
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
