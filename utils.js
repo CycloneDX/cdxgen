@@ -2073,6 +2073,9 @@ export const parseKVDep = function (rawOutput) {
  * @param {string} name License full name
  */
 export const findLicenseId = function (name) {
+  if (!name) {
+    return undefined;
+  }
   for (const l of licenseMapping) {
     if (l.names.includes(name) || l.exp.toUpperCase() === name.toUpperCase()) {
       return l.exp;
@@ -2395,7 +2398,11 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           value: body.info.version
         });
       }
-      if (body.releases && body.releases[p.version]) {
+      if (
+        body.releases &&
+        body.releases[p.version] &&
+        body.releases[p.version].length
+      ) {
         const digest = body.releases[p.version][0].digests;
         if (digest["sha256"]) {
           p._integrity = "sha256-" + digest["sha256"];
@@ -2507,7 +2514,7 @@ export const parsePyProjectToml = (tomlFile) => {
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       let key = tmpA[0].trim();
-      let value = tmpA[1].trim().replace(/"/g, "");
+      let value = tmpA[1].trim().replace(/["']/g, "");
       switch (key) {
         case "description":
           pkg.description = value;
@@ -2757,10 +2764,30 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
  * @param {Array} epkgList Existing package list
  * @returns List of packages
  */
-export const getPyModules = async (src, epkgList) => {
+export const getPyModules = async (src, epkgList, options) => {
   const allImports = {};
   const dependenciesList = [];
-  const modList = findAppModules(src, "python", "parsedeps");
+  let modList = [];
+  // Issue: 615 fix. Reuse existing slices file
+  // FIXME: The argument is called usagesSlicesFile while the atom command used is parsedeps.
+  // This logic could be rewritten while implementing evinse for python to that the analysis works for either type of slice
+  if (options.usagesSlicesFile && existsSync(options.usagesSlicesFile)) {
+    const slicesData = JSON.parse(
+      readFileSync(options.usagesSlicesFile, "utf-8")
+    );
+    if (slicesData && Object.keys(slicesData) && slicesData.modules) {
+      modList = slicesData.modules;
+    } else {
+      modList = slicesData;
+    }
+  } else {
+    modList = findAppModules(
+      src,
+      "python",
+      "parsedeps",
+      options.usagesSlicesFile
+    );
+  }
   const pyDefaultModules = new Set(PYTHON_STD_MODULES);
   const filteredModList = modList.filter(
     (x) =>
@@ -6473,6 +6500,11 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
+        if (result.error && result.error.includes("spawnSync python ENOENT")) {
+          console.log(
+            "Install suitable version of python or set the environment variable PYTHON_CMD."
+          );
+        }
         if (!result.stderr) {
           console.log(
             "Ensure the virtualenv package is installed using pip. `python -m pip install virtualenv`"
@@ -6611,7 +6643,9 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         }
         if (!versionRelatedError && DEBUG_MODE) {
           console.log("args used:", pipInstallArgs);
-          console.log(result.stdout, result.stderr);
+          if (result.stderr) {
+            console.log(result.stderr);
+          }
           console.log(
             "Possible build errors detected. The resulting list in the SBOM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
           );

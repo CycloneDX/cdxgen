@@ -2454,7 +2454,7 @@ export const createPythonBom = async (path, options) => {
       }
       // Get the imported modules and a dedupe list of packages
       const parentDependsOn = new Set();
-      const retMap = await getPyModules(path, pkgList);
+      const retMap = await getPyModules(path, pkgList, options);
       if (retMap.pkgList && retMap.pkgList.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         for (const p of retMap.pkgList) {
