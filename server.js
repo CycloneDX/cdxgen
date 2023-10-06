@@ -1,14 +1,13 @@
 import connect from "connect";
 import http from "node:http";
 import bodyParser from "body-parser";
-import url from "node:url";
+import url, { URL } from "node:url";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
 import { createBom, submitBom } from "./index.js";
 import compression from "compression";
-import { URL } from "url";
 
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS =

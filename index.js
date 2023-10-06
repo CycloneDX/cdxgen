@@ -60,6 +60,7 @@ import {
   parseGoVersionData,
   parseGosumData,
   parseGoListDep,
+  parseGoModGraph,
   parseGoModWhy,
   parseGoModData,
   parseGopkgData,
@@ -2548,6 +2549,8 @@ export const createPythonBom = async (path, options) => {
  */
 export const createGoBom = async (path, options) => {
   let pkgList = [];
+  let dependencies = [];
+  const parentComponent = createDefaultParentComponent(path, "golang", options);
   // Is this a binary file
   let maybeBinary = false;
   try {
@@ -2569,6 +2572,8 @@ export const createGoBom = async (path, options) => {
     }
     return buildBomNSData(options, pkgList, "golang", {
       allImports,
+      dependencies,
+      parentComponent,
       src: path,
       filename: path
     });
@@ -2600,6 +2605,8 @@ export const createGoBom = async (path, options) => {
     }
     return buildBomNSData(options, pkgList, "golang", {
       src: path,
+      dependencies,
+      parentComponent,
       filename: gosumFiles.join(", ")
     });
   }
@@ -2615,7 +2622,7 @@ export const createGoBom = async (path, options) => {
       const dlist = await parseGosumData(gosumData);
       if (dlist && dlist.length) {
         dlist.forEach((pkg) => {
-          gosumMap[`${pkg.group}/${pkg.name}/${pkg.version}`] = pkg._integrity;
+          gosumMap[`${pkg.group}/${pkg.name}@${pkg.version}`] = pkg._integrity;
         });
       }
     }
@@ -2642,10 +2649,11 @@ export const createGoBom = async (path, options) => {
         if (basePath.includes("/vendor/") || basePath.includes("/build/")) {
           continue;
         }
+        // First we execute the go list -deps command which gives the correct list of dependencies
         if (DEBUG_MODE) {
           console.log("Executing go list -deps in", basePath);
         }
-        const result = spawnSync(
+        let result = spawnSync(
           "go",
           [
             "list",
@@ -2656,22 +2664,62 @@ export const createGoBom = async (path, options) => {
           ],
           { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
         );
+        if (DEBUG_MODE) {
+          console.log("Executing go mod graph in", basePath);
+        }
         if (result.status !== 0 || result.error) {
           shouldManuallyParse = true;
-          if (result.stdout) {
+          if (DEBUG_MODE && result.stdout) {
             console.log(result.stdout);
           }
-          if (result.stderr) {
+          if (DEBUG_MODE && result.stderr) {
             console.log(result.stderr);
           }
           options.failOnError && process.exit(1);
         }
         const stdout = result.stdout;
         if (stdout) {
-          const cmdOutput = Buffer.from(stdout).toString();
+          let cmdOutput = Buffer.from(stdout).toString();
           const dlist = await parseGoListDep(cmdOutput, gosumMap);
           if (dlist && dlist.length) {
             pkgList = pkgList.concat(dlist);
+          }
+          // Next we use the go mod graph command to construct the dependency tree
+          result = spawnSync("go", ["mod", "graph"], {
+            cwd: basePath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS
+          });
+          // Check if got a mod graph successfully
+          if (result.status !== 0 || result.error) {
+            if (DEBUG_MODE && result.stdout) {
+              console.log(result.stdout);
+            }
+            if (DEBUG_MODE && result.stderr) {
+              console.log(result.stderr);
+            }
+            options.failOnError && process.exit(1);
+          }
+          if (result.stdout) {
+            cmdOutput = Buffer.from(result.stdout).toString();
+            const retMap = await parseGoModGraph(
+              cmdOutput,
+              f,
+              gosumMap,
+              pkgList,
+              parentComponent
+            );
+            if (retMap.pkgList && retMap.pkgList.length) {
+              pkgList = pkgList.concat(retMap.pkgList);
+              pkgList = trimComponents(pkgList, "json");
+            }
+            if (retMap.dependenciesList && retMap.dependenciesList.length) {
+              dependencies = mergeDependencies(
+                dependencies,
+                retMap.dependenciesList,
+                parentComponent
+              );
+            }
           }
         } else {
           shouldManuallyParse = true;
@@ -2696,6 +2744,8 @@ export const createGoBom = async (path, options) => {
         const pkgFullName = `${apkg.name}`;
         if (apkg.scope === "required") {
           allImports[pkgFullName] = true;
+          continue;
+        } else if (apkg.scope === "optional") {
           continue;
         }
         if (DEBUG_MODE) {
@@ -2733,6 +2783,8 @@ export const createGoBom = async (path, options) => {
       if (pkgList.length && !shouldManuallyParse) {
         return buildBomNSData(options, pkgList, "golang", {
           allImports,
+          dependencies,
+          parentComponent,
           src: path,
           filename: gomodFiles.join(", ")
         });
@@ -2756,6 +2808,8 @@ export const createGoBom = async (path, options) => {
     }
     return buildBomNSData(options, pkgList, "golang", {
       src: path,
+      dependencies,
+      parentComponent,
       filename: gomodFiles.join(", ")
     });
   } else if (gopkgLockFiles.length) {
@@ -2773,6 +2827,8 @@ export const createGoBom = async (path, options) => {
     }
     return buildBomNSData(options, pkgList, "golang", {
       src: path,
+      dependencies,
+      parentComponent,
       filename: gopkgLockFiles.join(", ")
     });
   }

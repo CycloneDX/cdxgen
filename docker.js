@@ -1,6 +1,6 @@
 import got from "got";
 import { globSync } from "glob";
-import { parse } from "url";
+import { parse } from "node:url";
 import stream from "node:stream/promises";
 import {
   existsSync,

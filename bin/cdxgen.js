@@ -6,8 +6,7 @@ import fs from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import jws from "jws";
-import crypto from "crypto";
-import { start as _serverStart } from "../server.js";
+import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import globalAgent from "global-agent";
 import process from "node:process";
@@ -243,7 +242,8 @@ const checkPermissions = (filePath) => {
 (async () => {
   // Start SBOM server
   if (args.server) {
-    return await _serverStart(options);
+    const serverModule = await import("../server.js");
+    return await serverModule.start(options);
   }
   // Check if cdxgen has the required permissions
   if (!checkPermissions(filePath)) {

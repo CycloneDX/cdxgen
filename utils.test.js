@@ -9,6 +9,7 @@ import {
   parseGoModData,
   parseGosumData,
   parseGoListDep,
+  parseGoModGraph,
   parseGoModWhy,
   parseGopkgData,
   parseGoVersionData,
@@ -678,14 +679,14 @@ test("parseGoModData", async () => {
   let dep_list = await parseGoModData(null);
   expect(dep_list).toEqual([]);
   const gosumMap = {
-    "google.golang.org/grpc/v1.21.0":
+    "google.golang.org/grpc@v1.21.0":
       "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
-    "github.com/aws/aws-sdk-go/v1.38.47": "sha256-fake-sha-for-aws-go-sdk=",
-    "github.com/spf13/cobra/v1.0.0":
+    "github.com/aws/aws-sdk-go@v1.38.47": "sha256-fake-sha-for-aws-go-sdk=",
+    "github.com/spf13/cobra@v1.0.0":
       "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
-    "github.com/spf13/viper/v1.0.2":
+    "github.com/spf13/viper@v1.0.2":
       "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
-    "github.com/stretchr/testify/v1.6.1":
+    "github.com/stretchr/testify@v1.6.1":
       "sha256-6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg="
   };
   dep_list = await parseGoModData(
@@ -698,11 +699,15 @@ test("parseGoModData", async () => {
     name: "github.com/aws/aws-sdk-go",
     license: undefined,
     version: "v1.38.47",
-    _integrity: "sha256-fake-sha-for-aws-go-sdk="
+    _integrity: "sha256-fake-sha-for-aws-go-sdk=",
+    "bom-ref": "pkg:golang/github.com/aws/aws-sdk-go@v1.38.47",
+    purl: "pkg:golang/github.com%2Faws%2Faws-sdk-go@v1.38.47"
   });
   expect(dep_list[1]).toEqual({
     group: "",
     name: "github.com/spf13/cobra",
+    "bom-ref": "pkg:golang/github.com/spf13/cobra@v1.0.0",
+    purl: "pkg:golang/github.com%2Fspf13%2Fcobra@v1.0.0",
     license: undefined,
     version: "v1.0.0",
     _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE="
@@ -710,6 +715,8 @@ test("parseGoModData", async () => {
   expect(dep_list[2]).toEqual({
     group: "",
     name: "google.golang.org/grpc",
+    "bom-ref": "pkg:golang/google.golang.org/grpc@v1.21.0",
+    purl: "pkg:golang/google.golang.org%2Fgrpc@v1.21.0",
     license: undefined,
     version: "v1.21.0",
     _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM="
@@ -717,6 +724,8 @@ test("parseGoModData", async () => {
   expect(dep_list[3]).toEqual({
     group: "",
     name: "github.com/spf13/viper",
+    "bom-ref": "pkg:golang/github.com/spf13/viper@v1.0.2",
+    purl: "pkg:golang/github.com%2Fspf13%2Fviper@v1.0.2",
     license: undefined,
     version: "v1.0.2",
     _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM="
@@ -775,6 +784,8 @@ test("parse go list dependencies", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "github.com/gorilla/mux",
+    "bom-ref": "pkg:golang/github.com/gorilla/mux@v1.7.4",
+    purl: "pkg:golang/github.com%2Fgorilla%2Fmux@v1.7.4",
     version: "v1.7.4",
     _integrity: undefined,
     license: undefined,
@@ -787,6 +798,38 @@ test("parse go list dependencies", async () => {
       },
       { name: "ModuleGoVersion", value: "1.12" }
     ]
+  });
+});
+
+test("parse go mod graph", async () => {
+  const retMap = await parseGoModGraph(
+    readFileSync("./test/data/gomod-graph.txt", { encoding: "utf-8" }),
+    "./test/data/gomod-graph.txt",
+    {},
+    [],
+    {}
+  );
+  expect(retMap.pkgList.length).toEqual(537);
+  expect(retMap.pkgList[0]).toEqual({
+    group: "",
+    name: "github.com/sqreen/go-dvwa",
+    version: null,
+    purl: "pkg:golang/github.com%2Fsqreen%2Fgo-dvwa",
+    "bom-ref": "pkg:golang/github.com/sqreen/go-dvwa",
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/gomod-graph.txt"
+          }
+        ]
+      }
+    },
+    properties: [{ name: "SrcFile", value: "./test/data/gomod-graph.txt" }]
   });
 });
 
@@ -828,6 +871,9 @@ test("parse go version data", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "github.com/ShiftLeftSecurity/atlassian-connect-go",
+    "bom-ref":
+      "pkg:golang/github.com/ShiftLeftSecurity/atlassian-connect-go@v0.0.2",
+    purl: "pkg:golang/github.com%2FShiftLeftSecurity%2Fatlassian-connect-go@v0.0.2",
     version: "v0.0.2",
     _integrity: "",
     license: undefined
@@ -840,6 +886,8 @@ test("parse go version data", async () => {
   expect(dep_list[0]).toEqual({
     group: "",
     name: "cloud.google.com/go",
+    "bom-ref": "pkg:golang/cloud.google.com/go@v0.79.0",
+    purl: "pkg:golang/cloud.google.com%2Fgo@v0.79.0",
     version: "v0.79.0",
     _integrity: "sha256-oqqswrt4x6b9OGBnNqdssxBl1xf0rSUNjU2BR4BZar0=",
     license: undefined
@@ -1198,7 +1246,10 @@ test("parse cs proj", async () => {
 });
 
 test("parse project.assets.json", async () => {
-  expect(await parseCsProjAssetsData(null)).toEqual([]);
+  expect(await parseCsProjAssetsData(null)).toEqual({
+    dependenciesList: [],
+    pkgList: []
+  });
   const dep_list = await parseCsProjAssetsData(
     readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
   );
@@ -1551,6 +1602,7 @@ test("parsePkgLock v2", async () => {
   expect(deps[1].license).toEqual("Apache-2.0");
   expect(deps[0]).toEqual({
     "bom-ref": "pkg:npm/shopify-theme-tailwindcss@2.2.1",
+    purl: "pkg:npm/shopify-theme-tailwindcss@2.2.1",
     author: "Wessel van Ree <hello@wesselvanree.com>",
     group: "",
     name: "shopify-theme-tailwindcss",
@@ -1621,6 +1673,7 @@ test("parsePkgLock v3", async () => {
   );
   expect(deps[0]).toEqual({
     "bom-ref": "pkg:npm/cdxgen@latest",
+    purl: "pkg:npm/cdxgen@latest",
     group: "",
     author: "",
     license: "ISC",
