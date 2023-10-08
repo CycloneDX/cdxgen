@@ -3124,17 +3124,18 @@ export const parseGoModData = async function (goModData, gosumMap) {
  * Parse go list output
  *
  * @param {string} rawOutput Output from go list invocation
- * @returns List of packages
+ * @returns Object with parent component and List of packages
  */
 export const parseGoListDep = async function (rawOutput, gosumMap) {
+  let parentComponent = {};
+  const deps = [];
   if (typeof rawOutput === "string") {
-    const deps = [];
     const keys_cache = {};
     const pkgs = rawOutput.split("\n");
     for (const l of pkgs) {
       const verArr = l.trim().replace(new RegExp("[\"']", "g"), "").split(" ");
 
-      if (verArr && verArr.length === 5) {
+      if (verArr && verArr.length >= 5) {
         const key = verArr[0] + "-" + verArr[1];
         // Filter duplicates
         if (!keys_cache[key]) {
@@ -3162,13 +3163,19 @@ export const parseGoListDep = async function (rawOutput, gosumMap) {
               value: verArr[4] || ""
             }
           ];
-          deps.push(component);
+          if (verArr.length > 5 && verArr[5] === "true") {
+            parentComponent = component;
+          } else {
+            deps.push(component);
+          }
         }
       }
     }
-    return deps;
   }
-  return [];
+  return {
+    parentComponent,
+    pkgList: deps
+  };
 };
 
 const _addGoComponentEvidence = (component, goModFile) => {

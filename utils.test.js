@@ -776,12 +776,12 @@ test("parseGoSumData", async () => {
 }, 120000);
 
 test("parse go list dependencies", async () => {
-  const dep_list = await parseGoListDep(
+  const retMap = await parseGoListDep(
     readFileSync("./test/data/golist-dep.txt", { encoding: "utf-8" }),
     {}
   );
-  expect(dep_list.length).toEqual(4);
-  expect(dep_list[0]).toEqual({
+  expect(retMap.pkgList.length).toEqual(4);
+  expect(retMap.pkgList[0]).toEqual({
     group: "",
     name: "github.com/gorilla/mux",
     "bom-ref": "pkg:golang/github.com/gorilla/mux@v1.7.4",

@@ -2551,7 +2551,7 @@ export const createGoBom = async (path, options) => {
   let pkgList = [];
   let dependencies = [];
   const allImports = {};
-  const parentComponent = createDefaultParentComponent(path, "golang", options);
+  let parentComponent = createDefaultParentComponent(path, "golang", options);
   // Is this a binary file
   let maybeBinary = false;
   try {
@@ -2603,6 +2603,66 @@ export const createGoBom = async (path, options) => {
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
+    }
+    const doneList = {};
+    let circuitBreak = false;
+    if (DEBUG_MODE) {
+      console.log(
+        `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+      );
+    }
+    // Using go mod why detect required packages
+    for (const apkg of pkgList) {
+      if (circuitBreak) {
+        break;
+      }
+      const pkgFullName = `${apkg.name}`;
+      if (apkg.scope === "required") {
+        allImports[pkgFullName] = true;
+        continue;
+      }
+      if (
+        apkg.scope === "optional" ||
+        allImports[pkgFullName] ||
+        doneList[pkgFullName]
+      ) {
+        continue;
+      }
+      if (DEBUG_MODE) {
+        console.log(`go mod why -m -vendor ${pkgFullName}`);
+      }
+      const mresult = spawnSync(
+        "go",
+        ["mod", "why", "-m", "-vendor", pkgFullName],
+        { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+      );
+      if (mresult.status !== 0 || mresult.error) {
+        if (DEBUG_MODE) {
+          if (mresult.stdout) {
+            console.log(mresult.stdout);
+          }
+          if (mresult.stderr) {
+            console.log(mresult.stderr);
+          }
+        }
+        circuitBreak = true;
+      } else {
+        const mstdout = mresult.stdout;
+        if (mstdout) {
+          const cmdOutput = Buffer.from(mstdout).toString();
+          const whyPkg = parseGoModWhy(cmdOutput);
+          // whyPkg would include this package string
+          // github.com/golang/protobuf/proto github.com/golang/protobuf
+          // golang.org/x/tools/cmd/goimports golang.org/x/tools
+          if (whyPkg && whyPkg.includes(pkgFullName)) {
+            allImports[pkgFullName] = true;
+          }
+          doneList[pkgFullName] = true;
+        }
+      }
+    }
+    if (DEBUG_MODE) {
+      console.log(`Required packages: ${Object.keys(allImports).length}`);
     }
     return buildBomNSData(options, pkgList, "golang", {
       src: path,
@@ -2660,7 +2720,7 @@ export const createGoBom = async (path, options) => {
             "list",
             "-deps",
             "-f",
-            "'{{with .Module}}{{.Path}} {{.Version}} {{.Indirect}} {{.GoMod}} {{.GoVersion}}{{end}}'",
+            "'{{with .Module}}{{.Path}} {{.Version}} {{.Indirect}} {{.GoMod}} {{.GoVersion}} {{.Main}}{{end}}'",
             "./..."
           ],
           { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
@@ -2681,9 +2741,17 @@ export const createGoBom = async (path, options) => {
         const stdout = result.stdout;
         if (stdout) {
           let cmdOutput = Buffer.from(stdout).toString();
-          const dlist = await parseGoListDep(cmdOutput, gosumMap);
-          if (dlist && dlist.length) {
-            pkgList = pkgList.concat(dlist);
+          const retMap = await parseGoListDep(cmdOutput, gosumMap);
+          if (retMap.pkgList && retMap.pkgList.length) {
+            pkgList = pkgList.concat(retMap.pkgList);
+          }
+          // We treat the main module as our parent
+          if (
+            retMap.parentComponent &&
+            Object.keys(retMap.parentComponent).length
+          ) {
+            parentComponent = retMap.parentComponent;
+            parentComponent.type = "application";
           }
           // Next we use the go mod graph command to construct the dependency tree
           result = spawnSync("go", ["mod", "graph"], {
@@ -2728,70 +2796,6 @@ export const createGoBom = async (path, options) => {
             "go unexpectedly didn't return any output. Check if the correct version of golang is installed."
           );
           options.failOnError && process.exit(1);
-        }
-      }
-      // In case of gosum mode we use go mod why to identify package usages
-      // This is not required in go list mode since the command already returns the direct/indirect dependency
-      if (useGosum && gosumFiles.length) {
-        const doneList = {};
-        let circuitBreak = false;
-        if (DEBUG_MODE) {
-          console.log(
-            `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
-          );
-        }
-        // Using go mod why detect required packages
-        for (const apkg of pkgList) {
-          if (circuitBreak) {
-            break;
-          }
-          const pkgFullName = `${apkg.name}`;
-          if (apkg.scope === "required") {
-            allImports[pkgFullName] = true;
-            continue;
-          }
-          if (
-            apkg.scope === "optional" ||
-            allImports[pkgFullName] ||
-            doneList[pkgFullName]
-          ) {
-            continue;
-          }
-          if (DEBUG_MODE) {
-            console.log(`go mod why -m -vendor ${pkgFullName}`);
-          }
-          const mresult = spawnSync(
-            "go",
-            ["mod", "why", "-m", "-vendor", pkgFullName],
-            { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
-          );
-          if (mresult.status !== 0 || mresult.error) {
-            if (DEBUG_MODE) {
-              if (mresult.stdout) {
-                console.log(mresult.stdout);
-              }
-              if (mresult.stderr) {
-                console.log(mresult.stderr);
-              }
-            }
-            circuitBreak = true;
-          } else {
-            const mstdout = mresult.stdout;
-            if (mstdout) {
-              const cmdOutput = Buffer.from(mstdout).toString();
-              const whyPkg = parseGoModWhy(cmdOutput);
-              // whyPkg would include this package string
-              // github.com/golang/protobuf/proto github.com/golang/protobuf
-              // golang.org/x/tools/cmd/goimports golang.org/x/tools
-              if (whyPkg && whyPkg.includes(pkgFullName)) {
-                allImports[pkgFullName] = true;
-              }
-              doneList[pkgFullName] = true;
-            }
-          }
-        }
-        if (DEBUG_MODE) {
-          console.log(`Required packages: ${Object.keys(allImports).length}`);
         }
       }
       if (pkgList.length && !shouldManuallyParse) {
