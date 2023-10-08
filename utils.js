@@ -3242,14 +3242,15 @@ export const parseGoModGraph = async function (
         try {
           const sourcePurl = PackageURL.fromString("pkg:golang/" + tmpA[0]);
           const dependsPurl = PackageURL.fromString("pkg:golang/" + tmpA[1]);
-          const sourcePurlString = decodeURIComponent(sourcePurl.toString());
-          const dependsPurlString = decodeURIComponent(dependsPurl.toString());
+          const sourceRefString = decodeURIComponent(sourcePurl.toString());
+          const dependsRefString = decodeURIComponent(dependsPurl.toString());
           // Since go mod graph over-reports direct dependencies we use the existing list
           // from go deps to filter the result
           if (
             existingPkgMap &&
             Object.keys(existingPkgMap).length &&
-            !existingPkgMap[sourcePurlString]
+            (!existingPkgMap[sourceRefString] ||
+              !existingPkgMap[dependsRefString])
           ) {
             continue;
           }
@@ -3275,19 +3276,16 @@ export const parseGoModGraph = async function (
               dependsPurl.version,
               gosumMap[tmpA[1]]
             );
-            pkgList.push(_addGoComponentEvidence(component, goModFile));
+            pkgList.push(component);
             addedPkgs[tmpA[1]] = true;
           }
-          if (!depsMap[sourcePurlString]) {
-            depsMap[sourcePurlString] = new Set();
+          if (!depsMap[sourceRefString]) {
+            depsMap[sourceRefString] = new Set();
           }
-          if (
-            existingPkgMap &&
-            Object.keys(existingPkgMap).length &&
-            existingPkgMap[dependsPurlString]
-          ) {
-            depsMap[sourcePurlString].add(dependsPurlString);
+          if (!depsMap[dependsRefString]) {
+            depsMap[dependsRefString] = new Set();
           }
+          depsMap[sourceRefString].add(dependsRefString);
         } catch (_e) {
           // pass
         }
