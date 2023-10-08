@@ -2398,6 +2398,8 @@ export const createPythonBom = async (path, options) => {
           let frozen = false;
           // Attempt to pip freeze in a virtualenv to improve precision
           if (options.installDeps) {
+            // If there are multiple requirements files then the tree is getting constructed for each one
+            // adding to the delay.
             const pkgMap = getPipFrozenTree(basePath, f, tempDir);
             if (pkgMap.pkgList && pkgMap.pkgList.length) {
               pkgList = pkgList.concat(pkgMap.pkgList);

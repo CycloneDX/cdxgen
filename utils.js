@@ -2564,6 +2564,9 @@ export const parsePyProjectToml = (tomlFile) => {
  */
 export const parsePoetrylockData = async function (lockData, lockFile) {
   const pkgList = [];
+  const dependenciesList = [];
+  const depsMap = {};
+  const existingPkgMap = {};
   let pkg = null;
   if (!lockData) {
     return pkgList;
@@ -2575,6 +2578,16 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
     // Package section starts with this marker
     if (l.indexOf("[[package]]") > -1) {
       if (pkg && pkg.name && pkg.version) {
+        const purlString = new PackageURL(
+          "pypi",
+          "",
+          pkg.name,
+          pkg.version,
+          null,
+          null
+        ).toString();
+        pkg.purl = purlString;
+        pkg["bom-ref"] = decodeURIComponent(purlString);
         pkg.evidence = {
           identity: {
             field: "purl",
@@ -2588,6 +2601,8 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
             ]
           }
         };
+        // This would help look
+        existingPkgMap[pkg.name] = pkg["bom-ref"];
         pkgList.push(pkg);
       }
       pkg = {};
@@ -6673,22 +6688,25 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    */
   // Bug #388. Perform pip install in all virtualenv to make the experience consistent
   if (reqOrSetupFile) {
+    // We have a poetry.lock file
     if (reqOrSetupFile.endsWith("poetry.lock")) {
       let poetryConfigArgs = [
+        "-m",
+        "poetry",
         "config",
         "virtualenvs.options.no-setuptools",
         "true",
         "--local"
       ];
-      result = spawnSync("poetry", poetryConfigArgs, {
+      result = spawnSync(PYTHON_CMD, poetryConfigArgs, {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
         shell: isWin
       });
-      let poetryInstallArgs = ["install", "-n", "--no-root"];
+      let poetryInstallArgs = ["-m", "poetry", "install", "-n", "--no-root"];
       // Attempt to perform poetry install
-      result = spawnSync("poetry", poetryInstallArgs, {
+      result = spawnSync(PYTHON_CMD, poetryInstallArgs, {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
@@ -6724,6 +6742,14 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           console.log(
             "Poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen."
           );
+          if (DEBUG_MODE) {
+            if (result.error) {
+              console.log(result.error);
+            }
+            if (result.stderr) {
+              console.log(result.stderr);
+            }
+          }
         }
       } else {
         let poetryEnvArgs = ["env info", "--path"];
@@ -6819,6 +6845,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         "About to construct the pip dependency tree. Please wait ..."
       );
     }
+    // This is a slow step that ideally needs to be invoked only once per venv
     const tree = getTreeWithPlugin(env, PYTHON_CMD, basePath);
     if (DEBUG_MODE && !tree.length) {
       console.log(
