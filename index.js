@@ -2550,6 +2550,7 @@ export const createPythonBom = async (path, options) => {
 export const createGoBom = async (path, options) => {
   let pkgList = [];
   let dependencies = [];
+  const allImports = {};
   const parentComponent = createDefaultParentComponent(path, "golang", options);
   // Is this a binary file
   let maybeBinary = false;
@@ -2729,56 +2730,69 @@ export const createGoBom = async (path, options) => {
           options.failOnError && process.exit(1);
         }
       }
-      const allImports = {};
-      let circuitBreak = false;
-      if (DEBUG_MODE) {
-        console.log(
-          `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
-        );
-      }
-      // Using go mod why detect required packages
-      for (const apkg of pkgList) {
-        if (circuitBreak) {
-          break;
+      // In case of gosum mode we use go mod why to identify package usages
+      // This is not required in go list mode since the command already returns the direct/indirect dependency
+      if (useGosum && gosumFiles.length) {
+        const doneList = {};
+        let circuitBreak = false;
+        if (DEBUG_MODE) {
+          console.log(
+            `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+          );
         }
-        const pkgFullName = `${apkg.name}`;
-        if (apkg.scope === "required") {
-          allImports[pkgFullName] = true;
-          continue;
-        } else if (apkg.scope === "optional") {
-          continue;
+        // Using go mod why detect required packages
+        for (const apkg of pkgList) {
+          if (circuitBreak) {
+            break;
+          }
+          const pkgFullName = `${apkg.name}`;
+          if (apkg.scope === "required") {
+            allImports[pkgFullName] = true;
+            continue;
+          }
+          if (
+            apkg.scope === "optional" ||
+            allImports[pkgFullName] ||
+            doneList[pkgFullName]
+          ) {
+            continue;
+          }
+          if (DEBUG_MODE) {
+            console.log(`go mod why -m -vendor ${pkgFullName}`);
+          }
+          const mresult = spawnSync(
+            "go",
+            ["mod", "why", "-m", "-vendor", pkgFullName],
+            { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+          );
+          if (mresult.status !== 0 || mresult.error) {
+            if (DEBUG_MODE) {
+              if (mresult.stdout) {
+                console.log(mresult.stdout);
+              }
+              if (mresult.stderr) {
+                console.log(mresult.stderr);
+              }
+            }
+            circuitBreak = true;
+          } else {
+            const mstdout = mresult.stdout;
+            if (mstdout) {
+              const cmdOutput = Buffer.from(mstdout).toString();
+              const whyPkg = parseGoModWhy(cmdOutput);
+              // whyPkg would include this package string
+              // github.com/golang/protobuf/proto github.com/golang/protobuf
+              // golang.org/x/tools/cmd/goimports golang.org/x/tools
+              if (whyPkg && whyPkg.includes(pkgFullName)) {
+                allImports[pkgFullName] = true;
+              }
+              doneList[pkgFullName] = true;
+            }
+          }
         }
         if (DEBUG_MODE) {
-          console.log(`go mod why -m -vendor ${pkgFullName}`);
+          console.log(`Required packages: ${Object.keys(allImports).length}`);
         }
-        const mresult = spawnSync(
-          "go",
-          ["mod", "why", "-m", "-vendor", pkgFullName],
-          { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
-        );
-        if (mresult.status !== 0 || mresult.error) {
-          if (DEBUG_MODE) {
-            if (mresult.stdout) {
-              console.log(mresult.stdout);
-            }
-            if (mresult.stderr) {
-              console.log(mresult.stderr);
-            }
-          }
-          circuitBreak = true;
-        } else {
-          const mstdout = mresult.stdout;
-          if (mstdout) {
-            const cmdOutput = Buffer.from(mstdout).toString();
-            const whyPkg = parseGoModWhy(cmdOutput);
-            if (whyPkg == pkgFullName) {
-              allImports[pkgFullName] = true;
-            }
-          }
-        }
-      }
-      if (DEBUG_MODE) {
-        console.log(`Required packages: ${Object.keys(allImports).length}`);
       }
       if (pkgList.length && !shouldManuallyParse) {
         return buildBomNSData(options, pkgList, "golang", {
