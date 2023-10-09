@@ -4,7 +4,7 @@
 
 cdxgen is a cli tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill of Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
 
-When used with plugins, cdxgen could generate an OBoM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBOM for some languages.
+When used with plugins, cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBOM for some languages.
 
 NOTE:
 
@@ -61,7 +61,7 @@ NOTE:
 
 Footnotes:
 
-- [1] - For multi-module applications, the BoM file could include components not included in the packaged war or ear file.
+- [1] - For multi-module applications, the BOM file could include components not included in the packaged war or ear file.
 - [2] - Pip freeze is automatically performed to improve precision. Requires virtual environment.
 - [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file, cdxgen would not include indirect dependencies.
 - [4] - See the section on plugins
@@ -197,7 +197,7 @@ To print the SBOM as a table pass `-p` argument.
 cdxgen -t java -o bom.json -p
 ```
 
-To recursively generate a single BoM for all languages pass `-r` argument.
+To recursively generate a single BOM for all languages pass `-r` argument.
 
 ```shell
 cdxgen -r -o bom.json
@@ -281,7 +281,7 @@ docker compose up
 
 ## War file support
 
-cdxgen can generate a BoM file from a given war file.
+cdxgen can generate a BOM file from a given war file.
 
 ```shell
 # cdxgen -t java app.war
@@ -399,9 +399,9 @@ systemctl --user start podman.socket
 podman system service -t 0 &
 ```
 
-### Generate OBoM for a live system
+### Generate OBOM for a live system
 
-You can use the `obom` command to generate an OBoM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
+You can use the `obom` command to generate an OBOM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
 
 ```shell
 # obom is an alias for cdxgen -t os
@@ -417,7 +417,7 @@ See [evinse mode](./ADVANCED.md) in the advanced documentation.
 
 ## BoM signing
 
-cdxgen can sign the generated BoM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
+cdxgen can sign the generated BOM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
 
 - SBOM_SIGN_ALGORITHM: Algorithm. Example: RS512
 - SBOM_SIGN_PRIVATE_KEY: Location to the RSA private key

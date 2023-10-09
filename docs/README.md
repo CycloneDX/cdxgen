@@ -42,7 +42,7 @@ To print the SBOM as a table pass `-p` argument.
 cdxgen -t java -o bom.json -p
 ```
 
-To recursively generate a single BoM for all languages pass `-r` argument.
+To recursively generate a single BOM for all languages pass `-r` argument.
 
 ```shell
 cdxgen -r -o bom.json
@@ -107,9 +107,9 @@ systemctl --user start podman.socket
 podman system service -t 0 &
 ```
 
-#### **Generate OBoM**
+#### **Generate OBOM**
 
-You can use the `obom` command to generate an OBoM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
+You can use the `obom` command to generate an OBOM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
 
 ```shell
 # obom is an alias for cdxgen -t os
@@ -121,7 +121,7 @@ This feature is powered by osquery, which is [installed](https://github.com/cycl
 
 #### **Integrate with Dependency Track**
 
-Invoke cdxgen with the below aruments to automatically submit the BoM to your organization's Dependency Track server.
+Invoke cdxgen with the below arguments to automatically submit the BOM to your organization's Dependency Track server.
 
 ```shell
       --server-url             Dependency track url. Eg: https://deptrack.cyclon
@@ -189,7 +189,7 @@ NOTE:
 
 Footnotes:
 
-- [1] - For multi-module applications, the BoM file could include components not included in the packaged war or ear file.
+- [1] - For multi-module applications, the BOM file could include components not included in the packaged war or ear file.
 - [2] - Pip freeze is automatically performed to improve precision. Requires virtual environment.
 - [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file, cdxgen would not include indirect dependencies.
 - [4] - See the section on plugins
@@ -263,9 +263,9 @@ const bomNSData = await createBom(filePath, options);
 const dbody = await submitBom(args, bomNSData.bomJson);
 ```
 
-#### **BoM Signing**
+#### **BOM Signing**
 
-cdxgen can sign the generated BoM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
+cdxgen can sign the generated BOM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
 
 - SBOM_SIGN_ALGORITHM: Algorithm. Example: RS512
 - SBOM_SIGN_PRIVATE_KEY: Location to the RSA private key
@@ -309,7 +309,7 @@ if (validationResult) {
 
 #### **REPL Mode**
 
-`cdxi` is a new interactive REPL server to create, import, and search a BoM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
+`cdxi` is a new interactive REPL server to create, import, and search a BOM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
 
 [![cdxi demo](https://asciinema.org/a/602361.svg)](https://asciinema.org/a/602361)
 
