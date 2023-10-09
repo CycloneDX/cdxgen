@@ -2310,24 +2310,34 @@ export const createPythonBom = async (path, options) => {
     for (const f of poetryFiles) {
       const basePath = dirname(f);
       const lockData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parsePoetrylockData(lockData, f);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      let retMap = await parsePoetrylockData(lockData, f);
+      if (retMap.pkgList && retMap.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+        pkgList = trimComponents(pkgList, "json");
       }
-      const pkgMap = getPipFrozenTree(basePath, f, tempDir);
-      if (pkgMap.pkgList && pkgMap.pkgList.length) {
-        pkgList = pkgList.concat(pkgMap.pkgList);
-      }
-      if (pkgMap.dependenciesList) {
+      if (retMap.dependenciesList && retMap.dependenciesList.length) {
         dependencies = mergeDependencies(
           dependencies,
-          pkgMap.dependenciesList,
+          retMap.dependenciesList,
           parentComponent
         );
+      } else {
+        // Fallback to retrieving the tree using virtualenv
+        retMap = getPipFrozenTree(basePath, f, tempDir);
+        if (retMap.pkgList && retMap.pkgList.length) {
+          pkgList = pkgList.concat(retMap.pkgList);
+        }
+        if (retMap.dependenciesList) {
+          dependencies = mergeDependencies(
+            dependencies,
+            retMap.dependenciesList,
+            parentComponent
+          );
+        }
       }
       const parentDependsOn = [];
       // Complete the dependency tree by making parent component depend on the first level
-      for (const p of pkgMap.rootList) {
+      for (const p of retMap.rootList) {
         parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
       }
       const pdependencies = {

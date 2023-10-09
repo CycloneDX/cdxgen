@@ -2364,26 +2364,30 @@ test("parse pyproject.toml", async () => {
 });
 
 test("parse poetry.lock", async () => {
-  let deps = await parsePoetrylockData(
+  let retMap = await parsePoetrylockData(
     readFileSync("./test/data/poetry.lock", { encoding: "utf-8" }),
     "./test/data/poetry.lock"
   );
-  expect(deps.length).toEqual(31);
-  deps = await parsePoetrylockData(
+  expect(retMap.pkgList.length).toEqual(32);
+  expect(retMap.dependenciesList.length).toEqual(32);
+  retMap = await parsePoetrylockData(
     readFileSync("./test/data/poetry1.lock", { encoding: "utf-8" }),
     "./test/data/poetry1.lock"
   );
-  expect(deps.length).toEqual(67);
-  deps = await parsePoetrylockData(
+  expect(retMap.pkgList.length).toEqual(68);
+  expect(retMap.dependenciesList.length).toEqual(68);
+  retMap = await parsePoetrylockData(
     readFileSync("./test/data/poetry-cpggen.lock", { encoding: "utf-8" }),
     "./test/data/poetry-cpggen.lock"
   );
-  expect(deps.length).toEqual(68);
-  deps = await parsePoetrylockData(
+  expect(retMap.pkgList.length).toEqual(69);
+  expect(retMap.dependenciesList.length).toEqual(69);
+  retMap = await parsePoetrylockData(
     readFileSync("./test/data/pdm.lock", { encoding: "utf-8" }),
     "./test/data/pdm.lock"
   );
-  expect(deps.length).toEqual(38);
+  expect(retMap.pkgList.length).toEqual(37);
+  expect(retMap.dependenciesList.length).toEqual(37);
 }, 120000);
 
 test("parse wheel metadata", () => {

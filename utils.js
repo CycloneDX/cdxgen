@@ -2563,11 +2563,13 @@ export const parsePyProjectToml = (tomlFile) => {
  * @param {string} lockFile Lock file name for evidence
  */
 export const parsePoetrylockData = async function (lockData, lockFile) {
-  const pkgList = [];
+  let pkgList = [];
   const dependenciesList = [];
   const depsMap = {};
   const existingPkgMap = {};
   let pkg = null;
+  let lastPkgRef = undefined;
+  let depsMode = false;
   if (!lockData) {
     return pkgList;
   }
@@ -2576,7 +2578,16 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
     let key = null;
     let value = null;
     // Package section starts with this marker
-    if (l.indexOf("[[package]]") > -1) {
+    if (
+      l.includes("[[package]]") ||
+      l.includes("[package.dependencies]") ||
+      l.startsWith("[package.") ||
+      l.startsWith("[extras") ||
+      l.startsWith("[metadata") ||
+      l.endsWith(" [")
+    ) {
+      // Package dependencies starts with this marker
+      depsMode = l.includes("[package.dependencies]");
       if (pkg && pkg.name && pkg.version) {
         const purlString = new PackageURL(
           "pypi",
@@ -2602,8 +2613,14 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
           }
         };
         // This would help look
-        existingPkgMap[pkg.name] = pkg["bom-ref"];
-        pkgList.push(pkg);
+        if (!existingPkgMap[pkg.name.toLowerCase()]) {
+          existingPkgMap[pkg.name.toLowerCase()] = pkg["bom-ref"];
+          pkgList.push(pkg);
+        }
+        lastPkgRef = pkg["bom-ref"];
+        if (!depsMap[lastPkgRef]) {
+          depsMap[lastPkgRef] = new Set();
+        }
       }
       pkg = {};
     }
@@ -2611,23 +2628,55 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
       value = tmpA[1].trim().replace(/"/g, "");
-      switch (key) {
-        case "description":
-          pkg.description = value;
-          break;
-        case "name":
-          pkg.name = value;
-          break;
-        case "version":
-          pkg.version = value;
-          break;
-        case "optional":
-          pkg.scope = value == "true" ? "optional" : undefined;
-          break;
+      if (depsMode) {
+        key = key.toLowerCase();
+        if (lastPkgRef) {
+          // Sometimes, the dependency may not have been resolved
+          // So we track the name
+          depsMap[lastPkgRef].add(existingPkgMap[key] || key);
+        }
+      } else {
+        switch (key) {
+          case "description":
+            pkg.description = value;
+            break;
+          case "name":
+            pkg.name = value;
+            break;
+          case "version":
+            pkg.version = value;
+            break;
+          case "optional":
+            pkg.scope = value == "true" ? "optional" : undefined;
+            break;
+        }
       }
     }
   });
-  return await getPyMetadata(pkgList, false);
+  pkgList = await getPyMetadata(pkgList, false);
+  for (const key of Object.keys(depsMap)) {
+    let dependsOnList = [];
+    for (const adep of Array.from(depsMap[key])) {
+      if (adep.startsWith("pkg:")) {
+        dependsOnList.push(adep);
+      } else if (existingPkgMap[adep]) {
+        dependsOnList.push(existingPkgMap[adep]);
+      } else if (existingPkgMap["py" + adep]) {
+        dependsOnList.push(existingPkgMap["py" + adep]);
+      } else if (existingPkgMap[adep.replace(/-/g, "_")]) {
+        dependsOnList.push(existingPkgMap[adep.replace(/-/g, "_")]);
+      }
+    }
+    dependenciesList.push({
+      ref: key,
+      dependsOn: dependsOnList
+    });
+  }
+  return {
+    pkgList,
+    rootList: pkgList,
+    dependenciesList
+  };
 };
 
 /**
