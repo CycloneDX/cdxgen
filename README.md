@@ -4,7 +4,7 @@
 
 cdxgen is a cli tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill of Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
 
-When used with plugins, cdxgen could generate an OBoM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBOM for some languages.
+When used with plugins, cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBOM for some languages.
 
 NOTE:
 
@@ -399,9 +399,9 @@ systemctl --user start podman.socket
 podman system service -t 0 &
 ```
 
-### Generate OBoM for a live system
+### Generate OBOM for a live system
 
-You can use the `obom` command to generate an OBoM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
+You can use the `obom` command to generate an OBOM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
 
 ```shell
 # obom is an alias for cdxgen -t os

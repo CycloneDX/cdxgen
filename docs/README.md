@@ -107,9 +107,9 @@ systemctl --user start podman.socket
 podman system service -t 0 &
 ```
 
-#### **Generate OBoM**
+#### **Generate OBOM**
 
-You can use the `obom` command to generate an OBoM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
+You can use the `obom` command to generate an OBOM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
 
 ```shell
 # obom is an alias for cdxgen -t os

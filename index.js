@@ -1671,7 +1671,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}"
+      "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
@@ -3285,7 +3285,7 @@ export const createCloudBuildBom = (path, options) => {
  */
 export const createOSBom = (path, options) => {
   console.warn(
-    "About to generate OBoM for the current OS installation. This will take several minutes ..."
+    "About to generate OBOM for the current OS installation. This will take several minutes ..."
   );
   let pkgList = [];
   let bomData = {};
