@@ -1671,7 +1671,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-      "project/{build.properties,*.sbt,*.scala}"
+        "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
