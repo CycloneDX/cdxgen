@@ -98,7 +98,7 @@ To improve performance for re-runs, pass the argument `--skip-maven-collector` t
 
 ## Interactive mode
 
-`cdxi` is a new interactive REPL server to create, import, and search a BoM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
+`cdxi` is a new interactive REPL server to create, import, and search a BOM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
 
 [![cdxi demo](https://asciinema.org/a/602361.svg)](https://asciinema.org/a/602361)
 

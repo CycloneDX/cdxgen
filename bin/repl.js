@@ -110,16 +110,16 @@ cdxgenRepl.defineCommand("create", {
     });
     if (bomNSData) {
       sbom = bomNSData.bomJson;
-      console.log("✅ BoM imported successfully.");
-      console.log("💭 Type .print to view the BoM as a table");
+      console.log("✅ BOM imported successfully.");
+      console.log("💭 Type .print to view the BOM as a table");
     } else {
-      console.log("BoM was not generated successfully");
+      console.log("BOM was not generated successfully");
     }
     this.displayPrompt();
   }
 });
 cdxgenRepl.defineCommand("import", {
-  help: "import an existing BoM",
+  help: "import an existing BOM",
   action(sbomOrPath) {
     this.clearBufferedCommand();
     importSbom(sbomOrPath);
@@ -139,7 +139,7 @@ cdxgenRepl.defineCommand("sbom", {
       console.log(sbom);
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -171,7 +171,7 @@ cdxgenRepl.defineCommand("search", {
       }
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -205,7 +205,7 @@ cdxgenRepl.defineCommand("sort", {
       }
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -229,7 +229,7 @@ cdxgenRepl.defineCommand("query", {
       }
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -242,7 +242,7 @@ cdxgenRepl.defineCommand("print", {
       printTable(sbom);
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -255,7 +255,7 @@ cdxgenRepl.defineCommand("tree", {
       printDependencyTree(sbom);
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -271,7 +271,7 @@ cdxgenRepl.defineCommand("validate", {
       }
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -285,10 +285,10 @@ cdxgenRepl.defineCommand("save", {
         saveToFile = "bom.json";
       }
       fs.writeFileSync(saveToFile, JSON.stringify(sbom, null, 2));
-      console.log(`BoM saved successfully to ${saveToFile}`);
+      console.log(`BOM saved successfully to ${saveToFile}`);
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -313,10 +313,10 @@ cdxgenRepl.defineCommand("update", {
       if (newSbom && newSbom.components.length <= sbom.components.length) {
         sbom = newSbom;
       }
-      console.log("BoM updated successfully.");
+      console.log("BOM updated successfully.");
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an existing BoM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
       );
     }
     this.displayPrompt();
@@ -333,7 +333,7 @@ cdxgenRepl.defineCommand("occurrences", {
         let components = await expression.evaluate(sbom);
         if (!components) {
           console.log(
-            "No results found. Use evinse command to generate an BoM with evidence."
+            "No results found. Use evinse command to generate an BOM with evidence."
           );
         } else {
           if (!Array.isArray(components)) {
@@ -346,7 +346,7 @@ cdxgenRepl.defineCommand("occurrences", {
       }
     } else {
       console.log(
-        "⚠ No BoM is loaded. Use .import command to import an evinse BoM"
+        "⚠ No BOM is loaded. Use .import command to import an evinse BOM"
       );
     }
     this.displayPrompt();

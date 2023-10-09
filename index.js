@@ -2634,7 +2634,7 @@ export const createGoBom = async (path, options) => {
   );
   if (gomodFiles.length) {
     let shouldManuallyParse = false;
-    // Use the go list -deps and go mod why commands to generate a good quality BoM for non-docker invocations
+    // Use the go list -deps and go mod why commands to generate a good quality BOM for non-docker invocations
     if (!["docker", "oci", "os"].includes(options.projectType)) {
       for (const f of gomodFiles) {
         const basePath = dirname(f);
@@ -2738,10 +2738,10 @@ export const createGoBom = async (path, options) => {
         });
       }
     }
-    // Parse the gomod files manually. The resultant BoM would be incomplete
+    // Parse the gomod files manually. The resultant BOM would be incomplete
     if (!["docker", "oci", "os"].includes(options.projectType)) {
       console.log(
-        "Manually parsing go.mod files. The resultant BoM would be incomplete."
+        "Manually parsing go.mod files. The resultant BOM would be incomplete."
       );
     }
     for (const f of gomodFiles) {
@@ -4165,7 +4165,7 @@ export const dedupeBom = (
   componentsXmls = trimComponents(componentsXmls, "xml");
   if (DEBUG_MODE) {
     console.log(
-      `BoM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
+      `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
     );
   }
   const serialNum = "urn:uuid:" + uuidv4();

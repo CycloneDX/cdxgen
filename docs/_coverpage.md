@@ -7,4 +7,4 @@
 - Generate Software Bill of Materials (SBOM) for most applications and container images with a single command
 - Generate Operations Bill of Materials (OBOM) for Linux and Windows hosts
 - Integrate with any CI/CD pipeline
-- Automatically submit the generated BoM to your dependency track server for analysis
+- Automatically submit the generated BOM to your dependency track server for analysis
