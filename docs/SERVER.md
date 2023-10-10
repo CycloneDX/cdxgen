@@ -1,5 +1,14 @@
 # Server Usage
 
+## Overview
+
+```mermaid
+sequenceDiagram
+    actor User
+    User->>+cdxgen server: Invoke /sbom
+    cdxgen server-->>-User: SBOM Response
+```
+
 ## Running as a server
 
 Invoke cdxgen with `--server` argument to run it in server mode. By default, it listens to port `9090`, which can be customized with the arguments `--server-host` and `--server-port`.
@@ -52,7 +61,17 @@ You can POST the arguments.
 curl -H "Content-Type: application/json" http://localhost:9090/sbom -XPOST -d $'{"url": "https://github.com/HooliCorp/vulnerable-aws-koa-app.git", "type": "nodejs", "multiProject": "true"}'
 ```
 
+### Health endpoint
+
+Use the /health endpoint to check if the SBOM server is up and running.
+
+```shell
+curl "http://127.0.0.1:9090/health"
+```
+
 ### Docker compose
+
+Use the provided docker-compose file to quickly launch a cdxgen server instance.
 
 ```shell
 git clone https://github.com/cyclonedx/cdxgen.git

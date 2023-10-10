@@ -1,5 +1,23 @@
 # CLI Usage
 
+## Overview
+
+In CLI mode, you can invoke cdxgen with Source Code, Container Image, or Binary Artifact as input to generate a Software Bill-of-Materials document. This can be subsequently used for a range of use cases as shown.
+
+```mermaid
+flowchart LR
+    A[Source Code] --> B([fa:fa-terminal cdxgen])
+    A1[Container Image] --> B([fa:fa-terminal cdxgen])
+    A2[Binary Artifact] --> B([fa:fa-terminal cdxgen])
+    B --> C(fa:fa-file SBOM)---|fa:fa-hashtag Sign| C
+    C --> D{Use Cases}
+    subgraph BOM Use Cases
+      D -->|Break build| E[fa:fa-shield Invoke depscan]
+      D -->|Vulnerability Management| F[fa:fa-shield-halved Dependency Track]
+      D -->|License Compliance| G[fa:fa-rectangle-list Dependency Track]
+    end
+```
+
 ## Installing
 
 ```shell
