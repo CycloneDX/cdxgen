@@ -140,6 +140,10 @@ jobs:
         with:
           repository: 'fsprojects/FAKE'
           path: 'repotests/dotnet-paket'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'appthreat/blint'
+          path: 'repotests/blint'
       - uses: dtolnay/rust-toolchain@stable
       - name: repotests
         run: |
@@ -178,6 +182,8 @@ jobs:
           bin/cdxgen.js -r -t rust repotests/rs-validator -o bomresults/bom-rs-validator.json --validate
           bin/cdxgen.js -r -t rust repotests/rs-axum -o bomresults/bom-rs-axum.json --validate
           bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
+          bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json
+          bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
           # mkdir -p jenkins
           # wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
           # wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi

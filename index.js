@@ -2321,8 +2321,10 @@ export const createPythonBom = async (path, options) => {
           retMap.dependenciesList,
           parentComponent
         );
-      } else {
-        // Fallback to retrieving the tree using virtualenv
+      }
+      // Retrieve the tree using virtualenv in deep mode and as a fallback
+      // This is a slow operation
+      if (options.deep || !dependencies.length) {
         retMap = getPipFrozenTree(basePath, f, tempDir);
         if (retMap.pkgList && retMap.pkgList.length) {
           pkgList = pkgList.concat(retMap.pkgList);
