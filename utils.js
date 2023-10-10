@@ -23,7 +23,7 @@ import {
 } from "node:fs";
 import got from "got";
 import Arborist from "@npmcli/arborist";
-import path from "path";
+import path from "node:path";
 import { xml2js } from "xml-js";
 import { fileURLToPath } from "node:url";
 import { load } from "cheerio";
@@ -368,6 +368,7 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
         name,
         group,
         version: pkgData.version,
+        purl: purl,
         "bom-ref": decodeURIComponent(purl)
       };
       if (!simple) {
@@ -451,35 +452,32 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     let pkg = {};
     let purlString = "";
     if (node == rootNode) {
-      purlString = decodeURIComponent(
-        new PackageURL(
-          "npm",
-          options.projectGroup || "",
-          options.projectName || node.packageName,
-          options.projectVersion || node.version,
-          null,
-          null
-        ).toString()
-      );
+      purlString = new PackageURL(
+        "npm",
+        options.projectGroup || "",
+        options.projectName || node.packageName,
+        options.projectVersion || node.version,
+        null,
+        null
+      ).toString();
       pkg = {
         author: node.package.author,
         group: options.projectGroup || "",
         name: options.projectName || node.packageName,
         version: options.projectVersion || node.version,
         type: "application",
-        "bom-ref": purlString
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString)
       };
     } else {
-      purlString = decodeURIComponent(
-        new PackageURL(
-          "npm",
-          "",
-          node.packageName,
-          node.version,
-          null,
-          null
-        ).toString()
-      );
+      purlString = new PackageURL(
+        "npm",
+        "",
+        node.packageName,
+        node.version,
+        null,
+        null
+      ).toString();
       const pkgLockFile = join(
         srcFilePath.replace("/", _sep),
         "package-lock.json"
@@ -511,7 +509,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           }
         },
         type: parentRef ? "npm" : "application",
-        "bom-ref": purlString
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString)
       };
     }
     const packageLicense = node.package.license;
@@ -556,7 +555,12 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         const {
           pkgList: childPkgList,
           dependenciesList: childDependenciesList
-        } = parseArboristNode(childNode, rootNode, purlString, visited);
+        } = parseArboristNode(
+          childNode,
+          rootNode,
+          decodeURIComponent(purlString),
+          visited
+        );
         pkgList = pkgList.concat(childPkgList);
         dependenciesList = dependenciesList.concat(childDependenciesList);
 
@@ -631,13 +635,18 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
       pkgDependsOn.push(depPurlString);
       if (edge.to == null) continue;
       const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
-        parseArboristNode(edge.to, rootNode, purlString, visited);
+        parseArboristNode(
+          edge.to,
+          rootNode,
+          decodeURIComponent(purlString),
+          visited
+        );
       pkgList = pkgList.concat(childPkgList);
       dependenciesList = dependenciesList.concat(childDependenciesList);
     }
 
     dependenciesList.push({
-      ref: purlString,
+      ref: decodeURIComponent(purlString),
       dependsOn: workspaceDependsOn
         .concat(childrenDependsOn)
         .concat(pkgDependsOn)
@@ -2554,8 +2563,13 @@ export const parsePyProjectToml = (tomlFile) => {
  * @param {string} lockFile Lock file name for evidence
  */
 export const parsePoetrylockData = async function (lockData, lockFile) {
-  const pkgList = [];
+  let pkgList = [];
+  const dependenciesList = [];
+  const depsMap = {};
+  const existingPkgMap = {};
   let pkg = null;
+  let lastPkgRef = undefined;
+  let depsMode = false;
   if (!lockData) {
     return pkgList;
   }
@@ -2564,8 +2578,27 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
     let key = null;
     let value = null;
     // Package section starts with this marker
-    if (l.indexOf("[[package]]") > -1) {
+    if (
+      l.includes("[[package]]") ||
+      l.includes("[package.dependencies]") ||
+      l.startsWith("[package.") ||
+      l.startsWith("[extras") ||
+      l.startsWith("[metadata") ||
+      l.endsWith(" [")
+    ) {
+      // Package dependencies starts with this marker
+      depsMode = l.includes("[package.dependencies]");
       if (pkg && pkg.name && pkg.version) {
+        const purlString = new PackageURL(
+          "pypi",
+          "",
+          pkg.name,
+          pkg.version,
+          null,
+          null
+        ).toString();
+        pkg.purl = purlString;
+        pkg["bom-ref"] = decodeURIComponent(purlString);
         pkg.evidence = {
           identity: {
             field: "purl",
@@ -2579,7 +2612,15 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
             ]
           }
         };
-        pkgList.push(pkg);
+        // This would help look
+        if (!existingPkgMap[pkg.name.toLowerCase()]) {
+          existingPkgMap[pkg.name.toLowerCase()] = pkg["bom-ref"];
+          pkgList.push(pkg);
+        }
+        lastPkgRef = pkg["bom-ref"];
+        if (!depsMap[lastPkgRef]) {
+          depsMap[lastPkgRef] = new Set();
+        }
       }
       pkg = {};
     }
@@ -2587,23 +2628,55 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
       const tmpA = l.split("=");
       key = tmpA[0].trim();
       value = tmpA[1].trim().replace(/"/g, "");
-      switch (key) {
-        case "description":
-          pkg.description = value;
-          break;
-        case "name":
-          pkg.name = value;
-          break;
-        case "version":
-          pkg.version = value;
-          break;
-        case "optional":
-          pkg.scope = value == "true" ? "optional" : undefined;
-          break;
+      if (depsMode) {
+        key = key.toLowerCase();
+        if (lastPkgRef) {
+          // Sometimes, the dependency may not have been resolved
+          // So we track the name
+          depsMap[lastPkgRef].add(existingPkgMap[key] || key);
+        }
+      } else {
+        switch (key) {
+          case "description":
+            pkg.description = value;
+            break;
+          case "name":
+            pkg.name = value;
+            break;
+          case "version":
+            pkg.version = value;
+            break;
+          case "optional":
+            pkg.scope = value == "true" ? "optional" : undefined;
+            break;
+        }
       }
     }
   });
-  return await getPyMetadata(pkgList, false);
+  pkgList = await getPyMetadata(pkgList, false);
+  for (const key of Object.keys(depsMap)) {
+    let dependsOnList = [];
+    for (const adep of Array.from(depsMap[key])) {
+      if (adep.startsWith("pkg:")) {
+        dependsOnList.push(adep);
+      } else if (existingPkgMap[adep]) {
+        dependsOnList.push(existingPkgMap[adep]);
+      } else if (existingPkgMap["py" + adep]) {
+        dependsOnList.push(existingPkgMap["py" + adep]);
+      } else if (existingPkgMap[adep.replace(/-/g, "_")]) {
+        dependsOnList.push(existingPkgMap[adep.replace(/-/g, "_")]);
+      }
+    }
+    dependenciesList.push({
+      ref: key,
+      dependsOn: dependsOnList
+    });
+  }
+  return {
+    pkgList,
+    rootList: pkgList,
+    dependenciesList
+  };
 };
 
 /**
@@ -3023,12 +3096,15 @@ export const getGoPkgComponent = async function (group, name, version, hash) {
       name: name
     });
   }
+  const purlString = new PackageURL("golang", group, name, version).toString();
   pkg = {
     group: group,
     name: name,
     version: version,
     _integrity: hash,
-    license: license
+    license: license,
+    purl: purlString,
+    "bom-ref": decodeURIComponent(purlString)
   };
   return pkg;
 };
@@ -3073,7 +3149,7 @@ export const parseGoModData = async function (goModData, gosumMap) {
     if (!isModReplacement) {
       // Add group, name and version component properties for required modules
       const version = tmpA[1];
-      const gosumHash = gosumMap[`${tmpA[0]}/${version}`];
+      const gosumHash = gosumMap[`${tmpA[0]}@${version}`];
       // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
       if (gosumHash === undefined) {
         continue;
@@ -3089,7 +3165,7 @@ export const parseGoModData = async function (goModData, gosumMap) {
       // Add group, name and version component properties for replacement modules
       const version = tmpA[3];
 
-      const gosumHash = gosumMap[`${tmpA[2]}/${version}`];
+      const gosumHash = gosumMap[`${tmpA[2]}@${version}`];
       // The hash for this version was not found in go.sum, so skip.
       if (gosumHash === undefined) {
         continue;
@@ -3112,23 +3188,24 @@ export const parseGoModData = async function (goModData, gosumMap) {
  * Parse go list output
  *
  * @param {string} rawOutput Output from go list invocation
- * @returns List of packages
+ * @returns Object with parent component and List of packages
  */
 export const parseGoListDep = async function (rawOutput, gosumMap) {
+  let parentComponent = {};
+  const deps = [];
   if (typeof rawOutput === "string") {
-    const deps = [];
     const keys_cache = {};
     const pkgs = rawOutput.split("\n");
     for (const l of pkgs) {
       const verArr = l.trim().replace(new RegExp("[\"']", "g"), "").split(" ");
 
-      if (verArr && verArr.length === 5) {
+      if (verArr && verArr.length >= 5) {
         const key = verArr[0] + "-" + verArr[1];
         // Filter duplicates
         if (!keys_cache[key]) {
           keys_cache[key] = key;
           const version = verArr[1];
-          const gosumHash = gosumMap[`${verArr[0]}/${version}`];
+          const gosumHash = gosumMap[`${verArr[0]}@${version}`];
           const component = await getGoPkgComponent(
             "",
             verArr[0],
@@ -3150,13 +3227,142 @@ export const parseGoListDep = async function (rawOutput, gosumMap) {
               value: verArr[4] || ""
             }
           ];
-          deps.push(component);
+          if (verArr.length > 5 && verArr[5] === "true") {
+            parentComponent = component;
+          } else {
+            deps.push(component);
+          }
         }
       }
     }
-    return deps;
   }
-  return [];
+  return {
+    parentComponent,
+    pkgList: deps
+  };
+};
+
+const _addGoComponentEvidence = (component, goModFile) => {
+  component.evidence = {
+    identity: {
+      field: "purl",
+      confidence: 1,
+      methods: [
+        {
+          technique: "manifest-analysis",
+          confidence: 1,
+          value: goModFile
+        }
+      ]
+    }
+  };
+  if (!component.properties) {
+    component.properties = [];
+  }
+  component.properties.push({
+    name: "SrcFile",
+    value: goModFile
+  });
+  return component;
+};
+
+/**
+ * Parse go mod graph
+ *
+ * @param {string} rawOutput Output from go mod graph invocation
+ * @param {string} goModFile go.mod file
+ * @param {Object} goSumMap Hashes from gosum for lookups
+ * @param {Array} epkgList Existing package list
+ *
+ * @returns Object containing List of packages and dependencies
+ */
+export const parseGoModGraph = async function (
+  rawOutput,
+  goModFile,
+  gosumMap,
+  epkgList = [],
+  parentComponent = {}
+) {
+  const pkgList = [];
+  const dependenciesList = [];
+  const addedPkgs = {};
+  const depsMap = {};
+  const existingPkgMap = {};
+  for (const epkg of epkgList) {
+    existingPkgMap[epkg["bom-ref"]] = true;
+  }
+  if (parentComponent && Object.keys(parentComponent).length) {
+    existingPkgMap[parentComponent["bom-ref"]] = true;
+  }
+  if (typeof rawOutput === "string") {
+    const lines = rawOutput.split("\n");
+    // Each line is of the form ref dependsOn
+    // github.com/spf13/afero@v1.2.2 golang.org/x/text@v0.3.0
+    for (const l of lines) {
+      // To keep the parsing logic simple we prefix pkg:golang/
+      // and let packageurl work out the rest
+      const tmpA = l.replace("\r", "").split(" ");
+      if (tmpA && tmpA.length === 2) {
+        try {
+          const sourcePurl = PackageURL.fromString("pkg:golang/" + tmpA[0]);
+          const dependsPurl = PackageURL.fromString("pkg:golang/" + tmpA[1]);
+          const sourceRefString = decodeURIComponent(sourcePurl.toString());
+          const dependsRefString = decodeURIComponent(dependsPurl.toString());
+          // Since go mod graph over-reports direct dependencies we use the existing list
+          // from go deps to filter the result
+          if (
+            existingPkgMap &&
+            Object.keys(existingPkgMap).length &&
+            (!existingPkgMap[sourceRefString] ||
+              !existingPkgMap[dependsRefString])
+          ) {
+            continue;
+          }
+          // Add the source and depends to the pkgList
+          if (!addedPkgs[tmpA[0]]) {
+            const component = await getGoPkgComponent(
+              "",
+              `${sourcePurl.namespace ? sourcePurl.namespace + "/" : ""}${
+                sourcePurl.name
+              }`,
+              sourcePurl.version,
+              gosumMap[tmpA[0]]
+            );
+            pkgList.push(_addGoComponentEvidence(component, goModFile));
+            addedPkgs[tmpA[0]] = true;
+          }
+          if (!addedPkgs[tmpA[1]]) {
+            const component = await getGoPkgComponent(
+              "",
+              `${dependsPurl.namespace ? dependsPurl.namespace + "/" : ""}${
+                dependsPurl.name
+              }`,
+              dependsPurl.version,
+              gosumMap[tmpA[1]]
+            );
+            pkgList.push(component);
+            addedPkgs[tmpA[1]] = true;
+          }
+          if (!depsMap[sourceRefString]) {
+            depsMap[sourceRefString] = new Set();
+          }
+          if (!depsMap[dependsRefString]) {
+            depsMap[dependsRefString] = new Set();
+          }
+          depsMap[sourceRefString].add(dependsRefString);
+        } catch (_e) {
+          // pass
+        }
+      }
+    }
+  }
+  for (const adep of Object.keys(depsMap).sort()) {
+    dependenciesList.push({
+      ref: adep,
+      dependsOn: Array.from(depsMap[adep]).sort()
+    });
+  }
+  return { pkgList, dependenciesList };
 };
 
 /**
@@ -3167,8 +3373,8 @@ export const parseGoListDep = async function (rawOutput, gosumMap) {
 export const parseGoModWhy = function (rawOutput) {
   if (typeof rawOutput === "string") {
     let pkg_name = undefined;
-    const tmpA = rawOutput.split("\n");
-    tmpA.forEach((l) => {
+    const lines = rawOutput.split("\n");
+    lines.forEach((l) => {
       if (l && !l.startsWith("#") && !l.startsWith("(")) {
         pkg_name = l.trim();
       }
@@ -4515,7 +4721,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
   let rootPkg = {};
 
   if (!csProjData) {
-    return pkgList, dependenciesList;
+    return { pkgList, dependenciesList };
   }
 
   csProjData = JSON.parse(csProjData);
@@ -6531,22 +6737,25 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    */
   // Bug #388. Perform pip install in all virtualenv to make the experience consistent
   if (reqOrSetupFile) {
+    // We have a poetry.lock file
     if (reqOrSetupFile.endsWith("poetry.lock")) {
       let poetryConfigArgs = [
+        "-m",
+        "poetry",
         "config",
         "virtualenvs.options.no-setuptools",
         "true",
         "--local"
       ];
-      result = spawnSync("poetry", poetryConfigArgs, {
+      result = spawnSync(PYTHON_CMD, poetryConfigArgs, {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
         shell: isWin
       });
-      let poetryInstallArgs = ["install", "-n", "--no-root"];
+      let poetryInstallArgs = ["-m", "poetry", "install", "-n", "--no-root"];
       // Attempt to perform poetry install
-      result = spawnSync("poetry", poetryInstallArgs, {
+      result = spawnSync(PYTHON_CMD, poetryInstallArgs, {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
@@ -6582,6 +6791,14 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           console.log(
             "Poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen."
           );
+          if (DEBUG_MODE) {
+            if (result.error) {
+              console.log(result.error);
+            }
+            if (result.stderr) {
+              console.log(result.stderr);
+            }
+          }
         }
       } else {
         let poetryEnvArgs = ["env info", "--path"];
@@ -6677,6 +6894,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         "About to construct the pip dependency tree. Please wait ..."
       );
     }
+    // This is a slow step that ideally needs to be invoked only once per venv
     const tree = getTreeWithPlugin(env, PYTHON_CMD, basePath);
     if (DEBUG_MODE && !tree.length) {
       console.log(
@@ -7132,7 +7350,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
         }
         if (versionSpecifiersMap[n]) {
           props.push({
-            name: "cdx:conan:versionSpecifiers",
+            name: "cdx:build:versionSpecifiers",
             value: versionSpecifiersMap[n]
           });
         }
@@ -7215,7 +7433,8 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
  * @param {array} epkgList Existing packages list
  */
 export const getCppModules = (src, options, osPkgsList, epkgList) => {
-  let pkgType = "conan";
+  // Generic is the type to use where the package registry could not be located
+  let pkgType = "generic";
   const pkgList = [];
   const pkgAddedMap = {};
   let sliceData = {};

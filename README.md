@@ -254,6 +254,14 @@ Arguments can be passed either via the query string or as a JSON body. The follo
 | projectGroup   | Dependency track project group                                                                                                              |
 | projectVersion | Dependency track project version [default: ""]                                                                                              |
 
+### Health endpoint
+
+Use the /health endpoint to check if the SBOM server is up and running.
+
+```shell
+curl "http://127.0.0.1:9090/health"
+```
+
 ### Scanning a local path
 
 ```shell
@@ -318,6 +326,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Scala SBT
 - Python (requirements.txt, setup.py, pyproject.toml, poetry.lock)
 - csharp (projects.assets.json)
+- Go (go.mod)
 
 ## Environment variables
 

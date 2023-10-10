@@ -1,8 +1,8 @@
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
-import { join } from "path";
-import { readdirSync, statSync, readFileSync } from "fs";
-import { basename, resolve, isAbsolute, relative } from "path";
+import { join } from "node:path";
+import { readdirSync, statSync, readFileSync } from "node:fs";
+import { basename, resolve, isAbsolute, relative } from "node:path";
 
 const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
   ? process.env.ASTGEN_IGNORE_DIRS.split(",")

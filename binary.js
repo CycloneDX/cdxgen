@@ -230,7 +230,7 @@ export const getGoBuildInfo = (src) => {
     let result = spawnSync(GOVERSION_BIN, [src], {
       encoding: "utf-8"
     });
-    if (result.status !== 0 || result.error) {
+    if (result.status !== 0 || result.error || !result.stdout) {
       if (result.stdout || result.stderr) {
         console.error(result.stdout, result.stderr);
       }
