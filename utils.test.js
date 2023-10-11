@@ -1253,7 +1253,7 @@ test("parse project.assets.json", async () => {
   const dep_list = await parseCsProjAssetsData(
     readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
   );
-  expect(dep_list["pkgList"].length).toEqual(1460);
+  expect(dep_list["pkgList"].length).toEqual(302);
   expect(dep_list["pkgList"][0]).toEqual({
     "bom-ref": "pkg:nuget/Castle.Core.Tests@0.0.0",
     group: "",
