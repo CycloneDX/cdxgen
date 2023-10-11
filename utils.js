@@ -4826,13 +4826,6 @@ export const parseCsProjAssetsData = async function (csProjData) {
               ).toString()
             );
             depList.add(ipurl);
-            pkgList.push({
-              group: "",
-              name: p,
-              version: dependencies[p],
-              description: "",
-              "bom-ref": ipurl
-            });
           }
         }
         dependenciesList.push({
