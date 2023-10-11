@@ -2697,7 +2697,7 @@ export const createGoBom = async (path, options) => {
       const dlist = await parseGosumData(gosumData);
       if (dlist && dlist.length) {
         dlist.forEach((pkg) => {
-          gosumMap[`${pkg.group}/${pkg.name}@${pkg.version}`] = pkg._integrity;
+          gosumMap[`${pkg.name}@${pkg.version}`] = pkg._integrity;
         });
       }
     }
