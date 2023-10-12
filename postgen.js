@@ -74,6 +74,7 @@ export const filterBom = (bomJson, options) => {
     bomJson.dependencies = newdependencies;
     // We set the compositions.aggregate to incomplete by default
     if (
+      options.specVersion >= 1.5 &&
       options.autoCompositions &&
       bomJson.metadata &&
       bomJson.metadata.component

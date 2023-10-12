@@ -52,6 +52,7 @@ test("filter bom tests2", () => {
   expect(newBom.compositions).toBeUndefined();
   newBom = filterBom(bomJson, {
     only: ["org.springframework"],
+    specVersion: 1.5,
     autoCompositions: true
   });
   for (const comp of newBom.components) {
