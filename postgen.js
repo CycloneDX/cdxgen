@@ -21,7 +21,10 @@ export const filterBom = (bomJson, options) => {
     ) {
       filtered = true;
       continue;
-    } else if (options.only && Array.isArray(options.only)) {
+    } else if (options.only && options.only.length) {
+      if (!Array.isArray(options.only)) {
+        options.only = [options.only];
+      }
       let purlfiltered = false;
       for (const filterstr of options.only) {
         if (filterstr.length && !comp.purl.toLowerCase().includes(filterstr)) {
@@ -33,7 +36,10 @@ export const filterBom = (bomJson, options) => {
       if (!purlfiltered) {
         newPkgMap[comp["bom-ref"]] = comp;
       }
-    } else if (options.filter && Array.isArray(options.filter)) {
+    } else if (options.filter && options.filter.length) {
+      if (!Array.isArray(options.filter)) {
+        options.filter = [options.filter];
+      }
       let purlfiltered = false;
       for (const filterstr of options.filter) {
         if (filterstr.length && comp.purl.toLowerCase().includes(filterstr)) {

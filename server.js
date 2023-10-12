@@ -7,6 +7,8 @@ import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
 import { createBom, submitBom } from "./index.js";
+import { postProcess } from "./postgen.js";
+
 import compression from "compression";
 
 // Timeout milliseconds. Default 10 mins
@@ -60,7 +62,10 @@ const parseQueryString = (q, body, options = {}) => {
     "parentUUID",
     "serverUrl",
     "apiKey",
-    "specVersion"
+    "specVersion",
+    "filter",
+    "only",
+    "autoCompositions"
   ];
 
   for (const param of queryParams) {
@@ -94,7 +99,7 @@ const start = (options) => {
     .listen(options.serverPort, options.serverHost);
   configureServer(cdxgenServer);
 
-  app.use("/health", async function (req, res) {
+  app.use("/health", async function (_req, res) {
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ status: "OK" }, null, 2));
   });
@@ -102,7 +107,11 @@ const start = (options) => {
   app.use("/sbom", async function (req, res) {
     const q = url.parse(req.url, true).query;
     let cleanup = false;
-    options = parseQueryString(q, req.body, options);
+    const reqOptions = parseQueryString(
+      q,
+      req.body,
+      Object.assign({}, options)
+    );
     const filePath = q.path || q.url || req.body.path || req.body.url;
     if (!filePath) {
       res.writeHead(500, { "Content-Type": "application/json" });
@@ -117,7 +126,10 @@ const start = (options) => {
       cleanup = true;
     }
     console.log("Generating SBOM for", srcDir);
-    const bomNSData = (await createBom(srcDir, options)) || {};
+    let bomNSData = (await createBom(srcDir, reqOptions)) || {};
+    if (reqOptions.requiredOnly || reqOptions["filter"] || reqOptions["only"]) {
+      bomNSData = postProcess(bomNSData, reqOptions);
+    }
     if (bomNSData.bomJson) {
       if (
         typeof bomNSData.bomJson === "string" ||
@@ -128,9 +140,9 @@ const start = (options) => {
         res.write(JSON.stringify(bomNSData.bomJson, null, 2));
       }
     }
-    if (options.serverUrl && options.apiKey) {
+    if (reqOptions.serverUrl && reqOptions.apiKey) {
       console.log("Publishing SBOM to Dependency Track");
-      submitBom(options, bomNSData.bomJson);
+      submitBom(reqOptions, bomNSData.bomJson);
     }
     res.end("\n");
     if (cleanup && srcDir && srcDir.startsWith(os.tmpdir()) && fs.rmSync) {
