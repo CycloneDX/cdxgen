@@ -707,9 +707,6 @@ function addComponent(
         compScope = "optional";
       }
     }
-    if (options.requiredOnly && ["optional", "excluded"].includes(compScope)) {
-      return;
-    }
     const component = {
       author,
       publisher,
@@ -1016,7 +1013,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
-  const dependencies = !options.requiredOnly ? context.dependencies || [] : [];
+  const dependencies = context.dependencies || [];
   const parentComponent =
     determineParentComponent(options) || context.parentComponent;
   const metadata = addMetadata(parentComponent, "json", options);
@@ -1330,7 +1327,7 @@ export const createJavaBom = async (path, options) => {
             if (bomJsonObj.components) {
               pkgList = pkgList.concat(bomJsonObj.components);
             }
-            if (bomJsonObj.dependencies && !options.requiredOnly) {
+            if (bomJsonObj.dependencies) {
               dependencies = mergeDependencies(
                 dependencies,
                 bomJsonObj.dependencies,

@@ -126,6 +126,7 @@ import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 
 ```text
 $ cdxgen -h
+Options:
   -o, --output                 Output file for bom.xml or bom.json. Default bom.
                                json
   -t, --type                   Project type
@@ -149,7 +150,9 @@ $ cdxgen -h
                                d or the project name and version together
       --parent-project-id      Dependency track parent project id
       --required-only          Include only the packages with required scope on
-                               the SBOM.                               [boolean]
+                               the SBOM. Would set compositions.aggregate to inc
+                               omplete unless --no-auto-compositions is passed.
+                                                                       [boolean]
       --fail-on-error          Fail if any dependency extractor fails. [boolean]
       --no-babel               Do not use babel to perform usage analysis for Ja
                                vaScript/TypeScript projects.           [boolean]
@@ -166,11 +169,21 @@ $ cdxgen -h
       --validate               Validate the generated SBOM using json schema. De
                                faults to true. Pass --no-validate to disable.
                                                        [boolean] [default: true]
+      --evidence               Generate SBOM with evidence for supported languag
+                               es. WIP                [boolean] [default: false]
       --usages-slices-file     Path for the usages slice file created by atom.
       --data-flow-slices-file  Path for the data-flow slice file created by atom
                                .
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
+      --filter                 Filter components containining this word in purl.
+                                Multiple values allowed.                 [array]
+      --only                   Include components only containining this word in
+                                purl. Useful to generate BOM with first party co
+                               mponents alone. Multiple values allowed.  [array]
+      --auto-compositions      Automatically set compositions when the BOM was f
+                               iltered. Defaults to true
+                                                       [boolean] [default: true]
   -h, --help                   Show help                               [boolean]
   -v, --version                Show version number                     [boolean]
 ```
