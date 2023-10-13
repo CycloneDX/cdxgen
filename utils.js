@@ -4719,6 +4719,9 @@ export const parseCsProjAssetsData = async function (csProjData) {
   const pkgList = [];
   let dependenciesList = [];
   let rootPkg = {};
+  // This tracks the resolved version
+  const pkgNameVersionMap = {};
+  const pkgAddedMap = {};
 
   if (!csProjData) {
     return { pkgList, dependenciesList };
@@ -4784,12 +4787,12 @@ export const parseCsProjAssetsData = async function (csProjData) {
 
   if (csProjData.libraries && csProjData.targets) {
     const lib = csProjData.libraries;
+    // Pass 1: Construct pkgList alone and track name and resolved version
     for (const framework in csProjData.targets) {
       for (const rootDep of Object.keys(csProjData.targets[framework])) {
         // if (rootDep.startsWith("runtime")){
         //   continue;
         // }
-        const depList = new Set();
         const [name, version] = rootDep.split("/");
         const dpurl = decodeURIComponent(
           new PackageURL("nuget", "", name, version, null, null).toString()
@@ -4810,29 +4813,41 @@ export const parseCsProjAssetsData = async function (csProjData) {
           }
         }
         pkgList.push(pkg);
-
+        pkgNameVersionMap[name] = version;
+        pkgAddedMap[name] = true;
+      }
+    }
+    // Pass 2: Fix the dependency tree
+    for (const framework in csProjData.targets) {
+      for (const rootDep of Object.keys(csProjData.targets[framework])) {
+        const depList = new Set();
+        const [name, version] = rootDep.split("/");
+        const dpurl = decodeURIComponent(
+          new PackageURL("nuget", "", name, version, null, null).toString()
+        );
         const dependencies =
           csProjData.targets[framework][rootDep].dependencies;
         if (dependencies) {
           for (const p of Object.keys(dependencies)) {
+            // This condition is not required for assets json that are well-formed.
+            if (!pkgNameVersionMap[p]) {
+              continue;
+            }
+            let dversion = pkgNameVersionMap[p];
             const ipurl = decodeURIComponent(
-              new PackageURL(
-                "nuget",
-                "",
-                p,
-                dependencies[p],
-                null,
-                null
-              ).toString()
+              new PackageURL("nuget", "", p, dversion, null, null).toString()
             );
             depList.add(ipurl);
-            pkgList.push({
-              group: "",
-              name: p,
-              version: dependencies[p],
-              description: "",
-              "bom-ref": ipurl
-            });
+            if (!pkgAddedMap[p]) {
+              pkgList.push({
+                group: "",
+                name: p,
+                version: dversion,
+                description: "",
+                "bom-ref": ipurl
+              });
+              pkgAddedMap[p] = true;
+            }
           }
         }
         dependenciesList.push({
