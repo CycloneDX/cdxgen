@@ -10,6 +10,28 @@ import process from "node:process";
 import { analyzeProject, createEvinseFile, prepareDB } from "../evinser.js";
 import { validateBom } from "../validator.js";
 import { printCallStack, printOccurrences, printServices } from "../display.js";
+import { findUpSync } from "find-up";
+import { load as _load } from "js-yaml";
+
+// Support for config files
+const configPath = findUpSync([
+  ".cdxgenrc",
+  ".cdxgen.json",
+  ".cdxgen.yml",
+  ".cdxgen.yaml"
+]);
+let config = {};
+if (configPath) {
+  try {
+    if (configPath.endsWith(".yml") || configPath.endsWith(".yaml")) {
+      config = _load(fs.readFileSync(configPath, "utf-8"));
+    } else {
+      config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+    }
+  } catch (e) {
+    console.log("Invalid config file", configPath);
+  }
+}
 
 const isWin = _platform() === "win32";
 const isMac = _platform() === "darwin";
@@ -28,6 +50,7 @@ if (!process.env.ATOM_DB && !fs.existsSync(ATOM_DB)) {
   }
 }
 const args = yargs(hideBin(process.argv))
+  .env("EVINSE")
   .option("input", {
     alias: "i",
     description: "Input SBOM file. Default bom.json",
@@ -88,6 +111,7 @@ const args = yargs(hideBin(process.argv))
     type: "boolean",
     description: "Print the evidences as table"
   })
+  .config(config)
   .scriptName("evinse")
   .version()
   .help("h").argv;

@@ -1,5 +1,98 @@
 # Advanced Usage
 
+## Filtering components
+
+cdxgen can filter the components and the dependency tree before writing to a BOM json file. Three kinds of filters are allowed:
+
+### Required only filter
+
+Pass `--required-only` to only store components with the `scope` attribute set to `required`. These are usually considered direct dependencies.
+
+```shell
+cdxgen -t java -o /tmp/bom.json -p --required-only
+```
+
+Languages supported:
+
+- Java with Maven
+- Node.js
+- Go
+- Php
+
+### Purl filter
+
+Use `--filter` to filter components containing the string in the purl.
+
+```shell
+cdxgen -t java -o /tmp/bom.json -p --filter org.springframework
+```
+
+### Include only filter
+
+Use `--only` to include only those components containing the string in the purl. This can be used to generate BOM with "first party" components only.
+
+```shell
+cdxgen -t java -o /tmp/bom.json -p --only org.springframework
+```
+
+## Automatic compositions
+
+When using any filters, cdxgen would automatically set the [compositions.aggregate](https://cyclonedx.org/docs/1.5/json/#compositions_items_aggregate) property to "incomplete" or "incomplete_first_party_only".
+
+To disable this behavior, pass `--no-auto-compositions`.
+
+## Configuration files
+
+Tired of passing command line arguments to cdxgen?
+
+JSON format
+
+- .cdxgenrc
+- .cdxgen.json
+
+YAML format
+
+- .cdxgen.yml
+- .cdxgen.yaml
+
+Examples:
+
+```json
+{
+  "type": "java",
+  "print": true,
+  "output": "bom.json"
+}
+```
+
+```yaml
+# Java type
+type: java
+# Print the BOM as table and tree
+print: true
+# Set the output file
+output: bom.json
+# Only include these components in the BOM
+only: org.springframework
+```
+
+### Environment variables
+
+All command line arguments can also be passed as environment variables using the "CDXGEN\_" prefix.
+
+```shell
+export CDXGEN_TYPE=java
+export CDXGEN_PROJECT_NAME=foo
+```
+
+Environment variables override values from the configuration files.
+
+### Config value ordering
+
+- Command-line arguments
+- Environment variables
+- Configuration files (JSON first, followed by yaml)
+
 ## Evinse Mode / SaaSBOM
 
 Evinse (Evinse Verification Is Nearly SBOM Evidence) is a new command with cdxgen to generate component evidence and SaaSBOM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom).

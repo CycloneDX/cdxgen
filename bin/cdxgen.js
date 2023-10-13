@@ -11,6 +11,29 @@ import { fileURLToPath } from "node:url";
 import globalAgent from "global-agent";
 import process from "node:process";
 import { printTable, printDependencyTree } from "../display.js";
+import { findUpSync } from "find-up";
+import { load as _load } from "js-yaml";
+import { postProcess } from "../postgen.js";
+
+// Support for config files
+const configPath = findUpSync([
+  ".cdxgenrc",
+  ".cdxgen.json",
+  ".cdxgen.yml",
+  ".cdxgen.yaml"
+]);
+let config = {};
+if (configPath) {
+  try {
+    if (configPath.endsWith(".yml") || configPath.endsWith(".yaml")) {
+      config = _load(fs.readFileSync(configPath, "utf-8"));
+    } else {
+      config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+    }
+  } catch (e) {
+    console.log("Invalid config file", configPath);
+  }
+}
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -22,6 +45,7 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
 const args = yargs(hideBin(process.argv))
+  .env("CDXGEN")
   .option("output", {
     alias: "o",
     description: "Output file for bom.xml or bom.json. Default bom.json"
@@ -77,7 +101,8 @@ const args = yargs(hideBin(process.argv))
   })
   .option("required-only", {
     type: "boolean",
-    description: "Include only the packages with required scope on the SBOM."
+    description:
+      "Include only the packages with required scope on the SBOM. Would set compositions.aggregate to incomplete unless --no-auto-compositions is passed."
   })
   .option("fail-on-error", {
     type: "boolean",
@@ -132,6 +157,28 @@ const args = yargs(hideBin(process.argv))
     description: "CycloneDX Specification version to use. Defaults to 1.5",
     default: 1.5
   })
+  .option("filter", {
+    description:
+      "Filter components containining this word in purl. Multiple values allowed."
+  })
+  .option("only", {
+    description:
+      "Include components only containining this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed."
+  })
+  .array("filter")
+  .array("only")
+  .option("auto-compositions", {
+    type: "boolean",
+    default: true,
+    description:
+      "Automatically set compositions when the BOM was filtered. Defaults to true"
+  })
+  .example([
+    ["$0 -t java .", "Generate a Java SBOM for the current directory"],
+    ["$0 --server", "Run cdxgen as a server"]
+  ])
+  .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
+  .config(config)
   .scriptName("cdxgen")
   .version()
   .alias("v", "version")
@@ -177,32 +224,14 @@ if (process.argv[1].includes("obom") && !args.type) {
 }
 
 /**
- * projectType: python, nodejs, java, golang
- * multiProject: Boolean to indicate monorepo or multi-module projects
+ * Command line options
  */
-const options = {
+const options = Object.assign({}, args, {
   projectType: args.type,
   multiProject: args.recurse,
-  output: args.output,
-  resolveClass: args.resolveClass,
-  installDeps: args.installDeps,
-  requiredOnly: args.requiredOnly,
-  failOnError: args.failOnError,
   noBabel: args.noBabel || args.babel === false,
-  deep: args.deep,
-  generateKeyAndSign: args.generateKeyAndSign,
-  project: args.projectId,
-  projectName: args.projectName,
-  projectGroup: args.projectGroup,
-  projectVersion: args.projectVersion,
-  server: args.server,
-  serverHost: args.serverHost,
-  serverPort: args.serverPort,
-  specVersion: args.specVersion,
-  evidence: args.evidence,
-  usagesSlicesFile: args.usagesSlicesFile,
-  dataFlowSlicesFile: args.dataFlowSlicesFile
-};
+  project: args.projectId
+});
 
 /**
  * Check for node >= 20 permissions
@@ -243,7 +272,7 @@ const checkPermissions = (filePath) => {
   // Start SBOM server
   if (args.server) {
     const serverModule = await import("../server.js");
-    return await serverModule.start(options);
+    return serverModule.start(options);
   }
   // Check if cdxgen has the required permissions
   if (!checkPermissions(filePath)) {
@@ -253,7 +282,10 @@ const checkPermissions = (filePath) => {
   if (!options.usagesSlicesFile) {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
-  const bomNSData = (await createBom(filePath, options)) || {};
+  let bomNSData = (await createBom(filePath, options)) || {};
+  if (options.requiredOnly || options["filter"] || options["only"]) {
+    bomNSData = postProcess(bomNSData, options);
+  }
   if (!args.output) {
     args.output = "bom.json";
   }

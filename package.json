@@ -39,10 +39,10 @@
   },
   "scripts": {
     "docs": "docsify serve docs",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js postgen.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint": "eslint *.js *.test.js bin/*.js",
-    "pretty": "prettier --write *.js data/*.json bin/*.js"
+    "pretty": "prettier --write *.js data/*.json bin/*.js *.md docs/*.md"
   },
   "engines": {
     "node": ">=16"
@@ -62,6 +62,7 @@
     "ajv-formats": "^2.1.1",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "^1.0.0",
+    "find-up": "^6.3.0",
     "glob": "^10.3.10",
     "global-agent": "^3.0.0",
     "got": "^13.0.0",

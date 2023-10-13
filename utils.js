@@ -4634,7 +4634,7 @@ export const parseCsPkgData = async function (pkgData) {
     attributesKey: "$",
     commentKey: "value"
   }).packages;
-  if (packages.length == 0) {
+  if (!packages || packages.length == 0) {
     return pkgList;
   }
   packages = packages[0].package;
@@ -4661,7 +4661,7 @@ export const parseCsProjData = async function (csProjData) {
     attributesKey: "$",
     commentKey: "value"
   }).Project;
-  if (projects.length == 0) {
+  if (!projects || projects.length == 0) {
     return pkgList;
   }
   const project = projects[0];
