@@ -4889,24 +4889,85 @@ export const parseCsPkgLockData = async function (csLockData) {
 
 export const parsePaketLockData = async function (paketLockData) {
   const pkgList = [];
+  const dependenciesList = [];
+  const dependenciesMap = {};
+  const pkgNameVersionMap = {};
+  let group = null;
   let pkg = null;
   if (!paketLockData) {
-    return pkgList;
+    return { pkgList, dependenciesList };
   }
-  const pkgRegex = /\s+([a-zA-Z0-9-.]+) \(((?=.*?\.)[a-zA-Z0-9-.]+)\)/g;
-  for (const [, name, version] of paketLockData.matchAll(pkgRegex)) {
-    const purl = decodeURIComponent(
-      new PackageURL("nuget", "", name, version, null, null).toString()
-    );
-    pkg = {
-      group: "",
-      name: name,
-      version: version,
-      purl: purl
-    };
-    pkgList.push(pkg);
+
+  const packages = paketLockData.split("\n");
+  const groupRegex = /^GROUP\s(\S*)$/;
+  const pkgRegex = /^\s{4}([\w.-]+) \(((?=.*?\.)[\w.-]+)\)/;
+  const depRegex = /^\s{6}([\w.-]+) \([><= \w.-]+\)/;
+
+  // Gather all packages
+  packages.forEach((l) => {
+    let match = l.match(groupRegex);
+    if (match) {
+      group = match[1];
+      return;
+    }
+
+    const [, name, version] = l.match(pkgRegex) || [, null, null];
+    if (name) {
+      const purl = decodeURIComponent(
+        new PackageURL("nuget", "", name, version, null, null).toString()
+      );
+      pkg = {
+        group: "",
+        name: name,
+        version: version,
+        purl: purl
+      };
+      pkgList.push(pkg);
+      dependenciesMap[purl] = new Set();
+      pkgNameVersionMap[name + group] = version;
+    }
+  });
+
+  let purl = null;
+  group = null;
+
+  // Construct the dependency tree
+  packages.forEach((l) => {
+    let match = l.match(groupRegex);
+    if (match) {
+      group = match[1];
+      return;
+    }
+
+    const [, pkgName, pkgVersion] = l.match(pkgRegex) || [, null, null];
+    if (pkgName) {
+      purl = decodeURIComponent(
+        new PackageURL("nuget", "", pkgName, pkgVersion, null, null).toString()
+      );
+      return;
+    }
+
+    const [, depName] = l.match(depRegex) || [, null];
+    if (depName) {
+      const depVersion = pkgNameVersionMap[depName + group];
+      const dpurl = decodeURIComponent(
+        new PackageURL("nuget", "", depName, depVersion, null, null).toString()
+      );
+      dependenciesMap[purl].add(dpurl);
+    }
+  });
+
+  for (const ref in dependenciesMap) {
+    dependenciesList.push({
+      ref: ref,
+      dependsOn: Array.from(dependenciesMap[ref])
+    });
   }
-  return pkgList;
+
+  return {
+    pkgList,
+    dependenciesList
+  };
 };
 
 /**
