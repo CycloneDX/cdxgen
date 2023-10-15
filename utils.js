@@ -4702,7 +4702,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
   // extract name, operator, version from .NET package representation
   // like "NLog >= 4.5.0"
   function extractNameOperatorVersion(inputStr) {
-    const extractNameOperatorVersion = /([\w.]+)\s*([><=!]+)\s*([\d.]+)/;
+    const extractNameOperatorVersion = /([\w.-]+)\s*([><=!]+)\s*([\d.]+)/;
     const match = inputStr.match(extractNameOperatorVersion);
 
     if (match) {
