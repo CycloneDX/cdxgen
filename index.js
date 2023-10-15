@@ -4144,9 +4144,14 @@ export const createCsharpBom = async (
         console.log(`Parsing ${f}`);
       }
       pkgData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parsePaketLockData(pkgData);
+      const results = await parsePaketLockData(pkgData);
+      const dlist = results.pkgList;
+      const deps = results.dependenciesList;
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
+      }
+      if (deps && deps.length) {
+        dependencies = dependencies.concat(deps);
       }
     }
   }

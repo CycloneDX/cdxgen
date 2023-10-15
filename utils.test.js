@@ -1299,16 +1299,27 @@ test("parse packages.lock.json", async () => {
 });
 
 test("parse paket.lock", async () => {
-  expect(await parsePaketLockData(null)).toEqual([]);
+  expect(await parsePaketLockData(null)).toEqual({
+    pkgList: [],
+    dependenciesList: []
+  });
   const dep_list = await parsePaketLockData(
     readFileSync("./test/data/paket.lock", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(13);
-  expect(dep_list[0]).toEqual({
+  expect(dep_list.pkgList.length).toEqual(13);
+  expect(dep_list.pkgList[0]).toEqual({
     group: "",
     name: "0x53A.ReferenceAssemblies.Paket",
     version: "0.2",
     purl: "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2"
+  });
+  expect(dep_list.dependenciesList.length).toEqual(13);
+  expect(dep_list.dependenciesList[2]).toEqual({
+    ref: "pkg:nuget/FSharp.Compiler.Service@17.0.1",
+    dependsOn: [
+      "pkg:nuget/System.Collections.Immutable@1.4",
+      "pkg:nuget/System.Reflection.Metadata@1.5"
+    ]
   });
 });
 
