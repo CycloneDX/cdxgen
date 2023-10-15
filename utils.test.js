@@ -1265,6 +1265,9 @@ test("parse project.assets.json", async () => {
   expect(dep_list["dependenciesList"][0]).toEqual({
     dependsOn: [
       "pkg:nuget/Castle.Core@0.0.0",
+      "pkg:nuget/Castle.Core-NLog@0.0.0",
+      "pkg:nuget/Castle.Core-Serilog@0.0.0",
+      "pkg:nuget/Castle.Core-log4net@0.0.0",
       "pkg:nuget/Microsoft.NET.Test.Sdk@17.1.0",
       "pkg:nuget/Microsoft.NETCore.App@2.1.0",
       "pkg:nuget/Microsoft.NETFramework.ReferenceAssemblies@1.0.0",
