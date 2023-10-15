@@ -4911,8 +4911,10 @@ export const parsePaketLockData = async function (paketLockData) {
       return;
     }
 
-    const [, name, version] = l.match(pkgRegex) || [, null, null];
-    if (name) {
+    match = l.match(pkgRegex);
+    if (match) {
+      const name = match[1];
+      const version = match[2];
       const purl = decodeURIComponent(
         new PackageURL("nuget", "", name, version, null, null).toString()
       );
@@ -4939,16 +4941,19 @@ export const parsePaketLockData = async function (paketLockData) {
       return;
     }
 
-    const [, pkgName, pkgVersion] = l.match(pkgRegex) || [, null, null];
-    if (pkgName) {
+    match = l.match(pkgRegex);
+    if (match) {
+      const pkgName = match[1];
+      const pkgVersion = match[2];
       purl = decodeURIComponent(
         new PackageURL("nuget", "", pkgName, pkgVersion, null, null).toString()
       );
       return;
     }
 
-    const [, depName] = l.match(depRegex) || [, null];
-    if (depName) {
+    match = l.match(depRegex);
+    if (match) {
+      const depName = match[1];
       const depVersion = pkgNameVersionMap[depName + group];
       const dpurl = decodeURIComponent(
         new PackageURL("nuget", "", depName, depVersion, null, null).toString()
