@@ -4813,7 +4813,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
           }
         }
         pkgList.push(pkg);
-        pkgNameVersionMap[name] = version;
+        pkgNameVersionMap[name + framework] = version;
         pkgAddedMap[name] = true;
       }
     }
@@ -4830,10 +4830,10 @@ export const parseCsProjAssetsData = async function (csProjData) {
         if (dependencies) {
           for (const p of Object.keys(dependencies)) {
             // This condition is not required for assets json that are well-formed.
-            if (!pkgNameVersionMap[p]) {
+            if (!pkgNameVersionMap[p + framework]) {
               continue;
             }
-            let dversion = pkgNameVersionMap[p];
+            let dversion = pkgNameVersionMap[p + framework];
             const ipurl = decodeURIComponent(
               new PackageURL("nuget", "", p, dversion, null, null).toString()
             );
