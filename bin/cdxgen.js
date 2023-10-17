@@ -213,11 +213,6 @@ if (!args.projectName) {
   }
 }
 
-// To help dependency track users, we downgrade the spec version to 1.4 automatically
-if (args.serverUrl || args.apiKey) {
-  args.specVersion = 1.4;
-}
-
 // Support for obom aliases
 if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
