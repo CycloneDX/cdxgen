@@ -2156,12 +2156,13 @@ export const createNodejsBom = async (path, options) => {
           rdeplist.push(dobj.ref);
         }
         // Fixes: 212. Handle case where there are no package.json to determine the parent package
+        // Bug fix: We need to consistently override the parent component group, name and version here
         if (Object.keys(parentComponent).length && parentComponent.name) {
           const ppurl = new PackageURL(
             "npm",
-            parentComponent.group,
-            parentComponent.name,
-            parentComponent.version,
+            options.projectGroup || parentComponent.group,
+            options.projectName || parentComponent.name,
+            options.projectVersion || parentComponent.version,
             null,
             null
           ).toString();

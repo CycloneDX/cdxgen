@@ -355,6 +355,12 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
       const pkgData = JSON.parse(readFileSync(pkgJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
       const name = pkgIdentifier.fullName || pkgData.name;
+      if (!name) {
+        console.log(
+          `${pkgJsonFile} doesn't contain the package name. Consider using the 'npm init' command to create a valid package.json file for this project.`
+        );
+        return pkgList;
+      }
       const group = pkgIdentifier.scope || "";
       const purl = new PackageURL(
         "npm",
@@ -718,8 +724,19 @@ export const yarnLockToIdentMap = function (lockData) {
             if (group) {
               group = `${group}/`;
             }
+            // "lru-cache@npm:^6.0.0":
+            // "string-width-cjs@npm:string-width@^4.2.0":
+            // Here range can be
+            // - npm:^6.0.0
+            // - npm:@types/ioredis@^4.28.10
+            // - npm:strip-ansi@^6.0.1
+            // See test cases with yarn3.lock and yarn6.lock
             if (range && range.startsWith("npm:")) {
-              range = range.replace("npm:", "");
+              if (range.includes("@")) {
+                range = range.split("@").slice(-1)[0];
+              } else {
+                range = range.replace("npm:", "");
+              }
             }
             currentIdents.push(`${group || ""}${name}|${range}`);
           }
@@ -755,20 +772,23 @@ export const parseYarnLock = async function (yarnLockFile) {
     let depsMode = false;
     let purlString = "";
     let deplist = [];
+    const pkgAddedMap = {};
     // This would have the keys and the resolved version required to solve the dependency tree
     const identMap = yarnLockToIdentMap(lockData);
     let prefixAtSymbol = false;
     lockData.split("\n").forEach((l) => {
       l = l.replace("\r", "");
-      if (l === "\n" || l.startsWith("#")) {
+      if (l.startsWith("#")) {
         return;
       }
-      if (!l.startsWith(" ")) {
+      if (!l.startsWith(" ") || l.trim() === "") {
         // Create an entry for the package and reset variables
         if (
           name !== "" &&
           version !== "" &&
-          (integrity !== "" || version.includes("local"))
+          (integrity !== "" ||
+            version.includes("local") ||
+            (integrity === "" && (depsMode || l.trim() === "")))
         ) {
           // Create a purl ref for the current package
           purlString = new PackageURL(
@@ -779,33 +799,37 @@ export const parseYarnLock = async function (yarnLockFile) {
             null,
             null
           ).toString();
-          pkgList.push({
-            group: group || "",
-            name: name,
-            version: version,
-            _integrity: integrity,
-            purl: purlString,
-            "bom-ref": decodeURIComponent(purlString),
-            properties: [
-              {
-                name: "SrcFile",
-                value: yarnLockFile
+          // Trim duplicates
+          if (!pkgAddedMap[purlString]) {
+            pkgAddedMap[purlString] = true;
+            pkgList.push({
+              group: group || "",
+              name: name,
+              version: version,
+              _integrity: integrity,
+              purl: purlString,
+              "bom-ref": decodeURIComponent(purlString),
+              properties: [
+                {
+                  name: "SrcFile",
+                  value: yarnLockFile
+                }
+              ],
+              evidence: {
+                identity: {
+                  field: "purl",
+                  confidence: 1,
+                  methods: [
+                    {
+                      technique: "manifest-analysis",
+                      confidence: 1,
+                      value: yarnLockFile
+                    }
+                  ]
+                }
               }
-            ],
-            evidence: {
-              identity: {
-                field: "purl",
-                confidence: 1,
-                methods: [
-                  {
-                    technique: "manifest-analysis",
-                    confidence: 1,
-                    value: yarnLockFile
-                  }
-                ]
-              }
-            }
-          });
+            });
+          }
           // Reset all the variables
           group = "";
           name = "";
@@ -852,7 +876,12 @@ export const parseYarnLock = async function (yarnLockFile) {
           if (dgroupname.endsWith(":")) {
             dgroupname = dgroupname.substring(0, dgroupname.length - 1);
           }
-          const resolvedVersion = identMap[`${dgroupname}|${tmpA[1]}`];
+          let range = tmpA[1];
+          // Deal with range with npm: prefix such as npm:string-width@^4.2.0, npm:@types/ioredis@^4.28.10
+          if (range.startsWith("npm:")) {
+            range = range.split("@").splice(-1)[0];
+          }
+          const resolvedVersion = identMap[`${dgroupname}|${range}`];
           const depPurlString = new PackageURL(
             "npm",
             null,

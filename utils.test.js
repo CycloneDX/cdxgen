@@ -2120,7 +2120,7 @@ test("parseYarnLock", async () => {
   });
 
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
-  expect(parsedList.pkgList.length).toEqual(1090);
+  expect(parsedList.pkgList.length).toEqual(1088);
   expect(parsedList.dependenciesList.length).toEqual(1088);
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
@@ -2151,8 +2151,8 @@ test("parseYarnLock", async () => {
     }
   });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
-  expect(parsedList.pkgList.length).toEqual(325);
-  expect(parsedList.dependenciesList.length).toEqual(323);
+  expect(parsedList.pkgList.length).toEqual(363);
+  expect(parsedList.dependenciesList.length).toEqual(363);
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
@@ -2220,6 +2220,15 @@ test("parseYarnLock", async () => {
   );
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@ampproject/remapping@2.2.0"
+  );
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn6.lock");
+  expect(parsedList.pkgList.length).toEqual(1472);
+  expect(parsedList.dependenciesList.length).toEqual(1472);
+  expect(parsedList.pkgList[0].purl).toEqual(
+    "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6"
+  );
+  expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
+    "pkg:npm/@aashutoshrathi/word-wrap@1.2.6"
   );
 });
 
