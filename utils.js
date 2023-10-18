@@ -39,6 +39,7 @@ import {
   valid,
   parse
 } from "semver";
+import nugetSemVer from "@snyk/nuget-semver";
 import StreamZip from "node-stream-zip";
 import { parseEDNString } from "edn-data";
 import { PackageURL } from "packageurl-js";
@@ -4974,7 +4975,6 @@ export const parsePaketLockData = async function (paketLockData) {
     dependenciesList
   };
 };
-
 /**
  * Parse composer lock file
  *
@@ -7738,9 +7738,9 @@ async function queryNuget(p, NUGET_URL) {
       //   np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
       //
       // }
-      if (np.version && valid(np.version)) {
-        let lower = compare(item.lower, np.version);
-        let upper = compare(item.upper, np.version);
+      if (np.version) {
+        let lower = nugetSemVer.compare(item.lower, np.version);
+        let upper = nugetSemVer.compare(item.upper, np.version);
         if (lower !== 1 && upper !== -1) {
           res = await cdxgenAgent.get(item["@id"], { responseType: "json" });
           newBody.push(
@@ -7760,17 +7760,21 @@ async function queryNuget(p, NUGET_URL) {
       np.version =
         tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
     }
-    const firstItem = items[0];
-    // Work backwards to find the body for the matching version
-    // body.push(firstItem.items[firstItem.items.length - 1])
     if (np.version) {
-      newBody.push(
-        firstItem.items
-          .reverse()
-          .filter(
-            (i) => i.catalogEntry && i.catalogEntry.version === np.version
-          )
-      );
+      for (const item of items) {
+        let lower = nugetSemVer.compare(item.lower, np.version);
+        let upper = nugetSemVer.compare(item.upper, np.version);
+        if (lower !== 1 && upper !== -1) {
+          newBody.push(
+            item.items
+              .reverse()
+              .filter(
+                (i) => i.catalogEntry && i.catalogEntry.version === np.version
+              )
+          );
+          break;
+        }
+      }
     }
   }
   return [np, newBody];
