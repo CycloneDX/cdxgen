@@ -4888,6 +4888,14 @@ export const parseCsPkgLockData = async function (csLockData) {
 };
 
 export const parsePaketLockData = async function (paketLockData) {
+  // Include patch version when not set by Paket
+  function formatVersion(version) {
+    if (version.split(".").length == 2) {
+      return version + ".0";
+    }
+    return version;
+  }
+
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
@@ -4914,7 +4922,7 @@ export const parsePaketLockData = async function (paketLockData) {
     match = l.match(pkgRegex);
     if (match) {
       const name = match[1];
-      const version = match[2];
+      const version = formatVersion(match[2]);
       const purl = decodeURIComponent(
         new PackageURL("nuget", "", name, version, null, null).toString()
       );
@@ -4944,7 +4952,7 @@ export const parsePaketLockData = async function (paketLockData) {
     match = l.match(pkgRegex);
     if (match) {
       const pkgName = match[1];
-      const pkgVersion = match[2];
+      const pkgVersion = formatVersion(match[2]);
       purl = decodeURIComponent(
         new PackageURL("nuget", "", pkgName, pkgVersion, null, null).toString()
       );
