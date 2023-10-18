@@ -784,6 +784,8 @@ export const parseYarnLock = async function (yarnLockFile) {
             name: name,
             version: version,
             _integrity: integrity,
+            purl: purlString,
+            "bom-ref": decodeURIComponent(purlString),
             properties: [
               {
                 name: "SrcFile",
@@ -1594,7 +1596,7 @@ export const parseGradleDep = function (
               qualifiers: { type: "jar" }
             };
             adep["purl"] = purlString;
-            adep["bom-ref"] = purlString;
+            adep["bom-ref"] = decodeURIComponent(purlString);
             if (scope) {
               adep["scope"] = scope;
             }
@@ -2067,8 +2069,8 @@ export const parseKVDep = function (rawOutput) {
         group,
         name,
         version,
-        purl: decodeURIComponent(purlString),
-        "bom-ref": purlString
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString)
       });
     });
     return deps;
@@ -4726,25 +4728,23 @@ export const parseCsProjAssetsData = async function (csProjData) {
   if (!csProjData) {
     return { pkgList, dependenciesList };
   }
-
   csProjData = JSON.parse(csProjData);
+  const purlString = new PackageURL(
+    "nuget",
+    "",
+    csProjData.project.restore.projectName,
+    csProjData.project.version || "latest",
+    null,
+    null
+  ).toString();
   rootPkg = {
     group: "",
     name: csProjData.project.restore.projectName,
     version: csProjData.project.version || "latest",
     type: "application",
-    "bom-ref": decodeURIComponent(
-      new PackageURL(
-        "nuget",
-        "",
-        csProjData.project.restore.projectName,
-        csProjData.project.version || "latest",
-        null,
-        null
-      ).toString()
-    )
+    purl: purlString,
+    "bom-ref": decodeURIComponent(purlString)
   };
-  const purlString = decodeURIComponent(rootPkg["bom-ref"].toString());
   pkgList.push(rootPkg);
   let rootPkgDeps = new Set();
 
@@ -4794,16 +4794,22 @@ export const parseCsProjAssetsData = async function (csProjData) {
         //   continue;
         // }
         const [name, version] = rootDep.split("/");
-        const dpurl = decodeURIComponent(
-          new PackageURL("nuget", "", name, version, null, null).toString()
-        );
+        const dpurl = new PackageURL(
+          "nuget",
+          "",
+          name,
+          version,
+          null,
+          null
+        ).toString();
         let pkg = {
           group: "",
           name: name,
           version: version,
           description: "",
           type: csProjData.targets[framework][rootDep].type,
-          "bom-ref": dpurl
+          purl: dpurl,
+          "bom-ref": decodeURIComponent(dpurl)
         };
         if (lib[rootDep]) {
           if (lib[rootDep].sha512) {
@@ -4834,9 +4840,14 @@ export const parseCsProjAssetsData = async function (csProjData) {
               continue;
             }
             let dversion = pkgNameVersionMap[p + framework];
-            const ipurl = decodeURIComponent(
-              new PackageURL("nuget", "", p, dversion, null, null).toString()
-            );
+            const ipurl = new PackageURL(
+              "nuget",
+              "",
+              p,
+              dversion,
+              null,
+              null
+            ).toString();
             depList.add(ipurl);
             if (!pkgAddedMap[p]) {
               pkgList.push({
@@ -4844,7 +4855,8 @@ export const parseCsProjAssetsData = async function (csProjData) {
                 name: p,
                 version: dversion,
                 description: "",
-                "bom-ref": ipurl
+                purl: ipurl,
+                "bom-ref": decodeURIComponent(ipurl)
               });
               pkgAddedMap[p] = true;
             }
@@ -5112,8 +5124,8 @@ export const parseSbtTree = (sbtTreeFile) => {
         group,
         name,
         version,
-        purl: decodeURIComponent(purlString),
-        "bom-ref": purlString,
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString),
         evidence: {
           identity: {
             field: "purl",
@@ -5601,8 +5613,8 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
         null,
         null
       );
-      const purlString = decodeURIComponent(purl.toString());
-      rootPkg["bom-ref"] = purlString;
+      const bomRefString = decodeURIComponent(purl.toString());
+      rootPkg["bom-ref"] = bomRefString;
       pkgList.push(rootPkg);
       const deplist = [];
       for (const rd of jsonData.dependencies) {
@@ -5618,7 +5630,7 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
         deplist.push(deppurlString);
       }
       dependenciesList.push({
-        ref: purlString,
+        ref: bomRefString,
         dependsOn: deplist
       });
       _swiftDepPkgList(pkgList, dependenciesList, depKeys, jsonData);
@@ -5998,7 +6010,7 @@ export const convertJarNSToPackages = (jarNSMapping) => {
       version: pom.version || purlObj.version,
       description: (pom.description || "").trim(),
       purl,
-      "bom-ref": purl,
+      "bom-ref": decodeURIComponent(purl),
       evidence: {
         identity: {
           field: "purl",

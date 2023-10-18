@@ -1256,6 +1256,7 @@ test("parse project.assets.json", async () => {
   expect(dep_list["pkgList"].length).toEqual(302);
   expect(dep_list["pkgList"][0]).toEqual({
     "bom-ref": "pkg:nuget/Castle.Core.Tests@0.0.0",
+    purl: "pkg:nuget/Castle.Core.Tests@0.0.0",
     group: "",
     name: "Castle.Core.Tests",
     type: "application",
@@ -1959,6 +1960,8 @@ test("parseYarnLock", async () => {
     name: "asap",
     version: "2.0.5",
     _integrity: "sha256-522765b50c3510490e52d7dcfe085ef9ba96958f",
+    "bom-ref": "pkg:npm/asap@2.0.5",
+    purl: "pkg:npm/asap@2.0.5",
     properties: [
       {
         name: "SrcFile",
@@ -1991,6 +1994,8 @@ test("parseYarnLock", async () => {
     group: "@babel",
     name: "cli",
     version: "7.10.1",
+    "bom-ref": "pkg:npm/@babel/cli@7.10.1",
+    purl: "pkg:npm/%40babel/cli@7.10.1",
     _integrity:
       "sha512-cVB+dXeGhMOqViIaZs3A9OUAe4pKw4SBNdMw6yHJMYR7s4TB+Cei7ThquV/84O19PdIFWuwe03vxxES0BHUm5g==",
     properties: [
@@ -2027,6 +2032,8 @@ test("parseYarnLock", async () => {
     group: "@apollo",
     name: "client",
     version: "3.2.5",
+    "bom-ref": "pkg:npm/@apollo/client@3.2.5",
+    purl: "pkg:npm/%40apollo/client@3.2.5",
     properties: [
       {
         name: "SrcFile",
@@ -2057,6 +2064,8 @@ test("parseYarnLock", async () => {
     group: "@actions",
     name: "artifact",
     version: "0.6.1",
+    "bom-ref": "pkg:npm/@actions/artifact@0.6.1",
+    purl: "pkg:npm/%40actions/artifact@0.6.1",
     properties: [
       {
         name: "SrcFile",
@@ -2086,6 +2095,8 @@ test("parseYarnLock", async () => {
       "sha512-+X9Jn4mPI+RYV0ITiiLyJSYlT9um111BocJSaztsxXR+9ZxWErpzdfQqyk+EYZUOklugjJkerQZRtJGLfJeClw==",
     group: "",
     name: "lru-cache",
+    "bom-ref": "pkg:npm/lru-cache@6.0.0",
+    purl: "pkg:npm/lru-cache@6.0.0",
     version: "6.0.0",
     properties: [
       {
@@ -2117,6 +2128,8 @@ test("parseYarnLock", async () => {
     group: "@arcanis",
     name: "slice-ansi",
     version: "1.0.2",
+    "bom-ref": "pkg:npm/@arcanis/slice-ansi@1.0.2",
+    purl: "pkg:npm/%40arcanis/slice-ansi@1.0.2",
     properties: [
       {
         name: "SrcFile",
@@ -2146,6 +2159,8 @@ test("parseYarnLock", async () => {
     group: "@babel",
     name: "code-frame",
     version: "7.16.7",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.16.7",
+    purl: "pkg:npm/%40babel/code-frame@7.16.7",
     properties: [
       {
         name: "SrcFile",
@@ -2176,6 +2191,8 @@ test("parseYarnLock", async () => {
     group: "@ac-synth",
     name: "yjs",
     version: "13.5.39-alpha1",
+    "bom-ref": "pkg:npm/@ac-synth/yjs@13.5.39-alpha1",
+    purl: "pkg:npm/%40ac-synth/yjs@13.5.39-alpha1",
     _integrity:
       "sha512-JE93VWVyVa07xkK1wJ5ogjSZ30Nn4ptUuUXdPnu8MsKme1xFHLFFD3UtnHxnxnNDSnGx+WLlhuyHdIFfSCYqYg==",
     properties: [
@@ -2195,6 +2212,15 @@ test("parseYarnLock", async () => {
       }
     }
   });
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn5.lock");
+  expect(parsedList.pkgList.length).toEqual(1962);
+  expect(parsedList.dependenciesList.length).toEqual(1962);
+  expect(parsedList.pkgList[0].purl).toEqual(
+    "pkg:npm/%40ampproject/remapping@2.2.0"
+  );
+  expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
+    "pkg:npm/@ampproject/remapping@2.2.0"
+  );
 });
 
 test("parseComposerLock", () => {
