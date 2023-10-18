@@ -7108,6 +7108,10 @@ export const parsePackageJsonName = (name) => {
 export const addEvidenceForImports = (pkgList, allImports) => {
   const impPkgs = Object.keys(allImports);
   for (const pkg of pkgList) {
+    if (impPkgs && impPkgs.length) {
+      // Assume that all packages are optional until we see an evidence
+      pkg.scope = "optional";
+    }
     const { group, name } = pkg;
     let aliases =
       group && group.length
