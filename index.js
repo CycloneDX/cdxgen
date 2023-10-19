@@ -373,7 +373,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     if (parentComponent) {
       cleanParentComponent(parentComponent);
       if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
-        parentComponent["purl"] = parentComponent["bom-ref"];
+        parentComponent["purl"] = encodeForPurl(parentComponent["bom-ref"]);
       }
     }
     if (parentComponent && parentComponent.components) {
@@ -400,7 +400,9 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
             )
           ) {
             if (!comp["bom-ref"]) {
-              comp["bom-ref"] = `pkg:${comp.type}/${fullName}`;
+              comp["bom-ref"] = `pkg:${comp.type}/${decodeURIComponent(
+                fullName
+              )}`;
             }
             if (!addedSubComponents[comp["bom-ref"]]) {
               subComponents.push(comp);
@@ -2130,7 +2132,7 @@ export const createNodejsBom = async (path, options) => {
           null,
           null
         ).toString();
-        tmpParentComponent["bom-ref"] = ppurl;
+        tmpParentComponent["bom-ref"] = decodeURIComponent(ppurl);
         tmpParentComponent["purl"] = ppurl;
         if (!Object.keys(parentComponent).length) {
           parentComponent = tmpParentComponent;
@@ -2154,12 +2156,13 @@ export const createNodejsBom = async (path, options) => {
           rdeplist.push(dobj.ref);
         }
         // Fixes: 212. Handle case where there are no package.json to determine the parent package
+        // Bug fix: We need to consistently override the parent component group, name and version here
         if (Object.keys(parentComponent).length && parentComponent.name) {
           const ppurl = new PackageURL(
             "npm",
-            parentComponent.group,
-            parentComponent.name,
-            parentComponent.version,
+            options.projectGroup || parentComponent.group,
+            options.projectName || parentComponent.name,
+            options.projectVersion || parentComponent.version,
             null,
             null
           ).toString();
@@ -5161,7 +5164,9 @@ export const createBom = async (path, options) => {
             purl: "pkg:oci/" + inspectData.RepoDigests[0],
             _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
           };
-          options.parentComponent["bom-ref"] = options.parentComponent.purl;
+          options.parentComponent["bom-ref"] = decodeURIComponent(
+            options.parentComponent.purl
+          );
         }
       } else if (inspectData.Id) {
         options.parentComponent = {
@@ -5173,7 +5178,9 @@ export const createBom = async (path, options) => {
           purl: "pkg:oci/" + inspectData.RepoDigests[0],
           _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
         };
-        options.parentComponent["bom-ref"] = options.parentComponent.purl;
+        options.parentComponent["bom-ref"] = decodeURIComponent(
+          options.parentComponent.purl
+        );
       }
     } else {
       options.parentComponent = createDefaultParentComponent(

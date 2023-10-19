@@ -355,6 +355,12 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
       const pkgData = JSON.parse(readFileSync(pkgJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
       const name = pkgIdentifier.fullName || pkgData.name;
+      if (!name) {
+        console.log(
+          `${pkgJsonFile} doesn't contain the package name. Consider using the 'npm init' command to create a valid package.json file for this project.`
+        );
+        return pkgList;
+      }
       const group = pkgIdentifier.scope || "";
       const purl = new PackageURL(
         "npm",
@@ -718,8 +724,19 @@ export const yarnLockToIdentMap = function (lockData) {
             if (group) {
               group = `${group}/`;
             }
+            // "lru-cache@npm:^6.0.0":
+            // "string-width-cjs@npm:string-width@^4.2.0":
+            // Here range can be
+            // - npm:^6.0.0
+            // - npm:@types/ioredis@^4.28.10
+            // - npm:strip-ansi@^6.0.1
+            // See test cases with yarn3.lock and yarn6.lock
             if (range && range.startsWith("npm:")) {
-              range = range.replace("npm:", "");
+              if (range.includes("@")) {
+                range = range.split("@").slice(-1)[0];
+              } else {
+                range = range.replace("npm:", "");
+              }
             }
             currentIdents.push(`${group || ""}${name}|${range}`);
           }
@@ -755,20 +772,23 @@ export const parseYarnLock = async function (yarnLockFile) {
     let depsMode = false;
     let purlString = "";
     let deplist = [];
+    const pkgAddedMap = {};
     // This would have the keys and the resolved version required to solve the dependency tree
     const identMap = yarnLockToIdentMap(lockData);
     let prefixAtSymbol = false;
     lockData.split("\n").forEach((l) => {
       l = l.replace("\r", "");
-      if (l === "\n" || l.startsWith("#")) {
+      if (l.startsWith("#")) {
         return;
       }
-      if (!l.startsWith(" ")) {
+      if (!l.startsWith(" ") || l.trim() === "") {
         // Create an entry for the package and reset variables
         if (
           name !== "" &&
           version !== "" &&
-          (integrity !== "" || version.includes("local"))
+          (integrity !== "" ||
+            version.includes("local") ||
+            (integrity === "" && (depsMode || l.trim() === "")))
         ) {
           // Create a purl ref for the current package
           purlString = new PackageURL(
@@ -779,31 +799,37 @@ export const parseYarnLock = async function (yarnLockFile) {
             null,
             null
           ).toString();
-          pkgList.push({
-            group: group || "",
-            name: name,
-            version: version,
-            _integrity: integrity,
-            properties: [
-              {
-                name: "SrcFile",
-                value: yarnLockFile
+          // Trim duplicates
+          if (!pkgAddedMap[purlString]) {
+            pkgAddedMap[purlString] = true;
+            pkgList.push({
+              group: group || "",
+              name: name,
+              version: version,
+              _integrity: integrity,
+              purl: purlString,
+              "bom-ref": decodeURIComponent(purlString),
+              properties: [
+                {
+                  name: "SrcFile",
+                  value: yarnLockFile
+                }
+              ],
+              evidence: {
+                identity: {
+                  field: "purl",
+                  confidence: 1,
+                  methods: [
+                    {
+                      technique: "manifest-analysis",
+                      confidence: 1,
+                      value: yarnLockFile
+                    }
+                  ]
+                }
               }
-            ],
-            evidence: {
-              identity: {
-                field: "purl",
-                confidence: 1,
-                methods: [
-                  {
-                    technique: "manifest-analysis",
-                    confidence: 1,
-                    value: yarnLockFile
-                  }
-                ]
-              }
-            }
-          });
+            });
+          }
           // Reset all the variables
           group = "";
           name = "";
@@ -850,7 +876,12 @@ export const parseYarnLock = async function (yarnLockFile) {
           if (dgroupname.endsWith(":")) {
             dgroupname = dgroupname.substring(0, dgroupname.length - 1);
           }
-          const resolvedVersion = identMap[`${dgroupname}|${tmpA[1]}`];
+          let range = tmpA[1];
+          // Deal with range with npm: prefix such as npm:string-width@^4.2.0, npm:@types/ioredis@^4.28.10
+          if (range.startsWith("npm:")) {
+            range = range.split("@").splice(-1)[0];
+          }
+          const resolvedVersion = identMap[`${dgroupname}|${range}`];
           const depPurlString = new PackageURL(
             "npm",
             null,
@@ -1594,7 +1625,7 @@ export const parseGradleDep = function (
               qualifiers: { type: "jar" }
             };
             adep["purl"] = purlString;
-            adep["bom-ref"] = purlString;
+            adep["bom-ref"] = decodeURIComponent(purlString);
             if (scope) {
               adep["scope"] = scope;
             }
@@ -2067,8 +2098,8 @@ export const parseKVDep = function (rawOutput) {
         group,
         name,
         version,
-        purl: decodeURIComponent(purlString),
-        "bom-ref": purlString
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString)
       });
     });
     return deps;
@@ -4726,25 +4757,23 @@ export const parseCsProjAssetsData = async function (csProjData) {
   if (!csProjData) {
     return { pkgList, dependenciesList };
   }
-
   csProjData = JSON.parse(csProjData);
+  const purlString = new PackageURL(
+    "nuget",
+    "",
+    csProjData.project.restore.projectName,
+    csProjData.project.version || "latest",
+    null,
+    null
+  ).toString();
   rootPkg = {
     group: "",
     name: csProjData.project.restore.projectName,
     version: csProjData.project.version || "latest",
     type: "application",
-    "bom-ref": decodeURIComponent(
-      new PackageURL(
-        "nuget",
-        "",
-        csProjData.project.restore.projectName,
-        csProjData.project.version || "latest",
-        null,
-        null
-      ).toString()
-    )
+    purl: purlString,
+    "bom-ref": decodeURIComponent(purlString)
   };
-  const purlString = decodeURIComponent(rootPkg["bom-ref"].toString());
   pkgList.push(rootPkg);
   let rootPkgDeps = new Set();
 
@@ -4794,16 +4823,22 @@ export const parseCsProjAssetsData = async function (csProjData) {
         //   continue;
         // }
         const [name, version] = rootDep.split("/");
-        const dpurl = decodeURIComponent(
-          new PackageURL("nuget", "", name, version, null, null).toString()
-        );
+        const dpurl = new PackageURL(
+          "nuget",
+          "",
+          name,
+          version,
+          null,
+          null
+        ).toString();
         let pkg = {
           group: "",
           name: name,
           version: version,
           description: "",
           type: csProjData.targets[framework][rootDep].type,
-          "bom-ref": dpurl
+          purl: dpurl,
+          "bom-ref": decodeURIComponent(dpurl)
         };
         if (lib[rootDep]) {
           if (lib[rootDep].sha512) {
@@ -4834,9 +4869,14 @@ export const parseCsProjAssetsData = async function (csProjData) {
               continue;
             }
             let dversion = pkgNameVersionMap[p + framework];
-            const ipurl = decodeURIComponent(
-              new PackageURL("nuget", "", p, dversion, null, null).toString()
-            );
+            const ipurl = new PackageURL(
+              "nuget",
+              "",
+              p,
+              dversion,
+              null,
+              null
+            ).toString();
             depList.add(ipurl);
             if (!pkgAddedMap[p]) {
               pkgList.push({
@@ -4844,7 +4884,8 @@ export const parseCsProjAssetsData = async function (csProjData) {
                 name: p,
                 version: dversion,
                 description: "",
-                "bom-ref": ipurl
+                purl: ipurl,
+                "bom-ref": decodeURIComponent(ipurl)
               });
               pkgAddedMap[p] = true;
             }
@@ -5112,8 +5153,8 @@ export const parseSbtTree = (sbtTreeFile) => {
         group,
         name,
         version,
-        purl: decodeURIComponent(purlString),
-        "bom-ref": purlString,
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString),
         evidence: {
           identity: {
             field: "purl",
@@ -5601,8 +5642,8 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
         null,
         null
       );
-      const purlString = decodeURIComponent(purl.toString());
-      rootPkg["bom-ref"] = purlString;
+      const bomRefString = decodeURIComponent(purl.toString());
+      rootPkg["bom-ref"] = bomRefString;
       pkgList.push(rootPkg);
       const deplist = [];
       for (const rd of jsonData.dependencies) {
@@ -5618,7 +5659,7 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
         deplist.push(deppurlString);
       }
       dependenciesList.push({
-        ref: purlString,
+        ref: bomRefString,
         dependsOn: deplist
       });
       _swiftDepPkgList(pkgList, dependenciesList, depKeys, jsonData);
@@ -5998,7 +6039,7 @@ export const convertJarNSToPackages = (jarNSMapping) => {
       version: pom.version || purlObj.version,
       description: (pom.description || "").trim(),
       purl,
-      "bom-ref": purl,
+      "bom-ref": decodeURIComponent(purl),
       evidence: {
         identity: {
           field: "purl",
@@ -7067,6 +7108,10 @@ export const parsePackageJsonName = (name) => {
 export const addEvidenceForImports = (pkgList, allImports) => {
   const impPkgs = Object.keys(allImports);
   for (const pkg of pkgList) {
+    if (impPkgs && impPkgs.length) {
+      // Assume that all packages are optional until we see an evidence
+      pkg.scope = "optional";
+    }
     const { group, name } = pkg;
     let aliases =
       group && group.length
