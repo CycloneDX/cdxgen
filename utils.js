@@ -661,12 +661,34 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     return { pkgList, dependenciesList };
   };
 
-  const arb = new Arborist({
+  let arb = new Arborist({
     path: path.dirname(pkgLockFile),
     // legacyPeerDeps=false enables npm >v3 package dependency resolution
     legacyPeerDeps: false
   });
-  const tree = await arb.loadVirtual();
+  let tree = undefined;
+  try {
+    tree = await arb.loadVirtual();
+  } catch (e) {
+    console.log(
+      `Unable to parse ${pkgLockFile} without legacy peer dependencies. Retrying ...`
+    );
+    try {
+      arb = new Arborist({
+        path: path.dirname(pkgLockFile),
+        legacyPeerDeps: true
+      });
+      tree = await arb.loadVirtual();
+    } catch (e) {
+      console.log(
+        `Unable to parse ${pkgLockFile} in legacy and non-legacy mode. The resulting SBOM would be incomplete.`
+      );
+      return { pkgList, dependenciesList };
+    }
+  }
+  if (!tree) {
+    return { pkgList, dependenciesList };
+  }
   ({ pkgList, dependenciesList } = parseArboristNode(
     tree,
     tree,
@@ -754,6 +776,28 @@ export const yarnLockToIdentMap = function (lockData) {
   return identMap;
 };
 
+const _parseYarnLine = (l) => {
+  let name = "";
+  let group = "";
+  const prefixAtSymbol = l.startsWith("@");
+  const tmpA = l.split("@");
+  // ignore possible leading empty strings
+  if (tmpA[0] === "") {
+    tmpA.shift();
+  }
+  if (tmpA.length >= 2) {
+    const fullName = tmpA[0];
+    if (fullName.indexOf("/") > -1) {
+      const parts = fullName.split("/");
+      group = (prefixAtSymbol ? "@" : "") + parts[0];
+      name = parts[1];
+    } else {
+      name = fullName;
+    }
+  }
+  return { group, name };
+};
+
 /**
  * Parse nodejs yarn lock file
  *
@@ -766,6 +810,7 @@ export const parseYarnLock = async function (yarnLockFile) {
   if (existsSync(yarnLockFile)) {
     const lockData = readFileSync(yarnLockFile, "utf8");
     let name = "";
+    let name_aliases = [];
     let group = "";
     let version = "";
     let integrity = "";
@@ -775,7 +820,6 @@ export const parseYarnLock = async function (yarnLockFile) {
     const pkgAddedMap = {};
     // This would have the keys and the resolved version required to solve the dependency tree
     const identMap = yarnLockToIdentMap(lockData);
-    let prefixAtSymbol = false;
     lockData.split("\n").forEach((l) => {
       l = l.replace("\r", "");
       if (l.startsWith("#")) {
@@ -790,49 +834,56 @@ export const parseYarnLock = async function (yarnLockFile) {
             version.includes("local") ||
             (integrity === "" && (depsMode || l.trim() === "")))
         ) {
-          // Create a purl ref for the current package
-          purlString = new PackageURL(
-            "npm",
-            group,
-            name,
-            version,
-            null,
-            null
-          ).toString();
-          // Trim duplicates
-          if (!pkgAddedMap[purlString]) {
-            pkgAddedMap[purlString] = true;
-            pkgList.push({
-              group: group || "",
-              name: name,
-              version: version,
-              _integrity: integrity,
-              purl: purlString,
-              "bom-ref": decodeURIComponent(purlString),
-              properties: [
-                {
-                  name: "SrcFile",
-                  value: yarnLockFile
+          name_aliases.push({ group, name });
+          // FIXME: What should we do about the dependencies for such aliases
+          for (const ang of name_aliases) {
+            group = ang.group;
+            name = ang.name;
+            // Create a purl ref for the current package
+            purlString = new PackageURL(
+              "npm",
+              group,
+              name,
+              version,
+              null,
+              null
+            ).toString();
+            // Trim duplicates
+            if (!pkgAddedMap[purlString]) {
+              pkgAddedMap[purlString] = true;
+              pkgList.push({
+                group: group || "",
+                name: name,
+                version: version,
+                _integrity: integrity,
+                purl: purlString,
+                "bom-ref": decodeURIComponent(purlString),
+                properties: [
+                  {
+                    name: "SrcFile",
+                    value: yarnLockFile
+                  }
+                ],
+                evidence: {
+                  identity: {
+                    field: "purl",
+                    confidence: 1,
+                    methods: [
+                      {
+                        technique: "manifest-analysis",
+                        confidence: 1,
+                        value: yarnLockFile
+                      }
+                    ]
+                  }
                 }
-              ],
-              evidence: {
-                identity: {
-                  field: "purl",
-                  confidence: 1,
-                  methods: [
-                    {
-                      technique: "manifest-analysis",
-                      confidence: 1,
-                      value: yarnLockFile
-                    }
-                  ]
-                }
-              }
-            });
+              });
+            }
           }
           // Reset all the variables
           group = "";
           name = "";
+          name_aliases = [];
           version = "";
           integrity = "";
         }
@@ -849,20 +900,29 @@ export const parseYarnLock = async function (yarnLockFile) {
         }
         // Collect the group and the name
         l = l.replace(/["']/g, "");
-        prefixAtSymbol = l.startsWith("@");
-        const tmpA = l.split("@");
-        // ignore possible leading empty strings
-        if (tmpA[0] === "") {
-          tmpA.shift();
-        }
-        if (tmpA.length >= 2) {
-          const fullName = tmpA[0];
-          if (fullName.indexOf("/") > -1) {
-            const parts = fullName.split("/");
-            group = (prefixAtSymbol ? "@" : "") + parts[0];
-            name = parts[1];
+        // Deals with lines including aliases
+        // Eg: string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^1.0.2 || 2 || 3 || 4, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3
+        const fragments = l.split(", ");
+        for (let i = 0; i < fragments.length; i++) {
+          const parsedline = _parseYarnLine(fragments[i]);
+          if (i === 0) {
+            group = parsedline.group;
+            name = parsedline.name;
           } else {
-            name = fullName;
+            let fullName = parsedline.name;
+            if (parsedline.group && parsedline.group.length) {
+              fullName = `${parsedline.group}/${parsedline.name}`;
+            }
+            if (
+              fullName !== name &&
+              fullName !== `${group}/${name}` &&
+              !name_aliases.includes(fullName)
+            ) {
+              name_aliases.push({
+                group: parsedline.group,
+                name: parsedline.name
+              });
+            }
           }
         }
       } else if (name !== "" && l.startsWith("  dependencies:")) {
