@@ -1053,7 +1053,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
  * @param path to the project
  * @param options Parse options from the cli
  */
-export const createJarBom = (path, options) => {
+export const createJarBom = async (path, options) => {
   let pkgList = [];
   let jarFiles = [];
   let nsMapping = {};
@@ -1093,6 +1093,9 @@ export const createJarBom = (path, options) => {
       const dlist = extractJarArchive(jar, tempDir);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
+      }
+      if (pkgList.length) {
+        pkgList = await getMvnMetadata(pkgList);
       }
     }
     // Clean up
@@ -4729,7 +4732,7 @@ export const createMultiXBom = async (pathList, options) => {
     }
     // Jar scanning is enabled by default
     // See #330
-    bomData = createJarBom(path, options);
+    bomData = await createJarBom(path, options);
     if (
       bomData &&
       bomData.bomJson &&
@@ -4755,7 +4758,7 @@ export const createMultiXBom = async (pathList, options) => {
     }
   } // for
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
-    bomData = createJarBom(options.lastWorkingDir, options);
+    bomData = await createJarBom(options.lastWorkingDir, options);
     if (
       bomData &&
       bomData.bomJson &&
@@ -5229,20 +5232,20 @@ export const createBom = async (path, options) => {
     case "sbt":
       return await createJavaBom(path, options);
     case "jar":
-      return createJarBom(path, options);
+      return await createJarBom(path, options);
     case "gradle-index":
     case "gradle-cache":
       options.useGradleCache = true;
-      return createJarBom(GRADLE_CACHE_DIR, options);
+      return await createJarBom(GRADLE_CACHE_DIR, options);
     case "sbt-index":
     case "sbt-cache":
       options.useSbtCache = true;
-      return createJarBom(SBT_CACHE_DIR, options);
+      return await createJarBom(SBT_CACHE_DIR, options);
     case "maven-index":
     case "maven-cache":
     case "maven-repo":
       options.useMavenCache = true;
-      return createJarBom(
+      return await createJarBom(
         process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository"),
         options
       );
