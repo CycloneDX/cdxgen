@@ -98,6 +98,12 @@ const args = yargs(hideBin(process.argv))
     default: false,
     type: "boolean"
   })
+  .option("with-reachables", {
+    description:
+      "Enable auto-tagged reachable slicing. Requires SBOM generated with --deep mode.",
+    default: false,
+    type: "boolean"
+  })
   .option("usages-slices-file", {
     description: "Use an existing usages slices file.",
     default: "usages.slices.json"
@@ -105,6 +111,10 @@ const args = yargs(hideBin(process.argv))
   .option("data-flow-slices-file", {
     description: "Use an existing data-flow slices file.",
     default: "data-flow.slices.json"
+  })
+  .option("reachables-slices-file", {
+    description: "Use an existing reachables slices file.",
+    default: "reachables.slices.json"
   })
   .option("print", {
     alias: "p",

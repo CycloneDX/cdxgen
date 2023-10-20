@@ -260,8 +260,10 @@ export const analyzeProject = async (dbObjMap, options) => {
   const language = options.language;
   let usageSlice = undefined;
   let dataFlowSlice = undefined;
+  let reachablesSlice = undefined;
   let usagesSlicesFile = undefined;
   let dataFlowSlicesFile = undefined;
+  let reachablesSlicesFile = undefined;
   let dataFlowFrames = {};
   let servicesMap = {};
   let retMap = {};
@@ -330,10 +332,36 @@ export const analyzeProject = async (dbObjMap, options) => {
       purlImportsMap
     );
   }
+  if (options.withReachables) {
+    if (
+      options.reachablesSlicesFile &&
+      fs.existsSync(options.reachablesSlicesFile)
+    ) {
+      reachablesSlicesFile = options.reachablesSlicesFile;
+      reachablesSlice = JSON.parse(
+        fs.readFileSync(options.reachablesSlicesFile, "utf-8")
+      );
+    } else {
+      retMap = createSlice(language, dirPath, "reachables");
+      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+        reachablesSlicesFile = retMap.slicesFile;
+        reachablesSlice = JSON.parse(
+          fs.readFileSync(retMap.slicesFile, "utf-8")
+        );
+        console.log(
+          `To speed up this step, cache ${reachablesSlicesFile} and invoke evinse with the --reachables-slices-file argument.`
+        );
+      }
+    }
+  }
+  if (reachablesSlice && Object.keys(reachablesSlice).length) {
+    dataFlowFrames = await collectReachableFrames(language, reachablesSlice);
+  }
   return {
     atomFile: retMap.atomFile,
     usagesSlicesFile,
     dataFlowSlicesFile,
+    reachablesSlicesFile,
     purlLocationMap,
     servicesMap,
     dataFlowFrames,
@@ -752,6 +780,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     tempDir,
     usagesSlicesFile,
     dataFlowSlicesFile,
+    reachablesSlicesFile,
     purlLocationMap,
     servicesMap,
     dataFlowFrames
@@ -828,6 +857,14 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         annotator: { component: bomJson.metadata.tools.components[0] },
         timestamp: new Date().toISOString(),
         text: fs.readFileSync(dataFlowSlicesFile, "utf8")
+      });
+    }
+    if (reachablesSlicesFile && fs.existsSync(reachablesSlicesFile)) {
+      bomJson.annotations.push({
+        subjects: [bomJson.serialNumber],
+        annotator: { component: bomJson.metadata.tools.components[0] },
+        timestamp: new Date().toISOString(),
+        text: fs.readFileSync(reachablesSlicesFile, "utf8")
       });
     }
   }
@@ -957,6 +994,46 @@ export const collectDataFlowFrames = async (
         line: theNode.lineNumber || undefined,
         column: theNode.columnNumber || undefined,
         fullFilename: theNode.parentFileName || ""
+      });
+    }
+    referredPurls = Array.from(referredPurls);
+    if (referredPurls.length) {
+      for (const apurl of referredPurls) {
+        if (!dfFrames[apurl]) {
+          dfFrames[apurl] = [];
+        }
+        // Store this frame as an evidence for this purl
+        dfFrames[apurl].push(aframe);
+      }
+    }
+  }
+  return dfFrames;
+};
+
+/**
+ * Method to convert reachable slice into usable callstack frames
+ * Implemented based on the logic proposed here - https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#data-flow-slice
+ *
+ * @param {string} language Application language
+ * @param {object} reachablesSlice Reachables slice object from atom
+ */
+export const collectReachableFrames = async (language, reachablesSlice) => {
+  const reachableNodes = reachablesSlice?.reachables || [];
+  // purl key and an array of frames array
+  // CycloneDX 1.5 currently accepts only 1 frame as evidence
+  // so this method is more future-proof
+  const dfFrames = {};
+  for (const anode of reachableNodes) {
+    let aframe = [];
+    let referredPurls = new Set(anode.purls || []);
+    for (const fnode of anode.flows) {
+      aframe.push({
+        package: fnode.parentPackageName,
+        module: fnode.parentClassName || "",
+        function: fnode.parentMethodName || "",
+        line: fnode.lineNumber || undefined,
+        column: fnode.columnNumber || undefined,
+        fullFilename: fnode.parentFileName || ""
       });
     }
     referredPurls = Array.from(referredPurls);
