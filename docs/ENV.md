@@ -36,3 +36,4 @@ The following environment variables are available to configure the bom generatio
 | CDX_MAVEN_INCLUDE_TEST_SCOPE | Whether test scoped dependencies should be included from Maven projects, Default: true                                               |
 | ASTGEN_IGNORE_DIRS           | Comma separated list of directories to ignore while analyzing using babel. The environment variable is also used by atom and astgen. |
 | ASTGEN_IGNORE_FILE_PATTERN   | Ignore regex to use                                                                                                                  |
+| PYPI_URL                     | Override pypi url. Default: https://pypi.org/pypi/                                                                                   |

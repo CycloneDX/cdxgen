@@ -2390,7 +2390,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
   if (!FETCH_LICENSE && !fetchDepsInfo) {
     return pkgList;
   }
-  const PYPI_URL = "https://pypi.org/pypi/";
+  const PYPI_URL = process.env.PYPI_URL || "https://pypi.org/pypi/";
   const cdepList = [];
   for (const p of pkgList) {
     if (!p || !p.name) {
