@@ -89,7 +89,12 @@ export const DEBUG_MODE =
   process.env.NODE_ENV === "development";
 
 // Timeout milliseconds. Default 20 mins
-const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 20 * 60 * 1000;
+export const TIMEOUT_MS =
+  parseInt(process.env.CDXGEN_TIMEOUT_MS) || 20 * 60 * 1000;
+
+// Max buffer for stdout and stderr. Defaults to 100MB
+export const MAX_BUFFER =
+  parseInt(process.env.CDXGEN_MAX_BUFFER) || 100 * 1024 * 1024;
 
 // Metadata cache
 export let metadata_cache = {};

@@ -367,6 +367,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | USE_GOSUM                    | Set to `true` or `1` to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod          |
 | CDXGEN_TIMEOUT_MS            | Default timeout for known execution involving maven, gradle or sbt                                                                   |
 | CDXGEN_SERVER_TIMEOUT_MS     | Default timeout in server mode                                                                                                       |
+| CDXGEN_MAX_BUFFER            | Max buffer for stdout and stderr. Defaults to 100MB                                                                                  |
 | CLJ_CMD                      | Set to override the clojure cli command                                                                                              |
 | LEIN_CMD                     | Set to override the leiningen command                                                                                                |
 | SBOM_SIGN_ALGORITHM          | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                                       |
