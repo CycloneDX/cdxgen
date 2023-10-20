@@ -314,6 +314,8 @@ export const getOSPackages = (src) => {
       "0",
       "--format",
       "cyclonedx",
+      "--cache-dir",
+      trivyCacheDir,
       "--output",
       bomJsonFile
     ];
