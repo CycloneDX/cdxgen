@@ -1760,11 +1760,11 @@ export const createJavaBom = async (path, options) => {
             // write to the existing plugins file
             if (useSlashSyntax) {
               sbtArgs = [
-                `'set asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`
+                `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`
               ];
             } else {
               sbtArgs = [
-                `'set asciiGraphWidth := 400' "dependencyTree::toFile ${dlFile} --force"`
+                `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`
               ];
             }
             pluginFile = addPlugin(basePath, sbtPluginDefinition);
