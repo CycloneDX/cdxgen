@@ -5015,7 +5015,6 @@ export const parsePaketLockData = async function (paketLockData) {
     dependenciesList
   };
 };
-
 /**
  * Parse composer lock file
  *
@@ -7741,6 +7740,44 @@ async function getNugetUrl() {
 }
 
 async function queryNuget(p, NUGET_URL) {
+  function setLatestVersion(upper) {
+    // Handle special case for versions with more than 3 parts
+    if (upper.split(".").length > 3) {
+      let tmpVersionArray = upper.split("-")[0].split(".");
+      // Compromise for versions such as 1.2.3.0-alpha
+      // How to find latest proper release version?
+      if (
+        upper.split("-").length > 1 &&
+        Number(tmpVersionArray.slice(-1)) === 0
+      ) {
+        return upper;
+      } else if (upper.split("-").length > 1) {
+        tmpVersionArray[tmpVersionArray.length - 1] = (
+          Number(tmpVersionArray.slice(-1)) - 1
+        ).toString();
+      }
+      return tmpVersionArray.join(".");
+    } else {
+      const tmpVersion = parse(upper);
+      let version =
+        tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+      if (compare(version, upper) === 1) {
+        if (tmpVersion.patch > 0) {
+          version =
+            tmpVersion.major +
+            "." +
+            tmpVersion.minor +
+            "." +
+            (tmpVersion.patch - 1).toString();
+        }
+      }
+      return version;
+    }
+  }
+  // Coerce only when missing patch/minor version
+  function coerceUp(version) {
+    return version.split(".").length < 3 ? coerce(version).version : version;
+  }
   if (DEBUG_MODE) {
     console.log(`Querying nuget for ${p.name}`);
   }
@@ -7757,62 +7794,48 @@ async function queryNuget(p, NUGET_URL) {
   }
   if (items[0] && !items[0].items) {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-      const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
-      np.version =
-        tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
-      if (
-        compare(np.version, res.body.items[res.body.items.length - 1].upper) ===
-        1
-      ) {
-        if (tmpVersion.patch > 0) {
-          np.version =
-            tmpVersion.major +
-            "." +
-            tmpVersion.minor +
-            "." +
-            (tmpVersion.patch - 1).toString();
-        }
-      }
+      let upper = items[items.length - 1].upper;
+      np.version = setLatestVersion(upper);
     }
     for (const item of items) {
-      // if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-      //   const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
-      //   np.version = tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
-      //
-      // }
-      if (np.version && valid(np.version)) {
-        let lower = compare(item.lower, np.version);
-        let upper = compare(item.upper, np.version);
+      if (np.version) {
+        let lower = compare(coerce(item.lower), coerce(np.version));
+        let upper = compare(coerce(item.upper), coerce(np.version));
         if (lower !== 1 && upper !== -1) {
           res = await cdxgenAgent.get(item["@id"], { responseType: "json" });
-          newBody.push(
-            res.body.items
-              .reverse()
-              .filter(
-                (i) => i.catalogEntry && i.catalogEntry.version === np.version
-              )
-          );
-          break;
+          for (const i of res.body.items.reverse()) {
+            if (
+              i.catalogEntry &&
+              i.catalogEntry.version === coerceUp(np.version)
+            ) {
+              newBody.push(i);
+              return [np, newBody];
+            }
+          }
         }
       }
     }
   } else {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-      const tmpVersion = parse(res.body.items[res.body.items.length - 1].upper);
-      np.version =
-        tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
+      let upper = items[items.length - 1].upper;
+      np.version = setLatestVersion(upper);
     }
-    const firstItem = items[0];
-    // Work backwards to find the body for the matching version
-    // body.push(firstItem.items[firstItem.items.length - 1])
     if (np.version) {
-      newBody.push(
-        firstItem.items
-          .reverse()
-          .filter(
-            (i) => i.catalogEntry && i.catalogEntry.version === np.version
-          )
-      );
+      for (const item of items) {
+        let lower = compare(coerce(item.lower), coerce(np.version));
+        let upper = compare(coerce(item.upper), coerce(np.version));
+        if (lower !== 1 && upper !== -1) {
+          for (const i of item.items.reverse()) {
+            if (
+              i.catalogEntry &&
+              i.catalogEntry.version === coerceUp(np.version)
+            ) {
+              newBody.push(i);
+              return [np, newBody];
+            }
+          }
+        }
+      }
     }
   }
   return [np, newBody];
@@ -7861,8 +7884,8 @@ export const getNugetMetadata = async function (
           depRepList[oldRef] = p["bom-ref"];
           p.version = np.version;
         }
-        if (newBody && newBody[0].length > 0) {
-          body = newBody[0][0];
+        if (newBody && newBody.length > 0) {
+          body = newBody[0];
         }
         if (body) {
           metadata_cache[cacheKey] = body;
