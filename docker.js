@@ -323,6 +323,9 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(":" + nameObj.tag, "");
     }
   }
+  if (fullImageName && fullImageName.startsWith("library/")) {
+    fullImageName = fullImageName.replace("library/", "");
+  }
   // The left over string is the repo name
   nameObj.repo = fullImageName;
   return nameObj;
@@ -336,9 +339,6 @@ export const getImage = async (fullImageName) => {
   let pullData = undefined;
   const { repo, tag, digest } = parseImageName(fullImageName);
   let repoWithTag = `${repo}:${tag !== "" ? tag : ":latest"}`;
-  if (repoWithTag.startsWith("library/")) {
-    repoWithTag = repoWithTag.replace("library/", "");
-  }
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
@@ -741,7 +741,26 @@ export const exportImage = async (fullImageName) => {
         })
       );
     } catch (err) {
-      console.error(err);
+      if (localData && localData.Id) {
+        console.log(`Retrying with ${localData.Id}`);
+        try {
+          await stream.pipeline(
+            client.stream(`images/${localData.Id}/get`),
+            x({
+              sync: true,
+              preserveOwner: false,
+              noMtime: true,
+              noChmod: true,
+              strict: true,
+              C: tempDir,
+              portable: true,
+              onwarn: () => {}
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
     }
   }
   // Continue with extracting the layers
