@@ -6299,11 +6299,8 @@ export const extractJarArchive = function (
             }
           }
           if (name && version) {
-            // If group and name are the same we only need the name
-            if (group == name) {
-              group = "";
-            }
-            group = group === "." ? "" : encodeForPurl(group || "") || "";
+            // if group is empty use name as group
+            group = encodeForPurl(group === "." ? name : group || name) || "";
             let apkg = {
               group,
               name: name ? encodeForPurl(name) : "",
