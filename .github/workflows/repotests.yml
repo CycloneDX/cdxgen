@@ -155,6 +155,8 @@ jobs:
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --required-only
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --filter postgres --filter json
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --only spring
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o repotests/java-sec-code/bom.json --deep
+          node bin/evinse.js -i repotests/java-sec-code/bom.json -o bomresults/java-sec-code.evinse.json -l java --with-reachables -p repotests/java-sec-code
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
           node bin/evinse.js -i bomresults/bom-java.json -o bomresults/bom-java.evinse.json -l java --with-data-flow -p repotests/shiftleft-java-example
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json

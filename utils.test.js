@@ -2230,6 +2230,15 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6"
   );
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarn7.lock");
+  expect(parsedList.pkgList.length).toEqual(1350);
+  expect(parsedList.dependenciesList.length).toEqual(1347);
+  expect(parsedList.pkgList[0].purl).toEqual(
+    "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6"
+  );
+  expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
+    "pkg:npm/@aashutoshrathi/word-wrap@1.2.6"
+  );
 });
 
 test("parseComposerLock", () => {

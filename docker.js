@@ -323,6 +323,9 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(":" + nameObj.tag, "");
     }
   }
+  if (fullImageName && fullImageName.startsWith("library/")) {
+    fullImageName = fullImageName.replace("library/", "");
+  }
   // The left over string is the repo name
   nameObj.repo = fullImageName;
   return nameObj;
@@ -333,7 +336,9 @@ export const parseImageName = (fullImageName) => {
  */
 export const getImage = async (fullImageName) => {
   let localData = undefined;
+  let pullData = undefined;
   const { repo, tag, digest } = parseImageName(fullImageName);
+  let repoWithTag = `${repo}:${tag !== "" ? tag : ":latest"}`;
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
@@ -380,6 +385,14 @@ export const getImage = async (fullImageName) => {
     }
   }
   try {
+    localData = await makeRequest(`images/${repoWithTag}/json`);
+    if (localData) {
+      return localData;
+    }
+  } catch (err) {
+    // ignore
+  }
+  try {
     localData = await makeRequest(`images/${repo}/json`);
   } catch (err) {
     try {
@@ -397,7 +410,7 @@ export const getImage = async (fullImageName) => {
     }
     // If the data is not available locally
     try {
-      const pullData = await makeRequest(
+      pullData = await makeRequest(
         `images/create?fromImage=${fullImageName}`,
         "POST"
       );
@@ -415,15 +428,42 @@ export const getImage = async (fullImageName) => {
         return undefined;
       }
     } catch (err) {
-      // continue regardless of error
+      try {
+        if (DEBUG_MODE) {
+          console.log(`Re-trying the pull with the name ${repoWithTag}.`);
+        }
+        pullData = await makeRequest(
+          `images/create?fromImage=${repoWithTag}`,
+          "POST"
+        );
+      } catch (err) {
+        // continue regardless of error
+      }
     }
     try {
       if (DEBUG_MODE) {
-        console.log(`Trying with ${repo}`);
+        console.log(`Trying with ${repoWithTag}`);
       }
-      localData = await makeRequest(`images/${repo}/json`);
+      localData = await makeRequest(`images/${repoWithTag}/json`);
+      if (localData) {
+        return localData;
+      }
     } catch (err) {
       try {
+        if (DEBUG_MODE) {
+          console.log(`Trying with ${repo}`);
+        }
+        localData = await makeRequest(`images/${repo}/json`);
+        if (localData) {
+          return localData;
+        }
+      } catch (err) {
+        // continue regardless of error
+      }
+      try {
+        if (DEBUG_MODE) {
+          console.log(`Trying with ${fullImageName}`);
+        }
         localData = await makeRequest(`images/${fullImageName}/json`);
       } catch (err) {
         // continue regardless of error
@@ -701,7 +741,26 @@ export const exportImage = async (fullImageName) => {
         })
       );
     } catch (err) {
-      console.error(err);
+      if (localData && localData.Id) {
+        console.log(`Retrying with ${localData.Id}`);
+        try {
+          await stream.pipeline(
+            client.stream(`images/${localData.Id}/get`),
+            x({
+              sync: true,
+              preserveOwner: false,
+              noMtime: true,
+              noChmod: true,
+              strict: true,
+              C: tempDir,
+              portable: true,
+              onwarn: () => {}
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
     }
   }
   // Continue with extracting the layers
