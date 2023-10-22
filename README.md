@@ -2,7 +2,7 @@
 
 ![cdxgen logo](cdxgen.png)
 
-cdxgen is a cli tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill of Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
+cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill of Materials (SBOM) containing an aggregate of all project dependencies for C/C++, node.js, php, python, ruby, rust, java, .Net, Dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
 
 When used with plugins, cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBOM for some languages.
 
@@ -396,7 +396,7 @@ sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 cdxgen odoo@sha256:4e1e147f0e6714e8f8c5806d2b484075b4076ca50490577cdf9162566086d15e -o /tmp/bom.json
 ```
 
-You can also pass `-t docker` for simple labels. Only the `latest` tag would be pulled if none was specified.
+You can also pass `-t docker` for basic labels. Only the `latest` tag would be pulled if none was specified.
 
 ```shell
 cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
