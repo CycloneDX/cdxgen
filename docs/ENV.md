@@ -25,6 +25,7 @@ The following environment variables are available to configure the bom generatio
 | FETCH_LICENSE                | Set this variable to `true` or `1` to fetch license information from the registry. npm and golang                                    |
 | USE_GOSUM                    | Set to `true` or `1` to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod          |
 | CDXGEN_TIMEOUT_MS            | Default timeout for known execution involving maven, gradle or sbt                                                                   |
+| CDXGEN_MAX_BUFFER            | Max buffer for stdout and stderr. Defaults to 100MB                                                                                  |
 | CDXGEN_SERVER_TIMEOUT_MS     | Default timeout in server mode                                                                                                       |
 | CLJ_CMD                      | Set to override the clojure cli command                                                                                              |
 | LEIN_CMD                     | Set to override the leiningen command                                                                                                |
@@ -36,3 +37,4 @@ The following environment variables are available to configure the bom generatio
 | CDX_MAVEN_INCLUDE_TEST_SCOPE | Whether test scoped dependencies should be included from Maven projects, Default: true                                               |
 | ASTGEN_IGNORE_DIRS           | Comma separated list of directories to ignore while analyzing using babel. The environment variable is also used by atom and astgen. |
 | ASTGEN_IGNORE_FILE_PATTERN   | Ignore regex to use                                                                                                                  |
+| PYPI_URL                     | Override pypi url. Default: https://pypi.org/pypi/                                                                                   |

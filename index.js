@@ -101,6 +101,8 @@ import {
   parseCmakeLikeFile,
   getCppModules,
   FETCH_LICENSE,
+  TIMEOUT_MS,
+  MAX_BUFFER,
   getNugetMetadata
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
@@ -175,9 +177,6 @@ const SBT_CACHE_DIR =
 // CycloneDX Hash pattern
 const HASH_PATTERN =
   "^([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{96}|[a-fA-F0-9]{128})$";
-
-// Timeout milliseconds. Default 10 mins
-const TIMEOUT_MS = parseInt(process.env.CDXGEN_TIMEOUT_MS) || 10 * 60 * 1000;
 
 /**
  * Creates a default parent component based on the directory name.
@@ -1210,7 +1209,7 @@ export const createJavaBom = async (path, options) => {
           shell: true,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
-          maxBuffer: 50 * 1024 * 1024
+          maxBuffer: MAX_BUFFER
         });
         // Check if the cyclonedx plugin created the required bom.xml file
         // Sometimes the plugin fails silently for complex maven projects
@@ -1235,7 +1234,8 @@ export const createJavaBom = async (path, options) => {
             cwd: basePath,
             shell: true,
             encoding: "utf-8",
-            timeout: TIMEOUT_MS
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER
           });
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
@@ -1490,7 +1490,8 @@ export const createJavaBom = async (path, options) => {
         const sresult = spawnSync(gradleCmd, gradleDepArgs, {
           cwd: path,
           encoding: "utf-8",
-          timeout: TIMEOUT_MS
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER
         });
         if (sresult.status !== 0 || sresult.error) {
           if (options.failOnError || DEBUG_MODE) {
@@ -1594,7 +1595,8 @@ export const createJavaBom = async (path, options) => {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
-          timeout: TIMEOUT_MS
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER
         });
         if (result.status !== 0 || result.error) {
           if (result.stderr) {
@@ -1626,7 +1628,7 @@ export const createJavaBom = async (path, options) => {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
-            maxBuffer: 1024 * 1024 * 100
+            maxBuffer: MAX_BUFFER
           });
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
@@ -1760,11 +1762,11 @@ export const createJavaBom = async (path, options) => {
             // write to the existing plugins file
             if (useSlashSyntax) {
               sbtArgs = [
-                `'set asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`
+                `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`
               ];
             } else {
               sbtArgs = [
-                `'set asciiGraphWidth := 400' "dependencyTree::toFile ${dlFile} --force"`
+                `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`
               ];
             }
             pluginFile = addPlugin(basePath, sbtPluginDefinition);
@@ -1783,7 +1785,8 @@ export const createJavaBom = async (path, options) => {
             cwd: basePath,
             shell: true,
             encoding: "utf-8",
-            timeout: TIMEOUT_MS
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER
           });
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
@@ -2651,7 +2654,12 @@ export const createGoBom = async (path, options) => {
       const mresult = spawnSync(
         "go",
         ["mod", "why", "-m", "-vendor", pkgFullName],
-        { cwd: path, encoding: "utf-8", timeout: TIMEOUT_MS }
+        {
+          cwd: path,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER
+        }
       );
       if (mresult.status !== 0 || mresult.error) {
         if (DEBUG_MODE) {
@@ -2740,7 +2748,12 @@ export const createGoBom = async (path, options) => {
             "'{{with .Module}}{{.Path}} {{.Version}} {{.Indirect}} {{.GoMod}} {{.GoVersion}} {{.Main}}{{end}}'",
             "./..."
           ],
-          { cwd: basePath, encoding: "utf-8", timeout: TIMEOUT_MS }
+          {
+            cwd: basePath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER
+          }
         );
         if (DEBUG_MODE) {
           console.log("Executing go mod graph in", basePath);
@@ -2774,7 +2787,8 @@ export const createGoBom = async (path, options) => {
           result = spawnSync("go", ["mod", "graph"], {
             cwd: basePath,
             encoding: "utf-8",
-            timeout: TIMEOUT_MS
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER
           });
           // Check if got a mod graph successfully
           if (result.status !== 0 || result.error) {
@@ -3162,7 +3176,8 @@ export const createClojureBom = (path, options) => {
       const result = spawnSync(LEIN_CMD, LEIN_ARGS, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
@@ -3209,7 +3224,8 @@ export const createClojureBom = (path, options) => {
       const result = spawnSync(CLJ_CMD, CLJ_ARGS, {
         cwd: basePath,
         encoding: "utf-8",
-        timeout: TIMEOUT_MS
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
@@ -3556,7 +3572,8 @@ export const createSwiftBom = (path, options) => {
         {
           cwd: basePath,
           encoding: "utf-8",
-          timeout: TIMEOUT_MS
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER
         }
       );
       if (result.status === 0 && result.stdout) {

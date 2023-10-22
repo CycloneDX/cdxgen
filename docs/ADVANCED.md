@@ -133,13 +133,18 @@ Options:
                                  directory. Useful to improve the recall for cal
                                  lstack evidence.     [boolean] [default: false]
       --annotate                 Include contents of atom slices as annotations
-                                                       [boolean] [default: true]
+                                                      [boolean] [default: false]
       --with-data-flow           Enable inter-procedural data-flow slicing.
+                                                      [boolean] [default: false]
+      --with-reachables          Enable auto-tagged reachable slicing. Requires
+                                 SBOM generated with --deep mode.
                                                       [boolean] [default: false]
       --usages-slices-file       Use an existing usages slices file.
                                                  [default: "usages.slices.json"]
       --data-flow-slices-file    Use an existing data-flow slices file.
                                               [default: "data-flow.slices.json"]
+      --reachables-slices-file   Use an existing reachables slices file.
+                                             [default: "reachables.slices.json"]
   -p, --print                    Print the evidences as table          [boolean]
       --version                  Show version number                   [boolean]
   -h                             Show help                             [boolean]
@@ -151,17 +156,37 @@ To generate an SBOM with evidence for a java project.
 evinse -i bom.json -o bom.evinse.json <path to the application>
 ```
 
-By default, only occurrence evidences are determined by creating usages slices. To generate callstack evidence, pass `--with-data-flow`
+By default, only occurrence evidences are determined by creating usages slices. To generate callstack evidence, pass either `--with-data-flow` or `--with-reachables`.
+
+#### Reachability-based callstack evidence
+
+atom supports reachability-based slicing for Java applications. Two necessary prerequisites for this slicing mode are that the input SBOM must be generated in deep mode (with --deep argument) and must be placed within the application directory.
+
+```shell
+cd <path to the application>
+cdxgen -t java --deep -o bom.json .
+evinse -i bom.json -o bom.evinse.json --with-reachables .
+```
+
+This is because
+
+#### Data Flow based slicing
+
+Often reachability cannot be computed reliably due to the presence of wrapper libraries or mitigating layers. In such cases, data-flow based slicing can be used to compute callstack using a reverse reachability algorithm. This is however a time and resource-consuming operation and might even require atom to be run externally in [java mode](https://cyclonedx.github.io/cdxgen/#/ADVANCED?id=use-atom-in-java-mode).
 
 ```shell
 evinse -i bom.json -o bom.evinse.json --with-data-flow <path to the application>
 ```
+
+#### Performance tuning
 
 To improve performance, you can cache the generated usages and data-flow slices file along with the bom file.
 
 ```shell
 evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-flow-slices-file data-flow.json --with-data-flow <path to the application>
 ```
+
+#### Other languages
 
 For JavaScript or TypeScript projects, pass `-l javascript`.
 

@@ -1,5 +1,11 @@
-import { platform as _platform, arch as _arch, tmpdir } from "node:os";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { platform as _platform, arch as _arch, tmpdir, homedir } from "node:os";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync
+} from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
@@ -284,6 +290,13 @@ export const getOSPackages = (src) => {
   const allTypes = new Set();
   if (TRIVY_BIN) {
     let imageType = "image";
+    const trivyCacheDir = join(homedir(), ".cache", "trivy");
+    try {
+      mkdirSync(join(trivyCacheDir, "db"), { recursive: true });
+      mkdirSync(join(trivyCacheDir, "java-db"), { recursive: true });
+    } catch (err) {
+      // ignore errors
+    }
     if (existsSync(src)) {
       imageType = "rootfs";
     }
@@ -292,12 +305,17 @@ export const getOSPackages = (src) => {
     const args = [
       imageType,
       "--skip-db-update",
+      "--skip-java-db-update",
       "--offline-scan",
+      "--skip-files",
+      "**/*.jar",
       "--no-progress",
       "--exit-code",
       "0",
       "--format",
       "cyclonedx",
+      "--cache-dir",
+      trivyCacheDir,
       "--output",
       bomJsonFile
     ];
