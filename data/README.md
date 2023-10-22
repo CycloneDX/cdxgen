@@ -18,3 +18,4 @@ Contents of data directory and their purpose.
 | spdx.schema.json      | jsonschema for validation                                                 |
 | vendor-alias.json     | List to correct the group names. Used while parsing .jar files            |
 | wrapdb-releases.json  | Database of all available meson wraps. Generated using contrib/wrapdb.py. |
+| frameworks-list.json  | List of string fragments to categorize components into frameworks         |

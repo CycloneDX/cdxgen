@@ -143,6 +143,7 @@ const args = yargs(hideBin(process.argv))
       "Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to disable."
   })
   .option("evidence", {
+    hidden: true,
     type: "boolean",
     default: false,
     description: "Generate SBOM with evidence for supported languages. WIP"
@@ -165,8 +166,15 @@ const args = yargs(hideBin(process.argv))
     description:
       "Include components only containining this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed."
   })
+  .option("author", {
+    description:
+      "The person(s) who created the BOM. Set this value if you're intending the modify the BOM and claim authorship.",
+    default: "OWASP Foundation"
+  })
+  .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
+  .array("author")
   .option("auto-compositions", {
     type: "boolean",
     default: true,

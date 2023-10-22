@@ -158,21 +158,29 @@ evinse -i bom.json -o bom.evinse.json <path to the application>
 
 By default, only occurrence evidences are determined by creating usages slices. To generate callstack evidence, pass either `--with-data-flow` or `--with-reachables`.
 
-#### Reachability-based callstack evidence
+#### Reachability-based call stack evidence
 
-atom supports reachability-based slicing for Java applications. Two necessary prerequisites for this slicing mode are that the input SBOM must be generated in deep mode (with --deep argument) and must be placed within the application directory.
+atom supports reachability-based evidence generation for Java, JavaScript, and TypeScript applications. Reachability refers to data flows that originate from entry points (sources) ending at a sink (which are invocations to external libraries). The technique used is called "Forward-Reachability".
+
+Two necessary prerequisites for this slicing mode are that the input SBOM must be generated with cdxgen and in deep mode (only for java, jars type) and must be placed within the application directory.
 
 ```shell
 cd <path to the application>
 cdxgen -t java --deep -o bom.json .
-evinse -i bom.json -o bom.evinse.json --with-reachables .
+evinse -i bom.json -o bom.evinse.json -l java --with-reachables .
 ```
 
-This is because
+For JavaScript and TypeScript applications, deep mode is optional.
 
-#### Data Flow based slicing
+```shell
+cd <path to the application>
+cdxgen -t js -o bom.json .
+evinse -i bom.json -o bom.evinse.json -l js --with-reachables .
+```
 
-Often reachability cannot be computed reliably due to the presence of wrapper libraries or mitigating layers. In such cases, data-flow based slicing can be used to compute callstack using a reverse reachability algorithm. This is however a time and resource-consuming operation and might even require atom to be run externally in [java mode](https://cyclonedx.github.io/cdxgen/#/ADVANCED?id=use-atom-in-java-mode).
+#### Data flow-based call stack evidence
+
+Often reachability cannot be computed reliably due to the presence of wrapper libraries or mitigating layers. Further, the repository being analyzed could be a common module containing only the sink methods without entry points (sources). In such cases, data-flow-based slicing can be used to compute call stack using a "Reverse-Reachability" algorithm. This is however a time and resource-consuming operation and might even require atom to be run externally in [java mode](https://cyclonedx.github.io/cdxgen/#/ADVANCED?id=use-atom-in-java-mode).
 
 ```shell
 evinse -i bom.json -o bom.evinse.json --with-data-flow <path to the application>
@@ -241,13 +249,12 @@ cdxgen -t docker -o bom.json <image name>
 Why not?
 
 ```shell
-cdxgen -t js -o bom.json -p --no-recurse
-evinse -i bom.json -o bom.evinse.json -l javascript
+cdxgen -t js -o bom.json -p --no-recurse .
+evinse -i bom.json -o bom.evinse.json -l javascript --with-reachables .
 
-# Don't be surprised to see the service endpoint offered by cdxgen!
+# Don't be surprised to see the service endpoint offered by cdxgen.
+# Review the reachables.slices.json and file any vulnerabilities or bugs!
 ```
-
-It is currently not possible to generate data-flow evidence for cdxgen in constant time since the graph is too large for pre-computation. If you have experience with source code analysis, please suggest some improvements to the [atom](https://github.com/AppThreat/atom) project.
 
 ## Use Atom in Java mode
 
@@ -283,4 +290,20 @@ ATOM_DB = join(homedir(), "AppData", "Local", ".atomdb");
 
 // Mac
 ATOM_DB = join(homedir(), "Library", "Application Support", ".atomdb");
+```
+
+## Customize metadata.authors in BOM
+
+Use the argument `--author` to override the author name.
+
+## Generate bash/zsh command completions
+
+Run the commands such as cdxgen, evinse etc with completion as the argument.
+
+```shell
+cdxgen completion >> ~/.zshrc
+
+# cdxgen completion >> ~/.bashrc
+
+# evinse completion >> ~/.zshrc
 ```

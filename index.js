@@ -103,7 +103,8 @@ import {
   FETCH_LICENSE,
   TIMEOUT_MS,
   MAX_BUFFER,
-  getNugetMetadata
+  getNugetMetadata,
+  frameworksList
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -318,7 +319,9 @@ const addToolsSection = (options, format) => {
         version: _version,
         purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
         type: "application",
-        "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`
+        "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`,
+        author: "OWASP Foundation",
+        publisher: "OWASP Foundation"
       }
     ]
   };
@@ -344,6 +347,28 @@ const cleanParentComponent = (comp) => {
   return comp;
 };
 
+const addAuthorsSection = (options, format) => {
+  let authors = [];
+  if (options.author) {
+    let oauthors = Array.isArray(options.author)
+      ? options.author
+      : [options.author];
+    for (const aauthor of oauthors) {
+      if (aauthor.trim().length < 2) {
+        continue;
+      }
+      if (format === "xml") {
+        authors.push({
+          author: { name: aauthor }
+        });
+      } else {
+        authors.push({ name: aauthor });
+      }
+    }
+  }
+  return authors;
+};
+
 /**
  * Function to create metadata block
  *
@@ -352,21 +377,16 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
   // DO NOT fork this project to just change the vendor or author's name
   // Try to contribute to this project by sending PR or filing issues
   const tools = addToolsSection(options, format);
+  const authors = addAuthorsSection(options, format);
   const metadata = {
     timestamp: new Date().toISOString(),
     tools,
-    authors: [
-      {
-        author: { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
-      }
-    ],
+    authors,
     supplier: undefined
   };
   if (format === "json") {
     metadata.tools = tools;
-    metadata.authors = [
-      { name: "Prabhu Subramanian", email: "prabhu@appthreat.com" }
-    ];
+    metadata.authors = authors;
   }
   if (parentComponent && Object.keys(parentComponent).length) {
     if (parentComponent) {
@@ -797,49 +817,12 @@ function determinePackageType(pkg) {
         }
       }
       if (purl.namespace) {
-        for (const cf of [
-          "System.Web",
-          "System.ServiceModel",
-          "System.Data",
-          "spring",
-          "flask",
-          "django",
-          "beego",
-          "chi",
-          "echo",
-          "gin",
-          "gorilla",
-          "rye",
-          "httprouter",
-          "akka",
-          "dropwizard",
-          "vertx",
-          "gwt",
-          "jax-rs",
-          "jax-ws",
-          "jsf",
-          "play",
-          "spark",
-          "struts",
-          "angular",
-          "react",
-          "next",
-          "ember",
-          "express",
-          "knex",
-          "vue",
-          "aiohttp",
-          "bottle",
-          "cherrypy",
-          "drt",
-          "falcon",
-          "hug",
-          "pyramid",
-          "sanic",
-          "tornado",
-          "vibora"
-        ]) {
-          if (purl.namespace.includes(cf)) {
+        for (const cf of frameworksList.all) {
+          if (
+            purl.namespace.includes(cf) ||
+            purl.name.toLowerCase().includes(cf) ||
+            pkg.purl.startsWith(cf)
+          ) {
             return "framework";
           }
         }
