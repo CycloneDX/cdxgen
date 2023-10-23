@@ -1,7 +1,7 @@
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import { join } from "node:path";
-import { readdirSync, statSync, readFileSync } from "node:fs";
+import { readdirSync, lstatSync, readFileSync } from "node:fs";
 import { basename, resolve, isAbsolute, relative } from "node:path";
 
 const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
@@ -46,7 +46,11 @@ const getAllFiles = (dir, extn, files, result, regex) => {
       continue;
     }
     const file = join(dir, files[i]);
-    if (statSync(file).isDirectory()) {
+    const fileStat = lstatSync(file);
+    if (fileStat.isSymbolicLink()) {
+      continue;
+    }
+    if (fileStat.isDirectory()) {
       // Ignore directories
       const dirName = basename(file);
       if (
