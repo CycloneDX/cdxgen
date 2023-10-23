@@ -1698,6 +1698,13 @@ test("parsePkgLock v3", async () => {
   });
   expect(deps[deps.length - 1].name).toEqual("uid2");
   expect(parsedList.dependenciesList.length).toEqual(161);
+  parsedList = await parsePkgLock("./package-lock.json", {
+    projectVersion: "latest",
+    projectName: "cdxgen"
+  });
+  deps = parsedList.pkgList;
+  expect(deps.length).toEqual(1204);
+  expect(parsedList.dependenciesList.length).toEqual(1204);
 });
 
 test("parseBowerJson", async () => {
@@ -2233,6 +2240,15 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn7.lock");
   expect(parsedList.pkgList.length).toEqual(1350);
   expect(parsedList.dependenciesList.length).toEqual(1347);
+  expect(parsedList.pkgList[0].purl).toEqual(
+    "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6"
+  );
+  expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
+    "pkg:npm/@aashutoshrathi/word-wrap@1.2.6"
+  );
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv4.lock");
+  expect(parsedList.pkgList.length).toEqual(1851);
+  expect(parsedList.dependenciesList.length).toEqual(1851);
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6"
   );

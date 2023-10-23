@@ -9,7 +9,12 @@ import { homedir, platform as _platform } from "node:os";
 import process from "node:process";
 import { analyzeProject, createEvinseFile, prepareDB } from "../evinser.js";
 import { validateBom } from "../validator.js";
-import { printCallStack, printOccurrences, printServices } from "../display.js";
+import {
+  printCallStack,
+  printOccurrences,
+  printServices,
+  printReachables
+} from "../display.js";
 import { findUpSync } from "find-up";
 import { load as _load } from "js-yaml";
 
@@ -65,7 +70,18 @@ const args = yargs(hideBin(process.argv))
     alias: "l",
     description: "Application language",
     default: "java",
-    choices: ["java", "jar", "javascript", "python", "android", "cpp"]
+    choices: [
+      "java",
+      "jar",
+      "js",
+      "ts",
+      "javascript",
+      "py",
+      "python",
+      "android",
+      "c",
+      "cpp"
+    ]
   })
   .option("db-path", {
     description: `Atom slices DB path. Default ${ATOM_DB}`,
@@ -121,6 +137,18 @@ const args = yargs(hideBin(process.argv))
     type: "boolean",
     description: "Print the evidences as table"
   })
+  .example([
+    [
+      "$0 -i bom.json -o bom.evinse.json -l java .",
+      "Generate a Java SBOM with evidence for the current directory"
+    ],
+    [
+      "$0 -i bom.json -o bom.evinse.json -l java --with-reachables .",
+      "Generate a Java SBOM with occurrence and reachable evidence for the current directory"
+    ]
+  ])
+  .completion("completion", "Generate bash/zsh completion")
+  .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .config(config)
   .scriptName("evinse")
   .version()
@@ -129,8 +157,8 @@ const args = yargs(hideBin(process.argv))
 const evinseArt = `
 ███████╗██╗   ██╗██╗███╗   ██╗███████╗███████╗
 ██╔════╝██║   ██║██║████╗  ██║██╔════╝██╔════╝
-█████╗  ██║   ██║██║██╔██╗ ██║███████╗█████╗  
-██╔══╝  ╚██╗ ██╔╝██║██║╚██╗██║╚════██║██╔══╝  
+█████╗  ██║   ██║██║██╔██╗ ██║███████╗█████╗
+██╔══╝  ╚██╗ ██╔╝██║██║╚██╗██║╚════██║██╔══╝
 ███████╗ ╚████╔╝ ██║██║ ╚████║███████║███████╗
 ╚══════╝  ╚═══╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝
 `;
@@ -151,6 +179,7 @@ console.log(evinseArt);
     if (args.print) {
       printOccurrences(bomJson);
       printCallStack(bomJson);
+      printReachables(sliceArtefacts);
       printServices(bomJson);
     }
   }

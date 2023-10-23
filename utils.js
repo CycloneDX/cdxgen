@@ -67,7 +67,9 @@ const knownLicenses = JSON.parse(
 const mesonWrapDB = JSON.parse(
   readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"))
 );
-
+export const frameworksList = JSON.parse(
+  readFileSync(join(dirNameStr, "data", "frameworks-list.json"))
+);
 const selfPJson = JSON.parse(readFileSync(join(dirNameStr, "package.json")));
 const _version = selfPJson.version;
 
@@ -216,7 +218,7 @@ export function getLicenses(pkg, format = "xml") {
         } else if (Object.keys(l).length) {
           licenseContent = l;
         } else {
-          return [];
+          return undefined;
         }
         if (!licenseContent.id) {
           addLicenseText(pkg, l, licenseContent, format);
@@ -225,7 +227,7 @@ export function getLicenses(pkg, format = "xml") {
       })
       .map((l) => ({ license: l }));
   }
-  return [];
+  return undefined;
 }
 
 /**
@@ -360,7 +362,7 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
       const pkgData = JSON.parse(readFileSync(pkgJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
       const name = pkgIdentifier.fullName || pkgData.name;
-      if (!name) {
+      if (!name && !pkgJsonFile.includes("node_modules")) {
         console.log(
           `${pkgJsonFile} doesn't contain the package name. Consider using the 'npm init' command to create a valid package.json file for this project.`
         );
@@ -392,7 +394,7 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
         apkg.evidence = {
           identity: {
             field: "purl",
-            confidence: 1,
+            confidence: 0.7,
             methods: [
               {
                 technique: "manifest-analysis",
@@ -548,7 +550,6 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         } = parseArboristNode(workspaceNode, rootNode, purlString, visited);
         pkgList = pkgList.concat(childPkgList);
         dependenciesList = dependenciesList.concat(childDependenciesList);
-
         const depWorkspacePurlString = decodeURIComponent(
           new PackageURL(
             "npm",
@@ -581,7 +582,6 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         );
         pkgList = pkgList.concat(childPkgList);
         dependenciesList = dependenciesList.concat(childDependenciesList);
-
         const depChildString = decodeURIComponent(
           new PackageURL(
             "npm",
@@ -618,6 +618,11 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
       for (const child of node.children) {
         if (child[1].integrity == edgeToIntegrity) {
           targetName = child[0].replace(/node_modules\//g, "");
+          // The package name could be different from the targetName retrieved
+          // Eg: "string-width-cjs": "npm:string-width@^4.2.0",
+          if (child[1].packageName && child[1].packageName !== targetName) {
+            targetName = child[1].packageName;
+          }
           targetVersion = child[1].version;
           foundMatch = true;
           break;
@@ -628,6 +633,11 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           if (child[1].integrity == edgeToIntegrity) {
             targetName = child[0].replace(/node_modules\//g, "");
             targetVersion = child[1].version;
+            // The package name could be different from the targetName retrieved
+            // "string-width-cjs": "npm:string-width@^4.2.0",
+            if (child[1].packageName && child[1].packageName !== targetName) {
+              targetName = child[1].packageName;
+            }
             break;
           }
         }
@@ -638,7 +648,6 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
       if (!targetVersion || !targetName) {
         continue;
       }
-
       const depPurlString = decodeURIComponent(
         new PackageURL(
           "npm",
@@ -649,7 +658,6 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           null
         ).toString()
       );
-
       pkgDependsOn.push(depPurlString);
       if (edge.to == null) continue;
       const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
@@ -7181,6 +7189,10 @@ export const addEvidenceForImports = (pkgList, allImports) => {
       pkg.scope = "optional";
     }
     const { group, name } = pkg;
+    // Evidence belonging to a type must be associated with the package
+    if (group === "@types") {
+      continue;
+    }
     let aliases =
       group && group.length
         ? [name, `${group}/${name}`, `@${group}/${name}`]

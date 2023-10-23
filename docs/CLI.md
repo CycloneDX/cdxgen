@@ -119,6 +119,9 @@ Options:
       --only                   Include components only containining this word in
                                 purl. Useful to generate BOM with first party co
                                mponents alone. Multiple values allowed.  [array]
+      --author                 The person(s) who created the BOM. Set this value
+                                if you're intending the modify the BOM and claim
+                                authorship.[array] [default: "OWASP Foundation"]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true
                                                        [boolean] [default: true]

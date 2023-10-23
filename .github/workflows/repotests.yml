@@ -147,11 +147,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: 'hoolicorp/java-sec-code'
-          path: 'repotests/java-sec-code'    
+          path: 'repotests/java-sec-code'
       - uses: dtolnay/rust-toolchain@stable
       - name: repotests
         run: |
+          bin/cdxgen.js -p -t js --no-recurse -o bom.json .
+          bin/evinse.js -l js -i bom.json -o bom.evinse.json --with-reachables .
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json
+          bin/cdxgen.js -p -t java --author foo --author bar repotests/java-sec-code -o bomresults/bom-java-sec-code.json
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --required-only
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --filter postgres --filter json
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --only spring
@@ -166,6 +169,7 @@ jobs:
           node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l javascript --with-data-flow -p repotests/meetingsdk-vuejs-sample
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-data-flow -p repotests/sveltejs-examples
+          CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
           FETCH_LICENSE=1 bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json --validate
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --validate
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --validate
