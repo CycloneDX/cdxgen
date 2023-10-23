@@ -294,7 +294,11 @@ ATOM_DB = join(homedir(), "Library", "Application Support", ".atomdb");
 
 ## Customize metadata.authors in BOM
 
-Use the argument `--author` to override the author name.
+Use the argument `--author` to override the author name. Use double quotes when the name includes spaces. Multiple values are allowed.
+
+```
+cdxgen --author "OWASP Foundation" --author "Apache Foundation" -t java ...
+```
 
 ## Generate bash/zsh command completions
 
