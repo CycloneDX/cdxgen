@@ -1046,6 +1046,9 @@ export const collectReachableFrames = async (language, reachablesSlice) => {
     let aframe = [];
     let referredPurls = new Set(anode.purls || []);
     for (const fnode of anode.flows) {
+      if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
+        continue;
+      }
       aframe.push({
         package: fnode.parentPackageName,
         module: fnode.parentClassName || "",
