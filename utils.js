@@ -462,6 +462,13 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
 
     let pkg = {};
     let purlString = "";
+    const author = node.package.author;
+    const authorString =
+      author instanceof Object
+        ? `${author.name}${author.email ? ` <${author.email}>` : ""}${
+            author.url ? ` (${author.url})` : ""
+          }`
+        : author;
     if (node == rootNode) {
       purlString = new PackageURL(
         "npm",
@@ -472,7 +479,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         null
       ).toString();
       pkg = {
-        author: node.package.author,
+        author: authorString,
         group: options.projectGroup || "",
         name: options.projectName || node.packageName,
         version: options.projectVersion || node.version,
@@ -497,7 +504,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         group: "",
         name: node.packageName,
         version: node.version,
-        author: node.package.author,
+        author: authorString,
         scope: scope,
         _integrity: integrity,
         properties: [
