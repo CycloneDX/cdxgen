@@ -24,6 +24,8 @@ const args = yargs(hideBin(process.argv))
     default: "public.key",
     description: "Public key in PEM format. Default public.key"
   })
+  .completion("completion", "Generate bash/zsh completion")
+  .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .scriptName("cdx-verify")
   .version()
   .help("h").argv;

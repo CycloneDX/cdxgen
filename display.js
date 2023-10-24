@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from "fs";
 import { createStream, table } from "table";
 
 // https://github.com/yangshun/tree-node-cli/blob/master/src/index.js
@@ -275,5 +276,38 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
         }
       }
     }
+  }
+};
+
+export const printReachables = (sliceArtefacts) => {
+  const reachablesSlicesFile = sliceArtefacts.reachablesSlicesFile;
+  if (!existsSync(reachablesSlicesFile)) {
+    return;
+  }
+  const purlCounts = {};
+  const reachablesSlices = JSON.parse(
+    readFileSync(reachablesSlicesFile, "utf-8")
+  );
+  for (const areachable of reachablesSlices.reachables || []) {
+    const purls = areachable.purls || [];
+    for (const apurl of purls) {
+      purlCounts[apurl] = (purlCounts[apurl] || 0) + 1;
+    }
+  }
+  const sortedPurls = Object.fromEntries(
+    Object.entries(purlCounts).sort(([, a], [, b]) => b - a)
+  );
+  const data = [["Package URL", "Reachable Flows"]];
+  for (const apurl of Object.keys(sortedPurls)) {
+    data.push([apurl, "" + sortedPurls[apurl]]);
+  }
+  const config = {
+    header: {
+      alignment: "center",
+      content: "Reachable Components\nGenerated with \u2665 by cdxgen"
+    }
+  };
+  if (data.length > 1) {
+    console.log(table(data, config));
   }
 };

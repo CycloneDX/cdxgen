@@ -71,7 +71,7 @@ export const prepareDB = async (options) => {
     }
   }
   for (const purl of Object.keys(purlsToSlice)) {
-    await createAndStoreSlice(purl, purlsJars, Usages);
+    await createAndStoreSlice(purl, purlsJars, Usages, options);
   }
   return { sequelize, Namespaces, Usages, DataFlows };
 };
@@ -148,8 +148,13 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   );
 };
 
-export const createAndStoreSlice = async (purl, purlsJars, Usages) => {
-  const retMap = createSlice(purl, purlsJars[purl], "usages");
+export const createAndStoreSlice = async (
+  purl,
+  purlsJars,
+  Usages,
+  options = {}
+) => {
+  const retMap = createSlice(purl, purlsJars[purl], "usages", options);
   let sliceData = undefined;
   if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
     sliceData = await Usages.findOrCreate({
@@ -166,7 +171,12 @@ export const createAndStoreSlice = async (purl, purlsJars, Usages) => {
   return sliceData;
 };
 
-export const createSlice = (purlOrLanguage, filePath, sliceType = "usages") => {
+export const createSlice = (
+  purlOrLanguage,
+  filePath,
+  sliceType = "usages",
+  options = {}
+) => {
   if (!filePath) {
     return;
   }
@@ -177,9 +187,18 @@ export const createSlice = (purlOrLanguage, filePath, sliceType = "usages") => {
   if (!language) {
     return undefined;
   }
-  const tempDir = fs.mkdtempSync(path.join(tmpdir(), `atom-${sliceType}-`));
-  const atomFile = path.join(tempDir, "app.atom");
-  const slicesFile = path.join(tempDir, `${sliceType}.slices.json`);
+  let sliceOutputDir = fs.mkdtempSync(
+    path.join(tmpdir(), `atom-${sliceType}-`)
+  );
+  if (options && options.output) {
+    sliceOutputDir =
+      fs.existsSync(options.output) &&
+      fs.lstatSync(options.output).isDirectory()
+        ? path.basename(options.output)
+        : path.dirname(options.output);
+  }
+  const atomFile = path.join(sliceOutputDir, "app.atom");
+  const slicesFile = path.join(sliceOutputDir, `${sliceType}.slices.json`);
   const args = [
     sliceType,
     "-l",
@@ -204,7 +223,7 @@ export const createSlice = (purlOrLanguage, filePath, sliceType = "usages") => {
     );
   }
   return {
-    tempDir,
+    tempDir: sliceOutputDir,
     slicesFile,
     atomFile
   };
@@ -280,7 +299,7 @@ export const analyzeProject = async (dbObjMap, options) => {
     usagesSlicesFile = options.usagesSlicesFile;
   } else {
     // Generate our own slices
-    retMap = createSlice(language, dirPath, "usages");
+    retMap = createSlice(language, dirPath, "usages", options);
     if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
       usageSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
       usagesSlicesFile = retMap.slicesFile;
@@ -312,7 +331,7 @@ export const analyzeProject = async (dbObjMap, options) => {
         fs.readFileSync(options.dataFlowSlicesFile, "utf-8")
       );
     } else {
-      retMap = createSlice(language, dirPath, "data-flow");
+      retMap = createSlice(language, dirPath, "data-flow", options);
       if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
         dataFlowSlicesFile = retMap.slicesFile;
         dataFlowSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
@@ -342,7 +361,7 @@ export const analyzeProject = async (dbObjMap, options) => {
         fs.readFileSync(options.reachablesSlicesFile, "utf-8")
       );
     } else {
-      retMap = createSlice(language, dirPath, "reachables");
+      retMap = createSlice(language, dirPath, "reachables", options);
       if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
         reachablesSlicesFile = retMap.slicesFile;
         reachablesSlice = JSON.parse(
@@ -1027,6 +1046,9 @@ export const collectReachableFrames = async (language, reachablesSlice) => {
     let aframe = [];
     let referredPurls = new Set(anode.purls || []);
     for (const fnode of anode.flows) {
+      if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
+        continue;
+      }
       aframe.push({
         package: fnode.parentPackageName,
         module: fnode.parentClassName || "",
