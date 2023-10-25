@@ -7,7 +7,7 @@ import {
   collectMvnDependencies
 } from "./utils.js";
 import { tmpdir } from "node:os";
-import path from "node:path";
+import path, { basename } from "node:path";
 import fs from "node:fs";
 import * as db from "./db.js";
 import { PackageURL } from "packageurl-js";
@@ -22,6 +22,13 @@ const typePurlsCache = {};
  * @param {object} Command line options
  */
 export const prepareDB = async (options) => {
+  if (!options.dbPath.includes("memory") && !fs.existsSync(options.dbPath)) {
+    try {
+      fs.mkdirSync(options.dbPath, { recursive: true });
+    } catch (e) {
+      // ignore
+    }
+  }
   const dirPath = options._[0] || ".";
   const bomJsonFile = options.input;
   if (!fs.existsSync(bomJsonFile)) {
@@ -54,8 +61,6 @@ export const prepareDB = async (options) => {
     if ((!usagesSlice && !namespaceSlice) || options.force) {
       if (comp.purl.startsWith("pkg:maven")) {
         hasMavenPkgs = true;
-      } else if (isSlicingRequired(comp.purl)) {
-        purlsToSlice[comp.purl] = true;
       }
     }
   }
@@ -250,17 +255,19 @@ export const initFromSbom = (components) => {
   const purlLocationMap = {};
   const purlImportsMap = {};
   for (const comp of components) {
-    if (!comp || !comp.evidence || !comp.evidence.occurrences) {
+    if (!comp || !comp.evidence) {
       continue;
     }
-    purlLocationMap[comp.purl] = new Set(
-      comp.evidence.occurrences.map((v) => v.location)
-    );
     (comp.properties || [])
       .filter((v) => v.name === "ImportedModules")
       .forEach((v) => {
         purlImportsMap[comp.purl] = (v.value || "").split(",");
       });
+    if (comp.evidence.occurrences) {
+      purlLocationMap[comp.purl] = new Set(
+        comp.evidence.occurrences.map((v) => v.location)
+      );
+    }
   }
   return {
     purlLocationMap,
@@ -412,7 +419,8 @@ export const parseObjectSlices = async (
     if (
       !slice.fileName ||
       !slice.fileName.trim().length ||
-      slice.fileName === "<empty>"
+      slice.fileName === "<empty>" ||
+      slice.fileName === "<unknown>"
     ) {
       continue;
     }
@@ -426,6 +434,7 @@ export const parseObjectSlices = async (
     );
     detectServicesFromUsages(language, slice, servicesMap);
   }
+  detectServicesFromUDT(language, usageSlice.userDefinedTypes, servicesMap);
   return {
     purlLocationMap,
     servicesMap,
@@ -475,10 +484,13 @@ export const parseSliceUsages = async (
         atype[0] !== false &&
         !isFilterableType(language, userDefinedTypesMap, atype[1])
       ) {
-        if (!atype[1].includes("(")) {
+        if (!atype[1].includes("(") && !atype[1].includes(".py")) {
           typesToLookup.add(atype[1]);
           // Javascript calls can be resolved to a precise line number only from the call nodes
-          if (language == "javascript" && ausageLine) {
+          if (
+            ["javascript", "js", "ts", "typescript"].includes(language) &&
+            ausageLine
+          ) {
             if (atype[1].includes(":")) {
               typesToLookup.add(atype[1].split("::")[0].replace(/:/g, "/"));
             }
@@ -503,7 +515,10 @@ export const parseSliceUsages = async (
       if (
         !isFilterableType(language, userDefinedTypesMap, acall?.resolvedMethod)
       ) {
-        if (!acall?.resolvedMethod.includes("(")) {
+        if (
+          !acall?.resolvedMethod.includes("(") &&
+          !acall?.resolvedMethod.includes(".py")
+        ) {
           typesToLookup.add(acall?.resolvedMethod);
           // Javascript calls can be resolved to a precise line number only from the call nodes
           if (acall.lineNumber) {
@@ -531,7 +546,7 @@ export const parseSliceUsages = async (
       }
       for (const aparamType of acall?.paramTypes || []) {
         if (!isFilterableType(language, userDefinedTypesMap, aparamType)) {
-          if (!aparamType.includes("(")) {
+          if (!aparamType.includes("(") && !aparamType.includes(".py")) {
             typesToLookup.add(aparamType);
             if (acall.lineNumber) {
               if (aparamType.includes(":")) {
@@ -580,16 +595,17 @@ export const parseSliceUsages = async (
       }
     } else {
       // Check the namespaces db
-      const nsHits =
-        typePurlsCache[atype] ||
-        (await dbObjMap.Namespaces.findAll({
+      let nsHits = typePurlsCache[atype];
+      if (["java", "jar"].includes(language)) {
+        nsHits = await dbObjMap.Namespaces.findAll({
           attributes: ["purl"],
           where: {
             data: {
               [Op.like]: `%${atype}%`
             }
           }
-        }));
+        });
+      }
       if (nsHits && nsHits.length) {
         for (const ns of nsHits) {
           if (!purlLocationMap[ns.purl]) {
@@ -612,16 +628,21 @@ export const isFilterableType = (
 ) => {
   if (
     !typeFullName ||
-    ["ANY", "UNKNOWN", "VOID"].includes(typeFullName.toUpperCase())
+    ["ANY", "UNKNOWN", "VOID", "IMPORT"].includes(typeFullName.toUpperCase())
   ) {
     return true;
   }
-  if (
-    typeFullName.startsWith("<operator") ||
-    typeFullName.startsWith("<unresolved") ||
-    typeFullName.startsWith("<unknownFullName")
-  ) {
-    return true;
+  for (const ab of [
+    "<operator",
+    "<unresolved",
+    "<unknownFullName",
+    "__builtin",
+    "LAMBDA",
+    "../"
+  ]) {
+    if (typeFullName.startsWith(ab)) {
+      return true;
+    }
   }
   if (language && ["java", "jar"].includes(language)) {
     if (
@@ -637,7 +658,7 @@ export const isFilterableType = (
       return true;
     }
   }
-  if (language === "javascript") {
+  if (["javascript", "js", "ts", "typescript"].includes(language)) {
     if (
       typeFullName.includes(".js") ||
       typeFullName.includes("=>") ||
@@ -645,9 +666,16 @@ export const isFilterableType = (
       typeFullName.startsWith("{ ") ||
       typeFullName.startsWith("JSON") ||
       typeFullName.startsWith("void:") ||
-      typeFullName.startsWith("LAMBDA") ||
-      typeFullName.startsWith("../") ||
       typeFullName.startsWith("node:")
+    ) {
+      return true;
+    }
+  }
+  if (["python", "py"].includes(language)) {
+    if (
+      typeFullName.startsWith("tmp") ||
+      typeFullName.startsWith("self.") ||
+      typeFullName.startsWith("_")
     ) {
       return true;
     }
@@ -715,6 +743,61 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
   }
 };
 
+/**
+ * Method to detect services from user defined types in the usage slice
+ *
+ * @param {string} language Application language
+ * @param {array} userDefinedTypes User defined types
+ * @param {object} servicesMap Existing service map
+ */
+export const detectServicesFromUDT = (
+  language,
+  userDefinedTypes,
+  servicesMap
+) => {
+  if (
+    ["python", "py"].includes(language) &&
+    userDefinedTypes &&
+    userDefinedTypes.length
+  ) {
+    for (const audt of userDefinedTypes) {
+      if (
+        audt.name.includes("route") ||
+        audt.name.includes("path") ||
+        audt.name.includes("url")
+      ) {
+        const fields = audt.fields || [];
+        if (
+          fields.length &&
+          fields[0] &&
+          fields[0].name &&
+          fields[0].name.length > 1
+        ) {
+          const endpoints = extractEndpoints(language, fields[0].name);
+          let serviceName = "service";
+          if (audt.fileName) {
+            serviceName = `${basename(
+              audt.fileName.replace(".py", "")
+            )}-service`;
+          }
+          if (!servicesMap[serviceName]) {
+            servicesMap[serviceName] = {
+              endpoints: new Set(),
+              authenticated: false,
+              xTrustBoundary: undefined
+            };
+          }
+          if (endpoints) {
+            for (const endpoint of endpoints) {
+              servicesMap[serviceName].endpoints.add(endpoint);
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 export const constructServiceName = (language, slice) => {
   let serviceName = "service";
   if (slice?.fullName) {
@@ -753,7 +836,10 @@ export const extractEndpoints = (language, code) => {
           );
       }
       break;
+    case "js":
+    case "ts":
     case "javascript":
+    case "typescript":
       if (code.includes("app.") || code.includes("route")) {
         const matches = code.match(/['"](.*?)['"]/gi) || [];
         endpoints = matches
@@ -769,22 +855,16 @@ export const extractEndpoints = (language, code) => {
           );
       }
       break;
+    case "py":
+    case "python":
+      endpoints = (code.match(/['"](.*?)['"]/gi) || [])
+        .map((v) => v.replace(/["']/g, "").replace("\n", ""))
+        .filter((v) => v.length > 2);
+      break;
     default:
       break;
   }
   return endpoints;
-};
-
-/**
- * Function to determine if slicing is required for the given language's dependencies.
- * For performance reasons, we make java operate only with namespaces
- *
- * @param {string} purl
- * @returns
- */
-export const isSlicingRequired = (purl) => {
-  const language = purlToLanguage(purl);
-  return ["python"].includes(language);
 };
 
 /**
@@ -945,7 +1025,10 @@ export const collectDataFlowFrames = async (
         continue;
       }
       let typeFullName = theNode.typeFullName;
-      if (language === "javascript" && typeFullName == "ANY") {
+      if (
+        ["javascript", "js", "ts", "typescript"].includes(language) &&
+        typeFullName == "ANY"
+      ) {
         if (
           theNode.code &&
           (theNode.code.startsWith("new ") ||
@@ -971,16 +1054,17 @@ export const collectDataFlowFrames = async (
           }
         } else {
           // Check the namespaces db
-          const nsHits =
-            typePurlsCache[typeFullName] ||
-            (await dbObjMap.Namespaces.findAll({
+          let nsHits = typePurlsCache[typeFullName];
+          if (["java", "jar"].includes(language)) {
+            nsHits = await dbObjMap.Namespaces.findAll({
               attributes: ["purl"],
               where: {
                 data: {
                   [Op.like]: `%${typeFullName}%`
                 }
               }
-            }));
+            });
+          }
           if (nsHits && nsHits.length) {
             for (const ns of nsHits) {
               referredPurls.add(ns.purl);
@@ -1099,7 +1183,7 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
     const tmpA = typeFullName.split(".");
     tmpA.pop();
     typeFullName = tmpA.join(".");
-  } else if (language === "javascript") {
+  } else if (["javascript", "js", "ts", "typescript"].includes(language)) {
     typeFullName = typeFullName.replace("new: ", "").replace("await ", "");
     if (typeFullName.includes(":")) {
       const tmpA = typeFullName.split("::")[0].replace(/:/g, "/").split("/");
@@ -1108,6 +1192,15 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
       }
       typeFullName = tmpA.join("/");
     }
+  } else if (["python", "py"].includes(language)) {
+    typeFullName = typeFullName
+      .replace(".py:<module>", "")
+      .replace(/\//g, ".")
+      .replace(".<metaClassCallHandler>", "")
+      .replace(".<fakeNew>", "")
+      .replace(".<body>", "")
+      .replace(".__iter__", "")
+      .replace(".__init__", "");
   }
   if (
     typeFullName.startsWith("<unresolved") ||

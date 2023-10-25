@@ -816,15 +816,13 @@ function determinePackageType(pkg) {
           return "application";
         }
       }
-      if (purl.namespace) {
-        for (const cf of frameworksList.all) {
-          if (
-            purl.namespace.includes(cf) ||
-            purl.name.toLowerCase().includes(cf) ||
-            pkg.purl.startsWith(cf)
-          ) {
-            return "framework";
-          }
+      for (const cf of frameworksList.all) {
+        if (
+          pkg.purl.startsWith(cf) ||
+          (purl.namespace && purl.namespace.includes(cf)) ||
+          purl.name.toLowerCase().includes(cf)
+        ) {
+          return "framework";
         }
       }
     } catch (e) {
@@ -835,9 +833,17 @@ function determinePackageType(pkg) {
       return "application";
     }
   }
+  if (Object.prototype.hasOwnProperty.call(pkg, "description")) {
+    if (
+      pkg.description &&
+      pkg.description.toLowerCase().includes("framework")
+    ) {
+      return "framework";
+    }
+  }
   if (Object.prototype.hasOwnProperty.call(pkg, "keywords")) {
     for (const keyword of pkg.keywords) {
-      if (keyword.toLowerCase() === "framework") {
+      if (keyword && keyword.toLowerCase() === "framework") {
         return "framework";
       }
     }
@@ -2459,6 +2465,23 @@ export const createPythonBom = async (path, options) => {
       // Get the imported modules and a dedupe list of packages
       const parentDependsOn = new Set();
       const retMap = await getPyModules(path, pkgList, options);
+      // We need to patch the existing package list to add ImportedModules for evinse to work
+      if (retMap.modList && retMap.modList.length) {
+        const iSymbolsMap = {};
+        retMap.modList.forEach((v) => {
+          iSymbolsMap[v.name] = v.importedSymbols;
+          iSymbolsMap[v.name.replace(/_/g, "-")] = v.importedSymbols;
+        });
+        for (const apkg of pkgList) {
+          if (iSymbolsMap[apkg.name]) {
+            apkg.properties = apkg.properties || [];
+            apkg.properties.push({
+              name: "ImportedModules",
+              value: iSymbolsMap[apkg.name]
+            });
+          }
+        }
+      }
       if (retMap.pkgList && retMap.pkgList.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         for (const p of retMap.pkgList) {

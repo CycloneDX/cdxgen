@@ -3,9 +3,7 @@
 // Evinse (Evinse Verification Is Nearly SBOM Evidence)
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { join } from "node:path";
 import fs from "node:fs";
-import { homedir, platform as _platform } from "node:os";
 import process from "node:process";
 import { analyzeProject, createEvinseFile, prepareDB } from "../evinser.js";
 import { validateBom } from "../validator.js";
@@ -15,6 +13,7 @@ import {
   printServices,
   printReachables
 } from "../display.js";
+import { ATOM_DB } from "../utils.js";
 import { findUpSync } from "find-up";
 import { load as _load } from "js-yaml";
 
@@ -38,22 +37,6 @@ if (configPath) {
   }
 }
 
-const isWin = _platform() === "win32";
-const isMac = _platform() === "darwin";
-let ATOM_DB = join(homedir(), ".local", "share", ".atomdb");
-if (isWin) {
-  ATOM_DB = join(homedir(), "AppData", "Local", ".atomdb");
-} else if (isMac) {
-  ATOM_DB = join(homedir(), "Library", "Application Support", ".atomdb");
-}
-
-if (!process.env.ATOM_DB && !fs.existsSync(ATOM_DB)) {
-  try {
-    fs.mkdirSync(ATOM_DB, { recursive: true });
-  } catch (e) {
-    // ignore
-  }
-}
 const args = yargs(hideBin(process.argv))
   .env("EVINSE")
   .option("input", {

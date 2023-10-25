@@ -10,10 +10,19 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import globalAgent from "global-agent";
 import process from "node:process";
-import { printTable, printDependencyTree } from "../display.js";
+import {
+  printCallStack,
+  printOccurrences,
+  printServices,
+  printReachables,
+  printTable,
+  printDependencyTree
+} from "../display.js";
 import { findUpSync } from "find-up";
 import { load as _load } from "js-yaml";
 import { postProcess } from "../postgen.js";
+import { analyzeProject, createEvinseFile, prepareDB } from "../evinser.js";
+import { ATOM_DB } from "../utils.js";
 
 // Support for config files
 const configPath = findUpSync([
@@ -48,7 +57,14 @@ const args = yargs(hideBin(process.argv))
   .env("CDXGEN")
   .option("output", {
     alias: "o",
-    description: "Output file for bom.xml or bom.json. Default bom.json"
+    description: "Output file for bom.xml or bom.json. Default bom.json",
+    default: "bom.json"
+  })
+  .option("evinse-output", {
+    description:
+      "Create bom with evidence as a separate file. Default bom.json",
+    default: "bom.json",
+    hidden: true
   })
   .option("type", {
     alias: "t",
@@ -143,16 +159,29 @@ const args = yargs(hideBin(process.argv))
       "Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to disable."
   })
   .option("evidence", {
-    hidden: true,
     type: "boolean",
     default: false,
-    description: "Generate SBOM with evidence for supported languages. WIP"
+    description: "Generate SBOM with evidence for supported languages."
+  })
+  .option("deps-slices-file", {
+    description: "Path for the parsedeps slice file created by atom.",
+    default: "deps.slices.json",
+    hidden: true
   })
   .option("usages-slices-file", {
-    description: "Path for the usages slice file created by atom."
+    description: "Path for the usages slices file created by atom.",
+    default: "usages.slices.json",
+    hidden: true
   })
   .option("data-flow-slices-file", {
-    description: "Path for the data-flow slice file created by atom."
+    description: "Path for the data-flow slices file created by atom.",
+    default: "data-flow.slices.json",
+    hidden: true
+  })
+  .option("reachables-slices-file", {
+    description: "Path for the reachables slices file created by atom.",
+    default: "reachables.slices.json",
+    hidden: true
   })
   .option("spec-version", {
     description: "CycloneDX Specification version to use. Defaults to 1.5",
@@ -288,9 +317,6 @@ const checkPermissions = (filePath) => {
   let bomNSData = (await createBom(filePath, options)) || {};
   if (options.requiredOnly || options["filter"] || options["only"]) {
     bomNSData = postProcess(bomNSData, options);
-  }
-  if (!args.output) {
-    args.output = "bom.json";
   }
   if (
     args.output &&
@@ -456,6 +482,34 @@ const checkPermissions = (filePath) => {
     } else {
       console.log("Unable to produce BOM for", filePath);
       console.log("Try running the command with -t <type> or -r argument");
+    }
+  }
+  // Evidence generation
+  if (args.evidence) {
+    const evinseOptions = {
+      _: args._,
+      input: options.output,
+      output: options.evinseOutput,
+      language: options.projectType || "java",
+      dbPath: process.env.ATOM_DB || ATOM_DB,
+      skipMavenCollector: false,
+      force: false,
+      withReachables: options.deep,
+      usagesSlicesFile: options.usagesSlicesFile,
+      dataFlowSlicesFile: options.dataFlowSlicesFile,
+      reachablesSlicesFile: options.reachablesSlicesFile
+    };
+    const dbObjMap = await prepareDB(evinseOptions);
+    if (dbObjMap) {
+      const sliceArtefacts = await analyzeProject(dbObjMap, evinseOptions);
+      const evinseJson = createEvinseFile(sliceArtefacts, evinseOptions);
+      bomNSData.bomJson = evinseJson;
+      if (args.print && evinseJson) {
+        printOccurrences(evinseJson);
+        printCallStack(evinseJson);
+        printReachables(sliceArtefacts);
+        printServices(evinseJson);
+      }
     }
   }
   // Perform automatic validation

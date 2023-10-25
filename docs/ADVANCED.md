@@ -95,7 +95,7 @@ Environment variables override values from the configuration files.
 
 ## Evinse Mode / SaaSBOM
 
-Evinse (Evinse Verification Is Nearly SBOM Evidence) is a new command with cdxgen to generate component evidence and SaaSBOM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom).
+Evinse (Evinse Verification Is Nearly SBOM Evidence) is a new command with cdxgen to generate component evidence and SaaSBOM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom). Beginning with cdxgen 9.9.x, cdxgen accepts a new argument called `--evidence` to generate such a comprehensive SBOM. This section is left for users interested in invoking the evinse tool directly for advanced use cases.
 
 <img src="_media/occurrence-evidence.png" alt="occurrence evidence" width="256">
 
@@ -156,18 +156,22 @@ To generate an SBOM with evidence for a java project.
 evinse -i bom.json -o bom.evinse.json <path to the application>
 ```
 
-By default, only occurrence evidences are determined by creating usages slices. To generate callstack evidence, pass either `--with-data-flow` or `--with-reachables`.
+By default, only occurrence evidence is determined by creating usages slices. To generate callstack evidence, pass either `--with-data-flow` or `--with-reachables`.
 
 #### Reachability-based call stack evidence
 
 atom supports reachability-based evidence generation for Java, JavaScript, and TypeScript applications. Reachability refers to data flows that originate from entry points (sources) ending at a sink (which are invocations to external libraries). The technique used is called "Forward-Reachability".
 
-Two necessary prerequisites for this slicing mode are that the input SBOM must be generated with cdxgen and in deep mode (only for java, jars type) and must be placed within the application directory.
+Two necessary prerequisites for this slicing mode are that the input SBOM must be generated with cdxgen and in deep mode (only for java, jars, python type) and must be placed within the application directory.
 
 ```shell
 cd <path to the application>
-cdxgen -t java --deep -o bom.json .
-evinse -i bom.json -o bom.evinse.json -l java --with-reachables .
+cdxgen -t java --deep -o bom.json --evidence .
+```
+
+```shell
+cd <path to the application>
+cdxgen -t python --deep -o bom.json --evidence .
 ```
 
 For JavaScript and TypeScript applications, deep mode is optional.
@@ -200,6 +204,12 @@ For JavaScript or TypeScript projects, pass `-l javascript`.
 
 ```shell
 evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-flow-slices-file data-flow.json -l javascript --with-data-flow <path to the application>
+```
+
+For Python with cached usages and reachables file.
+
+```shell
+evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --reachables-slices-file reachables.json -l python --with-reachables <path to the application>
 ```
 
 ## Generate SBOM from maven or gradle cache
@@ -249,8 +259,7 @@ cdxgen -t docker -o bom.json <image name>
 Why not?
 
 ```shell
-cdxgen -t js -o bom.json -p --no-recurse .
-evinse -i bom.json -o bom.evinse.json -l javascript --with-reachables .
+cdxgen -t js -o bom.json -p --no-recurse --evidence .
 
 # Don't be surprised to see the service endpoint offered by cdxgen.
 # Review the reachables.slices.json and file any vulnerabilities or bugs!
