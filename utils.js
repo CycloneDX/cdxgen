@@ -2443,7 +2443,24 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         p.author = body.info.author_email.trim();
       }
       p.description = body.info.summary;
-      p.license = findLicenseId(body.info.license);
+      p.license = [];
+      if (body.info.classifiers) {
+        for (const c of body.info.classifiers) {
+          if (c.startsWith("License :: ")) {
+            let licenseName = c.split("::").slice(-1)[0].trim();
+            let licenseId = findLicenseId(licenseName);
+            if (licenseId && !p.license.includes(licenseId)) {
+              p.license.push(licenseId);
+            }
+          }
+        }
+      }
+      if (body.info.license) {
+        let licenseId = findLicenseId(body.info.license);
+        if (licenseId && !p.license.includes(licenseId)) {
+          p.license.push(licenseId);
+        }
+      }
       if (body.info.home_page) {
         if (body.info.home_page.includes("git")) {
           p.repository = { url: body.info.home_page };
