@@ -2444,7 +2444,6 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       }
       p.description = body.info.summary;
       p.license = [];
-      if (body.info.license) p.license.push(findLicenseId(body.info.license));
       if (body.info.classifiers) {
         for (const c of body.info.classifiers) {
           if (c.startsWith("License :: ")) {
@@ -2454,6 +2453,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           }
         }
       }
+      if (body.info.license) p.license.push(findLicenseId(body.info.license));
       if (body.info.home_page) {
         if (body.info.home_page.includes("git")) {
           p.repository = { url: body.info.home_page };
