@@ -2443,13 +2443,14 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         p.author = body.info.author_email.trim();
       }
       p.description = body.info.summary;
-      p.license = findLicenseId(body.info.license);
-      if (!p.license && body.info.classifiers) {
+      p.license = [];
+      if (body.info.license) p.license.push(findLicenseId(body.info.license));
+      if (body.info.classifiers) {
         for (const c of body.info.classifiers) {
           if (c.startsWith("License :: ")) {
-            let licenseText = c.split(" :: ")[c.split(" :: ").length - 1];
-            p.license = findLicenseId(licenseText);
-            break;
+            let licenseName = c.split(" :: ")[c.split(" :: ").length - 1];
+            let licenseId = findLicenseId(licenseName);
+            if (!p.license.includes(licenseId)) p.license.push(licenseId);
           }
         }
       }
