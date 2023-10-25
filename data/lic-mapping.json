@@ -27,7 +27,14 @@
   },
   {
     "exp": "0BSD",
-    "names": ["Zero-Clause BSD", "BSD", "BSD License", "BSD-like"]
+    "names": [
+      "Zero-Clause BSD",
+      "BSD",
+      "BSD License",
+      "BSD-like",
+      "new BSD License",
+      "new BSD"
+    ]
   },
   {
     "exp": "BSD-2-Clause",
@@ -55,7 +62,8 @@
       "Revised BSD",
       "Revised BSD License",
       "The New BSD License",
-      "BSD (3-clause)"
+      "BSD (3-clause)",
+      "3-Clause BSD License"
     ]
   },
   {
@@ -270,7 +278,11 @@
   },
   {
     "exp": "MPL-2.0",
-    "names": ["MPL 2.0", "Mozilla Public License 2.0"]
+    "names": [
+      "MPL 2.0",
+      "Mozilla Public License 2.0",
+      "Mozilla Public License 2.0 (MPL 2.0)"
+    ]
   },
   {
     "exp": "NetCDF",
@@ -282,6 +294,6 @@
   },
   {
     "exp": "ISC",
-    "names": ["ISC license"]
+    "names": ["ISC license", "ISC License (ISCL)"]
   }
 ]
