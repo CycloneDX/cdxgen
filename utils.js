@@ -2454,7 +2454,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         }
       }
       if (body.info.license) {
-        let licenseId = findLicenseId(licenseName);
+        let licenseId = findLicenseId(body.info.license);
         if (licenseId && !p.license.includes(licenseId)) p.license.push(licenseId);
       }
       if (body.info.home_page) {
