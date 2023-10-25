@@ -2449,13 +2449,17 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           if (c.startsWith("License :: ")) {
             let licenseName = c.split(" :: ")[c.split(" :: ").length - 1];
             let licenseId = findLicenseId(licenseName);
-            if (licenseId && !p.license.includes(licenseId)) p.license.push(licenseId);
+            if (licenseId && !p.license.includes(licenseId)) {
+              p.license.push(licenseId);
+            }
           }
         }
       }
       if (body.info.license) {
         let licenseId = findLicenseId(body.info.license);
-        if (licenseId && !p.license.includes(licenseId)) p.license.push(licenseId);
+        if (licenseId && !p.license.includes(licenseId)) {
+          p.license.push(licenseId);
+        }
       }
       if (body.info.home_page) {
         if (body.info.home_page.includes("git")) {
