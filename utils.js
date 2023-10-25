@@ -2444,6 +2444,15 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       }
       p.description = body.info.summary;
       p.license = findLicenseId(body.info.license);
+      if (!p.license && body.info.classifiers) {
+        for (const c of body.info.classifiers) {
+          if (c.startsWith("License :: ")) {
+            let licenseText = c.split(" :: ")[c.split(" :: ").length - 1];
+            p.license = findLicenseId(licenseText);
+            break;
+          }
+        }
+      }
       if (body.info.home_page) {
         if (body.info.home_page.includes("git")) {
           p.repository = { url: body.info.home_page };
