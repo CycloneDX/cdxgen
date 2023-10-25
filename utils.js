@@ -2447,7 +2447,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       if (body.info.classifiers) {
         for (const c of body.info.classifiers) {
           if (c.startsWith("License :: ")) {
-            let licenseName = c.split(" :: ")[c.split(" :: ").length - 1];
+            let licenseName = c.split("::").slice(-1)[0].trim();
             let licenseId = findLicenseId(licenseName);
             if (licenseId && !p.license.includes(licenseId)) {
               p.license.push(licenseId);
