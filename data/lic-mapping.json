@@ -295,5 +295,14 @@
   {
     "exp": "ISC",
     "names": ["ISC license", "ISC License (ISCL)"]
+  },
+  {
+    "exp": "PSF-2.0",
+    "names": [
+      "Python Software Foundation License",
+      "Python Software Foundation License (PSFL)",
+      "Python Software Foundation License 2.0",
+      "PSFL"
+    ]
   }
 ]
