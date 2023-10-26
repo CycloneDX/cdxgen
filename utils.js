@@ -330,11 +330,12 @@ export const getNpmMetadata = async function (pkgList) {
         body = res.body;
         metadata_cache[key] = body;
       }
-      p.description = body.versions?.[p.version]?.description || body.description;
+      p.description =
+        body.versions?.[p.version]?.description || body.description;
       p.license =
-          body.versions?.[p.version]?.license ||
-          body.license ||
-          (await getRepoLicense(body.repository?.url, undefined));
+        body.versions?.[p.version]?.license ||
+        body.license ||
+        (await getRepoLicense(body.repository?.url, undefined));
       if (body.repository && body.repository.url) {
         p.repository = { url: body.repository.url };
       }
