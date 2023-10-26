@@ -330,8 +330,11 @@ export const getNpmMetadata = async function (pkgList) {
         body = res.body;
         metadata_cache[key] = body;
       }
-      p.description = body.description;
-      p.license = body.license;
+      p.description = body.versions?.[p.version]?.description || body.description;
+      p.license =
+          body.versions?.[p.version]?.license ||
+          body.license ||
+          (await getRepoLicense(body.repository?.url, undefined));
       if (body.repository && body.repository.url) {
         p.repository = { url: body.repository.url };
       }
@@ -3094,6 +3097,9 @@ export const toGitHubUrl = function (repoMetadata) {
 export const getRepoLicense = async function (repoUrl, repoMetadata) {
   if (!repoUrl) {
     repoUrl = toGitHubUrl(repoMetadata);
+  }
+  if (repoUrl.startsWith("git://") && repoUrl.endsWith(".git")) {
+    repoUrl = repoUrl.replace("git://", "https://").slice(0, -4);
   }
   // Perform github lookups
   if (repoUrl.indexOf("github.com") > -1) {
