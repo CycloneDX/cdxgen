@@ -2,12 +2,14 @@
   {
     "exp": "Apache-2.0",
     "names": [
+      "Apache2",
       "Apache 2",
       "Apache 2.0",
       "Apache Version 2.0",
       "Apache 2.0 License",
       "Apache Software License, Version 2.0",
       "The Apache Software License, Version 2.0",
+      "Apache License v2.0",
       "Apache License (v2.0)",
       "Apache License 2.0",
       "Apache License Version 2.0",
@@ -20,6 +22,9 @@
       "Apache-2.0 OR MIT",
       "Apache2.0",
       "apache-2-0",
+      "APL2",
+      "the Apache License, ASL Version 2.0",
+      "Apache Publich License 2.0",
       "https://opensource.org/licenses/Apache2.0",
       "https://opensource.org/license/apache-2-0",
       "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -44,7 +49,8 @@
       "BSD-2-Clause",
       "BSD 2-Clause License",
       "The BSD 2-Clause License",
-      "The 2-Clause BSD License"
+      "The 2-Clause BSD License",
+      "The BSD License"
     ]
   },
   {
@@ -53,6 +59,7 @@
       "BSD 3 Clause",
       "BSD 3-Clause",
       "BSD-3-Clause",
+      "BSD 3-clause",
       "BSD 3-Clause License",
       "The BSD 3-Clause License",
       "BSD 3-Clause \"New\" or \"Revised\" License (BSD-3-Clause)",
@@ -76,6 +83,12 @@
       "The BSD 4-Clause License",
       "BSD 4-Clause \"New\" or \"Revised\" License (BSD-4-Clause)",
       "BSD (4-clause)"
+    ]
+  },
+  {
+    "exp": "CC0-1.0",
+    "names": [
+      "CC0"
     ]
   },
   {
@@ -159,6 +172,7 @@
       "LGPL v2.1",
       "LGPL-2.1",
       "LGPL2.1",
+      "LGPL, version 2.1",
       "GNU Lesser General Public License",
       "GNU Lesser General Public License Version 2.1",
       "GNU Lesser General Public License Version 2.1, February 1999",
@@ -281,6 +295,8 @@
     "names": [
       "MPL 2.0",
       "Mozilla Public License 2.0",
+      "Mozilla Public License version 2.0",
+      "Mozilla Public License, version 2.0",
       "Mozilla Public License 2.0 (MPL 2.0)"
     ]
   },
@@ -295,6 +311,10 @@
   {
     "exp": "ISC",
     "names": ["ISC license", "ISC License (ISCL)"]
+  },
+  {
+    "exp": "ICU",
+    "names": ["Unicode/ICU License"]
   },
   {
     "exp": "PSF-2.0",
