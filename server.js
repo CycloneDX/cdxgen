@@ -85,7 +85,7 @@ const gitClone = (repoUrl, branch = null) => {
     if (result.status !== 0 || result.error) {
       console.log(result.error);
     }
-}
+  }
 
   return tempDir;
 };

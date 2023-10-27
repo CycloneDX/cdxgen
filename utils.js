@@ -7225,7 +7225,7 @@ export const addEvidenceForImports = (pkgList, allImports) => {
       const all_includes = impPkgs.filter(
         (find_pkg) =>
           find_pkg.startsWith(alias) &&
-          (find_pkg.length === alias.length || find_pkg[alias.length] === "/"),
+          (find_pkg.length === alias.length || find_pkg[alias.length] === "/")
       );
       if (impPkgs.includes(alias) || all_includes.length) {
         let importedModules = new Set();
