@@ -55,7 +55,7 @@ const gitClone = (repoUrl, branch = null) => {
   const tempDir = fs.mkdtempSync(
     path.join(
       os.tmpdir(),
-      path.basename(parsedUrl.pathname)
+      path.basename(parsedUrl.pathname.replace(/\.git/g, ""))
     )
   );
 
