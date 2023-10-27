@@ -50,7 +50,6 @@ const parseAndSanitizeUrl = (url) => {
 };
 
 const gitClone = (repoUrl, branch = null) => {
-
   const { parsedUrl, sanitizedRepoUrl } = parseAndSanitizeUrl(repoUrl);
 
   const tempDir = fs.mkdtempSync(
@@ -76,8 +75,8 @@ const gitClone = (repoUrl, branch = null) => {
   } else {
     console.log("Cloning", repoUrl, "to", tempDir, "with branch", branch);
     const result = spawnSync(
-      "git", 
-      ["clone", repoUrl,"--branch", branch, "--depth", "1", tempDir],
+      "git",
+      ["clone", repoUrl, "--branch", branch, "--depth", "1", tempDir],
       {
         encoding: "utf-8",
         shell: false
