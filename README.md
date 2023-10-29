@@ -26,7 +26,7 @@ Most SBOM tools are like barcode scanners. They can scan a few package manifest 
 | Python                          | pyproject.toml, setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, pdm.lock, bdist_wheel, .whl, .egg-info | Yes using the automatic pip install/freeze. When disabled, only with Pipfile.lock and poetry.lock | Yes      |
 | Go                              | binary, go.mod, go.sum, Gopkg.lock                                                                                | Yes except binary                                                                                 | Yes      |
 | Ruby                            | Gemfile.lock, gemspec                                                                                             | Only for Gemfile.lock                                                                             |          |
-| Uust                            | binary, Cargo.toml, Cargo.lock                                                                                    | Only for Cargo.lock                                                                               |          |
+| Rust                            | binary, Cargo.toml, Cargo.lock                                                                                    | Only for Cargo.lock                                                                               |          |
 | .Net                            | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg, paket.lock                         | Only for project.assets.json, packages.lock.json, paket.lock                                      |          |
 | Dart                            | pubspec.lock, pubspec.yaml                                                                                        | Only for pubspec.lock                                                                             |          |
 | Haskell                         | cabal.project.freeze                                                                                              | Yes                                                                                               |          |
@@ -399,7 +399,7 @@ sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 cdxgen odoo@sha256:4e1e147f0e6714e8f8c5806d2b484075b4076ca50490577cdf9162566086d15e -o /tmp/bom.json
 ```
 
-You can also pass `-t docker` for basic labels. Only the `latest` tag would be pulled if none was specified.
+You can also pass `-t docker` with repository names. Only the `latest` tag would be pulled if none was specified.
 
 ```shell
 cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
