@@ -2,7 +2,7 @@
 
 ![cdxgen logo](cdxgen.png)
 
-cdxgen is a cli tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill of Materials (SBOM) containing an aggregate of all project dependencies for c/c++, node.js, php, python, ruby, rust, java, .Net, dart, haskell, elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
+cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill of Materials (SBOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
 
 When used with plugins, cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBOM for some languages.
 
@@ -20,21 +20,21 @@ Most SBOM tools are like barcode scanners. They can scan a few package manifest 
 
 | Language/Platform               | Package format                                                                                                    | Transitive dependencies                                                                           | Evidence |
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------- |
-| node.js                         | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js                   | Yes except .min.js                                                                                | Yes      |
-| java                            | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                                              | Yes unless pom.xml is manually parsed due to unavailability of maven or errors                    | Yes      |
-| php                             | composer.lock                                                                                                     | Yes                                                                                               |          |
-| python                          | pyproject.toml, setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, pdm.lock, bdist_wheel, .whl, .egg-info | Yes using the automatic pip install/freeze. When disabled, only with Pipfile.lock and poetry.lock | Yes      |
-| go                              | binary, go.mod, go.sum, Gopkg.lock                                                                                | Yes except binary                                                                                 | Yes      |
-| ruby                            | Gemfile.lock, gemspec                                                                                             | Only for Gemfile.lock                                                                             |          |
-| rust                            | binary, Cargo.toml, Cargo.lock                                                                                    | Only for Cargo.lock                                                                               |          |
+| Node.js                         | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js                   | Yes except .min.js                                                                                | Yes      |
+| Java                            | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                                              | Yes unless pom.xml is manually parsed due to unavailability of maven or errors                    | Yes      |
+| PHP                             | composer.lock                                                                                                     | Yes                                                                                               |          |
+| Python                          | pyproject.toml, setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, pdm.lock, bdist_wheel, .whl, .egg-info | Yes using the automatic pip install/freeze. When disabled, only with Pipfile.lock and poetry.lock | Yes      |
+| Go                              | binary, go.mod, go.sum, Gopkg.lock                                                                                | Yes except binary                                                                                 | Yes      |
+| Ruby                            | Gemfile.lock, gemspec                                                                                             | Only for Gemfile.lock                                                                             |          |
+| Uust                            | binary, Cargo.toml, Cargo.lock                                                                                    | Only for Cargo.lock                                                                               |          |
 | .Net                            | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg, paket.lock                         | Only for project.assets.json, packages.lock.json, paket.lock                                      |          |
-| dart                            | pubspec.lock, pubspec.yaml                                                                                        | Only for pubspec.lock                                                                             |          |
-| haskell                         | cabal.project.freeze                                                                                              | Yes                                                                                               |          |
-| elixir                          | mix.lock                                                                                                          | Yes                                                                                               |          |
-| c/c++/Objective C/c++11         | conan.lock, conanfile.txt, \*.cmake, CMakeLists.txt, meson.build, codebase without package managers!              | Yes only for conan.lock. Best effort basis for cmake without version numbers.                     | Yes      |
-| clojure                         | Clojure CLI (deps.edn), Leiningen (project.clj)                                                                   | Yes unless the files are parsed manually due to lack of clojure cli or leiningen command          |          |
-| swift                           | Package.resolved, Package.swift (swiftpm)                                                                         | Yes                                                                                               |          |
-| docker / oci image              | All supported languages. Linux OS packages with plugins [4]                                                       | Best effort based on lock files                                                                   | Yes      |
+| Dart                            | pubspec.lock, pubspec.yaml                                                                                        | Only for pubspec.lock                                                                             |          |
+| Haskell                         | cabal.project.freeze                                                                                              | Yes                                                                                               |          |
+| Elixir                          | mix.lock                                                                                                          | Yes                                                                                               |          |
+| C/C++/Objective C/C++11         | conan.lock, conanfile.txt, \*.cmake, CMakeLists.txt, meson.build, codebase without package managers!              | Yes only for conan.lock. Best effort basis for cmake without version numbers.                     | Yes      |
+| Clojure                         | Clojure CLI (deps.edn), Leiningen (project.clj)                                                                   | Yes unless the files are parsed manually due to lack of clojure cli or leiningen command          |          |
+| Swift                           | Package.resolved, Package.swift (swiftpm)                                                                         | Yes                                                                                               |          |
+| Docker / oci image              | All supported languages. Linux OS packages with plugins [4]                                                       | Best effort based on lock files                                                                   | Yes      |
 | GitHub Actions                  | .github/workflows/\*.yml                                                                                          | N/A                                                                                               | Yes      |
 | Linux                           | All supported languages. Linux OS packages with plugins [5]                                                       | Best effort based on lock files                                                                   | Yes      |
 | Windows                         | All supported languages. OS packages with best effort [5]                                                         | Best effort based on lock files                                                                   | Yes      |
@@ -399,7 +399,7 @@ sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 cdxgen odoo@sha256:4e1e147f0e6714e8f8c5806d2b484075b4076ca50490577cdf9162566086d15e -o /tmp/bom.json
 ```
 
-You can also pass `-t docker` for simple labels. Only the `latest` tag would be pulled if none was specified.
+You can also pass `-t docker` for basic labels. Only the `latest` tag would be pulled if none was specified.
 
 ```shell
 cdxgen shiftleft/scan-slim -o /tmp/bom.json -t docker
