@@ -8,7 +8,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { createBom, submitBom } from "./index.js";
 import { postProcess } from "./postgen.js";
-import gitUrlParse from "git-url-parse";
 
 import compression from "compression";
 
@@ -26,41 +25,17 @@ app.use(
 );
 app.use(compression());
 
-const isGitRepoURL = (url) => {
-  const gitRepoRegex = /git@[a-zA-Z0-9.-]+:[\w-]+\/[\w-]+\.git/;
-  return gitRepoRegex.test(url);
-};
-
-const parseAndSanitizeUrl = (url) => {
-  let parsedUrl;
-  let sanitizedUrl;
-
-  if (isGitRepoURL(url)) {
-    parsedUrl = gitUrlParse(url);
-    sanitizedUrl = `${parsedUrl.user}@${parsedUrl.source}:${parsedUrl.owner}${parsedUrl.pathname}`;
-  } else {
-    parsedUrl = new URL(url);
-    sanitizedUrl = `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}`;
-  }
-
-  return {
-    parsedUrl,
-    sanitizedUrl
-  };
-};
-
 const gitClone = (repoUrl, branch = null) => {
-  const { parsedUrl, sanitizedRepoUrl } = parseAndSanitizeUrl(repoUrl);
 
   const tempDir = fs.mkdtempSync(
     path.join(
       os.tmpdir(),
-      path.basename(parsedUrl.pathname.replace(/\.git/g, ""))
+      path.basename(repoUrl)
     )
   );
 
   if (branch == null) {
-    console.log("Cloning", sanitizedRepoUrl, "to", tempDir);
+    console.log("Cloning Repo", "to", tempDir);
     const result = spawnSync(
       "git",
       ["clone", repoUrl, "--depth", "1", tempDir],
@@ -73,7 +48,7 @@ const gitClone = (repoUrl, branch = null) => {
       console.log(result.error);
     }
   } else {
-    console.log("Cloning", repoUrl, "to", tempDir, "with branch", branch);
+    console.log("Cloning repo with optional branch", "to", tempDir);
     const result = spawnSync(
       "git",
       ["clone", repoUrl, "--branch", branch, "--depth", "1", tempDir],
