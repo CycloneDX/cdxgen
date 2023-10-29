@@ -7222,11 +7222,16 @@ export const addEvidenceForImports = (pkgList, allImports) => {
         ? [name, `${group}/${name}`, `@${group}/${name}`]
         : [name];
     for (const alias of aliases) {
-      if (impPkgs.includes(alias)) {
-        const evidences = allImports[alias];
-        if (evidences) {
-          pkg.scope = "required";
-          let importedModules = new Set();
+      const all_includes = impPkgs.filter(
+        (find_pkg) =>
+          find_pkg.startsWith(alias) &&
+          (find_pkg.length === alias.length || find_pkg[alias.length] === "/")
+      );
+      if (impPkgs.includes(alias) || all_includes.length) {
+        let importedModules = new Set();
+        pkg.scope = "required";
+        for (const subevidence of all_includes) {
+          const evidences = allImports[subevidence];
           for (const evidence of evidences) {
             if (evidence && Object.keys(evidence).length && evidence.fileName) {
               pkg.evidence = pkg.evidence || {};
@@ -7247,14 +7252,14 @@ export const addEvidenceForImports = (pkgList, allImports) => {
               }
             }
           }
-          importedModules = Array.from(importedModules);
-          if (importedModules.length) {
-            pkg.properties = pkg.properties || [];
-            pkg.properties.push({
-              name: "ImportedModules",
-              value: importedModules.join(",")
-            });
-          }
+        }
+        importedModules = Array.from(importedModules);
+        if (importedModules.length) {
+          pkg.properties = pkg.properties || [];
+          pkg.properties.push({
+            name: "ImportedModules",
+            value: importedModules.join(",")
+          });
         }
         break;
       }

@@ -1,7 +1,7 @@
 import connect from "connect";
 import http from "node:http";
 import bodyParser from "body-parser";
-import url, { URL } from "node:url";
+import url from "node:url";
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import fs from "node:fs";
@@ -25,22 +25,39 @@ app.use(
 );
 app.use(compression());
 
-const gitClone = (repoUrl) => {
-  const parsedUrl = new URL(repoUrl);
-
-  const sanitizedRepoUrl = `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}`;
-
+const gitClone = (repoUrl, branch = null) => {
   const tempDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), path.basename(parsedUrl.pathname))
+    path.join(os.tmpdir(), path.basename(repoUrl))
   );
-  console.log("Cloning", sanitizedRepoUrl, "to", tempDir);
-  const result = spawnSync("git", ["clone", repoUrl, "--depth", "1", tempDir], {
-    encoding: "utf-8",
-    shell: false
-  });
-  if (result.status !== 0 || result.error) {
-    console.log(result.error);
+
+  if (branch == null) {
+    console.log("Cloning Repo", "to", tempDir);
+    const result = spawnSync(
+      "git",
+      ["clone", repoUrl, "--depth", "1", tempDir],
+      {
+        encoding: "utf-8",
+        shell: false
+      }
+    );
+    if (result.status !== 0 || result.error) {
+      console.log(result.error);
+    }
+  } else {
+    console.log("Cloning repo with optional branch", "to", tempDir);
+    const result = spawnSync(
+      "git",
+      ["clone", repoUrl, "--branch", branch, "--depth", "1", tempDir],
+      {
+        encoding: "utf-8",
+        shell: false
+      }
+    );
+    if (result.status !== 0 || result.error) {
+      console.log(result.error);
+    }
   }
+
   return tempDir;
 };
 
@@ -65,7 +82,8 @@ const parseQueryString = (q, body, options = {}) => {
     "specVersion",
     "filter",
     "only",
-    "autoCompositions"
+    "autoCompositions",
+    "gitBranch"
   ];
 
   for (const param of queryParams) {
@@ -117,7 +135,7 @@ const start = (options) => {
     res.writeHead(200, { "Content-Type": "application/json" });
     let srcDir = filePath;
     if (filePath.startsWith("http") || filePath.startsWith("git")) {
-      srcDir = gitClone(filePath);
+      srcDir = gitClone(filePath, reqOptions.gitBranch);
       cleanup = true;
     }
     console.log("Generating SBOM for", srcDir);
