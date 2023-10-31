@@ -68,7 +68,6 @@ RUN set -e; \
     && sdk install sbt $SBT_VERSION \
     && mv /root/.sdkman/candidates/* /opt/ \
     && rm -rf /root/.sdkman \
-    && dnf install -y epel-release \
     && mkdir -p ${ANDROID_HOME}/cmdline-tools \
     && curl -L https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
     && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
