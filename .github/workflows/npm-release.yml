@@ -120,3 +120,22 @@ jobs:
         labels: ${{ steps.meta3.outputs.labels }}
         cache-from: type=gha,scope=cdxgen-ppc64
         cache-to: type=gha,mode=max,scope=cdxgen-ppc64
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta4
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ghcr.io/cyclonedx/cdxgen-next
+      if: github.ref == 'refs/heads/master'
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: ci/Dockerfile-fedora
+        platforms: linux/amd64
+        push: true
+        tags: ${{ steps.meta4.outputs.tags }}
+        labels: ${{ steps.meta4.outputs.labels }}
+        cache-from: type=gha,scope=cdxgen-next
+        cache-to: type=gha,mode=max,scope=cdxgen-next
+      if: github.ref == 'refs/heads/master'
