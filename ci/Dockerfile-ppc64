@@ -4,14 +4,14 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="9.8.x" \
+      org.opencontainers.image.version="9.9.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
       org.opencontainers.image.description="Container image for cyclonedx cdxgen SBOM generator" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-ppc64 -r /app --server"
 
-ARG SBT_VERSION=1.9.6
+ARG SBT_VERSION=1.9.7
 ARG MAVEN_VERSION=3.9.4
 ARG GRADLE_VERSION=8.3
 ARG GO_VERSION=1.21.1

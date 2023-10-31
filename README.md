@@ -170,10 +170,7 @@ Options:
                                faults to true. Pass --no-validate to disable.
                                                        [boolean] [default: true]
       --evidence               Generate SBOM with evidence for supported languag
-                               es. WIP                [boolean] [default: false]
-      --usages-slices-file     Path for the usages slice file created by atom.
-      --data-flow-slices-file  Path for the data-flow slice file created by atom
-                               .
+                               es.                    [boolean] [default: false]
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
       --filter                 Filter components containining this word in purl.

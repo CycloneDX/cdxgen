@@ -51,6 +51,13 @@ if (!url.startsWith("file://")) {
 }
 const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 const isWin = platform() === "win32";
+const isMac = platform() === "darwin";
+export let ATOM_DB = join(homedir(), ".local", "share", ".atomdb");
+if (isWin) {
+  ATOM_DB = join(homedir(), "AppData", "Local", ".atomdb");
+} else if (isMac) {
+  ATOM_DB = join(homedir(), "Library", "Application Support", ".atomdb");
+}
 
 const licenseMapping = JSON.parse(
   readFileSync(join(dirNameStr, "data", "lic-mapping.json"))
@@ -116,6 +123,8 @@ const MAX_LICENSE_ID_LENGTH = 100;
 let PYTHON_CMD = "python";
 if (process.env.PYTHON_CMD) {
   PYTHON_CMD = process.env.PYTHON_CMD;
+} else if (process.env.CONDA_PYTHON_EXE) {
+  PYTHON_CMD = process.env.CONDA_PYTHON_EXE;
 }
 
 // Custom user-agent for cdxgen
@@ -2426,13 +2435,23 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         cdepList.push(p);
         continue;
       }
+      const origName = p.name;
       // Some packages support extra modules
       if (p.name.includes("[")) {
         p.name = p.name.split("[")[0];
       }
-      const res = await cdxgenAgent.get(PYPI_URL + p.name + "/json", {
-        responseType: "json"
-      });
+      let res = undefined;
+      try {
+        res = await cdxgenAgent.get(PYPI_URL + p.name + "/json", {
+          responseType: "json"
+        });
+      } catch (err) {
+        // retry by prefixing django- to the package name
+        res = await cdxgenAgent.get(PYPI_URL + "django-" + p.name + "/json", {
+          responseType: "json"
+        });
+        p.name = "django-" + p.name;
+      }
       const body = res.body;
       if (body.info.author && body.info.author.trim() !== "") {
         if (body.info.author_email && body.info.author_email.trim() !== "") {
@@ -2538,6 +2557,10 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           name: "cdx:pypi:latest_version",
           value: body.info.version
         });
+        p.properties.push({
+          name: "cdx:pypi:resolved_from",
+          value: origName
+        });
       }
       if (
         body.releases &&
@@ -2551,12 +2574,22 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           p._integrity = "md5-" + digest["md5"];
         }
       }
+      const purlString = new PackageURL(
+        "pypi",
+        "",
+        p.name,
+        p.version,
+        null,
+        null
+      ).toString();
+      p.purl = purlString;
+      p["bom-ref"] = decodeURIComponent(purlString);
       cdepList.push(p);
     } catch (err) {
       if (DEBUG_MODE) {
         console.error(p.name, "is not found on PyPI.");
         console.log(
-          "If this package is available from PyPI or a registry, its name might be different to the module name. Raise a ticket at https://github.com/CycloneDX/cdxgen/issues so that this could be added to the mapping file pypi-pkg-aliases.json"
+          "If this package is available from PyPI or a registry, its name might be different from the module name. Raise a ticket at https://github.com/CycloneDX/cdxgen/issues so that this can be added to the mapping file pypi-pkg-aliases.json"
         );
         console.log(
           "Alternatively, if this is a package that gets installed directly in your environment and offers a python binding, then track such packages manually."
@@ -2584,6 +2617,16 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
           }
         };
       }
+      const purlString = new PackageURL(
+        "pypi",
+        "",
+        p.name,
+        p.version,
+        null,
+        null
+      ).toString();
+      p.purl = purlString;
+      p["bom-ref"] = decodeURIComponent(purlString);
       cdepList.push(p);
     }
   }
@@ -2973,35 +3016,29 @@ export const getPyModules = async (src, epkgList, options) => {
   const allImports = {};
   const dependenciesList = [];
   let modList = [];
+  const slicesFile = resolve(
+    options.depsSlicesFile || options.usagesSlicesFile
+  );
   // Issue: 615 fix. Reuse existing slices file
-  // FIXME: The argument is called usagesSlicesFile while the atom command used is parsedeps.
-  // This logic could be rewritten while implementing evinse for python to that the analysis works for either type of slice
-  if (options.usagesSlicesFile && existsSync(options.usagesSlicesFile)) {
-    const slicesData = JSON.parse(
-      readFileSync(options.usagesSlicesFile, "utf-8")
-    );
+  if (slicesFile && existsSync(slicesFile)) {
+    const slicesData = JSON.parse(readFileSync(slicesFile, "utf-8"));
     if (slicesData && Object.keys(slicesData) && slicesData.modules) {
       modList = slicesData.modules;
     } else {
       modList = slicesData;
     }
   } else {
-    modList = findAppModules(
-      src,
-      "python",
-      "parsedeps",
-      options.usagesSlicesFile
-    );
+    modList = findAppModules(src, "python", "parsedeps", slicesFile);
   }
   const pyDefaultModules = new Set(PYTHON_STD_MODULES);
-  const filteredModList = modList.filter(
+  modList = modList.filter(
     (x) =>
       !pyDefaultModules.has(x.name.toLowerCase()) &&
       !x.name.startsWith("_") &&
       !x.name.startsWith(".")
   );
-  let pkgList = filteredModList.map((p) => {
-    return {
+  let pkgList = modList.map((p) => {
+    const apkg = {
       name:
         PYPI_MODULE_PACKAGE_MAPPING[p.name.toLowerCase()] ||
         PYPI_MODULE_PACKAGE_MAPPING[p.name.replace(/_/g, "-").toLowerCase()] ||
@@ -3015,6 +3052,13 @@ export const getPyModules = async (src, epkgList, options) => {
         }
       ]
     };
+    if (p.importedSymbols) {
+      apkg.properties.push({
+        name: "ImportedModules",
+        value: p.importedSymbols
+      });
+    }
+    return apkg;
   });
   pkgList = pkgList.filter(
     (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index
@@ -3038,7 +3082,7 @@ export const getPyModules = async (src, epkgList, options) => {
       });
     }
   }
-  return { allImports, pkgList, dependenciesList };
+  return { allImports, pkgList, dependenciesList, modList };
 };
 
 /**
@@ -6862,9 +6906,19 @@ const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
     if (!dependenciesMap[pkgRef]) {
       dependenciesMap[pkgRef] = [];
     }
+    const purlString = new PackageURL(
+      "pypi",
+      "",
+      d.name,
+      d.version,
+      null,
+      null
+    ).toString();
     pkgList.push({
       name: d.name,
       version: d.version,
+      purl: purlString,
+      "bom-ref": decodeURIComponent(purlString),
       properties: [
         {
           name: "SrcFile",
@@ -6874,11 +6928,11 @@ const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 1,
+          confidence: 0.8,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 1,
+              confidence: 0.8,
               value: reqOrSetupFile
             }
           ]
@@ -6918,6 +6972,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
    */
   if (
     !process.env.VIRTUAL_ENV &&
+    !process.env.CONDA_PREFIX &&
     reqOrSetupFile &&
     !reqOrSetupFile.endsWith("poetry.lock")
   ) {
@@ -6928,7 +6983,10 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
-        if (result.error && result.error.includes("spawnSync python ENOENT")) {
+        if (
+          result.stderr &&
+          result.stderr.includes("spawnSync python ENOENT")
+        ) {
           console.log(
             "Install suitable version of python or set the environment variable PYTHON_CMD."
           );
@@ -7106,7 +7164,10 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     }
   }
   // Bug #375. Attempt pip freeze on existing and new virtual environments
-  if (env.VIRTUAL_ENV && env.VIRTUAL_ENV.length) {
+  if (
+    (env.VIRTUAL_ENV && env.VIRTUAL_ENV.length) ||
+    (env.CONDA_PREFIX && env.CONDA_PREFIX.length)
+  ) {
     /**
      * At this point, the previous attempt to do a pip install might have failed and we might have an unclean virtual environment with an incomplete list
      * The position taken by cdxgen is "Some SBOM is better than no SBOM", so we proceed to collecting the dependencies that got installed with pip freeze
@@ -7136,9 +7197,19 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       const version = t.version;
       let exclude = ["pip", "setuptools", "wheel"];
       if (!exclude.includes(name)) {
+        const purlString = new PackageURL(
+          "pypi",
+          "",
+          name,
+          version,
+          null,
+          null
+        ).toString();
         pkgList.push({
           name,
           version,
+          purl: purlString,
+          "bom-ref": decodeURIComponent(purlString),
           evidence: {
             identity: {
               field: "purl",
@@ -7147,7 +7218,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
                 {
                   technique: "instrumentation",
                   confidence: 1,
-                  value: env.VIRTUAL_ENV
+                  value: env.VIRTUAL_ENV || env.CONDA_PREFIX
                 }
               ]
             }
@@ -7162,12 +7233,6 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     } // end for
     for (const k of Object.keys(dependenciesMap)) {
       dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
-    }
-  } else {
-    if (DEBUG_MODE) {
-      console.log(
-        "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBOM accuracy."
-      );
     }
   }
   return {
