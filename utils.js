@@ -6983,7 +6983,10 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
-        if (result.error && result.error.includes("spawnSync python ENOENT")) {
+        if (
+          result.stderr &&
+          result.stderr.includes("spawnSync python ENOENT")
+        ) {
           console.log(
             "Install suitable version of python or set the environment variable PYTHON_CMD."
           );
@@ -7230,12 +7233,6 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     } // end for
     for (const k of Object.keys(dependenciesMap)) {
       dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
-    }
-  } else {
-    if (DEBUG_MODE) {
-      console.log(
-        "NOTE: Setup and activate a python virtual environment for this project prior to invoking cdxgen to improve SBOM accuracy."
-      );
     }
   }
   return {
