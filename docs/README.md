@@ -250,7 +250,7 @@ cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff
 Minimal example:
 
 ```ts
-import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.8.0";
+import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.9.0";
 ```
 
 See the [Deno Readme](https://github.com/CycloneDX/cdxgen/blob/master/contrib/deno/README.md) for detailed instructions.
