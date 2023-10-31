@@ -32,7 +32,14 @@ export const prepareDB = async (options) => {
   const dirPath = options._[0] || ".";
   const bomJsonFile = options.input;
   if (!fs.existsSync(bomJsonFile)) {
-    console.log("Bom file doesn't exist");
+    console.log(
+      "Bom file doesn't exist. Check if cdxgen was invoked with the correct type argument."
+    );
+    if (!process.env.CDXGEN_DEBUG_MODE) {
+      console.log(
+        "Set the environment variable CDXGEN_DEBUG_MODE to debug to troubleshoot the issue further."
+      );
+    }
     return;
   }
   const bomJson = JSON.parse(fs.readFileSync(bomJsonFile, "utf8"));
