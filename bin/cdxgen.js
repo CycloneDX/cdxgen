@@ -106,14 +106,17 @@ const args = yargs(hideBin(process.argv))
   })
   .option("project-version", {
     description: "Dependency track project version",
-    default: ""
+    default: "",
+    type: "string"
   })
   .option("project-id", {
     description:
-      "Dependency track project id. Either provide the id or the project name and version together"
+      "Dependency track project id. Either provide the id or the project name and version together",
+    type: "string"
   })
   .option("parent-project-id", {
-    description: "Dependency track parent project id"
+    description: "Dependency track parent project id",
+    type: "string"
   })
   .option("required-only", {
     type: "boolean",
@@ -185,7 +188,8 @@ const args = yargs(hideBin(process.argv))
   })
   .option("spec-version", {
     description: "CycloneDX Specification version to use. Defaults to 1.5",
-    default: 1.5
+    default: 1.5,
+    type: "number"
   })
   .option("filter", {
     description:
