@@ -4747,7 +4747,26 @@ export const parseConanLockData = function (conanLockData) {
     if (nodes[nk].ref) {
       const tmpA = nodes[nk].ref.split("/");
       if (tmpA.length === 2) {
-        pkgList.push({ name: tmpA[0], version: tmpA[1] });
+        let version = tmpA[1] || "latest";
+        if (tmpA[1].includes("@")) {
+          version = version.split("@")[0];
+        } else if (tmpA[1].includes("#")) {
+          version = version.split("#")[0];
+        }
+        const purlString = new PackageURL(
+          "conan",
+          "",
+          tmpA[0],
+          version,
+          null,
+          null
+        ).toString();
+        pkgList.push({
+          name: tmpA[0],
+          version,
+          purl: purlString,
+          "bom-ref": decodeURIComponent(purlString)
+        });
       }
     }
   }
@@ -4759,15 +4778,50 @@ export const parseConanData = function (conanData) {
   if (!conanData) {
     return pkgList;
   }
+  let scope = "required";
   conanData.split("\n").forEach((l) => {
     l = l.replace("\r", "");
+    if (l.includes("[build_requires]")) {
+      scope = "optional";
+    }
+    if (l.includes("[requires]")) {
+      scope = "required";
+    }
     if (!l.includes("/")) {
       return;
     }
     if (l.includes("/")) {
       const tmpA = l.trim().split("#")[0].split("/");
-      if (tmpA.length === 2 && /^\d+/.test(tmpA[1])) {
-        pkgList.push({ name: tmpA[0], version: tmpA[1] });
+      if (tmpA.length >= 2 && /^\d+/.test(tmpA[1])) {
+        let version = tmpA[1] || "latest";
+        let qualifiers = undefined;
+        if (tmpA[1].includes("#")) {
+          const tmpB = version.split("#");
+          version = tmpB[0];
+          qualifiers = { revision: tmpB[1] };
+        }
+        if (l.includes("#")) {
+          const tmpB = l.split("#");
+          qualifiers = { revision: tmpB[1] };
+        }
+        if (tmpA[1].includes("@")) {
+          version = version.split("@")[0];
+        }
+        const purlString = new PackageURL(
+          "conan",
+          "",
+          tmpA[0],
+          version,
+          qualifiers,
+          null
+        ).toString();
+        pkgList.push({
+          name: tmpA[0],
+          version,
+          purl: purlString,
+          "bom-ref": decodeURIComponent(purlString),
+          scope
+        });
       }
     }
   });
@@ -6103,7 +6157,7 @@ export const collectGradleDependencies = (
  * Method to collect class names from all jars in a directory
  *
  * @param {string} jarPath Path containing jars
- * @param {object} pomPathMap Map containing jar to pom names. Required to successful parse gradle cache.
+ * @param {object} pomPathMap Map containing jar to pom names. Required to successfully parse gradle cache.
  *
  * @return object containing jar name and class list
  */
@@ -7750,6 +7804,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
         !n.startsWith("@")
       ) {
         n = n.replace(/"/g, "");
+        // Can this be replaced with a db lookup?
         for (const wrapkey of Object.keys(mesonWrapDB)) {
           const awrap = mesonWrapDB[wrapkey];
           if (
@@ -7863,6 +7918,44 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
   const pkgAddedMap = {};
   let sliceData = {};
   const epkgMap = {};
+  let parentComponent = undefined;
+  const dependsOn = [];
+  // Let's look for any vcpkg.json file to tell us about the directory we're scanning
+  // users can use this file to give us a clue even if they do not use vcpkg library manager
+  if (existsSync(join(src, "vcpkg.json"))) {
+    const vcPkgData = JSON.parse(join(src, "vcpkg.json"));
+    if (
+      vcPkgData &&
+      Object.keys(vcPkgData).length &&
+      vcPkgData.name &&
+      vcPkgData.version
+    ) {
+      const parentPurl = new PackageURL(
+        pkgType,
+        "",
+        vcPkgData.name,
+        vcPkgData.version,
+        null,
+        null
+      ).toString();
+      parentComponent = {
+        name: vcPkgData.name,
+        version: vcPkgData.version,
+        description: vcPkgData.description,
+        license: vcPkgData.license,
+        purl: parentPurl,
+        "bom-ref": decodeURIComponent(parentPurl)
+      };
+      if (vcPkgData.homepage) {
+        parentComponent.homepage = { url: vcPkgData.homepage };
+      }
+    }
+  } else if (join(src, "CMakeLists.txt")) {
+    const retMap = parseCmakeLikeFile(join(src, "CMakeLists.txt"), pkgType);
+    if (retMap.parentComponent && Object.keys(retMap.parentComponent).length) {
+      parentComponent = retMap.parentComponent;
+    }
+  }
   (epkgList || []).forEach((p) => {
     epkgMap[p.name] = p;
   });
@@ -7935,15 +8028,14 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     }
     if (usageData[afile]) {
       const usymbols = Array.from(usageData[afile]).filter(
-        (v) =>
-          !v.startsWith("<operator") &&
-          !v.startsWith("<global") &&
-          !v.startsWith("<empty")
+        (v) => !v.startsWith("<") && !v.startsWith("__")
       );
-      if (!apkg["properties"]) {
+      if (!apkg["properties"] && usymbols.length) {
         apkg["properties"] = [
           { name: "ImportedSymbols", value: usymbols.join(", ") }
         ];
+      } else {
+        apkg["properties"] = [];
       }
       const newProps = [];
       let symbolsPropertyFound = false;
@@ -7956,7 +8048,7 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
         }
         newProps.push(prop);
       }
-      if (!symbolsPropertyFound) {
+      if (!symbolsPropertyFound && usymbols.length) {
         apkg["properties"].push({
           name: "ImportedSymbols",
           value: usymbols.join(", ")
@@ -7964,10 +8056,40 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
       }
       apkg["properties"] = newProps;
     }
-    pkgList.push(apkg);
-    pkgAddedMap[name] = true;
+    // At this point, we have a package but we don't know what it's called
+    // So let's try to locate this generic package using some heuristics
+    apkg = locateGenericPackage(apkg);
+    if (!pkgAddedMap[name]) {
+      pkgList.push(apkg);
+      dependsOn.push(apkg["bom-ref"]);
+      pkgAddedMap[name] = true;
+    }
   }
-  return pkgList;
+  const dependenciesList =
+    dependsOn.length && parentComponent
+      ? [
+          {
+            ref: parentComponent["bom-ref"],
+            dependsOn
+          }
+        ]
+      : [];
+  return {
+    parentComponent,
+    pkgList,
+    dependenciesList
+  };
+};
+
+/**
+ * NOT IMPLEMENTED YET.
+ * A future method to locate a generic package given some name and properties
+ *
+ * @param {object} apkg Package to locate
+ * @returns Located project with precise purl or the original unmodified input.
+ */
+export const locateGenericPackage = (apkg) => {
+  return apkg;
 };
 
 export const parseCUsageSlice = (sliceData) => {

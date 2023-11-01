@@ -21,7 +21,6 @@ import {
 import { findUpSync } from "find-up";
 import { load as _load } from "js-yaml";
 import { postProcess } from "../postgen.js";
-import { analyzeProject, createEvinseFile, prepareDB } from "../evinser.js";
 import { ATOM_DB } from "../utils.js";
 
 // Support for config files
@@ -266,7 +265,8 @@ const options = Object.assign({}, args, {
   projectType: args.type,
   multiProject: args.recurse,
   noBabel: args.noBabel || args.babel === false,
-  project: args.projectId
+  project: args.projectId,
+  deep: args.deep || args.evidence
 });
 
 /**
@@ -490,6 +490,7 @@ const checkPermissions = (filePath) => {
   }
   // Evidence generation
   if (args.evidence) {
+    const evinserModule = await import("../evinser.js");
     const evinseOptions = {
       _: args._,
       input: options.output,
@@ -503,10 +504,16 @@ const checkPermissions = (filePath) => {
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile
     };
-    const dbObjMap = await prepareDB(evinseOptions);
+    const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {
-      const sliceArtefacts = await analyzeProject(dbObjMap, evinseOptions);
-      const evinseJson = createEvinseFile(sliceArtefacts, evinseOptions);
+      const sliceArtefacts = await evinserModule.analyzeProject(
+        dbObjMap,
+        evinseOptions
+      );
+      const evinseJson = evinserModule.createEvinseFile(
+        sliceArtefacts,
+        evinseOptions
+      );
       bomNSData.bomJson = evinseJson;
       if (args.print && evinseJson) {
         printOccurrences(evinseJson);

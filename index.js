@@ -1153,7 +1153,7 @@ export const createJavaBom = async (path, options) => {
     ) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.9";
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.10";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
       let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
       if (includeMavenTestScope) {
@@ -3032,6 +3032,7 @@ export const createDartBom = async (path, options) => {
  */
 export const createCppBom = (path, options) => {
   let parentComponent = undefined;
+  let dependencies = [];
   const addedParentComponentsMap = {};
   const conanLockFiles = getAllFiles(
     path,
@@ -3087,11 +3088,13 @@ export const createCppBom = (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const retMap = parseCmakeLikeFile(f, "conan");
+      const basePath = dirname(f);
+      const retMap = parseCmakeLikeFile(f, "generic");
       if (retMap.pkgList && retMap.pkgList.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (
+        basePath === path &&
         retMap.parentComponent &&
         Object.keys(retMap.parentComponent).length
       ) {
@@ -3135,20 +3138,41 @@ export const createCppBom = (path, options) => {
     // Now we check with atom and attempt to detect all external modules via usages
     // We pass the current list of packages so that we enhance the current list and replace
     // components inadvertently. For example, we might resolved a name, version and url information already via cmake
-    const dlist = getCppModules(path, options, osPkgsList, pkgList);
-    if (dlist && dlist.length) {
-      pkgList = pkgList.concat(dlist);
+    const retMap = getCppModules(path, options, osPkgsList, pkgList);
+    if (retMap.pkgList && retMap.pkgList.length) {
+      pkgList = pkgList.concat(retMap.pkgList);
+    }
+    if (retMap.dependenciesList) {
+      if (dependencies.length) {
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependenciesList,
+          parentComponent
+        );
+      } else {
+        dependencies = retMap.dependenciesList;
+      }
+    }
+    if (!parentComponent) {
+      parentComponent = retMap.parentComponent;
+    } else {
+      parentComponent.components = parentComponent.components || [];
+      if (!addedParentComponentsMap[retMap.parentComponent.name]) {
+        parentComponent.components.push(retMap.parentComponent);
+        addedParentComponentsMap[retMap.parentComponent.name] = true;
+      }
     }
   }
   if (!options.createMultiXBom) {
     if (!parentComponent) {
-      parentComponent = createDefaultParentComponent(path, "conan", options);
+      parentComponent = createDefaultParentComponent(path, "generic", options);
     }
     options.parentComponent = parentComponent;
   }
-  return buildBomNSData(options, pkgList, "conan", {
+  return buildBomNSData(options, pkgList, "generic", {
     src: path,
-    parentComponent
+    parentComponent,
+    dependencies
   });
 };
 
