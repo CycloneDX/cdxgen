@@ -2295,46 +2295,24 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
     if (group.indexOf("android") !== -1) {
       urlPrefix = ANDROID_MAVEN;
     }
-    const groupPart = group.replace(/\./g, "/");
     // Querying maven requires a valid group name
-    if (!groupPart || groupPart === "") {
+    if (!group || group === "") {
       cdepList.push(p);
       continue;
     }
-    const fullUrl =
-      urlPrefix +
-      groupPart +
-      "/" +
-      p.name +
-      "/" +
-      p.version +
-      "/" +
-      p.name +
-      "-" +
-      p.version +
-      ".pom";
+    const pomMetadata = {
+      urlPrefix: urlPrefix,
+      group: group,
+      name: p.name,
+      version: p.version
+    };
     try {
       if (DEBUG_MODE) {
-        console.log(`Querying ${fullUrl}`);
+        console.log(
+          `Querying ${pomMetadata} from ${composePomXmlUrl(pomMetadata)}`
+        );
       }
-      const res = await cdxgenAgent.get(fullUrl);
-      const bodyJson = xml2js(res.body, {
-        compact: true,
-        spaces: 4,
-        textKey: "_",
-        attributesKey: "$",
-        commentKey: "value"
-      }).project;
-      if (bodyJson && bodyJson.licenses && bodyJson.licenses.license) {
-        if (Array.isArray(bodyJson.licenses.license)) {
-          p.license = bodyJson.licenses.license.map((l) => {
-            return findLicenseId(l.name._);
-          });
-        } else if (Object.keys(bodyJson.licenses.license).length) {
-          const l = bodyJson.licenses.license;
-          p.license = [findLicenseId(l.name._)];
-        }
-      }
+      const bodyJson = await fetchPomXmlAsJson(pomMetadata);
       p.publisher =
         bodyJson.organization && bodyJson.organization.name
           ? bodyJson.organization.name._
@@ -2343,21 +2321,149 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
       if (bodyJson.scm && bodyJson.scm.url) {
         p.repository = { url: bodyJson.scm.url._ };
       }
-      cdepList.push(p);
+      p.license =
+        parseLicenseEntryOrArrayFromPomXml(bodyJson?.licenses?.license) ||
+        (await extractLicenseCommentFromPomXml(pomMetadata)) ||
+        (await getRepoLicense(p.repository?.url, undefined));
     } catch (err) {
       if (DEBUG_MODE) {
         console.log(
-          "Unable to find metadata for",
-          group,
-          p.name,
-          p.version,
-          fullUrl
+          `An error occurred when trying to fetch metadata ${pomMetadata}`,
+          err
         );
       }
+    } finally {
       cdepList.push(p);
     }
   }
   return cdepList;
+};
+
+/**
+ * Method to compose URL of pom.xml
+ *
+ * @param {String} urlPrefix
+ * @param {String} group
+ * @param {String} name
+ * @param {String} version
+ *
+ * @return {String} fullUrl
+ */
+export const composePomXmlUrl = function ({ urlPrefix, group, name, version }) {
+  const groupPart = group.replace(/\./g, "/");
+  const fullUrl =
+    urlPrefix +
+    groupPart +
+    "/" +
+    name +
+    "/" +
+    version +
+    "/" +
+    name +
+    "-" +
+    version +
+    ".pom";
+  return fullUrl;
+};
+
+/**
+ * Method to fetch pom.xml data and parse it to JSON
+ *
+ * @param {String} urlPrefix
+ * @param {String} group
+ * @param {String} name
+ * @param {String} version
+ *
+ * @return {Object|undefined}
+ */
+export const fetchPomXmlAsJson = async function ({
+  urlPrefix,
+  group,
+  name,
+  version
+}) {
+  const pomXml = await fetchPomXml({ urlPrefix, group, name, version });
+  const options = {
+    compact: true,
+    spaces: 4,
+    textKey: "_",
+    attributesKey: "$",
+    commentKey: "value"
+  };
+  const pomJson = xml2js(pomXml, options).project;
+  if (pomJson?.parent) {
+    const parentXml = await fetchPomXml({
+      urlPrefix,
+      group: pomJson.parent.groupId?._,
+      name: pomJson.parent.artifactId?._,
+      version: pomJson.parent.version?._
+    });
+    const parentJson = xml2js(parentXml, options).project;
+    const result = { ...parentJson, ...pomJson };
+    return result;
+  }
+  return pomJson;
+};
+
+/**
+ * Method to fetch pom.xml data
+ *
+ * @param {String} urlPrefix
+ * @param {String} group
+ * @param {String} name
+ * @param {String} version
+ *
+ * @return {String}
+ */
+export const fetchPomXml = async function ({
+  urlPrefix,
+  group,
+  name,
+  version
+}) {
+  let fullUrl = composePomXmlUrl({ urlPrefix, group, name, version });
+  const res = await cdxgenAgent.get(fullUrl);
+  return res.body;
+};
+
+/**
+ * Method extract single or multiple license entries that might appear in pom.xml
+ *
+ * @param {Object|Array} license
+ */
+export const parseLicenseEntryOrArrayFromPomXml = function (license) {
+  if (!license) return;
+  if (Array.isArray(license)) {
+    return license.map((l) => {
+      return findLicenseId(l.name._);
+    });
+  } else if (Object.keys(license).length) {
+    return [findLicenseId(license.name._)];
+  }
+};
+
+/**
+ * Method to parse pom.xml in search of a comment containing license text
+ *
+ * @param {String} urlPrefix
+ * @param {String} group
+ * @param {String} name
+ * @param {String} version
+ *
+ * @return {String} License ID
+ */
+export const extractLicenseCommentFromPomXml = async function ({
+  urlPrefix,
+  group,
+  name,
+  version
+}) {
+  const pom_xml = await fetchPomXml({ urlPrefix, group, name, version });
+  const licenseRegex = /<!--([\s\S]*?)-->[\s\n]*<project/m;
+  const match = licenseRegex.exec(pom_xml);
+  if (match && match[1]) {
+    return findLicenseId(match[1].trim());
+  }
 };
 
 /**
@@ -3114,14 +3220,15 @@ export const parseSetupPyFile = async function (setupPyData) {
 };
 
 /**
- * Method to construct a github url for the given repo
+ * Method to construct a GitHub API url for the given repo metadata
  * @param {Object} repoMetadata Repo metadata with group and name
+ * @return {String|undefined} github api url (or undefined - if not enough data)
  */
-export const toGitHubUrl = function (repoMetadata) {
+export const repoMetadataToGitHubApiUrl = function (repoMetadata) {
   if (repoMetadata) {
     const group = repoMetadata.group;
     const name = repoMetadata.name;
-    let ghUrl = "https://github.com";
+    let ghUrl = "https://api.github.com/repos";
     if (group && group !== "." && group != "") {
       ghUrl = ghUrl + "/" + group.replace("github.com/", "");
     }
@@ -3133,6 +3240,32 @@ export const toGitHubUrl = function (repoMetadata) {
 };
 
 /**
+ * Method to construct GitHub api url from repo metadata or one of multiple formats of repo URLs
+ * @param {String} repoUrl Repository url
+ * @param {Object} repoMetadata Object containing group and package name strings
+ * @return {String|undefined} github api url (or undefined - if not a GitHub repo)
+ */
+export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
+  if (!repoUrl || !repoUrl.includes("://github.com/")) {
+    return repoMetadataToGitHubApiUrl(repoMetadata);
+  }
+  if (repoUrl.toLowerCase().endsWith(".git")) {
+    repoUrl = repoUrl.slice(0, -4);
+  }
+  repoUrl.replace(/\/$/, "");
+  const parts = repoUrl.split("/");
+
+  if (parts.length < 5 || parts[2] !== "github.com") {
+    return undefined; // Not a valid GitHub repo URL
+  } else {
+    return repoMetadataToGitHubApiUrl({
+      group: parts[3],
+      name: parts[4]
+    });
+  }
+};
+
+/**
  * Method to retrieve repo license by querying github api
  *
  * @param {String} repoUrl Repository url
@@ -3140,25 +3273,16 @@ export const toGitHubUrl = function (repoMetadata) {
  * @return {String} SPDX license id
  */
 export const getRepoLicense = async function (repoUrl, repoMetadata) {
-  if (!repoUrl) {
-    repoUrl = toGitHubUrl(repoMetadata);
-  }
-  if (repoUrl.startsWith("git://") && repoUrl.endsWith(".git")) {
-    repoUrl = repoUrl.replace("git://", "https://").slice(0, -4);
-  }
+  let apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
   // Perform github lookups
-  if (repoUrl.indexOf("github.com") > -1) {
-    let apiUrl = repoUrl.replace(
-      "https://github.com",
-      "https://api.github.com/repos"
-    );
-    apiUrl += "/license";
+  if (apiUrl) {
+    let licenseUrl = apiUrl + "/license";
     const headers = {};
     if (process.env.GITHUB_TOKEN) {
       headers["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
     }
     try {
-      const res = await cdxgenAgent.get(apiUrl, {
+      const res = await cdxgenAgent.get(licenseUrl, {
         responseType: "json",
         headers: headers
       });
