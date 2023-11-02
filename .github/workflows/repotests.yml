@@ -152,6 +152,10 @@ jobs:
         with:
           repository: 'DefectDojo/django-DefectDojo'
           path: 'repotests/django-DefectDojo'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'googleprojectzero/Jackalope'
+          path: 'repotests/Jackalope'
       - uses: dtolnay/rust-toolchain@stable
       - name: repotests
         run: |
@@ -190,6 +194,7 @@ jobs:
           bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
           bin/cdxgen.js -r -t c repotests/openpbs -o bomresults/bom-openpbs.json
+          bin/cdxgen.js -r -t c repotests/Jackalope -o bomresults/bom-Jackalope.json -p
           cd repotests/ha-android && ./gradlew assembleDebug || true && cd ../..
           bin/cdxgen.js -r -t java repotests/ha-android -o bomresults/bom-android.json
           CDXGEN_DEBUG_MODE=debug bin/evinse.js -i bomresults/bom-android.json -o bomresults/bom-android.evinse.json -l java repotests/ha-android
@@ -201,13 +206,13 @@ jobs:
           bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
-          # mkdir -p jenkins
-          # wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
-          # wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
-          # wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
-          # wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
-          # mv *.hpi jenkins
-          # CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
+          mkdir -p jenkins
+          wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
+          wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
+          wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
+          wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
+          mv *.hpi jenkins
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
         shell: bash
       - name: repotests 1.4
