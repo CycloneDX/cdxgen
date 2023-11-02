@@ -236,7 +236,9 @@ export function getLicenses(pkg, format = "xml") {
         }
         return licenseContent;
       })
-      .map((l) => (l.expression ? { expression: l } : { license: l }));
+      .map((l) =>
+        l.expression ? { expression: l.expression } : { license: l }
+      );
   }
   return undefined;
 }

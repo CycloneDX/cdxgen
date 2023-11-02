@@ -1591,6 +1591,16 @@ test("get licenses", () => {
       }
     }
   ]);
+
+  let inputLicense = "(MIT or Apache-2.0)";
+  licenses = getLicenses({
+    license: inputLicense
+  });
+  expect(licenses).toEqual([
+    {
+      expression: inputLicense
+    }
+  ]);
 });
 
 test("parsePkgLock v1", async () => {
