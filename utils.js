@@ -221,6 +221,8 @@ export function getLicenses(pkg, format = "xml") {
               licenseContent.name = "CUSTOM";
             }
             licenseContent.url = l;
+          } else if (l.includes(" ") || l.includes("(")) {
+            licenseContent.expression = l;
           } else {
             licenseContent.name = l;
           }
@@ -234,7 +236,7 @@ export function getLicenses(pkg, format = "xml") {
         }
         return licenseContent;
       })
-      .map((l) => ({ license: l }));
+      .map((l) => (l.expression ? { expression: l } : { license: l }));
   }
   return undefined;
 }
