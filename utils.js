@@ -7950,7 +7950,7 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
         parentComponent.homepage = { url: vcPkgData.homepage };
       }
     }
-  } else if (join(src, "CMakeLists.txt")) {
+  } else if (existsSync(join(src, "CMakeLists.txt"))) {
     const retMap = parseCmakeLikeFile(join(src, "CMakeLists.txt"), pkgType);
     if (retMap.parentComponent && Object.keys(retMap.parentComponent).length) {
       parentComponent = retMap.parentComponent;
