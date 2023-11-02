@@ -320,3 +320,14 @@ cdxgen completion >> ~/.zshrc
 
 # evinse completion >> ~/.zshrc
 ```
+
+## BOM Profile
+
+With profiles, cdxgen can generate a BOM that is optimized for a specific use case or purpose.
+
+| Profile            | Purpose                                                                   | Configurations enabled                                                             |
+| ------------------ | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| appsec             | BOM will be consumed by application security for vulnerability management | Enable deep mode                                                                   |
+| research           | BOM for security research                                                 | Enables deep and evidence mode. Disable ignore directory for JavaScript/TypeScript |
+| operational        | Generate OBOM                                                             | projectType set to os                                                              |
+| license-compliance | Fetch license data                                                        | Set FETCH_LICENSE environment variable                                             |

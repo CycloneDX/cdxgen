@@ -203,6 +203,18 @@ const args = yargs(hideBin(process.argv))
       "The person(s) who created the BOM. Set this value if you're intending the modify the BOM and claim authorship.",
     default: "OWASP Foundation"
   })
+  .option("profile", {
+    description: "BOM profile to use for generation. Default generic.",
+    default: "generic",
+    choices: [
+      "appsec",
+      "research",
+      "operational",
+      "threat-modeling",
+      "license-compliance",
+      "generic"
+    ]
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
@@ -258,6 +270,31 @@ if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
 }
 
+const applyProfile = (options) => {
+  switch (options.profile) {
+    case "appsec":
+      options.deep = true;
+      break;
+    case "research":
+      options.deep = true;
+      options.evidence = true;
+      process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = true;
+      process.env.ASTGEN_IGNORE_DIRS = "";
+      process.env.ASTGEN_IGNORE_FILE_PATTERN = "";
+      break;
+    case "operational":
+      options.projectType = options.projectType || "os";
+      break;
+    case "threat-modeling": // unused
+      break;
+    case "license-compliance":
+      process.env.FETCH_LICENSE = true;
+      break;
+    default:
+      break;
+  }
+};
+
 /**
  * Command line options
  */
@@ -268,6 +305,7 @@ const options = Object.assign({}, args, {
   project: args.projectId,
   deep: args.deep || args.evidence
 });
+applyProfile(options);
 
 /**
  * Check for node >= 20 permissions
