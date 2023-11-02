@@ -323,7 +323,7 @@ cdxgen completion >> ~/.zshrc
 
 ## BOM Profile
 
-With profiles, cdxgen can generate a BOM that is optimized for a specific use case or purpose.
+With profiles, cdxgen can generate a BOM that is optimized for a specific use case or purpose. The default is `generic`.
 
 | Profile            | Purpose                                                                   | Configurations enabled                                                             |
 | ------------------ | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |

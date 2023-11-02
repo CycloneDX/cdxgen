@@ -166,6 +166,8 @@ jobs:
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --filter postgres --filter json
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --only spring
           bin/cdxgen.js -p -t java repotests/java-sec-code -o repotests/java-sec-code/bom.json --deep --evidence
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --profile research
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --profile license-compliance
           bin/cdxgen.js -t python repotests/django-DefectDojo -o repotests/django-DefectDojo/bom.json --deep --evidence
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
           node bin/evinse.js -i bomresults/bom-java.json -o bomresults/bom-java.evinse.json -l java --with-data-flow -p repotests/shiftleft-java-example
@@ -206,13 +208,6 @@ jobs:
           bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
-          mkdir -p jenkins
-          wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
-          wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
-          wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
-          wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
-          mv *.hpi jenkins
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
           ls -ltr bomresults
         shell: bash
       - name: repotests 1.4
@@ -226,6 +221,13 @@ jobs:
           FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate --spec-version 1.4
+          mkdir -p jenkins
+          wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
+          wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
+          wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
+          wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
+          mv *.hpi jenkins
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
         shell: bash
       - name: denotests
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
