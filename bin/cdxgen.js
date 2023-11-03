@@ -293,6 +293,7 @@ const applyProfile = (options) => {
     default:
       break;
   }
+  return options;
 };
 
 /**
@@ -344,7 +345,7 @@ const checkPermissions = (filePath) => {
  */
 (async () => {
   // Start SBOM server
-  if (args.server) {
+  if (options.server) {
     const serverModule = await import("../server.js");
     return serverModule.start(options);
   }
@@ -361,15 +362,15 @@ const checkPermissions = (filePath) => {
     bomNSData = postProcess(bomNSData, options);
   }
   if (
-    args.output &&
-    (typeof args.output === "string" || args.output instanceof String)
+    options.output &&
+    (typeof options.output === "string" || options.output instanceof String)
   ) {
     if (bomNSData.bomXmlFiles) {
       console.log("BOM files produced:", bomNSData.bomXmlFiles);
     } else {
-      const jsonFile = args.output.replace(".xml", ".json");
+      const jsonFile = options.output.replace(".xml", ".json");
       // Create bom json file
-      if (!args.output.endsWith(".xml") && bomNSData.bomJson) {
+      if (!options.output.endsWith(".xml") && bomNSData.bomJson) {
         let jsonPayload = undefined;
         if (
           typeof bomNSData.bomJson === "string" ||
@@ -383,7 +384,7 @@ const checkPermissions = (filePath) => {
         }
         if (
           jsonPayload &&
-          (args.generateKeyAndSign ||
+          (options.generateKeyAndSign ||
             (process.env.SBOM_SIGN_ALGORITHM &&
               process.env.SBOM_SIGN_ALGORITHM !== "none" &&
               process.env.SBOM_SIGN_PRIVATE_KEY &&
@@ -396,7 +397,7 @@ const checkPermissions = (filePath) => {
           let privateKeyToUse = undefined;
           let jwkPublicKey = undefined;
           let publicKeyFile = undefined;
-          if (args.generateKeyAndSign) {
+          if (options.generateKeyAndSign) {
             const jdirName = dirname(jsonFile);
             publicKeyFile = join(jdirName, "public.key");
             const privateKeyFile = join(jdirName, "private.key");
@@ -506,8 +507,8 @@ const checkPermissions = (filePath) => {
         }
       }
       // Create bom xml file
-      if (args.output.endsWith(".xml") && bomNSData.bomXml) {
-        fs.writeFileSync(args.output, bomNSData.bomXml);
+      if (options.output.endsWith(".xml") && bomNSData.bomXml) {
+        fs.writeFileSync(options.output, bomNSData.bomXml);
       }
       //
       if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
@@ -516,7 +517,7 @@ const checkPermissions = (filePath) => {
         console.log("Namespace mapping file written to", nsFile);
       }
     }
-  } else if (!args.print) {
+  } else if (!options.print) {
     if (bomNSData.bomJson) {
       console.log(JSON.stringify(bomNSData.bomJson, null, 2));
     } else if (bomNSData.bomXml) {
@@ -527,7 +528,7 @@ const checkPermissions = (filePath) => {
     }
   }
   // Evidence generation
-  if (args.evidence) {
+  if (options.evidence) {
     const evinserModule = await import("../evinser.js");
     const evinseOptions = {
       _: args._,
@@ -553,7 +554,7 @@ const checkPermissions = (filePath) => {
         evinseOptions
       );
       bomNSData.bomJson = evinseJson;
-      if (args.print && evinseJson) {
+      if (options.print && evinseJson) {
         printOccurrences(evinseJson);
         printCallStack(evinseJson);
         printReachables(sliceArtefacts);
@@ -562,22 +563,22 @@ const checkPermissions = (filePath) => {
     }
   }
   // Perform automatic validation
-  if (args.validate) {
+  if (options.validate) {
     if (!validateBom(bomNSData.bomJson)) {
       process.exit(1);
     }
   }
   // Automatically submit the bom data
-  if (args.serverUrl && args.serverUrl != true && args.apiKey) {
+  if (options.serverUrl && options.serverUrl != true && options.apiKey) {
     try {
-      const dbody = await submitBom(args, bomNSData.bomJson);
+      const dbody = await submitBom(options, bomNSData.bomJson);
       console.log("Response from server", dbody);
     } catch (err) {
       console.log(err);
     }
   }
 
-  if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
+  if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     printDependencyTree(bomNSData.bomJson);
     printTable(bomNSData.bomJson);
   }

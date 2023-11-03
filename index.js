@@ -3083,7 +3083,8 @@ export const createCppBom = (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-  } else if (cmakeLikeFiles.length) {
+  }
+  if (cmakeLikeFiles.length) {
     for (const f of cmakeLikeFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
@@ -3107,6 +3108,13 @@ export const createCppBom = (path, options) => {
             addedParentComponentsMap[retMap.parentComponent.name] = true;
           }
         }
+      } else if (
+        retMap.parentComponent &&
+        Object.keys(retMap.parentComponent).length &&
+        !addedParentComponentsMap[retMap.parentComponent.name]
+      ) {
+        retMap.parentComponent.type = "library";
+        pkgList.push(retMap.parentComponent);
       }
     }
   }
