@@ -210,6 +210,16 @@ jobs:
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
           ls -ltr bomresults
         shell: bash
+      - name: jenkins plugins
+        run: |
+          mkdir -p jenkins
+          curl -LO https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
+          curl -LO https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
+          curl -LO https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
+          curl -LO https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
+          mv *.hpi jenkins
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
+        shell: bash
       - name: repotests 1.4
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign --spec-version 1.4
@@ -221,13 +231,6 @@ jobs:
           FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate --spec-version 1.4
-          mkdir -p jenkins
-          wget https://updates.jenkins.io/download/plugins/sonar/2.14/sonar.hpi
-          wget https://updates.jenkins.io/download/plugins/bouncycastle-api/2.26/bouncycastle-api.hpi
-          wget https://updates.jenkins.io/download/plugins/jsch/0.1.55.61.va_e9ee26616e7/jsch.hpi
-          wget https://updates.jenkins.io/download/plugins/momentjs/1.1.1/momentjs.hpi
-          mv *.hpi jenkins
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
         shell: bash
       - name: denotests
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
