@@ -1061,7 +1061,9 @@ test("parse conan data", () => {
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
     name: "zstd",
-    version: "1.4.4"
+    version: "1.4.4",
+    "bom-ref": "pkg:conan/zstd@1.4.4",
+    purl: "pkg:conan/zstd@1.4.4"
   });
   dep_list = parseConanData(
     readFileSync("./test/data/conanfile.txt", { encoding: "utf-8" })
@@ -1069,7 +1071,10 @@ test("parse conan data", () => {
   expect(dep_list.length).toEqual(3);
   expect(dep_list[0]).toEqual({
     name: "zstd",
-    version: "1.4.4"
+    version: "1.4.4",
+    "bom-ref": "pkg:conan/zstd@1.4.4",
+    purl: "pkg:conan/zstd@1.4.4",
+    scope: "required"
   });
   dep_list = parseConanData(
     readFileSync("./test/data/cmakes/conanfile.txt", { encoding: "utf-8" })
@@ -1077,7 +1082,22 @@ test("parse conan data", () => {
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
     name: "qr-code-generator",
-    version: "1.8.0"
+    version: "1.8.0",
+    "bom-ref": "pkg:conan/qr-code-generator@1.8.0",
+    purl: "pkg:conan/qr-code-generator@1.8.0",
+    scope: "required"
+  });
+  dep_list = parseConanData(
+    readFileSync("./test/data/cmakes/conanfile1.txt", { encoding: "utf-8" })
+  );
+  expect(dep_list.length).toEqual(42);
+  expect(dep_list[0]).toEqual({
+    "bom-ref":
+      "pkg:conan/7-Zip@19.00?revision=bb67aa9bc0da3feddc68ca9f334f4c8b",
+    name: "7-Zip",
+    purl: "pkg:conan/7-Zip@19.00?revision=bb67aa9bc0da3feddc68ca9f334f4c8b",
+    scope: "required",
+    version: "19.00"
   });
 });
 

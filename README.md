@@ -181,6 +181,10 @@ Options:
       --author                 The person(s) who created the BOM. Set this value
                                 if you're intending the modify the BOM and claim
                                 authorship.[array] [default: "OWASP Foundation"]
+      --profile                BOM profile to use for generation. Default generi
+                               c.
+  [choices: "appsec", "research", "operational", "threat-modeling", "license-com
+                                       pliance", "generic"] [default: "generic"]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true
                                                        [boolean] [default: true]
@@ -373,7 +377,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | SBOM_SIGN_ALGORITHM          | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                                       |
 | SBOM_SIGN_PRIVATE_KEY        | Private key to use for signing                                                                                                       |
 | SBOM_SIGN_PUBLIC_KEY         | Optional. Public key to include in the SBOM signature                                                                                |
-| CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.8"                                                  |
+| CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.10"                                                 |
 | CDX_MAVEN_GOAL               | CycloneDX Maven plugin goal to use. Default makeAggregateBom. Other options: makeBom, makePackageBom                                 |
 | CDX_MAVEN_INCLUDE_TEST_SCOPE | Whether test scoped dependencies should be included from Maven projects, Default: true                                               |
 | ASTGEN_IGNORE_DIRS           | Comma separated list of directories to ignore while analyzing using babel. The environment variable is also used by atom and astgen. |

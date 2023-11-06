@@ -21,7 +21,6 @@ import {
 import { findUpSync } from "find-up";
 import { load as _load } from "js-yaml";
 import { postProcess } from "../postgen.js";
-import { analyzeProject, createEvinseFile, prepareDB } from "../evinser.js";
 import { ATOM_DB } from "../utils.js";
 
 // Support for config files
@@ -204,6 +203,18 @@ const args = yargs(hideBin(process.argv))
       "The person(s) who created the BOM. Set this value if you're intending the modify the BOM and claim authorship.",
     default: "OWASP Foundation"
   })
+  .option("profile", {
+    description: "BOM profile to use for generation. Default generic.",
+    default: "generic",
+    choices: [
+      "appsec",
+      "research",
+      "operational",
+      "threat-modeling",
+      "license-compliance",
+      "generic"
+    ]
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
@@ -259,6 +270,32 @@ if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
 }
 
+const applyProfile = (options) => {
+  switch (options.profile) {
+    case "appsec":
+      options.deep = true;
+      break;
+    case "research":
+      options.deep = true;
+      options.evidence = true;
+      process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = true;
+      process.env.ASTGEN_IGNORE_DIRS = "";
+      process.env.ASTGEN_IGNORE_FILE_PATTERN = "";
+      break;
+    case "operational":
+      options.projectType = options.projectType || "os";
+      break;
+    case "threat-modeling": // unused
+      break;
+    case "license-compliance":
+      process.env.FETCH_LICENSE = true;
+      break;
+    default:
+      break;
+  }
+  return options;
+};
+
 /**
  * Command line options
  */
@@ -266,8 +303,10 @@ const options = Object.assign({}, args, {
   projectType: args.type,
   multiProject: args.recurse,
   noBabel: args.noBabel || args.babel === false,
-  project: args.projectId
+  project: args.projectId,
+  deep: args.deep || args.evidence
 });
+applyProfile(options);
 
 /**
  * Check for node >= 20 permissions
@@ -306,7 +345,7 @@ const checkPermissions = (filePath) => {
  */
 (async () => {
   // Start SBOM server
-  if (args.server) {
+  if (options.server) {
     const serverModule = await import("../server.js");
     return serverModule.start(options);
   }
@@ -323,15 +362,15 @@ const checkPermissions = (filePath) => {
     bomNSData = postProcess(bomNSData, options);
   }
   if (
-    args.output &&
-    (typeof args.output === "string" || args.output instanceof String)
+    options.output &&
+    (typeof options.output === "string" || options.output instanceof String)
   ) {
     if (bomNSData.bomXmlFiles) {
       console.log("BOM files produced:", bomNSData.bomXmlFiles);
     } else {
-      const jsonFile = args.output.replace(".xml", ".json");
+      const jsonFile = options.output.replace(".xml", ".json");
       // Create bom json file
-      if (!args.output.endsWith(".xml") && bomNSData.bomJson) {
+      if (!options.output.endsWith(".xml") && bomNSData.bomJson) {
         let jsonPayload = undefined;
         if (
           typeof bomNSData.bomJson === "string" ||
@@ -345,7 +384,7 @@ const checkPermissions = (filePath) => {
         }
         if (
           jsonPayload &&
-          (args.generateKeyAndSign ||
+          (options.generateKeyAndSign ||
             (process.env.SBOM_SIGN_ALGORITHM &&
               process.env.SBOM_SIGN_ALGORITHM !== "none" &&
               process.env.SBOM_SIGN_PRIVATE_KEY &&
@@ -358,7 +397,7 @@ const checkPermissions = (filePath) => {
           let privateKeyToUse = undefined;
           let jwkPublicKey = undefined;
           let publicKeyFile = undefined;
-          if (args.generateKeyAndSign) {
+          if (options.generateKeyAndSign) {
             const jdirName = dirname(jsonFile);
             publicKeyFile = join(jdirName, "public.key");
             const privateKeyFile = join(jdirName, "private.key");
@@ -468,8 +507,8 @@ const checkPermissions = (filePath) => {
         }
       }
       // Create bom xml file
-      if (args.output.endsWith(".xml") && bomNSData.bomXml) {
-        fs.writeFileSync(args.output, bomNSData.bomXml);
+      if (options.output.endsWith(".xml") && bomNSData.bomXml) {
+        fs.writeFileSync(options.output, bomNSData.bomXml);
       }
       //
       if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
@@ -478,7 +517,7 @@ const checkPermissions = (filePath) => {
         console.log("Namespace mapping file written to", nsFile);
       }
     }
-  } else if (!args.print) {
+  } else if (!options.print) {
     if (bomNSData.bomJson) {
       console.log(JSON.stringify(bomNSData.bomJson, null, 2));
     } else if (bomNSData.bomXml) {
@@ -489,7 +528,8 @@ const checkPermissions = (filePath) => {
     }
   }
   // Evidence generation
-  if (args.evidence) {
+  if (options.evidence) {
+    const evinserModule = await import("../evinser.js");
     const evinseOptions = {
       _: args._,
       input: options.output,
@@ -503,12 +543,18 @@ const checkPermissions = (filePath) => {
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile
     };
-    const dbObjMap = await prepareDB(evinseOptions);
+    const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {
-      const sliceArtefacts = await analyzeProject(dbObjMap, evinseOptions);
-      const evinseJson = createEvinseFile(sliceArtefacts, evinseOptions);
+      const sliceArtefacts = await evinserModule.analyzeProject(
+        dbObjMap,
+        evinseOptions
+      );
+      const evinseJson = evinserModule.createEvinseFile(
+        sliceArtefacts,
+        evinseOptions
+      );
       bomNSData.bomJson = evinseJson;
-      if (args.print && evinseJson) {
+      if (options.print && evinseJson) {
         printOccurrences(evinseJson);
         printCallStack(evinseJson);
         printReachables(sliceArtefacts);
@@ -517,22 +563,22 @@ const checkPermissions = (filePath) => {
     }
   }
   // Perform automatic validation
-  if (args.validate) {
+  if (options.validate) {
     if (!validateBom(bomNSData.bomJson)) {
       process.exit(1);
     }
   }
   // Automatically submit the bom data
-  if (args.serverUrl && args.serverUrl != true && args.apiKey) {
+  if (options.serverUrl && options.serverUrl != true && options.apiKey) {
     try {
-      const dbody = await submitBom(args, bomNSData.bomJson);
+      const dbody = await submitBom(options, bomNSData.bomJson);
       console.log("Response from server", dbody);
     } catch (err) {
       console.log(err);
     }
   }
 
-  if (args.print && bomNSData.bomJson && bomNSData.bomJson.components) {
+  if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     printDependencyTree(bomNSData.bomJson);
     printTable(bomNSData.bomJson);
   }
