@@ -1665,7 +1665,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}"
+      "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
@@ -3639,7 +3639,11 @@ export const createContainerSpecLikeBom = async (path, options) => {
   );
   let dfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Dockerfile"
+    (options.multiProject ? "**/" : "") + "*Dockerfile*"
+  );
+  const cfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Containerfile*"
   );
   const yamlFiles = getAllFiles(
     path,
@@ -3662,9 +3666,9 @@ export const createContainerSpecLikeBom = async (path, options) => {
   // Privado.ai json files
   const privadoFiles = getAllFiles(path, ".privado/" + "*.json");
 
-  // Parse yaml manifest files or dockerfiles
-  if (dcFiles.length || dfFiles.length) {
-    for (const f of [...dcFiles, ...dfFiles]) {
+  // Parse yaml manifest files, dockerfiles or containerfiles
+  if (dcFiles.length || dfFiles.length || cfFiles.length) {
+    for (const f of [...dcFiles, ...dfFiles, ...cfFiles]) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
@@ -3674,7 +3678,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
       if (f.endsWith(".yml") || f.endsWith(".yaml")) {
         imglist = parseContainerSpecData(dData);
       } else {
-        // dockerfiles
+        // dockerfile or containerfile
         for (const dfLine of dData.split("\n")) {
           if (dfLine.includes("FROM")) {
             imglist.push({
@@ -5088,7 +5092,11 @@ export const createXBom = async (path, options) => {
   );
   const dfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Dockerfile"
+    (options.multiProject ? "**/" : "") + "*Dockerfile*"
+  );
+  const cfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Containerfile*"
   );
   const skFiles = getAllFiles(
     path,
@@ -5098,7 +5106,13 @@ export const createXBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "deployment.yaml"
   );
-  if (dcFiles.length || dfFiles.length || skFiles.length || deplFiles.length) {
+  if (
+    dcFiles.length ||
+    dfFiles.length ||
+    cfFiles.length ||
+    skFiles.length ||
+    deplFiles.length
+  ) {
     return await createContainerSpecLikeBom(path, options);
   }
 
