@@ -3713,6 +3713,10 @@ export const createContainerSpecLikeBom = async (path, options) => {
         // dockerfile or containerfile
         let buildStageNames = [];
         for (const dfLine of dData.split("\n")) {
+          if (dfLine.trim().startsWith("#")) {
+            continue; // skip commented out lines
+          }
+
           if (dfLine.includes("FROM")) {
             const fromStatement = dfLine.split("FROM")[1].split("AS");
 
