@@ -3717,7 +3717,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
             const fromStatement = dfLine.split("FROM")[1].split("AS");
 
             const imageStatement = fromStatement[0].trim();
-            const buildStageName = fromStatement[1].trim();
+            const buildStageName = fromStatement[1]?.trim();
 
             if (buildStageNames.includes(imageStatement)) {
               if (DEBUG_MODE) {
