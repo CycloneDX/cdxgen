@@ -1665,7 +1665,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}"
+      "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
@@ -3663,6 +3663,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
   let parentComponent = {};
   let dependencies = [];
   const doneimages = [];
+  const skippedImageSrcs = [];
   const doneservices = [];
   const origProjectType = options.projectType;
   let dcFiles = getAllFiles(
@@ -3760,6 +3761,9 @@ export const createContainerSpecLikeBom = async (path, options) => {
               if (DEBUG_MODE) {
                 console.log("Skipping", img.image);
               }
+
+              skippedImageSrcs.push({ image: img.image, src: f });
+
               continue;
             }
             if (DEBUG_MODE) {
@@ -3820,6 +3824,32 @@ export const createContainerSpecLikeBom = async (path, options) => {
         } // for img
       }
     } // for
+
+    // Add additional SrcFile property to skipped image components
+    for (const skippedImage of skippedImageSrcs) {
+      for (const co of components) {
+        let srcFileValues = [];
+        let srcImageValue;
+        co.properties.forEach(function (property) {
+          if (property.name === "SrcFile") {
+            srcFileValues.push(property.value);
+          }
+          if (property.name === "oci:SrcImage") {
+            srcImageValue = property.value;
+          }
+        });
+
+        if (
+          srcImageValue === skippedImage.image &&
+          !srcFileValues.includes(skippedImage.src)
+        ) {
+          co.properties = co.properties.concat({
+            name: "SrcFile",
+            value: skippedImage.src
+          });
+        }
+      }
+    }
   } // if
   // Parse openapi files
   if (oapiFiles.length) {
