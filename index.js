@@ -1665,7 +1665,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-      "project/{build.properties,*.sbt,*.scala}"
+        "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
@@ -3711,11 +3711,30 @@ export const createContainerSpecLikeBom = async (path, options) => {
         imglist = parseContainerSpecData(dData);
       } else {
         // dockerfile or containerfile
+        let buildStageNames = [];
         for (const dfLine of dData.split("\n")) {
           if (dfLine.includes("FROM")) {
+            const fromStatement = dfLine.split("FROM")[1].split("AS");
+
+            const imageStatement = fromStatement[0].trim();
+            const buildStageName = fromStatement[1].trim();
+
+            if (buildStageNames.includes(imageStatement)) {
+              if (DEBUG_MODE) {
+                console.log(
+                  `Skipping image ${imageStatement} which uses previously seen build stage name.`
+                );
+              }
+              continue;
+            }
+
             imglist.push({
-              image: dfLine.split("FROM")[1].split("AS")[0].trim()
+              image: imageStatement
             });
+
+            if (buildStageName) {
+              buildStageNames.push(buildStageName);
+            }
           }
         }
       }
