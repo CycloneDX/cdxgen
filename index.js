@@ -3815,6 +3815,20 @@ export const createContainerSpecLikeBom = async (path, options) => {
               if (bomData.componentsXmls && bomData.componentsXmls.length) {
                 componentsXmls = componentsXmls.concat(bomData.componentsXmls);
               }
+              console.log("ADAM BOM DEPS ", bomData.bomJson.dependencies);
+
+              /**
+               * For OCI, bomJson.dependencies ref values are in the format `pkg:oci/image@sha256:digest`,
+               * while components purl and bom-ref are in the format  `pkg:oci/image@version?`
+               */
+              // const modifiedOciDeps = bomData.bomJson.dependencies.forEach(
+              //   (dep) => {
+              //     dep.ref = `${dep.ref.split("@sha256")[0]}?`;
+              //   }
+              // );
+
+              // dependencies = dependencies.concat(modifiedOciDeps);
+              dependencies = dependencies.concat(bomData.bomJson.dependencies);
             }
           } // img.image
         } // for img
