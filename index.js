@@ -1665,7 +1665,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}"
+      "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
@@ -3815,9 +3815,9 @@ export const createContainerSpecLikeBom = async (path, options) => {
               if (bomData.componentsXmls && bomData.componentsXmls.length) {
                 componentsXmls = componentsXmls.concat(bomData.componentsXmls);
               }
-              console.log("ADAM BOM DEPS ", bomData.bomJson.dependencies);
 
               /**
+               * FIXME
                * For OCI, bomJson.dependencies ref values are in the format `pkg:oci/image@sha256:digest`,
                * while components purl and bom-ref are in the format  `pkg:oci/image@version?`
                */
