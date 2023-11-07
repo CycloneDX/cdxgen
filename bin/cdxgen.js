@@ -150,6 +150,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("install-deps", {
     type: "boolean",
+    hidden: true,
     default: true,
     description:
       "Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature."
@@ -215,10 +216,15 @@ const args = yargs(hideBin(process.argv))
       "generic"
     ]
   })
+  .option("exclude", {
+    description: "Additional glob pattern(s) to ignore",
+    hidden: true
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
   .array("author")
+  .array("exclude")
   .option("auto-compositions", {
     type: "boolean",
     default: true,

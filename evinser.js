@@ -7,7 +7,7 @@ import {
   collectMvnDependencies
 } from "./utils.js";
 import { tmpdir } from "node:os";
-import path, { basename } from "node:path";
+import path from "node:path";
 import fs from "node:fs";
 import * as db from "./db.js";
 import { PackageURL } from "packageurl-js";
@@ -94,15 +94,30 @@ export const catalogMavenDeps = async (
   Namespaces,
   options = {}
 ) => {
-  console.log("About to collect jar dependencies for the path", dirPath);
-  const mavenCmd = getMavenCommand(dirPath, dirPath);
-  // collect all jars including from the cache if data-flow mode is enabled
-  const jarNSMapping = collectMvnDependencies(
-    mavenCmd,
-    dirPath,
-    false,
-    options.withDeepJarCollector
-  );
+  let jarNSMapping = undefined;
+  if (fs.existsSync(path.join(dirPath, "bom.json.map"))) {
+    try {
+      const mapData = JSON.parse(
+        fs.readFileSync(path.join(dirPath, "bom.json.map"))
+      );
+      if (mapData && Object.keys(mapData).length) {
+        jarNSMapping = mapData;
+      }
+    } catch (err) {
+      // ignore
+    }
+  }
+  if (!jarNSMapping) {
+    console.log("About to collect jar dependencies for the path", dirPath);
+    const mavenCmd = getMavenCommand(dirPath, dirPath);
+    // collect all jars including from the cache if data-flow mode is enabled
+    jarNSMapping = collectMvnDependencies(
+      mavenCmd,
+      dirPath,
+      false,
+      options.withDeepJarCollector
+    );
+  }
   if (jarNSMapping) {
     for (const purl of Object.keys(jarNSMapping)) {
       purlsJars[purl] = jarNSMapping[purl].jarFile;
@@ -317,9 +332,6 @@ export const analyzeProject = async (dbObjMap, options) => {
     if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
       usageSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
       usagesSlicesFile = retMap.slicesFile;
-      console.log(
-        `To speed up this step, cache ${usagesSlicesFile} and invoke evinse with the --usages-slices-file argument.`
-      );
     }
   }
   if (usageSlice && Object.keys(usageSlice).length) {
@@ -349,9 +361,6 @@ export const analyzeProject = async (dbObjMap, options) => {
       if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
         dataFlowSlicesFile = retMap.slicesFile;
         dataFlowSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
-        console.log(
-          `To speed up this step, cache ${dataFlowSlicesFile} and invoke evinse with the --data-flow-slices-file argument.`
-        );
       }
     }
   }
@@ -380,9 +389,6 @@ export const analyzeProject = async (dbObjMap, options) => {
         reachablesSlicesFile = retMap.slicesFile;
         reachablesSlice = JSON.parse(
           fs.readFileSync(retMap.slicesFile, "utf-8")
-        );
-        console.log(
-          `To speed up this step, cache ${reachablesSlicesFile} and invoke evinse with the --reachables-slices-file argument.`
         );
       }
     }
@@ -783,7 +789,7 @@ export const detectServicesFromUDT = (
           const endpoints = extractEndpoints(language, fields[0].name);
           let serviceName = "service";
           if (audt.fileName) {
-            serviceName = `${basename(
+            serviceName = `${path.basename(
               audt.fileName.replace(".py", "")
             )}-service`;
           }
