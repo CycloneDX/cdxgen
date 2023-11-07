@@ -1665,7 +1665,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}"
+      "project/{build.properties,*.sbt,*.scala}"
     );
 
     let sbtProjects = [];
@@ -5375,8 +5375,9 @@ export const createBom = async (path, options) => {
         options
       );
     case "universal":
-    case "dockerfile":
+    case "containerfile":
     case "docker-compose":
+    case "dockerfile":
     case "swarm":
     case "tekton":
     case "kustomize":
