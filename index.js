@@ -3669,6 +3669,14 @@ export const createContainerSpecLikeBom = async (path, options) => {
     path,
     (options.multiProject ? "**/" : "") + "*.yml"
   );
+  let dfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Dockerfile*"
+  );
+  const cfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Containerfile*"
+  );
   const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yaml"
@@ -3689,14 +3697,52 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   // Privado.ai json files
   const privadoFiles = getAllFiles(path, ".privado/" + "*.json");
-  // parse yaml manifest files
-  if (dcFiles.length) {
-    for (const f of dcFiles) {
+
+  // Parse yaml manifest files, dockerfiles or containerfiles
+  if (dcFiles.length || dfFiles.length || cfFiles.length) {
+    for (const f of [...dcFiles, ...dfFiles, ...cfFiles]) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dcData = readFileSync(f, { encoding: "utf-8" });
-      const imglist = parseContainerSpecData(dcData);
+      const dData = readFileSync(f, { encoding: "utf-8" });
+      let imglist = [];
+      // parse yaml manifest files
+      if (f.endsWith(".yml") || f.endsWith(".yaml")) {
+        imglist = parseContainerSpecData(dData);
+      } else {
+        // dockerfile or containerfile
+        let buildStageNames = [];
+        for (const dfLine of dData.split("\n")) {
+          if (dfLine.trim().startsWith("#")) {
+            continue; // skip commented out lines
+          }
+
+          if (dfLine.includes("FROM")) {
+            const fromStatement = dfLine.split("FROM")[1].split("AS");
+
+            const imageStatement = fromStatement[0].trim();
+            const buildStageName = fromStatement[1]?.trim();
+
+            if (buildStageNames.includes(imageStatement)) {
+              if (DEBUG_MODE) {
+                console.log(
+                  `Skipping image ${imageStatement} which uses previously seen build stage name.`
+                );
+              }
+              continue;
+            }
+
+            imglist.push({
+              image: imageStatement
+            });
+
+            if (buildStageName) {
+              buildStageNames.push(buildStageName);
+            }
+          }
+        }
+      }
+
       if (imglist && imglist.length) {
         if (DEBUG_MODE) {
           console.log("Images identified in", f, "are", imglist);
@@ -3816,19 +3862,21 @@ export const createContainerSpecLikeBom = async (path, options) => {
                 componentsXmls = componentsXmls.concat(bomData.componentsXmls);
               }
 
-              /**
-               * FIXME
-               * For OCI, bomJson.dependencies ref values are in the format `pkg:oci/image@sha256:digest`,
-               * while components purl and bom-ref are in the format  `pkg:oci/image@version?`
-               */
-              // const modifiedOciDeps = bomData.bomJson.dependencies.forEach(
-              //   (dep) => {
-              //     dep.ref = `${dep.ref.split("@sha256")[0]}?`;
-              //   }
-              // );
+              // Only add dependencies if it's a Dockerfile or Containerfile
+              if (dfFiles.includes(f) || cfFiles.includes(f)) {
+                if (bomData.bomJson.dependencies) {
+                  // dependencies = dependencies.concat(bomData.bomJson.dependencies);
+                  const dependency = bomData.bomJson.dependencies[0];
+                  const dependsOnRefs = new Set(
+                    bomData.components.map((c) => c["bom-ref"])
+                  );
+                  dependency.dependsOn = dependsOnRefs;
 
-              // dependencies = dependencies.concat(modifiedOciDeps);
-              dependencies = dependencies.concat(bomData.bomJson.dependencies);
+                  dependencies = dependencies.concat(dependency);
+                }
+
+                parentComponent = bomData.parentComponent;
+              }
             }
           } // img.image
         } // for img
@@ -3913,9 +3961,11 @@ export const createContainerSpecLikeBom = async (path, options) => {
       if (mbomData.componentsXmls && mbomData.componentsXmls.length) {
         componentsXmls = componentsXmls.concat(mbomData.componentsXmls);
       }
-      // We need to retain the parentComponent. See #527
-      // Parent component returned by multi X search is usually good
-      parentComponent = mbomData.parentComponent;
+      if (parentComponent.type !== "container") {
+        // We need to retain the parentComponent. See #527
+        // Parent component returned by multi X search is usually good
+        parentComponent = mbomData.parentComponent;
+      }
       options.parentComponent = parentComponent;
       if (mbomData.bomJson) {
         if (mbomData.bomJson.dependencies) {
