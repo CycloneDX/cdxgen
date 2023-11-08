@@ -3,4 +3,6 @@
 - [Server Usage](SERVER.md)
 - [Configuration](ENV.md)
 - [Advanced Usage](ADVANCED.md)
+- [Tutorials - Java](LESSON1.md)
+- [Tutorials - JavaScript](LESSON2.md)
 - [Enterprise Support](SUPPORT.md)

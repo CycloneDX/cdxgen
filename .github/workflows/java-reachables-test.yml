@@ -1,0 +1,46 @@
+name: Reachables tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['21.x']
+        os: ['ubuntu-latest']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '19'
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build
+        run: |
+          npm install
+          npm run build --if-present
+          mkdir -p repotests
+          mkdir -p bomresults
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DependencyTrack/dependency-track'
+          path: 'repotests/dependency-track'
+      - name: compile
+        run: |
+          cd repotests/dependency-track
+          mvn clean compile -DskipTests -Dmaven.test.skip=true
+      - name: repotests
+        run: |         
+          bin/cdxgen.js -p -t java --profile research -o repotests/dependency-track/bom.json repotests/dependency-track
+          cp -rf repotests/dependency-track/*.json *.slices.json bomresults/
+      - uses: actions/upload-artifact@v3
+        with:
+          name: bomresults
+          path: bomresults
