@@ -7690,7 +7690,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
           .split(")")[0]
           .split(",")
           .filter((v) => v.length > 1);
-        const parentName = tmpB[0];
+        const parentName = tmpB[0].replace(":", "");
         let parentVersion = undefined;
         // In case of meson.build we can find the version number after the word version
         // thanks to our replaces and splits
