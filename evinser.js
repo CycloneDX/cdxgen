@@ -834,7 +834,7 @@ export const extractEndpoints = (language, code) => {
     case "jar":
       if (
         code.startsWith("@") &&
-        code.includes("Mapping") &&
+        (code.includes("Mapping") || code.includes("Path")) &&
         code.includes("(")
       ) {
         const matches = code.match(/['"](.*?)['"]/gi) || [];
