@@ -111,9 +111,9 @@ Options:
                                es.                    [boolean] [default: false]
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
-      --filter                 Filter components containining this word in purl.
+      --filter                 Filter components containing this word in purl.
                                 Multiple values allowed.                 [array]
-      --only                   Include components only containining this word in
+      --only                   Include components only containing this word in
                                 purl. Useful to generate BOM with first party co
                                mponents alone. Multiple values allowed.  [array]
       --author                 The person(s) who created the BOM. Set this value
