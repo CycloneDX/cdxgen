@@ -520,7 +520,6 @@ const checkPermissions = (filePath) => {
       if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
         const nsFile = jsonFile + ".map";
         fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
-        console.log("Namespace mapping file written to", nsFile);
       }
     }
   } else if (!options.print) {
