@@ -104,7 +104,8 @@ import {
   TIMEOUT_MS,
   MAX_BUFFER,
   getNugetMetadata,
-  frameworksList
+  frameworksList,
+  parseContainerFile
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -1666,7 +1667,7 @@ export const createJavaBom = async (path, options) => {
     let sbtProjectFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}",
+      "project/{build.properties,*.sbt,*.scala}",
       options
     );
 
@@ -3759,37 +3760,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
       if (f.endsWith(".yml") || f.endsWith(".yaml")) {
         imglist = parseContainerSpecData(dData);
       } else {
-        // dockerfile or containerfile
-        let buildStageNames = [];
-        for (const dfLine of dData.split("\n")) {
-          if (dfLine.trim().startsWith("#")) {
-            continue; // skip commented out lines
-          }
-
-          if (dfLine.includes("FROM")) {
-            const fromStatement = dfLine.split("FROM")[1].split("AS");
-
-            const imageStatement = fromStatement[0].trim();
-            const buildStageName = fromStatement[1]?.trim();
-
-            if (buildStageNames.includes(imageStatement)) {
-              if (DEBUG_MODE) {
-                console.log(
-                  `Skipping image ${imageStatement} which uses previously seen build stage name.`
-                );
-              }
-              continue;
-            }
-
-            imglist.push({
-              image: imageStatement
-            });
-
-            if (buildStageName) {
-              buildStageNames.push(buildStageName);
-            }
-          }
-        }
+        imglist = parseContainerFile(dData);
       }
 
       if (imglist && imglist.length) {

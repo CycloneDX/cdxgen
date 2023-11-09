@@ -496,9 +496,8 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     const author = node.package.author;
     const authorString =
       author instanceof Object
-        ? `${author.name}${author.email ? ` <${author.email}>` : ""}${
-            author.url ? ` (${author.url})` : ""
-          }`
+        ? `${author.name}${author.email ? ` <${author.email}>` : ""}${author.url ? ` (${author.url})` : ""
+        }`
         : author;
     if (node == rootNode) {
       purlString = new PackageURL(
@@ -2054,8 +2053,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
  */
 export const parseBazelActionGraph = function (rawOutput) {
   const mavenPrefixRegex = RegExp(
-    `^.*v1/https/[^/]*(?:${
-      process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/"
+    `^.*v1/https/[^/]*(?:${process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/"
     })?(.*)/(.*)/(.*)/(.*.jar)(?:"| \\\\)?$`,
     "g"
   );
@@ -3641,8 +3639,7 @@ export const parseGoModGraph = async function (
           if (!addedPkgs[tmpA[0]]) {
             const component = await getGoPkgComponent(
               "",
-              `${sourcePurl.namespace ? sourcePurl.namespace + "/" : ""}${
-                sourcePurl.name
+              `${sourcePurl.namespace ? sourcePurl.namespace + "/" : ""}${sourcePurl.name
               }`,
               sourcePurl.version,
               gosumMap[tmpA[0]]
@@ -3653,8 +3650,7 @@ export const parseGoModGraph = async function (
           if (!addedPkgs[tmpA[1]]) {
             const component = await getGoPkgComponent(
               "",
-              `${dependsPurl.namespace ? dependsPurl.namespace + "/" : ""}${
-                dependsPurl.name
+              `${dependsPurl.namespace ? dependsPurl.namespace + "/" : ""}${dependsPurl.name
               }`,
               dependsPurl.version,
               gosumMap[tmpA[1]]
@@ -4385,6 +4381,43 @@ export const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
       }
     }
   }
+  return imgList;
+};
+
+export const parseContainerFile = function (fileContents) {
+  const imgList = [];
+
+  let buildStageNames = [];
+  for (const line of fileContents.split("\n")) {
+    if (line.trim().startsWith("#")) {
+      continue; // skip commented out lines
+    }
+
+    if (line.includes("FROM")) {
+      const fromStatement = line.split("FROM")[1].split("AS");
+
+      const imageStatement = fromStatement[0].trim();
+      const buildStageName = fromStatement[1]?.trim();
+
+      if (buildStageNames.includes(imageStatement)) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Skipping image ${imageStatement} which uses previously seen build stage name.`
+          );
+        }
+        continue;
+      }
+
+      imgList.push({
+        image: imageStatement
+      });
+
+      if (buildStageName) {
+        buildStageNames.push(buildStageName);
+      }
+    }
+  }
+
   return imgList;
 };
 
@@ -7100,14 +7133,12 @@ export const findAppModules = function (
 };
 
 const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
-  const tRef = `pkg:pypi/${t.name.replace(/_/g, "-").toLowerCase()}@${
-    t.version
-  }`;
+  const tRef = `pkg:pypi/${t.name.replace(/_/g, "-").toLowerCase()}@${t.version
+    }`;
   const dependsOn = [];
   for (const d of t.dependencies) {
-    const pkgRef = `pkg:pypi/${d.name.replace(/_/g, "-").toLowerCase()}@${
-      d.version
-    }`;
+    const pkgRef = `pkg:pypi/${d.name.replace(/_/g, "-").toLowerCase()}@${d.version
+      }`;
     dependsOn.push(pkgRef);
     if (!dependenciesMap[pkgRef]) {
       dependenciesMap[pkgRef] = [];
@@ -7508,9 +7539,8 @@ export const addEvidenceForImports = (pkgList, allImports) => {
               pkg.evidence = pkg.evidence || {};
               pkg.evidence.occurrences = pkg.evidence.occurrences || [];
               pkg.evidence.occurrences.push({
-                location: `${evidence.fileName}${
-                  evidence.lineNumber ? "#" + evidence.lineNumber : ""
-                }`
+                location: `${evidence.fileName}${evidence.lineNumber ? "#" + evidence.lineNumber : ""
+                  }`
               });
               importedModules.add(evidence.importedAs);
               for (const importedSm of evidence.importedModules || []) {
@@ -8021,11 +8051,11 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     let name = fileName.replace(extn, "");
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
       epkgMap[name] || {
-        name,
-        group,
-        version: "",
-        type: pkgType
-      };
+      name,
+      group,
+      version: "",
+      type: pkgType
+    };
     // If this is a relative file, there is a good chance we can reuse the project group
     if (!afile.startsWith(_sep)) {
       group = options.projectGroup || "";
@@ -8096,11 +8126,11 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
   const dependenciesList =
     dependsOn.length && parentComponent
       ? [
-          {
-            ref: parentComponent["bom-ref"],
-            dependsOn
-          }
-        ]
+        {
+          ref: parentComponent["bom-ref"],
+          dependsOn
+        }
+      ]
       : [];
   return {
     parentComponent,

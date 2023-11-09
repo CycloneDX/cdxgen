@@ -73,7 +73,8 @@ import {
   parsePyProjectToml,
   parseSbtTree,
   parseCmakeDotFile,
-  parseCmakeLikeFile
+  parseCmakeLikeFile,
+  parseContainerFile
 } from "./utils.js";
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
@@ -94,10 +95,10 @@ test("SSRI test", () => {
   );
   ss = parse(
     "sha256-" +
-      Buffer.from(
-        "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
-        "hex"
-      ).toString("base64")
+    Buffer.from(
+      "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
+      "hex"
+    ).toString("base64")
   );
   expect(ss.sha256[0].digest).toStrictEqual(
     "LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78="
@@ -2725,6 +2726,13 @@ test("parse container spec like files", async () => {
   expect(dep_list[0]).toEqual({
     image: "gcr.io/google-samples/microservices-demo/adservice"
   });
+});
+
+test("parse containerfiles / dockerfiles", async () => {
+  let dep_list = parseContainerFile(
+    readFileSync("./test/data/Dockerfile", { encoding: "utf-8" })
+  );
+  expect(dep_list.length).toEqual(2);
 });
 
 test("parse cloudbuild data", async () => {
