@@ -4388,6 +4388,43 @@ export const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
   return imgList;
 };
 
+export const parseContainerFile = function (fileContents) {
+  const imgList = [];
+
+  let buildStageNames = [];
+  for (const line of fileContents.split("\n")) {
+    if (line.trim().startsWith("#")) {
+      continue; // skip commented out lines
+    }
+
+    if (line.includes("FROM")) {
+      const fromStatement = line.split("FROM")[1].split("AS");
+
+      const imageStatement = fromStatement[0].trim();
+      const buildStageName = fromStatement[1]?.trim();
+
+      if (buildStageNames.includes(imageStatement)) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Skipping image ${imageStatement} which uses previously seen build stage name.`
+          );
+        }
+        continue;
+      }
+
+      imgList.push({
+        image: imageStatement
+      });
+
+      if (buildStageName) {
+        buildStageNames.push(buildStageName);
+      }
+    }
+  }
+
+  return imgList;
+};
+
 export const parseContainerSpecData = function (dcData) {
   const pkgList = [];
   const imgList = [];
@@ -7690,7 +7727,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
           .split(")")[0]
           .split(",")
           .filter((v) => v.length > 1);
-        const parentName = tmpB[0];
+        const parentName = tmpB[0].replace(":", "");
         let parentVersion = undefined;
         // In case of meson.build we can find the version number after the word version
         // thanks to our replaces and splits

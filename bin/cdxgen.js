@@ -193,11 +193,11 @@ const args = yargs(hideBin(process.argv))
   })
   .option("filter", {
     description:
-      "Filter components containining this word in purl. Multiple values allowed."
+      "Filter components containing this word in purl. Multiple values allowed."
   })
   .option("only", {
     description:
-      "Include components only containining this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed."
+      "Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed."
   })
   .option("author", {
     description:
@@ -520,7 +520,6 @@ const checkPermissions = (filePath) => {
       if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
         const nsFile = jsonFile + ".map";
         fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
-        console.log("Namespace mapping file written to", nsFile);
       }
     }
   } else if (!options.print) {

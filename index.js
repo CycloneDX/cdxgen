@@ -104,7 +104,8 @@ import {
   TIMEOUT_MS,
   MAX_BUFFER,
   getNugetMetadata,
-  frameworksList
+  frameworksList,
+  parseContainerFile
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -3714,6 +3715,16 @@ export const createContainerSpecLikeBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "*.yml",
     options
   );
+  const dfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    options
+  );
+  const cfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Containerfile*",
+    options
+  );
   const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yaml",
@@ -3737,14 +3748,22 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   // Privado.ai json files
   const privadoFiles = getAllFiles(path, ".privado/" + "*.json", options);
-  // parse yaml manifest files
-  if (dcFiles.length) {
-    for (const f of dcFiles) {
+  // Parse yaml manifest files, dockerfiles or containerfiles
+  if (dcFiles.length || dfFiles.length || cfFiles.length) {
+    for (const f of [...dcFiles, ...dfFiles, ...cfFiles]) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dcData = readFileSync(f, { encoding: "utf-8" });
-      const imglist = parseContainerSpecData(dcData);
+
+      const dData = readFileSync(f, { encoding: "utf-8" });
+      let imglist = [];
+      // parse yaml manifest files
+      if (f.endsWith(".yml") || f.endsWith(".yaml")) {
+        imglist = parseContainerSpecData(dData);
+      } else {
+        imglist = parseContainerFile(dData);
+      }
+
       if (imglist && imglist.length) {
         if (DEBUG_MODE) {
           console.log("Images identified in", f, "are", imglist);
@@ -5216,10 +5235,20 @@ export const createXBom = async (path, options) => {
     return createHelmBom(path, options);
   }
 
-  // Docker compose, kubernetes and skaffold
+  // Docker compose, dockerfile, containerfile, kubernetes and skaffold
   const dcFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "docker-compose*.yml",
+    options
+  );
+  const dfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    options
+  );
+  const cfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Containerfile*",
     options
   );
   const skFiles = getAllFiles(
@@ -5232,7 +5261,13 @@ export const createXBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "deployment.yaml",
     options
   );
-  if (dcFiles.length || skFiles.length || deplFiles.length) {
+  if (
+    dcFiles.length ||
+    dfFiles.length ||
+    cfFiles.length ||
+    skFiles.length ||
+    deplFiles.length
+  ) {
     return await createContainerSpecLikeBom(path, options);
   }
 
@@ -5498,7 +5533,9 @@ export const createBom = async (path, options) => {
         options
       );
     case "universal":
+    case "containerfile":
     case "docker-compose":
+    case "dockerfile":
     case "swarm":
     case "tekton":
     case "kustomize":

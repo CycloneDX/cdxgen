@@ -73,7 +73,8 @@ import {
   parsePyProjectToml,
   parseSbtTree,
   parseCmakeDotFile,
-  parseCmakeLikeFile
+  parseCmakeLikeFile,
+  parseContainerFile
 } from "./utils.js";
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
@@ -2724,6 +2725,31 @@ test("parse container spec like files", async () => {
   expect(dep_list.length).toEqual(22);
   expect(dep_list[0]).toEqual({
     image: "gcr.io/google-samples/microservices-demo/adservice"
+  });
+});
+
+test("parse containerfiles / dockerfiles", async () => {
+  let dep_list = parseContainerFile(
+    readFileSync("./test/data/Dockerfile", { encoding: "utf-8" })
+  );
+  expect(dep_list.length).toEqual(5);
+  expect(dep_list[0]).toEqual({
+    image: "hello-world"
+  });
+  expect(dep_list[0]).toEqual({
+    image: "hello-world"
+  });
+  expect(dep_list[1]).toEqual({
+    image: "hello-world"
+  });
+  expect(dep_list[2]).toEqual({
+    image: "hello-world:latest"
+  });
+  expect(dep_list[3]).toEqual({
+    image: "hello-world@sha256:1234567890abcdef"
+  });
+  expect(dep_list[4]).toEqual({
+    image: "hello-world:latest@sha256:1234567890abcdef"
   });
 });
 

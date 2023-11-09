@@ -49,6 +49,8 @@ Most SBOM tools are like barcode scanners. They can scan a few package manifest 
 | Gradle Cache                    | $HOME/caches/modules-2/files-2.1/\*\*/\*.jar                                                                      | N/A                                                                                               |          |
 | Helm Index                      | $HOME/.cache/helm/repository/\*\*/\*.yaml                                                                         | N/A                                                                                               |          |
 | Docker compose                  | docker-compose\*.yml. Images would also be scanned.                                                               | N/A                                                                                               |          |
+| Dockerfile                      | `*Dockerfile*` Images would also be scanned.                                                                      | N/A                                                                                               |          |
+| Containerfile                   | `*Containerfile*`. Images would also be scanned.                                                                  | N/A                                                                                               |          |
 | Google CloudBuild configuration | cloudbuild.yaml                                                                                                   | N/A                                                                                               |          |
 | OpenAPI                         | openapi\*.json, openapi\*.yaml                                                                                    | N/A                                                                                               |          |
 
@@ -173,9 +175,9 @@ Options:
                                es.                    [boolean] [default: false]
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
-      --filter                 Filter components containining this word in purl.
+      --filter                 Filter components containing this word in purl.
                                 Multiple values allowed.                 [array]
-      --only                   Include components only containining this word in
+      --only                   Include components only containing this word in
                                 purl. Useful to generate BOM with first party co
                                mponents alone. Multiple values allowed.  [array]
       --author                 The person(s) who created the BOM. Set this value
