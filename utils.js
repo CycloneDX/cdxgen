@@ -107,6 +107,8 @@ export const MAX_BUFFER =
 
 // Metadata cache
 export let metadata_cache = {};
+// Speed up lookup namespaces for a given jar
+const jarNSMapping_cache = {};
 
 // Whether test scope shall be included for java/maven projects; default, if unset shall be 'true'
 export const includeMavenTestScope =
@@ -140,20 +142,34 @@ export const cdxgenAgent = got.extend({
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
  */
-export const getAllFiles = function (dirPath, pattern) {
+export const getAllFiles = function (dirPath, pattern, options = {}) {
+  let ignoreList = [
+    "**/.hg/**",
+    "**/.git/**",
+    "**/venv/**",
+    "**/docs/**",
+    "**/examples/**",
+    "**/site-packages/**"
+  ];
+  // Only ignore node_modules if the caller is not looking for package.json
+  if (!pattern.includes("package.json")) {
+    ignoreList.push("**/node_modules/**");
+  }
+  if (options && options.exclude && Array.isArray(options.exclude)) {
+    ignoreList = ignoreList.concat(options.exclude);
+  }
+  return getAllFilesWithIgnore(dirPath, pattern, ignoreList);
+};
+
+/**
+ * Method to get files matching a pattern
+ *
+ * @param {string} dirPath Root directory for search
+ * @param {string} pattern Glob pattern (eg: *.gradle)
+ * @param {array} ignoreList Directory patterns to ignore
+ */
+export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
   try {
-    const ignoreList = [
-      "**/.hg/**",
-      "**/.git/**",
-      "**/venv/**",
-      "**/docs/**",
-      "**/examples/**",
-      "**/site-packages/**"
-    ];
-    // Only ignore node_modules if the caller is not looking for package.json
-    if (!pattern.includes("package.json")) {
-      ignoreList.push("**/node_modules/**");
-    }
     return globSync(pattern, {
       cwd: dirPath,
       absolute: true,
@@ -6072,7 +6088,7 @@ export const collectMvnDependencies = function (
   const MAVEN_CACHE_DIR =
     process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository");
   const tempDir = mkdtempSync(join(tmpdir(), "mvn-deps-"));
-  const copyArgs = [
+  let copyArgs = [
     "dependency:copy-dependencies",
     `-DoutputDirectory=${tempDir}`,
     "-U",
@@ -6082,6 +6098,10 @@ export const collectMvnDependencies = function (
     "-Dmdep.prependGroupId=" + (process.env.MAVEN_PREPEND_GROUP || "false"),
     "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false")
   ];
+  if (process.env.MVN_ARGS) {
+    const addArgs = process.env.MVN_ARGS.split(" ");
+    copyArgs = copyArgs.concat(addArgs);
+  }
   if (basePath && basePath !== MAVEN_CACHE_DIR) {
     console.log(`Executing '${mavenCmd} ${copyArgs.join(" ")}' in ${basePath}`);
     const result = spawnSync(mavenCmd, copyArgs, {
@@ -6282,51 +6302,59 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
           purl = purlObj.toString();
         }
       }
-      if (DEBUG_MODE) {
-        console.log(`Executing 'jar tf ${jf}'`);
-      }
-
-      const jarResult = spawnSync("jar", ["-tf", jf], {
-        encoding: "utf-8",
-        shell: isWin,
-        maxBuffer: 50 * 1024 * 1024,
-        env
-      });
-      if (
-        jarResult &&
-        jarResult.stderr &&
-        jarResult.stderr.includes(
-          "is not recognized as an internal or external command"
-        )
-      ) {
-        jarCommandAvailable = false;
-        console.log(
-          "jar command is not available in PATH. Ensure JDK >= 17 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
-        );
-      }
-      const consolelines = (jarResult.stdout || "").split("\n");
-      const nsList = consolelines
-        .filter((l) => {
-          return (
-            (l.includes(".class") ||
-              l.includes(".java") ||
-              l.includes(".kt")) &&
-            !l.includes("-INF") &&
-            !l.includes("module-info")
-          );
-        })
-        .map((e) => {
-          return e
-            .replace("\r", "")
-            .replace(/.(class|java|kt)/, "")
-            .replace(/\/$/, "")
-            .replace(/\//g, ".");
+      // If we have a hit from the cache, use it.
+      if (purl && jarNSMapping_cache[purl]) {
+        jarNSMapping[purl] = jarNSMapping_cache[purl];
+      } else {
+        if (DEBUG_MODE) {
+          console.log(`Executing 'jar tf ${jf}'`);
+        }
+        const jarResult = spawnSync("jar", ["-tf", jf], {
+          encoding: "utf-8",
+          shell: isWin,
+          maxBuffer: 50 * 1024 * 1024,
+          env
         });
-      jarNSMapping[purl || jf] = {
-        jarFile: jf,
-        pom: pomData,
-        namespaces: nsList
-      };
+        if (
+          jarResult &&
+          jarResult.stderr &&
+          jarResult.stderr.includes(
+            "is not recognized as an internal or external command"
+          )
+        ) {
+          jarCommandAvailable = false;
+          console.log(
+            "jar command is not available in PATH. Ensure JDK >= 17 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
+          );
+        }
+        const consolelines = (jarResult.stdout || "").split("\n");
+        const nsList = consolelines
+          .filter((l) => {
+            return (
+              (l.includes(".class") ||
+                l.includes(".java") ||
+                l.includes(".kt")) &&
+              !l.includes("-INF") &&
+              !l.includes("module-info")
+            );
+          })
+          .map((e) => {
+            return e
+              .replace("\r", "")
+              .replace(/.(class|java|kt)/, "")
+              .replace(/\/$/, "")
+              .replace(/\//g, ".");
+          });
+        jarNSMapping[purl || jf] = {
+          jarFile: jf,
+          pom: pomData,
+          namespaces: nsList
+        };
+        // Retain in the global cache to speed up future lookups
+        if (purl) {
+          jarNSMapping_cache[purl] = jarNSMapping[purl];
+        }
+      }
     }
     if (!jarNSMapping) {
       console.log(`Unable to determine class names for the jars in ${jarPath}`);
