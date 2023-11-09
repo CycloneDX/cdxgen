@@ -3713,6 +3713,16 @@ export const createContainerSpecLikeBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "*.yml",
     options
   );
+  const dfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    options
+  );
+  const cfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Containerfile*",
+    options
+  );
   const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yaml",
@@ -3736,14 +3746,52 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   // Privado.ai json files
   const privadoFiles = getAllFiles(path, ".privado/" + "*.json", options);
-  // parse yaml manifest files
-  if (dcFiles.length) {
-    for (const f of dcFiles) {
+  // Parse yaml manifest files, dockerfiles or containerfiles
+  if (dcFiles.length || dfFiles.length || cfFiles.length) {
+    for (const f of [...dcFiles, ...dfFiles, ...cfFiles]) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dcData = readFileSync(f, { encoding: "utf-8" });
-      const imglist = parseContainerSpecData(dcData);
+
+      const dData = readFileSync(f, { encoding: "utf-8" });
+      let imglist = [];
+      // parse yaml manifest files
+      if (f.endsWith(".yml") || f.endsWith(".yaml")) {
+        imglist = parseContainerSpecData(dData);
+      } else {
+        // dockerfile or containerfile
+        let buildStageNames = [];
+        for (const dfLine of dData.split("\n")) {
+          if (dfLine.trim().startsWith("#")) {
+            continue; // skip commented out lines
+          }
+
+          if (dfLine.includes("FROM")) {
+            const fromStatement = dfLine.split("FROM")[1].split("AS");
+
+            const imageStatement = fromStatement[0].trim();
+            const buildStageName = fromStatement[1]?.trim();
+
+            if (buildStageNames.includes(imageStatement)) {
+              if (DEBUG_MODE) {
+                console.log(
+                  `Skipping image ${imageStatement} which uses previously seen build stage name.`
+                );
+              }
+              continue;
+            }
+
+            imglist.push({
+              image: imageStatement
+            });
+
+            if (buildStageName) {
+              buildStageNames.push(buildStageName);
+            }
+          }
+        }
+      }
+
       if (imglist && imglist.length) {
         if (DEBUG_MODE) {
           console.log("Images identified in", f, "are", imglist);
@@ -5186,10 +5234,20 @@ export const createXBom = async (path, options) => {
     return createHelmBom(path, options);
   }
 
-  // Docker compose, kubernetes and skaffold
+  // Docker compose, dockerfile, containerfile, kubernetes and skaffold
   const dcFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "docker-compose*.yml",
+    options
+  );
+  const dfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    options
+  );
+  const cfFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*Containerfile*",
     options
   );
   const skFiles = getAllFiles(
@@ -5202,7 +5260,13 @@ export const createXBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "deployment.yaml",
     options
   );
-  if (dcFiles.length || skFiles.length || deplFiles.length) {
+  if (
+    dcFiles.length ||
+    dfFiles.length ||
+    cfFiles.length ||
+    skFiles.length ||
+    deplFiles.length
+  ) {
     return await createContainerSpecLikeBom(path, options);
   }
 
@@ -5468,7 +5532,9 @@ export const createBom = async (path, options) => {
         options
       );
     case "universal":
+    case "containerfile":
     case "docker-compose":
+    case "dockerfile":
     case "swarm":
     case "tekton":
     case "kustomize":
