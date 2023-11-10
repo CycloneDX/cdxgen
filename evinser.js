@@ -1199,9 +1199,9 @@ export const framePicker = (dfFrames) => {
 
 /**
  * Method to simplify types. For example, arrays ending with [] could be simplified.
- * 
+ *
  * @param {string} typeFullName Full name of the type to simplify
- * @returns 
+ * @returns Simplified type string
  */
 export const simplifyType = (typeFullName) => {
   return typeFullName.replace("[]", "");
