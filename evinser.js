@@ -498,14 +498,16 @@ export const parseSliceUsages = async (
         !isFilterableType(language, userDefinedTypesMap, atype[1])
       ) {
         if (!atype[1].includes("(") && !atype[1].includes(".py")) {
-          typesToLookup.add(atype[1]);
+          typesToLookup.add(simplifyType(atype[1]));
           // Javascript calls can be resolved to a precise line number only from the call nodes
           if (
             ["javascript", "js", "ts", "typescript"].includes(language) &&
             ausageLine
           ) {
             if (atype[1].includes(":")) {
-              typesToLookup.add(atype[1].split("::")[0].replace(/:/g, "/"));
+              typesToLookup.add(
+                simplifyType(atype[1].split("::")[0].replace(/:/g, "/"))
+              );
             }
             addToOverrides(lKeyOverrides, atype[1], fileName, ausageLine);
           }
@@ -532,7 +534,7 @@ export const parseSliceUsages = async (
           !acall?.resolvedMethod.includes("(") &&
           !acall?.resolvedMethod.includes(".py")
         ) {
-          typesToLookup.add(acall?.resolvedMethod);
+          typesToLookup.add(simplifyType(acall?.resolvedMethod));
           // Javascript calls can be resolved to a precise line number only from the call nodes
           if (acall.lineNumber) {
             addToOverrides(
@@ -560,10 +562,12 @@ export const parseSliceUsages = async (
       for (const aparamType of acall?.paramTypes || []) {
         if (!isFilterableType(language, userDefinedTypesMap, aparamType)) {
           if (!aparamType.includes("(") && !aparamType.includes(".py")) {
-            typesToLookup.add(aparamType);
+            typesToLookup.add(simplifyType(aparamType));
             if (acall.lineNumber) {
               if (aparamType.includes(":")) {
-                typesToLookup.add(aparamType.split("::")[0].replace(/:/g, "/"));
+                typesToLookup.add(
+                  simplifyType(aparamType.split("::")[0].replace(/:/g, "/"))
+                );
               }
               addToOverrides(
                 lKeyOverrides,
@@ -609,7 +613,7 @@ export const parseSliceUsages = async (
     } else {
       // Check the namespaces db
       let nsHits = typePurlsCache[atype];
-      if (["java", "jar"].includes(language)) {
+      if (!nsHits && ["java", "jar"].includes(language)) {
         nsHits = await dbObjMap.Namespaces.findAll({
           attributes: ["purl"],
           where: {
@@ -629,6 +633,9 @@ export const parseSliceUsages = async (
           }
         }
         typePurlsCache[atype] = nsHits;
+      } else {
+        // Avoid persistent lookups
+        typePurlsCache[atype] = [];
       }
     }
   }
@@ -1190,6 +1197,16 @@ export const framePicker = (dfFrames) => {
   return aframe;
 };
 
+/**
+ * Method to simplify types. For example, arrays ending with [] could be simplified.
+ * 
+ * @param {string} typeFullName Full name of the type to simplify
+ * @returns 
+ */
+export const simplifyType = (typeFullName) => {
+  return typeFullName.replace("[]", "");
+};
+
 export const getClassTypeFromSignature = (language, typeFullName) => {
   if (["java", "jar"].includes(language) && typeFullName.includes(":")) {
     typeFullName = typeFullName.split(":")[0];
@@ -1225,7 +1242,7 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
   if (typeFullName.includes("$")) {
     typeFullName = typeFullName.split("$")[0];
   }
-  return typeFullName;
+  return simplifyType(typeFullName);
 };
 
 const addToOverrides = (lKeyOverrides, atype, fileName, ausageLineNumber) => {
