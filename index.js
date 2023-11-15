@@ -1860,7 +1860,7 @@ export const createNodejsBom = async (path, options) => {
   const parentSubComponents = [];
   let ppurl = "";
   // Docker mode requires special handling
-  if (["docker", "oci", "os"].includes(options.projectType)) {
+  if (["docker", "oci", "container", "os"].includes(options.projectType)) {
     const pkgJsonFiles = getAllFiles(path, "**/package.json", options);
     // Are there any package.json files in the container?
     if (pkgJsonFiles.length) {
@@ -1880,7 +1880,7 @@ export const createNodejsBom = async (path, options) => {
   }
   let allImports = {};
   if (
-    !["docker", "oci", "os"].includes(options.projectType) &&
+    !["docker", "oci", "container", "os"].includes(options.projectType) &&
     !options.noBabel
   ) {
     if (DEBUG_MODE) {
@@ -2753,7 +2753,7 @@ export const createGoBom = async (path, options) => {
   if (gomodFiles.length) {
     let shouldManuallyParse = false;
     // Use the go list -deps and go mod why commands to generate a good quality BOM for non-docker invocations
-    if (!["docker", "oci", "os"].includes(options.projectType)) {
+    if (!["docker", "oci", "container", "os"].includes(options.projectType)) {
       for (const f of gomodFiles) {
         const basePath = dirname(f);
         // Ignore vendor packages
@@ -2865,7 +2865,7 @@ export const createGoBom = async (path, options) => {
       }
     }
     // Parse the gomod files manually. The resultant BOM would be incomplete
-    if (!["docker", "oci", "os"].includes(options.projectType)) {
+    if (!["docker", "oci", "container", "os"].includes(options.projectType)) {
       console.log(
         "Manually parsing go.mod files. The resultant BOM would be incomplete."
       );
@@ -3154,7 +3154,7 @@ export const createCppBom = (path, options) => {
   // inside of other project types. So we currently limit this analyis only when -t argument
   // is used.
   if (
-    !["docker", "oci", "os"].includes(options.projectType) &&
+    !["docker", "oci", "container", "os"].includes(options.projectType) &&
     (!options.createMultiXBom || options.deep)
   ) {
     let osPkgsList = [];
@@ -5296,6 +5296,7 @@ export const createBom = async (path, options) => {
     projectType === "docker" ||
     projectType === "podman" ||
     projectType === "oci" ||
+    projectType === "container" ||
     path.startsWith("docker.io") ||
     path.startsWith("quay.io") ||
     path.startsWith("ghcr.io") ||

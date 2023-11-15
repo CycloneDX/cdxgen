@@ -58,6 +58,13 @@ jobs:
       run: |
         chmod +x contrib/free_disk_space.sh
         ./contrib/free_disk_space.sh
+    - name: Setup nydus
+      run: |
+        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
+        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
+        chmod +x nydus-static/*
+        mv nydus-static/* /usr/local/bin/
+        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
     - name: Set up Docker Buildx
@@ -68,7 +75,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Extract metadata (tags, labels) for Docker
       id: meta
       uses: docker/metadata-action@v4
@@ -86,6 +92,11 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha,scope=cdxgen
         cache-to: type=gha,mode=max,scope=cdxgen
+    - name: nydusify
+      run: |
+        nydusify convert --source ghcr.io/cyclonedx/cdxgen:master --target ghcr.io/cyclonedx/cdxgen-nydus:master
+        nydusify check --source ghcr.io/cyclonedx/cdxgen:master --target ghcr.io/cyclonedx/cdxgen-nydus:master
+      if: github.ref == 'refs/heads/master'
     - name: Extract metadata (tags, labels) for Docker
       id: meta2
       uses: docker/metadata-action@v4
