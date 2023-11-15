@@ -126,8 +126,8 @@ const getDefaultOptions = () => {
         opts.prefixUrl = isWin
           ? WIN_LOCAL_TLS
           : isDockerRootless
-          ? `http://unix:${homedir()}/.docker/run/docker.sock:`
-          : "http://unix:/var/run/docker.sock:";
+            ? `http://unix:${homedir()}/.docker/run/docker.sock:`
+            : "http://unix:/var/run/docker.sock:";
       }
     }
   } else {
