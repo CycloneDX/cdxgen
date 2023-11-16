@@ -5544,19 +5544,36 @@ export async function submitBom(args, bomContents) {
   if (encodedBomContents.startsWith("77u/")) {
     encodedBomContents = encodedBomContents.substring(4);
   }
-  let projectVersion = args.projectVersion || "master";
-  if (projectVersion == true) {
-    projectVersion = "master";
-  }
   const bomPayload = {
-    project: args.projectId,
-    projectName: args.projectName,
-    projectVersion: projectVersion,
     autoCreate: "true",
     bom: encodedBomContents
   };
-  if (typeof args.parentProjectId !== "undefined") {
-    bomPayload.parentUUID = args.parentProjectId;
+  let projectVersion = args.projectVersion || "master";
+  if (
+    typeof args.projectId !== "undefined" ||
+    (typeof args.projectName !== "undefined" &&
+      typeof projectVersion !== "undefined")
+  ) {
+    if (typeof args.projectId !== "undefined") {
+      bomPayload.project = args.projectId;
+    }
+    if (typeof args.projectName !== "undefined") {
+      bomPayload.projectName = args.projectName;
+    }
+    if (typeof projectVersion !== "undefined") {
+      bomPayload.projectVersion = projectVersion;
+    }
+  } else {
+    console.log(
+      "projectId, projectName and projectVersion, or all three must be provided."
+    );
+    return;
+  }
+  if (
+    typeof args.parentProjectId !== "undefined" ||
+    typeof args.parentUUID !== "undefined"
+  ) {
+    bomPayload.parentUUID = args.parentProjectId || args.parentUUID;
   }
   if (DEBUG_MODE) {
     console.log(
