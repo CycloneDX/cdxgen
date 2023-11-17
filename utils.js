@@ -6636,7 +6636,9 @@ export const extractJarArchive = function (
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
       } else {
-        let group = "", name = "", version = "";
+        let group = "",
+          name = "",
+          version = "";
         // When maven descriptor is available take group, name and version from pom.properties
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
@@ -6645,7 +6647,12 @@ export const extractJarArchive = function (
           if (groupDir && groupDir.length) {
             let artifactDir = readdirSync(join(mavenDir, groupDir[0]));
             if (artifactDir && artifactDir.length) {
-              let pomPropertiesFile = join(mavenDir, groupDir[0], artifactDir[0], "pom.properties");
+              let pomPropertiesFile = join(
+                mavenDir,
+                groupDir[0],
+                artifactDir[0],
+                "pom.properties"
+              );
               if (existsSync(pomPropertiesFile)) {
                 const pomProperties = parsePomProperties(
                   readFileSync(pomPropertiesFile, {
@@ -6665,14 +6672,16 @@ export const extractJarArchive = function (
               encoding: "utf-8"
             })
           );
-          group = group ||
+          group =
+            group ||
             jarMetadata["Extension-Name"] ||
             jarMetadata["Implementation-Vendor-Id"] ||
             jarMetadata["Bundle-SymbolicName"] ||
             jarMetadata["Bundle-Vendor"] ||
             jarMetadata["Automatic-Module-Name"] ||
             "";
-          version = version ||
+          version =
+            version ||
             jarMetadata["Bundle-Version"] ||
             jarMetadata["Implementation-Version"] ||
             jarMetadata["Specification-Version"];
