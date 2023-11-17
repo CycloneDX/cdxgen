@@ -6787,7 +6787,7 @@ export const extractJarArchive = function (
           pkgList.push(apkg);
         } else {
           if (DEBUG_MODE) {
-            console.log(`Ignored jar ${jarname}`, jarMetadata, name, version);
+            console.log(`Ignored jar ${jarname}`, name, version);
           }
         }
         try {
