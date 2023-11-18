@@ -6638,7 +6638,9 @@ export const extractJarArchive = function (
       } else {
         let group = "",
           name = "",
-          version = "";
+          version = "",
+          confidence = 1,
+          technique = "manifest-analysis";
         // When maven descriptor is available take group, name and version from pom.properties
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
@@ -6667,6 +6669,7 @@ export const extractJarArchive = function (
           }
         }
         if ((!group || !name || !version) && existsSync(manifestFile)) {
+          confidence = 0.8;
           const jarMetadata = parseJarManifest(
             readFileSync(manifestFile, {
               encoding: "utf-8"
@@ -6690,6 +6693,8 @@ export const extractJarArchive = function (
           }
           // Prefer jar filename to construct name and version
           if (!name || !version || name === "" || version === "") {
+            confidence = 0.5;
+            technique = "filename";
             const tmpA = jarname.split("-");
             if (tmpA && tmpA.length > 1) {
               const lastPart = tmpA[tmpA.length - 1];
@@ -6757,11 +6762,11 @@ export const extractJarArchive = function (
             evidence: {
               identity: {
                 field: "purl",
-                confidence: 0.5,
+                confidence: confidence,
                 methods: [
                   {
-                    technique: "filename",
-                    confidence: 0.5,
+                    technique: technique,
+                    confidence: confidence,
                     value: jarname
                   }
                 ]
