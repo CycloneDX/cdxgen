@@ -30,13 +30,13 @@ Use curl or your favorite tool to pass arguments to the `/sbom` route.
 Arguments can be passed either via the query string or as a JSON body. The following arguments are supported.
 
 | Argument         | Description                                                                                                                                      |
-|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | type             | Project type                                                                                                                                     |
 | multiProject     | [boolean]                                                                                                                                        |
 | requiredOnly     | Include only the packages with required scope on the SBOM. [boolean]                                                                             |
 | noBabel          | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                         |
 | installDeps      | Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. [boolean] [default: true]      |
-| projectId        | The UUID of the project.  You must provide the UUID or the projectName and projectVersion (or all three).                                        |
+| projectId        | The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three).                                         |
 | projectName      | Dependency Track project name. Default use the directory name                                                                                    |
 | projectGroup     | Dependency Track project group                                                                                                                   |
 | projectVersion   | Dependency Track project version [default: ""]                                                                                                   |
@@ -68,7 +68,9 @@ You can POST the arguments.
 ```bash
 curl -H "Content-Type: application/json" http://localhost:9090/sbom -XPOST -d $'{"url": "https://github.com/HooliCorp/vulnerable-aws-koa-app.git", "type": "nodejs", "multiProject": "true"}'
 ```
+
 Using requests.post in Python:
+
 ```python
 import requests
 data = {
