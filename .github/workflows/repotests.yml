@@ -220,6 +220,16 @@ jobs:
           mv *.hpi jenkins
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t jenkins jenkins -o bomresults/bom-jenkins.json --validate
         shell: bash
+      - name: standalone jar files
+        run: |
+          mkdir -p standalone-jar-files
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jacoco/org.jacoco.report/0.8.8/org.jacoco.report-0.8.8.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/ws/xmlschema/xmlschema-core/2.2.5/xmlschema-core-2.2.5.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.16.0/jackson-core-2.16.0.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/wsdl4j/wsdl4j/1.6.3/wsdl4j-1.6.3.jar
+          FETCH_LICENSE=true bin/cdxgen.js -p -o bomresults/bom-standalone-jar-files.json --validate
+        shell: bash
       - name: repotests 1.4
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign --spec-version 1.4
