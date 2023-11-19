@@ -19,7 +19,8 @@ import {
   readFileSync,
   rmSync,
   unlinkSync,
-  writeFileSync
+  writeFileSync,
+  readdirSync
 } from "node:fs";
 import got from "got";
 import Arborist from "@npmcli/arborist";
@@ -6514,6 +6515,23 @@ export const parseJarManifest = function (jarMetadata) {
   return metadata;
 };
 
+export const parsePomProperties = function (pomProperties) {
+  const properties = {};
+  if (!pomProperties) {
+    return properties;
+  }
+  pomProperties.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
+    if (l.includes("=")) {
+      const tmpA = l.split("=");
+      if (tmpA && tmpA.length === 2) {
+        properties[tmpA[0]] = tmpA[1].replace("\r", "");
+      }
+    }
+  });
+  return properties;
+};
+
 export const encodeForPurl = (s) => {
   return s && !s.includes("%40")
     ? encodeURIComponent(s).replace(/%3A/g, ":").replace(/%2F/g, "/")
@@ -6601,13 +6619,14 @@ export const extractJarArchive = function (
       }
       const manifestDir = join(tempDir, "META-INF");
       const manifestFile = join(manifestDir, "MANIFEST.MF");
+      const mavenDir = join(manifestDir, "maven");
       let jarResult = {
         status: 1
       };
       if (existsSync(pomname)) {
         jarResult = { status: 0 };
       } else {
-        jarResult = spawnSync("jar", ["-xf", jf], {
+        jarResult = spawnSync("jar", ["-xf", jf, "META-INF"], {
           encoding: "utf-8",
           cwd: tempDir,
           shell: isWin,
@@ -6617,29 +6636,65 @@ export const extractJarArchive = function (
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
       } else {
-        if (existsSync(manifestFile)) {
+        let group = "",
+          name = "",
+          version = "",
+          confidence = 1,
+          technique = "manifest-analysis";
+        // When maven descriptor is available take group, name and version from pom.properties
+        // META-INF/maven/${groupId}/${artifactId}/pom.properties
+        // see https://maven.apache.org/shared/maven-archiver/index.html
+        if (existsSync(mavenDir)) {
+          let groupDir = readdirSync(mavenDir);
+          if (groupDir && groupDir.length) {
+            let artifactDir = readdirSync(join(mavenDir, groupDir[0]));
+            if (artifactDir && artifactDir.length) {
+              let pomPropertiesFile = join(
+                mavenDir,
+                groupDir[0],
+                artifactDir[0],
+                "pom.properties"
+              );
+              if (existsSync(pomPropertiesFile)) {
+                const pomProperties = parsePomProperties(
+                  readFileSync(pomPropertiesFile, {
+                    encoding: "utf-8"
+                  })
+                );
+                group = pomProperties["groupId"];
+                name = pomProperties["artifactId"];
+                version = pomProperties["version"];
+              }
+            }
+          }
+        }
+        if ((!group || !name || !version) && existsSync(manifestFile)) {
+          confidence = 0.8;
           const jarMetadata = parseJarManifest(
             readFileSync(manifestFile, {
               encoding: "utf-8"
             })
           );
-          let group =
+          group =
+            group ||
             jarMetadata["Extension-Name"] ||
             jarMetadata["Implementation-Vendor-Id"] ||
             jarMetadata["Bundle-SymbolicName"] ||
             jarMetadata["Bundle-Vendor"] ||
             jarMetadata["Automatic-Module-Name"] ||
             "";
-          let version =
+          version =
+            version ||
             jarMetadata["Bundle-Version"] ||
             jarMetadata["Implementation-Version"] ||
             jarMetadata["Specification-Version"];
           if (version && version.includes(" ")) {
             version = version.split(" ")[0];
           }
-          let name = "";
           // Prefer jar filename to construct name and version
           if (!name || !version || name === "" || version === "") {
+            confidence = 0.5;
+            technique = "filename";
             const tmpA = jarname.split("-");
             if (tmpA && tmpA.length > 1) {
               const lastPart = tmpA[tmpA.length - 1];
@@ -6688,56 +6743,56 @@ export const extractJarArchive = function (
               break;
             }
           }
-          if (name && version) {
-            // if group is empty use name as group
-            group = encodeForPurl(group === "." ? name : group || name) || "";
-            let apkg = {
+          // if group is empty use name as group
+          group = group === "." ? name : group || name;
+        }
+        if (name && version) {
+          let apkg = {
+            group: group ? encodeForPurl(group) : "",
+            name: name ? encodeForPurl(name) : "",
+            version,
+            purl: new PackageURL(
+              "maven",
               group,
-              name: name ? encodeForPurl(name) : "",
+              name,
               version,
-              purl: new PackageURL(
-                "maven",
-                group,
-                name,
-                version,
-                { type: "jar" },
-                null
-              ).toString(),
-              evidence: {
-                identity: {
-                  field: "purl",
-                  confidence: 0.5,
-                  methods: [
-                    {
-                      technique: "filename",
-                      confidence: 0.5,
-                      value: jarname
-                    }
-                  ]
-                }
-              },
-              properties: [
-                {
-                  name: "SrcFile",
-                  value: jarname
-                }
-              ]
-            };
-            if (
-              jarNSMapping &&
-              jarNSMapping[apkg.purl] &&
-              jarNSMapping[apkg.purl].namespaces
-            ) {
-              apkg.properties.push({
-                name: "Namespaces",
-                value: jarNSMapping[apkg.purl].namespaces.join("\n")
-              });
-            }
-            pkgList.push(apkg);
-          } else {
-            if (DEBUG_MODE) {
-              console.log(`Ignored jar ${jarname}`, jarMetadata, name, version);
-            }
+              { type: "jar" },
+              null
+            ).toString(),
+            evidence: {
+              identity: {
+                field: "purl",
+                confidence: confidence,
+                methods: [
+                  {
+                    technique: technique,
+                    confidence: confidence,
+                    value: jarname
+                  }
+                ]
+              }
+            },
+            properties: [
+              {
+                name: "SrcFile",
+                value: jarname
+              }
+            ]
+          };
+          if (
+            jarNSMapping &&
+            jarNSMapping[apkg.purl] &&
+            jarNSMapping[apkg.purl].namespaces
+          ) {
+            apkg.properties.push({
+              name: "Namespaces",
+              value: jarNSMapping[apkg.purl].namespaces.join("\n")
+            });
+          }
+          pkgList.push(apkg);
+        } else {
+          if (DEBUG_MODE) {
+            console.log(`Ignored jar ${jarname}`, name, version);
           }
         }
         try {
