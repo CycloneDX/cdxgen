@@ -81,12 +81,6 @@ jobs:
       with:
         images: |
           ghcr.io/cyclonedx/cdxgen
-    - name: Extract metadata (tags, labels) for nydus
-      id: metanydus
-      uses: docker/metadata-action@v4
-      with:
-        images: |
-          ghcr.io/cyclonedx/cdxgen-nydus
     - name: Build and push Docker images
       uses: docker/build-push-action@v4
       with:
@@ -100,8 +94,8 @@ jobs:
         cache-to: type=gha,mode=max,scope=cdxgen
     - name: nydusify
       run: |
-        nydusify convert --source ${{ steps.meta.outputs.tags }} --target ${{ steps.metanydus.outputs.tags }}
-        nydusify check --target ${{ steps.metanydus.outputs.tags }}
+        sudo nydusify convert --oci-ref --source ${{ steps.meta.outputs.tags }} --target ${{ steps.meta.outputs.tags }}-nydus
+        nydusify check --target ${{ steps.meta.outputs.tags }}-nydus
       if: github.ref == 'refs/heads/master'
     - name: Attach cdx sbom
       run: |
