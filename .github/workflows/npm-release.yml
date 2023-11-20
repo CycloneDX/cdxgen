@@ -81,6 +81,12 @@ jobs:
       with:
         images: |
           ghcr.io/cyclonedx/cdxgen
+    - name: Extract metadata (tags, labels) for nydus
+      id: metanydus
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ghcr.io/cyclonedx/cdxgen-nydus
     - name: Build and push Docker images
       uses: docker/build-push-action@v4
       with:
@@ -94,9 +100,15 @@ jobs:
         cache-to: type=gha,mode=max,scope=cdxgen
     - name: nydusify
       run: |
-        nydusify convert --source ghcr.io/cyclonedx/cdxgen:master --target ghcr.io/cyclonedx/cdxgen-nydus:master
-        nydusify check --source ghcr.io/cyclonedx/cdxgen:master --target ghcr.io/cyclonedx/cdxgen-nydus:master
+        nydusify convert --source ${{ steps.meta.outputs.tags }} --target ${{ steps.metanydus.outputs.tags }}
+        nydusify check --target ${{ steps.metanydus.outputs.tags }}
       if: github.ref == 'refs/heads/master'
+    - name: Attach cdx sbom
+      run: |
+        npm install
+        node bin/cdxgen.js -t docker -o bom.json ${{ steps.meta.outputs.tags }}
+        oras attach --artifact-type sbom/cyclonedx ${{ steps.meta.outputs.tags }} ./bom.json:application/json
+        oras discover -o tree ${{ steps.meta.outputs.tags }}
     - name: Extract metadata (tags, labels) for Docker
       id: meta2
       uses: docker/metadata-action@v4
