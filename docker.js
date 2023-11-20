@@ -111,7 +111,6 @@ export const getOnlyDirs = (srcpath, dirName) => {
 };
 
 const getDefaultOptions = (forRegistry) => {
-  console.log("getDefaultOptions called with", forRegistry);
   let authTokenSet = false;
   if (!forRegistry && process.env.DOCKER_SERVER_ADDRESS) {
     forRegistry = process.env.DOCKER_SERVER_ADDRESS;
@@ -178,9 +177,6 @@ const getDefaultOptions = (forRegistry) => {
               opts.headers = {
                 "X-Registry-Auth": configJson.auths[serverAddress].auth
               };
-              console.log(
-                `Using the existing authentication token for the registry ${serverAddress}`
-              );
               authTokenSet = true;
               break;
             } else if (configJson.credsStore) {
@@ -192,9 +188,6 @@ const getDefaultOptions = (forRegistry) => {
                 opts.headers = {
                   "X-Registry-Auth": helperAuthToken
                 };
-                console.log(
-                  `Using the authentication token from the credential store for ${serverAddress}`
-                );
                 authTokenSet = true;
                 break;
               }
@@ -215,9 +208,6 @@ const getDefaultOptions = (forRegistry) => {
                 opts.headers = {
                   "X-Registry-Auth": helperAuthToken
                 };
-                console.log(
-                  `Using the authentication token from the credential helper for ${serverAddress}`
-                );
                 authTokenSet = true;
                 break;
               }
@@ -492,7 +482,10 @@ export const getImage = async (fullImageName) => {
   let localData = undefined;
   let pullData = undefined;
   const { registry, repo, tag, digest } = parseImageName(fullImageName);
-  let repoWithTag = `${repo}:${tag !== "" ? tag : ":latest"}`;
+  let repoWithTag =
+    registry && registry !== "docker.io"
+      ? fullImageName
+      : `${repo}:${tag !== "" ? tag : ":latest"}`;
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
@@ -1098,7 +1091,6 @@ export const getCredsFromHelper = (exeSuffix, serverAddress) => {
     input: serverAddress,
     encoding: "utf-8"
   });
-  console.log("Invoking", credHelperExe, "get");
   if (result.status !== 0 || result.error) {
     console.log(result.stdout, result.stderr);
   } else if (result.stdout) {
