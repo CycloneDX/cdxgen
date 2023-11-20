@@ -30,8 +30,24 @@ let dockerConn = undefined;
 let isPodman = false;
 let isPodmanRootless = true;
 let isDockerRootless = false;
+// https://github.com/containerd/containerd
+let isContainerd = !!process.env.CONTAINERD_ADDRESS;
 const WIN_LOCAL_TLS = "http://localhost:2375";
 let isWinLocalTLS = false;
+
+if (
+  !process.env.DOCKER_HOST &&
+  (process.env.CONTAINERD_ADDRESS ||
+    (process.env.XDG_RUNTIME_DIR &&
+      existsSync(
+        join(process.env.XDG_RUNTIME_DIR, "containerd-rootless", "api.sock")
+      )))
+) {
+  isContainerd = true;
+}
+
+// Cache the registry auth keys
+const registry_auth_keys = {};
 
 /**
  * Method to get all dirs matching a name
@@ -94,7 +110,18 @@ export const getOnlyDirs = (srcpath, dirName) => {
   ].filter((d) => d.endsWith(dirName));
 };
 
-const getDefaultOptions = () => {
+const getDefaultOptions = (forRegistry) => {
+  console.log("getDefaultOptions called with", forRegistry);
+  let authTokenSet = false;
+  if (!forRegistry && process.env.DOCKER_SERVER_ADDRESS) {
+    forRegistry = process.env.DOCKER_SERVER_ADDRESS;
+  }
+  if (forRegistry) {
+    forRegistry = forRegistry.replace("http://", "").replace("https://", "");
+    if (forRegistry.includes("/")) {
+      forRegistry = forRegistry.split("/")[0];
+    }
+  }
   const opts = {
     enableUnixSockets: true,
     throwHttpErrors: true,
@@ -102,6 +129,106 @@ const getDefaultOptions = () => {
     hooks: { beforeError: [] },
     mutableDefaults: true
   };
+  const DOCKER_CONFIG = process.env.DOCKER_CONFIG || join(homedir(), ".docker");
+  // Support for private registry
+  if (process.env.DOCKER_AUTH_CONFIG) {
+    opts.headers = {
+      "X-Registry-Auth": process.env.DOCKER_AUTH_CONFIG
+    };
+    authTokenSet = true;
+  }
+  if (
+    !authTokenSet &&
+    process.env.DOCKER_USER &&
+    process.env.DOCKER_PASSWORD &&
+    process.env.DOCKER_EMAIL &&
+    forRegistry
+  ) {
+    const authPayload = {
+      username: process.env.DOCKER_USER,
+      email: process.env.DOCKER_EMAIL,
+      serveraddress: forRegistry
+    };
+    if (process.env.DOCKER_USER === "<token>") {
+      authPayload.IdentityToken = process.env.DOCKER_PASSWORD;
+    } else {
+      authPayload.password = process.env.DOCKER_PASSWORD;
+    }
+    opts.headers = {
+      "X-Registry-Auth": Buffer.from(JSON.stringify(authPayload)).toString(
+        "base64"
+      )
+    };
+  }
+  if (!authTokenSet && existsSync(join(DOCKER_CONFIG, "config.json"))) {
+    const configData = readFileSync(
+      join(DOCKER_CONFIG, "config.json"),
+      "utf-8"
+    );
+    if (configData) {
+      try {
+        const configJson = JSON.parse(configData);
+        if (configJson.auths) {
+          // Check if there are hardcoded tokens
+          for (const serverAddress of Object.keys(configJson.auths)) {
+            if (forRegistry && !serverAddress.includes(forRegistry)) {
+              continue;
+            }
+            if (configJson.auths[serverAddress].auth) {
+              opts.headers = {
+                "X-Registry-Auth": configJson.auths[serverAddress].auth
+              };
+              console.log(
+                `Using the existing authentication token for the registry ${serverAddress}`
+              );
+              authTokenSet = true;
+              break;
+            } else if (configJson.credsStore) {
+              const helperAuthToken = getCredsFromHelper(
+                configJson.credsStore,
+                serverAddress
+              );
+              if (helperAuthToken) {
+                opts.headers = {
+                  "X-Registry-Auth": helperAuthToken
+                };
+                console.log(
+                  `Using the authentication token from the credential store for ${serverAddress}`
+                );
+                authTokenSet = true;
+                break;
+              }
+            }
+          }
+        } else if (configJson.credHelpers) {
+          // Support for credential helpers
+          for (const serverAddress of Object.keys(configJson.credHelpers)) {
+            if (forRegistry && !serverAddress.includes(forRegistry)) {
+              continue;
+            }
+            if (configJson.credHelpers[serverAddress]) {
+              const helperAuthToken = getCredsFromHelper(
+                configJson.credHelpers[serverAddress],
+                serverAddress
+              );
+              if (helperAuthToken) {
+                opts.headers = {
+                  "X-Registry-Auth": helperAuthToken
+                };
+                console.log(
+                  `Using the authentication token from the credential helper for ${serverAddress}`
+                );
+                authTokenSet = true;
+                break;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        // pass
+      }
+    }
+  }
   const userInfo = _userInfo();
   opts.podmanPrefixUrl = isWin ? "" : `http://unix:/run/podman/podman.sock:`;
   opts.podmanRootlessPrefixUrl = isWin
@@ -148,22 +275,34 @@ const getDefaultOptions = () => {
         ),
         key: readFileSync(join(process.env.DOCKER_CERT_PATH, "key.pem"), "utf8")
       };
+      // Disable tls on empty values
+      // From the docker docs: Setting the DOCKER_TLS_VERIFY environment variable to any value other than the empty string is equivalent to setting the --tlsverify flag
+      if (
+        process.env.DOCKER_TLS_VERIFY &&
+        process.env.DOCKER_TLS_VERIFY === ""
+      ) {
+        opts.https.rejectUnauthorized = false;
+        console.log("TLS Verification disabled for", hostStr);
+      }
     }
   }
 
   return opts;
 };
 
-export const getConnection = async (options) => {
-  if (!dockerConn) {
-    const defaultOptions = getDefaultOptions();
+export const getConnection = async (options, forRegistry) => {
+  if (isContainerd) {
+    return undefined;
+  } else if (!dockerConn) {
+    const defaultOptions = getDefaultOptions(forRegistry);
     const opts = Object.assign(
       {},
       {
         enableUnixSockets: defaultOptions.enableUnixSockets,
         throwHttpErrors: defaultOptions.throwHttpErrors,
         method: defaultOptions.method,
-        prefixUrl: defaultOptions.prefixUrl
+        prefixUrl: defaultOptions.prefixUrl,
+        headers: defaultOptions.headers
       },
       options
     );
@@ -247,8 +386,8 @@ export const getConnection = async (options) => {
   return dockerConn;
 };
 
-export const makeRequest = async (path, method = "GET") => {
-  const client = await getConnection();
+export const makeRequest = async (path, method = "GET", forRegistry) => {
+  const client = await getConnection({}, forRegistry);
   if (!client) {
     return undefined;
   }
@@ -258,14 +397,15 @@ export const makeRequest = async (path, method = "GET") => {
     enableUnixSockets: true,
     method
   };
-  const defaultOptions = getDefaultOptions();
+  const defaultOptions = getDefaultOptions(forRegistry);
   const opts = Object.assign(
     {},
     {
       enableUnixSockets: defaultOptions.enableUnixSockets,
       throwHttpErrors: defaultOptions.throwHttpErrors,
       method: defaultOptions.method,
-      prefixUrl: defaultOptions.prefixUrl
+      prefixUrl: defaultOptions.prefixUrl,
+      headers: defaultOptions.headers
     },
     extraOptions
   );
@@ -332,19 +472,40 @@ export const parseImageName = (fullImageName) => {
 };
 
 /**
+ * Prefer cli on windows or when using tcp/ssh based host.
+ *
+ * @returns boolean true if we should use the cli. false otherwise
+ */
+const needsCliFallback = () => {
+  return (
+    isWin ||
+    (process.env.DOCKER_HOST &&
+      (process.env.DOCKER_HOST.startsWith("tcp://") ||
+        process.env.DOCKER_HOST.startsWith("ssh://")))
+  );
+};
+
+/**
  * Method to get image to the local registry by pulling from the remote if required
  */
 export const getImage = async (fullImageName) => {
   let localData = undefined;
   let pullData = undefined;
-  const { repo, tag, digest } = parseImageName(fullImageName);
+  const { registry, repo, tag, digest } = parseImageName(fullImageName);
   let repoWithTag = `${repo}:${tag !== "" ? tag : ":latest"}`;
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
   }
-  if (isWin) {
-    let result = spawnSync("docker", ["pull", fullImageName], {
+  if (isContainerd) {
+    console.log(
+      "containerd/nerdctl is currently unsupported. Export the image manually and run cdxgen against the tar image."
+    );
+    return undefined;
+  }
+  if (needsCliFallback()) {
+    const dockerCmd = process.env.DOCKER_CMD || "docker";
+    let result = spawnSync(dockerCmd, ["pull", fullImageName], {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
@@ -355,12 +516,16 @@ export const getImage = async (fullImageName) => {
         console.log(
           "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on."
         );
+      } else if (result.stderr && result.stderr.includes("not found")) {
+        console.log(
+          "Set the environment variable DOCKER_CMD to use an alternative command such as nerdctl or podman."
+        );
       } else {
         console.log(result.stderr);
       }
       return localData;
     } else {
-      result = spawnSync("docker", ["inspect", fullImageName], {
+      result = spawnSync(dockerCmd, ["inspect", fullImageName], {
         encoding: "utf-8"
       });
       if (result.status !== 0 || result.error) {
@@ -385,7 +550,11 @@ export const getImage = async (fullImageName) => {
     }
   }
   try {
-    localData = await makeRequest(`images/${repoWithTag}/json`);
+    localData = await makeRequest(
+      `images/${repoWithTag}/json`,
+      "GET",
+      registry
+    );
     if (localData) {
       return localData;
     }
@@ -393,10 +562,14 @@ export const getImage = async (fullImageName) => {
     // ignore
   }
   try {
-    localData = await makeRequest(`images/${repo}/json`);
+    localData = await makeRequest(`images/${repo}/json`, "GET", registry);
   } catch (err) {
     try {
-      localData = await makeRequest(`images/${fullImageName}/json`);
+      localData = await makeRequest(
+        `images/${fullImageName}/json`,
+        "GET",
+        registry
+      );
       if (localData) {
         return localData;
       }
@@ -412,7 +585,8 @@ export const getImage = async (fullImageName) => {
     try {
       pullData = await makeRequest(
         `images/create?fromImage=${fullImageName}`,
-        "POST"
+        "POST",
+        registry
       );
       if (
         pullData &&
@@ -434,7 +608,8 @@ export const getImage = async (fullImageName) => {
         }
         pullData = await makeRequest(
           `images/create?fromImage=${repoWithTag}`,
-          "POST"
+          "POST",
+          registry
         );
       } catch (err) {
         // continue regardless of error
@@ -444,7 +619,11 @@ export const getImage = async (fullImageName) => {
       if (DEBUG_MODE) {
         console.log(`Trying with ${repoWithTag}`);
       }
-      localData = await makeRequest(`images/${repoWithTag}/json`);
+      localData = await makeRequest(
+        `images/${repoWithTag}/json`,
+        "GET",
+        registry
+      );
       if (localData) {
         return localData;
       }
@@ -453,7 +632,7 @@ export const getImage = async (fullImageName) => {
         if (DEBUG_MODE) {
           console.log(`Trying with ${repo}`);
         }
-        localData = await makeRequest(`images/${repo}/json`);
+        localData = await makeRequest(`images/${repo}/json`, "GET", registry);
         if (localData) {
           return localData;
         }
@@ -464,7 +643,11 @@ export const getImage = async (fullImageName) => {
         if (DEBUG_MODE) {
           console.log(`Trying with ${fullImageName}`);
         }
-        localData = await makeRequest(`images/${fullImageName}/json`);
+        localData = await makeRequest(
+          `images/${fullImageName}/json`,
+          "GET",
+          registry
+        );
       } catch (err) {
         // continue regardless of error
       }
@@ -684,7 +867,7 @@ export const exportImage = async (fullImageName) => {
   if (!localData) {
     return undefined;
   }
-  const { tag, digest } = parseImageName(fullImageName);
+  const { registry, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
@@ -695,7 +878,7 @@ export const exportImage = async (fullImageName) => {
   // Windows containers use index.json
   const manifestIndexFile = join(tempDir, "index.json");
   // On Windows, fallback to invoking cli
-  if (isWin) {
+  if (needsCliFallback()) {
     const imageTarFile = join(tempDir, "image.tar");
     console.log(
       `About to export image ${fullImageName} to ${imageTarFile} using docker cli`
@@ -722,10 +905,16 @@ export const exportImage = async (fullImageName) => {
       }
     }
   } else {
-    const client = await getConnection();
+    const client = await getConnection({}, registry);
     try {
       if (DEBUG_MODE) {
-        console.log(`About to export image ${fullImageName} to ${tempDir}`);
+        if (registry && registry.trim().length) {
+          console.log(
+            `About to export image ${fullImageName} from ${registry} to ${tempDir}`
+          );
+        } else {
+          console.log(`About to export image ${fullImageName} to ${tempDir}`);
+        }
       }
       await stream.pipeline(
         client.stream(`images/${fullImageName}/get`),
@@ -895,4 +1084,48 @@ export const removeImage = async (fullImageName, force = false) => {
     "DELETE"
   );
   return removeData;
+};
+
+export const getCredsFromHelper = (exeSuffix, serverAddress) => {
+  if (registry_auth_keys[serverAddress]) {
+    return registry_auth_keys[serverAddress];
+  }
+  let credHelperExe = `docker-credential-${exeSuffix}`;
+  if (isWin) {
+    credHelperExe = credHelperExe + ".exe";
+  }
+  const result = spawnSync(credHelperExe, ["get"], {
+    input: serverAddress,
+    encoding: "utf-8"
+  });
+  console.log("Invoking", credHelperExe, "get");
+  if (result.status !== 0 || result.error) {
+    console.log(result.stdout, result.stderr);
+  } else if (result.stdout) {
+    const cmdOutput = Buffer.from(result.stdout).toString();
+    try {
+      const authPayload = JSON.parse(cmdOutput);
+      const fixedAuthPayload = {
+        username:
+          authPayload.username ||
+          authPayload.Username ||
+          process.env.DOCKER_USER,
+        password:
+          authPayload.password ||
+          authPayload.Secret ||
+          process.env.DOCKER_PASSWORD,
+        email:
+          authPayload.email || authPayload.username || process.env.DOCKER_USER,
+        serveraddress: serverAddress
+      };
+      const authKey = Buffer.from(JSON.stringify(fixedAuthPayload)).toString(
+        "base64"
+      );
+      registry_auth_keys[serverAddress] = authKey;
+      return authKey;
+    } catch (err) {
+      return undefined;
+    }
+  }
+  return undefined;
 };

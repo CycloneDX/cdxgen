@@ -108,7 +108,7 @@ const setFileRef = (allImports, src, file, pathnode, specifiers = []) => {
   }
   const fileRelativeLoc = relative(src, file);
   // remove unexpected extension imports
-  if (/\.(svg|png|jpg|d\.ts)/.test(pathway)) {
+  if (/\.(svg|png|jpg|json|d\.ts)/.test(pathway)) {
     return;
   }
   const importedModules = specifiers
