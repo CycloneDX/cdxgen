@@ -187,7 +187,7 @@ jobs:
           FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --validate
           node bin/evinse.js -i bomresults/bom-ts-1.json -o bomresults/bom-ts.evinse.json -l javascript --with-data-flow -p repotests/shiftleft-ts-example
           FETCH_LICENSE=true bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts-2.json --validate
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --validate
+          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --validate
         shell: bash
       - name: repotests meetingsdk-vuejs-sample
         run: |
@@ -303,8 +303,8 @@ jobs:
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/1.4-bom-java.json --generate-key-and-sign --spec-version 1.4
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.4-bom-github.json --spec-version 1.4
-          FETCH_LICENSE=false bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/1.4-bom-ts-1.json --validate --spec-version 1.4
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/1.4-bom-ts-2.json --validate --spec-version 1.4
+          FETCH_LICENSE=0 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/1.4-bom-ts-1.json --validate --spec-version 1.4
+          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/1.4-bom-ts-2.json --validate --spec-version 1.4
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/1.4-bom-go.json --validate --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/1.4-bom-csharp2.json --validate --spec-version 1.4
           FETCH_LICENSE=false bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/1.4-bom-csharp3.json --validate --spec-version 1.4
