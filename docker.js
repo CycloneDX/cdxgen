@@ -1105,7 +1105,20 @@ export const getCredsFromHelper = (exeSuffix, serverAddress) => {
     const cmdOutput = Buffer.from(result.stdout).toString();
     try {
       const authPayload = JSON.parse(cmdOutput);
-      const authKey = Buffer.from(JSON.stringify(authPayload)).toString(
+      const fixedAuthPayload = {
+        username:
+          authPayload.username ||
+          authPayload.Username ||
+          process.env.DOCKER_USER,
+        password:
+          authPayload.password ||
+          authPayload.Secret ||
+          process.env.DOCKER_PASSWORD,
+        email:
+          authPayload.email || authPayload.username || process.env.DOCKER_USER,
+        serveraddress: serverAddress
+      };
+      const authKey = Buffer.from(JSON.stringify(fixedAuthPayload)).toString(
         "base64"
       );
       registry_auth_keys[serverAddress] = authKey;
