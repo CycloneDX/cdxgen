@@ -6539,6 +6539,44 @@ export const encodeForPurl = (s) => {
 };
 
 /**
+ * Method to get pom properties from maven directory
+ *
+ * @param {string} mavenDir Path to maven directory
+ *
+ * @return array with pom properties
+ */
+export const getPomPropertiesFromMavenDir = function (mavenDir) {
+  let pomProperties = {};
+  if (existsSync(mavenDir) && lstatSync(mavenDir).isDirectory()) {
+    let mavenDirEntries = readdirSync(mavenDir, { withFileTypes: true });
+    mavenDirEntries.forEach((mavenDirEntry) => {
+      if (mavenDirEntry.isDirectory()) {
+        let groupDirEntries = readdirSync(
+          join(mavenDirEntry.path, mavenDirEntry.name),
+          { withFileTypes: true }
+        );
+        groupDirEntries.forEach((groupDirEntry) => {
+          if (groupDirEntry.isDirectory()) {
+            let pomPropertiesFile = join(
+              groupDirEntry.path,
+              groupDirEntry.name,
+              "pom.properties"
+            );
+            if (existsSync(pomPropertiesFile)) {
+              const pomPropertiesString = readFileSync(pomPropertiesFile, {
+                encoding: "utf-8"
+              });
+              pomProperties = parsePomProperties(pomPropertiesString);
+            }
+          }
+        });
+      }
+    });
+  }
+  return pomProperties;
+};
+
+/**
  * Method to extract a war or ear file
  *
  * @param {string} jarFile Path to jar file
@@ -6636,38 +6674,15 @@ export const extractJarArchive = function (
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
       } else {
-        let group = "",
-          name = "",
-          version = "",
-          confidence = 1,
-          technique = "manifest-analysis";
         // When maven descriptor is available take group, name and version from pom.properties
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
-        if (existsSync(mavenDir)) {
-          let groupDir = readdirSync(mavenDir);
-          if (groupDir && groupDir.length) {
-            let artifactDir = readdirSync(join(mavenDir, groupDir[0]));
-            if (artifactDir && artifactDir.length) {
-              let pomPropertiesFile = join(
-                mavenDir,
-                groupDir[0],
-                artifactDir[0],
-                "pom.properties"
-              );
-              if (existsSync(pomPropertiesFile)) {
-                const pomProperties = parsePomProperties(
-                  readFileSync(pomPropertiesFile, {
-                    encoding: "utf-8"
-                  })
-                );
-                group = pomProperties["groupId"];
-                name = pomProperties["artifactId"];
-                version = pomProperties["version"];
-              }
-            }
-          }
-        }
+        const pomProperties = getPomPropertiesFromMavenDir(mavenDir);
+        let group = pomProperties["groupId"],
+          name = pomProperties["artifactId"],
+          version = pomProperties["version"],
+          confidence = 1,
+          technique = "manifest-analysis";
         if ((!group || !name || !version) && existsSync(manifestFile)) {
           confidence = 0.8;
           const jarMetadata = parseJarManifest(
