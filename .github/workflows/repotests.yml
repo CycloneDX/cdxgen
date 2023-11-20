@@ -157,58 +157,126 @@ jobs:
           repository: 'googleprojectzero/Jackalope'
           path: 'repotests/Jackalope'
       - uses: dtolnay/rust-toolchain@stable
-      - name: repotests
+      - name: repotests evidence
         run: |
-          bin/cdxgen.js -p -t js --no-recurse -o bom.json --evidence .
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json
-          bin/cdxgen.js -p -t java --author foo --author bar repotests/java-sec-code -o bomresults/bom-java-sec-code.json
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --required-only
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --filter postgres --filter json
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --only spring
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o repotests/java-sec-code/bom.json --deep --evidence
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --profile research
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code.json --profile license-compliance
-          bin/cdxgen.js -t python repotests/django-DefectDojo -o repotests/django-DefectDojo/bom.json --deep --evidence
+          bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
+        shell: bash
+      - name: repotests java-sec-code
+        run: |
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --author foo --author bar  
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-3.json --required-only
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-4.json --filter postgres --filter json
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-5.json --only spring
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-6.json --deep --evidence
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-7.json --profile research
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-8.json --profile license-compliance
+        shell: bash
+      - name: repotests django-DefectDojo
+        run: |
+          bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo/bom.json --deep --evidence
+        shell: bash
+      - name: repotests shiftleft-java-example
+        run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
           node bin/evinse.js -i bomresults/bom-java.json -o bomresults/bom-java.evinse.json -l java --with-data-flow -p repotests/shiftleft-java-example
           SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/bom-github.json
-          FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
-          node bin/evinse.js -i bomresults/bom-ts.json -o bomresults/bom-ts.evinse.json -l javascript --with-data-flow -p repotests/shiftleft-ts-example
+        shell: bash
+      - name: repotests shiftleft-ts-example
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --validate
+          node bin/evinse.js -i bomresults/bom-ts-1.json -o bomresults/bom-ts.evinse.json -l javascript --with-data-flow -p repotests/shiftleft-ts-example
+          FETCH_LICENSE=true bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts-2.json --validate
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --validate
+        shell: bash
+      - name: repotests meetingsdk-vuejs-sample
+        run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/meetingsdk-vuejs-sample -o bomresults/bom-vue.json
           node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l javascript --with-data-flow -p repotests/meetingsdk-vuejs-sample
+        shell: bash
+      - name: repotests sveltejs-examples
+        run: |
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/sveltejs-examples -o bomresults/bom-svelte.json
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-data-flow -p repotests/sveltejs-examples
           CDXGEN_DEBUG_MODE=debug ASTGEN_IGNORE_DIRS="" node bin/evinse.js -i bomresults/bom-svelte.json -o bomresults/bom-svelte.evinse.json -l javascript --with-reachables -p repotests/sveltejs-examples
-          FETCH_LICENSE=1 bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts.json --validate
+        shell: bash
+      - name: repotests shiftleft-go-example
+        run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/bom-go.json --validate
+        shell: bash
+      - name: repotests vulnerable_net_core
+        run: |
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --validate
-          FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate
+        shell: bash
+      - name: repotests Goatly.NET
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate
+        shell: bash
+      - name: repotests DjanGoat
+        run: |
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate
-          bin/cdxgen.js -p -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate
-          bin/cdxgen.js -p -t php --no-recurse repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate
+        shell: bash
+      - name: repotests Vulnerable-Web-Application
+        run: |
+          bin/cdxgen.js -p -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php-1.json --validate
+          bin/cdxgen.js -p -t php --no-recurse repotests/Vulnerable-Web-Application -o bomresults/bom-php-2.json --validate
+        shell: bash
+      - name: repotests railsgoat
+        run: |
           bin/cdxgen.js -p -r -t ruby repotests/railsgoat -o bomresults/bom-ruby.json --validate
+        shell: bash
+      - name: repotests bazel-examples
+        run: |
           bin/cdxgen.js -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json --validate
+        shell: bash
+      - name: repotests gallery
+        run: |
           bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --validate
+        shell: bash
+      - name: repotests ziggurat
+        run: |
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t clojure repotests/ziggurat -o bomresults/bom-clj.json --validate
-          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --validate
-          bin/cdxgen.js --no-recurse repotests/microservices-demo -o bomresults/bom-msd.json --validate
-          bin/cdxgen.js -r repotests/microservices-demo -o bomresults/bom-msd.json --validate
-          bin/cdxgen.js -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts.json --validate
-          bin/cdxgen.js -r -t c repotests/openpbs -o bomresults/bom-openpbs.json
-          bin/cdxgen.js -r -t c repotests/Jackalope -o bomresults/bom-Jackalope.json -p
+        shell: bash
+      - name: repotests swift-markdown
+        run: |
+          CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --validate
+        shell: bash
+      - name: repotests microservices-demo
+        run: |
+          bin/cdxgen.js -p --no-recurse repotests/microservices-demo -o bomresults/bom-msd-1.json --validate
+          bin/cdxgen.js -p -r repotests/microservices-demo -o bomresults/bom-msd-2.json --validate
+          bin/cdxgen.js -p -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
+        shell: bash
+      - name: repotests openpbs
+        run: |
+          bin/cdxgen.js -p -r -t c repotests/openpbs -o bomresults/bom-openpbs.json
+        shell: bash
+      - name: repotests Jackalope
+        run: |
+          bin/cdxgen.js -p -r -t c repotests/Jackalope -o bomresults/bom-Jackalope.json
+        shell: bash
+      - name: repotests ha-android
+        run: |
           cd repotests/ha-android && ./gradlew assembleDebug || true && cd ../..
           bin/cdxgen.js -r -t java repotests/ha-android -o bomresults/bom-android.json
           CDXGEN_DEBUG_MODE=debug bin/evinse.js -i bomresults/bom-android.json -o bomresults/bom-android.evinse.json -l java repotests/ha-android
-          bin/cdxgen.js -r -t rust repotests/rs-rust -o bomresults/bom-rs-rust.json --validate
-          bin/cdxgen.js -r -t rust repotests/rs-cargo -o bomresults/bom-rs-cargo.json --validate
+        shell: bash
+      - name: repotests rust
+        run: |
+          bin/cdxgen.js -p -r -t rust repotests/rs-rust -o bomresults/bom-rs-rust.json --validate
+          bin/cdxgen.js -p -r -t rust repotests/rs-cargo -o bomresults/bom-rs-cargo.json --validate
           cargo generate-lockfile --manifest-path repotests/rs-validator/validator/Cargo.toml
-          bin/cdxgen.js -r -t rust repotests/rs-validator -o bomresults/bom-rs-validator.json --validate
-          bin/cdxgen.js -r -t rust repotests/rs-axum -o bomresults/bom-rs-axum.json --validate
+          bin/cdxgen.js -p -r -t rust repotests/rs-validator -o bomresults/bom-rs-validator.json --validate
+          bin/cdxgen.js -p -r -t rust repotests/rs-axum -o bomresults/bom-rs-axum.json --validate
+        shell: bash
+      - name: repotests dotnet-paket
+        run: |
           bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
+        shell: bash
+      - name: repotests blint
+        run: |
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
-          ls -ltr bomresults
         shell: bash
       - name: jenkins plugins
         run: |
@@ -242,6 +310,10 @@ jobs:
           FETCH_LICENSE=0 bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate --spec-version 1.4
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/bom-python.json --validate --spec-version 1.4
           bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php.json --validate --spec-version 1.4
+        shell: bash
+      - name: list repotest bomresults
+        run: |
+          ls -ltr bomresults
         shell: bash
       - name: denotests
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
