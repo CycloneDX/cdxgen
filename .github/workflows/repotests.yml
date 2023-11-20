@@ -228,6 +228,7 @@ jobs:
           curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.16.0/jackson-core-2.16.0.jar
           curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
           curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/wsdl4j/wsdl4j/1.6.3/wsdl4j-1.6.3.jar
+          curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/apache/maven/maven-core/3.9.2/maven-core-3.9.2.jar
           FETCH_LICENSE=true bin/cdxgen.js -p standalone-jar-files -o bomresults/bom-standalone-jar-files.json --validate
         shell: bash
       - name: repotests 1.4
