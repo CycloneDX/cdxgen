@@ -156,6 +156,10 @@ jobs:
         with:
           repository: 'googleprojectzero/Jackalope'
           path: 'repotests/Jackalope'
+      - uses: actions/checkout@v3
+        with:
+          repository: 'hritik14/broken-mvn-wrapper'
+          path: 'repotests/broken-mvn-wrapper'
       - uses: dtolnay/rust-toolchain@stable
       - name: repotests evidence
         run: |
@@ -277,6 +281,7 @@ jobs:
         run: |
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
+          bin/cdxgen.js -p -t java repotests/broken-mvn-wrapper -o bomresults/bom-broken-mvn-wrapper.json
         shell: bash
       - name: jenkins plugins
         run: |
