@@ -37,7 +37,7 @@ ENV GOPATH=/opt/app-root/go \
     PYTHONIOENCODING="utf-8" \
     COMPOSER_ALLOW_SUPERUSER=1 \
     ANDROID_HOME=/opt/android-sdk-linux \
-    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
+    JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8" \
     SWIFT_SIGNING_KEY=$SWIFT_SIGNING_KEY \
     SWIFT_PLATFORM=$SWIFT_PLATFORM \
     SWIFT_BRANCH=$SWIFT_BRANCH \
