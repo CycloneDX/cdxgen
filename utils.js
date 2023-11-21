@@ -6999,6 +6999,7 @@ export const getMavenCommand = (srcPath, rootPath) => {
   let isWrapperReady = false;
   let isWrapperFound = false;
   let findMavenFile = "mvnw";
+  let mavenWrapperCmd = null;
   if (platform() == "win32") {
     findMavenFile = "mvnw.bat";
     if (
@@ -7017,7 +7018,7 @@ export const getMavenCommand = (srcPath, rootPath) => {
     } catch (e) {
       // continue regardless of error
     }
-    mavenCmd = resolve(join(srcPath, findMavenFile));
+    mavenWrapperCmd = resolve(join(srcPath, findMavenFile));
     isWrapperFound = true;
   } else if (rootPath && existsSync(join(rootPath, findMavenFile))) {
     // Check if the root directory has a wrapper script
@@ -7026,7 +7027,7 @@ export const getMavenCommand = (srcPath, rootPath) => {
     } catch (e) {
       // continue regardless of error
     }
-    mavenCmd = resolve(join(rootPath, findMavenFile));
+    mavenWrapperCmd = resolve(join(rootPath, findMavenFile));
     isWrapperFound = true;
   }
   if (isWrapperFound) {
@@ -7035,14 +7036,15 @@ export const getMavenCommand = (srcPath, rootPath) => {
         "Testing the wrapper script by invoking wrapper:wrapper task"
       );
     }
-    const result = spawnSync(mavenCmd, ["wrapper:wrapper"], {
+    const result = spawnSync(mavenWrapperCmd, ["wrapper:wrapper"], {
       encoding: "utf-8",
       cwd: rootPath,
       timeout: TIMEOUT_MS,
       shell: isWin
     });
-    if (!result.error) {
+    if (!result.error && !result.status) {
       isWrapperReady = true;
+      mavenCmd = mavenWrapperCmd;
     } else {
       if (DEBUG_MODE) {
         console.log(
