@@ -107,7 +107,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: 'GoogleCloudPlatform/microservices-demo'
-          ref: 'tags/v0.8.1'
+          ref: 'v0.8.1'
           path: 'repotests/microservices-demo'
       - uses: actions/checkout@v4
         with:
