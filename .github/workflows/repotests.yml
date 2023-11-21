@@ -264,7 +264,6 @@ jobs:
           CDXGEN_DEBUG_MODE=debug bin/cdxgen.js -p -r -t swift repotests/swift-markdown -o bomresults/bom-swift.json --validate
         shell: bash
       - name: repotests microservices-demo
-        if: matrix.os == 'windows-latest'
         run: |
           bin/cdxgen.js -p --no-recurse repotests/microservices-demo -o bomresults/bom-msd-1.json --validate
           bin/cdxgen.js -p -r repotests/microservices-demo -o bomresults/bom-msd-2.json --validate
