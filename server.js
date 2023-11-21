@@ -72,7 +72,7 @@ const parseQueryString = (q, body, options = {}) => {
     "requiredOnly",
     "noBabel",
     "installDeps",
-    "project",
+    "projectId",
     "projectName",
     "projectGroup",
     "projectVersion",

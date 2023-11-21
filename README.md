@@ -445,7 +445,7 @@ This feature is powered by osquery, which is [installed](https://github.com/cycl
 
 See [evinse mode](./ADVANCED.md) in the advanced documentation.
 
-## BoM signing
+## BOM signing
 
 cdxgen can sign the generated BOM json file to increase authenticity and non-repudiation capabilities. To enable this, set the following environment variables.
 

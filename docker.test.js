@@ -55,6 +55,15 @@ test("parseImageName tests", () => {
     platform: ""
   });
   expect(
+    parseImageName("foocorp.jfrog.io/docker/library/eclipse-temurin:latest")
+  ).toEqual({
+    registry: "foocorp.jfrog.io",
+    repo: "docker/library/eclipse-temurin",
+    tag: "latest",
+    digest: "",
+    platform: ""
+  });
+  expect(
     parseImageName(
       "quay.io/shiftleft/scan-java@sha256:5d008306a7c5d09ba0161a3408fa3839dc2c9dd991ffb68adecc1040399fe9e1"
     )
