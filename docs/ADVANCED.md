@@ -331,3 +331,19 @@ With profiles, cdxgen can generate a BOM that is optimized for a specific use ca
 | research           | BOM for security research                                                 | Enables deep and evidence mode. Disable ignore directory for JavaScript/TypeScript |
 | operational        | Generate OBOM                                                             | projectType set to os                                                              |
 | license-compliance | Fetch license data                                                        | Set FETCH_LICENSE environment variable                                             |
+
+## Nydus - next-generation container image
+
+[Nydus](https://github.com/dragonflyoss/nydus) enhances the current OCI image specification by improving container launch speed, image space and network bandwidth efficiency, and data integrity. cdxgen container images are available in nydus format with the `-nydus` suffix.
+
+```
+ghcr.io/cyclonedx/cdxgen:master-nydus
+```
+
+### Example invocation using nerdctl
+
+Refer to the nydus-demo.yml workflow for an example github action that demonstrates the use of nydus snapshotter to improve the performance of cdxgen.
+
+```shell
+sudo nerdctl --snapshotter nydus run --rm -v $HOME/.m2:/root/.m2 -v $(pwd):/app ghcr.io/cyclonedx/cdxgen:master-nydus -p -t java /app
+```
