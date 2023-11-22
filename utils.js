@@ -2430,7 +2430,7 @@ export const fetchPomXmlAsJson = async function ({
  * @param {String} name
  * @param {String} version
  *
- * @return {String}
+ * @return {Promise<String>}
  */
 export const fetchPomXml = async function ({
   urlPrefix,
@@ -2467,7 +2467,7 @@ export const parseLicenseEntryOrArrayFromPomXml = function (license) {
  * @param {String} name
  * @param {String} version
  *
- * @return {String} License ID
+ * @return {Promise<String>} License ID
  */
 export const extractLicenseCommentFromPomXml = async function ({
   urlPrefix,
@@ -3287,7 +3287,7 @@ export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
  *
  * @param {String} repoUrl Repository url
  * @param {Object} repoMetadata Object containing group and package name strings
- * @return {String} SPDX license id
+ * @return {Promise<String>} SPDX license id
  */
 export const getRepoLicense = async function (repoUrl, repoMetadata) {
   let apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
@@ -8465,6 +8465,18 @@ export const getNugetMetadata = async function (
             p.license = findLicenseId(body.catalogEntry.licenseExpression);
           } else if (body.catalogEntry.licenseUrl) {
             p.license = findLicenseId(body.catalogEntry.licenseUrl);
+            // as the old .NET framework is not open source and therefore the license not in the SPDX index,
+            // the license info is provided with name ".NET Library License"
+            // resolved only here as this license should only be related to Nuget projects
+            if (
+              p.license.endsWith("?LinkId=329770") ||
+              p.license.endsWith("dotnet_library_license.htm")
+            ) {
+              p.license = {
+                name: ".NET Library License",
+                url: "http://go.microsoft.com/fwlink/?LinkId=329770"
+              };
+            }
           }
           if (body.catalogEntry.projectUrl) {
             p.repository = { url: body.catalogEntry.projectUrl };
@@ -8476,6 +8488,13 @@ export const getNugetMetadata = async function (
                 p.version +
                 "/"
             };
+            // license couldn't be properly identified and is still a url,
+            // therefore trying to resolve license via repository
+            if (p.license.startsWith("https://")) {
+              p.license =
+                (await getRepoLicense(p.repository.url, undefined)) ||
+                p.license;
+            }
           }
           cdepList.push(p);
         }
