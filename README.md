@@ -86,10 +86,10 @@ For go, `go mod why` command is used to identify required packages. For php, com
 ## Installing
 
 ```shell
-sudo npm install -g @cyclonedx/cdxgen
+npm install -g @cyclonedx/cdxgen
 
 # For CycloneDX 1.4 compatibility use version 8.6.0 or pass the argument `--spec-version 1.4`
-sudo npm install -g @cyclonedx/cdxgen@8.6.0
+npm install -g @cyclonedx/cdxgen@8.6.0
 ```
 
 If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:
