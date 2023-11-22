@@ -45,7 +45,6 @@ import { parseEDNString } from "edn-data";
 import { PackageURL } from "packageurl-js";
 import { getTreeWithPlugin } from "./piptree.js";
 import iconv from "iconv-lite";
-import { string } from "yargs";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -8471,7 +8470,7 @@ export const getNugetMetadata = async function (
             // resolved only here as this license should only be related to Nuget projects
             if (
               p.license &&
-              p.license instanceof string &&
+              typeof p.license === "string" &&
               (p.license.endsWith("?LinkId=329770") ||
                 p.license.endsWith("dotnet_library_license.htm"))
             ) {
@@ -8495,7 +8494,7 @@ export const getNugetMetadata = async function (
             // therefore trying to resolve license via repository
             if (
               !p.license ||
-              (p.license instanceof string && p.license.startsWith("https://"))
+              (typeof p.license === "string" && p.license.startsWith("https://"))
             ) {
               p.license =
                 (await getRepoLicense(p.repository.url, undefined)) ||
