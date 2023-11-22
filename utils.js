@@ -8494,7 +8494,8 @@ export const getNugetMetadata = async function (
             // therefore trying to resolve license via repository
             if (
               !p.license ||
-              (typeof p.license === "string" && p.license.startsWith("https://"))
+              (typeof p.license === "string" &&
+                p.license.startsWith("https://"))
             ) {
               p.license =
                 (await getRepoLicense(p.repository.url, undefined)) ||
