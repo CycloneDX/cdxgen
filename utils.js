@@ -8476,7 +8476,7 @@ export const getNugetMetadata = async function (
             ) {
               p.license = {
                 name: ".NET Library License",
-                url: "http://go.microsoft.com/fwlink/?LinkId=329770"
+                url: "https://go.microsoft.com/fwlink/?LinkId=329770"
               };
             }
           }
