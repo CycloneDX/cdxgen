@@ -295,6 +295,7 @@ jobs:
       - name: repotests dotnet-paket
         run: |
           bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket-2.json --validate
         shell: bash
       - name: repotests blint
         run: |
