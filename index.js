@@ -312,20 +312,22 @@ const addToolsSection = (options, format) => {
       ];
     }
   }
-  return {
-    components: [
-      {
-        group: "@cyclonedx",
-        name: "cdxgen",
-        version: _version,
-        purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
-        type: "application",
-        "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`,
-        author: "OWASP Foundation",
-        publisher: "OWASP Foundation"
-      }
-    ]
-  };
+  return [
+    {
+      components: [
+        {
+          group: "@cyclonedx",
+          name: "cdxgen",
+          version: _version,
+          purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
+          type: "application",
+          "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`,
+          author: "OWASP Foundation",
+          publisher: "OWASP Foundation"
+        }
+      ]
+    }
+  ];
 };
 
 const componentToSimpleFullName = (comp) => {
