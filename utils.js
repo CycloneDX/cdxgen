@@ -221,11 +221,12 @@ export function getLicenses(pkg, format = "xml") {
               l.includes("mit-license") ||
               l.includes("://github.com/dotnet/standard/") ||
               l.includes("://github.com/dotnet/corefx/") ||
-              l.includes("://github.com/dotnet/core-setup/")
+              l.includes("://github.com/dotnet/core-setup/") ||
+              l.endsWith("?linkid=869050") // https://github.com/mono/mono/blob/main/LICENSE
             ) {
               licenseContent.id = "MIT";
             } else if (
-              l.endsWith("?LinkId=329770") ||
+              l.endsWith("?LinkId=329770") || // https://dotnet.microsoft.com/en-us/dotnet_library_license.htm
               l.endsWith("dotnet_library_license.htm")
             ) {
               // as the old .NET framework is not open source and therefore the license not in the SPDX index,
@@ -233,7 +234,19 @@ export function getLicenses(pkg, format = "xml") {
               licenseContent.name = ".NET Library License";
             } else if (l.includes("opensource.org")) {
               const possibleId = l
+                .replace("https://", "http://")
                 .replace("http://www.opensource.org/licenses/", "")
+                .toUpperCase();
+              spdxLicenses.forEach((v) => {
+                if (v.toUpperCase() === possibleId) {
+                  licenseContent.id = v;
+                }
+              });
+            } else if (l.includes("apache.org")) {
+              const possibleId = l
+                .replace("https://", "http://")
+                .replace("http://www.apache.org/licenses/LICENSE-", "Apache-")
+                .replace(".txt", "")
                 .toUpperCase();
               spdxLicenses.forEach((v) => {
                 if (v.toUpperCase() === possibleId) {
