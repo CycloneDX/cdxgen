@@ -217,9 +217,21 @@ export function getLicenses(pkg, format = "xml") {
             licenseContent.id = l;
             licenseContent.url = "https://opensource.org/licenses/" + l;
           } else if (l.startsWith("http")) {
-            if (!l.includes("opensource.org")) {
-              licenseContent.name = "CUSTOM";
-            } else {
+            if (
+              l.includes("mit-license") ||
+              l.includes("://github.com/dotnet/standard/") ||
+              l.includes("://github.com/dotnet/corefx/") ||
+              l.includes("://github.com/dotnet/core-setup/")
+            ) {
+              licenseContent.id = "MIT";
+            } else if (
+              l.endsWith("?LinkId=329770") ||
+              l.endsWith("dotnet_library_license.htm")
+            ) {
+              // as the old .NET framework is not open source and therefore the license not in the SPDX index,
+              // the license info is provided with name ".NET Library License"
+              licenseContent.name = ".NET Library License";
+            } else if (l.includes("opensource.org")) {
               const possibleId = l
                 .replace("http://www.opensource.org/licenses/", "")
                 .toUpperCase();
@@ -228,9 +240,6 @@ export function getLicenses(pkg, format = "xml") {
                   licenseContent.id = v;
                 }
               });
-            }
-            if (l.includes("mit-license")) {
-              licenseContent.id = "MIT";
             }
             // We always need a name to avoid validation errors
             // Issue: #469
@@ -8465,19 +8474,12 @@ export const getNugetMetadata = async function (
             p.license = findLicenseId(body.catalogEntry.licenseExpression);
           } else if (body.catalogEntry.licenseUrl) {
             p.license = findLicenseId(body.catalogEntry.licenseUrl);
-            // as the old .NET framework is not open source and therefore the license not in the SPDX index,
-            // the license info is provided with name ".NET Library License"
-            // resolved only here as this license should only be related to Nuget projects
             if (
-              p.license &&
               typeof p.license === "string" &&
-              (p.license.endsWith("?LinkId=329770") ||
-                p.license.endsWith("dotnet_library_license.htm"))
+              p.license.includes("://github.com/")
             ) {
-              p.license = {
-                name: ".NET Library License",
-                url: "https://go.microsoft.com/fwlink/?LinkId=329770"
-              };
+              p.license =
+                (await getRepoLicense(p.license, undefined)) || p.license;
             }
           }
           if (body.catalogEntry.projectUrl) {
@@ -8490,13 +8492,13 @@ export const getNugetMetadata = async function (
                 p.version +
                 "/"
             };
-            // license couldn't be properly identified and is still a url,
-            // therefore trying to resolve license via repository
             if (
-              !p.license ||
-              (typeof p.license === "string" &&
-                p.license.startsWith("https://"))
+              (!p.license || typeof p.license === "string") &&
+              typeof p.repository.url === "string" &&
+              p.repository.url.includes("://github.com/")
             ) {
+              // license couldn't be properly identified and is still a url,
+              // therefore trying to resolve license via repository
               p.license =
                 (await getRepoLicense(p.repository.url, undefined)) ||
                 p.license;
