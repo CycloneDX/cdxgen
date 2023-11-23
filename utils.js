@@ -3332,6 +3332,9 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
           }
         }
         licObj["id"] = licenseId;
+        if (!licObj["id"] && !licObj["name"]) {
+          licObj["name"] = "CUSTOM";
+        }
         return licObj;
       }
     } catch (err) {
