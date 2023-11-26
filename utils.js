@@ -217,42 +217,10 @@ export function getLicenses(pkg, format = "xml") {
             licenseContent.id = l;
             licenseContent.url = "https://opensource.org/licenses/" + l;
           } else if (l.startsWith("http")) {
-            if (
-              l.includes("mit-license") ||
-              l.includes("://github.com/dotnet/standard/") ||
-              l.includes("://github.com/dotnet/corefx/") ||
-              l.includes("://github.com/dotnet/core-setup/") ||
-              l.endsWith("?linkid=869050") // https://github.com/mono/mono/blob/main/LICENSE
-            ) {
-              licenseContent.id = "MIT";
-            } else if (
-              l.endsWith("?LinkId=329770") || // https://dotnet.microsoft.com/en-us/dotnet_library_license.htm
-              l.endsWith("dotnet_library_license.htm")
-            ) {
-              // as the old .NET framework is not open source and therefore the license not in the SPDX index,
-              // the license info is provided with name ".NET Library License"
-              licenseContent.name = ".NET Library License";
-            } else if (l.includes("opensource.org")) {
-              const possibleId = l
-                .replace("https://", "http://")
-                .replace("http://www.opensource.org/licenses/", "")
-                .toUpperCase();
-              spdxLicenses.forEach((v) => {
-                if (v.toUpperCase() === possibleId) {
-                  licenseContent.id = v;
-                }
-              });
-            } else if (l.includes("apache.org")) {
-              const possibleId = l
-                .replace("https://", "http://")
-                .replace("http://www.apache.org/licenses/LICENSE-", "Apache-")
-                .replace(".txt", "")
-                .toUpperCase();
-              spdxLicenses.forEach((v) => {
-                if (v.toUpperCase() === possibleId) {
-                  licenseContent.id = v;
-                }
-              });
+            let knownLicense = getKnownLicense(l, pkg);
+            if (knownLicense) {
+              licenseContent.id = knownLicense.id;
+              licenseContent.name = knownLicense.name;
             }
             // We always need a name to avoid validation errors
             // Issue: #469
@@ -277,6 +245,65 @@ export function getLicenses(pkg, format = "xml") {
   }
   return undefined;
 }
+
+/**
+ * Method to retrieve known license by known-licenses.json
+ *
+ * @param {String} repoUrl Repository url
+ * @param {String} pkg Bom ref
+ * @return {Object>} Objetct with SPDX license id or license name
+ */
+export const getKnownLicense = function (licenseUrl, pkg) {
+  if (licenseUrl.includes("opensource.org")) {
+    const possibleId = licenseUrl
+      .toLowerCase()
+      .replace("https://", "http://")
+      .replace("http://www.opensource.org/licenses/", "");
+    for (const spdxLicense of spdxLicenses) {
+      if (spdxLicense.toLowerCase() === possibleId) {
+        return { id: spdxLicense };
+      }
+    }
+  } else if (licenseUrl.includes("apache.org")) {
+    const possibleId = licenseUrl
+      .toLowerCase()
+      .replace("https://", "http://")
+      .replace("http://www.apache.org/licenses/license-", "apache-")
+      .replace(".txt", "");
+    for (const spdxLicense of spdxLicenses) {
+      if (spdxLicense.toLowerCase() === possibleId) {
+        return { id: spdxLicense };
+      }
+    }
+  }
+  for (const akLicGroup of knownLicenses) {
+    if (
+      akLicGroup.packageNamespace === "*" ||
+      (pkg.purl && pkg.purl.startsWith(akLicGroup.packageNamespace))
+    ) {
+      for (const akLic of akLicGroup.knownLicenses) {
+        if (akLic.group && akLic.name) {
+          if (akLic.group === "." && akLic.name === pkg.name) {
+            return { id: akLic.license, name: akLic.licenseName };
+          } else if (
+            pkg.group &&
+            pkg.group.includes(akLic.group) &&
+            (akLic.name === pkg.name || akLic.name === "*")
+          ) {
+            return { id: akLic.license, name: akLic.licenseName };
+          }
+        }
+        if (akLic.urlIncludes && licenseUrl.includes(akLic.urlIncludes)) {
+          return { id: akLic.license, name: akLic.licenseName };
+        }
+        if (akLic.urlEndswith && licenseUrl.endsWith(akLic.urlEndswith)) {
+          return { id: akLic.license, name: akLic.licenseName };
+        }
+      }
+    }
+  }
+  return undefined;
+};
 
 /**
  * Tries to find a file containing the license text based on commonly
@@ -3345,26 +3372,23 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
           }
         }
         licObj["id"] = licenseId;
-        if (!licObj["id"] && !licObj["name"]) {
-          licObj["name"] = "CUSTOM";
+        if (licObj["id"] || licObj["name"]) {
+          return licObj;
         }
-        return licObj;
       }
     } catch (err) {
-      return undefined;
-    }
-  } else if (repoMetadata) {
-    const group = repoMetadata.group;
-    const name = repoMetadata.name;
-    if (group && name) {
-      for (const akLic of knownLicenses) {
-        if (akLic.group === "." && akLic.name === name) {
-          return akLic.license;
-        } else if (
-          group.includes(akLic.group) &&
-          (akLic.name === name || akLic.name === "*")
+      if (err && err.message) {
+        if (
+          err.message.includes("rate limit exceeded") &&
+          !process.env.GITHUB_TOKEN
         ) {
-          return akLic.license;
+          console.log(
+            "Rate limit exceeded for REST API of github.com. " +
+              "Please ensure GITHUB_TOKEN is set as environment variable. " +
+              "See: https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api"
+          );
+        } else if (!err.message.includes("404")) {
+          console.log(err);
         }
       }
     }
