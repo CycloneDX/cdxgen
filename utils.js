@@ -242,6 +242,11 @@ export function getLicenses(pkg, format = "xml") {
         return licenseContent;
       })
       .map((l) => ({ license: l }));
+  } else {
+    let knownLicense = getKnownLicense(undefined, pkg);
+    if (knownLicense) {
+      return [{ license: knownLicense }];
+    }
   }
   return undefined;
 }
@@ -254,7 +259,7 @@ export function getLicenses(pkg, format = "xml") {
  * @return {Object>} Objetct with SPDX license id or license name
  */
 export const getKnownLicense = function (licenseUrl, pkg) {
-  if (licenseUrl.includes("opensource.org")) {
+  if (licenseUrl && licenseUrl.includes("opensource.org")) {
     const possibleId = licenseUrl
       .toLowerCase()
       .replace("https://", "http://")
@@ -264,7 +269,7 @@ export const getKnownLicense = function (licenseUrl, pkg) {
         return { id: spdxLicense };
       }
     }
-  } else if (licenseUrl.includes("apache.org")) {
+  } else if (licenseUrl && licenseUrl.includes("apache.org")) {
     const possibleId = licenseUrl
       .toLowerCase()
       .replace("https://", "http://")
@@ -293,10 +298,18 @@ export const getKnownLicense = function (licenseUrl, pkg) {
             return { id: akLic.license, name: akLic.licenseName };
           }
         }
-        if (akLic.urlIncludes && licenseUrl.includes(akLic.urlIncludes)) {
+        if (
+          akLic.urlIncludes &&
+          licenseUrl &&
+          licenseUrl.includes(akLic.urlIncludes)
+        ) {
           return { id: akLic.license, name: akLic.licenseName };
         }
-        if (akLic.urlEndswith && licenseUrl.endsWith(akLic.urlEndswith)) {
+        if (
+          akLic.urlEndswith &&
+          licenseUrl &&
+          licenseUrl.endsWith(akLic.urlEndswith)
+        ) {
           return { id: akLic.license, name: akLic.licenseName };
         }
       }
