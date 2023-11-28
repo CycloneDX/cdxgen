@@ -217,20 +217,10 @@ export function getLicenses(pkg, format = "xml") {
             licenseContent.id = l;
             licenseContent.url = "https://opensource.org/licenses/" + l;
           } else if (l.startsWith("http")) {
-            if (!l.includes("opensource.org")) {
-              licenseContent.name = "CUSTOM";
-            } else {
-              const possibleId = l
-                .replace("http://www.opensource.org/licenses/", "")
-                .toUpperCase();
-              spdxLicenses.forEach((v) => {
-                if (v.toUpperCase() === possibleId) {
-                  licenseContent.id = v;
-                }
-              });
-            }
-            if (l.includes("mit-license")) {
-              licenseContent.id = "MIT";
+            let knownLicense = getKnownLicense(l, pkg);
+            if (knownLicense) {
+              licenseContent.id = knownLicense.id;
+              licenseContent.name = knownLicense.name;
             }
             // We always need a name to avoid validation errors
             // Issue: #469
@@ -252,9 +242,81 @@ export function getLicenses(pkg, format = "xml") {
         return licenseContent;
       })
       .map((l) => ({ license: l }));
+  } else {
+    let knownLicense = getKnownLicense(undefined, pkg);
+    if (knownLicense) {
+      return [{ license: knownLicense }];
+    }
   }
   return undefined;
 }
+
+/**
+ * Method to retrieve known license by known-licenses.json
+ *
+ * @param {String} repoUrl Repository url
+ * @param {String} pkg Bom ref
+ * @return {Object>} Objetct with SPDX license id or license name
+ */
+export const getKnownLicense = function (licenseUrl, pkg) {
+  if (licenseUrl && licenseUrl.includes("opensource.org")) {
+    const possibleId = licenseUrl
+      .toLowerCase()
+      .replace("https://", "http://")
+      .replace("http://www.opensource.org/licenses/", "");
+    for (const spdxLicense of spdxLicenses) {
+      if (spdxLicense.toLowerCase() === possibleId) {
+        return { id: spdxLicense };
+      }
+    }
+  } else if (licenseUrl && licenseUrl.includes("apache.org")) {
+    const possibleId = licenseUrl
+      .toLowerCase()
+      .replace("https://", "http://")
+      .replace("http://www.apache.org/licenses/license-", "apache-")
+      .replace(".txt", "");
+    for (const spdxLicense of spdxLicenses) {
+      if (spdxLicense.toLowerCase() === possibleId) {
+        return { id: spdxLicense };
+      }
+    }
+  }
+  for (const akLicGroup of knownLicenses) {
+    if (
+      akLicGroup.packageNamespace === "*" ||
+      (pkg.purl && pkg.purl.startsWith(akLicGroup.packageNamespace))
+    ) {
+      for (const akLic of akLicGroup.knownLicenses) {
+        if (akLic.group && akLic.name) {
+          if (akLic.group === "." && akLic.name === pkg.name) {
+            return { id: akLic.license, name: akLic.licenseName };
+          } else if (
+            pkg.group &&
+            pkg.group.includes(akLic.group) &&
+            (akLic.name === pkg.name || akLic.name === "*")
+          ) {
+            return { id: akLic.license, name: akLic.licenseName };
+          }
+        }
+        if (
+          akLic.urlIncludes &&
+          licenseUrl &&
+          licenseUrl.includes(akLic.urlIncludes)
+        ) {
+          return { id: akLic.license, name: akLic.licenseName };
+        }
+        if (
+          akLic.urlEndswith &&
+          licenseUrl &&
+          licenseUrl.endsWith(akLic.urlEndswith)
+        ) {
+          return { id: akLic.license, name: akLic.licenseName };
+        }
+      }
+    }
+  }
+  return undefined;
+};
 
 /**
  * Tries to find a file containing the license text based on commonly
@@ -2430,7 +2492,7 @@ export const fetchPomXmlAsJson = async function ({
  * @param {String} name
  * @param {String} version
  *
- * @return {String}
+ * @return {Promise<String>}
  */
 export const fetchPomXml = async function ({
   urlPrefix,
@@ -2467,7 +2529,7 @@ export const parseLicenseEntryOrArrayFromPomXml = function (license) {
  * @param {String} name
  * @param {String} version
  *
- * @return {String} License ID
+ * @return {Promise<String>} License ID
  */
 export const extractLicenseCommentFromPomXml = async function ({
   urlPrefix,
@@ -3287,7 +3349,7 @@ export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
  *
  * @param {String} repoUrl Repository url
  * @param {Object} repoMetadata Object containing group and package name strings
- * @return {String} SPDX license id
+ * @return {Promise<String>} SPDX license id
  */
 export const getRepoLicense = async function (repoUrl, repoMetadata) {
   let apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
@@ -3323,23 +3385,23 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
           }
         }
         licObj["id"] = licenseId;
-        return licObj;
+        if (licObj["id"] || licObj["name"]) {
+          return licObj;
+        }
       }
     } catch (err) {
-      return undefined;
-    }
-  } else if (repoMetadata) {
-    const group = repoMetadata.group;
-    const name = repoMetadata.name;
-    if (group && name) {
-      for (const akLic of knownLicenses) {
-        if (akLic.group === "." && akLic.name === name) {
-          return akLic.license;
-        } else if (
-          group.includes(akLic.group) &&
-          (akLic.name === name || akLic.name === "*")
+      if (err && err.message) {
+        if (
+          err.message.includes("rate limit exceeded") &&
+          !process.env.GITHUB_TOKEN
         ) {
-          return akLic.license;
+          console.log(
+            "Rate limit exceeded for REST API of github.com. " +
+              "Please ensure GITHUB_TOKEN is set as environment variable. " +
+              "See: https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api"
+          );
+        } else if (!err.message.includes("404")) {
+          console.log(err);
         }
       }
     }
@@ -8465,6 +8527,13 @@ export const getNugetMetadata = async function (
             p.license = findLicenseId(body.catalogEntry.licenseExpression);
           } else if (body.catalogEntry.licenseUrl) {
             p.license = findLicenseId(body.catalogEntry.licenseUrl);
+            if (
+              typeof p.license === "string" &&
+              p.license.includes("://github.com/")
+            ) {
+              p.license =
+                (await getRepoLicense(p.license, undefined)) || p.license;
+            }
           }
           if (body.catalogEntry.projectUrl) {
             p.repository = { url: body.catalogEntry.projectUrl };
@@ -8476,6 +8545,17 @@ export const getNugetMetadata = async function (
                 p.version +
                 "/"
             };
+            if (
+              (!p.license || typeof p.license === "string") &&
+              typeof p.repository.url === "string" &&
+              p.repository.url.includes("://github.com/")
+            ) {
+              // license couldn't be properly identified and is still a url,
+              // therefore trying to resolve license via repository
+              p.license =
+                (await getRepoLicense(p.repository.url, undefined)) ||
+                p.license;
+            }
           }
           cdepList.push(p);
         }
