@@ -322,6 +322,29 @@ export const analyzeProject = async (dbObjMap, options) => {
   // Load any existing purl-location information from the sbom.
   // For eg: cdxgen populates this information for javascript projects
   let { purlLocationMap, purlImportsMap } = initFromSbom(components);
+  // Do reachables first so that usages slicing can reuse the atom file
+  if (options.withReachables) {
+    if (
+      options.reachablesSlicesFile &&
+      fs.existsSync(options.reachablesSlicesFile)
+    ) {
+      reachablesSlicesFile = options.reachablesSlicesFile;
+      reachablesSlice = JSON.parse(
+        fs.readFileSync(options.reachablesSlicesFile, "utf-8")
+      );
+    } else {
+      retMap = createSlice(language, dirPath, "reachables", options);
+      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+        reachablesSlicesFile = retMap.slicesFile;
+        reachablesSlice = JSON.parse(
+          fs.readFileSync(retMap.slicesFile, "utf-8")
+        );
+      }
+    }
+  }
+  if (reachablesSlice && Object.keys(reachablesSlice).length) {
+    dataFlowFrames = await collectReachableFrames(language, reachablesSlice);
+  }
   // Reuse existing usages slices
   if (options.usagesSlicesFile && fs.existsSync(options.usagesSlicesFile)) {
     usageSlice = JSON.parse(fs.readFileSync(options.usagesSlicesFile, "utf-8"));
@@ -373,28 +396,6 @@ export const analyzeProject = async (dbObjMap, options) => {
       purlLocationMap,
       purlImportsMap
     );
-  }
-  if (options.withReachables) {
-    if (
-      options.reachablesSlicesFile &&
-      fs.existsSync(options.reachablesSlicesFile)
-    ) {
-      reachablesSlicesFile = options.reachablesSlicesFile;
-      reachablesSlice = JSON.parse(
-        fs.readFileSync(options.reachablesSlicesFile, "utf-8")
-      );
-    } else {
-      retMap = createSlice(language, dirPath, "reachables", options);
-      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
-        reachablesSlicesFile = retMap.slicesFile;
-        reachablesSlice = JSON.parse(
-          fs.readFileSync(retMap.slicesFile, "utf-8")
-        );
-      }
-    }
-  }
-  if (reachablesSlice && Object.keys(reachablesSlice).length) {
-    dataFlowFrames = await collectReachableFrames(language, reachablesSlice);
   }
   return {
     atomFile: retMap.atomFile,
@@ -776,15 +777,19 @@ export const detectServicesFromUDT = (
   servicesMap
 ) => {
   if (
-    ["python", "py"].includes(language) &&
+    ["python", "py", "c", "cpp", "c++"].includes(language) &&
     userDefinedTypes &&
     userDefinedTypes.length
   ) {
     for (const audt of userDefinedTypes) {
       if (
-        audt.name.includes("route") ||
-        audt.name.includes("path") ||
-        audt.name.includes("url")
+        audt.name.toLowerCase().includes("route") ||
+        audt.name.toLowerCase().includes("path") ||
+        audt.name.toLowerCase().includes("url") ||
+        audt.name.toLowerCase().includes("registerhandler") ||
+        audt.name.toLowerCase().includes("endpoint") ||
+        audt.name.toLowerCase().includes("api") ||
+        audt.name.toLowerCase().includes("add_method")
       ) {
         const fields = audt.fields || [];
         if (
@@ -875,13 +880,10 @@ export const extractEndpoints = (language, code) => {
           );
       }
       break;
-    case "py":
-    case "python":
+    default:
       endpoints = (code.match(/['"](.*?)['"]/gi) || [])
         .map((v) => v.replace(/["']/g, "").replace("\n", ""))
         .filter((v) => v.length > 2);
-      break;
-    default:
       break;
   }
   return endpoints;
@@ -910,6 +912,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   const components = bomJson.components || [];
   let occEvidencePresent = false;
   let csEvidencePresent = false;
+  let servicesPresent = false;
   for (const comp of components) {
     if (!comp.purl) {
       continue;
@@ -957,6 +960,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     }
     // Add to existing services
     bomJson.services = (bomJson.services || []).concat(services);
+    servicesPresent = true;
   }
   if (options.annotate) {
     if (!bomJson.annotations) {
@@ -993,7 +997,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   bomJson.metadata.timestamp = new Date().toISOString();
   delete bomJson.signature;
   fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, 2));
-  if (occEvidencePresent || csEvidencePresent) {
+  if (occEvidencePresent || csEvidencePresent || servicesPresent) {
     console.log(evinseOutFile, "created successfully.");
   } else {
     console.log(

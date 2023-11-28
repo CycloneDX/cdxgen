@@ -5536,7 +5536,7 @@ export const parseComposerLock = function (pkgLockFile) {
   if (existsSync(pkgLockFile)) {
     let lockData = {};
     try {
-      lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
+      lockData = JSON.parse(readFileSync(pkgLockFile, { encoding: "utf-8" }));
     } catch (e) {
       console.error("Invalid composer.lock file:", pkgLockFile);
       return [];
@@ -5605,7 +5605,7 @@ export const parseSbtTree = (sbtTreeFile) => {
   const dependenciesList = [];
   const keys_cache = {};
   const level_trees = {};
-  const tmpA = readFileSync(sbtTreeFile, "utf-8").split("\n");
+  const tmpA = readFileSync(sbtTreeFile, { encoding: "utf-8" }).split("\n");
   let last_level = 0;
   let last_purl = "";
   let stack = [];
@@ -5737,7 +5737,9 @@ export const parseSbtTree = (sbtTreeFile) => {
 export const parseSbtLock = function (pkgLockFile) {
   const pkgList = [];
   if (existsSync(pkgLockFile)) {
-    const lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
+    const lockData = JSON.parse(
+      readFileSync(pkgLockFile, { encoding: "utf-8" })
+    );
     if (lockData && lockData.dependencies) {
       for (const pkg of lockData.dependencies) {
         const artifacts = pkg.artifacts || undefined;
@@ -6194,7 +6196,9 @@ export const parseSwiftResolved = (resolvedFile) => {
   const pkgList = [];
   if (existsSync(resolvedFile)) {
     try {
-      const pkgData = JSON.parse(readFileSync(resolvedFile, "utf8"));
+      const pkgData = JSON.parse(
+        readFileSync(resolvedFile, { encoding: "utf-8" })
+      );
       let resolvedList = [];
       if (pkgData.pins) {
         resolvedList = pkgData.pins;
@@ -6387,7 +6391,7 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         }
       }
       if (existsSync(pomname)) {
-        pomData = parsePomXml(readFileSync(pomname, "utf-8"));
+        pomData = parsePomXml(readFileSync(pomname, { encoding: "utf-8" }));
         if (pomData) {
           const purlObj = new PackageURL(
             "maven",
@@ -7318,7 +7322,9 @@ export const findAppModules = function (
   ];
   executeAtom(src, args);
   if (existsSync(slicesFile)) {
-    const slicesData = JSON.parse(readFileSync(slicesFile), "utf8");
+    const slicesData = JSON.parse(readFileSync(slicesFile), {
+      encoding: "utf-8"
+    });
     if (slicesData && Object.keys(slicesData) && slicesData.modules) {
       retList = slicesData.modules;
     } else {
@@ -7791,7 +7797,7 @@ export const componentSorter = (a, b) => {
 };
 
 export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
-  const dotGraphData = readFileSync(dotFile, "utf-8");
+  const dotGraphData = readFileSync(dotFile, { encoding: "utf-8" });
   const pkgList = [];
   const dependenciesMap = {};
   const pkgBomRefMap = {};
@@ -7900,12 +7906,13 @@ export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
 };
 
 export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
-  let cmakeListData = readFileSync(cmakeListFile, "utf-8");
+  let cmakeListData = readFileSync(cmakeListFile, { encoding: "utf-8" });
   const pkgList = [];
   const pkgAddedMap = {};
   const versionSpecifiersMap = {};
   const versionsMap = {};
   let parentComponent = {};
+  const templateValues = {};
   cmakeListData = cmakeListData
     .replace(/^ {2}/g, "")
     .replace(/\(\r\n/g, "(")
@@ -7920,7 +7927,20 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
     let group = "";
     let path = undefined;
     let name_list = [];
-    if (l.startsWith("project") && !Object.keys(parentComponent).length) {
+    if (l.startsWith("set")) {
+      const tmpA = l.replace("set(", "").replace(")", "").trim().split(" ");
+      if (tmpA && tmpA.length === 2) {
+        templateValues[tmpA[0]] = tmpA[1];
+      }
+    } else if (
+      l.startsWith("project") &&
+      !Object.keys(parentComponent).length
+    ) {
+      if (l.includes("${")) {
+        for (const tmplKey of Object.keys(templateValues)) {
+          l = l.replace("${" + tmplKey + "}", templateValues[tmplKey] || "");
+        }
+      }
       const tmpA = l.replace("project (", "project(").split("project(");
       if (tmpA && tmpA.length > 1) {
         const tmpB = (tmpA[1] || "")
@@ -7938,7 +7958,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
         if (versionIndex > -1 && tmpB.length > versionIndex) {
           parentVersion = tmpB[versionIndex + 1];
         }
-        if (parentName && parentName.length) {
+        if (parentName && parentName.length && !parentName.includes("$")) {
           parentComponent = {
             group: options.projectGroup || "",
             name: parentName,
@@ -8120,7 +8140,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
               methods: [
                 {
                   technique: "source-code-analysis",
-                  confidence: 0,
+                  confidence: 0.5,
                   value: `Filename ${cmakeListFile}`
                 }
               ]
@@ -8154,7 +8174,7 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
         ospkg.evidence = {
           identity: {
             field: "purl",
-            confidence: 0,
+            confidence: 0.8,
             methods: [
               {
                 technique: "filename",
@@ -8188,47 +8208,122 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
   const epkgMap = {};
   let parentComponent = undefined;
   const dependsOn = [];
+  (epkgList || []).forEach((p) => {
+    epkgMap[p.group + "/" + p.name] = p;
+  });
   // Let's look for any vcpkg.json file to tell us about the directory we're scanning
   // users can use this file to give us a clue even if they do not use vcpkg library manager
   if (existsSync(join(src, "vcpkg.json"))) {
-    const vcPkgData = JSON.parse(join(src, "vcpkg.json"));
-    if (
-      vcPkgData &&
-      Object.keys(vcPkgData).length &&
-      vcPkgData.name &&
-      vcPkgData.version
-    ) {
+    const vcPkgData = JSON.parse(
+      readFileSync(join(src, "vcpkg.json"), { encoding: "utf-8" })
+    );
+    if (vcPkgData && Object.keys(vcPkgData).length && vcPkgData.name) {
       const parentPurl = new PackageURL(
         pkgType,
         "",
         vcPkgData.name,
-        vcPkgData.version,
+        vcPkgData.version || "",
         null,
         null
       ).toString();
       parentComponent = {
         name: vcPkgData.name,
-        version: vcPkgData.version,
+        version: vcPkgData.version || "",
         description: vcPkgData.description,
         license: vcPkgData.license,
         purl: parentPurl,
+        type: "application",
         "bom-ref": decodeURIComponent(parentPurl)
       };
       if (vcPkgData.homepage) {
         parentComponent.homepage = { url: vcPkgData.homepage };
       }
-    }
+      // Are there any dependencies declared in vcpkg.json
+      if (vcPkgData.dependencies && Array.isArray(vcPkgData.dependencies)) {
+        for (const avcdep of vcPkgData.dependencies) {
+          let avcpkgName = undefined;
+          let scope = undefined;
+          if (typeof avcdep === "string" || avcdep instanceof String) {
+            avcpkgName = avcdep;
+          } else if (Object.keys(avcdep).length && avcdep.name) {
+            avcpkgName = avcdep.name;
+            if (avcdep.host) {
+              scope = "optional";
+            }
+          }
+          // Is this a dependency we haven't seen before including the all lower and upper case version?
+          if (
+            avcpkgName &&
+            !epkgMap["/" + avcpkgName] &&
+            !epkgMap["/" + avcpkgName.toLowerCase()] &&
+            !epkgMap["/" + avcpkgName.toUpperCase()]
+          ) {
+            const pkgPurl = new PackageURL(
+              pkgType,
+              "",
+              avcpkgName,
+              "",
+              null,
+              null
+            ).toString();
+            const apkg = {
+              group: "",
+              name: avcpkgName,
+              type: pkgType,
+              version: "",
+              purl: pkgPurl,
+              scope,
+              "bom-ref": decodeURIComponent(pkgPurl),
+              evidence: {
+                identity: {
+                  field: "purl",
+                  confidence: 0.5,
+                  methods: [
+                    {
+                      technique: "source-code-analysis",
+                      confidence: 0.5,
+                      value: `Filename ${join(src, "vcpkg.json")}`
+                    }
+                  ]
+                }
+              }
+            };
+            if (!pkgAddedMap[avcpkgName]) {
+              pkgList.push(apkg);
+              dependsOn.push(apkg["bom-ref"]);
+              pkgAddedMap[avcpkgName] = true;
+            }
+          }
+        }
+      }
+    } // if
   } else if (existsSync(join(src, "CMakeLists.txt"))) {
     const retMap = parseCmakeLikeFile(join(src, "CMakeLists.txt"), pkgType);
     if (retMap.parentComponent && Object.keys(retMap.parentComponent).length) {
       parentComponent = retMap.parentComponent;
     }
+  } else if (options.projectName && options.projectVersion) {
+    parentComponent = {
+      group: options.projectGroup || "",
+      name: options.projectName || "",
+      version: "" + options.projectVersion || "latest",
+      type: "application"
+    };
+    const parentPurl = new PackageURL(
+      pkgType,
+      parentComponent.group,
+      parentComponent.name,
+      parentComponent.version,
+      null,
+      null
+    ).toString();
+    parentComponent.purl = parentPurl;
+    parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
   }
-  (epkgList || []).forEach((p) => {
-    epkgMap[p.name] = p;
-  });
   if (options.usagesSlicesFile && existsSync(options.usagesSlicesFile)) {
-    sliceData = JSON.parse(readFileSync(options.usagesSlicesFile));
+    sliceData = JSON.parse(
+      readFileSync(options.usagesSlicesFile, { encoding: "utf-8" })
+    );
     if (DEBUG_MODE) {
       console.log("Re-using existing slices file", options.usagesSlicesFile);
     }
@@ -8241,7 +8336,9 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     );
   }
   const usageData = parseCUsageSlice(sliceData);
-  for (const afile of Object.keys(usageData)) {
+  for (let afile of Object.keys(usageData)) {
+    // Normalize windows separator
+    afile = afile.replace("..\\", "").replace(/\\/g, "/");
     let fileName = basename(afile);
     if (!fileName || !fileName.length) {
       continue;
@@ -8260,14 +8357,14 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     // We need to resolve the name to an os package here
     let name = fileName.replace(extn, "");
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
-      epkgMap[name] || {
+      epkgMap[group + "/" + name] || {
         name,
         group,
         version: "",
         type: pkgType
       };
     // If this is a relative file, there is a good chance we can reuse the project group
-    if (!afile.startsWith(_sep)) {
+    if (!afile.startsWith(_sep) && !group.length) {
       group = options.projectGroup || "";
     }
     if (!apkg.purl) {
@@ -8295,9 +8392,16 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
       apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
     }
     if (usageData[afile]) {
-      const usymbols = Array.from(usageData[afile]).filter(
-        (v) => !v.startsWith("<") && !v.startsWith("__")
-      );
+      const usymbols = Array.from(usageData[afile])
+        .filter(
+          (v) =>
+            !v.startsWith("<") &&
+            !v.startsWith("__") &&
+            v !== "main" &&
+            !v.includes("anonymous_") &&
+            !v.includes(afile)
+        )
+        .sort();
       if (!apkg["properties"] && usymbols.length) {
         apkg["properties"] = [
           { name: "ImportedSymbols", value: usymbols.join(", ") }
@@ -8344,7 +8448,9 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
       : [];
   return {
     parentComponent,
-    pkgList,
+    pkgList: pkgList.sort(function (a, b) {
+      return a.purl.localeCompare(b.purl);
+    }),
     dependenciesList
   };
 };
@@ -8377,34 +8483,21 @@ export const parseCUsageSlice = (sliceData) => {
         continue;
       }
       const slFileName = slice.fileName;
-      const slLineNumber = slice.lineNumber || 0;
       const allLines = usageData[slFileName] || new Set();
       if (slice.fullName && slice.fullName.length > 3) {
-        allLines.add(slice.fullName + "|" + slLineNumber);
         if (slice.code && slice.code.startsWith("#include")) {
           usageData[slice.fullName] = new Set();
+        } else {
+          allLines.add(slice.fullName);
         }
       }
       for (const ausage of slice.usages) {
-        if (ausage.targetObj.resolvedMethod) {
-          allLines.add(ausage.targetObj.resolvedMethod + "|" + slLineNumber);
-        } else {
-          const targetObjName = ausage.targetObj.name.replace(/\n/g, " ");
-          // We need to still filter out <global>, <clinit> style targets
-          if (
-            ausage.targetObj.lineNumber === slLineNumber ||
-            targetObjName.startsWith("<") ||
-            (slice.fullName.length > 3 &&
-              targetObjName.includes(slice.fullName))
-          ) {
-            continue;
-          }
-          allLines.add(targetObjName + "|" + slLineNumber);
-        }
         let calls = ausage?.invokedCalls || [];
         calls = calls.concat(ausage?.argToCalls || []);
         for (const acall of calls) {
-          allLines.add(acall.resolvedMethod + "|" + slLineNumber);
+          if (!acall.resolvedMethod.includes("->")) {
+            allLines.add(acall.resolvedMethod);
+          }
         }
       }
       if (Array.from(allLines).length) {
