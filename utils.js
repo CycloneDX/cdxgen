@@ -4680,11 +4680,12 @@ export const parseOpenapiSpecData = function (oaData) {
   } catch (e) {
     return servlist;
   }
-
-  // Check if 'info' and 'info.title' exist
-  const name = oaData.info && oaData.info.title ? oaData.info.title.replace(/ /g, "-") : "default-name";
-  const version = oaData.info && oaData.info.version ? oaData.info.version : "latest";
-
+  const name = oaData.info && oaData.info.title
+    ? oaData.info.title.replace(/ /g, "-")
+    : "default-name";
+  const version = oaData.info && oaData.info.version
+    ? oaData.info.version
+    : "latest";
   const aservice = {
     "bom-ref": `urn:service:${name}:${version}`,
     name,
