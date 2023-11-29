@@ -20,8 +20,10 @@ import {
   rmSync,
   unlinkSync,
   writeFileSync,
-  readdirSync
+  readdirSync,
+  createReadStream
 } from "node:fs";
+import { createHash } from "node:crypto";
 import got from "got";
 import Arborist from "@npmcli/arborist";
 import path from "node:path";
@@ -120,6 +122,11 @@ export const includeMavenTestScope =
 export const FETCH_LICENSE =
   process.env.FETCH_LICENSE &&
   ["true", "1"].includes(process.env.FETCH_LICENSE);
+
+// Wether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
+export const SEARCH_MAVEN_ORG =
+  !process.env.SEARCH_MAVEN_ORG ||
+  ["true", "1"].includes(process.env.SEARCH_MAVEN_ORG);
 
 const MAX_LICENSE_ID_LENGTH = 100;
 
@@ -6644,6 +6651,22 @@ export const getPomPropertiesFromMavenDir = function (mavenDir) {
 };
 
 /**
+ *
+ * @param {string} hashName name of hash algorithm
+ * @param {string} path path to file
+ * @returns {Promise<String>} hex value of hash
+ */
+async function checksumFile(hashName, path) {
+  return new Promise((resolve, reject) => {
+    const hash = createHash(hashName);
+    const stream = createReadStream(path);
+    stream.on("error", (err) => reject(err));
+    stream.on("data", (chunk) => hash.update(chunk));
+    stream.on("end", () => resolve(hash.digest("hex")));
+  });
+}
+
+/**
  * Method to extract a war or ear file
  *
  * @param {string} jarFile Path to jar file
@@ -6652,7 +6675,7 @@ export const getPomPropertiesFromMavenDir = function (mavenDir) {
  *
  * @return pkgList Package list
  */
-export const extractJarArchive = function (
+export const extractJarArchive = async function (
   jarFile,
   tempDir,
   jarNSMapping = {}
@@ -6750,6 +6773,23 @@ export const extractJarArchive = function (
           version = pomProperties["version"],
           confidence = 1,
           technique = "manifest-analysis";
+        if ((!group || !name || !version) && SEARCH_MAVEN_ORG) {
+          const sha = await checksumFile("sha1", jf);
+          const searchurl =
+            "http://search.maven.org/solrsearch/select?q=1:%22" +
+            sha +
+            "%22&rows=20&wt=json";
+          const res = await cdxgenAgent.get(searchurl, {
+            responseType: "json"
+          });
+          const data = res && res.body ? res.body["response"] : undefined;
+          if (data && data["numFound"] == 1) {
+            const jarInfo = data["docs"][0];
+            group = jarInfo["g"];
+            name = jarInfo["a"];
+            version = jarInfo["v"];
+          }
+        }
         if ((!group || !name || !version) && existsSync(manifestFile)) {
           confidence = 0.8;
           const jarMetadata = parseJarManifest(

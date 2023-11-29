@@ -1081,7 +1081,7 @@ export const createJarBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${jar}`);
       }
-      const dlist = extractJarArchive(jar, tempDir);
+      const dlist = await extractJarArchive(jar, tempDir);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -1123,7 +1123,7 @@ export const createJavaBom = async (path, options) => {
       }
       const tempDir = mkdtempSync(join(tmpdir(), "war-deps-"));
       jarNSMapping = collectJarNS(tempDir);
-      pkgList = extractJarArchive(path, tempDir, jarNSMapping);
+      pkgList = await extractJarArchive(path, tempDir, jarNSMapping);
       if (pkgList.length) {
         pkgList = await getMvnMetadata(pkgList);
       }
@@ -3541,7 +3541,7 @@ export const createJenkinsBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = extractJarArchive(f, tempDir);
+      const dlist = await extractJarArchive(f, tempDir);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
