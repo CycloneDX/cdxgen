@@ -24,35 +24,45 @@ test("parseImageName tests", () => {
     repo: "debian",
     tag: "",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "",
+    name: "debian"
   });
   expect(parseImageName("debian:latest")).toEqual({
     registry: "",
     repo: "debian",
     tag: "latest",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "",
+    name: "debian"
   });
   expect(parseImageName("shiftleft/scan:v1.15.6")).toEqual({
     registry: "",
     repo: "shiftleft/scan",
     tag: "v1.15.6",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "shiftleft",
+    name: "scan"
   });
   expect(parseImageName("localhost:5000/shiftleft/scan:v1.15.6")).toEqual({
     registry: "localhost:5000",
     repo: "shiftleft/scan",
     tag: "v1.15.6",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "shiftleft",
+    name: "scan"
   });
   expect(parseImageName("localhost:5000/shiftleft/scan")).toEqual({
     registry: "localhost:5000",
     repo: "shiftleft/scan",
     tag: "",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "shiftleft",
+    name: "scan"
   });
   expect(
     parseImageName("foocorp.jfrog.io/docker/library/eclipse-temurin:latest")
@@ -61,7 +71,9 @@ test("parseImageName tests", () => {
     repo: "docker/library/eclipse-temurin",
     tag: "latest",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "docker/library",
+    name: "eclipse-temurin"
   });
   expect(
     parseImageName(
@@ -72,7 +84,9 @@ test("parseImageName tests", () => {
     repo: "shiftleft/scan-java",
     tag: "",
     digest: "5d008306a7c5d09ba0161a3408fa3839dc2c9dd991ffb68adecc1040399fe9e1",
-    platform: ""
+    platform: "",
+    group: "shiftleft",
+    name: "scan-java"
   });
 }, 120000);
 

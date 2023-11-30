@@ -3833,13 +3833,9 @@ export const createContainerSpecLikeBom = async (path, options) => {
             }
             const imageObj = parseImageName(img.image);
 
-            const imageObjParts = imageObj.repo.split("/");
-            const imageName = imageObjParts.pop().toLowerCase();
-            const groupName = imageObjParts.join("/");
-
             const pkg = {
-              name: imageName,
-              group: groupName ?? "",
+              name: imageObj.name,
+              group: imageObj.group,
               version:
                 imageObj.tag ||
                 (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
