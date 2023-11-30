@@ -3832,19 +3832,25 @@ export const createContainerSpecLikeBom = async (path, options) => {
               console.log(`Parsing image ${img.image}`);
             }
             const imageObj = parseImageName(img.image);
+
             const pkg = {
-              name: imageObj.repo,
+              name: imageObj.name,
+              group: imageObj.group,
               version:
                 imageObj.tag ||
                 (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
               qualifiers: {},
-              properties: commonProperties
+              properties: commonProperties,
+              type: "container"
             };
             if (imageObj.registry) {
-              pkg["qualifiers"]["repository_url"] = imageObj.registry;
+              pkg["qualifiers"]["repository_url"] = img.image;
             }
             if (imageObj.platform) {
               pkg["qualifiers"]["platform"] = imageObj.platform;
+            }
+            if (imageObj.tag) {
+              pkg["qualifiers"]["tag"] = imageObj.tag;
             }
             // Create an entry for the oci image
             const imageBomData = buildBomNSData(options, [pkg], "oci", {

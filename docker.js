@@ -416,11 +416,16 @@ export const parseImageName = (fullImageName) => {
     repo: "",
     tag: "",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "",
+    name: ""
   };
   if (!fullImageName) {
     return nameObj;
   }
+  // ensure it's lowercased
+  fullImageName = fullImageName.toLowerCase();
+
   // Extract registry name
   if (
     fullImageName.includes("/") &&
@@ -437,6 +442,7 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(tmpA[0] + "/", "");
     }
   }
+
   // Extract digest name
   if (fullImageName.includes("@sha256:")) {
     const tmpA = fullImageName.split("@sha256:");
@@ -445,6 +451,7 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace("@sha256:" + nameObj.digest, "");
     }
   }
+
   // Extract tag name
   if (fullImageName.includes(":")) {
     const tmpA = fullImageName.split(":");
@@ -453,11 +460,20 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(":" + nameObj.tag, "");
     }
   }
-  if (fullImageName && fullImageName.startsWith("library/")) {
-    fullImageName = fullImageName.replace("library/", "");
-  }
+
   // The left over string is the repo name
   nameObj.repo = fullImageName;
+  nameObj.name = fullImageName;
+
+  // extract group name
+  if (fullImageName.includes("/")) {
+    const tmpA = fullImageName.split("/");
+    if (tmpA.length > 1) {
+      nameObj.name = tmpA[tmpA.length - 1];
+      nameObj.group = fullImageName.replace("/" + tmpA[tmpA.length - 1], "");
+    }
+  }
+
   return nameObj;
 };
 
