@@ -11,3 +11,7 @@ definitions:
         username: $USERNAME
         password: $PASSWORD
         email: $EMAIL
+
+    - step: &build-step-pipe-deploy
+      script:
+        - pipe: atlassian/aws/s3-deploy:0.2.2

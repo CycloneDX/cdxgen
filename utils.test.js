@@ -2758,7 +2758,7 @@ test("parse bitbucket-pipelines", async () => {
   let dep_list = parseBitbucketPipelinesFile(
     readFileSync("./test/data/bitbucket-pipelines.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(3);
+  expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
     image: "node:16"
   });
@@ -2767,6 +2767,9 @@ test("parse bitbucket-pipelines", async () => {
   });
   expect(dep_list[2]).toEqual({
     image: "some.private.org/docker/library/node:20"
+  });
+  expect(dep_list[3]).toEqual({
+    image: "atlassian/aws/s3-deploy:0.2.2"
   });
 });
 

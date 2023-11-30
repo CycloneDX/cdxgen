@@ -4501,6 +4501,7 @@ export const parseBitbucketPipelinesFile = function (fileContents) {
       continue; // skip commented out lines
     }
 
+    // Assume this is a private build image object
     if (line.startsWith("name:") && privateImageBlockFound) {
       const imageName = line.split("name:").pop().trim();
 
@@ -4511,6 +4512,7 @@ export const parseBitbucketPipelinesFile = function (fileContents) {
       privateImageBlockFound = false;
     }
 
+    // Docker image usage
     if (line.startsWith("image:")) {
       const imageName = line.split("image:").pop().trim();
 
@@ -4531,6 +4533,15 @@ export const parseBitbucketPipelinesFile = function (fileContents) {
           image: imageName
         });
       }
+    }
+
+    // Pipe usage
+    if (line.startsWith("- pipe:")) {
+      const pipeName = line.split("- pipe:").pop().trim();
+
+      imgList.push({
+        image: pipeName
+      });
     }
   }
 
