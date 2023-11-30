@@ -37,6 +37,15 @@ test("parseImageName tests", () => {
     group: "",
     name: "debian"
   });
+  expect(parseImageName("library/debian:latest")).toEqual({
+    registry: "",
+    repo: "library/debian",
+    tag: "latest",
+    digest: "",
+    platform: "",
+    group: "library",
+    name: "debian"
+  });
   expect(parseImageName("shiftleft/scan:v1.15.6")).toEqual({
     registry: "",
     repo: "shiftleft/scan",

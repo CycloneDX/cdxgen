@@ -460,9 +460,6 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(":" + nameObj.tag, "");
     }
   }
-  if (fullImageName && fullImageName.startsWith("library/")) {
-    fullImageName = fullImageName.replace("library/", "");
-  }
 
   // The left over string is the repo name
   nameObj.repo = fullImageName;
