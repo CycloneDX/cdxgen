@@ -15,3 +15,7 @@ definitions:
     - step: &build-step-pipe-deploy
       script:
         - pipe: atlassian/aws/s3-deploy:0.2.2
+
+    - step: &build-step-pipe-deploy-alternate
+      script:
+        - pipe: docker://some.private.org/docker/library/some-pipe:1.0.0
