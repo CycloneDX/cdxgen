@@ -4537,7 +4537,11 @@ export const parseBitbucketPipelinesFile = function (fileContents) {
 
     // Pipe usage
     if (line.startsWith("- pipe:")) {
-      const pipeName = line.split("- pipe:").pop().trim();
+      let pipeName = line.split("- pipe:").pop().trim();
+
+      if (pipeName.startsWith("docker://")) {
+        pipeName = pipeName.replace("docker://", "");
+      }
 
       imgList.push({
         image: pipeName
