@@ -1,0 +1,21 @@
+image: node:16
+
+definitions:
+  steps:
+    - step: &build-step
+      image: node:18
+
+    - step: &build-step-private
+      image:
+        name: some.private.org/docker/library/node:20
+        username: $USERNAME
+        password: $PASSWORD
+        email: $EMAIL
+
+    - step: &build-step-pipe-deploy
+      script:
+        - pipe: atlassian/aws/s3-deploy:0.2.2
+
+    - step: &build-step-pipe-deploy-alternate
+      script:
+        - pipe: docker://some.private.org/docker/library/some-pipe:1.0.0

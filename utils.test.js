@@ -74,7 +74,8 @@ import {
   parseSbtTree,
   parseCmakeDotFile,
   parseCmakeLikeFile,
-  parseContainerFile
+  parseContainerFile,
+  parseBitbucketPipelinesFile
 } from "./utils.js";
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
@@ -2750,6 +2751,28 @@ test("parse containerfiles / dockerfiles", async () => {
   });
   expect(dep_list[4]).toEqual({
     image: "hello-world:latest@sha256:1234567890abcdef"
+  });
+});
+
+test("parse bitbucket-pipelines", async () => {
+  let dep_list = parseBitbucketPipelinesFile(
+    readFileSync("./test/data/bitbucket-pipelines.yml", { encoding: "utf-8" })
+  );
+  expect(dep_list.length).toEqual(5);
+  expect(dep_list[0]).toEqual({
+    image: "node:16"
+  });
+  expect(dep_list[1]).toEqual({
+    image: "node:18"
+  });
+  expect(dep_list[2]).toEqual({
+    image: "some.private.org/docker/library/node:20"
+  });
+  expect(dep_list[3]).toEqual({
+    image: "atlassian/aws/s3-deploy:0.2.2"
+  });
+  expect(dep_list[4]).toEqual({
+    image: "some.private.org/docker/library/some-pipe:1.0.0"
   });
 });
 
