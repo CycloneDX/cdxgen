@@ -3832,11 +3832,17 @@ export const createContainerSpecLikeBom = async (path, options) => {
               console.log(`Parsing image ${img.image}`);
             }
             const imageObj = parseImageName(img.image);
+
+            const imageObjParts = imageObj.repo.split("/");
+            const imageName = imageObjParts.pop().toLowerCase();
+            const groupName = imageObjParts.join("/");
+
             const pkg = {
-              name: imageObj.repo.split("/").pop().toLowerCase(),
+              name: imageName,
+              group: groupName ?? "",
               version:
                 imageObj.tag ||
-                (imageObj.digest ? "sha256:" + imageObj.digest : "latest"), // TODO - this may not work if both a tag and digest are provided
+                (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
               qualifiers: {},
               properties: commonProperties,
               type: "container"
