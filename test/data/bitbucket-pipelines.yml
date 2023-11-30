@@ -1,0 +1,13 @@
+image: node:16
+
+definitions:
+  steps:
+    - step: &build-step
+      image: node:18
+
+    - step: &build-step-private
+      image:
+        name: some.private.org/docker/library/node:20
+        username: $USERNAME
+        password: $PASSWORD
+        email: $EMAIL

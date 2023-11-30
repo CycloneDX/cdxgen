@@ -105,7 +105,8 @@ import {
   MAX_BUFFER,
   getNugetMetadata,
   frameworksList,
-  parseContainerFile
+  parseContainerFile,
+  parseBitbucketPipelinesFile
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -3719,6 +3720,11 @@ export const createContainerSpecLikeBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "*Dockerfile*",
     options
   );
+  const bbPipelineFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "bitbucket-pipelines.yml",
+    options
+  );
   const cfFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*Containerfile*",
@@ -3747,27 +3753,35 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   // Privado.ai json files
   const privadoFiles = getAllFiles(path, ".privado/" + "*.json", options);
-  // Parse yaml manifest files, dockerfiles or containerfiles
-  if (dcFiles.length || dfFiles.length || cfFiles.length) {
-    for (const f of [...dcFiles, ...dfFiles, ...cfFiles]) {
+
+  // Parse yaml manifest files, dockerfiles, containerfiles or bitbucket pipeline files
+  if (
+    dcFiles.length ||
+    dfFiles.length ||
+    cfFiles.length ||
+    bbPipelineFiles.length
+  ) {
+    for (const f of [...dcFiles, ...dfFiles, ...cfFiles, ...bbPipelineFiles]) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
 
       const dData = readFileSync(f, { encoding: "utf-8" });
-      let imglist = [];
+      let imgList = [];
       // parse yaml manifest files
-      if (f.endsWith(".yml") || f.endsWith(".yaml")) {
-        imglist = parseContainerSpecData(dData);
+      if (f.endsWith("bitbucket-pipelines.yml")) {
+        imgList = parseBitbucketPipelinesFile(dData);
+      } else if (f.endsWith(".yml") || f.endsWith(".yaml")) {
+        imgList = parseContainerSpecData(dData);
       } else {
-        imglist = parseContainerFile(dData);
+        imgList = parseContainerFile(dData);
       }
 
-      if (imglist && imglist.length) {
+      if (imgList && imgList.length) {
         if (DEBUG_MODE) {
-          console.log("Images identified in", f, "are", imglist);
+          console.log("Images identified in", f, "are", imgList);
         }
-        for (const img of imglist) {
+        for (const img of imgList) {
           const commonProperties = [
             {
               name: "SrcFile",

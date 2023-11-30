@@ -4455,12 +4455,14 @@ export const parseContainerFile = function (fileContents) {
   const imgList = [];
 
   let buildStageNames = [];
-  for (const line of fileContents.split("\n")) {
-    if (line.trim().startsWith("#")) {
+  for (let line of fileContents.split("\n")) {
+    line = line.trim();
+
+    if (line.startsWith("#")) {
       continue; // skip commented out lines
     }
 
-    if (line.includes("FROM")) {
+    if (line.startsWith("FROM")) {
       const fromStatement = line.split("FROM")[1].split("AS");
 
       const imageStatement = fromStatement[0].trim();
@@ -4481,6 +4483,53 @@ export const parseContainerFile = function (fileContents) {
 
       if (buildStageName) {
         buildStageNames.push(buildStageName);
+      }
+    }
+  }
+
+  return imgList;
+};
+
+export const parseBitbucketPipelinesFile = function (fileContents) {
+  const imgList = [];
+
+  let privateImageBlockFound = false;
+
+  for (let line of fileContents.split("\n")) {
+    line = line.trim();
+    if (line.startsWith("#")) {
+      continue; // skip commented out lines
+    }
+
+    if (line.startsWith("name:") && privateImageBlockFound) {
+      const imageName = line.split("name:").pop().trim();
+
+      imgList.push({
+        image: imageName
+      });
+
+      privateImageBlockFound = false;
+    }
+
+    if (line.startsWith("image:")) {
+      const imageName = line.split("image:").pop().trim();
+
+      /**
+       * Assume this is a private build image object
+       * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-private-build-images
+       */
+      if (imageName === "") {
+        privateImageBlockFound = true;
+        continue;
+      } else {
+        /**
+         * Assume this is a public build image
+         * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-public-build-images
+         */
+
+        imgList.push({
+          image: imageName
+        });
       }
     }
   }
