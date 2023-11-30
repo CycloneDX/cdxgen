@@ -243,8 +243,8 @@ const getDefaultOptions = (forRegistry) => {
         opts.prefixUrl = isWin
           ? WIN_LOCAL_TLS
           : isDockerRootless
-          ? `http://unix:${homedir()}/.docker/run/docker.sock:`
-          : "http://unix:/var/run/docker.sock:";
+            ? `http://unix:${homedir()}/.docker/run/docker.sock:`
+            : "http://unix:/var/run/docker.sock:";
       }
     }
   } else {
@@ -688,7 +688,7 @@ export const extractTar = async (fullImageName, dir) => {
         strict: true,
         C: dir,
         portable: true,
-        onwarn: () => {},
+        onwarn: () => { },
         filter: (path, entry) => {
           // Some files are known to cause issues with extract
           if (
@@ -938,7 +938,7 @@ export const exportImage = async (fullImageName) => {
           strict: true,
           C: tempDir,
           portable: true,
-          onwarn: () => {}
+          onwarn: () => { }
         })
       );
     } catch (err) {
@@ -955,7 +955,7 @@ export const exportImage = async (fullImageName) => {
               strict: true,
               C: tempDir,
               portable: true,
-              onwarn: () => {}
+              onwarn: () => { }
             })
           );
         } catch (err) {
