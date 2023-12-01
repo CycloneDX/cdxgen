@@ -4,23 +4,29 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
   workflow_dispatch:
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['21.x']
-        os: ['ubuntu-latest', 'windows-latest']
+        node-version: ["21.x"]
+        os: ["ubuntu-latest", "windows-latest"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '19'
+          distribution: "temurin"
+          java-version: "19"
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -54,130 +60,130 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
       - uses: actions/checkout@v4
         with:
-          repository: 'ShiftLeftSecurity/shiftleft-java-example'
-          path: 'repotests/shiftleft-java-example'
+          repository: "ShiftLeftSecurity/shiftleft-java-example"
+          path: "repotests/shiftleft-java-example"
       - uses: actions/checkout@v4
         with:
-          repository: 'ShiftLeftSecurity/shiftleft-ts-example'
-          path: 'repotests/shiftleft-ts-example'
+          repository: "ShiftLeftSecurity/shiftleft-ts-example"
+          path: "repotests/shiftleft-ts-example"
       - uses: actions/checkout@v4
         with:
-          repository: 'ShiftLeftSecurity/shiftleft-go-example'
-          path: 'repotests/shiftleft-go-example'
+          repository: "ShiftLeftSecurity/shiftleft-go-example"
+          path: "repotests/shiftleft-go-example"
       - uses: actions/checkout@v4
         with:
-          repository: 'prabhu/shiftleft-scala-example'
-          path: 'repotests/shiftleft-scala-example'
+          repository: "prabhu/shiftleft-scala-example"
+          path: "repotests/shiftleft-scala-example"
       - uses: actions/checkout@v4
         with:
-          repository: 'HooliCorp/vulnerable_net_core'
-          path: 'repotests/vulnerable_net_core'
+          repository: "HooliCorp/vulnerable_net_core"
+          path: "repotests/vulnerable_net_core"
       - uses: actions/checkout@v4
         with:
-          repository: 'HooliCorp/Goatly.NET'
-          path: 'repotests/Goatly.NET'
+          repository: "HooliCorp/Goatly.NET"
+          path: "repotests/Goatly.NET"
       - uses: actions/checkout@v4
         with:
-          repository: 'HooliCorp/DjanGoat'
-          path: 'repotests/DjanGoat'
+          repository: "HooliCorp/DjanGoat"
+          path: "repotests/DjanGoat"
       - uses: actions/checkout@v4
         with:
-          repository: 'prabhu/Vulnerable-Web-Application'
-          path: 'repotests/Vulnerable-Web-Application'
+          repository: "prabhu/Vulnerable-Web-Application"
+          path: "repotests/Vulnerable-Web-Application"
       - uses: actions/checkout@v4
         with:
-          repository: 'prabhu/railsgoat'
-          path: 'repotests/railsgoat'
+          repository: "prabhu/railsgoat"
+          path: "repotests/railsgoat"
       - uses: actions/checkout@v4
         with:
-          repository: 'bazelbuild/examples'
-          path: 'repotests/bazel-examples'
+          repository: "bazelbuild/examples"
+          path: "repotests/bazel-examples"
       - uses: actions/checkout@v4
         with:
-          repository: 'flutter/gallery'
-          ref: 'v2.10.2'
-          path: 'repotests/gallery'
+          repository: "flutter/gallery"
+          ref: "v2.10.2"
+          path: "repotests/gallery"
       - uses: actions/checkout@v4
         with:
-          repository: 'gojek/ziggurat'
-          ref: '4.9.4'
-          path: 'repotests/ziggurat'
+          repository: "gojek/ziggurat"
+          ref: "4.9.4"
+          path: "repotests/ziggurat"
       - uses: actions/checkout@v4
         with:
-          repository: 'apple/swift-markdown'
-          ref: '0.3.0'
-          path: 'repotests/swift-markdown'
+          repository: "apple/swift-markdown"
+          ref: "0.3.0"
+          path: "repotests/swift-markdown"
       - uses: actions/checkout@v4
         with:
-          repository: 'GoogleCloudPlatform/microservices-demo'
-          ref: 'v0.8.1'
-          path: 'repotests/microservices-demo'
+          repository: "GoogleCloudPlatform/microservices-demo"
+          ref: "v0.8.1"
+          path: "repotests/microservices-demo"
       - uses: actions/checkout@v4
         with:
-          repository: 'zoom/meetingsdk-vuejs-sample'
-          ref: 'v2.18.0'
-          path: 'repotests/meetingsdk-vuejs-sample'
+          repository: "zoom/meetingsdk-vuejs-sample"
+          ref: "v2.18.0"
+          path: "repotests/meetingsdk-vuejs-sample"
       - uses: actions/checkout@v4
         with:
-          repository: 'sveltejs/examples'
-          path: 'repotests/sveltejs-examples'
+          repository: "sveltejs/examples"
+          path: "repotests/sveltejs-examples"
       - uses: actions/checkout@v4
         with:
-          repository: 'openpbs/openpbs'
-          ref: 'v23.06.06'
-          path: 'repotests/openpbs'
+          repository: "openpbs/openpbs"
+          ref: "v23.06.06"
+          path: "repotests/openpbs"
       - uses: actions/checkout@v4
         with:
-          repository: 'home-assistant/android'
-          ref: '2023.11.3'
-          path: 'repotests/ha-android'
+          repository: "home-assistant/android"
+          ref: "2023.11.3"
+          path: "repotests/ha-android"
       - uses: actions/checkout@v4
         with:
-          repository: 'rust-lang/rust'
-          ref: '1.74.0'
-          path: 'repotests/rs-rust'
+          repository: "rust-lang/rust"
+          ref: "1.74.0"
+          path: "repotests/rs-rust"
       - uses: actions/checkout@v4
         with:
-          repository: 'rust-lang/cargo'
-          ref: '0.75.0'
-          path: 'repotests/rs-cargo'
+          repository: "rust-lang/cargo"
+          ref: "0.75.0"
+          path: "repotests/rs-cargo"
       - uses: actions/checkout@v4
         with:
-          repository: 'Keats/validator'
-          ref: 'v0.15.0'
-          path: 'repotests/rs-validator'
+          repository: "Keats/validator"
+          ref: "v0.15.0"
+          path: "repotests/rs-validator"
       - uses: actions/checkout@v4
         with:
-          repository: 'tokio-rs/axum'
-          ref: 'axum-v0.6.20'
-          path: 'repotests/rs-axum'
+          repository: "tokio-rs/axum"
+          ref: "axum-v0.6.20"
+          path: "repotests/rs-axum"
       - uses: actions/checkout@v4
         with:
-          repository: 'fsprojects/FAKE'
-          ref: '6.0.0'
-          path: 'repotests/dotnet-paket'
+          repository: "fsprojects/FAKE"
+          ref: "6.0.0"
+          path: "repotests/dotnet-paket"
       - uses: actions/checkout@v4
         with:
-          repository: 'appthreat/blint'
-          ref: 'v1.0.34'
-          path: 'repotests/blint'
+          repository: "appthreat/blint"
+          ref: "v1.0.34"
+          path: "repotests/blint"
       - uses: actions/checkout@v4
         with:
-          repository: 'hoolicorp/java-sec-code'
-          path: 'repotests/java-sec-code'
+          repository: "hoolicorp/java-sec-code"
+          path: "repotests/java-sec-code"
       - uses: actions/checkout@v3
         with:
-          repository: 'DefectDojo/django-DefectDojo'
-          ref: '2.28.2'
-          path: 'repotests/django-DefectDojo'
+          repository: "DefectDojo/django-DefectDojo"
+          ref: "2.28.2"
+          path: "repotests/django-DefectDojo"
       - uses: actions/checkout@v3
         with:
-          repository: 'googleprojectzero/Jackalope'
-          path: 'repotests/Jackalope'
+          repository: "googleprojectzero/Jackalope"
+          path: "repotests/Jackalope"
       - uses: actions/checkout@v3
         with:
-          repository: 'hritik14/broken-mvn-wrapper'
-          path: 'repotests/broken-mvn-wrapper'
+          repository: "hritik14/broken-mvn-wrapper"
+          path: "repotests/broken-mvn-wrapper"
       - uses: dtolnay/rust-toolchain@stable
       - name: repotests evidence
         run: |
