@@ -83,7 +83,8 @@ const parseQueryString = (q, body, options = {}) => {
     "filter",
     "only",
     "autoCompositions",
-    "gitBranch"
+    "gitBranch",
+    "active"
   ];
 
   for (const param of queryParams) {

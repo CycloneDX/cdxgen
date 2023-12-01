@@ -105,7 +105,8 @@ import {
   MAX_BUFFER,
   getNugetMetadata,
   frameworksList,
-  parseContainerFile
+  parseContainerFile,
+  parseBitbucketPipelinesFile
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -3148,6 +3149,18 @@ export const createCppBom = (path, options) => {
         retMap.parentComponent.type = "library";
         pkgList.push(retMap.parentComponent);
       }
+      // Retain the dependency tree from cmake
+      if (retMap.dependenciesList) {
+        if (dependencies.length) {
+          dependencies = mergeDependencies(
+            dependencies,
+            retMap.dependenciesList,
+            parentComponent
+          );
+        } else {
+          dependencies = retMap.dependenciesList;
+        }
+      }
     }
   }
   // The need for java >= 17 with atom is causing confusions since there could be C projects
@@ -3719,6 +3732,11 @@ export const createContainerSpecLikeBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "*Dockerfile*",
     options
   );
+  const bbPipelineFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "bitbucket-pipelines.yml",
+    options
+  );
   const cfFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*Containerfile*",
@@ -3747,27 +3765,35 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   // Privado.ai json files
   const privadoFiles = getAllFiles(path, ".privado/" + "*.json", options);
-  // Parse yaml manifest files, dockerfiles or containerfiles
-  if (dcFiles.length || dfFiles.length || cfFiles.length) {
-    for (const f of [...dcFiles, ...dfFiles, ...cfFiles]) {
+
+  // Parse yaml manifest files, dockerfiles, containerfiles or bitbucket pipeline files
+  if (
+    dcFiles.length ||
+    dfFiles.length ||
+    cfFiles.length ||
+    bbPipelineFiles.length
+  ) {
+    for (const f of [...dcFiles, ...dfFiles, ...cfFiles, ...bbPipelineFiles]) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
 
       const dData = readFileSync(f, { encoding: "utf-8" });
-      let imglist = [];
+      let imgList = [];
       // parse yaml manifest files
-      if (f.endsWith(".yml") || f.endsWith(".yaml")) {
-        imglist = parseContainerSpecData(dData);
+      if (f.endsWith("bitbucket-pipelines.yml")) {
+        imgList = parseBitbucketPipelinesFile(dData);
+      } else if (f.endsWith(".yml") || f.endsWith(".yaml")) {
+        imgList = parseContainerSpecData(dData);
       } else {
-        imglist = parseContainerFile(dData);
+        imgList = parseContainerFile(dData);
       }
 
-      if (imglist && imglist.length) {
+      if (imgList && imgList.length) {
         if (DEBUG_MODE) {
-          console.log("Images identified in", f, "are", imglist);
+          console.log("Images identified in", f, "are", imgList);
         }
-        for (const img of imglist) {
+        for (const img of imgList) {
           const commonProperties = [
             {
               name: "SrcFile",
@@ -3832,19 +3858,25 @@ export const createContainerSpecLikeBom = async (path, options) => {
               console.log(`Parsing image ${img.image}`);
             }
             const imageObj = parseImageName(img.image);
+
             const pkg = {
-              name: imageObj.repo,
+              name: imageObj.name,
+              group: imageObj.group,
               version:
                 imageObj.tag ||
                 (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
               qualifiers: {},
-              properties: commonProperties
+              properties: commonProperties,
+              type: "container"
             };
             if (imageObj.registry) {
-              pkg["qualifiers"]["repository_url"] = imageObj.registry;
+              pkg["qualifiers"]["repository_url"] = img.image;
             }
             if (imageObj.platform) {
               pkg["qualifiers"]["platform"] = imageObj.platform;
+            }
+            if (imageObj.tag) {
+              pkg["qualifiers"]["tag"] = imageObj.tag;
             }
             // Create an entry for the oci image
             const imageBomData = buildBomNSData(options, [pkg], "oci", {

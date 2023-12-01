@@ -1,0 +1,44 @@
+{
+  "name": "google-cloud-cpp-development",
+  "description": "Describes the vcpkg dependencies for vcpkg development.",
+  "homepage": "https://github.com/googleapis/google-cloud-cpp",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "abseil",
+    "crc32c",
+    {
+      "name": "curl",
+      "features": [
+        "ssl"
+      ]
+    },
+    {
+      "$description": "If cross-compiling, we need the gRPC protoc plugin on the 'host' environment.",
+      "name": "grpc",
+      "host": true
+    },
+    {
+      "$description": "If cross-compiling, we need the protoc compiler on the 'host' environment.",
+      "name": "protobuf",
+      "host": true
+    },
+    "grpc",
+    "protobuf",
+    "nlohmann-json",
+    "benchmark",
+    "gtest",
+    {
+      "$description": "Only used for the opentelemetry feature.",
+      "name": "opentelemetry-cpp"
+    },
+    {
+      "$description": "Only used for the docfx feature.",
+      "name": "pugixml"
+    },
+    {
+      "$description": "Only used for the docfx feature.",
+      "name": "yaml-cpp"
+    }
+  ]
+}
