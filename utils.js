@@ -6774,20 +6774,24 @@ export const extractJarArchive = async function (
           confidence = 1,
           technique = "manifest-analysis";
         if ((!group || !name || !version) && SEARCH_MAVEN_ORG) {
-          const sha = await checksumFile("sha1", jf);
-          const searchurl =
-            "http://search.maven.org/solrsearch/select?q=1:%22" +
-            sha +
-            "%22&rows=20&wt=json";
-          const res = await cdxgenAgent.get(searchurl, {
-            responseType: "json"
-          });
-          const data = res && res.body ? res.body["response"] : undefined;
-          if (data && data["numFound"] == 1) {
-            const jarInfo = data["docs"][0];
-            group = jarInfo["g"];
-            name = jarInfo["a"];
-            version = jarInfo["v"];
+          try {
+            const sha = await checksumFile("sha1", jf);
+            const searchurl =
+              "http://search.maven.org/solrsearch/select?q=1:%22" +
+              sha +
+              "%22&rows=20&wt=json";
+            const res = await cdxgenAgent.get(searchurl, {
+              responseType: "json"
+            });
+            const data = res && res.body ? res.body["response"] : undefined;
+            if (data && data["numFound"] == 1) {
+              const jarInfo = data["docs"][0];
+              group = jarInfo["g"];
+              name = jarInfo["a"];
+              version = jarInfo["v"];
+            }
+          } catch (err) {
+            console.log(err);
           }
         }
         if ((!group || !name || !version) && existsSync(manifestFile)) {
