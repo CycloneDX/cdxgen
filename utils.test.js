@@ -3107,6 +3107,18 @@ test("parseCmakeLikeFile tests", () => {
     version: ""
   });
   retMap = parseCmakeLikeFile(
+    "./test/data/cmakes/CMakeLists-tpl.txt",
+    "generic"
+  );
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:generic/aurora-examples",
+    group: "",
+    name: "aurora-examples",
+    purl: "pkg:generic/aurora-examples",
+    type: "application",
+    version: ""
+  });
+  retMap = parseCmakeLikeFile(
     "./test/data/cmakes/mongoc-config.cmake",
     "conan"
   );

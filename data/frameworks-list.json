@@ -141,6 +141,25 @@
     "pkg:cargo/nickel",
     "pkg:cargo/yew",
     "pkg:cargo/azul",
-    "pkg:cargo/conrod"
+    "pkg:cargo/conrod",
+    "pkg:generic/Aws",
+    "pkg:generic/Azure",
+    "pkg:generic/google",
+    "pkg:generic/CivetServer",
+    "pkg:generic/civetweb",
+    "pkg:generic/cpprest",
+    "pkg:generic/QCoreApplication",
+    "pkg:generic/drogon",
+    "pkg:generic/wfrest",
+    "pkg:generic/http",
+    "pkg:generic/fio",
+    "pkg:generic/onion",
+    "pkg:generic/lwan",
+    "pkg:generic/oatpp",
+    "pkg:generic/QDjango",
+    "pkg:generic/userver",
+    "pkg:generic/Wt/",
+    "pkg:generic/klone",
+    "pkg:generic/kcgi"
   ]
 }

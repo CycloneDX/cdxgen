@@ -3149,6 +3149,18 @@ export const createCppBom = (path, options) => {
         retMap.parentComponent.type = "library";
         pkgList.push(retMap.parentComponent);
       }
+      // Retain the dependency tree from cmake
+      if (retMap.dependenciesList) {
+        if (dependencies.length) {
+          dependencies = mergeDependencies(
+            dependencies,
+            retMap.dependenciesList,
+            parentComponent
+          );
+        } else {
+          dependencies = retMap.dependenciesList;
+        }
+      }
     }
   }
   // The need for java >= 17 with atom is causing confusions since there could be C projects
