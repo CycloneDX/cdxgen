@@ -6845,7 +6845,7 @@ export const extractJarArchive = async function (
           try {
             const sha = await checksumFile("sha1", jf);
             const searchurl =
-              "http://search.maven.org/solrsearch/select?q=1:%22" +
+              "https://search.maven.org/solrsearch/select?q=1:%22" +
               sha +
               "%22&rows=20&wt=json";
             const res = await cdxgenAgent.get(searchurl, {
@@ -6857,6 +6857,7 @@ export const extractJarArchive = async function (
               group = jarInfo["g"];
               name = jarInfo["a"];
               version = jarInfo["v"];
+              technique = "hash-comparison";
             }
           } catch (err) {
             console.log(err);
