@@ -3657,7 +3657,8 @@ export const createSwiftBom = async (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-  } else if (swiftFiles.length) {
+  }
+  if (swiftFiles.length) {
     for (const f of swiftFiles) {
       const basePath = dirname(f);
       if (completedPath.includes(basePath)) {
