@@ -108,7 +108,8 @@ import {
   parseContainerFile,
   parseBitbucketPipelinesFile,
   getPyMetadata,
-  addEvidenceForDotnet
+  addEvidenceForDotnet,
+  getSwiftPackageMetadata
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -3628,7 +3629,7 @@ export const createHelmBom = (path, options) => {
  * @param path to the project
  * @param options Parse options from the cli
  */
-export const createSwiftBom = (path, options) => {
+export const createSwiftBom = async (path, options) => {
   const swiftFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift",
@@ -3656,8 +3657,7 @@ export const createSwiftBom = (path, options) => {
         pkgList = pkgList.concat(dlist);
       }
     }
-  }
-  if (swiftFiles.length) {
+  } else if (swiftFiles.length) {
     for (const f of swiftFiles) {
       const basePath = dirname(f);
       if (completedPath.includes(basePath)) {
@@ -3703,6 +3703,9 @@ export const createSwiftBom = (path, options) => {
         options.failOnError && process.exit(1);
       }
     }
+  }
+  if (FETCH_LICENSE) {
+    const retMap = await getSwiftPackageMetadata(pkgList);
   }
   return buildBomNSData(options, pkgList, "swift", {
     src: path,
@@ -4899,7 +4902,7 @@ export const createMultiXBom = async (pathList, options) => {
         )
       );
     }
-    bomData = createSwiftBom(path, options);
+    bomData = await createSwiftBom(path, options);
     if (
       bomData &&
       bomData.bomJson &&
@@ -5329,7 +5332,7 @@ export const createXBom = async (path, options) => {
     options
   );
   if (swiftFiles.length || pkgResolvedFiles.length) {
-    return createSwiftBom(path, options);
+    return await createSwiftBom(path, options);
   }
 };
 
@@ -5585,7 +5588,7 @@ export const createBom = async (path, options) => {
     case "cloudbuild":
       return createCloudBuildBom(path, options);
     case "swift":
-      return createSwiftBom(path, options);
+      return await createSwiftBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/cyclonedx/cdxgen/issues/95

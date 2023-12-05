@@ -404,6 +404,38 @@ export function readLicenseText(
   return null;
 }
 
+export const getSwiftPackageMetadata = async (pkgList) => {
+  const regex = /^(?:https?:\/\/)?(?:www\.)?github\.com\/(.*?)(?:\.git)*$/m;
+  const cdepList = [];
+  for (const p of pkgList) {
+    try {
+      const match = regex.exec(p.repository.url)[1];
+      let key = p.name;
+      let body = {};
+      if (metadata_cache[key]) {
+        body = metadata_cache[key];
+      } else {
+        const res = await cdxgenAgent.get("https://api.github.com/repos/" + match + "/license", {
+          responseType: "json"
+        });
+
+        const licenseRes = await cdxgenAgent.get(res.body.download_url);
+        body = licenseRes.body;
+        metadata_cache[key] = body;
+      }
+      p.license = body;
+      cdepList.push(p);
+
+    } catch (err) {
+      cdepList.push(p);
+      if (DEBUG_MODE) {
+        console.error(p, "was not found on github");
+      }
+    }
+  }
+  return cdepList;
+};
+
 /**
  * Method to retrieve metadata for npm packages by querying npmjs
  *
