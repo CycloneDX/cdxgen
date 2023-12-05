@@ -3705,7 +3705,7 @@ export const createSwiftBom = async (path, options) => {
     }
   }
   if (FETCH_LICENSE) {
-    const retMap = await getSwiftPackageMetadata(pkgList);
+    pkgList = await getSwiftPackageMetadata(pkgList);
   }
   return buildBomNSData(options, pkgList, "swift", {
     src: path,

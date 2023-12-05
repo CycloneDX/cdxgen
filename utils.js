@@ -408,6 +408,10 @@ export const getSwiftPackageMetadata = async (pkgList) => {
   const regex = /^(?:https?:\/\/)?(?:www\.)?github\.com\/(.*?)(?:\.git)*$/m;
   const cdepList = [];
   for (const p of pkgList) {
+    if (!p.repository || !p.repository.url) {
+      continue;
+    }
+
     try {
       const match = regex.exec(p.repository.url)[1];
       let key = p.name;
