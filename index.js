@@ -3698,6 +3698,13 @@ export const createSwiftBom = (path, options) => {
       }
     }
   }
+  if (options.unspecifiedPrefix) {
+    for (const p of pkgList) {
+      if (p.version === "unspecified") {
+        p.group = options.unspecifiedPrefix + "." + p.group;
+      }
+    }
+  }
   return buildBomNSData(options, pkgList, "swift", {
     src: path,
     filename: swiftFiles.join(", "),

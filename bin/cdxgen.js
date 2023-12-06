@@ -220,6 +220,10 @@ const args = yargs(hideBin(process.argv))
     description: "Additional glob pattern(s) to ignore",
     hidden: true
   })
+  .option("unspecified-prefix", {
+    description:
+      "Set a  group name prefix for local swift packages with unspecified version. Needed to define packages as internal for DependencyTrack"
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
