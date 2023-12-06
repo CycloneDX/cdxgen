@@ -404,45 +404,20 @@ export function readLicenseText(
   return null;
 }
 
-const getSwiftPackageLicenseFromGithub = async (p, pathname) => {
-  try {
-    const match = /^\/(.*?)(?:(?:\.git)|$)/m.exec(pathname)[1];
-    let key = p.name;
-    let body = {};
-    if (metadata_cache[key]) {
-      body = metadata_cache[key];
-    } else {
-      const res = await cdxgenAgent.get("https://api.github.com/repos/" + match + "/license", {
-        responseType: "json"
-      });
-      const licenseRes = await cdxgenAgent.get(res.body.download_url);
-      body = licenseRes.body;
-      metadata_cache[key] = body;
-    }
-    p.license = body;
-  } catch (err) {
-    if (DEBUG_MODE) {
-      console.error(p, "was not found on github");
-    }
-  }
-  return p;
-}
-
 export const getSwiftPackageMetadata = async (pkgList) => {
   const cdepList = [];
   for (const p of pkgList) {
     if (!p.repository || !p.repository.url) {
       continue;
     }
-    let url = new URL(p.repository.url);
-    if (url.host == "github.com") {
-      cdepList.push(await getSwiftPackageLicenseFromGithub(p, url.pathname));
+    if (p.repository.url.includes("://github.com/")) {
+      p.license = await getRepoLicense(p.repository.url, undefined);
     } else {
-      cdepList.push(p);
       if (DEBUG_MODE) {
         console.error(url.host, "is currently not supported to fetch for licenses");
       }
     }
+    cdepList.push(p);
   }
   return cdepList;
 };
