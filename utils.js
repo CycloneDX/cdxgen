@@ -419,7 +419,7 @@ export const getSwiftPackageMetadata = async (pkgList) => {
         }
       } else {
         if (DEBUG_MODE) {
-          console.error(
+          console.log(
             p.repository.url,
             "is currently not supported to fetch for licenses"
           );
@@ -427,7 +427,7 @@ export const getSwiftPackageMetadata = async (pkgList) => {
       }
     } else {
       if (DEBUG_MODE) {
-        console.error("missing repository url for", p.name);
+        console.warn("missing repository url for", p.name);
       }
     }
     cdepList.push(p);
