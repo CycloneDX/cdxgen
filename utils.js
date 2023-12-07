@@ -410,11 +410,24 @@ export const getSwiftPackageMetadata = async (pkgList) => {
     if (!p.repository || !p.repository.url) {
       continue;
     }
-    if (p.repository.url.includes("://github.com/")) {
-      p.license = await getRepoLicense(p.repository.url, undefined);
+    if (p.repository && p.repository.url) {
+      if (p.repository.url.includes("://github.com/")) {
+        try {
+          p.license = await getRepoLicense(p.repository.url, undefined);
+        } catch (e) {
+          console.error("error fetching repo license from", p.repository.url);
+        }
+      } else {
+        if (DEBUG_MODE) {
+          console.error(
+            p.repository.url,
+            "is currently not supported to fetch for licenses"
+          );
+        }
+      }
     } else {
       if (DEBUG_MODE) {
-        console.error(url.host, "is currently not supported to fetch for licenses");
+        console.error("missing repository url for", p.name);
       }
     }
     cdepList.push(p);
