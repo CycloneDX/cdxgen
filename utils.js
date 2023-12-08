@@ -6832,13 +6832,11 @@ export const extractJarArchive = function (
             if (tmpA && tmpA.length > 1) {
               const lastPart = tmpA[tmpA.length - 1];
               // Bug #768. Check if we have any number before simplifying the name.
-              if (/\d+/.test(lastPart)) {
+              if (/\d/.test(lastPart)) {
                 if (!version || version === "") {
                   version = lastPart.replace(".jar", "");
                 }
-                if (!name || name === "") {
-                  name = jarname.replace("-" + lastPart, "") || "";
-                }
+                name = jarname.replace("-" + lastPart, "") || "";
               }
             }
           }
