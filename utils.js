@@ -129,11 +129,11 @@ export const SEARCH_MAVEN_ORG =
   ["true", "1"].includes(process.env.SEARCH_MAVEN_ORG);
 
 // circuit breaker for search maven.org
-let SEARCH_MAVEN_ORG_ERRORS = 0;
+let search_maven_org_errors = 0;
 const MAX_SEARCH_MAVEN_ORG_ERRORS = 5;
 
 // circuit breaker for get repo license
-let GET_REPO_LICENSE_ERRORS = 0;
+let get_repo_license_errors = 0;
 const MAX_GET_REPO_LICENSE_ERRORS = 5;
 
 const MAX_LICENSE_ID_LENGTH = 100;
@@ -3369,7 +3369,7 @@ export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
 export const getRepoLicense = async function (repoUrl, repoMetadata) {
   let apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
   // Perform github lookups
-  if (apiUrl && GET_REPO_LICENSE_ERRORS < MAX_GET_REPO_LICENSE_ERRORS) {
+  if (apiUrl && get_repo_license_errors < MAX_GET_REPO_LICENSE_ERRORS) {
     let licenseUrl = apiUrl + "/license";
     const headers = {};
     if (process.env.GITHUB_TOKEN) {
@@ -3415,10 +3415,10 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
               "Please ensure GITHUB_TOKEN is set as environment variable. " +
               "See: https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api"
           );
-          GET_REPO_LICENSE_ERRORS++;
+          get_repo_license_errors++;
         } else if (!err.message.includes("404")) {
           console.log(err);
-          GET_REPO_LICENSE_ERRORS++;
+          get_repo_license_errors++;
         }
       }
     }
@@ -6854,7 +6854,7 @@ export const extractJarArchive = async function (
         if (
           (!group || !name || !version) &&
           SEARCH_MAVEN_ORG &&
-          SEARCH_MAVEN_ORG_ERRORS < MAX_SEARCH_MAVEN_ORG_ERRORS
+          search_maven_org_errors < MAX_SEARCH_MAVEN_ORG_ERRORS
         ) {
           try {
             const sha = await checksumFile("sha1", jf);
@@ -6876,7 +6876,7 @@ export const extractJarArchive = async function (
           } catch (err) {
             if (err && err.message && !err.message.includes("404")) {
               console.log(err);
-              SEARCH_MAVEN_ORG_ERRORS++;
+              search_maven_org_errors++;
             }
           }
         }
