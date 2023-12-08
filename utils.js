@@ -6682,7 +6682,7 @@ export const encodeForPurl = (s) => {
 export const getPomPropertiesFromMavenDir = function (mavenDir) {
   let pomProperties = {};
   if (existsSync(mavenDir) && lstatSync(mavenDir).isDirectory()) {
-    const pomPropertiesFiles = getAllFiles(mavenDir, "pom.properties");
+    const pomPropertiesFiles = getAllFiles(mavenDir, "**/pom.properties");
     if (pomPropertiesFiles && pomPropertiesFiles.length) {
       const pomPropertiesString = readFileSync(pomPropertiesFiles[0], {
         encoding: "utf-8"
