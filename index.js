@@ -106,7 +106,8 @@ import {
   getNugetMetadata,
   frameworksList,
   parseContainerFile,
-  parseBitbucketPipelinesFile
+  parseBitbucketPipelinesFile,
+  getPyMetadata
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -2574,6 +2575,9 @@ export const createPythonBom = async (path, options) => {
   // Clean up
   if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
+  }
+  if (FETCH_LICENSE) {
+    pkgList = await getPyMetadata(pkgList, false);
   }
   return buildBomNSData(options, pkgList, "pypi", {
     allImports,
