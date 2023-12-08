@@ -1272,8 +1272,9 @@ test("parse project.assets.json", async () => {
     dependenciesList: [],
     pkgList: []
   });
-  const dep_list = await parseCsProjAssetsData(
-    readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
+  let dep_list = await parseCsProjAssetsData(
+    readFileSync("./test/data/project.assets.json", { encoding: "utf-8" }),
+    "./test/data/project.assets.json"
   );
   expect(dep_list["pkgList"].length).toEqual(302);
   expect(dep_list["pkgList"][0]).toEqual({
@@ -1309,6 +1310,26 @@ test("parse project.assets.json", async () => {
     ],
     ref: "pkg:nuget/Castle.Core.Tests@0.0.0"
   });
+  dep_list = await parseCsProjAssetsData(
+    readFileSync("./test/data/project.assets1.json", { encoding: "utf-8" }),
+    "./test/data/project.assets1.json"
+  );
+  expect(dep_list["pkgList"].length).toEqual(43);
+  expect(dep_list["pkgList"][0]).toEqual({
+    "bom-ref": "pkg:nuget/Podcast.Server@1.0.0",
+    purl: "pkg:nuget/Podcast.Server@1.0.0",
+    group: "",
+    name: "Podcast.Server",
+    type: "application",
+    version: "1.0.0"
+  });
+  /*
+  const pkgList = addEvidenceForDotnet(
+    dep_list.pkgList,
+    "./test/data/dosai-methods.json"
+  );
+  expect(pkgList.length).toEqual(43);
+  */
 });
 
 test("parse packages.lock.json", async () => {

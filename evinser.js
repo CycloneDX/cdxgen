@@ -244,7 +244,9 @@ export const createSlice = (
   args.push(path.resolve(filePath));
   const result = executeAtom(filePath, args);
   if (!result || !fs.existsSync(slicesFile)) {
-    console.warn(`Unable to generate ${sliceType} slice using atom.`);
+    console.warn(
+      `Unable to generate ${sliceType} slice using atom. Check if this is a supported language.`
+    );
     console.log(
       "Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
     );
