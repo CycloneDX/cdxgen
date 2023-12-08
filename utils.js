@@ -20,7 +20,6 @@ import {
   rmSync,
   unlinkSync,
   writeFileSync,
-  readdirSync,
   createReadStream
 } from "node:fs";
 import { createHash } from "node:crypto";
@@ -6700,30 +6699,13 @@ export const encodeForPurl = (s) => {
 export const getPomPropertiesFromMavenDir = function (mavenDir) {
   let pomProperties = {};
   if (existsSync(mavenDir) && lstatSync(mavenDir).isDirectory()) {
-    let mavenDirEntries = readdirSync(mavenDir, { withFileTypes: true });
-    mavenDirEntries.forEach((mavenDirEntry) => {
-      if (mavenDirEntry.isDirectory()) {
-        let groupDirEntries = readdirSync(
-          join(mavenDirEntry.path, mavenDirEntry.name),
-          { withFileTypes: true }
-        );
-        groupDirEntries.forEach((groupDirEntry) => {
-          if (groupDirEntry.isDirectory()) {
-            let pomPropertiesFile = join(
-              groupDirEntry.path,
-              groupDirEntry.name,
-              "pom.properties"
-            );
-            if (existsSync(pomPropertiesFile)) {
-              const pomPropertiesString = readFileSync(pomPropertiesFile, {
-                encoding: "utf-8"
-              });
-              pomProperties = parsePomProperties(pomPropertiesString);
-            }
-          }
-        });
-      }
-    });
+    const pomPropertiesFiles = getAllFiles(mavenDir, "**/pom.properties");
+    if (pomPropertiesFiles && pomPropertiesFiles.length) {
+      const pomPropertiesString = readFileSync(pomPropertiesFiles[0], {
+        encoding: "utf-8"
+      });
+      pomProperties = parsePomProperties(pomPropertiesString);
+    }
   }
   return pomProperties;
 };
