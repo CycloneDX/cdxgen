@@ -6827,17 +6827,17 @@ export const extractJarArchive = function (
           if (!name || !version || name === "" || version === "") {
             confidence = 0.5;
             technique = "filename";
+            name = jarname.replace(".jar", "");
             const tmpA = jarname.split("-");
             if (tmpA && tmpA.length > 1) {
               const lastPart = tmpA[tmpA.length - 1];
-              if (!version || version === "") {
-                version = lastPart.replace(".jar", "");
-              }
-              if (!name || name === "") {
+              // Bug #768. Check if we have any number before simplifying the name.
+              if (/\d/.test(lastPart)) {
+                if (!version || version === "") {
+                  version = lastPart.replace(".jar", "");
+                }
                 name = jarname.replace("-" + lastPart, "") || "";
               }
-            } else {
-              name = jarname.replace(".jar", "");
             }
           }
           if (
