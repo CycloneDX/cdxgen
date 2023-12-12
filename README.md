@@ -371,6 +371,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | GRADLE_DEPENDENCY_TASK       | By default cdxgen use the task "dependencies" to collect packages. Set to override the task name.                                    |
 | SBT_CACHE_DIR                | Specify sbt cache directory. Useful for class name resolving                                                                         |
 | FETCH_LICENSE                | Set this variable to `true` or `1` to fetch license information from the registry. npm and golang                                    |
+| SEARCH_MAVEN_ORG             | If maven metadata is missing in jar file, a search is performed on search.maven.org. Set to `false` or `0` to disable search.        |
 | USE_GOSUM                    | Set to `true` or `1` to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod          |
 | CDXGEN_TIMEOUT_MS            | Default timeout for known execution involving maven, gradle or sbt                                                                   |
 | CDXGEN_SERVER_TIMEOUT_MS     | Default timeout in server mode                                                                                                       |
