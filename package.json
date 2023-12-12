@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "9.9.6",
+  "version": "9.9.8",
   "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
@@ -55,17 +55,17 @@
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
   "dependencies": {
-    "@babel/parser": "^7.23.5",
-    "@babel/traverse": "^7.23.5",
+    "@babel/parser": "^7.23.6",
+    "@babel/traverse": "^7.23.6",
     "@npmcli/arborist": "7.2.0",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "1.1.1",
-    "find-up": "^6.3.0",
+    "find-up": "6.3.0",
     "glob": "^10.3.10",
     "global-agent": "^3.0.0",
-    "got": "^13.0.0",
+    "got": "13.0.0",
     "iconv-lite": "^0.6.3",
     "js-yaml": "^4.1.0",
     "jws": "^4.0.0",
@@ -84,14 +84,15 @@
   },
   "optionalDependencies": {
     "@appthreat/atom": "1.7.2",
-    "@cyclonedx/cdxgen-plugins-bin": "^1.4.0",
-    "@cyclonedx/cdxgen-plugins-bin-arm64": "^1.4.0",
-    "@cyclonedx/cdxgen-plugins-bin-ppc64": "^1.4.0",
+    "@cyclonedx/cdxgen-plugins-bin": "^1.5.4",
+    "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "^1.5.4",
+    "@cyclonedx/cdxgen-plugins-bin-arm64": "^1.5.4",
+    "@cyclonedx/cdxgen-plugins-bin-ppc64": "^1.5.4",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
     "jsonata": "^2.0.3",
-    "sequelize": "^6.35.1",
+    "sequelize": "^6.35.2",
     "sqlite3": "^5.1.6"
   },
   "files": [
@@ -102,10 +103,10 @@
   "devDependencies": {
     "caxa": "^3.0.1",
     "docsify-cli": "^4.4.4",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jest": "^29.7.0",
-    "prettier": "3.1.0"
+    "prettier": "3.1.1"
   }
 }

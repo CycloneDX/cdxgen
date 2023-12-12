@@ -5206,7 +5206,7 @@ export const parseCsPkgData = async function (pkgData) {
   return pkgList;
 };
 
-export const parseCsProjData = async function (csProjData) {
+export const parseCsProjData = async function (csProjData, projFile) {
   const pkgList = [];
   if (!csProjData) {
     return pkgList;
@@ -5235,6 +5235,27 @@ export const parseCsProjData = async function (csProjData) {
         }
         pkg.name = pref.Include;
         pkg.version = pref.Version;
+        if (projFile) {
+          pkg.properties = [
+            {
+              name: "SrcFile",
+              value: projFile
+            }
+          ];
+          pkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.7,
+                  value: projFile
+                }
+              ]
+            }
+          };
+        }
         pkgList.push(pkg);
       }
       // .net framework use Reference
@@ -5249,6 +5270,27 @@ export const parseCsProjData = async function (csProjData) {
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
+        if (projFile) {
+          pkg.properties = [
+            {
+              name: "SrcFile",
+              value: projFile
+            }
+          ];
+          pkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.7,
+                  value: projFile
+                }
+              ]
+            }
+          };
+        }
         pkgList.push(pkg);
       }
     }
@@ -5256,7 +5298,10 @@ export const parseCsProjData = async function (csProjData) {
   return pkgList;
 };
 
-export const parseCsProjAssetsData = async function (csProjData) {
+export const parseCsProjAssetsData = async function (
+  csProjData,
+  assetsJsonFile
+) {
   // extract name, operator, version from .NET package representation
   // like "NLog >= 4.5.0"
   function extractNameOperatorVersion(inputStr) {
@@ -5373,6 +5418,43 @@ export const parseCsProjAssetsData = async function (csProjData) {
           } else if (lib[rootDep].sha256) {
             pkg["_integrity"] = "sha256-" + lib[rootDep].sha256;
           }
+          if (lib[rootDep].files && Array.isArray(lib[rootDep].files)) {
+            const dllFiles = new Set();
+            lib[rootDep].files.forEach((f) => {
+              if (
+                f.endsWith(".dll") ||
+                f.endsWith(".exe") ||
+                f.endsWith(".so")
+              ) {
+                dllFiles.add(basename(f));
+              }
+            });
+            pkg.properties = [
+              {
+                name: "SrcFile",
+                value: assetsJsonFile
+              },
+              {
+                name: "PackageFiles",
+                value: Array.from(dllFiles).join(", ")
+              }
+            ];
+          }
+        }
+        if (assetsJsonFile) {
+          pkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 1,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 1,
+                  value: assetsJsonFile
+                }
+              ]
+            }
+          };
         }
         pkgList.push(pkg);
         pkgNameVersionMap[name + framework] = version;
@@ -6889,17 +6971,17 @@ export const extractJarArchive = async function (
           if (!name || !version || name === "" || version === "") {
             confidence = 0.5;
             technique = "filename";
+            name = jarname.replace(".jar", "");
             const tmpA = jarname.split("-");
             if (tmpA && tmpA.length > 1) {
               const lastPart = tmpA[tmpA.length - 1];
-              if (!version || version === "") {
-                version = lastPart.replace(".jar", "");
-              }
-              if (!name || name === "") {
+              // Bug #768. Check if we have any number before simplifying the name.
+              if (/\d/.test(lastPart)) {
+                if (!version || version === "") {
+                  version = lastPart.replace(".jar", "");
+                }
                 name = jarname.replace("-" + lastPart, "") || "";
               }
-            } else {
-              name = jarname.replace(".jar", "");
             }
           }
           if (
@@ -7270,6 +7352,7 @@ export const executeAtom = (src, args) => {
   let cwd =
     existsSync(src) && lstatSync(src).isDirectory() ? src : dirname(src);
   let ATOM_BIN = getAtomCommand();
+  let isSupported = true;
   if (ATOM_BIN.includes(" ")) {
     const tmpA = ATOM_BIN.split(" ");
     if (tmpA && tmpA.length > 1) {
@@ -7322,6 +7405,12 @@ export const executeAtom = (src, args) => {
       );
     }
   }
+  if (result.stdout) {
+    if (result.stdout.includes("No language frontend supported for language")) {
+      console.log("This language is not yet supported by atom.");
+      isSupported = false;
+    }
+  }
   if (DEBUG_MODE) {
     if (result.stdout) {
       console.log(result.stdout);
@@ -7330,7 +7419,7 @@ export const executeAtom = (src, args) => {
       console.log(result.stderr);
     }
   }
-  return !result.error;
+  return isSupported && !result.error;
 };
 
 /**
@@ -8797,4 +8886,104 @@ export const getNugetMetadata = async function (
     pkgList: cdepList,
     dependencies: newDependencies
   };
+};
+
+export const addEvidenceForDotnet = (pkgList, slicesFile) => {
+  // We need two datastructures.
+  // dll to purl mapping from the pkgList
+  // purl to occurrences list using the slicesFile
+  if (!slicesFile || !existsSync(slicesFile)) {
+    return pkgList;
+  }
+  const pkgFilePurlMap = {};
+  const purlLocationMap = {};
+  const purlModulesMap = {};
+  const purlMethodsMap = {};
+  for (const apkg of pkgList) {
+    if (apkg.properties && Array.isArray(apkg.properties)) {
+      apkg.properties
+        .filter((p) => p.name === "PackageFiles")
+        .forEach((aprop) => {
+          if (aprop.value) {
+            const tmpA = aprop.value.split(", ");
+            if (tmpA && tmpA.length) {
+              tmpA.forEach((dllFile) => {
+                pkgFilePurlMap[dllFile] = apkg.purl;
+              });
+            }
+          }
+        });
+    }
+  }
+  const slicesData = JSON.parse(readFileSync(slicesFile, "utf-8"));
+  if (slicesData && Object.keys(slicesData)) {
+    if (slicesData.Dependencies) {
+      for (const adep of slicesData.Dependencies) {
+        if (
+          adep.Module &&
+          adep.Module.endsWith(".dll") &&
+          pkgFilePurlMap[adep.Module]
+        ) {
+          const modPurl = pkgFilePurlMap[adep.Module];
+          if (!purlLocationMap[modPurl]) {
+            purlLocationMap[modPurl] = new Set();
+          }
+          purlLocationMap[modPurl].add(`${adep.Path}#${adep.LineNumber}`);
+        }
+      }
+    }
+    if (slicesData.MethodCalls) {
+      for (const amethodCall of slicesData.MethodCalls) {
+        if (
+          amethodCall.Module &&
+          amethodCall.Module.endsWith(".dll") &&
+          pkgFilePurlMap[amethodCall.Module]
+        ) {
+          const modPurl = pkgFilePurlMap[amethodCall.Module];
+          if (!purlLocationMap[modPurl]) {
+            purlLocationMap[modPurl] = new Set();
+          }
+          if (!purlModulesMap[modPurl]) {
+            purlModulesMap[modPurl] = new Set();
+          }
+          if (!purlMethodsMap[modPurl]) {
+            purlMethodsMap[modPurl] = new Set();
+          }
+          purlLocationMap[modPurl].add(
+            `${amethodCall.Path}#${amethodCall.LineNumber}`
+          );
+          purlModulesMap[modPurl].add(amethodCall.ClassName);
+          purlMethodsMap[modPurl].add(amethodCall.CalledMethod);
+        }
+      }
+    }
+  }
+  if (Object.keys(purlLocationMap).length) {
+    for (const apkg of pkgList) {
+      if (purlLocationMap[apkg.purl]) {
+        const locationOccurrences = Array.from(
+          purlLocationMap[apkg.purl]
+        ).sort();
+        // Add the occurrences evidence
+        apkg.evidence.occurrences = locationOccurrences.map((l) => ({
+          location: l
+        }));
+      }
+      // Add the imported modules to properties
+      if (purlModulesMap[apkg.purl]) {
+        apkg.properties.push({
+          name: "ImportedModules",
+          value: Array.from(purlModulesMap[apkg.purl]).sort().join(", ")
+        });
+      }
+      // Add the called methods to properties
+      if (purlMethodsMap[apkg.purl]) {
+        apkg.properties.push({
+          name: "CalledMethods",
+          value: Array.from(purlMethodsMap[apkg.purl]).sort().join(", ")
+        });
+      }
+    }
+  }
+  return pkgList;
 };

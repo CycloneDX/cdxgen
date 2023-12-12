@@ -107,7 +107,8 @@ import {
   frameworksList,
   parseContainerFile,
   parseBitbucketPipelinesFile,
-  getPyMetadata
+  getPyMetadata,
+  addEvidenceForDotnet
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -131,7 +132,8 @@ import {
   getGoBuildInfo,
   getCargoAuditableInfo,
   executeOsQuery,
-  getOSPackages
+  getOSPackages,
+  getDotnetSlices
 } from "./binary.js";
 
 const isWin = _platform() === "win32";
@@ -4202,10 +4204,16 @@ export const createCsharpBom = async (
   let manifestFiles = [];
   let pkgData = undefined;
   let dependencies = [];
-  const csProjFiles = getAllFiles(
+  let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
     options
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.vbproj", options)
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.fsproj", options)
   );
   const pkgConfigFiles = getAllFiles(
     path,
@@ -4253,7 +4261,7 @@ export const createCsharpBom = async (
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      let results = await parseCsProjAssetsData(pkgData);
+      let results = await parseCsProjAssetsData(pkgData, af);
       let deps = results["dependenciesList"];
       let dlist = results["pkgList"];
       if (dlist && dlist.length) {
@@ -4305,7 +4313,7 @@ export const createCsharpBom = async (
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const dlist = await parseCsProjData(csProjData);
+      const dlist = await parseCsProjData(csProjData, f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -4336,6 +4344,22 @@ export const createCsharpBom = async (
   if (pkgList.length) {
     dependencies = mergeDependencies(dependencies, [], parentComponent);
     pkgList = trimComponents(pkgList, "json");
+    // Perform deep analysis using dosai
+    if (options.deep) {
+      const slicesFile = resolve(
+        options.depsSlicesFile || join(tmpdir(), "dosai.json")
+      );
+      // Create the slices file if it doesn't exist
+      if (!existsSync(slicesFile)) {
+        const sliceResult = getDotnetSlices(resolve(path), resolve(slicesFile));
+        if (!sliceResult && DEBUG_MODE) {
+          console.log(
+            "Slicing with dosai was unsuccessful. Check the errors reported in the logs above."
+          );
+        }
+      }
+      pkgList = addEvidenceForDotnet(pkgList, slicesFile, options);
+    }
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
@@ -5117,10 +5141,16 @@ export const createXBom = async (path, options) => {
   }
 
   // .Net
-  const csProjFiles = getAllFiles(
+  let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
     options
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.vbproj", options)
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.fsproj", options)
   );
   if (csProjFiles.length) {
     return await createCsharpBom(path, options);

@@ -9,7 +9,7 @@ import {
 import { join, dirname, basename } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
-import { DEBUG_MODE, findLicenseId } from "./utils.js";
+import { DEBUG_MODE, TIMEOUT_MS, findLicenseId } from "./utils.js";
 
 import { fileURLToPath } from "node:url";
 
@@ -24,7 +24,7 @@ const isWin = _platform() === "win32";
 let platform = _platform();
 let extn = "";
 let pluginsBinSuffix = "";
-if (platform == "win32") {
+if (platform === "win32") {
   platform = "windows";
   extn = ".exe";
 }
@@ -36,6 +36,9 @@ switch (arch) {
     break;
   case "x64":
     arch = "amd64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-amd64";
+    }
     break;
   case "arm64":
     pluginsBinSuffix = "-arm64";
@@ -165,7 +168,21 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
 } else if (process.env.OSQUERY_CMD) {
   OSQUERY_BIN = process.env.OSQUERY_CMD;
 }
+let DOSAI_BIN = null;
+if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
+  if (platform === "darwin") {
+    platform = "osx";
+  }
+  DOSAI_BIN = join(
+    CDXGEN_PLUGINS_DIR,
+    "dosai",
+    "dosai-" + platform + "-" + arch + extn
+  );
+} else if (process.env.DOSAI_CMD) {
+  DOSAI_BIN = process.env.DOSAI_CMD;
+}
 
+// Keep this list updated every year
 const OS_DISTRO_ALIAS = {
   "ubuntu-4.10": "warty",
   "ubuntu-5.04": "hoary",
@@ -691,4 +708,37 @@ export const executeOsQuery = (query) => {
     }
   }
   return undefined;
+};
+
+/**
+ * Method to execute dosai to create slices for dotnet
+ *
+ * @param {string} src
+ * @param {string} slicesFile
+ * @returns boolean
+ */
+export const getDotnetSlices = (src, slicesFile) => {
+  if (!DOSAI_BIN) {
+    return false;
+  }
+  const args = ["methods", "--path", src, "--o", slicesFile];
+  if (DEBUG_MODE) {
+    console.log("Executing", DOSAI_BIN, args.join(" "));
+  }
+  const result = spawnSync(DOSAI_BIN, args, {
+    encoding: "utf-8",
+    timeout: TIMEOUT_MS,
+    cwd: src
+  });
+  if (result.status !== 0 || result.error) {
+    if (DEBUG_MODE && result.error) {
+      if (result.stderr) {
+        console.error(result.stdout, result.stderr);
+      } else {
+        console.log("Check if dosai plugin was installed successfully.");
+      }
+    }
+    return false;
+  }
+  return true;
 };
