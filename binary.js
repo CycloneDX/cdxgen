@@ -24,7 +24,7 @@ const isWin = _platform() === "win32";
 let platform = _platform();
 let extn = "";
 let pluginsBinSuffix = "";
-if (platform == "win32") {
+if (platform === "win32") {
   platform = "windows";
   extn = ".exe";
 }
@@ -36,6 +36,9 @@ switch (arch) {
     break;
   case "x64":
     arch = "amd64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-amd64";
+    }
     break;
   case "arm64":
     pluginsBinSuffix = "-arm64";
@@ -729,7 +732,11 @@ export const getDotnetSlices = (src, slicesFile) => {
   });
   if (result.status !== 0 || result.error) {
     if (DEBUG_MODE && result.error) {
-      console.error(result.stdout, result.stderr);
+      if (result.stderr) {
+        console.error(result.stdout, result.stderr);
+      } else {
+        console.log("Check if dosai plugin was installed successfully.");
+      }
     }
     return false;
   }
