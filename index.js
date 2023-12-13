@@ -3705,10 +3705,15 @@ export const createSwiftBom = async (path, options) => {
       }
     }
   }
+  let filteredPkgList = pkgList.filter((value, index, array) =>
+    index === array.findIndex((t) => (
+      t.group === value.group
+    ))
+  )
   if (FETCH_LICENSE) {
-    pkgList = await getSwiftPackageMetadata(pkgList);
+    filteredPkgList = await getSwiftPackageMetadata(filteredPkgList);
   }
-  return buildBomNSData(options, pkgList, "swift", {
+  return buildBomNSData(options, filteredPkgList, "swift", {
     src: path,
     filename: swiftFiles.join(", "),
     parentComponent,
