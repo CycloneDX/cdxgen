@@ -6162,7 +6162,7 @@ export const convertOSQueryResults = function (
   return pkgList;
 };
 
-const purlStringFromUrlString = (type, repoUrl, version) => {
+const purlFromUrlString = (type, repoUrl, version) => {
   let namespace, name;
   if (repoUrl || repoUrl.includes("://github.com/")) {
     const parts = getGithubUrlParts(repoUrl);
@@ -6178,14 +6178,9 @@ const purlStringFromUrlString = (type, repoUrl, version) => {
     }
     return undefined;
   }
-
+  
   const purl = new PackageURL(type, namespace, name, version, null, null);
-  return decodeURIComponent(purl.toString());
-};
-
-const purlStringFromName = (type, namespace, name, version) => {
-  const purl = new PackageURL(type, namespace, name, version, null, null);
-  return decodeURIComponent(purl.toString());
+  return purl;
 };
 
 /**
@@ -6199,18 +6194,17 @@ export const parseSwiftJsonTreeObject = (
   jsonObject,
   pkgFile
 ) => {
-  const name = jsonObject.name;
-  const identity = jsonObject.identity;
+  const nameOrIdentity = jsonObject.name || jsonObject.identity;
   const urlOrPath = jsonObject.url || jsonObject.path;
   const version = jsonObject.version;
-  const purlString =
-    purlStringFromUrlString("swift", urlOrPath, version) ||
-    purlStringFromName("swift", identity, name, version);
   const rootPkg = {
-    name: name,
-    group: purlString,
+    name: nameOrIdentity,
+    group: nameOrIdentity.toLowerCase(),
     version: version
   };
+  const purl = purlFromUrlString("swift", urlOrPath, version) ||
+    new PackageURL("swift", rootPkg.name, rootPkg.group, version, null, null);
+  const purlString = decodeURIComponent(purl.toString());
   rootPkg["bom-ref"] = purlString;
   if (urlOrPath) {
     if (urlOrPath.startsWith("http")) {
@@ -6297,14 +6291,9 @@ export const parseSwiftResolved = (resolvedFile) => {
         const packageOrIdentity = adep.package || adep.identity;
         const locationOrUrl = adep.location || adep.repositoryURL;
         const version = adep.state.version || adep.state.revision;
-        const purlString = purlStringFromUrlString(
-          "swift",
-          locationOrUrl,
-          version
-        );
         const rootPkg = {
           name: packageOrIdentity,
-          group: purlString,
+          group: packageOrIdentity.toLowerCase(),
           version: version,
           properties: [
             {
