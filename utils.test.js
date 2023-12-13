@@ -2919,7 +2919,7 @@ test("parse swift deps files", () => {
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "swift-markdown",
+    group: "pkg:swift/swift-markdown/swift-markdown@unspecified",
     name: "swift-markdown",
     version: "unspecified",
     properties: [
@@ -2930,26 +2930,24 @@ test("parse swift deps files", () => {
   });
   expect(retData.dependenciesList.length).toEqual(5);
   expect(retData.dependenciesList[0]).toEqual({
+    ref: "pkg:swift/github.com/apple/swift-cmark@unspecified",
+    dependsOn: []
+  });
+  expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual({
     ref: "pkg:swift/swift-markdown/swift-markdown@unspecified",
     dependsOn: [
-      "pkg:swift/swift-cmark/cmark-gfm@unspecified",
-      "pkg:swift/swift-argument-parser/swift-argument-parser@1.0.3",
-      "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"
+      "pkg:swift/github.com/apple/swift-cmark@unspecified",
+      "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
+      "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"
     ]
   });
-  expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual(
-    {
-      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
-      dependsOn: []
-    }
-  );
   retData = parseSwiftJsonTree(
     readFileSync("./test/data/swift-deps1.json", { encoding: "utf-8" }),
     "./test/data/swift-deps.json"
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "swift-certificates",
+    group: "pkg:swift/swift-certificates/swift-certificates@unspecified",
     name: "swift-certificates",
     version: "unspecified",
     properties: [
@@ -2963,31 +2961,31 @@ test("parse swift deps files", () => {
   });
   expect(retData.dependenciesList).toEqual([
     {
-      ref: "pkg:swift/swift-certificates/swift-certificates@unspecified",
-      dependsOn: ["pkg:swift/swift-crypto/swift-crypto@2.4.0"]
-    },
-    {
-      ref: "pkg:swift/swift-crypto/swift-crypto@2.4.0",
-      dependsOn: ["pkg:swift/swift-asn1/swift-asn1@0.7.0"]
-    },
-    {
-      ref: "pkg:swift/swift-asn1/swift-asn1@0.7.0",
-      dependsOn: ["pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"]
-    },
-    {
-      ref: "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0",
-      dependsOn: ["pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0"]
-    },
-    {
-      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
+      ref: "pkg:swift/github.com/apple/swift-docc-symbolkit@1.0.0",
       dependsOn: []
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-docc-symbolkit@1.0.0"]
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-asn1@0.7.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"]
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-crypto@2.4.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-asn1@0.7.0"]
+    },
+    {
+      ref: "pkg:swift/swift-certificates/swift-certificates@unspecified",
+      dependsOn: ["pkg:swift/github.com/apple/swift-crypto@2.4.0"]
     }
   ]);
   let pkgList = parseSwiftResolved("./test/data/Package.resolved");
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "",
+    group: "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
     version: "1.0.3",
     properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
     evidence: {
@@ -3009,7 +3007,7 @@ test("parse swift deps files", () => {
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "",
+    group: "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     version: "1.2.2",
     properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
     evidence: {
