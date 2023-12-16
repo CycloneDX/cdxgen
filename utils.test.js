@@ -2921,6 +2921,7 @@ test("parse swift deps files", () => {
   expect(retData.pkgList[0]).toEqual({
     group: "swift-markdown",
     name: "swift-markdown",
+    purl: "pkg:swift/swift-markdown@unspecified",
     version: "unspecified",
     properties: [
       { name: "SrcPath", value: "/Volumes/Work/sandbox/swift-markdown" },
@@ -2951,6 +2952,7 @@ test("parse swift deps files", () => {
   expect(retData.pkgList[0]).toEqual({
     group: "swift-certificates",
     name: "swift-certificates",
+    purl: "pkg:swift/swift-certificates@unspecified",
     version: "unspecified",
     properties: [
       {
@@ -2989,6 +2991,7 @@ test("parse swift deps files", () => {
     name: "swift-argument-parser",
     group: "swift-argument-parser",
     version: "1.0.3",
+    purl: "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
     properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
     evidence: {
       identity: {
@@ -3003,6 +3006,7 @@ test("parse swift deps files", () => {
         ]
       }
     },
+    "bom-ref": "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
     repository: { url: "https://github.com/apple/swift-argument-parser" }
   });
   pkgList = parseSwiftResolved("./test/data/Package2.resolved");
@@ -3011,6 +3015,7 @@ test("parse swift deps files", () => {
     name: "swift-argument-parser",
     group: "swift-argument-parser",
     version: "1.2.2",
+    purl: "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
     evidence: {
       identity: {
@@ -3025,6 +3030,7 @@ test("parse swift deps files", () => {
         ]
       }
     },
+    "bom-ref": "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     repository: { url: "https://github.com/apple/swift-argument-parser.git" }
   });
 });

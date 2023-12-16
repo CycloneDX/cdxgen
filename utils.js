@@ -407,9 +407,6 @@ export function readLicenseText(
 export const getSwiftPackageMetadata = async (pkgList) => {
   const cdepList = [];
   for (const p of pkgList) {
-    if (!p.repository || !p.repository.url) {
-      continue;
-    }
     if (p.repository && p.repository.url) {
       if (p.repository.url.includes("://github.com/")) {
         try {
@@ -427,7 +424,7 @@ export const getSwiftPackageMetadata = async (pkgList) => {
       }
     } else {
       if (DEBUG_MODE) {
-        console.warn("missing repository url for", p.name);
+        console.warn("no repository url found for", p.name);
       }
     }
     cdepList.push(p);
@@ -6201,14 +6198,15 @@ export const parseSwiftJsonTreeObject = (
   const nameOrIdentity = jsonObject.name || jsonObject.identity;
   const urlOrPath = jsonObject.url || jsonObject.path;
   const version = jsonObject.version;
+  const purl = purlFromUrlString("swift", urlOrPath, version);
+  const purlString = decodeURIComponent(purl.toString());
   const rootPkg = {
     name: nameOrIdentity,
     group: nameOrIdentity.toLowerCase(),
-    version: version
+    version: version,
+    purl: purlString,
+    "bom-ref": purlString
   };
-  const purl = purlFromUrlString("swift", urlOrPath, version);
-  const purlString = decodeURIComponent(purl.toString());
-  rootPkg["bom-ref"] = purlString;
   if (urlOrPath) {
     if (urlOrPath.startsWith("http")) {
       rootPkg.repository = { url: urlOrPath };
@@ -6294,10 +6292,14 @@ export const parseSwiftResolved = (resolvedFile) => {
         const packageOrIdentity = adep.package || adep.identity;
         const locationOrUrl = adep.location || adep.repositoryURL;
         const version = adep.state.version || adep.state.revision;
+        const purl = purlFromUrlString("swift", locationOrUrl, version);
+        const purlString = decodeURIComponent(purl.toString());
         const rootPkg = {
           name: packageOrIdentity,
           group: packageOrIdentity.toLowerCase(),
           version: version,
+          purl: purlString,
+          "bom-ref": purlString,
           properties: [
             {
               name: "SrcFile",
