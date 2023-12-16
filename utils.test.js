@@ -2933,14 +2933,16 @@ test("parse swift deps files", () => {
     ref: "pkg:swift/github.com/apple/swift-cmark@unspecified",
     dependsOn: []
   });
-  expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual({
-    ref: "pkg:swift/swift-markdown/swift-markdown@unspecified",
-    dependsOn: [
-      "pkg:swift/github.com/apple/swift-cmark@unspecified",
-      "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
-      "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"
-    ]
-  });
+  expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual(
+    {
+      ref: "pkg:swift/swift-markdown/swift-markdown@unspecified",
+      dependsOn: [
+        "pkg:swift/github.com/apple/swift-cmark@unspecified",
+        "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
+        "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"
+      ]
+    }
+  );
   retData = parseSwiftJsonTree(
     readFileSync("./test/data/swift-deps1.json", { encoding: "utf-8" }),
     "./test/data/swift-deps.json"
