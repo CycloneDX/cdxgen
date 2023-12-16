@@ -6163,7 +6163,8 @@ export const convertOSQueryResults = function (
 };
 
 const purlFromUrlString = (type, repoUrl, version) => {
-  let namespace, name;
+  let namespace = "",
+    name;
   if (repoUrl && repoUrl.includes("://github.com/")) {
     const parts = getGithubUrlParts(repoUrl);
     if (parts.length < 5 || parts[2] !== "github.com") {
@@ -6172,6 +6173,9 @@ const purlFromUrlString = (type, repoUrl, version) => {
       namespace = parts[2];
       name = parts[3] + "/" + parts[4];
     }
+  } else if (repoUrl && repoUrl.startsWith("/")) {
+    const parts = repoUrl.split("/");
+    name = parts[parts.length - 1];
   } else {
     if (DEBUG_MODE) {
       console.warn("unsupported repo url for swift type");
@@ -6202,9 +6206,7 @@ export const parseSwiftJsonTreeObject = (
     group: nameOrIdentity.toLowerCase(),
     version: version
   };
-  const purl =
-    purlFromUrlString("swift", urlOrPath, version) ||
-    new PackageURL("swift", rootPkg.name, rootPkg.group, version, null, null);
+  const purl = purlFromUrlString("swift", urlOrPath, version);
   const purlString = decodeURIComponent(purl.toString());
   rootPkg["bom-ref"] = purlString;
   if (urlOrPath) {

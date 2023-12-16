@@ -2919,14 +2919,14 @@ test("parse swift deps files", () => {
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "pkg:swift/swift-markdown/swift-markdown@unspecified",
+    group: "swift-markdown",
     name: "swift-markdown",
     version: "unspecified",
     properties: [
       { name: "SrcPath", value: "/Volumes/Work/sandbox/swift-markdown" },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref": "pkg:swift/swift-markdown/swift-markdown@unspecified"
+    "bom-ref": "pkg:swift/swift-markdown@unspecified"
   });
   expect(retData.dependenciesList.length).toEqual(5);
   expect(retData.dependenciesList[0]).toEqual({
@@ -2935,7 +2935,7 @@ test("parse swift deps files", () => {
   });
   expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual(
     {
-      ref: "pkg:swift/swift-markdown/swift-markdown@unspecified",
+      ref: "pkg:swift/swift-markdown@unspecified",
       dependsOn: [
         "pkg:swift/github.com/apple/swift-cmark@unspecified",
         "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
@@ -2949,7 +2949,7 @@ test("parse swift deps files", () => {
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "pkg:swift/swift-certificates/swift-certificates@unspecified",
+    group: "swift-certificates",
     name: "swift-certificates",
     version: "unspecified",
     properties: [
@@ -2959,7 +2959,7 @@ test("parse swift deps files", () => {
       },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref": "pkg:swift/swift-certificates/swift-certificates@unspecified"
+    "bom-ref": "pkg:swift/swift-certificates@unspecified"
   });
   expect(retData.dependenciesList).toEqual([
     {
@@ -2979,7 +2979,7 @@ test("parse swift deps files", () => {
       dependsOn: ["pkg:swift/github.com/apple/swift-asn1@0.7.0"]
     },
     {
-      ref: "pkg:swift/swift-certificates/swift-certificates@unspecified",
+      ref: "pkg:swift/swift-certificates@unspecified",
       dependsOn: ["pkg:swift/github.com/apple/swift-crypto@2.4.0"]
     }
   ]);
@@ -2987,7 +2987,7 @@ test("parse swift deps files", () => {
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
+    group: "swift-argument-parser",
     version: "1.0.3",
     properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
     evidence: {
@@ -3009,7 +3009,7 @@ test("parse swift deps files", () => {
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
+    group: "swift-argument-parser",
     version: "1.2.2",
     properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
     evidence: {
