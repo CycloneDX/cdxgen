@@ -6167,8 +6167,8 @@ const purlFromUrlString = (type, repoUrl, version) => {
     if (parts.length < 5 || parts[2] !== "github.com") {
       return undefined; // Not a valid GitHub repo URL
     } else {
-      namespace = parts[2];
-      name = parts[3] + "/" + parts[4];
+      namespace = parts[2] + "/" + parts[3];
+      name = parts[4];
     }
   } else if (repoUrl && repoUrl.startsWith("/")) {
     const parts = repoUrl.split("/");
@@ -6195,15 +6195,14 @@ export const parseSwiftJsonTreeObject = (
   jsonObject,
   pkgFile
 ) => {
-  const nameOrIdentity = jsonObject.name || jsonObject.identity;
   const urlOrPath = jsonObject.url || jsonObject.path;
   const version = jsonObject.version;
   const purl = purlFromUrlString("swift", urlOrPath, version);
   const purlString = decodeURIComponent(purl.toString());
   const rootPkg = {
-    name: nameOrIdentity,
-    group: nameOrIdentity.toLowerCase(),
-    version: version,
+    name: purl.name,
+    group: purl.namespace,
+    version: purl.version,
     purl: purlString,
     "bom-ref": purlString
   };
@@ -6289,15 +6288,14 @@ export const parseSwiftResolved = (resolvedFile) => {
         resolvedList = pkgData.object.pins;
       }
       for (const adep of resolvedList) {
-        const packageOrIdentity = adep.package || adep.identity;
         const locationOrUrl = adep.location || adep.repositoryURL;
         const version = adep.state.version || adep.state.revision;
         const purl = purlFromUrlString("swift", locationOrUrl, version);
         const purlString = decodeURIComponent(purl.toString());
         const rootPkg = {
-          name: packageOrIdentity,
-          group: packageOrIdentity.toLowerCase(),
-          version: version,
+          name: purl.name,
+          group: purl.namespace,
+          version: purl.version,
           purl: purlString,
           "bom-ref": purlString,
           properties: [
