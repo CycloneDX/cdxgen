@@ -2919,28 +2919,29 @@ test("parse swift deps files", () => {
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "swift-markdown",
     name: "swift-markdown",
+    group: "",
+    purl: "pkg:swift/swift-markdown@unspecified",
     version: "unspecified",
     properties: [
       { name: "SrcPath", value: "/Volumes/Work/sandbox/swift-markdown" },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref": "pkg:swift/swift-markdown/swift-markdown@unspecified"
+    "bom-ref": "pkg:swift/swift-markdown@unspecified"
   });
   expect(retData.dependenciesList.length).toEqual(5);
   expect(retData.dependenciesList[0]).toEqual({
-    ref: "pkg:swift/swift-markdown/swift-markdown@unspecified",
-    dependsOn: [
-      "pkg:swift/swift-cmark/cmark-gfm@unspecified",
-      "pkg:swift/swift-argument-parser/swift-argument-parser@1.0.3",
-      "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"
-    ]
+    ref: "pkg:swift/github.com/apple/swift-cmark@unspecified",
+    dependsOn: []
   });
   expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual(
     {
-      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
-      dependsOn: []
+      ref: "pkg:swift/swift-markdown@unspecified",
+      dependsOn: [
+        "pkg:swift/github.com/apple/swift-cmark@unspecified",
+        "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
+        "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"
+      ]
     }
   );
   retData = parseSwiftJsonTree(
@@ -2949,8 +2950,9 @@ test("parse swift deps files", () => {
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "swift-certificates",
     name: "swift-certificates",
+    group: "",
+    purl: "pkg:swift/swift-certificates@unspecified",
     version: "unspecified",
     properties: [
       {
@@ -2959,36 +2961,37 @@ test("parse swift deps files", () => {
       },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref": "pkg:swift/swift-certificates/swift-certificates@unspecified"
+    "bom-ref": "pkg:swift/swift-certificates@unspecified"
   });
   expect(retData.dependenciesList).toEqual([
     {
-      ref: "pkg:swift/swift-certificates/swift-certificates@unspecified",
-      dependsOn: ["pkg:swift/swift-crypto/swift-crypto@2.4.0"]
-    },
-    {
-      ref: "pkg:swift/swift-crypto/swift-crypto@2.4.0",
-      dependsOn: ["pkg:swift/swift-asn1/swift-asn1@0.7.0"]
-    },
-    {
-      ref: "pkg:swift/swift-asn1/swift-asn1@0.7.0",
-      dependsOn: ["pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"]
-    },
-    {
-      ref: "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0",
-      dependsOn: ["pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0"]
-    },
-    {
-      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
+      ref: "pkg:swift/github.com/apple/swift-docc-symbolkit@1.0.0",
       dependsOn: []
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-docc-symbolkit@1.0.0"]
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-asn1@0.7.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"]
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-crypto@2.4.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-asn1@0.7.0"]
+    },
+    {
+      ref: "pkg:swift/swift-certificates@unspecified",
+      dependsOn: ["pkg:swift/github.com/apple/swift-crypto@2.4.0"]
     }
   ]);
   let pkgList = parseSwiftResolved("./test/data/Package.resolved");
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "",
+    group: "github.com/apple",
     version: "1.0.3",
+    purl: "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
     properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
     evidence: {
       identity: {
@@ -3003,14 +3006,16 @@ test("parse swift deps files", () => {
         ]
       }
     },
+    "bom-ref": "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
     repository: { url: "https://github.com/apple/swift-argument-parser" }
   });
   pkgList = parseSwiftResolved("./test/data/Package2.resolved");
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "",
+    group: "github.com/apple",
     version: "1.2.2",
+    purl: "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
     evidence: {
       identity: {
@@ -3025,6 +3030,7 @@ test("parse swift deps files", () => {
         ]
       }
     },
+    "bom-ref": "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     repository: { url: "https://github.com/apple/swift-argument-parser.git" }
   });
 });

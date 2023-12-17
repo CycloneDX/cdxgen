@@ -404,6 +404,34 @@ export function readLicenseText(
   return null;
 }
 
+export const getSwiftPackageMetadata = async (pkgList) => {
+  const cdepList = [];
+  for (const p of pkgList) {
+    if (p.repository && p.repository.url) {
+      if (p.repository.url.includes("://github.com/")) {
+        try {
+          p.license = await getRepoLicense(p.repository.url, undefined);
+        } catch (e) {
+          console.error("error fetching repo license from", p.repository.url);
+        }
+      } else {
+        if (DEBUG_MODE) {
+          console.log(
+            p.repository.url,
+            "is currently not supported to fetch for licenses"
+          );
+        }
+      }
+    } else {
+      if (DEBUG_MODE) {
+        console.warn("no repository url found for", p.name);
+      }
+    }
+    cdepList.push(p);
+  }
+  return cdepList;
+};
+
 /**
  * Method to retrieve metadata for npm packages by querying npmjs
  *
@@ -3333,21 +3361,30 @@ export const repoMetadataToGitHubApiUrl = function (repoMetadata) {
 };
 
 /**
+ * Method to split GitHub url into its parts
+ * @param {String} repoUrl Repository url
+ * @return {[String]} parts from url
+ */
+export const getGithubUrlParts = (repoUrl) => {
+  if (repoUrl.toLowerCase().endsWith(".git")) {
+    repoUrl = repoUrl.slice(0, -4);
+  }
+  repoUrl.replace(/\/$/, "");
+  const parts = repoUrl.split("/");
+  return parts;
+};
+
+/**
  * Method to construct GitHub api url from repo metadata or one of multiple formats of repo URLs
  * @param {String} repoUrl Repository url
  * @param {Object} repoMetadata Object containing group and package name strings
  * @return {String|undefined} github api url (or undefined - if not a GitHub repo)
  */
 export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
-  if (!repoUrl || !repoUrl.includes("://github.com/")) {
+  if (repoMetadata) {
     return repoMetadataToGitHubApiUrl(repoMetadata);
   }
-  if (repoUrl.toLowerCase().endsWith(".git")) {
-    repoUrl = repoUrl.slice(0, -4);
-  }
-  repoUrl.replace(/\/$/, "");
-  const parts = repoUrl.split("/");
-
+  const parts = getGithubUrlParts(repoUrl);
   if (parts.length < 5 || parts[2] !== "github.com") {
     return undefined; // Not a valid GitHub repo URL
   } else {
@@ -6122,87 +6159,89 @@ export const convertOSQueryResults = function (
   return pkgList;
 };
 
-export const _swiftDepPkgList = (
+const purlFromUrlString = (type, repoUrl, version) => {
+  let namespace = "",
+    name;
+  if (repoUrl && repoUrl.includes("://github.com/")) {
+    const parts = getGithubUrlParts(repoUrl);
+    if (parts.length < 5 || parts[2] !== "github.com") {
+      return undefined; // Not a valid GitHub repo URL
+    } else {
+      namespace = parts[2] + "/" + parts[3];
+      name = parts[4];
+    }
+  } else if (repoUrl && repoUrl.startsWith("/")) {
+    const parts = repoUrl.split("/");
+    name = parts[parts.length - 1];
+  } else {
+    if (DEBUG_MODE) {
+      console.warn("unsupported repo url for swift type");
+    }
+    return undefined;
+  }
+
+  const purl = new PackageURL(type, namespace, name, version, null, null);
+  return purl;
+};
+
+/**
+ * Parse swift dependency tree output json object
+ * @param {string} jsonObject Swift dependencies json object
+ * @param {string} pkgFile Package.swift file
+ */
+export const parseSwiftJsonTreeObject = (
   pkgList,
   dependenciesList,
-  depKeys,
-  jsonData
+  jsonObject,
+  pkgFile
 ) => {
-  if (jsonData && jsonData.dependencies) {
-    for (const adep of jsonData.dependencies) {
-      const urlOrPath = adep.url || adep.path;
-      const apkg = {
-        group: adep.identity || "",
-        name: adep.name,
-        version: adep.version
-      };
-      const purl = new PackageURL(
-        "swift",
-        apkg.group,
-        apkg.name,
-        apkg.version,
-        null,
-        null
-      );
-      const purlString = decodeURIComponent(purl.toString());
-      if (urlOrPath) {
-        if (urlOrPath.startsWith("http")) {
-          apkg.repository = { url: urlOrPath };
-          if (apkg.path) {
-            apkg.properties = [
-              {
-                name: "SrcPath",
-                value: apkg.path
-              }
-            ];
-          }
-        } else {
-          apkg.properties = [
-            {
-              name: "SrcPath",
-              value: urlOrPath
-            }
-          ];
-        }
+  const urlOrPath = jsonObject.url || jsonObject.path;
+  const version = jsonObject.version;
+  const purl = purlFromUrlString("swift", urlOrPath, version);
+  const purlString = decodeURIComponent(purl.toString());
+  const rootPkg = {
+    name: purl.name,
+    group: purl.namespace,
+    version: purl.version,
+    purl: purlString,
+    "bom-ref": purlString
+  };
+  if (urlOrPath) {
+    if (urlOrPath.startsWith("http")) {
+      rootPkg.repository = { url: urlOrPath };
+    } else {
+      const properties = [];
+      properties.push({
+        name: "SrcPath",
+        value: urlOrPath
+      });
+      if (pkgFile) {
+        properties.push({
+          name: "SrcFile",
+          value: pkgFile
+        });
       }
-      pkgList.push(apkg);
-      // Handle the immediate dependencies before recursing
-      if (adep.dependencies && adep.dependencies.length) {
-        const deplist = [];
-        for (const cdep of adep.dependencies) {
-          const deppurl = new PackageURL(
-            "swift",
-            cdep.identity || "",
-            cdep.name,
-            cdep.version,
-            null,
-            null
-          );
-          const deppurlString = decodeURIComponent(deppurl.toString());
-          deplist.push(deppurlString);
-        }
-        if (!depKeys[purlString]) {
-          dependenciesList.push({
-            ref: purlString,
-            dependsOn: deplist
-          });
-          depKeys[purlString] = true;
-        }
-        if (adep.dependencies && adep.dependencies.length) {
-          _swiftDepPkgList(pkgList, dependenciesList, depKeys, adep);
-        }
-      } else {
-        if (!depKeys[purlString]) {
-          dependenciesList.push({
-            ref: purlString,
-            dependsOn: []
-          });
-          depKeys[purlString] = true;
-        }
-      }
+      rootPkg.properties = properties;
     }
   }
-  return { pkgList, dependenciesList };
+  pkgList.push(rootPkg);
+  const depList = [];
+  if (jsonObject.dependencies) {
+    for (const dependency of jsonObject.dependencies) {
+      const res = parseSwiftJsonTreeObject(
+        pkgList,
+        dependenciesList,
+        dependency,
+        pkgFile
+      );
+      depList.push(res);
+    }
+  }
+  dependenciesList.push({
+    ref: purlString,
+    dependsOn: depList
+  });
+  return purlString;
 };
 
 /**
@@ -6216,64 +6255,9 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
   }
   const pkgList = [];
   const dependenciesList = [];
-  const depKeys = {};
-  let rootPkg = {};
-  let jsonData = {};
   try {
-    jsonData = JSON.parse(rawOutput);
-    if (jsonData && jsonData.name) {
-      rootPkg = {
-        group: jsonData.identity || "",
-        name: jsonData.name,
-        version: jsonData.version
-      };
-      const urlOrPath = jsonData.url || jsonData.path;
-      if (urlOrPath) {
-        if (urlOrPath.startsWith("http")) {
-          rootPkg.repository = { url: urlOrPath };
-        } else {
-          rootPkg.properties = [
-            {
-              name: "SrcPath",
-              value: urlOrPath
-            },
-            {
-              name: "SrcFile",
-              value: pkgFile
-            }
-          ];
-        }
-      }
-      const purl = new PackageURL(
-        "swift",
-        rootPkg.group,
-        rootPkg.name,
-        rootPkg.version,
-        null,
-        null
-      );
-      const bomRefString = decodeURIComponent(purl.toString());
-      rootPkg["bom-ref"] = bomRefString;
-      pkgList.push(rootPkg);
-      const deplist = [];
-      for (const rd of jsonData.dependencies) {
-        const deppurl = new PackageURL(
-          "swift",
-          rd.identity || "",
-          rd.name,
-          rd.version,
-          null,
-          null
-        );
-        const deppurlString = decodeURIComponent(deppurl.toString());
-        deplist.push(deppurlString);
-      }
-      dependenciesList.push({
-        ref: bomRefString,
-        dependsOn: deplist
-      });
-      _swiftDepPkgList(pkgList, dependenciesList, depKeys, jsonData);
-    }
+    const jsonData = JSON.parse(rawOutput);
+    parseSwiftJsonTreeObject(pkgList, dependenciesList, jsonData, pkgFile);
   } catch (e) {
     if (DEBUG_MODE) {
       console.log(e);
@@ -6304,10 +6288,16 @@ export const parseSwiftResolved = (resolvedFile) => {
         resolvedList = pkgData.object.pins;
       }
       for (const adep of resolvedList) {
-        const apkg = {
-          name: adep.package || adep.identity,
-          group: "",
-          version: adep.state.version || adep.state.revision,
+        const locationOrUrl = adep.location || adep.repositoryURL;
+        const version = adep.state.version || adep.state.revision;
+        const purl = purlFromUrlString("swift", locationOrUrl, version);
+        const purlString = decodeURIComponent(purl.toString());
+        const rootPkg = {
+          name: purl.name,
+          group: purl.namespace,
+          version: purl.version,
+          purl: purlString,
+          "bom-ref": purlString,
           properties: [
             {
               name: "SrcFile",
@@ -6328,11 +6318,10 @@ export const parseSwiftResolved = (resolvedFile) => {
             }
           }
         };
-        const repLocation = adep.location || adep.repositoryURL;
-        if (repLocation) {
-          apkg.repository = { url: repLocation };
+        if (locationOrUrl) {
+          rootPkg.repository = { url: locationOrUrl };
         }
-        pkgList.push(apkg);
+        pkgList.push(rootPkg);
       }
     } catch (err) {
       // continue regardless of error
