@@ -478,13 +478,15 @@ export const parseSliceUsages = async (
   purlLocationMap,
   purlImportsMap
 ) => {
-  const usages = slice.usages;
-  if (!usages || !usages.length) {
-    return undefined;
-  }
   const fileName = slice.fileName;
   const typesToLookup = new Set();
   const lKeyOverrides = {};
+  const usages = slice.usages || [];
+  // Annotations from usages
+  if (slice.signature && slice.signature.startsWith("@") && !usages.length) {
+    typesToLookup.add(slice.fullName);
+    addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
+  }
   for (const ausage of usages) {
     const ausageLine =
       ausage?.targetObj?.lineNumber || ausage?.definedBy?.lineNumber;

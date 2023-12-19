@@ -83,7 +83,7 @@
     "yargs": "^17.7.2"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "1.7.4",
+    "@appthreat/atom": "1.7.5",
     "@cyclonedx/cdxgen-plugins-bin": "^1.5.4",
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "^1.5.4",
     "@cyclonedx/cdxgen-plugins-bin-arm64": "^1.5.4",
