@@ -1267,7 +1267,7 @@ export const createJavaBom = async (path, options) => {
               );
             } else {
               console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 20 with maven 3.9 which might be incompatible."
+                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible."
               );
             }
             console.log(
@@ -3170,7 +3170,7 @@ export const createCppBom = (path, options) => {
       }
     }
   }
-  // The need for java >= 17 with atom is causing confusions since there could be C projects
+  // The need for java >= 21 with atom is causing confusions since there could be C projects
   // inside of other project types. So we currently limit this analyis only when -t argument
   // is used.
   if (

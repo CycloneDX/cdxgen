@@ -2135,7 +2135,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       } else {
         console.error(result.stdout, result.stderr);
         console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible."
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible."
         );
       }
       if (result.stderr.includes("not get unknown property")) {
@@ -6584,7 +6584,7 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         ) {
           jarCommandAvailable = false;
           console.log(
-            "jar command is not available in PATH. Ensure JDK >= 17 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
+            "jar command is not available in PATH. Ensure JDK >= 21 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
           );
         }
         const consolelines = (jarResult.stdout || "").split("\n");
