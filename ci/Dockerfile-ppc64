@@ -1,4 +1,4 @@
-FROM almalinux:9.2-minimal
+FROM almalinux:9.3-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
@@ -13,7 +13,7 @@ LABEL maintainer="cyclonedx" \
 
 ARG SBT_VERSION=1.9.7
 ARG MAVEN_VERSION=3.9.4
-ARG GRADLE_VERSION=8.3
+ARG GRADLE_VERSION=8.5
 ARG GO_VERSION=1.21.1
 
 ENV GOPATH=/opt/app-root/go \
@@ -52,7 +52,7 @@ RUN set -e; \
     echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
     && microdnf module enable php ruby -y \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
-        python3.11 python3.11-devel python3.11-pip ruby ruby-devel java-17-openjdk-headless \
+        python3.11 python3.11-devel python3.11-pip ruby ruby-devel java-21-openjdk-headless \
         pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \

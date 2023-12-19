@@ -229,14 +229,14 @@ To generate SBOM for an older specification version, such as 1.4, pass the versi
 cdxgen -r -o bom.json --spec-version 1.4
 ```
 
-To generate SBOM for C or Python, ensure Java >= 17 is installed.
+To generate SBOM for C or Python, ensure Java >= 21 is installed.
 
 ```shell
-# Install java >= 17
+# Install java >= 21
 cdxgen -t c -o bom.json
 ```
 
-NOTE: cdxgen is known to freeze with Java 8 or 11, so ensure >= 17 is installed and JAVA_HOME environment variable is configured correctly. If in doubt, use the cdxgen container image.
+NOTE: cdxgen is known to freeze with Java 8 or 11, so ensure >= 21 is installed and JAVA_HOME environment variable is configured correctly. If in doubt, use the cdxgen container image.
 
 ## Universal SBOM
 

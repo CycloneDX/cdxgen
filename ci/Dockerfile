@@ -1,4 +1,4 @@
-FROM almalinux:9.2-minimal
+FROM almalinux:9.3-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
@@ -16,10 +16,10 @@ ARG SWIFT_PLATFORM=ubi9
 ARG SWIFT_BRANCH=swift-5.8-release
 ARG SWIFT_VERSION=swift-5.8-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
-ARG JAVA_VERSION=20.0.2-graalce
+ARG JAVA_VERSION=21.0.1-graalce
 ARG SBT_VERSION=1.9.7
 ARG MAVEN_VERSION=3.9.4
-ARG GRADLE_VERSION=8.3
+ARG GRADLE_VERSION=8.5
 ARG GO_VERSION=1.21.1
 
 ENV GOPATH=/opt/app-root/go \

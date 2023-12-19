@@ -527,7 +527,17 @@ export const parseSliceUsages = async (
       .concat(ausage?.invokedCalls || [])
       .concat(ausage?.argToCalls || [])
       .concat(ausage?.procedures || [])) {
-      if (acall.isExternal == false) {
+      if (acall.resolvedMethod.startsWith("@")) {
+        typesToLookup.add(acall.callName);
+        if (acall.lineNumber) {
+          addToOverrides(
+            lKeyOverrides,
+            acall.callName,
+            fileName,
+            acall.lineNumber
+          );
+        }
+      } else if (acall.isExternal == false) {
         continue;
       }
       if (
