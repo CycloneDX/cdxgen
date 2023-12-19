@@ -527,7 +527,7 @@ export const parseSliceUsages = async (
       .concat(ausage?.invokedCalls || [])
       .concat(ausage?.argToCalls || [])
       .concat(ausage?.procedures || [])) {
-      if (acall.resolvedMethod.startsWith("@")) {
+      if (acall.resolvedMethod && acall.resolvedMethod.startsWith("@")) {
         typesToLookup.add(acall.callName);
         if (acall.lineNumber) {
           addToOverrides(
