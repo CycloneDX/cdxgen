@@ -2366,7 +2366,8 @@ export const guessLicenseId = function (content) {
 export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
   const MAVEN_CENTRAL_URL =
     process.env.MAVEN_CENTRAL_URL || "https://repo1.maven.org/maven2/";
-  const ANDROID_MAVEN = "https://maven.google.com/";
+  const ANDROID_MAVEN_URL =
+    process.env.ANDROID_MAVEN_URL || "https://maven.google.com/";
   const cdepList = [];
   if (!pkgList || !pkgList.length) {
     return pkgList;
@@ -2414,7 +2415,7 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
     let urlPrefix = MAVEN_CENTRAL_URL;
     // Ideally we should try one resolver after the other. But it increases the time taken
     if (group.indexOf("android") !== -1) {
-      urlPrefix = ANDROID_MAVEN;
+      urlPrefix = ANDROID_MAVEN_URL;
     }
     // Querying maven requires a valid group name
     if (!group || group === "") {

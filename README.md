@@ -358,6 +358,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | MVN_ARGS                     | Set to pass additional arguments such as profile or settings to maven                                                                |
 | MAVEN_HOME                   | Specify maven home                                                                                                                   |
 | MAVEN_CENTRAL_URL            | Specify URL of Maven Central for metadata fetching (e.g. when private repo is used)                                                  |
+| ANDROID_MAVEN_URL            | Specify URL of Android Maven Repository for metadata fetching (e.g. when private repo is used)                                       |
 | BAZEL_TARGET                 | Bazel target to build. Default :all (Eg: //java-maven)                                                                               |
 | BAZEL_STRIP_MAVEN_PREFIX     | Strip Maven group prefix (e.g. useful when private repo is used, defaults to `/maven2/`)                                             |
 | BAZEL_USE_ACTION_GRAPH       | SBOM for specific Bazel target, uses `bazel aquery 'outputs(".*.jar", deps(<BAZEL_TARGET>))'` (defaults to `false`)                  |
