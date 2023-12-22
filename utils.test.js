@@ -1358,7 +1358,8 @@ test("parse paket.lock", async () => {
     group: "",
     name: "0x53A.ReferenceAssemblies.Paket",
     version: "0.2",
-    purl: "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2"
+    purl: "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2",
+    "bom-ref": "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2"
   });
   expect(dep_list.dependenciesList.length).toEqual(13);
   expect(dep_list.dependenciesList[2]).toEqual({
@@ -2315,13 +2316,16 @@ test("parseYarnLock", async () => {
 });
 
 test("parseComposerLock", () => {
-  let deps = parseComposerLock("./test/data/composer.lock");
-  expect(deps.length).toEqual(1);
-  expect(deps[0]).toEqual({
+  let retMap = parseComposerLock("./test/data/composer.lock");
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.dependenciesList.length).toEqual(1);
+  expect(retMap.pkgList[0]).toEqual({
     group: "quickbooks",
     name: "v3-php-sdk",
     scope: "required",
-    version: "4.0.6.1",
+    version: "v4.0.6.1",
+    purl: "pkg:composer/quickbooks/v3-php-sdk@v4.0.6.1",
+    "bom-ref": "pkg:composer/quickbooks/v3-php-sdk@v4.0.6.1",
     repository: {
       type: "git",
       url: "https://github.com/intuit/QuickBooks-V3-PHP-SDK.git",
@@ -2333,6 +2337,10 @@ test("parseComposerLock", () => {
       {
         name: "SrcFile",
         value: "./test/data/composer.lock"
+      },
+      {
+        name: "Namespaces",
+        value: "QuickBooksOnline\\API\\"
       }
     ],
     evidence: {
@@ -2350,13 +2358,16 @@ test("parseComposerLock", () => {
     }
   });
 
-  deps = parseComposerLock("./test/data/composer-2.lock");
-  expect(deps.length).toEqual(73);
-  expect(deps[0]).toEqual({
+  retMap = parseComposerLock("./test/data/composer-2.lock");
+  expect(retMap.pkgList.length).toEqual(73);
+  expect(retMap.dependenciesList.length).toEqual(73);
+  expect(retMap.pkgList[0]).toEqual({
     group: "amphp",
     name: "amp",
     scope: "required",
-    version: "2.4.4",
+    version: "v2.4.4",
+    purl: "pkg:composer/amphp/amp@v2.4.4",
+    "bom-ref": "pkg:composer/amphp/amp@v2.4.4",
     repository: {
       type: "git",
       url: "https://github.com/amphp/amp.git",
@@ -2368,6 +2379,10 @@ test("parseComposerLock", () => {
       {
         name: "SrcFile",
         value: "./test/data/composer-2.lock"
+      },
+      {
+        name: "Namespaces",
+        value: "Amp\\"
       }
     ],
     evidence: {
@@ -2385,12 +2400,15 @@ test("parseComposerLock", () => {
     }
   });
 
-  deps = parseComposerLock("./test/data/composer-3.lock");
-  expect(deps.length).toEqual(62);
-  expect(deps[0]).toEqual({
+  retMap = parseComposerLock("./test/data/composer-3.lock");
+  expect(retMap.pkgList.length).toEqual(62);
+  expect(retMap.dependenciesList.length).toEqual(62);
+  expect(retMap.pkgList[0]).toEqual({
     group: "amphp",
     name: "amp",
-    version: "2.6.2",
+    version: "v2.6.2",
+    purl: "pkg:composer/amphp/amp@v2.6.2",
+    "bom-ref": "pkg:composer/amphp/amp@v2.6.2",
     repository: {
       type: "git",
       url: "https://github.com/amphp/amp.git",
@@ -2399,7 +2417,13 @@ test("parseComposerLock", () => {
     license: ["MIT"],
     description: "A non-blocking concurrency framework for PHP applications.",
     scope: "required",
-    properties: [{ name: "SrcFile", value: "./test/data/composer-3.lock" }],
+    properties: [
+      { name: "SrcFile", value: "./test/data/composer-3.lock" },
+      {
+        name: "Namespaces",
+        value: "Amp\\"
+      }
+    ],
     evidence: {
       identity: {
         field: "purl",
@@ -2413,6 +2437,42 @@ test("parseComposerLock", () => {
         ]
       }
     }
+  });
+  retMap = parseComposerLock("./test/data/composer-4.lock");
+  expect(retMap.pkgList.length).toEqual(50);
+  expect(retMap.dependenciesList.length).toEqual(50);
+  expect(retMap.pkgList[0]).toEqual({
+    group: "apache",
+    name: "log4php",
+    purl: "pkg:composer/apache/log4php@2.3.0",
+    "bom-ref": "pkg:composer/apache/log4php@2.3.0",
+    version: "2.3.0",
+    repository: {
+      type: "git",
+      url: "https://git-wip-us.apache.org/repos/asf/logging-log4php.git",
+      reference: "8c6df2481cd68d0d211d38f700406c5f0a9de0c2"
+    },
+    license: ["Apache-2.0"],
+    description: "A versatile logging framework for PHP",
+    scope: "required",
+    properties: [{ name: "SrcFile", value: "./test/data/composer-4.lock" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            confidence: 1,
+            technique: "manifest-analysis",
+            value: "./test/data/composer-4.lock"
+          }
+        ]
+      }
+    }
+  });
+  expect(retMap.dependenciesList[1]).toEqual({
+    ref: "pkg:composer/doctrine/annotations@v1.2.1",
+    dependsOn: ["pkg:composer/doctrine/lexer@v1.0"]
   });
 });
 
