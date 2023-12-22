@@ -1807,6 +1807,8 @@ test("parsePnpmLock", async () => {
       "sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==",
     group: "@babel",
     name: "code-frame",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.10.1",
+    purl: "pkg:npm/%40babel/code-frame@7.10.1",
     scope: undefined,
     version: "7.10.1",
     properties: [
@@ -1837,6 +1839,8 @@ test("parsePnpmLock", async () => {
       "sha512-iAXqUn8IIeBTNd72xsFlgaXHkMBMt6y4HJp1tIaK465CWLT/fG1aqB7ykr95gHHmlBdGbFeWWfyB4NJJ0nmeIg==",
     group: "@babel",
     name: "code-frame",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.16.7",
+    purl: "pkg:npm/%40babel/code-frame@7.16.7",
     scope: "optional",
     version: "7.16.7",
     properties: [
@@ -1866,6 +1870,8 @@ test("parsePnpmLock", async () => {
     group: "",
     name: "ansi-regex",
     version: "2.1.1",
+    "bom-ref": "pkg:npm/ansi-regex@2.1.1",
+    purl: "pkg:npm/ansi-regex@2.1.1",
     scope: undefined,
     _integrity: "sha1-w7M6te42DYbg5ijwRorn7yfWVN8=",
     properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock2.yaml" }],
@@ -1900,6 +1906,8 @@ test("parsePnpmLock", async () => {
     group: "@nodelib",
     name: "fs.scandir",
     version: "2.1.5",
+    "bom-ref": "pkg:npm/@nodelib/fs.scandir@2.1.5",
+    purl: "pkg:npm/%40nodelib/fs.scandir@2.1.5",
     scope: undefined,
     _integrity:
       "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==",
@@ -1933,6 +1941,8 @@ test("parsePnpmLock", async () => {
     group: "@babel",
     name: "code-frame",
     version: "7.18.6",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.18.6",
+    purl: "pkg:npm/%40babel/code-frame@7.18.6",
     scope: "optional",
     _integrity:
       "sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==",
@@ -1955,6 +1965,8 @@ test("parsePnpmLock", async () => {
     group: "",
     name: "yargs",
     version: "17.7.1",
+    "bom-ref": "pkg:npm/yargs@17.7.1",
+    purl: "pkg:npm/yargs@17.7.1",
     scope: "optional",
     _integrity:
       "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
@@ -1980,6 +1992,8 @@ test("parsePnpmLock", async () => {
     group: "@babel",
     name: "code-frame",
     version: "7.18.6",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.18.6",
+    purl: "pkg:npm/%40babel/code-frame@7.18.6",
     scope: "optional",
     _integrity:
       "sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==",

@@ -1351,6 +1351,8 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
             group: group,
             name: name,
             version: version,
+            purl: purlString,
+            "bom-ref": decodeURIComponent(purlString),
             scope,
             _integrity: integrity,
             properties: [
