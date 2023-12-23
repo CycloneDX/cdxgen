@@ -220,6 +220,17 @@ const args = yargs(hideBin(process.argv))
     description: "Additional glob pattern(s) to ignore",
     hidden: true
   })
+  .option("export-proto", {
+    type: "boolean",
+    default: false,
+    description: "Serialize and export BOM as protobuf binary.",
+    hidden: true
+  })
+  .option("proto-bin-file", {
+    description: "Path for the serialized protobuf binary.",
+    default: "bom.cdx",
+    hidden: true
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
@@ -582,7 +593,11 @@ const checkPermissions = (filePath) => {
       console.log(err);
     }
   }
-
+  // Protobuf serialization
+  if (options.exportProto) {
+    const protobomModule = await import("../protobom.js");
+    protobomModule.writeBinary(bomNSData.bomJson, options.protoBinFile);
+  }
   if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     printDependencyTree(bomNSData.bomJson);
     printTable(bomNSData.bomJson);

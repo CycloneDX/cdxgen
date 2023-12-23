@@ -347,3 +347,11 @@ Refer to the nydus-demo.yml workflow for an example github action that demonstra
 ```shell
 sudo nerdctl --snapshotter nydus run --rm -v $HOME/.m2:/root/.m2 -v $(pwd):/app ghcr.io/cyclonedx/cdxgen:master-nydus -p -t java /app
 ```
+
+## Export as protobuf binary
+
+Pass the argument `--export-proto` to serialize and export the BOM as protobuf binary. Only the spec version 1.5 is supported in this mode.
+
+```shell
+--export-proto --proto-bin-file bom.cdx.bin
+```
