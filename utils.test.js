@@ -1351,7 +1351,8 @@ test("parse paket.lock", async () => {
     dependenciesList: []
   });
   const dep_list = await parsePaketLockData(
-    readFileSync("./test/data/paket.lock", { encoding: "utf-8" })
+    readFileSync("./test/data/paket.lock", { encoding: "utf-8" }),
+    "./test/data/paket.lock"
   );
   expect(dep_list.pkgList.length).toEqual(13);
   expect(dep_list.pkgList[0]).toEqual({
@@ -1359,7 +1360,21 @@ test("parse paket.lock", async () => {
     name: "0x53A.ReferenceAssemblies.Paket",
     version: "0.2",
     purl: "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2",
-    "bom-ref": "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2"
+    "bom-ref": "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2",
+    properties: [{ name: "SrcFile", value: "./test/data/paket.lock" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/paket.lock"
+          }
+        ]
+      }
+    }
   });
   expect(dep_list.dependenciesList.length).toEqual(13);
   expect(dep_list.dependenciesList[2]).toEqual({

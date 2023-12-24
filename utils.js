@@ -5577,7 +5577,7 @@ export const parseCsPkgLockData = async function (csLockData) {
   return pkgList;
 };
 
-export const parsePaketLockData = async function (paketLockData) {
+export const parsePaketLockData = async function (paketLockData, pkgLockFile) {
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
@@ -5613,13 +5613,31 @@ export const parsePaketLockData = async function (paketLockData) {
         null,
         null
       ).toString();
-      // FIXME: Add evidence data by getting the file
       pkg = {
         group: "",
         name,
         version,
         purl,
-        "bom-ref": decodeURIComponent(purl)
+        "bom-ref": decodeURIComponent(purl),
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgLockFile
+          }
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgLockFile
+              }
+            ]
+          }
+        }
       };
       pkgList.push(pkg);
       dependenciesMap[purl] = new Set();
@@ -5671,6 +5689,7 @@ export const parsePaketLockData = async function (paketLockData) {
     dependenciesList
   };
 };
+
 /**
  * Parse composer lock file
  *

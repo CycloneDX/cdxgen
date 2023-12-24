@@ -22,7 +22,7 @@ Most SBOM tools are like barcode scanners. They can scan a few package manifest 
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------- |
 | Node.js                         | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js                   | Yes except .min.js                                                                                | Yes      |
 | Java                            | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                                              | Yes unless pom.xml is manually parsed due to unavailability of maven or errors                    | Yes      |
-| PHP                             | composer.lock                                                                                                     | Yes                                                                                               |          |
+| PHP                             | composer.lock                                                                                                     | Yes                                                                                               | Yes      |
 | Python                          | pyproject.toml, setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, pdm.lock, bdist_wheel, .whl, .egg-info | Yes using the automatic pip install/freeze. When disabled, only with Pipfile.lock and poetry.lock | Yes      |
 | Go                              | binary, go.mod, go.sum, Gopkg.lock                                                                                | Yes except binary                                                                                 | Yes      |
 | Ruby                            | Gemfile.lock, gemspec                                                                                             | Only for Gemfile.lock                                                                             |          |
@@ -347,6 +347,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Python (requirements.txt, setup.py, pyproject.toml, poetry.lock)
 - .NET (project.assets.json, paket.lock)
 - Go (go.mod)
+- PHP (composer.lock)
 
 ## Environment variables
 
