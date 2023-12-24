@@ -5577,7 +5577,7 @@ export const parseCsPkgLockData = async function (csLockData) {
   return pkgList;
 };
 
-export const parsePaketLockData = async function (paketLockData) {
+export const parsePaketLockData = async function (paketLockData, pkgLockFile) {
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
@@ -5605,14 +5605,39 @@ export const parsePaketLockData = async function (paketLockData) {
     if (match) {
       const name = match[1];
       const version = match[2];
-      const purl = decodeURIComponent(
-        new PackageURL("nuget", "", name, version, null, null).toString()
-      );
+      const purl = new PackageURL(
+        "nuget",
+        "",
+        name,
+        version,
+        null,
+        null
+      ).toString();
       pkg = {
         group: "",
-        name: name,
-        version: version,
-        purl: purl
+        name,
+        version,
+        purl,
+        "bom-ref": decodeURIComponent(purl),
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgLockFile
+          }
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgLockFile
+              }
+            ]
+          }
+        }
       };
       pkgList.push(pkg);
       dependenciesMap[purl] = new Set();
@@ -5664,6 +5689,7 @@ export const parsePaketLockData = async function (paketLockData) {
     dependenciesList
   };
 };
+
 /**
  * Parse composer lock file
  *
@@ -5671,6 +5697,9 @@ export const parsePaketLockData = async function (paketLockData) {
  */
 export const parseComposerLock = function (pkgLockFile) {
   const pkgList = [];
+  const dependenciesList = [];
+  const dependenciesMap = {};
+  const pkgNamePurlMap = {};
   if (existsSync(pkgLockFile)) {
     let lockData = {};
     try {
@@ -5687,6 +5716,7 @@ export const parseComposerLock = function (pkgLockFile) {
       if (lockData["packages-dev"]) {
         packages["optional"] = lockData["packages-dev"];
       }
+      // Pass 1: Collect all packages
       for (const compScope in packages) {
         for (const i in packages[compScope]) {
           const pkg = packages[compScope][i];
@@ -5699,14 +5729,20 @@ export const parseComposerLock = function (pkgLockFile) {
             group = "";
           }
           const name = basename(pkg.name);
-          pkgList.push({
+          const purl = new PackageURL(
+            "composer",
+            group,
+            name,
+            pkg.version,
+            null,
+            null
+          ).toString();
+          const apkg = {
             group: group,
             name: name,
-            // Remove leading v from version to work around bug
-            //  https://github.com/OSSIndex/vulns/issues/231
-            // @TODO: remove workaround when DependencyTrack v4.4 is released,
-            //  which has it's own workaround. Or when the 231 bug is fixed.
-            version: pkg.version.replace(/^v/, ""),
+            purl,
+            "bom-ref": decodeURIComponent(purl),
+            version: pkg.version,
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,
@@ -5730,12 +5766,58 @@ export const parseComposerLock = function (pkgLockFile) {
                 ]
               }
             }
-          });
+          };
+          if (pkg.autoload && Object.keys(pkg.autoload).length) {
+            const namespaces = [];
+            for (const aaload of Object.keys(pkg.autoload)) {
+              if (aaload.startsWith("psr")) {
+                for (const ans of Object.keys(pkg.autoload[aaload])) {
+                  namespaces.push(ans);
+                }
+              }
+            }
+            if (namespaces.length) {
+              apkg.properties.push({
+                name: "Namespaces",
+                value: namespaces.join(", ")
+              });
+            }
+          }
+          pkgList.push(apkg);
+          dependenciesMap[purl] = new Set();
+          pkgNamePurlMap[pkg.name] = purl;
+        }
+      }
+      // Pass 2: Construct dependency tree
+      for (const compScope in packages) {
+        for (const i in packages[compScope]) {
+          const pkg = packages[compScope][i];
+          if (!pkg || !pkg.name || !pkg.version) {
+            continue;
+          }
+          if (!pkg.require || !Object.keys(pkg.require).length) {
+            continue;
+          }
+          const purl = pkgNamePurlMap[pkg.name];
+          for (const adepName of Object.keys(pkg.require)) {
+            if (pkgNamePurlMap[adepName]) {
+              dependenciesMap[purl].add(pkgNamePurlMap[adepName]);
+            }
+          }
         }
       }
     }
   }
-  return pkgList;
+  for (const ref in dependenciesMap) {
+    dependenciesList.push({
+      ref: ref,
+      dependsOn: Array.from(dependenciesMap[ref])
+    });
+  }
+  return {
+    pkgList,
+    dependenciesList
+  };
 };
 
 export const parseSbtTree = (sbtTreeFile) => {

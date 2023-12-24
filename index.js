@@ -4048,6 +4048,8 @@ export const createContainerSpecLikeBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 export const createPHPBom = (path, options) => {
+  let dependencies = [];
+  let parentComponent = {};
   const composerJsonFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.json",
@@ -4117,17 +4119,56 @@ export const createPHPBom = (path, options) => {
   );
   if (composerLockFiles.length) {
     for (const f of composerLockFiles) {
+      const basePath = dirname(f);
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = parseComposerLock(f);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      // Is there a composer.json to find the parent component
+      if (
+        !Object.keys(parentComponent).length &&
+        existsSync(join(basePath, "composer.json"))
+      ) {
+        const composerData = JSON.parse(
+          readFileSync(join(basePath, "composer.json"), { encoding: "utf-8" })
+        );
+        const pkgName = composerData.name;
+        if (pkgName) {
+          parentComponent.group = dirname(pkgName);
+          if (parentComponent.group === ".") {
+            parentComponent.group = "";
+          }
+          parentComponent.name = basename(pkgName);
+          parentComponent.type = "application";
+          parentComponent.version = composerData.version || "latest";
+          parentComponent["bom-ref"] = decodeURIComponent(
+            new PackageURL(
+              "composer",
+              parentComponent.group,
+              parentComponent.name,
+              parentComponent.version,
+              null,
+              null
+            ).toString()
+          );
+        }
+      }
+      const retMap = parseComposerLock(f);
+      if (retMap.pkgList && retMap.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+      }
+      if (retMap.dependenciesList) {
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependenciesList,
+          parentComponent
+        );
       }
     }
     return buildBomNSData(options, pkgList, "composer", {
       src: path,
-      filename: composerLockFiles.join(", ")
+      filename: composerLockFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   }
   return {};
@@ -4331,7 +4372,7 @@ export const createCsharpBom = async (
         console.log(`Parsing ${f}`);
       }
       pkgData = readFileSync(f, { encoding: "utf-8" });
-      const results = await parsePaketLockData(pkgData);
+      const results = await parsePaketLockData(pkgData, f);
       const dlist = results.pkgList;
       const deps = results.dependenciesList;
       if (dlist && dlist.length) {
