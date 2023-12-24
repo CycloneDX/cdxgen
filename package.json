@@ -84,7 +84,7 @@
   },
   "optionalDependencies": {
     "@appthreat/atom": "1.8.0",
-    "@appthreat/cdx-proto": "^0.0.3",
+    "@appthreat/cdx-proto": "^0.0.4",
     "@cyclonedx/cdxgen-plugins-bin": "^1.5.4",
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "^1.5.4",
     "@cyclonedx/cdxgen-plugins-bin-arm64": "^1.5.4",
