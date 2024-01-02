@@ -666,6 +666,12 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         purl: purlString,
         "bom-ref": decodeURIComponent(purlString)
       };
+      if (node.resolved) {
+        pkg.properties.push({
+          name: "ResolvedUrl",
+          value: node.resolved
+        });
+      }
     }
     const packageLicense = node.package.license;
     if (packageLicense) {
@@ -694,8 +700,9 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
             null
           ).toString()
         );
-
-        workspaceDependsOn.push(depWorkspacePurlString);
+        if (decodeURIComponent(purlString) !== depWorkspacePurlString) {
+          workspaceDependsOn.push(depWorkspacePurlString);
+        }
       }
     }
 
@@ -726,7 +733,9 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
             null
           ).toString()
         );
-        childrenDependsOn.push(depChildString);
+        if (decodeURIComponent(purlString) !== depChildString) {
+          childrenDependsOn.push(depChildString);
+        }
       }
     }
 
@@ -735,31 +744,35 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     for (const edge of node.edgesOut.values()) {
       let targetVersion;
       let targetName;
-
+      let foundMatch = false;
       // if the edge doesn't have an integrity, it's likely a peer dependency
       // which isn't installed
-      let edgeToIntegrity = edge.to ? edge.to.integrity : null;
-      // let packageName = node.packageName;
-      // let edgeName = edge.name;
+      // Bug #795. At times, npm loses the integrity node completely and such packages are getting missed out
+      // To keep things safe, we include these packages.
+      let edgeToIntegrity = edge.to ? edge.to.integrity : undefined;
       if (!edgeToIntegrity) {
-        continue;
-      }
-
-      // the edges don't actually contain a version, so we need to search the root node
-      // children to find the correct version. we check the node children first, then
-      // we check the root node children
-      let foundMatch = false;
-      for (const child of node.children) {
-        if (child[1].integrity == edgeToIntegrity) {
-          targetName = child[0].replace(/node_modules\//g, "");
-          // The package name could be different from the targetName retrieved
-          // Eg: "string-width-cjs": "npm:string-width@^4.2.0",
-          if (child[1].packageName && child[1].packageName !== targetName) {
-            targetName = child[1].packageName;
+        // This hack is required to fix the package name
+        targetName = node.name.replace(/-cjs$/, "");
+        targetVersion = node.version;
+        foundMatch = true;
+      } else {
+        // the edges don't actually contain a version, so we need to search the root node
+        // children to find the correct version. we check the node children first, then
+        // we check the root node children
+        for (const child of node.children) {
+          if (edgeToIntegrity) {
+            if (child[1].integrity == edgeToIntegrity) {
+              targetName = child[0].replace(/node_modules\//g, "");
+              // The package name could be different from the targetName retrieved
+              // Eg: "string-width-cjs": "npm:string-width@^4.2.0",
+              if (child[1].packageName && child[1].packageName !== targetName) {
+                targetName = child[1].packageName;
+              }
+              targetVersion = child[1].version;
+              foundMatch = true;
+              break;
+            }
           }
-          targetVersion = child[1].version;
-          foundMatch = true;
-          break;
         }
       }
       if (!foundMatch) {
@@ -792,8 +805,12 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           null
         ).toString()
       );
-      pkgDependsOn.push(depPurlString);
-      if (edge.to == null) continue;
+      if (decodeURIComponent(purlString) !== depPurlString) {
+        pkgDependsOn.push(depPurlString);
+      }
+      if (edge.to == null) {
+        continue;
+      }
       const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
         parseArboristNode(
           edge.to,
