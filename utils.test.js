@@ -1710,7 +1710,7 @@ test("parsePkgLock v2 workspace", async () => {
   );
   let pkgs = parsedList.pkgList;
   let deps = parsedList.dependenciesList;
-  expect(pkgs.length).toEqual(1032);
+  expect(pkgs.length).toEqual(1034);
   expect(pkgs[0].license).toEqual("MIT");
   let hasAppWorkspacePkg = pkgs.some(
     (obj) => obj["bom-ref"] === "pkg:npm/app@0.0.0"
