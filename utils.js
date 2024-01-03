@@ -4059,6 +4059,9 @@ export const parseGemfileLockData = async function (gemLockData) {
       const tmpA = l.split(" ");
       if (tmpA && tmpA.length == 2) {
         const name = tmpA[0];
+        if (name === "remote:") {
+          return;
+        }
         if (!pkgnames[name]) {
           let version = tmpA[1].split(", ")[0];
           version = version.replace(/[(>=<)~ ]/g, "");
@@ -4077,7 +4080,8 @@ export const parseGemfileLockData = async function (gemLockData) {
       l === "PLATFORMS" ||
       l === "DEPENDENCIES" ||
       l === "RUBY VERSION" ||
-      l === "BUNDLED WITH"
+      l === "BUNDLED WITH" ||
+      l === "PATH"
     ) {
       specsFound = false;
     }
