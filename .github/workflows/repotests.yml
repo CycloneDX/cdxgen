@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '19'
@@ -170,20 +170,20 @@ jobs:
         with:
           repository: 'hoolicorp/java-sec-code'
           path: 'repotests/java-sec-code'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'DefectDojo/django-DefectDojo'
           ref: '2.28.2'
           path: 'repotests/django-DefectDojo'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'googleprojectzero/Jackalope'
           path: 'repotests/Jackalope'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'hritik14/broken-mvn-wrapper'
           path: 'repotests/broken-mvn-wrapper'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: 'microsoft/dotnet-podcasts'
           path: 'repotests/dotnet-podcasts'
@@ -250,7 +250,7 @@ jobs:
       - name: repotests Vulnerable-Web-Application
         run: |
           bin/cdxgen.js -p -t php repotests/Vulnerable-Web-Application -o bomresults/bom-php-1.json --validate
-          bin/cdxgen.js -p -t php --no-recurse repotests/Vulnerable-Web-Application -o bomresults/bom-php-2.json --validate
+          bin/cdxgen.js -p -t php --no-recurse repotests/Vulnerable-Web-Application -o bomresults/bom-php-2.json --validate --profile research -p
         shell: bash
       - name: repotests railsgoat
         run: |

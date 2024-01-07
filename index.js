@@ -4055,6 +4055,11 @@ export const createPHPBom = (path, options) => {
     (options.multiProject ? "**/" : "") + "composer.json",
     options
   );
+  if (!options.exclude) {
+    options.exclude = [];
+  }
+  // Ignore vendor directories for lock files
+  options.exclude.push("**/vendor/**");
   let composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock",
@@ -4123,6 +4128,7 @@ export const createPHPBom = (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
+      let rootRequires = [];
       // Is there a composer.json to find the parent component
       if (
         !Object.keys(parentComponent).length &&
@@ -4131,6 +4137,7 @@ export const createPHPBom = (path, options) => {
         const composerData = JSON.parse(
           readFileSync(join(basePath, "composer.json"), { encoding: "utf-8" })
         );
+        rootRequires = composerData.require;
         const pkgName = composerData.name;
         if (pkgName) {
           parentComponent.group = dirname(pkgName);
@@ -4152,16 +4159,33 @@ export const createPHPBom = (path, options) => {
           );
         }
       }
-      const retMap = parseComposerLock(f);
+      const retMap = parseComposerLock(f, rootRequires);
       if (retMap.pkgList && retMap.pkgList.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (retMap.dependenciesList) {
+        if (!Object.keys(parentComponent).length) {
+          parentComponent = createDefaultParentComponent(
+            path,
+            "composer",
+            options
+          );
+        }
+        // Complete the dependency tree by making parent component depend on the first level
+        const parentDependsOn = [];
+        for (const p of retMap.rootList) {
+          parentDependsOn.push(p["bom-ref"]);
+        }
+        const pdependencies = {
+          ref: parentComponent["bom-ref"],
+          dependsOn: parentDependsOn
+        };
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
           parentComponent
         );
+        dependencies.splice(0, 0, pdependencies);
       }
     }
     return buildBomNSData(options, pkgList, "composer", {

@@ -1214,7 +1214,7 @@ test("parse github actions workflow data", async () => {
   dep_list = parseGitHubWorkflowData(
     readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(8);
+  expect(dep_list.length).toEqual(7);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
@@ -1762,8 +1762,8 @@ test("parsePkgLock v3", async () => {
     projectName: "cdxgen"
   });
   deps = parsedList.pkgList;
-  expect(deps.length).toEqual(1195);
-  expect(parsedList.dependenciesList.length).toEqual(1195);
+  expect(deps.length).toEqual(1199);
+  expect(parsedList.dependenciesList.length).toEqual(1199);
 });
 
 test("parseBowerJson", async () => {
