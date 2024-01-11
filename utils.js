@@ -5715,12 +5715,20 @@ export const parsePaketLockData = async function (paketLockData, pkgLockFile) {
  * Parse composer lock file
  *
  * @param {string} pkgLockFile composer.lock file
+ * @param {array} rootRequires require section from composer.json
  */
-export const parseComposerLock = function (pkgLockFile) {
+export const parseComposerLock = function (pkgLockFile, rootRequires) {
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
   const pkgNamePurlMap = {};
+  const rootList = [];
+  const rootRequiresMap = {};
+  if (rootRequires) {
+    for (const rr of Object.keys(rootRequires)) {
+      rootRequiresMap[rr] = true;
+    }
+  }
   if (existsSync(pkgLockFile)) {
     let lockData = {};
     try {
@@ -5745,6 +5753,7 @@ export const parseComposerLock = function (pkgLockFile) {
           if (!pkg || !pkg.name || !pkg.version) {
             continue;
           }
+
           let group = dirname(pkg.name);
           if (group === ".") {
             group = "";
@@ -5793,7 +5802,7 @@ export const parseComposerLock = function (pkgLockFile) {
             for (const aaload of Object.keys(pkg.autoload)) {
               if (aaload.startsWith("psr")) {
                 for (const ans of Object.keys(pkg.autoload[aaload])) {
-                  namespaces.push(ans);
+                  namespaces.push(ans.trim());
                 }
               }
             }
@@ -5807,6 +5816,10 @@ export const parseComposerLock = function (pkgLockFile) {
           pkgList.push(apkg);
           dependenciesMap[purl] = new Set();
           pkgNamePurlMap[pkg.name] = purl;
+          // Add this package to the root list if needed
+          if (rootRequiresMap[pkg.name]) {
+            rootList.push(apkg);
+          }
         }
       }
       // Pass 2: Construct dependency tree
@@ -5837,7 +5850,8 @@ export const parseComposerLock = function (pkgLockFile) {
   }
   return {
     pkgList,
-    dependenciesList
+    dependenciesList,
+    rootList
   };
 };
 

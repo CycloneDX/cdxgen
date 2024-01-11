@@ -207,7 +207,9 @@ export const createSlice = (
   if (!filePath) {
     return;
   }
-  console.log(`Create ${sliceType} slice for ${purlOrLanguage} ${filePath}`);
+  console.log(
+    `Create ${sliceType} slice for ${path.resolve(filePath)}. Please wait ...`
+  );
   const language = purlOrLanguage.startsWith("pkg:")
     ? purlToLanguage(purlOrLanguage, filePath)
     : purlOrLanguage;
@@ -271,22 +273,35 @@ export const purlToLanguage = (purl, filePath) => {
     case "pypi":
       language = "python";
       break;
+    case "composer":
+      language = "php";
+      break;
+    case "generic":
+      language = "c";
   }
   return language;
 };
 
-export const initFromSbom = (components) => {
+export const initFromSbom = (components, language) => {
   const purlLocationMap = {};
   const purlImportsMap = {};
   for (const comp of components) {
     if (!comp || !comp.evidence) {
       continue;
     }
-    (comp.properties || [])
-      .filter((v) => v.name === "ImportedModules")
-      .forEach((v) => {
-        purlImportsMap[comp.purl] = (v.value || "").split(",");
-      });
+    if (language === "php") {
+      (comp.properties || [])
+        .filter((v) => v.name === "Namespaces")
+        .forEach((v) => {
+          purlImportsMap[comp.purl] = (v.value || "").split(", ");
+        });
+    } else {
+      (comp.properties || [])
+        .filter((v) => v.name === "ImportedModules")
+        .forEach((v) => {
+          purlImportsMap[comp.purl] = (v.value || "").split(",");
+        });
+    }
     if (comp.evidence.occurrences) {
       purlLocationMap[comp.purl] = new Set(
         comp.evidence.occurrences.map((v) => v.location)
@@ -323,7 +338,7 @@ export const analyzeProject = async (dbObjMap, options) => {
   const components = bomJson.components || [];
   // Load any existing purl-location information from the sbom.
   // For eg: cdxgen populates this information for javascript projects
-  let { purlLocationMap, purlImportsMap } = initFromSbom(components);
+  let { purlLocationMap, purlImportsMap } = initFromSbom(components, language);
   // Do reachables first so that usages slicing can reuse the atom file
   if (options.withReachables) {
     if (
@@ -487,6 +502,11 @@ export const parseSliceUsages = async (
     typesToLookup.add(slice.fullName);
     addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
   }
+  // PHP imports from usages
+  if (slice.code && slice.code.startsWith("use") && !usages.length) {
+    typesToLookup.add(slice.fullName);
+    addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
+  }
   for (const ausage of usages) {
     const ausageLine =
       ausage?.targetObj?.lineNumber || ausage?.definedBy?.lineNumber;
@@ -616,12 +636,25 @@ export const parseSliceUsages = async (
     if (purlImportsMap && Object.keys(purlImportsMap).length) {
       for (const apurl of Object.keys(purlImportsMap)) {
         const apurlImports = purlImportsMap[apurl];
-        if (apurlImports && apurlImports.includes(atype)) {
-          if (!purlLocationMap[apurl]) {
-            purlLocationMap[apurl] = new Set();
+        if (language === "php") {
+          for (const aimp of apurlImports) {
+            if (atype.startsWith(aimp)) {
+              if (!purlLocationMap[apurl]) {
+                purlLocationMap[apurl] = new Set();
+              }
+              if (lKeyOverrides[atype]) {
+                purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+              }
+            }
           }
-          if (lKeyOverrides[atype]) {
-            purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+        } else {
+          if (apurlImports && apurlImports.includes(atype)) {
+            if (!purlLocationMap[apurl]) {
+              purlLocationMap[apurl] = new Set();
+            }
+            if (lKeyOverrides[atype]) {
+              purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+            }
           }
         }
       }
@@ -715,6 +748,11 @@ export const isFilterableType = (
       return true;
     }
   }
+  if (["php"].includes(language)) {
+    if (!typeFullName.includes("\\") && !typeFullName.startsWith("use")) {
+      return true;
+    }
+  }
   if (userDefinedTypesMap[typeFullName]) {
     return true;
   }
@@ -739,12 +777,16 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     let endpoints = [];
     let authenticated = undefined;
     if (targetObj && targetObj?.resolvedMethod) {
-      endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
+      if (language != "php") {
+        endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
+      }
       if (targetObj?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
     } else if (definedBy && definedBy?.resolvedMethod) {
-      endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
+      if (language != "php") {
+        endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
+      }
       if (definedBy?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
@@ -752,12 +794,17 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     if (usage.invokedCalls) {
       for (const acall of usage.invokedCalls) {
         if (acall.resolvedMethod) {
-          const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
-          if (acall.resolvedMethod.toLowerCase().includes("auth")) {
-            authenticated = true;
-          }
-          if (tmpEndpoints && tmpEndpoints.length) {
-            endpoints = (endpoints || []).concat(tmpEndpoints);
+          if (language != "php") {
+            const tmpEndpoints = extractEndpoints(
+              language,
+              acall.resolvedMethod
+            );
+            if (acall.resolvedMethod.toLowerCase().includes("auth")) {
+              authenticated = true;
+            }
+            if (tmpEndpoints && tmpEndpoints.length) {
+              endpoints = (endpoints || []).concat(tmpEndpoints);
+            }
           }
         }
       }
@@ -791,7 +838,7 @@ export const detectServicesFromUDT = (
   servicesMap
 ) => {
   if (
-    ["python", "py", "c", "cpp", "c++"].includes(language) &&
+    ["python", "py", "c", "cpp", "c++", "php"].includes(language) &&
     userDefinedTypes &&
     userDefinedTypes.length
   ) {
@@ -803,7 +850,15 @@ export const detectServicesFromUDT = (
         audt.name.toLowerCase().includes("registerhandler") ||
         audt.name.toLowerCase().includes("endpoint") ||
         audt.name.toLowerCase().includes("api") ||
-        audt.name.toLowerCase().includes("add_method")
+        audt.name.toLowerCase().includes("add_method") ||
+        audt.name.toLowerCase().includes("get") ||
+        audt.name.toLowerCase().includes("post") ||
+        audt.name.toLowerCase().includes("delete") ||
+        audt.name.toLowerCase().includes("put") ||
+        audt.name.toLowerCase().includes("head") ||
+        audt.name.toLowerCase().includes("options") ||
+        audt.name.toLowerCase().includes("addRoute") ||
+        audt.name.toLowerCase().includes("connect")
       ) {
         const fields = audt.fields || [];
         if (
@@ -819,14 +874,14 @@ export const detectServicesFromUDT = (
               audt.fileName.replace(".py", "")
             )}-service`;
           }
-          if (!servicesMap[serviceName]) {
-            servicesMap[serviceName] = {
-              endpoints: new Set(),
-              authenticated: false,
-              xTrustBoundary: undefined
-            };
-          }
-          if (endpoints) {
+          if (endpoints && endpoints.length) {
+            if (!servicesMap[serviceName]) {
+              servicesMap[serviceName] = {
+                endpoints: new Set(),
+                authenticated: false,
+                xTrustBoundary: undefined
+              };
+            }
             for (const endpoint of endpoints) {
               servicesMap[serviceName].endpoints.add(endpoint);
             }
@@ -897,7 +952,7 @@ export const extractEndpoints = (language, code) => {
     default:
       endpoints = (code.match(/['"](.*?)['"]/gi) || [])
         .map((v) => v.replace(/["']/g, "").replace("\n", ""))
-        .filter((v) => v.length > 2);
+        .filter((v) => v.length > 2 && v.includes("/"));
       break;
   }
   return endpoints;
@@ -1015,7 +1070,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     console.log(evinseOutFile, "created successfully.");
   } else {
     console.log(
-      "Unable to identify component evidence for the input SBOM. Only java, javascript and python projects are supported by evinse."
+      "Unable to identify component evidence for the input SBOM. Only java, javascript, python, and php projects are supported by evinse."
     );
   }
   if (tempDir && tempDir.startsWith(tmpdir())) {
@@ -1249,6 +1304,8 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
       .replace(".<body>", "")
       .replace(".__iter__", "")
       .replace(".__init__", "");
+  } else if (["php"].includes(language)) {
+    typeFullName = typeFullName.split("->")[0].split("::")[0];
   }
   if (
     typeFullName.startsWith("<unresolved") ||
