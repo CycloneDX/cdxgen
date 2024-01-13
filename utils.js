@@ -7495,6 +7495,7 @@ export const executeAtom = (src, args) => {
     timeout: TIMEOUT_MS,
     detached: !isWin && !process.env.CI,
     shell: isWin,
+    killSignal: "SIGKILL",
     env
   });
   if (result.stderr) {
