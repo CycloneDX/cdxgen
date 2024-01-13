@@ -1762,8 +1762,8 @@ test("parsePkgLock v3", async () => {
     projectName: "cdxgen"
   });
   deps = parsedList.pkgList;
-  expect(deps.length).toEqual(1199);
-  expect(parsedList.dependenciesList.length).toEqual(1199);
+  expect(deps.length).toEqual(1201);
+  expect(parsedList.dependenciesList.length).toEqual(1201);
 });
 
 test("parseBowerJson", async () => {

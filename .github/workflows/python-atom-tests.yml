@@ -17,8 +17,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '19'
+          distribution: 'zulu'
+          java-version: '21'
       - name: npm install, build and test
         run: |
           npm install

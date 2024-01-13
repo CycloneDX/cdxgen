@@ -7506,7 +7506,7 @@ export const executeAtom = (src, args) => {
       result.stderr.includes("Error: Could not create the Java Virtual Machine")
     ) {
       console.log(
-        "Atom requires Java 17 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
+        "Atom requires Java 21 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
       );
       console.log(`Current JAVA_HOME: ${env["JAVA_HOME"] || ""}`);
     } else if (result.stderr.includes("astgen")) {

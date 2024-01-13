@@ -248,7 +248,7 @@ curl -H "Content-Type: application/json" http://localhost:9090/sbom -XPOST -d $'
 
 #### **Integration as Library**
 
-cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 16
+cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 20
 
 Minimal example:
 

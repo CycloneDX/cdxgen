@@ -510,7 +510,7 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 
 ## Integration as library
 
-cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 16
+cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 20
 
 Minimal example:
 

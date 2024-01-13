@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['21.x']
-        java-version: ['19']
+        java-version: ['21']
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -32,7 +32,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: npm install, build and test
         run: |
@@ -71,7 +71,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['21.x']
-        java-version: ['19']
+        java-version: ['21']
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -85,7 +85,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: npm install, build and test
         run: |
@@ -111,7 +111,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['21.x']
-        java-version: ['19']
+        java-version: ['21']
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -125,7 +125,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: ${{ matrix.java-version }}
       - name: npm install, build
         run: |
