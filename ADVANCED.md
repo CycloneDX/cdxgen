@@ -12,7 +12,7 @@ Evinse (Evinse Verification Is Nearly SBOM Evidence) is a new command with cdxge
 
 ### Pre-requisites
 
-- Java > 17 installed
+- Java >= 21 installed
 - Application source code
 - Input SBOM in CycloneDX >1.5 format. Use cdxgen to generate one.
 
