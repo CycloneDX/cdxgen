@@ -1,4 +1,6 @@
 import { platform as _platform, arch as _arch, tmpdir, homedir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   existsSync,
   mkdirSync,
@@ -398,7 +400,7 @@ export const getOSPackages = (src) => {
       }
       let distro_codename = osReleaseData["VERSION_CODENAME"] || "";
       let distro_id = osReleaseData["ID"] || "";
-      let distro_id_like = osReleaseData["ID_LIKE"] || "";
+      const distro_id_like = osReleaseData["ID_LIKE"] || "";
       let purl_type = "rpm";
       switch (distro_id) {
         case "debian":

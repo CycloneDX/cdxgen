@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync } from "node:fs";
 import { createStream, table } from "table";
 
 // https://github.com/yangshun/tree-node-cli/blob/master/src/index.js
@@ -166,7 +166,7 @@ export const printCallStack = (bomJson) => {
         )
       )
     ).sort(locationComparator);
-    let frameDisplay = [frames[0]];
+    const frameDisplay = [frames[0]];
     if (frames.length > 1) {
       for (let i = 1; i < frames.length - 1; i++) {
         frameDisplay.push(`${SYMBOLS_ANSI.BRANCH} ${frames[i]}`);
