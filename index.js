@@ -1828,8 +1828,8 @@ export const createJavaBom = async (path, options) => {
             options.failOnError && process.exit(1);
           }
 
-        // Cleanup
-        unlinkSync(tempSbtPlugins);
+          // Cleanup
+          unlinkSync(tempSbtPlugins);
         } // for
       } // else
 
