@@ -1718,37 +1718,38 @@ export const createJavaBom = async (path, options) => {
         }
       } else {
         const SBT_CMD = process.env.SBT_CMD || "sbt";
-        const sbtVersion = determineSbtVersion(path);
-        if (DEBUG_MODE) {
-          console.log("Detected sbt version: " + sbtVersion);
-        }
-        // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
-        // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
-        const standalonePluginFile =
-          sbtVersion != null &&
-          gte(sbtVersion, "1.3.4") &&
-          lte(sbtVersion, "1.4.0");
-        const useSlashSyntax = gte(sbtVersion, "1.5.0");
-        const isDependencyTreeBuiltIn =
-          sbtVersion != null && gte(sbtVersion, "1.4.0");
-        const tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));
-        const tempSbtgDir = mkdtempSync(join(tmpdir(), "cdxsbtg-"));
-        mkdirSync(tempSbtgDir, { recursive: true });
-        // Create temporary plugins file
-        const tempSbtPlugins = join(tempSbtgDir, "dep-plugins.sbt");
 
-        // Requires a custom version of `sbt-dependency-graph` that
-        // supports `--append` for `toFile` subtask.
-        let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
-        if (isDependencyTreeBuiltIn) {
-          sbtPluginDefinition = `\naddDependencyTreePlugin\n`;
-          if (DEBUG_MODE) {
-            console.log("Using addDependencyTreePlugin as the custom plugin");
-          }
-        }
-        writeFileSync(tempSbtPlugins, sbtPluginDefinition);
         for (const i in sbtProjects) {
           const basePath = sbtProjects[i];
+          const sbtVersion = determineSbtVersion(basePath);
+          if (DEBUG_MODE) {
+            console.log("Detected sbt version: " + sbtVersion);
+          }
+          // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
+          // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
+          const standalonePluginFile =
+            sbtVersion != null &&
+            gte(sbtVersion, "1.3.4") &&
+            lte(sbtVersion, "1.4.0");
+          const useSlashSyntax = gte(sbtVersion, "1.5.0");
+          const isDependencyTreeBuiltIn =
+            sbtVersion != null && gte(sbtVersion, "1.4.0");
+          const tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));
+          const tempSbtgDir = mkdtempSync(join(tmpdir(), "cdxsbtg-"));
+          mkdirSync(tempSbtgDir, { recursive: true });
+          // Create temporary plugins file
+          const tempSbtPlugins = join(tempSbtgDir, "dep-plugins.sbt");
+
+          // Requires a custom version of `sbt-dependency-graph` that
+          // supports `--append` for `toFile` subtask.
+          let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
+          if (isDependencyTreeBuiltIn) {
+            sbtPluginDefinition = `\naddDependencyTreePlugin\n`;
+            if (DEBUG_MODE) {
+              console.log("Using addDependencyTreePlugin as the custom plugin");
+            }
+          }
+          writeFileSync(tempSbtPlugins, sbtPluginDefinition);
           const dlFile = join(tempDir, "dl-" + i + ".tmp");
           let sbtArgs = [];
           let pluginFile = null;
@@ -1826,10 +1827,10 @@ export const createJavaBom = async (path, options) => {
             }
             options.failOnError && process.exit(1);
           }
-        }
 
         // Cleanup
         unlinkSync(tempSbtPlugins);
+        } // for
       } // else
 
       if (DEBUG_MODE) {
