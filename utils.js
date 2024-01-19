@@ -1298,7 +1298,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
     } catch (e) {
       // ignore parse errors
     }
-    const packages = yamlObj.packages;
+    const packages = yamlObj.packages || {};
     const pkgKeys = Object.keys(packages);
     for (const k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
