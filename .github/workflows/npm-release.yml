@@ -146,15 +146,3 @@ jobs:
         images: |
           ghcr.io/cyclonedx/cdxgen-next
       if: github.ref == 'refs/heads/master'
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ci/Dockerfile-fedora
-        platforms: linux/amd64
-        push: true
-        tags: ${{ steps.meta4.outputs.tags }}
-        labels: ${{ steps.meta4.outputs.labels }}
-        cache-from: type=gha,scope=cdxgen-next
-        cache-to: type=gha,mode=max,scope=cdxgen-next
-      if: github.ref == 'refs/heads/master'
