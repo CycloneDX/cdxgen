@@ -1722,14 +1722,14 @@ export const createJavaBom = async (path, options) => {
         // If can't find sbt version at the root of repository then search in
         // sbt project array too because sometimes the project folder isn't at
         // root of repository
-	if (sbtVersion == null) {
-	  for (const i in sbtProjects) {
-	    sbtVersion = determineSbtVersion(sbtProjects[i]);
-	    if (sbtVersion != null) {
-	      break;
-	    }
-	  }
-	}
+        if (sbtVersion == null) {
+          for (const i in sbtProjects) {
+            sbtVersion = determineSbtVersion(sbtProjects[i]);
+            if (sbtVersion != null) {
+              break;
+            }
+          }
+        }
         if (DEBUG_MODE) {
           console.log("Detected sbt version: " + sbtVersion);
         }
