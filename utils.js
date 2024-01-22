@@ -7207,6 +7207,9 @@ export const extractJarArchive = async function (
  */
 export const determineSbtVersion = function (projectPath) {
   const buildPropFile = join(projectPath, "project", "build.properties");
+  if (DEBUG_MODE) {
+    console.log("Looking for", buildPropFile);
+  }
   if (existsSync(buildPropFile)) {
     const properties = propertiesReader(buildPropFile);
     const property = properties.get("sbt.version");
