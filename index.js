@@ -1236,46 +1236,50 @@ export const createJavaBom = async (path, options) => {
             maxBuffer: MAX_BUFFER
           });
           if (result.status !== 0 || result.error) {
-            console.error(result.stdout, result.stderr);
-            console.log(
-              "Resolve the above maven error. This could be due to the following:\n"
-            );
-            if (
-              result.stdout &&
-              (result.stdout.includes("Non-resolvable parent POM") ||
-                result.stdout.includes("points at wrong local POM"))
-            ) {
+            // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
+            // These could be due to a range of reasons that are covered below.
+            if (pomFiles.length === 1 || DEBUG_MODE) {
+              console.error(result.stdout, result.stderr);
               console.log(
-                "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory."
+                "Resolve the above maven error. This could be due to the following:\n"
               );
-            } else if (
-              result.stdout &&
-              (result.stdout.includes("Could not resolve dependencies") ||
-                result.stdout.includes("no dependency information available"))
-            ) {
+              if (
+                result.stdout &&
+                (result.stdout.includes("Non-resolvable parent POM") ||
+                  result.stdout.includes("points at wrong local POM"))
+              ) {
+                console.log(
+                  "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory."
+                );
+              } else if (
+                result.stdout &&
+                (result.stdout.includes("Could not resolve dependencies") ||
+                  result.stdout.includes("no dependency information available"))
+              ) {
+                console.log(
+                  "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."
+                );
+              } else if (
+                result.stdout &&
+                result.stdout.includes(
+                  "Could not resolve target platform specification"
+                )
+              ) {
+                console.log(
+                  "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option"
+                );
+              } else {
+                console.log(
+                  "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible."
+                );
+              }
               console.log(
-                "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."
+                "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
               );
-            } else if (
-              result.stdout &&
-              result.stdout.includes(
-                "Could not resolve target platform specification"
-              )
-            ) {
               console.log(
-                "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option"
-              );
-            } else {
-              console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible."
+                "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool."
               );
             }
-            console.log(
-              "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
-            );
-            console.log(
-              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool."
-            );
             // Do not fall back to methods that can produce incomplete results when failOnError is set
             options.failOnError && process.exit(1);
             console.log(
