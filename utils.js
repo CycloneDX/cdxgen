@@ -1260,6 +1260,9 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
       ).toString();
   }
   if (existsSync(pnpmLock)) {
+    if (DEBUG_MODE) {
+      console.log(`Parsing file ${pnpmLock}`);
+    }
     const lockData = readFileSync(pnpmLock, "utf8");
     const yamlObj = _load(lockData);
     if (!yamlObj) {
@@ -1295,7 +1298,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
     } catch (e) {
       // ignore parse errors
     }
-    const packages = yamlObj.packages;
+    const packages = yamlObj.packages || {};
     const pkgKeys = Object.keys(packages);
     for (const k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
