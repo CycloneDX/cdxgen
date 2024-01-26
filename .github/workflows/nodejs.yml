@@ -38,7 +38,7 @@ jobs:
           - os: windows
             build: |
               deno compile --no-terminal --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-pc-windows-msvc --output cdxgenx.exe bin/cdxgen.js
-              .\cdxgen.exe --help
+              .\cdxgenx.exe --help
               (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
             artifact: build/cdxgenx.exe
           - os: macos
