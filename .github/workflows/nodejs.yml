@@ -68,7 +68,7 @@ jobs:
           deno-version: v1.x
       - name: deno compile
         run: |
-          npm ci --omit=dev
+          npm install --omit=dev
           deno lint
           mkdir build
           ${{ matrix.build }}
