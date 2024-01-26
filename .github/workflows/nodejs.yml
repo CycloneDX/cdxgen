@@ -37,25 +37,25 @@ jobs:
         include:
           - os: windows
             build: |
-              deno compile --no-terminal --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-pc-windows-msvc --output build/cdxgenx.exe bin/cdxgen.js
-              .\build\cdxgen.exe --help
-              (Get-FileHash .\build\cdxgen.exe).hash | Out-File -FilePath .\build\cdxgen.exe.sha256
+              deno compile --no-terminal --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-pc-windows-msvc --output cdxgenx.exe bin/cdxgen.js
+              .\cdxgen.exe --help
+              (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
             artifact: build/cdxgenx.exe
           - os: macos
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-apple-darwin --output build/cdxgenx-darwin-amd64 bin/cdxgen.js
-              ./build/cdxgenx-darwin-amd64 --help
-              shasum -a 256 build/cdxgenx-darwin-amd64 > build/cdxgenx-darwin-amd64.sha256
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target aarch64-apple-darwin --output build/cdxgenx-darwin-arm64 bin/cdxgen.js
-              shasum -a 256 build/cdxgenx-darwin-arm64 > build/cdxgenx-darwin-arm64.sha256
-            artifact: build/cdxgenx-darwin-amd64
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-apple-darwin --output cdxgenx-darwin-amd64 bin/cdxgen.js
+              ./cdxgenx-darwin-amd64 --help
+              shasum -a 256 cdxgenx-darwin-amd64 > cdxgenx-darwin-amd64.sha256
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target aarch64-apple-darwin --output cdxgenx-darwin-arm64 bin/cdxgen.js
+              shasum -a 256 cdxgenx-darwin-arm64 > cdxgenx-darwin-arm64.sha256
+            artifact: cdxgenx-darwin-amd64
           - os: ubuntu
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-unknown-linux-gnu --output build/cdxgenx bin/cdxgen.js
-              shasum -a 256 build/cdxgenx > build/cdxgenx.sha256
-              chmod + build/cdxgenx
-              ./build/cdxgenx --help
-            artifact: build/cdxgenx
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-unknown-linux-gnu --output cdxgenx bin/cdxgen.js
+              shasum -a 256 cdxgenx > cdxgenx.sha256
+              chmod + cdxgenx
+              ./cdxgenx --help
+            artifact: cdxgenx
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v4
@@ -83,8 +83,8 @@ jobs:
           files: |
             ${{ matrix.artifact }}
             ${{ matrix.artifact }}.sha256
-            build/cdxgenx-darwin-arm64
-            build/cdxgenx-darwin-arm64.sha256
+            cdxgenx-darwin-arm64
+            cdxgenx-darwin-arm64.sha256
   sae-builds:
     strategy:
       matrix:

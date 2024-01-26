@@ -22,7 +22,7 @@
       "include": ["bin/", "*.js"],
       "exclude": ["test/", "data/", "contrib/"]
     },
-    "lock": true,
+    "lock": false,
     "nodeModulesDir": true,
     "unstable": [],
     "test": {
@@ -30,7 +30,7 @@
     },
     "tasks": {
       "start": "deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js",
-      "jest": "deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net npm:jest@^29.7.0 --inject-globals false docker.test.js utils.test.js display.test.js postgen.test.js"
+      "exe": "deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --output build/cdxgenx-devel bin/cdxgen.js"
     },
     "imports": {
       "@appthreat/atom": "npm:@appthreat/atom@2.0.6",
