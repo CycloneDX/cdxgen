@@ -39,8 +39,8 @@ jobs:
             build: |
               deno compile --no-terminal --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-pc-windows-msvc --output cdxgenx.exe bin/cdxgen.js
               .\cdxgenx.exe --help
-              (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
-            artifact: build/cdxgenx.exe
+              (Get-FileHash .\cdxgenx.exe).hash | Out-File -FilePath .\cdxgenx.exe.sha256
+            artifact: cdxgenx.exe
           - os: macos
             build: |
               deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-apple-darwin --output cdxgenx-darwin-amd64 bin/cdxgen.js
