@@ -2,6 +2,8 @@ import got from "got";
 import { globSync } from "glob";
 import { parse } from "node:url";
 import stream from "node:stream/promises";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   existsSync,
   readdirSync,
@@ -498,7 +500,7 @@ export const getImage = async (fullImageName) => {
   let localData = undefined;
   let pullData = undefined;
   const { registry, repo, tag, digest } = parseImageName(fullImageName);
-  let repoWithTag =
+  const repoWithTag =
     registry && registry !== "docker.io"
       ? fullImageName
       : `${repo}:${tag !== "" ? tag : ":latest"}`;

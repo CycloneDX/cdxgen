@@ -1,6 +1,7 @@
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import { join } from "node:path";
+import process from "node:process";
 import { readdirSync, lstatSync, readFileSync } from "node:fs";
 import { basename, resolve, isAbsolute, relative } from "node:path";
 

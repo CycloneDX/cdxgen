@@ -10,7 +10,7 @@ const testBom = JSON.parse(
   readFileSync("./test/data/bom-java.json", { encoding: "utf-8" })
 );
 
-test("proto binary tests", async () => {
+test("proto binary tests", () => {
   const binFile = join(tempDir, "test.cdx.bin");
   writeBinary({}, binFile);
   expect(existsSync(binFile)).toBeTruthy();

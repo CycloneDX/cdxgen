@@ -1110,7 +1110,7 @@ export const collectDataFlowFrames = async (
   }
   const paths = dataFlowSlice?.paths || [];
   for (const apath of paths) {
-    let aframe = [];
+    const aframe = [];
     let referredPurls = new Set();
     for (const nid of apath) {
       const theNode = nodeCache[nid];
@@ -1213,14 +1213,14 @@ export const collectDataFlowFrames = async (
  * @param {string} language Application language
  * @param {object} reachablesSlice Reachables slice object from atom
  */
-export const collectReachableFrames = async (language, reachablesSlice) => {
+export const collectReachableFrames = (language, reachablesSlice) => {
   const reachableNodes = reachablesSlice?.reachables || [];
   // purl key and an array of frames array
   // CycloneDX 1.5 currently accepts only 1 frame as evidence
   // so this method is more future-proof
   const dfFrames = {};
   for (const anode of reachableNodes) {
-    let aframe = [];
+    const aframe = [];
     let referredPurls = new Set(anode.purls || []);
     for (const fnode of anode.flows) {
       if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {

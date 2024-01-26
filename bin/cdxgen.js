@@ -10,6 +10,7 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import globalAgent from "global-agent";
 import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   printCallStack,
   printOccurrences,

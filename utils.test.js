@@ -80,7 +80,8 @@ import {
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
 import { expect, test } from "@jest/globals";
-import path from "path";
+import path from "node:path";
+import { Buffer } from "node:buffer";
 
 test("SSRI test", () => {
   // gopkg.lock hash
@@ -1180,7 +1181,7 @@ test("parse clojure data", () => {
   });
 });
 
-test("parse mix lock data", async () => {
+test("parse mix lock data", () => {
   expect(parseMixLockData(null)).toEqual([]);
   let dep_list = parseMixLockData(
     readFileSync("./test/data/mix.lock", { encoding: "utf-8" })
@@ -1200,12 +1201,12 @@ test("parse mix lock data", async () => {
   });
 });
 
-test("parse github actions workflow data", async () => {
+test("parse github actions workflow data", () => {
   expect(parseGitHubWorkflowData(null)).toEqual([]);
   let dep_list = parseGitHubWorkflowData(
     readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(4);
+  expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
@@ -1466,7 +1467,7 @@ test("parse .net cs proj", async () => {
 });
 
 test("get nget metadata", async () => {
-  let dep_list = [
+  const dep_list = [
     {
       dependsOn: [
         "pkg:nuget/Microsoft.NET.Test.Sdk@17.1.0",
@@ -1504,7 +1505,7 @@ test("get nget metadata", async () => {
       ref: "pkg:nuget/Serilog@3.0.1"
     }
   ];
-  let pkg_list = [
+  const pkg_list = [
     {
       group: "",
       name: "Castle.Core",
@@ -1719,10 +1720,10 @@ test("get licenses", () => {
 });
 
 test("parsePkgLock v1", async () => {
-  let parsedList = await parsePkgLock(
+  const parsedList = await parsePkgLock(
     "./test/data/package-json/v1/package-lock.json"
   );
-  let deps = parsedList.pkgList;
+  const deps = parsedList.pkgList;
   expect(deps.length).toEqual(910);
   expect(deps[1]._integrity).toEqual(
     "sha512-ZmIomM7EE1DvPEnSFAHZn9Vs9zJl5A9H7el0EGTE6ZbW9FKe/14IYAlPbC8iH25YarEQxZL+E8VW7Mi7kfQrDQ=="
@@ -1731,10 +1732,10 @@ test("parsePkgLock v1", async () => {
 });
 
 test("parsePkgLock v2", async () => {
-  let parsedList = await parsePkgLock(
+  const parsedList = await parsePkgLock(
     "./test/data/package-json/v2/package-lock.json"
   );
-  let deps = parsedList.pkgList;
+  const deps = parsedList.pkgList;
   expect(deps.length).toEqual(134);
   expect(deps[1]._integrity).toEqual(
     "sha512-x9yaMvEh5BEaZKeVQC4vp3l+QoFj3BXcd4aYfuKSzIIyihjdVARAadYy3SMNIz0WCCdS2vB9JL/U6GQk5PaxQw=="
@@ -1771,27 +1772,31 @@ test("parsePkgLock v2", async () => {
 });
 
 test("parsePkgLock v2 workspace", async () => {
-  let parsedList = await parsePkgLock(
+  const parsedList = await parsePkgLock(
     "./test/data/package-json/v2-workspace/package-lock.json"
   );
-  let pkgs = parsedList.pkgList;
-  let deps = parsedList.dependenciesList;
+  const pkgs = parsedList.pkgList;
+  const deps = parsedList.dependenciesList;
   expect(pkgs.length).toEqual(1034);
   expect(pkgs[0].license).toEqual("MIT");
-  let hasAppWorkspacePkg = pkgs.some(
+  const hasAppWorkspacePkg = pkgs.some(
     (obj) => obj["bom-ref"] === "pkg:npm/app@0.0.0"
   );
-  let hasAppWorkspaceDeps = deps.some((obj) => obj.ref === "pkg:npm/app@0.0.0");
+  const hasAppWorkspaceDeps = deps.some(
+    (obj) => obj.ref === "pkg:npm/app@0.0.0"
+  );
   expect(hasAppWorkspacePkg).toEqual(true);
   expect(hasAppWorkspaceDeps).toEqual(true);
-  let hasRootPkg = pkgs.some((obj) => obj["bom-ref"] === "pkg:npm/root@0.0.0");
-  let hasRootDeps = deps.some((obj) => obj.ref === "pkg:npm/root@0.0.0");
+  const hasRootPkg = pkgs.some(
+    (obj) => obj["bom-ref"] === "pkg:npm/root@0.0.0"
+  );
+  const hasRootDeps = deps.some((obj) => obj.ref === "pkg:npm/root@0.0.0");
   expect(hasRootPkg).toEqual(true);
   expect(hasRootDeps).toEqual(true);
-  let hasScriptsWorkspacePkg = pkgs.some(
+  const hasScriptsWorkspacePkg = pkgs.some(
     (obj) => obj["bom-ref"] === "pkg:npm/scripts@0.0.0"
   );
-  let hasScriptsWorkspaceDeps = deps.some(
+  const hasScriptsWorkspaceDeps = deps.some(
     (obj) => obj.ref === "pkg:npm/scripts@0.0.0"
   );
   expect(hasScriptsWorkspacePkg).toEqual(true);
@@ -2622,7 +2627,7 @@ test("parse requirements.txt", async () => {
   });
 });
 
-test("parse pyproject.toml", async () => {
+test("parse pyproject.toml", () => {
   const pkg = parsePyProjectToml("./test/data/pyproject.toml");
   expect(pkg).toEqual({
     name: "cpggen",
@@ -2727,7 +2732,7 @@ test("parse scala sbt list", () => {
 });
 
 test("parse scala sbt tree", () => {
-  let retMap = parseSbtTree("./test/data/atom-sbt-tree.txt");
+  const retMap = parseSbtTree("./test/data/atom-sbt-tree.txt");
   expect(retMap.pkgList.length).toEqual(153);
   expect(retMap.dependenciesList.length).toEqual(153);
 });
@@ -2788,7 +2793,7 @@ test("parse bazel build", () => {
   expect(projs[0]).toEqual("java-maven-lib");
 });
 
-test("parse helm charts", async () => {
+test("parse helm charts", () => {
   let dep_list = parseHelmYamlData(
     readFileSync("./test/data/Chart.yaml", { encoding: "utf-8" })
   );
@@ -2819,7 +2824,7 @@ test("parse helm charts", async () => {
   });
 });
 
-test("parse container spec like files", async () => {
+test("parse container spec like files", () => {
   let dep_list = parseContainerSpecData(
     readFileSync("./test/data/docker-compose.yml", { encoding: "utf-8" })
   );
@@ -2905,8 +2910,8 @@ test("parse container spec like files", async () => {
   });
 });
 
-test("parse containerfiles / dockerfiles", async () => {
-  let dep_list = parseContainerFile(
+test("parse containerfiles / dockerfiles", () => {
+  const dep_list = parseContainerFile(
     readFileSync("./test/data/Dockerfile", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
@@ -2930,8 +2935,8 @@ test("parse containerfiles / dockerfiles", async () => {
   });
 });
 
-test("parse bitbucket-pipelines", async () => {
-  let dep_list = parseBitbucketPipelinesFile(
+test("parse bitbucket-pipelines", () => {
+  const dep_list = parseBitbucketPipelinesFile(
     readFileSync("./test/data/bitbucket-pipelines.yml", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
@@ -2952,7 +2957,7 @@ test("parse bitbucket-pipelines", async () => {
   });
 });
 
-test("parse cloudbuild data", async () => {
+test("parse cloudbuild data", () => {
   expect(parseCloudBuildData(null)).toEqual([]);
   const dep_list = parseCloudBuildData(
     readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
@@ -2973,7 +2978,7 @@ test("parse privado files", () => {
   expect(servList[0].properties.length).toEqual(5);
 });
 
-test("parse openapi spec files", async () => {
+test("parse openapi spec files", () => {
   let aservice = parseOpenapiSpecData(
     readFileSync("./test/data/openapi/openapi-spec.json", {
       encoding: "utf-8"
