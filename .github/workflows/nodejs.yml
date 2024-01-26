@@ -31,7 +31,32 @@ jobs:
         env:
           CI: true
   deno-build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows, macos, ubuntu]
+        include:
+          - os: windows
+            build: |
+              deno compile --no-terminal --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-pc-windows-msvc --output build/cdxgenx.exe bin/cdxgen.js
+              .\build\cdxgen.exe --help
+              (Get-FileHash .\build\cdxgen.exe).hash | Out-File -FilePath .\build\cdxgen.exe.sha256
+            artifact: build/cdxgenx.exe
+          - os: macos
+            build: |
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-apple-darwin --output build/cdxgenx-darwin-amd64 bin/cdxgen.js
+              ./build/cdxgenx-darwin-amd64 --help
+              shasum -a 256 build/cdxgenx-darwin-amd64 > build/cdxgenx-darwin-amd64.sha256
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target aarch64-apple-darwin --output build/cdxgenx-darwin-arm64 bin/cdxgen.js
+              shasum -a 256 build/cdxgenx-darwin-arm64 > build/cdxgenx-darwin-arm64.sha256
+            artifact: build/cdxgenx-darwin-amd64
+          - os: ubuntu
+            build: |
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-unknown-linux-gnu --output build/cdxgenx bin/cdxgen.js
+              shasum -a 256 build/cdxgenx > build/cdxgenx.sha256
+              chmod + build/cdxgenx
+              ./build/cdxgenx --help
+            artifact: build/cdxgenx
+    runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -43,36 +68,23 @@ jobs:
           deno-version: v1.x
       - name: deno compile
         run: |
-          npm ci --omit=optional --omit=dev
+          npm ci --omit=dev
           deno lint
           mkdir build
-          deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-unknown-linux-gnu --output build/cdxgenx bin/cdxgen.js
-          shasum -a 256 build/cdxgenx > build/cdxgenx.sha256
-          chmod + build/cdxgenx
-          ./build/cdxgenx --help
-          deno compile --no-terminal --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-pc-windows-msvc --output build/cdxgenx.exe bin/cdxgen.js
-          shasum -a 256 build/cdxgenx.exe > build/cdxgenx.exe.sha256
-          deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-apple-darwin --output build/cdxgenx-darwin-amd64 bin/cdxgen.js
-          shasum -a 256 build/cdxgenx-darwin-amd64 > build/cdxgenx-darwin-amd64.sha256
-          deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target aarch64-apple-darwin --output build/cdxgenx-darwin-arm64 bin/cdxgen.js
-          shasum -a 256 build/cdxgenx-darwin-arm64 > build/cdxgenx-darwin-arm64.sha256
+          ${{ matrix.build }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            build/cdxgenx
-            build/cdxgenx.sha256
-            build/cdxgenx.exe
-            build/cdxgenx.exe.sha256
-            build/cdxgenx-darwin-amd64
-            build/cdxgenx-darwin-amd64.sha256
+            ${{ matrix.artifact }}
+            ${{ matrix.artifact }}.sha256
             build/cdxgenx-darwin-arm64
             build/cdxgenx-darwin-arm64.sha256
-      - uses: actions/upload-artifact@v4
-        with:
-          name: deno-builds
-          path: build
   sae-builds:
     strategy:
       matrix:
