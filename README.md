@@ -345,7 +345,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Gradle
 - Scala SBT
 - Python (requirements.txt, setup.py, pyproject.toml, poetry.lock)
-- .NET (project.assets.json, paket.lock)
+- .NET (packages.lock.json, project.assets.json, paket.lock)
 - Go (go.mod)
 - PHP (composer.lock)
 
