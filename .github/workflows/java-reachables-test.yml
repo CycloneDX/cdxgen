@@ -47,7 +47,7 @@ jobs:
           cd repotests/drogon/examples
           node ../../../bin/cdxgen.js -p -t c --profile research -o bom.json .
           cd ../../..
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: bomresults
           path: bomresults

@@ -69,7 +69,7 @@ jobs:
             build/cdxgenx-darwin-amd64.sha256
             build/cdxgenx-darwin-arm64
             build/cdxgenx-darwin-arm64.sha256
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: deno-builds
           path: build
@@ -126,11 +126,11 @@ jobs:
         run: |
           npm ci
           ${{ matrix.build }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.artifact }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.vartifact }}
           path: ${{ matrix.vartifact }}
