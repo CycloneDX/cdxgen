@@ -1,4 +1,6 @@
 import { platform as _platform, homedir, tmpdir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import { basename, join, dirname, sep, resolve } from "node:path";
 import { parse } from "ssri";
 import {
@@ -354,9 +356,9 @@ const cleanParentComponent = (comp) => {
 };
 
 const addAuthorsSection = (options, format) => {
-  let authors = [];
+  const authors = [];
   if (options.author) {
-    let oauthors = Array.isArray(options.author)
+    const oauthors = Array.isArray(options.author)
       ? options.author
       : [options.author];
     for (const aauthor of oauthors) {
@@ -402,13 +404,13 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       }
     }
     if (parentComponent && parentComponent.components) {
-      let parentFullName = componentToSimpleFullName(parentComponent);
+      const parentFullName = componentToSimpleFullName(parentComponent);
       const subComponents = [];
       const addedSubComponents = {};
       for (const comp of parentComponent.components) {
         cleanParentComponent(comp);
         if (comp.name && comp.type) {
-          let fullName = componentToSimpleFullName(comp);
+          const fullName = componentToSimpleFullName(comp);
           // Fixes #479
           // Prevent the parent component from also appearing as a sub-component
           // We cannot use purl or bom-ref here since they would not match
@@ -714,7 +716,7 @@ function addComponent(
         pkg.qualifiers,
         encodeForPurl(pkg.subpath)
       );
-    let purlString = purl.toString();
+    const purlString = purl.toString();
     let description = { "#cdata": pkg.description };
     if (format === "json") {
       description = pkg.description || undefined;
@@ -4345,9 +4347,9 @@ export const createCsharpBom = async (
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      let results = await parseCsProjAssetsData(pkgData, af);
-      let deps = results["dependenciesList"];
-      let dlist = results["pkgList"];
+      const results = await parseCsProjAssetsData(pkgData, af);
+      const deps = results["dependenciesList"];
+      const dlist = results["pkgList"];
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -4364,10 +4366,10 @@ export const createCsharpBom = async (
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      let results = await parseCsPkgLockData(pkgData, af);
-      let deps = results["dependenciesList"];
-      let dlist = results["pkgList"];
-      let rootList = results["rootList"];
+      const results = await parseCsPkgLockData(pkgData, af);
+      const deps = results["dependenciesList"];
+      const dlist = results["pkgList"];
+      const rootList = results["rootList"];
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -5724,7 +5726,7 @@ export async function submitBom(args, bomContents) {
     autoCreate: "true",
     bom: encodedBomContents
   };
-  let projectVersion = args.projectVersion || "master";
+  const projectVersion = args.projectVersion || "master";
   if (
     typeof args.projectId !== "undefined" ||
     (typeof args.projectName !== "undefined" &&

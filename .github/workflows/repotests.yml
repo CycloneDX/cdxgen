@@ -28,7 +28,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Trim CI agent
@@ -362,7 +362,7 @@ jobs:
           docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t java /app/repotests/shiftleft-java-example -o /app/denoresults/bom-java.json
           docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t python /app/repotests/DjanGoat -o /app/denoresults/bom-python.json
           ls -ltr denoresults
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: bomresults
           path: bomresults
