@@ -4,6 +4,7 @@
       "lib": [],
       "strict": true
     },
+    "include": ["*.js", "data/", "bin/"],
     "lint": {
       "include": ["bin/", "*.js"],
       "exclude": ["test/", "data/", "contrib/"],

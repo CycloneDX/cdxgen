@@ -37,7 +37,7 @@ jobs:
         include:
           - os: windows
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --output cdxgenx.exe bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease --allow-write --allow-net --output cdxgenx.exe bin/cdxgen.js
               .\cdxgenx.exe --help
               (Get-FileHash .\cdxgenx.exe).hash | Out-File -FilePath .\cdxgenx.exe.sha256
             artifact: cdxgenx.exe
@@ -71,6 +71,15 @@ jobs:
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.artifact }}
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   with:
+      #     files: |
+      #       ${{ matrix.artifact }}
+      #       ${{ matrix.artifact }}.sha256
+      #       cdxgenx-darwin-arm64
+      #       cdxgenx-darwin-arm64.sha256
   sae-builds:
     strategy:
       matrix:
