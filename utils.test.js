@@ -1333,16 +1333,82 @@ test("parse project.assets.json", async () => {
 });
 
 test("parse packages.lock.json", async () => {
-  expect(await parseCsPkgLockData(null)).toEqual([]);
-  const dep_list = await parseCsPkgLockData(
-    readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" })
+  expect(await parseCsPkgLockData(null)).toEqual({
+    dependenciesList: [],
+    pkgList: [],
+    rootList: []
+  });
+  let dep_list = await parseCsPkgLockData(
+    readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" }),
+    "./test/data/packages.lock.json"
   );
-  expect(dep_list.length).toEqual(14);
-  expect(dep_list[0]).toEqual({
+  expect(dep_list["pkgList"].length).toEqual(14);
+  expect(dep_list["pkgList"][0]).toEqual({
     group: "",
     name: "Antlr",
-    version: "3.5.0.2"
+    version: "3.5.0.2",
+    purl: "pkg:nuget/Antlr@3.5.0.2",
+    "bom-ref": "pkg:nuget/Antlr@3.5.0.2",
+    _integrity:
+      "sha512-CSfrVuDVMx3OrQhT84zed+tOdM1clljyRLWWlQM22fJsmG836RVDGQlE6tzysXh8X8p9UjkHbLr6OqEIVhtdEA==",
+    properties: [{ name: "SrcFile", value: "./test/data/packages.lock.json" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/packages.lock.json"
+          }
+        ]
+      }
+    }
   });
+  dep_list = await parseCsPkgLockData(
+    readFileSync("./test/data/packages2.lock.json", { encoding: "utf-8" }),
+    "./test/data/packages2.lock.json"
+  );
+  expect(dep_list["pkgList"].length).toEqual(34);
+  expect(dep_list["dependenciesList"].length).toEqual(34);
+  expect(dep_list["pkgList"][0]).toEqual({
+    group: "",
+    name: "McMaster.Extensions.Hosting.CommandLine",
+    version: "4.0.1",
+    purl: "pkg:nuget/McMaster.Extensions.Hosting.CommandLine@4.0.1",
+    "bom-ref": "pkg:nuget/McMaster.Extensions.Hosting.CommandLine@4.0.1",
+    _integrity:
+      "sha512-pZJF/zeXT3OC+3GUNO9ZicpCO9I7wYLmj0E2qPR8CRA6iUs0kGu6SCkmraB1sITx4elcVjMLiZDGMsBVMqaPhg==",
+    properties: [{ name: "SrcFile", value: "./test/data/packages2.lock.json" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/packages2.lock.json"
+          }
+        ]
+      }
+    }
+  });
+  expect(dep_list["dependenciesList"][0]).toEqual({
+    ref: "pkg:nuget/McMaster.Extensions.Hosting.CommandLine@4.0.1",
+    dependsOn: [
+      "pkg:nuget/McMaster.Extensions.CommandLineUtils@4.0.1",
+      "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@6.0.0",
+      "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@6.0.0"
+    ]
+  });
+  dep_list = await parseCsPkgLockData(
+    readFileSync("./test/data/packages3.lock.json", { encoding: "utf-8" }),
+    "./test/data/packages3.lock.json"
+  );
+  expect(dep_list["pkgList"].length).toEqual(15);
+  expect(dep_list["dependenciesList"].length).toEqual(15);
 });
 
 test("parse paket.lock", async () => {

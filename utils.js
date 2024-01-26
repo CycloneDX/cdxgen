@@ -5577,28 +5577,95 @@ export const parseCsProjAssetsData = async function (
   };
 };
 
-export const parseCsPkgLockData = async function (csLockData) {
+export const parseCsPkgLockData = async function (csLockData, pkgLockFile) {
   const pkgList = [];
+  const dependenciesList = [];
+  const rootList = [];
   let pkg = null;
   if (!csLockData) {
-    return pkgList;
+    return {
+      pkgList,
+      dependenciesList,
+      rootList
+    };
   }
   const assetData = JSON.parse(csLockData);
   if (!assetData || !assetData.dependencies) {
-    return pkgList;
+    return {
+      pkgList,
+      dependenciesList,
+      rootList
+    };
   }
   for (const aversion of Object.keys(assetData.dependencies)) {
     for (const alib of Object.keys(assetData.dependencies[aversion])) {
       const libData = assetData.dependencies[aversion][alib];
+      const purl = new PackageURL(
+        "nuget",
+        "",
+        alib,
+        libData.resolved,
+        null,
+        null
+      ).toString();
       pkg = {
         group: "",
         name: alib,
-        version: libData.resolved
+        version: libData.resolved,
+        purl,
+        "bom-ref": decodeURIComponent(purl),
+        _integrity: libData.contentHash
+          ? "sha512-" + libData.contentHash
+          : undefined,
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgLockFile
+          }
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgLockFile
+              }
+            ]
+          }
+        }
       };
       pkgList.push(pkg);
+      if (libData.type === "Direct") {
+        rootList.push(pkg);
+      }
+      const dependsOn = [];
+      if (libData.dependencies) {
+        for (const adep of Object.keys(libData.dependencies)) {
+          const adpurl = new PackageURL(
+            "nuget",
+            "",
+            adep,
+            libData.dependencies[adep],
+            null,
+            null
+          ).toString();
+          dependsOn.push(decodeURIComponent(adpurl));
+        }
+      }
+      dependenciesList.push({
+        ref: decodeURIComponent(purl),
+        dependsOn
+      });
     }
   }
-  return pkgList;
+  return {
+    pkgList,
+    dependenciesList,
+    rootList
+  };
 };
 
 export const parsePaketLockData = async function (paketLockData, pkgLockFile) {

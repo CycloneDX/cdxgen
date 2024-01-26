@@ -4357,16 +4357,41 @@ export const createCsharpBom = async (
     }
   } else if (pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
+    let parentDependsOn = [];
     // packages.lock.json from nuget
     for (const af of pkgLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      const dlist = await parseCsPkgLockData(pkgData);
+      let results = await parseCsPkgLockData(pkgData, af);
+      let deps = results["dependenciesList"];
+      let dlist = results["pkgList"];
+      let rootList = results["rootList"];
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
+      if (deps && deps.length) {
+        dependencies = dependencies.concat(deps);
+      }
+      if (!parentComponent) {
+        parentComponent = createDefaultParentComponent(
+          path,
+          options.type,
+          options
+        );
+      }
+      // Keep track of the direct dependencies so that we can construct one complete
+      // list after processing all lock files
+      if (rootList && rootList.length) {
+        parentDependsOn = parentDependsOn.concat(rootList);
+      }
+    }
+    if (parentDependsOn.length) {
+      dependencies.splice(0, 0, {
+        ref: parentComponent["bom-ref"],
+        dependsOn: parentDependsOn.map((p) => p["bom-ref"])
+      });
     }
   } else if (pkgConfigFiles.length) {
     manifestFiles = manifestFiles.concat(pkgConfigFiles);
