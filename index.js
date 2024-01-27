@@ -354,7 +354,7 @@ const addFormulationSection = () => {
       name: f.name,
       version: f.hash
     }));
-    let environmentVars = [];
+    let environmentVars = [{ name: "GIT_BRANCH", value: gitBranch }];
     for (const aevar of Object.keys(process.env)) {
       if (
         (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
@@ -380,9 +380,6 @@ const addFormulationSection = () => {
         inputs: [
           {
             source: { ref: originUrl },
-            parameters: [
-              { name: "branch", value: gitBranch, dataType: "string" }
-            ],
             environmentVars
           }
         ],
@@ -391,7 +388,6 @@ const addFormulationSection = () => {
     ];
     formulation.push(aformulation);
   }
-  console.log(JSON.stringify(formulation));
   return formulation;
 };
 
