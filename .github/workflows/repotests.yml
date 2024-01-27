@@ -363,6 +363,7 @@ jobs:
           docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t python /app/repotests/DjanGoat -o /app/denoresults/bom-python.json
           ls -ltr denoresults
       - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         with:
           name: bomresults
           path: bomresults
