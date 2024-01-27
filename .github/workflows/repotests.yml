@@ -191,10 +191,6 @@ jobs:
           repository: 'microsoft/dotnet-podcasts'
           path: 'repotests/dotnet-podcasts'
       - uses: dtolnay/rust-toolchain@stable
-      - name: repotests evidence
-        run: |
-          bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
-        shell: bash
       - name: repotests java-sec-code
         run: |
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation
@@ -205,6 +201,10 @@ jobs:
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-6.json --deep --evidence
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-7.json --profile research --export-proto
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-8.json --profile license-compliance
+        shell: bash
+      - name: repotests evidence
+        run: |
+          bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
         shell: bash
       - name: repotests django-DefectDojo
         run: |

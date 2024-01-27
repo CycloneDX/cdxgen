@@ -360,7 +360,9 @@ const addFormulationSection = () => {
         (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
         !aevar.toLowerCase().includes("key") &&
         !aevar.toLowerCase().includes("token") &&
-        !aevar.toLowerCase().includes("pass")
+        !aevar.toLowerCase().includes("pass") &&
+        process.env[aevar] &&
+        process.env[aevar].length
       ) {
         environmentVars.push({
           name: aevar,
