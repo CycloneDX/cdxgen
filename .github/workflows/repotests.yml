@@ -364,7 +364,6 @@ jobs:
           deno info bin/evinse.js
           deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-deno.json
           deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-deno.json
-          ls -ltr denoresults
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         with:
