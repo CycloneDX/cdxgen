@@ -1215,7 +1215,7 @@ test("parse github actions workflow data", () => {
   dep_list = parseGitHubWorkflowData(
     readFileSync("./.github/workflows/repotests.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(7);
+  expect(dep_list.length).toEqual(8);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",

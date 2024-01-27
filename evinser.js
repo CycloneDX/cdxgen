@@ -4,7 +4,8 @@ import {
   getGradleCommand,
   getMavenCommand,
   collectGradleDependencies,
-  collectMvnDependencies
+  collectMvnDependencies,
+  DEBUG_MODE
 } from "./utils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -111,7 +112,7 @@ export const catalogMavenDeps = async (
     console.log("About to collect jar dependencies for the path", dirPath);
     const mavenCmd = getMavenCommand(dirPath, dirPath);
     // collect all jars including from the cache if data-flow mode is enabled
-    jarNSMapping = collectMvnDependencies(
+    jarNSMapping = await collectMvnDependencies(
       mavenCmd,
       dirPath,
       false,
@@ -145,7 +146,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   );
   const gradleCmd = getGradleCommand(dirPath, dirPath);
   // collect all jars including from the cache if data-flow mode is enabled
-  const jarNSMapping = collectGradleDependencies(
+  const jarNSMapping = await collectGradleDependencies(
     gradleCmd,
     dirPath,
     false,
@@ -1163,7 +1164,7 @@ export const collectDataFlowFrames = async (
               referredPurls.add(ns.purl);
             }
             typePurlsCache[typeFullName] = nsHits;
-          } else {
+          } else if (DEBUG_MODE) {
             console.log("Unable to identify purl for", typeFullName);
           }
         }
