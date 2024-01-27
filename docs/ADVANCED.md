@@ -363,5 +363,63 @@ Pass the argument `--include-formulation` to include git metadata such as files 
 Example:
 
 ```
-
+"formulation": [
+    {
+      "bom-ref": "f8324846-fad6-4927-a8e7-49379f57489b",
+      "components": [
+        {
+          "type": "file",
+          "name": ".gitattributes",
+          "version": "eba1110b5794582b53554bb1e4224b860d4e173f"
+        },
+        {
+          "type": "file",
+          "name": "README_zh.md",
+          "version": "70e6883720e454e3f2fe30c9730b3e56c35adc28"
+        },
+        {
+          "type": "file",
+          "name": "docker-compose.yml",
+          "version": "7e9c878ee725717b3922225f26b99931332ae6c8"
+        },
+        {
+          "type": "file",
+          "name": "pom.xml",
+          "version": "8da3449df64e6eb1d63ca3ca5fbd123a374d738e"
+        },
+        {
+          "type": "file",
+          "name": "src/main/java/org/joychou/Application.java",
+          "version": "41169b9a018f38ee62e300047d5a6bd93562f512"
+        },
+        {
+          "type": "file",
+          "name": "src/main/resources/url/url_safe_domain.xml",
+          "version": "ee81efcf364e18221c401e03f1d890348fe73e87"
+        }
+      ],
+      "workflows": [
+        {
+          "bom-ref": "9f66ea8d-b1b7-4c79-8294-376903ec1bc8",
+          "uid": "c451097b-5c74-49db-ada7-81bd77cdb390",
+          "inputs": [
+            {
+              "source": {
+                "ref": "git@github.com:HooliCorp/java-sec-code.git"
+              },
+              "environmentVars": [
+                {
+                  "name": "GIT_BRANCH",
+                  "value": "master"
+                }
+              ]
+            }
+          ],
+          "taskTypes": [
+            "clone"
+          ]
+        }
+      ]
+    }
+  ]
 ```
