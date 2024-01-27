@@ -31,6 +31,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
       - name: Trim CI agent
         run: |
           chmod +x contrib/free_disk_space.sh
@@ -356,11 +359,10 @@ jobs:
           ls -ltr bomresults
         shell: bash
       - name: denotests
-        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         run: |
-          docker build -t ghcr.io/cyclonedx/cdxgen-deno -f ci/Dockerfile-deno .
-          docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t java /app/repotests/shiftleft-java-example -o /app/denoresults/bom-java.json
-          docker run --rm -t -e "CDXGEN_DEBUG_MODE=debug" -v $(pwd):/app ghcr.io/cyclonedx/cdxgen-deno -p -r -t python /app/repotests/DjanGoat -o /app/denoresults/bom-python.json
+          deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-deno.json
+          deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-deno2.json --profile research
+          deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-deno.json --deep --evidence
           ls -ltr denoresults
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
