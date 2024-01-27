@@ -99,7 +99,7 @@ export const catalogMavenDeps = async (
   if (fs.existsSync(path.join(dirPath, "bom.json.map"))) {
     try {
       const mapData = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "bom.json.map"))
+        fs.readFileSync(path.join(dirPath, "bom.json.map"), "utf-8")
       );
       if (mapData && Object.keys(mapData).length) {
         jarNSMapping = mapData;

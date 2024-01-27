@@ -130,8 +130,7 @@ import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 ```text
 $ cdxgen -h
 Options:
-  -o, --output                 Output file for bom.xml or bom.json. Default bom.
-                               json
+  -o, --output                 Output file. Default bom.json
   -t, --type                   Project type
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
@@ -522,7 +521,7 @@ See the [Deno Readme](./contrib/deno/README.md) for detailed instructions.
 
 ```javascript
 import { createBom, submitBom } from "@cyclonedx/cdxgen";
-// bomNSData would contain bomJson, bomXml
+// bomNSData would contain bomJson
 const bomNSData = await createBom(filePath, options);
 // Submission to dependency track server
 const dbody = await submitBom(args, bomNSData.bomJson);
