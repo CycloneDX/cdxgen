@@ -260,7 +260,7 @@ See the [Deno Readme](https://github.com/CycloneDX/cdxgen/blob/master/contrib/de
 
 ```javascript
 import { createBom, submitBom } from "@cyclonedx/cdxgen";
-// bomNSData would contain bomJson, bomXml
+// bomNSData would contain bomJson
 const bomNSData = await createBom(filePath, options);
 // Submission to dependency track server
 const dbody = await submitBom(args, bomNSData.bomJson);

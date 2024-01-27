@@ -7,10 +7,9 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import jws from "jws";
 import crypto from "node:crypto";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import globalAgent from "global-agent";
 import process from "node:process";
-import { Buffer } from "node:buffer";
 import {
   printCallStack,
   printOccurrences,
@@ -57,7 +56,7 @@ const args = yargs(hideBin(process.argv))
   .env("CDXGEN")
   .option("output", {
     alias: "o",
-    description: "Output file for bom.xml or bom.json. Default bom.json",
+    description: "Output file. Default bom.json",
     default: "bom.json"
   })
   .option("evinse-output", {
@@ -296,7 +295,7 @@ const applyProfile = (options) => {
     case "research":
       options.deep = true;
       options.evidence = true;
-      process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = true;
+      process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = "true";
       process.env.ASTGEN_IGNORE_DIRS = "";
       process.env.ASTGEN_IGNORE_FILE_PATTERN = "";
       break;
@@ -306,7 +305,7 @@ const applyProfile = (options) => {
     case "threat-modeling": // unused
       break;
     case "license-compliance":
-      process.env.FETCH_LICENSE = true;
+      process.env.FETCH_LICENSE = "true";
       break;
     default:
       break;
@@ -383,162 +382,149 @@ const checkPermissions = (filePath) => {
     options.output &&
     (typeof options.output === "string" || options.output instanceof String)
   ) {
-    if (bomNSData.bomXmlFiles) {
-      console.log("BOM files produced:", bomNSData.bomXmlFiles);
-    } else {
-      const jsonFile = options.output.replace(".xml", ".json");
-      // Create bom json file
-      if (!options.output.endsWith(".xml") && bomNSData.bomJson) {
-        let jsonPayload = undefined;
-        if (
-          typeof bomNSData.bomJson === "string" ||
-          bomNSData.bomJson instanceof String
-        ) {
-          fs.writeFileSync(jsonFile, bomNSData.bomJson);
-          jsonPayload = bomNSData.bomJson;
-        } else {
-          jsonPayload = JSON.stringify(bomNSData.bomJson, null, 2);
-          fs.writeFileSync(jsonFile, jsonPayload);
+    const jsonFile = options.output;
+    // Create bom json file
+    if (bomNSData.bomJson) {
+      let jsonPayload = undefined;
+      if (
+        typeof bomNSData.bomJson === "string" ||
+        bomNSData.bomJson instanceof String
+      ) {
+        fs.writeFileSync(jsonFile, bomNSData.bomJson);
+        jsonPayload = bomNSData.bomJson;
+      } else {
+        jsonPayload = JSON.stringify(bomNSData.bomJson, null, 2);
+        fs.writeFileSync(jsonFile, jsonPayload);
+      }
+      if (
+        jsonPayload &&
+        (options.generateKeyAndSign ||
+          (process.env.SBOM_SIGN_ALGORITHM &&
+            process.env.SBOM_SIGN_ALGORITHM !== "none" &&
+            process.env.SBOM_SIGN_PRIVATE_KEY &&
+            fs.existsSync(process.env.SBOM_SIGN_PRIVATE_KEY)))
+      ) {
+        let alg = process.env.SBOM_SIGN_ALGORITHM || "RS512";
+        if (alg.includes("none")) {
+          alg = "RS512";
         }
-        if (
-          jsonPayload &&
-          (options.generateKeyAndSign ||
-            (process.env.SBOM_SIGN_ALGORITHM &&
-              process.env.SBOM_SIGN_ALGORITHM !== "none" &&
-              process.env.SBOM_SIGN_PRIVATE_KEY &&
-              fs.existsSync(process.env.SBOM_SIGN_PRIVATE_KEY)))
-        ) {
-          let alg = process.env.SBOM_SIGN_ALGORITHM || "RS512";
-          if (alg.includes("none")) {
-            alg = "RS512";
-          }
-          let privateKeyToUse = undefined;
-          let jwkPublicKey = undefined;
-          let publicKeyFile = undefined;
-          if (options.generateKeyAndSign) {
-            const jdirName = dirname(jsonFile);
-            publicKeyFile = join(jdirName, "public.key");
-            const privateKeyFile = join(jdirName, "private.key");
-            const { privateKey, publicKey } = crypto.generateKeyPairSync(
-              "rsa",
-              {
-                modulusLength: 4096,
-                publicKeyEncoding: {
-                  type: "spki",
-                  format: "pem"
-                },
-                privateKeyEncoding: {
-                  type: "pkcs8",
-                  format: "pem"
-                }
-              }
-            );
-            fs.writeFileSync(publicKeyFile, publicKey);
-            fs.writeFileSync(privateKeyFile, privateKey);
-            console.log(
-              "Created public/private key pairs for testing purposes",
-              publicKeyFile,
-              privateKeyFile
-            );
-            privateKeyToUse = privateKey;
+        let privateKeyToUse = undefined;
+        let jwkPublicKey = undefined;
+        let publicKeyFile = undefined;
+        if (options.generateKeyAndSign) {
+          const jdirName = dirname(jsonFile);
+          publicKeyFile = join(jdirName, "public.key");
+          const privateKeyFile = join(jdirName, "private.key");
+          const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
+            modulusLength: 4096,
+            publicKeyEncoding: {
+              type: "spki",
+              format: "pem"
+            },
+            privateKeyEncoding: {
+              type: "pkcs8",
+              format: "pem"
+            }
+          });
+          fs.writeFileSync(publicKeyFile, publicKey);
+          fs.writeFileSync(privateKeyFile, privateKey);
+          console.log(
+            "Created public/private key pairs for testing purposes",
+            publicKeyFile,
+            privateKeyFile
+          );
+          privateKeyToUse = privateKey;
+          jwkPublicKey = crypto
+            .createPublicKey(publicKey)
+            .export({ format: "jwk" });
+        } else {
+          privateKeyToUse = fs.readFileSync(
+            process.env.SBOM_SIGN_PRIVATE_KEY,
+            "utf8"
+          );
+          if (
+            process.env.SBOM_SIGN_PUBLIC_KEY &&
+            fs.existsSync(process.env.SBOM_SIGN_PUBLIC_KEY)
+          ) {
             jwkPublicKey = crypto
-              .createPublicKey(publicKey)
+              .createPublicKey(
+                fs.readFileSync(process.env.SBOM_SIGN_PUBLIC_KEY, "utf8")
+              )
               .export({ format: "jwk" });
-          } else {
-            privateKeyToUse = fs.readFileSync(
-              process.env.SBOM_SIGN_PRIVATE_KEY,
-              "utf8"
-            );
-            if (
-              process.env.SBOM_SIGN_PUBLIC_KEY &&
-              fs.existsSync(process.env.SBOM_SIGN_PUBLIC_KEY)
-            ) {
-              jwkPublicKey = crypto
-                .createPublicKey(
-                  fs.readFileSync(process.env.SBOM_SIGN_PUBLIC_KEY, "utf8")
-                )
-                .export({ format: "jwk" });
-            }
           }
-          try {
-            // Sign the individual components
-            // Let's leave the services unsigned for now since it might require additional cleansing
-            const bomJsonUnsignedObj = JSON.parse(jsonPayload);
-            for (const comp of bomJsonUnsignedObj.components) {
-              const compSignature = jws.sign({
-                header: { alg },
-                payload: comp,
-                privateKey: privateKeyToUse
-              });
-              const compSignatureBlock = {
-                algorithm: alg,
-                value: compSignature
-              };
-              if (jwkPublicKey) {
-                compSignatureBlock.publicKey = jwkPublicKey;
-              }
-              comp.signature = compSignatureBlock;
-            }
-            const signature = jws.sign({
+        }
+        try {
+          // Sign the individual components
+          // Let's leave the services unsigned for now since it might require additional cleansing
+          const bomJsonUnsignedObj = JSON.parse(jsonPayload);
+          for (const comp of bomJsonUnsignedObj.components) {
+            const compSignature = jws.sign({
               header: { alg },
-              payload: JSON.stringify(bomJsonUnsignedObj, null, 2),
+              payload: comp,
               privateKey: privateKeyToUse
             });
-            if (signature) {
-              const signatureBlock = {
-                algorithm: alg,
-                value: signature
-              };
-              if (jwkPublicKey) {
-                signatureBlock.publicKey = jwkPublicKey;
-              }
-              bomJsonUnsignedObj.signature = signatureBlock;
-              fs.writeFileSync(
-                jsonFile,
-                JSON.stringify(bomJsonUnsignedObj, null, 2)
+            const compSignatureBlock = {
+              algorithm: alg,
+              value: compSignature
+            };
+            if (jwkPublicKey) {
+              compSignatureBlock.publicKey = jwkPublicKey;
+            }
+            comp.signature = compSignatureBlock;
+          }
+          const signature = jws.sign({
+            header: { alg },
+            payload: JSON.stringify(bomJsonUnsignedObj, null, 2),
+            privateKey: privateKeyToUse
+          });
+          if (signature) {
+            const signatureBlock = {
+              algorithm: alg,
+              value: signature
+            };
+            if (jwkPublicKey) {
+              signatureBlock.publicKey = jwkPublicKey;
+            }
+            bomJsonUnsignedObj.signature = signatureBlock;
+            fs.writeFileSync(
+              jsonFile,
+              JSON.stringify(bomJsonUnsignedObj, null, 2)
+            );
+            if (publicKeyFile) {
+              // Verifying this signature
+              const signatureVerification = jws.verify(
+                signature,
+                alg,
+                fs.readFileSync(publicKeyFile, "utf8")
               );
-              if (publicKeyFile) {
-                // Verifying this signature
-                const signatureVerification = jws.verify(
-                  signature,
-                  alg,
-                  fs.readFileSync(publicKeyFile, "utf8")
+              if (signatureVerification) {
+                console.log(
+                  "SBOM signature is verifiable with the public key and the algorithm",
+                  publicKeyFile,
+                  alg
                 );
-                if (signatureVerification) {
-                  console.log(
-                    "SBOM signature is verifiable with the public key and the algorithm",
-                    publicKeyFile,
-                    alg
-                  );
-                } else {
-                  console.log("SBOM signature verification was unsuccessful");
-                  console.log(
-                    "Check if the public key was exported in PEM format"
-                  );
-                }
+              } else {
+                console.log("SBOM signature verification was unsuccessful");
+                console.log(
+                  "Check if the public key was exported in PEM format"
+                );
               }
             }
-          } catch (ex) {
-            console.log("SBOM signing was unsuccessful", ex);
-            console.log("Check if the private key was exported in PEM format");
           }
+        } catch (ex) {
+          console.log("SBOM signing was unsuccessful", ex);
+          console.log("Check if the private key was exported in PEM format");
         }
       }
-      // Create bom xml file
-      if (options.output.endsWith(".xml") && bomNSData.bomXml) {
-        fs.writeFileSync(options.output, bomNSData.bomXml);
-      }
-      //
-      if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
-        const nsFile = jsonFile + ".map";
-        fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
-      }
+    }
+    // bom ns mapping
+    if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
+      const nsFile = jsonFile + ".map";
+      fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
     }
   } else if (!options.print) {
     if (bomNSData.bomJson) {
       console.log(JSON.stringify(bomNSData.bomJson, null, 2));
-    } else if (bomNSData.bomXml) {
-      console.log(Buffer.from(bomNSData.bomXml).toString());
     } else {
       console.log("Unable to produce BOM for", filePath);
       console.log("Try running the command with -t <type> or -r argument");
