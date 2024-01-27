@@ -22,7 +22,7 @@
       "include": ["bin/", "*.js"],
       "exclude": ["test/", "data/", "contrib/"]
     },
-    "lock": true,
+    "lock": false,
     "nodeModulesDir": true,
     "unstable": [],
     "test": {
