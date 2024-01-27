@@ -1289,7 +1289,7 @@ export const createJavaBom = async (path, options) => {
         parentComponent = {
           name: rootProject,
           type: "application",
-          ...(retMap.metadata || {})
+          ...retMap.metadata
         };
         const parentPurl = new PackageURL(
           "maven",
@@ -1313,7 +1313,7 @@ export const createJavaBom = async (path, options) => {
               name: rspName,
               type: "application",
               qualifiers: { type: "jar" },
-              ...(retMap.metadata || {})
+              ...retMap.metadata
             };
             const rootSubProjectPurl = new PackageURL(
               "maven",
