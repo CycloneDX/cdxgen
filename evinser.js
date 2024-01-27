@@ -4,7 +4,8 @@ import {
   getGradleCommand,
   getMavenCommand,
   collectGradleDependencies,
-  collectMvnDependencies
+  collectMvnDependencies,
+  DEBUG_MODE
 } from "./utils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -1163,7 +1164,7 @@ export const collectDataFlowFrames = async (
               referredPurls.add(ns.purl);
             }
             typePurlsCache[typeFullName] = nsHits;
-          } else {
+          } else if (DEBUG_MODE) {
             console.log("Unable to identify purl for", typeFullName);
           }
         }
