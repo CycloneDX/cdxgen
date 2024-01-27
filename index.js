@@ -1164,7 +1164,7 @@ export const createJavaBom = async (path, options) => {
     ) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.10";
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.11";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
       let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
       if (includeMavenTestScope) {
