@@ -6527,12 +6527,12 @@ export const parseSwiftResolved = (resolvedFile) => {
  * @param {boolean} cleanup Remove temporary directories
  * @param {boolean} includeCacheDir Include maven and gradle cache directories
  */
-export const collectMvnDependencies = function (
+export const collectMvnDependencies = async (
   mavenCmd,
   basePath,
   cleanup = true,
   includeCacheDir = false
-) {
+) => {
   let jarNSMapping = {};
   const MAVEN_CACHE_DIR =
     process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository");
@@ -6573,12 +6573,12 @@ export const collectMvnDependencies = function (
         "3. Ensure the temporary directory is available and has sufficient disk space to copy all the artifacts."
       );
     } else {
-      jarNSMapping = collectJarNS(tempDir);
+      jarNSMapping = await collectJarNS(tempDir);
     }
   }
   if (includeCacheDir || basePath === MAVEN_CACHE_DIR) {
     // slow operation
-    jarNSMapping = collectJarNS(MAVEN_CACHE_DIR);
+    jarNSMapping = await collectJarNS(MAVEN_CACHE_DIR);
   }
 
   // Clean up
@@ -6588,7 +6588,7 @@ export const collectMvnDependencies = function (
   return jarNSMapping;
 };
 
-export const collectGradleDependencies = (
+export const collectGradleDependencies = async (
   gradleCmd,
   basePath,
   cleanup = true, // eslint-disable-line no-unused-vars
@@ -6618,7 +6618,7 @@ export const collectGradleDependencies = (
   for (const apom of pomFiles) {
     pomPathMap[basename(apom)] = apom;
   }
-  const jarNSMapping = collectJarNS(GRADLE_CACHE_DIR, pomPathMap);
+  const jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR, pomPathMap);
   return jarNSMapping;
 };
 
@@ -6630,7 +6630,7 @@ export const collectGradleDependencies = (
  *
  * @return object containing jar name and class list
  */
-export const collectJarNS = function (jarPath, pomPathMap = {}) {
+export const collectJarNS = async (jarPath, pomPathMap = {}) => {
   const jarNSMapping = {};
   console.log(
     `About to identify class names for all jars in the path ${jarPath}`
@@ -6645,14 +6645,10 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
       "bin"
     )}`;
   }
-  let jarCommandAvailable = true;
-  // Execute jar tvf to get class names
+  // Parse jar files to get class names
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
-      if (!jarCommandAvailable) {
-        break;
-      }
       const jarname = jf;
       let pomname =
         pomPathMap[basename(jf).replace(".jar", ".pom")] ||
@@ -6756,44 +6752,9 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         jarNSMapping[purl] = jarNSMapping_cache[purl];
       } else {
         if (DEBUG_MODE) {
-          console.log(`Executing 'jar tf ${jf}'`);
+          console.log(`Parsing ${jf}`);
         }
-        const jarResult = spawnSync("jar", ["-tf", jf], {
-          encoding: "utf-8",
-          shell: isWin,
-          maxBuffer: 50 * 1024 * 1024,
-          env
-        });
-        if (
-          jarResult &&
-          jarResult.stderr &&
-          jarResult.stderr.includes(
-            "is not recognized as an internal or external command"
-          )
-        ) {
-          jarCommandAvailable = false;
-          console.log(
-            "jar command is not available in PATH. Ensure JDK >= 21 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
-          );
-        }
-        const consolelines = (jarResult.stdout || "").split("\n");
-        const nsList = consolelines
-          .filter((l) => {
-            return (
-              (l.includes(".class") ||
-                l.includes(".java") ||
-                l.includes(".kt")) &&
-              !l.includes("-INF") &&
-              !l.includes("module-info")
-            );
-          })
-          .map((e) => {
-            return e
-              .replace("\r", "")
-              .replace(/.(class|java|kt)/, "")
-              .replace(/\/$/, "")
-              .replace(/\//g, ".");
-          });
+        const nsList = await getJarClasses(jf);
         jarNSMapping[purl || jf] = {
           jarFile: jf,
           pom: pomData,
@@ -7388,6 +7349,53 @@ export const readZipEntry = async function (
     console.log(e);
   }
   return retData;
+};
+
+/**
+ * Method to get the classes and relevant sources in a jar file
+ *
+ * @param {string} jarFile Jar file to read
+ *
+ * @returns List of classes and sources matching certain known patterns
+ */
+export const getJarClasses = async function (jarFile) {
+  const retList = [];
+  try {
+    const zip = new StreamZip.async({ file: jarFile });
+    const entriesCount = await zip.entriesCount;
+    if (!entriesCount) {
+      return [];
+    }
+    const entries = await zip.entries();
+    for (const entry of Object.values(entries)) {
+      if (entry.isDirectory) {
+        continue;
+      }
+      if (
+        (entry.name.includes(".class") ||
+          entry.name.includes(".java") ||
+          entry.name.includes(".scala") ||
+          entry.name.includes(".groovy") ||
+          entry.name.includes(".kt")) &&
+        !entry.name.includes("-INF") &&
+        !entry.name.includes("module-info")
+      ) {
+        retList.push(
+          entry.name
+            .replace("\r", "")
+            .replace(/.(class|java|kt|scala|groovy)/g, "")
+            .replace(/\/$/, "")
+            .replace(/\//g, ".")
+        );
+      }
+    }
+    zip.close();
+  } catch (e) {
+    if (DEBUG_MODE) {
+      console.log(`Unable to parse ${jarFile}. Skipping.`);
+    }
+  }
+  return retList;
 };
 
 /**

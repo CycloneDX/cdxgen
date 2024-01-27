@@ -1055,14 +1055,14 @@ export const createJarBom = async (path, options) => {
   let nsMapping = {};
   const parentComponent = createDefaultParentComponent(path, "maven", options);
   if (options.useGradleCache) {
-    nsMapping = collectGradleDependencies(
+    nsMapping = await collectGradleDependencies(
       getGradleCommand(path, null),
       path,
       false,
       true
     );
   } else if (options.useMavenCache) {
-    nsMapping = collectMvnDependencies(
+    nsMapping = await collectMvnDependencies(
       getMavenCommand(path, null),
       null,
       false,
@@ -1129,7 +1129,7 @@ export const createJavaBom = async (path, options) => {
         console.log(`Retrieving packages from ${path}`);
       }
       const tempDir = mkdtempSync(join(tmpdir(), "war-deps-"));
-      jarNSMapping = collectJarNS(tempDir);
+      jarNSMapping = await collectJarNS(tempDir);
       pkgList = await extractJarArchive(path, tempDir, jarNSMapping);
       if (pkgList.length) {
         pkgList = await getMvnMetadata(pkgList);
@@ -1190,7 +1190,7 @@ export const createJavaBom = async (path, options) => {
         const mavenCmd = getMavenCommand(basePath, path);
         // Should we attempt to resolve class names
         if (options.resolveClass || options.deep) {
-          const tmpjarNSMapping = collectMvnDependencies(
+          const tmpjarNSMapping = await collectMvnDependencies(
             mavenCmd,
             basePath,
             true,
@@ -1557,7 +1557,7 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = collectJarNS(GRADLE_CACHE_DIR);
+        jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
@@ -1854,7 +1854,7 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = collectJarNS(SBT_CACHE_DIR);
+        jarNSMapping = await collectJarNS(SBT_CACHE_DIR);
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {

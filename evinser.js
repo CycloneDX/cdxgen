@@ -111,7 +111,7 @@ export const catalogMavenDeps = async (
     console.log("About to collect jar dependencies for the path", dirPath);
     const mavenCmd = getMavenCommand(dirPath, dirPath);
     // collect all jars including from the cache if data-flow mode is enabled
-    jarNSMapping = collectMvnDependencies(
+    jarNSMapping = await collectMvnDependencies(
       mavenCmd,
       dirPath,
       false,
@@ -145,7 +145,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   );
   const gradleCmd = getGradleCommand(dirPath, dirPath);
   // collect all jars including from the cache if data-flow mode is enabled
-  const jarNSMapping = collectGradleDependencies(
+  const jarNSMapping = await collectGradleDependencies(
     gradleCmd,
     dirPath,
     false,
