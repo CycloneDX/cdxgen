@@ -114,14 +114,16 @@ import {
   getSwiftPackageMetadata
 } from "./utils.js";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
 const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
-const selfPJson = JSON.parse(readFileSync(join(dirName, "package.json")));
+const selfPJson = JSON.parse(
+  readFileSync(join(dirName, "package.json"), "utf-8")
+);
 const _version = selfPJson.version;
 import { findJSImports } from "./analyzer.js";
 import { gte, lte } from "semver";
@@ -142,10 +144,12 @@ import {
 const isWin = _platform() === "win32";
 
 const osQueries = !isWin
-  ? JSON.parse(readFileSync(join(dirName, "data", "queries.json")))
-  : JSON.parse(readFileSync(join(dirName, "data", "queries-win.json")));
+  ? JSON.parse(readFileSync(join(dirName, "data", "queries.json"), "utf-8"))
+  : JSON.parse(
+      readFileSync(join(dirName, "data", "queries-win.json"), "utf-8")
+    );
 const cosDbQueries = JSON.parse(
-  readFileSync(join(dirName, "data", "cosdb-queries.json"))
+  readFileSync(join(dirName, "data", "cosdb-queries.json"), "utf-8")
 );
 
 import { table } from "table";

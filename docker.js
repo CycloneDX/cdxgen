@@ -710,7 +710,7 @@ export const extractTar = async (fullImageName, dir) => {
         "Please run cdxgen from a powershell terminal with admin privileges to create symlinks."
       );
       console.log(err);
-    } else if (err.code !== "TAR_BAD_ARCHIVE") {
+    } else if (!["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO"].includes(err.code)) {
       console.log(
         `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`
       );

@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import jws from "jws";
 import crypto from "node:crypto";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import globalAgent from "global-agent";
 import process from "node:process";
 import { Buffer } from "node:buffer";
@@ -296,7 +296,7 @@ const applyProfile = (options) => {
     case "research":
       options.deep = true;
       options.evidence = true;
-      process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = true;
+      process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = "true";
       process.env.ASTGEN_IGNORE_DIRS = "";
       process.env.ASTGEN_IGNORE_FILE_PATTERN = "";
       break;
@@ -306,7 +306,7 @@ const applyProfile = (options) => {
     case "threat-modeling": // unused
       break;
     case "license-compliance":
-      process.env.FETCH_LICENSE = true;
+      process.env.FETCH_LICENSE = "true";
       break;
     default:
       break;

@@ -29,7 +29,7 @@ import got from "got";
 import Arborist from "@npmcli/arborist";
 import path from "node:path";
 import { xml2js } from "xml-js";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import { load } from "cheerio";
 import { load as _load } from "js-yaml";
 import { spawnSync } from "node:child_process";
@@ -64,34 +64,36 @@ if (isWin) {
 }
 
 const licenseMapping = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "lic-mapping.json"))
+  readFileSync(join(dirNameStr, "data", "lic-mapping.json"), "utf-8")
 );
 const vendorAliases = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "vendor-alias.json"))
+  readFileSync(join(dirNameStr, "data", "vendor-alias.json"), "utf-8")
 );
 const spdxLicenses = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "spdx-licenses.json"))
+  readFileSync(join(dirNameStr, "data", "spdx-licenses.json"), "utf-8")
 );
 const knownLicenses = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "known-licenses.json"))
+  readFileSync(join(dirNameStr, "data", "known-licenses.json"), "utf-8")
 );
 const mesonWrapDB = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"))
+  readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"), "utf-8")
 );
 export const frameworksList = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "frameworks-list.json"))
+  readFileSync(join(dirNameStr, "data", "frameworks-list.json"), "utf-8")
 );
-const selfPJson = JSON.parse(readFileSync(join(dirNameStr, "package.json")));
+const selfPJson = JSON.parse(
+  readFileSync(join(dirNameStr, "package.json"), "utf-8")
+);
 const _version = selfPJson.version;
 
 // Refer to contrib/py-modules.py for a script to generate this list
 // The script needs to be used once every few months to update this list
 const PYTHON_STD_MODULES = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "python-stdlib.json"))
+  readFileSync(join(dirNameStr, "data", "python-stdlib.json"), "utf-8")
 );
 // Mapping between modules and package names
 const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "pypi-pkg-aliases.json"))
+  readFileSync(join(dirNameStr, "data", "pypi-pkg-aliases.json"), "utf-8")
 );
 
 // Debug mode flag
@@ -183,7 +185,7 @@ export const getAllFiles = function (dirPath, pattern, options = {}) {
  *
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
- * @param {array} ignoreList Directory patterns to ignore
+ * @param {Array} ignoreList Directory patterns to ignore
  */
 export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
   try {
@@ -192,7 +194,6 @@ export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
       absolute: true,
       nocase: true,
       nodir: true,
-      strict: true,
       dot: pattern.startsWith(".") ? true : false,
       follow: false,
       ignore: ignoreList
@@ -270,9 +271,9 @@ export function getLicenses(pkg, format = "xml") {
 /**
  * Method to retrieve known license by known-licenses.json
  *
- * @param {String} repoUrl Repository url
+ * @param {String} licenseUrl Repository url
  * @param {String} pkg Bom ref
- * @return {Object>} Objetct with SPDX license id or license name
+ * @return {Object} Objetct with SPDX license id or license name
  */
 export const getKnownLicense = function (licenseUrl, pkg) {
   if (licenseUrl && licenseUrl.includes("opensource.org")) {
@@ -1564,7 +1565,7 @@ export const parseMinJs = async (minJsFile) => {
  */
 export const parsePom = function (pomFile) {
   const deps = [];
-  const xmlData = readFileSync(pomFile);
+  const xmlData = readFileSync(pomFile, "utf-8");
   const project = xml2js(xmlData, {
     compact: true,
     spaces: 4,
@@ -7645,7 +7646,7 @@ export const findAppModules = function (
   ];
   executeAtom(src, args);
   if (existsSync(slicesFile)) {
-    const slicesData = JSON.parse(readFileSync(slicesFile), {
+    const slicesData = JSON.parse(readFileSync(slicesFile, "utf-8"), {
       encoding: "utf-8"
     });
     if (slicesData && Object.keys(slicesData) && slicesData.modules) {
