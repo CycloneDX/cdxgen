@@ -905,8 +905,6 @@ function addComponentHash(alg, digest, component, format = "json") {
  */
 const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const bomNSData = {
-    bomXml: undefined,
-    bomXmlFiles: undefined,
     bomJson: undefined,
     bomJsonFiles: undefined,
     nsMapping: undefined,
@@ -1111,7 +1109,7 @@ export const createJavaBom = async (path, options) => {
           timeout: TIMEOUT_MS,
           maxBuffer: MAX_BUFFER
         });
-        // Check if the cyclonedx plugin created the required bom.xml file
+        // Check if the cyclonedx plugin created the required bom.json file
         // Sometimes the plugin fails silently for complex maven projects
         bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
         // Check if the bom json files got created in a directory other than target
@@ -1211,7 +1209,6 @@ export const createJavaBom = async (path, options) => {
           }
         }
       } // for
-      const bomFiles = getAllFiles(path, "**/target/bom.xml", options);
       for (const abjson of bomJsonFiles) {
         let bomJsonObj = undefined;
         try {
@@ -1263,7 +1260,6 @@ export const createJavaBom = async (path, options) => {
         });
       } else if (bomJsonFiles.length) {
         const bomNSData = {};
-        bomNSData.bomXmlFiles = bomFiles;
         bomNSData.bomJsonFiles = bomJsonFiles;
         bomNSData.nsMapping = jarNSMapping;
         bomNSData.dependencies = dependencies;
