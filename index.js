@@ -354,6 +354,19 @@ const addFormulationSection = () => {
       name: f.name,
       version: f.hash
     }));
+    const environmentVars = [];
+    for (const aevar of Object.keys(process.env)) {
+      if (
+        (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
+        !aevar.includes("key") &&
+        !aevar.includes("token")
+      ) {
+        environmentVars.push({
+          name: aevar,
+          value: process.env[aevar]
+        });
+      }
+    }
     aformulation.workflows = [
       {
         "bom-ref": uuidv4(),
@@ -363,7 +376,8 @@ const addFormulationSection = () => {
             source: { ref: originUrl },
             parameters: [
               { name: "branch", value: gitBranch, dataType: "string" }
-            ]
+            ],
+            environmentVars
           }
         ],
         taskTypes: ["clone"]
@@ -371,6 +385,7 @@ const addFormulationSection = () => {
     ];
     formulation.push(aformulation);
   }
+  console.log(formulation);
   return formulation;
 };
 
