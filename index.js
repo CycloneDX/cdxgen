@@ -400,14 +400,17 @@ function addMetadata(parentComponent = {}, options = {}) {
   // Try to contribute to this project by sending PR or filing issues
   const tools = addToolsSection(options);
   const authors = addAuthorsSection(options);
-  const lifecycles = addLifecyclesSection(options);
+  const lifecycles =
+    options.specVersion >= 1.5 ? addLifecyclesSection(options) : undefined;
   const metadata = {
     timestamp: new Date().toISOString(),
-    lifecycles,
     tools,
     authors,
     supplier: undefined
   };
+  if (lifecycles) {
+    metadata.lifecycles = lifecycles;
+  }
   if (parentComponent && Object.keys(parentComponent).length) {
     if (parentComponent) {
       cleanParentComponent(parentComponent);
@@ -896,11 +899,15 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       version: 1,
       metadata: metadata,
       components,
-      dependencies,
-      formulation: options.includeFormulation
-        ? addFormulationSection(options)
-        : undefined
+      dependencies
     };
+    const formulation =
+      options.includeFormulation && options.specVersion >= 1.5
+        ? addFormulationSection(options)
+        : undefined;
+    if (formulation) {
+      jsonTpl.formulation = formulation;
+    }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
     bomNSData.dependencies = dependencies;
