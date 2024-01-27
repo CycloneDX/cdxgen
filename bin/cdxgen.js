@@ -231,6 +231,11 @@ const args = yargs(hideBin(process.argv))
     default: "bom.cdx",
     hidden: true
   })
+  .option("include-formulation", {
+    type: "boolean",
+    default: false,
+    description: "Generate formulation section using git metadata."
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")

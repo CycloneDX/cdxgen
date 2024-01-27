@@ -197,7 +197,7 @@ jobs:
         shell: bash
       - name: repotests java-sec-code
         run: |
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --author foo --author bar
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-3.json --required-only
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-4.json --filter postgres --filter json
@@ -218,7 +218,7 @@ jobs:
         shell: bash
       - name: repotests shiftleft-ts-example
         run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --validate
+          FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-1.json --include-formulation
           node bin/evinse.js -i bomresults/bom-ts-1.json -o bomresults/bom-ts.evinse.json -l javascript --with-data-flow -p repotests/shiftleft-ts-example
           FETCH_LICENSE=true bin/cdxgen.js -p -t js repotests/shiftleft-ts-example --required-only -o bomresults/bom-ts-2.json --validate
           FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/bom-ts-3.json --validate
@@ -240,11 +240,11 @@ jobs:
         shell: bash
       - name: repotests vulnerable_net_core
         run: |
-          FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --validate
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/bom-csharp2.json --include-formulation
         shell: bash
       - name: repotests Goatly.NET
         run: |
-          FETCH_LICENSE=false bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --validate
+          FETCH_LICENSE=false bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/bom-csharp3.json --include-formulation
         shell: bash
       - name: repotests DjanGoat
         run: |
