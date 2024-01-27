@@ -57,7 +57,7 @@ jobs:
         env:
           CI: true
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3
       - uses: swift-actions/setup-swift@v1
         if: matrix.os == 'ubuntu-latest'
       - uses: actions/checkout@v4
