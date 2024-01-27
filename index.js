@@ -354,7 +354,7 @@ const addFormulationSection = () => {
       name: f.name,
       version: f.hash
     }));
-    const environmentVars = [];
+    let environmentVars = [];
     for (const aevar of Object.keys(process.env)) {
       if (
         (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
@@ -367,6 +367,9 @@ const addFormulationSection = () => {
           value: process.env[aevar]
         });
       }
+    }
+    if (!environmentVars.length) {
+      environmentVars = undefined;
     }
     aformulation.workflows = [
       {
@@ -386,7 +389,7 @@ const addFormulationSection = () => {
     ];
     formulation.push(aformulation);
   }
-  console.log(formulation);
+  console.log(JSON.stringify(formulation));
   return formulation;
 };
 

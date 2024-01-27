@@ -355,3 +355,13 @@ Pass the argument `--export-proto` to serialize and export the BOM as protobuf b
 ```shell
 --export-proto --proto-bin-file bom.cdx.bin
 ```
+
+## Include git metadata (formulation)
+
+Pass the argument `--include-formulation` to include git metadata such as files in the tree, origin url, branch, and CI environment variables under the `formulation` section.
+
+Example:
+
+```
+
+```
