@@ -1,14 +1,28 @@
 # Introduction
 
-This folder demonstates the use of cdxgen as a library with [deno](https://deno.land)
+This folder demonstrates the following:
+
+- Using deno to develop and build cdxgen
+- Using cdxgen as a library to build custom SBOM tool.
 
 ## Installation
 
-Install deno by following the [instructions](https://deno.land/manual@v1.34.3/getting_started/installation) for your OS
+Install deno by following the [instructions](https://docs.deno.com/runtime/manual/) for your OS
 
-## Usage
+## Develop and build cdxgen
 
 ```shell
-cd contrib/deno
-deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net main.ts <path to repo>
+deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js <path to repo>
 ```
+
+### Produce native builds
+
+Use the `exe` task.
+
+```
+deno task exe
+```
+
+## Use cdxgen as a library
+
+Take a look at deps.ts and main.ts for a simple example that builds a cli tool on top of the npm package.
