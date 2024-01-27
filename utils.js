@@ -216,7 +216,7 @@ const toBase64 = (hexString) => {
  * and url of the license object, otherwise, set the 'name' of the license
  * object.
  */
-export function getLicenses(pkg, format = "xml") {
+export function getLicenses(pkg, format = "json") {
   let license = pkg.license && (pkg.license.type || pkg.license);
   if (license) {
     if (!Array.isArray(license)) {
@@ -340,7 +340,7 @@ export const getKnownLicense = function (licenseUrl, pkg) {
  * used naming and content types. If a candidate file is found, add
  * the text to the license text object and stop.
  */
-export function addLicenseText(pkg, l, licenseContent, format = "xml") {
+export function addLicenseText(pkg, l, licenseContent, format = "json") {
   const licenseFilenames = [
     "LICENSE",
     "License",
@@ -386,7 +386,7 @@ export function addLicenseText(pkg, l, licenseContent, format = "xml") {
 export function readLicenseText(
   licenseFilepath,
   licenseContentType,
-  format = "xml"
+  format = "json"
 ) {
   const licenseText = readFileSync(licenseFilepath, "utf8");
   if (licenseText) {

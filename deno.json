@@ -60,7 +60,6 @@
       "tar": "npm:tar@^6.2.0",
       "uuid": "npm:uuid@^9.0.1",
       "xml-js": "npm:xml-js@^1.6.11",
-      "xmlbuilder": "npm:xmlbuilder@^15.1.1",
       "yargs": "npm:yargs@^17.7.2",
       "jest": "npm:jest@^29.7.0",
       "@jest/globals": "npm:@jest/globals@^29.7.0",

@@ -19,7 +19,6 @@ import {
 import got from "got";
 import { v4 as uuidv4 } from "uuid";
 import { PackageURL } from "packageurl-js";
-import { create } from "xmlbuilder";
 import {
   parsePackageJsonName,
   getLicenses,
@@ -256,51 +255,6 @@ const determineParentComponent = (options) => {
   return parentComponent;
 };
 
-/**
- * Function to create the services block
- */
-function addServices(services, format = "xml") {
-  const serv_list = [];
-  for (const aserv of services) {
-    if (format === "xml") {
-      const service = {
-        "@bom-ref": aserv["bom-ref"],
-        group: aserv.group || "",
-        name: aserv.name,
-        version: aserv.version | "latest"
-      };
-      delete service["bom-ref"];
-      const aentry = {
-        service
-      };
-      serv_list.push(aentry);
-    } else {
-      serv_list.push(aserv);
-    }
-  }
-  return serv_list;
-}
-
-/**
- * Function to create the dependency block
- */
-function addDependencies(dependencies) {
-  const deps_list = [];
-  for (const adep of dependencies) {
-    const dependsOnList = adep.dependsOn.map((v) => ({
-      "@ref": v
-    }));
-    const aentry = {
-      dependency: { "@ref": adep.ref }
-    };
-    if (dependsOnList.length) {
-      aentry.dependency.dependency = dependsOnList;
-    }
-    deps_list.push(aentry);
-  }
-  return deps_list;
-}
-
 const addToolsSection = (options, format) => {
   if (options.specVersion === 1.4) {
     if (format === "json") {
@@ -385,7 +339,7 @@ const addAuthorsSection = (options, format) => {
  * Function to create metadata block
  *
  */
-function addMetadata(parentComponent = {}, format = "xml", options = {}) {
+function addMetadata(parentComponent = {}, format = "json", options = {}) {
   // DO NOT fork this project to just change the vendor or author's name
   // Try to contribute to this project by sending PR or filing issues
   const tools = addToolsSection(options, format);
@@ -587,7 +541,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
  * @param pkg
  * @returns {Array}
  */
-function addExternalReferences(opkg, format = "xml") {
+function addExternalReferences(opkg, format = "json") {
   const externalReferences = [];
   let pkgList = [];
   if (Array.isArray(opkg)) {
@@ -660,7 +614,7 @@ export function listComponents(
   allImports,
   pkg,
   ptype = "npm",
-  format = "xml"
+  format = "json"
 ) {
   const compMap = {};
   const isRootPkg = ptype === "npm";
@@ -688,7 +642,7 @@ function addComponent(
   ptype,
   compMap,
   isRootPkg = false,
-  format = "xml"
+  format = "json"
 ) {
   if (!pkg || pkg.extraneous) {
     return;
@@ -867,7 +821,7 @@ function determinePackageType(pkg) {
  * Uses the SHA1 shasum (if present) otherwise utilizes Subresource Integrity
  * of the package with support for multiple hashing algorithms.
  */
-function processHashes(pkg, component, format = "xml") {
+function processHashes(pkg, component, format = "json") {
   if (pkg.hashes) {
     // This attribute would be available when we read a bom json directly
     // Eg: cyclonedx-maven-plugin. See: Bugs: #172, #175
@@ -924,7 +878,7 @@ function processHashes(pkg, component, format = "xml") {
 /**
  * Adds a hash to component.
  */
-function addComponentHash(alg, digest, component, format = "xml") {
+function addComponentHash(alg, digest, component, format = "json") {
   let hash = "";
   // If it is a valid hash simply use it
   if (new RegExp(HASH_PATTERN).test(digest)) {
@@ -945,56 +899,6 @@ function addComponentHash(alg, digest, component, format = "xml") {
     component.hashes.push({ hash: ahash });
   }
 }
-
-/**
- * Return Bom in xml format
- *
- * @param {String} Serial number
- * @param {Object} parentComponent Parent component object
- * @param {Array} components Bom components
- * @param {Object} context Context object
- * @returns bom xml string
- */
-const buildBomXml = (
-  serialNum,
-  parentComponent,
-  components,
-  context,
-  options = {}
-) => {
-  const bom = create("bom", {
-    encoding: "utf-8",
-    separateArrayItems: true
-  }).att(
-    "xmlns",
-    `http://cyclonedx.org/schema/bom/${"" + (options.specVersion || 1.5)}`
-  );
-  bom.att("serialNumber", serialNum);
-  bom.att("version", 1);
-  const metadata = addMetadata(parentComponent, "xml", options);
-  bom.ele("metadata").ele(metadata);
-  if (components && components.length) {
-    bom.ele("components").ele(components);
-    if (context) {
-      if (context.services && context.services.length) {
-        bom.ele("services").ele(addServices(context.services, "xml"));
-      }
-      if (context.dependencies && context.dependencies.length) {
-        bom.ele("dependencies").ele(addDependencies(context.dependencies));
-      }
-    }
-    const bomString = bom.end({
-      pretty: true,
-      indent: "  ",
-      newline: "\n",
-      width: 0,
-      allowEmpty: false,
-      spacebeforeslash: ""
-    });
-    return bomString;
-  }
-  return "";
-};
 
 /**
  * Return the BOM in xml, json format including any namespace mapping
@@ -1021,13 +925,6 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const metadata = addMetadata(parentComponent, "json", options);
   const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
   if (components && (components.length || parentComponent)) {
-    const bomString = buildBomXml(
-      serialNum,
-      parentComponent,
-      components,
-      context,
-      options
-    );
     // CycloneDX 1.5 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
@@ -1038,7 +935,6 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       components: listComponents(options, allImports, pkgInfo, ptype, "json"),
       dependencies
     };
-    bomNSData.bomXml = bomString;
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
     bomNSData.dependencies = dependencies;
@@ -3747,7 +3643,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
   let services = [];
   const ociSpecs = [];
   let components = [];
-  let componentsXmls = [];
   let parentComponent = {};
   let dependencies = [];
   const doneimages = [];
@@ -3921,15 +3816,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
               imageBomData.bomJson.components
             ) {
               components = components.concat(imageBomData.bomJson.components);
-              componentsXmls = componentsXmls.concat(
-                listComponents(
-                  options,
-                  {},
-                  imageBomData.bomJson.components,
-                  "oci",
-                  "xml"
-                )
-              );
             }
             const bomData = await createBom(img.image, { projectType: "oci" });
             doneimages.push(img.image);
@@ -3940,9 +3826,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
                   co.properties = commonProperties;
                 }
                 components = components.concat(bomData.components);
-              }
-              if (bomData.componentsXmls && bomData.componentsXmls.length) {
-                componentsXmls = componentsXmls.concat(bomData.componentsXmls);
               }
             }
           } // img.image
@@ -4025,9 +3908,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
       if (mbomData.components && mbomData.components.length) {
         components = components.concat(mbomData.components);
       }
-      if (mbomData.componentsXmls && mbomData.componentsXmls.length) {
-        componentsXmls = componentsXmls.concat(mbomData.componentsXmls);
-      }
       // We need to retain the parentComponent. See #527
       // Parent component returned by multi X search is usually good
       parentComponent = mbomData.parentComponent;
@@ -4053,13 +3933,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   options.services = services;
   options.ociSpecs = ociSpecs;
-  return dedupeBom(
-    options,
-    components,
-    componentsXmls,
-    parentComponent,
-    dependencies
-  );
+  return dedupeBom(options, components, parentComponent, dependencies);
 };
 
 /**
@@ -4555,7 +4429,6 @@ export const trimComponents = (components, format) => {
 export const dedupeBom = (
   options,
   components,
-  componentsXmls,
   parentComponent,
   dependencies
 ) => {
@@ -4566,7 +4439,6 @@ export const dedupeBom = (
     dependencies = [];
   }
   components = trimComponents(components, "json");
-  componentsXmls = trimComponents(componentsXmls, "xml");
   if (DEBUG_MODE) {
     console.log(
       `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
@@ -4577,17 +4449,6 @@ export const dedupeBom = (
     options,
     parentComponent,
     components,
-    componentsXmls,
-    bomXml: buildBomXml(
-      serialNum,
-      parentComponent,
-      componentsXmls,
-      {
-        dependencies: dependencies,
-        services: options.services
-      },
-      options
-    ),
     bomJson: {
       bomFormat: "CycloneDX",
       specVersion: "" + (options.specVersion || 1.5),
@@ -4610,7 +4471,6 @@ export const dedupeBom = (
 export const createMultiXBom = async (pathList, options) => {
   let components = [];
   let dependencies = [];
-  let componentsXmls = [];
   let bomData = undefined;
   let parentComponent = determineParentComponent(options) || {};
   let parentSubComponents = [];
@@ -4631,9 +4491,6 @@ export const createMultiXBom = async (pathList, options) => {
       options.allOSComponentTypes = allTypes;
     }
     components = components.concat(osPackages);
-    componentsXmls = componentsXmls.concat(
-      listComponents(options, {}, osPackages, "", "xml")
-    );
     if (dependenciesList && dependenciesList.length) {
       dependencies = dependencies.concat(dependenciesList);
     }
@@ -4653,9 +4510,6 @@ export const createMultiXBom = async (pathList, options) => {
         console.log(`Found ${bomData.bomJson.components.length} OS components`);
       }
       components = components.concat(bomData.bomJson.components);
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "", "xml")
-      );
     }
   }
   for (const path of pathList) {
@@ -4691,9 +4545,6 @@ export const createMultiXBom = async (pathList, options) => {
           bomData.parentComponent.components
         );
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "npm", "xml")
-      );
     }
     bomData = await createJavaBom(path, options);
     if (
@@ -4724,9 +4575,6 @@ export const createMultiXBom = async (pathList, options) => {
           bomData.parentComponent.components
         );
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
-      );
     }
     bomData = await createPythonBom(path, options);
     if (
@@ -4748,9 +4596,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "pypi", "xml")
-      );
     }
     bomData = await createGoBom(path, options);
     if (
@@ -4772,9 +4617,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "golang", "xml")
-      );
     }
     bomData = await createRustBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4791,9 +4633,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "cargo", "xml")
-      );
     }
     bomData = createPHPBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4810,15 +4649,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "composer",
-          "xml"
-        )
-      );
     }
     bomData = await createRubyBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4835,9 +4665,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "gem", "xml")
-      );
     }
     bomData = await createCsharpBom(path, options, parentComponent);
     if (
@@ -4859,9 +4686,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "nuget", "xml")
-      );
     }
     bomData = await createDartBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4878,9 +4702,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "pub", "xml")
-      );
     }
     bomData = createHaskellBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4897,15 +4718,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "hackage",
-          "xml"
-        )
-      );
     }
     bomData = createElixirBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4922,9 +4734,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "hex", "xml")
-      );
     }
     bomData = createCppBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4941,9 +4750,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "conan", "xml")
-      );
     }
     bomData = createClojureBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4960,15 +4766,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "clojars",
-          "xml"
-        )
-      );
     }
     bomData = createGitHubBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4985,9 +4782,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "github", "xml")
-      );
     }
     bomData = createCloudBuildBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -5004,15 +4798,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "cloudbuild",
-          "xml"
-        )
-      );
     }
     bomData = await createSwiftBom(path, options);
     if (
@@ -5034,9 +4819,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "swift", "xml")
-      );
     }
     // Jar scanning is enabled by default
     // See #330
@@ -5060,9 +4842,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
-      );
     }
   } // for
   if (options.lastWorkingDir && options.lastWorkingDir !== "") {
@@ -5086,9 +4865,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
-      );
     }
   }
   // Retain the components of parent component
@@ -5111,13 +4887,7 @@ export const createMultiXBom = async (pathList, options) => {
       delete parentComponent.components;
     }
   }
-  return dedupeBom(
-    options,
-    components,
-    componentsXmls,
-    parentComponent,
-    dependencies
-  );
+  return dedupeBom(options, components, parentComponent, dependencies);
 };
 
 /**
