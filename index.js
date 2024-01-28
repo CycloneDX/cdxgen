@@ -112,7 +112,7 @@ import {
   addEvidenceForDotnet,
   getSwiftPackageMetadata
 } from "./utils.js";
-import { getBranch, getOriginUrl, listFiles } from "./git.js";
+import { getBranch, getOriginUrl, listFiles } from "./gitcontext.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
 let url = import.meta.url;

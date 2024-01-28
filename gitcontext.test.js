@@ -1,6 +1,6 @@
 import { expect, test } from "@jest/globals";
 
-import { getBranch, getOriginUrl, listFiles } from "./git.js";
+import { getBranch, getOriginUrl, listFiles } from "./gitcontext.js";
 
 test("git tests", () => {
   expect(getBranch()).toBeDefined();
