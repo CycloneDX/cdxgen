@@ -53,7 +53,7 @@ let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+export const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 export const isWin = platform() === "win32";
 export const isMac = platform() === "darwin";
 export let ATOM_DB = join(homedir(), ".local", "share", ".atomdb");

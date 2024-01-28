@@ -1,0 +1,34 @@
+{
+  "deb_packages": {
+    "query": "select * from deb_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves all the installed DEB packages in the target Linux system.",
+    "purlType": "deb"
+  },
+  "portage_packages": {
+    "query": "select * from portage_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves all the installed packages on the target Linux system.",
+    "purlType": "ebuild"
+  },
+  "rpm_packages": {
+    "query": "select * from rpm_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves all the installed RPM packages in the target Linux system.",
+    "purlType": "rpm"
+  },
+  "python_packages": {
+    "query": "select * from python_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Python packages installed on system.",
+    "purlType": "pypi"
+  },
+  "windows_programs": {
+    "query": "select * from programs where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves the list of products as they are installed by Windows Installer in the target Windows system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "homebrew_packages": {
+    "query": "SELECT * FROM homebrew_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "List all homebrew_packages.",
+    "purlType": "swid",
+    "componentType": "data"
+  }
+}
