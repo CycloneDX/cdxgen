@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
-import { convertOSQueryResults, dirNameStr, executeOsQuery } from "./utils.js";
+import { convertOSQueryResults, dirNameStr } from "./utils.js";
+import { executeOsQuery } from "./binary.js";
 import { join } from "node:path";
 const cbomosDbQueries = JSON.parse(
   readFileSync(join(dirNameStr, "data", "cbomosdb-queries.json"), "utf-8")

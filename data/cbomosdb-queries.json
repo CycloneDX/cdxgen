@@ -7,17 +7,20 @@
   "portage_packages": {
     "query": "select * from portage_packages where name like '%ssl%' OR name like '%crypto%';",
     "description": "Retrieves all the installed packages on the target Linux system.",
-    "purlType": "ebuild"
+    "purlType": "ebuild",
+    "componentType": "library"
   },
   "rpm_packages": {
     "query": "select * from rpm_packages where name like '%ssl%' OR name like '%crypto%';",
     "description": "Retrieves all the installed RPM packages in the target Linux system.",
-    "purlType": "rpm"
+    "purlType": "rpm",
+    "componentType": "library"
   },
   "python_packages": {
     "query": "select * from python_packages where name like '%ssl%' OR name like '%crypto%';",
     "description": "Python packages installed on system.",
-    "purlType": "pypi"
+    "purlType": "pypi",
+    "componentType": "library"
   },
   "windows_programs": {
     "query": "select * from programs where name like '%ssl%' OR name like '%crypto%';",
@@ -29,6 +32,6 @@
     "query": "SELECT * FROM homebrew_packages where name like '%ssl%' OR name like '%crypto%';",
     "description": "List all homebrew_packages.",
     "purlType": "swid",
-    "componentType": "data"
+    "componentType": "library"
   }
 }

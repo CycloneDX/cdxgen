@@ -236,6 +236,12 @@ const args = yargs(hideBin(process.argv))
     default: false,
     description: "Generate formulation section using git metadata."
   })
+  .option("include-crypto", {
+    type: "boolean",
+    default: false,
+    description: "Include crypto libraries found under formulation.",
+    hidden: true
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")

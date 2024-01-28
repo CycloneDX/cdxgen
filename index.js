@@ -140,6 +140,7 @@ import {
   getOSPackages,
   getDotnetSlices
 } from "./binary.js";
+import { collectOSCryptoLibs } from "./cbomutils.js";
 
 const isWin = _platform() === "win32";
 
@@ -339,21 +340,30 @@ const addLifecyclesSection = (options) => {
 /**
  * Method to generate the formulation section based on git metadata
  *
+ * @param {Object} options
  * @returns formulation array
  */
-const addFormulationSection = () => {
+const addFormulationSection = (options) => {
   const formulation = [];
   const gitBranch = getBranch();
   const originUrl = getOriginUrl();
   const gitFiles = listFiles();
   if (gitBranch && originUrl && gitFiles) {
     const aformulation = {};
-    aformulation["bom-ref"] = uuidv4();
-    aformulation.components = gitFiles.map((f) => ({
+    let components = gitFiles.map((f) => ({
       type: "file",
       name: f.name,
       version: f.hash
     }));
+    // Should we include the OS crypto libraries
+    if (options.includeCrypto) {
+      const cryptoLibs = collectOSCryptoLibs();
+      if (cryptoLibs && cryptoLibs.length) {
+        components = components.concat(cryptoLibs);
+      }
+    }
+    aformulation["bom-ref"] = uuidv4();
+    aformulation.components = components;
     let environmentVars = [{ name: "GIT_BRANCH", value: gitBranch }];
     for (const aevar of Object.keys(process.env)) {
       if (
@@ -383,7 +393,7 @@ const addFormulationSection = () => {
             environmentVars
           }
         ],
-        taskTypes: ["clone"]
+        taskTypes: options.includeCrypto ? ["build"] : ["clone"]
       }
     ];
     formulation.push(aformulation);
