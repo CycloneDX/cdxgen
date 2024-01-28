@@ -122,6 +122,8 @@ Options:
                                c.
   [choices: "appsec", "research", "operational", "threat-modeling", "license-com
                                        pliance", "generic"] [default: "generic"]
+      --include-formulation    Generate formulation section using git metadata.
+                                                      [boolean] [default: false]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true
                                                        [boolean] [default: true]

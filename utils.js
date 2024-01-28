@@ -54,8 +54,8 @@ if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
 const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
-const isWin = platform() === "win32";
-const isMac = platform() === "darwin";
+export const isWin = platform() === "win32";
+export const isMac = platform() === "darwin";
 export let ATOM_DB = join(homedir(), ".local", "share", ".atomdb");
 if (isWin) {
   ATOM_DB = join(homedir(), "AppData", "Local", ".atomdb");
@@ -216,7 +216,7 @@ const toBase64 = (hexString) => {
  * and url of the license object, otherwise, set the 'name' of the license
  * object.
  */
-export function getLicenses(pkg, format = "json") {
+export function getLicenses(pkg) {
   let license = pkg.license && (pkg.license.type || pkg.license);
   if (license) {
     if (!Array.isArray(license)) {
@@ -254,7 +254,7 @@ export function getLicenses(pkg, format = "json") {
           return undefined;
         }
         if (!licenseContent.id) {
-          addLicenseText(pkg, l, licenseContent, format);
+          addLicenseText(pkg, l, licenseContent);
         }
         return licenseContent;
       })
@@ -340,7 +340,7 @@ export const getKnownLicense = function (licenseUrl, pkg) {
  * used naming and content types. If a candidate file is found, add
  * the text to the license text object and stop.
  */
-export function addLicenseText(pkg, l, licenseContent, format = "json") {
+export function addLicenseText(pkg, l, licenseContent) {
   const licenseFilenames = [
     "LICENSE",
     "License",
@@ -369,8 +369,7 @@ export function addLicenseText(pkg, l, licenseContent, format = "json") {
         if (existsSync(licenseFilepath)) {
           licenseContent.text = readLicenseText(
             licenseFilepath,
-            licenseContentType,
-            format
+            licenseContentType
           );
           return;
         }
@@ -383,26 +382,14 @@ export function addLicenseText(pkg, l, licenseContent, format = "json") {
  * Read the file from the given path to the license text object and includes
  * content-type attribute, if not default. Returns the license text object.
  */
-export function readLicenseText(
-  licenseFilepath,
-  licenseContentType,
-  format = "json"
-) {
+export function readLicenseText(licenseFilepath, licenseContentType) {
   const licenseText = readFileSync(licenseFilepath, "utf8");
   if (licenseText) {
-    if (format === "xml") {
-      const licenseContentText = { "#cdata": licenseText };
-      if (licenseContentType !== "text/plain") {
-        licenseContentText["@content-type"] = licenseContentType;
-      }
-      return licenseContentText;
-    } else {
-      const licenseContentText = { content: licenseText };
-      if (licenseContentType !== "text/plain") {
-        licenseContentText["contentType"] = licenseContentType;
-      }
-      return licenseContentText;
+    const licenseContentText = { content: licenseText };
+    if (licenseContentType !== "text/plain") {
+      licenseContentText["contentType"] = licenseContentType;
     }
+    return licenseContentText;
   }
   return null;
 }
