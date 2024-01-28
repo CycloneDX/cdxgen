@@ -112,6 +112,7 @@ import {
   addEvidenceForDotnet,
   getSwiftPackageMetadata
 } from "./utils.js";
+import { getBranch, getOriginUrl, listFiles } from "./gitcontext.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
 let url = import.meta.url;
@@ -255,27 +256,15 @@ const determineParentComponent = (options) => {
   return parentComponent;
 };
 
-const addToolsSection = (options, format) => {
+const addToolsSection = (options) => {
   if (options.specVersion === 1.4) {
-    if (format === "json") {
-      return [
-        {
-          vendor: "cyclonedx",
-          name: "cdxgen",
-          version: _version
-        }
-      ];
-    } else {
-      return [
-        {
-          tool: {
-            vendor: "cyclonedx",
-            name: "cdxgen",
-            version: _version
-          }
-        }
-      ];
-    }
+    return [
+      {
+        vendor: "cyclonedx",
+        name: "cdxgen",
+        version: _version
+      }
+    ];
   }
   return {
     components: [
@@ -313,7 +302,7 @@ const cleanParentComponent = (comp) => {
   return comp;
 };
 
-const addAuthorsSection = (options, format) => {
+const addAuthorsSection = (options) => {
   const authors = [];
   if (options.author) {
     const oauthors = Array.isArray(options.author)
@@ -323,36 +312,104 @@ const addAuthorsSection = (options, format) => {
       if (aauthor.trim().length < 2) {
         continue;
       }
-      if (format === "xml") {
-        authors.push({
-          author: { name: aauthor }
-        });
-      } else {
-        authors.push({ name: aauthor });
-      }
+      authors.push({ name: aauthor });
     }
   }
   return authors;
 };
 
 /**
+ * Method to generate metadata.lifecycles section. We assume that we operate during "build"
+ * most of the time and under "post-build" for containers.
+ *
+ * @param {Object} options
+ * @returns Lifecycles array
+ */
+const addLifecyclesSection = (options) => {
+  const lifecycles = [{ phase: "build" }];
+  if (options.exportData) {
+    const inspectData = options.exportData.inspectData;
+    if (inspectData) {
+      lifecycles.push({ phase: "post-build" });
+    }
+  }
+  return lifecycles;
+};
+
+/**
+ * Method to generate the formulation section based on git metadata
+ *
+ * @returns formulation array
+ */
+const addFormulationSection = () => {
+  const formulation = [];
+  const gitBranch = getBranch();
+  const originUrl = getOriginUrl();
+  const gitFiles = listFiles();
+  if (gitBranch && originUrl && gitFiles) {
+    const aformulation = {};
+    aformulation["bom-ref"] = uuidv4();
+    aformulation.components = gitFiles.map((f) => ({
+      type: "file",
+      name: f.name,
+      version: f.hash
+    }));
+    let environmentVars = [{ name: "GIT_BRANCH", value: gitBranch }];
+    for (const aevar of Object.keys(process.env)) {
+      if (
+        (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
+        !aevar.toLowerCase().includes("key") &&
+        !aevar.toLowerCase().includes("token") &&
+        !aevar.toLowerCase().includes("pass") &&
+        process.env[aevar] &&
+        process.env[aevar].length
+      ) {
+        environmentVars.push({
+          name: aevar,
+          value: process.env[aevar]
+        });
+      }
+    }
+    if (!environmentVars.length) {
+      environmentVars = undefined;
+    }
+    aformulation.workflows = [
+      {
+        "bom-ref": uuidv4(),
+        uid: uuidv4(),
+        inputs: [
+          {
+            source: { ref: originUrl },
+            environmentVars
+          }
+        ],
+        taskTypes: ["clone"]
+      }
+    ];
+    formulation.push(aformulation);
+  }
+  return formulation;
+};
+
+/**
  * Function to create metadata block
  *
  */
-function addMetadata(parentComponent = {}, format = "json", options = {}) {
+function addMetadata(parentComponent = {}, options = {}) {
   // DO NOT fork this project to just change the vendor or author's name
   // Try to contribute to this project by sending PR or filing issues
-  const tools = addToolsSection(options, format);
-  const authors = addAuthorsSection(options, format);
+  const tools = addToolsSection(options);
+  const authors = addAuthorsSection(options);
+  const lifecycles =
+    options.specVersion >= 1.5 ? addLifecyclesSection(options) : undefined;
   const metadata = {
     timestamp: new Date().toISOString(),
     tools,
     authors,
     supplier: undefined
   };
-  if (format === "json") {
-    metadata.tools = tools;
-    metadata.authors = authors;
+  if (lifecycles) {
+    metadata.lifecycles = lifecycles;
   }
   if (parentComponent && Object.keys(parentComponent).length) {
     if (parentComponent) {
@@ -398,9 +455,7 @@ function addMetadata(parentComponent = {}, format = "json", options = {}) {
       } // for
       parentComponent.components = subComponents;
     }
-    if (format === "json") {
-      metadata.component = parentComponent;
-    }
+    metadata.component = parentComponent;
   }
   if (options) {
     const mproperties = [];
@@ -518,18 +573,7 @@ function addMetadata(parentComponent = {}, format = "json", options = {}) {
     }
 
     if (mproperties.length) {
-      if (format === "json") {
-        metadata.properties = mproperties;
-      } else {
-        metadata.properties = mproperties.map((v) => {
-          return {
-            property: {
-              "@name": v.name,
-              "#text": v.value
-            }
-          };
-        });
-      }
+      metadata.properties = mproperties;
     }
   }
   return metadata;
@@ -541,7 +585,7 @@ function addMetadata(parentComponent = {}, format = "json", options = {}) {
  * @param pkg
  * @returns {Array}
  */
-function addExternalReferences(opkg, format = "json") {
+function addExternalReferences(opkg) {
   const externalReferences = [];
   let pkgList = [];
   if (Array.isArray(opkg)) {
@@ -551,54 +595,25 @@ function addExternalReferences(opkg, format = "json") {
   }
   for (const pkg of pkgList) {
     if (pkg.externalReferences) {
-      if (format === "xml") {
-        for (const ref of pkg.externalReferences) {
-          // If the value already comes from json format
-          if (ref.type && ref.url) {
-            externalReferences.push({
-              reference: { "@type": ref.type, url: ref.url }
-            });
-          }
-        }
-      } else {
-        externalReferences.concat(pkg.externalReferences);
-      }
+      externalReferences.concat(pkg.externalReferences);
     } else {
-      if (format === "xml") {
-        if (pkg.homepage && pkg.homepage.url) {
-          externalReferences.push({
-            reference: { "@type": "website", url: pkg.homepage.url }
-          });
-        }
-        if (pkg.bugs && pkg.bugs.url) {
-          externalReferences.push({
-            reference: { "@type": "issue-tracker", url: pkg.bugs.url }
-          });
-        }
-        if (pkg.repository && pkg.repository.url) {
-          externalReferences.push({
-            reference: { "@type": "vcs", url: pkg.repository.url }
-          });
-        }
-      } else {
-        if (pkg.homepage && pkg.homepage.url) {
-          externalReferences.push({
-            type: pkg.homepage.url.includes("git") ? "vcs" : "website",
-            url: pkg.homepage.url
-          });
-        }
-        if (pkg.bugs && pkg.bugs.url) {
-          externalReferences.push({
-            type: "issue-tracker",
-            url: pkg.bugs.url
-          });
-        }
-        if (pkg.repository && pkg.repository.url) {
-          externalReferences.push({
-            type: "vcs",
-            url: pkg.repository.url
-          });
-        }
+      if (pkg.homepage && pkg.homepage.url) {
+        externalReferences.push({
+          type: pkg.homepage.url.includes("git") ? "vcs" : "website",
+          url: pkg.homepage.url
+        });
+      }
+      if (pkg.bugs && pkg.bugs.url) {
+        externalReferences.push({
+          type: "issue-tracker",
+          url: pkg.bugs.url
+        });
+      }
+      if (pkg.repository && pkg.repository.url) {
+        externalReferences.push({
+          type: "vcs",
+          url: pkg.repository.url
+        });
       }
     }
   }
@@ -609,27 +624,18 @@ function addExternalReferences(opkg, format = "json") {
  * For all modules in the specified package, creates a list of
  * component objects from each one.
  */
-export function listComponents(
-  options,
-  allImports,
-  pkg,
-  ptype = "npm",
-  format = "json"
-) {
+export function listComponents(options, allImports, pkg, ptype = "npm") {
   const compMap = {};
   const isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach((p) => {
-      addComponent(options, allImports, p, ptype, compMap, false, format);
+      addComponent(options, allImports, p, ptype, compMap, false);
     });
   } else {
-    addComponent(options, allImports, pkg, ptype, compMap, isRootPkg, format);
+    addComponent(options, allImports, pkg, ptype, compMap, isRootPkg);
   }
-  if (format === "xml") {
-    return Object.keys(compMap).map((k) => ({ component: compMap[k] }));
-  } else {
-    return Object.keys(compMap).map((k) => compMap[k]);
-  }
+
+  return Object.keys(compMap).map((k) => compMap[k]);
 }
 
 /**
@@ -641,8 +647,7 @@ function addComponent(
   pkg,
   ptype,
   compMap,
-  isRootPkg = false,
-  format = "json"
+  isRootPkg = false
 ) {
   if (!pkg || pkg.extraneous) {
     return;
@@ -663,7 +668,7 @@ function addComponent(
       ptype = "maven";
     }
     const version = pkg.version || "";
-    const licenses = pkg.licenses || getLicenses(pkg, format);
+    const licenses = pkg.licenses || getLicenses(pkg);
     const purl =
       pkg.purl ||
       new PackageURL(
@@ -675,10 +680,7 @@ function addComponent(
         encodeForPurl(pkg.subpath)
       );
     const purlString = purl.toString();
-    let description = { "#cdata": pkg.description };
-    if (format === "json") {
-      description = pkg.description || undefined;
-    }
+    const description = pkg.description || undefined;
     let compScope = pkg.scope;
     if (allImports) {
       const impPkgs = Object.keys(allImports);
@@ -705,15 +707,11 @@ function addComponent(
       hashes: [],
       licenses,
       purl: purlString,
-      externalReferences: addExternalReferences(pkg, format)
+      externalReferences: addExternalReferences(pkg)
     };
-    if (format === "xml") {
-      component["@type"] = determinePackageType(pkg);
-      component["@bom-ref"] = decodeURIComponent(purlString);
-    } else {
-      component["type"] = determinePackageType(pkg);
-      component["bom-ref"] = decodeURIComponent(purlString);
-    }
+
+    component["type"] = determinePackageType(pkg);
+    component["bom-ref"] = decodeURIComponent(purlString);
     if (
       component.externalReferences === undefined ||
       component.externalReferences.length === 0
@@ -721,20 +719,18 @@ function addComponent(
       delete component.externalReferences;
     }
 
-    processHashes(pkg, component, format);
+    processHashes(pkg, component);
     // Retain any component properties
-    if (format === "json") {
-      // Retain evidence
-      if (
-        options.specVersion >= 1.5 &&
-        pkg.evidence &&
-        Object.keys(pkg.evidence).length
-      ) {
-        component.evidence = pkg.evidence;
-      }
-      if (pkg.properties && pkg.properties.length) {
-        component.properties = pkg.properties;
-      }
+    // Retain evidence
+    if (
+      options.specVersion >= 1.5 &&
+      pkg.evidence &&
+      Object.keys(pkg.evidence).length
+    ) {
+      component.evidence = pkg.evidence;
+    }
+    if (pkg.properties && pkg.properties.length) {
+      component.properties = pkg.properties;
     }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;
@@ -743,9 +739,7 @@ function addComponent(
     Object.keys(pkg.dependencies)
       .map((x) => pkg.dependencies[x])
       .filter((x) => typeof x !== "string") //remove cycles
-      .map((x) =>
-        addComponent(options, allImports, x, ptype, compMap, false, format)
-      );
+      .map((x) => addComponent(options, allImports, x, ptype, compMap, false));
   }
 }
 
@@ -821,53 +815,32 @@ function determinePackageType(pkg) {
  * Uses the SHA1 shasum (if present) otherwise utilizes Subresource Integrity
  * of the package with support for multiple hashing algorithms.
  */
-function processHashes(pkg, component, format = "json") {
+function processHashes(pkg, component) {
   if (pkg.hashes) {
     // This attribute would be available when we read a bom json directly
     // Eg: cyclonedx-maven-plugin. See: Bugs: #172, #175
     for (const ahash of pkg.hashes) {
-      addComponentHash(ahash.alg, ahash.content, component, format);
+      addComponentHash(ahash.alg, ahash.content, component);
     }
   } else if (pkg._shasum) {
     let ahash = { "@alg": "SHA-1", "#text": pkg._shasum };
-    if (format === "json") {
-      ahash = { alg: "SHA-1", content: pkg._shasum };
-      component.hashes.push(ahash);
-    } else {
-      component.hashes.push({
-        hash: ahash
-      });
-    }
+    ahash = { alg: "SHA-1", content: pkg._shasum };
+    component.hashes.push(ahash);
   } else if (pkg._integrity) {
     const integrity = parse(pkg._integrity) || {};
     // Components may have multiple hashes with various lengths. Check each one
     // that is supported by the CycloneDX specification.
     if (Object.prototype.hasOwnProperty.call(integrity, "sha512")) {
-      addComponentHash(
-        "SHA-512",
-        integrity.sha512[0].digest,
-        component,
-        format
-      );
+      addComponentHash("SHA-512", integrity.sha512[0].digest, component);
     }
     if (Object.prototype.hasOwnProperty.call(integrity, "sha384")) {
-      addComponentHash(
-        "SHA-384",
-        integrity.sha384[0].digest,
-        component,
-        format
-      );
+      addComponentHash("SHA-384", integrity.sha384[0].digest, component);
     }
     if (Object.prototype.hasOwnProperty.call(integrity, "sha256")) {
-      addComponentHash(
-        "SHA-256",
-        integrity.sha256[0].digest,
-        component,
-        format
-      );
+      addComponentHash("SHA-256", integrity.sha256[0].digest, component);
     }
     if (Object.prototype.hasOwnProperty.call(integrity, "sha1")) {
-      addComponentHash("SHA-1", integrity.sha1[0].digest, component, format);
+      addComponentHash("SHA-1", integrity.sha1[0].digest, component);
     }
   }
   if (component.hashes.length === 0) {
@@ -878,7 +851,7 @@ function processHashes(pkg, component, format = "json") {
 /**
  * Adds a hash to component.
  */
-function addComponentHash(alg, digest, component, format = "json") {
+function addComponentHash(alg, digest, component) {
   let hash = "";
   // If it is a valid hash simply use it
   if (new RegExp(HASH_PATTERN).test(digest)) {
@@ -891,17 +864,12 @@ function addComponentHash(alg, digest, component, format = "json") {
       ? Buffer.from(digest, "base64").toString("hex")
       : digest;
   }
-  let ahash = { "@alg": alg, "#text": hash };
-  if (format === "json") {
-    ahash = { alg: alg, content: hash };
-    component.hashes.push(ahash);
-  } else {
-    component.hashes.push({ hash: ahash });
-  }
+  const ahash = { alg: alg, content: hash };
+  component.hashes.push(ahash);
 }
 
 /**
- * Return the BOM in xml, json format including any namespace mapping
+ * Return the BOM in json format including any namespace mapping
  */
 const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const bomNSData = {
@@ -920,8 +888,8 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const dependencies = context.dependencies || [];
   const parentComponent =
     determineParentComponent(options) || context.parentComponent;
-  const metadata = addMetadata(parentComponent, "json", options);
-  const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
+  const metadata = addMetadata(parentComponent, options);
+  const components = listComponents(options, allImports, pkgInfo, ptype);
   if (components && (components.length || parentComponent)) {
     // CycloneDX 1.5 Json Template
     const jsonTpl = {
@@ -930,9 +898,16 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
-      components: listComponents(options, allImports, pkgInfo, ptype, "json"),
+      components,
       dependencies
     };
+    const formulation =
+      options.includeFormulation && options.specVersion >= 1.5
+        ? addFormulationSection(options)
+        : undefined;
+    if (formulation) {
+      jsonTpl.formulation = formulation;
+    }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
     bomNSData.dependencies = dependencies;
@@ -1249,7 +1224,7 @@ export const createJavaBom = async (path, options) => {
         }
       }
       if (pkgList) {
-        pkgList = trimComponents(pkgList, "json");
+        pkgList = trimComponents(pkgList);
         pkgList = await getMvnMetadata(pkgList, jarNSMapping);
         return buildBomNSData(options, pkgList, "maven", {
           src: path,
@@ -2242,7 +2217,7 @@ export const createPythonBom = async (path, options) => {
       let retMap = await parsePoetrylockData(lockData, f);
       if (retMap.pkgList && retMap.pkgList.length) {
         pkgList = pkgList.concat(retMap.pkgList);
-        pkgList = trimComponents(pkgList, "json");
+        pkgList = trimComponents(pkgList);
       }
       if (retMap.dependenciesList && retMap.dependenciesList.length) {
         dependencies = mergeDependencies(
@@ -2757,7 +2732,7 @@ export const createGoBom = async (path, options) => {
             );
             if (retMap.pkgList && retMap.pkgList.length) {
               pkgList = pkgList.concat(retMap.pkgList);
-              pkgList = trimComponents(pkgList, "json");
+              pkgList = trimComponents(pkgList);
             }
             if (retMap.dependenciesList && retMap.dependenciesList.length) {
               dependencies = mergeDependencies(
@@ -4328,7 +4303,7 @@ export const createCsharpBom = async (
   }
   if (pkgList.length) {
     dependencies = mergeDependencies(dependencies, [], parentComponent);
-    pkgList = trimComponents(pkgList, "json");
+    pkgList = trimComponents(pkgList);
     // Perform deep analysis using dosai
     if (options.deep) {
       const slicesFile = resolve(
@@ -4352,7 +4327,7 @@ export const createCsharpBom = async (
       dependencies = dependencies.concat(retMap.dependencies);
     }
     dependencies = mergeDependencies(dependencies, [], parentComponent);
-    pkgList = trimComponents(pkgList, "json");
+    pkgList = trimComponents(pkgList);
   }
   return buildBomNSData(options, pkgList, "nuget", {
     src: path,
@@ -4398,25 +4373,14 @@ export const mergeDependencies = (
   return retlist;
 };
 
-export const trimComponents = (components, format) => {
+export const trimComponents = (components) => {
   const keyCache = {};
   const filteredComponents = [];
   for (const comp of components) {
-    if (format === "xml" && comp.component) {
-      const key =
-        comp.component.purl ||
-        comp.component["bom-ref"] ||
-        comp.name + comp.version;
-      if (!keyCache[key]) {
-        keyCache[key] = true;
-        filteredComponents.push(comp);
-      }
-    } else {
-      const key = comp.purl || comp["bom-ref"] || comp.name + comp.version;
-      if (!keyCache[key]) {
-        keyCache[key] = true;
-        filteredComponents.push(comp);
-      }
+    const key = comp.purl || comp["bom-ref"] || comp.name + comp.version;
+    if (!keyCache[key]) {
+      keyCache[key] = true;
+      filteredComponents.push(comp);
     }
   }
   return filteredComponents;
@@ -4434,7 +4398,7 @@ export const dedupeBom = (
   if (!dependencies) {
     dependencies = [];
   }
-  components = trimComponents(components, "json");
+  components = trimComponents(components);
   if (DEBUG_MODE) {
     console.log(
       `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
@@ -4450,7 +4414,7 @@ export const dedupeBom = (
       specVersion: "" + (options.specVersion || 1.5),
       serialNumber: serialNum,
       version: 1,
-      metadata: addMetadata(parentComponent, "json", options),
+      metadata: addMetadata(parentComponent, options),
       components,
       services: options.services || [],
       dependencies
@@ -4873,7 +4837,7 @@ export const createMultiXBom = async (pathList, options) => {
     parentSubComponents = parentSubComponents.filter(
       (c) => c["bom-ref"] !== parentComponent["bom-ref"]
     );
-    parentComponent.components = trimComponents(parentSubComponents, "json");
+    parentComponent.components = trimComponents(parentSubComponents);
     if (
       parentComponent.components.length == 1 &&
       parentComponent.components[0].name == parentComponent.name &&
