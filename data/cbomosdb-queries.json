@@ -34,5 +34,35 @@
     "description": "List all homebrew_packages.",
     "purlType": "swid",
     "componentType": "library"
+  },
+  "authorized_keys": {
+    "query": "SELECT * FROM authorized_keys;",
+    "description": "List of authorized keys.",
+    "purlType": "generic",
+    "componentType": "cryptographic-asset"
+  },
+  "certificates": {
+    "query": "SELECT * FROM certificates;",
+    "description": "List of certificates.",
+    "purlType": "generic",
+    "componentType": "cryptographic-asset"
+  },
+  "keychain_items": {
+    "query": "SELECT * FROM keychain_items;",
+    "description": "Generic details about keychain items.",
+    "purlType": "generic",
+    "componentType": "data"
+  },
+  "kernel_keys": {
+    "query": "SELECT * FROM kernel_keys;",
+    "description": "List of security data, authentication keys and encryption keys.",
+    "purlType": "generic",
+    "componentType": "cryptographic-asset"
+  },
+  "yum_sources": {
+    "query": "SELECT * FROM yum_sources;",
+    "description": "Current list of Yum repositories or software channels.",
+    "purlType": "generic",
+    "componentType": "data"
   }
 }

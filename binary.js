@@ -688,7 +688,7 @@ export const executeOsQuery = (query) => {
       timeout: 60 * 1000
     });
     if (result.status !== 0 || result.error) {
-      if (DEBUG_MODE && result.error) {
+      if (DEBUG_MODE && result.stderr) {
         console.error(result.stdout, result.stderr);
       }
     }
