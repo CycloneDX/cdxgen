@@ -357,7 +357,7 @@ const addFormulationSection = (options) => {
     }));
     // Should we include the OS crypto libraries
     if (options.includeCrypto) {
-      const cryptoLibs = collectOSCryptoLibs();
+      const cryptoLibs = collectOSCryptoLibs(options);
       if (cryptoLibs && cryptoLibs.length) {
         components = components.concat(cryptoLibs);
       }
