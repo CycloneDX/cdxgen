@@ -1391,7 +1391,7 @@ export const createJavaBom = async (path, options) => {
         parentComponent = {
           name: rootProject,
           type: "application",
-          ...(retMap.metadata || {})
+          ...retMap.metadata
         };
         const parentPurl = new PackageURL(
           "maven",
@@ -1415,7 +1415,7 @@ export const createJavaBom = async (path, options) => {
               name: rspName,
               type: "application",
               qualifiers: { type: "jar" },
-              ...(retMap.metadata || {})
+              ...retMap.metadata
             };
             const rootSubProjectPurl = new PackageURL(
               "maven",
@@ -4280,14 +4280,11 @@ export const createRubyBom = async (path, options) => {
  * @param path to the project
  * @param options Parse options from the cli
  */
-export const createCsharpBom = async (
-  path,
-  options,
-  parentComponent = undefined
-) => {
+export const createCsharpBom = async (path, options) => {
   let manifestFiles = [];
   let pkgData = undefined;
   let dependencies = [];
+  let parentComponent = createDefaultParentComponent(path, "nuget", options);
   let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
@@ -4352,7 +4349,7 @@ export const createCsharpBom = async (
         pkgList = pkgList.concat(dlist);
       }
       if (deps && deps.length) {
-        dependencies = dependencies.concat(deps);
+        dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
   } else if (pkgLockFiles.length) {
@@ -4372,14 +4369,7 @@ export const createCsharpBom = async (
         pkgList = pkgList.concat(dlist);
       }
       if (deps && deps.length) {
-        dependencies = dependencies.concat(deps);
-      }
-      if (!parentComponent) {
-        parentComponent = createDefaultParentComponent(
-          path,
-          options.type,
-          options
-        );
+        dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
       // Keep track of the direct dependencies so that we can construct one complete
       // list after processing all lock files
@@ -4443,15 +4433,11 @@ export const createCsharpBom = async (
         pkgList = pkgList.concat(dlist);
       }
       if (deps && deps.length) {
-        dependencies = dependencies.concat(deps);
+        dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
   }
-  if (!parentComponent) {
-    parentComponent = createDefaultParentComponent(path, options.type, options);
-  }
   if (pkgList.length) {
-    dependencies = mergeDependencies(dependencies, [], parentComponent);
     pkgList = trimComponents(pkgList, "json");
     // Perform deep analysis using dosai
     if (options.deep) {
@@ -4475,7 +4461,6 @@ export const createCsharpBom = async (
     if (retMap.dependencies && retMap.dependencies.length) {
       dependencies = dependencies.concat(retMap.dependencies);
     }
-    dependencies = mergeDependencies(dependencies, [], parentComponent);
     pkgList = trimComponents(pkgList, "json");
   }
   return buildBomNSData(options, pkgList, "nuget", {
@@ -4833,7 +4818,7 @@ export const createMultiXBom = async (pathList, options) => {
         listComponents(options, {}, bomData.bomJson.components, "gem", "xml")
       );
     }
-    bomData = await createCsharpBom(path, options, parentComponent);
+    bomData = await createCsharpBom(path, options);
     if (
       bomData &&
       bomData.bomJson &&
