@@ -7026,7 +7026,7 @@ export const extractJarArchive = async function (
     existsSync(manifestname)
   ) {
     tempDir = dirname(jarFile);
-  } else if (!existsSync(join(tempDir, fname))) {
+  } else if (!existsSync(join(tempDir, fname)) && lstatSync(jarFile).isFile()) {
     // Only copy if the file doesn't exist
     copyFileSync(jarFile, join(tempDir, fname), constants.COPYFILE_FICLONE);
   }
@@ -7041,17 +7041,12 @@ export const extractJarArchive = async function (
     )}`;
   }
   if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
-    const jarResult = spawnSync("jar", ["-xf", join(tempDir, fname)], {
-      encoding: "utf-8",
-      cwd: tempDir,
-      shell: isWin,
-      env
-    });
-    if (jarResult.status !== 0) {
-      console.error(jarResult.stdout, jarResult.stderr);
-      console.log(
-        "Check if JRE is installed and the jar command is available in the PATH."
-      );
+    try {
+      const zip = new StreamZip.async({ file: join(tempDir, fname) });
+      await zip.extract(null, tempDir);
+      await zip.close();
+    } catch (e) {
+      console.log(`Unable to extract ${join(tempDir, fname)}. Skipping.`);
       return pkgList;
     }
     jarFiles = getAllFiles(join(tempDir, "WEB-INF", "lib"), "**/*.jar");
@@ -7063,6 +7058,10 @@ export const extractJarArchive = async function (
   }
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
+      // If the jar file doesn't exist at the point of use, skip it
+      if (!existsSync(jf)) {
+        continue;
+      }
       pomname = jf.replace(".jar", ".pom");
       const jarname = basename(jf);
       // Ignore test jars
@@ -7081,12 +7080,17 @@ export const extractJarArchive = async function (
       if (existsSync(pomname)) {
         jarResult = { status: 0 };
       } else {
-        jarResult = spawnSync("jar", ["-xf", jf, "META-INF"], {
-          encoding: "utf-8",
-          cwd: tempDir,
-          shell: isWin,
-          env
-        });
+        // Unzip natively
+        try {
+          const zip = new StreamZip.async({ file: jf });
+          await zip.extract(null, tempDir);
+          await zip.close();
+        } catch (e) {
+          if (DEBUG_MODE) {
+            console.log(`Unable to extract ${jf}. Skipping.`);
+          }
+        }
+        jarResult = { status: 0 };
       }
       if (jarResult.status !== 0) {
         console.error(jarResult.stdout, jarResult.stderr);
