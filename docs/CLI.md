@@ -65,8 +65,7 @@ import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 $ cdxgen -h
 
 Options:
-  -o, --output                 Output file for bom.xml or bom.json. Default bom.
-                               json
+  -o, --output                 Output file. Default bom.json
   -t, --type                   Project type
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
@@ -123,6 +122,8 @@ Options:
                                c.
   [choices: "appsec", "research", "operational", "threat-modeling", "license-com
                                        pliance", "generic"] [default: "generic"]
+      --include-formulation    Generate formulation section using git metadata.
+                                                      [boolean] [default: false]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true
                                                        [boolean] [default: true]

@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process";
 import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
+import process from "node:process";
 import { createBom, submitBom } from "./index.js";
 import { postProcess } from "./postgen.js";
 
@@ -113,7 +114,7 @@ const start = (options) => {
     .listen(options.serverPort, options.serverHost);
   configureServer(cdxgenServer);
 
-  app.use("/health", async function (_req, res) {
+  app.use("/health", function (_req, res) {
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ status: "OK" }, null, 2));
   });

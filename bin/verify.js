@@ -5,7 +5,7 @@ import { hideBin } from "yargs/helpers";
 import fs from "node:fs";
 import jws from "jws";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import { dirname, join } from "node:path";
 
 let url = import.meta.url;

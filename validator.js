@@ -5,7 +5,7 @@ import { join, dirname } from "node:path";
 import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE } from "./utils.js";
 
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
@@ -23,14 +23,15 @@ export const validateBom = (bomJson) => {
   }
   const schema = JSON.parse(
     readFileSync(
-      join(dirName, "data", `bom-${bomJson.specVersion}.schema.json`)
+      join(dirName, "data", `bom-${bomJson.specVersion}.schema.json`),
+      "utf-8"
     )
   );
   const defsSchema = JSON.parse(
-    readFileSync(join(dirName, "data", "jsf-0.82.schema.json"))
+    readFileSync(join(dirName, "data", "jsf-0.82.schema.json"), "utf-8")
   );
   const spdxSchema = JSON.parse(
-    readFileSync(join(dirName, "data", "spdx.schema.json"))
+    readFileSync(join(dirName, "data", "spdx.schema.json"), "utf-8")
   );
   const ajv = new Ajv({
     schemas: [schema, defsSchema, spdxSchema],

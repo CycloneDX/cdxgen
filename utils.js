@@ -1,5 +1,7 @@
 import { globSync } from "glob";
 import { homedir, platform, tmpdir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   basename,
   delimiter as _delimiter,
@@ -27,7 +29,7 @@ import got from "got";
 import Arborist from "@npmcli/arborist";
 import path from "node:path";
 import { xml2js } from "xml-js";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import { load } from "cheerio";
 import { load as _load } from "js-yaml";
 import { spawnSync } from "node:child_process";
@@ -51,9 +53,9 @@ let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
-const isWin = platform() === "win32";
-const isMac = platform() === "darwin";
+export const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+export const isWin = platform() === "win32";
+export const isMac = platform() === "darwin";
 export let ATOM_DB = join(homedir(), ".local", "share", ".atomdb");
 if (isWin) {
   ATOM_DB = join(homedir(), "AppData", "Local", ".atomdb");
@@ -62,34 +64,36 @@ if (isWin) {
 }
 
 const licenseMapping = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "lic-mapping.json"))
+  readFileSync(join(dirNameStr, "data", "lic-mapping.json"), "utf-8")
 );
 const vendorAliases = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "vendor-alias.json"))
+  readFileSync(join(dirNameStr, "data", "vendor-alias.json"), "utf-8")
 );
 const spdxLicenses = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "spdx-licenses.json"))
+  readFileSync(join(dirNameStr, "data", "spdx-licenses.json"), "utf-8")
 );
 const knownLicenses = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "known-licenses.json"))
+  readFileSync(join(dirNameStr, "data", "known-licenses.json"), "utf-8")
 );
 const mesonWrapDB = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"))
+  readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"), "utf-8")
 );
 export const frameworksList = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "frameworks-list.json"))
+  readFileSync(join(dirNameStr, "data", "frameworks-list.json"), "utf-8")
 );
-const selfPJson = JSON.parse(readFileSync(join(dirNameStr, "package.json")));
+const selfPJson = JSON.parse(
+  readFileSync(join(dirNameStr, "package.json"), "utf-8")
+);
 const _version = selfPJson.version;
 
 // Refer to contrib/py-modules.py for a script to generate this list
 // The script needs to be used once every few months to update this list
 const PYTHON_STD_MODULES = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "python-stdlib.json"))
+  readFileSync(join(dirNameStr, "data", "python-stdlib.json"), "utf-8")
 );
 // Mapping between modules and package names
 const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "pypi-pkg-aliases.json"))
+  readFileSync(join(dirNameStr, "data", "pypi-pkg-aliases.json"), "utf-8")
 );
 
 // Debug mode flag
@@ -122,14 +126,14 @@ export const FETCH_LICENSE =
   process.env.FETCH_LICENSE &&
   ["true", "1"].includes(process.env.FETCH_LICENSE);
 
-// Wether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
+// Whether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
 export const SEARCH_MAVEN_ORG =
   !process.env.SEARCH_MAVEN_ORG ||
   ["true", "1"].includes(process.env.SEARCH_MAVEN_ORG);
 
 // circuit breaker for search maven.org
 let search_maven_org_errors = 0;
-const MAX_SEARCH_MAVEN_ORG_ERRORS = 5;
+const MAX_SEARCH_MAVEN_ORG_ERRORS = 1;
 
 // circuit breaker for get repo license
 let get_repo_license_errors = 0;
@@ -137,11 +141,69 @@ const MAX_GET_REPO_LICENSE_ERRORS = 5;
 
 const MAX_LICENSE_ID_LENGTH = 100;
 
-let PYTHON_CMD = "python";
+export let JAVA_CMD = "java";
+if (process.env.JAVA_CMD) {
+  JAVA_CMD = process.env.JAVA_CMD;
+} else if (
+  process.env.JAVA_HOME &&
+  existsSync(process.env.JAVA_HOME) &&
+  existsSync(join(process.env.JAVA_HOME, "bin", "java"))
+) {
+  JAVA_CMD = join(process.env.JAVA_HOME, "bin", "java");
+}
+export let PYTHON_CMD = "python";
 if (process.env.PYTHON_CMD) {
   PYTHON_CMD = process.env.PYTHON_CMD;
 } else if (process.env.CONDA_PYTHON_EXE) {
   PYTHON_CMD = process.env.CONDA_PYTHON_EXE;
+}
+export let DOTNET_CMD = "dotnet";
+if (process.env.DOTNET_CMD) {
+  DOTNET_CMD = process.env.DOTNET_CMD;
+}
+export let NODE_CMD = "node";
+if (process.env.NODE_CMD) {
+  NODE_CMD = process.env.NODE_CMD;
+}
+export let NPM_CMD = "npm";
+if (process.env.NPM_CMD) {
+  NPM_CMD = process.env.NPM_CMD;
+}
+export let YARN_CMD = "yarn";
+if (process.env.YARN_CMD) {
+  YARN_CMD = process.env.YARN_CMD;
+}
+export let GCC_CMD = "gcc";
+if (process.env.GCC_CMD) {
+  GCC_CMD = process.env.GCC_CMD;
+}
+export let RUSTC_CMD = "rustc";
+if (process.env.RUSTC_CMD) {
+  RUSTC_CMD = process.env.RUSTC_CMD;
+}
+export let GO_CMD = "go";
+if (process.env.GO_CMD) {
+  GO_CMD = process.env.GO_CMD;
+}
+export let CARGO_CMD = "cargo";
+if (process.env.CARGO_CMD) {
+  CARGO_CMD = process.env.CARGO_CMD;
+}
+
+// Clojure CLI
+export let CLJ_CMD = "clj";
+if (process.env.CLJ_CMD) {
+  CLJ_CMD = process.env.CLJ_CMD;
+}
+
+export let LEIN_CMD = "lein";
+if (process.env.LEIN_CMD) {
+  LEIN_CMD = process.env.LEIN_CMD;
+}
+
+export let SWIFT_CMD = "swift";
+if (process.env.SWIFT_CMD) {
+  SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
 // Custom user-agent for cdxgen
@@ -181,7 +243,7 @@ export const getAllFiles = function (dirPath, pattern, options = {}) {
  *
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
- * @param {array} ignoreList Directory patterns to ignore
+ * @param {Array} ignoreList Directory patterns to ignore
  */
 export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
   try {
@@ -190,7 +252,6 @@ export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
       absolute: true,
       nocase: true,
       nodir: true,
-      strict: true,
       dot: pattern.startsWith(".") ? true : false,
       follow: false,
       ignore: ignoreList
@@ -213,7 +274,7 @@ const toBase64 = (hexString) => {
  * and url of the license object, otherwise, set the 'name' of the license
  * object.
  */
-export function getLicenses(pkg, format = "xml") {
+export function getLicenses(pkg) {
   let license = pkg.license && (pkg.license.type || pkg.license);
   if (license) {
     if (!Array.isArray(license)) {
@@ -231,7 +292,7 @@ export function getLicenses(pkg, format = "xml") {
             licenseContent.id = l;
             licenseContent.url = "https://opensource.org/licenses/" + l;
           } else if (l.startsWith("http")) {
-            let knownLicense = getKnownLicense(l, pkg);
+            const knownLicense = getKnownLicense(l, pkg);
             if (knownLicense) {
               licenseContent.id = knownLicense.id;
               licenseContent.name = knownLicense.name;
@@ -251,13 +312,13 @@ export function getLicenses(pkg, format = "xml") {
           return undefined;
         }
         if (!licenseContent.id) {
-          addLicenseText(pkg, l, licenseContent, format);
+          addLicenseText(pkg, l, licenseContent);
         }
         return licenseContent;
       })
       .map((l) => ({ license: l }));
   } else {
-    let knownLicense = getKnownLicense(undefined, pkg);
+    const knownLicense = getKnownLicense(undefined, pkg);
     if (knownLicense) {
       return [{ license: knownLicense }];
     }
@@ -268,9 +329,9 @@ export function getLicenses(pkg, format = "xml") {
 /**
  * Method to retrieve known license by known-licenses.json
  *
- * @param {String} repoUrl Repository url
+ * @param {String} licenseUrl Repository url
  * @param {String} pkg Bom ref
- * @return {Object>} Objetct with SPDX license id or license name
+ * @return {Object} Objetct with SPDX license id or license name
  */
 export const getKnownLicense = function (licenseUrl, pkg) {
   if (licenseUrl && licenseUrl.includes("opensource.org")) {
@@ -337,7 +398,7 @@ export const getKnownLicense = function (licenseUrl, pkg) {
  * used naming and content types. If a candidate file is found, add
  * the text to the license text object and stop.
  */
-export function addLicenseText(pkg, l, licenseContent, format = "xml") {
+export function addLicenseText(pkg, l, licenseContent) {
   const licenseFilenames = [
     "LICENSE",
     "License",
@@ -366,8 +427,7 @@ export function addLicenseText(pkg, l, licenseContent, format = "xml") {
         if (existsSync(licenseFilepath)) {
           licenseContent.text = readLicenseText(
             licenseFilepath,
-            licenseContentType,
-            format
+            licenseContentType
           );
           return;
         }
@@ -380,26 +440,14 @@ export function addLicenseText(pkg, l, licenseContent, format = "xml") {
  * Read the file from the given path to the license text object and includes
  * content-type attribute, if not default. Returns the license text object.
  */
-export function readLicenseText(
-  licenseFilepath,
-  licenseContentType,
-  format = "xml"
-) {
+export function readLicenseText(licenseFilepath, licenseContentType) {
   const licenseText = readFileSync(licenseFilepath, "utf8");
   if (licenseText) {
-    if (format === "xml") {
-      const licenseContentText = { "#cdata": licenseText };
-      if (licenseContentType !== "text/plain") {
-        licenseContentText["@content-type"] = licenseContentType;
-      }
-      return licenseContentText;
-    } else {
-      const licenseContentText = { content: licenseText };
-      if (licenseContentType !== "text/plain") {
-        licenseContentText["contentType"] = licenseContentType;
-      }
-      return licenseContentText;
+    const licenseContentText = { content: licenseText };
+    if (licenseContentType !== "text/plain") {
+      licenseContentText["contentType"] = licenseContentType;
     }
+    return licenseContentText;
   }
   return null;
 }
@@ -681,9 +729,9 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     pkgList.push(pkg);
 
     // retrieve workspace node pkglists
-    let workspaceDependsOn = [];
+    const workspaceDependsOn = [];
     if (node.fsChildren && node.fsChildren.size > 0) {
-      for (let workspaceNode of node.fsChildren) {
+      for (const workspaceNode of node.fsChildren) {
         const {
           pkgList: childPkgList,
           dependenciesList: childDependenciesList
@@ -708,10 +756,10 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
 
     // this handles the case when a node has ["dependencies"] key in a package-lock.json
     // for a node. We exclude the root node because it's already been handled
-    let childrenDependsOn = [];
+    const childrenDependsOn = [];
     if (node != rootNode) {
       for (const child of node.children) {
-        let childNode = child[1];
+        const childNode = child[1];
         const {
           pkgList: childPkgList,
           dependenciesList: childDependenciesList
@@ -749,7 +797,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
       // which isn't installed
       // Bug #795. At times, npm loses the integrity node completely and such packages are getting missed out
       // To keep things safe, we include these packages.
-      let edgeToIntegrity = edge.to ? edge.to.integrity : undefined;
+      const edgeToIntegrity = edge.to ? edge.to.integrity : undefined;
       if (!edgeToIntegrity) {
         // This hack is required to fix the package name
         targetName = node.name.replace(/-cjs$/, "");
@@ -1562,7 +1610,7 @@ export const parseMinJs = async (minJsFile) => {
  */
 export const parsePom = function (pomFile) {
   const deps = [];
-  const xmlData = readFileSync(pomFile);
+  const xmlData = readFileSync(pomFile, "utf-8");
   const project = xml2js(xmlData, {
     compact: true,
     spaces: 4,
@@ -2428,7 +2476,7 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
         });
       }
     }
-    let group = p.group || "";
+    const group = p.group || "";
     // If the package already has key metadata skip querying maven
     if (group && p.name && p.version && !FETCH_LICENSE) {
       cdepList.push(p);
@@ -2565,7 +2613,7 @@ export const fetchPomXml = async function ({
   name,
   version
 }) {
-  let fullUrl = composePomXmlUrl({ urlPrefix, group, name, version });
+  const fullUrl = composePomXmlUrl({ urlPrefix, group, name, version });
   const res = await cdxgenAgent.get(fullUrl);
   return res.body;
 };
@@ -2654,7 +2702,7 @@ export const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
     return -c;
   };
   // Iterate in the "reverse" order
-  for (let rv of versionsList.sort(comparator)) {
+  for (const rv of versionsList.sort(comparator)) {
     if (satisfies(coerce(rv), versionSpecifiers, true)) {
       return rv;
     }
@@ -2720,8 +2768,8 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       if (body.info.classifiers) {
         for (const c of body.info.classifiers) {
           if (c.startsWith("License :: ")) {
-            let licenseName = c.split("::").slice(-1)[0].trim();
-            let licenseId = findLicenseId(licenseName);
+            const licenseName = c.split("::").slice(-1)[0].trim();
+            const licenseId = findLicenseId(licenseName);
             if (licenseId && !p.license.includes(licenseId)) {
               p.license.push(licenseId);
             }
@@ -2729,7 +2777,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         }
       }
       if (body.info.license) {
-        let licenseId = findLicenseId(body.info.license);
+        const licenseId = findLicenseId(body.info.license);
         if (licenseId && !p.license.includes(licenseId)) {
           p.license.push(licenseId);
         }
@@ -2939,7 +2987,7 @@ export const parsePiplockData = async function (lockData) {
 export const parsePyProjectToml = (tomlFile) => {
   // Do we need a toml npm package at some point?
   const tomlData = readFileSync(tomlFile, { encoding: "utf-8" });
-  let pkg = {};
+  const pkg = {};
   if (!tomlData) {
     return pkg;
   }
@@ -2947,7 +2995,7 @@ export const parsePyProjectToml = (tomlFile) => {
     l = l.replace("\r", "");
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
-      let key = tmpA[0].trim();
+      const key = tmpA[0].trim();
       let value = tmpA[1].trim().replace(/["']/g, "");
       switch (key) {
         case "description":
@@ -3080,7 +3128,7 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
   });
   pkgList = await getPyMetadata(pkgList, false);
   for (const key of Object.keys(depsMap)) {
-    let dependsOnList = [];
+    const dependsOnList = [];
     for (const adep of Array.from(depsMap[key])) {
       if (adep.startsWith("pkg:")) {
         dependsOnList.push(adep);
@@ -3426,10 +3474,10 @@ export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
  * @return {Promise<String>} SPDX license id
  */
 export const getRepoLicense = async function (repoUrl, repoMetadata) {
-  let apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
+  const apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
   // Perform github lookups
   if (apiUrl && get_repo_license_errors < MAX_GET_REPO_LICENSE_ERRORS) {
-    let licenseUrl = apiUrl + "/license";
+    const licenseUrl = apiUrl + "/license";
     const headers = {};
     if (process.env.GITHUB_TOKEN) {
       headers["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
@@ -3849,7 +3897,7 @@ export const parseGosumData = async function (gosumData) {
   }
   const pkgs = gosumData.split("\n");
   for (const l of pkgs) {
-    let m = l.replace("\r", "");
+    const m = l.replace("\r", "");
     // look for lines containing go.mod
     if (m.indexOf("go.mod") > -1) {
       const tmpA = m.split(" ");
@@ -4534,7 +4582,7 @@ export const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
 export const parseContainerFile = function (fileContents) {
   const imgList = [];
 
-  let buildStageNames = [];
+  const buildStageNames = [];
   for (let line of fileContents.split("\n")) {
     line = line.trim();
 
@@ -5190,7 +5238,7 @@ export const parseNupkg = async function (nupkgFile) {
   return await parseNuspecData(nupkgFile, nuspecData);
 };
 
-export const parseNuspecData = async function (nupkgFile, nuspecData) {
+export const parseNuspecData = function (nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
   let npkg = undefined;
@@ -5243,7 +5291,7 @@ export const parseNuspecData = async function (nupkgFile, nuspecData) {
   return pkgList;
 };
 
-export const parseCsPkgData = async function (pkgData) {
+export const parseCsPkgData = function (pkgData) {
   const pkgList = [];
   if (!pkgData) {
     return pkgList;
@@ -5270,7 +5318,7 @@ export const parseCsPkgData = async function (pkgData) {
   return pkgList;
 };
 
-export const parseCsProjData = async function (csProjData, projFile) {
+export const parseCsProjData = function (csProjData, projFile) {
   const pkgList = [];
   if (!csProjData) {
     return pkgList;
@@ -5362,10 +5410,7 @@ export const parseCsProjData = async function (csProjData, projFile) {
   return pkgList;
 };
 
-export const parseCsProjAssetsData = async function (
-  csProjData,
-  assetsJsonFile
-) {
+export const parseCsProjAssetsData = function (csProjData, assetsJsonFile) {
   // extract name, operator, version from .NET package representation
   // like "NLog >= 4.5.0"
   function extractNameOperatorVersion(inputStr) {
@@ -5384,7 +5429,7 @@ export const parseCsProjAssetsData = async function (
   }
 
   const pkgList = [];
-  let dependenciesList = [];
+  const dependenciesList = [];
   let rootPkg = {};
   // This tracks the resolved version
   const pkgNameVersionMap = {};
@@ -5411,7 +5456,7 @@ export const parseCsProjAssetsData = async function (
     "bom-ref": decodeURIComponent(purlString)
   };
   pkgList.push(rootPkg);
-  let rootPkgDeps = new Set();
+  const rootPkgDeps = new Set();
 
   // create root pkg deps
   if (csProjData.targets && csProjData.projectFileDependencyGroups) {
@@ -5467,7 +5512,7 @@ export const parseCsProjAssetsData = async function (
           null,
           null
         ).toString();
-        let pkg = {
+        const pkg = {
           group: "",
           name: name,
           version: version,
@@ -5541,7 +5586,7 @@ export const parseCsProjAssetsData = async function (
             if (!pkgNameVersionMap[p + framework]) {
               continue;
             }
-            let dversion = pkgNameVersionMap[p + framework];
+            const dversion = pkgNameVersionMap[p + framework];
             const ipurl = new PackageURL(
               "nuget",
               "",
@@ -5577,7 +5622,7 @@ export const parseCsProjAssetsData = async function (
   };
 };
 
-export const parseCsPkgLockData = async function (csLockData, pkgLockFile) {
+export const parseCsPkgLockData = function (csLockData, pkgLockFile) {
   const pkgList = [];
   const dependenciesList = [];
   const rootList = [];
@@ -5668,7 +5713,7 @@ export const parseCsPkgLockData = async function (csLockData, pkgLockFile) {
   };
 };
 
-export const parsePaketLockData = async function (paketLockData, pkgLockFile) {
+export const parsePaketLockData = function (paketLockData, pkgLockFile) {
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
@@ -6528,12 +6573,12 @@ export const parseSwiftResolved = (resolvedFile) => {
  * @param {boolean} cleanup Remove temporary directories
  * @param {boolean} includeCacheDir Include maven and gradle cache directories
  */
-export const collectMvnDependencies = function (
+export const collectMvnDependencies = async (
   mavenCmd,
   basePath,
   cleanup = true,
   includeCacheDir = false
-) {
+) => {
   let jarNSMapping = {};
   const MAVEN_CACHE_DIR =
     process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository");
@@ -6574,12 +6619,12 @@ export const collectMvnDependencies = function (
         "3. Ensure the temporary directory is available and has sufficient disk space to copy all the artifacts."
       );
     } else {
-      jarNSMapping = collectJarNS(tempDir);
+      jarNSMapping = await collectJarNS(tempDir);
     }
   }
   if (includeCacheDir || basePath === MAVEN_CACHE_DIR) {
     // slow operation
-    jarNSMapping = collectJarNS(MAVEN_CACHE_DIR);
+    jarNSMapping = await collectJarNS(MAVEN_CACHE_DIR);
   }
 
   // Clean up
@@ -6589,7 +6634,7 @@ export const collectMvnDependencies = function (
   return jarNSMapping;
 };
 
-export const collectGradleDependencies = (
+export const collectGradleDependencies = async (
   gradleCmd,
   basePath,
   cleanup = true, // eslint-disable-line no-unused-vars
@@ -6619,7 +6664,7 @@ export const collectGradleDependencies = (
   for (const apom of pomFiles) {
     pomPathMap[basename(apom)] = apom;
   }
-  const jarNSMapping = collectJarNS(GRADLE_CACHE_DIR, pomPathMap);
+  const jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR, pomPathMap);
   return jarNSMapping;
 };
 
@@ -6631,7 +6676,7 @@ export const collectGradleDependencies = (
  *
  * @return object containing jar name and class list
  */
-export const collectJarNS = function (jarPath, pomPathMap = {}) {
+export const collectJarNS = async (jarPath, pomPathMap = {}) => {
   const jarNSMapping = {};
   console.log(
     `About to identify class names for all jars in the path ${jarPath}`
@@ -6646,14 +6691,10 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
       "bin"
     )}`;
   }
-  let jarCommandAvailable = true;
-  // Execute jar tvf to get class names
+  // Parse jar files to get class names
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
-      if (!jarCommandAvailable) {
-        break;
-      }
       const jarname = jf;
       let pomname =
         pomPathMap[basename(jf).replace(".jar", ".pom")] ||
@@ -6685,10 +6726,10 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         // .m2/repository/org/apache/logging/log4j/log4j-web/3.0.0-SNAPSHOT/log4j-web-3.0.0-SNAPSHOT.jar
         const tmpA = jf.split(join(".m2", "repository", ""));
         if (tmpA && tmpA.length) {
-          let tmpJarPath = tmpA[tmpA.length - 1];
+          const tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield log4j-web-3.0.0-SNAPSHOT.jar
           const jarFileName = basename(tmpJarPath).replace(".jar", "");
-          let tmpDirParts = dirname(tmpJarPath).split(_sep);
+          const tmpDirParts = dirname(tmpJarPath).split(_sep);
           // Retrieve the version
           let jarVersion = tmpDirParts.pop();
           if (jarVersion === "plugins") {
@@ -6731,10 +6772,10 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         // .gradle/caches/modules-2/files-2.1/org.xmlresolver/xmlresolver/4.2.0/f4dbdaa83d636dcac91c9003ffa7fb173173fe8d/xmlresolver-4.2.0-data.jar
         const tmpA = jf.split(join("files-2.1", ""));
         if (tmpA && tmpA.length) {
-          let tmpJarPath = tmpA[tmpA.length - 1];
+          const tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield xmlresolver-4.2.0-data.jar
           const jarFileName = basename(tmpJarPath).replace(".jar", "");
-          let tmpDirParts = dirname(tmpJarPath).split(_sep);
+          const tmpDirParts = dirname(tmpJarPath).split(_sep);
           // This would remove the hash from the end of the directory name
           tmpDirParts.pop();
           // Retrieve the version
@@ -6757,44 +6798,9 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         jarNSMapping[purl] = jarNSMapping_cache[purl];
       } else {
         if (DEBUG_MODE) {
-          console.log(`Executing 'jar tf ${jf}'`);
+          console.log(`Parsing ${jf}`);
         }
-        const jarResult = spawnSync("jar", ["-tf", jf], {
-          encoding: "utf-8",
-          shell: isWin,
-          maxBuffer: 50 * 1024 * 1024,
-          env
-        });
-        if (
-          jarResult &&
-          jarResult.stderr &&
-          jarResult.stderr.includes(
-            "is not recognized as an internal or external command"
-          )
-        ) {
-          jarCommandAvailable = false;
-          console.log(
-            "jar command is not available in PATH. Ensure JDK >= 21 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
-          );
-        }
-        const consolelines = (jarResult.stdout || "").split("\n");
-        const nsList = consolelines
-          .filter((l) => {
-            return (
-              (l.includes(".class") ||
-                l.includes(".java") ||
-                l.includes(".kt")) &&
-              !l.includes("-INF") &&
-              !l.includes("module-info")
-            );
-          })
-          .map((e) => {
-            return e
-              .replace("\r", "")
-              .replace(/.(class|java|kt)/, "")
-              .replace(/\/$/, "")
-              .replace(/\//g, ".");
-          });
+        const nsList = await getJarClasses(jf);
         jarNSMapping[purl || jf] = {
           jarFile: jf,
           pom: pomData,
@@ -6816,7 +6822,7 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
 };
 
 export const convertJarNSToPackages = (jarNSMapping) => {
-  let pkgList = [];
+  const pkgList = [];
   for (const purl of Object.keys(jarNSMapping)) {
     let { jarFile, pom, namespaces } = jarNSMapping[purl];
     if (!pom) {
@@ -6977,7 +6983,7 @@ export const getPomPropertiesFromMavenDir = function (mavenDir) {
  * @param {string} path path to file
  * @returns {Promise<String>} hex value of hash
  */
-async function checksumFile(hashName, path) {
+function checksumFile(hashName, path) {
   return new Promise((resolve, reject) => {
     const hash = createHash(hashName);
     const stream = createReadStream(path);
@@ -7006,7 +7012,7 @@ export const extractJarArchive = async function (
   const fname = basename(jarFile);
   let pomname = undefined;
   // If there is a pom file in the same directory, try to use it
-  let manifestname = join(dirname(jarFile), "META-INF", "MANIFEST.MF");
+  const manifestname = join(dirname(jarFile), "META-INF", "MANIFEST.MF");
   // Issue 439: Current implementation checks for existance of a .pom file, but .pom file is not used.
   // Instead code expects to find META-INF/MANIFEST.MF in the same folder as a .jar file.
   // For now check for presence of both .pom and MANIFEST.MF files.
@@ -7106,7 +7112,15 @@ export const extractJarArchive = async function (
               sha +
               "%22&rows=20&wt=json";
             const res = await cdxgenAgent.get(searchurl, {
-              responseType: "json"
+              responseType: "json",
+              timeout: {
+                lookup: 200,
+                connect: 5000,
+                secureConnect: 5000,
+                socket: 1000,
+                send: 10000,
+                response: 1000
+              }
             });
             const data = res && res.body ? res.body["response"] : undefined;
             if (data && data["numFound"] == 1) {
@@ -7118,7 +7132,9 @@ export const extractJarArchive = async function (
             }
           } catch (err) {
             if (err && err.message && !err.message.includes("404")) {
-              console.log(err);
+              if (DEBUG_MODE) {
+                console.log(err);
+              }
               search_maven_org_errors++;
             }
           }
@@ -7202,7 +7218,7 @@ export const extractJarArchive = async function (
           group = group === "." ? name : group || name;
         }
         if (name && version) {
-          let apkg = {
+          const apkg = {
             group: group ? encodeForPurl(group) : "",
             name: name ? encodeForPurl(name) : "",
             version,
@@ -7392,6 +7408,53 @@ export const readZipEntry = async function (
 };
 
 /**
+ * Method to get the classes and relevant sources in a jar file
+ *
+ * @param {string} jarFile Jar file to read
+ *
+ * @returns List of classes and sources matching certain known patterns
+ */
+export const getJarClasses = async function (jarFile) {
+  const retList = [];
+  try {
+    const zip = new StreamZip.async({ file: jarFile });
+    const entriesCount = await zip.entriesCount;
+    if (!entriesCount) {
+      return [];
+    }
+    const entries = await zip.entries();
+    for (const entry of Object.values(entries)) {
+      if (entry.isDirectory) {
+        continue;
+      }
+      if (
+        (entry.name.includes(".class") ||
+          entry.name.includes(".java") ||
+          entry.name.includes(".scala") ||
+          entry.name.includes(".groovy") ||
+          entry.name.includes(".kt")) &&
+        !entry.name.includes("-INF") &&
+        !entry.name.includes("module-info")
+      ) {
+        retList.push(
+          entry.name
+            .replace("\r", "")
+            .replace(/.(class|java|kt|scala|groovy)/g, "")
+            .replace(/\/$/, "")
+            .replace(/\//g, ".")
+        );
+      }
+    }
+    zip.close();
+  } catch (e) {
+    if (DEBUG_MODE) {
+      console.log(`Unable to parse ${jarFile}. Skipping.`);
+    }
+  }
+  return retList;
+};
+
+/**
  * Method to return the gradle command to use.
  *
  * @param {string} srcPath Path to look for gradlew wrapper
@@ -7531,7 +7594,7 @@ export const getAtomCommand = () => {
 };
 
 export const executeAtom = (src, args) => {
-  let cwd =
+  const cwd =
     existsSync(src) && lstatSync(src).isDirectory() ? src : dirname(src);
   let ATOM_BIN = getAtomCommand();
   let isSupported = true;
@@ -7579,7 +7642,7 @@ export const executeAtom = (src, args) => {
       result.stderr.includes("Error: Could not create the Java Virtual Machine")
     ) {
       console.log(
-        "Atom requires Java 17 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
+        "Atom requires Java 21 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
       );
       console.log(`Current JAVA_HOME: ${env["JAVA_HOME"] || ""}`);
     } else if (result.stderr.includes("astgen")) {
@@ -7638,7 +7701,7 @@ export const findAppModules = function (
   ];
   executeAtom(src, args);
   if (existsSync(slicesFile)) {
-    const slicesData = JSON.parse(readFileSync(slicesFile), {
+    const slicesData = JSON.parse(readFileSync(slicesFile, "utf-8"), {
       encoding: "utf-8"
     });
     if (slicesData && Object.keys(slicesData) && slicesData.modules) {
@@ -7787,7 +7850,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   if (reqOrSetupFile) {
     // We have a poetry.lock file
     if (reqOrSetupFile.endsWith("poetry.lock")) {
-      let poetryConfigArgs = [
+      const poetryConfigArgs = [
         "-m",
         "poetry",
         "config",
@@ -7849,7 +7912,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           }
         }
       } else {
-        let poetryEnvArgs = ["env info", "--path"];
+        const poetryEnvArgs = ["env info", "--path"];
         result = spawnSync("poetry", poetryEnvArgs, {
           cwd: basePath,
           encoding: "utf-8",
@@ -7963,7 +8026,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       }
       const name = t.name.replace(/_/g, "-").toLowerCase();
       const version = t.version;
-      let exclude = ["pip", "setuptools", "wheel"];
+      const exclude = ["pip", "setuptools", "wheel"];
       if (!exclude.includes(name)) {
         const purlString = new PackageURL(
           "pypi",
@@ -8050,7 +8113,7 @@ export const addEvidenceForImports = (pkgList, allImports) => {
     if (group === "@types") {
       continue;
     }
-    let aliases =
+    const aliases =
       group && group.length
         ? [name, `${group}/${name}`, `@${group}/${name}`]
         : [name];
@@ -8124,8 +8187,8 @@ export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
       return;
     }
     let name = "";
-    let group = "";
-    let version = "";
+    const group = "";
+    const version = "";
     let path = undefined;
     if (l.startsWith("digraph")) {
       const tmpA = l.split(" ");
@@ -8151,7 +8214,7 @@ export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
         if (tmpA && tmpA.length) {
           const relationship = tmpA[1];
           if (relationship.includes("->")) {
-            let tmpB = relationship.split(" -> ");
+            const tmpB = relationship.split(" -> ");
             if (tmpB && tmpB.length === 2) {
               if (tmpB[0].includes(_sep)) {
                 tmpB[0] = basename(tmpB[0]);
@@ -8240,9 +8303,9 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
     if (l === "\n" || l.startsWith("#")) {
       return;
     }
-    let group = "";
-    let path = undefined;
-    let name_list = [];
+    const group = "";
+    const path = undefined;
+    const name_list = [];
     if (l.startsWith("set")) {
       const tmpA = l.replace("set(", "").replace(")", "").trim().split(" ");
       if (tmpA && tmpA.length === 2) {
@@ -8398,7 +8461,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
       }
     }
     for (let n of name_list) {
-      let props = [];
+      const props = [];
       let confidence = 0;
       if (
         n &&
@@ -8517,7 +8580,7 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
  */
 export const getCppModules = (src, options, osPkgsList, epkgList) => {
   // Generic is the type to use where the package registry could not be located
-  let pkgType = "generic";
+  const pkgType = "generic";
   const pkgList = [];
   const pkgAddedMap = {};
   let sliceData = {};
@@ -8655,11 +8718,11 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
   for (let afile of Object.keys(usageData)) {
     // Normalize windows separator
     afile = afile.replace("..\\", "").replace(/\\/g, "/");
-    let fileName = basename(afile);
+    const fileName = basename(afile);
     if (!fileName || !fileName.length) {
       continue;
     }
-    let extn = extname(fileName);
+    const extn = extname(fileName);
     let group = dirname(afile);
     if (
       group.startsWith(".") ||
@@ -8669,9 +8732,9 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     ) {
       group = "";
     }
-    let version = "";
+    const version = "";
     // We need to resolve the name to an os package here
-    let name = fileName.replace(extn, "");
+    const name = fileName.replace(extn, "");
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
       epkgMap[group + "/" + name] || {
         name,
@@ -8844,7 +8907,7 @@ async function queryNuget(p, NUGET_URL) {
   function setLatestVersion(upper) {
     // Handle special case for versions with more than 3 parts
     if (upper.split(".").length > 3) {
-      let tmpVersionArray = upper.split("-")[0].split(".");
+      const tmpVersionArray = upper.split("-")[0].split(".");
       // Compromise for versions such as 1.2.3.0-alpha
       // How to find latest proper release version?
       if (
@@ -8889,19 +8952,19 @@ async function queryNuget(p, NUGET_URL) {
     NUGET_URL + np.name.toLowerCase() + "/index.json",
     { responseType: "json" }
   );
-  let items = res.body.items;
+  const items = res.body.items;
   if (!items || !items[0]) {
     return [np, newBody, body];
   }
   if (items[0] && !items[0].items) {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-      let upper = items[items.length - 1].upper;
+      const upper = items[items.length - 1].upper;
       np.version = setLatestVersion(upper);
     }
     for (const item of items) {
       if (np.version) {
-        let lower = compare(coerce(item.lower), coerce(np.version));
-        let upper = compare(coerce(item.upper), coerce(np.version));
+        const lower = compare(coerce(item.lower), coerce(np.version));
+        const upper = compare(coerce(item.upper), coerce(np.version));
         if (lower !== 1 && upper !== -1) {
           res = await cdxgenAgent.get(item["@id"], { responseType: "json" });
           for (const i of res.body.items.reverse()) {
@@ -8918,13 +8981,13 @@ async function queryNuget(p, NUGET_URL) {
     }
   } else {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-      let upper = items[items.length - 1].upper;
+      const upper = items[items.length - 1].upper;
       np.version = setLatestVersion(upper);
     }
     if (np.version) {
       for (const item of items) {
-        let lower = compare(coerce(item.lower), coerce(np.version));
-        let upper = compare(coerce(item.upper), coerce(np.version));
+        const lower = compare(coerce(item.lower), coerce(np.version));
+        const upper = compare(coerce(item.upper), coerce(np.version));
         if (lower !== 1 && upper !== -1) {
           for (const i of item.items.reverse()) {
             if (

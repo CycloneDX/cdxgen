@@ -122,3 +122,4 @@ test/obj
 oci/
 roots/
 .python-version
+build/

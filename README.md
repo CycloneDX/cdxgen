@@ -130,8 +130,7 @@ import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 ```text
 $ cdxgen -h
 Options:
-  -o, --output                 Output file for bom.xml or bom.json. Default bom.
-                               json
+  -o, --output                 Output file. Default bom.json
   -t, --type                   Project type
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
@@ -188,6 +187,8 @@ Options:
                                c.
   [choices: "appsec", "research", "operational", "threat-modeling", "license-com
                                        pliance", "generic"] [default: "generic"]
+      --include-formulation    Generate formulation section using git metadata.
+                                                      [boolean] [default: false]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true
                                                        [boolean] [default: true]
@@ -383,7 +384,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | SBOM_SIGN_ALGORITHM          | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                                       |
 | SBOM_SIGN_PRIVATE_KEY        | Private key to use for signing                                                                                                       |
 | SBOM_SIGN_PUBLIC_KEY         | Optional. Public key to include in the SBOM signature                                                                                |
-| CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.10"                                                 |
+| CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.11"                                                 |
 | CDX_MAVEN_GOAL               | CycloneDX Maven plugin goal to use. Default makeAggregateBom. Other options: makeBom, makePackageBom                                 |
 | CDX_MAVEN_INCLUDE_TEST_SCOPE | Whether test scoped dependencies should be included from Maven projects, Default: true                                               |
 | ASTGEN_IGNORE_DIRS           | Comma separated list of directories to ignore while analyzing using babel. The environment variable is also used by atom and astgen. |
@@ -510,7 +511,7 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 
 ## Integration as library
 
-cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 16
+cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 20
 
 Minimal example:
 
@@ -522,7 +523,7 @@ See the [Deno Readme](./contrib/deno/README.md) for detailed instructions.
 
 ```javascript
 import { createBom, submitBom } from "@cyclonedx/cdxgen";
-// bomNSData would contain bomJson, bomXml
+// bomNSData would contain bomJson
 const bomNSData = await createBom(filePath, options);
 // Submission to dependency track server
 const dbody = await submitBom(args, bomNSData.bomJson);

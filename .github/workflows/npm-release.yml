@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - release/*
     tags:
     - 'v*'
   workflow_dispatch:
@@ -21,9 +22,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 18.x
+        node-version: 21.x
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -50,9 +51,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 18.x
+        node-version: 21.x
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |

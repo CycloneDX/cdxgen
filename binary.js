@@ -1,4 +1,6 @@
 import { platform as _platform, arch as _arch, tmpdir, homedir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   existsSync,
   mkdirSync,
@@ -11,7 +13,7 @@ import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE, TIMEOUT_MS, findLicenseId } from "./utils.js";
 
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -108,16 +110,18 @@ if (!CDXGEN_PLUGINS_DIR) {
       }
     }
   }
-  const globalPlugins = join(
-    globalNodePath,
-    "@cyclonedx",
-    "cdxgen-plugins-bin" + pluginsBinSuffix,
-    "plugins"
-  );
-  if (existsSync(globalPlugins)) {
-    CDXGEN_PLUGINS_DIR = globalPlugins;
-    if (DEBUG_MODE) {
-      console.log("Found global plugins", CDXGEN_PLUGINS_DIR);
+  if (globalNodePath) {
+    const globalPlugins = join(
+      globalNodePath,
+      "@cyclonedx",
+      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      "plugins"
+    );
+    if (existsSync(globalPlugins)) {
+      CDXGEN_PLUGINS_DIR = globalPlugins;
+      if (DEBUG_MODE) {
+        console.log("Found global plugins", CDXGEN_PLUGINS_DIR);
+      }
     }
   }
 }
@@ -398,7 +402,7 @@ export const getOSPackages = (src) => {
       }
       let distro_codename = osReleaseData["VERSION_CODENAME"] || "";
       let distro_id = osReleaseData["ID"] || "";
-      let distro_id_like = osReleaseData["ID_LIKE"] || "";
+      const distro_id_like = osReleaseData["ID_LIKE"] || "";
       let purl_type = "rpm";
       switch (distro_id) {
         case "debian":
@@ -464,6 +468,7 @@ export const getOSPackages = (src) => {
                   comp.group = group;
                   purlObj.namespace = group;
                 }
+                purlObj.qualifiers = purlObj.qualifiers || {};
                 if (distro_id && distro_id.length) {
                   purlObj.qualifiers["distro"] = distro_id;
                 }
@@ -647,6 +652,7 @@ const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
         const tmpPurl = PackageURL.fromString(d.replace("none", compPurl.type));
         tmpPurl.type = compPurl.type;
         tmpPurl.namespace = compPurl.namespace;
+        tmpPurl.qualifiers = tmpPurl.qualifiers || {};
         if (compPurl.qualifiers) {
           if (compPurl.qualifiers.distro_name) {
             tmpPurl.qualifiers.distro_name = compPurl.qualifiers.distro_name;
@@ -682,7 +688,7 @@ export const executeOsQuery = (query) => {
       timeout: 60 * 1000
     });
     if (result.status !== 0 || result.error) {
-      if (DEBUG_MODE && result.error) {
+      if (DEBUG_MODE && result.stderr) {
         console.error(result.stdout, result.stderr);
       }
     }

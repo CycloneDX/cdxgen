@@ -4,7 +4,8 @@ import {
   getGradleCommand,
   getMavenCommand,
   collectGradleDependencies,
-  collectMvnDependencies
+  collectMvnDependencies,
+  DEBUG_MODE
 } from "./utils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -98,7 +99,7 @@ export const catalogMavenDeps = async (
   if (fs.existsSync(path.join(dirPath, "bom.json.map"))) {
     try {
       const mapData = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "bom.json.map"))
+        fs.readFileSync(path.join(dirPath, "bom.json.map"), "utf-8")
       );
       if (mapData && Object.keys(mapData).length) {
         jarNSMapping = mapData;
@@ -111,7 +112,7 @@ export const catalogMavenDeps = async (
     console.log("About to collect jar dependencies for the path", dirPath);
     const mavenCmd = getMavenCommand(dirPath, dirPath);
     // collect all jars including from the cache if data-flow mode is enabled
-    jarNSMapping = collectMvnDependencies(
+    jarNSMapping = await collectMvnDependencies(
       mavenCmd,
       dirPath,
       false,
@@ -145,7 +146,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   );
   const gradleCmd = getGradleCommand(dirPath, dirPath);
   // collect all jars including from the cache if data-flow mode is enabled
-  const jarNSMapping = collectGradleDependencies(
+  const jarNSMapping = await collectGradleDependencies(
     gradleCmd,
     dirPath,
     false,
@@ -1110,7 +1111,7 @@ export const collectDataFlowFrames = async (
   }
   const paths = dataFlowSlice?.paths || [];
   for (const apath of paths) {
-    let aframe = [];
+    const aframe = [];
     let referredPurls = new Set();
     for (const nid of apath) {
       const theNode = nodeCache[nid];
@@ -1163,7 +1164,7 @@ export const collectDataFlowFrames = async (
               referredPurls.add(ns.purl);
             }
             typePurlsCache[typeFullName] = nsHits;
-          } else {
+          } else if (DEBUG_MODE) {
             console.log("Unable to identify purl for", typeFullName);
           }
         }
@@ -1213,14 +1214,14 @@ export const collectDataFlowFrames = async (
  * @param {string} language Application language
  * @param {object} reachablesSlice Reachables slice object from atom
  */
-export const collectReachableFrames = async (language, reachablesSlice) => {
+export const collectReachableFrames = (language, reachablesSlice) => {
   const reachableNodes = reachablesSlice?.reachables || [];
   // purl key and an array of frames array
   // CycloneDX 1.5 currently accepts only 1 frame as evidence
   // so this method is more future-proof
   const dfFrames = {};
   for (const anode of reachableNodes) {
-    let aframe = [];
+    const aframe = [];
     let referredPurls = new Set(anode.purls || []);
     for (const fnode of anode.flows) {
       if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
