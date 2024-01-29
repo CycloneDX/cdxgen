@@ -141,11 +141,40 @@ const MAX_GET_REPO_LICENSE_ERRORS = 5;
 
 const MAX_LICENSE_ID_LENGTH = 100;
 
-let PYTHON_CMD = "python";
+export let JAVA_CMD = "java";
+if (process.env.JAVA_CMD) {
+  JAVA_CMD = process.env.JAVA_CMD;
+} else if (
+  process.env.JAVA_HOME &&
+  existsSync(process.env.JAVA_HOME) &&
+  existsSync(join(process.env.JAVA_HOME, "bin", "java"))
+) {
+  JAVA_CMD = join(process.env.JAVA_HOME, "bin", "java");
+}
+export let PYTHON_CMD = "python";
 if (process.env.PYTHON_CMD) {
   PYTHON_CMD = process.env.PYTHON_CMD;
 } else if (process.env.CONDA_PYTHON_EXE) {
   PYTHON_CMD = process.env.CONDA_PYTHON_EXE;
+}
+export let DOTNET_CMD = "dotnet";
+if (process.env.DOTNET_CMD) {
+  DOTNET_CMD = process.env.DOTNET_CMD;
+}
+// Clojure CLI
+export let CLJ_CMD = "clj";
+if (process.env.CLJ_CMD) {
+  CLJ_CMD = process.env.CLJ_CMD;
+}
+
+export let LEIN_CMD = "lein";
+if (process.env.LEIN_CMD) {
+  LEIN_CMD = process.env.LEIN_CMD;
+}
+
+export let SWIFT_CMD = "swift";
+if (process.env.SWIFT_CMD) {
+  SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
 // Custom user-agent for cdxgen

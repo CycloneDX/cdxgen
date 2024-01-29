@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { isWin } from "./utils.js";
+import { isWin, PYTHON_CMD, JAVA_CMD, DOTNET_CMD } from "./utils.js";
 import process from "node:process";
 import { Buffer } from "node:buffer";
 
@@ -73,13 +73,45 @@ export const listFiles = (dir) => {
 
 /**
  * Execute a git command
+ *
  * @param {string} dir Repo directory
  * @param {Array} args arguments to git command
  *
  * @returns Output from the git command
  */
 export const execGitCommand = (dir, args) => {
-  const result = spawnSync(GIT_COMMAND, args, {
+  return getCommandOutput(GIT_COMMAND, dir, args);
+};
+
+export const collectJavaInfo = (dir) => {
+  const versionDesc = getCommandOutput(JAVA_CMD, dir, ["--version"]);
+  const moduleDesc = getCommandOutput(JAVA_CMD, dir, ["--list-modules"]) || "";
+  if (versionDesc) {
+    return {
+      type: "platform",
+      name: "java",
+      description: versionDesc,
+      properties: [
+        {
+          name: "java:modules",
+          value: moduleDesc.replaceAll("\n", ", ")
+        }
+      ]
+    };
+  }
+  return undefined;
+};
+
+/**
+ * Execute any command to retrieve the output
+ *
+ * @param {*} cmd Command to execute
+ * @param {*} dir working directory
+ * @param {*} args arguments
+ * @returns String output from the command or undefined in case of error
+ */
+const getCommandOutput = (cmd, dir, args) => {
+  const result = spawnSync(cmd, args, {
     cwd: dir,
     encoding: "utf-8",
     shell: isWin

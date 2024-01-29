@@ -110,9 +110,12 @@ import {
   parseBitbucketPipelinesFile,
   getPyMetadata,
   addEvidenceForDotnet,
-  getSwiftPackageMetadata
+  getSwiftPackageMetadata,
+  CLJ_CMD,
+  LEIN_CMD,
+  SWIFT_CMD
 } from "./utils.js";
-import { getBranch, getOriginUrl, listFiles } from "./gitcontext.js";
+import { getBranch, getOriginUrl, listFiles } from "./envcontext.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
 let url = import.meta.url;
@@ -166,22 +169,6 @@ if (process.env.GRADLE_USER_HOME) {
     "modules-2",
     "files-2.1"
   );
-}
-
-// Clojure CLI
-let CLJ_CMD = "clj";
-if (process.env.CLJ_CMD) {
-  CLJ_CMD = process.env.CLJ_CMD;
-}
-
-let LEIN_CMD = "lein";
-if (process.env.LEIN_CMD) {
-  LEIN_CMD = process.env.LEIN_CMD;
-}
-
-let SWIFT_CMD = "swift";
-if (process.env.SWIFT_CMD) {
-  SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
 // Construct sbt cache directory
