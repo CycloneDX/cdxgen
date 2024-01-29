@@ -4,7 +4,13 @@ import {
   getBranch,
   getOriginUrl,
   listFiles,
-  collectJavaInfo
+  collectJavaInfo,
+  collectDotnetInfo,
+  collectPythonInfo,
+  collectNodeInfo,
+  collectGccInfo,
+  collectRustInfo,
+  collectGoInfo
 } from "./envcontext.js";
 
 test("git tests", () => {
@@ -16,4 +22,10 @@ test("git tests", () => {
 
 test("tools tests", () => {
   expect(collectJavaInfo()).toBeDefined();
+  expect(collectDotnetInfo()).toBeDefined();
+  expect(collectPythonInfo()).toBeDefined();
+  expect(collectNodeInfo()).toBeDefined();
+  expect(collectGccInfo()).toBeDefined();
+  expect(collectRustInfo()).toBeDefined();
+  expect(collectGoInfo()).toBeDefined();
 });

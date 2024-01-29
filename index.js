@@ -115,7 +115,12 @@ import {
   LEIN_CMD,
   SWIFT_CMD
 } from "./utils.js";
-import { getBranch, getOriginUrl, listFiles } from "./envcontext.js";
+import {
+  collectEnvInfo,
+  getBranch,
+  getOriginUrl,
+  listFiles
+} from "./envcontext.js";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, URL } from "node:url";
 let url = import.meta.url;
@@ -342,6 +347,11 @@ const addFormulationSection = (options) => {
       name: f.name,
       version: f.hash
     }));
+    // Collect build environment details
+    const infoComponents = collectEnvInfo(options.path);
+    if (infoComponents && infoComponents.length) {
+      components = components.concat(infoComponents);
+    }
     // Should we include the OS crypto libraries
     if (options.includeCrypto) {
       const cryptoLibs = collectOSCryptoLibs(options);
@@ -380,7 +390,7 @@ const addFormulationSection = (options) => {
             environmentVars
           }
         ],
-        taskTypes: options.includeCrypto ? ["build"] : ["clone"]
+        taskTypes: ["build", "clone"]
       }
     ];
     formulation.push(aformulation);

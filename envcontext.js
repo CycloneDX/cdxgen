@@ -1,5 +1,16 @@
 import { spawnSync } from "node:child_process";
-import { isWin, PYTHON_CMD, JAVA_CMD, DOTNET_CMD } from "./utils.js";
+import {
+  isWin,
+  PYTHON_CMD,
+  JAVA_CMD,
+  DOTNET_CMD,
+  NODE_CMD,
+  NPM_CMD,
+  GCC_CMD,
+  GO_CMD,
+  RUSTC_CMD,
+  CARGO_CMD
+} from "./utils.js";
 import process from "node:process";
 import { Buffer } from "node:buffer";
 
@@ -83,6 +94,12 @@ export const execGitCommand = (dir, args) => {
   return getCommandOutput(GIT_COMMAND, dir, args);
 };
 
+/**
+ * Collect Java version and installed modules
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing the java details
+ */
 export const collectJavaInfo = (dir) => {
   const versionDesc = getCommandOutput(JAVA_CMD, dir, ["--version"]);
   const moduleDesc = getCommandOutput(JAVA_CMD, dir, ["--list-modules"]) || "";
@@ -90,6 +107,7 @@ export const collectJavaInfo = (dir) => {
     return {
       type: "platform",
       name: "java",
+      version: versionDesc.split("\n")[0].replace("java ", ""),
       description: versionDesc,
       properties: [
         {
@@ -100,6 +118,162 @@ export const collectJavaInfo = (dir) => {
     };
   }
   return undefined;
+};
+
+/**
+ * Collect dotnet version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing dotnet details
+ */
+export const collectDotnetInfo = (dir) => {
+  const versionDesc = getCommandOutput(DOTNET_CMD, dir, ["--version"]);
+  const moduleDesc =
+    getCommandOutput(DOTNET_CMD, dir, ["--list-runtimes"]) || "";
+  if (versionDesc) {
+    return {
+      type: "platform",
+      name: "dotnet",
+      version: versionDesc.trim(),
+      description: moduleDesc.replaceAll("\n", "\\n")
+    };
+  }
+  return undefined;
+};
+
+/**
+ * Collect python version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing python details
+ */
+export const collectPythonInfo = (dir) => {
+  const versionDesc = getCommandOutput(PYTHON_CMD, dir, ["--version"]);
+  const moduleDesc =
+    getCommandOutput(PYTHON_CMD, dir, ["-m", "pip", "--version"]) || "";
+  if (versionDesc) {
+    return {
+      type: "platform",
+      name: "python",
+      version: versionDesc.replace("Python ", ""),
+      description: moduleDesc.replaceAll("\n", "\\n")
+    };
+  }
+  return undefined;
+};
+
+/**
+ * Collect node version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing node details
+ */
+export const collectNodeInfo = (dir) => {
+  const versionDesc = getCommandOutput(NODE_CMD, dir, ["--version"]);
+  let moduleDesc = getCommandOutput(NPM_CMD, dir, ["--version"]);
+  if (moduleDesc) {
+    moduleDesc = `npm: ${moduleDesc}`;
+  }
+  if (versionDesc) {
+    return {
+      type: "platform",
+      name: "node",
+      version: versionDesc.trim(),
+      description: moduleDesc
+    };
+  }
+  return undefined;
+};
+
+/**
+ * Collect gcc version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing gcc details
+ */
+export const collectGccInfo = (dir) => {
+  const versionDesc = getCommandOutput(GCC_CMD, dir, ["--version"]);
+  const moduleDesc = getCommandOutput(GCC_CMD, dir, ["-print-search-dirs"]);
+  if (versionDesc) {
+    return {
+      type: "platform",
+      name: "gcc",
+      version: versionDesc.split("\n")[0],
+      description: moduleDesc.replaceAll("\n", "\\n")
+    };
+  }
+  return undefined;
+};
+
+/**
+ * Collect rust version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing rust details
+ */
+export const collectRustInfo = (dir) => {
+  const versionDesc = getCommandOutput(RUSTC_CMD, dir, ["--version"]);
+  const moduleDesc = getCommandOutput(CARGO_CMD, dir, ["--version"]);
+  if (versionDesc) {
+    return {
+      type: "platform",
+      name: "rustc",
+      version: versionDesc.trim(),
+      description: moduleDesc.trim()
+    };
+  }
+  return undefined;
+};
+
+/**
+ * Collect go version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing go details
+ */
+export const collectGoInfo = (dir) => {
+  const versionDesc = getCommandOutput(GO_CMD, dir, ["version"]);
+  if (versionDesc) {
+    return {
+      type: "platform",
+      name: "go",
+      version: versionDesc.trim()
+    };
+  }
+  return undefined;
+};
+
+export const collectEnvInfo = (dir) => {
+  const infoComponents = [];
+  let cmp = collectJavaInfo(dir);
+  if (cmp) {
+    infoComponents.push(cmp);
+  }
+  cmp = collectDotnetInfo(dir);
+  if (cmp) {
+    infoComponents.push(cmp);
+  }
+  cmp = collectPythonInfo(dir);
+  if (cmp) {
+    infoComponents.push(cmp);
+  }
+  cmp = collectNodeInfo(dir);
+  if (cmp) {
+    infoComponents.push(cmp);
+  }
+  cmp = collectGccInfo(dir);
+  if (cmp) {
+    infoComponents.push(cmp);
+  }
+  cmp = collectRustInfo(dir);
+  if (cmp) {
+    infoComponents.push(cmp);
+  }
+  cmp = collectGoInfo(dir);
+  if (cmp) {
+    infoComponents.push(cmp);
+  }
+  return infoComponents;
 };
 
 /**

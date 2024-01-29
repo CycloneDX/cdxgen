@@ -161,6 +161,35 @@ export let DOTNET_CMD = "dotnet";
 if (process.env.DOTNET_CMD) {
   DOTNET_CMD = process.env.DOTNET_CMD;
 }
+export let NODE_CMD = "node";
+if (process.env.NODE_CMD) {
+  NODE_CMD = process.env.NODE_CMD;
+}
+export let NPM_CMD = "npm";
+if (process.env.NPM_CMD) {
+  NPM_CMD = process.env.NPM_CMD;
+}
+export let YARN_CMD = "yarn";
+if (process.env.YARN_CMD) {
+  YARN_CMD = process.env.YARN_CMD;
+}
+export let GCC_CMD = "gcc";
+if (process.env.GCC_CMD) {
+  GCC_CMD = process.env.GCC_CMD;
+}
+export let RUSTC_CMD = "rustc";
+if (process.env.RUSTC_CMD) {
+  RUSTC_CMD = process.env.RUSTC_CMD;
+}
+export let GO_CMD = "go";
+if (process.env.GO_CMD) {
+  GO_CMD = process.env.GO_CMD;
+}
+export let CARGO_CMD = "cargo";
+if (process.env.CARGO_CMD) {
+  CARGO_CMD = process.env.CARGO_CMD;
+}
+
 // Clojure CLI
 export let CLJ_CMD = "clj";
 if (process.env.CLJ_CMD) {
