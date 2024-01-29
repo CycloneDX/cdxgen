@@ -356,9 +356,12 @@ Pass the argument `--export-proto` to serialize and export the BOM as protobuf b
 --export-proto --proto-bin-file bom.cdx.bin
 ```
 
-## Include git metadata (formulation)
+## Include formulation
 
-Pass the argument `--include-formulation` to include git metadata such as files in the tree, origin url, branch, and CI environment variables under the `formulation` section.
+Pass the argument `--include-formulation` to collect the following information under the `formulation` section:
+
+- git metadata such as files in the tree, origin url, branch, and CI environment variables
+- build tools versions (Java, Python, Node.js, gcc, dotnet, rustc)
 
 Example:
 
@@ -396,6 +399,23 @@ Example:
           "type": "file",
           "name": "src/main/resources/url/url_safe_domain.xml",
           "version": "ee81efcf364e18221c401e03f1d890348fe73e87"
+        },
+        {
+          "type": "platform",
+          "name": "dotnet",
+          "version": "8.0.101",
+          "description": "Microsoft.AspNetCore.App 6.0.26 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]\\nMicrosoft.AspNetCore.App 8.0.1 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]\\nMicrosoft.NETCore.App 6.0.26 [/usr/share/dotnet/shared/Microsoft.NETCore.App]\\nMicrosoft.NETCore.App 8.0.1 [/usr/share/dotnet/shared/Microsoft.NETCore.App]"
+        },
+        {
+          "type": "platform",
+          "name": "rustc",
+          "version": "rustc 1.75.0 (82e1608df 2023-12-21)",
+          "description": "cargo 1.75.0 (1d8b05cdd 2023-11-20)"
+        },
+        {
+          "type": "platform",
+          "name": "go",
+          "version": "go version go1.21.6 linux/amd64"
         }
       ],
       "workflows": [
