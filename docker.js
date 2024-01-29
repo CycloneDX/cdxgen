@@ -695,7 +695,17 @@ export const extractTar = async (fullImageName, dir) => {
             path.includes("ssl/certs") ||
             path.includes("etc/") ||
             path.includes("logs/") ||
-            ["CharacterDevice"].includes(entry.type)
+            path.includes("dev/") ||
+            [
+              "BlockDevice",
+              "CharacterDevice",
+              "FIFO",
+              "MultiVolume",
+              "TapeVolume",
+              "SymbolicLink",
+              "RenamedOrSymlinked",
+              "HardLink"
+            ].includes(entry.type)
           ) {
             return false;
           }
