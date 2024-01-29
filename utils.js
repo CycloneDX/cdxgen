@@ -126,14 +126,14 @@ export const FETCH_LICENSE =
   process.env.FETCH_LICENSE &&
   ["true", "1"].includes(process.env.FETCH_LICENSE);
 
-// Wether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
+// Whether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
 export const SEARCH_MAVEN_ORG =
   !process.env.SEARCH_MAVEN_ORG ||
   ["true", "1"].includes(process.env.SEARCH_MAVEN_ORG);
 
 // circuit breaker for search maven.org
 let search_maven_org_errors = 0;
-const MAX_SEARCH_MAVEN_ORG_ERRORS = 5;
+const MAX_SEARCH_MAVEN_ORG_ERRORS = 1;
 
 // circuit breaker for get repo license
 let get_repo_license_errors = 0;
@@ -7112,7 +7112,15 @@ export const extractJarArchive = async function (
               sha +
               "%22&rows=20&wt=json";
             const res = await cdxgenAgent.get(searchurl, {
-              responseType: "json"
+              responseType: "json",
+              timeout: {
+                lookup: 200,
+                connect: 5000,
+                secureConnect: 5000,
+                socket: 1000,
+                send: 10000,
+                response: 1000
+              }
             });
             const data = res && res.body ? res.body["response"] : undefined;
             if (data && data["numFound"] == 1) {
@@ -7124,7 +7132,9 @@ export const extractJarArchive = async function (
             }
           } catch (err) {
             if (err && err.message && !err.message.includes("404")) {
-              console.log(err);
+              if (DEBUG_MODE) {
+                console.log(err);
+              }
               search_maven_org_errors++;
             }
           }
