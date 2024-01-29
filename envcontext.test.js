@@ -20,7 +20,6 @@ test("git tests", () => {
   expect(files.length).toBeGreaterThan(10);
 });
 
-/*
 test("tools tests", () => {
   expect(collectJavaInfo()).toBeDefined();
   expect(collectDotnetInfo()).toBeDefined();
@@ -30,4 +29,3 @@ test("tools tests", () => {
   expect(collectRustInfo()).toBeDefined();
   expect(collectGoInfo()).toBeDefined();
 });
-*/
