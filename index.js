@@ -4320,7 +4320,11 @@ export const createCsharpBom = async (path, options) => {
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
     if (retMap.dependencies && retMap.dependencies.length) {
-      dependencies = dependencies.concat(retMap.dependencies);
+      dependencies = mergeDependencies(
+        dependencies,
+        retMap.dependencies,
+        parentComponent
+      );
     }
     pkgList = trimComponents(pkgList);
   }
