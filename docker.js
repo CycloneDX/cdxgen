@@ -1063,6 +1063,12 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
     if (!lastWorkingDir.startsWith("/app")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/app"));
     }
+    if (!lastWorkingDir.startsWith("/workspace")) {
+      knownSysPaths.push(join(allLayersExplodedDir, "/workspace"));
+    }
+    if (!lastWorkingDir.startsWith("/layers")) {
+      knownSysPaths.push(join(allLayersExplodedDir, "/layers"));
+    }
     if (!lastWorkingDir.startsWith("/data")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/data"));
     }
