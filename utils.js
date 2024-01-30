@@ -7062,6 +7062,10 @@ export const extractJarArchive = async function (
     if (jarFiles && jarFiles2.length) {
       jarFiles = jarFiles.concat(jarFiles2);
     }
+    // Fallback. If our jar file didn't include any jar
+    if (jarFile.endsWith(".jar") && !jarFiles.length) {
+      jarFiles = [join(tempDir, fname)];
+    }
   } else {
     jarFiles = [join(tempDir, fname)];
   }
