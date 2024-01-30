@@ -7076,6 +7076,9 @@ export const extractJarArchive = async function (
     for (const jf of jarFiles) {
       // If the jar file doesn't exist at the point of use, skip it
       if (!existsSync(jf)) {
+        if (DEBUG_MODE) {
+          console.log(jf, "is not a readable file");
+        }
         continue;
       }
       pomname = jf.replace(".jar", ".pom");
@@ -7085,6 +7088,9 @@ export const extractJarArchive = async function (
         jarname.endsWith("-tests.jar") ||
         jarname.endsWith("-test-sources.jar")
       ) {
+        if (DEBUG_MODE) {
+          console.log(`Skipping tests jar ${jarname}`);
+        }
         continue;
       }
       const manifestDir = join(tempDir, "META-INF");
@@ -7290,18 +7296,21 @@ export const extractJarArchive = async function (
           }
         }
       }
+      try {
+        if (rmSync && existsSync(join(tempDir, "META-INF"))) {
+          // Clean up META-INF
+          rmSync(join(tempDir, "META-INF"), {
+            recursive: true,
+            force: true
+          });
+        }
+      } catch (err) {
+        // ignore cleanup errors
+      }
     } // for
   } // if
-  try {
-    if (rmSync && existsSync(join(tempDir, "META-INF"))) {
-      // Clean up META-INF
-      rmSync(join(tempDir, "META-INF"), {
-        recursive: true,
-        force: true
-      });
-    }
-  } catch (err) {
-    // ignore cleanup errors
+  if (jarFiles.length !== pkgList.length) {
+    console.log(`Obtained only ${pkgList.length} from ${jarFiles.length} jars`);
   }
   return pkgList;
 };
