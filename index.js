@@ -948,38 +948,41 @@ export const createJarBom = async (path, options) => {
       false,
       true
     );
+  }
+  if (path.endsWith(".jar")) {
+    jarFiles = [resolve(path)];
   } else {
     jarFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "*.[jw]ar",
       options
     );
-    // Jenkins plugins
-    const hpiFiles = getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.hpi",
-      options
-    );
-    if (hpiFiles.length) {
-      jarFiles = jarFiles.concat(hpiFiles);
+  }
+  // Jenkins plugins
+  const hpiFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.hpi",
+    options
+  );
+  if (hpiFiles.length) {
+    jarFiles = jarFiles.concat(hpiFiles);
+  }
+  const tempDir = mkdtempSync(join(tmpdir(), "jar-deps-"));
+  for (const jar of jarFiles) {
+    if (DEBUG_MODE) {
+      console.log(`Parsing ${jar}`);
     }
-    const tempDir = mkdtempSync(join(tmpdir(), "jar-deps-"));
-    for (const jar of jarFiles) {
-      if (DEBUG_MODE) {
-        console.log(`Parsing ${jar}`);
-      }
-      const dlist = await extractJarArchive(jar, tempDir);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
-      }
-      if (pkgList.length) {
-        pkgList = await getMvnMetadata(pkgList);
-      }
+    const dlist = await extractJarArchive(jar, tempDir);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
     }
-    // Clean up
-    if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
-      rmSync(tempDir, { recursive: true, force: true });
+    if (pkgList.length) {
+      pkgList = await getMvnMetadata(pkgList);
     }
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+    rmSync(tempDir, { recursive: true, force: true });
   }
   pkgList = pkgList.concat(convertJarNSToPackages(nsMapping));
   return buildBomNSData(options, pkgList, "maven", {
@@ -1002,7 +1005,7 @@ export const createJavaBom = async (path, options) => {
   // This is subsequently referred to in the dependencies list
   let parentComponent = {};
   // war/ear mode
-  if (path.endsWith(".war")) {
+  if (path.endsWith(".war") || path.endsWith(".jar")) {
     // Check if the file exists
     if (existsSync(path)) {
       if (DEBUG_MODE) {
@@ -4800,7 +4803,12 @@ export const createMultiXBom = async (pathList, options) => {
       }
     }
   } // for
-  if (options.lastWorkingDir && options.lastWorkingDir !== "") {
+  if (
+    options.lastWorkingDir &&
+    options.lastWorkingDir !== "" &&
+    !options.lastWorkingDir.includes("/opt/") &&
+    !options.lastWorkingDir.includes("/home/")
+  ) {
     bomData = await createJarBom(options.lastWorkingDir, options);
     if (
       bomData &&

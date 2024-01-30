@@ -684,7 +684,7 @@ export const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: true,
+        strict: false,
         C: dir,
         portable: true,
         onwarn: () => {},
@@ -696,6 +696,9 @@ export const extractTar = async (fullImageName, dir) => {
             path.includes("etc/") ||
             path.includes("logs/") ||
             path.includes("dev/") ||
+            path.includes("usr/share/zoneinfo/") ||
+            path.includes("usr/share/doc/") ||
+            path.includes("usr/share/i18n/") ||
             [
               "BlockDevice",
               "CharacterDevice",
@@ -727,6 +730,12 @@ export const extractTar = async (fullImageName, dir) => {
       console.log("------------");
       console.log(err);
       console.log("------------");
+    } else if (err.code === "TAR_BAD_ARCHIVE") {
+      if (DEBUG_MODE) {
+        console.log(`Archive ${fullImageName} is empty. Skipping.`);
+      }
+    } else {
+      console.log(err);
     }
     return false;
   }
@@ -832,13 +841,30 @@ export const extractFromManifest = async (
     }
     const lastLayer = layers[layers.length - 1];
     for (const layer of layers) {
+      try {
+        if (!lstatSync(join(tempDir, layer)).isFile()) {
+          console.log(
+            `Skipping layer ${layer} since it is not a readable file.`
+          );
+          continue;
+        }
+      } catch (e) {
+        console.log(`Skipping layer ${layer} since it is not a readable file.`);
+        continue;
+      }
       if (DEBUG_MODE) {
         console.log(`Extracting layer ${layer} to ${allLayersExplodedDir}`);
       }
       try {
         await extractTar(join(tempDir, layer), allLayersExplodedDir);
       } catch (err) {
-        console.log(err);
+        if (err.code === "TAR_BAD_ARCHIVE") {
+          if (DEBUG_MODE) {
+            console.log(`Layer ${layer} is empty.`);
+          }
+        } else {
+          console.log(err);
+        }
       }
     }
     if (manifest.Config) {
@@ -1058,15 +1084,23 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
     }
   }
   if (lastWorkingDir && lastWorkingDir !== "") {
-    knownSysPaths.push(lastWorkingDir);
+    if (
+      !lastWorkingDir.includes("/opt/") &&
+      !lastWorkingDir.includes("/home/")
+    ) {
+      knownSysPaths.push(lastWorkingDir);
+    }
     // Some more common app dirs
-    if (!lastWorkingDir.startsWith("/app")) {
+    if (!lastWorkingDir.includes("/app/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/app"));
     }
-    if (!lastWorkingDir.startsWith("/data")) {
+    if (!lastWorkingDir.includes("/layers/")) {
+      knownSysPaths.push(join(allLayersExplodedDir, "/layers"));
+    }
+    if (!lastWorkingDir.includes("/data/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/data"));
     }
-    if (!lastWorkingDir.startsWith("/srv")) {
+    if (!lastWorkingDir.includes("/srv/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/srv"));
     }
   }

@@ -7026,7 +7026,7 @@ export const extractJarArchive = async function (
     existsSync(manifestname)
   ) {
     tempDir = dirname(jarFile);
-  } else if (!existsSync(join(tempDir, fname))) {
+  } else if (!existsSync(join(tempDir, fname)) && lstatSync(jarFile).isFile()) {
     // Only copy if the file doesn't exist
     copyFileSync(jarFile, join(tempDir, fname), constants.COPYFILE_FICLONE);
   }
@@ -7040,29 +7040,47 @@ export const extractJarArchive = async function (
       "bin"
     )}`;
   }
-  if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
-    const jarResult = spawnSync("jar", ["-xf", join(tempDir, fname)], {
-      encoding: "utf-8",
-      cwd: tempDir,
-      shell: isWin,
-      env
-    });
-    if (jarResult.status !== 0) {
-      console.error(jarResult.stdout, jarResult.stderr);
-      console.log(
-        "Check if JRE is installed and the jar command is available in the PATH."
-      );
+  if (
+    jarFile.endsWith(".war") ||
+    jarFile.endsWith(".hpi") ||
+    jarFile.endsWith(".jar")
+  ) {
+    try {
+      const zip = new StreamZip.async({ file: join(tempDir, fname) });
+      await zip.extract(null, tempDir);
+      await zip.close();
+    } catch (e) {
+      console.log(`Unable to extract ${join(tempDir, fname)}. Skipping.`);
       return pkgList;
     }
     jarFiles = getAllFiles(join(tempDir, "WEB-INF", "lib"), "**/*.jar");
     if (jarFile.endsWith(".hpi")) {
       jarFiles.push(jarFile);
     }
+    // Some jar files could also have more jar files inside BOOT-INF directory
+    const jarFiles2 = getAllFiles(join(tempDir, "BOOT-INF", "lib"), "**/*.jar");
+    if (jarFiles && jarFiles2.length) {
+      jarFiles = jarFiles.concat(jarFiles2);
+    }
+    // Fallback. If our jar file didn't include any jar
+    if (jarFile.endsWith(".jar") && !jarFiles.length) {
+      jarFiles = [join(tempDir, fname)];
+    }
   } else {
     jarFiles = [join(tempDir, fname)];
   }
+  if (DEBUG_MODE) {
+    console.log(`List of jars: ${jarFiles}`);
+  }
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
+      // If the jar file doesn't exist at the point of use, skip it
+      if (!existsSync(jf)) {
+        if (DEBUG_MODE) {
+          console.log(jf, "is not a readable file");
+        }
+        continue;
+      }
       pomname = jf.replace(".jar", ".pom");
       const jarname = basename(jf);
       // Ignore test jars
@@ -7070,6 +7088,9 @@ export const extractJarArchive = async function (
         jarname.endsWith("-tests.jar") ||
         jarname.endsWith("-test-sources.jar")
       ) {
+        if (DEBUG_MODE) {
+          console.log(`Skipping tests jar ${jarname}`);
+        }
         continue;
       }
       const manifestDir = join(tempDir, "META-INF");
@@ -7081,16 +7102,20 @@ export const extractJarArchive = async function (
       if (existsSync(pomname)) {
         jarResult = { status: 0 };
       } else {
-        jarResult = spawnSync("jar", ["-xf", jf, "META-INF"], {
-          encoding: "utf-8",
-          cwd: tempDir,
-          shell: isWin,
-          env
-        });
+        // Unzip natively
+        try {
+          const zip = new StreamZip.async({ file: jf });
+          await zip.extract(null, tempDir);
+          await zip.close();
+          jarResult = { status: 0 };
+        } catch (e) {
+          if (DEBUG_MODE) {
+            console.log(`Unable to extract ${jf}. Skipping.`);
+          }
+          jarResult = { status: 1 };
+        }
       }
-      if (jarResult.status !== 0) {
-        console.error(jarResult.stdout, jarResult.stderr);
-      } else {
+      if (jarResult.status === 0) {
         // When maven descriptor is available take group, name and version from pom.properties
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
@@ -7114,7 +7139,7 @@ export const extractJarArchive = async function (
             const res = await cdxgenAgent.get(searchurl, {
               responseType: "json",
               timeout: {
-                lookup: 200,
+                lookup: 1000,
                 connect: 5000,
                 secureConnect: 5000,
                 socket: 1000,
@@ -7132,7 +7157,11 @@ export const extractJarArchive = async function (
             }
           } catch (err) {
             if (err && err.message && !err.message.includes("404")) {
-              if (DEBUG_MODE) {
+              if (err.message.includes("Timeout")) {
+                console.log(
+                  "Maven search appears to be unavailable. Search will be skipped for all remaining packages."
+                );
+              } else if (DEBUG_MODE) {
                 console.log(err);
               }
               search_maven_org_errors++;
@@ -7266,20 +7295,23 @@ export const extractJarArchive = async function (
             console.log(`Ignored jar ${jarname}`, name, version);
           }
         }
-        try {
-          if (rmSync && existsSync(join(tempDir, "META-INF"))) {
-            // Clean up META-INF
-            rmSync(join(tempDir, "META-INF"), {
-              recursive: true,
-              force: true
-            });
-          }
-        } catch (err) {
-          // ignore cleanup errors
+      }
+      try {
+        if (rmSync && existsSync(join(tempDir, "META-INF"))) {
+          // Clean up META-INF
+          rmSync(join(tempDir, "META-INF"), {
+            recursive: true,
+            force: true
+          });
         }
+      } catch (err) {
+        // ignore cleanup errors
       }
     } // for
   } // if
+  if (jarFiles.length !== pkgList.length) {
+    console.log(`Obtained only ${pkgList.length} from ${jarFiles.length} jars`);
+  }
   return pkgList;
 };
 
