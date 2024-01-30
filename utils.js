@@ -7040,7 +7040,11 @@ export const extractJarArchive = async function (
       "bin"
     )}`;
   }
-  if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
+  if (
+    jarFile.endsWith(".war") ||
+    jarFile.endsWith(".hpi") ||
+    jarFile.endsWith(".jar")
+  ) {
     try {
       const zip = new StreamZip.async({ file: join(tempDir, fname) });
       await zip.extract(null, tempDir);
@@ -7053,8 +7057,16 @@ export const extractJarArchive = async function (
     if (jarFile.endsWith(".hpi")) {
       jarFiles.push(jarFile);
     }
+    // Some jar files could also have more jar files inside BOOT-INF directory
+    const jarFiles2 = getAllFiles(join(tempDir, "BOOT-INF", "lib"), "**/*.jar");
+    if (jarFiles && jarFiles2.length) {
+      jarFiles = jarFiles.concat(jarFiles2);
+    }
   } else {
     jarFiles = [join(tempDir, fname)];
+  }
+  if (DEBUG_MODE) {
+    console.log(`List of jars: ${jarFiles}`);
   }
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {

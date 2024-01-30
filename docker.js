@@ -1084,18 +1084,23 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
     }
   }
   if (lastWorkingDir && lastWorkingDir !== "") {
-    knownSysPaths.push(lastWorkingDir);
+    if (
+      !lastWorkingDir.includes("/opt/") &&
+      !lastWorkingDir.includes("/home/")
+    ) {
+      knownSysPaths.push(lastWorkingDir);
+    }
     // Some more common app dirs
-    if (!lastWorkingDir.startsWith("/app")) {
+    if (!lastWorkingDir.includes("/app/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/app"));
     }
-    if (!lastWorkingDir.startsWith("/layers")) {
+    if (!lastWorkingDir.includes("/layers/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/layers"));
     }
-    if (!lastWorkingDir.startsWith("/data")) {
+    if (!lastWorkingDir.includes("/data/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/data"));
     }
-    if (!lastWorkingDir.startsWith("/srv")) {
+    if (!lastWorkingDir.includes("/srv/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/srv"));
     }
   }
