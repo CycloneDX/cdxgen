@@ -8,6 +8,9 @@ on:
     - 'v*'
   workflow_dispatch:
   pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -80,9 +83,9 @@ jobs:
   sae-builds:
     strategy:
       matrix:
-        os: [windows, macos, ubuntu]
+        os: [windows-latest, macos-14, ubuntu-latest]
         include:
-          - os: windows
+          - os: windows-latest
             build: |
               npx caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               .\cdxgen.exe --version
@@ -93,7 +96,7 @@ jobs:
               (Get-FileHash .\cdx-verify.exe).hash | Out-File -FilePath .\cdx-verify.exe.sha256
             artifact: cdxgen.exe
             vartifact: cdx-verify.exe
-          - os: macos
+          - os: macos-14
             build: |
               npx caxa --input . --output "cdxgen.app" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               tar -czf "cdxgen.app.tgz" cdxgen.app
@@ -105,7 +108,7 @@ jobs:
               shasum -a 256 cdx-verify.app.tgz > cdx-verify.app.tgz.sha256
             artifact: cdxgen.app.tgz
             vartifact: cdx-verify.app.tgz
-          - os: ubuntu
+          - os: ubuntu-latest
             build: |
               npx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
               chmod +x cdxgen
@@ -119,7 +122,7 @@ jobs:
               sha256sum cdx-verify > cdx-verify.sha256
             artifact: cdxgen
             vartifact: cdx-verify
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
