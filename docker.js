@@ -696,6 +696,9 @@ export const extractTar = async (fullImageName, dir) => {
             path.includes("etc/") ||
             path.includes("logs/") ||
             path.includes("dev/") ||
+            path.includes("usr/share/zoneinfo/") ||
+            path.includes("usr/share/doc/") ||
+            path.includes("usr/share/i18n/") ||
             [
               "BlockDevice",
               "CharacterDevice",
@@ -727,6 +730,8 @@ export const extractTar = async (fullImageName, dir) => {
       console.log("------------");
       console.log(err);
       console.log("------------");
+    } else {
+      console.log(err);
     }
     return false;
   }
@@ -832,6 +837,17 @@ export const extractFromManifest = async (
     }
     const lastLayer = layers[layers.length - 1];
     for (const layer of layers) {
+      try {
+        if (!lstatSync(join(tempDir, layer)).isFile()) {
+          console.log(
+            `Skipping layer ${layer} since it is not a readable file.`
+          );
+          continue;
+        }
+      } catch (e) {
+        console.log(`Skipping layer ${layer} since it is not a readable file.`);
+        continue;
+      }
       if (DEBUG_MODE) {
         console.log(`Extracting layer ${layer} to ${allLayersExplodedDir}`);
       }
@@ -1062,9 +1078,6 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
     // Some more common app dirs
     if (!lastWorkingDir.startsWith("/app")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/app"));
-    }
-    if (!lastWorkingDir.startsWith("/workspace")) {
-      knownSysPaths.push(join(allLayersExplodedDir, "/workspace"));
     }
     if (!lastWorkingDir.startsWith("/layers")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/layers"));

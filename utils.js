@@ -7085,16 +7085,15 @@ export const extractJarArchive = async function (
           const zip = new StreamZip.async({ file: jf });
           await zip.extract(null, tempDir);
           await zip.close();
+          jarResult = { status: 0 };
         } catch (e) {
           if (DEBUG_MODE) {
             console.log(`Unable to extract ${jf}. Skipping.`);
           }
+          jarResult = { status: 1 };
         }
-        jarResult = { status: 0 };
       }
-      if (jarResult.status !== 0) {
-        console.error(jarResult.stdout, jarResult.stderr);
-      } else {
+      if (jarResult.status === 0) {
         // When maven descriptor is available take group, name and version from pom.properties
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
@@ -7270,20 +7269,20 @@ export const extractJarArchive = async function (
             console.log(`Ignored jar ${jarname}`, name, version);
           }
         }
-        try {
-          if (rmSync && existsSync(join(tempDir, "META-INF"))) {
-            // Clean up META-INF
-            rmSync(join(tempDir, "META-INF"), {
-              recursive: true,
-              force: true
-            });
-          }
-        } catch (err) {
-          // ignore cleanup errors
-        }
       }
     } // for
   } // if
+  try {
+    if (rmSync && existsSync(join(tempDir, "META-INF"))) {
+      // Clean up META-INF
+      rmSync(join(tempDir, "META-INF"), {
+        recursive: true,
+        force: true
+      });
+    }
+  } catch (err) {
+    // ignore cleanup errors
+  }
   return pkgList;
 };
 
