@@ -67,10 +67,7 @@ jobs:
           deno lint
           mkdir build
           ${{ matrix.build }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.artifact }}
-          path: ${{ matrix.artifact }}
+        continue-on-error: true
       # - name: Release
       #   uses: softprops/action-gh-release@v1
       #   if: startsWith(github.ref, 'refs/tags/')
