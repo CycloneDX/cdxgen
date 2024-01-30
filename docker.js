@@ -684,7 +684,7 @@ export const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: true,
+        strict: false,
         C: dir,
         portable: true,
         onwarn: () => {},
@@ -730,6 +730,10 @@ export const extractTar = async (fullImageName, dir) => {
       console.log("------------");
       console.log(err);
       console.log("------------");
+    } else if (err.code === "TAR_BAD_ARCHIVE") {
+      if (DEBUG_MODE) {
+        console.log(`Archive ${fullImageName} is empty. Skipping.`);
+      }
     } else {
       console.log(err);
     }
@@ -854,7 +858,13 @@ export const extractFromManifest = async (
       try {
         await extractTar(join(tempDir, layer), allLayersExplodedDir);
       } catch (err) {
-        console.log(err);
+        if (err.code === "TAR_BAD_ARCHIVE") {
+          if (DEBUG_MODE) {
+            console.log(`Layer ${layer} is empty.`);
+          }
+        } else {
+          console.log(err);
+        }
       }
     }
     if (manifest.Config) {

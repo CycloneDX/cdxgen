@@ -7117,7 +7117,7 @@ export const extractJarArchive = async function (
             const res = await cdxgenAgent.get(searchurl, {
               responseType: "json",
               timeout: {
-                lookup: 200,
+                lookup: 1000,
                 connect: 5000,
                 secureConnect: 5000,
                 socket: 1000,
@@ -7135,7 +7135,11 @@ export const extractJarArchive = async function (
             }
           } catch (err) {
             if (err && err.message && !err.message.includes("404")) {
-              if (DEBUG_MODE) {
+              if (err.message.includes("Timeout")) {
+                console.log(
+                  "Maven search appears to be unavailable. Search will be skipped for all remaining packages."
+                );
+              } else if (DEBUG_MODE) {
                 console.log(err);
               }
               search_maven_org_errors++;
