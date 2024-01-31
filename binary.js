@@ -40,10 +40,17 @@ switch (arch) {
     arch = "amd64";
     if (platform === "windows") {
       pluginsBinSuffix = "-windows-amd64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-amd64";
     }
     break;
   case "arm64":
     pluginsBinSuffix = "-arm64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-arm64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-arm64";
+    }
     break;
   case "ppc64":
     arch = "ppc64le";
@@ -169,18 +176,23 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
     "osquery",
     "osqueryi-" + platform + "-" + arch + extn
   );
+  // osqueryi-darwin-amd64.app/Contents/MacOS/osqueryd
+  if (platform === "darwin") {
+    OSQUERY_BIN = `${OSQUERY_BIN}.app/Contents/MacOS/osqueryd`;
+  }
 } else if (process.env.OSQUERY_CMD) {
   OSQUERY_BIN = process.env.OSQUERY_CMD;
 }
 let DOSAI_BIN = null;
 if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
+  let platformToUse = platform;
   if (platform === "darwin") {
-    platform = "osx";
+    platformToUse = "osx";
   }
   DOSAI_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "dosai",
-    "dosai-" + platform + "-" + arch + extn
+    "dosai-" + platformToUse + "-" + arch + extn
   );
 } else if (process.env.DOSAI_CMD) {
   DOSAI_BIN = process.env.DOSAI_CMD;
@@ -679,6 +691,13 @@ export const executeOsQuery = (query) => {
       query = query + ";";
     }
     const args = ["--json", query];
+    // On darwin, we need to disable the safety check and run cdxgen with sudo
+    // https://github.com/osquery/osquery/issues/1382
+    if (platform === "darwin") {
+      args.push("--allow_unsafe");
+      args.push("--disable_logging");
+      args.push("--disable_events");
+    }
     if (DEBUG_MODE) {
       console.log("Executing", OSQUERY_BIN, args.join(" "));
     }

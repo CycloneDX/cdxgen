@@ -1,0 +1,122 @@
+{
+  "os_version": {
+    "query": "select * from os_version;",
+    "description": "Retrieves the current version of the running osquery in the target system and where the configuration was loaded from.",
+    "purlType": "swid",
+    "componentType": "operating-system"
+  },
+  "safari_extensions": {
+    "query": "select safari_extensions.* from users join safari_extensions using (uid);",
+    "description": "Safari browser extension details for all users. This table requires Full Disk Access (FDA) permission.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "chrome_extensions": {
+    "query": "select chrome_extensions.* from users join chrome_extensions using (uid);",
+    "description": "Retrieves the list of extensions for Chrome in the target system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "firefox_addons": {
+    "query": "select firefox_addons.* from users join firefox_addons using (uid);",
+    "description": "Retrieves the list of addons for Firefox in the target system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "vscode_extensions": {
+    "query": "select vscode_extensions.* from users join vscode_extensions using (uid);",
+    "description": "Lists all vscode extensions.",
+    "purlType": "vsix",
+    "componentType": "application"
+  },
+  "apps": {
+    "query": "select * from apps;",
+    "description": "macOS applications installed in known search paths (e.g., /Applications).",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "system_extensions": {
+    "query": "select * from system_extensions;",
+    "description": "macOS (>= 10.15) system extension table.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "certificates": {
+    "query": "SELECT * FROM certificates WHERE path != 'Other People';",
+    "description": "List all certificates in the trust store.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "package_bom": {
+    "query": "SELECT * FROM package_bom;",
+    "description": "macOS package bill of materials (BOM) file list.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "package_install_history": {
+    "query": "SELECT * FROM package_install_history;",
+    "description": "macOS package install history.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "package_receipts": {
+    "query": "SELECT * FROM package_receipts;",
+    "description": "macOS package receipt details.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "running_apps": {
+    "query": "SELECT * FROM running_apps;",
+    "description": "macOS applications currently running on the host system.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "sandboxes": {
+    "query": "SELECT * FROM sandboxes;",
+    "description": "macOS application sandboxes container details.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "startup_items": {
+    "query": "SELECT * FROM startup_items;",
+    "description": "List all startup_items.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "listening_ports": {
+    "query": "SELECT DISTINCT process.name, listening.port, listening.protocol, listening.family, listening.address, process.pid, process.path, process.on_disk, process.parent, process.start_time FROM processes AS process JOIN listening_ports AS listening ON process.pid = listening.pid;",
+    "description": "List all processes and their listening_ports.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "interface_addresses": {
+    "query": "SELECT * FROM interface_addresses;",
+    "description": "List all interface_addresses.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_container_ports": {
+    "query": "SELECT * FROM docker_container_ports;",
+    "description": "List all docker_container_ports.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_containers": {
+    "query": "SELECT * FROM docker_containers;",
+    "description": "List all docker_containers.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_networks": {
+    "query": "SELECT * FROM docker_networks;",
+    "description": "List all docker_networks.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "docker_volumes": {
+    "query": "SELECT * FROM docker_volumes;",
+    "description": "List all docker_volumes.",
+    "purlType": "swid",
+    "componentType": "data"
+  }
+}
