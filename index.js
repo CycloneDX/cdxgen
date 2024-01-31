@@ -152,11 +152,24 @@ import { collectOSCryptoLibs } from "./cbomutils.js";
 
 const isWin = _platform() === "win32";
 
-const osQueries = !isWin
-  ? JSON.parse(readFileSync(join(dirName, "data", "queries.json"), "utf-8"))
-  : JSON.parse(
+let osQueries = {};
+switch (_platform()) {
+  case "win32":
+    osQueries = JSON.parse(
       readFileSync(join(dirName, "data", "queries-win.json"), "utf-8")
     );
+    break;
+  case "darwin":
+    osQueries = JSON.parse(
+      readFileSync(join(dirName, "data", "queries-darwin.json"), "utf-8")
+    );
+    break;
+  default:
+    osQueries = JSON.parse(
+      readFileSync(join(dirName, "data", "queries.json"), "utf-8")
+    );
+    break;
+}
 const cosDbQueries = JSON.parse(
   readFileSync(join(dirName, "data", "cosdb-queries.json"), "utf-8")
 );
