@@ -40,10 +40,17 @@ switch (arch) {
     arch = "amd64";
     if (platform === "windows") {
       pluginsBinSuffix = "-windows-amd64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-amd64";
     }
     break;
   case "arm64":
     pluginsBinSuffix = "-arm64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-arm64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-arm64";
+    }
     break;
   case "ppc64":
     arch = "ppc64le";
