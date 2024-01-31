@@ -1185,8 +1185,11 @@ export const parseYarnLock = async function (yarnLockFile) {
         }
         // checksum used by yarn 2/3 is hex encoded
         if (l.startsWith("checksum")) {
+          // in some cases yarn 4 will add a prefix to the checksum, containing the cachekey and compression level
+          // example: 10c0/53c2b231a61a46792b39a0d43bc4f4f77...
+          const checksum = parts[1].split("/").pop();
           integrity =
-            "sha512-" + Buffer.from(parts[1], "hex").toString("base64");
+            "sha512-" + Buffer.from(checksum, "hex").toString("base64");
         }
         if (l.startsWith("resolved")) {
           const tmpB = parts[1].split("#");
