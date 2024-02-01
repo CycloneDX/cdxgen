@@ -193,7 +193,7 @@ const args = yargs(hideBin(process.argv))
   })
   .option("filter", {
     description:
-      "Filter components containing this word in purl. Multiple values allowed."
+      "Filter components containing this word in purl or component.properties.value. Multiple values allowed."
   })
   .option("only", {
     description:

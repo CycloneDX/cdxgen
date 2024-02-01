@@ -175,8 +175,9 @@ Options:
                                es.                    [boolean] [default: false]
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
-      --filter                 Filter components containing this word in purl.
-                                Multiple values allowed.                 [array]
+      --filter                 Filter components containing this word in purl or
+                                component.properties.value. Multiple values allo
+                               wed.                                      [array]
       --only                   Include components only containing this word in
                                 purl. Useful to generate BOM with first party co
                                mponents alone. Multiple values allowed.  [array]

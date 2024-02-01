@@ -19,12 +19,20 @@ Languages supported:
 - Go
 - Php
 
-### Purl filter
+### Purl and properties filter
 
-Use `--filter` to filter components containing the string in the purl.
+Use `--filter` to filter components containing the string in the purl or components.properties.value. Filters are case-insensitive.
+
+Example 1: Filter all "springframework" packages
 
 ```shell
 cdxgen -t java -o /tmp/bom.json -p --filter org.springframework
+```
+
+Example 2: Filter components belonging to the gradle profile "debugAndroidTestCompileClasspath" or "debugRuntimeClasspath"
+
+```shell
+cdxgen -t gradle -o /tmp/bom.json -p --filter debugAndroidTestCompileClasspath --filter debugRuntimeClasspath
 ```
 
 ### Include only filter
