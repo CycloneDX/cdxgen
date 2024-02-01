@@ -58,6 +58,7 @@ export const filterBom = (bomJson, options) => {
         const properties = comp.properties || [];
         for (const aprop of properties) {
           if (
+            filterstr.length &&
             aprop &&
             aprop.value &&
             aprop.value.toLowerCase().includes(filterstr.toLowerCase())

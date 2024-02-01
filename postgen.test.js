@@ -41,14 +41,14 @@ test("filter bom tests2", () => {
       throw new Error(`${comp.purl} is unexpected`);
     }
   }
-  expect(newBom.components.length).toEqual(177);
+  expect(newBom.components.length).toEqual(158);
   newBom = filterBom(bomJson, { filter: ["apache", "json"] });
   for (const comp of newBom.components) {
     if (comp.purl.includes("apache") || comp.purl.includes("json")) {
       throw new Error(`${comp.purl} is unexpected`);
     }
   }
-  expect(newBom.components.length).toEqual(172);
+  expect(newBom.components.length).toEqual(135);
   expect(newBom.compositions).toBeUndefined();
   newBom = filterBom(bomJson, {
     only: ["org.springframework"],
@@ -60,7 +60,7 @@ test("filter bom tests2", () => {
       throw new Error(`${comp.purl} is unexpected`);
     }
   }
-  expect(newBom.components.length).toEqual(37);
+  expect(newBom.components.length).toEqual(29);
   expect(newBom.compositions).toEqual([
     {
       aggregate: "incomplete_first_party_only",
