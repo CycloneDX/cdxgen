@@ -27,7 +27,10 @@ export const filterBom = (bomJson, options) => {
       }
       let purlfiltered = false;
       for (const filterstr of options.only) {
-        if (filterstr.length && !comp.purl.toLowerCase().includes(filterstr)) {
+        if (
+          filterstr.length &&
+          !comp.purl.toLowerCase().includes(filterstr.toLowerCase())
+        ) {
           filtered = true;
           purlfiltered = true;
           continue;
@@ -42,10 +45,27 @@ export const filterBom = (bomJson, options) => {
       }
       let purlfiltered = false;
       for (const filterstr of options.filter) {
-        if (filterstr.length && comp.purl.toLowerCase().includes(filterstr)) {
+        // Check the purl
+        if (
+          filterstr.length &&
+          comp.purl.toLowerCase().includes(filterstr.toLowerCase())
+        ) {
           filtered = true;
           purlfiltered = true;
           continue;
+        }
+        // Look for any properties value matching the string
+        const properties = comp.properties || [];
+        for (const aprop of properties) {
+          if (
+            aprop &&
+            aprop.value &&
+            aprop.value.toLowerCase().includes(filterstr.toLowerCase())
+          ) {
+            filtered = true;
+            purlfiltered = true;
+            continue;
+          }
         }
       }
       if (!purlfiltered) {
