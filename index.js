@@ -133,7 +133,7 @@ const selfPJson = JSON.parse(
   readFileSync(join(dirName, "package.json"), "utf-8")
 );
 const _version = selfPJson.version;
-import { findJSImports } from "./analyzer.js";
+import { findJSImportsExports } from "./analyzer.js";
 import { gte, lte } from "semver";
 import {
   getPkgPathList,
@@ -1795,6 +1795,7 @@ export const createNodejsBom = async (path, options) => {
     }
   }
   let allImports = {};
+  let allExports = {};
   if (
     !["docker", "oci", "container", "os"].includes(options.projectType) &&
     !options.noBabel
@@ -1804,7 +1805,9 @@ export const createNodejsBom = async (path, options) => {
         `Performing babel-based package usage analysis with source code at ${path}`
       );
     }
-    allImports = await findJSImports(path);
+    const retData = await findJSImportsExports(path, options.deep);
+    allImports = retData.allImports;
+    allExports = retData.allExports;
   }
   const yarnLockFiles = getAllFiles(
     path,
@@ -1976,7 +1979,12 @@ export const createNodejsBom = async (path, options) => {
     if (existsSync(swFile)) {
       let pkgList = await parseNodeShrinkwrap(swFile);
       if (allImports && Object.keys(allImports).length) {
-        pkgList = addEvidenceForImports(pkgList, allImports);
+        pkgList = await addEvidenceForImports(
+          pkgList,
+          allImports,
+          allExports,
+          options.deep
+        );
       }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
@@ -1986,10 +1994,16 @@ export const createNodejsBom = async (path, options) => {
     } else if (existsSync(pnpmLock)) {
       let pkgList = await parsePnpmLock(pnpmLock);
       if (allImports && Object.keys(allImports).length) {
-        pkgList = addEvidenceForImports(pkgList, allImports);
+        pkgList = await addEvidenceForImports(
+          pkgList,
+          allImports,
+          allExports,
+          options.deep
+        );
       }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
+        allExports,
         src: path,
         filename: "pnpm-lock.yaml"
       });
@@ -2140,7 +2154,12 @@ export const createNodejsBom = async (path, options) => {
   // We need to set this to force our version to be used rather than the directory name based one.
   options.parentComponent = parentComponent;
   if (allImports && Object.keys(allImports).length) {
-    pkgList = addEvidenceForImports(pkgList, allImports);
+    pkgList = await addEvidenceForImports(
+      pkgList,
+      allImports,
+      allExports,
+      options.deep
+    );
   }
   return buildBomNSData(options, pkgList, "npm", {
     src: path,

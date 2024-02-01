@@ -559,13 +559,29 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
         null,
         null
       ).toString();
+      const author = pkgData.author;
+      const authorString =
+        author instanceof Object
+          ? `${author.name}${author.email ? ` <${author.email}>` : ""}${
+              author.url ? ` (${author.url})` : ""
+            }`
+          : author;
       const apkg = {
         name,
         group,
         version: pkgData.version,
+        description: pkgData.description,
         purl: purl,
-        "bom-ref": decodeURIComponent(purl)
+        "bom-ref": decodeURIComponent(purl),
+        author: authorString,
+        license: pkgData.license
       };
+      if (pkgData.homepage) {
+        apkg.homepage = { url: pkgData.homepage };
+      }
+      if (pkgData.repository && pkgData.repository.url) {
+        apkg.repository = { url: pkgData.repository.url };
+      }
       if (!simple) {
         apkg.properties = [
           {
@@ -718,6 +734,12 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         pkg.properties.push({
           name: "ResolvedUrl",
           value: node.resolved
+        });
+      }
+      if (node.location) {
+        pkg.properties.push({
+          name: "LocalNodeModulesPath",
+          value: node.location
         });
       }
     }
@@ -8135,9 +8157,16 @@ export const parsePackageJsonName = (name) => {
  *
  * @param {array} pkgList List of package
  * @param {object} allImports Import statements object with package name as key and an object with file and location details
+ * @param {object} allExports Exported modules if available from node_modules
  */
-export const addEvidenceForImports = (pkgList, allImports) => {
+export const addEvidenceForImports = async (
+  pkgList,
+  allImports,
+  allExports,
+  deep
+) => {
   const impPkgs = Object.keys(allImports);
+  const exportedPkgs = Object.keys(allExports);
   for (const pkg of pkgList) {
     if (impPkgs && impPkgs.length) {
       // Assume that all packages are optional until we see an evidence
@@ -8158,6 +8187,47 @@ export const addEvidenceForImports = (pkgList, allImports) => {
           find_pkg.startsWith(alias) &&
           (find_pkg.length === alias.length || find_pkg[alias.length] === "/")
       );
+      const all_exports = exportedPkgs.filter((find_pkg) =>
+        find_pkg.startsWith(alias)
+      );
+      if (all_exports && all_exports.length) {
+        let exportedModules = new Set(all_exports);
+        pkg.properties = pkg.properties || [];
+        for (const subevidence of all_exports) {
+          const evidences = allExports[subevidence];
+          for (const evidence of evidences) {
+            if (evidence && Object.keys(evidence).length) {
+              if (evidence.exportedModules.length > 1) {
+                for (const aexpsubm of evidence.exportedModules) {
+                  // Be selective on the submodule names
+                  if (
+                    !evidence.importedAs
+                      .toLowerCase()
+                      .includes(aexpsubm.toLowerCase()) &&
+                    !alias.endsWith(aexpsubm)
+                  ) {
+                    // Store both the short and long form of the exported sub modules
+                    if (aexpsubm.length > 3) {
+                      exportedModules.add(aexpsubm);
+                    }
+                    exportedModules.add(
+                      `${evidence.importedAs.replace("./", "")}/${aexpsubm}`
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+        exportedModules = Array.from(exportedModules);
+        if (exportedModules.length) {
+          pkg.properties.push({
+            name: "ExportedModules",
+            value: exportedModules.join(",")
+          });
+        }
+      }
+      // Identify all the imported modules of a component
       if (impPkgs.includes(alias) || all_includes.length) {
         let importedModules = new Set();
         pkg.scope = "required";
@@ -8178,7 +8248,9 @@ export const addEvidenceForImports = (pkgList, allImports) => {
                   continue;
                 }
                 // Store both the short and long form of the imported sub modules
-                importedModules.add(importedSm);
+                if (importedSm.length > 3) {
+                  importedModules.add(importedSm);
+                }
                 importedModules.add(`${evidence.importedAs}/${importedSm}`);
               }
             }
@@ -8194,8 +8266,35 @@ export const addEvidenceForImports = (pkgList, allImports) => {
         }
         break;
       }
-    }
-  }
+      // Capture metadata such as description from local node_modules in deep mode
+      if (deep && !pkg.description && pkg.properties) {
+        let localNodeModulesPath = undefined;
+        for (const aprop of pkg.properties) {
+          if (aprop.name === "LocalNodeModulesPath") {
+            localNodeModulesPath = resolve(join(aprop.value, "package.json"));
+            break;
+          }
+        }
+        if (localNodeModulesPath && existsSync(localNodeModulesPath)) {
+          const lnmPkgList = await parsePkgJson(localNodeModulesPath, true);
+          if (lnmPkgList && lnmPkgList.length === 1) {
+            const lnmMetadata = lnmPkgList[0];
+            if (lnmMetadata && Object.keys(lnmMetadata).length) {
+              pkg.description = lnmMetadata.description;
+              pkg.author = lnmMetadata.author;
+              pkg.license = lnmMetadata.license;
+              pkg.homepage = lnmMetadata.homepage;
+              pkg.repository = lnmMetadata.repository;
+            }
+          }
+        }
+      }
+    } // for alias
+    // Trim the properties
+    pkg.properties = pkg.properties.filter(
+      (p) => p.name !== "LocalNodeModulesPath"
+    );
+  } // for pkg
   return pkgList;
 };
 
