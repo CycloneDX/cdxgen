@@ -8283,6 +8283,8 @@ export const addEvidenceForImports = async (
               pkg.description = lnmMetadata.description;
               pkg.author = lnmMetadata.author;
               pkg.license = lnmMetadata.license;
+              pkg.homepage = lnmMetadata.homepage;
+              pkg.repository = lnmMetadata.repository;
             }
           }
         }
