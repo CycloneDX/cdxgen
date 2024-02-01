@@ -38,6 +38,7 @@ import {
   parsePom,
   getMvnMetadata,
   getLicenses,
+  parsePkgJson,
   parsePkgLock,
   parseBowerJson,
   parseNodeShrinkwrap,
@@ -1717,6 +1718,11 @@ test("get licenses", () => {
       }
     }
   ]);
+});
+
+test("parsePkgJson", async () => {
+  const pkgList = await parsePkgJson("./package.json", true);
+  expect(pkgList.length).toEqual(1);
 });
 
 test("parsePkgLock v1", async () => {
