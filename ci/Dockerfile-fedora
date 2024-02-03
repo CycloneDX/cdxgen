@@ -11,11 +11,11 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.description="Container image for cyclonedx cdxgen SBOM generator for testing" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-fedora -r /app --server"
 
-ARG JAVA_VERSION=21-graalce
+ARG JAVA_VERSION=21-tem
 ARG SBT_VERSION=1.9.8
 ARG MAVEN_VERSION=4.0.0-alpha-9
-ARG GRADLE_VERSION=8.5
-ARG GO_VERSION=1.21.5
+ARG GRADLE_VERSION=8.6
+ARG GO_VERSION=1.21.6
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -77,9 +77,6 @@ RUN set -e; \
     && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platform-tools' --sdk_root=/opt/android-sdk-linux \
     && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platforms;android-34' --sdk_root=/opt/android-sdk-linux \
     && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;34.0.0' --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;google;m2repository' --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;android;m2repository' --sdk_root=/opt/android-sdk-linux \
-    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'extras;google;google_play_services' --sdk_root=/opt/android-sdk-linux \
     && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
     && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
     && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
