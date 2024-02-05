@@ -3814,7 +3814,8 @@ export const createContainerSpecLikeBom = async (path, options) => {
               type: "container"
             };
             if (imageObj.registry) {
-              pkg["qualifiers"]["repository_url"] = img.image;
+              pkg["qualifiers"]["repository_url"] =
+                `${imageObj.registry}/${imageObj.repo}`;
             }
             if (imageObj.platform) {
               pkg["qualifiers"]["platform"] = imageObj.platform;

@@ -426,7 +426,14 @@ export const parseImageName = (fullImageName) => {
     return nameObj;
   }
   // ensure it's lowercased
-  fullImageName = fullImageName.toLowerCase();
+  fullImageName = fullImageName.toLowerCase().trim();
+
+  // Extract platform
+  if (fullImageName.startsWith("--platform=")) {
+    const tmpName = fullImageName.replace("--platform=", "").split(" ");
+    nameObj.platform = tmpName[0];
+    fullImageName = tmpName[1];
+  }
 
   // Extract registry name
   if (
