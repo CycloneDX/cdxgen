@@ -2,6 +2,8 @@ import got from "got";
 import { globSync } from "glob";
 import { parse } from "node:url";
 import stream from "node:stream/promises";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   existsSync,
   readdirSync,
@@ -416,11 +418,16 @@ export const parseImageName = (fullImageName) => {
     repo: "",
     tag: "",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "",
+    name: ""
   };
   if (!fullImageName) {
     return nameObj;
   }
+  // ensure it's lowercased
+  fullImageName = fullImageName.toLowerCase();
+
   // Extract registry name
   if (
     fullImageName.includes("/") &&
@@ -437,6 +444,7 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(tmpA[0] + "/", "");
     }
   }
+
   // Extract digest name
   if (fullImageName.includes("@sha256:")) {
     const tmpA = fullImageName.split("@sha256:");
@@ -445,6 +453,7 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace("@sha256:" + nameObj.digest, "");
     }
   }
+
   // Extract tag name
   if (fullImageName.includes(":")) {
     const tmpA = fullImageName.split(":");
@@ -453,11 +462,20 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(":" + nameObj.tag, "");
     }
   }
-  if (fullImageName && fullImageName.startsWith("library/")) {
-    fullImageName = fullImageName.replace("library/", "");
-  }
+
   // The left over string is the repo name
   nameObj.repo = fullImageName;
+  nameObj.name = fullImageName;
+
+  // extract group name
+  if (fullImageName.includes("/")) {
+    const tmpA = fullImageName.split("/");
+    if (tmpA.length > 1) {
+      nameObj.name = tmpA[tmpA.length - 1];
+      nameObj.group = fullImageName.replace("/" + tmpA[tmpA.length - 1], "");
+    }
+  }
+
   return nameObj;
 };
 
@@ -482,7 +500,7 @@ export const getImage = async (fullImageName) => {
   let localData = undefined;
   let pullData = undefined;
   const { registry, repo, tag, digest } = parseImageName(fullImageName);
-  let repoWithTag =
+  const repoWithTag =
     registry && registry !== "docker.io"
       ? fullImageName
       : `${repo}:${tag !== "" ? tag : ":latest"}`;
@@ -666,7 +684,7 @@ export const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: true,
+        strict: false,
         C: dir,
         portable: true,
         onwarn: () => {},
@@ -677,7 +695,20 @@ export const extractTar = async (fullImageName, dir) => {
             path.includes("ssl/certs") ||
             path.includes("etc/") ||
             path.includes("logs/") ||
-            ["CharacterDevice"].includes(entry.type)
+            path.includes("dev/") ||
+            path.includes("usr/share/zoneinfo/") ||
+            path.includes("usr/share/doc/") ||
+            path.includes("usr/share/i18n/") ||
+            [
+              "BlockDevice",
+              "CharacterDevice",
+              "FIFO",
+              "MultiVolume",
+              "TapeVolume",
+              "SymbolicLink",
+              "RenamedOrSymlinked",
+              "HardLink"
+            ].includes(entry.type)
           ) {
             return false;
           }
@@ -692,13 +723,19 @@ export const extractTar = async (fullImageName, dir) => {
         "Please run cdxgen from a powershell terminal with admin privileges to create symlinks."
       );
       console.log(err);
-    } else if (err.code !== "TAR_BAD_ARCHIVE") {
+    } else if (!["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO"].includes(err.code)) {
       console.log(
         `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`
       );
       console.log("------------");
       console.log(err);
       console.log("------------");
+    } else if (err.code === "TAR_BAD_ARCHIVE") {
+      if (DEBUG_MODE) {
+        console.log(`Archive ${fullImageName} is empty. Skipping.`);
+      }
+    } else {
+      console.log(err);
     }
     return false;
   }
@@ -804,13 +841,30 @@ export const extractFromManifest = async (
     }
     const lastLayer = layers[layers.length - 1];
     for (const layer of layers) {
+      try {
+        if (!lstatSync(join(tempDir, layer)).isFile()) {
+          console.log(
+            `Skipping layer ${layer} since it is not a readable file.`
+          );
+          continue;
+        }
+      } catch (e) {
+        console.log(`Skipping layer ${layer} since it is not a readable file.`);
+        continue;
+      }
       if (DEBUG_MODE) {
         console.log(`Extracting layer ${layer} to ${allLayersExplodedDir}`);
       }
       try {
         await extractTar(join(tempDir, layer), allLayersExplodedDir);
       } catch (err) {
-        console.log(err);
+        if (err.code === "TAR_BAD_ARCHIVE") {
+          if (DEBUG_MODE) {
+            console.log(`Layer ${layer} is empty.`);
+          }
+        } else {
+          console.log(err);
+        }
       }
     }
     if (manifest.Config) {
@@ -1030,15 +1084,23 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
     }
   }
   if (lastWorkingDir && lastWorkingDir !== "") {
-    knownSysPaths.push(lastWorkingDir);
+    if (
+      !lastWorkingDir.includes("/opt/") &&
+      !lastWorkingDir.includes("/home/")
+    ) {
+      knownSysPaths.push(lastWorkingDir);
+    }
     // Some more common app dirs
-    if (!lastWorkingDir.startsWith("/app")) {
+    if (!lastWorkingDir.includes("/app/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/app"));
     }
-    if (!lastWorkingDir.startsWith("/data")) {
+    if (!lastWorkingDir.includes("/layers/")) {
+      knownSysPaths.push(join(allLayersExplodedDir, "/layers"));
+    }
+    if (!lastWorkingDir.includes("/data/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/data"));
     }
-    if (!lastWorkingDir.startsWith("/srv")) {
+    if (!lastWorkingDir.includes("/srv/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/srv"));
     }
   }

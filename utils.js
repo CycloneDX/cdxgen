@@ -1,5 +1,7 @@
 import { globSync } from "glob";
 import { homedir, platform, tmpdir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   basename,
   delimiter as _delimiter,
@@ -20,13 +22,14 @@ import {
   rmSync,
   unlinkSync,
   writeFileSync,
-  readdirSync
+  createReadStream
 } from "node:fs";
+import { createHash } from "node:crypto";
 import got from "got";
 import Arborist from "@npmcli/arborist";
 import path from "node:path";
 import { xml2js } from "xml-js";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import { load } from "cheerio";
 import { load as _load } from "js-yaml";
 import { spawnSync } from "node:child_process";
@@ -50,9 +53,9 @@ let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
-const isWin = platform() === "win32";
-const isMac = platform() === "darwin";
+export const dirNameStr = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+export const isWin = platform() === "win32";
+export const isMac = platform() === "darwin";
 export let ATOM_DB = join(homedir(), ".local", "share", ".atomdb");
 if (isWin) {
   ATOM_DB = join(homedir(), "AppData", "Local", ".atomdb");
@@ -61,34 +64,36 @@ if (isWin) {
 }
 
 const licenseMapping = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "lic-mapping.json"))
+  readFileSync(join(dirNameStr, "data", "lic-mapping.json"), "utf-8")
 );
 const vendorAliases = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "vendor-alias.json"))
+  readFileSync(join(dirNameStr, "data", "vendor-alias.json"), "utf-8")
 );
 const spdxLicenses = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "spdx-licenses.json"))
+  readFileSync(join(dirNameStr, "data", "spdx-licenses.json"), "utf-8")
 );
 const knownLicenses = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "known-licenses.json"))
+  readFileSync(join(dirNameStr, "data", "known-licenses.json"), "utf-8")
 );
 const mesonWrapDB = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"))
+  readFileSync(join(dirNameStr, "data", "wrapdb-releases.json"), "utf-8")
 );
 export const frameworksList = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "frameworks-list.json"))
+  readFileSync(join(dirNameStr, "data", "frameworks-list.json"), "utf-8")
 );
-const selfPJson = JSON.parse(readFileSync(join(dirNameStr, "package.json")));
+const selfPJson = JSON.parse(
+  readFileSync(join(dirNameStr, "package.json"), "utf-8")
+);
 const _version = selfPJson.version;
 
 // Refer to contrib/py-modules.py for a script to generate this list
 // The script needs to be used once every few months to update this list
 const PYTHON_STD_MODULES = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "python-stdlib.json"))
+  readFileSync(join(dirNameStr, "data", "python-stdlib.json"), "utf-8")
 );
 // Mapping between modules and package names
 const PYPI_MODULE_PACKAGE_MAPPING = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "pypi-pkg-aliases.json"))
+  readFileSync(join(dirNameStr, "data", "pypi-pkg-aliases.json"), "utf-8")
 );
 
 // Debug mode flag
@@ -121,13 +126,84 @@ export const FETCH_LICENSE =
   process.env.FETCH_LICENSE &&
   ["true", "1"].includes(process.env.FETCH_LICENSE);
 
+// Whether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
+export const SEARCH_MAVEN_ORG =
+  !process.env.SEARCH_MAVEN_ORG ||
+  ["true", "1"].includes(process.env.SEARCH_MAVEN_ORG);
+
+// circuit breaker for search maven.org
+let search_maven_org_errors = 0;
+const MAX_SEARCH_MAVEN_ORG_ERRORS = 1;
+
+// circuit breaker for get repo license
+let get_repo_license_errors = 0;
+const MAX_GET_REPO_LICENSE_ERRORS = 5;
+
 const MAX_LICENSE_ID_LENGTH = 100;
 
-let PYTHON_CMD = "python";
+export let JAVA_CMD = "java";
+if (process.env.JAVA_CMD) {
+  JAVA_CMD = process.env.JAVA_CMD;
+} else if (
+  process.env.JAVA_HOME &&
+  existsSync(process.env.JAVA_HOME) &&
+  existsSync(join(process.env.JAVA_HOME, "bin", "java"))
+) {
+  JAVA_CMD = join(process.env.JAVA_HOME, "bin", "java");
+}
+export let PYTHON_CMD = "python";
 if (process.env.PYTHON_CMD) {
   PYTHON_CMD = process.env.PYTHON_CMD;
 } else if (process.env.CONDA_PYTHON_EXE) {
   PYTHON_CMD = process.env.CONDA_PYTHON_EXE;
+}
+export let DOTNET_CMD = "dotnet";
+if (process.env.DOTNET_CMD) {
+  DOTNET_CMD = process.env.DOTNET_CMD;
+}
+export let NODE_CMD = "node";
+if (process.env.NODE_CMD) {
+  NODE_CMD = process.env.NODE_CMD;
+}
+export let NPM_CMD = "npm";
+if (process.env.NPM_CMD) {
+  NPM_CMD = process.env.NPM_CMD;
+}
+export let YARN_CMD = "yarn";
+if (process.env.YARN_CMD) {
+  YARN_CMD = process.env.YARN_CMD;
+}
+export let GCC_CMD = "gcc";
+if (process.env.GCC_CMD) {
+  GCC_CMD = process.env.GCC_CMD;
+}
+export let RUSTC_CMD = "rustc";
+if (process.env.RUSTC_CMD) {
+  RUSTC_CMD = process.env.RUSTC_CMD;
+}
+export let GO_CMD = "go";
+if (process.env.GO_CMD) {
+  GO_CMD = process.env.GO_CMD;
+}
+export let CARGO_CMD = "cargo";
+if (process.env.CARGO_CMD) {
+  CARGO_CMD = process.env.CARGO_CMD;
+}
+
+// Clojure CLI
+export let CLJ_CMD = "clj";
+if (process.env.CLJ_CMD) {
+  CLJ_CMD = process.env.CLJ_CMD;
+}
+
+export let LEIN_CMD = "lein";
+if (process.env.LEIN_CMD) {
+  LEIN_CMD = process.env.LEIN_CMD;
+}
+
+export let SWIFT_CMD = "swift";
+if (process.env.SWIFT_CMD) {
+  SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
 // Custom user-agent for cdxgen
@@ -167,7 +243,7 @@ export const getAllFiles = function (dirPath, pattern, options = {}) {
  *
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
- * @param {array} ignoreList Directory patterns to ignore
+ * @param {Array} ignoreList Directory patterns to ignore
  */
 export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
   try {
@@ -176,7 +252,6 @@ export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
       absolute: true,
       nocase: true,
       nodir: true,
-      strict: true,
       dot: pattern.startsWith(".") ? true : false,
       follow: false,
       ignore: ignoreList
@@ -199,7 +274,7 @@ const toBase64 = (hexString) => {
  * and url of the license object, otherwise, set the 'name' of the license
  * object.
  */
-export function getLicenses(pkg, format = "xml") {
+export function getLicenses(pkg) {
   let license = pkg.license && (pkg.license.type || pkg.license);
   if (license) {
     if (!Array.isArray(license)) {
@@ -217,20 +292,10 @@ export function getLicenses(pkg, format = "xml") {
             licenseContent.id = l;
             licenseContent.url = "https://opensource.org/licenses/" + l;
           } else if (l.startsWith("http")) {
-            if (!l.includes("opensource.org")) {
-              licenseContent.name = "CUSTOM";
-            } else {
-              const possibleId = l
-                .replace("http://www.opensource.org/licenses/", "")
-                .toUpperCase();
-              spdxLicenses.forEach((v) => {
-                if (v.toUpperCase() === possibleId) {
-                  licenseContent.id = v;
-                }
-              });
-            }
-            if (l.includes("mit-license")) {
-              licenseContent.id = "MIT";
+            const knownLicense = getKnownLicense(l, pkg);
+            if (knownLicense) {
+              licenseContent.id = knownLicense.id;
+              licenseContent.name = knownLicense.name;
             }
             // We always need a name to avoid validation errors
             // Issue: #469
@@ -247,21 +312,93 @@ export function getLicenses(pkg, format = "xml") {
           return undefined;
         }
         if (!licenseContent.id) {
-          addLicenseText(pkg, l, licenseContent, format);
+          addLicenseText(pkg, l, licenseContent);
         }
         return licenseContent;
       })
       .map((l) => ({ license: l }));
+  } else {
+    const knownLicense = getKnownLicense(undefined, pkg);
+    if (knownLicense) {
+      return [{ license: knownLicense }];
+    }
   }
   return undefined;
 }
+
+/**
+ * Method to retrieve known license by known-licenses.json
+ *
+ * @param {String} licenseUrl Repository url
+ * @param {String} pkg Bom ref
+ * @return {Object} Objetct with SPDX license id or license name
+ */
+export const getKnownLicense = function (licenseUrl, pkg) {
+  if (licenseUrl && licenseUrl.includes("opensource.org")) {
+    const possibleId = licenseUrl
+      .toLowerCase()
+      .replace("https://", "http://")
+      .replace("http://www.opensource.org/licenses/", "");
+    for (const spdxLicense of spdxLicenses) {
+      if (spdxLicense.toLowerCase() === possibleId) {
+        return { id: spdxLicense };
+      }
+    }
+  } else if (licenseUrl && licenseUrl.includes("apache.org")) {
+    const possibleId = licenseUrl
+      .toLowerCase()
+      .replace("https://", "http://")
+      .replace("http://www.apache.org/licenses/license-", "apache-")
+      .replace(".txt", "");
+    for (const spdxLicense of spdxLicenses) {
+      if (spdxLicense.toLowerCase() === possibleId) {
+        return { id: spdxLicense };
+      }
+    }
+  }
+  for (const akLicGroup of knownLicenses) {
+    if (
+      akLicGroup.packageNamespace === "*" ||
+      (pkg.purl && pkg.purl.startsWith(akLicGroup.packageNamespace))
+    ) {
+      for (const akLic of akLicGroup.knownLicenses) {
+        if (akLic.group && akLic.name) {
+          if (akLic.group === "." && akLic.name === pkg.name) {
+            return { id: akLic.license, name: akLic.licenseName };
+          } else if (
+            pkg.group &&
+            pkg.group.includes(akLic.group) &&
+            (akLic.name === pkg.name || akLic.name === "*")
+          ) {
+            return { id: akLic.license, name: akLic.licenseName };
+          }
+        }
+        if (
+          akLic.urlIncludes &&
+          licenseUrl &&
+          licenseUrl.includes(akLic.urlIncludes)
+        ) {
+          return { id: akLic.license, name: akLic.licenseName };
+        }
+        if (
+          akLic.urlEndswith &&
+          licenseUrl &&
+          licenseUrl.endsWith(akLic.urlEndswith)
+        ) {
+          return { id: akLic.license, name: akLic.licenseName };
+        }
+      }
+    }
+  }
+  return undefined;
+};
 
 /**
  * Tries to find a file containing the license text based on commonly
  * used naming and content types. If a candidate file is found, add
  * the text to the license text object and stop.
  */
-export function addLicenseText(pkg, l, licenseContent, format = "xml") {
+export function addLicenseText(pkg, l, licenseContent) {
   const licenseFilenames = [
     "LICENSE",
     "License",
@@ -290,8 +427,7 @@ export function addLicenseText(pkg, l, licenseContent, format = "xml") {
         if (existsSync(licenseFilepath)) {
           licenseContent.text = readLicenseText(
             licenseFilepath,
-            licenseContentType,
-            format
+            licenseContentType
           );
           return;
         }
@@ -304,29 +440,45 @@ export function addLicenseText(pkg, l, licenseContent, format = "xml") {
  * Read the file from the given path to the license text object and includes
  * content-type attribute, if not default. Returns the license text object.
  */
-export function readLicenseText(
-  licenseFilepath,
-  licenseContentType,
-  format = "xml"
-) {
+export function readLicenseText(licenseFilepath, licenseContentType) {
   const licenseText = readFileSync(licenseFilepath, "utf8");
   if (licenseText) {
-    if (format === "xml") {
-      const licenseContentText = { "#cdata": licenseText };
-      if (licenseContentType !== "text/plain") {
-        licenseContentText["@content-type"] = licenseContentType;
-      }
-      return licenseContentText;
-    } else {
-      const licenseContentText = { content: licenseText };
-      if (licenseContentType !== "text/plain") {
-        licenseContentText["contentType"] = licenseContentType;
-      }
-      return licenseContentText;
+    const licenseContentText = { content: licenseText };
+    if (licenseContentType !== "text/plain") {
+      licenseContentText["contentType"] = licenseContentType;
     }
+    return licenseContentText;
   }
   return null;
 }
+
+export const getSwiftPackageMetadata = async (pkgList) => {
+  const cdepList = [];
+  for (const p of pkgList) {
+    if (p.repository && p.repository.url) {
+      if (p.repository.url.includes("://github.com/")) {
+        try {
+          p.license = await getRepoLicense(p.repository.url, undefined);
+        } catch (e) {
+          console.error("error fetching repo license from", p.repository.url);
+        }
+      } else {
+        if (DEBUG_MODE) {
+          console.log(
+            p.repository.url,
+            "is currently not supported to fetch for licenses"
+          );
+        }
+      }
+    } else {
+      if (DEBUG_MODE) {
+        console.warn("no repository url found for", p.name);
+      }
+    }
+    cdepList.push(p);
+  }
+  return cdepList;
+};
 
 /**
  * Method to retrieve metadata for npm packages by querying npmjs
@@ -407,13 +559,29 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
         null,
         null
       ).toString();
+      const author = pkgData.author;
+      const authorString =
+        author instanceof Object
+          ? `${author.name}${author.email ? ` <${author.email}>` : ""}${
+              author.url ? ` (${author.url})` : ""
+            }`
+          : author;
       const apkg = {
         name,
         group,
         version: pkgData.version,
+        description: pkgData.description,
         purl: purl,
-        "bom-ref": decodeURIComponent(purl)
+        "bom-ref": decodeURIComponent(purl),
+        author: authorString,
+        license: pkgData.license
       };
+      if (pkgData.homepage) {
+        apkg.homepage = { url: pkgData.homepage };
+      }
+      if (pkgData.repository && pkgData.repository.url) {
+        apkg.repository = { url: pkgData.repository.url };
+      }
       if (!simple) {
         apkg.properties = [
           {
@@ -562,6 +730,18 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
         purl: purlString,
         "bom-ref": decodeURIComponent(purlString)
       };
+      if (node.resolved) {
+        pkg.properties.push({
+          name: "ResolvedUrl",
+          value: node.resolved
+        });
+      }
+      if (node.location) {
+        pkg.properties.push({
+          name: "LocalNodeModulesPath",
+          value: node.location
+        });
+      }
     }
     const packageLicense = node.package.license;
     if (packageLicense) {
@@ -571,9 +751,9 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     pkgList.push(pkg);
 
     // retrieve workspace node pkglists
-    let workspaceDependsOn = [];
+    const workspaceDependsOn = [];
     if (node.fsChildren && node.fsChildren.size > 0) {
-      for (let workspaceNode of node.fsChildren) {
+      for (const workspaceNode of node.fsChildren) {
         const {
           pkgList: childPkgList,
           dependenciesList: childDependenciesList
@@ -590,17 +770,18 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
             null
           ).toString()
         );
-
-        workspaceDependsOn.push(depWorkspacePurlString);
+        if (decodeURIComponent(purlString) !== depWorkspacePurlString) {
+          workspaceDependsOn.push(depWorkspacePurlString);
+        }
       }
     }
 
     // this handles the case when a node has ["dependencies"] key in a package-lock.json
     // for a node. We exclude the root node because it's already been handled
-    let childrenDependsOn = [];
+    const childrenDependsOn = [];
     if (node != rootNode) {
       for (const child of node.children) {
-        let childNode = child[1];
+        const childNode = child[1];
         const {
           pkgList: childPkgList,
           dependenciesList: childDependenciesList
@@ -622,7 +803,9 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
             null
           ).toString()
         );
-        childrenDependsOn.push(depChildString);
+        if (decodeURIComponent(purlString) !== depChildString) {
+          childrenDependsOn.push(depChildString);
+        }
       }
     }
 
@@ -631,31 +814,35 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     for (const edge of node.edgesOut.values()) {
       let targetVersion;
       let targetName;
-
+      let foundMatch = false;
       // if the edge doesn't have an integrity, it's likely a peer dependency
       // which isn't installed
-      let edgeToIntegrity = edge.to ? edge.to.integrity : null;
-      // let packageName = node.packageName;
-      // let edgeName = edge.name;
+      // Bug #795. At times, npm loses the integrity node completely and such packages are getting missed out
+      // To keep things safe, we include these packages.
+      const edgeToIntegrity = edge.to ? edge.to.integrity : undefined;
       if (!edgeToIntegrity) {
-        continue;
-      }
-
-      // the edges don't actually contain a version, so we need to search the root node
-      // children to find the correct version. we check the node children first, then
-      // we check the root node children
-      let foundMatch = false;
-      for (const child of node.children) {
-        if (child[1].integrity == edgeToIntegrity) {
-          targetName = child[0].replace(/node_modules\//g, "");
-          // The package name could be different from the targetName retrieved
-          // Eg: "string-width-cjs": "npm:string-width@^4.2.0",
-          if (child[1].packageName && child[1].packageName !== targetName) {
-            targetName = child[1].packageName;
+        // This hack is required to fix the package name
+        targetName = node.name.replace(/-cjs$/, "");
+        targetVersion = node.version;
+        foundMatch = true;
+      } else {
+        // the edges don't actually contain a version, so we need to search the root node
+        // children to find the correct version. we check the node children first, then
+        // we check the root node children
+        for (const child of node.children) {
+          if (edgeToIntegrity) {
+            if (child[1].integrity == edgeToIntegrity) {
+              targetName = child[0].replace(/node_modules\//g, "");
+              // The package name could be different from the targetName retrieved
+              // Eg: "string-width-cjs": "npm:string-width@^4.2.0",
+              if (child[1].packageName && child[1].packageName !== targetName) {
+                targetName = child[1].packageName;
+              }
+              targetVersion = child[1].version;
+              foundMatch = true;
+              break;
+            }
           }
-          targetVersion = child[1].version;
-          foundMatch = true;
-          break;
         }
       }
       if (!foundMatch) {
@@ -688,8 +875,12 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
           null
         ).toString()
       );
-      pkgDependsOn.push(depPurlString);
-      if (edge.to == null) continue;
+      if (decodeURIComponent(purlString) !== depPurlString) {
+        pkgDependsOn.push(depPurlString);
+      }
+      if (edge.to == null) {
+        continue;
+      }
       const { pkgList: childPkgList, dependenciesList: childDependenciesList } =
         parseArboristNode(
           edge.to,
@@ -1016,8 +1207,11 @@ export const parseYarnLock = async function (yarnLockFile) {
         }
         // checksum used by yarn 2/3 is hex encoded
         if (l.startsWith("checksum")) {
+          // in some cases yarn 4 will add a prefix to the checksum, containing the cachekey and compression level
+          // example: 10c0/53c2b231a61a46792b39a0d43bc4f4f77...
+          const checksum = parts[1].split("/").pop();
           integrity =
-            "sha512-" + Buffer.from(parts[1], "hex").toString("base64");
+            "sha512-" + Buffer.from(checksum, "hex").toString("base64");
         }
         if (l.startsWith("resolved")) {
           const tmpB = parts[1].split("#");
@@ -1139,6 +1333,9 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
       ).toString();
   }
   if (existsSync(pnpmLock)) {
+    if (DEBUG_MODE) {
+      console.log(`Parsing file ${pnpmLock}`);
+    }
     const lockData = readFileSync(pnpmLock, "utf8");
     const yamlObj = _load(lockData);
     if (!yamlObj) {
@@ -1174,7 +1371,7 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
     } catch (e) {
       // ignore parse errors
     }
-    const packages = yamlObj.packages;
+    const packages = yamlObj.packages || {};
     const pkgKeys = Object.keys(packages);
     for (const k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
@@ -1247,6 +1444,8 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
             group: group,
             name: name,
             version: version,
+            purl: purlString,
+            "bom-ref": decodeURIComponent(purlString),
             scope,
             _integrity: integrity,
             properties: [
@@ -1436,7 +1635,7 @@ export const parseMinJs = async (minJsFile) => {
  */
 export const parsePom = function (pomFile) {
   const deps = [];
-  const xmlData = readFileSync(pomFile);
+  const xmlData = readFileSync(pomFile, "utf-8");
   const project = xml2js(xmlData, {
     compact: true,
     spaces: 4,
@@ -2031,7 +2230,7 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
       } else {
         console.error(result.stdout, result.stderr);
         console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 20 with gradle 8 which might be incompatible."
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible."
         );
       }
       if (result.stderr.includes("not get unknown property")) {
@@ -2262,7 +2461,8 @@ export const guessLicenseId = function (content) {
 export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
   const MAVEN_CENTRAL_URL =
     process.env.MAVEN_CENTRAL_URL || "https://repo1.maven.org/maven2/";
-  const ANDROID_MAVEN = "https://maven.google.com/";
+  const ANDROID_MAVEN_URL =
+    process.env.ANDROID_MAVEN_URL || "https://maven.google.com/";
   const cdepList = [];
   if (!pkgList || !pkgList.length) {
     return pkgList;
@@ -2301,7 +2501,7 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
         });
       }
     }
-    let group = p.group || "";
+    const group = p.group || "";
     // If the package already has key metadata skip querying maven
     if (group && p.name && p.version && !FETCH_LICENSE) {
       cdepList.push(p);
@@ -2310,7 +2510,7 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
     let urlPrefix = MAVEN_CENTRAL_URL;
     // Ideally we should try one resolver after the other. But it increases the time taken
     if (group.indexOf("android") !== -1) {
-      urlPrefix = ANDROID_MAVEN;
+      urlPrefix = ANDROID_MAVEN_URL;
     }
     // Querying maven requires a valid group name
     if (!group || group === "") {
@@ -2430,7 +2630,7 @@ export const fetchPomXmlAsJson = async function ({
  * @param {String} name
  * @param {String} version
  *
- * @return {String}
+ * @return {Promise<String>}
  */
 export const fetchPomXml = async function ({
   urlPrefix,
@@ -2438,7 +2638,7 @@ export const fetchPomXml = async function ({
   name,
   version
 }) {
-  let fullUrl = composePomXmlUrl({ urlPrefix, group, name, version });
+  const fullUrl = composePomXmlUrl({ urlPrefix, group, name, version });
   const res = await cdxgenAgent.get(fullUrl);
   return res.body;
 };
@@ -2467,7 +2667,7 @@ export const parseLicenseEntryOrArrayFromPomXml = function (license) {
  * @param {String} name
  * @param {String} version
  *
- * @return {String} License ID
+ * @return {Promise<String>} License ID
  */
 export const extractLicenseCommentFromPomXml = async function ({
   urlPrefix,
@@ -2527,7 +2727,7 @@ export const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
     return -c;
   };
   // Iterate in the "reverse" order
-  for (let rv of versionsList.sort(comparator)) {
+  for (const rv of versionsList.sort(comparator)) {
     if (satisfies(coerce(rv), versionSpecifiers, true)) {
       return rv;
     }
@@ -2593,8 +2793,8 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
       if (body.info.classifiers) {
         for (const c of body.info.classifiers) {
           if (c.startsWith("License :: ")) {
-            let licenseName = c.split("::").slice(-1)[0].trim();
-            let licenseId = findLicenseId(licenseName);
+            const licenseName = c.split("::").slice(-1)[0].trim();
+            const licenseId = findLicenseId(licenseName);
             if (licenseId && !p.license.includes(licenseId)) {
               p.license.push(licenseId);
             }
@@ -2602,7 +2802,7 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
         }
       }
       if (body.info.license) {
-        let licenseId = findLicenseId(body.info.license);
+        const licenseId = findLicenseId(body.info.license);
         if (licenseId && !p.license.includes(licenseId)) {
           p.license.push(licenseId);
         }
@@ -2812,7 +3012,7 @@ export const parsePiplockData = async function (lockData) {
 export const parsePyProjectToml = (tomlFile) => {
   // Do we need a toml npm package at some point?
   const tomlData = readFileSync(tomlFile, { encoding: "utf-8" });
-  let pkg = {};
+  const pkg = {};
   if (!tomlData) {
     return pkg;
   }
@@ -2820,7 +3020,7 @@ export const parsePyProjectToml = (tomlFile) => {
     l = l.replace("\r", "");
     if (l.indexOf("=") > -1) {
       const tmpA = l.split("=");
-      let key = tmpA[0].trim();
+      const key = tmpA[0].trim();
       let value = tmpA[1].trim().replace(/["']/g, "");
       switch (key) {
         case "description":
@@ -2953,7 +3153,7 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
   });
   pkgList = await getPyMetadata(pkgList, false);
   for (const key of Object.keys(depsMap)) {
-    let dependsOnList = [];
+    const dependsOnList = [];
     for (const adep of Array.from(depsMap[key])) {
       if (adep.startsWith("pkg:")) {
         dependsOnList.push(adep);
@@ -3257,21 +3457,30 @@ export const repoMetadataToGitHubApiUrl = function (repoMetadata) {
 };
 
 /**
+ * Method to split GitHub url into its parts
+ * @param {String} repoUrl Repository url
+ * @return {[String]} parts from url
+ */
+export const getGithubUrlParts = (repoUrl) => {
+  if (repoUrl.toLowerCase().endsWith(".git")) {
+    repoUrl = repoUrl.slice(0, -4);
+  }
+  repoUrl.replace(/\/$/, "");
+  const parts = repoUrl.split("/");
+  return parts;
+};
+
+/**
  * Method to construct GitHub api url from repo metadata or one of multiple formats of repo URLs
  * @param {String} repoUrl Repository url
  * @param {Object} repoMetadata Object containing group and package name strings
  * @return {String|undefined} github api url (or undefined - if not a GitHub repo)
  */
 export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
-  if (!repoUrl || !repoUrl.includes("://github.com/")) {
+  if (repoMetadata) {
     return repoMetadataToGitHubApiUrl(repoMetadata);
   }
-  if (repoUrl.toLowerCase().endsWith(".git")) {
-    repoUrl = repoUrl.slice(0, -4);
-  }
-  repoUrl.replace(/\/$/, "");
-  const parts = repoUrl.split("/");
-
+  const parts = getGithubUrlParts(repoUrl);
   if (parts.length < 5 || parts[2] !== "github.com") {
     return undefined; // Not a valid GitHub repo URL
   } else {
@@ -3287,13 +3496,13 @@ export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
  *
  * @param {String} repoUrl Repository url
  * @param {Object} repoMetadata Object containing group and package name strings
- * @return {String} SPDX license id
+ * @return {Promise<String>} SPDX license id
  */
 export const getRepoLicense = async function (repoUrl, repoMetadata) {
-  let apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
+  const apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
   // Perform github lookups
-  if (apiUrl) {
-    let licenseUrl = apiUrl + "/license";
+  if (apiUrl && get_repo_license_errors < MAX_GET_REPO_LICENSE_ERRORS) {
+    const licenseUrl = apiUrl + "/license";
     const headers = {};
     if (process.env.GITHUB_TOKEN) {
       headers["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
@@ -3323,23 +3532,25 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
           }
         }
         licObj["id"] = licenseId;
-        return licObj;
+        if (licObj["id"] || licObj["name"]) {
+          return licObj;
+        }
       }
     } catch (err) {
-      return undefined;
-    }
-  } else if (repoMetadata) {
-    const group = repoMetadata.group;
-    const name = repoMetadata.name;
-    if (group && name) {
-      for (const akLic of knownLicenses) {
-        if (akLic.group === "." && akLic.name === name) {
-          return akLic.license;
-        } else if (
-          group.includes(akLic.group) &&
-          (akLic.name === name || akLic.name === "*")
+      if (err && err.message) {
+        if (
+          err.message.includes("rate limit exceeded") &&
+          !process.env.GITHUB_TOKEN
         ) {
-          return akLic.license;
+          console.log(
+            "Rate limit exceeded for REST API of github.com. " +
+              "Please ensure GITHUB_TOKEN is set as environment variable. " +
+              "See: https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api"
+          );
+          get_repo_license_errors++;
+        } else if (!err.message.includes("404")) {
+          console.log(err);
+          get_repo_license_errors++;
         }
       }
     }
@@ -3711,7 +3922,7 @@ export const parseGosumData = async function (gosumData) {
   }
   const pkgs = gosumData.split("\n");
   for (const l of pkgs) {
-    let m = l.replace("\r", "");
+    const m = l.replace("\r", "");
     // look for lines containing go.mod
     if (m.indexOf("go.mod") > -1) {
       const tmpA = m.split(" ");
@@ -3924,6 +4135,9 @@ export const parseGemfileLockData = async function (gemLockData) {
       const tmpA = l.split(" ");
       if (tmpA && tmpA.length == 2) {
         const name = tmpA[0];
+        if (name === "remote:") {
+          return;
+        }
         if (!pkgnames[name]) {
           let version = tmpA[1].split(", ")[0];
           version = version.replace(/[(>=<)~ ]/g, "");
@@ -3942,7 +4156,8 @@ export const parseGemfileLockData = async function (gemLockData) {
       l === "PLATFORMS" ||
       l === "DEPENDENCIES" ||
       l === "RUBY VERSION" ||
-      l === "BUNDLED WITH"
+      l === "BUNDLED WITH" ||
+      l === "PATH"
     ) {
       specsFound = false;
     }
@@ -4392,13 +4607,15 @@ export const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
 export const parseContainerFile = function (fileContents) {
   const imgList = [];
 
-  let buildStageNames = [];
-  for (const line of fileContents.split("\n")) {
-    if (line.trim().startsWith("#")) {
+  const buildStageNames = [];
+  for (let line of fileContents.split("\n")) {
+    line = line.trim();
+
+    if (line.startsWith("#")) {
       continue; // skip commented out lines
     }
 
-    if (line.includes("FROM")) {
+    if (line.startsWith("FROM")) {
       const fromStatement = line.split("FROM")[1].split("AS");
 
       const imageStatement = fromStatement[0].trim();
@@ -4420,6 +4637,68 @@ export const parseContainerFile = function (fileContents) {
       if (buildStageName) {
         buildStageNames.push(buildStageName);
       }
+    }
+  }
+
+  return imgList;
+};
+
+export const parseBitbucketPipelinesFile = function (fileContents) {
+  const imgList = [];
+
+  let privateImageBlockFound = false;
+
+  for (let line of fileContents.split("\n")) {
+    line = line.trim();
+    if (line.startsWith("#")) {
+      continue; // skip commented out lines
+    }
+
+    // Assume this is a private build image object
+    if (line.startsWith("name:") && privateImageBlockFound) {
+      const imageName = line.split("name:").pop().trim();
+
+      imgList.push({
+        image: imageName
+      });
+
+      privateImageBlockFound = false;
+    }
+
+    // Docker image usage
+    if (line.startsWith("image:")) {
+      const imageName = line.split("image:").pop().trim();
+
+      /**
+       * Assume this is a private build image object
+       * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-private-build-images
+       */
+      if (imageName === "") {
+        privateImageBlockFound = true;
+        continue;
+      } else {
+        /**
+         * Assume this is a public build image
+         * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-public-build-images
+         */
+
+        imgList.push({
+          image: imageName
+        });
+      }
+    }
+
+    // Pipe usage
+    if (line.startsWith("- pipe:")) {
+      let pipeName = line.split("- pipe:").pop().trim();
+
+      if (pipeName.startsWith("docker://")) {
+        pipeName = pipeName.replace("docker://", "");
+      }
+
+      imgList.push({
+        image: pipeName
+      });
     }
   }
 
@@ -4618,8 +4897,13 @@ export const parseOpenapiSpecData = function (oaData) {
   } catch (e) {
     return servlist;
   }
-  const name = oaData.info.title.replace(/ /g, "-");
-  const version = oaData.info.version || "latest";
+
+  const name =
+    oaData.info && oaData.info.title
+      ? oaData.info.title.replace(/ /g, "-")
+      : "default-name";
+  const version =
+    oaData.info && oaData.info.version ? oaData.info.version : "latest";
   const aservice = {
     "bom-ref": `urn:service:${name}:${version}`,
     name,
@@ -4979,7 +5263,7 @@ export const parseNupkg = async function (nupkgFile) {
   return await parseNuspecData(nupkgFile, nuspecData);
 };
 
-export const parseNuspecData = async function (nupkgFile, nuspecData) {
+export const parseNuspecData = function (nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
   let npkg = undefined;
@@ -5032,7 +5316,7 @@ export const parseNuspecData = async function (nupkgFile, nuspecData) {
   return pkgList;
 };
 
-export const parseCsPkgData = async function (pkgData) {
+export const parseCsPkgData = function (pkgData) {
   const pkgList = [];
   if (!pkgData) {
     return pkgList;
@@ -5059,7 +5343,7 @@ export const parseCsPkgData = async function (pkgData) {
   return pkgList;
 };
 
-export const parseCsProjData = async function (csProjData) {
+export const parseCsProjData = function (csProjData, projFile) {
   const pkgList = [];
   if (!csProjData) {
     return pkgList;
@@ -5088,6 +5372,27 @@ export const parseCsProjData = async function (csProjData) {
         }
         pkg.name = pref.Include;
         pkg.version = pref.Version;
+        if (projFile) {
+          pkg.properties = [
+            {
+              name: "SrcFile",
+              value: projFile
+            }
+          ];
+          pkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.7,
+                  value: projFile
+                }
+              ]
+            }
+          };
+        }
         pkgList.push(pkg);
       }
       // .net framework use Reference
@@ -5102,6 +5407,27 @@ export const parseCsProjData = async function (csProjData) {
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
+        if (projFile) {
+          pkg.properties = [
+            {
+              name: "SrcFile",
+              value: projFile
+            }
+          ];
+          pkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.7,
+                  value: projFile
+                }
+              ]
+            }
+          };
+        }
         pkgList.push(pkg);
       }
     }
@@ -5109,7 +5435,7 @@ export const parseCsProjData = async function (csProjData) {
   return pkgList;
 };
 
-export const parseCsProjAssetsData = async function (csProjData) {
+export const parseCsProjAssetsData = function (csProjData, assetsJsonFile) {
   // extract name, operator, version from .NET package representation
   // like "NLog >= 4.5.0"
   function extractNameOperatorVersion(inputStr) {
@@ -5128,7 +5454,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
   }
 
   const pkgList = [];
-  let dependenciesList = [];
+  const dependenciesList = [];
   let rootPkg = {};
   // This tracks the resolved version
   const pkgNameVersionMap = {};
@@ -5155,7 +5481,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
     "bom-ref": decodeURIComponent(purlString)
   };
   pkgList.push(rootPkg);
-  let rootPkgDeps = new Set();
+  const rootPkgDeps = new Set();
 
   // create root pkg deps
   if (csProjData.targets && csProjData.projectFileDependencyGroups) {
@@ -5211,7 +5537,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
           null,
           null
         ).toString();
-        let pkg = {
+        const pkg = {
           group: "",
           name: name,
           version: version,
@@ -5226,6 +5552,43 @@ export const parseCsProjAssetsData = async function (csProjData) {
           } else if (lib[rootDep].sha256) {
             pkg["_integrity"] = "sha256-" + lib[rootDep].sha256;
           }
+          if (lib[rootDep].files && Array.isArray(lib[rootDep].files)) {
+            const dllFiles = new Set();
+            lib[rootDep].files.forEach((f) => {
+              if (
+                f.endsWith(".dll") ||
+                f.endsWith(".exe") ||
+                f.endsWith(".so")
+              ) {
+                dllFiles.add(basename(f));
+              }
+            });
+            pkg.properties = [
+              {
+                name: "SrcFile",
+                value: assetsJsonFile
+              },
+              {
+                name: "PackageFiles",
+                value: Array.from(dllFiles).join(", ")
+              }
+            ];
+          }
+        }
+        if (assetsJsonFile) {
+          pkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 1,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 1,
+                  value: assetsJsonFile
+                }
+              ]
+            }
+          };
         }
         pkgList.push(pkg);
         pkgNameVersionMap[name + framework] = version;
@@ -5248,7 +5611,7 @@ export const parseCsProjAssetsData = async function (csProjData) {
             if (!pkgNameVersionMap[p + framework]) {
               continue;
             }
-            let dversion = pkgNameVersionMap[p + framework];
+            const dversion = pkgNameVersionMap[p + framework];
             const ipurl = new PackageURL(
               "nuget",
               "",
@@ -5284,31 +5647,98 @@ export const parseCsProjAssetsData = async function (csProjData) {
   };
 };
 
-export const parseCsPkgLockData = async function (csLockData) {
+export const parseCsPkgLockData = function (csLockData, pkgLockFile) {
   const pkgList = [];
+  const dependenciesList = [];
+  const rootList = [];
   let pkg = null;
   if (!csLockData) {
-    return pkgList;
+    return {
+      pkgList,
+      dependenciesList,
+      rootList
+    };
   }
   const assetData = JSON.parse(csLockData);
   if (!assetData || !assetData.dependencies) {
-    return pkgList;
+    return {
+      pkgList,
+      dependenciesList,
+      rootList
+    };
   }
   for (const aversion of Object.keys(assetData.dependencies)) {
     for (const alib of Object.keys(assetData.dependencies[aversion])) {
       const libData = assetData.dependencies[aversion][alib];
+      const purl = new PackageURL(
+        "nuget",
+        "",
+        alib,
+        libData.resolved,
+        null,
+        null
+      ).toString();
       pkg = {
         group: "",
         name: alib,
-        version: libData.resolved
+        version: libData.resolved,
+        purl,
+        "bom-ref": decodeURIComponent(purl),
+        _integrity: libData.contentHash
+          ? "sha512-" + libData.contentHash
+          : undefined,
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgLockFile
+          }
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgLockFile
+              }
+            ]
+          }
+        }
       };
       pkgList.push(pkg);
+      if (libData.type === "Direct") {
+        rootList.push(pkg);
+      }
+      const dependsOn = [];
+      if (libData.dependencies) {
+        for (const adep of Object.keys(libData.dependencies)) {
+          const adpurl = new PackageURL(
+            "nuget",
+            "",
+            adep,
+            libData.dependencies[adep],
+            null,
+            null
+          ).toString();
+          dependsOn.push(decodeURIComponent(adpurl));
+        }
+      }
+      dependenciesList.push({
+        ref: decodeURIComponent(purl),
+        dependsOn
+      });
     }
   }
-  return pkgList;
+  return {
+    pkgList,
+    dependenciesList,
+    rootList
+  };
 };
 
-export const parsePaketLockData = async function (paketLockData) {
+export const parsePaketLockData = function (paketLockData, pkgLockFile) {
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
@@ -5336,14 +5766,39 @@ export const parsePaketLockData = async function (paketLockData) {
     if (match) {
       const name = match[1];
       const version = match[2];
-      const purl = decodeURIComponent(
-        new PackageURL("nuget", "", name, version, null, null).toString()
-      );
+      const purl = new PackageURL(
+        "nuget",
+        "",
+        name,
+        version,
+        null,
+        null
+      ).toString();
       pkg = {
         group: "",
-        name: name,
-        version: version,
-        purl: purl
+        name,
+        version,
+        purl,
+        "bom-ref": decodeURIComponent(purl),
+        properties: [
+          {
+            name: "SrcFile",
+            value: pkgLockFile
+          }
+        ],
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 1,
+                value: pkgLockFile
+              }
+            ]
+          }
+        }
       };
       pkgList.push(pkg);
       dependenciesMap[purl] = new Set();
@@ -5395,17 +5850,29 @@ export const parsePaketLockData = async function (paketLockData) {
     dependenciesList
   };
 };
+
 /**
  * Parse composer lock file
  *
  * @param {string} pkgLockFile composer.lock file
+ * @param {array} rootRequires require section from composer.json
  */
-export const parseComposerLock = function (pkgLockFile) {
+export const parseComposerLock = function (pkgLockFile, rootRequires) {
   const pkgList = [];
+  const dependenciesList = [];
+  const dependenciesMap = {};
+  const pkgNamePurlMap = {};
+  const rootList = [];
+  const rootRequiresMap = {};
+  if (rootRequires) {
+    for (const rr of Object.keys(rootRequires)) {
+      rootRequiresMap[rr] = true;
+    }
+  }
   if (existsSync(pkgLockFile)) {
     let lockData = {};
     try {
-      lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
+      lockData = JSON.parse(readFileSync(pkgLockFile, { encoding: "utf-8" }));
     } catch (e) {
       console.error("Invalid composer.lock file:", pkgLockFile);
       return [];
@@ -5418,6 +5885,7 @@ export const parseComposerLock = function (pkgLockFile) {
       if (lockData["packages-dev"]) {
         packages["optional"] = lockData["packages-dev"];
       }
+      // Pass 1: Collect all packages
       for (const compScope in packages) {
         for (const i in packages[compScope]) {
           const pkg = packages[compScope][i];
@@ -5425,19 +5893,26 @@ export const parseComposerLock = function (pkgLockFile) {
           if (!pkg || !pkg.name || !pkg.version) {
             continue;
           }
+
           let group = dirname(pkg.name);
           if (group === ".") {
             group = "";
           }
           const name = basename(pkg.name);
-          pkgList.push({
+          const purl = new PackageURL(
+            "composer",
+            group,
+            name,
+            pkg.version,
+            null,
+            null
+          ).toString();
+          const apkg = {
             group: group,
             name: name,
-            // Remove leading v from version to work around bug
-            //  https://github.com/OSSIndex/vulns/issues/231
-            // @TODO: remove workaround when DependencyTrack v4.4 is released,
-            //  which has it's own workaround. Or when the 231 bug is fixed.
-            version: pkg.version.replace(/^v/, ""),
+            purl,
+            "bom-ref": decodeURIComponent(purl),
+            version: pkg.version,
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,
@@ -5461,12 +5936,63 @@ export const parseComposerLock = function (pkgLockFile) {
                 ]
               }
             }
-          });
+          };
+          if (pkg.autoload && Object.keys(pkg.autoload).length) {
+            const namespaces = [];
+            for (const aaload of Object.keys(pkg.autoload)) {
+              if (aaload.startsWith("psr")) {
+                for (const ans of Object.keys(pkg.autoload[aaload])) {
+                  namespaces.push(ans.trim());
+                }
+              }
+            }
+            if (namespaces.length) {
+              apkg.properties.push({
+                name: "Namespaces",
+                value: namespaces.join(", ")
+              });
+            }
+          }
+          pkgList.push(apkg);
+          dependenciesMap[purl] = new Set();
+          pkgNamePurlMap[pkg.name] = purl;
+          // Add this package to the root list if needed
+          if (rootRequiresMap[pkg.name]) {
+            rootList.push(apkg);
+          }
+        }
+      }
+      // Pass 2: Construct dependency tree
+      for (const compScope in packages) {
+        for (const i in packages[compScope]) {
+          const pkg = packages[compScope][i];
+          if (!pkg || !pkg.name || !pkg.version) {
+            continue;
+          }
+          if (!pkg.require || !Object.keys(pkg.require).length) {
+            continue;
+          }
+          const purl = pkgNamePurlMap[pkg.name];
+          for (const adepName of Object.keys(pkg.require)) {
+            if (pkgNamePurlMap[adepName]) {
+              dependenciesMap[purl].add(pkgNamePurlMap[adepName]);
+            }
+          }
         }
       }
     }
   }
-  return pkgList;
+  for (const ref in dependenciesMap) {
+    dependenciesList.push({
+      ref: ref,
+      dependsOn: Array.from(dependenciesMap[ref])
+    });
+  }
+  return {
+    pkgList,
+    dependenciesList,
+    rootList
+  };
 };
 
 export const parseSbtTree = (sbtTreeFile) => {
@@ -5474,7 +6000,7 @@ export const parseSbtTree = (sbtTreeFile) => {
   const dependenciesList = [];
   const keys_cache = {};
   const level_trees = {};
-  const tmpA = readFileSync(sbtTreeFile, "utf-8").split("\n");
+  const tmpA = readFileSync(sbtTreeFile, { encoding: "utf-8" }).split("\n");
   let last_level = 0;
   let last_purl = "";
   let stack = [];
@@ -5606,7 +6132,9 @@ export const parseSbtTree = (sbtTreeFile) => {
 export const parseSbtLock = function (pkgLockFile) {
   const pkgList = [];
   if (existsSync(pkgLockFile)) {
-    const lockData = JSON.parse(readFileSync(pkgLockFile, "utf8"));
+    const lockData = JSON.parse(
+      readFileSync(pkgLockFile, { encoding: "utf-8" })
+    );
     if (lockData && lockData.dependencies) {
       for (const pkg of lockData.dependencies) {
         const artifacts = pkg.artifacts || undefined;
@@ -5891,87 +6419,89 @@ export const convertOSQueryResults = function (
   return pkgList;
 };
 
-export const _swiftDepPkgList = (
+const purlFromUrlString = (type, repoUrl, version) => {
+  let namespace = "",
+    name;
+  if (repoUrl && repoUrl.includes("://github.com/")) {
+    const parts = getGithubUrlParts(repoUrl);
+    if (parts.length < 5 || parts[2] !== "github.com") {
+      return undefined; // Not a valid GitHub repo URL
+    } else {
+      namespace = parts[2] + "/" + parts[3];
+      name = parts[4];
+    }
+  } else if (repoUrl && repoUrl.startsWith("/")) {
+    const parts = repoUrl.split("/");
+    name = parts[parts.length - 1];
+  } else {
+    if (DEBUG_MODE) {
+      console.warn("unsupported repo url for swift type");
+    }
+    return undefined;
+  }
+
+  const purl = new PackageURL(type, namespace, name, version, null, null);
+  return purl;
+};
+
+/**
+ * Parse swift dependency tree output json object
+ * @param {string} jsonObject Swift dependencies json object
+ * @param {string} pkgFile Package.swift file
+ */
+export const parseSwiftJsonTreeObject = (
   pkgList,
   dependenciesList,
-  depKeys,
-  jsonData
+  jsonObject,
+  pkgFile
 ) => {
-  if (jsonData && jsonData.dependencies) {
-    for (const adep of jsonData.dependencies) {
-      const urlOrPath = adep.url || adep.path;
-      const apkg = {
-        group: adep.identity || "",
-        name: adep.name,
-        version: adep.version
-      };
-      const purl = new PackageURL(
-        "swift",
-        apkg.group,
-        apkg.name,
-        apkg.version,
-        null,
-        null
-      );
-      const purlString = decodeURIComponent(purl.toString());
-      if (urlOrPath) {
-        if (urlOrPath.startsWith("http")) {
-          apkg.repository = { url: urlOrPath };
-          if (apkg.path) {
-            apkg.properties = [
-              {
-                name: "SrcPath",
-                value: apkg.path
-              }
-            ];
-          }
-        } else {
-          apkg.properties = [
-            {
-              name: "SrcPath",
-              value: urlOrPath
-            }
-          ];
-        }
+  const urlOrPath = jsonObject.url || jsonObject.path;
+  const version = jsonObject.version;
+  const purl = purlFromUrlString("swift", urlOrPath, version);
+  const purlString = decodeURIComponent(purl.toString());
+  const rootPkg = {
+    name: purl.name,
+    group: purl.namespace,
+    version: purl.version,
+    purl: purlString,
+    "bom-ref": purlString
+  };
+  if (urlOrPath) {
+    if (urlOrPath.startsWith("http")) {
+      rootPkg.repository = { url: urlOrPath };
+    } else {
+      const properties = [];
+      properties.push({
+        name: "SrcPath",
+        value: urlOrPath
+      });
+      if (pkgFile) {
+        properties.push({
+          name: "SrcFile",
+          value: pkgFile
+        });
       }
-      pkgList.push(apkg);
-      // Handle the immediate dependencies before recursing
-      if (adep.dependencies && adep.dependencies.length) {
-        const deplist = [];
-        for (const cdep of adep.dependencies) {
-          const deppurl = new PackageURL(
-            "swift",
-            cdep.identity || "",
-            cdep.name,
-            cdep.version,
-            null,
-            null
-          );
-          const deppurlString = decodeURIComponent(deppurl.toString());
-          deplist.push(deppurlString);
-        }
-        if (!depKeys[purlString]) {
-          dependenciesList.push({
-            ref: purlString,
-            dependsOn: deplist
-          });
-          depKeys[purlString] = true;
-        }
-        if (adep.dependencies && adep.dependencies.length) {
-          _swiftDepPkgList(pkgList, dependenciesList, depKeys, adep);
-        }
-      } else {
-        if (!depKeys[purlString]) {
-          dependenciesList.push({
-            ref: purlString,
-            dependsOn: []
-          });
-          depKeys[purlString] = true;
-        }
-      }
+      rootPkg.properties = properties;
     }
   }
-  return { pkgList, dependenciesList };
+  pkgList.push(rootPkg);
+  const depList = [];
+  if (jsonObject.dependencies) {
+    for (const dependency of jsonObject.dependencies) {
+      const res = parseSwiftJsonTreeObject(
+        pkgList,
+        dependenciesList,
+        dependency,
+        pkgFile
+      );
+      depList.push(res);
+    }
+  }
+  dependenciesList.push({
+    ref: purlString,
+    dependsOn: depList
+  });
+  return purlString;
 };
 
 /**
@@ -5985,64 +6515,9 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
   }
   const pkgList = [];
   const dependenciesList = [];
-  const depKeys = {};
-  let rootPkg = {};
-  let jsonData = {};
   try {
-    jsonData = JSON.parse(rawOutput);
-    if (jsonData && jsonData.name) {
-      rootPkg = {
-        group: jsonData.identity || "",
-        name: jsonData.name,
-        version: jsonData.version
-      };
-      const urlOrPath = jsonData.url || jsonData.path;
-      if (urlOrPath) {
-        if (urlOrPath.startsWith("http")) {
-          rootPkg.repository = { url: urlOrPath };
-        } else {
-          rootPkg.properties = [
-            {
-              name: "SrcPath",
-              value: urlOrPath
-            },
-            {
-              name: "SrcFile",
-              value: pkgFile
-            }
-          ];
-        }
-      }
-      const purl = new PackageURL(
-        "swift",
-        rootPkg.group,
-        rootPkg.name,
-        rootPkg.version,
-        null,
-        null
-      );
-      const bomRefString = decodeURIComponent(purl.toString());
-      rootPkg["bom-ref"] = bomRefString;
-      pkgList.push(rootPkg);
-      const deplist = [];
-      for (const rd of jsonData.dependencies) {
-        const deppurl = new PackageURL(
-          "swift",
-          rd.identity || "",
-          rd.name,
-          rd.version,
-          null,
-          null
-        );
-        const deppurlString = decodeURIComponent(deppurl.toString());
-        deplist.push(deppurlString);
-      }
-      dependenciesList.push({
-        ref: bomRefString,
-        dependsOn: deplist
-      });
-      _swiftDepPkgList(pkgList, dependenciesList, depKeys, jsonData);
-    }
+    const jsonData = JSON.parse(rawOutput);
+    parseSwiftJsonTreeObject(pkgList, dependenciesList, jsonData, pkgFile);
   } catch (e) {
     if (DEBUG_MODE) {
       console.log(e);
@@ -6063,7 +6538,9 @@ export const parseSwiftResolved = (resolvedFile) => {
   const pkgList = [];
   if (existsSync(resolvedFile)) {
     try {
-      const pkgData = JSON.parse(readFileSync(resolvedFile, "utf8"));
+      const pkgData = JSON.parse(
+        readFileSync(resolvedFile, { encoding: "utf-8" })
+      );
       let resolvedList = [];
       if (pkgData.pins) {
         resolvedList = pkgData.pins;
@@ -6071,10 +6548,16 @@ export const parseSwiftResolved = (resolvedFile) => {
         resolvedList = pkgData.object.pins;
       }
       for (const adep of resolvedList) {
-        const apkg = {
-          name: adep.package || adep.identity,
-          group: "",
-          version: adep.state.version || adep.state.revision,
+        const locationOrUrl = adep.location || adep.repositoryURL;
+        const version = adep.state.version || adep.state.revision;
+        const purl = purlFromUrlString("swift", locationOrUrl, version);
+        const purlString = decodeURIComponent(purl.toString());
+        const rootPkg = {
+          name: purl.name,
+          group: purl.namespace,
+          version: purl.version,
+          purl: purlString,
+          "bom-ref": purlString,
           properties: [
             {
               name: "SrcFile",
@@ -6095,11 +6578,10 @@ export const parseSwiftResolved = (resolvedFile) => {
             }
           }
         };
-        const repLocation = adep.location || adep.repositoryURL;
-        if (repLocation) {
-          apkg.repository = { url: repLocation };
+        if (locationOrUrl) {
+          rootPkg.repository = { url: locationOrUrl };
         }
-        pkgList.push(apkg);
+        pkgList.push(rootPkg);
       }
     } catch (err) {
       // continue regardless of error
@@ -6116,12 +6598,12 @@ export const parseSwiftResolved = (resolvedFile) => {
  * @param {boolean} cleanup Remove temporary directories
  * @param {boolean} includeCacheDir Include maven and gradle cache directories
  */
-export const collectMvnDependencies = function (
+export const collectMvnDependencies = async (
   mavenCmd,
   basePath,
   cleanup = true,
   includeCacheDir = false
-) {
+) => {
   let jarNSMapping = {};
   const MAVEN_CACHE_DIR =
     process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository");
@@ -6162,12 +6644,12 @@ export const collectMvnDependencies = function (
         "3. Ensure the temporary directory is available and has sufficient disk space to copy all the artifacts."
       );
     } else {
-      jarNSMapping = collectJarNS(tempDir);
+      jarNSMapping = await collectJarNS(tempDir);
     }
   }
   if (includeCacheDir || basePath === MAVEN_CACHE_DIR) {
     // slow operation
-    jarNSMapping = collectJarNS(MAVEN_CACHE_DIR);
+    jarNSMapping = await collectJarNS(MAVEN_CACHE_DIR);
   }
 
   // Clean up
@@ -6177,7 +6659,7 @@ export const collectMvnDependencies = function (
   return jarNSMapping;
 };
 
-export const collectGradleDependencies = (
+export const collectGradleDependencies = async (
   gradleCmd,
   basePath,
   cleanup = true, // eslint-disable-line no-unused-vars
@@ -6207,7 +6689,7 @@ export const collectGradleDependencies = (
   for (const apom of pomFiles) {
     pomPathMap[basename(apom)] = apom;
   }
-  const jarNSMapping = collectJarNS(GRADLE_CACHE_DIR, pomPathMap);
+  const jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR, pomPathMap);
   return jarNSMapping;
 };
 
@@ -6219,7 +6701,7 @@ export const collectGradleDependencies = (
  *
  * @return object containing jar name and class list
  */
-export const collectJarNS = function (jarPath, pomPathMap = {}) {
+export const collectJarNS = async (jarPath, pomPathMap = {}) => {
   const jarNSMapping = {};
   console.log(
     `About to identify class names for all jars in the path ${jarPath}`
@@ -6234,14 +6716,10 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
       "bin"
     )}`;
   }
-  let jarCommandAvailable = true;
-  // Execute jar tvf to get class names
+  // Parse jar files to get class names
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
-      if (!jarCommandAvailable) {
-        break;
-      }
       const jarname = jf;
       let pomname =
         pomPathMap[basename(jf).replace(".jar", ".pom")] ||
@@ -6256,7 +6734,7 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         }
       }
       if (existsSync(pomname)) {
-        pomData = parsePomXml(readFileSync(pomname, "utf-8"));
+        pomData = parsePomXml(readFileSync(pomname, { encoding: "utf-8" }));
         if (pomData) {
           const purlObj = new PackageURL(
             "maven",
@@ -6273,10 +6751,10 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         // .m2/repository/org/apache/logging/log4j/log4j-web/3.0.0-SNAPSHOT/log4j-web-3.0.0-SNAPSHOT.jar
         const tmpA = jf.split(join(".m2", "repository", ""));
         if (tmpA && tmpA.length) {
-          let tmpJarPath = tmpA[tmpA.length - 1];
+          const tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield log4j-web-3.0.0-SNAPSHOT.jar
           const jarFileName = basename(tmpJarPath).replace(".jar", "");
-          let tmpDirParts = dirname(tmpJarPath).split(_sep);
+          const tmpDirParts = dirname(tmpJarPath).split(_sep);
           // Retrieve the version
           let jarVersion = tmpDirParts.pop();
           if (jarVersion === "plugins") {
@@ -6319,10 +6797,10 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         // .gradle/caches/modules-2/files-2.1/org.xmlresolver/xmlresolver/4.2.0/f4dbdaa83d636dcac91c9003ffa7fb173173fe8d/xmlresolver-4.2.0-data.jar
         const tmpA = jf.split(join("files-2.1", ""));
         if (tmpA && tmpA.length) {
-          let tmpJarPath = tmpA[tmpA.length - 1];
+          const tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield xmlresolver-4.2.0-data.jar
           const jarFileName = basename(tmpJarPath).replace(".jar", "");
-          let tmpDirParts = dirname(tmpJarPath).split(_sep);
+          const tmpDirParts = dirname(tmpJarPath).split(_sep);
           // This would remove the hash from the end of the directory name
           tmpDirParts.pop();
           // Retrieve the version
@@ -6345,44 +6823,9 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
         jarNSMapping[purl] = jarNSMapping_cache[purl];
       } else {
         if (DEBUG_MODE) {
-          console.log(`Executing 'jar tf ${jf}'`);
+          console.log(`Parsing ${jf}`);
         }
-        const jarResult = spawnSync("jar", ["-tf", jf], {
-          encoding: "utf-8",
-          shell: isWin,
-          maxBuffer: 50 * 1024 * 1024,
-          env
-        });
-        if (
-          jarResult &&
-          jarResult.stderr &&
-          jarResult.stderr.includes(
-            "is not recognized as an internal or external command"
-          )
-        ) {
-          jarCommandAvailable = false;
-          console.log(
-            "jar command is not available in PATH. Ensure JDK >= 17 is installed and set the environment variables JAVA_HOME and PATH to the bin directory inside JAVA_HOME."
-          );
-        }
-        const consolelines = (jarResult.stdout || "").split("\n");
-        const nsList = consolelines
-          .filter((l) => {
-            return (
-              (l.includes(".class") ||
-                l.includes(".java") ||
-                l.includes(".kt")) &&
-              !l.includes("-INF") &&
-              !l.includes("module-info")
-            );
-          })
-          .map((e) => {
-            return e
-              .replace("\r", "")
-              .replace(/.(class|java|kt)/, "")
-              .replace(/\/$/, "")
-              .replace(/\//g, ".");
-          });
+        const nsList = await getJarClasses(jf);
         jarNSMapping[purl || jf] = {
           jarFile: jf,
           pom: pomData,
@@ -6404,7 +6847,7 @@ export const collectJarNS = function (jarPath, pomPathMap = {}) {
 };
 
 export const convertJarNSToPackages = (jarNSMapping) => {
-  let pkgList = [];
+  const pkgList = [];
   for (const purl of Object.keys(jarNSMapping)) {
     let { jarFile, pom, namespaces } = jarNSMapping[purl];
     if (!pom) {
@@ -6548,33 +6991,32 @@ export const encodeForPurl = (s) => {
 export const getPomPropertiesFromMavenDir = function (mavenDir) {
   let pomProperties = {};
   if (existsSync(mavenDir) && lstatSync(mavenDir).isDirectory()) {
-    let mavenDirEntries = readdirSync(mavenDir, { withFileTypes: true });
-    mavenDirEntries.forEach((mavenDirEntry) => {
-      if (mavenDirEntry.isDirectory()) {
-        let groupDirEntries = readdirSync(
-          join(mavenDirEntry.path, mavenDirEntry.name),
-          { withFileTypes: true }
-        );
-        groupDirEntries.forEach((groupDirEntry) => {
-          if (groupDirEntry.isDirectory()) {
-            let pomPropertiesFile = join(
-              groupDirEntry.path,
-              groupDirEntry.name,
-              "pom.properties"
-            );
-            if (existsSync(pomPropertiesFile)) {
-              const pomPropertiesString = readFileSync(pomPropertiesFile, {
-                encoding: "utf-8"
-              });
-              pomProperties = parsePomProperties(pomPropertiesString);
-            }
-          }
-        });
-      }
-    });
+    const pomPropertiesFiles = getAllFiles(mavenDir, "**/pom.properties");
+    if (pomPropertiesFiles && pomPropertiesFiles.length) {
+      const pomPropertiesString = readFileSync(pomPropertiesFiles[0], {
+        encoding: "utf-8"
+      });
+      pomProperties = parsePomProperties(pomPropertiesString);
+    }
   }
   return pomProperties;
 };
+
+/**
+ *
+ * @param {string} hashName name of hash algorithm
+ * @param {string} path path to file
+ * @returns {Promise<String>} hex value of hash
+ */
+function checksumFile(hashName, path) {
+  return new Promise((resolve, reject) => {
+    const hash = createHash(hashName);
+    const stream = createReadStream(path);
+    stream.on("error", (err) => reject(err));
+    stream.on("data", (chunk) => hash.update(chunk));
+    stream.on("end", () => resolve(hash.digest("hex")));
+  });
+}
 
 /**
  * Method to extract a war or ear file
@@ -6585,7 +7027,7 @@ export const getPomPropertiesFromMavenDir = function (mavenDir) {
  *
  * @return pkgList Package list
  */
-export const extractJarArchive = function (
+export const extractJarArchive = async function (
   jarFile,
   tempDir,
   jarNSMapping = {}
@@ -6595,7 +7037,7 @@ export const extractJarArchive = function (
   const fname = basename(jarFile);
   let pomname = undefined;
   // If there is a pom file in the same directory, try to use it
-  let manifestname = join(dirname(jarFile), "META-INF", "MANIFEST.MF");
+  const manifestname = join(dirname(jarFile), "META-INF", "MANIFEST.MF");
   // Issue 439: Current implementation checks for existance of a .pom file, but .pom file is not used.
   // Instead code expects to find META-INF/MANIFEST.MF in the same folder as a .jar file.
   // For now check for presence of both .pom and MANIFEST.MF files.
@@ -6609,7 +7051,7 @@ export const extractJarArchive = function (
     existsSync(manifestname)
   ) {
     tempDir = dirname(jarFile);
-  } else if (!existsSync(join(tempDir, fname))) {
+  } else if (!existsSync(join(tempDir, fname)) && lstatSync(jarFile).isFile()) {
     // Only copy if the file doesn't exist
     copyFileSync(jarFile, join(tempDir, fname), constants.COPYFILE_FICLONE);
   }
@@ -6623,29 +7065,47 @@ export const extractJarArchive = function (
       "bin"
     )}`;
   }
-  if (jarFile.endsWith(".war") || jarFile.endsWith(".hpi")) {
-    const jarResult = spawnSync("jar", ["-xf", join(tempDir, fname)], {
-      encoding: "utf-8",
-      cwd: tempDir,
-      shell: isWin,
-      env
-    });
-    if (jarResult.status !== 0) {
-      console.error(jarResult.stdout, jarResult.stderr);
-      console.log(
-        "Check if JRE is installed and the jar command is available in the PATH."
-      );
+  if (
+    jarFile.endsWith(".war") ||
+    jarFile.endsWith(".hpi") ||
+    jarFile.endsWith(".jar")
+  ) {
+    try {
+      const zip = new StreamZip.async({ file: join(tempDir, fname) });
+      await zip.extract(null, tempDir);
+      await zip.close();
+    } catch (e) {
+      console.log(`Unable to extract ${join(tempDir, fname)}. Skipping.`);
       return pkgList;
     }
     jarFiles = getAllFiles(join(tempDir, "WEB-INF", "lib"), "**/*.jar");
     if (jarFile.endsWith(".hpi")) {
       jarFiles.push(jarFile);
     }
+    // Some jar files could also have more jar files inside BOOT-INF directory
+    const jarFiles2 = getAllFiles(join(tempDir, "BOOT-INF", "lib"), "**/*.jar");
+    if (jarFiles && jarFiles2.length) {
+      jarFiles = jarFiles.concat(jarFiles2);
+    }
+    // Fallback. If our jar file didn't include any jar
+    if (jarFile.endsWith(".jar") && !jarFiles.length) {
+      jarFiles = [join(tempDir, fname)];
+    }
   } else {
     jarFiles = [join(tempDir, fname)];
   }
+  if (DEBUG_MODE) {
+    console.log(`List of jars: ${jarFiles}`);
+  }
   if (jarFiles && jarFiles.length) {
     for (const jf of jarFiles) {
+      // If the jar file doesn't exist at the point of use, skip it
+      if (!existsSync(jf)) {
+        if (DEBUG_MODE) {
+          console.log(jf, "is not a readable file");
+        }
+        continue;
+      }
       pomname = jf.replace(".jar", ".pom");
       const jarname = basename(jf);
       // Ignore test jars
@@ -6653,6 +7113,9 @@ export const extractJarArchive = function (
         jarname.endsWith("-tests.jar") ||
         jarname.endsWith("-test-sources.jar")
       ) {
+        if (DEBUG_MODE) {
+          console.log(`Skipping tests jar ${jarname}`);
+        }
         continue;
       }
       const manifestDir = join(tempDir, "META-INF");
@@ -6664,16 +7127,20 @@ export const extractJarArchive = function (
       if (existsSync(pomname)) {
         jarResult = { status: 0 };
       } else {
-        jarResult = spawnSync("jar", ["-xf", jf, "META-INF"], {
-          encoding: "utf-8",
-          cwd: tempDir,
-          shell: isWin,
-          env
-        });
+        // Unzip natively
+        try {
+          const zip = new StreamZip.async({ file: jf });
+          await zip.extract(null, tempDir);
+          await zip.close();
+          jarResult = { status: 0 };
+        } catch (e) {
+          if (DEBUG_MODE) {
+            console.log(`Unable to extract ${jf}. Skipping.`);
+          }
+          jarResult = { status: 1 };
+        }
       }
-      if (jarResult.status !== 0) {
-        console.error(jarResult.stdout, jarResult.stderr);
-      } else {
+      if (jarResult.status === 0) {
         // When maven descriptor is available take group, name and version from pom.properties
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
@@ -6683,6 +7150,49 @@ export const extractJarArchive = function (
           version = pomProperties["version"],
           confidence = 1,
           technique = "manifest-analysis";
+        if (
+          (!group || !name || !version) &&
+          SEARCH_MAVEN_ORG &&
+          search_maven_org_errors < MAX_SEARCH_MAVEN_ORG_ERRORS
+        ) {
+          try {
+            const sha = await checksumFile("sha1", jf);
+            const searchurl =
+              "https://search.maven.org/solrsearch/select?q=1:%22" +
+              sha +
+              "%22&rows=20&wt=json";
+            const res = await cdxgenAgent.get(searchurl, {
+              responseType: "json",
+              timeout: {
+                lookup: 1000,
+                connect: 5000,
+                secureConnect: 5000,
+                socket: 1000,
+                send: 10000,
+                response: 1000
+              }
+            });
+            const data = res && res.body ? res.body["response"] : undefined;
+            if (data && data["numFound"] == 1) {
+              const jarInfo = data["docs"][0];
+              group = jarInfo["g"];
+              name = jarInfo["a"];
+              version = jarInfo["v"];
+              technique = "hash-comparison";
+            }
+          } catch (err) {
+            if (err && err.message && !err.message.includes("404")) {
+              if (err.message.includes("Timeout")) {
+                console.log(
+                  "Maven search appears to be unavailable. Search will be skipped for all remaining packages."
+                );
+              } else if (DEBUG_MODE) {
+                console.log(err);
+              }
+              search_maven_org_errors++;
+            }
+          }
+        }
         if ((!group || !name || !version) && existsSync(manifestFile)) {
           confidence = 0.8;
           const jarMetadata = parseJarManifest(
@@ -6710,17 +7220,17 @@ export const extractJarArchive = function (
           if (!name || !version || name === "" || version === "") {
             confidence = 0.5;
             technique = "filename";
+            name = jarname.replace(".jar", "");
             const tmpA = jarname.split("-");
             if (tmpA && tmpA.length > 1) {
               const lastPart = tmpA[tmpA.length - 1];
-              if (!version || version === "") {
-                version = lastPart.replace(".jar", "");
-              }
-              if (!name || name === "") {
+              // Bug #768. Check if we have any number before simplifying the name.
+              if (/\d/.test(lastPart)) {
+                if (!version || version === "") {
+                  version = lastPart.replace(".jar", "");
+                }
                 name = jarname.replace("-" + lastPart, "") || "";
               }
-            } else {
-              name = jarname.replace(".jar", "");
             }
           }
           if (
@@ -6762,7 +7272,7 @@ export const extractJarArchive = function (
           group = group === "." ? name : group || name;
         }
         if (name && version) {
-          let apkg = {
+          const apkg = {
             group: group ? encodeForPurl(group) : "",
             name: name ? encodeForPurl(name) : "",
             version,
@@ -6810,20 +7320,23 @@ export const extractJarArchive = function (
             console.log(`Ignored jar ${jarname}`, name, version);
           }
         }
-        try {
-          if (rmSync && existsSync(join(tempDir, "META-INF"))) {
-            // Clean up META-INF
-            rmSync(join(tempDir, "META-INF"), {
-              recursive: true,
-              force: true
-            });
-          }
-        } catch (err) {
-          // ignore cleanup errors
+      }
+      try {
+        if (rmSync && existsSync(join(tempDir, "META-INF"))) {
+          // Clean up META-INF
+          rmSync(join(tempDir, "META-INF"), {
+            recursive: true,
+            force: true
+          });
         }
+      } catch (err) {
+        // ignore cleanup errors
       }
     } // for
   } // if
+  if (jarFiles.length !== pkgList.length) {
+    console.log(`Obtained only ${pkgList.length} from ${jarFiles.length} jars`);
+  }
   return pkgList;
 };
 
@@ -6837,6 +7350,9 @@ export const extractJarArchive = function (
  */
 export const determineSbtVersion = function (projectPath) {
   const buildPropFile = join(projectPath, "project", "build.properties");
+  if (DEBUG_MODE) {
+    console.log("Looking for", buildPropFile);
+  }
   if (existsSync(buildPropFile)) {
     const properties = propertiesReader(buildPropFile);
     const property = properties.get("sbt.version");
@@ -6949,6 +7465,53 @@ export const readZipEntry = async function (
 };
 
 /**
+ * Method to get the classes and relevant sources in a jar file
+ *
+ * @param {string} jarFile Jar file to read
+ *
+ * @returns List of classes and sources matching certain known patterns
+ */
+export const getJarClasses = async function (jarFile) {
+  const retList = [];
+  try {
+    const zip = new StreamZip.async({ file: jarFile });
+    const entriesCount = await zip.entriesCount;
+    if (!entriesCount) {
+      return [];
+    }
+    const entries = await zip.entries();
+    for (const entry of Object.values(entries)) {
+      if (entry.isDirectory) {
+        continue;
+      }
+      if (
+        (entry.name.includes(".class") ||
+          entry.name.includes(".java") ||
+          entry.name.includes(".scala") ||
+          entry.name.includes(".groovy") ||
+          entry.name.includes(".kt")) &&
+        !entry.name.includes("-INF") &&
+        !entry.name.includes("module-info")
+      ) {
+        retList.push(
+          entry.name
+            .replace("\r", "")
+            .replace(/.(class|java|kt|scala|groovy)/g, "")
+            .replace(/\/$/, "")
+            .replace(/\//g, ".")
+        );
+      }
+    }
+    zip.close();
+  } catch (e) {
+    if (DEBUG_MODE) {
+      console.log(`Unable to parse ${jarFile}. Skipping.`);
+    }
+  }
+  return retList;
+};
+
+/**
  * Method to return the gradle command to use.
  *
  * @param {string} srcPath Path to look for gradlew wrapper
@@ -6999,6 +7562,7 @@ export const getMavenCommand = (srcPath, rootPath) => {
   let isWrapperReady = false;
   let isWrapperFound = false;
   let findMavenFile = "mvnw";
+  let mavenWrapperCmd = null;
   if (platform() == "win32") {
     findMavenFile = "mvnw.bat";
     if (
@@ -7017,7 +7581,7 @@ export const getMavenCommand = (srcPath, rootPath) => {
     } catch (e) {
       // continue regardless of error
     }
-    mavenCmd = resolve(join(srcPath, findMavenFile));
+    mavenWrapperCmd = resolve(join(srcPath, findMavenFile));
     isWrapperFound = true;
   } else if (rootPath && existsSync(join(rootPath, findMavenFile))) {
     // Check if the root directory has a wrapper script
@@ -7026,7 +7590,7 @@ export const getMavenCommand = (srcPath, rootPath) => {
     } catch (e) {
       // continue regardless of error
     }
-    mavenCmd = resolve(join(rootPath, findMavenFile));
+    mavenWrapperCmd = resolve(join(rootPath, findMavenFile));
     isWrapperFound = true;
   }
   if (isWrapperFound) {
@@ -7035,14 +7599,15 @@ export const getMavenCommand = (srcPath, rootPath) => {
         "Testing the wrapper script by invoking wrapper:wrapper task"
       );
     }
-    const result = spawnSync(mavenCmd, ["wrapper:wrapper"], {
+    const result = spawnSync(mavenWrapperCmd, ["wrapper:wrapper"], {
       encoding: "utf-8",
       cwd: rootPath,
       timeout: TIMEOUT_MS,
       shell: isWin
     });
-    if (!result.error) {
+    if (!result.error && !result.status) {
       isWrapperReady = true;
+      mavenCmd = mavenWrapperCmd;
     } else {
       if (DEBUG_MODE) {
         console.log(
@@ -7086,9 +7651,10 @@ export const getAtomCommand = () => {
 };
 
 export const executeAtom = (src, args) => {
-  let cwd =
+  const cwd =
     existsSync(src) && lstatSync(src).isDirectory() ? src : dirname(src);
   let ATOM_BIN = getAtomCommand();
+  let isSupported = true;
   if (ATOM_BIN.includes(" ")) {
     const tmpA = ATOM_BIN.split(" ");
     if (tmpA && tmpA.length > 1) {
@@ -7122,6 +7688,7 @@ export const executeAtom = (src, args) => {
     timeout: TIMEOUT_MS,
     detached: !isWin && !process.env.CI,
     shell: isWin,
+    killSignal: "SIGKILL",
     env
   });
   if (result.stderr) {
@@ -7132,13 +7699,19 @@ export const executeAtom = (src, args) => {
       result.stderr.includes("Error: Could not create the Java Virtual Machine")
     ) {
       console.log(
-        "Atom requires Java 17 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
+        "Atom requires Java 21 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image."
       );
       console.log(`Current JAVA_HOME: ${env["JAVA_HOME"] || ""}`);
     } else if (result.stderr.includes("astgen")) {
       console.warn(
         "WARN: Unable to locate astgen command. Install atom globally using sudo npm install -g @appthreat/atom to resolve this issue."
       );
+    }
+  }
+  if (result.stdout) {
+    if (result.stdout.includes("No language frontend supported for language")) {
+      console.log("This language is not yet supported by atom.");
+      isSupported = false;
     }
   }
   if (DEBUG_MODE) {
@@ -7149,7 +7722,7 @@ export const executeAtom = (src, args) => {
       console.log(result.stderr);
     }
   }
-  return !result.error;
+  return isSupported && !result.error;
 };
 
 /**
@@ -7185,7 +7758,9 @@ export const findAppModules = function (
   ];
   executeAtom(src, args);
   if (existsSync(slicesFile)) {
-    const slicesData = JSON.parse(readFileSync(slicesFile), "utf8");
+    const slicesData = JSON.parse(readFileSync(slicesFile, "utf-8"), {
+      encoding: "utf-8"
+    });
     if (slicesData && Object.keys(slicesData) && slicesData.modules) {
       retList = slicesData.modules;
     } else {
@@ -7332,7 +7907,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   if (reqOrSetupFile) {
     // We have a poetry.lock file
     if (reqOrSetupFile.endsWith("poetry.lock")) {
-      let poetryConfigArgs = [
+      const poetryConfigArgs = [
         "-m",
         "poetry",
         "config",
@@ -7394,7 +7969,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           }
         }
       } else {
-        let poetryEnvArgs = ["env info", "--path"];
+        const poetryEnvArgs = ["env info", "--path"];
         result = spawnSync("poetry", poetryEnvArgs, {
           cwd: basePath,
           encoding: "utf-8",
@@ -7508,7 +8083,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       }
       const name = t.name.replace(/_/g, "-").toLowerCase();
       const version = t.version;
-      let exclude = ["pip", "setuptools", "wheel"];
+      const exclude = ["pip", "setuptools", "wheel"];
       if (!exclude.includes(name)) {
         const purlString = new PackageURL(
           "pypi",
@@ -7582,9 +8157,16 @@ export const parsePackageJsonName = (name) => {
  *
  * @param {array} pkgList List of package
  * @param {object} allImports Import statements object with package name as key and an object with file and location details
+ * @param {object} allExports Exported modules if available from node_modules
  */
-export const addEvidenceForImports = (pkgList, allImports) => {
+export const addEvidenceForImports = async (
+  pkgList,
+  allImports,
+  allExports,
+  deep
+) => {
   const impPkgs = Object.keys(allImports);
+  const exportedPkgs = Object.keys(allExports);
   for (const pkg of pkgList) {
     if (impPkgs && impPkgs.length) {
       // Assume that all packages are optional until we see an evidence
@@ -7595,7 +8177,7 @@ export const addEvidenceForImports = (pkgList, allImports) => {
     if (group === "@types") {
       continue;
     }
-    let aliases =
+    const aliases =
       group && group.length
         ? [name, `${group}/${name}`, `@${group}/${name}`]
         : [name];
@@ -7605,6 +8187,47 @@ export const addEvidenceForImports = (pkgList, allImports) => {
           find_pkg.startsWith(alias) &&
           (find_pkg.length === alias.length || find_pkg[alias.length] === "/")
       );
+      const all_exports = exportedPkgs.filter((find_pkg) =>
+        find_pkg.startsWith(alias)
+      );
+      if (all_exports && all_exports.length) {
+        let exportedModules = new Set(all_exports);
+        pkg.properties = pkg.properties || [];
+        for (const subevidence of all_exports) {
+          const evidences = allExports[subevidence];
+          for (const evidence of evidences) {
+            if (evidence && Object.keys(evidence).length) {
+              if (evidence.exportedModules.length > 1) {
+                for (const aexpsubm of evidence.exportedModules) {
+                  // Be selective on the submodule names
+                  if (
+                    !evidence.importedAs
+                      .toLowerCase()
+                      .includes(aexpsubm.toLowerCase()) &&
+                    !alias.endsWith(aexpsubm)
+                  ) {
+                    // Store both the short and long form of the exported sub modules
+                    if (aexpsubm.length > 3) {
+                      exportedModules.add(aexpsubm);
+                    }
+                    exportedModules.add(
+                      `${evidence.importedAs.replace("./", "")}/${aexpsubm}`
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+        exportedModules = Array.from(exportedModules);
+        if (exportedModules.length) {
+          pkg.properties.push({
+            name: "ExportedModules",
+            value: exportedModules.join(",")
+          });
+        }
+      }
+      // Identify all the imported modules of a component
       if (impPkgs.includes(alias) || all_includes.length) {
         let importedModules = new Set();
         pkg.scope = "required";
@@ -7625,7 +8248,9 @@ export const addEvidenceForImports = (pkgList, allImports) => {
                   continue;
                 }
                 // Store both the short and long form of the imported sub modules
-                importedModules.add(importedSm);
+                if (importedSm.length > 3) {
+                  importedModules.add(importedSm);
+                }
                 importedModules.add(`${evidence.importedAs}/${importedSm}`);
               }
             }
@@ -7641,8 +8266,35 @@ export const addEvidenceForImports = (pkgList, allImports) => {
         }
         break;
       }
-    }
-  }
+      // Capture metadata such as description from local node_modules in deep mode
+      if (deep && !pkg.description && pkg.properties) {
+        let localNodeModulesPath = undefined;
+        for (const aprop of pkg.properties) {
+          if (aprop.name === "LocalNodeModulesPath") {
+            localNodeModulesPath = resolve(join(aprop.value, "package.json"));
+            break;
+          }
+        }
+        if (localNodeModulesPath && existsSync(localNodeModulesPath)) {
+          const lnmPkgList = await parsePkgJson(localNodeModulesPath, true);
+          if (lnmPkgList && lnmPkgList.length === 1) {
+            const lnmMetadata = lnmPkgList[0];
+            if (lnmMetadata && Object.keys(lnmMetadata).length) {
+              pkg.description = lnmMetadata.description;
+              pkg.author = lnmMetadata.author;
+              pkg.license = lnmMetadata.license;
+              pkg.homepage = lnmMetadata.homepage;
+              pkg.repository = lnmMetadata.repository;
+            }
+          }
+        }
+      }
+    } // for alias
+    // Trim the properties
+    pkg.properties = pkg.properties.filter(
+      (p) => p.name !== "LocalNodeModulesPath"
+    );
+  } // for pkg
   return pkgList;
 };
 
@@ -7658,7 +8310,7 @@ export const componentSorter = (a, b) => {
 };
 
 export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
-  const dotGraphData = readFileSync(dotFile, "utf-8");
+  const dotGraphData = readFileSync(dotFile, { encoding: "utf-8" });
   const pkgList = [];
   const dependenciesMap = {};
   const pkgBomRefMap = {};
@@ -7669,8 +8321,8 @@ export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
       return;
     }
     let name = "";
-    let group = "";
-    let version = "";
+    const group = "";
+    const version = "";
     let path = undefined;
     if (l.startsWith("digraph")) {
       const tmpA = l.split(" ");
@@ -7696,7 +8348,7 @@ export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
         if (tmpA && tmpA.length) {
           const relationship = tmpA[1];
           if (relationship.includes("->")) {
-            let tmpB = relationship.split(" -> ");
+            const tmpB = relationship.split(" -> ");
             if (tmpB && tmpB.length === 2) {
               if (tmpB[0].includes(_sep)) {
                 tmpB[0] = basename(tmpB[0]);
@@ -7767,12 +8419,13 @@ export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
 };
 
 export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
-  let cmakeListData = readFileSync(cmakeListFile, "utf-8");
+  let cmakeListData = readFileSync(cmakeListFile, { encoding: "utf-8" });
   const pkgList = [];
   const pkgAddedMap = {};
   const versionSpecifiersMap = {};
   const versionsMap = {};
   let parentComponent = {};
+  const templateValues = {};
   cmakeListData = cmakeListData
     .replace(/^ {2}/g, "")
     .replace(/\(\r\n/g, "(")
@@ -7784,10 +8437,23 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
     if (l === "\n" || l.startsWith("#")) {
       return;
     }
-    let group = "";
-    let path = undefined;
-    let name_list = [];
-    if (l.startsWith("project") && !Object.keys(parentComponent).length) {
+    const group = "";
+    const path = undefined;
+    const name_list = [];
+    if (l.startsWith("set")) {
+      const tmpA = l.replace("set(", "").replace(")", "").trim().split(" ");
+      if (tmpA && tmpA.length === 2) {
+        templateValues[tmpA[0]] = tmpA[1];
+      }
+    } else if (
+      l.startsWith("project") &&
+      !Object.keys(parentComponent).length
+    ) {
+      if (l.includes("${")) {
+        for (const tmplKey of Object.keys(templateValues)) {
+          l = l.replace("${" + tmplKey + "}", templateValues[tmplKey] || "");
+        }
+      }
       const tmpA = l.replace("project (", "project(").split("project(");
       if (tmpA && tmpA.length > 1) {
         const tmpB = (tmpA[1] || "")
@@ -7805,7 +8471,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
         if (versionIndex > -1 && tmpB.length > versionIndex) {
           parentVersion = tmpB[versionIndex + 1];
         }
-        if (parentName && parentName.length) {
+        if (parentName && parentName.length && !parentName.includes("$")) {
           parentComponent = {
             group: options.projectGroup || "",
             name: parentName,
@@ -7929,7 +8595,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
       }
     }
     for (let n of name_list) {
-      let props = [];
+      const props = [];
       let confidence = 0;
       if (
         n &&
@@ -7987,7 +8653,7 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
               methods: [
                 {
                   technique: "source-code-analysis",
-                  confidence: 0,
+                  confidence: 0.5,
                   value: `Filename ${cmakeListFile}`
                 }
               ]
@@ -8021,7 +8687,7 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
         ospkg.evidence = {
           identity: {
             field: "purl",
-            confidence: 0,
+            confidence: 0.8,
             methods: [
               {
                 technique: "filename",
@@ -8048,54 +8714,129 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
  */
 export const getCppModules = (src, options, osPkgsList, epkgList) => {
   // Generic is the type to use where the package registry could not be located
-  let pkgType = "generic";
+  const pkgType = "generic";
   const pkgList = [];
   const pkgAddedMap = {};
   let sliceData = {};
   const epkgMap = {};
   let parentComponent = undefined;
   const dependsOn = [];
+  (epkgList || []).forEach((p) => {
+    epkgMap[p.group + "/" + p.name] = p;
+  });
   // Let's look for any vcpkg.json file to tell us about the directory we're scanning
   // users can use this file to give us a clue even if they do not use vcpkg library manager
   if (existsSync(join(src, "vcpkg.json"))) {
-    const vcPkgData = JSON.parse(join(src, "vcpkg.json"));
-    if (
-      vcPkgData &&
-      Object.keys(vcPkgData).length &&
-      vcPkgData.name &&
-      vcPkgData.version
-    ) {
+    const vcPkgData = JSON.parse(
+      readFileSync(join(src, "vcpkg.json"), { encoding: "utf-8" })
+    );
+    if (vcPkgData && Object.keys(vcPkgData).length && vcPkgData.name) {
       const parentPurl = new PackageURL(
         pkgType,
         "",
         vcPkgData.name,
-        vcPkgData.version,
+        vcPkgData.version || "",
         null,
         null
       ).toString();
       parentComponent = {
         name: vcPkgData.name,
-        version: vcPkgData.version,
+        version: vcPkgData.version || "",
         description: vcPkgData.description,
         license: vcPkgData.license,
         purl: parentPurl,
+        type: "application",
         "bom-ref": decodeURIComponent(parentPurl)
       };
       if (vcPkgData.homepage) {
         parentComponent.homepage = { url: vcPkgData.homepage };
       }
-    }
+      // Are there any dependencies declared in vcpkg.json
+      if (vcPkgData.dependencies && Array.isArray(vcPkgData.dependencies)) {
+        for (const avcdep of vcPkgData.dependencies) {
+          let avcpkgName = undefined;
+          let scope = undefined;
+          if (typeof avcdep === "string" || avcdep instanceof String) {
+            avcpkgName = avcdep;
+          } else if (Object.keys(avcdep).length && avcdep.name) {
+            avcpkgName = avcdep.name;
+            if (avcdep.host) {
+              scope = "optional";
+            }
+          }
+          // Is this a dependency we haven't seen before including the all lower and upper case version?
+          if (
+            avcpkgName &&
+            !epkgMap["/" + avcpkgName] &&
+            !epkgMap["/" + avcpkgName.toLowerCase()] &&
+            !epkgMap["/" + avcpkgName.toUpperCase()]
+          ) {
+            const pkgPurl = new PackageURL(
+              pkgType,
+              "",
+              avcpkgName,
+              "",
+              null,
+              null
+            ).toString();
+            const apkg = {
+              group: "",
+              name: avcpkgName,
+              type: pkgType,
+              version: "",
+              purl: pkgPurl,
+              scope,
+              "bom-ref": decodeURIComponent(pkgPurl),
+              evidence: {
+                identity: {
+                  field: "purl",
+                  confidence: 0.5,
+                  methods: [
+                    {
+                      technique: "source-code-analysis",
+                      confidence: 0.5,
+                      value: `Filename ${join(src, "vcpkg.json")}`
+                    }
+                  ]
+                }
+              }
+            };
+            if (!pkgAddedMap[avcpkgName]) {
+              pkgList.push(apkg);
+              dependsOn.push(apkg["bom-ref"]);
+              pkgAddedMap[avcpkgName] = true;
+            }
+          }
+        }
+      }
+    } // if
   } else if (existsSync(join(src, "CMakeLists.txt"))) {
     const retMap = parseCmakeLikeFile(join(src, "CMakeLists.txt"), pkgType);
     if (retMap.parentComponent && Object.keys(retMap.parentComponent).length) {
       parentComponent = retMap.parentComponent;
     }
+  } else if (options.projectName && options.projectVersion) {
+    parentComponent = {
+      group: options.projectGroup || "",
+      name: options.projectName || "",
+      version: "" + options.projectVersion || "latest",
+      type: "application"
+    };
+    const parentPurl = new PackageURL(
+      pkgType,
+      parentComponent.group,
+      parentComponent.name,
+      parentComponent.version,
+      null,
+      null
+    ).toString();
+    parentComponent.purl = parentPurl;
+    parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
   }
-  (epkgList || []).forEach((p) => {
-    epkgMap[p.name] = p;
-  });
   if (options.usagesSlicesFile && existsSync(options.usagesSlicesFile)) {
-    sliceData = JSON.parse(readFileSync(options.usagesSlicesFile));
+    sliceData = JSON.parse(
+      readFileSync(options.usagesSlicesFile, { encoding: "utf-8" })
+    );
     if (DEBUG_MODE) {
       console.log("Re-using existing slices file", options.usagesSlicesFile);
     }
@@ -8108,12 +8849,14 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     );
   }
   const usageData = parseCUsageSlice(sliceData);
-  for (const afile of Object.keys(usageData)) {
-    let fileName = basename(afile);
+  for (let afile of Object.keys(usageData)) {
+    // Normalize windows separator
+    afile = afile.replace("..\\", "").replace(/\\/g, "/");
+    const fileName = basename(afile);
     if (!fileName || !fileName.length) {
       continue;
     }
-    let extn = extname(fileName);
+    const extn = extname(fileName);
     let group = dirname(afile);
     if (
       group.startsWith(".") ||
@@ -8123,18 +8866,18 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     ) {
       group = "";
     }
-    let version = "";
+    const version = "";
     // We need to resolve the name to an os package here
-    let name = fileName.replace(extn, "");
+    const name = fileName.replace(extn, "");
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
-      epkgMap[name] || {
+      epkgMap[group + "/" + name] || {
         name,
         group,
         version: "",
         type: pkgType
       };
     // If this is a relative file, there is a good chance we can reuse the project group
-    if (!afile.startsWith(_sep)) {
+    if (!afile.startsWith(_sep) && !group.length) {
       group = options.projectGroup || "";
     }
     if (!apkg.purl) {
@@ -8162,9 +8905,16 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
       apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
     }
     if (usageData[afile]) {
-      const usymbols = Array.from(usageData[afile]).filter(
-        (v) => !v.startsWith("<") && !v.startsWith("__")
-      );
+      const usymbols = Array.from(usageData[afile])
+        .filter(
+          (v) =>
+            !v.startsWith("<") &&
+            !v.startsWith("__") &&
+            v !== "main" &&
+            !v.includes("anonymous_") &&
+            !v.includes(afile)
+        )
+        .sort();
       if (!apkg["properties"] && usymbols.length) {
         apkg["properties"] = [
           { name: "ImportedSymbols", value: usymbols.join(", ") }
@@ -8211,7 +8961,9 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
       : [];
   return {
     parentComponent,
-    pkgList,
+    pkgList: pkgList.sort(function (a, b) {
+      return a.purl.localeCompare(b.purl);
+    }),
     dependenciesList
   };
 };
@@ -8244,34 +8996,21 @@ export const parseCUsageSlice = (sliceData) => {
         continue;
       }
       const slFileName = slice.fileName;
-      const slLineNumber = slice.lineNumber || 0;
       const allLines = usageData[slFileName] || new Set();
       if (slice.fullName && slice.fullName.length > 3) {
-        allLines.add(slice.fullName + "|" + slLineNumber);
         if (slice.code && slice.code.startsWith("#include")) {
           usageData[slice.fullName] = new Set();
+        } else {
+          allLines.add(slice.fullName);
         }
       }
       for (const ausage of slice.usages) {
-        if (ausage.targetObj.resolvedMethod) {
-          allLines.add(ausage.targetObj.resolvedMethod + "|" + slLineNumber);
-        } else {
-          const targetObjName = ausage.targetObj.name.replace(/\n/g, " ");
-          // We need to still filter out <global>, <clinit> style targets
-          if (
-            ausage.targetObj.lineNumber === slLineNumber ||
-            targetObjName.startsWith("<") ||
-            (slice.fullName.length > 3 &&
-              targetObjName.includes(slice.fullName))
-          ) {
-            continue;
-          }
-          allLines.add(targetObjName + "|" + slLineNumber);
-        }
         let calls = ausage?.invokedCalls || [];
         calls = calls.concat(ausage?.argToCalls || []);
         for (const acall of calls) {
-          allLines.add(acall.resolvedMethod + "|" + slLineNumber);
+          if (!acall.resolvedMethod.includes("->")) {
+            allLines.add(acall.resolvedMethod);
+          }
         }
       }
       if (Array.from(allLines).length) {
@@ -8302,7 +9041,7 @@ async function queryNuget(p, NUGET_URL) {
   function setLatestVersion(upper) {
     // Handle special case for versions with more than 3 parts
     if (upper.split(".").length > 3) {
-      let tmpVersionArray = upper.split("-")[0].split(".");
+      const tmpVersionArray = upper.split("-")[0].split(".");
       // Compromise for versions such as 1.2.3.0-alpha
       // How to find latest proper release version?
       if (
@@ -8347,19 +9086,19 @@ async function queryNuget(p, NUGET_URL) {
     NUGET_URL + np.name.toLowerCase() + "/index.json",
     { responseType: "json" }
   );
-  let items = res.body.items;
+  const items = res.body.items;
   if (!items || !items[0]) {
     return [np, newBody, body];
   }
   if (items[0] && !items[0].items) {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-      let upper = items[items.length - 1].upper;
+      const upper = items[items.length - 1].upper;
       np.version = setLatestVersion(upper);
     }
     for (const item of items) {
       if (np.version) {
-        let lower = compare(coerce(item.lower), coerce(np.version));
-        let upper = compare(coerce(item.upper), coerce(np.version));
+        const lower = compare(coerce(item.lower), coerce(np.version));
+        const upper = compare(coerce(item.upper), coerce(np.version));
         if (lower !== 1 && upper !== -1) {
           res = await cdxgenAgent.get(item["@id"], { responseType: "json" });
           for (const i of res.body.items.reverse()) {
@@ -8376,13 +9115,13 @@ async function queryNuget(p, NUGET_URL) {
     }
   } else {
     if (!p.version || p.version === "0.0.0" || p.version === "latest") {
-      let upper = items[items.length - 1].upper;
+      const upper = items[items.length - 1].upper;
       np.version = setLatestVersion(upper);
     }
     if (np.version) {
       for (const item of items) {
-        let lower = compare(coerce(item.lower), coerce(np.version));
-        let upper = compare(coerce(item.upper), coerce(np.version));
+        const lower = compare(coerce(item.lower), coerce(np.version));
+        const upper = compare(coerce(item.upper), coerce(np.version));
         if (lower !== 1 && upper !== -1) {
           for (const i of item.items.reverse()) {
             if (
@@ -8463,6 +9202,13 @@ export const getNugetMetadata = async function (
             p.license = findLicenseId(body.catalogEntry.licenseExpression);
           } else if (body.catalogEntry.licenseUrl) {
             p.license = findLicenseId(body.catalogEntry.licenseUrl);
+            if (
+              typeof p.license === "string" &&
+              p.license.includes("://github.com/")
+            ) {
+              p.license =
+                (await getRepoLicense(p.license, undefined)) || p.license;
+            }
           }
           if (body.catalogEntry.projectUrl) {
             p.repository = { url: body.catalogEntry.projectUrl };
@@ -8474,6 +9220,17 @@ export const getNugetMetadata = async function (
                 p.version +
                 "/"
             };
+            if (
+              (!p.license || typeof p.license === "string") &&
+              typeof p.repository.url === "string" &&
+              p.repository.url.includes("://github.com/")
+            ) {
+              // license couldn't be properly identified and is still a url,
+              // therefore trying to resolve license via repository
+              p.license =
+                (await getRepoLicense(p.repository.url, undefined)) ||
+                p.license;
+            }
           }
           cdepList.push(p);
         }
@@ -8509,4 +9266,104 @@ export const getNugetMetadata = async function (
     pkgList: cdepList,
     dependencies: newDependencies
   };
+};
+
+export const addEvidenceForDotnet = (pkgList, slicesFile) => {
+  // We need two datastructures.
+  // dll to purl mapping from the pkgList
+  // purl to occurrences list using the slicesFile
+  if (!slicesFile || !existsSync(slicesFile)) {
+    return pkgList;
+  }
+  const pkgFilePurlMap = {};
+  const purlLocationMap = {};
+  const purlModulesMap = {};
+  const purlMethodsMap = {};
+  for (const apkg of pkgList) {
+    if (apkg.properties && Array.isArray(apkg.properties)) {
+      apkg.properties
+        .filter((p) => p.name === "PackageFiles")
+        .forEach((aprop) => {
+          if (aprop.value) {
+            const tmpA = aprop.value.split(", ");
+            if (tmpA && tmpA.length) {
+              tmpA.forEach((dllFile) => {
+                pkgFilePurlMap[dllFile] = apkg.purl;
+              });
+            }
+          }
+        });
+    }
+  }
+  const slicesData = JSON.parse(readFileSync(slicesFile, "utf-8"));
+  if (slicesData && Object.keys(slicesData)) {
+    if (slicesData.Dependencies) {
+      for (const adep of slicesData.Dependencies) {
+        if (
+          adep.Module &&
+          adep.Module.endsWith(".dll") &&
+          pkgFilePurlMap[adep.Module]
+        ) {
+          const modPurl = pkgFilePurlMap[adep.Module];
+          if (!purlLocationMap[modPurl]) {
+            purlLocationMap[modPurl] = new Set();
+          }
+          purlLocationMap[modPurl].add(`${adep.Path}#${adep.LineNumber}`);
+        }
+      }
+    }
+    if (slicesData.MethodCalls) {
+      for (const amethodCall of slicesData.MethodCalls) {
+        if (
+          amethodCall.Module &&
+          amethodCall.Module.endsWith(".dll") &&
+          pkgFilePurlMap[amethodCall.Module]
+        ) {
+          const modPurl = pkgFilePurlMap[amethodCall.Module];
+          if (!purlLocationMap[modPurl]) {
+            purlLocationMap[modPurl] = new Set();
+          }
+          if (!purlModulesMap[modPurl]) {
+            purlModulesMap[modPurl] = new Set();
+          }
+          if (!purlMethodsMap[modPurl]) {
+            purlMethodsMap[modPurl] = new Set();
+          }
+          purlLocationMap[modPurl].add(
+            `${amethodCall.Path}#${amethodCall.LineNumber}`
+          );
+          purlModulesMap[modPurl].add(amethodCall.ClassName);
+          purlMethodsMap[modPurl].add(amethodCall.CalledMethod);
+        }
+      }
+    }
+  }
+  if (Object.keys(purlLocationMap).length) {
+    for (const apkg of pkgList) {
+      if (purlLocationMap[apkg.purl]) {
+        const locationOccurrences = Array.from(
+          purlLocationMap[apkg.purl]
+        ).sort();
+        // Add the occurrences evidence
+        apkg.evidence.occurrences = locationOccurrences.map((l) => ({
+          location: l
+        }));
+      }
+      // Add the imported modules to properties
+      if (purlModulesMap[apkg.purl]) {
+        apkg.properties.push({
+          name: "ImportedModules",
+          value: Array.from(purlModulesMap[apkg.purl]).sort().join(", ")
+        });
+      }
+      // Add the called methods to properties
+      if (purlMethodsMap[apkg.purl]) {
+        apkg.properties.push({
+          name: "CalledMethods",
+          value: Array.from(purlMethodsMap[apkg.purl]).sort().join(", ")
+        });
+      }
+    }
+  }
+  return pkgList;
 };

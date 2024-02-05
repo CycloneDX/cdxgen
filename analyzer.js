@@ -1,13 +1,13 @@
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
 import { join } from "node:path";
+import process from "node:process";
 import { readdirSync, lstatSync, readFileSync } from "node:fs";
 import { basename, resolve, isAbsolute, relative } from "node:path";
 
 const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
   ? process.env.ASTGEN_IGNORE_DIRS.split(",")
   : [
-      "node_modules",
       "venv",
       "docs",
       "test",
@@ -36,7 +36,7 @@ const IGNORE_FILE_PATTERN = new RegExp(
   "i"
 );
 
-const getAllFiles = (dir, extn, files, result, regex) => {
+const getAllFiles = (deep, dir, extn, files, result, regex) => {
   files = files || readdirSync(dir);
   result = result || [];
   regex = regex || new RegExp(`\\${extn}$`);
@@ -59,8 +59,20 @@ const getAllFiles = (dir, extn, files, result, regex) => {
       ) {
         continue;
       }
+      // We need to include node_modules in deep mode to track exports
+      // Ignore only for non-deep analysis
+      if (!deep && dirName === "node_modules") {
+        continue;
+      }
       try {
-        result = getAllFiles(file, extn, readdirSync(file), result, regex);
+        result = getAllFiles(
+          deep,
+          file,
+          extn,
+          readdirSync(file),
+          result,
+          regex
+        );
       } catch (error) {
         continue;
       }
@@ -100,7 +112,14 @@ const babelParserOptions = {
  * Filter only references to (t|jsx?) or (less|scss) files for now.
  * Opt to use our relative paths.
  */
-const setFileRef = (allImports, src, file, pathnode, specifiers = []) => {
+const setFileRef = (
+  allImports,
+  allExports,
+  src,
+  file,
+  pathnode,
+  specifiers = []
+) => {
   const pathway = pathnode.value || pathnode.name;
   const sourceLoc = pathnode.loc?.start;
   if (!pathway) {
@@ -114,9 +133,13 @@ const setFileRef = (allImports, src, file, pathnode, specifiers = []) => {
   const importedModules = specifiers
     .map((s) => s.imported?.name)
     .filter((v) => v !== undefined);
+  const exportedModules = specifiers
+    .map((s) => s.exported?.name)
+    .filter((v) => v !== undefined);
   const occurrence = {
     importedAs: pathway,
     importedModules,
+    exportedModules,
     isExternal: true,
     fileName: fileRelativeLoc,
     lineNumber: sourceLoc && sourceLoc.line ? sourceLoc.line : undefined,
@@ -131,16 +154,29 @@ const setFileRef = (allImports, src, file, pathnode, specifiers = []) => {
       moduleFullPath = relative(src, moduleFullPath);
       wasAbsolute = true;
     }
-    occurrence.isExternal = false;
+    if (!moduleFullPath.startsWith("node_modules/")) {
+      occurrence.isExternal = false;
+    }
   }
   allImports[moduleFullPath] = allImports[moduleFullPath] || new Set();
   allImports[moduleFullPath].add(occurrence);
+
   // Handle module package name
   // Eg: zone.js/dist/zone will be referred to as zone.js in package.json
   if (!wasAbsolute && moduleFullPath.includes("/")) {
     const modPkg = moduleFullPath.split("/")[0];
     allImports[modPkg] = allImports[modPkg] || new Set();
     allImports[modPkg].add(occurrence);
+  }
+  if (exportedModules && exportedModules.length) {
+    moduleFullPath = moduleFullPath
+      .replace("node_modules/", "")
+      .replace("dist/", "")
+      .replace(/\.(js|ts|cjs|mjs)$/g, "")
+      .replace("src/", "");
+    allExports[moduleFullPath] = allExports[moduleFullPath] || new Set();
+    occurrence.exportedModules = exportedModules;
+    allExports[moduleFullPath].add(occurrence);
   }
 };
 
@@ -177,13 +213,14 @@ const fileToParseableCode = (file) => {
  * Check AST tree for any (j|tsx?) files and set a file
  * references for any import, require or dynamic import files.
  */
-const parseFileASTTree = (src, file, allImports) => {
+const parseFileASTTree = (src, file, allImports, allExports) => {
   const ast = parse(fileToParseableCode(file), babelParserOptions);
   traverse.default(ast, {
     ImportDeclaration: (path) => {
       if (path && path.node) {
         setFileRef(
           allImports,
+          allExports,
           src,
           file,
           path.node.source,
@@ -199,24 +236,25 @@ const parseFileASTTree = (src, file, allImports) => {
         path.node.name === "require" &&
         path.parent.type === "CallExpression"
       ) {
-        setFileRef(allImports, src, file, path.parent.arguments[0]);
+        setFileRef(allImports, allExports, src, file, path.parent.arguments[0]);
       }
     },
     // Use for dynamic imports like routes.jsx
     CallExpression: (path) => {
       if (path && path.node && path.node.callee.type === "Import") {
-        setFileRef(allImports, src, file, path.node.arguments[0]);
+        setFileRef(allImports, allExports, src, file, path.node.arguments[0]);
       }
     },
     // Use for export barrells
     ExportAllDeclaration: (path) => {
-      setFileRef(allImports, src, file, path.node.source);
+      setFileRef(allImports, allExports, src, file, path.node.source);
     },
     ExportNamedDeclaration: (path) => {
       // ensure there is a path export
       if (path && path.node && path.node.source) {
         setFileRef(
           allImports,
+          allExports,
           src,
           file,
           path.node.source,
@@ -230,36 +268,37 @@ const parseFileASTTree = (src, file, allImports) => {
 /**
  * Return paths to all (j|tsx?) files.
  */
-const getAllSrcJSAndTSFiles = (src) =>
+const getAllSrcJSAndTSFiles = (src, deep) =>
   Promise.all([
-    getAllFiles(src, ".js"),
-    getAllFiles(src, ".jsx"),
-    getAllFiles(src, ".cjs"),
-    getAllFiles(src, ".mjs"),
-    getAllFiles(src, ".ts"),
-    getAllFiles(src, ".tsx"),
-    getAllFiles(src, ".vue"),
-    getAllFiles(src, ".svelte")
+    getAllFiles(deep, src, ".js"),
+    getAllFiles(deep, src, ".jsx"),
+    getAllFiles(deep, src, ".cjs"),
+    getAllFiles(deep, src, ".mjs"),
+    getAllFiles(deep, src, ".ts"),
+    getAllFiles(deep, src, ".tsx"),
+    getAllFiles(deep, src, ".vue"),
+    getAllFiles(deep, src, ".svelte")
   ]);
 
 /**
- * Where Node CLI runs from.
+ * Find all imports and exports
  */
-export const findJSImports = async (src) => {
+export const findJSImportsExports = async (src, deep) => {
   const allImports = {};
+  const allExports = {};
   const errFiles = [];
   try {
-    const promiseMap = await getAllSrcJSAndTSFiles(src);
+    const promiseMap = await getAllSrcJSAndTSFiles(src, deep);
     const srcFiles = promiseMap.flatMap((d) => d);
     for (const file of srcFiles) {
       try {
-        parseFileASTTree(src, file, allImports);
+        parseFileASTTree(src, file, allImports, allExports);
       } catch (err) {
         errFiles.push(file);
       }
     }
-    return allImports;
+    return { allImports, allExports };
   } catch (err) {
-    return allImports;
+    return { allImports, allExports };
   }
 };

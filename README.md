@@ -22,12 +22,12 @@ Most SBOM tools are like barcode scanners. They can scan a few package manifest 
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------- |
 | Node.js                         | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js                   | Yes except .min.js                                                                                | Yes      |
 | Java                            | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                                              | Yes unless pom.xml is manually parsed due to unavailability of maven or errors                    | Yes      |
-| PHP                             | composer.lock                                                                                                     | Yes                                                                                               |          |
+| PHP                             | composer.lock                                                                                                     | Yes                                                                                               | Yes      |
 | Python                          | pyproject.toml, setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, pdm.lock, bdist_wheel, .whl, .egg-info | Yes using the automatic pip install/freeze. When disabled, only with Pipfile.lock and poetry.lock | Yes      |
 | Go                              | binary, go.mod, go.sum, Gopkg.lock                                                                                | Yes except binary                                                                                 | Yes      |
 | Ruby                            | Gemfile.lock, gemspec                                                                                             | Only for Gemfile.lock                                                                             |          |
 | Rust                            | binary, Cargo.toml, Cargo.lock                                                                                    | Only for Cargo.lock                                                                               |          |
-| .Net                            | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg, paket.lock                         | Only for project.assets.json, packages.lock.json, paket.lock                                      |          |
+| .Net                            | .csproj, .vbproj, .fsproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg, paket.lock       | Only for project.assets.json, packages.lock.json, paket.lock                                      |          |
 | Dart                            | pubspec.lock, pubspec.yaml                                                                                        | Only for pubspec.lock                                                                             |          |
 | Haskell                         | cabal.project.freeze                                                                                              | Yes                                                                                               |          |
 | Elixir                          | mix.lock                                                                                                          | Yes                                                                                               |          |
@@ -51,6 +51,7 @@ Most SBOM tools are like barcode scanners. They can scan a few package manifest 
 | Docker compose                  | docker-compose\*.yml. Images would also be scanned.                                                               | N/A                                                                                               |          |
 | Dockerfile                      | `*Dockerfile*` Images would also be scanned.                                                                      | N/A                                                                                               |          |
 | Containerfile                   | `*Containerfile*`. Images would also be scanned.                                                                  | N/A                                                                                               |          |
+| Bitbucket Pipelines             | `bitbucket-pipelines.yml` images and pipes would also be scanned.                                                 | N/A                                                                                               |          |
 | Google CloudBuild configuration | cloudbuild.yaml                                                                                                   | N/A                                                                                               |          |
 | OpenAPI                         | openapi\*.json, openapi\*.yaml                                                                                    | N/A                                                                                               |          |
 
@@ -86,10 +87,10 @@ For go, `go mod why` command is used to identify required packages. For php, com
 ## Installing
 
 ```shell
-sudo npm install -g @cyclonedx/cdxgen
+npm install -g @cyclonedx/cdxgen
 
 # For CycloneDX 1.4 compatibility use version 8.6.0 or pass the argument `--spec-version 1.4`
-sudo npm install -g @cyclonedx/cdxgen@8.6.0
+npm install -g @cyclonedx/cdxgen@8.6.0
 ```
 
 If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:
@@ -129,8 +130,7 @@ import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
 ```text
 $ cdxgen -h
 Options:
-  -o, --output                 Output file for bom.xml or bom.json. Default bom.
-                               json
+  -o, --output                 Output file. Default bom.json
   -t, --type                   Project type
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
@@ -175,8 +175,9 @@ Options:
                                es.                    [boolean] [default: false]
       --spec-version           CycloneDX Specification version to use. Defaults
                                to 1.5                             [default: 1.5]
-      --filter                 Filter components containing this word in purl.
-                                Multiple values allowed.                 [array]
+      --filter                 Filter components containing this word in purl or
+                                component.properties.value. Multiple values allo
+                               wed.                                      [array]
       --only                   Include components only containing this word in
                                 purl. Useful to generate BOM with first party co
                                mponents alone. Multiple values allowed.  [array]
@@ -187,6 +188,8 @@ Options:
                                c.
   [choices: "appsec", "research", "operational", "threat-modeling", "license-com
                                        pliance", "generic"] [default: "generic"]
+      --include-formulation    Generate formulation section using git metadata.
+                                                      [boolean] [default: false]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true
                                                        [boolean] [default: true]
@@ -228,14 +231,14 @@ To generate SBOM for an older specification version, such as 1.4, pass the versi
 cdxgen -r -o bom.json --spec-version 1.4
 ```
 
-To generate SBOM for C or Python, ensure Java >= 17 is installed.
+To generate SBOM for C or Python, ensure Java >= 21 is installed.
 
 ```shell
-# Install java >= 17
+# Install java >= 21
 cdxgen -t c -o bom.json
 ```
 
-NOTE: cdxgen is known to freeze with Java 8 or 11, so ensure >= 17 is installed and JAVA_HOME environment variable is configured correctly. If in doubt, use the cdxgen container image.
+NOTE: cdxgen is known to freeze with Java 8 or 11, so ensure >= 21 is installed and JAVA_HOME environment variable is configured correctly. If in doubt, use the cdxgen container image.
 
 ## Universal SBOM
 
@@ -327,7 +330,7 @@ This would create a bom.json.map file with the jar - class name mapping. Refer t
 
 ## Resolving licenses
 
-cdxgen can automatically query public registries such as maven, npm, or nuget to resolve the package licenses. This is a time-consuming operation and is disabled by default. To enable, set the environment variable `FETCH_LICENSE` to `true`, as shown.
+cdxgen can automatically query public registries such as maven, npm, or nuget to resolve the package licenses. This is a time-consuming operation and is disabled by default. To enable, set the environment variable `FETCH_LICENSE` to `true`, as shown. Ensure that `GITHUB_TOKEN` is set or provided by [built-in GITHUB_TOKEN in GitHub Actions](https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api#primary-rate-limit-for-github_token-in-github-actions), otherwise rate limiting might prevent license resolving.
 
 ```bash
 export FETCH_LICENSE=true
@@ -344,8 +347,9 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Gradle
 - Scala SBT
 - Python (requirements.txt, setup.py, pyproject.toml, poetry.lock)
-- .NET (project.assets.json, paket.lock)
+- .NET (packages.lock.json, project.assets.json, paket.lock)
 - Go (go.mod)
+- PHP (composer.lock)
 
 ## Environment variables
 
@@ -357,6 +361,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | MVN_ARGS                     | Set to pass additional arguments such as profile or settings to maven                                                                |
 | MAVEN_HOME                   | Specify maven home                                                                                                                   |
 | MAVEN_CENTRAL_URL            | Specify URL of Maven Central for metadata fetching (e.g. when private repo is used)                                                  |
+| ANDROID_MAVEN_URL            | Specify URL of Android Maven Repository for metadata fetching (e.g. when private repo is used)                                       |
 | BAZEL_TARGET                 | Bazel target to build. Default :all (Eg: //java-maven)                                                                               |
 | BAZEL_STRIP_MAVEN_PREFIX     | Strip Maven group prefix (e.g. useful when private repo is used, defaults to `/maven2/`)                                             |
 | BAZEL_USE_ACTION_GRAPH       | SBOM for specific Bazel target, uses `bazel aquery 'outputs(".*.jar", deps(<BAZEL_TARGET>))'` (defaults to `false`)                  |
@@ -370,6 +375,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | GRADLE_DEPENDENCY_TASK       | By default cdxgen use the task "dependencies" to collect packages. Set to override the task name.                                    |
 | SBT_CACHE_DIR                | Specify sbt cache directory. Useful for class name resolving                                                                         |
 | FETCH_LICENSE                | Set this variable to `true` or `1` to fetch license information from the registry. npm and golang                                    |
+| SEARCH_MAVEN_ORG             | If maven metadata is missing in jar file, a search is performed on search.maven.org. Set to `false` or `0` to disable search.        |
 | USE_GOSUM                    | Set to `true` or `1` to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod          |
 | CDXGEN_TIMEOUT_MS            | Default timeout for known execution involving maven, gradle or sbt                                                                   |
 | CDXGEN_SERVER_TIMEOUT_MS     | Default timeout in server mode                                                                                                       |
@@ -379,7 +385,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 | SBOM_SIGN_ALGORITHM          | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                                       |
 | SBOM_SIGN_PRIVATE_KEY        | Private key to use for signing                                                                                                       |
 | SBOM_SIGN_PUBLIC_KEY         | Optional. Public key to include in the SBOM signature                                                                                |
-| CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.10"                                                 |
+| CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.11"                                                 |
 | CDX_MAVEN_GOAL               | CycloneDX Maven plugin goal to use. Default makeAggregateBom. Other options: makeBom, makePackageBom                                 |
 | CDX_MAVEN_INCLUDE_TEST_SCOPE | Whether test scoped dependencies should be included from Maven projects, Default: true                                               |
 | ASTGEN_IGNORE_DIRS           | Comma separated list of directories to ignore while analyzing using babel. The environment variable is also used by atom and astgen. |
@@ -506,7 +512,7 @@ Permission to modify and redistribute is granted under the terms of the Apache 2
 
 ## Integration as library
 
-cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 16
+cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 20
 
 Minimal example:
 
@@ -518,7 +524,7 @@ See the [Deno Readme](./contrib/deno/README.md) for detailed instructions.
 
 ```javascript
 import { createBom, submitBom } from "@cyclonedx/cdxgen";
-// bomNSData would contain bomJson, bomXml
+// bomNSData would contain bomJson
 const bomNSData = await createBom(filePath, options);
 // Submission to dependency track server
 const dbody = await submitBom(args, bomNSData.bomJson);

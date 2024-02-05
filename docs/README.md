@@ -54,10 +54,10 @@ To generate SBOM for an older specification version such as 1.4, pass the versio
 cdxgen -r -o bom.json --spec-version 1.4
 ```
 
-To generate SBOM for C or Python, ensure Java >= 17 is installed.
+To generate SBOM for C or Python, ensure Java >= 21 is installed.
 
 ```shell
-# Install java >= 17
+# Install java >= 21
 cdxgen -t c -o bom.json
 ```
 
@@ -155,7 +155,7 @@ cdxgen -t java -o bom.json --server-url https://deptrack.server.com --api-key "t
 | go                              | binary, go.mod, go.sum, Gopkg.lock                                                                                | Yes except binary                                                                                 | Yes      |
 | ruby                            | Gemfile.lock, gemspec                                                                                             | Only for Gemfile.lock                                                                             |          |
 | rust                            | binary, Cargo.toml, Cargo.lock                                                                                    | Only for Cargo.lock                                                                               |          |
-| .Net                            | .csproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg, paket.lock                         | Only for project.assets.json, packages.lock.json, paket.lock                                      |          |
+| .Net                            | .csproj, .vbproj, .fsproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg, paket.lock       | Only for project.assets.json, packages.lock.json, paket.lock                                      |          |
 | dart                            | pubspec.lock, pubspec.yaml                                                                                        | Only for pubspec.lock                                                                             |          |
 | haskell                         | cabal.project.freeze                                                                                              | Yes                                                                                               |          |
 | elixir                          | mix.lock                                                                                                          | Yes                                                                                               |          |
@@ -179,6 +179,7 @@ cdxgen -t java -o bom.json --server-url https://deptrack.server.com --api-key "t
 | Docker compose                  | docker-compose\*.yml. Images would also be scanned.                                                               | N/A                                                                                               |          |
 | Dockerfile                      | `*Dockerfile*` Images would also be scanned.                                                                      | N/A                                                                                               |          |
 | Containerfile                   | `*Containerfile*`. Images would also be scanned.                                                                  | N/A                                                                                               |          |
+| Bitbucket Pipelines             | `bitbucket-pipelines.yml` images and pipes would also be scanned.                                                 | N/A                                                                                               |          |
 | Google CloudBuild configuration | cloudbuild.yaml                                                                                                   | N/A                                                                                               |          |
 | OpenAPI                         | openapi\*.json, openapi\*.yaml                                                                                    | N/A                                                                                               |          |
 
@@ -247,7 +248,7 @@ curl -H "Content-Type: application/json" http://localhost:9090/sbom -XPOST -d $'
 
 #### **Integration as Library**
 
-cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 16
+cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 20
 
 Minimal example:
 
@@ -259,7 +260,7 @@ See the [Deno Readme](https://github.com/CycloneDX/cdxgen/blob/master/contrib/de
 
 ```javascript
 import { createBom, submitBom } from "@cyclonedx/cdxgen";
-// bomNSData would contain bomJson, bomXml
+// bomNSData would contain bomJson
 const bomNSData = await createBom(filePath, options);
 // Submission to dependency track server
 const dbody = await submitBom(args, bomNSData.bomJson);

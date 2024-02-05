@@ -4,7 +4,8 @@ import {
   getGradleCommand,
   getMavenCommand,
   collectGradleDependencies,
-  collectMvnDependencies
+  collectMvnDependencies,
+  DEBUG_MODE
 } from "./utils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -98,7 +99,7 @@ export const catalogMavenDeps = async (
   if (fs.existsSync(path.join(dirPath, "bom.json.map"))) {
     try {
       const mapData = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "bom.json.map"))
+        fs.readFileSync(path.join(dirPath, "bom.json.map"), "utf-8")
       );
       if (mapData && Object.keys(mapData).length) {
         jarNSMapping = mapData;
@@ -111,7 +112,7 @@ export const catalogMavenDeps = async (
     console.log("About to collect jar dependencies for the path", dirPath);
     const mavenCmd = getMavenCommand(dirPath, dirPath);
     // collect all jars including from the cache if data-flow mode is enabled
-    jarNSMapping = collectMvnDependencies(
+    jarNSMapping = await collectMvnDependencies(
       mavenCmd,
       dirPath,
       false,
@@ -145,7 +146,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   );
   const gradleCmd = getGradleCommand(dirPath, dirPath);
   // collect all jars including from the cache if data-flow mode is enabled
-  const jarNSMapping = collectGradleDependencies(
+  const jarNSMapping = await collectGradleDependencies(
     gradleCmd,
     dirPath,
     false,
@@ -207,7 +208,9 @@ export const createSlice = (
   if (!filePath) {
     return;
   }
-  console.log(`Create ${sliceType} slice for ${purlOrLanguage} ${filePath}`);
+  console.log(
+    `Create ${sliceType} slice for ${path.resolve(filePath)}. Please wait ...`
+  );
   const language = purlOrLanguage.startsWith("pkg:")
     ? purlToLanguage(purlOrLanguage, filePath)
     : purlOrLanguage;
@@ -244,7 +247,9 @@ export const createSlice = (
   args.push(path.resolve(filePath));
   const result = executeAtom(filePath, args);
   if (!result || !fs.existsSync(slicesFile)) {
-    console.warn(`Unable to generate ${sliceType} slice using atom.`);
+    console.warn(
+      `Unable to generate ${sliceType} slice using atom. Check if this is a supported language.`
+    );
     console.log(
       "Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
     );
@@ -269,22 +274,35 @@ export const purlToLanguage = (purl, filePath) => {
     case "pypi":
       language = "python";
       break;
+    case "composer":
+      language = "php";
+      break;
+    case "generic":
+      language = "c";
   }
   return language;
 };
 
-export const initFromSbom = (components) => {
+export const initFromSbom = (components, language) => {
   const purlLocationMap = {};
   const purlImportsMap = {};
   for (const comp of components) {
     if (!comp || !comp.evidence) {
       continue;
     }
-    (comp.properties || [])
-      .filter((v) => v.name === "ImportedModules")
-      .forEach((v) => {
-        purlImportsMap[comp.purl] = (v.value || "").split(",");
-      });
+    if (language === "php") {
+      (comp.properties || [])
+        .filter((v) => v.name === "Namespaces")
+        .forEach((v) => {
+          purlImportsMap[comp.purl] = (v.value || "").split(", ");
+        });
+    } else {
+      (comp.properties || [])
+        .filter((v) => v.name === "ImportedModules")
+        .forEach((v) => {
+          purlImportsMap[comp.purl] = (v.value || "").split(",");
+        });
+    }
     if (comp.evidence.occurrences) {
       purlLocationMap[comp.purl] = new Set(
         comp.evidence.occurrences.map((v) => v.location)
@@ -321,7 +339,30 @@ export const analyzeProject = async (dbObjMap, options) => {
   const components = bomJson.components || [];
   // Load any existing purl-location information from the sbom.
   // For eg: cdxgen populates this information for javascript projects
-  let { purlLocationMap, purlImportsMap } = initFromSbom(components);
+  let { purlLocationMap, purlImportsMap } = initFromSbom(components, language);
+  // Do reachables first so that usages slicing can reuse the atom file
+  if (options.withReachables) {
+    if (
+      options.reachablesSlicesFile &&
+      fs.existsSync(options.reachablesSlicesFile)
+    ) {
+      reachablesSlicesFile = options.reachablesSlicesFile;
+      reachablesSlice = JSON.parse(
+        fs.readFileSync(options.reachablesSlicesFile, "utf-8")
+      );
+    } else {
+      retMap = createSlice(language, dirPath, "reachables", options);
+      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+        reachablesSlicesFile = retMap.slicesFile;
+        reachablesSlice = JSON.parse(
+          fs.readFileSync(retMap.slicesFile, "utf-8")
+        );
+      }
+    }
+  }
+  if (reachablesSlice && Object.keys(reachablesSlice).length) {
+    dataFlowFrames = await collectReachableFrames(language, reachablesSlice);
+  }
   // Reuse existing usages slices
   if (options.usagesSlicesFile && fs.existsSync(options.usagesSlicesFile)) {
     usageSlice = JSON.parse(fs.readFileSync(options.usagesSlicesFile, "utf-8"));
@@ -373,28 +414,6 @@ export const analyzeProject = async (dbObjMap, options) => {
       purlLocationMap,
       purlImportsMap
     );
-  }
-  if (options.withReachables) {
-    if (
-      options.reachablesSlicesFile &&
-      fs.existsSync(options.reachablesSlicesFile)
-    ) {
-      reachablesSlicesFile = options.reachablesSlicesFile;
-      reachablesSlice = JSON.parse(
-        fs.readFileSync(options.reachablesSlicesFile, "utf-8")
-      );
-    } else {
-      retMap = createSlice(language, dirPath, "reachables", options);
-      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
-        reachablesSlicesFile = retMap.slicesFile;
-        reachablesSlice = JSON.parse(
-          fs.readFileSync(retMap.slicesFile, "utf-8")
-        );
-      }
-    }
-  }
-  if (reachablesSlice && Object.keys(reachablesSlice).length) {
-    dataFlowFrames = await collectReachableFrames(language, reachablesSlice);
   }
   return {
     atomFile: retMap.atomFile,
@@ -475,13 +494,20 @@ export const parseSliceUsages = async (
   purlLocationMap,
   purlImportsMap
 ) => {
-  const usages = slice.usages;
-  if (!usages || !usages.length) {
-    return undefined;
-  }
   const fileName = slice.fileName;
   const typesToLookup = new Set();
   const lKeyOverrides = {};
+  const usages = slice.usages || [];
+  // Annotations from usages
+  if (slice.signature && slice.signature.startsWith("@") && !usages.length) {
+    typesToLookup.add(slice.fullName);
+    addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
+  }
+  // PHP imports from usages
+  if (slice.code && slice.code.startsWith("use") && !usages.length) {
+    typesToLookup.add(slice.fullName);
+    addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
+  }
   for (const ausage of usages) {
     const ausageLine =
       ausage?.targetObj?.lineNumber || ausage?.definedBy?.lineNumber;
@@ -524,7 +550,17 @@ export const parseSliceUsages = async (
       .concat(ausage?.invokedCalls || [])
       .concat(ausage?.argToCalls || [])
       .concat(ausage?.procedures || [])) {
-      if (acall.isExternal == false) {
+      if (acall.resolvedMethod && acall.resolvedMethod.startsWith("@")) {
+        typesToLookup.add(acall.callName);
+        if (acall.lineNumber) {
+          addToOverrides(
+            lKeyOverrides,
+            acall.callName,
+            fileName,
+            acall.lineNumber
+          );
+        }
+      } else if (acall.isExternal == false) {
         continue;
       }
       if (
@@ -601,12 +637,25 @@ export const parseSliceUsages = async (
     if (purlImportsMap && Object.keys(purlImportsMap).length) {
       for (const apurl of Object.keys(purlImportsMap)) {
         const apurlImports = purlImportsMap[apurl];
-        if (apurlImports && apurlImports.includes(atype)) {
-          if (!purlLocationMap[apurl]) {
-            purlLocationMap[apurl] = new Set();
+        if (language === "php") {
+          for (const aimp of apurlImports) {
+            if (atype.startsWith(aimp)) {
+              if (!purlLocationMap[apurl]) {
+                purlLocationMap[apurl] = new Set();
+              }
+              if (lKeyOverrides[atype]) {
+                purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+              }
+            }
           }
-          if (lKeyOverrides[atype]) {
-            purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+        } else {
+          if (apurlImports && apurlImports.includes(atype)) {
+            if (!purlLocationMap[apurl]) {
+              purlLocationMap[apurl] = new Set();
+            }
+            if (lKeyOverrides[atype]) {
+              purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+            }
           }
         }
       }
@@ -700,6 +749,11 @@ export const isFilterableType = (
       return true;
     }
   }
+  if (["php"].includes(language)) {
+    if (!typeFullName.includes("\\") && !typeFullName.startsWith("use")) {
+      return true;
+    }
+  }
   if (userDefinedTypesMap[typeFullName]) {
     return true;
   }
@@ -724,12 +778,16 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     let endpoints = [];
     let authenticated = undefined;
     if (targetObj && targetObj?.resolvedMethod) {
-      endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
+      if (language != "php") {
+        endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
+      }
       if (targetObj?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
     } else if (definedBy && definedBy?.resolvedMethod) {
-      endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
+      if (language != "php") {
+        endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
+      }
       if (definedBy?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
@@ -737,12 +795,17 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     if (usage.invokedCalls) {
       for (const acall of usage.invokedCalls) {
         if (acall.resolvedMethod) {
-          const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
-          if (acall.resolvedMethod.toLowerCase().includes("auth")) {
-            authenticated = true;
-          }
-          if (tmpEndpoints && tmpEndpoints.length) {
-            endpoints = (endpoints || []).concat(tmpEndpoints);
+          if (language != "php") {
+            const tmpEndpoints = extractEndpoints(
+              language,
+              acall.resolvedMethod
+            );
+            if (acall.resolvedMethod.toLowerCase().includes("auth")) {
+              authenticated = true;
+            }
+            if (tmpEndpoints && tmpEndpoints.length) {
+              endpoints = (endpoints || []).concat(tmpEndpoints);
+            }
           }
         }
       }
@@ -776,15 +839,27 @@ export const detectServicesFromUDT = (
   servicesMap
 ) => {
   if (
-    ["python", "py"].includes(language) &&
+    ["python", "py", "c", "cpp", "c++", "php"].includes(language) &&
     userDefinedTypes &&
     userDefinedTypes.length
   ) {
     for (const audt of userDefinedTypes) {
       if (
-        audt.name.includes("route") ||
-        audt.name.includes("path") ||
-        audt.name.includes("url")
+        audt.name.toLowerCase().includes("route") ||
+        audt.name.toLowerCase().includes("path") ||
+        audt.name.toLowerCase().includes("url") ||
+        audt.name.toLowerCase().includes("registerhandler") ||
+        audt.name.toLowerCase().includes("endpoint") ||
+        audt.name.toLowerCase().includes("api") ||
+        audt.name.toLowerCase().includes("add_method") ||
+        audt.name.toLowerCase().includes("get") ||
+        audt.name.toLowerCase().includes("post") ||
+        audt.name.toLowerCase().includes("delete") ||
+        audt.name.toLowerCase().includes("put") ||
+        audt.name.toLowerCase().includes("head") ||
+        audt.name.toLowerCase().includes("options") ||
+        audt.name.toLowerCase().includes("addRoute") ||
+        audt.name.toLowerCase().includes("connect")
       ) {
         const fields = audt.fields || [];
         if (
@@ -800,14 +875,14 @@ export const detectServicesFromUDT = (
               audt.fileName.replace(".py", "")
             )}-service`;
           }
-          if (!servicesMap[serviceName]) {
-            servicesMap[serviceName] = {
-              endpoints: new Set(),
-              authenticated: false,
-              xTrustBoundary: undefined
-            };
-          }
-          if (endpoints) {
+          if (endpoints && endpoints.length) {
+            if (!servicesMap[serviceName]) {
+              servicesMap[serviceName] = {
+                endpoints: new Set(),
+                authenticated: false,
+                xTrustBoundary: undefined
+              };
+            }
             for (const endpoint of endpoints) {
               servicesMap[serviceName].endpoints.add(endpoint);
             }
@@ -875,13 +950,10 @@ export const extractEndpoints = (language, code) => {
           );
       }
       break;
-    case "py":
-    case "python":
+    default:
       endpoints = (code.match(/['"](.*?)['"]/gi) || [])
         .map((v) => v.replace(/["']/g, "").replace("\n", ""))
-        .filter((v) => v.length > 2);
-      break;
-    default:
+        .filter((v) => v.length > 2 && v.includes("/"));
       break;
   }
   return endpoints;
@@ -910,6 +982,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   const components = bomJson.components || [];
   let occEvidencePresent = false;
   let csEvidencePresent = false;
+  let servicesPresent = false;
   for (const comp of components) {
     if (!comp.purl) {
       continue;
@@ -957,6 +1030,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     }
     // Add to existing services
     bomJson.services = (bomJson.services || []).concat(services);
+    servicesPresent = true;
   }
   if (options.annotate) {
     if (!bomJson.annotations) {
@@ -993,11 +1067,11 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   bomJson.metadata.timestamp = new Date().toISOString();
   delete bomJson.signature;
   fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, 2));
-  if (occEvidencePresent || csEvidencePresent) {
+  if (occEvidencePresent || csEvidencePresent || servicesPresent) {
     console.log(evinseOutFile, "created successfully.");
   } else {
     console.log(
-      "Unable to identify component evidence for the input SBOM. Only java, javascript and python projects are supported by evinse."
+      "Unable to identify component evidence for the input SBOM. Only java, javascript, python, and php projects are supported by evinse."
     );
   }
   if (tempDir && tempDir.startsWith(tmpdir())) {
@@ -1037,7 +1111,7 @@ export const collectDataFlowFrames = async (
   }
   const paths = dataFlowSlice?.paths || [];
   for (const apath of paths) {
-    let aframe = [];
+    const aframe = [];
     let referredPurls = new Set();
     for (const nid of apath) {
       const theNode = nodeCache[nid];
@@ -1090,7 +1164,7 @@ export const collectDataFlowFrames = async (
               referredPurls.add(ns.purl);
             }
             typePurlsCache[typeFullName] = nsHits;
-          } else {
+          } else if (DEBUG_MODE) {
             console.log("Unable to identify purl for", typeFullName);
           }
         }
@@ -1140,14 +1214,14 @@ export const collectDataFlowFrames = async (
  * @param {string} language Application language
  * @param {object} reachablesSlice Reachables slice object from atom
  */
-export const collectReachableFrames = async (language, reachablesSlice) => {
+export const collectReachableFrames = (language, reachablesSlice) => {
   const reachableNodes = reachablesSlice?.reachables || [];
   // purl key and an array of frames array
   // CycloneDX 1.5 currently accepts only 1 frame as evidence
   // so this method is more future-proof
   const dfFrames = {};
   for (const anode of reachableNodes) {
-    let aframe = [];
+    const aframe = [];
     let referredPurls = new Set(anode.purls || []);
     for (const fnode of anode.flows) {
       if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
@@ -1231,6 +1305,8 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
       .replace(".<body>", "")
       .replace(".__iter__", "")
       .replace(".__init__", "");
+  } else if (["php"].includes(language)) {
+    typeFullName = typeFullName.split("->")[0].split("::")[0];
   }
   if (
     typeFullName.startsWith("<unresolved") ||

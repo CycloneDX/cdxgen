@@ -1,4 +1,6 @@
 import { platform as _platform, arch as _arch, tmpdir, homedir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
   existsSync,
   mkdirSync,
@@ -9,9 +11,9 @@ import {
 import { join, dirname, basename } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
-import { DEBUG_MODE, findLicenseId } from "./utils.js";
+import { DEBUG_MODE, TIMEOUT_MS, findLicenseId } from "./utils.js";
 
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -24,7 +26,7 @@ const isWin = _platform() === "win32";
 let platform = _platform();
 let extn = "";
 let pluginsBinSuffix = "";
-if (platform == "win32") {
+if (platform === "win32") {
   platform = "windows";
   extn = ".exe";
 }
@@ -36,9 +38,19 @@ switch (arch) {
     break;
   case "x64":
     arch = "amd64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-amd64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-amd64";
+    }
     break;
   case "arm64":
     pluginsBinSuffix = "-arm64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-arm64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-arm64";
+    }
     break;
   case "ppc64":
     arch = "ppc64le";
@@ -105,16 +117,18 @@ if (!CDXGEN_PLUGINS_DIR) {
       }
     }
   }
-  const globalPlugins = join(
-    globalNodePath,
-    "@cyclonedx",
-    "cdxgen-plugins-bin" + pluginsBinSuffix,
-    "plugins"
-  );
-  if (existsSync(globalPlugins)) {
-    CDXGEN_PLUGINS_DIR = globalPlugins;
-    if (DEBUG_MODE) {
-      console.log("Found global plugins", CDXGEN_PLUGINS_DIR);
+  if (globalNodePath) {
+    const globalPlugins = join(
+      globalNodePath,
+      "@cyclonedx",
+      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      "plugins"
+    );
+    if (existsSync(globalPlugins)) {
+      CDXGEN_PLUGINS_DIR = globalPlugins;
+      if (DEBUG_MODE) {
+        console.log("Found global plugins", CDXGEN_PLUGINS_DIR);
+      }
     }
   }
 }
@@ -162,10 +176,29 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
     "osquery",
     "osqueryi-" + platform + "-" + arch + extn
   );
+  // osqueryi-darwin-amd64.app/Contents/MacOS/osqueryd
+  if (platform === "darwin") {
+    OSQUERY_BIN = `${OSQUERY_BIN}.app/Contents/MacOS/osqueryd`;
+  }
 } else if (process.env.OSQUERY_CMD) {
   OSQUERY_BIN = process.env.OSQUERY_CMD;
 }
+let DOSAI_BIN = null;
+if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
+  let platformToUse = platform;
+  if (platform === "darwin") {
+    platformToUse = "osx";
+  }
+  DOSAI_BIN = join(
+    CDXGEN_PLUGINS_DIR,
+    "dosai",
+    "dosai-" + platformToUse + "-" + arch + extn
+  );
+} else if (process.env.DOSAI_CMD) {
+  DOSAI_BIN = process.env.DOSAI_CMD;
+}
 
+// Keep this list updated every year
 const OS_DISTRO_ALIAS = {
   "ubuntu-4.10": "warty",
   "ubuntu-5.04": "hoary",
@@ -381,7 +414,7 @@ export const getOSPackages = (src) => {
       }
       let distro_codename = osReleaseData["VERSION_CODENAME"] || "";
       let distro_id = osReleaseData["ID"] || "";
-      let distro_id_like = osReleaseData["ID_LIKE"] || "";
+      const distro_id_like = osReleaseData["ID_LIKE"] || "";
       let purl_type = "rpm";
       switch (distro_id) {
         case "debian":
@@ -447,6 +480,7 @@ export const getOSPackages = (src) => {
                   comp.group = group;
                   purlObj.namespace = group;
                 }
+                purlObj.qualifiers = purlObj.qualifiers || {};
                 if (distro_id && distro_id.length) {
                   purlObj.qualifiers["distro"] = distro_id;
                 }
@@ -630,6 +664,7 @@ const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
         const tmpPurl = PackageURL.fromString(d.replace("none", compPurl.type));
         tmpPurl.type = compPurl.type;
         tmpPurl.namespace = compPurl.namespace;
+        tmpPurl.qualifiers = tmpPurl.qualifiers || {};
         if (compPurl.qualifiers) {
           if (compPurl.qualifiers.distro_name) {
             tmpPurl.qualifiers.distro_name = compPurl.qualifiers.distro_name;
@@ -656,6 +691,13 @@ export const executeOsQuery = (query) => {
       query = query + ";";
     }
     const args = ["--json", query];
+    // On darwin, we need to disable the safety check and run cdxgen with sudo
+    // https://github.com/osquery/osquery/issues/1382
+    if (platform === "darwin") {
+      args.push("--allow_unsafe");
+      args.push("--disable_logging");
+      args.push("--disable_events");
+    }
     if (DEBUG_MODE) {
       console.log("Executing", OSQUERY_BIN, args.join(" "));
     }
@@ -665,7 +707,7 @@ export const executeOsQuery = (query) => {
       timeout: 60 * 1000
     });
     if (result.status !== 0 || result.error) {
-      if (DEBUG_MODE && result.error) {
+      if (DEBUG_MODE && result.stderr) {
         console.error(result.stdout, result.stderr);
       }
     }
@@ -691,4 +733,37 @@ export const executeOsQuery = (query) => {
     }
   }
   return undefined;
+};
+
+/**
+ * Method to execute dosai to create slices for dotnet
+ *
+ * @param {string} src
+ * @param {string} slicesFile
+ * @returns boolean
+ */
+export const getDotnetSlices = (src, slicesFile) => {
+  if (!DOSAI_BIN) {
+    return false;
+  }
+  const args = ["methods", "--path", src, "--o", slicesFile];
+  if (DEBUG_MODE) {
+    console.log("Executing", DOSAI_BIN, args.join(" "));
+  }
+  const result = spawnSync(DOSAI_BIN, args, {
+    encoding: "utf-8",
+    timeout: TIMEOUT_MS,
+    cwd: src
+  });
+  if (result.status !== 0 || result.error) {
+    if (DEBUG_MODE && result.error) {
+      if (result.stderr) {
+        console.error(result.stdout, result.stderr);
+      } else {
+        console.log("Check if dosai plugin was installed successfully.");
+      }
+    }
+    return false;
+  }
+  return true;
 };

@@ -1,4 +1,6 @@
 import { platform as _platform, homedir, tmpdir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import { basename, join, dirname, sep, resolve } from "node:path";
 import { parse } from "ssri";
 import {
@@ -17,7 +19,6 @@ import {
 import got from "got";
 import { v4 as uuidv4 } from "uuid";
 import { PackageURL } from "packageurl-js";
-import { create } from "xmlbuilder";
 import {
   parsePackageJsonName,
   getLicenses,
@@ -105,19 +106,34 @@ import {
   MAX_BUFFER,
   getNugetMetadata,
   frameworksList,
-  parseContainerFile
+  parseContainerFile,
+  parseBitbucketPipelinesFile,
+  getPyMetadata,
+  addEvidenceForDotnet,
+  getSwiftPackageMetadata,
+  CLJ_CMD,
+  LEIN_CMD,
+  SWIFT_CMD
 } from "./utils.js";
+import {
+  collectEnvInfo,
+  getBranch,
+  getOriginUrl,
+  listFiles
+} from "./envcontext.js";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
 const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
-const selfPJson = JSON.parse(readFileSync(join(dirName, "package.json")));
+const selfPJson = JSON.parse(
+  readFileSync(join(dirName, "package.json"), "utf-8")
+);
 const _version = selfPJson.version;
-import { findJSImports } from "./analyzer.js";
+import { findJSImportsExports } from "./analyzer.js";
 import { gte, lte } from "semver";
 import {
   getPkgPathList,
@@ -129,16 +145,33 @@ import {
   getGoBuildInfo,
   getCargoAuditableInfo,
   executeOsQuery,
-  getOSPackages
+  getOSPackages,
+  getDotnetSlices
 } from "./binary.js";
+import { collectOSCryptoLibs } from "./cbomutils.js";
 
 const isWin = _platform() === "win32";
 
-const osQueries = !isWin
-  ? JSON.parse(readFileSync(join(dirName, "data", "queries.json")))
-  : JSON.parse(readFileSync(join(dirName, "data", "queries-win.json")));
+let osQueries = {};
+switch (_platform()) {
+  case "win32":
+    osQueries = JSON.parse(
+      readFileSync(join(dirName, "data", "queries-win.json"), "utf-8")
+    );
+    break;
+  case "darwin":
+    osQueries = JSON.parse(
+      readFileSync(join(dirName, "data", "queries-darwin.json"), "utf-8")
+    );
+    break;
+  default:
+    osQueries = JSON.parse(
+      readFileSync(join(dirName, "data", "queries.json"), "utf-8")
+    );
+    break;
+}
 const cosDbQueries = JSON.parse(
-  readFileSync(join(dirName, "data", "cosdb-queries.json"))
+  readFileSync(join(dirName, "data", "cosdb-queries.json"), "utf-8")
 );
 
 import { table } from "table";
@@ -154,22 +187,6 @@ if (process.env.GRADLE_USER_HOME) {
     "modules-2",
     "files-2.1"
   );
-}
-
-// Clojure CLI
-let CLJ_CMD = "clj";
-if (process.env.CLJ_CMD) {
-  CLJ_CMD = process.env.CLJ_CMD;
-}
-
-let LEIN_CMD = "lein";
-if (process.env.LEIN_CMD) {
-  LEIN_CMD = process.env.LEIN_CMD;
-}
-
-let SWIFT_CMD = "swift";
-if (process.env.SWIFT_CMD) {
-  SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
 // Construct sbt cache directory
@@ -245,72 +262,15 @@ const determineParentComponent = (options) => {
   return parentComponent;
 };
 
-/**
- * Function to create the services block
- */
-function addServices(services, format = "xml") {
-  const serv_list = [];
-  for (const aserv of services) {
-    if (format === "xml") {
-      const service = {
-        "@bom-ref": aserv["bom-ref"],
-        group: aserv.group || "",
-        name: aserv.name,
-        version: aserv.version | "latest"
-      };
-      delete service["bom-ref"];
-      const aentry = {
-        service
-      };
-      serv_list.push(aentry);
-    } else {
-      serv_list.push(aserv);
-    }
-  }
-  return serv_list;
-}
-
-/**
- * Function to create the dependency block
- */
-function addDependencies(dependencies) {
-  const deps_list = [];
-  for (const adep of dependencies) {
-    const dependsOnList = adep.dependsOn.map((v) => ({
-      "@ref": v
-    }));
-    const aentry = {
-      dependency: { "@ref": adep.ref }
-    };
-    if (dependsOnList.length) {
-      aentry.dependency.dependency = dependsOnList;
-    }
-    deps_list.push(aentry);
-  }
-  return deps_list;
-}
-
-const addToolsSection = (options, format) => {
+const addToolsSection = (options) => {
   if (options.specVersion === 1.4) {
-    if (format === "json") {
-      return [
-        {
-          vendor: "cyclonedx",
-          name: "cdxgen",
-          version: _version
-        }
-      ];
-    } else {
-      return [
-        {
-          tool: {
-            vendor: "cyclonedx",
-            name: "cdxgen",
-            version: _version
-          }
-        }
-      ];
-    }
+    return [
+      {
+        vendor: "cyclonedx",
+        name: "cdxgen",
+        version: _version
+      }
+    ];
   }
   return {
     components: [
@@ -348,46 +308,128 @@ const cleanParentComponent = (comp) => {
   return comp;
 };
 
-const addAuthorsSection = (options, format) => {
-  let authors = [];
+const addAuthorsSection = (options) => {
+  const authors = [];
   if (options.author) {
-    let oauthors = Array.isArray(options.author)
+    const oauthors = Array.isArray(options.author)
       ? options.author
       : [options.author];
     for (const aauthor of oauthors) {
       if (aauthor.trim().length < 2) {
         continue;
       }
-      if (format === "xml") {
-        authors.push({
-          author: { name: aauthor }
-        });
-      } else {
-        authors.push({ name: aauthor });
-      }
+      authors.push({ name: aauthor });
     }
   }
   return authors;
 };
 
 /**
+ * Method to generate metadata.lifecycles section. We assume that we operate during "build"
+ * most of the time and under "post-build" for containers.
+ *
+ * @param {Object} options
+ * @returns Lifecycles array
+ */
+const addLifecyclesSection = (options) => {
+  const lifecycles = [{ phase: "build" }];
+  if (options.exportData) {
+    const inspectData = options.exportData.inspectData;
+    if (inspectData) {
+      lifecycles.push({ phase: "post-build" });
+    }
+  }
+  return lifecycles;
+};
+
+/**
+ * Method to generate the formulation section based on git metadata
+ *
+ * @param {Object} options
+ * @returns formulation array
+ */
+const addFormulationSection = (options) => {
+  const formulation = [];
+  const gitBranch = getBranch();
+  const originUrl = getOriginUrl();
+  const gitFiles = listFiles();
+  if (gitBranch && originUrl && gitFiles) {
+    const aformulation = {};
+    let components = gitFiles.map((f) => ({
+      type: "file",
+      name: f.name,
+      version: f.hash
+    }));
+    // Collect build environment details
+    const infoComponents = collectEnvInfo(options.path);
+    if (infoComponents && infoComponents.length) {
+      components = components.concat(infoComponents);
+    }
+    // Should we include the OS crypto libraries
+    if (options.includeCrypto) {
+      const cryptoLibs = collectOSCryptoLibs(options);
+      if (cryptoLibs && cryptoLibs.length) {
+        components = components.concat(cryptoLibs);
+      }
+    }
+    aformulation["bom-ref"] = uuidv4();
+    aformulation.components = components;
+    let environmentVars = [{ name: "GIT_BRANCH", value: gitBranch }];
+    for (const aevar of Object.keys(process.env)) {
+      if (
+        (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
+        !aevar.toLowerCase().includes("key") &&
+        !aevar.toLowerCase().includes("token") &&
+        !aevar.toLowerCase().includes("pass") &&
+        process.env[aevar] &&
+        process.env[aevar].length
+      ) {
+        environmentVars.push({
+          name: aevar,
+          value: process.env[aevar]
+        });
+      }
+    }
+    if (!environmentVars.length) {
+      environmentVars = undefined;
+    }
+    aformulation.workflows = [
+      {
+        "bom-ref": uuidv4(),
+        uid: uuidv4(),
+        inputs: [
+          {
+            source: { ref: originUrl },
+            environmentVars
+          }
+        ],
+        taskTypes: ["build", "clone"]
+      }
+    ];
+    formulation.push(aformulation);
+  }
+  return formulation;
+};
+
+/**
  * Function to create metadata block
  *
  */
-function addMetadata(parentComponent = {}, format = "xml", options = {}) {
+function addMetadata(parentComponent = {}, options = {}) {
   // DO NOT fork this project to just change the vendor or author's name
   // Try to contribute to this project by sending PR or filing issues
-  const tools = addToolsSection(options, format);
-  const authors = addAuthorsSection(options, format);
+  const tools = addToolsSection(options);
+  const authors = addAuthorsSection(options);
+  const lifecycles =
+    options.specVersion >= 1.5 ? addLifecyclesSection(options) : undefined;
   const metadata = {
     timestamp: new Date().toISOString(),
     tools,
     authors,
     supplier: undefined
   };
-  if (format === "json") {
-    metadata.tools = tools;
-    metadata.authors = authors;
+  if (lifecycles) {
+    metadata.lifecycles = lifecycles;
   }
   if (parentComponent && Object.keys(parentComponent).length) {
     if (parentComponent) {
@@ -397,13 +439,13 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       }
     }
     if (parentComponent && parentComponent.components) {
-      let parentFullName = componentToSimpleFullName(parentComponent);
+      const parentFullName = componentToSimpleFullName(parentComponent);
       const subComponents = [];
       const addedSubComponents = {};
       for (const comp of parentComponent.components) {
         cleanParentComponent(comp);
         if (comp.name && comp.type) {
-          let fullName = componentToSimpleFullName(comp);
+          const fullName = componentToSimpleFullName(comp);
           // Fixes #479
           // Prevent the parent component from also appearing as a sub-component
           // We cannot use purl or bom-ref here since they would not match
@@ -433,9 +475,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
       } // for
       parentComponent.components = subComponents;
     }
-    if (format === "json") {
-      metadata.component = parentComponent;
-    }
+    metadata.component = parentComponent;
   }
   if (options) {
     const mproperties = [];
@@ -553,18 +593,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
     }
 
     if (mproperties.length) {
-      if (format === "json") {
-        metadata.properties = mproperties;
-      } else {
-        metadata.properties = mproperties.map((v) => {
-          return {
-            property: {
-              "@name": v.name,
-              "#text": v.value
-            }
-          };
-        });
-      }
+      metadata.properties = mproperties;
     }
   }
   return metadata;
@@ -576,7 +605,7 @@ function addMetadata(parentComponent = {}, format = "xml", options = {}) {
  * @param pkg
  * @returns {Array}
  */
-function addExternalReferences(opkg, format = "xml") {
+function addExternalReferences(opkg) {
   const externalReferences = [];
   let pkgList = [];
   if (Array.isArray(opkg)) {
@@ -586,54 +615,25 @@ function addExternalReferences(opkg, format = "xml") {
   }
   for (const pkg of pkgList) {
     if (pkg.externalReferences) {
-      if (format === "xml") {
-        for (const ref of pkg.externalReferences) {
-          // If the value already comes from json format
-          if (ref.type && ref.url) {
-            externalReferences.push({
-              reference: { "@type": ref.type, url: ref.url }
-            });
-          }
-        }
-      } else {
-        externalReferences.concat(pkg.externalReferences);
-      }
+      externalReferences.concat(pkg.externalReferences);
     } else {
-      if (format === "xml") {
-        if (pkg.homepage && pkg.homepage.url) {
-          externalReferences.push({
-            reference: { "@type": "website", url: pkg.homepage.url }
-          });
-        }
-        if (pkg.bugs && pkg.bugs.url) {
-          externalReferences.push({
-            reference: { "@type": "issue-tracker", url: pkg.bugs.url }
-          });
-        }
-        if (pkg.repository && pkg.repository.url) {
-          externalReferences.push({
-            reference: { "@type": "vcs", url: pkg.repository.url }
-          });
-        }
-      } else {
-        if (pkg.homepage && pkg.homepage.url) {
-          externalReferences.push({
-            type: pkg.homepage.url.includes("git") ? "vcs" : "website",
-            url: pkg.homepage.url
-          });
-        }
-        if (pkg.bugs && pkg.bugs.url) {
-          externalReferences.push({
-            type: "issue-tracker",
-            url: pkg.bugs.url
-          });
-        }
-        if (pkg.repository && pkg.repository.url) {
-          externalReferences.push({
-            type: "vcs",
-            url: pkg.repository.url
-          });
-        }
+      if (pkg.homepage && pkg.homepage.url) {
+        externalReferences.push({
+          type: pkg.homepage.url.includes("git") ? "vcs" : "website",
+          url: pkg.homepage.url
+        });
+      }
+      if (pkg.bugs && pkg.bugs.url) {
+        externalReferences.push({
+          type: "issue-tracker",
+          url: pkg.bugs.url
+        });
+      }
+      if (pkg.repository && pkg.repository.url) {
+        externalReferences.push({
+          type: "vcs",
+          url: pkg.repository.url
+        });
       }
     }
   }
@@ -644,27 +644,18 @@ function addExternalReferences(opkg, format = "xml") {
  * For all modules in the specified package, creates a list of
  * component objects from each one.
  */
-export function listComponents(
-  options,
-  allImports,
-  pkg,
-  ptype = "npm",
-  format = "xml"
-) {
+export function listComponents(options, allImports, pkg, ptype = "npm") {
   const compMap = {};
   const isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
     pkg.forEach((p) => {
-      addComponent(options, allImports, p, ptype, compMap, false, format);
+      addComponent(options, allImports, p, ptype, compMap, false);
     });
   } else {
-    addComponent(options, allImports, pkg, ptype, compMap, isRootPkg, format);
+    addComponent(options, allImports, pkg, ptype, compMap, isRootPkg);
   }
-  if (format === "xml") {
-    return Object.keys(compMap).map((k) => ({ component: compMap[k] }));
-  } else {
-    return Object.keys(compMap).map((k) => compMap[k]);
-  }
+
+  return Object.keys(compMap).map((k) => compMap[k]);
 }
 
 /**
@@ -676,8 +667,7 @@ function addComponent(
   pkg,
   ptype,
   compMap,
-  isRootPkg = false,
-  format = "xml"
+  isRootPkg = false
 ) {
   if (!pkg || pkg.extraneous) {
     return;
@@ -698,7 +688,7 @@ function addComponent(
       ptype = "maven";
     }
     const version = pkg.version || "";
-    const licenses = pkg.licenses || getLicenses(pkg, format);
+    const licenses = pkg.licenses || getLicenses(pkg);
     const purl =
       pkg.purl ||
       new PackageURL(
@@ -709,11 +699,8 @@ function addComponent(
         pkg.qualifiers,
         encodeForPurl(pkg.subpath)
       );
-    let purlString = purl.toString();
-    let description = { "#cdata": pkg.description };
-    if (format === "json") {
-      description = pkg.description || undefined;
-    }
+    const purlString = purl.toString();
+    const description = pkg.description || undefined;
     let compScope = pkg.scope;
     if (allImports) {
       const impPkgs = Object.keys(allImports);
@@ -740,15 +727,11 @@ function addComponent(
       hashes: [],
       licenses,
       purl: purlString,
-      externalReferences: addExternalReferences(pkg, format)
+      externalReferences: addExternalReferences(pkg)
     };
-    if (format === "xml") {
-      component["@type"] = determinePackageType(pkg);
-      component["@bom-ref"] = decodeURIComponent(purlString);
-    } else {
-      component["type"] = determinePackageType(pkg);
-      component["bom-ref"] = decodeURIComponent(purlString);
-    }
+
+    component["type"] = determinePackageType(pkg);
+    component["bom-ref"] = decodeURIComponent(purlString);
     if (
       component.externalReferences === undefined ||
       component.externalReferences.length === 0
@@ -756,20 +739,18 @@ function addComponent(
       delete component.externalReferences;
     }
 
-    processHashes(pkg, component, format);
+    processHashes(pkg, component);
     // Retain any component properties
-    if (format === "json") {
-      // Retain evidence
-      if (
-        options.specVersion >= 1.5 &&
-        pkg.evidence &&
-        Object.keys(pkg.evidence).length
-      ) {
-        component.evidence = pkg.evidence;
-      }
-      if (pkg.properties && pkg.properties.length) {
-        component.properties = pkg.properties;
-      }
+    // Retain evidence
+    if (
+      options.specVersion >= 1.5 &&
+      pkg.evidence &&
+      Object.keys(pkg.evidence).length
+    ) {
+      component.evidence = pkg.evidence;
+    }
+    if (pkg.properties && pkg.properties.length) {
+      component.properties = pkg.properties;
     }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;
@@ -778,9 +759,7 @@ function addComponent(
     Object.keys(pkg.dependencies)
       .map((x) => pkg.dependencies[x])
       .filter((x) => typeof x !== "string") //remove cycles
-      .map((x) =>
-        addComponent(options, allImports, x, ptype, compMap, false, format)
-      );
+      .map((x) => addComponent(options, allImports, x, ptype, compMap, false));
   }
 }
 
@@ -856,53 +835,32 @@ function determinePackageType(pkg) {
  * Uses the SHA1 shasum (if present) otherwise utilizes Subresource Integrity
  * of the package with support for multiple hashing algorithms.
  */
-function processHashes(pkg, component, format = "xml") {
+function processHashes(pkg, component) {
   if (pkg.hashes) {
     // This attribute would be available when we read a bom json directly
     // Eg: cyclonedx-maven-plugin. See: Bugs: #172, #175
     for (const ahash of pkg.hashes) {
-      addComponentHash(ahash.alg, ahash.content, component, format);
+      addComponentHash(ahash.alg, ahash.content, component);
     }
   } else if (pkg._shasum) {
     let ahash = { "@alg": "SHA-1", "#text": pkg._shasum };
-    if (format === "json") {
-      ahash = { alg: "SHA-1", content: pkg._shasum };
-      component.hashes.push(ahash);
-    } else {
-      component.hashes.push({
-        hash: ahash
-      });
-    }
+    ahash = { alg: "SHA-1", content: pkg._shasum };
+    component.hashes.push(ahash);
   } else if (pkg._integrity) {
     const integrity = parse(pkg._integrity) || {};
     // Components may have multiple hashes with various lengths. Check each one
     // that is supported by the CycloneDX specification.
     if (Object.prototype.hasOwnProperty.call(integrity, "sha512")) {
-      addComponentHash(
-        "SHA-512",
-        integrity.sha512[0].digest,
-        component,
-        format
-      );
+      addComponentHash("SHA-512", integrity.sha512[0].digest, component);
     }
     if (Object.prototype.hasOwnProperty.call(integrity, "sha384")) {
-      addComponentHash(
-        "SHA-384",
-        integrity.sha384[0].digest,
-        component,
-        format
-      );
+      addComponentHash("SHA-384", integrity.sha384[0].digest, component);
     }
     if (Object.prototype.hasOwnProperty.call(integrity, "sha256")) {
-      addComponentHash(
-        "SHA-256",
-        integrity.sha256[0].digest,
-        component,
-        format
-      );
+      addComponentHash("SHA-256", integrity.sha256[0].digest, component);
     }
     if (Object.prototype.hasOwnProperty.call(integrity, "sha1")) {
-      addComponentHash("SHA-1", integrity.sha1[0].digest, component, format);
+      addComponentHash("SHA-1", integrity.sha1[0].digest, component);
     }
   }
   if (component.hashes.length === 0) {
@@ -913,7 +871,7 @@ function processHashes(pkg, component, format = "xml") {
 /**
  * Adds a hash to component.
  */
-function addComponentHash(alg, digest, component, format = "xml") {
+function addComponentHash(alg, digest, component) {
   let hash = "";
   // If it is a valid hash simply use it
   if (new RegExp(HASH_PATTERN).test(digest)) {
@@ -926,72 +884,15 @@ function addComponentHash(alg, digest, component, format = "xml") {
       ? Buffer.from(digest, "base64").toString("hex")
       : digest;
   }
-  let ahash = { "@alg": alg, "#text": hash };
-  if (format === "json") {
-    ahash = { alg: alg, content: hash };
-    component.hashes.push(ahash);
-  } else {
-    component.hashes.push({ hash: ahash });
-  }
+  const ahash = { alg: alg, content: hash };
+  component.hashes.push(ahash);
 }
 
 /**
- * Return Bom in xml format
- *
- * @param {String} Serial number
- * @param {Object} parentComponent Parent component object
- * @param {Array} components Bom components
- * @param {Object} context Context object
- * @returns bom xml string
- */
-const buildBomXml = (
-  serialNum,
-  parentComponent,
-  components,
-  context,
-  options = {}
-) => {
-  const bom = create("bom", {
-    encoding: "utf-8",
-    separateArrayItems: true
-  }).att(
-    "xmlns",
-    `http://cyclonedx.org/schema/bom/${"" + (options.specVersion || 1.5)}`
-  );
-  bom.att("serialNumber", serialNum);
-  bom.att("version", 1);
-  const metadata = addMetadata(parentComponent, "xml", options);
-  bom.ele("metadata").ele(metadata);
-  if (components && components.length) {
-    bom.ele("components").ele(components);
-    if (context) {
-      if (context.services && context.services.length) {
-        bom.ele("services").ele(addServices(context.services, "xml"));
-      }
-      if (context.dependencies && context.dependencies.length) {
-        bom.ele("dependencies").ele(addDependencies(context.dependencies));
-      }
-    }
-    const bomString = bom.end({
-      pretty: true,
-      indent: "  ",
-      newline: "\n",
-      width: 0,
-      allowEmpty: false,
-      spacebeforeslash: ""
-    });
-    return bomString;
-  }
-  return "";
-};
-
-/**
- * Return the BOM in xml, json format including any namespace mapping
+ * Return the BOM in json format including any namespace mapping
  */
 const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const bomNSData = {
-    bomXml: undefined,
-    bomXmlFiles: undefined,
     bomJson: undefined,
     bomJsonFiles: undefined,
     nsMapping: undefined,
@@ -1007,16 +908,9 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const dependencies = context.dependencies || [];
   const parentComponent =
     determineParentComponent(options) || context.parentComponent;
-  const metadata = addMetadata(parentComponent, "json", options);
-  const components = listComponents(options, allImports, pkgInfo, ptype, "xml");
+  const metadata = addMetadata(parentComponent, options);
+  const components = listComponents(options, allImports, pkgInfo, ptype);
   if (components && (components.length || parentComponent)) {
-    const bomString = buildBomXml(
-      serialNum,
-      parentComponent,
-      components,
-      context,
-      options
-    );
     // CycloneDX 1.5 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
@@ -1024,10 +918,16 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
-      components: listComponents(options, allImports, pkgInfo, ptype, "json"),
+      components,
       dependencies
     };
-    bomNSData.bomXml = bomString;
+    const formulation =
+      options.includeFormulation && options.specVersion >= 1.5
+        ? addFormulationSection(options)
+        : undefined;
+    if (formulation) {
+      jsonTpl.formulation = formulation;
+    }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
     bomNSData.dependencies = dependencies;
@@ -1048,51 +948,54 @@ export const createJarBom = async (path, options) => {
   let nsMapping = {};
   const parentComponent = createDefaultParentComponent(path, "maven", options);
   if (options.useGradleCache) {
-    nsMapping = collectGradleDependencies(
+    nsMapping = await collectGradleDependencies(
       getGradleCommand(path, null),
       path,
       false,
       true
     );
   } else if (options.useMavenCache) {
-    nsMapping = collectMvnDependencies(
+    nsMapping = await collectMvnDependencies(
       getMavenCommand(path, null),
       null,
       false,
       true
     );
+  }
+  if (path.endsWith(".jar")) {
+    jarFiles = [resolve(path)];
   } else {
     jarFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "*.[jw]ar",
       options
     );
-    // Jenkins plugins
-    const hpiFiles = getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.hpi",
-      options
-    );
-    if (hpiFiles.length) {
-      jarFiles = jarFiles.concat(hpiFiles);
+  }
+  // Jenkins plugins
+  const hpiFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.hpi",
+    options
+  );
+  if (hpiFiles.length) {
+    jarFiles = jarFiles.concat(hpiFiles);
+  }
+  const tempDir = mkdtempSync(join(tmpdir(), "jar-deps-"));
+  for (const jar of jarFiles) {
+    if (DEBUG_MODE) {
+      console.log(`Parsing ${jar}`);
     }
-    const tempDir = mkdtempSync(join(tmpdir(), "jar-deps-"));
-    for (const jar of jarFiles) {
-      if (DEBUG_MODE) {
-        console.log(`Parsing ${jar}`);
-      }
-      const dlist = extractJarArchive(jar, tempDir);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
-      }
-      if (pkgList.length) {
-        pkgList = await getMvnMetadata(pkgList);
-      }
+    const dlist = await extractJarArchive(jar, tempDir);
+    if (dlist && dlist.length) {
+      pkgList = pkgList.concat(dlist);
     }
-    // Clean up
-    if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
-      rmSync(tempDir, { recursive: true, force: true });
+    if (pkgList.length) {
+      pkgList = await getMvnMetadata(pkgList);
     }
+  }
+  // Clean up
+  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+    rmSync(tempDir, { recursive: true, force: true });
   }
   pkgList = pkgList.concat(convertJarNSToPackages(nsMapping));
   return buildBomNSData(options, pkgList, "maven", {
@@ -1115,15 +1018,15 @@ export const createJavaBom = async (path, options) => {
   // This is subsequently referred to in the dependencies list
   let parentComponent = {};
   // war/ear mode
-  if (path.endsWith(".war")) {
+  if (path.endsWith(".war") || path.endsWith(".jar")) {
     // Check if the file exists
     if (existsSync(path)) {
       if (DEBUG_MODE) {
         console.log(`Retrieving packages from ${path}`);
       }
       const tempDir = mkdtempSync(join(tmpdir(), "war-deps-"));
-      jarNSMapping = collectJarNS(tempDir);
-      pkgList = extractJarArchive(path, tempDir, jarNSMapping);
+      jarNSMapping = await collectJarNS(tempDir);
+      pkgList = await extractJarArchive(path, tempDir, jarNSMapping);
       if (pkgList.length) {
         pkgList = await getMvnMetadata(pkgList);
       }
@@ -1157,7 +1060,7 @@ export const createJavaBom = async (path, options) => {
     ) {
       const cdxMavenPlugin =
         process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.7.10";
+        "org.cyclonedx:cyclonedx-maven-plugin:2.7.11";
       const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
       let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
       if (includeMavenTestScope) {
@@ -1183,7 +1086,7 @@ export const createJavaBom = async (path, options) => {
         const mavenCmd = getMavenCommand(basePath, path);
         // Should we attempt to resolve class names
         if (options.resolveClass || options.deep) {
-          const tmpjarNSMapping = collectMvnDependencies(
+          const tmpjarNSMapping = await collectMvnDependencies(
             mavenCmd,
             basePath,
             true,
@@ -1204,7 +1107,7 @@ export const createJavaBom = async (path, options) => {
           timeout: TIMEOUT_MS,
           maxBuffer: MAX_BUFFER
         });
-        // Check if the cyclonedx plugin created the required bom.xml file
+        // Check if the cyclonedx plugin created the required bom.json file
         // Sometimes the plugin fails silently for complex maven projects
         bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
         // Check if the bom json files got created in a directory other than target
@@ -1231,46 +1134,50 @@ export const createJavaBom = async (path, options) => {
             maxBuffer: MAX_BUFFER
           });
           if (result.status !== 0 || result.error) {
-            console.error(result.stdout, result.stderr);
-            console.log(
-              "Resolve the above maven error. This could be due to the following:\n"
-            );
-            if (
-              result.stdout &&
-              (result.stdout.includes("Non-resolvable parent POM") ||
-                result.stdout.includes("points at wrong local POM"))
-            ) {
+            // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
+            // These could be due to a range of reasons that are covered below.
+            if (pomFiles.length === 1 || DEBUG_MODE) {
+              console.error(result.stdout, result.stderr);
               console.log(
-                "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory."
+                "Resolve the above maven error. This could be due to the following:\n"
               );
-            } else if (
-              result.stdout &&
-              (result.stdout.includes("Could not resolve dependencies") ||
-                result.stdout.includes("no dependency information available"))
-            ) {
+              if (
+                result.stdout &&
+                (result.stdout.includes("Non-resolvable parent POM") ||
+                  result.stdout.includes("points at wrong local POM"))
+              ) {
+                console.log(
+                  "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory."
+                );
+              } else if (
+                result.stdout &&
+                (result.stdout.includes("Could not resolve dependencies") ||
+                  result.stdout.includes("no dependency information available"))
+              ) {
+                console.log(
+                  "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."
+                );
+              } else if (
+                result.stdout &&
+                result.stdout.includes(
+                  "Could not resolve target platform specification"
+                )
+              ) {
+                console.log(
+                  "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option"
+                );
+              } else {
+                console.log(
+                  "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible."
+                );
+              }
               console.log(
-                "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."
+                "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
               );
-            } else if (
-              result.stdout &&
-              result.stdout.includes(
-                "Could not resolve target platform specification"
-              )
-            ) {
               console.log(
-                "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option"
-              );
-            } else {
-              console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 20 with maven 3.9 which might be incompatible."
+                "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool."
               );
             }
-            console.log(
-              "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
-            );
-            console.log(
-              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool."
-            );
             // Do not fall back to methods that can produce incomplete results when failOnError is set
             options.failOnError && process.exit(1);
             console.log(
@@ -1300,7 +1207,6 @@ export const createJavaBom = async (path, options) => {
           }
         }
       } // for
-      const bomFiles = getAllFiles(path, "**/target/bom.xml", options);
       for (const abjson of bomJsonFiles) {
         let bomJsonObj = undefined;
         try {
@@ -1341,7 +1247,7 @@ export const createJavaBom = async (path, options) => {
         }
       }
       if (pkgList) {
-        pkgList = trimComponents(pkgList, "json");
+        pkgList = trimComponents(pkgList);
         pkgList = await getMvnMetadata(pkgList, jarNSMapping);
         return buildBomNSData(options, pkgList, "maven", {
           src: path,
@@ -1352,7 +1258,6 @@ export const createJavaBom = async (path, options) => {
         });
       } else if (bomJsonFiles.length) {
         const bomNSData = {};
-        bomNSData.bomXmlFiles = bomFiles;
         bomNSData.bomJsonFiles = bomJsonFiles;
         bomNSData.nsMapping = jarNSMapping;
         bomNSData.dependencies = dependencies;
@@ -1382,7 +1287,7 @@ export const createJavaBom = async (path, options) => {
         parentComponent = {
           name: rootProject,
           type: "application",
-          ...(retMap.metadata || {})
+          ...retMap.metadata
         };
         const parentPurl = new PackageURL(
           "maven",
@@ -1406,7 +1311,7 @@ export const createJavaBom = async (path, options) => {
               name: rspName,
               type: "application",
               qualifiers: { type: "jar" },
-              ...(retMap.metadata || {})
+              ...retMap.metadata
             };
             const rootSubProjectPurl = new PackageURL(
               "maven",
@@ -1546,7 +1451,7 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = collectJarNS(GRADLE_CACHE_DIR);
+        jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
@@ -1713,7 +1618,18 @@ export const createJavaBom = async (path, options) => {
         }
       } else {
         const SBT_CMD = process.env.SBT_CMD || "sbt";
-        const sbtVersion = determineSbtVersion(path);
+        let sbtVersion = determineSbtVersion(path);
+        // If can't find sbt version at the root of repository then search in
+        // sbt project array too because sometimes the project folder isn't at
+        // root of repository
+        if (sbtVersion == null) {
+          for (const i in sbtProjects) {
+            sbtVersion = determineSbtVersion(sbtProjects[i]);
+            if (sbtVersion != null) {
+              break;
+            }
+          }
+        }
         if (DEBUG_MODE) {
           console.log("Detected sbt version: " + sbtVersion);
         }
@@ -1832,7 +1748,7 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = collectJarNS(SBT_CACHE_DIR);
+        jarNSMapping = await collectJarNS(SBT_CACHE_DIR);
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
@@ -1879,6 +1795,7 @@ export const createNodejsBom = async (path, options) => {
     }
   }
   let allImports = {};
+  let allExports = {};
   if (
     !["docker", "oci", "container", "os"].includes(options.projectType) &&
     !options.noBabel
@@ -1888,7 +1805,9 @@ export const createNodejsBom = async (path, options) => {
         `Performing babel-based package usage analysis with source code at ${path}`
       );
     }
-    allImports = await findJSImports(path);
+    const retData = await findJSImportsExports(path, options.deep);
+    allImports = retData.allImports;
+    allExports = retData.allExports;
   }
   const yarnLockFiles = getAllFiles(
     path,
@@ -2060,7 +1979,12 @@ export const createNodejsBom = async (path, options) => {
     if (existsSync(swFile)) {
       let pkgList = await parseNodeShrinkwrap(swFile);
       if (allImports && Object.keys(allImports).length) {
-        pkgList = addEvidenceForImports(pkgList, allImports);
+        pkgList = await addEvidenceForImports(
+          pkgList,
+          allImports,
+          allExports,
+          options.deep
+        );
       }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
@@ -2070,10 +1994,16 @@ export const createNodejsBom = async (path, options) => {
     } else if (existsSync(pnpmLock)) {
       let pkgList = await parsePnpmLock(pnpmLock);
       if (allImports && Object.keys(allImports).length) {
-        pkgList = addEvidenceForImports(pkgList, allImports);
+        pkgList = await addEvidenceForImports(
+          pkgList,
+          allImports,
+          allExports,
+          options.deep
+        );
       }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
+        allExports,
         src: path,
         filename: "pnpm-lock.yaml"
       });
@@ -2224,7 +2154,12 @@ export const createNodejsBom = async (path, options) => {
   // We need to set this to force our version to be used rather than the directory name based one.
   options.parentComponent = parentComponent;
   if (allImports && Object.keys(allImports).length) {
-    pkgList = addEvidenceForImports(pkgList, allImports);
+    pkgList = await addEvidenceForImports(
+      pkgList,
+      allImports,
+      allExports,
+      options.deep
+    );
   }
   return buildBomNSData(options, pkgList, "npm", {
     src: path,
@@ -2324,7 +2259,7 @@ export const createPythonBom = async (path, options) => {
       let retMap = await parsePoetrylockData(lockData, f);
       if (retMap.pkgList && retMap.pkgList.length) {
         pkgList = pkgList.concat(retMap.pkgList);
-        pkgList = trimComponents(pkgList, "json");
+        pkgList = trimComponents(pkgList);
       }
       if (retMap.dependenciesList && retMap.dependenciesList.length) {
         dependencies = mergeDependencies(
@@ -2573,6 +2508,9 @@ export const createPythonBom = async (path, options) => {
   // Clean up
   if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
+  }
+  if (FETCH_LICENSE) {
+    pkgList = await getPyMetadata(pkgList, false);
   }
   return buildBomNSData(options, pkgList, "pypi", {
     allImports,
@@ -2836,7 +2774,7 @@ export const createGoBom = async (path, options) => {
             );
             if (retMap.pkgList && retMap.pkgList.length) {
               pkgList = pkgList.concat(retMap.pkgList);
-              pkgList = trimComponents(pkgList, "json");
+              pkgList = trimComponents(pkgList);
             }
             if (retMap.dependenciesList && retMap.dependenciesList.length) {
               dependencies = mergeDependencies(
@@ -3148,9 +3086,21 @@ export const createCppBom = (path, options) => {
         retMap.parentComponent.type = "library";
         pkgList.push(retMap.parentComponent);
       }
+      // Retain the dependency tree from cmake
+      if (retMap.dependenciesList) {
+        if (dependencies.length) {
+          dependencies = mergeDependencies(
+            dependencies,
+            retMap.dependenciesList,
+            parentComponent
+          );
+        } else {
+          dependencies = retMap.dependenciesList;
+        }
+      }
     }
   }
-  // The need for java >= 17 with atom is causing confusions since there could be C projects
+  // The need for java >= 21 with atom is causing confusions since there could be C projects
   // inside of other project types. So we currently limit this analyis only when -t argument
   // is used.
   if (
@@ -3541,7 +3491,7 @@ export const createJenkinsBom = async (path, options) => {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = extractJarArchive(f, tempDir);
+      const dlist = await extractJarArchive(f, tempDir);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3609,7 +3559,7 @@ export const createHelmBom = (path, options) => {
  * @param path to the project
  * @param options Parse options from the cli
  */
-export const createSwiftBom = (path, options) => {
+export const createSwiftBom = async (path, options) => {
   const swiftFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift",
@@ -3685,6 +3635,9 @@ export const createSwiftBom = (path, options) => {
       }
     }
   }
+  if (FETCH_LICENSE) {
+    pkgList = await getSwiftPackageMetadata(pkgList);
+  }
   return buildBomNSData(options, pkgList, "swift", {
     src: path,
     filename: swiftFiles.join(", "),
@@ -3703,7 +3656,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
   let services = [];
   const ociSpecs = [];
   let components = [];
-  let componentsXmls = [];
   let parentComponent = {};
   let dependencies = [];
   const doneimages = [];
@@ -3718,6 +3670,11 @@ export const createContainerSpecLikeBom = async (path, options) => {
   const dfFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    options
+  );
+  const bbPipelineFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "bitbucket-pipelines.yml",
     options
   );
   const cfFiles = getAllFiles(
@@ -3748,27 +3705,35 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   // Privado.ai json files
   const privadoFiles = getAllFiles(path, ".privado/" + "*.json", options);
-  // Parse yaml manifest files, dockerfiles or containerfiles
-  if (dcFiles.length || dfFiles.length || cfFiles.length) {
-    for (const f of [...dcFiles, ...dfFiles, ...cfFiles]) {
+
+  // Parse yaml manifest files, dockerfiles, containerfiles or bitbucket pipeline files
+  if (
+    dcFiles.length ||
+    dfFiles.length ||
+    cfFiles.length ||
+    bbPipelineFiles.length
+  ) {
+    for (const f of [...dcFiles, ...dfFiles, ...cfFiles, ...bbPipelineFiles]) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
 
       const dData = readFileSync(f, { encoding: "utf-8" });
-      let imglist = [];
+      let imgList = [];
       // parse yaml manifest files
-      if (f.endsWith(".yml") || f.endsWith(".yaml")) {
-        imglist = parseContainerSpecData(dData);
+      if (f.endsWith("bitbucket-pipelines.yml")) {
+        imgList = parseBitbucketPipelinesFile(dData);
+      } else if (f.endsWith(".yml") || f.endsWith(".yaml")) {
+        imgList = parseContainerSpecData(dData);
       } else {
-        imglist = parseContainerFile(dData);
+        imgList = parseContainerFile(dData);
       }
 
-      if (imglist && imglist.length) {
+      if (imgList && imgList.length) {
         if (DEBUG_MODE) {
-          console.log("Images identified in", f, "are", imglist);
+          console.log("Images identified in", f, "are", imgList);
         }
-        for (const img of imglist) {
+        for (const img of imgList) {
           const commonProperties = [
             {
               name: "SrcFile",
@@ -3836,19 +3801,25 @@ export const createContainerSpecLikeBom = async (path, options) => {
               console.log(`Parsing image ${img.image}`);
             }
             const imageObj = parseImageName(img.image);
+
             const pkg = {
-              name: imageObj.repo,
+              name: imageObj.name,
+              group: imageObj.group,
               version:
                 imageObj.tag ||
                 (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
               qualifiers: {},
-              properties: commonProperties
+              properties: commonProperties,
+              type: "container"
             };
             if (imageObj.registry) {
-              pkg["qualifiers"]["repository_url"] = imageObj.registry;
+              pkg["qualifiers"]["repository_url"] = img.image;
             }
             if (imageObj.platform) {
               pkg["qualifiers"]["platform"] = imageObj.platform;
+            }
+            if (imageObj.tag) {
+              pkg["qualifiers"]["tag"] = imageObj.tag;
             }
             // Create an entry for the oci image
             const imageBomData = buildBomNSData(options, [pkg], "oci", {
@@ -3862,15 +3833,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
               imageBomData.bomJson.components
             ) {
               components = components.concat(imageBomData.bomJson.components);
-              componentsXmls = componentsXmls.concat(
-                listComponents(
-                  options,
-                  {},
-                  imageBomData.bomJson.components,
-                  "oci",
-                  "xml"
-                )
-              );
             }
             const bomData = await createBom(img.image, { projectType: "oci" });
             doneimages.push(img.image);
@@ -3881,9 +3843,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
                   co.properties = commonProperties;
                 }
                 components = components.concat(bomData.components);
-              }
-              if (bomData.componentsXmls && bomData.componentsXmls.length) {
-                componentsXmls = componentsXmls.concat(bomData.componentsXmls);
               }
             }
           } // img.image
@@ -3992,9 +3951,6 @@ export const createContainerSpecLikeBom = async (path, options) => {
       if (mbomData.components && mbomData.components.length) {
         components = components.concat(mbomData.components);
       }
-      if (mbomData.componentsXmls && mbomData.componentsXmls.length) {
-        componentsXmls = componentsXmls.concat(mbomData.componentsXmls);
-      }
       // We need to retain the parentComponent. See #527
       // Parent component returned by multi X search is usually good
       parentComponent = mbomData.parentComponent;
@@ -4020,13 +3976,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
   }
   options.services = services;
   options.ociSpecs = ociSpecs;
-  return dedupeBom(
-    options,
-    components,
-    componentsXmls,
-    parentComponent,
-    dependencies
-  );
+  return dedupeBom(options, components, parentComponent, dependencies);
 };
 
 /**
@@ -4036,11 +3986,18 @@ export const createContainerSpecLikeBom = async (path, options) => {
  * @param options Parse options from the cli
  */
 export const createPHPBom = (path, options) => {
+  let dependencies = [];
+  let parentComponent = {};
   const composerJsonFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.json",
     options
   );
+  if (!options.exclude) {
+    options.exclude = [];
+  }
+  // Ignore vendor directories for lock files
+  options.exclude.push("**/vendor/**");
   let composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock",
@@ -4105,17 +4062,75 @@ export const createPHPBom = (path, options) => {
   );
   if (composerLockFiles.length) {
     for (const f of composerLockFiles) {
+      const basePath = dirname(f);
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = parseComposerLock(f);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      let rootRequires = [];
+      // Is there a composer.json to find the parent component
+      if (
+        !Object.keys(parentComponent).length &&
+        existsSync(join(basePath, "composer.json"))
+      ) {
+        const composerData = JSON.parse(
+          readFileSync(join(basePath, "composer.json"), { encoding: "utf-8" })
+        );
+        rootRequires = composerData.require;
+        const pkgName = composerData.name;
+        if (pkgName) {
+          parentComponent.group = dirname(pkgName);
+          if (parentComponent.group === ".") {
+            parentComponent.group = "";
+          }
+          parentComponent.name = basename(pkgName);
+          parentComponent.type = "application";
+          parentComponent.version = composerData.version || "latest";
+          parentComponent["bom-ref"] = decodeURIComponent(
+            new PackageURL(
+              "composer",
+              parentComponent.group,
+              parentComponent.name,
+              parentComponent.version,
+              null,
+              null
+            ).toString()
+          );
+        }
+      }
+      const retMap = parseComposerLock(f, rootRequires);
+      if (retMap.pkgList && retMap.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+      }
+      if (retMap.dependenciesList) {
+        if (!Object.keys(parentComponent).length) {
+          parentComponent = createDefaultParentComponent(
+            path,
+            "composer",
+            options
+          );
+        }
+        // Complete the dependency tree by making parent component depend on the first level
+        const parentDependsOn = [];
+        for (const p of retMap.rootList) {
+          parentDependsOn.push(p["bom-ref"]);
+        }
+        const pdependencies = {
+          ref: parentComponent["bom-ref"],
+          dependsOn: parentDependsOn
+        };
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependenciesList,
+          parentComponent
+        );
+        dependencies.splice(0, 0, pdependencies);
       }
     }
     return buildBomNSData(options, pkgList, "composer", {
       src: path,
-      filename: composerLockFiles.join(", ")
+      filename: composerLockFiles.join(", "),
+      dependencies,
+      parentComponent
     });
   }
   return {};
@@ -4188,18 +4203,21 @@ export const createRubyBom = async (path, options) => {
  * @param path to the project
  * @param options Parse options from the cli
  */
-export const createCsharpBom = async (
-  path,
-  options,
-  parentComponent = undefined
-) => {
+export const createCsharpBom = async (path, options) => {
   let manifestFiles = [];
   let pkgData = undefined;
   let dependencies = [];
-  const csProjFiles = getAllFiles(
+  const parentComponent = createDefaultParentComponent(path, "nuget", options);
+  let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
     options
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.vbproj", options)
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.fsproj", options)
   );
   const pkgConfigFiles = getAllFiles(
     path,
@@ -4247,28 +4265,46 @@ export const createCsharpBom = async (
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      let results = await parseCsProjAssetsData(pkgData);
-      let deps = results["dependenciesList"];
-      let dlist = results["pkgList"];
+      const results = await parseCsProjAssetsData(pkgData, af);
+      const deps = results["dependenciesList"];
+      const dlist = results["pkgList"];
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
       if (deps && deps.length) {
-        dependencies = dependencies.concat(deps);
+        dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
   } else if (pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
+    let parentDependsOn = [];
     // packages.lock.json from nuget
     for (const af of pkgLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      const dlist = await parseCsPkgLockData(pkgData);
+      const results = await parseCsPkgLockData(pkgData, af);
+      const deps = results["dependenciesList"];
+      const dlist = results["pkgList"];
+      const rootList = results["rootList"];
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
+      if (deps && deps.length) {
+        dependencies = mergeDependencies(dependencies, deps, parentComponent);
+      }
+      // Keep track of the direct dependencies so that we can construct one complete
+      // list after processing all lock files
+      if (rootList && rootList.length) {
+        parentDependsOn = parentDependsOn.concat(rootList);
+      }
+    }
+    if (parentDependsOn.length) {
+      dependencies.splice(0, 0, {
+        ref: parentComponent["bom-ref"],
+        dependsOn: parentDependsOn.map((p) => p["bom-ref"])
+      });
     }
   } else if (pkgConfigFiles.length) {
     manifestFiles = manifestFiles.concat(pkgConfigFiles);
@@ -4299,7 +4335,7 @@ export const createCsharpBom = async (
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const dlist = await parseCsProjData(csProjData);
+      const dlist = await parseCsProjData(csProjData, f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -4313,31 +4349,46 @@ export const createCsharpBom = async (
         console.log(`Parsing ${f}`);
       }
       pkgData = readFileSync(f, { encoding: "utf-8" });
-      const results = await parsePaketLockData(pkgData);
+      const results = await parsePaketLockData(pkgData, f);
       const dlist = results.pkgList;
       const deps = results.dependenciesList;
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
       if (deps && deps.length) {
-        dependencies = dependencies.concat(deps);
+        dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
   }
-  if (!parentComponent) {
-    parentComponent = createDefaultParentComponent(path, options.type, options);
-  }
   if (pkgList.length) {
-    dependencies = mergeDependencies(dependencies, [], parentComponent);
-    pkgList = trimComponents(pkgList, "json");
+    pkgList = trimComponents(pkgList);
+    // Perform deep analysis using dosai
+    if (options.deep) {
+      const slicesFile = resolve(
+        options.depsSlicesFile || join(tmpdir(), "dosai.json")
+      );
+      // Create the slices file if it doesn't exist
+      if (!existsSync(slicesFile)) {
+        const sliceResult = getDotnetSlices(resolve(path), resolve(slicesFile));
+        if (!sliceResult && DEBUG_MODE) {
+          console.log(
+            "Slicing with dosai was unsuccessful. Check the errors reported in the logs above."
+          );
+        }
+      }
+      pkgList = addEvidenceForDotnet(pkgList, slicesFile, options);
+    }
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
     if (retMap.dependencies && retMap.dependencies.length) {
-      dependencies = dependencies.concat(retMap.dependencies);
+      dependencies = mergeDependencies(
+        dependencies,
+        retMap.dependencies,
+        parentComponent
+      );
     }
-    dependencies = mergeDependencies(dependencies, [], parentComponent);
-    pkgList = trimComponents(pkgList, "json");
+    pkgList = trimComponents(pkgList);
   }
   return buildBomNSData(options, pkgList, "nuget", {
     src: path,
@@ -4383,25 +4434,14 @@ export const mergeDependencies = (
   return retlist;
 };
 
-export const trimComponents = (components, format) => {
+export const trimComponents = (components) => {
   const keyCache = {};
   const filteredComponents = [];
   for (const comp of components) {
-    if (format === "xml" && comp.component) {
-      const key =
-        comp.component.purl ||
-        comp.component["bom-ref"] ||
-        comp.name + comp.version;
-      if (!keyCache[key]) {
-        keyCache[key] = true;
-        filteredComponents.push(comp);
-      }
-    } else {
-      const key = comp.purl || comp["bom-ref"] || comp.name + comp.version;
-      if (!keyCache[key]) {
-        keyCache[key] = true;
-        filteredComponents.push(comp);
-      }
+    const key = comp.purl || comp["bom-ref"] || comp.name + comp.version;
+    if (!keyCache[key]) {
+      keyCache[key] = true;
+      filteredComponents.push(comp);
     }
   }
   return filteredComponents;
@@ -4410,7 +4450,6 @@ export const trimComponents = (components, format) => {
 export const dedupeBom = (
   options,
   components,
-  componentsXmls,
   parentComponent,
   dependencies
 ) => {
@@ -4420,8 +4459,7 @@ export const dedupeBom = (
   if (!dependencies) {
     dependencies = [];
   }
-  components = trimComponents(components, "json");
-  componentsXmls = trimComponents(componentsXmls, "xml");
+  components = trimComponents(components);
   if (DEBUG_MODE) {
     console.log(
       `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
@@ -4432,23 +4470,12 @@ export const dedupeBom = (
     options,
     parentComponent,
     components,
-    componentsXmls,
-    bomXml: buildBomXml(
-      serialNum,
-      parentComponent,
-      componentsXmls,
-      {
-        dependencies: dependencies,
-        services: options.services
-      },
-      options
-    ),
     bomJson: {
       bomFormat: "CycloneDX",
       specVersion: "" + (options.specVersion || 1.5),
       serialNumber: serialNum,
       version: 1,
-      metadata: addMetadata(parentComponent, "json", options),
+      metadata: addMetadata(parentComponent, options),
       components,
       services: options.services || [],
       dependencies
@@ -4465,7 +4492,6 @@ export const dedupeBom = (
 export const createMultiXBom = async (pathList, options) => {
   let components = [];
   let dependencies = [];
-  let componentsXmls = [];
   let bomData = undefined;
   let parentComponent = determineParentComponent(options) || {};
   let parentSubComponents = [];
@@ -4486,9 +4512,6 @@ export const createMultiXBom = async (pathList, options) => {
       options.allOSComponentTypes = allTypes;
     }
     components = components.concat(osPackages);
-    componentsXmls = componentsXmls.concat(
-      listComponents(options, {}, osPackages, "", "xml")
-    );
     if (dependenciesList && dependenciesList.length) {
       dependencies = dependencies.concat(dependenciesList);
     }
@@ -4508,9 +4531,6 @@ export const createMultiXBom = async (pathList, options) => {
         console.log(`Found ${bomData.bomJson.components.length} OS components`);
       }
       components = components.concat(bomData.bomJson.components);
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "", "xml")
-      );
     }
   }
   for (const path of pathList) {
@@ -4546,9 +4566,6 @@ export const createMultiXBom = async (pathList, options) => {
           bomData.parentComponent.components
         );
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "npm", "xml")
-      );
     }
     bomData = await createJavaBom(path, options);
     if (
@@ -4579,9 +4596,6 @@ export const createMultiXBom = async (pathList, options) => {
           bomData.parentComponent.components
         );
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
-      );
     }
     bomData = await createPythonBom(path, options);
     if (
@@ -4603,9 +4617,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "pypi", "xml")
-      );
     }
     bomData = await createGoBom(path, options);
     if (
@@ -4627,9 +4638,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "golang", "xml")
-      );
     }
     bomData = await createRustBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4646,9 +4654,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "cargo", "xml")
-      );
     }
     bomData = createPHPBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4665,15 +4670,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "composer",
-          "xml"
-        )
-      );
     }
     bomData = await createRubyBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4690,11 +4686,8 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "gem", "xml")
-      );
     }
-    bomData = await createCsharpBom(path, options, parentComponent);
+    bomData = await createCsharpBom(path, options);
     if (
       bomData &&
       bomData.bomJson &&
@@ -4714,9 +4707,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "nuget", "xml")
-      );
     }
     bomData = await createDartBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4733,9 +4723,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "pub", "xml")
-      );
     }
     bomData = createHaskellBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4752,15 +4739,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "hackage",
-          "xml"
-        )
-      );
     }
     bomData = createElixirBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4777,9 +4755,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "hex", "xml")
-      );
     }
     bomData = createCppBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4796,9 +4771,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "conan", "xml")
-      );
     }
     bomData = createClojureBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4815,15 +4787,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "clojars",
-          "xml"
-        )
-      );
     }
     bomData = createGitHubBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4840,9 +4803,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "github", "xml")
-      );
     }
     bomData = createCloudBuildBom(path, options);
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
@@ -4859,17 +4819,8 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(
-          options,
-          {},
-          bomData.bomJson.components,
-          "cloudbuild",
-          "xml"
-        )
-      );
     }
-    bomData = createSwiftBom(path, options);
+    bomData = await createSwiftBom(path, options);
     if (
       bomData &&
       bomData.bomJson &&
@@ -4889,9 +4840,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "swift", "xml")
-      );
     }
     // Jar scanning is enabled by default
     // See #330
@@ -4915,12 +4863,14 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
-      );
     }
   } // for
-  if (options.lastWorkingDir && options.lastWorkingDir !== "") {
+  if (
+    options.lastWorkingDir &&
+    options.lastWorkingDir !== "" &&
+    !options.lastWorkingDir.includes("/opt/") &&
+    !options.lastWorkingDir.includes("/home/")
+  ) {
     bomData = await createJarBom(options.lastWorkingDir, options);
     if (
       bomData &&
@@ -4941,9 +4891,6 @@ export const createMultiXBom = async (pathList, options) => {
       ) {
         parentSubComponents.push(bomData.parentComponent);
       }
-      componentsXmls = componentsXmls.concat(
-        listComponents(options, {}, bomData.bomJson.components, "maven", "xml")
-      );
     }
   }
   // Retain the components of parent component
@@ -4956,7 +4903,7 @@ export const createMultiXBom = async (pathList, options) => {
     parentSubComponents = parentSubComponents.filter(
       (c) => c["bom-ref"] !== parentComponent["bom-ref"]
     );
-    parentComponent.components = trimComponents(parentSubComponents, "json");
+    parentComponent.components = trimComponents(parentSubComponents);
     if (
       parentComponent.components.length == 1 &&
       parentComponent.components[0].name == parentComponent.name &&
@@ -4966,13 +4913,7 @@ export const createMultiXBom = async (pathList, options) => {
       delete parentComponent.components;
     }
   }
-  return dedupeBom(
-    options,
-    components,
-    componentsXmls,
-    parentComponent,
-    dependencies
-  );
+  return dedupeBom(options, components, parentComponent, dependencies);
 };
 
 /**
@@ -5111,10 +5052,16 @@ export const createXBom = async (path, options) => {
   }
 
   // .Net
-  const csProjFiles = getAllFiles(
+  let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
     options
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.vbproj", options)
+  );
+  csProjFiles = csProjFiles.concat(
+    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.fsproj", options)
   );
   if (csProjFiles.length) {
     return await createCsharpBom(path, options);
@@ -5293,7 +5240,7 @@ export const createXBom = async (path, options) => {
     options
   );
   if (swiftFiles.length || pkgResolvedFiles.length) {
-    return createSwiftBom(path, options);
+    return await createSwiftBom(path, options);
   }
 };
 
@@ -5549,7 +5496,7 @@ export const createBom = async (path, options) => {
     case "cloudbuild":
       return createCloudBuildBom(path, options);
     case "swift":
-      return createSwiftBom(path, options);
+      return await createSwiftBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/cyclonedx/cdxgen/issues/95
@@ -5579,7 +5526,7 @@ export async function submitBom(args, bomContents) {
     autoCreate: "true",
     bom: encodedBomContents
   };
-  let projectVersion = args.projectVersion || "master";
+  const projectVersion = args.projectVersion || "master";
   if (
     typeof args.projectId !== "undefined" ||
     (typeof args.projectName !== "undefined" &&

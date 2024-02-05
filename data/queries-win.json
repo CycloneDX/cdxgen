@@ -15,12 +15,20 @@
   "chrome_extensions": {
     "query": "select chrome_extensions.* from users join chrome_extensions using (uid);",
     "description": "Retrieves the list of extensions for Chrome in the target system.",
-    "purlType": "swid"
+    "purlType": "swid",
+    "componentType": "application"
   },
   "firefox_addons": {
     "query": "select firefox_addons.* from users join firefox_addons using (uid);",
     "description": "Retrieves the list of addons for Firefox in the target system.",
-    "purlType": "swid"
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "vscode_extensions": {
+    "query": "select vscode_extensions.* from users join vscode_extensions using (uid);",
+    "description": "Lists all vscode extensions.",
+    "purlType": "vsix",
+    "componentType": "application"
   },
   "browser_plugins": {
     "query": "select browser_plugins.* from users join browser_plugins using (uid);",
@@ -143,11 +151,6 @@
     "query": "SELECT * FROM npm_packages;",
     "description": "List all npm_packages.",
     "purlType": "npm"
-  },
-  "atom_packages": {
-    "query": "SELECT * FROM atom_packages;",
-    "description": "List all atom_packages.",
-    "purlType": "atom"
   },
   "startup_items": {
     "query": "SELECT * FROM startup_items;",

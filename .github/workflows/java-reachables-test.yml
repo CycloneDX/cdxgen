@@ -3,6 +3,9 @@ name: Reachables tests
 on:
   pull_request:
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 jobs:
   build:
     strategy:
@@ -14,12 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '19'
+          java-version: '21'
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm install, build
@@ -32,15 +35,22 @@ jobs:
         with:
           repository: 'DependencyTrack/dependency-track'
           path: 'repotests/dependency-track'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'drogonframework/drogon'
+          path: 'repotests/drogon'
       - name: compile
         run: |
           cd repotests/dependency-track
-          mvn clean compile -DskipTests -Dmaven.test.skip=true
+          mvn -q clean compile -DskipTests -Dmaven.test.skip=true
       - name: repotests
-        run: |         
-          bin/cdxgen.js -p -t java --profile research -o repotests/dependency-track/bom.json repotests/dependency-track
+        run: |
+          node bin/cdxgen.js -p -t java --profile research -o repotests/dependency-track/bom.json repotests/dependency-track
           cp -rf repotests/dependency-track/*.json *.slices.json bomresults/
-      - uses: actions/upload-artifact@v3
+          cd repotests/drogon/examples
+          node ../../../bin/cdxgen.js -p -t c --profile research -o bom.json .
+          cd ../../..
+      - uses: actions/upload-artifact@v4
         with:
           name: bomresults
           path: bomresults

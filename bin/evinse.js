@@ -63,7 +63,8 @@ const args = yargs(hideBin(process.argv))
       "python",
       "android",
       "c",
-      "cpp"
+      "cpp",
+      "php"
     ]
   })
   .option("db-path", {

@@ -1,10 +1,10 @@
-FROM almalinux:9.2-minimal
+FROM almalinux:9.3-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="9.9.x" \
+      org.opencontainers.image.version="10.0.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -16,11 +16,11 @@ ARG SWIFT_PLATFORM=ubi9
 ARG SWIFT_BRANCH=swift-5.8-release
 ARG SWIFT_VERSION=swift-5.8-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
-ARG JAVA_VERSION=20.0.2-graalce
-ARG SBT_VERSION=1.9.7
-ARG MAVEN_VERSION=3.9.4
-ARG GRADLE_VERSION=8.3
-ARG GO_VERSION=1.21.1
+ARG JAVA_VERSION=21.0.2-graalce
+ARG SBT_VERSION=1.9.8
+ARG MAVEN_VERSION=3.9.6
+ARG GRADLE_VERSION=8.5
+ARG GO_VERSION=1.21.5
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \

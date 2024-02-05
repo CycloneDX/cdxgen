@@ -19,12 +19,20 @@ Languages supported:
 - Go
 - Php
 
-### Purl filter
+### Purl and properties filter
 
-Use `--filter` to filter components containing the string in the purl.
+Use `--filter` to filter components containing the string in the purl or components.properties.value. Filters are case-insensitive.
+
+Example 1: Filter all "springframework" packages
 
 ```shell
 cdxgen -t java -o /tmp/bom.json -p --filter org.springframework
+```
+
+Example 2: Filter components belonging to the gradle profile "debugAndroidTestCompileClasspath" or "debugRuntimeClasspath"
+
+```shell
+cdxgen -t gradle -o /tmp/bom.json -p --filter debugAndroidTestCompileClasspath --filter debugRuntimeClasspath
 ```
 
 ### Include only filter
@@ -331,3 +339,115 @@ With profiles, cdxgen can generate a BOM that is optimized for a specific use ca
 | research           | BOM for security research                                                 | Enables deep and evidence mode. Disable ignore directory for JavaScript/TypeScript |
 | operational        | Generate OBOM                                                             | projectType set to os                                                              |
 | license-compliance | Fetch license data                                                        | Set FETCH_LICENSE environment variable                                             |
+
+## Nydus - next-generation container image
+
+[Nydus](https://github.com/dragonflyoss/nydus) enhances the current OCI image specification by improving container launch speed, image space and network bandwidth efficiency, and data integrity. cdxgen container images are available in nydus format with the `-nydus` suffix.
+
+```
+ghcr.io/cyclonedx/cdxgen:master-nydus
+```
+
+### Example invocation using nerdctl
+
+Refer to the nydus-demo.yml workflow for an example github action that demonstrates the use of nydus snapshotter to improve the performance of cdxgen.
+
+```shell
+sudo nerdctl --snapshotter nydus run --rm -v $HOME/.m2:/root/.m2 -v $(pwd):/app ghcr.io/cyclonedx/cdxgen:master-nydus -p -t java /app
+```
+
+## Export as protobuf binary
+
+Pass the argument `--export-proto` to serialize and export the BOM as protobuf binary. Only the spec version 1.5 is supported in this mode.
+
+```shell
+--export-proto --proto-bin-file bom.cdx.bin
+```
+
+## Include formulation
+
+Pass the argument `--include-formulation` to collect the following information under the `formulation` section:
+
+- git metadata such as files in the tree, origin url, branch, and CI environment variables
+- build tools versions (Java, Python, Node.js, gcc, dotnet, rustc)
+
+Example:
+
+```
+"formulation": [
+    {
+      "bom-ref": "f8324846-fad6-4927-a8e7-49379f57489b",
+      "components": [
+        {
+          "type": "file",
+          "name": ".gitattributes",
+          "version": "eba1110b5794582b53554bb1e4224b860d4e173f"
+        },
+        {
+          "type": "file",
+          "name": "README_zh.md",
+          "version": "70e6883720e454e3f2fe30c9730b3e56c35adc28"
+        },
+        {
+          "type": "file",
+          "name": "docker-compose.yml",
+          "version": "7e9c878ee725717b3922225f26b99931332ae6c8"
+        },
+        {
+          "type": "file",
+          "name": "pom.xml",
+          "version": "8da3449df64e6eb1d63ca3ca5fbd123a374d738e"
+        },
+        {
+          "type": "file",
+          "name": "src/main/java/org/joychou/Application.java",
+          "version": "41169b9a018f38ee62e300047d5a6bd93562f512"
+        },
+        {
+          "type": "file",
+          "name": "src/main/resources/url/url_safe_domain.xml",
+          "version": "ee81efcf364e18221c401e03f1d890348fe73e87"
+        },
+        {
+          "type": "platform",
+          "name": "dotnet",
+          "version": "8.0.101",
+          "description": "Microsoft.AspNetCore.App 6.0.26 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]\\nMicrosoft.AspNetCore.App 8.0.1 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]\\nMicrosoft.NETCore.App 6.0.26 [/usr/share/dotnet/shared/Microsoft.NETCore.App]\\nMicrosoft.NETCore.App 8.0.1 [/usr/share/dotnet/shared/Microsoft.NETCore.App]"
+        },
+        {
+          "type": "platform",
+          "name": "rustc",
+          "version": "rustc 1.75.0 (82e1608df 2023-12-21)",
+          "description": "cargo 1.75.0 (1d8b05cdd 2023-11-20)"
+        },
+        {
+          "type": "platform",
+          "name": "go",
+          "version": "go version go1.21.6 linux/amd64"
+        }
+      ],
+      "workflows": [
+        {
+          "bom-ref": "9f66ea8d-b1b7-4c79-8294-376903ec1bc8",
+          "uid": "c451097b-5c74-49db-ada7-81bd77cdb390",
+          "inputs": [
+            {
+              "source": {
+                "ref": "git@github.com:HooliCorp/java-sec-code.git"
+              },
+              "environmentVars": [
+                {
+                  "name": "GIT_BRANCH",
+                  "value": "master"
+                }
+              ]
+            }
+          ],
+          "taskTypes": [
+            "clone"
+          ]
+        }
+      ]
+    }
+  ]
+```

@@ -38,6 +38,7 @@ import {
   parsePom,
   getMvnMetadata,
   getLicenses,
+  parsePkgJson,
   parsePkgLock,
   parseBowerJson,
   parseNodeShrinkwrap,
@@ -74,12 +75,14 @@ import {
   parseSbtTree,
   parseCmakeDotFile,
   parseCmakeLikeFile,
-  parseContainerFile
+  parseContainerFile,
+  parseBitbucketPipelinesFile
 } from "./utils.js";
 import { readFileSync } from "node:fs";
 import { parse } from "ssri";
 import { expect, test } from "@jest/globals";
-import path from "path";
+import path from "node:path";
+import { Buffer } from "node:buffer";
 
 test("SSRI test", () => {
   // gopkg.lock hash
@@ -1179,7 +1182,7 @@ test("parse clojure data", () => {
   });
 });
 
-test("parse mix lock data", async () => {
+test("parse mix lock data", () => {
   expect(parseMixLockData(null)).toEqual([]);
   let dep_list = parseMixLockData(
     readFileSync("./test/data/mix.lock", { encoding: "utf-8" })
@@ -1199,12 +1202,12 @@ test("parse mix lock data", async () => {
   });
 });
 
-test("parse github actions workflow data", async () => {
+test("parse github actions workflow data", () => {
   expect(parseGitHubWorkflowData(null)).toEqual([]);
   let dep_list = parseGitHubWorkflowData(
     readFileSync("./.github/workflows/nodejs.yml", { encoding: "utf-8" })
   );
-  expect(dep_list.length).toEqual(4);
+  expect(dep_list.length).toEqual(5);
   expect(dep_list[0]).toEqual({
     group: "actions",
     name: "checkout",
@@ -1271,8 +1274,9 @@ test("parse project.assets.json", async () => {
     dependenciesList: [],
     pkgList: []
   });
-  const dep_list = await parseCsProjAssetsData(
-    readFileSync("./test/data/project.assets.json", { encoding: "utf-8" })
+  let dep_list = await parseCsProjAssetsData(
+    readFileSync("./test/data/project.assets.json", { encoding: "utf-8" }),
+    "./test/data/project.assets.json"
   );
   expect(dep_list["pkgList"].length).toEqual(302);
   expect(dep_list["pkgList"][0]).toEqual({
@@ -1308,19 +1312,105 @@ test("parse project.assets.json", async () => {
     ],
     ref: "pkg:nuget/Castle.Core.Tests@0.0.0"
   });
+  dep_list = await parseCsProjAssetsData(
+    readFileSync("./test/data/project.assets1.json", { encoding: "utf-8" }),
+    "./test/data/project.assets1.json"
+  );
+  expect(dep_list["pkgList"].length).toEqual(43);
+  expect(dep_list["pkgList"][0]).toEqual({
+    "bom-ref": "pkg:nuget/Podcast.Server@1.0.0",
+    purl: "pkg:nuget/Podcast.Server@1.0.0",
+    group: "",
+    name: "Podcast.Server",
+    type: "application",
+    version: "1.0.0"
+  });
+  /*
+  const pkgList = addEvidenceForDotnet(
+    dep_list.pkgList,
+    "./test/data/dosai-methods.json"
+  );
+  expect(pkgList.length).toEqual(43);
+  */
 });
 
 test("parse packages.lock.json", async () => {
-  expect(await parseCsPkgLockData(null)).toEqual([]);
-  const dep_list = await parseCsPkgLockData(
-    readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" })
+  expect(await parseCsPkgLockData(null)).toEqual({
+    dependenciesList: [],
+    pkgList: [],
+    rootList: []
+  });
+  let dep_list = await parseCsPkgLockData(
+    readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" }),
+    "./test/data/packages.lock.json"
   );
-  expect(dep_list.length).toEqual(14);
-  expect(dep_list[0]).toEqual({
+  expect(dep_list["pkgList"].length).toEqual(14);
+  expect(dep_list["pkgList"][0]).toEqual({
     group: "",
     name: "Antlr",
-    version: "3.5.0.2"
+    version: "3.5.0.2",
+    purl: "pkg:nuget/Antlr@3.5.0.2",
+    "bom-ref": "pkg:nuget/Antlr@3.5.0.2",
+    _integrity:
+      "sha512-CSfrVuDVMx3OrQhT84zed+tOdM1clljyRLWWlQM22fJsmG836RVDGQlE6tzysXh8X8p9UjkHbLr6OqEIVhtdEA==",
+    properties: [{ name: "SrcFile", value: "./test/data/packages.lock.json" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/packages.lock.json"
+          }
+        ]
+      }
+    }
   });
+  dep_list = await parseCsPkgLockData(
+    readFileSync("./test/data/packages2.lock.json", { encoding: "utf-8" }),
+    "./test/data/packages2.lock.json"
+  );
+  expect(dep_list["pkgList"].length).toEqual(34);
+  expect(dep_list["dependenciesList"].length).toEqual(34);
+  expect(dep_list["pkgList"][0]).toEqual({
+    group: "",
+    name: "McMaster.Extensions.Hosting.CommandLine",
+    version: "4.0.1",
+    purl: "pkg:nuget/McMaster.Extensions.Hosting.CommandLine@4.0.1",
+    "bom-ref": "pkg:nuget/McMaster.Extensions.Hosting.CommandLine@4.0.1",
+    _integrity:
+      "sha512-pZJF/zeXT3OC+3GUNO9ZicpCO9I7wYLmj0E2qPR8CRA6iUs0kGu6SCkmraB1sITx4elcVjMLiZDGMsBVMqaPhg==",
+    properties: [{ name: "SrcFile", value: "./test/data/packages2.lock.json" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/packages2.lock.json"
+          }
+        ]
+      }
+    }
+  });
+  expect(dep_list["dependenciesList"][0]).toEqual({
+    ref: "pkg:nuget/McMaster.Extensions.Hosting.CommandLine@4.0.1",
+    dependsOn: [
+      "pkg:nuget/McMaster.Extensions.CommandLineUtils@4.0.1",
+      "pkg:nuget/Microsoft.Extensions.Hosting.Abstractions@6.0.0",
+      "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@6.0.0"
+    ]
+  });
+  dep_list = await parseCsPkgLockData(
+    readFileSync("./test/data/packages3.lock.json", { encoding: "utf-8" }),
+    "./test/data/packages3.lock.json"
+  );
+  expect(dep_list["pkgList"].length).toEqual(15);
+  expect(dep_list["dependenciesList"].length).toEqual(15);
 });
 
 test("parse paket.lock", async () => {
@@ -1329,14 +1419,30 @@ test("parse paket.lock", async () => {
     dependenciesList: []
   });
   const dep_list = await parsePaketLockData(
-    readFileSync("./test/data/paket.lock", { encoding: "utf-8" })
+    readFileSync("./test/data/paket.lock", { encoding: "utf-8" }),
+    "./test/data/paket.lock"
   );
   expect(dep_list.pkgList.length).toEqual(13);
   expect(dep_list.pkgList[0]).toEqual({
     group: "",
     name: "0x53A.ReferenceAssemblies.Paket",
     version: "0.2",
-    purl: "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2"
+    purl: "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2",
+    "bom-ref": "pkg:nuget/0x53A.ReferenceAssemblies.Paket@0.2",
+    properties: [{ name: "SrcFile", value: "./test/data/paket.lock" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/paket.lock"
+          }
+        ]
+      }
+    }
   });
   expect(dep_list.dependenciesList.length).toEqual(13);
   expect(dep_list.dependenciesList[2]).toEqual({
@@ -1362,7 +1468,7 @@ test("parse .net cs proj", async () => {
 });
 
 test("get nget metadata", async () => {
-  let dep_list = [
+  const dep_list = [
     {
       dependsOn: [
         "pkg:nuget/Microsoft.NET.Test.Sdk@17.1.0",
@@ -1400,7 +1506,7 @@ test("get nget metadata", async () => {
       ref: "pkg:nuget/Serilog@3.0.1"
     }
   ];
-  let pkg_list = [
+  const pkg_list = [
     {
       group: "",
       name: "Castle.Core",
@@ -1614,11 +1720,16 @@ test("get licenses", () => {
   ]);
 });
 
+test("parsePkgJson", async () => {
+  const pkgList = await parsePkgJson("./package.json", true);
+  expect(pkgList.length).toEqual(1);
+});
+
 test("parsePkgLock v1", async () => {
-  let parsedList = await parsePkgLock(
+  const parsedList = await parsePkgLock(
     "./test/data/package-json/v1/package-lock.json"
   );
-  let deps = parsedList.pkgList;
+  const deps = parsedList.pkgList;
   expect(deps.length).toEqual(910);
   expect(deps[1]._integrity).toEqual(
     "sha512-ZmIomM7EE1DvPEnSFAHZn9Vs9zJl5A9H7el0EGTE6ZbW9FKe/14IYAlPbC8iH25YarEQxZL+E8VW7Mi7kfQrDQ=="
@@ -1627,10 +1738,10 @@ test("parsePkgLock v1", async () => {
 });
 
 test("parsePkgLock v2", async () => {
-  let parsedList = await parsePkgLock(
+  const parsedList = await parsePkgLock(
     "./test/data/package-json/v2/package-lock.json"
   );
-  let deps = parsedList.pkgList;
+  const deps = parsedList.pkgList;
   expect(deps.length).toEqual(134);
   expect(deps[1]._integrity).toEqual(
     "sha512-x9yaMvEh5BEaZKeVQC4vp3l+QoFj3BXcd4aYfuKSzIIyihjdVARAadYy3SMNIz0WCCdS2vB9JL/U6GQk5PaxQw=="
@@ -1667,27 +1778,31 @@ test("parsePkgLock v2", async () => {
 });
 
 test("parsePkgLock v2 workspace", async () => {
-  let parsedList = await parsePkgLock(
+  const parsedList = await parsePkgLock(
     "./test/data/package-json/v2-workspace/package-lock.json"
   );
-  let pkgs = parsedList.pkgList;
-  let deps = parsedList.dependenciesList;
-  expect(pkgs.length).toEqual(1032);
+  const pkgs = parsedList.pkgList;
+  const deps = parsedList.dependenciesList;
+  expect(pkgs.length).toEqual(1034);
   expect(pkgs[0].license).toEqual("MIT");
-  let hasAppWorkspacePkg = pkgs.some(
+  const hasAppWorkspacePkg = pkgs.some(
     (obj) => obj["bom-ref"] === "pkg:npm/app@0.0.0"
   );
-  let hasAppWorkspaceDeps = deps.some((obj) => obj.ref === "pkg:npm/app@0.0.0");
+  const hasAppWorkspaceDeps = deps.some(
+    (obj) => obj.ref === "pkg:npm/app@0.0.0"
+  );
   expect(hasAppWorkspacePkg).toEqual(true);
   expect(hasAppWorkspaceDeps).toEqual(true);
-  let hasRootPkg = pkgs.some((obj) => obj["bom-ref"] === "pkg:npm/root@0.0.0");
-  let hasRootDeps = deps.some((obj) => obj.ref === "pkg:npm/root@0.0.0");
+  const hasRootPkg = pkgs.some(
+    (obj) => obj["bom-ref"] === "pkg:npm/root@0.0.0"
+  );
+  const hasRootDeps = deps.some((obj) => obj.ref === "pkg:npm/root@0.0.0");
   expect(hasRootPkg).toEqual(true);
   expect(hasRootDeps).toEqual(true);
-  let hasScriptsWorkspacePkg = pkgs.some(
+  const hasScriptsWorkspacePkg = pkgs.some(
     (obj) => obj["bom-ref"] === "pkg:npm/scripts@0.0.0"
   );
-  let hasScriptsWorkspaceDeps = deps.some(
+  const hasScriptsWorkspaceDeps = deps.some(
     (obj) => obj.ref === "pkg:npm/scripts@0.0.0"
   );
   expect(hasScriptsWorkspacePkg).toEqual(true);
@@ -1724,8 +1839,8 @@ test("parsePkgLock v3", async () => {
     projectName: "cdxgen"
   });
   deps = parsedList.pkgList;
-  expect(deps.length).toEqual(1204);
-  expect(parsedList.dependenciesList.length).toEqual(1204);
+  expect(deps.length).toEqual(1203);
+  expect(parsedList.dependenciesList.length).toEqual(1203);
 });
 
 test("parseBowerJson", async () => {
@@ -1785,6 +1900,8 @@ test("parsePnpmLock", async () => {
       "sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==",
     group: "@babel",
     name: "code-frame",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.10.1",
+    purl: "pkg:npm/%40babel/code-frame@7.10.1",
     scope: undefined,
     version: "7.10.1",
     properties: [
@@ -1815,6 +1932,8 @@ test("parsePnpmLock", async () => {
       "sha512-iAXqUn8IIeBTNd72xsFlgaXHkMBMt6y4HJp1tIaK465CWLT/fG1aqB7ykr95gHHmlBdGbFeWWfyB4NJJ0nmeIg==",
     group: "@babel",
     name: "code-frame",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.16.7",
+    purl: "pkg:npm/%40babel/code-frame@7.16.7",
     scope: "optional",
     version: "7.16.7",
     properties: [
@@ -1844,6 +1963,8 @@ test("parsePnpmLock", async () => {
     group: "",
     name: "ansi-regex",
     version: "2.1.1",
+    "bom-ref": "pkg:npm/ansi-regex@2.1.1",
+    purl: "pkg:npm/ansi-regex@2.1.1",
     scope: undefined,
     _integrity: "sha1-w7M6te42DYbg5ijwRorn7yfWVN8=",
     properties: [{ name: "SrcFile", value: "./test/data/pnpm-lock2.yaml" }],
@@ -1878,6 +1999,8 @@ test("parsePnpmLock", async () => {
     group: "@nodelib",
     name: "fs.scandir",
     version: "2.1.5",
+    "bom-ref": "pkg:npm/@nodelib/fs.scandir@2.1.5",
+    purl: "pkg:npm/%40nodelib/fs.scandir@2.1.5",
     scope: undefined,
     _integrity:
       "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==",
@@ -1911,6 +2034,8 @@ test("parsePnpmLock", async () => {
     group: "@babel",
     name: "code-frame",
     version: "7.18.6",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.18.6",
+    purl: "pkg:npm/%40babel/code-frame@7.18.6",
     scope: "optional",
     _integrity:
       "sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==",
@@ -1933,6 +2058,8 @@ test("parsePnpmLock", async () => {
     group: "",
     name: "yargs",
     version: "17.7.1",
+    "bom-ref": "pkg:npm/yargs@17.7.1",
+    purl: "pkg:npm/yargs@17.7.1",
     scope: "optional",
     _integrity:
       "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
@@ -1958,6 +2085,8 @@ test("parsePnpmLock", async () => {
     group: "@babel",
     name: "code-frame",
     version: "7.18.6",
+    "bom-ref": "pkg:npm/@babel/code-frame@7.18.6",
+    purl: "pkg:npm/%40babel/code-frame@7.18.6",
     scope: "optional",
     _integrity:
       "sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==",
@@ -2276,16 +2405,31 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6"
   );
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv4.1.lock");
+  expect(parsedList.pkgList.length).toEqual(861);
+  expect(parsedList.dependenciesList.length).toEqual(858);
+  expect(parsedList.pkgList[0].purl).toEqual(
+    "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6"
+  );
+  expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
+    "pkg:npm/@aashutoshrathi/word-wrap@1.2.6"
+  );
+  expect(parsedList.pkgList[0]._integrity).toEqual(
+    "sha512-U8KyMaYaRnkrOaDUO8T093a7RUKqV+4EkwZ2gC5VASgsL8iqwU5M0fESD/i1Jha2/1q1Oa0wqiJ31yZES3Fhnw=="
+  );
 });
 
 test("parseComposerLock", () => {
-  let deps = parseComposerLock("./test/data/composer.lock");
-  expect(deps.length).toEqual(1);
-  expect(deps[0]).toEqual({
+  let retMap = parseComposerLock("./test/data/composer.lock");
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.dependenciesList.length).toEqual(1);
+  expect(retMap.pkgList[0]).toEqual({
     group: "quickbooks",
     name: "v3-php-sdk",
     scope: "required",
-    version: "4.0.6.1",
+    version: "v4.0.6.1",
+    purl: "pkg:composer/quickbooks/v3-php-sdk@v4.0.6.1",
+    "bom-ref": "pkg:composer/quickbooks/v3-php-sdk@v4.0.6.1",
     repository: {
       type: "git",
       url: "https://github.com/intuit/QuickBooks-V3-PHP-SDK.git",
@@ -2297,6 +2441,10 @@ test("parseComposerLock", () => {
       {
         name: "SrcFile",
         value: "./test/data/composer.lock"
+      },
+      {
+        name: "Namespaces",
+        value: "QuickBooksOnline\\API\\"
       }
     ],
     evidence: {
@@ -2314,13 +2462,16 @@ test("parseComposerLock", () => {
     }
   });
 
-  deps = parseComposerLock("./test/data/composer-2.lock");
-  expect(deps.length).toEqual(73);
-  expect(deps[0]).toEqual({
+  retMap = parseComposerLock("./test/data/composer-2.lock");
+  expect(retMap.pkgList.length).toEqual(73);
+  expect(retMap.dependenciesList.length).toEqual(73);
+  expect(retMap.pkgList[0]).toEqual({
     group: "amphp",
     name: "amp",
     scope: "required",
-    version: "2.4.4",
+    version: "v2.4.4",
+    purl: "pkg:composer/amphp/amp@v2.4.4",
+    "bom-ref": "pkg:composer/amphp/amp@v2.4.4",
     repository: {
       type: "git",
       url: "https://github.com/amphp/amp.git",
@@ -2332,6 +2483,10 @@ test("parseComposerLock", () => {
       {
         name: "SrcFile",
         value: "./test/data/composer-2.lock"
+      },
+      {
+        name: "Namespaces",
+        value: "Amp\\"
       }
     ],
     evidence: {
@@ -2349,12 +2504,15 @@ test("parseComposerLock", () => {
     }
   });
 
-  deps = parseComposerLock("./test/data/composer-3.lock");
-  expect(deps.length).toEqual(62);
-  expect(deps[0]).toEqual({
+  retMap = parseComposerLock("./test/data/composer-3.lock");
+  expect(retMap.pkgList.length).toEqual(62);
+  expect(retMap.dependenciesList.length).toEqual(62);
+  expect(retMap.pkgList[0]).toEqual({
     group: "amphp",
     name: "amp",
-    version: "2.6.2",
+    version: "v2.6.2",
+    purl: "pkg:composer/amphp/amp@v2.6.2",
+    "bom-ref": "pkg:composer/amphp/amp@v2.6.2",
     repository: {
       type: "git",
       url: "https://github.com/amphp/amp.git",
@@ -2363,7 +2521,13 @@ test("parseComposerLock", () => {
     license: ["MIT"],
     description: "A non-blocking concurrency framework for PHP applications.",
     scope: "required",
-    properties: [{ name: "SrcFile", value: "./test/data/composer-3.lock" }],
+    properties: [
+      { name: "SrcFile", value: "./test/data/composer-3.lock" },
+      {
+        name: "Namespaces",
+        value: "Amp\\"
+      }
+    ],
     evidence: {
       identity: {
         field: "purl",
@@ -2377,6 +2541,42 @@ test("parseComposerLock", () => {
         ]
       }
     }
+  });
+  retMap = parseComposerLock("./test/data/composer-4.lock");
+  expect(retMap.pkgList.length).toEqual(50);
+  expect(retMap.dependenciesList.length).toEqual(50);
+  expect(retMap.pkgList[0]).toEqual({
+    group: "apache",
+    name: "log4php",
+    purl: "pkg:composer/apache/log4php@2.3.0",
+    "bom-ref": "pkg:composer/apache/log4php@2.3.0",
+    version: "2.3.0",
+    repository: {
+      type: "git",
+      url: "https://git-wip-us.apache.org/repos/asf/logging-log4php.git",
+      reference: "8c6df2481cd68d0d211d38f700406c5f0a9de0c2"
+    },
+    license: ["Apache-2.0"],
+    description: "A versatile logging framework for PHP",
+    scope: "required",
+    properties: [{ name: "SrcFile", value: "./test/data/composer-4.lock" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            confidence: 1,
+            technique: "manifest-analysis",
+            value: "./test/data/composer-4.lock"
+          }
+        ]
+      }
+    }
+  });
+  expect(retMap.dependenciesList[1]).toEqual({
+    ref: "pkg:composer/doctrine/annotations@v1.2.1",
+    dependsOn: ["pkg:composer/doctrine/lexer@v1.0"]
   });
 });
 
@@ -2445,7 +2645,7 @@ test("parse requirements.txt", async () => {
   });
 });
 
-test("parse pyproject.toml", async () => {
+test("parse pyproject.toml", () => {
   const pkg = parsePyProjectToml("./test/data/pyproject.toml");
   expect(pkg).toEqual({
     name: "cpggen",
@@ -2550,7 +2750,7 @@ test("parse scala sbt list", () => {
 });
 
 test("parse scala sbt tree", () => {
-  let retMap = parseSbtTree("./test/data/atom-sbt-tree.txt");
+  const retMap = parseSbtTree("./test/data/atom-sbt-tree.txt");
   expect(retMap.pkgList.length).toEqual(153);
   expect(retMap.dependenciesList.length).toEqual(153);
 });
@@ -2611,7 +2811,7 @@ test("parse bazel build", () => {
   expect(projs[0]).toEqual("java-maven-lib");
 });
 
-test("parse helm charts", async () => {
+test("parse helm charts", () => {
   let dep_list = parseHelmYamlData(
     readFileSync("./test/data/Chart.yaml", { encoding: "utf-8" })
   );
@@ -2642,7 +2842,7 @@ test("parse helm charts", async () => {
   });
 });
 
-test("parse container spec like files", async () => {
+test("parse container spec like files", () => {
   let dep_list = parseContainerSpecData(
     readFileSync("./test/data/docker-compose.yml", { encoding: "utf-8" })
   );
@@ -2728,8 +2928,8 @@ test("parse container spec like files", async () => {
   });
 });
 
-test("parse containerfiles / dockerfiles", async () => {
-  let dep_list = parseContainerFile(
+test("parse containerfiles / dockerfiles", () => {
+  const dep_list = parseContainerFile(
     readFileSync("./test/data/Dockerfile", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
@@ -2753,7 +2953,29 @@ test("parse containerfiles / dockerfiles", async () => {
   });
 });
 
-test("parse cloudbuild data", async () => {
+test("parse bitbucket-pipelines", () => {
+  const dep_list = parseBitbucketPipelinesFile(
+    readFileSync("./test/data/bitbucket-pipelines.yml", { encoding: "utf-8" })
+  );
+  expect(dep_list.length).toEqual(5);
+  expect(dep_list[0]).toEqual({
+    image: "node:16"
+  });
+  expect(dep_list[1]).toEqual({
+    image: "node:18"
+  });
+  expect(dep_list[2]).toEqual({
+    image: "some.private.org/docker/library/node:20"
+  });
+  expect(dep_list[3]).toEqual({
+    image: "atlassian/aws/s3-deploy:0.2.2"
+  });
+  expect(dep_list[4]).toEqual({
+    image: "some.private.org/docker/library/some-pipe:1.0.0"
+  });
+});
+
+test("parse cloudbuild data", () => {
   expect(parseCloudBuildData(null)).toEqual([]);
   const dep_list = parseCloudBuildData(
     readFileSync("./test/data/cloudbuild.yaml", { encoding: "utf-8" })
@@ -2774,7 +2996,7 @@ test("parse privado files", () => {
   expect(servList[0].properties.length).toEqual(5);
 });
 
-test("parse openapi spec files", async () => {
+test("parse openapi spec files", () => {
   let aservice = parseOpenapiSpecData(
     readFileSync("./test/data/openapi/openapi-spec.json", {
       encoding: "utf-8"
@@ -2875,28 +3097,29 @@ test("parse swift deps files", () => {
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "swift-markdown",
     name: "swift-markdown",
+    group: "",
+    purl: "pkg:swift/swift-markdown@unspecified",
     version: "unspecified",
     properties: [
       { name: "SrcPath", value: "/Volumes/Work/sandbox/swift-markdown" },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref": "pkg:swift/swift-markdown/swift-markdown@unspecified"
+    "bom-ref": "pkg:swift/swift-markdown@unspecified"
   });
   expect(retData.dependenciesList.length).toEqual(5);
   expect(retData.dependenciesList[0]).toEqual({
-    ref: "pkg:swift/swift-markdown/swift-markdown@unspecified",
-    dependsOn: [
-      "pkg:swift/swift-cmark/cmark-gfm@unspecified",
-      "pkg:swift/swift-argument-parser/swift-argument-parser@1.0.3",
-      "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"
-    ]
+    ref: "pkg:swift/github.com/apple/swift-cmark@unspecified",
+    dependsOn: []
   });
   expect(retData.dependenciesList[retData.dependenciesList.length - 1]).toEqual(
     {
-      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
-      dependsOn: []
+      ref: "pkg:swift/swift-markdown@unspecified",
+      dependsOn: [
+        "pkg:swift/github.com/apple/swift-cmark@unspecified",
+        "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
+        "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"
+      ]
     }
   );
   retData = parseSwiftJsonTree(
@@ -2905,8 +3128,9 @@ test("parse swift deps files", () => {
   );
   expect(retData.pkgList.length).toEqual(5);
   expect(retData.pkgList[0]).toEqual({
-    group: "swift-certificates",
     name: "swift-certificates",
+    group: "",
+    purl: "pkg:swift/swift-certificates@unspecified",
     version: "unspecified",
     properties: [
       {
@@ -2915,36 +3139,37 @@ test("parse swift deps files", () => {
       },
       { name: "SrcFile", value: "./test/data/swift-deps.json" }
     ],
-    "bom-ref": "pkg:swift/swift-certificates/swift-certificates@unspecified"
+    "bom-ref": "pkg:swift/swift-certificates@unspecified"
   });
   expect(retData.dependenciesList).toEqual([
     {
-      ref: "pkg:swift/swift-certificates/swift-certificates@unspecified",
-      dependsOn: ["pkg:swift/swift-crypto/swift-crypto@2.4.0"]
-    },
-    {
-      ref: "pkg:swift/swift-crypto/swift-crypto@2.4.0",
-      dependsOn: ["pkg:swift/swift-asn1/swift-asn1@0.7.0"]
-    },
-    {
-      ref: "pkg:swift/swift-asn1/swift-asn1@0.7.0",
-      dependsOn: ["pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0"]
-    },
-    {
-      ref: "pkg:swift/swift-docc-plugin/SwiftDocCPlugin@1.1.0",
-      dependsOn: ["pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0"]
-    },
-    {
-      ref: "pkg:swift/swift-docc-symbolkit/SymbolKit@1.0.0",
+      ref: "pkg:swift/github.com/apple/swift-docc-symbolkit@1.0.0",
       dependsOn: []
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-docc-plugin@1.1.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-docc-symbolkit@1.0.0"]
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-asn1@0.7.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-docc-plugin@1.1.0"]
+    },
+    {
+      ref: "pkg:swift/github.com/apple/swift-crypto@2.4.0",
+      dependsOn: ["pkg:swift/github.com/apple/swift-asn1@0.7.0"]
+    },
+    {
+      ref: "pkg:swift/swift-certificates@unspecified",
+      dependsOn: ["pkg:swift/github.com/apple/swift-crypto@2.4.0"]
     }
   ]);
   let pkgList = parseSwiftResolved("./test/data/Package.resolved");
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "",
+    group: "github.com/apple",
     version: "1.0.3",
+    purl: "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
     properties: [{ name: "SrcFile", value: "./test/data/Package.resolved" }],
     evidence: {
       identity: {
@@ -2959,14 +3184,16 @@ test("parse swift deps files", () => {
         ]
       }
     },
+    "bom-ref": "pkg:swift/github.com/apple/swift-argument-parser@1.0.3",
     repository: { url: "https://github.com/apple/swift-argument-parser" }
   });
   pkgList = parseSwiftResolved("./test/data/Package2.resolved");
   expect(pkgList.length).toEqual(4);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
-    group: "",
+    group: "github.com/apple",
     version: "1.2.2",
+    purl: "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
     evidence: {
       identity: {
@@ -2981,6 +3208,7 @@ test("parse swift deps files", () => {
         ]
       }
     },
+    "bom-ref": "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     repository: { url: "https://github.com/apple/swift-argument-parser.git" }
   });
 });
@@ -3080,6 +3308,18 @@ test("parseCmakeLikeFile tests", () => {
     group: "",
     name: "mongo-c-driver",
     purl: "pkg:conan/mongo-c-driver",
+    type: "application",
+    version: ""
+  });
+  retMap = parseCmakeLikeFile(
+    "./test/data/cmakes/CMakeLists-tpl.txt",
+    "generic"
+  );
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:generic/aurora-examples",
+    group: "",
+    name: "aurora-examples",
+    purl: "pkg:generic/aurora-examples",
     type: "application",
     version: ""
   });

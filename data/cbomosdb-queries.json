@@ -1,0 +1,68 @@
+{
+  "deb_packages": {
+    "query": "select * from deb_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves all the installed DEB packages in the target Linux system.",
+    "purlType": "deb",
+    "componentType": "library"
+  },
+  "portage_packages": {
+    "query": "select * from portage_packages where package like '%ssl%' OR package like '%crypto%';",
+    "description": "Retrieves all the installed packages on the target Linux system.",
+    "purlType": "ebuild",
+    "componentType": "library"
+  },
+  "rpm_packages": {
+    "query": "select * from rpm_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves all the installed RPM packages in the target Linux system.",
+    "purlType": "rpm",
+    "componentType": "library"
+  },
+  "python_packages": {
+    "query": "select * from python_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Python packages installed on system.",
+    "purlType": "pypi",
+    "componentType": "library"
+  },
+  "windows_programs": {
+    "query": "select * from programs where name like '%ssl%' OR name like '%crypto%';",
+    "description": "Retrieves the list of products as they are installed by Windows Installer in the target Windows system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "homebrew_packages": {
+    "query": "SELECT * FROM homebrew_packages where name like '%ssl%' OR name like '%crypto%';",
+    "description": "List all homebrew_packages.",
+    "purlType": "swid",
+    "componentType": "library"
+  },
+  "authorized_keys": {
+    "query": "SELECT * FROM authorized_keys;",
+    "description": "List of authorized keys.",
+    "purlType": "generic",
+    "componentType": "cryptographic-asset"
+  },
+  "certificates": {
+    "query": "SELECT * FROM certificates;",
+    "description": "List of certificates.",
+    "purlType": "generic",
+    "componentType": "cryptographic-asset"
+  },
+  "keychain_items": {
+    "query": "SELECT * FROM keychain_items;",
+    "description": "Generic details about keychain items.",
+    "purlType": "generic",
+    "componentType": "data"
+  },
+  "kernel_keys": {
+    "query": "SELECT * FROM kernel_keys;",
+    "description": "List of security data, authentication keys and encryption keys.",
+    "purlType": "generic",
+    "componentType": "cryptographic-asset"
+  },
+  "yum_sources": {
+    "query": "SELECT * FROM yum_sources;",
+    "description": "Current list of Yum repositories or software channels.",
+    "purlType": "generic",
+    "componentType": "data"
+  }
+}
