@@ -139,7 +139,8 @@ import {
   getPkgPathList,
   parseImageName,
   exportArchive,
-  exportImage
+  exportImage,
+  addSkippedSrcFiles
 } from "./docker.js";
 import {
   getGoBuildInfo,
@@ -3659,6 +3660,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
   let parentComponent = {};
   let dependencies = [];
   const doneimages = [];
+  const skippedImageSrcs = [];
   const doneservices = [];
   const origProjectType = options.projectType;
   let dcFiles = getAllFiles(
@@ -3791,6 +3793,9 @@ export const createContainerSpecLikeBom = async (path, options) => {
               if (DEBUG_MODE) {
                 console.log("Skipping", img.image);
               }
+
+              skippedImageSrcs.push({ image: img.image, src: f });
+
               continue;
             }
             if (DEBUG_MODE) {
@@ -3846,6 +3851,9 @@ export const createContainerSpecLikeBom = async (path, options) => {
         } // for img
       }
     } // for
+
+    // Add additional SrcFile property to skipped image components
+    addSkippedSrcFiles(skippedImageSrcs, components);
   } // if
   // Parse openapi files
   if (oapiFiles.length) {
