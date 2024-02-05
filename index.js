@@ -139,7 +139,8 @@ import {
   getPkgPathList,
   parseImageName,
   exportArchive,
-  exportImage
+  exportImage,
+  addSkippedSrcFiles
 } from "./docker.js";
 import {
   getGoBuildInfo,
@@ -3851,30 +3852,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
     } // for
 
     // Add additional SrcFile property to skipped image components
-    for (const skippedImage of skippedImageSrcs) {
-      for (const co of components) {
-        let srcFileValues = [];
-        let srcImageValue;
-        co.properties.forEach(function (property) {
-          if (property.name === "SrcFile") {
-            srcFileValues.push(property.value);
-          }
-          if (property.name === "oci:SrcImage") {
-            srcImageValue = property.value;
-          }
-        });
-
-        if (
-          srcImageValue === skippedImage.image &&
-          !srcFileValues.includes(skippedImage.src)
-        ) {
-          co.properties = co.properties.concat({
-            name: "SrcFile",
-            value: skippedImage.src
-          });
-        }
-      }
-    }
+    addSkippedSrcFiles(skippedImageSrcs, components);
   } // if
   // Parse openapi files
   if (oapiFiles.length) {

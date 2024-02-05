@@ -4,9 +4,10 @@ import {
   getImage,
   removeImage,
   exportImage,
-  isWin
+  isWin,
+  addSkippedSrcFiles
 } from "./docker.js";
-import { expect, test } from "@jest/globals";
+import { expect, test, describe, beforeEach } from "@jest/globals";
 
 test("docker connection", async () => {
   if (!(isWin && process.env.CI === "true")) {
@@ -116,4 +117,73 @@ test("docker getImage", async () => {
   }
   const imageData = await exportImage("hello-world:latest");
   expect(imageData);
+}, 120000);
+
+describe("addSkippedSrcFiles tests", () => {
+  let testComponents;
+
+  beforeEach(() => {
+    testComponents = [
+      {
+        name: "node",
+        version: "20",
+        component: "node:20",
+        purl: "pkg:oci/node@20?tag=20",
+        type: "container",
+        "bom-ref": "pkg:oci/node@20?tag=20",
+        properties: [
+          {
+            name: "SrcFile",
+            value: "/some/project/Dockerfile"
+          },
+          {
+            name: "oci:SrcImage",
+            value: "node:20"
+          }
+        ]
+      }
+    ];
+  });
+
+  test("no matching additional src files", () => {
+    addSkippedSrcFiles(
+      [
+        {
+          image: "node:18",
+          src: "/some/project/bitbucket-pipeline.yml"
+        }
+      ],
+      testComponents
+    );
+
+    expect(testComponents[0].properties).toHaveLength(2);
+  });
+
+  test("adds additional src files", () => {
+    addSkippedSrcFiles(
+      [
+        {
+          image: "node:20",
+          src: "/some/project/bitbucket-pipeline.yml"
+        }
+      ],
+      testComponents
+    );
+
+    expect(testComponents[0].properties).toHaveLength(3);
+  });
+
+  test("skips if same src file", () => {
+    addSkippedSrcFiles(
+      [
+        {
+          image: "node:20",
+          src: "/some/project/Dockerfile"
+        }
+      ],
+      testComponents
+    );
+
+    expect(testComponents[0].properties).toHaveLength(2);
+  });
 }, 120000);
