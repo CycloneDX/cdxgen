@@ -6728,7 +6728,13 @@ export const collectJarNS = async (jarPath, pomPathMap = {}) => {
       let purl = undefined;
       // In some cases, the pom name might be slightly different to the jar name
       if (!existsSync(pomname)) {
-        const pomSearch = getAllFiles(dirname(jf), "*.pom");
+        let searchDir = dirname(jf);
+        // in case of gradle, there would be hash directory that is different for jar vs pom
+        // so we need to start search from a level up
+        if (searchDir.includes(join(".gradle", "caches"))) {
+          searchDir = join(searchDir, "..");
+        }
+        const pomSearch = getAllFiles(searchDir, "**/*.pom");
         if (pomSearch && pomSearch.length === 1) {
           pomname = pomSearch[0];
         }
@@ -6805,12 +6811,16 @@ export const collectJarNS = async (jarPath, pomPathMap = {}) => {
           tmpDirParts.pop();
           // Retrieve the version
           const jarVersion = tmpDirParts.pop();
+          const pkgName = jarFileName.replace(`-${jarVersion}`, "");
           // The result would form the group name
-          const jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          let jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          if (jarGroupName.includes(pkgName)) {
+            jarGroupName = jarGroupName.replace("." + pkgName, "");
+          }
           const purlObj = new PackageURL(
             "maven",
             jarGroupName,
-            jarFileName.replace(`-${jarVersion}`, ""),
+            pkgName,
             jarVersion,
             { type: "jar" },
             null

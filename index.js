@@ -1452,7 +1452,10 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+        const tmpjarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+        if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+          jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+        }
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
@@ -1749,7 +1752,10 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = await collectJarNS(SBT_CACHE_DIR);
+        const tmpjarNSMapping = await collectJarNS(SBT_CACHE_DIR);
+        if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+          jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+        }
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
