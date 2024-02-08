@@ -3791,7 +3791,10 @@ export const createContainerSpecLikeBom = async (path, options) => {
           if (img.image) {
             if (doneimages.includes(img.image)) {
               if (DEBUG_MODE) {
-                console.log("Skipping", img.image);
+                console.log(
+                  "Skipping image as it's already been processed",
+                  img.image
+                );
               }
 
               skippedImageSrcs.push({ image: img.image, src: f });
@@ -3814,8 +3817,21 @@ export const createContainerSpecLikeBom = async (path, options) => {
               type: "container"
             };
             if (imageObj.registry) {
-              pkg["qualifiers"]["repository_url"] =
-                `${imageObj.registry}/${imageObj.repo}`;
+              // Skip adding repository_url if the registry or repo contains variables.
+              if (
+                imageObj.registry.includes("${") ||
+                imageObj.repo.includes("${")
+              ) {
+                if (DEBUG_MODE) {
+                  console.warn(
+                    "Skipping adding repository_url qualifier as it contains variables, which are not yet supported",
+                    img.image
+                  );
+                }
+              } else {
+                pkg["qualifiers"]["repository_url"] =
+                  `${imageObj.registry}/${imageObj.repo}`;
+              }
             }
             if (imageObj.platform) {
               pkg["qualifiers"]["platform"] = imageObj.platform;
