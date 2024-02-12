@@ -4034,16 +4034,19 @@ export const parseGoVersionData = async function (buildInfoData) {
  * @param {*} pkgList List of packages with metadata
  */
 export const getRubyGemsMetadata = async function (pkgList) {
-  const RUBYGEMS_URL = "https://rubygems.org/api/v1/versions/";
+  const RUBYGEMS_URL = "https://rubygems.org/api/v2/rubygems/";
   const rdepList = [];
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
-      const res = await cdxgenAgent.get(RUBYGEMS_URL + p.name + ".json", {
-        responseType: "json"
-      });
+      const res = await cdxgenAgent.get(
+        `${RUBYGEMS_URL}${p.name}/versions/${p.version}.json`,
+        {
+          responseType: "json"
+        }
+      );
       let body = res.body;
       if (body && body.length) {
         body = body[0];
@@ -4062,6 +4065,23 @@ export const getRubyGemsMetadata = async function (pkgList) {
       }
       if (body.sha) {
         p._integrity = "sha256-" + body.sha;
+      }
+      if (body.authors) {
+        p.author = body.authors;
+      }
+      // Track the platform such as java
+      if (body.platform && body.platform !== "ruby") {
+        if (p.purl.includes("?")) {
+          p.purl = `${p.purl}&platform=${body.platform}`;
+        } else {
+          p.purl = `${p.purl}?platform=${body.platform}`;
+        }
+      }
+      if (p.ruby_version) {
+        p.properties.push({
+          name: "cdx:gem:rubyVersionSpecifiers",
+          value: p.ruby_version
+        });
       }
       // Use the latest version if none specified
       if (!p.version) {
