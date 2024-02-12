@@ -9,7 +9,7 @@
       "include": ["bin/", "*.js"],
       "exclude": ["test/", "data/", "contrib/"],
       "rules": {
-        "tags": ["recommended"],
+        "tags": ["recommended", "no-self-compare"],
         "exclude": ["no-unused-vars", "no-invalid-regexp"]
       }
     },

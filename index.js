@@ -1452,7 +1452,10 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+        const tmpjarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+        if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+          jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+        }
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
@@ -1749,7 +1752,10 @@ export const createJavaBom = async (path, options) => {
       }
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        jarNSMapping = await collectJarNS(SBT_CACHE_DIR);
+        const tmpjarNSMapping = await collectJarNS(SBT_CACHE_DIR);
+        if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+          jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+        }
       }
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
@@ -4145,10 +4151,13 @@ export const createRubyBom = async (path, options) => {
   );
   let gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile.lock",
+    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
     options
   );
   let pkgList = [];
+  let dependencies = [];
+  let rootList = [];
+  const parentComponent = createDefaultParentComponent(path, "gem", options);
   const gemFileMode = gemFiles.length;
   const gemLockMode = gemLockFiles.length;
   if (gemFileMode && !gemLockMode && options.installDeps) {
@@ -4170,7 +4179,7 @@ export const createRubyBom = async (path, options) => {
   }
   gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile.lock",
+    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
     options
   );
   if (gemLockFiles.length) {
@@ -4179,17 +4188,41 @@ export const createRubyBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       const gemLockData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parseGemfileLockData(gemLockData);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      const retMap = await parseGemfileLockData(gemLockData, f);
+      if (retMap.pkgList && retMap.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+        pkgList = trimComponents(pkgList);
+      }
+      if (retMap.dependenciesList && retMap.dependenciesList.length) {
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependenciesList,
+          parentComponent
+        );
+      }
+      if (retMap.rootList && retMap.rootList.length) {
+        rootList = rootList.concat(retMap.rootList);
       }
     }
-    return buildBomNSData(options, pkgList, "gem", {
-      src: path,
-      filename: gemLockFiles.join(", ")
-    });
   }
-  return {};
+  if (rootList.length) {
+    dependencies = mergeDependencies(
+      dependencies,
+      [
+        {
+          ref: parentComponent["bom-ref"],
+          dependsOn: rootList
+        }
+      ],
+      parentComponent
+    );
+  }
+  return buildBomNSData(options, pkgList, "gem", {
+    src: path,
+    dependencies,
+    parentComponent,
+    filename: gemLockFiles.join(", ")
+  });
 };
 
 /**
@@ -4674,7 +4707,11 @@ export const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
+      dependencies = mergeDependencies(
+        dependencies,
+        bomData.bomJson.dependencies,
+        bomData.parentComponent
+      );
       if (
         bomData.parentComponent &&
         Object.keys(bomData.parentComponent).length
@@ -5039,7 +5076,7 @@ export const createXBom = async (path, options) => {
   );
   const gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile.lock",
+    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
     options
   );
   if (gemFiles.length || gemLockFiles.length) {

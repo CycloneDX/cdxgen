@@ -544,7 +544,7 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
       const pkgData = JSON.parse(readFileSync(pkgJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
       const name = pkgIdentifier.fullName || pkgData.name;
-      if (!name && !pkgJsonFile.includes("node_modules")) {
+      if (DEBUG_MODE && !name && !pkgJsonFile.includes("node_modules")) {
         console.log(
           `${pkgJsonFile} doesn't contain the package name. Consider using the 'npm init' command to create a valid package.json file for this project.`
         );
@@ -4034,16 +4034,28 @@ export const parseGoVersionData = async function (buildInfoData) {
  * @param {*} pkgList List of packages with metadata
  */
 export const getRubyGemsMetadata = async function (pkgList) {
-  const RUBYGEMS_URL = "https://rubygems.org/api/v1/versions/";
+  const RUBYGEMS_V2_URL =
+    process.env.RUBYGEMS_V2_URL || "https://rubygems.org/api/v2/rubygems/";
+  const RUBYGEMS_V1_URL =
+    process.env.RUBYGEMS_V1_URL || "https://rubygems.org/api/v1/gems/";
   const rdepList = [];
+  const apiOptions = {
+    responseType: "json"
+  };
+  if (process.env.GEM_HOST_API_KEY) {
+    apiOptions.headers = {
+      Authorization: process.env.GEM_HOST_API_KEY
+    };
+  }
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
-      const res = await cdxgenAgent.get(RUBYGEMS_URL + p.name + ".json", {
-        responseType: "json"
-      });
+      const fullUrl = p.version
+        ? `${RUBYGEMS_V2_URL}${p.name}/versions/${p.version}.json`
+        : `${RUBYGEMS_V1_URL}${p.name}.json`;
+      const res = await cdxgenAgent.get(fullUrl, apiOptions);
       let body = res.body;
       if (body && body.length) {
         body = body[0];
@@ -4055,13 +4067,53 @@ export const getRubyGemsMetadata = async function (pkgList) {
       if (body.metadata) {
         if (body.metadata.source_code_uri) {
           p.repository = { url: body.metadata.source_code_uri };
+          if (
+            body.homepage_uri &&
+            body.homepage_uri !== body.metadata.source_code_uri
+          ) {
+            p.homepage = { url: body.homepage_uri };
+          }
         }
         if (body.metadata.bug_tracker_uri) {
-          p.homepage = { url: body.metadata.bug_tracker_uri };
+          p.bugs = { url: body.metadata.bug_tracker_uri };
         }
       }
       if (body.sha) {
         p._integrity = "sha256-" + body.sha;
+      }
+      if (body.authors) {
+        p.author = body.authors;
+      }
+      // Track the platform such as java
+      if (body.platform && body.platform !== "ruby") {
+        p.properties.push({
+          name: "cdx:gem:platform",
+          value: body.platform
+        });
+      }
+      if (body.ruby_version) {
+        p.properties.push({
+          name: "cdx:gem:rubyVersionSpecifiers",
+          value: body.ruby_version
+        });
+      }
+      if (body.gem_uri) {
+        p.properties.push({
+          name: "cdx:gem:gemUri",
+          value: body.gem_uri
+        });
+      }
+      if (body.yanked) {
+        p.properties.push({
+          name: "cdx:gem:yanked",
+          value: "" + body.yanked
+        });
+      }
+      if (body.prerelease) {
+        p.properties.push({
+          name: "cdx:gem:prerelease",
+          value: "" + body.prerelease
+        });
       }
       // Use the latest version if none specified
       if (!p.version) {
@@ -4119,15 +4171,22 @@ export const parseGemspecData = async function (gemspecData) {
 /**
  * Method to parse Gemfile.lock
  *
- * @param {*} gemLockData Gemfile.lock data
+ * @param {object} gemLockData Gemfile.lock data
+ * @param {string} lockFile Lock file
  */
-export const parseGemfileLockData = async function (gemLockData) {
-  const pkgList = [];
+export const parseGemfileLockData = async (gemLockData, lockFile) => {
+  let pkgList = [];
   const pkgnames = {};
+  const dependenciesList = [];
+  const dependenciesMap = {};
+  const pkgVersionMap = {};
+  const rootList = [];
   if (!gemLockData) {
     return pkgList;
   }
   let specsFound = false;
+  // We need two passes to identify components and resolve dependencies
+  // In the first pass, we capture package name and version
   gemLockData.split("\n").forEach((l) => {
     l = l.trim();
     l = l.replace("\r", "");
@@ -4138,35 +4197,106 @@ export const parseGemfileLockData = async function (gemLockData) {
         if (name === "remote:") {
           return;
         }
-        if (!pkgnames[name]) {
-          let version = tmpA[1].split(", ")[0];
-          version = version.replace(/[(>=<)~ ]/g, "");
-          pkgList.push({
-            name,
-            version
-          });
-          pkgnames[name] = true;
+        let version = tmpA[1];
+        // We only allow bracket characters ()
+        if (version.search(/[,><~ ]/) < 0) {
+          version = version.replace(/[=()]/g, "");
+          pkgVersionMap[name] = version;
         }
       }
     }
     if (l === "specs:") {
       specsFound = true;
     }
-    if (
-      l === "PLATFORMS" ||
-      l === "DEPENDENCIES" ||
-      l === "RUBY VERSION" ||
-      l === "BUNDLED WITH" ||
-      l === "PATH"
-    ) {
+    if (l === l.toUpperCase()) {
       specsFound = false;
     }
   });
-  if (FETCH_LICENSE) {
-    return await getRubyGemsMetadata(pkgList);
-  } else {
-    return pkgList;
+  specsFound = false;
+  let lastParent = undefined;
+  // In the second pass, we use the space in the prefix to figure out the dependency tree
+  gemLockData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
+    if (specsFound) {
+      const tmpA = l.split(" (");
+      if (tmpA && tmpA.length == 2) {
+        const nameWithPrefix = tmpA[0];
+        const name = tmpA[0].trim();
+        if (name === "remote:") {
+          return;
+        }
+        const level = nameWithPrefix.replace(name, "").split("  ").length % 2;
+        const purlString = new PackageURL(
+          "gem",
+          "",
+          name,
+          pkgVersionMap[name],
+          null,
+          null
+        ).toString();
+        const bomRef = decodeURIComponent(purlString);
+        if (level === 1) {
+          lastParent = bomRef;
+          rootList.push(bomRef);
+        }
+        const apkg = {
+          name,
+          version: pkgVersionMap[name],
+          purl: purlString,
+          "bom-ref": bomRef,
+          properties: [
+            {
+              name: "SrcFile",
+              value: lockFile
+            }
+          ],
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence: 0.8,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.8,
+                  value: lockFile
+                }
+              ]
+            }
+          }
+        };
+        if (lastParent && lastParent !== bomRef) {
+          if (!dependenciesMap[lastParent]) {
+            dependenciesMap[lastParent] = new Set();
+          }
+          dependenciesMap[lastParent].add(bomRef);
+        }
+        if (!dependenciesMap[bomRef]) {
+          dependenciesMap[bomRef] = new Set();
+        }
+        if (!pkgnames[name]) {
+          pkgList.push(apkg);
+          pkgnames[name] = true;
+        }
+      }
+    }
+    if (l.trim() === "specs:") {
+      specsFound = true;
+    }
+    if (l.trim() == l.trim().toUpperCase()) {
+      specsFound = false;
+    }
+  });
+  for (const k of Object.keys(dependenciesMap)) {
+    dependenciesList.push({
+      ref: k,
+      dependsOn: Array.from(dependenciesMap[k])
+    });
   }
+  if (FETCH_LICENSE) {
+    pkgList = await getRubyGemsMetadata(pkgList);
+    return { pkgList, dependenciesList };
+  }
+  return { pkgList, dependenciesList, rootList };
 };
 
 /**
@@ -6728,7 +6858,13 @@ export const collectJarNS = async (jarPath, pomPathMap = {}) => {
       let purl = undefined;
       // In some cases, the pom name might be slightly different to the jar name
       if (!existsSync(pomname)) {
-        const pomSearch = getAllFiles(dirname(jf), "*.pom");
+        let searchDir = dirname(jf);
+        // in case of gradle, there would be hash directory that is different for jar vs pom
+        // so we need to start search from a level up
+        if (searchDir.includes(join(".gradle", "caches"))) {
+          searchDir = join(searchDir, "..");
+        }
+        const pomSearch = getAllFiles(searchDir, "**/*.pom");
         if (pomSearch && pomSearch.length === 1) {
           pomname = pomSearch[0];
         }
@@ -6805,12 +6941,16 @@ export const collectJarNS = async (jarPath, pomPathMap = {}) => {
           tmpDirParts.pop();
           // Retrieve the version
           const jarVersion = tmpDirParts.pop();
+          const pkgName = jarFileName.replace(`-${jarVersion}`, "");
           // The result would form the group name
-          const jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          let jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
+          if (jarGroupName.includes(pkgName)) {
+            jarGroupName = jarGroupName.replace("." + pkgName, "");
+          }
           const purlObj = new PackageURL(
             "maven",
             jarGroupName,
-            jarFileName.replace(`-${jarVersion}`, ""),
+            pkgName,
             jarVersion,
             { type: "jar" },
             null
