@@ -544,7 +544,7 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
       const pkgData = JSON.parse(readFileSync(pkgJsonFile, "utf8"));
       const pkgIdentifier = parsePackageJsonName(pkgData.name);
       const name = pkgIdentifier.fullName || pkgData.name;
-      if (!name && !pkgJsonFile.includes("node_modules")) {
+      if (DEBUG_MODE && !name && !pkgJsonFile.includes("node_modules")) {
         console.log(
           `${pkgJsonFile} doesn't contain the package name. Consider using the 'npm init' command to create a valid package.json file for this project.`
         );

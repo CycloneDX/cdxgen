@@ -4707,7 +4707,11 @@ export const createMultiXBom = async (pathList, options) => {
         );
       }
       components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
+      dependencies = mergeDependencies(
+        dependencies,
+        bomData.bomJson.dependencies,
+        bomData.parentComponent
+      );
       if (
         bomData.parentComponent &&
         Object.keys(bomData.parentComponent).length
