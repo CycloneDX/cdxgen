@@ -4100,13 +4100,13 @@ export const getRubyGemsMetadata = async function (pkgList) {
       if (body.yanked) {
         p.properties.push({
           name: "cdx:gem:yanked",
-          value: body.yanked
+          value: "" + body.yanked
         });
       }
       if (body.prerelease) {
         p.properties.push({
           name: "cdx:gem:prerelease",
-          value: body.prerelease
+          value: "" + body.prerelease
         });
       }
       // Use the latest version if none specified
