@@ -4091,6 +4091,24 @@ export const getRubyGemsMetadata = async function (pkgList) {
           value: body.ruby_version
         });
       }
+      if (body.gem_uri) {
+        p.properties.push({
+          name: "cdx:gem:gemUri",
+          value: body.gem_uri
+        });
+      }
+      if (body.yanked) {
+        p.properties.push({
+          name: "cdx:gem:yanked",
+          value: body.yanked
+        });
+      }
+      if (body.prerelease) {
+        p.properties.push({
+          name: "cdx:gem:prerelease",
+          value: body.prerelease
+        });
+      }
       // Use the latest version if none specified
       if (!p.version) {
         p.version = body.number;
