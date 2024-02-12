@@ -4067,9 +4067,15 @@ export const getRubyGemsMetadata = async function (pkgList) {
       if (body.metadata) {
         if (body.metadata.source_code_uri) {
           p.repository = { url: body.metadata.source_code_uri };
+          if (
+            body.homepage_uri &&
+            body.homepage_uri !== body.metadata.source_code_uri
+          ) {
+            p.homepage = { url: body.homepage_uri };
+          }
         }
         if (body.metadata.bug_tracker_uri) {
-          p.homepage = { url: body.metadata.bug_tracker_uri };
+          p.bugs = { url: body.metadata.bug_tracker_uri };
         }
       }
       if (body.sha) {
