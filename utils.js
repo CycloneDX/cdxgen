@@ -4123,7 +4123,7 @@ export const parseGemspecData = async function (gemspecData) {
  * @param {string} lockFile Lock file
  */
 export const parseGemfileLockData = async (gemLockData, lockFile) => {
-  const pkgList = [];
+  let pkgList = [];
   const pkgnames = {};
   const dependenciesList = [];
   const dependenciesMap = {};

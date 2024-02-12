@@ -4151,12 +4151,7 @@ export const createRubyBom = async (path, options) => {
   );
   let gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile.lock",
-    options
-  );
-  const podLockFiles = getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "Podfile.lock",
+    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
     options
   );
   let pkgList = [];
@@ -5071,15 +5066,10 @@ export const createXBom = async (path, options) => {
   );
   const gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile.lock",
+    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
     options
   );
-  const podLockFiles = getAllFiles(
-    path,
-    (options.multiProject ? "**/" : "") + "Podfile.lock",
-    options
-  );
-  if (gemFiles.length || gemLockFiles.length || podLockFiles.length) {
+  if (gemFiles.length || gemLockFiles.length) {
     return await createRubyBom(path, options);
   }
 
