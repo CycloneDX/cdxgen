@@ -4206,10 +4206,16 @@ export const createRubyBom = async (path, options) => {
     }
   }
   if (rootList.length) {
-    dependencies.splice(0, 0, {
-      ref: parentComponent["bom-ref"],
-      dependsOn: rootList
-    });
+    dependencies = mergeDependencies(
+      dependencies,
+      [
+        {
+          ref: parentComponent["bom-ref"],
+          dependsOn: rootList
+        }
+      ],
+      parentComponent
+    );
   }
   return buildBomNSData(options, pkgList, "gem", {
     src: path,
