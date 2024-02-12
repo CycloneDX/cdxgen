@@ -350,6 +350,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - .NET (packages.lock.json, project.assets.json, paket.lock)
 - Go (go.mod)
 - PHP (composer.lock)
+- Ruby (Gemfile.lock)
 
 ## Environment variables
 

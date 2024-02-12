@@ -2581,14 +2581,44 @@ test("parseComposerLock", () => {
 });
 
 test("parseGemfileLockData", async () => {
-  const deps = await parseGemfileLockData(
-    readFileSync("./test/data/Gemfile.lock", { encoding: "utf-8" })
+  let retMap = await parseGemfileLockData(
+    readFileSync("./test/data/Gemfile.lock", { encoding: "utf-8" }),
+    "./test/data/Gemfile.lock"
   );
-  expect(deps.length).toEqual(140);
-  expect(deps[0]).toEqual({
+  expect(retMap.pkgList.length).toEqual(141);
+  expect(retMap.dependenciesList.length).toEqual(141);
+  expect(retMap.pkgList[0]).toEqual({
     name: "actioncable",
-    version: "6.0.0"
+    version: "6.0.0",
+    purl: "pkg:gem/actioncable@6.0.0",
+    "bom-ref": "pkg:gem/actioncable@6.0.0",
+    properties: [{ name: "SrcFile", value: "./test/data/Gemfile.lock" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 0.8,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 0.8,
+            value: "./test/data/Gemfile.lock"
+          }
+        ]
+      }
+    }
   });
+  retMap = await parseGemfileLockData(
+    readFileSync("./test/data/Gemfile1.lock", { encoding: "utf-8" }),
+    "./test/data/Gemfile1.lock"
+  );
+  expect(retMap.pkgList.length).toEqual(36);
+  expect(retMap.dependenciesList.length).toEqual(36);
+  retMap = await parseGemfileLockData(
+    readFileSync("./test/data/Gemfile2.lock", { encoding: "utf-8" }),
+    "./test/data/Gemfile2.lock"
+  );
+  expect(retMap.pkgList.length).toEqual(90);
+  expect(retMap.dependenciesList.length).toEqual(90);
 });
 
 test("parseGemspecData", async () => {

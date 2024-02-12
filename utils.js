@@ -4119,15 +4119,22 @@ export const parseGemspecData = async function (gemspecData) {
 /**
  * Method to parse Gemfile.lock
  *
- * @param {*} gemLockData Gemfile.lock data
+ * @param {object} gemLockData Gemfile.lock data
+ * @param {string} lockFile Lock file
  */
-export const parseGemfileLockData = async function (gemLockData) {
+export const parseGemfileLockData = async (gemLockData, lockFile) => {
   const pkgList = [];
   const pkgnames = {};
+  const dependenciesList = [];
+  const dependenciesMap = {};
+  const pkgVersionMap = {};
+  const rootList = [];
   if (!gemLockData) {
     return pkgList;
   }
   let specsFound = false;
+  // We need two passes to identify components and resolve dependencies
+  // In the first pass, we capture package name and version
   gemLockData.split("\n").forEach((l) => {
     l = l.trim();
     l = l.replace("\r", "");
@@ -4138,35 +4145,106 @@ export const parseGemfileLockData = async function (gemLockData) {
         if (name === "remote:") {
           return;
         }
-        if (!pkgnames[name]) {
-          let version = tmpA[1].split(", ")[0];
-          version = version.replace(/[(>=<)~ ]/g, "");
-          pkgList.push({
-            name,
-            version
-          });
-          pkgnames[name] = true;
+        let version = tmpA[1];
+        // We only allow bracket characters ()
+        if (version.search(/[,><~ ]/) < 0) {
+          version = version.replace(/[=()]/g, "");
+          pkgVersionMap[name] = version;
         }
       }
     }
     if (l === "specs:") {
       specsFound = true;
     }
-    if (
-      l === "PLATFORMS" ||
-      l === "DEPENDENCIES" ||
-      l === "RUBY VERSION" ||
-      l === "BUNDLED WITH" ||
-      l === "PATH"
-    ) {
+    if (l === l.toUpperCase()) {
       specsFound = false;
     }
   });
-  if (FETCH_LICENSE) {
-    return await getRubyGemsMetadata(pkgList);
-  } else {
-    return pkgList;
+  specsFound = false;
+  let lastParent = undefined;
+  // In the second pass, we use the space in the prefix to figure out the dependency tree
+  gemLockData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
+    if (specsFound) {
+      const tmpA = l.split(" (");
+      if (tmpA && tmpA.length == 2) {
+        const nameWithPrefix = tmpA[0];
+        const name = tmpA[0].trim();
+        if (name === "remote:") {
+          return;
+        }
+        const level = nameWithPrefix.replace(name, "").split("  ").length % 2;
+        const purlString = new PackageURL(
+          "gem",
+          "",
+          name,
+          pkgVersionMap[name],
+          null,
+          null
+        ).toString();
+        const bomRef = decodeURIComponent(purlString);
+        if (level === 1) {
+          lastParent = bomRef;
+          rootList.push(bomRef);
+        }
+        const apkg = {
+          name,
+          version: pkgVersionMap[name],
+          purl: purlString,
+          "bom-ref": bomRef,
+          properties: [
+            {
+              name: "SrcFile",
+              value: lockFile
+            }
+          ],
+          evidence: {
+            identity: {
+              field: "purl",
+              confidence: 0.8,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.8,
+                  value: lockFile
+                }
+              ]
+            }
+          }
+        };
+        if (lastParent && lastParent !== bomRef) {
+          if (!dependenciesMap[lastParent]) {
+            dependenciesMap[lastParent] = new Set();
+          }
+          dependenciesMap[lastParent].add(bomRef);
+        }
+        if (!dependenciesMap[bomRef]) {
+          dependenciesMap[bomRef] = new Set();
+        }
+        if (!pkgnames[name]) {
+          pkgList.push(apkg);
+          pkgnames[name] = true;
+        }
+      }
+    }
+    if (l.trim() === "specs:") {
+      specsFound = true;
+    }
+    if (l.trim() == l.trim().toUpperCase()) {
+      specsFound = false;
+    }
+  });
+  for (const k of Object.keys(dependenciesMap)) {
+    dependenciesList.push({
+      ref: k,
+      dependsOn: Array.from(dependenciesMap[k])
+    });
   }
+  if (FETCH_LICENSE) {
+    pkgList = await getRubyGemsMetadata(pkgList);
+    return { pkgList, dependenciesList };
+  }
+  return { pkgList, dependenciesList, rootList };
 };
 
 /**

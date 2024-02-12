@@ -1194,7 +1194,7 @@ export const getCredsFromHelper = (exeSuffix, serverAddress) => {
 export const addSkippedSrcFiles = (skippedImageSrcs, components) => {
   for (const skippedImage of skippedImageSrcs) {
     for (const co of components) {
-      let srcFileValues = [];
+      const srcFileValues = [];
       let srcImageValue;
       co.properties.forEach(function (property) {
         if (property.name === "oci:SrcImage") {

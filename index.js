@@ -4154,7 +4154,15 @@ export const createRubyBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "Gemfile.lock",
     options
   );
+  const podLockFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Podfile.lock",
+    options
+  );
   let pkgList = [];
+  let dependencies = [];
+  let rootList = [];
+  const parentComponent = createDefaultParentComponent(path, "gem", options);
   const gemFileMode = gemFiles.length;
   const gemLockMode = gemLockFiles.length;
   if (gemFileMode && !gemLockMode && options.installDeps) {
@@ -4176,7 +4184,7 @@ export const createRubyBom = async (path, options) => {
   }
   gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile.lock",
+    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
     options
   );
   if (gemLockFiles.length) {
@@ -4185,17 +4193,35 @@ export const createRubyBom = async (path, options) => {
         console.log(`Parsing ${f}`);
       }
       const gemLockData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parseGemfileLockData(gemLockData);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+      const retMap = await parseGemfileLockData(gemLockData, f);
+      if (retMap.pkgList && retMap.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+        pkgList = trimComponents(pkgList);
+      }
+      if (retMap.dependenciesList && retMap.dependenciesList.length) {
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependenciesList,
+          parentComponent
+        );
+      }
+      if (retMap.rootList && retMap.rootList.length) {
+        rootList = rootList.concat(retMap.rootList);
       }
     }
-    return buildBomNSData(options, pkgList, "gem", {
-      src: path,
-      filename: gemLockFiles.join(", ")
+  }
+  if (rootList.length) {
+    dependencies.splice(0, 0, {
+      ref: parentComponent["bom-ref"],
+      dependsOn: rootList
     });
   }
-  return {};
+  return buildBomNSData(options, pkgList, "gem", {
+    src: path,
+    dependencies,
+    parentComponent,
+    filename: gemLockFiles.join(", ")
+  });
 };
 
 /**
@@ -5048,7 +5074,12 @@ export const createXBom = async (path, options) => {
     (options.multiProject ? "**/" : "") + "Gemfile.lock",
     options
   );
-  if (gemFiles.length || gemLockFiles.length) {
+  const podLockFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "Podfile.lock",
+    options
+  );
+  if (gemFiles.length || gemLockFiles.length || podLockFiles.length) {
     return await createRubyBom(path, options);
   }
 
