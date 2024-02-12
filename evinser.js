@@ -132,7 +132,7 @@ export const catalogMavenDeps = async (
               namespaces: jarNSMapping[purl].namespaces
             },
             null,
-            2
+            null
           )
         }
       });
@@ -165,7 +165,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
               namespaces: jarNSMapping[purl].namespaces
             },
             null,
-            2
+            null
           )
         }
       });
@@ -1066,7 +1066,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   // Set the current timestamp to indicate this is newer
   bomJson.metadata.timestamp = new Date().toISOString();
   delete bomJson.signature;
-  fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, 2));
+  fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, null));
   if (occEvidencePresent || csEvidencePresent || servicesPresent) {
     console.log(evinseOutFile, "created successfully.");
   } else {

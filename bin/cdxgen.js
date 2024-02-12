@@ -507,7 +507,7 @@ const checkPermissions = (filePath) => {
             bomJsonUnsignedObj.signature = signatureBlock;
             fs.writeFileSync(
               jsonFile,
-              JSON.stringify(bomJsonUnsignedObj, null, 2)
+              JSON.stringify(bomJsonUnsignedObj, null, null)
             );
             if (publicKeyFile) {
               // Verifying this signature

@@ -284,7 +284,7 @@ cdxgenRepl.defineCommand("save", {
       if (!saveToFile) {
         saveToFile = "bom.json";
       }
-      fs.writeFileSync(saveToFile, JSON.stringify(sbom, null, 2));
+      fs.writeFileSync(saveToFile, JSON.stringify(sbom, null, null));
       console.log(`BOM saved successfully to ${saveToFile}`);
     } else {
       console.log(
