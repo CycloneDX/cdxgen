@@ -4034,19 +4034,28 @@ export const parseGoVersionData = async function (buildInfoData) {
  * @param {*} pkgList List of packages with metadata
  */
 export const getRubyGemsMetadata = async function (pkgList) {
-  const RUBYGEMS_URL = "https://rubygems.org/api/v2/rubygems/";
+  const RUBYGEMS_V2_URL =
+    process.env.RUBYGEMS_V2_URL || "https://rubygems.org/api/v2/rubygems/";
+  const RUBYGEMS_V1_URL =
+    process.env.RUBYGEMS_V1_URL || "https://rubygems.org/api/v1/gems/";
   const rdepList = [];
+  const apiOptions = {
+    responseType: "json"
+  };
+  if (process.env.GEM_HOST_API_KEY) {
+    apiOptions.headers = {
+      Authorization: process.env.GEM_HOST_API_KEY
+    };
+  }
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
-      const res = await cdxgenAgent.get(
-        `${RUBYGEMS_URL}${p.name}/versions/${p.version}.json`,
-        {
-          responseType: "json"
-        }
-      );
+      const fullUrl = p.version
+        ? `${RUBYGEMS_V2_URL}${p.name}/versions/${p.version}.json`
+        : `${RUBYGEMS_V1_URL}${p.name}.json`;
+      const res = await cdxgenAgent.get(fullUrl, apiOptions);
       let body = res.body;
       if (body && body.length) {
         body = body[0];
@@ -4071,16 +4080,15 @@ export const getRubyGemsMetadata = async function (pkgList) {
       }
       // Track the platform such as java
       if (body.platform && body.platform !== "ruby") {
-        if (p.purl.includes("?")) {
-          p.purl = `${p.purl}&platform=${body.platform}`;
-        } else {
-          p.purl = `${p.purl}?platform=${body.platform}`;
-        }
+        p.properties.push({
+          name: "cdx:gem:platform",
+          value: body.platform
+        });
       }
-      if (p.ruby_version) {
+      if (body.ruby_version) {
         p.properties.push({
           name: "cdx:gem:rubyVersionSpecifiers",
-          value: p.ruby_version
+          value: body.ruby_version
         });
       }
       // Use the latest version if none specified
