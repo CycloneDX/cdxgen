@@ -4031,7 +4031,7 @@ export const parseGoVersionData = async function (buildInfoData) {
 /**
  * Method to query rubygems api for gems details
  *
- * @param {*} pkgList List of packages with metadata
+ * @param {Array} pkgList List of packages with metadata
  */
 export const getRubyGemsMetadata = async function (pkgList) {
   const RUBYGEMS_V2_URL =
@@ -4133,7 +4133,7 @@ export const getRubyGemsMetadata = async function (pkgList) {
 /**
  * Method to parse Gemspec
  *
- * @param {*} gemspecData Gemspec data
+ * @param {string} gemspecData Gemspec data
  */
 export const parseGemspecData = async function (gemspecData) {
   let pkgList = [];
