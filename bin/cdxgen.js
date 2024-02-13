@@ -7,16 +7,16 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import jws from "jws";
 import crypto from "node:crypto";
-import { fileURLToPath, URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 import globalAgent from "global-agent";
 import process from "node:process";
 import {
   printCallStack,
+  printDependencyTree,
   printOccurrences,
-  printServices,
   printReachables,
-  printTable,
-  printDependencyTree
+  printServices,
+  printTable
 } from "../display.js";
 import { findUpSync } from "find-up";
 import { load as _load } from "js-yaml";

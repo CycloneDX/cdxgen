@@ -5,21 +5,21 @@ import stream from "node:stream/promises";
 import process from "node:process";
 import { Buffer } from "node:buffer";
 import {
-  existsSync,
-  readdirSync,
-  statSync,
-  lstatSync,
-  readFileSync,
   createReadStream,
-  mkdtempSync,
+  existsSync,
+  lstatSync,
   mkdirSync,
-  rmSync
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync
 } from "node:fs";
 import { join } from "node:path";
 import {
+  platform as _platform,
   userInfo as _userInfo,
   homedir,
-  platform as _platform,
   tmpdir
 } from "node:os";
 import { x } from "tar";
@@ -1196,7 +1196,7 @@ export const addSkippedSrcFiles = (skippedImageSrcs, components) => {
     for (const co of components) {
       const srcFileValues = [];
       let srcImageValue;
-      co.properties.forEach(function (property) {
+      co.properties.forEach((property) => {
         if (property.name === "oci:SrcImage") {
           srcImageValue = property.value;
         }

@@ -11,11 +11,11 @@ import { createBom } from "../index.js";
 import { validateBom } from "../validator.js";
 import {
   printCallStack,
-  printOccurrences,
-  printOSTable,
-  printTable,
   printDependencyTree,
-  printServices
+  printOSTable,
+  printOccurrences,
+  printServices,
+  printTable
 } from "../display.js";
 
 const options = {

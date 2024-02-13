@@ -1,11 +1,11 @@
 import {
+  DEBUG_MODE,
+  collectGradleDependencies,
+  collectMvnDependencies,
   executeAtom,
   getAllFiles,
   getGradleCommand,
-  getMavenCommand,
-  collectGradleDependencies,
-  collectMvnDependencies,
-  DEBUG_MODE
+  getMavenCommand
 } from "./utils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -20,7 +20,7 @@ const typePurlsCache = {};
 /**
  * Function to create the db for the libraries referred in the sbom.
  *
- * @param {object} Command line options
+ * @param {Object} Command line options
  */
 export const prepareDB = async (options) => {
   if (!options.dbPath.includes("memory") && !fs.existsSync(options.dbPath)) {
@@ -318,8 +318,8 @@ export const initFromSbom = (components, language) => {
 /**
  * Function to analyze the project
  *
- * @param {object} dbObjMap DB and model instances
- * @param {object} Command line options
+ * @param {Object} dbObjMap DB and model instances
+ * @param {Object} Command line options
  */
 export const analyzeProject = async (dbObjMap, options) => {
   const dirPath = options._[0] || ".";
@@ -479,11 +479,11 @@ export const parseObjectSlices = async (
  * https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#use
  *
  * @param {string} language Application language
- * @param {object} userDefinedTypesMap User Defined types in the application
- * @param {array} usages Usages array for each objectSlice
- * @param {object} dbObjMap DB Models
- * @param {object} purlLocationMap Object to track locations where purls are used
- * @param {object} purlImportsMap Object to track package urls and their import aliases
+ * @param {Object} userDefinedTypesMap User Defined types in the application
+ * @param {Array} usages Usages array for each objectSlice
+ * @param {Object} dbObjMap DB Models
+ * @param {Object} purlLocationMap Object to track locations where purls are used
+ * @param {Object} purlImportsMap Object to track package urls and their import aliases
  * @returns
  */
 export const parseSliceUsages = async (
@@ -764,8 +764,8 @@ export const isFilterableType = (
  * Method to detect services from annotation objects in the usage slice
  *
  * @param {string} language Application language
- * @param {array} usages Usages array for each objectSlice
- * @param {object} servicesMap Existing service map
+ * @param {Array} usages Usages array for each objectSlice
+ * @param {Object} servicesMap Existing service map
  */
 export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
   const usages = slice.usages;
@@ -830,8 +830,8 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
  * Method to detect services from user defined types in the usage slice
  *
  * @param {string} language Application language
- * @param {array} userDefinedTypes User defined types
- * @param {object} servicesMap Existing service map
+ * @param {Array} userDefinedTypes User defined types
+ * @param {Object} servicesMap Existing service map
  */
 export const detectServicesFromUDT = (
   language,
@@ -962,8 +962,8 @@ export const extractEndpoints = (language, code) => {
 /**
  * Method to create the SBOM with evidence file called evinse file.
  *
- * @param {object} sliceArtefacts Various artefacts from the slice operation
- * @param {object} options Command line options
+ * @param {Object} sliceArtefacts Various artefacts from the slice operation
+ * @param {Object} options Command line options
  * @returns
  */
 export const createEvinseFile = (sliceArtefacts, options) => {
@@ -1085,11 +1085,11 @@ export const createEvinseFile = (sliceArtefacts, options) => {
  * Implemented based on the logic proposed here - https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#data-flow-slice
  *
  * @param {string} language Application language
- * @param {object} userDefinedTypesMap User Defined types in the application
- * @param {object} dataFlowSlice Data flow slice object from atom
- * @param {object} dbObjMap DB models
- * @param {object} purlLocationMap Object to track locations where purls are used
- * @param {object} purlImportsMap Object to track package urls and their import aliases
+ * @param {Object} userDefinedTypesMap User Defined types in the application
+ * @param {Object} dataFlowSlice Data flow slice object from atom
+ * @param {Object} dbObjMap DB models
+ * @param {Object} purlLocationMap Object to track locations where purls are used
+ * @param {Object} purlImportsMap Object to track package urls and their import aliases
  */
 export const collectDataFlowFrames = async (
   language,
@@ -1212,7 +1212,7 @@ export const collectDataFlowFrames = async (
  * Implemented based on the logic proposed here - https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#data-flow-slice
  *
  * @param {string} language Application language
- * @param {object} reachablesSlice Reachables slice object from atom
+ * @param {Object} reachablesSlice Reachables slice object from atom
  */
 export const collectReachableFrames = (language, reachablesSlice) => {
   const reachableNodes = reachablesSlice?.reachables || [];
@@ -1253,7 +1253,7 @@ export const collectReachableFrames = (language, reachablesSlice) => {
 /**
  * Method to pick a callstack frame as an evidence. This method is required since CycloneDX 1.5 accepts only a single frame as evidence.
  *
- * @param {array} dfFrames Data flow frames
+ * @param {Array} dfFrames Data flow frames
  * @returns
  */
 export const framePicker = (dfFrames) => {

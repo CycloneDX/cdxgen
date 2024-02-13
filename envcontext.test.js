@@ -1,16 +1,16 @@
 import { expect, test } from "@jest/globals";
 
 import {
+  collectDotnetInfo,
+  collectGccInfo,
+  collectGoInfo,
+  collectJavaInfo,
+  collectNodeInfo,
+  collectPythonInfo,
+  collectRustInfo,
   getBranch,
   getOriginUrl,
-  listFiles,
-  collectJavaInfo,
-  collectDotnetInfo,
-  collectPythonInfo,
-  collectNodeInfo,
-  collectGccInfo,
-  collectRustInfo,
-  collectGoInfo
+  listFiles
 } from "./envcontext.js";
 
 test("git tests", () => {

@@ -540,10 +540,17 @@ Refer to the [permissions document](./docs/PERMISSIONS.md)
 Follow the usual PR process, but before raising a PR, run the following commands.
 
 ```bash
+# Generate types using jsdoc syntax
+npm run gen-types
+# Run eslint with auto fix
 npm run lint
+# Run prettier
 npm run pretty
+# Run jest tests
 npm test
 ```
+
+If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels "good first issue" or "help wanted".
 
 ## Enterprise support
 

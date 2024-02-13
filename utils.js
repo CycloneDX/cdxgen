@@ -3,33 +3,33 @@ import { homedir, platform, tmpdir } from "node:os";
 import process from "node:process";
 import { Buffer } from "node:buffer";
 import {
-  basename,
   delimiter as _delimiter,
+  sep as _sep,
+  basename,
   dirname,
   extname,
   join,
-  resolve,
-  sep as _sep
+  resolve
 } from "node:path";
 import {
   chmodSync,
   constants,
   copyFileSync,
+  createReadStream,
   existsSync,
   lstatSync,
   mkdtempSync,
   readFileSync,
   rmSync,
   unlinkSync,
-  writeFileSync,
-  createReadStream
+  writeFileSync
 } from "node:fs";
 import { createHash } from "node:crypto";
 import got from "got";
 import Arborist from "@npmcli/arborist";
 import path from "node:path";
 import { xml2js } from "xml-js";
-import { fileURLToPath, URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 import { load } from "cheerio";
 import { load as _load } from "js-yaml";
 import { spawnSync } from "node:child_process";
@@ -39,9 +39,9 @@ import {
   coerce,
   compare,
   maxSatisfying,
+  parse,
   satisfies,
-  valid,
-  parse
+  valid
 } from "semver";
 import StreamZip from "node-stream-zip";
 import { parseEDNString } from "edn-data";
@@ -1609,7 +1609,6 @@ export const parseMinJs = async (minJsFile) => {
                 }
               });
             }
-            return;
           }
         }
       });
@@ -4031,7 +4030,7 @@ export const parseGoVersionData = async function (buildInfoData) {
 /**
  * Method to query rubygems api for gems details
  *
- * @param {*} pkgList List of packages with metadata
+ * @param {Array} pkgList List of packages with metadata
  */
 export const getRubyGemsMetadata = async function (pkgList) {
   const RUBYGEMS_V2_URL =
@@ -4133,7 +4132,7 @@ export const getRubyGemsMetadata = async function (pkgList) {
 /**
  * Method to parse Gemspec
  *
- * @param {*} gemspecData Gemspec data
+ * @param {string} gemspecData Gemspec data
  */
 export const parseGemspecData = async function (gemspecData) {
   let pkgList = [];
@@ -9123,9 +9122,7 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
       : [];
   return {
     parentComponent,
-    pkgList: pkgList.sort(function (a, b) {
-      return a.purl.localeCompare(b.purl);
-    }),
+    pkgList: pkgList.sort((a, b) => a.purl.localeCompare(b.purl)),
     dependenciesList
   };
 };

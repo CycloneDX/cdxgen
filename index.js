@@ -1,119 +1,119 @@
 import { platform as _platform, homedir, tmpdir } from "node:os";
 import process from "node:process";
 import { Buffer } from "node:buffer";
-import { basename, join, dirname, sep, resolve } from "node:path";
+import { basename, dirname, join, resolve, sep } from "node:path";
 import { parse } from "ssri";
 import {
-  lstatSync,
-  mkdtempSync,
-  rmSync,
-  existsSync,
-  readFileSync,
-  unlinkSync,
-  mkdirSync,
-  writeFileSync,
-  statSync,
   accessSync,
-  constants
+  constants,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  unlinkSync,
+  writeFileSync
 } from "node:fs";
 import got from "got";
 import { v4 as uuidv4 } from "uuid";
 import { PackageURL } from "packageurl-js";
 import {
-  parsePackageJsonName,
-  getLicenses,
-  encodeForPurl,
-  getAllFiles,
-  extractJarArchive,
-  getMvnMetadata,
-  collectJarNS,
-  includeMavenTestScope,
-  getMavenCommand,
-  collectGradleDependencies,
-  collectMvnDependencies,
-  parsePom,
-  parseMavenTree,
-  executeGradleProperties,
-  getGradleCommand,
-  convertJarNSToPackages,
-  parseGradleDep,
-  parseBazelSkyframe,
-  parseBazelActionGraph,
-  parseSbtLock,
-  determineSbtVersion,
+  CLJ_CMD,
+  DEBUG_MODE,
+  FETCH_LICENSE,
+  LEIN_CMD,
+  MAX_BUFFER,
+  SWIFT_CMD,
+  TIMEOUT_MS,
+  addEvidenceForDotnet,
+  addEvidenceForImports,
   addPlugin,
   cleanupPlugin,
-  parsePkgJson,
-  parseMinJs,
-  parseBowerJson,
-  parsePnpmLock,
-  parsePkgLock,
-  parseNodeShrinkwrap,
-  parseYarnLock,
-  parsePoetrylockData,
-  parseBdistMetadata,
-  readZipEntry,
-  parsePiplockData,
+  collectGradleDependencies,
+  collectJarNS,
+  collectMvnDependencies,
+  convertJarNSToPackages,
+  convertOSQueryResults,
+  determineSbtVersion,
+  encodeForPurl,
+  executeGradleProperties,
+  extractJarArchive,
+  frameworksList,
+  getAllFiles,
+  getCppModules,
+  getGradleCommand,
+  getLicenses,
+  getMavenCommand,
+  getMvnMetadata,
+  getNugetMetadata,
   getPipFrozenTree,
-  parseReqFile,
+  getPyMetadata,
   getPyModules,
-  parseSetupPyFile,
-  parseGoVersionData,
-  parseGosumData,
+  getSwiftPackageMetadata,
+  includeMavenTestScope,
+  parseBazelActionGraph,
+  parseBazelSkyframe,
+  parseBdistMetadata,
+  parseBitbucketPipelinesFile,
+  parseBowerJson,
+  parseCabalData,
+  parseCargoAuditableData,
+  parseCargoData,
+  parseCargoTomlData,
+  parseCljDep,
+  parseCloudBuildData,
+  parseCmakeLikeFile,
+  parseComposerLock,
+  parseConanData,
+  parseConanLockData,
+  parseContainerFile,
+  parseContainerSpecData,
+  parseCsPkgData,
+  parseCsPkgLockData,
+  parseCsProjAssetsData,
+  parseCsProjData,
+  parseEdnData,
+  parseGemfileLockData,
+  parseGitHubWorkflowData,
   parseGoListDep,
+  parseGoModData,
   parseGoModGraph,
   parseGoModWhy,
-  parseGoModData,
+  parseGoVersionData,
   parseGopkgData,
-  parseCargoAuditableData,
-  parseCargoTomlData,
-  parseCargoData,
+  parseGosumData,
+  parseGradleDep,
+  parseHelmYamlData,
+  parseLeinDep,
+  parseLeiningenData,
+  parseMavenTree,
+  parseMinJs,
+  parseMixLockData,
+  parseNodeShrinkwrap,
+  parseNupkg,
+  parseOpenapiSpecData,
+  parsePackageJsonName,
+  parsePaketLockData,
+  parsePiplockData,
+  parsePkgJson,
+  parsePkgLock,
+  parsePnpmLock,
+  parsePoetrylockData,
+  parsePom,
+  parsePrivadoFile,
   parsePubLockData,
   parsePubYamlData,
-  parseConanLockData,
-  parseConanData,
-  parseLeiningenData,
-  parseLeinDep,
-  parseEdnData,
-  parseCljDep,
-  parseCabalData,
-  parseMixLockData,
-  parseGitHubWorkflowData,
-  parseCloudBuildData,
-  convertOSQueryResults,
-  parseHelmYamlData,
-  parseSwiftResolved,
-  parseSwiftJsonTree,
-  parseContainerSpecData,
-  parseOpenapiSpecData,
-  parsePrivadoFile,
-  parseComposerLock,
-  parseGemfileLockData,
-  parseNupkg,
-  parseCsProjAssetsData,
-  parseCsPkgLockData,
-  parseCsPkgData,
-  parseCsProjData,
-  parsePaketLockData,
-  DEBUG_MODE,
   parsePyProjectToml,
-  addEvidenceForImports,
+  parseReqFile,
+  parseSbtLock,
   parseSbtTree,
-  parseCmakeLikeFile,
-  getCppModules,
-  FETCH_LICENSE,
-  TIMEOUT_MS,
-  MAX_BUFFER,
-  getNugetMetadata,
-  frameworksList,
-  parseContainerFile,
-  parseBitbucketPipelinesFile,
-  getPyMetadata,
-  addEvidenceForDotnet,
-  getSwiftPackageMetadata,
-  CLJ_CMD,
-  LEIN_CMD,
-  SWIFT_CMD
+  parseSetupPyFile,
+  parseSwiftJsonTree,
+  parseSwiftResolved,
+  parseYarnLock,
+  readZipEntry
 } from "./utils.js";
 import {
   collectEnvInfo,
@@ -122,7 +122,7 @@ import {
   listFiles
 } from "./envcontext.js";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath, URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
@@ -136,18 +136,18 @@ const _version = selfPJson.version;
 import { findJSImportsExports } from "./analyzer.js";
 import { gte, lte } from "semver";
 import {
-  getPkgPathList,
-  parseImageName,
+  addSkippedSrcFiles,
   exportArchive,
   exportImage,
-  addSkippedSrcFiles
+  getPkgPathList,
+  parseImageName
 } from "./docker.js";
 import {
-  getGoBuildInfo,
-  getCargoAuditableInfo,
   executeOsQuery,
-  getOSPackages,
-  getDotnetSlices
+  getCargoAuditableInfo,
+  getDotnetSlices,
+  getGoBuildInfo,
+  getOSPackages
 } from "./binary.js";
 import { collectOSCryptoLibs } from "./cbomutils.js";
 
@@ -603,7 +603,7 @@ function addMetadata(parentComponent = {}, options = {}) {
 /**
  * Method to create external references
  *
- * @param pkg
+ * @param {Array | Object} opkg
  * @returns {Array}
  */
 function addExternalReferences(opkg) {
@@ -644,6 +644,11 @@ function addExternalReferences(opkg) {
 /**
  * For all modules in the specified package, creates a list of
  * component objects from each one.
+ *
+ * @param {Object} options CLI options
+ * @param {Object} allImports All imports
+ * @param {Object} pkg Package object
+ * @param {string} ptype Package type
  */
 export function listComponents(options, allImports, pkg, ptype = "npm") {
   const compMap = {};
@@ -891,6 +896,13 @@ function addComponentHash(alg, digest, component) {
 
 /**
  * Return the BOM in json format including any namespace mapping
+ *
+ * @param {Object} options Options
+ * @param {Object} pkgInfo Package information
+ * @param {string} ptype Package type
+ * @param {Object} context Context
+ *
+ * @returns {Object} BOM with namespace mapping
  */
 const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const bomNSData = {
@@ -940,8 +952,10 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
 /**
  * Function to create bom string for Java jars
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ *
+ * @returns {Object} BOM with namespace mapping
  */
 export const createJarBom = async (path, options) => {
   let pkgList = [];
@@ -1008,8 +1022,8 @@ export const createJarBom = async (path, options) => {
 /**
  * Function to create bom string for Java projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createJavaBom = async (path, options) => {
   let jarNSMapping = {};
@@ -1772,8 +1786,8 @@ export const createJavaBom = async (path, options) => {
 /**
  * Function to create bom string for Node.js projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createNodejsBom = async (path, options) => {
   let pkgList = [];
@@ -2179,8 +2193,8 @@ export const createNodejsBom = async (path, options) => {
 /**
  * Function to create bom string for Python projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createPythonBom = async (path, options) => {
   let allImports = {};
@@ -2531,8 +2545,8 @@ export const createPythonBom = async (path, options) => {
 /**
  * Function to create bom string for Go projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createGoBom = async (path, options) => {
   let pkgList = [];
@@ -2857,8 +2871,8 @@ export const createGoBom = async (path, options) => {
 /**
  * Function to create bom string for Rust projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createRustBom = async (path, options) => {
   let pkgList = [];
@@ -2943,8 +2957,8 @@ export const createRustBom = async (path, options) => {
 /**
  * Function to create bom string for Dart projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createDartBom = async (path, options) => {
   const pubFiles = getAllFiles(
@@ -2996,8 +3010,8 @@ export const createDartBom = async (path, options) => {
 /**
  * Function to create bom string for cpp projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createCppBom = (path, options) => {
   let parentComponent = undefined;
@@ -3176,8 +3190,8 @@ export const createCppBom = (path, options) => {
 /**
  * Function to create bom string for clojure projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createClojureBom = (path, options) => {
   const ednFiles = getAllFiles(
@@ -3298,8 +3312,8 @@ export const createClojureBom = (path, options) => {
 /**
  * Function to create bom string for Haskell projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createHaskellBom = (path, options) => {
   const cabalFiles = getAllFiles(
@@ -3330,8 +3344,8 @@ export const createHaskellBom = (path, options) => {
 /**
  * Function to create bom string for Elixir projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createElixirBom = (path, options) => {
   const mixFiles = getAllFiles(
@@ -3362,8 +3376,8 @@ export const createElixirBom = (path, options) => {
 /**
  * Function to create bom string for GitHub action workflows
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createGitHubBom = (path, options) => {
   const ghactionFiles = getAllFiles(
@@ -3394,8 +3408,8 @@ export const createGitHubBom = (path, options) => {
 /**
  * Function to create bom string for cloudbuild yaml
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createCloudBuildBom = (path, options) => {
   const cbFiles = getAllFiles(path, "cloudbuild.yml", options);
@@ -3422,8 +3436,8 @@ export const createCloudBuildBom = (path, options) => {
 /**
  * Function to create obom string for the current OS using osquery
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createOSBom = (path, options) => {
   console.warn(
@@ -3446,9 +3460,7 @@ export const createOSBom = (path, options) => {
         parentComponent = dlist.splice(0, 1)[0];
       }
       pkgList = pkgList.concat(
-        dlist.sort(function (a, b) {
-          return a.name.localeCompare(b.name);
-        })
+        dlist.sort((a, b) => a.name.localeCompare(b.name))
       );
     }
   } // for
@@ -3482,8 +3494,8 @@ export const createOSBom = (path, options) => {
 /**
  * Function to create bom string for Jenkins plugins
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createJenkinsBom = async (path, options) => {
   let pkgList = [];
@@ -3531,8 +3543,8 @@ export const createJenkinsBom = async (path, options) => {
 /**
  * Function to create bom string for Helm charts
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createHelmBom = (path, options) => {
   let pkgList = [];
@@ -3563,8 +3575,8 @@ export const createHelmBom = (path, options) => {
 /**
  * Function to create bom string for swift projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createSwiftBom = async (path, options) => {
   const swiftFiles = getAllFiles(
@@ -3656,8 +3668,8 @@ export const createSwiftBom = async (path, options) => {
 /**
  * Function to create bom string for docker compose
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createContainerSpecLikeBom = async (path, options) => {
   let services = [];
@@ -3983,8 +3995,8 @@ export const createContainerSpecLikeBom = async (path, options) => {
 /**
  * Function to create bom string for php projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createPHPBom = (path, options) => {
   let dependencies = [];
@@ -4140,8 +4152,8 @@ export const createPHPBom = (path, options) => {
 /**
  * Function to create bom string for ruby projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createRubyBom = async (path, options) => {
   const gemFiles = getAllFiles(
@@ -4228,8 +4240,8 @@ export const createRubyBom = async (path, options) => {
 /**
  * Function to create bom string for csharp projects
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createCsharpBom = async (path, options) => {
   let manifestFiles = [];
@@ -4475,6 +4487,16 @@ export const trimComponents = (components) => {
   return filteredComponents;
 };
 
+/**
+ * Dedupe components
+ *
+ * @param {Object} options Options
+ * @param {Array} components Components
+ * @param {Object} parentComponent Parent component
+ * @param {Array} dependencies Dependencies
+ *
+ * @returns {Object} Object including BOM Json
+ */
 export const dedupeBom = (
   options,
   components,
@@ -4514,8 +4536,8 @@ export const dedupeBom = (
 /**
  * Function to create bom string for all languages
  *
- * @param pathList list of to the project
- * @param options Parse options from the cli
+ * @param {string} pathList list of to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createMultiXBom = async (pathList, options) => {
   let components = [];
@@ -4951,8 +4973,8 @@ export const createMultiXBom = async (pathList, options) => {
 /**
  * Function to create bom string for various languages
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createXBom = async (path, options) => {
   try {
@@ -5279,8 +5301,8 @@ export const createXBom = async (path, options) => {
 /**
  * Function to create bom string for various languages
  *
- * @param path to the project
- * @param options Parse options from the cli
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
  */
 export const createBom = async (path, options) => {
   let { projectType } = options;
@@ -5543,8 +5565,8 @@ export const createBom = async (path, options) => {
 /**
  * Method to submit the generated bom to dependency-track or cyclonedx server
  *
- * @param args CLI args
- * @param bomContents BOM Json
+ * @param {Object} args CLI args
+ * @param {Object} bomContents BOM Json
  */
 export async function submitBom(args, bomContents) {
   const serverUrl = args.serverUrl.replace(/\/$/, "") + "/api/v1/bom";

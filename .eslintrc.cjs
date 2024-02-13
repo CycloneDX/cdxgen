@@ -12,6 +12,12 @@ module.exports = {
   },
   "rules": {
     "prettier/prettier": "error",
-    "no-constant-binary-expression": "error"
+    "no-constant-binary-expression": "error",
+    "prefer-const": ["error", {
+      "destructuring": "all"
+    }],
+    "prefer-arrow-callback": "error",
+    "require-await": "error",
+    "no-useless-return": "error"
   }
 };

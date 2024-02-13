@@ -1,5 +1,5 @@
 import path from "node:path";
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 import SQLite from "sqlite3";
 
 class Namespaces extends Model {}
