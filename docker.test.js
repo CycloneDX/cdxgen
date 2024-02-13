@@ -1,13 +1,13 @@
 import {
-  getConnection,
-  parseImageName,
-  getImage,
-  removeImage,
+  addSkippedSrcFiles,
   exportImage,
+  getConnection,
+  getImage,
   isWin,
-  addSkippedSrcFiles
+  parseImageName,
+  removeImage
 } from "./docker.js";
-import { expect, test, describe, beforeEach } from "@jest/globals";
+import { beforeEach, describe, expect, test } from "@jest/globals";
 
 test("docker connection", async () => {
   if (!(isWin && process.env.CI === "true")) {

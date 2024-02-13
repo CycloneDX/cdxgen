@@ -1,11 +1,11 @@
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { dirname, join } from "node:path";
 import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE } from "./utils.js";
 
-import { fileURLToPath, URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();

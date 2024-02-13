@@ -1,15 +1,15 @@
 import { spawnSync } from "node:child_process";
 import {
-  isWin,
-  PYTHON_CMD,
-  JAVA_CMD,
+  CARGO_CMD,
   DOTNET_CMD,
-  NODE_CMD,
-  NPM_CMD,
   GCC_CMD,
   GO_CMD,
+  JAVA_CMD,
+  NODE_CMD,
+  NPM_CMD,
+  PYTHON_CMD,
   RUSTC_CMD,
-  CARGO_CMD
+  isWin
 } from "./utils.js";
 import process from "node:process";
 import { Buffer } from "node:buffer";

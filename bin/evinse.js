@@ -10,8 +10,8 @@ import { validateBom } from "../validator.js";
 import {
   printCallStack,
   printOccurrences,
-  printServices,
-  printReachables
+  printReachables,
+  printServices
 } from "../display.js";
 import { ATOM_DB } from "../utils.js";
 import { findUpSync } from "find-up";

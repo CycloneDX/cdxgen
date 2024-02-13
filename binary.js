@@ -1,4 +1,4 @@
-import { platform as _platform, arch as _arch, tmpdir, homedir } from "node:os";
+import { arch as _arch, platform as _platform, homedir, tmpdir } from "node:os";
 import process from "node:process";
 import { Buffer } from "node:buffer";
 import {
@@ -8,12 +8,12 @@ import {
   readFileSync,
   rmSync
 } from "node:fs";
-import { join, dirname, basename } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE, TIMEOUT_MS, findLicenseId } from "./utils.js";
 
-import { fileURLToPath, URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {

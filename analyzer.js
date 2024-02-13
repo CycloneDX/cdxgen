@@ -1,9 +1,8 @@
 import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
-import { join } from "node:path";
 import process from "node:process";
-import { readdirSync, lstatSync, readFileSync } from "node:fs";
-import { basename, resolve, isAbsolute, relative } from "node:path";
+import { lstatSync, readFileSync, readdirSync } from "node:fs";
+import { basename, isAbsolute, join, relative, resolve } from "node:path";
 
 const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
   ? process.env.ASTGEN_IGNORE_DIRS.split(",")
@@ -190,21 +189,25 @@ const fileToParseableCode = (file) => {
   let code = readFileSync(file, "utf-8");
   if (file.endsWith(".vue") || file.endsWith(".svelte")) {
     code = code
-      .replace(vueCommentRegex, function (match) {
-        return match.replaceAll(/\S/g, " ");
-      })
-      .replace(vueCleaningRegex, function (match) {
-        return match.replaceAll(/\S/g, " ").substring(1) + ";";
-      })
-      .replace(vueBindRegex, function (match, grA, grB, grC) {
-        return grA.replaceAll(/\S/g, " ") + grB + grC.replaceAll(/\S/g, " ");
-      })
-      .replace(vuePropRegex, function (match, grA, grB) {
-        return " " + grA.replace(/[.:@]/g, " ") + grB;
-      })
-      .replace(vueTemplateRegex, function (match, grA, grB, grC) {
-        return grA + grB.replaceAll("{{", "{ ").replaceAll("}}", " }") + grC;
-      });
+      .replace(vueCommentRegex, (match) => match.replaceAll(/\S/g, " "))
+      .replace(
+        vueCleaningRegex,
+        (match) => match.replaceAll(/\S/g, " ").substring(1) + ";"
+      )
+      .replace(
+        vueBindRegex,
+        (match, grA, grB, grC) =>
+          grA.replaceAll(/\S/g, " ") + grB + grC.replaceAll(/\S/g, " ")
+      )
+      .replace(
+        vuePropRegex,
+        (match, grA, grB) => " " + grA.replace(/[.:@]/g, " ") + grB
+      )
+      .replace(
+        vueTemplateRegex,
+        (match, grA, grB, grC) =>
+          grA + grB.replaceAll("{{", "{ ").replaceAll("}}", " }") + grC
+      );
   }
   return code;
 };

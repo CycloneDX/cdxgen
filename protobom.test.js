@@ -1,9 +1,9 @@
 import { expect, test } from "@jest/globals";
 import { tmpdir } from "node:os";
-import { existsSync, rmSync, mkdtempSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
-import { writeBinary, readBinary } from "./protobom.js";
+import { readBinary, writeBinary } from "./protobom.js";
 
 const tempDir = mkdtempSync(join(tmpdir(), "bin-tests-"));
 const testBom = JSON.parse(

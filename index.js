@@ -1,119 +1,119 @@
 import { platform as _platform, homedir, tmpdir } from "node:os";
 import process from "node:process";
 import { Buffer } from "node:buffer";
-import { basename, join, dirname, sep, resolve } from "node:path";
+import { basename, dirname, join, resolve, sep } from "node:path";
 import { parse } from "ssri";
 import {
-  lstatSync,
-  mkdtempSync,
-  rmSync,
-  existsSync,
-  readFileSync,
-  unlinkSync,
-  mkdirSync,
-  writeFileSync,
-  statSync,
   accessSync,
-  constants
+  constants,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  unlinkSync,
+  writeFileSync
 } from "node:fs";
 import got from "got";
 import { v4 as uuidv4 } from "uuid";
 import { PackageURL } from "packageurl-js";
 import {
-  parsePackageJsonName,
-  getLicenses,
-  encodeForPurl,
-  getAllFiles,
-  extractJarArchive,
-  getMvnMetadata,
-  collectJarNS,
-  includeMavenTestScope,
-  getMavenCommand,
-  collectGradleDependencies,
-  collectMvnDependencies,
-  parsePom,
-  parseMavenTree,
-  executeGradleProperties,
-  getGradleCommand,
-  convertJarNSToPackages,
-  parseGradleDep,
-  parseBazelSkyframe,
-  parseBazelActionGraph,
-  parseSbtLock,
-  determineSbtVersion,
+  CLJ_CMD,
+  DEBUG_MODE,
+  FETCH_LICENSE,
+  LEIN_CMD,
+  MAX_BUFFER,
+  SWIFT_CMD,
+  TIMEOUT_MS,
+  addEvidenceForDotnet,
+  addEvidenceForImports,
   addPlugin,
   cleanupPlugin,
-  parsePkgJson,
-  parseMinJs,
-  parseBowerJson,
-  parsePnpmLock,
-  parsePkgLock,
-  parseNodeShrinkwrap,
-  parseYarnLock,
-  parsePoetrylockData,
-  parseBdistMetadata,
-  readZipEntry,
-  parsePiplockData,
+  collectGradleDependencies,
+  collectJarNS,
+  collectMvnDependencies,
+  convertJarNSToPackages,
+  convertOSQueryResults,
+  determineSbtVersion,
+  encodeForPurl,
+  executeGradleProperties,
+  extractJarArchive,
+  frameworksList,
+  getAllFiles,
+  getCppModules,
+  getGradleCommand,
+  getLicenses,
+  getMavenCommand,
+  getMvnMetadata,
+  getNugetMetadata,
   getPipFrozenTree,
-  parseReqFile,
+  getPyMetadata,
   getPyModules,
-  parseSetupPyFile,
-  parseGoVersionData,
-  parseGosumData,
+  getSwiftPackageMetadata,
+  includeMavenTestScope,
+  parseBazelActionGraph,
+  parseBazelSkyframe,
+  parseBdistMetadata,
+  parseBitbucketPipelinesFile,
+  parseBowerJson,
+  parseCabalData,
+  parseCargoAuditableData,
+  parseCargoData,
+  parseCargoTomlData,
+  parseCljDep,
+  parseCloudBuildData,
+  parseCmakeLikeFile,
+  parseComposerLock,
+  parseConanData,
+  parseConanLockData,
+  parseContainerFile,
+  parseContainerSpecData,
+  parseCsPkgData,
+  parseCsPkgLockData,
+  parseCsProjAssetsData,
+  parseCsProjData,
+  parseEdnData,
+  parseGemfileLockData,
+  parseGitHubWorkflowData,
   parseGoListDep,
+  parseGoModData,
   parseGoModGraph,
   parseGoModWhy,
-  parseGoModData,
+  parseGoVersionData,
   parseGopkgData,
-  parseCargoAuditableData,
-  parseCargoTomlData,
-  parseCargoData,
+  parseGosumData,
+  parseGradleDep,
+  parseHelmYamlData,
+  parseLeinDep,
+  parseLeiningenData,
+  parseMavenTree,
+  parseMinJs,
+  parseMixLockData,
+  parseNodeShrinkwrap,
+  parseNupkg,
+  parseOpenapiSpecData,
+  parsePackageJsonName,
+  parsePaketLockData,
+  parsePiplockData,
+  parsePkgJson,
+  parsePkgLock,
+  parsePnpmLock,
+  parsePoetrylockData,
+  parsePom,
+  parsePrivadoFile,
   parsePubLockData,
   parsePubYamlData,
-  parseConanLockData,
-  parseConanData,
-  parseLeiningenData,
-  parseLeinDep,
-  parseEdnData,
-  parseCljDep,
-  parseCabalData,
-  parseMixLockData,
-  parseGitHubWorkflowData,
-  parseCloudBuildData,
-  convertOSQueryResults,
-  parseHelmYamlData,
-  parseSwiftResolved,
-  parseSwiftJsonTree,
-  parseContainerSpecData,
-  parseOpenapiSpecData,
-  parsePrivadoFile,
-  parseComposerLock,
-  parseGemfileLockData,
-  parseNupkg,
-  parseCsProjAssetsData,
-  parseCsPkgLockData,
-  parseCsPkgData,
-  parseCsProjData,
-  parsePaketLockData,
-  DEBUG_MODE,
   parsePyProjectToml,
-  addEvidenceForImports,
+  parseReqFile,
+  parseSbtLock,
   parseSbtTree,
-  parseCmakeLikeFile,
-  getCppModules,
-  FETCH_LICENSE,
-  TIMEOUT_MS,
-  MAX_BUFFER,
-  getNugetMetadata,
-  frameworksList,
-  parseContainerFile,
-  parseBitbucketPipelinesFile,
-  getPyMetadata,
-  addEvidenceForDotnet,
-  getSwiftPackageMetadata,
-  CLJ_CMD,
-  LEIN_CMD,
-  SWIFT_CMD
+  parseSetupPyFile,
+  parseSwiftJsonTree,
+  parseSwiftResolved,
+  parseYarnLock,
+  readZipEntry
 } from "./utils.js";
 import {
   collectEnvInfo,
@@ -122,7 +122,7 @@ import {
   listFiles
 } from "./envcontext.js";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath, URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
@@ -136,18 +136,18 @@ const _version = selfPJson.version;
 import { findJSImportsExports } from "./analyzer.js";
 import { gte, lte } from "semver";
 import {
-  getPkgPathList,
-  parseImageName,
+  addSkippedSrcFiles,
   exportArchive,
   exportImage,
-  addSkippedSrcFiles
+  getPkgPathList,
+  parseImageName
 } from "./docker.js";
 import {
-  getGoBuildInfo,
-  getCargoAuditableInfo,
   executeOsQuery,
-  getOSPackages,
-  getDotnetSlices
+  getCargoAuditableInfo,
+  getDotnetSlices,
+  getGoBuildInfo,
+  getOSPackages
 } from "./binary.js";
 import { collectOSCryptoLibs } from "./cbomutils.js";
 
@@ -3460,9 +3460,7 @@ export const createOSBom = (path, options) => {
         parentComponent = dlist.splice(0, 1)[0];
       }
       pkgList = pkgList.concat(
-        dlist.sort(function (a, b) {
-          return a.name.localeCompare(b.name);
-        })
+        dlist.sort((a, b) => a.name.localeCompare(b.name))
       );
     }
   } // for

@@ -1,11 +1,11 @@
 import {
+  DEBUG_MODE,
+  collectGradleDependencies,
+  collectMvnDependencies,
   executeAtom,
   getAllFiles,
   getGradleCommand,
-  getMavenCommand,
-  collectGradleDependencies,
-  collectMvnDependencies,
-  DEBUG_MODE
+  getMavenCommand
 } from "./utils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
