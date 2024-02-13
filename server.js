@@ -152,7 +152,7 @@ const start = (options) => {
       ) {
         res.write(bomNSData.bomJson);
       } else {
-        res.write(JSON.stringify(bomNSData.bomJson, null, 2));
+        res.write(JSON.stringify(bomNSData.bomJson, null, null));
       }
     }
     if (reqOptions.serverUrl && reqOptions.apiKey) {

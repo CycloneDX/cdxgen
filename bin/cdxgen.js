@@ -404,7 +404,15 @@ const checkPermissions = (filePath) => {
         fs.writeFileSync(jsonFile, bomNSData.bomJson);
         jsonPayload = bomNSData.bomJson;
       } else {
-        jsonPayload = JSON.stringify(bomNSData.bomJson, null, 2);
+        jsonPayload = JSON.stringify(
+          bomNSData.bomJson,
+          null,
+          options.deep ||
+            ["os", "docker", "universal"].includes(options.projectType) ||
+            process.env.CI
+            ? null
+            : 2
+        );
         fs.writeFileSync(jsonFile, jsonPayload);
       }
       if (
@@ -499,7 +507,7 @@ const checkPermissions = (filePath) => {
             bomJsonUnsignedObj.signature = signatureBlock;
             fs.writeFileSync(
               jsonFile,
-              JSON.stringify(bomJsonUnsignedObj, null, 2)
+              JSON.stringify(bomJsonUnsignedObj, null, null)
             );
             if (publicKeyFile) {
               // Verifying this signature
