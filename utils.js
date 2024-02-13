@@ -4214,76 +4214,98 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
   });
   specsFound = false;
   let lastParent = undefined;
+  let lastRemote = undefined;
+  let lastRevision = undefined;
   // In the second pass, we use the space in the prefix to figure out the dependency tree
   gemLockData.split("\n").forEach((l) => {
     l = l.replace("\r", "");
-    if (specsFound) {
-      const tmpA = l.split(" (");
-      if (tmpA && tmpA.length == 2) {
-        const nameWithPrefix = tmpA[0];
-        const name = tmpA[0].trim();
-        if (name === "remote:") {
-          return;
-        }
-        const level = nameWithPrefix.replace(name, "").split("  ").length % 2;
-        const purlString = new PackageURL(
-          "gem",
-          "",
-          name,
-          pkgVersionMap[name],
-          null,
-          null
-        ).toString();
-        const bomRef = decodeURIComponent(purlString);
-        if (level === 1) {
-          lastParent = bomRef;
-          rootList.push(bomRef);
-        }
-        const apkg = {
-          name,
-          version: pkgVersionMap[name],
-          purl: purlString,
-          "bom-ref": bomRef,
-          properties: [
-            {
-              name: "SrcFile",
-              value: lockFile
-            }
-          ],
-          evidence: {
-            identity: {
-              field: "purl",
-              confidence: 0.8,
-              methods: [
-                {
-                  technique: "manifest-analysis",
-                  confidence: 0.8,
-                  value: lockFile
-                }
-              ]
-            }
-          }
-        };
-        if (lastParent && lastParent !== bomRef) {
-          if (!dependenciesMap[lastParent]) {
-            dependenciesMap[lastParent] = new Set();
-          }
-          dependenciesMap[lastParent].add(bomRef);
-        }
-        if (!dependenciesMap[bomRef]) {
-          dependenciesMap[bomRef] = new Set();
-        }
-        if (!pkgnames[name]) {
-          pkgList.push(apkg);
-          pkgnames[name] = true;
-        }
-      }
+    if (l.trim().startsWith("remote:")) {
+      lastRemote = l.trim().split(" ")[1];
     }
-    if (l.trim() === "specs:") {
-      specsFound = true;
+    if (l.trim().startsWith("revision:")) {
+      lastRevision = l.trim().split(" ")[1];
     }
     if (l.trim() == l.trim().toUpperCase()) {
       specsFound = false;
+      lastRemote = undefined;
+      lastRevision = undefined;
+    }
+    if (l.trim() === "specs:") {
+      specsFound = true;
+      return;
+    }
+    if (specsFound) {
+      const tmpA = l.split(" (");
+      const nameWithPrefix = tmpA[0];
+      const name = tmpA[0].trim();
+      const level = nameWithPrefix.replace(name, "").split("  ").length % 2;
+      if (!name.length || name === "remote:" || name === name.toUpperCase()) {
+        return;
+      }
+      const purlString = new PackageURL(
+        "gem",
+        "",
+        name,
+        pkgVersionMap[name],
+        null,
+        null
+      ).toString();
+      const bomRef = decodeURIComponent(purlString);
+      if (level === 1) {
+        lastParent = bomRef;
+        rootList.push(bomRef);
+      }
+      const properties = [
+        {
+          name: "SrcFile",
+          value: lockFile
+        }
+      ];
+      if (lastRemote) {
+        properties.push({
+          name: "cdx:gem:remote",
+          value: lastRemote
+        });
+      }
+      if (lastRevision) {
+        properties.push({
+          name: "cdx:gem:remoteRevision",
+          value: lastRevision
+        });
+      }
+      const apkg = {
+        name,
+        version: pkgVersionMap[name],
+        purl: purlString,
+        "bom-ref": bomRef,
+        properties,
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 0.8,
+            methods: [
+              {
+                technique: "manifest-analysis",
+                confidence: 0.8,
+                value: lockFile
+              }
+            ]
+          }
+        }
+      };
+      if (lastParent && lastParent !== bomRef) {
+        if (!dependenciesMap[lastParent]) {
+          dependenciesMap[lastParent] = new Set();
+        }
+        dependenciesMap[lastParent].add(bomRef);
+      }
+      if (!dependenciesMap[bomRef]) {
+        dependenciesMap[bomRef] = new Set();
+      }
+      if (!pkgnames[name]) {
+        pkgList.push(apkg);
+        pkgnames[name] = true;
+      }
     }
   });
   for (const k of Object.keys(dependenciesMap)) {
