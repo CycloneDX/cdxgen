@@ -2592,7 +2592,13 @@ test("parseGemfileLockData", async () => {
     version: "6.0.0",
     purl: "pkg:gem/actioncable@6.0.0",
     "bom-ref": "pkg:gem/actioncable@6.0.0",
-    properties: [{ name: "SrcFile", value: "./test/data/Gemfile.lock" }],
+    properties: [
+      { name: "SrcFile", value: "./test/data/Gemfile.lock" },
+      {
+        name: "cdx:gem:remote",
+        value: "https://rubygems.org/"
+      }
+    ],
     evidence: {
       identity: {
         field: "purl",
@@ -2619,6 +2625,12 @@ test("parseGemfileLockData", async () => {
   );
   expect(retMap.pkgList.length).toEqual(90);
   expect(retMap.dependenciesList.length).toEqual(90);
+  retMap = await parseGemfileLockData(
+    readFileSync("./test/data/Gemfile4.lock", { encoding: "utf-8" }),
+    "./test/data/Gemfile4.lock"
+  );
+  expect(retMap.pkgList.length).toEqual(183);
+  expect(retMap.dependenciesList.length).toEqual(183);
 });
 
 test("parseGemspecData", async () => {
