@@ -2585,8 +2585,8 @@ test("parseGemfileLockData", async () => {
     readFileSync("./test/data/Gemfile.lock", { encoding: "utf-8" }),
     "./test/data/Gemfile.lock"
   );
-  expect(retMap.pkgList.length).toEqual(141);
-  expect(retMap.dependenciesList.length).toEqual(141);
+  expect(retMap.pkgList.length).toEqual(140);
+  expect(retMap.dependenciesList.length).toEqual(140);
   expect(retMap.pkgList[0]).toEqual({
     name: "actioncable",
     version: "6.0.0",
@@ -2623,14 +2623,26 @@ test("parseGemfileLockData", async () => {
     readFileSync("./test/data/Gemfile2.lock", { encoding: "utf-8" }),
     "./test/data/Gemfile2.lock"
   );
-  expect(retMap.pkgList.length).toEqual(90);
-  expect(retMap.dependenciesList.length).toEqual(90);
+  expect(retMap.pkgList.length).toEqual(89);
+  expect(retMap.dependenciesList.length).toEqual(89);
   retMap = await parseGemfileLockData(
     readFileSync("./test/data/Gemfile4.lock", { encoding: "utf-8" }),
     "./test/data/Gemfile4.lock"
   );
-  expect(retMap.pkgList.length).toEqual(183);
-  expect(retMap.dependenciesList.length).toEqual(183);
+  expect(retMap.pkgList.length).toEqual(182);
+  expect(retMap.dependenciesList.length).toEqual(182);
+  retMap = await parseGemfileLockData(
+    readFileSync("./test/data/Gemfile5.lock", { encoding: "utf-8" }),
+    "./test/data/Gemfile5.lock"
+  );
+  expect(retMap.pkgList.length).toEqual(43);
+  expect(retMap.dependenciesList.length).toEqual(43);
+  retMap = await parseGemfileLockData(
+    readFileSync("./test/data/Gemfile6.lock", { encoding: "utf-8" }),
+    "./test/data/Gemfile6.lock"
+  );
+  expect(retMap.pkgList.length).toEqual(139);
+  expect(retMap.dependenciesList.length).toEqual(139);
 });
 
 test("parseGemspecData", async () => {
