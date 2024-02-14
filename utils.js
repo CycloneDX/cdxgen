@@ -4310,6 +4310,10 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
         .replace(" (", "")
         .replace(")", "");
       if (mayBeVersion.search(/[,><~ ]/) < 0) {
+        // Reset the platform
+        if (level === 1) {
+          lastParentPlatform = undefined;
+        }
         // Extract the platform
         for (const prefix of RUBY_PLATFORM_PREFIXES) {
           if (mayBeVersion.includes(prefix)) {

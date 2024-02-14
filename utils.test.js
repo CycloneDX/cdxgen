@@ -2635,8 +2635,8 @@ test("parseGemfileLockData", async () => {
     readFileSync("./test/data/Gemfile5.lock", { encoding: "utf-8" }),
     "./test/data/Gemfile5.lock"
   );
-  expect(retMap.pkgList.length).toEqual(42);
-  expect(retMap.dependenciesList.length).toEqual(42);
+  expect(retMap.pkgList.length).toEqual(43);
+  expect(retMap.dependenciesList.length).toEqual(43);
   retMap = await parseGemfileLockData(
     readFileSync("./test/data/Gemfile6.lock", { encoding: "utf-8" }),
     "./test/data/Gemfile6.lock"
