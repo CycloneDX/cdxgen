@@ -4027,6 +4027,32 @@ export const parseGoVersionData = async function (buildInfoData) {
   return pkgList;
 };
 
+export const RUBY_PLATFORM_PREFIXES = [
+  "-x86_64",
+  "-x86",
+  "-x64",
+  "-aarch",
+  "-arm",
+  "-universal",
+  "-java",
+  "-truffle"
+];
+
+/**
+ * Simplify the ruby version by removing platform suffixes
+ *
+ * @param {string} version Version to simplify
+ * @returns {string} Simplified version
+ */
+const simplifyRubyVersion = (version) => {
+  for (const prefix of RUBY_PLATFORM_PREFIXES) {
+    if (version.includes(prefix)) {
+      version = version.split(prefix)[0];
+    }
+  }
+  return version;
+};
+
 /**
  * Method to query rubygems api for gems details
  *
@@ -4052,7 +4078,7 @@ export const getRubyGemsMetadata = async function (pkgList) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
       const fullUrl = p.version
-        ? `${RUBYGEMS_V2_URL}${p.name}/versions/${p.version}.json`
+        ? `${RUBYGEMS_V2_URL}${p.name}/versions/${simplifyRubyVersion(p.version)}.json`
         : `${RUBYGEMS_V1_URL}${p.name}.json`;
       const res = await cdxgenAgent.get(fullUrl, apiOptions);
       let body = res.body;
@@ -4179,6 +4205,7 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
   const dependenciesList = [];
   const dependenciesMap = {};
   const pkgVersionMap = {};
+  const pkgVersionPlatformMap = {};
   const rootList = [];
   if (!gemLockData) {
     return pkgList;
@@ -4200,7 +4227,28 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
         // We only allow bracket characters ()
         if (version.search(/[,><~ ]/) < 0) {
           version = version.replace(/[=()]/g, "");
-          pkgVersionMap[name] = version;
+          // Sometimes, the version number could include the platform
+          // Examples:
+          //  bcrypt_pbkdf (1.1.0)
+          //  bcrypt_pbkdf (1.1.0-x64-mingw32)
+          //  bcrypt_pbkdf (1.1.0-x86-mingw32)
+          // In such cases, we need to track all of them to improve precision
+          let platformPrefix = false;
+          for (const prefix of RUBY_PLATFORM_PREFIXES) {
+            if (version.includes(prefix)) {
+              platformPrefix = true;
+              const platform = version.split(prefix).pop();
+              pkgVersionMap[`${name}${prefix}${platform}`] = version;
+              if (!pkgVersionPlatformMap[name]) {
+                pkgVersionPlatformMap[name] = new Set();
+              }
+              pkgVersionPlatformMap[name].add(version);
+              break;
+            }
+          }
+          if (!platformPrefix) {
+            pkgVersionMap[name] = version;
+          }
         }
       }
     }
@@ -4215,6 +4263,9 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
   let lastParent = undefined;
   let lastRemote = undefined;
   let lastRevision = undefined;
+  let lastBranch = undefined;
+  let lastTag = undefined;
+  let lastParentPlatform = undefined;
   // In the second pass, we use the space in the prefix to figure out the dependency tree
   gemLockData.split("\n").forEach((l) => {
     l = l.replace("\r", "");
@@ -4224,10 +4275,19 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
     if (l.trim().startsWith("revision:")) {
       lastRevision = l.trim().split(" ")[1];
     }
+    if (l.trim().startsWith("branch:")) {
+      lastBranch = l.trim().split(" ")[1];
+    }
+    if (l.trim().startsWith("tag:")) {
+      lastTag = l.trim().split(" ")[1];
+    }
     if (l.trim() == l.trim().toUpperCase()) {
       specsFound = false;
       lastRemote = undefined;
       lastRevision = undefined;
+      lastBranch = undefined;
+      lastTag = undefined;
+      lastParentPlatform = undefined;
     }
     if (l.trim() === "specs:") {
       specsFound = true;
@@ -4238,14 +4298,54 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
       const nameWithPrefix = tmpA[0];
       const name = tmpA[0].trim();
       const level = nameWithPrefix.replace(name, "").split("  ").length % 2;
-      if (!name.length || name === "remote:" || name === name.toUpperCase()) {
+      if (
+        !name.length ||
+        ["remote:", "bundler", name.toUpperCase()].includes(name)
+      ) {
         return;
+      }
+      let mayBeVersion = l
+        .trim()
+        .replace(name, "")
+        .replace(" (", "")
+        .replace(")", "");
+      if (mayBeVersion.search(/[,><~ ]/) < 0) {
+        // Extract the platform
+        for (const prefix of RUBY_PLATFORM_PREFIXES) {
+          if (mayBeVersion.includes(prefix)) {
+            const platform = mayBeVersion.split(prefix).pop();
+            lastParentPlatform = `${prefix.replace("-", "")}${platform}`;
+            break;
+          }
+        }
+      } else {
+        mayBeVersion = undefined;
+      }
+      // Give preference to the version in the line
+      let version = mayBeVersion;
+      if (!version) {
+        // Identifying the resolved version for a given dependency requires multiple lookups
+        version = pkgVersionMap[name];
+      }
+      // Is there a platform specific alias?
+      if (!version && lastParentPlatform) {
+        version = pkgVersionMap[`${name}-${lastParentPlatform}`];
+      }
+
+      // Is there a match based on the last parent platform
+      if (!version && lastParentPlatform && pkgVersionPlatformMap[name]) {
+        for (const aver of Array.from(pkgVersionPlatformMap[name])) {
+          if (aver.includes(lastParentPlatform.replace("-gnu", ""))) {
+            version = aver;
+            break;
+          }
+        }
       }
       const purlString = new PackageURL(
         "gem",
         "",
         name,
-        pkgVersionMap[name],
+        version,
         null,
         null
       ).toString();
@@ -4272,9 +4372,27 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
           value: lastRevision
         });
       }
+      if (lastBranch) {
+        properties.push({
+          name: "cdx:gem:remoteBranch",
+          value: lastBranch
+        });
+      }
+      if (lastTag) {
+        properties.push({
+          name: "cdx:gem:remoteTag",
+          value: lastTag
+        });
+      }
+      if (lastParentPlatform) {
+        properties.push({
+          name: "cdx:gem:platform",
+          value: lastParentPlatform
+        });
+      }
       const apkg = {
         name,
-        version: pkgVersionMap[name],
+        version,
         purl: purlString,
         "bom-ref": bomRef,
         properties,
@@ -4301,9 +4419,10 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
       if (!dependenciesMap[bomRef]) {
         dependenciesMap[bomRef] = new Set();
       }
-      if (!pkgnames[name]) {
+      // Allow duplicate packages if the version number includes platform
+      if (!pkgnames[purlString]) {
         pkgList.push(apkg);
-        pkgnames[name] = true;
+        pkgnames[purlString] = true;
       }
     }
   });
