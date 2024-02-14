@@ -4033,6 +4033,7 @@ export const RUBY_PLATFORM_PREFIXES = [
   "-x64",
   "-aarch",
   "-arm",
+  "-ruby",
   "-universal",
   "-java",
   "-truffle"
@@ -4109,8 +4110,10 @@ export const getRubyGemsMetadata = async function (pkgList) {
       if (body.authors) {
         p.author = body.authors;
       }
+      const platformPresent =
+        p.properties.filter((p) => p.name === "cdx:gem:platform").length > 0;
       // Track the platform such as java
-      if (body.platform && body.platform !== "ruby") {
+      if (!platformPresent && body.platform && body.platform !== "ruby") {
         p.properties.push({
           name: "cdx:gem:platform",
           value: body.platform
@@ -4271,6 +4274,9 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
     l = l.replace("\r", "");
     if (l.trim().startsWith("remote:")) {
       lastRemote = l.trim().split(" ")[1];
+      if (lastRemote.length < 3) {
+        lastRemote = undefined;
+      }
     }
     if (l.trim().startsWith("revision:")) {
       lastRevision = l.trim().split(" ")[1];
