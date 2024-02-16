@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.1.2",
+  "version": "10.1.3",
   "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
@@ -84,7 +84,7 @@
     "yargs": "^17.7.2"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.0.7",
+    "@appthreat/atom": "2.0.8",
     "@appthreat/cdx-proto": "^0.0.4",
     "@cyclonedx/cdxgen-plugins-bin": "^1.5.8",
     "@cyclonedx/cdxgen-plugins-bin-arm64": "^1.5.8",
