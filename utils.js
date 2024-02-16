@@ -4495,36 +4495,56 @@ export const getCratesMetadata = async function (pkgList) {
  * @param {Array} pkgList Package list
  */
 export const getDartMetadata = async function (pkgList) {
+  const RESPONSE_TYPE = "json";
+  const HEADER_ACCEPT = "application/vnd.pub.v2+json";
   const PUB_DEV_URL = process.env.PUB_DEV_URL || "https://pub.dev";
   const PUB_PACKAGES_URL = PUB_DEV_URL + "/api/packages/";
+  const PUB_LICENSE_REGEX = /^license:/i;
   const cdepList = [];
+
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
         console.log(`Querying ${PUB_DEV_URL} for ${p.name}`);
       }
       const res = await cdxgenAgent.get(PUB_PACKAGES_URL + p.name, {
-        responseType: "json",
+        responseType: RESPONSE_TYPE,
         headers: {
-          Accept: "application/vnd.pub.v2+json"
+          Accept: HEADER_ACCEPT
         }
       });
       if (res && res.body) {
-        const versions = res.body.versions;
-        for (const v of versions) {
-          if (p.version === v.version) {
-            const pubspec = v.pubspec;
-            p.description = pubspec.description;
-            if (pubspec.repository) {
-              p.repository = { url: pubspec.repository };
-            }
-            if (pubspec.homepage) {
-              p.homepage = { url: pubspec.homepage };
-            }
-            p.license = `${PUB_DEV_URL}/packages/${p.name}/license`;
-            cdepList.push(p);
-            break;
+        const version = res.body.versions.find((v) => p.version === v.version);
+        if (version) {
+          const pubspec = version.pubspec;
+          p.description = pubspec.description;
+          if (pubspec.repository) {
+            p.repository = { url: pubspec.repository };
           }
+          if (pubspec.homepage) {
+            p.homepage = { url: pubspec.homepage };
+          }
+          const res2 = await cdxgenAgent.get(
+            PUB_PACKAGES_URL + p.name + "/score",
+            {
+              responseType: RESPONSE_TYPE,
+              headers: {
+                Accept: HEADER_ACCEPT
+              }
+            }
+          );
+          if (res2 && res2.body) {
+            const tags = res2.body.tags;
+            const license = tags.find((tag) => PUB_LICENSE_REGEX.test(tag));
+            if (license) {
+              p.license = spdxLicenses.find(
+                (spdxLicense) =>
+                  spdxLicense.toLowerCase() ===
+                  license.replace(PUB_LICENSE_REGEX, "").toLowerCase()
+              );
+            }
+          }
+          cdepList.push(p);
         }
       }
     } catch (err) {

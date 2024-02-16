@@ -1020,17 +1020,17 @@ test("get dart metadata", async () => {
     {
       group: "",
       name: "async",
-      version: "2.8.2"
+      version: "2.11.0"
     }
   ]);
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
     group: "",
     name: "async",
-    version: "2.8.2",
+    version: "2.11.0",
     description:
       "Utility functions and classes related to the 'dart:async' library.",
-    license: "https://pub.dev/packages/async/license",
+    license: "BSD-3-Clause",
     repository: {
       url: "https://github.com/dart-lang/async"
     }
