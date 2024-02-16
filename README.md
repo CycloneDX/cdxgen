@@ -299,7 +299,7 @@ curl "http://127.0.0.1:9090/sbom?url=https://github.com/HooliCorp/vulnerable-aws
 If you need to pass credentials to authenticate.
 
 ```shell
-curl "http://127.0.0.1:9090/sbom?url=https://<Git_Access_Token>@github.com/some/repo.git&multiProject=true&type=js"
+curl "http://127.0.0.1:9090/sbom?url=https://<access_token>@github.com/some/repo.git&multiProject=true&type=js"
 curl "http://127.0.0.1:9090/sbom?url=https://<username>:<password>@bitbucket.org/some/repo.git&multiProject=true&type=js"
 ```
 
