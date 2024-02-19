@@ -3218,7 +3218,7 @@ test("parse swift deps files", () => {
     }
   ]);
   let pkgList = parseSwiftResolved("./test/data/Package.resolved");
-  expect(pkgList.length).toEqual(5);
+  expect(pkgList.length).toEqual(6);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
     group: "github.com/apple",
@@ -3242,7 +3242,7 @@ test("parse swift deps files", () => {
     repository: { url: "https://github.com/apple/swift-argument-parser" }
   });
   pkgList = parseSwiftResolved("./test/data/Package2.resolved");
-  expect(pkgList.length).toEqual(5);
+  expect(pkgList.length).toEqual(6);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
     group: "github.com/apple",
