@@ -6722,14 +6722,21 @@ export const convertOSQueryResults = function (
 const purlFromUrlString = (type, repoUrl, version) => {
   let namespace = "",
     name;
-  if (repoUrl && repoUrl.includes("://github.com/")) {
-    const parts = getGithubUrlParts(repoUrl);
-    if (parts.length < 5 || parts[2] !== "github.com") {
-      return undefined; // Not a valid GitHub repo URL
-    } else {
-      namespace = parts[2] + "/" + parts[3];
-      name = parts[4];
-    }
+  if (repoUrl && repoUrl.startsWith("http")) {
+    let url = new URL(repoUrl);
+    let pathnameParts = url.pathname.split('/');
+    let pathnameLastElement = pathnameParts.pop(); // pop() returns last element and removes it from pathnameParts
+    name = pathnameLastElement.replace('.git','');
+    let urlpath = pathnameParts.join('/');
+    namespace = url.hostname + urlpath;
+  } else if (repoUrl && repoUrl.startsWith("git@")) {
+    let parts = repoUrl.split(':')
+    let hostname = parts[0].split('@')[1];
+    let pathnameParts = parts[1].split('/');
+    let pathnameLastElement = pathnameParts.pop();
+    name = pathnameLastElement.replace('.git','');
+    let urlpath = pathnameParts.join('/');
+    namespace = hostname + ":" + urlpath;
   } else if (repoUrl && repoUrl.startsWith("/")) {
     const parts = repoUrl.split("/");
     name = parts[parts.length - 1];
