@@ -29,6 +29,24 @@
         }
       },
       {
+        "package": "swift-http-server",
+        "repositoryURL": "https://bitbucket.org/atlassian/swift-http-server",
+        "state": {
+          "branch": null,
+          "revision": "72211fb4139a84b6eaa71b1e15356604c84d0d94",
+          "version": "0.7.4"
+        }
+      },
+      {
+        "package": "swift-http-server",
+        "repositoryURL": "git@bitbucket.org:atlassian/swift-http-server",
+        "state": {
+          "branch": null,
+          "revision": "72211fb4139a84b6eaa71b1e15356604c84d0d94",
+          "version": "0.7.4"
+        }
+      }, 
+      {
         "package": "SymbolKit",
         "repositoryURL": "https://github.com/apple/swift-docc-symbolkit",
         "state": {
