@@ -8167,6 +8167,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   const rootList = [];
   const dependenciesList = [];
   let result = undefined;
+  let frozen = true;
   const env = {
     ...process.env
   };
@@ -8186,6 +8187,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
       shell: isWin
     });
     if (result.status !== 0 || result.error) {
+      frozen = false;
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
         if (
@@ -8258,6 +8260,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
             env
           });
           if (result.status !== 0 || result.error) {
+            frozen = false;
             if (DEBUG_MODE && result.stderr) {
               console.log(result.stderr);
             }
@@ -8273,6 +8276,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
             );
           }
         } else {
+          frozen = false;
           console.log(
             "Poetry install has failed. Setup and activate the poetry virtual environment and re-run cdxgen."
           );
@@ -8329,6 +8333,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
         env
       });
       if (result.status !== 0 || result.error) {
+        frozen = false;
         let versionRelatedError = false;
         if (
           result.stderr &&
@@ -8343,27 +8348,38 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
           );
           console.log(result.stderr);
         }
-        if (!versionRelatedError && DEBUG_MODE) {
-          console.log("args used:", pipInstallArgs);
-          if (result.stderr) {
-            console.log(result.stderr);
-          }
-          console.log(
-            "Possible build errors detected. The resulting list in the SBOM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
-          );
-          if (platform() === "win32") {
+        if (!versionRelatedError) {
+          if (DEBUG_MODE) {
+            console.log("args used:", pipInstallArgs);
+            if (result.stderr) {
+              console.log(result.stderr);
+            }
             console.log(
-              "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
+              "Possible build errors detected. The resulting list in the SBOM would therefore be incomplete.\nTry installing any missing build tools or development libraries to improve the accuracy."
+            );
+            if (platform() === "win32") {
+              console.log(
+                "- Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers"
+              );
+            } else {
+              console.log(
+                "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager."
+              );
+            }
+            console.log(
+              "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution."
+            );
+            console.log(
+              "- Check if any git submodules have to be initialized."
+            );
+            console.log(
+              "- If the application has its own Dockerfile, look for additional clues in there. You can also run cdxgen npm package during the container build step."
             );
           } else {
             console.log(
-              "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager."
+              "Possible build errors detected. Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
             );
           }
-          console.log(
-            "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution."
-          );
-          console.log("- Check if any git submodules have to be initialized.");
         }
       }
     }
@@ -8443,7 +8459,8 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
   return {
     pkgList,
     rootList,
-    dependenciesList
+    dependenciesList,
+    frozen
   };
 };
 

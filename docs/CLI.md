@@ -66,6 +66,7 @@ $ cdxgen -h
 
 Options:
   -o, --output                 Output file. Default bom.json
+                                                           [default: "bom.json"]
   -t, --type                   Project type
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
@@ -82,10 +83,12 @@ Options:
       --project-group          Dependency track project group
       --project-name           Dependency track project name. Default use the di
                                rectory name
-      --project-version        Dependency track project version    [default: ""]
+      --project-version        Dependency track project version
+                                                          [string] [default: ""]
       --project-id             Dependency track project id. Either provide the i
                                d or the project name and version together
-      --parent-project-id      Dependency track parent project id
+                                                                        [string]
+      --parent-project-id      Dependency track parent project id       [string]
       --required-only          Include only the packages with required scope on
                                the SBOM. Would set compositions.aggregate to inc
                                omplete unless --no-auto-compositions is passed.
@@ -109,13 +112,13 @@ Options:
       --evidence               Generate SBOM with evidence for supported languag
                                es.                    [boolean] [default: false]
       --spec-version           CycloneDX Specification version to use. Defaults
-                               to 1.5                             [default: 1.5]
+                               to 1.5                    [number] [default: 1.5]
       --filter                 Filter components containing this word in purl or
                                 component.properties.value. Multiple values allo
                                wed.                                      [array]
-      --only                   Include components only containing this word in
-                                purl. Useful to generate BOM with first party co
-                               mponents alone. Multiple values allowed.  [array]
+      --only                   Include components only containing this word in p
+                               url. Useful to generate BOM with first party comp
+                               onents alone. Multiple values allowed.    [array]
       --author                 The person(s) who created the BOM. Set this value
                                 if you're intending the modify the BOM and claim
                                 authorship.[array] [default: "OWASP Foundation"]
@@ -123,7 +126,10 @@ Options:
                                c.
   [choices: "appsec", "research", "operational", "threat-modeling", "license-com
                                        pliance", "generic"] [default: "generic"]
+      --exclude                Additional glob pattern(s) to ignore      [array]
       --include-formulation    Generate formulation section using git metadata.
+                                                      [boolean] [default: false]
+      --include-crypto         Include crypto libraries found under formulation.
                                                       [boolean] [default: false]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true

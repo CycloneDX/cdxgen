@@ -340,6 +340,10 @@ With profiles, cdxgen can generate a BOM that is optimized for a specific use ca
 | operational        | Generate OBOM                                                             | projectType set to os                                                              |
 | license-compliance | Fetch license data                                                        | Set FETCH_LICENSE environment variable                                             |
 
+## BOM lifecycles
+
+By default, cdxgen attempts to generate a BOM for the `build` lifecycle [phase](https://cyclonedx.org/docs/1.5/json/#tab-pane_metadata_lifecycles_items_oneOf_i0) for applications and `post-build` phase for container images. Using the argument, `--no-install-deps` it is possible to generate `pre-build` BOM for certain languages and ecosystems (Eg: Python) by disabling the package installation feature.
+
 ## Nydus - next-generation container image
 
 [Nydus](https://github.com/dragonflyoss/nydus) enhances the current OCI image specification by improving container launch speed, image space and network bandwidth efficiency, and data integrity. cdxgen container images are available in nydus format with the `-nydus` suffix.
