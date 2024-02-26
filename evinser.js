@@ -229,21 +229,26 @@ export const createSlice = (
   }
   const atomFile = path.join(sliceOutputDir, "app.atom");
   const slicesFile = path.join(sliceOutputDir, `${sliceType}.slices.json`);
-  const args = [
-    sliceType,
+  let args = [sliceType];
+  // Support for crypto slices aka CBOM
+  if (sliceType === "reachables" && options.includeCrypto) {
+    args.push("--include-crypto");
+  }
+  args = args.concat([
     "-l",
     language,
     "-o",
     path.resolve(atomFile),
     "--slice-outfile",
     path.resolve(slicesFile)
-  ];
+  ]);
   // For projects with several layers, slice depth needs to be increased from the default 7 to 15 or 20
   // This would increase the time but would yield more deeper paths
-  if (sliceType == "data-flow" && process.env.ATOM_SLICE_DEPTH) {
+  if (sliceType === "data-flow" && process.env.ATOM_SLICE_DEPTH) {
     args.push("--slice-depth");
     args.push(process.env.ATOM_SLICE_DEPTH);
   }
+
   args.push(path.resolve(filePath));
   const result = executeAtom(filePath, args);
   if (!result || !fs.existsSync(slicesFile)) {

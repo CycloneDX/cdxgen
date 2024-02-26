@@ -582,7 +582,8 @@ const checkPermissions = (filePath) => {
       withReachables: options.deep,
       usagesSlicesFile: options.usagesSlicesFile,
       dataFlowSlicesFile: options.dataFlowSlicesFile,
-      reachablesSlicesFile: options.reachablesSlicesFile
+      reachablesSlicesFile: options.reachablesSlicesFile,
+      includeCrypto: options.includeCrypto
     };
     const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {
