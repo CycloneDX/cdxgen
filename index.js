@@ -2210,9 +2210,9 @@ export const createPythonBom = async (path, options) => {
   let metadataFilename = "";
   let dependencies = [];
   let pkgList = [];
-  if (options.installDeps) {
+  if (options.installDeps && DEBUG_MODE) {
     console.log(
-      "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies."
+      "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies in case of any build issues."
     );
   }
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
