@@ -330,15 +330,24 @@ const addAuthorsSection = (options) => {
  * most of the time and under "post-build" for containers.
  *
  * @param {Object} options
- * @returns Lifecycles array
+ * @returns {Array} Lifecycles array
  */
 const addLifecyclesSection = (options) => {
-  const lifecycles = [{ phase: "build" }];
+  // If lifecycle was set via CLI arguments, reuse the value
+  if (options.lifecycle) {
+    return [{ phase: options.lifecycle }];
+  }
+  const lifecycles = [{ phase: options.installDeps ? "build" : "pre-build" }];
   if (options.exportData) {
     const inspectData = options.exportData.inspectData;
     if (inspectData) {
       lifecycles.push({ phase: "post-build" });
     }
+  } else if (options.deep) {
+    lifecycles.push({ phase: "post-build" });
+  }
+  if (options.projectType === "os") {
+    lifecycles.push({ phase: "operations" });
   }
   return lifecycles;
 };
@@ -347,7 +356,7 @@ const addLifecyclesSection = (options) => {
  * Method to generate the formulation section based on git metadata
  *
  * @param {Object} options
- * @returns formulation array
+ * @returns {Array} formulation array
  */
 const addFormulationSection = (options) => {
   const formulation = [];
@@ -2201,6 +2210,11 @@ export const createPythonBom = async (path, options) => {
   let metadataFilename = "";
   let dependencies = [];
   let pkgList = [];
+  if (options.installDeps) {
+    console.log(
+      "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies."
+    );
+  }
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pipenvMode = existsSync(join(path, "Pipfile"));
@@ -2382,7 +2396,7 @@ export const createPythonBom = async (path, options) => {
             const pkgMap = getPipFrozenTree(basePath, f, tempDir);
             if (pkgMap.pkgList && pkgMap.pkgList.length) {
               pkgList = pkgList.concat(pkgMap.pkgList);
-              frozen = true;
+              frozen = pkgMap.frozen;
             }
             if (pkgMap.dependenciesList) {
               dependencies = mergeDependencies(

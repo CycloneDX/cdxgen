@@ -1,6 +1,5 @@
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  },
-  "deno.enable": false
+  }
 }

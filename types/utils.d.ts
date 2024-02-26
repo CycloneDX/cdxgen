@@ -207,6 +207,7 @@ export function parseGoModWhy(rawOutput: string): any;
 export function parseGosumData(gosumData: any): Promise<any[]>;
 export function parseGopkgData(gopkgData: any): Promise<any[]>;
 export function parseGoVersionData(buildInfoData: any): Promise<any[]>;
+export const RUBY_PLATFORM_PREFIXES: string[];
 export function getRubyGemsMetadata(pkgList: any[]): Promise<any[]>;
 export function parseGemspecData(gemspecData: string): Promise<any[]>;
 export function parseGemfileLockData(gemLockData: object, lockFile: string): Promise<any[] | {
@@ -477,6 +478,7 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
         ref: string;
         dependsOn: any;
     }[];
+    frozen: boolean;
 };
 export function parsePackageJsonName(name: any): {
     scope: any;

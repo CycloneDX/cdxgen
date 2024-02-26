@@ -150,8 +150,6 @@ const args = yargs(hideBin(process.argv))
   })
   .option("install-deps", {
     type: "boolean",
-    hidden: true,
-    default: true,
     description:
       "Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature."
   })
@@ -216,9 +214,13 @@ const args = yargs(hideBin(process.argv))
       "generic"
     ]
   })
+  .option("lifecycle", {
+    description: "Product lifecycle for the generated BOM.",
+    hidden: true,
+    choices: ["pre-build", "build", "post-build"]
+  })
   .option("exclude", {
-    description: "Additional glob pattern(s) to ignore",
-    hidden: true
+    description: "Additional glob pattern(s) to ignore"
   })
   .option("export-proto", {
     type: "boolean",
@@ -239,8 +241,7 @@ const args = yargs(hideBin(process.argv))
   .option("include-crypto", {
     type: "boolean",
     default: false,
-    description: "Include crypto libraries found under formulation.",
-    hidden: true
+    description: "Include crypto libraries found under formulation."
   })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
@@ -298,14 +299,22 @@ if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
 }
 
-const applyProfile = (options) => {
+/**
+ * Method to apply advanced options such as profile and lifecycles
+ *
+ * @param {object} CLI options
+ */
+const applyAdvancedOptions = (options) => {
   switch (options.profile) {
     case "appsec":
       options.deep = true;
+      options.includeFormulation = true;
       break;
     case "research":
       options.deep = true;
       options.evidence = true;
+      options.includeFormulation = true;
+      options.includeCrypto = true;
       process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = "true";
       process.env.ASTGEN_IGNORE_DIRS = "";
       process.env.ASTGEN_IGNORE_FILE_PATTERN = "";
@@ -313,12 +322,22 @@ const applyProfile = (options) => {
     case "operational":
       options.projectType = options.projectType || "os";
       break;
-    case "threat-modeling": // unused
+    case "threat-modeling":
+      options.deep = true;
+      options.evidence = true;
       break;
     case "license-compliance":
       process.env.FETCH_LICENSE = "true";
       break;
     default:
+      break;
+  }
+  switch (options.lifecycle) {
+    case "pre-build":
+      options.installDeps = false;
+      break;
+    default:
+      options.installDeps = true;
       break;
   }
   return options;
@@ -334,7 +353,7 @@ const options = Object.assign({}, args, {
   project: args.projectId,
   deep: args.deep || args.evidence
 });
-applyProfile(options);
+applyAdvancedOptions(options);
 
 /**
  * Check for node >= 20 permissions
