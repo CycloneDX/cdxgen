@@ -1,4 +1,4 @@
-FROM almalinux:9.3-minimal
+FROM ghcr.io/appthreat/base:main
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
@@ -9,7 +9,7 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
       org.opencontainers.image.description="Container image for cyclonedx cdxgen SBOM generator" \
-      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
+      org.opencontainers.docker.cmd="docker run --rm --cpus=4 --memory=16G -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
 
 ARG SWIFT_SIGNING_KEY=A62AE125BBBFBB96A6E042EC925CC1CCED3D1561
 ARG SWIFT_PLATFORM=ubi9
@@ -64,10 +64,11 @@ RUN set -e; \
     esac; \
     echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
     && microdnf module enable php ruby -y \
-    && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
-        python3.11 python3.11-devel python3.11-pip ruby ruby-devel glibc-common glibc-all-langpacks \
+    && microdnf install -y epel-release \
+    && microdnf install --enablerepo=crb --nodocs -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
+        libxml2-devel libxslt-devel unixODBC-devel hdf5-devel python3-devel python3-pip python3-h5py \
+        ruby ruby-devel glibc-common glibc-all-langpacks \
         pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel \
-    && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
     && python3 -m pip install --user pipenv poetry \
@@ -95,7 +96,6 @@ RUN set -e; \
     && chmod +x /usr/bin/swift \
     && rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz \
     && swift --version \
-    && microdnf install -y epel-release \
     && mkdir -p ${ANDROID_HOME}/cmdline-tools \
     && curl -L https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
     && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
