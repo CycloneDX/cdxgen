@@ -8377,7 +8377,7 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
             );
           } else {
             console.log(
-              "Possible build errors detected. Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot. Alternatively, generate a less precise pre-build SBOM by invoking cdxgen with '--lifecycle pre-build' argument."
+              "Possible build errors detected. Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
             );
           }
         }
