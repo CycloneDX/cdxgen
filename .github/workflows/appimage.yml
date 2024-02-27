@@ -4,9 +4,10 @@ on: [workflow_dispatch]
 
 jobs:
   build:
+    # use ubuntu-20.04 due to avoid glic errors
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
         sudo apt-get install -y python3.8 python3.8-dev python3-pip python3-testresources python3-setuptools patchelf desktop-file-utils libgdk-pixbuf2.0-dev
@@ -21,7 +22,7 @@ jobs:
         appimage-builder --recipe appimage-builder.yml --skip-test
       env:
         UPDATE_INFO: gh-releases-zsync|cyclonedx|cdxgen|latest|*x86_64.AppImage.zsync
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: AppImage
         path: './*.AppImage*'

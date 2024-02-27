@@ -1,0 +1,79 @@
+example.group:eclipse-repository:eclipse-repository:1.0.0-SNAPSHOT
++- example.group:example-feature:eclipse-feature:0.1.0-SNAPSHOT:compile
++- example.group:example-feature-2:eclipse-feature:0.2.0-SNAPSHOT:compile
++- example.group:example-bundle:eclipse-plugin:0.1.0-SNAPSHOT:compile
+|  +- p2.eclipse.plugin:com.ibm.icu:eclipse-plugin:67.1.0.v20200706-1749:system
+|  +- p2.eclipse.plugin:com.sun.jna:eclipse-plugin:5.8.0.v20210503-0343:system
+|  +- p2.eclipse.plugin:com.sun.jna.platform:eclipse-plugin:5.8.0.v20210406-1004:system
+|  +- p2.eclipse.plugin:org.eclipse.core.runtime:eclipse-plugin:3.25.0.v20220506-1157:system
+|  +- p2.eclipse.plugin:org.eclipse.swt:eclipse-plugin:3.120.0.v20220530-1036:system
+|  +- p2.eclipse.plugin:org.eclipse.ui:eclipse-plugin:3.201.0.v20220124-1108:system
+|  +- p2.eclipse.plugin:javax.annotation:eclipse-plugin:1.3.5.v20200909-1856:system
+|  +- p2.eclipse.plugin:org.eclipse.osgi:eclipse-plugin:3.18.0.v20220516-2155:system
+|  +- p2.eclipse.plugin:javax.inject:eclipse-plugin:1.0.0.v20220405-0441:system
+|  +- p2.eclipse.plugin:org.apache.batik.constants:eclipse-plugin:1.14.0.v20210324-0332:system
+|  +- p2.eclipse.plugin:org.apache.batik.css:eclipse-plugin:1.14.0.v20210324-0332:system
+|  +- p2.eclipse.plugin:org.apache.batik.util:eclipse-plugin:1.14.0.v20210324-0332:system
+|  +- p2.eclipse.plugin:org.apache.batik.i18n:eclipse-plugin:1.14.0.v20210324-0332:system
+|  +- p2.eclipse.plugin:org.apache.xmlgraphics:eclipse-plugin:2.6.0.v20210409-0748:system
+|  +- p2.eclipse.plugin:org.w3c.dom.svg:eclipse-plugin:1.1.0.v201011041433:system
+|  +- p2.eclipse.plugin:org.w3c.dom.events:eclipse-plugin:3.0.0.draft20060413_v201105210656:system
+|  +- p2.eclipse.plugin:org.w3c.css.sac:eclipse-plugin:1.3.1.v200903091627:system
+|  +- p2.eclipse.plugin:org.apache.commons.io:eclipse-plugin:2.8.0.v20210415-0900:system
+|  +- p2.eclipse.plugin:org.apache.commons.logging:eclipse-plugin:1.2.0.v20180409-1502:system
+|  +- p2.eclipse.plugin:org.apache.felix.scr:eclipse-plugin:2.1.24.v20200924-1939:system
+|  +- p2.eclipse.plugin:org.eclipse.osgi.services:eclipse-plugin:3.10.200.v20210723-0643:system
+|  +- org.osgi:org.osgi.util.promise:eclipse-plugin:1.2.0:compile
+|  |  \- org.osgi:osgi.annotation:jar:8.0.1:compile
+|  +- p2.eclipse.plugin:org.eclipse.core.commands:eclipse-plugin:3.10.200.v20220512-0851:system
+|  +- p2.eclipse.plugin:org.eclipse.equinox.common:eclipse-plugin:3.16.100.v20220315-2327:system
+|  +- p2.eclipse.plugin:org.eclipse.core.contenttype:eclipse-plugin:3.8.100.v20210910-0640:system
+|  +- p2.eclipse.plugin:org.eclipse.equinox.preferences:eclipse-plugin:3.10.0.v20220503-1634:system
+|  +- p2.eclipse.plugin:org.eclipse.equinox.registry:eclipse-plugin:3.11.100.v20211021-1418:system
+|  +- p2.eclipse.plugin:org.eclipse.core.databinding:eclipse-plugin:1.11.0.v20220118-1028:system
+|  +- p2.eclipse.plugin:org.eclipse.core.databinding.observable:eclipse-plugin:1.12.0.v20211231-1006:system
+|  +- p2.eclipse.plugin:org.eclipse.core.databinding.property:eclipse-plugin:1.9.0.v20210619-1129:system
+|  +- p2.eclipse.plugin:org.eclipse.core.expressions:eclipse-plugin:3.8.100.v20210910-0640:system
+|  +- p2.eclipse.plugin:org.eclipse.core.jobs:eclipse-plugin:3.13.0.v20220512-1935:system
+|  +- p2.eclipse.plugin:org.eclipse.equinox.app:eclipse-plugin:1.6.100.v20211021-1418:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.core.commands:eclipse-plugin:1.0.100.v20211204-1536:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.core.di:eclipse-plugin:1.8.200.v20220512-1957:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.core.contexts:eclipse-plugin:1.10.0.v20220430-0424:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.core.services:eclipse-plugin:2.3.200.v20220513-1235:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.core.di.annotations:eclipse-plugin:1.7.100.v20210910-0640:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.core.di.extensions:eclipse-plugin:0.17.100.v20210910-0640:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.core.di.extensions.supplier:eclipse-plugin:0.16.300.v20220503-2248:system
+|  +- org.osgi:org.osgi.service.prefs:eclipse-plugin:1.1.2:compile
+|  +- p2.eclipse.plugin:org.eclipse.e4.emf.xpath:eclipse-plugin:0.3.0.v20210722-1426:system
+|  +- p2.eclipse.plugin:org.apache.commons.jxpath:eclipse-plugin:1.3.0.v200911051830:system
+|  +- p2.eclipse.plugin:org.eclipse.emf.ecore:eclipse-plugin:2.27.0.v20220426-0617:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.bindings:eclipse-plugin:0.13.100.v20210722-1426:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.services:eclipse-plugin:1.5.0.v20210115-1333:system
+|  +- p2.eclipse.plugin:org.eclipse.jface:eclipse-plugin:3.26.0.v20220513-0449:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.css.core:eclipse-plugin:0.13.200.v20211022-1402:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.css.swt:eclipse-plugin:0.14.500.v20220511-1639:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.css.swt.theme:eclipse-plugin:0.13.100.v20220310-1056:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.di:eclipse-plugin:1.4.0.v20210621-1133:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.dialogs:eclipse-plugin:1.3.200.v20211210-1500:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.model.workbench:eclipse-plugin:2.2.100.v20220331-0744:system
+|  +- p2.eclipse.plugin:org.eclipse.equinox.event:eclipse-plugin:1.6.100.v20211021-1418:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.widgets:eclipse-plugin:1.3.0.v20210621-1136:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.workbench:eclipse-plugin:1.13.100.v20211019-0756:system
+|  +- p2.eclipse.plugin:org.eclipse.emf.ecore.change:eclipse-plugin:2.14.0.v20190528-0725:system
+|  +- p2.eclipse.plugin:org.eclipse.emf.ecore.xmi:eclipse-plugin:2.16.0.v20190528-0725:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.workbench.addons.swt:eclipse-plugin:1.4.400.v20211102-0453:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.workbench.renderers.swt:eclipse-plugin:0.15.500.v20220511-1638:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.workbench.swt:eclipse-plugin:0.16.500.v20220506-1520:system
+|  +- p2.eclipse.plugin:org.eclipse.jface.databinding:eclipse-plugin:1.13.0.v20210619-1146:system
+|  +- p2.eclipse.plugin:org.eclipse.e4.ui.workbench3:eclipse-plugin:0.16.0.v20210619-0956:system
+|  +- p2.eclipse.plugin:org.eclipse.urischeme:eclipse-plugin:1.2.100.v20211001-1648:system
+|  +- p2.eclipse.plugin:org.eclipse.emf.common:eclipse-plugin:2.25.0.v20220325-0806:system
+|  +- p2.eclipse.plugin:org.eclipse.help:eclipse-plugin:3.9.100.v20210721-0601:system
+|  +- org.osgi:org.osgi.util.function:eclipse-plugin:1.2.0:compile
+|  +- p2.eclipse.plugin:org.eclipse.swt.win32.win32.x86_64:eclipse-plugin:3.120.0.v20220530-1036:system
+|  +- p2.eclipse.plugin:org.eclipse.ui.workbench:eclipse-plugin:3.125.100.v20220524-1304:system
+|  +- p2.eclipse.plugin:org.w3c.dom.smil:eclipse-plugin:1.0.1.v200903091627:system
+|  +- p2.eclipse.plugin:org.eclipse.swt.gtk.linux.x86_64:eclipse-plugin:3.120.0.v20220530-1036:system
+|  \- p2.eclipse.plugin:org.eclipse.swt.cocoa.macosx.x86_64:eclipse-plugin:3.120.0.v20220530-1036:system
++- example.group:org.tycho.demo.rootfiles:p2-installable-unit:1.0.0:compile
+\- example.group:org.tycho.demo.rootfiles.win:p2-installable-unit:1.0.0-SNAPSHOT:compile

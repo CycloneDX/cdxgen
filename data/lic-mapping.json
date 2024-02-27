@@ -2,12 +2,14 @@
   {
     "exp": "Apache-2.0",
     "names": [
+      "Apache2",
       "Apache 2",
       "Apache 2.0",
       "Apache Version 2.0",
       "Apache 2.0 License",
       "Apache Software License, Version 2.0",
       "The Apache Software License, Version 2.0",
+      "Apache License v2.0",
       "Apache License (v2.0)",
       "Apache License 2.0",
       "Apache License Version 2.0",
@@ -20,6 +22,9 @@
       "Apache-2.0 OR MIT",
       "Apache2.0",
       "apache-2-0",
+      "APL2",
+      "the Apache License, ASL Version 2.0",
+      "Apache Publich License 2.0",
       "https://opensource.org/licenses/Apache2.0",
       "https://opensource.org/license/apache-2-0",
       "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -27,7 +32,14 @@
   },
   {
     "exp": "0BSD",
-    "names": ["Zero-Clause BSD", "BSD", "BSD License", "BSD-like"]
+    "names": [
+      "Zero-Clause BSD",
+      "BSD",
+      "BSD License",
+      "BSD-like",
+      "new BSD License",
+      "new BSD"
+    ]
   },
   {
     "exp": "BSD-2-Clause",
@@ -37,7 +49,8 @@
       "BSD-2-Clause",
       "BSD 2-Clause License",
       "The BSD 2-Clause License",
-      "The 2-Clause BSD License"
+      "The 2-Clause BSD License",
+      "The BSD License"
     ]
   },
   {
@@ -46,6 +59,7 @@
       "BSD 3 Clause",
       "BSD 3-Clause",
       "BSD-3-Clause",
+      "BSD 3-clause",
       "BSD 3-Clause License",
       "The BSD 3-Clause License",
       "BSD 3-Clause \"New\" or \"Revised\" License (BSD-3-Clause)",
@@ -55,8 +69,25 @@
       "Revised BSD",
       "Revised BSD License",
       "The New BSD License",
-      "BSD (3-clause)"
+      "BSD (3-clause)",
+      "3-Clause BSD License"
     ]
+  },
+  {
+    "exp": "BSD-4-Clause",
+    "names": [
+      "BSD 4 Clause",
+      "BSD 4-Clause",
+      "BSD-4-Clause",
+      "BSD 4-Clause License",
+      "The BSD 4-Clause License",
+      "BSD 4-Clause \"New\" or \"Revised\" License (BSD-4-Clause)",
+      "BSD (4-clause)"
+    ]
+  },
+  {
+    "exp": "CC0-1.0",
+    "names": ["CC0"]
   },
   {
     "exp": "CDDL-1.0",
@@ -139,6 +170,7 @@
       "LGPL v2.1",
       "LGPL-2.1",
       "LGPL2.1",
+      "LGPL, version 2.1",
       "GNU Lesser General Public License",
       "GNU Lesser General Public License Version 2.1",
       "GNU Lesser General Public License Version 2.1, February 1999",
@@ -177,6 +209,8 @@
   {
     "exp": "GPL-2.0-only",
     "names": [
+      "GPLv2",
+      "GPL-2.0",
       "GNU General Public License (GPL) version 2",
       "GNU General Public License (GPL) version 2.0",
       "GNU General Public License v2",
@@ -216,12 +250,14 @@
       "GNU General Public License v3",
       "GNU General Public License v3.0",
       "GNU General Public License as published by the Free Software Foundation, version 3.",
-      "GPL-3"
+      "GPL-3",
+      "GPL-3.0"
     ]
   },
   {
     "exp": "GPL-3.0-or-later",
     "names": [
+      "GPLv3+",
       "GNU General Public License (GPL) version 3, or any later version",
       "GNU General Public License (GPL) version 3.0, or any later version",
       "GNU General Public License v3 or later",
@@ -254,7 +290,13 @@
   },
   {
     "exp": "MPL-2.0",
-    "names": ["MPL 2.0", "Mozilla Public License 2.0"]
+    "names": [
+      "MPL 2.0",
+      "Mozilla Public License 2.0",
+      "Mozilla Public License version 2.0",
+      "Mozilla Public License, version 2.0",
+      "Mozilla Public License 2.0 (MPL 2.0)"
+    ]
   },
   {
     "exp": "NetCDF",
@@ -266,6 +308,19 @@
   },
   {
     "exp": "ISC",
-    "names": ["ISC license"]
+    "names": ["ISC license", "ISC License (ISCL)"]
+  },
+  {
+    "exp": "ICU",
+    "names": ["Unicode/ICU License"]
+  },
+  {
+    "exp": "PSF-2.0",
+    "names": [
+      "Python Software Foundation License",
+      "Python Software Foundation License (PSFL)",
+      "Python Software Foundation License 2.0",
+      "PSFL"
+    ]
   }
 ]

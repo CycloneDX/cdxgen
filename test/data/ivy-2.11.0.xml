@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven" xmlns:e="http://ant.apache.org/ivy/extra">
+	<info organisation="commons-io"
+		module="commons-io"
+		revision="2.11.0"
+		status="release"
+		publication="20210710024300"
+	>
+		<license name="Apache License, Version 2.0" url="https://www.apache.org/licenses/LICENSE-2.0.txt" />
+		<description homepage="https://commons.apache.org/proper/commons-io/">
+		The Apache Commons IO library contains utility classes, stream implementations, file filters,
+file comparators, endian transformation classes, and much more.
+		</description>
+		<m:dependency.management__org.junit.jupiter__junit-jupiter-params__version>5.7.2</m:dependency.management__org.junit.jupiter__junit-jupiter-params__version>
+		<m:properties__implementation.build>${scmBranch}@r${buildNumber}; ${maven.build.timestamp}</m:properties__implementation.build>
+		<m:properties__commons.pmd.version>3.13.0</m:properties__commons.pmd.version>
+		<m:properties__commons.surefire-report.aggregate>false</m:properties__commons.surefire-report.aggregate>
+		<m:properties__commons.findbugs.version>3.0.5</m:properties__commons.findbugs.version>
+		<m:properties__commons.binary.suffix>-bin</m:properties__commons.binary.suffix>
+		<m:properties__commons.release.isDistModule>true</m:properties__commons.release.isDistModule>
+		<m:properties__commons.animal-sniffer.version>1.19</m:properties__commons.animal-sniffer.version>
+		<m:properties__jmh.version>1.32</m:properties__jmh.version>
+		<m:properties__commons.releaseManagerName>Gary Gregory</m:properties__commons.releaseManagerName>
+		<m:dependency.management__org.junit.jupiter__junit-jupiter-engine__version>5.7.2</m:dependency.management__org.junit.jupiter__junit-jupiter-engine__version>
+		<m:properties__project.reporting.outputEncoding>${commons.encoding}</m:properties__project.reporting.outputEncoding>
+		<m:properties__commons.jacoco.version>0.8.7</m:properties__commons.jacoco.version>
+		<m:properties__distMgmtSnapshotsUrl>https://repository.apache.org/content/repositories/snapshots</m:properties__distMgmtSnapshotsUrl>
+		<m:properties__commons.jacoco.instructionRatio>0.90</m:properties__commons.jacoco.instructionRatio>
+		<m:properties__commons.jar-plugin.version>3.2.0</m:properties__commons.jar-plugin.version>
+		<m:properties__gpg.useagent>true</m:properties__gpg.useagent>
+		<m:properties__commons.build-plugin.version>1.11</m:properties__commons.build-plugin.version>
+		<m:properties__commons.osgi.export>
+        
+        org.apache.commons.io;
+        org.apache.commons.io.comparator;
+        org.apache.commons.io.filefilter;
+        org.apache.commons.io.input;
+        org.apache.commons.io.output;version=1.4.9999;-noimport:=true,
+        
+        org.apache.commons.io;
+        org.apache.commons.io.comparator;
+        org.apache.commons.io.filefilter;
+        org.apache.commons.io.input;
+        org.apache.commons.io.output;
+        org.apache.commons.io.*;version=${project.version};-noimport:=true
+    </m:properties__commons.osgi.export>
+		<m:properties__commons.releaseManagerKey>86fdc7e2a11262cb</m:properties__commons.releaseManagerKey>
+		<m:properties__commons.cobertura.version>2.7</m:properties__commons.cobertura.version>
+		<m:properties__commons.osgi.symbolicName>org.apache.commons.${commons.packageId}</m:properties__commons.osgi.symbolicName>
+		<m:properties__commons.javadoc.java.link>${commons.javadoc7.java.link}</m:properties__commons.javadoc.java.link>
+		<m:properties__commons.rc.version>RC1</m:properties__commons.rc.version>
+		<m:dependency.management__org.junit.jupiter__junit-jupiter-api__version>5.7.2</m:dependency.management__org.junit.jupiter__junit-jupiter-api__version>
+		<m:properties__commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-io/</m:properties__commons.scmPubUrl>
+		<m:properties__commons.release.desc>(requires Java 8)</m:properties__commons.release.desc>
+		<m:properties__maven.build.timestamp.format>yyyy-MM-dd HH:mm:ssZ</m:properties__maven.build.timestamp.format>
+		<m:dependency.management__org.junit.platform__junit-platform-reporting__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-reporting__version>
+		<m:properties__commons.clirr.version>2.8</m:properties__commons.clirr.version>
+		<m:properties__commons.source-plugin.version>3.2.1</m:properties__commons.source-plugin.version>
+		<e:sbtTransformHash>2305a068806fd961e9eab9fa26a87d48b1aa8663</e:sbtTransformHash>
+		<m:properties__maven.compiler.target>1.8</m:properties__maven.compiler.target>
+		<m:maven.plugins>org.apache.maven.plugins__maven-remote-resources-plugin__null|org.apache.maven.plugins__maven-enforcer-plugin__null|org.apache.maven.plugins__maven-site-plugin__null|org.apache.maven.plugins__maven-remote-resources-plugin__null|org.apache.maven.plugins__maven-enforcer-plugin__null|org.apache.maven.plugins__maven-site-plugin__null|null__maven-assembly-plugin__null|org.apache.maven.plugins__maven-antrun-plugin__null|org.apache.maven.plugins__maven-compiler-plugin__null|org.apache.maven.plugins__maven-enforcer-plugin__3.0.0-M3|org.apache.maven.plugins__maven-jar-plugin__3.2.0|null__maven-source-plugin__null|org.apache.maven.plugins__maven-surefire-plugin__null|org.apache.commons__commons-build-plugin__null|org.apache.felix__maven-bundle-plugin__null|org.apache.rat__apache-rat-plugin__null|org.apache.maven.plugins__maven-scm-publish-plugin__null|org.apache.maven.plugins__maven-remote-resources-plugin__null|org.apache.maven.plugins__maven-enforcer-plugin__null|org.apache.maven.plugins__maven-site-plugin__null|org.apache.maven.plugins__maven-remote-resources-plugin__null|org.apache.maven.plugins__maven-enforcer-plugin__null|org.apache.maven.plugins__maven-site-plugin__null|null__maven-assembly-plugin__null|org.apache.maven.plugins__maven-antrun-plugin__null|org.apache.maven.plugins__maven-compiler-plugin__null|org.apache.maven.plugins__maven-enforcer-plugin__3.0.0-M3|org.apache.maven.plugins__maven-jar-plugin__3.2.0|null__maven-source-plugin__null|org.apache.maven.plugins__maven-surefire-plugin__null|org.apache.commons__commons-build-plugin__null|org.apache.felix__maven-bundle-plugin__null|org.apache.rat__apache-rat-plugin__null|org.apache.maven.plugins__maven-scm-publish-plugin__null|org.apache.maven.plugins__maven-enforcer-plugin__3.0.0-M3|org.apache.maven.plugins__maven-jar-plugin__null|org.apache.maven.plugins__maven-surefire-plugin__null|null__maven-assembly-plugin__null|org.apache.maven.plugins__maven-checkstyle-plugin__null|org.apache.maven.plugins__maven-scm-publish-plugin__null|com.github.spotbugs__spotbugs-maven-plugin__4.2.3|com.github.siom79.japicmp__japicmp-maven-plugin__null</m:maven.plugins>
+		<m:properties__commons.jira.id>IO</m:properties__commons.jira.id>
+		<m:dependency.management__org.junit.platform__junit-platform-engine__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-engine__version>
+		<m:dependency.management__org.junit.platform__junit-platform-jfr__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-jfr__version>
+		<m:properties__commons.javadoc.version>3.2.0</m:properties__commons.javadoc.version>
+		<m:properties__commons.jacoco.classRatio>1.00</m:properties__commons.jacoco.classRatio>
+		<m:properties__commons.release.2.name>${project.artifactId}-${commons.release.2.version}</m:properties__commons.release.2.name>
+		<m:properties__commons.checkstyle-plugin.version>3.1.1</m:properties__commons.checkstyle-plugin.version>
+		<m:properties__commons.spotbugs.version>4.0.4</m:properties__commons.spotbugs.version>
+		<m:properties__commons.scm-publish.version>1.1</m:properties__commons.scm-publish.version>
+		<m:dependency.management__org.junit.platform__junit-platform-testkit__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-testkit__version>
+		<m:properties__commons.scmPubCheckoutDirectory>site-content</m:properties__commons.scmPubCheckoutDirectory>
+		<m:properties__commons.project-info.version>3.1.0</m:properties__commons.project-info.version>
+		<m:properties__distMgmtSnapshotsName>Apache Development Snapshot Repository</m:properties__distMgmtSnapshotsName>
+		<m:properties__spotbugs.impl.version>4.3.0</m:properties__spotbugs.impl.version>
+		<m:dependency.management__org.junit.jupiter__junit-jupiter-migrationsupport__version>5.7.2</m:dependency.management__org.junit.jupiter__junit-jupiter-migrationsupport__version>
+		<m:properties__commons.osgi.import>
+        
+        sun.nio.ch;resolution:=optional,
+        sun.misc;resolution:=optional,
+        *
+    </m:properties__commons.osgi.import>
+		<m:properties__sourceReleaseAssemblyDescriptor>source-release</m:properties__sourceReleaseAssemblyDescriptor>
+		<m:dependency.management__org.junit.jupiter__junit-jupiter__version>5.7.2</m:dependency.management__org.junit.jupiter__junit-jupiter__version>
+		<m:properties__commons.release.name>${project.artifactId}-${commons.release.version}</m:properties__commons.release.name>
+		<m:properties__commons.surefire.version>3.0.0-M5</m:properties__commons.surefire.version>
+		<m:properties__commons.javadoc11.java.link>https://docs.oracle.com/en/java/javase/11/docs/api/</m:properties__commons.javadoc11.java.link>
+		<m:dependency.management__org.junit.vintage__junit-vintage-engine__version>5.7.2</m:dependency.management__org.junit.vintage__junit-vintage-engine__version>
+		<m:properties__commons.packageId>${project.artifactId}</m:properties__commons.packageId>
+		<m:properties__commons.release.3.name>${project.artifactId}-${commons.release.3.version}</m:properties__commons.release.3.name>
+		<m:dependency.management__org.junit.platform__junit-platform-runner__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-runner__version>
+		<m:properties__commons.release-plugin.version>1.7</m:properties__commons.release-plugin.version>
+		<m:properties__commons.javadoc8.java.link>http://docs.oracle.com/javase/8/docs/api/</m:properties__commons.javadoc8.java.link>
+		<m:properties__commons.javadoc.javaee6.link>http://docs.oracle.com/javaee/6/api/</m:properties__commons.javadoc.javaee6.link>
+		<m:properties__commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</m:properties__commons.distSvnStagingUrl>
+		<m:properties__commons.rat.version>0.13</m:properties__commons.rat.version>
+		<m:properties__commons.javadoc12.java.link>https://docs.oracle.com/en/java/javase/12/docs/api/</m:properties__commons.javadoc12.java.link>
+		<m:properties__commons.wagon-ssh.version>3.4.0</m:properties__commons.wagon-ssh.version>
+		<m:properties__commons.javadoc.javaee5.link>http://docs.oracle.com/javaee/5/api/</m:properties__commons.javadoc.javaee5.link>
+		<m:properties__commons.felix.version>5.1.1</m:properties__commons.felix.version>
+		<m:properties__commons.assembly-plugin.version>3.3.0</m:properties__commons.assembly-plugin.version>
+		<m:properties__commons.jacoco.methodRatio>0.95</m:properties__commons.jacoco.methodRatio>
+		<m:properties__commons.javadoc7.java.link>http://docs.oracle.com/javase/7/docs/api/</m:properties__commons.javadoc7.java.link>
+		<m:properties__commons.scmPubServer>commons.site</m:properties__commons.scmPubServer>
+		<m:properties__commons.encoding>iso-8859-1</m:properties__commons.encoding>
+		<m:properties__commons.build-helper.version>3.2.0</m:properties__commons.build-helper.version>
+		<m:properties__commons.jxr.version>3.0.0</m:properties__commons.jxr.version>
+		<m:properties__commons.japicmp.ignoreMissingClasses>false</m:properties__commons.japicmp.ignoreMissingClasses>
+		<m:dependency.management__org.junit.platform__junit-platform-suite-api__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-suite-api__version>
+		<m:properties__spotbugs.plugin.version>4.2.3</m:properties__spotbugs.plugin.version>
+		<m:properties__commons.javadoc9.java.link>http://docs.oracle.com/javase/9/docs/api/</m:properties__commons.javadoc9.java.link>
+		<m:properties__assembly.tarLongFileMode>posix</m:properties__assembly.tarLongFileMode>
+		<m:properties__commons.animal-sniffer.signature.version>1.0</m:properties__commons.animal-sniffer.signature.version>
+		<m:properties__commons.release.version>2.11.0</m:properties__commons.release.version>
+		<m:properties__commons.site.cache>${user.home}/commons-sites</m:properties__commons.site.cache>
+		<m:properties__commons.javadoc13.java.link>https://docs.oracle.com/en/java/javase/13/docs/api/</m:properties__commons.javadoc13.java.link>
+		<m:dependency.management__org.junit.platform__junit-platform-commons__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-commons__version>
+		<m:properties__commons.bc.version>2.10.0</m:properties__commons.bc.version>
+		<m:properties__commons.manifestfile>${project.build.directory}/osgi/MANIFEST.MF</m:properties__commons.manifestfile>
+		<m:properties__commons.jdepend.version>2.0</m:properties__commons.jdepend.version>
+		<m:properties__changes.announcementDirectory>.</m:properties__changes.announcementDirectory>
+		<m:properties__commons.module.name>org.apache.commons.io</m:properties__commons.module.name>
+		<m:properties__commons.release.4.binary.suffix>-bin</m:properties__commons.release.4.binary.suffix>
+		<m:properties__commons.javadoc6.java.link>http://docs.oracle.com/javase/6/docs/api/</m:properties__commons.javadoc6.java.link>
+		<m:properties__commons.docEncoding>${commons.encoding}</m:properties__commons.docEncoding>
+		<m:properties__commons.coveralls.timestampFormat>EpochMillis</m:properties__commons.coveralls.timestampFormat>
+		<m:properties__commons.osgi.excludeDependencies>true</m:properties__commons.osgi.excludeDependencies>
+		<m:properties__organization.logo>https://www.apache.org/images/asf_logo_wide_2016.png</m:properties__organization.logo>
+		<m:dependency.management__org.junit.platform__junit-platform-console__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-console__version>
+		<m:properties__japicmp.skip>false</m:properties__japicmp.skip>
+		<m:properties__commons.compiler.fork>false</m:properties__commons.compiler.fork>
+		<m:properties__commons.coveralls.version>4.3.0</m:properties__commons.coveralls.version>
+		<m:properties__commons.jacoco.complexityRatio>0.85</m:properties__commons.jacoco.complexityRatio>
+		<m:properties__commons.jira.pid>12310477</m:properties__commons.jira.pid>
+		<m:properties__commons.changes.onlyCurrentVersion>false</m:properties__commons.changes.onlyCurrentVersion>
+		<m:properties__minSeverity>info</m:properties__minSeverity>
+		<m:properties__commons.jacoco.haltOnFailure>false</m:properties__commons.jacoco.haltOnFailure>
+		<m:dependency.management__org.junit.platform__junit-platform-launcher__version>1.7.2</m:dependency.management__org.junit.platform__junit-platform-launcher__version>
+		<m:properties__commons.japicmp.breakBuildOnBinaryIncompatibleModifications>true</m:properties__commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
+		<m:properties__project.build.outputTimestamp>2020-01-22T15:10:15Z</m:properties__project.build.outputTimestamp>
+		<m:properties__commons.javadoc10.java.link>http://docs.oracle.com/javase/10/docs/api/</m:properties__commons.javadoc10.java.link>
+		<m:properties__commons.release.3.binary.suffix>-bin</m:properties__commons.release.3.binary.suffix>
+		<m:properties__checkstyle.plugin.version>3.1.2</m:properties__checkstyle.plugin.version>
+		<m:properties__commons.compiler.version>3.8.1</m:properties__commons.compiler.version>
+		<m:properties__changes.announcementFile>RELEASE-NOTES.txt</m:properties__changes.announcementFile>
+		<m:properties__commons.jacoco.branchRatio>0.85</m:properties__commons.jacoco.branchRatio>
+		<m:properties__commons.japicmp.version>0.15.3</m:properties__commons.japicmp.version>
+		<m:properties__commons.javadoc.javaee.link>${commons.javadoc.javaee6.link}</m:properties__commons.javadoc.javaee.link>
+		<m:properties__commons.release.2.binary.suffix>-bin</m:properties__commons.release.2.binary.suffix>
+		<m:properties__commons.failsafe.version>2.22.2</m:properties__commons.failsafe.version>
+		<m:properties__commons.changes.runOnlyAtExecutionRoot>false</m:properties__commons.changes.runOnlyAtExecutionRoot>
+		<m:properties__jacoco.skip>${env.JACOCO_SKIP}</m:properties__jacoco.skip>
+		<m:properties__project.build.sourceEncoding>${commons.encoding}</m:properties__project.build.sourceEncoding>
+		<m:properties__commons.japicmp.breakBuildOnSourceIncompatibleModifications>false</m:properties__commons.japicmp.breakBuildOnSourceIncompatibleModifications>
+		<m:properties__commons.changes.version>2.12.1</m:properties__commons.changes.version>
+		<m:properties__surefire.version>2.22.0</m:properties__surefire.version>
+		<m:properties__commons.deployment.protocol>scp</m:properties__commons.deployment.protocol>
+		<m:properties__biz.aQute.bndlib.version>5.1.2</m:properties__biz.aQute.bndlib.version>
+		<m:properties__commons.componentid>io</m:properties__commons.componentid>
+		<m:properties__commons.jacoco.lineRatio>0.90</m:properties__commons.jacoco.lineRatio>
+		<m:properties__commons.site-plugin.version>3.9.1</m:properties__commons.site-plugin.version>
+		<m:properties__commons.spotbugs.impl.version>4.0.6</m:properties__commons.spotbugs.impl.version>
+		<m:properties__commons.site.path>${commons.componentid}</m:properties__commons.site.path>
+		<m:properties__commons.surefire-report.version>2.22.2</m:properties__commons.surefire-report.version>
+		<m:properties__sonar.host.url>https://analysis.apache.org/</m:properties__sonar.host.url>
+		<m:properties__maven.compiler.source>1.8</m:properties__maven.compiler.source>
+		<m:properties__commons.javadoc.javaee7.link>http://docs.oracle.com/javaee/7/api/</m:properties__commons.javadoc.javaee7.link>
+		<m:properties__commons.changes.maxEntries>100</m:properties__commons.changes.maxEntries>
+	</info>
+	<configurations>
+		<conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf" extends="runtime,master"/>
+		<conf name="master" visibility="public" description="contains only the artifact published by this module itself, with no transitive dependencies"/>
+		<conf name="compile" visibility="public" description="this is the default scope, used if none is specified. Compile dependencies are available in all classpaths."/>
+		<conf name="provided" visibility="public" description="this is much like compile, but indicates you expect the JDK or a container to provide it. It is only available on the compilation classpath, and is not transitive."/>
+		<conf name="runtime" visibility="public" description="this scope indicates that the dependency is not required for compilation, but is for execution. It is in the runtime and test classpaths, but not the compile classpath." extends="compile"/>
+		<conf name="test" visibility="private" description="this scope indicates that the dependency is not required for normal use of the application, and is only available for the test compilation and execution phases." extends="runtime"/>
+		<conf name="system" visibility="public" description="this scope is similar to provided except that you have to provide the JAR which contains it explicitly. The artifact is always available and is not looked up in a repository."/>
+		<conf name="sources" visibility="public" description="this configuration contains the source artifact of this module, if any."/>
+		<conf name="javadoc" visibility="public" description="this configuration contains the javadoc artifact of this module, if any."/>
+		<conf name="optional" visibility="public" description="contains all optional dependencies"/>
+	</configurations>
+	<publications>
+		<artifact name="commons-io" type="jar" ext="jar" conf="master"/>
+	</publications>
+	<dependencies>
+		<dependency org="org.junit.jupiter" name="junit-jupiter" rev="5.7.2" force="true" conf="test->runtime(*),master(compile)"/>
+		<dependency org="org.junit-pioneer" name="junit-pioneer" rev="1.4.2" force="true" conf="test->runtime(*),master(compile)"/>
+		<dependency org="org.mockito" name="mockito-inline" rev="3.11.2" force="true" conf="test->runtime(*),master(compile)"/>
+		<dependency org="com.google.jimfs" name="jimfs" rev="1.2" force="true" conf="test->runtime(*),master(compile)"/>
+		<dependency org="org.apache.commons" name="commons-lang3" rev="3.12.0" force="true" conf="test->runtime(*),master(compile)"/>
+		<dependency org="org.openjdk.jmh" name="jmh-core" rev="1.32" force="true" conf="test->runtime(*),master(compile)"/>
+		<dependency org="org.openjdk.jmh" name="jmh-generator-annprocess" rev="1.32" force="true" conf="test->runtime(*),master(compile)"/>
+	</dependencies>
+</ivy-module>

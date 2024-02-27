@@ -1,0 +1,5158 @@
+{
+  "graph" : {
+    "nodes" : [
+      {
+        "id" : 1045,
+        "label" : "IDENTIFIER",
+        "name" : "i",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "i",
+        "typeFullName" : "int",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 251,
+        "columnNumber" : 57
+      },
+      {
+        "id" : 1114,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 275,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 1124,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 276,
+        "columnNumber" : 51
+      },
+      {
+        "id" : 1011,
+        "label" : "CALL",
+        "name" : "getNodeValue",
+        "fullName" : "org.w3c.dom.Node.getNodeValue:java.lang.String()",
+        "signature" : "java.lang.String()",
+        "isExternal" : true,
+        "code" : "node.getNodeValue()",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 244,
+        "columnNumber" : 35
+      },
+      {
+        "id" : 1137,
+        "label" : "IDENTIFIER",
+        "name" : "JWT",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "JWT",
+        "typeFullName" : "com.auth0.jwt.JWT",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 280,
+        "columnNumber" : 18
+      },
+      {
+        "id" : 681,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 163,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 341,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "password",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "String password",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 69,
+        "columnNumber" : 48
+      },
+      {
+        "id" : 371,
+        "label" : "CALL",
+        "name" : "<operator>.fieldAccess",
+        "fullName" : "<operator>.fieldAccess",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "this.jdbcTemplate",
+        "typeFullName" : "org.springframework.jdbc.core.JdbcTemplate",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 75,
+        "columnNumber" : 33
+      },
+      {
+        "id" : 157,
+        "label" : "IDENTIFIER",
+        "name" : "args",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "args",
+        "typeFullName" : "java.lang.String[]",
+        "parentMethodName" : "com.example.vulnspring.VulnSpringApplication.main:void(java.lang.String[])",
+        "parentMethodSignature" : "void(java.lang.String[])",
+        "parentFileName" : "src/main/java/com/example/vulnspring/VulnSpringApplication.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.VulnSpringApplication",
+        "lineNumber" : 10,
+        "columnNumber" : 54
+      },
+      {
+        "id" : 393,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.logout:java.lang.String(javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 86,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 248,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.home:java.lang.String(org.springframework.ui.Model,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 47,
+        "columnNumber" : 34
+      },
+      {
+        "id" : 1027,
+        "label" : "IDENTIFIER",
+        "name" : "node",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "node",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 248,
+        "columnNumber" : 7
+      },
+      {
+        "id" : 536,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"file:secret.txt\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.checkDB:java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 123,
+        "columnNumber" : 31
+      },
+      {
+        "id" : 719,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"error\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 175,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 531,
+        "label" : "IDENTIFIER",
+        "name" : "dbpath",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "dbpath",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.checkDB:java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 121,
+        "columnNumber" : 53
+      },
+      {
+        "id" : 635,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 144,
+        "columnNumber" : 41
+      },
+      {
+        "id" : 574,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"\\\\A\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.checkDB:java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 128,
+        "columnNumber" : 74
+      },
+      {
+        "id" : 114,
+        "label" : "IDENTIFIER",
+        "name" : "LoggerFactory",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "LoggerFactory",
+        "typeFullName" : "org.slf4j.LoggerFactory",
+        "parentMethodName" : "com.example.vulnspring.SessionFilter.<clinit>:void()",
+        "parentMethodSignature" : "void()",
+        "parentFileName" : "src/main/java/com/example/vulnspring/SessionFilter.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.SessionFilter",
+        "lineNumber" : 21,
+        "columnNumber" : 39
+      },
+      {
+        "id" : 1193,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"isValidMessage\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 293,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 1003,
+        "label" : "IDENTIFIER",
+        "name" : "node",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "node",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 242,
+        "columnNumber" : 21
+      },
+      {
+        "id" : 1008,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"#text\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 244,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 1266,
+        "label" : "IDENTIFIER",
+        "name" : "Base64",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Base64",
+        "typeFullName" : "java.util.Base64",
+        "parentMethodName" : "com.example.vulnspring.WebController.addressValidation:java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 315,
+        "columnNumber" : 17
+      },
+      {
+        "id" : 1032,
+        "label" : "CALL",
+        "name" : "getNodeValue",
+        "fullName" : "org.w3c.dom.Node.getNodeValue:java.lang.String()",
+        "signature" : "java.lang.String()",
+        "isExternal" : true,
+        "code" : "node.getNodeValue()",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 249,
+        "columnNumber" : 25
+      },
+      {
+        "id" : 369,
+        "label" : "IDENTIFIER",
+        "name" : "result",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "result",
+        "typeFullName" : "java.util.Map",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 75,
+        "columnNumber" : 24
+      },
+      {
+        "id" : 1012,
+        "label" : "IDENTIFIER",
+        "name" : "node",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "node",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 244,
+        "columnNumber" : 35
+      },
+      {
+        "id" : 1305,
+        "label" : "IDENTIFIER",
+        "name" : "e",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "e",
+        "typeFullName" : "java.lang.ClassNotFoundException",
+        "parentMethodName" : "com.example.vulnspring.WebController.addressValidation:java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 327,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 318,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 62,
+        "columnNumber" : 25
+      },
+      {
+        "id" : 997,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "currentString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "StringBuffer currentString",
+        "typeFullName" : "java.lang.StringBuffer",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 241,
+        "columnNumber" : 40
+      },
+      {
+        "id" : 152,
+        "label" : "IDENTIFIER",
+        "name" : "SpringApplication",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "SpringApplication",
+        "typeFullName" : "org.springframework.boot.SpringApplication",
+        "parentMethodName" : "com.example.vulnspring.VulnSpringApplication.main:void(java.lang.String[])",
+        "parentMethodSignature" : "void(java.lang.String[])",
+        "parentFileName" : "src/main/java/com/example/vulnspring/VulnSpringApplication.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.VulnSpringApplication",
+        "lineNumber" : 10,
+        "columnNumber" : 3
+      },
+      {
+        "id" : 171,
+        "label" : "IDENTIFIER",
+        "name" : "this",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "this",
+        "typeFullName" : "com.example.vulnspring.WebController",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 60,
+        "columnNumber" : 7
+      },
+      {
+        "id" : 177,
+        "label" : "IDENTIFIER",
+        "name" : "this",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "this",
+        "typeFullName" : "com.example.vulnspring.WebController",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 396,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.logout:java.lang.String(javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 87,
+        "columnNumber" : 3
+      },
+      {
+        "id" : 1043,
+        "label" : "IDENTIFIER",
+        "name" : "node",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "node",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 251,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 340,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "username",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "String username",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 69,
+        "columnNumber" : 31
+      },
+      {
+        "id" : 470,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 105,
+        "columnNumber" : 92
+      },
+      {
+        "id" : 744,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 183,
+        "columnNumber" : 41
+      },
+      {
+        "id" : 1239,
+        "label" : "IDENTIFIER",
+        "name" : "Base64",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Base64",
+        "typeFullName" : "java.util.Base64",
+        "parentMethodName" : "com.example.vulnspring.WebController.addressValidation:java.lang.String(org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 308,
+        "columnNumber" : 16
+      },
+      {
+        "id" : 1037,
+        "label" : "IDENTIFIER",
+        "name" : "i",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "i",
+        "typeFullName" : "int",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 251,
+        "columnNumber" : 12
+      },
+      {
+        "id" : 149,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "args",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "String[] args",
+        "typeFullName" : "java.lang.String[]",
+        "parentMethodName" : "com.example.vulnspring.VulnSpringApplication.main:void(java.lang.String[])",
+        "parentMethodSignature" : "void(java.lang.String[])",
+        "parentFileName" : "src/main/java/com/example/vulnspring/VulnSpringApplication.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.VulnSpringApplication",
+        "lineNumber" : 9,
+        "columnNumber" : 26
+      },
+      {
+        "id" : 1041,
+        "label" : "CALL",
+        "name" : "getLength",
+        "fullName" : "org.w3c.dom.NodeList.getLength:int()",
+        "signature" : "int()",
+        "isExternal" : true,
+        "code" : "node.getChildNodes().getLength()",
+        "typeFullName" : "int",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 251,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 1199,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"isValidMessage\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 295,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 485,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 106,
+        "columnNumber" : 88
+      },
+      {
+        "id" : 319,
+        "label" : "IDENTIFIER",
+        "name" : "username",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "username",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 62,
+        "columnNumber" : 37
+      },
+      {
+        "id" : 1054,
+        "label" : "IDENTIFIER",
+        "name" : "currentString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "currentString",
+        "typeFullName" : "java.lang.StringBuffer",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 64
+      },
+      {
+        "id" : 1051,
+        "label" : "CALL",
+        "name" : "getChildNodes",
+        "fullName" : "org.w3c.dom.Node.getChildNodes:org.w3c.dom.NodeList()",
+        "signature" : "org.w3c.dom.NodeList()",
+        "isExternal" : true,
+        "code" : "node.getChildNodes()",
+        "typeFullName" : "org.w3c.dom.NodeList",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 34
+      },
+      {
+        "id" : 1007,
+        "label" : "IDENTIFIER",
+        "name" : "nodeName",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "nodeName",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 244,
+        "columnNumber" : 7
+      },
+      {
+        "id" : 282,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "username",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "@RequestParam(name = \"username\", required = true) String username",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 58,
+        "columnNumber" : 43
+      },
+      {
+        "id" : 317,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 62,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 720,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"Invalid To Account\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 175,
+        "columnNumber" : 32
+      },
+      {
+        "id" : 1174,
+        "label" : "IDENTIFIER",
+        "name" : "jwtString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "jwtString",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 288,
+        "columnNumber" : 38
+      },
+      {
+        "id" : 1192,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 293,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 1188,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 292,
+        "columnNumber" : 49
+      },
+      {
+        "id" : 781,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"error\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 191,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 996,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "node",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Node node",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 241,
+        "columnNumber" : 29
+      },
+      {
+        "id" : 1200,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"Invalid Token!\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 295,
+        "columnNumber" : 41
+      },
+      {
+        "id" : 683,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"Negative amount value!\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 163,
+        "columnNumber" : 32
+      },
+      {
+        "id" : 1331,
+        "label" : "IDENTIFIER",
+        "name" : "LoggerFactory",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "LoggerFactory",
+        "typeFullName" : "org.slf4j.LoggerFactory",
+        "parentMethodName" : "com.example.vulnspring.WebController.<clinit>:void()",
+        "parentMethodSignature" : "void()",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 44,
+        "columnNumber" : 39
+      },
+      {
+        "id" : 1165,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "jwtString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "@RequestParam String jwtString",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 287,
+        "columnNumber" : 33
+      },
+      {
+        "id" : 1040,
+        "label" : "IDENTIFIER",
+        "name" : "i",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "i",
+        "typeFullName" : "int",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 251,
+        "columnNumber" : 19
+      },
+      {
+        "id" : 1332,
+        "label" : "CALL",
+        "name" : "<operator>.fieldAccess",
+        "fullName" : "<operator>.fieldAccess",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "WebController.class",
+        "typeFullName" : "java.lang.Class",
+        "parentMethodName" : "com.example.vulnspring.WebController.<clinit>:void()",
+        "parentMethodSignature" : "void()",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 44,
+        "columnNumber" : 63
+      },
+      {
+        "id" : 670,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Model model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 155,
+        "columnNumber" : 49
+      },
+      {
+        "id" : 1102,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"Support Desk is under construction. Send an email to support@example.com.\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.support:java.lang.String(org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 270,
+        "columnNumber" : 5
+      },
+      {
+        "id" : 1018,
+        "label" : "IDENTIFIER",
+        "name" : "currentString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "currentString",
+        "typeFullName" : "java.lang.StringBuffer",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 247,
+        "columnNumber" : 3
+      },
+      {
+        "id" : 408,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 92,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 1198,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 295,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 153,
+        "label" : "CALL",
+        "name" : "<operator>.fieldAccess",
+        "fullName" : "<operator>.fieldAccess",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "VulnSpringApplication.class",
+        "typeFullName" : "java.lang.Class",
+        "parentMethodName" : "com.example.vulnspring.VulnSpringApplication.main:void(java.lang.String[])",
+        "parentMethodSignature" : "void(java.lang.String[])",
+        "parentFileName" : "src/main/java/com/example/vulnspring/VulnSpringApplication.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.VulnSpringApplication",
+        "lineNumber" : 10,
+        "columnNumber" : 25
+      },
+      {
+        "id" : 427,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 95,
+        "columnNumber" : 41
+      },
+      {
+        "id" : 1173,
+        "label" : "IDENTIFIER",
+        "name" : "JWT",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "JWT",
+        "typeFullName" : "com.auth0.jwt.JWT",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 288,
+        "columnNumber" : 27
+      },
+      {
+        "id" : 1298,
+        "label" : "IDENTIFIER",
+        "name" : "e",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "e",
+        "typeFullName" : "java.io.IOException",
+        "parentMethodName" : "com.example.vulnspring.WebController.addressValidation:java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 324,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 358,
+        "label" : "CALL",
+        "name" : "<operator>.addition",
+        "fullName" : "<operator>.addition",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "\"SELECT * FROM users WHERE USERNAME=\\\"\" + username + \"\\\" AND PASSWORD=\\\"\" + password + \"\\\"\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 74,
+        "columnNumber" : 19
+      },
+      {
+        "id" : 303,
+        "label" : "IDENTIFIER",
+        "name" : "password",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "password",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 60,
+        "columnNumber" : 30
+      },
+      {
+        "id" : 370,
+        "label" : "CALL",
+        "name" : "queryForMap",
+        "fullName" : "org.springframework.jdbc.core.JdbcTemplate.queryForMap:java.util.Map(java.lang.String)",
+        "signature" : "java.util.Map(java.lang.String)",
+        "isExternal" : true,
+        "code" : "jdbcTemplate.queryForMap(query)",
+        "typeFullName" : "java.util.Map",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 75,
+        "columnNumber" : 33
+      },
+      {
+        "id" : 178,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "this",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "this",
+        "typeFullName" : "com.example.vulnspring.WebController",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 241,
+        "columnNumber" : null
+      },
+      {
+        "id" : 339,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "this",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "this",
+        "typeFullName" : "com.example.vulnspring.WebController",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 69,
+        "columnNumber" : null
+      },
+      {
+        "id" : 290,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "password",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "@RequestParam(name = \"password\", required = true) String password",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 59,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 1189,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 292,
+        "columnNumber" : 70
+      },
+      {
+        "id" : 1019,
+        "label" : "CALL",
+        "name" : "<operator>.addition",
+        "fullName" : "<operator>.addition",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "\"<\" + nodeName + \">\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 247,
+        "columnNumber" : 24
+      },
+      {
+        "id" : 347,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "null",
+        "typeFullName" : "null",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 70,
+        "columnNumber" : 19
+      },
+      {
+        "id" : 469,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 105,
+        "columnNumber" : 71
+      },
+      {
+        "id" : 426,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 95,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 743,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 183,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 350,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "null",
+        "typeFullName" : "null",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 70,
+        "columnNumber" : 39
+      },
+      {
+        "id" : 1101,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"supportmessage\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.support:java.lang.String(org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 269,
+        "columnNumber" : 22
+      },
+      {
+        "id" : 782,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"not enough balance\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 191,
+        "columnNumber" : 32
+      },
+      {
+        "id" : 172,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "this",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "this",
+        "typeFullName" : "com.example.vulnspring.WebController",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 57,
+        "columnNumber" : null
+      },
+      {
+        "id" : 1049,
+        "label" : "CALL",
+        "name" : "getNodeString",
+        "fullName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "signature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "isExternal" : false,
+        "code" : "this.getNodeString(node.getChildNodes().item(i), currentString)",
+        "typeFullName" : "java.lang.StringBuffer",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 616,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 141,
+        "columnNumber" : 25
+      },
+      {
+        "id" : 1167,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 287,
+        "columnNumber" : 65
+      },
+      {
+        "id" : 1057,
+        "label" : "CALL",
+        "name" : "<operator>.addition",
+        "fullName" : "<operator>.addition",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "\"</\" + nodeName + \">\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 254,
+        "columnNumber" : 24
+      },
+      {
+        "id" : 1001,
+        "label" : "IDENTIFIER",
+        "name" : "nodeName",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "nodeName",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 242,
+        "columnNumber" : 10
+      },
+      {
+        "id" : 682,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"error\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 163,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 933,
+        "label" : "IDENTIFIER",
+        "name" : "DocumentBuilderFactory",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "DocumentBuilderFactory",
+        "typeFullName" : "javax.xml.parsers.DocumentBuilderFactory",
+        "parentMethodName" : "com.example.vulnspring.WebController.issue:java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 230,
+        "columnNumber" : 38
+      },
+      {
+        "id" : 1194,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"Token is valid for your username!\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 293,
+        "columnNumber" : 41
+      },
+      {
+        "id" : 255,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.home:java.lang.String(org.springframework.ui.Model,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 48,
+        "columnNumber" : 55
+      },
+      {
+        "id" : 302,
+        "label" : "IDENTIFIER",
+        "name" : "username",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "username",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 60,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 1129,
+        "label" : "IDENTIFIER",
+        "name" : "Algorithm",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Algorithm",
+        "typeFullName" : "com.auth0.jwt.algorithms.Algorithm",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 279,
+        "columnNumber" : 29
+      },
+      {
+        "id" : 156,
+        "label" : "CALL",
+        "name" : "<operator>.arrayInitializer",
+        "fullName" : "<operator>.arrayInitializer",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "<operator>.arrayInitializer",
+        "typeFullName" : "java.lang.String[]",
+        "parentMethodName" : "com.example.vulnspring.VulnSpringApplication.main:void(java.lang.String[])",
+        "parentMethodSignature" : "void(java.lang.String[])",
+        "parentFileName" : "src/main/java/com/example/vulnspring/VulnSpringApplication.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.VulnSpringApplication",
+        "lineNumber" : 10,
+        "columnNumber" : 3
+      },
+      {
+        "id" : 1013,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 244,
+        "columnNumber" : 69
+      },
+      {
+        "id" : 1056,
+        "label" : "IDENTIFIER",
+        "name" : "currentString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "currentString",
+        "typeFullName" : "java.lang.StringBuffer",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 254,
+        "columnNumber" : 3
+      },
+      {
+        "id" : 519,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "dbpath",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "@RequestParam(name = \"dbpath\") String dbpath",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.checkDB:java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 119,
+        "columnNumber" : 24
+      },
+      {
+        "id" : 281,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.login:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 58,
+        "columnNumber" : 22
+      },
+      {
+        "id" : 1048,
+        "label" : "IDENTIFIER",
+        "name" : "currentString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "currentString",
+        "typeFullName" : "java.lang.StringBuffer",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 1123,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 276,
+        "columnNumber" : 30
+      },
+      {
+        "id" : 349,
+        "label" : "IDENTIFIER",
+        "name" : "password",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "password",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 70,
+        "columnNumber" : 27
+      },
+      {
+        "id" : 1038,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "0",
+        "typeFullName" : "int",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 251,
+        "columnNumber" : 16
+      },
+      {
+        "id" : 1053,
+        "label" : "IDENTIFIER",
+        "name" : "i",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "i",
+        "typeFullName" : "int",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 60
+      },
+      {
+        "id" : 530,
+        "label" : "IDENTIFIER",
+        "name" : "FilenameUtils",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "FilenameUtils",
+        "typeFullName" : "org.apache.commons.io.FilenameUtils",
+        "parentMethodName" : "com.example.vulnspring.WebController.checkDB:java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 121,
+        "columnNumber" : 27
+      },
+      {
+        "id" : 1010,
+        "label" : "CALL",
+        "name" : "trim",
+        "fullName" : "java.lang.String.trim:java.lang.String()",
+        "signature" : "java.lang.String()",
+        "isExternal" : true,
+        "code" : "node.getNodeValue().trim()",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 244,
+        "columnNumber" : 35
+      },
+      {
+        "id" : 346,
+        "label" : "IDENTIFIER",
+        "name" : "username",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "username",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 70,
+        "columnNumber" : 7
+      },
+      {
+        "id" : 115,
+        "label" : "CALL",
+        "name" : "<operator>.fieldAccess",
+        "fullName" : "<operator>.fieldAccess",
+        "signature" : "",
+        "isExternal" : true,
+        "code" : "SessionFilter.class",
+        "typeFullName" : "java.lang.Class",
+        "parentMethodName" : "com.example.vulnspring.SessionFilter.<clinit>:void()",
+        "parentMethodSignature" : "void()",
+        "parentFileName" : "src/main/java/com/example/vulnspring/SessionFilter.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.SessionFilter",
+        "lineNumber" : 21,
+        "columnNumber" : 63
+      },
+      {
+        "id" : 1052,
+        "label" : "IDENTIFIER",
+        "name" : "node",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "node",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 34
+      },
+      {
+        "id" : 1050,
+        "label" : "CALL",
+        "name" : "item",
+        "fullName" : "org.w3c.dom.NodeList.item:org.w3c.dom.Node(int)",
+        "signature" : "org.w3c.dom.Node(int)",
+        "isExternal" : true,
+        "code" : "node.getChildNodes().item(i)",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 252,
+        "columnNumber" : 34
+      },
+      {
+        "id" : 634,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 144,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 357,
+        "label" : "IDENTIFIER",
+        "name" : "query",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "query",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 74,
+        "columnNumber" : 11
+      },
+      {
+        "id" : 254,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.home:java.lang.String(org.springframework.ui.Model,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 48,
+        "columnNumber" : 34
+      },
+      {
+        "id" : 535,
+        "label" : "IDENTIFIER",
+        "name" : "dbpath",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "dbpath",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.checkDB:java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 123,
+        "columnNumber" : 7
+      },
+      {
+        "id" : 1033,
+        "label" : "IDENTIFIER",
+        "name" : "node",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "node",
+        "typeFullName" : "org.w3c.dom.Node",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 249,
+        "columnNumber" : 25
+      },
+      {
+        "id" : 1031,
+        "label" : "IDENTIFIER",
+        "name" : "currentString",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "currentString",
+        "typeFullName" : "java.lang.StringBuffer",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 249,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 900,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"Balance Transfer Failed!\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 214,
+        "columnNumber" : 32
+      },
+      {
+        "id" : 377,
+        "label" : "IDENTIFIER",
+        "name" : "result",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "result",
+        "typeFullName" : "java.util.Map",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 76,
+        "columnNumber" : 8
+      },
+      {
+        "id" : 1097,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Model model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.support:java.lang.String(org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 268,
+        "columnNumber" : 24
+      },
+      {
+        "id" : 501,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 110,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 503,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"Update Failed!\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 110,
+        "columnNumber" : 32
+      },
+      {
+        "id" : 718,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 175,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 484,
+        "label" : "IDENTIFIER",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 106,
+        "columnNumber" : 67
+      },
+      {
+        "id" : 451,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Model model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 103,
+        "columnNumber" : 92
+      },
+      {
+        "id" : 1042,
+        "label" : "CALL",
+        "name" : "getChildNodes",
+        "fullName" : "org.w3c.dom.Node.getChildNodes:org.w3c.dom.NodeList()",
+        "signature" : "org.w3c.dom.NodeList()",
+        "isExternal" : true,
+        "code" : "node.getChildNodes()",
+        "typeFullName" : "org.w3c.dom.NodeList",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 251,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 378,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"username\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 76,
+        "columnNumber" : 27
+      },
+      {
+        "id" : 899,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"error\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 214,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 502,
+        "label" : "LITERAL",
+        "name" : "",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "\"error\"",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 110,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 780,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 191,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 445,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.update:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 103,
+        "columnNumber" : 23
+      },
+      {
+        "id" : 1164,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "Model model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.jwt:java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model,java.lang.String,javax.servlet.http.HttpSession)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 287,
+        "columnNumber" : 20
+      },
+      {
+        "id" : 898,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 214,
+        "columnNumber" : 4
+      },
+      {
+        "id" : 374,
+        "label" : "IDENTIFIER",
+        "name" : "query",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "query",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.loginSuccess:boolean(java.lang.String,java.lang.String)",
+        "parentMethodSignature" : "boolean(java.lang.String,java.lang.String)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 75,
+        "columnNumber" : 58
+      },
+      {
+        "id" : 1002,
+        "label" : "CALL",
+        "name" : "getNodeName",
+        "fullName" : "org.w3c.dom.Node.getNodeName:java.lang.String()",
+        "signature" : "java.lang.String()",
+        "isExternal" : true,
+        "code" : "node.getNodeName()",
+        "typeFullName" : "java.lang.String",
+        "parentMethodName" : "com.example.vulnspring.WebController.getNodeString:java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentMethodSignature" : "java.lang.StringBuffer(org.w3c.dom.Node,java.lang.StringBuffer)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 242,
+        "columnNumber" : 21
+      },
+      {
+        "id" : 1100,
+        "label" : "IDENTIFIER",
+        "name" : "model",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "model",
+        "typeFullName" : "org.springframework.ui.Model",
+        "parentMethodName" : "com.example.vulnspring.WebController.support:java.lang.String(org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 269,
+        "columnNumber" : 3
+      },
+      {
+        "id" : 659,
+        "label" : "METHOD_PARAMETER_IN",
+        "name" : "session",
+        "fullName" : "",
+        "signature" : "",
+        "isExternal" : false,
+        "code" : "HttpSession session",
+        "typeFullName" : "javax.servlet.http.HttpSession",
+        "parentMethodName" : "com.example.vulnspring.WebController.transfer:java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentMethodSignature" : "java.lang.String(javax.servlet.http.HttpSession,java.lang.String,java.lang.Float,org.springframework.ui.Model)",
+        "parentFileName" : "src/main/java/com/example/vulnspring/WebController.java",
+        "parentPackageName" : "com.example.vulnspring",
+        "parentClassName" : "com.example.vulnspring.WebController",
+        "lineNumber" : 154,
+        "columnNumber" : 25
+      }
+    ],
+    "edges" : [
+      {
+        "src" : 1010,
+        "dst" : 1011,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 900,
+        "dst" : 898,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 426,
+        "dst" : 427,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1123,
+        "dst" : 1124,
+        "label" : "CFG"
+      },
+      {
+        "src" : 743,
+        "dst" : 744,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 426,
+        "dst" : 408,
+        "label" : "REF"
+      },
+      {
+        "src" : 898,
+        "dst" : 899,
+        "label" : "CFG"
+      },
+      {
+        "src" : 899,
+        "dst" : 900,
+        "label" : "CFG"
+      },
+      {
+        "src" : 319,
+        "dst" : 282,
+        "label" : "REF"
+      },
+      {
+        "src" : 720,
+        "dst" : 718,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1018,
+        "dst" : 997,
+        "label" : "REF"
+      },
+      {
+        "src" : 1012,
+        "dst" : 996,
+        "label" : "REF"
+      },
+      {
+        "src" : 718,
+        "dst" : 719,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1049,
+        "dst" : 1054,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 451,
+        "dst" : 501,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1174,
+        "dst" : 1173,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 635,
+        "dst" : 634,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1049,
+        "dst" : 177,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1053,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 157,
+        "dst" : 149,
+        "label" : "REF"
+      },
+      {
+        "src" : 1054,
+        "dst" : 1049,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 254,
+        "dst" : 255,
+        "label" : "CFG"
+      },
+      {
+        "src" : 530,
+        "dst" : 531,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1002,
+        "dst" : 1003,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1051,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1053,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1198,
+        "dst" : 1164,
+        "label" : "REF"
+      },
+      {
+        "src" : 346,
+        "dst" : 347,
+        "label" : "CFG"
+      },
+      {
+        "src" : 374,
+        "dst" : 371,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 248,
+        "dst" : 254,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1198,
+        "dst" : 1199,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1199,
+        "dst" : 1200,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1052,
+        "label" : "AST"
+      },
+      {
+        "src" : 1052,
+        "dst" : 1051,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 177,
+        "dst" : 1049,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 317,
+        "dst" : 318,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1003,
+        "dst" : 1002,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1200,
+        "dst" : 1198,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 172,
+        "dst" : 171,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 469,
+        "dst" : 445,
+        "label" : "REF"
+      },
+      {
+        "src" : 178,
+        "dst" : 177,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 682,
+        "dst" : 683,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1188,
+        "dst" : 1189,
+        "label" : "CFG"
+      },
+      {
+        "src" : 153,
+        "dst" : 157,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 156,
+        "dst" : 153,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 318,
+        "dst" : 317,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 302,
+        "dst" : 282,
+        "label" : "REF"
+      },
+      {
+        "src" : 1053,
+        "dst" : 1050,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1193,
+        "dst" : 1192,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 719,
+        "dst" : 720,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1052,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 519,
+        "dst" : 531,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 683,
+        "dst" : 681,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1052,
+        "dst" : 1051,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1042,
+        "dst" : 1043,
+        "label" : "AST"
+      },
+      {
+        "src" : 1331,
+        "dst" : 1332,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1052,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1042,
+        "dst" : 1043,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 780,
+        "dst" : 670,
+        "label" : "REF"
+      },
+      {
+        "src" : 899,
+        "dst" : 898,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1049,
+        "dst" : 1054,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1056,
+        "dst" : 1057,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1012,
+        "dst" : 1011,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 781,
+        "dst" : 782,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1001,
+        "dst" : 1007,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1053,
+        "dst" : 1050,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 898,
+        "dst" : 899,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1114,
+        "dst" : 1123,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 531,
+        "dst" : 530,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 780,
+        "dst" : 781,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1048,
+        "dst" : 1054,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 781,
+        "dst" : 780,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1097,
+        "dst" : 1100,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 503,
+        "dst" : 501,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1054,
+        "dst" : 1050,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 503,
+        "dst" : 502,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 349,
+        "dst" : 350,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1002,
+        "dst" : 1003,
+        "label" : "AST"
+      },
+      {
+        "src" : 1052,
+        "dst" : 996,
+        "label" : "REF"
+      },
+      {
+        "src" : 1011,
+        "dst" : 1012,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 371,
+        "dst" : 374,
+        "label" : "CFG"
+      },
+      {
+        "src" : 997,
+        "dst" : 1018,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 318,
+        "dst" : 319,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 369,
+        "dst" : 377,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1049,
+        "dst" : 1054,
+        "label" : "AST"
+      },
+      {
+        "src" : 1011,
+        "dst" : 1012,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 744,
+        "dst" : 743,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 670,
+        "dst" : 681,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1003,
+        "dst" : 996,
+        "label" : "REF"
+      },
+      {
+        "src" : 1031,
+        "dst" : 997,
+        "label" : "REF"
+      },
+      {
+        "src" : 1199,
+        "dst" : 1198,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 350,
+        "dst" : 349,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1102,
+        "dst" : 1100,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 536,
+        "dst" : 535,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1053,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1100,
+        "dst" : 1097,
+        "label" : "REF"
+      },
+      {
+        "src" : 319,
+        "dst" : 317,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1038,
+        "dst" : 1037,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 370,
+        "dst" : 371,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1173,
+        "dst" : 1174,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1038,
+        "dst" : 1037,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 469,
+        "dst" : 484,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1008,
+        "dst" : 1007,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1173,
+        "dst" : 1174,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 681,
+        "dst" : 682,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1003,
+        "dst" : 1002,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1033,
+        "dst" : 1043,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 346,
+        "dst" : 347,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1189,
+        "dst" : 1188,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1002,
+        "dst" : 1001,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1054,
+        "label" : "CFG"
+      },
+      {
+        "src" : 157,
+        "dst" : 156,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 153,
+        "dst" : 156,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 254,
+        "dst" : 255,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 535,
+        "dst" : 519,
+        "label" : "REF"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1051,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 1007,
+        "dst" : 1008,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 470,
+        "dst" : 469,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1032,
+        "dst" : 1031,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 177,
+        "dst" : 1052,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 370,
+        "dst" : 369,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1012,
+        "dst" : 1027,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1050,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 535,
+        "dst" : 536,
+        "label" : "CFG"
+      },
+      {
+        "src" : 318,
+        "dst" : 319,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1037,
+        "dst" : 1038,
+        "label" : "CFG"
+      },
+      {
+        "src" : 536,
+        "dst" : 535,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1192,
+        "dst" : 1164,
+        "label" : "REF"
+      },
+      {
+        "src" : 1043,
+        "dst" : 996,
+        "label" : "REF"
+      },
+      {
+        "src" : 1031,
+        "dst" : 1054,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1010,
+        "dst" : 1013,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1042,
+        "dst" : 1043,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 350,
+        "dst" : 349,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1049,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 718,
+        "dst" : 719,
+        "label" : "CFG"
+      },
+      {
+        "src" : 317,
+        "dst" : 319,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 485,
+        "dst" : 484,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 898,
+        "dst" : 670,
+        "label" : "REF"
+      },
+      {
+        "src" : 1003,
+        "dst" : 1027,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1174,
+        "dst" : 1165,
+        "label" : "REF"
+      },
+      {
+        "src" : 370,
+        "dst" : 371,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 177,
+        "dst" : 1048,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1188,
+        "dst" : 1167,
+        "label" : "REF"
+      },
+      {
+        "src" : 781,
+        "dst" : 782,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1200,
+        "dst" : 1199,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 719,
+        "dst" : 718,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 153,
+        "dst" : 157,
+        "label" : "CFG"
+      },
+      {
+        "src" : 531,
+        "dst" : 519,
+        "label" : "REF"
+      },
+      {
+        "src" : 1011,
+        "dst" : 1010,
+        "label" : "CFG"
+      },
+      {
+        "src" : 743,
+        "dst" : 659,
+        "label" : "REF"
+      },
+      {
+        "src" : 743,
+        "dst" : 744,
+        "label" : "CFG"
+      },
+      {
+        "src" : 149,
+        "dst" : 157,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1053,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1052,
+        "dst" : 1051,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1037,
+        "dst" : 1040,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1012,
+        "dst" : 1011,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 682,
+        "dst" : 681,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 393,
+        "dst" : 396,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1193,
+        "dst" : 1194,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1053,
+        "label" : "AST"
+      },
+      {
+        "src" : 1013,
+        "dst" : 1010,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 302,
+        "dst" : 303,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1192,
+        "dst" : 1193,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1049,
+        "dst" : 1048,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 502,
+        "dst" : 503,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1057,
+        "dst" : 1056,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1049,
+        "dst" : 1050,
+        "label" : "AST"
+      },
+      {
+        "src" : 396,
+        "dst" : 393,
+        "label" : "REF"
+      },
+      {
+        "src" : 370,
+        "dst" : 374,
+        "label" : "AST"
+      },
+      {
+        "src" : 1053,
+        "dst" : 1051,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 318,
+        "dst" : 319,
+        "label" : "CFG"
+      },
+      {
+        "src" : 535,
+        "dst" : 536,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1054,
+        "dst" : 1049,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1031,
+        "dst" : 1056,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 255,
+        "dst" : 254,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 426,
+        "dst" : 427,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 484,
+        "dst" : 485,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1010,
+        "dst" : 1013,
+        "label" : "CFG"
+      },
+      {
+        "src" : 347,
+        "dst" : 346,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1193,
+        "dst" : 1194,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1043,
+        "dst" : 1042,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1048,
+        "dst" : 177,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1043,
+        "dst" : 1040,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 255,
+        "dst" : 254,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1101,
+        "dst" : 1100,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1027,
+        "dst" : 1043,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1049,
+        "dst" : 1050,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1053,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 634,
+        "dst" : 635,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1003,
+        "dst" : 1002,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1002,
+        "dst" : 1003,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 996,
+        "dst" : 1003,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1193,
+        "dst" : 1192,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 485,
+        "dst" : 484,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1011,
+        "dst" : 1010,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 152,
+        "dst" : 156,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1012,
+        "dst" : 1011,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1011,
+        "dst" : 1012,
+        "label" : "AST"
+      },
+      {
+        "src" : 371,
+        "dst" : 374,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 616,
+        "dst" : 634,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 681,
+        "dst" : 682,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1018,
+        "dst" : 1054,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 634,
+        "dst" : 616,
+        "label" : "REF"
+      },
+      {
+        "src" : 530,
+        "dst" : 531,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1018,
+        "dst" : 1031,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 634,
+        "dst" : 635,
+        "label" : "CFG"
+      },
+      {
+        "src" : 530,
+        "dst" : 531,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1165,
+        "dst" : 1174,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 339,
+        "dst" : 371,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1018,
+        "dst" : 1056,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 317,
+        "dst" : 281,
+        "label" : "REF"
+      },
+      {
+        "src" : 1037,
+        "dst" : 1038,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 719,
+        "dst" : 718,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1033,
+        "dst" : 1032,
+        "label" : "CFG"
+      },
+      {
+        "src" : 171,
+        "dst" : 302,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1056,
+        "dst" : 997,
+        "label" : "REF"
+      },
+      {
+        "src" : 152,
+        "dst" : 153,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1027,
+        "dst" : 1033,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 340,
+        "dst" : 346,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1032,
+        "dst" : 1033,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 370,
+        "dst" : 374,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 718,
+        "dst" : 670,
+        "label" : "REF"
+      },
+      {
+        "src" : 1043,
+        "dst" : 1042,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1031,
+        "dst" : 1032,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1043,
+        "dst" : 1052,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 282,
+        "dst" : 302,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 358,
+        "dst" : 357,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 317,
+        "dst" : 318,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 408,
+        "dst" : 426,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1194,
+        "dst" : 1192,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 374,
+        "dst" : 370,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 899,
+        "dst" : 900,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 319,
+        "dst" : 318,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 501,
+        "dst" : 451,
+        "label" : "REF"
+      },
+      {
+        "src" : 1164,
+        "dst" : 1198,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1053,
+        "dst" : 1045,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1041,
+        "dst" : 1042,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 370,
+        "dst" : 371,
+        "label" : "AST"
+      },
+      {
+        "src" : 1101,
+        "dst" : 1100,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 156,
+        "dst" : 157,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1002,
+        "dst" : 1003,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 682,
+        "dst" : 683,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1019,
+        "dst" : 1018,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 303,
+        "dst" : 290,
+        "label" : "REF"
+      },
+      {
+        "src" : 378,
+        "dst" : 377,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1041,
+        "dst" : 1040,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1027,
+        "dst" : 996,
+        "label" : "REF"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1051,
+        "label" : "AST"
+      },
+      {
+        "src" : 469,
+        "dst" : 470,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 635,
+        "dst" : 634,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 427,
+        "dst" : 426,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 427,
+        "dst" : 426,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1102,
+        "dst" : 1101,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1052,
+        "dst" : 1043,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 378,
+        "dst" : 377,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1198,
+        "dst" : 1199,
+        "label" : "CFG"
+      },
+      {
+        "src" : 347,
+        "dst" : 346,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 502,
+        "dst" : 501,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1164,
+        "dst" : 1192,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1188,
+        "dst" : 1189,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 484,
+        "dst" : 485,
+        "label" : "CFG"
+      },
+      {
+        "src" : 781,
+        "dst" : 780,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1003,
+        "dst" : 1012,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 357,
+        "dst" : 374,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 782,
+        "dst" : 781,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 469,
+        "dst" : 470,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1053,
+        "dst" : 1051,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1049,
+        "dst" : 177,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 1052,
+        "dst" : 177,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1003,
+        "dst" : 1001,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1041,
+        "dst" : 1042,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 157,
+        "dst" : 156,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1033,
+        "dst" : 1032,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1041,
+        "dst" : 1042,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 281,
+        "dst" : 317,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1041,
+        "dst" : 1042,
+        "label" : "AST"
+      },
+      {
+        "src" : 1050,
+        "dst" : 1054,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 157,
+        "dst" : 156,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 302,
+        "dst" : 171,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 682,
+        "dst" : 681,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1124,
+        "dst" : 1123,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1100,
+        "dst" : 1101,
+        "label" : "CFG"
+      },
+      {
+        "src" : 171,
+        "dst" : 172,
+        "label" : "REF"
+      },
+      {
+        "src" : 1033,
+        "dst" : 1032,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 171,
+        "dst" : 302,
+        "label" : "CFG"
+      },
+      {
+        "src" : 371,
+        "dst" : 370,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1100,
+        "dst" : 1101,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1042,
+        "dst" : 1041,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 114,
+        "dst" : 115,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1048,
+        "dst" : 1056,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 445,
+        "dst" : 469,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1045,
+        "dst" : 1040,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1049,
+        "dst" : 177,
+        "label" : "AST"
+      },
+      {
+        "src" : 1032,
+        "dst" : 1033,
+        "label" : "AST"
+      },
+      {
+        "src" : 531,
+        "dst" : 535,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1194,
+        "dst" : 1193,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 341,
+        "dst" : 349,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 659,
+        "dst" : 743,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 900,
+        "dst" : 899,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 683,
+        "dst" : 682,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1054,
+        "dst" : 997,
+        "label" : "REF"
+      },
+      {
+        "src" : 670,
+        "dst" : 780,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 290,
+        "dst" : 303,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1042,
+        "dst" : 1041,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 470,
+        "dst" : 469,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 780,
+        "dst" : 781,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1033,
+        "dst" : 1031,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 502,
+        "dst" : 503,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 720,
+        "dst" : 719,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 670,
+        "dst" : 718,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1199,
+        "dst" : 1200,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1123,
+        "dst" : 1114,
+        "label" : "REF"
+      },
+      {
+        "src" : 1042,
+        "dst" : 1043,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1042,
+        "dst" : 1041,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1048,
+        "dst" : 997,
+        "label" : "REF"
+      },
+      {
+        "src" : 1192,
+        "dst" : 1193,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 501,
+        "dst" : 502,
+        "label" : "CFG"
+      },
+      {
+        "src" : 670,
+        "dst" : 898,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1032,
+        "dst" : 1033,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 374,
+        "dst" : 370,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1011,
+        "dst" : 1012,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 349,
+        "dst" : 341,
+        "label" : "REF"
+      },
+      {
+        "src" : 1010,
+        "dst" : 1011,
+        "label" : "AST"
+      },
+      {
+        "src" : 177,
+        "dst" : 1052,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1032,
+        "dst" : 1033,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 1298,
+        "dst" : 1305,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 303,
+        "dst" : 302,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1101,
+        "dst" : 1102,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 156,
+        "dst" : 157,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1033,
+        "dst" : 996,
+        "label" : "REF"
+      },
+      {
+        "src" : 377,
+        "dst" : 378,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1043,
+        "dst" : 1042,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 782,
+        "dst" : 780,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1010,
+        "dst" : 1011,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 1167,
+        "dst" : 1188,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 377,
+        "dst" : 378,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1040,
+        "dst" : 1053,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 157,
+        "dst" : 153,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 501,
+        "dst" : 502,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1013,
+        "dst" : 1010,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 156,
+        "dst" : 157,
+        "label" : "AST"
+      },
+      {
+        "src" : 1040,
+        "dst" : 1043,
+        "label" : "CFG"
+      },
+      {
+        "src" : 318,
+        "dst" : 317,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1031,
+        "dst" : 1033,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1031,
+        "dst" : 1033,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1123,
+        "dst" : 1124,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1001,
+        "dst" : 1003,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 302,
+        "dst" : 303,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1053,
+        "dst" : 1050,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1018,
+        "dst" : 1019,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 374,
+        "dst" : 370,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1124,
+        "dst" : 1123,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1199,
+        "dst" : 1198,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 744,
+        "dst" : 743,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 177,
+        "dst" : 178,
+        "label" : "REF"
+      },
+      {
+        "src" : 371,
+        "dst" : 374,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 502,
+        "dst" : 501,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1051,
+        "dst" : 1052,
+        "label" : "RECEIVER"
+      },
+      {
+        "src" : 370,
+        "dst" : 374,
+        "label" : "ARGUMENT"
+      },
+      {
+        "src" : 1007,
+        "dst" : 1008,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1008,
+        "dst" : 1007,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 484,
+        "dst" : 445,
+        "label" : "REF"
+      },
+      {
+        "src" : 254,
+        "dst" : 248,
+        "label" : "REF"
+      },
+      {
+        "src" : 1173,
+        "dst" : 1174,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1040,
+        "dst" : 1043,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 1010,
+        "dst" : 1011,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 681,
+        "dst" : 670,
+        "label" : "REF"
+      },
+      {
+        "src" : 719,
+        "dst" : 720,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1011,
+        "dst" : 1010,
+        "label" : "DOMINATE"
+      },
+      {
+        "src" : 374,
+        "dst" : 371,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 346,
+        "dst" : 340,
+        "label" : "REF"
+      },
+      {
+        "src" : 349,
+        "dst" : 350,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1054,
+        "dst" : 1049,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1001,
+        "dst" : 1003,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1048,
+        "dst" : 177,
+        "label" : "CFG"
+      },
+      {
+        "src" : 899,
+        "dst" : 898,
+        "label" : "POST_DOMINATE"
+      },
+      {
+        "src" : 1101,
+        "dst" : 1102,
+        "label" : "CFG"
+      },
+      {
+        "src" : 1189,
+        "dst" : 1188,
+        "label" : "REACHING_DEF"
+      },
+      {
+        "src" : 1040,
+        "dst" : 1041,
+        "label" : "REACHING_DEF"
+      }
+    ]
+  },
+  "paths" : [
+    [
+      1123,
+      1114
+    ],
+    [
+      254,
+      248
+    ],
+    [
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      1056,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1037,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1054
+    ],
+    [
+      1038,
+      1037,
+      1040,
+      1053,
+      1045
+    ],
+    [
+      781,
+      780,
+      670,
+      718
+    ],
+    [
+      502,
+      501,
+      451
+    ],
+    [
+      374,
+      370,
+      369,
+      377
+    ],
+    [
+      1045,
+      1040,
+      1041
+    ],
+    [
+      996,
+      1003,
+      1012,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1045
+    ],
+    [
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1054
+    ],
+    [
+      1173,
+      1174,
+      1165
+    ],
+    [
+      743,
+      659
+    ],
+    [
+      781,
+      780,
+      670,
+      681
+    ],
+    [
+      1003,
+      1012,
+      1027,
+      1033,
+      1043,
+      1052,
+      1051,
+      1053,
+      1045,
+      1040,
+      1041
+    ],
+    [
+      1003,
+      1012,
+      1027,
+      1033,
+      1032,
+      1031,
+      1056,
+      997,
+      1018,
+      1054,
+      1049,
+      1048
+    ],
+    [
+      720,
+      718,
+      670,
+      681
+    ],
+    [
+      1037,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      1056,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      341,
+      349
+    ],
+    [
+      1048,
+      997,
+      1018,
+      1031,
+      1054,
+      1049
+    ],
+    [
+      1114,
+      1123
+    ],
+    [
+      1056,
+      997,
+      1018,
+      1031,
+      1054,
+      1049,
+      1048
+    ],
+    [
+      1013,
+      1010
+    ],
+    [
+      1012,
+      996,
+      1003,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      484,
+      445,
+      469
+    ],
+    [
+      535,
+      519,
+      531
+    ],
+    [
+      1051,
+      1053,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1033,
+      996,
+      1003,
+      1012,
+      1027,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      445,
+      469,
+      484
+    ],
+    [
+      1164,
+      1192
+    ],
+    [
+      531,
+      519
+    ],
+    [
+      1101,
+      1100,
+      1097
+    ],
+    [
+      290,
+      303
+    ],
+    [
+      634,
+      616
+    ],
+    [
+      1051,
+      1050,
+      1049,
+      1048,
+      1056,
+      997,
+      1018,
+      1054
+    ],
+    [
+      157,
+      149
+    ],
+    [
+      1124,
+      1123,
+      1114
+    ],
+    [
+      1102,
+      1100,
+      1097
+    ],
+    [
+      996,
+      1003,
+      1012,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      451,
+      501
+    ],
+    [
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      1056,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1003,
+      1012,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1012,
+      996,
+      1003,
+      1027,
+      1033,
+      1032,
+      1031,
+      1056,
+      997,
+      1018,
+      1054,
+      1049,
+      1048
+    ],
+    [
+      720,
+      718,
+      670,
+      780
+    ],
+    [
+      1198,
+      1164,
+      1192
+    ],
+    [
+      1003,
+      1012,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      1049,
+      1048,
+      1054,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1043,
+      996,
+      1003,
+      1002,
+      1001,
+      1007
+    ],
+    [
+      1045,
+      1040,
+      1053,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      1054,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      530,
+      531,
+      535,
+      519
+    ],
+    [
+      1012,
+      996,
+      1003,
+      1002,
+      1001,
+      1007
+    ],
+    [
+      1012,
+      996,
+      1003,
+      1027,
+      1033,
+      1043,
+      1052,
+      1051,
+      1053,
+      1045,
+      1040,
+      1041
+    ],
+    [
+      1003,
+      1012,
+      996
+    ],
+    [
+      317,
+      281
+    ],
+    [
+      1018,
+      997
+    ],
+    [
+      408,
+      426
+    ],
+    [
+      1188,
+      1167
+    ],
+    [
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1054
+    ],
+    [
+      1003,
+      1002,
+      1001,
+      1007
+    ],
+    [
+      519,
+      531,
+      535
+    ],
+    [
+      393,
+      396
+    ],
+    [
+      781,
+      780,
+      670,
+      898
+    ],
+    [
+      255,
+      254,
+      248
+    ],
+    [
+      1012,
+      996,
+      1003,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1054
+    ],
+    [
+      1033,
+      996,
+      1003,
+      1012,
+      1011,
+      1010
+    ],
+    [
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      1056,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1033,
+      1043,
+      996,
+      1003,
+      1012,
+      1027
+    ],
+    [
+      303,
+      290
+    ],
+    [
+      1012,
+      996,
+      1003,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1045
+    ],
+    [
+      681,
+      670,
+      898
+    ],
+    [
+      1043,
+      996,
+      1003,
+      1012,
+      1027,
+      1033,
+      1032,
+      1031,
+      1056,
+      997,
+      1018,
+      1054,
+      1049,
+      1048
+    ],
+    [
+      681,
+      670,
+      780
+    ],
+    [
+      248,
+      254
+    ],
+    [
+      396,
+      393
+    ],
+    [
+      1298,
+      1305
+    ],
+    [
+      1003,
+      1012,
+      1011,
+      1010
+    ],
+    [
+      1033,
+      996,
+      1003,
+      1012,
+      1027,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      1033,
+      996,
+      1003,
+      1002,
+      1001,
+      1007
+    ],
+    [
+      659,
+      743
+    ],
+    [
+      1032,
+      1031,
+      1056,
+      997,
+      1018,
+      1054,
+      1049,
+      1048
+    ],
+    [
+      1200,
+      1198,
+      1164,
+      1192
+    ],
+    [
+      1033,
+      996,
+      1003,
+      1012,
+      1027,
+      1043,
+      1052,
+      1051,
+      1053,
+      1045,
+      1040,
+      1041
+    ],
+    [
+      426,
+      408
+    ],
+    [
+      1038,
+      1037,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      1043,
+      996,
+      1003,
+      1012,
+      1011,
+      1010
+    ],
+    [
+      1038,
+      1037,
+      1040,
+      1041
+    ],
+    [
+      1033,
+      996,
+      1003,
+      1012,
+      1027,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1045
+    ],
+    [
+      378,
+      377
+    ],
+    [
+      1038,
+      1037,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1032
+    ],
+    [
+      1193,
+      1192,
+      1164,
+      1198
+    ],
+    [
+      1165,
+      1174
+    ],
+    [
+      1167,
+      1188
+    ],
+    [
+      282,
+      302
+    ],
+    [
+      1045,
+      1040,
+      1053,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      1097,
+      1100
+    ],
+    [
+      1008,
+      1007
+    ],
+    [
+      1194,
+      1192,
+      1164,
+      1198
+    ],
+    [
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      1056,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      1049,
+      1048,
+      1056,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      350,
+      349,
+      341
+    ],
+    [
+      616,
+      634
+    ],
+    [
+      346,
+      340
+    ],
+    [
+      720,
+      718,
+      670,
+      898
+    ],
+    [
+      681,
+      670,
+      718
+    ],
+    [
+      302,
+      282
+    ],
+    [
+      996,
+      1003,
+      1012,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1051,
+      1050,
+      1049,
+      1048,
+      997,
+      1018,
+      1031,
+      1054
+    ],
+    [
+      469,
+      445
+    ],
+    [
+      340,
+      346
+    ],
+    [
+      1003,
+      1012,
+      1027,
+      1033,
+      1043,
+      1042,
+      1041,
+      1040,
+      1053,
+      1045
+    ]
+  ]
+}

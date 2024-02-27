@@ -1,0 +1,222 @@
+[
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "main",
+    "channel": "pkgs/main",
+    "dist_name": "_libgcc_mutex-0.1-main",
+    "name": "_libgcc_mutex",
+    "platform": "linux-64",
+    "version": "0.1"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "1_gnu",
+    "channel": "pkgs/main",
+    "dist_name": "_openmp_mutex-5.1-1_gnu",
+    "name": "_openmp_mutex",
+    "platform": "linux-64",
+    "version": "5.1"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h7b6447c_0",
+    "channel": "pkgs/main",
+    "dist_name": "bzip2-1.0.8-h7b6447c_0",
+    "name": "bzip2",
+    "platform": "linux-64",
+    "version": "1.0.8"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h06a4308_0",
+    "channel": "pkgs/main",
+    "dist_name": "ca-certificates-2023.08.22-h06a4308_0",
+    "name": "ca-certificates",
+    "platform": "linux-64",
+    "version": "2023.08.22"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 1,
+    "build_string": "h1181459_1",
+    "channel": "pkgs/main",
+    "dist_name": "ld_impl_linux-64-2.38-h1181459_1",
+    "name": "ld_impl_linux-64",
+    "platform": "linux-64",
+    "version": "2.38"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h6a678d5_0",
+    "channel": "pkgs/main",
+    "dist_name": "libffi-3.4.4-h6a678d5_0",
+    "name": "libffi",
+    "platform": "linux-64",
+    "version": "3.4.4"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 1,
+    "build_string": "h1234567_1",
+    "channel": "pkgs/main",
+    "dist_name": "libgcc-ng-11.2.0-h1234567_1",
+    "name": "libgcc-ng",
+    "platform": "linux-64",
+    "version": "11.2.0"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 1,
+    "build_string": "h1234567_1",
+    "channel": "pkgs/main",
+    "dist_name": "libgomp-11.2.0-h1234567_1",
+    "name": "libgomp",
+    "platform": "linux-64",
+    "version": "11.2.0"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 1,
+    "build_string": "h1234567_1",
+    "channel": "pkgs/main",
+    "dist_name": "libstdcxx-ng-11.2.0-h1234567_1",
+    "name": "libstdcxx-ng",
+    "platform": "linux-64",
+    "version": "11.2.0"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h5eee18b_0",
+    "channel": "pkgs/main",
+    "dist_name": "libuuid-1.41.5-h5eee18b_0",
+    "name": "libuuid",
+    "platform": "linux-64",
+    "version": "1.41.5"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h6a678d5_0",
+    "channel": "pkgs/main",
+    "dist_name": "ncurses-6.4-h6a678d5_0",
+    "name": "ncurses",
+    "platform": "linux-64",
+    "version": "6.4"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 2,
+    "build_string": "h7f8727e_2",
+    "channel": "pkgs/main",
+    "dist_name": "openssl-3.0.11-h7f8727e_2",
+    "name": "openssl",
+    "platform": "linux-64",
+    "version": "3.0.11"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "py311h06a4308_0",
+    "channel": "pkgs/main",
+    "dist_name": "pip-23.2.1-py311h06a4308_0",
+    "name": "pip",
+    "platform": "linux-64",
+    "version": "23.2.1"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h955ad1f_0",
+    "channel": "pkgs/main",
+    "dist_name": "python-3.11.5-h955ad1f_0",
+    "name": "python",
+    "platform": "linux-64",
+    "version": "3.11.5"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h5eee18b_0",
+    "channel": "pkgs/main",
+    "dist_name": "readline-8.2-h5eee18b_0",
+    "name": "readline",
+    "platform": "linux-64",
+    "version": "8.2"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "py311h06a4308_0",
+    "channel": "pkgs/main",
+    "dist_name": "setuptools-68.0.0-py311h06a4308_0",
+    "name": "setuptools",
+    "platform": "linux-64",
+    "version": "68.0.0"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h5eee18b_0",
+    "channel": "pkgs/main",
+    "dist_name": "sqlite-3.41.2-h5eee18b_0",
+    "name": "sqlite",
+    "platform": "linux-64",
+    "version": "3.41.2"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h1ccaba5_0",
+    "channel": "pkgs/main",
+    "dist_name": "tk-8.6.12-h1ccaba5_0",
+    "name": "tk",
+    "platform": "linux-64",
+    "version": "8.6.12"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h04d1e81_0",
+    "channel": "pkgs/main",
+    "dist_name": "tzdata-2023c-h04d1e81_0",
+    "name": "tzdata",
+    "platform": "noarch",
+    "version": "2023c"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "py311h06a4308_0",
+    "channel": "pkgs/main",
+    "dist_name": "wheel-0.41.2-py311h06a4308_0",
+    "name": "wheel",
+    "platform": "linux-64",
+    "version": "0.41.2"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h5eee18b_0",
+    "channel": "pkgs/main",
+    "dist_name": "xz-5.4.2-h5eee18b_0",
+    "name": "xz",
+    "platform": "linux-64",
+    "version": "5.4.2"
+  },
+  {
+    "base_url": "https://repo.anaconda.com/pkgs/main",
+    "build_number": 0,
+    "build_string": "h5eee18b_0",
+    "channel": "pkgs/main",
+    "dist_name": "zlib-1.2.13-h5eee18b_0",
+    "name": "zlib",
+    "platform": "linux-64",
+    "version": "1.2.13"
+  }
+]

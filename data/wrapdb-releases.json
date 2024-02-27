@@ -1,0 +1,3496 @@
+{
+  "abseil-cpp": {
+    "name_with_version": "abseil-cpp-20230125.1",
+    "analyzed_version": "20230125.1",
+    "analyzed_source_url": "https://github.com/abseil/abseil-cpp/archive/20230125.1.tar.gz",
+    "analyzed_source_filename": "abseil-cpp-20230125.1.tar.gz",
+    "analyzed_source_hash": "81311c17599b3712069ded20cca09a62ab0bf2a89dfa16993786c8782b7ed145",
+    "PkgProvides": [
+      "absl_algorithm_container",
+      "absl_any_invocable",
+      "absl_bad_any_cast_impl",
+      "absl_bad_optional_access",
+      "absl_bad_variant_access",
+      "absl_base",
+      "absl_bind_front",
+      "absl_city",
+      "absl_civil_time",
+      "absl_cleanup",
+      "absl_container",
+      "absl_cord",
+      "absl_cord_internal",
+      "absl_cordz_functions",
+      "absl_cordz_handle",
+      "absl_cordz_info",
+      "absl_cordz_sample_token",
+      "absl_core_headers",
+      "absl_crc",
+      "absl_debugging",
+      "absl_debugging_internal",
+      "absl_demangle_internal",
+      "absl_examine_stack",
+      "absl_exponential_biased",
+      "absl_failure_signal_handler",
+      "absl_flags",
+      "absl_flags_commandlineflag",
+      "absl_flags_commandlineflag_internal",
+      "absl_flags_config",
+      "absl_flags_internal",
+      "absl_flags_marshalling",
+      "absl_flags_parse",
+      "absl_flags_private_handle_accessor",
+      "absl_flags_program_name",
+      "absl_flags_reflection",
+      "absl_flags_usage",
+      "absl_flags_usage_internal",
+      "absl_flat_hash_map",
+      "absl_flat_hash_set",
+      "absl_function_ref",
+      "absl_graphcycles_internal",
+      "absl_hash",
+      "absl_hashtablez_sampler",
+      "absl_inlined_vector",
+      "absl_int128",
+      "absl_leak_check",
+      "absl_log",
+      "absl_log_severity",
+      "absl_low_level_hash",
+      "absl_memory",
+      "absl_numeric",
+      "absl_optional",
+      "absl_periodic_sampler",
+      "absl_profiling",
+      "absl_random",
+      "absl_random_bit_gen_ref",
+      "absl_random_distributions",
+      "absl_random_internal_distribution_test_util",
+      "absl_random_internal_platform",
+      "absl_random_internal_pool_urbg",
+      "absl_random_internal_randen",
+      "absl_random_internal_randen_hwaes",
+      "absl_random_internal_randen_hwaes_impl",
+      "absl_random_internal_randen_slow",
+      "absl_random_internal_seed_material",
+      "absl_random_random",
+      "absl_random_seed_gen_exception",
+      "absl_random_seed_sequences",
+      "absl_raw_hash_set",
+      "absl_raw_logging_internal",
+      "absl_scoped_set_env",
+      "absl_span",
+      "absl_spinlock_wait",
+      "absl_stacktrace",
+      "absl_status",
+      "absl_statusor",
+      "absl_str_format",
+      "absl_str_format_internal",
+      "absl_strerror",
+      "absl_strings",
+      "absl_strings_internal",
+      "absl_symbolize",
+      "absl_synchronization",
+      "absl_throw_delegate",
+      "absl_time",
+      "absl_time_zone",
+      "absl_type_traits",
+      "absl_types",
+      "absl_utility",
+      "absl_variant"
+    ],
+    "available_versions": [
+      "20230125.1-5",
+      "20230125.1-4",
+      "20230125.1-3",
+      "20230125.1-2",
+      "20230125.1-1",
+      "20220623.0-2",
+      "20220623.0-1",
+      "20211102.0-3",
+      "20211102.0-2",
+      "20211102.0-1",
+      "20210324.2-4",
+      "20210324.2-3",
+      "20210324.2-2",
+      "20210324.2-1",
+      "20210324.1-4",
+      "20210324.1-3",
+      "20210324.1-2",
+      "20210324.1-1",
+      "20200923.2-1",
+      "20200225.2-3",
+      "20200225.2-2",
+      "20200225.2-1"
+    ]
+  },
+  "arduinocore-avr": {
+    "name_with_version": "avr",
+    "analyzed_version": "avr",
+    "analyzed_source_url": "http://downloads.arduino.cc/cores/avr-1.8.2.tar.bz2",
+    "analyzed_source_filename": "avr-1.8.2.tar.bz2",
+    "analyzed_source_hash": "6213d41c6e91a75ac931527da5b10f2dbe0140c8cc1dd41b06cd4e78b943f41b",
+    "PkgProvides": [],
+    "available_versions": ["1.8.2-1", "1.6.20-1"]
+  },
+  "argparse": {
+    "name_with_version": "argparse-2.9",
+    "analyzed_version": "2.9",
+    "analyzed_source_url": "https://github.com/p-ranav/argparse/archive/refs/tags/v2.9.tar.gz",
+    "analyzed_source_filename": "argparse-2.9.tar.gz",
+    "analyzed_source_hash": "cd563293580b9dc592254df35b49cf8a19b4870ff5f611c7584cf967d9e6031e",
+    "PkgProvides": ["argparse"],
+    "available_versions": ["2.9-1", "2.6-1", "2.5-1", "2.4-1", "2.2-1"]
+  },
+  "argu-parser": {
+    "name_with_version": "argu-parser-0.0.1",
+    "analyzed_version": "0.0.1",
+    "analyzed_source_url": "https://github.com/juniorrantila/argu-parser/archive/refs/tags/v0.0.1.tar.gz",
+    "analyzed_source_filename": "argu-parser-0.0.1.tar.gz",
+    "analyzed_source_hash": "bb9c773364848baab62fbcfbfd10a2acb3beb8051d02fef93e93071959bbc396",
+    "PkgProvides": ["argu-parser"],
+    "available_versions": ["0.0.1-1"]
+  },
+  "asio": {
+    "name_with_version": "asio-1.28.1",
+    "analyzed_version": "1.28.1",
+    "analyzed_source_url": "https://sourceforge.net/projects/asio/files/asio/1.28.1%20%28Stable%29/asio-1.28.1.tar.gz/download",
+    "analyzed_source_filename": "asio-1.28.1.tar.gz",
+    "analyzed_source_hash": "eef0eddce419827876f4929c6d7523e010528031e5289ec57914e89fb9ab9d8d",
+    "PkgProvides": ["asio"],
+    "available_versions": ["1.28.1-1", "1.24.0-1"]
+  },
+  "backward-cpp": {
+    "name_with_version": "backward-cpp-1.6",
+    "analyzed_version": "1.6",
+    "analyzed_source_url": "https://github.com/bombela/backward-cpp/archive/refs/tags/v1.6.tar.gz",
+    "analyzed_source_filename": "backward-cpp-1.6.tar.gz",
+    "analyzed_source_hash": "c654d0923d43f1cea23d086729673498e4741fb2457e806cfaeaea7b20c97c10",
+    "PkgProvides": ["backward-cpp"],
+    "available_versions": ["1.6-2", "1.6-1"]
+  },
+  "bdwgc": {
+    "name_with_version": "gc-8.2.2",
+    "analyzed_version": "gc-8.2.2",
+    "analyzed_source_url": "https://github.com/ivmai/bdwgc/releases/download/v8.2.2/gc-8.2.2.tar.gz",
+    "analyzed_source_filename": "gc-8.2.2.tar.gz",
+    "analyzed_source_hash": "f30107bcb062e0920a790ffffa56d9512348546859364c23a14be264b38836a0",
+    "PkgProvides": ["gc"],
+    "available_versions": ["8.2.2-1", "8.2.0-1", "7.6.8-1"]
+  },
+  "blueprint-compiler": {
+    "name_with_version": "blueprint-compiler-v0.10.0",
+    "analyzed_version": "v0.10.0",
+    "analyzed_source_url": "https://gitlab.gnome.org/jwestman/blueprint-compiler/-/archive/v0.10.0/blueprint-compiler-v0.10.0.tar.gz",
+    "analyzed_source_filename": "blueprint-compiler-v0.10.0.tar.gz",
+    "analyzed_source_hash": "2bc729b36897d0959a9890fb0997c9847aa9d2fc9356520bd8a46ed0b51ff4c0",
+    "PkgProvides": ["program_names"],
+    "available_versions": ["0.10.0-1"]
+  },
+  "box2d": {
+    "name_with_version": "box2d-2.4.1",
+    "analyzed_version": "2.4.1",
+    "analyzed_source_url": "https://github.com/erincatto/box2d/archive/v2.4.1/box2d-2.4.1.tar.gz",
+    "analyzed_source_filename": "box2d-2.4.1.tar.gz",
+    "analyzed_source_hash": "d6b4650ff897ee1ead27cf77a5933ea197cbeef6705638dd181adc2e816b23c2",
+    "PkgProvides": ["box2d"],
+    "available_versions": [
+      "2.4.1-3",
+      "2.4.1-2",
+      "2.4.1-1",
+      "2.3.1-7",
+      "2.3.1-5",
+      "2.3.1-4",
+      "2.3.1-2"
+    ]
+  },
+  "bshoshany-thread-pool": {
+    "name_with_version": "thread-pool-3.5.0",
+    "analyzed_version": "thread-pool-3.5.0",
+    "analyzed_source_url": "https://github.com/bshoshany/thread-pool/archive/refs/tags/v3.5.0.zip",
+    "analyzed_source_filename": "thread-pool-3.5.0.zip",
+    "analyzed_source_hash": "0cbfd770acbb88ec612abf48e04bfd774254ace805e648f112ec7022099e30c2",
+    "PkgProvides": ["bshoshany-thread-pool"],
+    "available_versions": ["3.5.0-1", "3.4.0-1", "3.3.0-1"]
+  },
+  "c-ares": {
+    "name_with_version": "c-ares-1.20.1",
+    "analyzed_version": "1.20.1",
+    "analyzed_source_url": "https://github.com/c-ares/c-ares/releases/download/cares-1_20_1/c-ares-1.20.1.tar.gz",
+    "analyzed_source_filename": "c-ares-1.20.1.tar.gz",
+    "analyzed_source_hash": "de24a314844cb157909730828560628704f4f896d167dd7da0fa2fb93ea18b10",
+    "PkgProvides": ["libcares"],
+    "available_versions": ["1.20.1-1"]
+  },
+  "c-flags": {
+    "name_with_version": "c-flags-1.5.4",
+    "analyzed_version": "1.5.4",
+    "analyzed_source_url": "https://github.com/DieTime/c-flags/archive/1.5.4.tar.gz",
+    "analyzed_source_filename": "c-flags-1.5.4.tar.gz",
+    "analyzed_source_hash": "890345a0a378bc1a2dcff8c39b0e7745947153bd2c2e1fd0e6b60944f78b46ae",
+    "PkgProvides": ["c-flags"],
+    "available_versions": ["1.5.4-1"]
+  },
+  "cairo": {
+    "name_with_version": "cairo-1.18.0",
+    "analyzed_version": "1.18.0",
+    "analyzed_source_url": "https://www.cairographics.org/releases/cairo-1.18.0.tar.xz",
+    "analyzed_source_filename": "cairo-1.18.0.tar.xz",
+    "analyzed_source_hash": "243a0736b978a33dee29f9cca7521733b78a65b5418206fef7bd1c3d4cf10b64",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["1.18.0-1", "1.17.8-1"]
+  },
+  "catch2": {
+    "name_with_version": "Catch2-3.4.0",
+    "analyzed_version": "Catch2-3.4.0",
+    "analyzed_source_url": "https://github.com/catchorg/Catch2/archive/v3.4.0.tar.gz",
+    "analyzed_source_filename": "Catch2-3.4.0.tar.gz",
+    "analyzed_source_hash": "122928b814b75717316c71af69bd2b43387643ba076a6ec16e7882bfb2dfacbb",
+    "PkgProvides": ["catch2", "catch2-with-main"],
+    "available_versions": [
+      "3.4.0-1",
+      "3.3.2-1",
+      "3.2.0-1",
+      "3.1.0-1",
+      "2.13.8-1",
+      "2.13.7-1",
+      "2.13.3-2",
+      "2.13.3-1",
+      "2.11.3-1",
+      "2.11.1-1",
+      "2.9.0-1",
+      "2.8.0-1",
+      "2.7.2-1",
+      "2.5.0-1",
+      "2.4.1-1"
+    ]
+  },
+  "catch": {
+    "name_with_version": "Catch2-2.2.2",
+    "analyzed_version": "Catch2-2.2.2",
+    "analyzed_source_url": "https://github.com/catchorg/Catch2/archive/v2.2.2.tar.gz",
+    "analyzed_source_filename": "Catch2-2.2.2.tar.gz",
+    "analyzed_source_hash": "e93aacf012579093fe6b4e686ff0488975cabee1e6b4e4f27a0acd898e8f09fd",
+    "PkgProvides": [],
+    "available_versions": ["2.2.2-1", "2.2.1-2", "2.2.1-1"]
+  },
+  "catchorg-clara": {
+    "name_with_version": "Clara-1.1.5",
+    "analyzed_version": "Clara-1.1.5",
+    "analyzed_source_url": "https://github.com/catchorg/Clara/archive/v1.1.5.tar.gz",
+    "analyzed_source_filename": "Clara-1.1.5.tar.gz",
+    "analyzed_source_hash": "767dc1718e53678cbea00977adcd0a8a195802a505aec3c537664cf25a173142",
+    "PkgProvides": [],
+    "available_versions": ["1.1.5-1"]
+  },
+  "centurion": {
+    "name_with_version": "centurion-7.3.0",
+    "analyzed_version": "7.3.0",
+    "analyzed_source_url": "https://github.com/albin-johansson/centurion/archive/refs/tags/v7.3.0.zip",
+    "analyzed_source_filename": "centurion-7.3.0.zip",
+    "analyzed_source_hash": "b607a27d17c25d412ef1a6e1db32c527b0cfef1712f0128361abb18624c7d03e",
+    "PkgProvides": ["centurion"],
+    "available_versions": ["7.3.0-1", "7.2.0-1"]
+  },
+  "cereal": {
+    "name_with_version": "cereal-1.3.2",
+    "analyzed_version": "1.3.2",
+    "analyzed_source_url": "https://github.com/USCiLab/cereal/archive/v1.3.2.tar.gz",
+    "analyzed_source_filename": "cereal-1.3.2.tar.gz",
+    "analyzed_source_hash": "16a7ad9b31ba5880dac55d62b5d6f243c3ebc8d46a3514149e56b5e7ea81f85f",
+    "PkgProvides": ["cereal"],
+    "available_versions": ["1.3.2-1", "1.3.0-1", "1.2.2-1"]
+  },
+  "cexception": {
+    "name_with_version": "CException-1.3.3",
+    "analyzed_version": "CException-1.3.3",
+    "analyzed_source_url": "https://github.com/ThrowTheSwitch/CException/archive/refs/tags/v1.3.3.tar.gz",
+    "analyzed_source_filename": "CException-1.3.3.tar.gz",
+    "analyzed_source_hash": "4c8330197e42f2ca4cbf45660e10b520ce5273ca15e8fc3a90af4cecc3b02b5c",
+    "PkgProvides": ["cexception"],
+    "available_versions": ["1.3.3-1"]
+  },
+  "check": {
+    "name_with_version": "check-0.15.2",
+    "analyzed_version": "0.15.2",
+    "analyzed_source_url": "https://github.com/libcheck/check/archive/0.15.2.tar.gz",
+    "analyzed_source_filename": "check-0.15.2.tar.gz",
+    "analyzed_source_hash": "998d355294bb94072f40584272cf4424571c396c631620ce463f6ea97aa67d2e",
+    "PkgProvides": ["check"],
+    "available_versions": [
+      "0.15.2-4",
+      "0.15.2-3",
+      "0.15.2-2",
+      "0.15.2-1",
+      "0.14.0-1"
+    ]
+  },
+  "chipmunk": {
+    "name_with_version": "Chipmunk2D-Chipmunk-7.0.3",
+    "analyzed_version": "Chipmunk2D-Chipmunk-7.0.3",
+    "analyzed_source_url": "https://github.com/slembcke/Chipmunk2D/archive/Chipmunk-7.0.3.tar.gz",
+    "analyzed_source_filename": "Chipmunk2D-Chipmunk-7.0.3.tar.gz",
+    "analyzed_source_hash": "1e6f093812d6130e45bdf4cb80280cb3c93d1e1833d8cf989d554d7963b7899a",
+    "PkgProvides": ["chipmunk"],
+    "available_versions": ["7.0.3-1", "6.2.2-2", "6.2.2-1"]
+  },
+  "cjson": {
+    "name_with_version": "cJSON-1.7.16",
+    "analyzed_version": "cJSON-1.7.16",
+    "analyzed_source_url": "https://github.com/DaveGamble/cJSON/archive/refs/tags/v1.7.16.tar.gz",
+    "analyzed_source_filename": "v1.7.16.tar.gz",
+    "analyzed_source_hash": "451131a92c55efc5457276807fc0c4c2c2707c9ee96ef90c47d68852d5384c6c",
+    "PkgProvides": ["libcjson", "libcjson_utils"],
+    "available_versions": [
+      "1.7.16-1",
+      "1.7.15-6",
+      "1.7.15-5",
+      "1.7.15-4",
+      "1.7.15-3",
+      "1.7.15-2",
+      "1.7.15-1",
+      "1.7.14-1"
+    ]
+  },
+  "cli11": {
+    "name_with_version": "CLI11-2.3.2",
+    "analyzed_version": "CLI11-2.3.2",
+    "analyzed_source_url": "https://github.com/CLIUtils/CLI11/archive/refs/tags/v2.3.2.tar.gz",
+    "analyzed_source_filename": "CLI11-2.3.2.tar.gz",
+    "analyzed_source_hash": "aac0ab42108131ac5d3344a9db0fdf25c4db652296641955720a4fbe52334e22",
+    "PkgProvides": ["cli11"],
+    "available_versions": ["2.3.2-1", "2.2.0-1", "2.1.2-1", "1.9.1-1"]
+  },
+  "cmark-gfm": {
+    "name_with_version": "cmark-gfm-0.29.0.gfm.13",
+    "analyzed_version": "0.29.0.gfm.13",
+    "analyzed_source_url": "https://github.com/github/cmark-gfm/archive/refs/tags/0.29.0.gfm.13.tar.gz",
+    "analyzed_source_filename": "cmark-gfm-0.29.0.gfm.13.tar.gz",
+    "analyzed_source_hash": "5abc61798ebd9de5660bc076443c07abad2b8d15dbc11094a3a79644b8ad243a",
+    "PkgProvides": ["libcmark-gfm"],
+    "available_versions": [
+      "0.29.0.gfm.13-1",
+      "0.29.0.gfm.10-1",
+      "0.29.0.gfm.6-1"
+    ]
+  },
+  "cmock": {
+    "name_with_version": "CMock-2.5.3",
+    "analyzed_version": "CMock-2.5.3",
+    "analyzed_source_url": "https://github.com/ThrowTheSwitch/CMock/archive/refs/tags/v2.5.3.tar.gz",
+    "analyzed_source_filename": "CMock-2.5.3.tar.gz",
+    "analyzed_source_hash": "d30724405b527f2b1d2894b27a1600af3ccb4aad12e63e48ba4f0ea8ae88fe9c",
+    "PkgProvides": ["cmock"],
+    "available_versions": ["2.5.3-1"]
+  },
+  "cmocka": {
+    "name_with_version": "cmocka-1.1.7",
+    "analyzed_version": "1.1.7",
+    "analyzed_source_url": "https://cmocka.org/files/1.1/cmocka-1.1.7.tar.xz",
+    "analyzed_source_filename": "cmocka-1.1.7.tar.xz",
+    "analyzed_source_hash": "810570eb0b8d64804331f82b29ff47c790ce9cd6b163e98d47a4807047ecad82",
+    "PkgProvides": ["cmocka"],
+    "available_versions": [
+      "1.1.7-2",
+      "1.1.7-1",
+      "1.1.5-5",
+      "1.1.5-4",
+      "1.1.5-3",
+      "1.1.5-2",
+      "1.1.5-1",
+      "1.1.2-1"
+    ]
+  },
+  "concurrentqueue": {
+    "name_with_version": "concurrentqueue-1.0.3",
+    "analyzed_version": "1.0.3",
+    "analyzed_source_url": "https://github.com/cameron314/concurrentqueue/archive/refs/tags/v1.0.3.tar.gz",
+    "analyzed_source_filename": "concurrentqueue-1.0.3.tar.xz",
+    "analyzed_source_hash": "eb37336bf9ae59aca7b954db3350d9b30d1cab24b96c7676f36040aa76e915e8",
+    "PkgProvides": ["concurrentqueue"],
+    "available_versions": ["1.0.3-1"]
+  },
+  "cpp-httplib": {
+    "name_with_version": "cpp-httplib-0.13.1",
+    "analyzed_version": "0.13.1",
+    "analyzed_source_url": "https://github.com/yhirose/cpp-httplib/archive/v0.13.1.tar.gz",
+    "analyzed_source_filename": "cpp-httplib-0.13.1.tar.gz",
+    "analyzed_source_hash": "9b837d290b61e3f0c4239da0b23bbf14c382922e2bf2a9bac21c1e3feabe1ff9",
+    "PkgProvides": ["cpp-httplib"],
+    "available_versions": ["0.13.1-1", "0.11.2-1", "0.8.9-2", "0.8.9-1"]
+  },
+  "cpputest": {
+    "name_with_version": "cpputest-4.0",
+    "analyzed_version": "4.0",
+    "analyzed_source_url": "https://github.com/cpputest/cpputest/archive/v4.0.tar.gz",
+    "analyzed_source_filename": "cpputest-4.0.tar.gz",
+    "analyzed_source_hash": "0b66d20661f232d2a6af124c4455c8ccc9a4ce72d29f6ad4877eb385faaf5108",
+    "PkgProvides": ["cpputest"],
+    "available_versions": ["4.0-2", "4.0-1"]
+  },
+  "cppzmq": {
+    "name_with_version": "cppzmq-4.10.0",
+    "analyzed_version": "4.10.0",
+    "analyzed_source_url": "https://github.com/zeromq/cppzmq/archive/refs/tags/v4.10.0.tar.gz",
+    "analyzed_source_filename": "cppzmq-4.10.0.tar.gz",
+    "analyzed_source_hash": "c81c81bba8a7644c84932225f018b5088743a22999c6d82a2b5f5cd1e6942b74",
+    "PkgProvides": ["cppzmq"],
+    "available_versions": ["4.10.0-1", "4.9.0-1", "4.8.1-2", "4.8.1-1"]
+  },
+  "cpr": {
+    "name_with_version": "cpr-1.10.4",
+    "analyzed_version": "1.10.4",
+    "analyzed_source_url": "https://github.com/libcpr/cpr/archive/1.10.4.tar.gz",
+    "analyzed_source_filename": "cpr-1.10.4.tar.gz",
+    "analyzed_source_hash": "88462d059cd3df22c4d39ae04483ed50dfd2c808b3effddb65ac3b9aa60b542d",
+    "PkgProvides": ["cpr"],
+    "available_versions": [
+      "1.10.4-1",
+      "1.9.6-2",
+      "1.9.6-1",
+      "1.9.3-1",
+      "1.9.2-2",
+      "1.9.2-1",
+      "1.7.2-1",
+      "1.5.0-1",
+      "1.3.0-1"
+    ]
+  },
+  "croaring": {
+    "name_with_version": "CRoaring-1.3.0",
+    "analyzed_version": "CRoaring-1.3.0",
+    "analyzed_source_url": "https://github.com/RoaringBitmap/CRoaring/archive/refs/tags/v1.3.0.tar.gz",
+    "analyzed_source_filename": "v1.3.0.tar.gz",
+    "analyzed_source_hash": "c4fccf6a8cfa6f15f47d0e6f6b202940c2305e3078eb745d25fe9e2739ae5278",
+    "PkgProvides": ["croaring"],
+    "available_versions": ["1.3.0-1"]
+  },
+  "curl": {
+    "name_with_version": "curl-8.4.0",
+    "analyzed_version": "8.4.0",
+    "analyzed_source_url": "https://github.com/curl/curl/releases/download/curl-8_4_0/curl-8.4.0.tar.xz",
+    "analyzed_source_filename": "curl-8.4.0.tar.xz",
+    "analyzed_source_hash": "16c62a9c4af0f703d28bda6d7bbf37ba47055ad3414d70dec63e2e6336f2a82d",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["8.4.0-1", "8.3.0-1", "8.0.1-1"]
+  },
+  "cxxopts": {
+    "name_with_version": "cxxopts-3.1.1",
+    "analyzed_version": "3.1.1",
+    "analyzed_source_url": "https://github.com/jarro2783/cxxopts/archive/v3.1.1.tar.gz",
+    "analyzed_source_filename": "cxxopts-3.1.1.tar.gz",
+    "analyzed_source_hash": "523175f792eb0ff04f9e653c90746c12655f10cb70f1d5e6d6d9491420298a08",
+    "PkgProvides": ["cxxopts"],
+    "available_versions": [
+      "3.1.1-1",
+      "3.0.0-1",
+      "2.2.1-1",
+      "2.2.0-2",
+      "2.2.0-1"
+    ]
+  },
+  "directxmath": {
+    "name_with_version": "DirectXMath-dec2022",
+    "analyzed_version": "DirectXMath-dec2022",
+    "analyzed_source_url": "https://github.com/microsoft/DirectXMath/archive/refs/tags/dec2022.tar.gz",
+    "analyzed_source_filename": "dec2022.tar.gz",
+    "analyzed_source_hash": "70a18f35343ff07084d31afa7a7978b3b59160f0533424365451c72475ff480f",
+    "PkgProvides": ["directxmath"],
+    "available_versions": ["3.1.8-1"]
+  },
+  "dlfcn-win32": {
+    "name_with_version": "dlfcn-win32-1.3.1",
+    "analyzed_version": "1.3.1",
+    "analyzed_source_url": "https://github.com/dlfcn-win32/dlfcn-win32/archive/refs/tags/v1.3.1.tar.gz",
+    "analyzed_source_filename": "dlfcn-win32-1.3.1.tar.gz",
+    "analyzed_source_hash": "f7248a8baeb79d9bcd5f702cc08a777431708758e70d1730b59674c5e795e88a",
+    "PkgProvides": ["dl"],
+    "available_versions": ["1.3.1-1"]
+  },
+  "docopt": {
+    "name_with_version": "docopt.cpp-0.6.3",
+    "analyzed_version": "docopt.cpp-0.6.3",
+    "analyzed_source_url": "https://github.com/docopt/docopt.cpp/archive/v0.6.3.tar.gz",
+    "analyzed_source_filename": "v0.6.3.tar.gz",
+    "analyzed_source_hash": "28af5a0c482c6d508d22b14d588a3b0bd9ff97135f99c2814a5aa3cbff1d6632",
+    "PkgProvides": ["docopt"],
+    "available_versions": ["0.6.3-3", "0.6.3-2", "0.6.3-1"]
+  },
+  "doctest": {
+    "name_with_version": "doctest-2.4.11",
+    "analyzed_version": "2.4.11",
+    "analyzed_source_url": "https://github.com/doctest/doctest/archive/refs/tags/v2.4.11.tar.gz",
+    "analyzed_source_filename": "doctest-2.4.11.tar.gz",
+    "analyzed_source_hash": "632ed2c05a7f53fa961381497bf8069093f0d6628c5f26286161fbd32a560186",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["2.4.11-1", "2.4.9-1", "2.4.8-1"]
+  },
+  "dragonbox": {
+    "name_with_version": "dragonbox-1.1.2",
+    "analyzed_version": "1.1.2",
+    "analyzed_source_url": "https://github.com/jk-jeon/dragonbox/archive/refs/tags/1.1.2.tar.gz",
+    "analyzed_source_filename": "dragonbox-1.1.2.tar.gz",
+    "analyzed_source_hash": "60938a42c1013dd214c976a019fcde893c603379f059881cb86ed0c2637e2f19",
+    "PkgProvides": ["dragonbox"],
+    "available_versions": ["1.1.2-1"]
+  },
+  "eigen": {
+    "name_with_version": "eigen-3.4.0",
+    "analyzed_version": "3.4.0",
+    "analyzed_source_url": "https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2",
+    "analyzed_source_filename": "eigen-3.4.0.tar.bz2",
+    "analyzed_source_hash": "b4c198460eba6f28d34894e3a5710998818515104d6e74e5cc331ce31e46e626",
+    "PkgProvides": ["eigen3"],
+    "available_versions": [
+      "3.4.0-2",
+      "3.4.0-1",
+      "3.3.9-1",
+      "3.3.8-1",
+      "3.3.7-3",
+      "3.3.7-2",
+      "3.3.7-1",
+      "3.3.5-1",
+      "3.3.4-1"
+    ]
+  },
+  "emilk-loguru": {
+    "name_with_version": "loguru-2.1.0",
+    "analyzed_version": "loguru-2.1.0",
+    "analyzed_source_url": "https://github.com/emilk/loguru/archive/v2.1.0.tar.gz",
+    "analyzed_source_filename": "loguru_2.1.0.tar.gz",
+    "analyzed_source_hash": "1a3be62ebec5609af60b1e094109a93b7412198b896bb88f31dcfe4d95b79ce7",
+    "PkgProvides": ["loguru"],
+    "available_versions": [
+      "2.1.0-9",
+      "2.1.0-8",
+      "2.1.0-7",
+      "2.1.0-6",
+      "2.1.0-5",
+      "2.1.0-4",
+      "2.1.0-3",
+      "2.1.0-2",
+      "2.1.0-1"
+    ]
+  },
+  "enet": {
+    "name_with_version": "enet-1.3.17",
+    "analyzed_version": "1.3.17",
+    "analyzed_source_url": "http://enet.bespin.org/download/enet-1.3.17.tar.gz",
+    "analyzed_source_filename": "enet-1.3.17.tar.gz",
+    "analyzed_source_hash": "a38f0f194555d558533b8b15c0c478e946310022d0ec7b34334e19e4574dcedc",
+    "PkgProvides": ["enet"],
+    "available_versions": ["1.3.17-2", "1.3.17-1", "1.3.13-4", "1.3.13-2"]
+  },
+  "entt": {
+    "name_with_version": "entt-3.11.0",
+    "analyzed_version": "3.11.0",
+    "analyzed_source_url": "https://github.com/skypjack/entt/archive/refs/tags/v3.11.0.tar.gz",
+    "analyzed_source_filename": "v3.11.0.tar.gz",
+    "analyzed_source_hash": "7cca2bd4d4aeef6c5bdbe06b9e047e7f2519ebaff901207cc81ac71a2bbe185e",
+    "PkgProvides": ["entt"],
+    "available_versions": ["3.11.0-2", "3.11.0-1"]
+  },
+  "epoxy": {
+    "name_with_version": "libepoxy-1.5.10",
+    "analyzed_version": "libepoxy-1.5.10",
+    "analyzed_source_url": "https://github.com/anholt/libepoxy/archive/refs/tags/1.5.10.tar.gz",
+    "analyzed_source_filename": "libepoxy-1.5.10.tar.gz",
+    "analyzed_source_hash": "a7ced37f4102b745ac86d6a70a9da399cc139ff168ba6b8002b4d8d43c900c15",
+    "PkgProvides": ["epoxy"],
+    "available_versions": ["1.5.10-2", "1.5.10-1", "1.5.9-1"]
+  },
+  "exiv2": {
+    "name_with_version": "exiv2-0.28.0-Source",
+    "analyzed_version": "0.28.0-Source",
+    "analyzed_source_url": "https://github.com/Exiv2/exiv2/releases/download/v0.28.0/exiv2-0.28.0-Source.tar.gz",
+    "analyzed_source_filename": "exiv2-0.28.0-Source.tar.gz",
+    "analyzed_source_hash": "89af3b5ef7277753ef7a7b5374ae017c6b9e304db3b688f1948e73e103491f3d",
+    "PkgProvides": ["exiv2"],
+    "available_versions": ["0.28.0-1"]
+  },
+  "expat": {
+    "name_with_version": "expat-2.5.0",
+    "analyzed_version": "2.5.0",
+    "analyzed_source_url": "https://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.xz",
+    "analyzed_source_filename": "expat-2.5.0.tar.bz2",
+    "analyzed_source_hash": "ef2420f0232c087801abf705e89ae65f6257df6b7931d37846a193ef2e8cdcbe",
+    "PkgProvides": ["expat"],
+    "available_versions": [
+      "2.5.0-3",
+      "2.5.0-2",
+      "2.5.0-1",
+      "2.4.9-1",
+      "2.4.8-2",
+      "2.4.8-1",
+      "2.2.9-4",
+      "2.2.9-3",
+      "2.2.9-2",
+      "2.2.9-1",
+      "2.2.6-1",
+      "2.2.5-5",
+      "2.2.5-4",
+      "2.2.5-3",
+      "2.2.5-1"
+    ]
+  },
+  "facil": {
+    "name_with_version": "facil.io-0.7.6",
+    "analyzed_version": "facil.io-0.7.6",
+    "analyzed_source_url": "https://github.com/boazsegev/facil.io/archive/0.7.6.tar.gz",
+    "analyzed_source_filename": "0.7.6.tar.gz",
+    "analyzed_source_hash": "dc004017093e1ae3838b8c2a281d77d7cc94a84e0f157d93740838fb61e26d47",
+    "PkgProvides": ["facil"],
+    "available_versions": ["0.7.6-3", "0.7.6-2", "0.7.6-1", "0.7.5-1"]
+  },
+  "fdk-aac": {
+    "name_with_version": "fdk-aac-2.0.2",
+    "analyzed_version": "2.0.2",
+    "analyzed_source_url": "https://sourceforge.net/projects/opencore-amr/files/fdk-aac/fdk-aac-2.0.2.tar.gz/download",
+    "analyzed_source_filename": "fdk-aac-2.0.2.tar.gz",
+    "analyzed_source_hash": "c9e8630cf9d433f3cead74906a1520d2223f89bcd3fa9254861017440b8eb22f",
+    "PkgProvides": ["fdk-aac"],
+    "available_versions": ["2.0.2-0"]
+  },
+  "ff-nvcodec-headers": {
+    "name_with_version": "nv-codec-headers-11.1.5.1",
+    "analyzed_version": "nv-codec-headers-11.1.5.1",
+    "analyzed_source_url": "https://github.com/FFmpeg/nv-codec-headers/releases/download/n11.1.5.1/nv-codec-headers-11.1.5.1.tar.gz",
+    "analyzed_source_filename": "nv-codec-headers-11.1.5.1.tar.gz",
+    "analyzed_source_hash": "a28cdde3ac0e9e02c2dde7a1b4de5333b4ac6148a8332ca712da243a3361a0d9",
+    "PkgProvides": ["ffnvcodec"],
+    "available_versions": ["11.1.5.1-0"]
+  },
+  "flac": {
+    "name_with_version": "flac-1.4.3",
+    "analyzed_version": "1.4.3",
+    "analyzed_source_url": "https://github.com/xiph/flac/releases/download/1.4.3/flac-1.4.3.tar.xz",
+    "analyzed_source_filename": "flac-1.4.3.tar.xz",
+    "analyzed_source_hash": "6c58e69cd22348f441b861092b825e591d0b822e106de6eb0ee4d05d27205b70",
+    "PkgProvides": ["flac"],
+    "available_versions": [
+      "1.4.3-1",
+      "1.4.2-2",
+      "1.4.2-1",
+      "1.4.1-1",
+      "1.4.0-2",
+      "1.4.0-1",
+      "1.3.4-4",
+      "1.3.4-3",
+      "1.3.4-2",
+      "1.3.4-1",
+      "1.3.3-2",
+      "1.3.3-1"
+    ]
+  },
+  "flatbuffers": {
+    "name_with_version": "flatbuffers-23.3.3",
+    "analyzed_version": "23.3.3",
+    "analyzed_source_url": "https://github.com/google/flatbuffers/archive/v23.3.3.tar.gz",
+    "analyzed_source_filename": "flatbuffers-23.3.3.tar.gz",
+    "analyzed_source_hash": "8aff985da30aaab37edf8e5b02fda33ed4cbdd962699a8e2af98fdef306f4e4d",
+    "PkgProvides": ["flatbuffers", "program_names"],
+    "available_versions": [
+      "23.3.3-1",
+      "23.1.21-1",
+      "22.11.23-1",
+      "2.0.8-1",
+      "2.0.6-2",
+      "2.0.6-1",
+      "1.11.0-1"
+    ]
+  },
+  "fluidsynth": {
+    "name_with_version": "fluidsynth-2.3.3",
+    "analyzed_version": "2.3.3",
+    "analyzed_source_url": "https://github.com/FluidSynth/fluidsynth/archive/v2.3.3.tar.gz",
+    "analyzed_source_filename": "fluidsynth-2.3.3.tar.gz",
+    "analyzed_source_hash": "321f7d3f72206b2522f30a1cb8ad1936fd4533ffc4d29dd335b1953c9fb371e6",
+    "PkgProvides": ["fluidsynth"],
+    "available_versions": [
+      "2.3.3-2",
+      "2.3.3-1",
+      "2.3.2-1",
+      "2.3.0-1",
+      "2.2.8-1",
+      "2.2.6-1",
+      "2.2.4-3",
+      "2.2.4-2",
+      "2.2.4-1",
+      "2.2.3-2",
+      "2.2.3-1",
+      "2.2.0-1",
+      "2.1.8-1",
+      "2.1.7-1"
+    ]
+  },
+  "fmt": {
+    "name_with_version": "fmt-10.1.1",
+    "analyzed_version": "10.1.1",
+    "analyzed_source_url": "https://github.com/fmtlib/fmt/archive/10.1.1.tar.gz",
+    "analyzed_source_filename": "fmt-10.1.1.tar.gz",
+    "analyzed_source_hash": "78b8c0a72b1c35e4443a7e308df52498252d1cefc2b08c9a97bc9ee6cfe61f8b",
+    "PkgProvides": ["fmt"],
+    "available_versions": [
+      "10.1.1-1",
+      "9.1.0-2",
+      "9.1.0-1",
+      "9.0.0-1",
+      "8.1.1-2",
+      "8.1.1-1",
+      "8.0.1-1",
+      "7.1.3-1",
+      "7.0.1-1",
+      "6.2.0-2",
+      "6.2.0-1",
+      "6.0.0-1",
+      "5.3.0-1",
+      "5.2.1-1",
+      "5.2.0-1",
+      "4.1.0-1"
+    ]
+  },
+  "fontconfig": {
+    "name_with_version": "fontconfig-2.14.2",
+    "analyzed_version": "2.14.2",
+    "analyzed_source_url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.14.2.tar.xz",
+    "analyzed_source_filename": "fontconfig-2.14.2.tar.xz",
+    "analyzed_source_hash": "dba695b57bce15023d2ceedef82062c2b925e51f5d4cc4aef736cf13f60a468b",
+    "PkgProvides": ["fontconfig"],
+    "available_versions": ["2.14.2-1"]
+  },
+  "freeglut": {
+    "name_with_version": "freeglut-3.4.0",
+    "analyzed_version": "3.4.0",
+    "analyzed_source_url": "http://downloads.sourceforge.net/freeglut/3.4.0/freeglut-3.4.0.tar.gz",
+    "analyzed_source_filename": "freeglut-3.4.0.tar.gz",
+    "analyzed_source_hash": "3c0bcb915d9b180a97edaebd011b7a1de54583a838644dcd42bb0ea0c6f3eaec",
+    "PkgProvides": ["freeglut", "glut"],
+    "available_versions": ["3.4.0-2", "3.4.0-1"]
+  },
+  "freetype2": {
+    "name_with_version": "freetype-2.13.2",
+    "analyzed_version": "freetype-2.13.2",
+    "analyzed_source_url": "https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz",
+    "analyzed_source_filename": "freetype-2.13.2.tar.xz",
+    "analyzed_source_hash": "12991c4e55c506dd7f9b765933e62fd2be2e06d421505d7950a132e4f1bb484d",
+    "PkgProvides": ["freetype", "freetype2"],
+    "available_versions": [
+      "2.13.2-1",
+      "2.13.1-1",
+      "2.13.0-1",
+      "2.12.1-2",
+      "2.12.1-1",
+      "2.12.0-1",
+      "2.11.1-1",
+      "2.11.0-1",
+      "2.9.1-2",
+      "2.9.1-1"
+    ]
+  },
+  "fribidi": {
+    "name_with_version": "fribidi-1.0.13",
+    "analyzed_version": "1.0.13",
+    "analyzed_source_url": "https://github.com/fribidi/fribidi/releases/download/v1.0.13/fribidi-1.0.13.tar.xz",
+    "analyzed_source_filename": "fribidi-1.0.13.tar.xz",
+    "analyzed_source_hash": "7fa16c80c81bd622f7b198d31356da139cc318a63fc7761217af4130903f54a2",
+    "PkgProvides": ["fribidi"],
+    "available_versions": ["1.0.13-1"]
+  },
+  "frozen": {
+    "name_with_version": "frozen-1.0.1",
+    "analyzed_version": "1.0.1",
+    "analyzed_source_url": "https://github.com/serge-sans-paille/frozen/archive/refs/tags/1.0.1.tar.gz",
+    "analyzed_source_filename": "frozen-1.0.1.tar.gz",
+    "analyzed_source_hash": "29ab5de4eb6bebfb803cd4bd33e324777488fb035116dab1aea27f9118809d0d",
+    "PkgProvides": ["frozen"],
+    "available_versions": ["1.0.1-2", "1.0.1-1"]
+  },
+  "ftxui": {
+    "name_with_version": "FTXUI-4.0.0",
+    "analyzed_version": "FTXUI-4.0.0",
+    "analyzed_source_url": "https://github.com/ArthurSonzogni/FTXUI/archive/refs/tags/v4.0.0.tar.gz",
+    "analyzed_source_filename": "FTXUI-4.0.0.tar.gz",
+    "analyzed_source_hash": "7276e4117429ebf8e34ea371c3ea4e66eb99e0f234cb4c5c85fca17174a53dfa",
+    "PkgProvides": ["ftxui-component", "ftxui-dom", "ftxui-screen"],
+    "available_versions": [
+      "4.0.0-1",
+      "3.0.0-2",
+      "3.0.0-1",
+      "2.0.0-3",
+      "2.0.0-2",
+      "2.0.0-1"
+    ]
+  },
+  "fuse": {
+    "name_with_version": "libfuse-fuse-2.9.9",
+    "analyzed_version": "libfuse-fuse-2.9.9",
+    "analyzed_source_url": "https://github.com/libfuse/libfuse/archive/refs/tags/fuse-2.9.9.tar.gz",
+    "analyzed_source_filename": "fuse-2.9.9.tar.gz",
+    "analyzed_source_hash": "e57a24721177c3b3dd71cb9239ca46b4dee283db9388d48f7ccd256184982194",
+    "PkgProvides": ["fuse"],
+    "available_versions": ["2.9.9-3", "2.9.9-2", "2.9.9-1"]
+  },
+  "gdbm": {
+    "name_with_version": "gdbm-1.23",
+    "analyzed_version": "1.23",
+    "analyzed_source_url": "ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.23.tar.gz",
+    "analyzed_source_filename": "gdbm-1.23.tar.gz",
+    "analyzed_source_hash": "74b1081d21fff13ae4bd7c16e5d6e504a4c26f7cde1dca0d963a484174bbcacd",
+    "PkgProvides": ["gdbm"],
+    "available_versions": ["1.23-2", "1.23-1", "1.14.1-2", "1.14.1-1"]
+  },
+  "gdk-pixbuf": {
+    "name_with_version": "gdk-pixbuf-2.42.10",
+    "analyzed_version": "2.42.10",
+    "analyzed_source_url": "https://download.gnome.org/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.10.tar.xz",
+    "analyzed_source_filename": "gdk-pixbuf-2.42.10.tar.xz",
+    "analyzed_source_hash": "ee9b6c75d13ba096907a2e3c6b27b61bcd17f5c7ebeab5a5b439d2f2e39fe44b",
+    "PkgProvides": ["gdk-pixbuf-2.0"],
+    "available_versions": ["2.42.10-1", "2.42.9-1"]
+  },
+  "gee": {
+    "name_with_version": "libgee-0.20.6",
+    "analyzed_version": "libgee-0.20.6",
+    "analyzed_source_url": "https://download.gnome.org/sources/libgee/0.20/libgee-0.20.6.tar.xz",
+    "analyzed_source_filename": "libgee-0.20.6.tar.xz",
+    "analyzed_source_hash": "1bf834f5e10d60cc6124d74ed3c1dd38da646787fbf7872220b8b4068e476d4d",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["0.20.6-1"]
+  },
+  "giflib": {
+    "name_with_version": "giflib-5.2.1",
+    "analyzed_version": "5.2.1",
+    "analyzed_source_url": "https://downloads.sourceforge.net/project/giflib/giflib-5.2.1.tar.gz",
+    "analyzed_source_filename": "giflib-5.2.1.tar.gz",
+    "analyzed_source_hash": "31da5562f44c5f15d63340a09a4fd62b48c45620cd302f77a6d9acf0077879bd",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["5.2.1-3", "5.2.1-2", "5.2.1-1"]
+  },
+  "glbinding": {
+    "name_with_version": "glbinding-3.3.0",
+    "analyzed_version": "3.3.0",
+    "analyzed_source_url": "https://github.com/cginternals/glbinding/archive/refs/tags/v3.3.0.zip",
+    "analyzed_source_filename": "glbinding-3.3.0.zip",
+    "analyzed_source_hash": "e035385dab8e9e687229e6b95b36c00bc0407669691913de5b63ca734e82b617",
+    "PkgProvides": ["glbinding", "glbinding-aux"],
+    "available_versions": ["3.3.0-1"]
+  },
+  "glew": {
+    "name_with_version": "glew-2.2.0",
+    "analyzed_version": "2.2.0",
+    "analyzed_source_url": "http://downloads.sourceforge.net/glew/glew-2.2.0.tgz",
+    "analyzed_source_filename": "glew-2.2.0.tgz",
+    "analyzed_source_hash": "d4fc82893cfb00109578d0a1a2337fb8ca335b3ceccf97b97e5cc7f08e4353e1",
+    "PkgProvides": ["glew"],
+    "available_versions": [
+      "2.2.0-2",
+      "2.2.0-1",
+      "2.1.0-4",
+      "2.1.0-3",
+      "2.1.0-2",
+      "2.1.0-1"
+    ]
+  },
+  "glfw": {
+    "name_with_version": "glfw-3.3.8",
+    "analyzed_version": "3.3.8",
+    "analyzed_source_url": "https://github.com/glfw/glfw/archive/refs/tags/3.3.8.tar.gz",
+    "analyzed_source_filename": "glfw-3.3.8.tar.gz",
+    "analyzed_source_hash": "f30f42e05f11e5fc62483e513b0488d5bceeab7d9c5da0ffe2252ad81816c713",
+    "PkgProvides": ["glfw3"],
+    "available_versions": ["3.3.8-3", "3.3.8-2", "3.3.8-1", "3.3.7-1"]
+  },
+  "glib-networking": {
+    "name_with_version": "glib-networking-2.78.0",
+    "analyzed_version": "2.78.0",
+    "analyzed_source_url": "https://download.gnome.org/sources/glib-networking/2.78/glib-networking-2.78.0.tar.xz",
+    "analyzed_source_filename": "glib-networking-2.78.0.tar.xz",
+    "analyzed_source_hash": "52fe4ce93f7dc51334b102894599858d23c8a65ac4a1110b30920565d68d3aba",
+    "PkgProvides": [],
+    "available_versions": ["2.78.0-1"]
+  },
+  "glib": {
+    "name_with_version": "glib-2.78.1",
+    "analyzed_version": "2.78.1",
+    "analyzed_source_url": "https://download.gnome.org/sources/glib/2.78/glib-2.78.1.tar.xz",
+    "analyzed_source_filename": "glib-2.78.1.tar.xz",
+    "analyzed_source_hash": "915bc3d0f8507d650ead3832e2f8fb670fce59aac4d7754a7dab6f1e6fed78b2",
+    "PkgProvides": ["dependency_names", "program_names"],
+    "available_versions": [
+      "2.78.1-1",
+      "2.78.0-1",
+      "2.76.5-1",
+      "2.76.4-1",
+      "2.76.3-1",
+      "2.76.1-1",
+      "2.74.4-1",
+      "2.74.1-1",
+      "2.74.0-2",
+      "2.74.0-1",
+      "2.72.2-1",
+      "2.72.1-1",
+      "2.70.4-1",
+      "2.70.2-1",
+      "2.70.1-1",
+      "2.70.0-1",
+      "2.68.1-1",
+      "2.66.7-1"
+    ]
+  },
+  "glm": {
+    "name_with_version": "glm-0.9.9.8",
+    "analyzed_version": "0.9.9.8",
+    "analyzed_source_url": "https://github.com/g-truc/glm/archive/0.9.9.8.tar.gz",
+    "analyzed_source_filename": "0.9.9.8.tar.gz",
+    "analyzed_source_hash": "7d508ab72cb5d43227a3711420f06ff99b0a0cb63ee2f93631b162bfe1fe9592",
+    "PkgProvides": ["glm"],
+    "available_versions": ["0.9.9.8-2", "0.9.9.8-1"]
+  },
+  "google-benchmark": {
+    "name_with_version": "benchmark-1.7.1",
+    "analyzed_version": "benchmark-1.7.1",
+    "analyzed_source_url": "https://github.com/google/benchmark/archive/refs/tags/v1.7.1.tar.gz",
+    "analyzed_source_filename": "benchmark-1.7.1.tar.gz",
+    "analyzed_source_hash": "6430e4092653380d9dc4ccb45a1e2dc9259d581f4866dc0759713126056bc1d7",
+    "PkgProvides": ["benchmark"],
+    "available_versions": [
+      "1.7.1-2",
+      "1.7.1-1",
+      "1.7.0-1",
+      "1.6.0-1",
+      "1.5.2-1",
+      "1.4.1-1"
+    ]
+  },
+  "google-brotli": {
+    "name_with_version": "brotli-1.1.0",
+    "analyzed_version": "brotli-1.1.0",
+    "analyzed_source_url": "https://github.com/google/brotli/archive/v1.1.0.tar.gz",
+    "analyzed_source_filename": "v1.1.0.tar.gz",
+    "analyzed_source_hash": "e720a6ca29428b803f4ad165371771f5398faba397edf6778837a18599ea13ff",
+    "PkgProvides": ["libbrotlicommon", "libbrotlidec", "libbrotlienc"],
+    "available_versions": ["1.1.0-1", "1.0.9-2", "1.0.9-1", "1.0.7-1"]
+  },
+  "google-snappy": {
+    "name_with_version": "snappy-1.1.9",
+    "analyzed_version": "snappy-1.1.9",
+    "analyzed_source_url": "https://github.com/google/snappy/archive/1.1.9.tar.gz",
+    "analyzed_source_filename": "1.1.9.tar.gz",
+    "analyzed_source_hash": "75c1fbb3d618dd3a0483bff0e26d0a92b495bbe5059c8b4f1c962b478b6e06e7",
+    "PkgProvides": ["snappy"],
+    "available_versions": ["1.1.9-1", "1.1.7-2", "1.1.7-1"]
+  },
+  "google-woff2": {
+    "name_with_version": "woff2-1.0.2",
+    "analyzed_version": "woff2-1.0.2",
+    "analyzed_source_url": "https://github.com/google/woff2/archive/v1.0.2.tar.gz",
+    "analyzed_source_filename": "v1.0.2.tar.gz",
+    "analyzed_source_hash": "add272bb09e6384a4833ffca4896350fdb16e0ca22df68c0384773c67a175594",
+    "PkgProvides": [
+      "libwoff2common",
+      "libwoff2dec",
+      "libwoff2enc",
+      "program_names"
+    ],
+    "available_versions": ["1.0.2-2", "1.0.2-1"]
+  },
+  "graphite2": {
+    "name_with_version": "graphite2-1.3.14",
+    "analyzed_version": "1.3.14",
+    "analyzed_source_url": "https://github.com/silnrsi/graphite/releases/download/1.3.14/graphite2-1.3.14.tgz",
+    "analyzed_source_filename": "graphite2-1.3.14.tgz",
+    "analyzed_source_hash": "f99d1c13aa5fa296898a181dff9b82fb25f6cc0933dbaa7a475d8109bd54209d",
+    "PkgProvides": ["graphite2"],
+    "available_versions": ["1.3.14-1"]
+  },
+  "gtest": {
+    "name_with_version": "googletest-1.14.0",
+    "analyzed_version": "googletest-1.14.0",
+    "analyzed_source_url": "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz",
+    "analyzed_source_filename": "gtest-1.14.0.tar.gz",
+    "analyzed_source_hash": "8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7",
+    "PkgProvides": ["gmock", "gmock_main", "gtest", "gtest_main"],
+    "available_versions": [
+      "1.14.0-1",
+      "1.13.0-1",
+      "1.12.1-1",
+      "1.11.0-2",
+      "1.11.0-1",
+      "1.10.0-1",
+      "1.8.1-1",
+      "1.8.0-5",
+      "1.8.0-4",
+      "1.8.0-3",
+      "1.8.0-2",
+      "1.8.0-1",
+      "1.7.0-5",
+      "1.7.0-4",
+      "1.7.0-2"
+    ]
+  },
+  "gumbo-parser": {
+    "name_with_version": "gumbo-parser",
+    "analyzed_version": "gumbo-parser",
+    "analyzed_source_url": "https://codeberg.org/grisha/gumbo-parser/archive/0.12.1.tar.gz",
+    "analyzed_source_filename": "gumbo-parser-0.12.1.tar.gz",
+    "analyzed_source_hash": "c0bb5354e46539680724d638dbea07296b797229a7e965b13305c930ddc10d82",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["0.12.1-2", "0.12.1-1", "0.10.1-1"]
+  },
+  "harfbuzz": {
+    "name_with_version": "harfbuzz-8.2.2",
+    "analyzed_version": "8.2.2",
+    "analyzed_source_url": "https://github.com/harfbuzz/harfbuzz/releases/download/8.2.2/harfbuzz-8.2.2.tar.xz",
+    "analyzed_source_filename": "harfbuzz-8.2.2.tar.xz",
+    "analyzed_source_hash": "e433ad85fbdf57f680be29479b3f964577379aaf319f557eb76569f0ecbc90f3",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": [
+      "8.2.2-1",
+      "8.2.1-1",
+      "8.2.0-1",
+      "8.1.1-1",
+      "5.2.0-1",
+      "4.4.1-1"
+    ]
+  },
+  "hedley": {
+    "name_with_version": "hedley-15",
+    "analyzed_version": "15",
+    "analyzed_source_url": "https://codeload.github.com/nemequ/hedley/tar.gz/v15",
+    "analyzed_source_filename": "hedley-15.tar.gz",
+    "analyzed_source_hash": "e91c71b58f59d08c7b8289be8f687866863d934dfaa528e4be30b178139ae863",
+    "PkgProvides": ["hedley"],
+    "available_versions": ["15-1", "11-1"]
+  },
+  "hinnant-date": {
+    "name_with_version": "date-3.0.1",
+    "analyzed_version": "date-3.0.1",
+    "analyzed_source_url": "https://github.com/HowardHinnant/date/archive/v3.0.1.tar.gz",
+    "analyzed_source_filename": "date-3.0.1.tar.gz",
+    "analyzed_source_hash": "7a390f200f0ccd207e8cff6757e04817c1a0aec3e327b006b7eb451c57ee3538",
+    "PkgProvides": ["date", "tz"],
+    "available_versions": ["3.0.1-2", "3.0.1-1", "3.0.0-1", "2.4.1-1"]
+  },
+  "htslib": {
+    "name_with_version": "htslib-1.17",
+    "analyzed_version": "1.17",
+    "analyzed_source_url": "https://github.com/samtools/htslib/releases/download/1.17/htslib-1.17.tar.bz2",
+    "analyzed_source_filename": "htslib-1.17.tar.bz2",
+    "analyzed_source_hash": "763779288c40f07646ec7ad98b96c378c739171d162ad98398868783b721839f",
+    "PkgProvides": ["htslib"],
+    "available_versions": [
+      "1.17-2",
+      "1.17-1",
+      "1.16-3",
+      "1.16-2",
+      "1.16-1",
+      "1.15-1",
+      "1.14-1",
+      "1.11-1",
+      "1.10.2-1",
+      "1.9-1"
+    ]
+  },
+  "icu": {
+    "name_with_version": "icu",
+    "analyzed_version": "icu",
+    "analyzed_source_url": "https://github.com/unicode-org/icu/releases/download/release-73-2/icu4c-73_2-src.tgz",
+    "analyzed_source_filename": "icu4c-73_2-src.tgz",
+    "analyzed_source_hash": "818a80712ed3caacd9b652305e01afc7fa167e6f2e94996da44b90c2ab604ce1",
+    "PkgProvides": ["icu-i18n", "icu-io", "icu-uc", "program_names"],
+    "available_versions": [
+      "73.2-2",
+      "73.2-1",
+      "73.1-1",
+      "72.1-5",
+      "72.1-4",
+      "72.1-3",
+      "72.1-2",
+      "72.1-1",
+      "71.1-1",
+      "70.1-2",
+      "70.1-1",
+      "67.1-4",
+      "67.1-3",
+      "67.1-2",
+      "67.1-1",
+      "55.2-1"
+    ]
+  },
+  "iir": {
+    "name_with_version": "iir1-1.9.3",
+    "analyzed_version": "iir1-1.9.3",
+    "analyzed_source_url": "https://github.com/berndporr/iir1/archive/refs/tags/1.9.3.tar.gz",
+    "analyzed_source_filename": "1.9.3.tar.gz",
+    "analyzed_source_hash": "de241ef7a3e5ae8e1309846fe820a2e18978aa3df3922bd83c2d75a0fcf4e78f",
+    "PkgProvides": ["iir"],
+    "available_versions": ["1.9.3-1", "1.9.2-2", "1.9.2-1"]
+  },
+  "imgui-sfml": {
+    "name_with_version": "imgui-sfml-2.5",
+    "analyzed_version": "2.5",
+    "analyzed_source_url": "https://github.com/eliasdaler/imgui-sfml/archive/refs/tags/v2.5.tar.gz",
+    "analyzed_source_filename": "v2.5.tar.gz",
+    "analyzed_source_hash": "3775c9303f656297f2392e91ffae2021e874ee319b4139c60076d6f757ede109",
+    "PkgProvides": ["imgui-sfml"],
+    "available_versions": [
+      "2.5-4",
+      "2.5-3",
+      "2.5-2",
+      "2.5-1",
+      "2.3-2",
+      "2.3-1",
+      "2.1-1"
+    ]
+  },
+  "imgui": {
+    "name_with_version": "imgui-1.89.9",
+    "analyzed_version": "1.89.9",
+    "analyzed_source_url": "https://github.com/ocornut/imgui/archive/refs/tags/v1.89.9.tar.gz",
+    "analyzed_source_filename": "imgui-1.89.9.tar.gz",
+    "analyzed_source_hash": "1acc27a778b71d859878121a3f7b287cd81c29d720893d2b2bf74455bf9d52d6",
+    "PkgProvides": ["imgui"],
+    "available_versions": [
+      "1.89.9-1",
+      "1.89.3-1",
+      "1.89.2-1",
+      "1.88-2",
+      "1.88-1",
+      "1.87-5",
+      "1.87-4",
+      "1.87-3",
+      "1.87-2",
+      "1.87-1",
+      "1.86-1",
+      "1.85-1",
+      "1.81-1",
+      "1.80-1",
+      "1.79-2",
+      "1.79-1",
+      "1.78-2",
+      "1.78-1",
+      "1.76-2",
+      "1.76-1"
+    ]
+  },
+  "imguizmo": {
+    "name_with_version": "ImGuizmo-1.83",
+    "analyzed_version": "ImGuizmo-1.83",
+    "analyzed_source_url": "https://github.com/CedricGuillemet/ImGuizmo/archive/refs/tags/1.83.tar.gz",
+    "analyzed_source_filename": "ImGuizmo-1.83.tar.gz",
+    "analyzed_source_hash": "e6d05c5ebde802df7f6c342a06bc675bd2aa1c754d2d96755399a182187098a8",
+    "PkgProvides": ["imguizmo"],
+    "available_versions": ["1.83-1"]
+  },
+  "implot": {
+    "name_with_version": "implot-0.16",
+    "analyzed_version": "0.16",
+    "analyzed_source_url": "https://github.com/epezent/implot/archive/refs/tags/v0.16.zip",
+    "analyzed_source_filename": "implot-0.16.zip",
+    "analyzed_source_hash": "24f772c688f6b8a6e19d7efc10e4923a04a915f13d487b08b83553aa62ae1708",
+    "PkgProvides": ["implot"],
+    "available_versions": ["0.16-1"]
+  },
+  "indicators": {
+    "name_with_version": "indicators-2.3",
+    "analyzed_version": "2.3",
+    "analyzed_source_url": "https://github.com/p-ranav/indicators/archive/refs/tags/v2.3.tar.gz",
+    "analyzed_source_filename": "indicators-2.3.tar.gz",
+    "analyzed_source_hash": "70da7a693ff7a6a283850ab6d62acf628eea17d386488af8918576d0760aef7b",
+    "PkgProvides": ["indicators"],
+    "available_versions": ["2.3-1", "2.2-2", "2.2-1"]
+  },
+  "inih": {
+    "name_with_version": "inih-r57",
+    "analyzed_version": "r57",
+    "analyzed_source_url": "https://github.com/benhoyt/inih/archive/r57.tar.gz",
+    "analyzed_source_filename": "inih-r57.tar.gz",
+    "analyzed_source_hash": "f03f98ca35c3adb56b2358573c8d3eda319ccd5287243d691e724b7eafa970b3",
+    "PkgProvides": ["inih", "inireader"],
+    "available_versions": ["r57-1", "r56-1", "r54-1", "r53-1", "r52-1", "r51-1"]
+  },
+  "irepeat": {
+    "name_with_version": "IREPEAT-0.6",
+    "analyzed_version": "IREPEAT-0.6",
+    "analyzed_source_url": "https://github.com/lemuriad/IREPEAT/archive/v0.6.tar.gz",
+    "analyzed_source_filename": "irepeat-0.6.0.tar.gz",
+    "analyzed_source_hash": "ee128300512337ad5b9c5ec8c13138eb901fef61d3bf0aebb836d307bd2bbd14",
+    "PkgProvides": ["irepeat"],
+    "available_versions": ["0.6-1"]
+  },
+  "jansson": {
+    "name_with_version": "jansson-2.14",
+    "analyzed_version": "2.14",
+    "analyzed_source_url": "https://github.com/akheron/jansson/releases/download/v2.14/jansson-2.14.tar.bz2",
+    "analyzed_source_filename": "jansson-2.14.tar.bz2",
+    "analyzed_source_hash": "fba956f27c6ae56ce6dfd52fbf9d20254aad42821f74fa52f83957625294afb9",
+    "PkgProvides": ["jansson"],
+    "available_versions": ["2.14-1", "2.13-1", "2.11-3", "2.11-2", "2.11-1"]
+  },
+  "jbig2dec": {
+    "name_with_version": "jbig2dec-0.20",
+    "analyzed_version": "0.20",
+    "analyzed_source_url": "https://github.com/ArtifexSoftware/jbig2dec/archive/refs/tags/0.20.tar.gz",
+    "analyzed_source_filename": "jbig2dec-0.20.tar.gz",
+    "analyzed_source_hash": "a9705369a6633aba532693450ec802c562397e1b824662de809ede92f67aff21",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["0.20-1"]
+  },
+  "jbigkit": {
+    "name_with_version": "jbigkit-2.1",
+    "analyzed_version": "2.1",
+    "analyzed_source_url": "https://www.cl.cam.ac.uk/~mgk25/jbigkit/download/jbigkit-2.1.tar.gz",
+    "analyzed_source_filename": "jbigkit-2.1.tar.gz",
+    "analyzed_source_hash": "de7106b6bfaf495d6865c7dd7ac6ca1381bd12e0d81405ea81e7f2167263d932",
+    "PkgProvides": ["libjbig", "libjbig85", "program_names"],
+    "available_versions": ["2.1-2", "2.1-1"]
+  },
+  "json-c": {
+    "name_with_version": "json-c-0.17",
+    "analyzed_version": "0.17",
+    "analyzed_source_url": "https://s3.amazonaws.com/json-c_releases/releases/json-c-0.17.tar.gz",
+    "analyzed_source_filename": "json-c-0.17.tar.gz",
+    "analyzed_source_hash": "7550914d58fb63b2c3546f3ccfbe11f1c094147bd31a69dcd23714d7956159e6",
+    "PkgProvides": ["json-c"],
+    "available_versions": [
+      "0.17-2",
+      "0.17-1",
+      "0.16-4",
+      "0.16-3",
+      "0.16-2",
+      "0.16-1",
+      "0.15-2",
+      "0.15-1",
+      "0.13.1-1"
+    ]
+  },
+  "json-glib": {
+    "name_with_version": "json-glib-1.6.6",
+    "analyzed_version": "1.6.6",
+    "analyzed_source_url": "https://download.gnome.org/sources/json-glib/1.6/json-glib-1.6.6.tar.xz",
+    "analyzed_source_filename": "json-glib-1.6.6.tar.xz",
+    "analyzed_source_hash": "96ec98be7a91f6dde33636720e3da2ff6ecbb90e76ccaa49497f31a6855a490e",
+    "PkgProvides": ["json-glib-1.0"],
+    "available_versions": ["1.6.6-2", "1.6.6-1"]
+  },
+  "json": {
+    "name_with_version": "json-3.2.0",
+    "analyzed_version": "3.2.0",
+    "analyzed_source_url": "https://github.com/nlohmann/json/archive/v3.2.0/json-3.2.0.tar.gz",
+    "analyzed_source_filename": "json-3.2.0.tar.gz",
+    "analyzed_source_hash": "2de558ff3b3b32eebfb51cf2ceb835a0fa5170e6b8712b02be9c2c07fcfe52a1",
+    "PkgProvides": [],
+    "available_versions": ["3.2.0-1", "2.1.1-1", "2.0.5-1", "2.0.3-1"]
+  },
+  "jsoncpp": {
+    "name_with_version": "jsoncpp-1.9.5",
+    "analyzed_version": "1.9.5",
+    "analyzed_source_url": "https://github.com/open-source-parsers/jsoncpp/archive/1.9.5.tar.gz",
+    "analyzed_source_filename": "jsoncpp-1.9.5.tar.gz",
+    "analyzed_source_hash": "f409856e5920c18d0c2fb85276e24ee607d2a09b5e7d5f0a371368903c275da2",
+    "PkgProvides": ["jsoncpp"],
+    "available_versions": ["1.9.5-2", "1.9.5-1", "1.8.4-1"]
+  },
+  "lame": {
+    "name_with_version": "lame-3.100",
+    "analyzed_version": "3.100",
+    "analyzed_source_url": "http://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz",
+    "analyzed_source_filename": "lame-3.100.tar.gz",
+    "analyzed_source_hash": "ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e",
+    "PkgProvides": ["mp3lame", "mpglib"],
+    "available_versions": [
+      "3.100-9",
+      "3.100-8",
+      "3.100-7",
+      "3.100-6",
+      "3.100-5",
+      "3.100-4",
+      "3.100-3",
+      "3.100-2",
+      "3.100-1",
+      "3.99.5-1"
+    ]
+  },
+  "lcms2": {
+    "name_with_version": "lcms2-2.15",
+    "analyzed_version": "2.15",
+    "analyzed_source_url": "https://github.com/mm2/Little-CMS/releases/download/lcms2.15/lcms2-2.15.tar.gz",
+    "analyzed_source_filename": "lcms2-2.15.tar.gz",
+    "analyzed_source_hash": "b20cbcbd0f503433be2a4e81462106fa61050a35074dc24a4e356792d971ab39",
+    "PkgProvides": ["lcms2"],
+    "available_versions": ["2.15-1", "2.13.1-1", "2.12-2", "2.12-1"]
+  },
+  "leptonica": {
+    "name_with_version": "leptonica-1.83.1",
+    "analyzed_version": "1.83.1",
+    "analyzed_source_url": "https://github.com/DanBloomberg/leptonica/releases/download/1.83.1/leptonica-1.83.1.tar.gz",
+    "analyzed_source_filename": "leptonica-1.83.1.tar.gz",
+    "analyzed_source_hash": "8f18615e0743af7df7f50985c730dfcf0c93548073d1f56621e4156a8b54d3dd",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["1.83.1-2", "1.83.1-1"]
+  },
+  "libarchive": {
+    "name_with_version": "libarchive-3.7.2",
+    "analyzed_version": "3.7.2",
+    "analyzed_source_url": "https://github.com/libarchive/libarchive/releases/download/v3.7.2/libarchive-3.7.2.tar.xz",
+    "analyzed_source_filename": "libarchive-3.7.2.tar.xz",
+    "analyzed_source_hash": "04357661e6717b6941682cde02ad741ae4819c67a260593dfb2431861b251acb",
+    "PkgProvides": ["libarchive"],
+    "available_versions": [
+      "3.7.2-3",
+      "3.7.2-2",
+      "3.7.2-1",
+      "3.7.1-2",
+      "3.7.1-1",
+      "3.7.0-1",
+      "3.6.2-3",
+      "3.6.2-2",
+      "3.6.2-1"
+    ]
+  },
+  "libccp4c": {
+    "name_with_version": "libccp4-8.0.0",
+    "analyzed_version": "libccp4-8.0.0",
+    "analyzed_source_url": "http://ftp.ccp4.ac.uk/opensource/libccp4-8.0.0.tar.gz",
+    "analyzed_source_filename": "libccp4-8.0.0.tar.gz",
+    "analyzed_source_hash": "cb813ae86612a0866329deab7cee96eac573d81be5b240341d40f9ad5322ff2d",
+    "PkgProvides": ["libccp4c"],
+    "available_versions": ["8.0.0-1", "6.5.1-2", "6.5.1-1"]
+  },
+  "libdicom": {
+    "name_with_version": "libdicom-1.0.5",
+    "analyzed_version": "1.0.5",
+    "analyzed_source_url": "https://github.com/ImagingDataCommons/libdicom/releases/download/v1.0.5/libdicom-1.0.5.tar.xz",
+    "analyzed_source_filename": "libdicom-1.0.5.tar.xz",
+    "analyzed_source_hash": "3b88f267b58009005bc1182d8bd0c4a3218013ce202da722e5e8c9867c6f94f4",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["1.0.5-1", "1.0.2-1", "1.0.1-1"]
+  },
+  "libdrm": {
+    "name_with_version": "libdrm-2.4.115",
+    "analyzed_version": "2.4.115",
+    "analyzed_source_url": "https://dri.freedesktop.org/libdrm/libdrm-2.4.115.tar.xz",
+    "analyzed_source_filename": "libdrm-2.4.115.tar.xz",
+    "analyzed_source_hash": "554cfbfe0542bddb391b4e3e05bfbbfc3e282b955bd56218d21c0616481f65eb",
+    "PkgProvides": [
+      "libdrm",
+      "libdrm_amdgpu",
+      "libdrm_etnaviv",
+      "libdrm_exynos",
+      "libdrm_freedreno",
+      "libdrm_intel",
+      "libdrm_nouveau",
+      "libdrm_omap",
+      "libdrm_radeon",
+      "libdrm_tegra"
+    ],
+    "available_versions": ["2.4.115-1", "2.4.114-1", "2.4.111-1", "2.4.110-1"]
+  },
+  "libebml": {
+    "name_with_version": "libebml-release-1.4.4",
+    "analyzed_version": "release-1.4.4",
+    "analyzed_source_url": "https://github.com/Matroska-Org/libebml/archive/refs/tags/release-1.4.4.tar.gz",
+    "analyzed_source_filename": "release-1.4.4.tar.gz",
+    "analyzed_source_hash": "3b30d89a5699fef4bdf5b4d7de7a1c94d9be47fababf9caca59250282f051283",
+    "PkgProvides": ["libebml"],
+    "available_versions": ["1.4.4-2", "1.4.4-1", "1.4.3-1", "1.4.2-1"]
+  },
+  "libexif": {
+    "name_with_version": "libexif-0.6.24",
+    "analyzed_version": "0.6.24",
+    "analyzed_source_url": "https://github.com/libexif/libexif/releases/download/v0.6.24/libexif-0.6.24.tar.bz2",
+    "analyzed_source_filename": "libexif-0.6.24.tar.gz",
+    "analyzed_source_hash": "d47564c433b733d83b6704c70477e0a4067811d184ec565258ac563d8223f6ae",
+    "PkgProvides": ["libexif"],
+    "available_versions": [
+      "0.6.24-5",
+      "0.6.24-4",
+      "0.6.24-3",
+      "0.6.24-2",
+      "0.6.24-1",
+      "0.6.22-1"
+    ]
+  },
+  "libffi": {
+    "name_with_version": "libffi-3.4.4",
+    "analyzed_version": "3.4.4",
+    "analyzed_source_url": "https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz",
+    "analyzed_source_filename": "libffi-3.4.4.tar.gz",
+    "analyzed_source_hash": "d66c56ad259a82cf2a9dfc408b32bf5da52371500b84745f7fb8b645712df676",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["3.4.4-3", "3.4.4-2", "3.4.4-1"]
+  },
+  "libffmpegthumbnailer": {
+    "name_with_version": "ffmpegthumbnailer-2.2.2",
+    "analyzed_version": "ffmpegthumbnailer-2.2.2",
+    "analyzed_source_url": "https://github.com/dirkvdb/ffmpegthumbnailer/releases/download/2.2.2/ffmpegthumbnailer-2.2.2.tar.bz2",
+    "analyzed_source_filename": "ffmpegthumbnailer-2.2.2.tar.bz2",
+    "analyzed_source_hash": "1cb24059c38223f657b300c84dd80491b7040d4b69471c4fea69be862bc99b5b",
+    "PkgProvides": ["libffmpegthumbnailer"],
+    "available_versions": ["2.2.2-3", "2.2.2-2", "2.2.2-1"]
+  },
+  "libgpiod": {
+    "name_with_version": "libgpiod-1.6.3",
+    "analyzed_version": "1.6.3",
+    "analyzed_source_url": "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-1.6.3.tar.gz",
+    "analyzed_source_filename": "libgpiod-1.6.3.tar.gz",
+    "analyzed_source_hash": "eb446070be1444fd7d32d32bbca53c2f3bbb0a21193db86198cf6050b7a28441",
+    "PkgProvides": ["libgpiod", "libgpiodcxx"],
+    "available_versions": ["1.6.3-1"]
+  },
+  "libjpeg-turbo": {
+    "name_with_version": "libjpeg-turbo-3.0.1",
+    "analyzed_version": "3.0.1",
+    "analyzed_source_url": "https://sourceforge.net/projects/libjpeg-turbo/files/3.0.1/libjpeg-turbo-3.0.1.tar.gz",
+    "analyzed_source_filename": "libjpeg-turbo-3.0.1.tar.gz",
+    "analyzed_source_hash": "22429507714ae147b3acacd299e82099fce5d9f456882fc28e252e4579ba2a75",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": [
+      "3.0.1-1",
+      "3.0.0-5",
+      "3.0.0-4",
+      "3.0.0-3",
+      "3.0.0-2",
+      "3.0.0-1",
+      "2.1.5.1-1",
+      "2.1.4-1",
+      "2.1.3-1",
+      "2.1.2-2",
+      "2.1.2-1",
+      "2.1.0-2",
+      "2.1.0-1"
+    ]
+  },
+  "libkqueue": {
+    "name_with_version": "libkqueue-2.6.2",
+    "analyzed_version": "2.6.2",
+    "analyzed_source_url": "https://github.com/mheily/libkqueue/archive/refs/tags/v2.6.2.tar.gz",
+    "analyzed_source_filename": "libkqueue-2.6.2.tar.gz",
+    "analyzed_source_hash": "c3502d918ad167957302314b6d97e14052beabc5f5698ea76d0527878900d300",
+    "PkgProvides": ["libkqueue"],
+    "available_versions": ["2.6.2-2", "2.6.2-1", "2.6.1-2", "2.6.1-1"]
+  },
+  "liblangtag": {
+    "name_with_version": "liblangtag-0.6.4",
+    "analyzed_version": "0.6.4",
+    "analyzed_source_url": "https://bitbucket.org/tagoh/liblangtag/downloads/liblangtag-0.6.4.tar.bz2",
+    "analyzed_source_filename": "liblangtag-0.6.4.tar.bz2",
+    "analyzed_source_hash": "5701062c17d3e73ddaa49956cbfa5d47d2f8221988dec561c0af2118c1c8a564",
+    "PkgProvides": ["liblangtag"],
+    "available_versions": ["0.6.4-2", "0.6.4-1", "0.6.3-1"]
+  },
+  "liblastfm": {
+    "name_with_version": "lastfmlib-1.0.1",
+    "analyzed_version": "lastfmlib-1.0.1",
+    "analyzed_source_url": "https://github.com/neheb/lastfmlib/releases/download/v1.0.1/lastfmlib-1.0.1.tar.xz",
+    "analyzed_source_filename": "lastfmlib-1.0.1.tar.xz",
+    "analyzed_source_hash": "4b7ed7566737f7e253d1bd0c40e5d81e6cae599eace07c2a57e7a1e11b0769aa",
+    "PkgProvides": ["liblastfm"],
+    "available_versions": ["1.0.1-1"]
+  },
+  "liblbfgs": {
+    "name_with_version": "liblbfgs-1.10",
+    "analyzed_version": "1.10",
+    "analyzed_source_url": "https://github.com/chokkan/liblbfgs/archive/v1.10.tar.gz",
+    "analyzed_source_filename": "v1.10.tar.gz",
+    "analyzed_source_hash": "95c1997e6c215c58738f5f723ca225d64c8070056081a23d636160ff2169bd2f",
+    "PkgProvides": ["liblbfgs"],
+    "available_versions": ["1.10-2", "1.10-1"]
+  },
+  "libliftoff": {
+    "name_with_version": "libliftoff-v0.3.0",
+    "analyzed_version": "v0.3.0",
+    "analyzed_source_url": "https://gitlab.freedesktop.org/emersion/libliftoff/-/archive/v0.3.0/libliftoff-v0.3.0.tar.gz",
+    "analyzed_source_filename": "libliftoff-v0.3.0.tar.gz",
+    "analyzed_source_hash": "ef531d4913903da3bdc5fe96324abd080aded89a0d4b7258c1d1095c1a4b7925",
+    "PkgProvides": ["libliftoff"],
+    "available_versions": ["0.3.0-1"]
+  },
+  "liblzma": {
+    "name_with_version": "xz-5.2.12",
+    "analyzed_version": "xz-5.2.12",
+    "analyzed_source_url": "http://tukaani.org/xz/xz-5.2.12.tar.xz",
+    "analyzed_source_filename": "xz-5.2.12.tar.xz",
+    "analyzed_source_hash": "f79a92b84101d19d76be833aecc93e68e56065b61ec737610964cd4f6c54ff2e",
+    "PkgProvides": ["liblzma"],
+    "available_versions": [
+      "5.2.12-1",
+      "5.2.11-2",
+      "5.2.11-1",
+      "5.2.10-1",
+      "5.2.8-2",
+      "5.2.8-1",
+      "5.2.7-1",
+      "5.2.6-3",
+      "5.2.6-2",
+      "5.2.6-1",
+      "5.2.5-2",
+      "5.2.5-1",
+      "5.2.1-6",
+      "5.2.1-5",
+      "5.2.1-4",
+      "5.2.1-2"
+    ]
+  },
+  "libmatroska": {
+    "name_with_version": "libmatroska-release-1.7.1",
+    "analyzed_version": "release-1.7.1",
+    "analyzed_source_url": "https://github.com/Matroska-Org/libmatroska/archive/refs/tags/release-1.7.1.tar.gz",
+    "analyzed_source_filename": "release-1.7.1.tar.gz",
+    "analyzed_source_hash": "64763443947833e6c17f1f555f4bb0df6c9f91881810d9d5e0f0bad3622d308b",
+    "PkgProvides": ["libmatroska"],
+    "available_versions": ["1.7.1-1", "1.7.0-1", "1.6.3-1"]
+  },
+  "libmicrohttpd": {
+    "name_with_version": "libmicrohttpd-0.9.77",
+    "analyzed_version": "0.9.77",
+    "analyzed_source_url": "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-0.9.77.tar.gz",
+    "analyzed_source_filename": "libmicrohttpd-0.9.77.tar.gz",
+    "analyzed_source_hash": "9e7023a151120060d2806a6ea4c13ca9933ece4eacfc5c9464d20edddb76b0a0",
+    "PkgProvides": ["libmicrohttpd"],
+    "available_versions": [
+      "0.9.77-2",
+      "0.9.77-1",
+      "0.9.76-3",
+      "0.9.76-2",
+      "0.9.76-1"
+    ]
+  },
+  "libnpupnp": {
+    "name_with_version": "libnpupnp-5.0.2",
+    "analyzed_version": "5.0.2",
+    "analyzed_source_url": "https://www.lesbonscomptes.com/upmpdcli/downloads/libnpupnp-5.0.2.tar.gz",
+    "analyzed_source_filename": "libnpupnp-5.0.2.tar.gz",
+    "analyzed_source_hash": "33f90fc14906f2cea1bb7af56677b4e950eed6976e07d98a8e2b2e91b0755558",
+    "PkgProvides": ["libnpupnp"],
+    "available_versions": [
+      "5.0.2-1",
+      "5.0.1-1",
+      "5.0.0-2",
+      "5.0.0-1",
+      "4.2.2-2",
+      "4.2.2-1",
+      "4.2.1-2",
+      "4.2.1-1"
+    ]
+  },
+  "libobsd": {
+    "name_with_version": "libobsd-1.1.1",
+    "analyzed_version": "1.1.1",
+    "analyzed_source_url": "https://github.com/guijan/libobsd/releases/download/v1.1.1/libobsd-1.1.1.tar.xz",
+    "analyzed_source_filename": "libobsd-1.1.1.tar.xz",
+    "analyzed_source_hash": "332b72ba5f9a76c40f8a526771b78dae3ac3388f689f818c0ac4ab77ef52809d",
+    "PkgProvides": ["libbsd-overlay", "libobsd"],
+    "available_versions": ["1.1.1-1", "1.1.0-1", "1.0.0-1"]
+  },
+  "libopenjp2": {
+    "name_with_version": "openjpeg-2.5.0",
+    "analyzed_version": "openjpeg-2.5.0",
+    "analyzed_source_url": "https://github.com/uclouvain/openjpeg/archive/v2.5.0.tar.gz",
+    "analyzed_source_filename": "openjpeg-2.5.0.tar.gz",
+    "analyzed_source_hash": "0333806d6adecc6f7a91243b2b839ff4d2053823634d4f6ed7a59bc87409122a",
+    "PkgProvides": ["libopenjp2"],
+    "available_versions": [
+      "2.5.0-3",
+      "2.5.0-2",
+      "2.5.0-1",
+      "2.3.1-9",
+      "2.3.1-8",
+      "2.3.1-7",
+      "2.3.1-6",
+      "2.3.1-5",
+      "2.3.1-4",
+      "2.3.1-3",
+      "2.3.1-1"
+    ]
+  },
+  "libpng": {
+    "name_with_version": "libpng-1.6.40",
+    "analyzed_version": "1.6.40",
+    "analyzed_source_url": "https://github.com/glennrp/libpng/archive/v1.6.40.tar.gz",
+    "analyzed_source_filename": "libpng-1.6.40.tar.gz",
+    "analyzed_source_hash": "62d25af25e636454b005c93cae51ddcd5383c40fa14aa3dae8f6576feb5692c2",
+    "PkgProvides": ["libpng"],
+    "available_versions": [
+      "1.6.40-1",
+      "1.6.39-3",
+      "1.6.39-2",
+      "1.6.39-1",
+      "1.6.37-5",
+      "1.6.37-4",
+      "1.6.37-3",
+      "1.6.37-2",
+      "1.6.37-1",
+      "1.6.35-6",
+      "1.6.35-5",
+      "1.6.35-4",
+      "1.6.34-3",
+      "1.6.34-2",
+      "1.6.34-1",
+      "1.6.17-8",
+      "1.6.17-7",
+      "1.6.17-6",
+      "1.6.17-5",
+      "1.6.17-4",
+      "1.6.17-2"
+    ]
+  },
+  "libpsl": {
+    "name_with_version": "libpsl-0.21.2",
+    "analyzed_version": "0.21.2",
+    "analyzed_source_url": "https://github.com/rockdaboot/libpsl/releases/download/0.21.2/libpsl-0.21.2.tar.gz",
+    "analyzed_source_filename": "libpsl-0.21.2.tar.gz",
+    "analyzed_source_hash": "e35991b6e17001afa2c0ca3b10c357650602b92596209b7492802f3768a6285f",
+    "PkgProvides": ["libpsl"],
+    "available_versions": ["0.21.2-1"]
+  },
+  "libsass": {
+    "name_with_version": "libsass-3.6.4",
+    "analyzed_version": "3.6.4",
+    "analyzed_source_url": "https://github.com/sass/libsass/archive/refs/tags/3.6.4.tar.gz",
+    "analyzed_source_filename": "libsass-3.6.4.tar.gz",
+    "analyzed_source_hash": "f9484d9a6df60576e791566eab2f757a97fd414fce01dd41fc0a693ea5db2889",
+    "PkgProvides": ["libsass"],
+    "available_versions": ["3.6.4-1"]
+  },
+  "libsndfile": {
+    "name_with_version": "libsndfile-1.2.2",
+    "analyzed_version": "1.2.2",
+    "analyzed_source_url": "https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz",
+    "analyzed_source_filename": "libsndfile-1.2.2.tar.xz",
+    "analyzed_source_hash": "3799ca9924d3125038880367bf1468e53a1b7e3686a934f098b7e1d286cdb80e",
+    "PkgProvides": ["sndfile"],
+    "available_versions": [
+      "1.2.2-1",
+      "1.2.0-1",
+      "1.1.0-6",
+      "1.1.0-5",
+      "1.1.0-4",
+      "1.1.0-3",
+      "1.1.0-2",
+      "1.1.0-1"
+    ]
+  },
+  "libsrtp2": {
+    "name_with_version": "libsrtp-2.5.0",
+    "analyzed_version": "libsrtp-2.5.0",
+    "analyzed_source_url": "https://github.com/cisco/libsrtp/archive/refs/tags/v2.5.0.tar.gz",
+    "analyzed_source_filename": "libsrtp-2.5.0.tar.gz",
+    "analyzed_source_hash": "8a43ef8e9ae2b665292591af62aa1a4ae41e468b6d98d8258f91478735da4e09",
+    "PkgProvides": ["libsrtp2"],
+    "available_versions": ["2.5.0-1", "2.4.2-1", "2.4.0-1", "2.2.0-1"]
+  },
+  "libssh2": {
+    "name_with_version": "libssh2-libssh2-1.10.0",
+    "analyzed_version": "libssh2-1.10.0",
+    "analyzed_source_url": "https://github.com/libssh2/libssh2/archive/libssh2-1.10.0.tar.gz",
+    "analyzed_source_filename": "libssh2-1.10.0.tar.gz",
+    "analyzed_source_hash": "31469ccfc71a5247c926e3f0938e122cbb7a7a4a1bdf1cf2d3121f78b558d261",
+    "PkgProvides": ["libssh2"],
+    "available_versions": [
+      "1.10.0-5",
+      "1.10.0-4",
+      "1.10.0-3",
+      "1.10.0-2",
+      "1.10.0-1"
+    ]
+  },
+  "libtiff": {
+    "name_with_version": "tiff-4.6.0",
+    "analyzed_version": "tiff-4.6.0",
+    "analyzed_source_url": "https://download.osgeo.org/libtiff/tiff-4.6.0.tar.xz",
+    "analyzed_source_filename": "tiff-4.6.0.tar.gz",
+    "analyzed_source_hash": "e178649607d1e22b51cf361dd20a3753f244f022eefab1f2f218fc62ebaf87d2",
+    "PkgProvides": ["libtiff-4"],
+    "available_versions": [
+      "4.6.0-1",
+      "4.5.1-1",
+      "4.5.0-3",
+      "4.5.0-2",
+      "4.5.0-1",
+      "4.4.0-3",
+      "4.4.0-2",
+      "4.4.0-1",
+      "4.1.0-5",
+      "4.1.0-4",
+      "4.1.0-3",
+      "4.1.0-2",
+      "4.1.0-1"
+    ]
+  },
+  "libtirpc": {
+    "name_with_version": "libtirpc-1.3.3",
+    "analyzed_version": "1.3.3",
+    "analyzed_source_url": "https://sourceforge.net/projects/libtirpc/files/libtirpc-1.3.3.tar.bz2",
+    "analyzed_source_filename": "libtirpc-1.3.3.tar.bz2",
+    "analyzed_source_hash": "6474e98851d9f6f33871957ddee9714fdcd9d8a5ee9abb5a98d63ea2e60e12f3",
+    "PkgProvides": ["libtirpc"],
+    "available_versions": ["1.3.3-1"]
+  },
+  "libtomcrypt": {
+    "name_with_version": "libtomcrypt-1.18.2",
+    "analyzed_version": "1.18.2",
+    "analyzed_source_url": "https://github.com/libtom/libtomcrypt/releases/download/v1.18.2/crypt-1.18.2.tar.xz",
+    "analyzed_source_filename": "crypt-1.18.2.tar.xz",
+    "analyzed_source_hash": "96ad4c3b8336050993c5bc2cf6c057484f2b0f9f763448151567fbab5e767b84",
+    "PkgProvides": ["libtomcrypt"],
+    "available_versions": ["1.18.2-1", "1.17-1"]
+  },
+  "libunibreak": {
+    "name_with_version": "libunibreak-5.1",
+    "analyzed_version": "5.1",
+    "analyzed_source_url": "https://github.com/adah1972/libunibreak/releases/download/libunibreak_5_1/libunibreak-5.1.tar.gz",
+    "analyzed_source_filename": "libunibreak-5.1.tar.gz",
+    "analyzed_source_hash": "dd1a92d4c5646aa0e457ff41d89812ec5243863be6c20bbcb5ee380f3dd78377",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["5.1-3", "5.1-2", "5.1-1"]
+  },
+  "libupnp": {
+    "name_with_version": "libupnp-1.14.18",
+    "analyzed_version": "1.14.18",
+    "analyzed_source_url": "https://github.com/pupnp/pupnp/releases/download/release-1.14.18/libupnp-1.14.18.tar.bz2",
+    "analyzed_source_filename": "libupnp-1.14.18.tar.bz2",
+    "analyzed_source_hash": "16a7cee93ce2868ae63ab1a8164dc7de43577c59983b9f61293a310d6888dceb",
+    "PkgProvides": ["libupnp"],
+    "available_versions": [
+      "1.14.18-1",
+      "1.14.17-1",
+      "1.14.15-1",
+      "1.14.14-2",
+      "1.14.14-1",
+      "1.14.13-1",
+      "1.14.12-2",
+      "1.14.12-1"
+    ]
+  },
+  "liburing": {
+    "name_with_version": "liburing-liburing-2.4",
+    "analyzed_version": "liburing-2.4",
+    "analyzed_source_url": "https://github.com/axboe/liburing/archive/refs/tags/liburing-2.4.tar.gz",
+    "analyzed_source_filename": "liburing-2.4.tar.gz",
+    "analyzed_source_hash": "2398ec82d967a6f903f3ae1fd4541c754472d3a85a584dc78c5da2fabc90706b",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": [
+      "2.4-1",
+      "2.3-3",
+      "2.3-2",
+      "2.3-1",
+      "2.2-2",
+      "2.2-1",
+      "2.1-1",
+      "2.0-1"
+    ]
+  },
+  "libusb": {
+    "name_with_version": "libusb-1.0.26",
+    "analyzed_version": "1.0.26",
+    "analyzed_source_url": "https://github.com/libusb/libusb/releases/download/v1.0.26/libusb-1.0.26.tar.bz2",
+    "analyzed_source_filename": "libusb-1.0.26.tar.bz2",
+    "analyzed_source_hash": "12ce7a61fc9854d1d2a1ffe095f7b5fac19ddba095c259e6067a46500381b5a5",
+    "PkgProvides": ["libusb-1.0"],
+    "available_versions": [
+      "1.0.26-5",
+      "1.0.26-4",
+      "1.0.26-3",
+      "1.0.26-2",
+      "1.0.26-1"
+    ]
+  },
+  "libuv": {
+    "name_with_version": "libuv-v1.46.0",
+    "analyzed_version": "v1.46.0",
+    "analyzed_source_url": "https://dist.libuv.org/dist/v1.46.0/libuv-v1.46.0.tar.gz",
+    "analyzed_source_filename": "libuv-v1.46.0.tar.gz",
+    "analyzed_source_hash": "111f83958b9fdc65f1489195d25f342b9f7a3e683140c60e62c00fbaccddddce",
+    "PkgProvides": ["libuv"],
+    "available_versions": [
+      "1.46.0-1",
+      "1.44.2-2",
+      "1.44.2-1",
+      "1.44.1-1",
+      "1.43.0-1",
+      "1.42.0-1",
+      "1.41.0-1",
+      "1.18.0-3",
+      "1.18.0-2",
+      "1.18.0-1"
+    ]
+  },
+  "libwebp": {
+    "name_with_version": "libwebp-1.3.2",
+    "analyzed_version": "1.3.2",
+    "analyzed_source_url": "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.3.2.tar.gz",
+    "analyzed_source_filename": "libwebp-1.3.2.tar.gz",
+    "analyzed_source_hash": "2a499607df669e40258e53d0ade8035ba4ec0175244869d1025d460562aa09b4",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["1.3.2-1", "1.3.1-2", "1.3.1-1"]
+  },
+  "libwebsockets": {
+    "name_with_version": "libwebsockets-v4.3.2",
+    "analyzed_version": "v4.3.2",
+    "analyzed_source_url": "https://libwebsockets.org/git/libwebsockets/snapshot/libwebsockets-v4.3.2.tar.xz",
+    "analyzed_source_filename": "libwebsockets-v4.3.2.tar.xz",
+    "analyzed_source_hash": "287ad6f63344323c4e2404d2ab3a8a0803932d554c724aaffbb1e8fe2e5e9243",
+    "PkgProvides": ["libwebsockets"],
+    "available_versions": [
+      "4.3.2-3",
+      "4.3.2-2",
+      "4.3.2-1",
+      "4.0.21-2",
+      "4.0.21-1",
+      "4.0.13-1"
+    ]
+  },
+  "libxcursor": {
+    "name_with_version": "libXcursor-1.2.1",
+    "analyzed_version": "libXcursor-1.2.1",
+    "analyzed_source_url": "https://xorg.freedesktop.org/releases/individual/lib/libXcursor-1.2.1.tar.xz",
+    "analyzed_source_filename": "libXrandr-1.2.1.tar.xz",
+    "analyzed_source_hash": "46c143731610bafd2070159a844571b287ac26192537d047a39df06155492104",
+    "PkgProvides": ["xcursor"],
+    "available_versions": ["1.2.1-1"]
+  },
+  "libxext": {
+    "name_with_version": "libXext-1.3.5",
+    "analyzed_version": "libXext-1.3.5",
+    "analyzed_source_url": "https://xorg.freedesktop.org/releases/individual/lib/libXext-1.3.5.tar.xz",
+    "analyzed_source_filename": "libXext-1.3.5.tar.xz",
+    "analyzed_source_hash": "db14c0c895c57ea33a8559de8cb2b93dc76c42ea4a39e294d175938a133d7bca",
+    "PkgProvides": ["xext"],
+    "available_versions": ["1.3.5-1", "1.3.4-1"]
+  },
+  "libxinerama": {
+    "name_with_version": "libXinerama-1.1.4",
+    "analyzed_version": "libXinerama-1.1.4",
+    "analyzed_source_url": "https://xorg.freedesktop.org/releases/individual/lib/libXinerama-1.1.4.tar.bz2",
+    "analyzed_source_filename": "libXrandr-1.1.4.tar.bz2",
+    "analyzed_source_hash": "0008dbd7ecf717e1e507eed1856ab0d9cf946d03201b85d5dcf61489bb02d720",
+    "PkgProvides": ["xinerama"],
+    "available_versions": ["1.1.4-1"]
+  },
+  "libxml2": {
+    "name_with_version": "libxml2-2.11.5",
+    "analyzed_version": "2.11.5",
+    "analyzed_source_url": "https://download.gnome.org/sources/libxml2/2.11/libxml2-2.11.5.tar.xz",
+    "analyzed_source_filename": "libxml2-2.11.5.tar.xz",
+    "analyzed_source_hash": "3727b078c360ec69fa869de14bd6f75d7ee8d36987b071e6928d4720a28df3a6",
+    "PkgProvides": ["libxml-2.0"],
+    "available_versions": [
+      "2.11.5-2",
+      "2.11.5-1",
+      "2.11.4-1",
+      "2.11.1-1",
+      "2.10.4-1",
+      "2.10.3-4",
+      "2.10.3-3",
+      "2.10.3-2",
+      "2.10.3-1",
+      "2.10.2-2",
+      "2.10.2-1",
+      "2.9.14-1",
+      "2.9.7-14",
+      "2.9.7-13",
+      "2.9.7-12",
+      "2.9.7-11",
+      "2.9.7-10",
+      "2.9.7-9",
+      "2.9.7-8",
+      "2.9.7-7",
+      "2.9.7-6",
+      "2.9.7-5",
+      "2.9.7-4",
+      "2.9.7-3",
+      "2.9.7-2",
+      "2.9.7-1",
+      "2.9.2-5",
+      "2.9.2-4",
+      "2.9.2-2"
+    ]
+  },
+  "libxmlpp": {
+    "name_with_version": "libxml++-5.0.3",
+    "analyzed_version": "libxml++-5.0.3",
+    "analyzed_source_url": "https://download.gnome.org/sources/libxml++/5.0/libxml++-5.0.3.tar.xz",
+    "analyzed_source_filename": "libxml++-5.0.3.tar.xz",
+    "analyzed_source_hash": "13074f59e3288a378cafe9e6847df17f764c23fa29bc94f3305b8bf81efb2cf7",
+    "PkgProvides": ["libxml++"],
+    "available_versions": [
+      "5.0.3-1",
+      "5.0.2-2",
+      "5.0.2-1",
+      "5.0.1-1",
+      "3.0.1-2",
+      "3.0.1-1"
+    ]
+  },
+  "libxrandr": {
+    "name_with_version": "libXrandr-1.5.2",
+    "analyzed_version": "libXrandr-1.5.2",
+    "analyzed_source_url": "https://xorg.freedesktop.org/releases/individual/lib/libXrandr-1.5.2.tar.bz2",
+    "analyzed_source_filename": "libXrandr-1.5.2.tar.bz2",
+    "analyzed_source_hash": "8aea0ebe403d62330bb741ed595b53741acf45033d3bda1792f1d4cc3daee023",
+    "PkgProvides": ["xrandr"],
+    "available_versions": ["1.5.2-1"]
+  },
+  "libxrender": {
+    "name_with_version": "libXrender-0.9.10",
+    "analyzed_version": "libXrender-0.9.10",
+    "analyzed_source_url": "https://xorg.freedesktop.org/releases/individual/lib/libXrender-0.9.10.tar.bz2",
+    "analyzed_source_filename": "libXrender-0.9.10.tar.bz2",
+    "analyzed_source_hash": "c06d5979f86e64cabbde57c223938db0b939dff49fdb5a793a1d3d0396650949",
+    "PkgProvides": ["xrender"],
+    "available_versions": ["0.9.10-1"]
+  },
+  "libxslt": {
+    "name_with_version": "libxslt-1.1.38",
+    "analyzed_version": "1.1.38",
+    "analyzed_source_url": "https://download.gnome.org/sources/libxslt/1.1/libxslt-1.1.38.tar.xz",
+    "analyzed_source_filename": "libxslt-1.1.38.tar.xz",
+    "analyzed_source_hash": "1f32450425819a09acaff2ab7a5a7f8a2ec7956e505d7beeb45e843d0e1ecab1",
+    "PkgProvides": ["libexslt", "libxslt", "program_names"],
+    "available_versions": [
+      "1.1.38-1",
+      "1.1.37-4",
+      "1.1.37-3",
+      "1.1.37-2",
+      "1.1.37-1",
+      "1.1.36-1",
+      "1.1.35-1",
+      "1.1.34-1"
+    ]
+  },
+  "libxv": {
+    "name_with_version": "libXv-1.0.11",
+    "analyzed_version": "libXv-1.0.11",
+    "analyzed_source_url": "https://xorg.freedesktop.org/releases/individual/lib/libXv-1.0.11.tar.bz2",
+    "analyzed_source_filename": "libXrandr-1.0.11.tar.bz2",
+    "analyzed_source_hash": "d26c13eac99ac4504c532e8e76a1c8e4bd526471eb8a0a4ff2a88db60cb0b088",
+    "PkgProvides": ["xv"],
+    "available_versions": ["1.0.11-1"]
+  },
+  "libxxf86vm": {
+    "name_with_version": "libXxf86vm-1.1.4",
+    "analyzed_version": "libXxf86vm-1.1.4",
+    "analyzed_source_url": "https://xorg.freedesktop.org/releases/individual/lib/libXxf86vm-1.1.4.tar.bz2",
+    "analyzed_source_filename": "libXxf86vm-1.1.4.tar.bz2",
+    "analyzed_source_hash": "afee27f93c5f31c0ad582852c0fb36d50e4de7cd585fcf655e278a633d85cd57",
+    "PkgProvides": ["xxf86vm"],
+    "available_versions": ["1.1.4-1"]
+  },
+  "libyaml": {
+    "name_with_version": "yaml-0.2.5",
+    "analyzed_version": "yaml-0.2.5",
+    "analyzed_source_url": "https://pyyaml.org/download/libyaml/yaml-0.2.5.tar.gz",
+    "analyzed_source_filename": "yaml-0.2.5.tar.gz",
+    "analyzed_source_hash": "c642ae9b75fee120b2d96c712538bd2cf283228d2337df2cf2988e3c02678ef4",
+    "PkgProvides": ["yaml-0.1"],
+    "available_versions": ["0.2.5-1"]
+  },
+  "lmdb": {
+    "name_with_version": "openldap-LMDB_0.9.29",
+    "analyzed_version": "openldap-LMDB_0.9.29",
+    "analyzed_source_url": "https://git.openldap.org/openldap/openldap/-/archive/LMDB_0.9.29/openldap-LMDB_0.9.29.tar.gz",
+    "analyzed_source_filename": "openldap-LMDB_0.9.29.tar.gz",
+    "analyzed_source_hash": "d4c668167a2d703ef91db733b4069b8b74dbc374405855be6626b45e2a7e2dd3",
+    "PkgProvides": ["lmdb", "program_names"],
+    "available_versions": ["0.9.29-3", "0.9.29-2", "0.9.29-1"]
+  },
+  "lua": {
+    "name_with_version": "lua-5.4.6",
+    "analyzed_version": "5.4.6",
+    "analyzed_source_url": "https://www.lua.org/ftp/lua-5.4.6.tar.gz",
+    "analyzed_source_filename": "lua-5.4.6.tar.gz",
+    "analyzed_source_hash": "7d5ea1b9cb6aa0b59ca3dde1c6adcb57ef83a1ba8e5432c0ecd06bf439b3ad88",
+    "PkgProvides": ["lua", "lua-5.4"],
+    "available_versions": [
+      "5.4.6-3",
+      "5.4.6-2",
+      "5.4.6-1",
+      "5.4.4-1",
+      "5.4.3-2",
+      "5.4.3-1",
+      "5.3.6-2",
+      "5.3.6-1",
+      "5.3.0-6",
+      "5.3.0-5",
+      "5.3.0-4",
+      "5.3.0-2"
+    ]
+  },
+  "ludocode-mpack": {
+    "name_with_version": "mpack-1.1",
+    "analyzed_version": "mpack-1.1",
+    "analyzed_source_url": "https://github.com/ludocode/mpack/archive/v1.1.tar.gz",
+    "analyzed_source_filename": "ludocode-mpack-1.1.tar.gz",
+    "analyzed_source_hash": "a62a3954dbbd77cf7f3048e8d7e89718d45a851d55003c37c51277c71ca968e6",
+    "PkgProvides": ["ludocode-mpack"],
+    "available_versions": ["1.1-1", "1.0-1"]
+  },
+  "lz4": {
+    "name_with_version": "lz4-1.9.4",
+    "analyzed_version": "1.9.4",
+    "analyzed_source_url": "https://github.com/lz4/lz4/archive/v1.9.4.tar.gz",
+    "analyzed_source_filename": "lz4-1.9.4.tgz",
+    "analyzed_source_hash": "0b0e3aa07c8c063ddf40b082bdf7e37a1562bda40a0ff5272957f3e987e0e54b",
+    "PkgProvides": ["liblz4"],
+    "available_versions": ["1.9.4-2", "1.9.4-1", "1.9.3-1", "1.9.2-1"]
+  },
+  "lzo2": {
+    "name_with_version": "lzo-2.10",
+    "analyzed_version": "lzo-2.10",
+    "analyzed_source_url": "https://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz",
+    "analyzed_source_filename": "lzo-2.10.tar.gz",
+    "analyzed_source_hash": "c0f892943208266f9b6543b3ae308fab6284c5c90e627931446fb49b4221a072",
+    "PkgProvides": ["lzo2"],
+    "available_versions": ["2.10-4", "2.10-3", "2.10-2", "2.10-1"]
+  },
+  "m4": {
+    "name_with_version": "m4-1.4.19",
+    "analyzed_version": "1.4.19",
+    "analyzed_source_url": "http://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.xz",
+    "analyzed_source_filename": "m4-1.4.19.tar.xz",
+    "analyzed_source_hash": "63aede5c6d33b6d9b13511cd0be2cac046f2e70fd0a07aa9573a04a82783af96",
+    "PkgProvides": ["program_names"],
+    "available_versions": ["1.4.19-1"]
+  },
+  "magic_enum": {
+    "name_with_version": "magic_enum-0.9.3",
+    "analyzed_version": "0.9.3",
+    "analyzed_source_url": "https://github.com/Neargye/magic_enum/archive/refs/tags/v0.9.3.tar.gz",
+    "analyzed_source_filename": "magic_enum-v0.9.3.tar.gz",
+    "analyzed_source_hash": "3cadd6a05f1bffc5141e5e731c46b2b73c2dbff025e723c8abaa659e0a24f072",
+    "PkgProvides": ["magic_enum"],
+    "available_versions": ["0.9.3-1", "0.9.2-1", "0.8.2-1", "0.8.1-1"]
+  },
+  "mdds": {
+    "name_with_version": "mdds-2.0.1",
+    "analyzed_version": "2.0.1",
+    "analyzed_source_url": "https://gitlab.com/mdds/mdds/-/archive/2.0.1/mdds-2.0.1.tar.gz",
+    "analyzed_source_filename": "mdds-2.0.1.tar.gz",
+    "analyzed_source_hash": "4a71007ad606510fcf10c1f48e4bcff8a9ea43f40fcb99015b76681131e331c1",
+    "PkgProvides": ["mdds-2.0"],
+    "available_versions": ["2.0.1-1", "1.6.0-2", "1.6.0-1"]
+  },
+  "microsoft-gsl": {
+    "name_with_version": "GSL-4.0.0",
+    "analyzed_version": "GSL-4.0.0",
+    "analyzed_source_url": "https://github.com/microsoft/GSL/archive/v4.0.0.zip",
+    "analyzed_source_filename": "GSL-4.0.0.zip",
+    "analyzed_source_hash": "eb91fcb10a6aa5ccb1d224e07a56c8ecffe9a1bb601fa1848276ec46a2200bfb",
+    "PkgProvides": ["microsoft_gsl"],
+    "available_versions": ["4.0.0-1", "3.1.0-1", "2.0.0-1"]
+  },
+  "miniz": {
+    "name_with_version": "miniz-3.0.2",
+    "analyzed_version": "3.0.2",
+    "analyzed_source_url": "https://github.com/richgel999/miniz/releases/download/3.0.2/miniz-3.0.2.zip",
+    "analyzed_source_filename": "miniz-3.0.2.zip",
+    "analyzed_source_hash": "ada38db0b703a56d3dd6d57bf84a9c5d664921d870d8fea4db153979fb5332c5",
+    "PkgProvides": ["miniz"],
+    "available_versions": [
+      "3.0.2-1",
+      "3.0.1-1",
+      "2.2.0-1",
+      "2.1.0-2",
+      "2.1.0-1"
+    ]
+  },
+  "minizip-ng": {
+    "name_with_version": "minizip-ng-4.0.1",
+    "analyzed_version": "4.0.1",
+    "analyzed_source_url": "https://github.com/zlib-ng/minizip-ng/archive/refs/tags/4.0.1.tar.gz",
+    "analyzed_source_filename": "4.0.1.tar.gz",
+    "analyzed_source_hash": "63e47a2b4dbac0da501f43f4da74f118dfb3ef0dee0ffbbe89428271002260f8",
+    "PkgProvides": ["minizip"],
+    "available_versions": [
+      "4.0.1-2",
+      "4.0.1-1",
+      "4.0.0-2",
+      "4.0.0-1",
+      "3.0.10-1",
+      "3.0.8-1",
+      "3.0.7-1",
+      "3.0.6-1"
+    ]
+  },
+  "mocklibc": {
+    "name_with_version": "mocklibc-1.0",
+    "analyzed_version": "1.0",
+    "analyzed_source_url": "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mocklibc/mocklibc-1.0.tar.gz",
+    "analyzed_source_filename": "mocklibc-1.0.tar.gz",
+    "analyzed_source_hash": "b2236a6af1028414783e9734a46ea051916ec226479d6a55a3bb823bff68f120",
+    "PkgProvides": [],
+    "available_versions": ["1.0-2"]
+  },
+  "mpdecimal": {
+    "name_with_version": "mpdecimal-2.5.1",
+    "analyzed_version": "2.5.1",
+    "analyzed_source_url": "http://www.bytereef.org/software/mpdecimal/releases/mpdecimal-2.5.1.tar.gz",
+    "analyzed_source_filename": "mpdecimal-2.5.1.tar.gz",
+    "analyzed_source_hash": "9f9cd4c041f99b5c49ffb7b59d9f12d95b683d88585608aa56a6307667b2b21f",
+    "PkgProvides": ["mpdec", "mpdecpp"],
+    "available_versions": [
+      "2.5.1-3",
+      "2.5.1-2",
+      "2.5.1-1",
+      "2.5.0-2",
+      "2.5.0-1"
+    ]
+  },
+  "msgpackc-cxx": {
+    "name_with_version": "msgpack-cxx-6.1.0",
+    "analyzed_version": "msgpack-cxx-6.1.0",
+    "analyzed_source_url": "https://github.com/msgpack/msgpack-c/releases/download/cpp-6.1.0/msgpack-cxx-6.1.0.tar.gz",
+    "analyzed_source_filename": "msgpack-cxx-6.1.0.tar.gz",
+    "analyzed_source_hash": "23ede7e93c8efee343ad8c6514c28f3708207e5106af3b3e4969b3a9ed7039e7",
+    "PkgProvides": ["msgpackc-cxx"],
+    "available_versions": ["6.1.0-1", "5.0.0-1"]
+  },
+  "mt32emu": {
+    "name_with_version": "munt-libmt32emu_2_7_1",
+    "analyzed_version": "munt-libmt32emu_2_7_1",
+    "analyzed_source_url": "https://github.com/munt/munt/archive/libmt32emu_2_7_1.tar.gz",
+    "analyzed_source_filename": "libmt32emu_2_7_1.tar.gz",
+    "analyzed_source_hash": "e4524d52d6799a4e32a961a2e92074f14adcb2f110a4e7a06bede77050cfdaf4",
+    "PkgProvides": ["mt32emu"],
+    "available_versions": [
+      "2.7.1-1",
+      "2.7.0-1",
+      "2.6.1-1",
+      "2.5.3-1",
+      "2.5.0-1",
+      "2.4.2-2",
+      "2.4.2-1"
+    ]
+  },
+  "muellan-clipp": {
+    "name_with_version": "clipp-1.2.3",
+    "analyzed_version": "clipp-1.2.3",
+    "analyzed_source_url": "https://github.com/muellan/clipp/archive/v1.2.3.tar.gz",
+    "analyzed_source_filename": "clipp-1.2.3.tar.gz",
+    "analyzed_source_hash": "73da8e3d354fececdea99f7deb79d0343647349563ace3eafb7f4cca6e86e90b",
+    "PkgProvides": [],
+    "available_versions": ["1.2.3-1"]
+  },
+  "mujs": {
+    "name_with_version": "mujs-1.3.3",
+    "analyzed_version": "1.3.3",
+    "analyzed_source_url": "https://github.com/ArtifexSoftware/mujs/archive/refs/tags/1.3.3.tar.gz",
+    "analyzed_source_filename": "mujs-1.3.3.tar.gz",
+    "analyzed_source_hash": "e2c5ee5416dfda2230c7a0cb7895df9a9b2d5b2065bb18e7e64dec2a796abe1b",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["1.3.3-1"]
+  },
+  "netstring-c": {
+    "name_with_version": "netstring-c-92104d314ad885fd444b70bffd12a2963ef37a2f",
+    "analyzed_version": "92104d314ad885fd444b70bffd12a2963ef37a2f",
+    "analyzed_source_url": "https://github.com/PeterScott/netstring-c/archive/92104d314ad885fd444b70bffd12a2963ef37a2f.tar.gz",
+    "analyzed_source_filename": "92104d314ad885fd444b70bffd12a2963ef37a2f.tar.gz",
+    "analyzed_source_hash": "233bf6c0a9c8516139bb3b4c80ab4345e47e423c28039f3c85aeefd69d3a8fbf",
+    "PkgProvides": ["netstring-c"],
+    "available_versions": ["0.0.0-3", "0.0.0-2", "0.0.0-1"]
+  },
+  "nghttp2": {
+    "name_with_version": "nghttp2-1.56.0",
+    "analyzed_version": "1.56.0",
+    "analyzed_source_url": "https://github.com/nghttp2/nghttp2/releases/download/v1.56.0/nghttp2-1.56.0.tar.xz",
+    "analyzed_source_filename": "nghttp2-1.56.0.tar.xz",
+    "analyzed_source_hash": "65eee8021e9d3620589a4a4e91ce9983d802b5229f78f3313770e13f4d2720e9",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["1.56.0-1"]
+  },
+  "nlohmann_json": {
+    "name_with_version": "nlohmann_json-3.11.2",
+    "analyzed_version": "3.11.2",
+    "analyzed_source_url": "https://github.com/nlohmann/json/releases/download/v3.11.2/include.zip",
+    "analyzed_source_filename": "nlohmann_json-3.11.2.zip",
+    "analyzed_source_hash": "e5c7a9f49a16814be27e4ed0ee900ecd0092bfb7dbfca65b5a421b774dccaaed",
+    "PkgProvides": ["nlohmann_json"],
+    "available_versions": [
+      "3.11.2-1",
+      "3.10.5-1",
+      "3.9.1-1",
+      "3.7.0-1",
+      "3.4.0-2",
+      "3.4.0-1",
+      "3.3.0-1"
+    ]
+  },
+  "nng": {
+    "name_with_version": "nng-1.5.2",
+    "analyzed_version": "1.5.2",
+    "analyzed_source_url": "https://github.com/nanomsg/nng/archive/v1.5.2.tar.gz",
+    "analyzed_source_filename": "nng-1.5.2.tar.gz",
+    "analyzed_source_hash": "f8b25ab86738864b1f2e3128e8badab581510fa8085ff5ca9bb980d317334c46",
+    "PkgProvides": ["nng"],
+    "available_versions": [
+      "1.5.2-3",
+      "1.5.2-2",
+      "1.5.2-1",
+      "1.3.2-2",
+      "1.3.2-1"
+    ]
+  },
+  "nonstd-any-lite": {
+    "name_with_version": "any-lite-0.2.0",
+    "analyzed_version": "any-lite-0.2.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/any-lite/tar.gz/v0.2.0",
+    "analyzed_source_filename": "any-lite-0.2.0.tar.gz",
+    "analyzed_source_hash": "945ac39f14273be742c8a060af100182e38920f641e5d8fa16699e74a09e9850",
+    "PkgProvides": [],
+    "available_versions": ["0.2.0-1"]
+  },
+  "nonstd-byte-lite": {
+    "name_with_version": "byte-lite-0.2.0",
+    "analyzed_version": "byte-lite-0.2.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/byte-lite/tar.gz/v0.2.0",
+    "analyzed_source_filename": "byte-lite-0.2.0.tar.gz",
+    "analyzed_source_hash": "34221fba6800b3a5af4a17a274fc024afb2d49b3b4ec9ac61588305375891a20",
+    "PkgProvides": [],
+    "available_versions": ["0.2.0-1"]
+  },
+  "nonstd-expected-lite": {
+    "name_with_version": "expected-lite-0.3.0",
+    "analyzed_version": "expected-lite-0.3.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/expected-lite/tar.gz/v0.3.0",
+    "analyzed_source_filename": "expected-lite-0.3.0.tar.gz",
+    "analyzed_source_hash": "fc942ce0614e9498bff6f35f1ee8d58f83026bac904d9ab427a2e822b5bdfcbd",
+    "PkgProvides": ["expected-lite"],
+    "available_versions": ["0.3.0-2", "0.3.0-1"]
+  },
+  "nonstd-observer-ptr-lite": {
+    "name_with_version": "observer-ptr-lite-0.4.0",
+    "analyzed_version": "observer-ptr-lite-0.4.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/observer-ptr-lite/tar.gz/v0.4.0",
+    "analyzed_source_filename": "observer-ptr-lite-0.4.0.tar.gz",
+    "analyzed_source_hash": "812eafbdaccfb44ffd2536692b668cd1f16228e8d7609de56b60320c8c57cc67",
+    "PkgProvides": [],
+    "available_versions": ["0.4.0-1"]
+  },
+  "nonstd-optional-lite": {
+    "name_with_version": "optional-lite-3.2.0",
+    "analyzed_version": "optional-lite-3.2.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/optional-lite/tar.gz/v3.2.0",
+    "analyzed_source_filename": "optional-lite-3.2.0.tar.gz",
+    "analyzed_source_hash": "069c92f6404878588be761d609b917a111b0231633a91f7f908288fc77eb24c8",
+    "PkgProvides": [],
+    "available_versions": ["3.2.0-1"]
+  },
+  "nonstd-span-lite": {
+    "name_with_version": "span-lite-0.5.0",
+    "analyzed_version": "span-lite-0.5.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/span-lite/tar.gz/v0.5.0",
+    "analyzed_source_filename": "span-lite-0.5.0.tar.gz",
+    "analyzed_source_hash": "405ae095bca3c63da28c72a3528369b9ba3996f1992f3ae90fcb01a9d8bdef38",
+    "PkgProvides": [],
+    "available_versions": ["0.5.0-1"]
+  },
+  "nonstd-status-value-lite": {
+    "name_with_version": "status-value-lite-1.1.0",
+    "analyzed_version": "status-value-lite-1.1.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/status-value-lite/tar.gz/v1.1.0",
+    "analyzed_source_filename": "status-value-lite-1.1.0.tar.gz",
+    "analyzed_source_hash": "adcc9f3938b7805c1c465b5cde4e96143e126e7ddbccc00a53b452a8cc4d8ba8",
+    "PkgProvides": [],
+    "available_versions": ["1.1.0-1"]
+  },
+  "nonstd-string-view-lite": {
+    "name_with_version": "string-view-lite-1.3.0",
+    "analyzed_version": "string-view-lite-1.3.0",
+    "analyzed_source_url": "https://codeload.github.com/martinmoene/string-view-lite/tar.gz/v1.3.0",
+    "analyzed_source_filename": "string-view-lite-1.3.0.tar.gz",
+    "analyzed_source_hash": "d83adb0495ccfba50ae5a1af70bde04f33a26dc40599b0ce9e55f09c075daf23",
+    "PkgProvides": [],
+    "available_versions": ["1.3.0-1"]
+  },
+  "nowide": {
+    "name_with_version": "nowide_standalone_v11.2.0",
+    "analyzed_version": "nowide_standalone_v11.2.0",
+    "analyzed_source_url": "https://github.com/boostorg/nowide/releases/download/v11.2.0/nowide_standalone_v11.2.0.tar.gz",
+    "analyzed_source_filename": "nowide_standalone_v11.2.0.tar.gz",
+    "analyzed_source_hash": "1869d176a8af389e4f7416f42bdd15d6a5db3c6e4ae77269ecb071a232304e1d",
+    "PkgProvides": ["nowide"],
+    "available_versions": ["11.2.0-1"]
+  },
+  "oatpp-openssl": {
+    "name_with_version": "oatpp-openssl-1.3.0",
+    "analyzed_version": "1.3.0",
+    "analyzed_source_url": "https://github.com/oatpp/oatpp-openssl/archive/refs/tags/1.3.0.tar.gz",
+    "analyzed_source_filename": "oatpp-openssl-1.3.0.tar.gz",
+    "analyzed_source_hash": "add694cf6294e5cd8b8f4681e0425802f01d798b9d17e29cdb865448a6aa81c8",
+    "PkgProvides": ["oatpp-openssl"],
+    "available_versions": ["1.3.0-2", "1.3.0-1"]
+  },
+  "oatpp-sqlite": {
+    "name_with_version": "oatpp-sqlite-1.3.0",
+    "analyzed_version": "1.3.0",
+    "analyzed_source_url": "https://github.com/oatpp/oatpp-sqlite/archive/refs/tags/1.3.0.tar.gz",
+    "analyzed_source_filename": "oatpp-sqlite-1.3.0.tar.gz",
+    "analyzed_source_hash": "f3abd7b0b1ea49fd4882fcf074223fdc4a2c82e9a9429341c3be48dd6187ebfd",
+    "PkgProvides": ["oatpp-sqlite"],
+    "available_versions": ["1.3.0-1"]
+  },
+  "oatpp-swagger": {
+    "name_with_version": "oatpp-swagger-1.3.0",
+    "analyzed_version": "1.3.0",
+    "analyzed_source_url": "https://github.com/oatpp/oatpp-swagger/archive/refs/tags/1.3.0.tar.gz",
+    "analyzed_source_filename": "oatpp-swagger-1.3.0.tar.gz",
+    "analyzed_source_hash": "4d8db6d73095a786a521a71e8ba6b535fea62237faaaa57d98257312627d3a45",
+    "PkgProvides": ["oatpp-swagger"],
+    "available_versions": ["1.3.0-1"]
+  },
+  "oatpp-websocket": {
+    "name_with_version": "oatpp-websocket-1.3.0",
+    "analyzed_version": "1.3.0",
+    "analyzed_source_url": "https://github.com/oatpp/oatpp-websocket/archive/refs/tags/1.3.0.tar.gz",
+    "analyzed_source_filename": "oatpp-websocket-1.3.0.tar.gz",
+    "analyzed_source_hash": "8215765238c595e296c9ea961670064ff9c44e3e0f9accda59d81b10cc29873b",
+    "PkgProvides": ["oatpp-websocket"],
+    "available_versions": ["1.3.0-1"]
+  },
+  "oatpp-zlib": {
+    "name_with_version": "oatpp-zlib-1.3.0",
+    "analyzed_version": "1.3.0",
+    "analyzed_source_url": "https://github.com/oatpp/oatpp-zlib/archive/refs/tags/1.3.0.tar.gz",
+    "analyzed_source_filename": "oatpp-zlib-1.3.0.tar.gz",
+    "analyzed_source_hash": "6103b041a424b280e7de1f7ae75404f770049750044531f8d41ec4bafaa9497f",
+    "PkgProvides": ["oatpp-zlib"],
+    "available_versions": ["1.3.0-1"]
+  },
+  "oatpp": {
+    "name_with_version": "oatpp-1.3.0",
+    "analyzed_version": "1.3.0",
+    "analyzed_source_url": "https://github.com/oatpp/oatpp/archive/refs/tags/1.3.0.tar.gz",
+    "analyzed_source_filename": "oatpp-1.3.0.tar.gz",
+    "analyzed_source_hash": "e1f80fa8fd7a74da6737e7fee1a4db68b4d7085a3f40e7d550752d6ff5714583",
+    "PkgProvides": ["oatpp", "oatpp-test"],
+    "available_versions": ["1.3.0-2", "1.3.0-1"]
+  },
+  "ogg": {
+    "name_with_version": "libogg-1.3.5",
+    "analyzed_version": "libogg-1.3.5",
+    "analyzed_source_url": "https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.xz",
+    "analyzed_source_filename": "libogg-1.3.5.tar.xz",
+    "analyzed_source_hash": "c4d91be36fc8e54deae7575241e03f4211eb102afb3fc0775fbbc1b740016705",
+    "PkgProvides": ["ogg"],
+    "available_versions": [
+      "1.3.5-6",
+      "1.3.5-5",
+      "1.3.5-4",
+      "1.3.5-3",
+      "1.3.5-2",
+      "1.3.5-1",
+      "1.3.2-7",
+      "1.3.2-6",
+      "1.3.2-5",
+      "1.3.2-4",
+      "1.3.2-2"
+    ]
+  },
+  "onqtam-doctest": {
+    "name_with_version": "doctest-2.4.0",
+    "analyzed_version": "doctest-2.4.0",
+    "analyzed_source_url": "https://github.com/onqtam/doctest/archive/2.4.0.tar.gz",
+    "analyzed_source_filename": "doctest-2.4.0.tar.gz",
+    "analyzed_source_hash": "f689f48e92c088928d88d8481e769c8e804f0a608b484ab8ef3d6ab6045b5444",
+    "PkgProvides": [],
+    "available_versions": ["2.4.0-1", "2.3.7-1"]
+  },
+  "openal-soft": {
+    "name_with_version": "openal-soft-1.23.1",
+    "analyzed_version": "1.23.1",
+    "analyzed_source_url": "https://github.com/kcat/openal-soft/archive/refs/tags/1.23.1.tar.gz",
+    "analyzed_source_filename": "openal-soft-1.23.1.tar.gz",
+    "analyzed_source_hash": "dfddf3a1f61059853c625b7bb03de8433b455f2f79f89548cbcbd5edca3d4a4a",
+    "PkgProvides": ["openal"],
+    "available_versions": [
+      "1.23.1-1",
+      "1.23.0-1",
+      "1.22.2-8",
+      "1.22.2-7",
+      "1.22.2-6",
+      "1.22.2-5",
+      "1.22.2-4",
+      "1.22.2-3",
+      "1.22.2-2",
+      "1.22.2-1",
+      "1.21.0-1"
+    ]
+  },
+  "opencl-headers": {
+    "name_with_version": "OpenCL-Headers-2023.04.17",
+    "analyzed_version": "OpenCL-Headers-2023.04.17",
+    "analyzed_source_url": "https://github.com/KhronosGroup/OpenCL-Headers/archive/refs/tags/v2023.04.17.tar.gz",
+    "analyzed_source_filename": "OpenCL-Headers-2023.04.17.tar.gz",
+    "analyzed_source_hash": "0ce992f4167f958f68a37918dec6325be18f848dee29a4521c633aae3304915d",
+    "PkgProvides": ["opencl-headers"],
+    "available_versions": ["2023.04.17-1", "2022.05.18-1", "2021.06.30-1"]
+  },
+  "openh264": {
+    "name_with_version": "openh264-2.3.1",
+    "analyzed_version": "2.3.1",
+    "analyzed_source_url": "https://github.com/cisco/openh264/archive/refs/tags/v2.3.1.tar.gz",
+    "analyzed_source_filename": "openh264-2.3.1.tar.gz",
+    "analyzed_source_hash": "453afa66dacb560bc5fd0468aabee90c483741571bca820a39a1c07f0362dc32",
+    "PkgProvides": ["openh264"],
+    "available_versions": ["2.3.1-1", "1.7.0-1"]
+  },
+  "openssl": {
+    "name_with_version": "openssl-3.0.8",
+    "analyzed_version": "3.0.8",
+    "analyzed_source_url": "https://www.openssl.org/source/openssl-3.0.8.tar.gz",
+    "analyzed_source_filename": "openssl-3.0.8.tar.gz",
+    "analyzed_source_hash": "6c13d2bf38fdf31eac3ce2a347073673f5d63263398f1f69d0df4a41253e4b3e",
+    "PkgProvides": ["libcrypto", "libssl", "openssl"],
+    "available_versions": [
+      "3.0.8-1",
+      "3.0.7-2",
+      "3.0.7-1",
+      "3.0.2-1",
+      "1.1.1l-3",
+      "1.1.1l-2",
+      "1.1.1l-1",
+      "1.1.1k-2",
+      "1.1.1k-1"
+    ]
+  },
+  "opus": {
+    "name_with_version": "opus-1.4",
+    "analyzed_version": "1.4",
+    "analyzed_source_url": "https://downloads.xiph.org/releases/opus/opus-1.4.tar.gz",
+    "analyzed_source_filename": "opus-1.4.tar.gz",
+    "analyzed_source_hash": "c9b32b4253be5ae63d1ff16eea06b94b5f0f2951b7a02aceef58e3a3ce49c51f",
+    "PkgProvides": ["opus"],
+    "available_versions": ["1.4-1"]
+  },
+  "orcus": {
+    "name_with_version": "orcus-0.17.2",
+    "analyzed_version": "0.17.2",
+    "analyzed_source_url": "https://gitlab.com/orcus/orcus/-/archive/0.17.2/orcus-0.17.2.tar.gz",
+    "analyzed_source_filename": "orcus-0.17.2.tar.gz",
+    "analyzed_source_hash": "06fd552265029e960e04efd11fae5aef277ea4552e5d39ba6fa707aa7f37b251",
+    "PkgProvides": ["liborcus-0.17"],
+    "available_versions": ["0.17.2-3", "0.17.2-2", "0.17.2-1"]
+  },
+  "orocos_kdl": {
+    "name_with_version": "orocos_kinematics_dynamics-1.5.1",
+    "analyzed_version": "orocos_kinematics_dynamics-1.5.1",
+    "analyzed_source_url": "https://github.com/orocos/orocos_kinematics_dynamics/archive/refs/tags/v1.5.1.tar.gz",
+    "analyzed_source_filename": "orocos-kdl-v1.5.1.tar.gz",
+    "analyzed_source_hash": "5acb90acd82b10971717aca6c17874390762ecdaa3a8e4db04984ea1d4a2af9b",
+    "PkgProvides": ["orocos-kdl"],
+    "available_versions": ["1.5.1-1"]
+  },
+  "pango": {
+    "name_with_version": "pango-1.51.0",
+    "analyzed_version": "1.51.0",
+    "analyzed_source_url": "https://download.gnome.org/sources/pango/1.51/pango-1.51.0.tar.xz",
+    "analyzed_source_filename": "pango-1.51.0.tar.xz",
+    "analyzed_source_hash": "74efc109ae6f903bbe6af77eaa2ac6094b8ee245a2e23f132a7a8f0862d1a9f5",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["1.51.0-1"]
+  },
+  "pcg": {
+    "name_with_version": "pcg-cpp-0.98.1",
+    "analyzed_version": "cpp-0.98.1",
+    "analyzed_source_url": "https://github.com/imneme/pcg-cpp/archive/v0.98.1.tar.gz",
+    "analyzed_source_filename": "pcg-cpp-v0.98.1.tar.gz",
+    "analyzed_source_hash": "25bb22f076e8c346fa28c2267ae3564b12122f1f4ab2d2a08ad8909dcd6319fd",
+    "PkgProvides": [],
+    "available_versions": ["0.98.1-2", "0.98.1-1"]
+  },
+  "pcre2": {
+    "name_with_version": "pcre2-10.42",
+    "analyzed_version": "10.42",
+    "analyzed_source_url": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.42/pcre2-10.42.tar.bz2",
+    "analyzed_source_filename": "pcre2-10.42.tar.bz2",
+    "analyzed_source_hash": "8d36cd8cb6ea2a4c2bb358ff6411b0c788633a2a45dabbf1aeb4b701d1b5e840",
+    "PkgProvides": [
+      "libpcre2-8",
+      "libpcre2-16",
+      "libpcre2-32",
+      "libpcre2-posix"
+    ],
+    "available_versions": [
+      "10.42-5",
+      "10.42-4",
+      "10.42-3",
+      "10.42-2",
+      "10.42-1",
+      "10.40-3",
+      "10.40-2",
+      "10.40-1",
+      "10.39-3",
+      "10.39-2",
+      "10.39-1",
+      "10.23-1"
+    ]
+  },
+  "pcre": {
+    "name_with_version": "pcre-8.45",
+    "analyzed_version": "8.45",
+    "analyzed_source_url": "https://sourceforge.net/projects/pcre/files/pcre/8.45/pcre-8.45.tar.bz2",
+    "analyzed_source_filename": "pcre-8.45.tar.bz2",
+    "analyzed_source_hash": "4dae6fdcd2bb0bb6c37b5f97c33c2be954da743985369cddac3546e3218bffb8",
+    "PkgProvides": ["libpcre"],
+    "available_versions": [
+      "8.45-4",
+      "8.45-3",
+      "8.45-2",
+      "8.45-1",
+      "8.37-4",
+      "8.37-3",
+      "8.37-2",
+      "8.37-1"
+    ]
+  },
+  "physfs": {
+    "name_with_version": "physfs-release-3.2.0",
+    "analyzed_version": "release-3.2.0",
+    "analyzed_source_url": "https://github.com/icculus/physfs/archive/refs/tags/release-3.2.0.zip",
+    "analyzed_source_filename": "physfs-release-3.2.0.zip",
+    "analyzed_source_hash": "18adad9a2d5e165a709588d1d942d73e3ffcb0495244b108cfe402690489990c",
+    "PkgProvides": ["physfs"],
+    "available_versions": ["3.2.0-2", "3.2.0-1"]
+  },
+  "pixman": {
+    "name_with_version": "pixman-0.42.2",
+    "analyzed_version": "0.42.2",
+    "analyzed_source_url": "https://www.cairographics.org/releases/pixman-0.42.2.tar.gz",
+    "analyzed_source_filename": "pixman-0.42.2.tar.gz",
+    "analyzed_source_hash": "ea1480efada2fd948bc75366f7c349e1c96d3297d09a3fe62626e38e234a625e",
+    "PkgProvides": ["pixman-1"],
+    "available_versions": ["0.42.2-1"]
+  },
+  "pkgconf": {
+    "name_with_version": "pkgconf-1.9.3",
+    "analyzed_version": "1.9.3",
+    "analyzed_source_url": "https://distfiles.ariadne.space/pkgconf/pkgconf-1.9.3.tar.xz",
+    "analyzed_source_filename": "pkgconf-1.9.3.tar.xz",
+    "analyzed_source_hash": "5fb355b487d54fb6d341e4f18d4e2f7e813a6622cf03a9e87affa6a40565699d",
+    "PkgProvides": ["libpkgconf"],
+    "available_versions": ["1.9.3-2", "1.9.3-1", "1.9.2-1", "1.9.0-1"]
+  },
+  "protobuf-c": {
+    "name_with_version": "protobuf-c-1.4.1",
+    "analyzed_version": "1.4.1",
+    "analyzed_source_url": "https://github.com/protobuf-c/protobuf-c/releases/download/v1.4.1/protobuf-c-1.4.1.tar.gz",
+    "analyzed_source_filename": "protobuf-c-1.4.1.tar.gz",
+    "analyzed_source_hash": "4cc4facd508172f3e0a4d3a8736225d472418aee35b4ad053384b137b220339f",
+    "PkgProvides": ["libprotobuf-c"],
+    "available_versions": ["1.4.1-3", "1.4.1-2", "1.4.1-1", "1.3.0-1"]
+  },
+  "protobuf": {
+    "name_with_version": "protobuf-3.21.12",
+    "analyzed_version": "3.21.12",
+    "analyzed_source_url": "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.21.12.tar.gz",
+    "analyzed_source_filename": "protobuf-3.21.12.tar.gz",
+    "analyzed_source_hash": "930c2c3b5ecc6c9c12615cf5ad93f1cd6e12d0aba862b572e076259970ac3a53",
+    "PkgProvides": ["program_names", "protobuf", "protobuf-lite", "protoc"],
+    "available_versions": [
+      "3.21.12-5",
+      "3.21.12-4",
+      "3.21.12-3",
+      "3.21.12-2",
+      "3.21.12-1",
+      "3.21.9-1",
+      "3.20.1-1",
+      "3.20.0-1",
+      "3.12.2-2",
+      "3.12.2-1",
+      "3.5.1-3",
+      "3.5.1-2",
+      "3.5.0-4",
+      "3.5.0-3",
+      "3.5.0-2"
+    ]
+  },
+  "proxy-libintl": {
+    "name_with_version": "proxy-libintl-0.4",
+    "analyzed_version": "0.4",
+    "analyzed_source_url": "https://github.com/frida/proxy-libintl/archive/refs/tags/0.4.tar.gz",
+    "analyzed_source_filename": "proxy-libintl-0.4.tar.gz",
+    "analyzed_source_hash": "13ef3eea0a3bc0df55293be368dfbcff5a8dd5f4759280f28e030d1494a5dffb",
+    "PkgProvides": ["intl"],
+    "available_versions": ["0.4-1"]
+  },
+  "pugixml": {
+    "name_with_version": "pugixml-1.13",
+    "analyzed_version": "1.13",
+    "analyzed_source_url": "https://github.com/zeux/pugixml/archive/v1.13.tar.gz",
+    "analyzed_source_filename": "pugixml-1.13.tar.gz",
+    "analyzed_source_hash": "5c5ad5d7caeb791420408042a7d88c2c6180781bf218feca259fd9d840a888e1",
+    "PkgProvides": ["pugixml"],
+    "available_versions": [
+      "1.13-3",
+      "1.13-2",
+      "1.13-1",
+      "1.12.1-1",
+      "1.12-1",
+      "1.11.4-1"
+    ]
+  },
+  "pybind11": {
+    "name_with_version": "pybind11-2.11.1",
+    "analyzed_version": "2.11.1",
+    "analyzed_source_url": "https://github.com/pybind/pybind11/archive/refs/tags/v2.11.1.tar.gz",
+    "analyzed_source_filename": "pybind11-2.11.1.tar.gz",
+    "analyzed_source_hash": "d475978da0cdc2d43b73f30910786759d593a9d8ee05b1b6846d1eb16c6d2e0c",
+    "PkgProvides": ["pybind11"],
+    "available_versions": [
+      "2.11.1-1",
+      "2.10.4-1",
+      "2.10.3-1",
+      "2.10.0-1",
+      "2.9.0-1",
+      "2.6.1-1",
+      "2.6.0-1",
+      "2.3.0-2",
+      "2.3.0-1",
+      "2.2.4-1",
+      "2.2.3-1",
+      "2.2.2-1"
+    ]
+  },
+  "qarchive": {
+    "name_with_version": "QArchive-2.2.7",
+    "analyzed_version": "QArchive-2.2.7",
+    "analyzed_source_url": "https://github.com/antony-jr/QArchive/archive/refs/tags/v2.2.7.tar.gz",
+    "analyzed_source_filename": "QArchive-2.2.7.tar.gz",
+    "analyzed_source_hash": "53bc9633e4e75d01d7ae6ff925fd111fc4951f922f74b37d652df51c0eb4aa30",
+    "PkgProvides": ["qarchive"],
+    "available_versions": [
+      "2.2.7-1",
+      "2.2.6-1",
+      "2.2.4-1",
+      "2.2.3-1",
+      "2.2.2-1",
+      "2.2.1-2",
+      "2.2.1-1",
+      "2.2.0-1",
+      "2.0.2-1"
+    ]
+  },
+  "quazip": {
+    "name_with_version": "quazip-1.4",
+    "analyzed_version": "1.4",
+    "analyzed_source_url": "https://github.com/stachenov/quazip/archive/refs/tags/v1.4.tar.gz",
+    "analyzed_source_filename": "quazip-1.4.tar.gz",
+    "analyzed_source_hash": "79633fd3a18e2d11a7d5c40c4c79c1786ba0c74b59ad752e8429746fe1781dd6",
+    "PkgProvides": ["quazip"],
+    "available_versions": ["1.4-1", "1.3-1", "0.7.3-1"]
+  },
+  "rang": {
+    "name_with_version": "rang-3.2",
+    "analyzed_version": "3.2",
+    "analyzed_source_url": "https://github.com/agauniyal/rang/archive/v3.2.tar.gz",
+    "analyzed_source_filename": "rang-3.2.tar.gz",
+    "analyzed_source_hash": "8b42d9c33a6529a6c283a4f4c73c26326561ccc67fbb3e6a3225edd688b39973",
+    "PkgProvides": ["rang"],
+    "available_versions": ["3.2-1", "2.0-1"]
+  },
+  "range-v3": {
+    "name_with_version": "range-v3-0.12.0",
+    "analyzed_version": "0.12.0",
+    "analyzed_source_url": "https://github.com/ericniebler/range-v3/archive/0.12.0.tar.gz",
+    "analyzed_source_filename": "range-v3-0.12.0.tar.gz",
+    "analyzed_source_hash": "015adb2300a98edfceaf0725beec3337f542af4915cec4d0b89fa0886f4ba9cb",
+    "PkgProvides": ["range-v3"],
+    "available_versions": [
+      "0.12.0-2",
+      "0.12.0-1",
+      "0.11.0-1",
+      "0.10.0-1",
+      "0.3.6-1"
+    ]
+  },
+  "rapidjson": {
+    "name_with_version": "rapidjson-1.1.0",
+    "analyzed_version": "1.1.0",
+    "analyzed_source_url": "https://github.com/Tencent/rapidjson/archive/v1.1.0.tar.gz",
+    "analyzed_source_filename": "rapidjson-1.1.0.tar.gz",
+    "analyzed_source_hash": "bf7ced29704a1e696fbccf2a2b4ea068e7774fa37f6d7dd4039d0787f8bed98e",
+    "PkgProvides": ["rapidjson"],
+    "available_versions": ["1.1.0-2", "1.1.0-1"]
+  },
+  "rdkafka": {
+    "name_with_version": "librdkafka-2.1.0",
+    "analyzed_version": "librdkafka-2.1.0",
+    "analyzed_source_url": "https://github.com/confluentinc/librdkafka/archive/v2.1.0.tar.gz",
+    "analyzed_source_filename": "librdkafka-2.1.0.tar.gz",
+    "analyzed_source_hash": "d8e76c4b1cde99e283a19868feaaff5778aa5c6f35790036c5ef44bc5b5187aa",
+    "PkgProvides": ["rdkafka", "rdkafka++"],
+    "available_versions": [
+      "2.1.0-2",
+      "2.1.0-1",
+      "1.9.2-5",
+      "1.9.2-4",
+      "1.9.2-3",
+      "1.9.2-2",
+      "1.9.2-1",
+      "1.9.0-2",
+      "1.9.0-1",
+      "1.8.2-1",
+      "1.7.0-1",
+      "1.5.2-1",
+      "1.5.0-1",
+      "1.4.4-1",
+      "1.4.0-1"
+    ]
+  },
+  "re2": {
+    "name_with_version": "re2-2023-03-01",
+    "analyzed_version": "2023-03-01",
+    "analyzed_source_url": "https://github.com/google/re2/archive/2023-03-01.tar.gz",
+    "analyzed_source_filename": "re2-2023-03-01.tar.gz",
+    "analyzed_source_hash": "7a9a4824958586980926a300b4717202485c4b4115ac031822e29aa4ef207e48",
+    "PkgProvides": ["re2"],
+    "available_versions": ["20230301-1", "20220401-1", "20201101-1"]
+  },
+  "reflex": {
+    "name_with_version": "RE-flex-3.2.11",
+    "analyzed_version": "RE-flex-3.2.11",
+    "analyzed_source_url": "https://github.com/Genivia/RE-flex/archive/v3.2.11.tar.gz",
+    "analyzed_source_filename": "v3.2.11.tar.gz",
+    "analyzed_source_hash": "45b1b7e6bc47f567a16ffec710dcbfd4e95f0f7a34c14472809ca2fcda0ce143",
+    "PkgProvides": ["program_names", "reflex"],
+    "available_versions": [
+      "3.2.11-1",
+      "3.2.7-1",
+      "3.2.3-1",
+      "3.0.1-2",
+      "3.0.1-1"
+    ]
+  },
+  "robin-map": {
+    "name_with_version": "robin-map-1.2.1",
+    "analyzed_version": "1.2.1",
+    "analyzed_source_url": "https://github.com/Tessil/robin-map/archive/refs/tags/v1.2.1.tar.gz",
+    "analyzed_source_filename": "robin-map-1.2.1.tar.gz",
+    "analyzed_source_hash": "2b54d2c1de2f73bea5c51d5dcbd64813a08caf1bfddcfdeee40ab74e9599e8e3",
+    "PkgProvides": ["robin-map"],
+    "available_versions": ["1.2.1-1"]
+  },
+  "rtaudio": {
+    "name_with_version": "rtaudio-6.0.1",
+    "analyzed_version": "6.0.1",
+    "analyzed_source_url": "http://www.music.mcgill.ca/~gary/rtaudio/release/rtaudio-6.0.1.tar.gz",
+    "analyzed_source_filename": "rtaudio-6.0.1.tar.gz",
+    "analyzed_source_hash": "42d29cc2b5fa378ba3a978faeb1885a0075acf0fecb5ee50f0d76f6c7d8ab28c",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": ["6.0.1-1", "5.2.0-1"]
+  },
+  "rubberband": {
+    "name_with_version": "rubberband-2.0.2",
+    "analyzed_version": "2.0.2",
+    "analyzed_source_url": "https://breakfastquay.com/files/releases/rubberband-2.0.2.tar.bz2",
+    "analyzed_source_filename": "rubberband-2.0.2.tar.bz2",
+    "analyzed_source_hash": "b9eac027e797789ae99611c9eaeaf1c3a44cc804f9c8a0441a0d1d26f3d6bdf9",
+    "PkgProvides": ["rubberband"],
+    "available_versions": ["2.0.2-1"]
+  },
+  "rxcpp": {
+    "name_with_version": "RxCpp-4.1.1",
+    "analyzed_version": "RxCpp-4.1.1",
+    "analyzed_source_url": "https://github.com/ReactiveX/RxCpp/archive/refs/tags/v4.1.1.tar.gz",
+    "analyzed_source_filename": "RxCpp-4.1.1.tar.gz",
+    "analyzed_source_hash": "054a9be63e66904ecaa552ce56d6458b4545d6da5ea32f5103c7fc379cebb374",
+    "PkgProvides": ["rxcpp"],
+    "available_versions": ["4.1.1-1", "4.1.0-1"]
+  },
+  "sassc": {
+    "name_with_version": "sassc-3.6.2",
+    "analyzed_version": "3.6.2",
+    "analyzed_source_url": "https://github.com/sass/sassc/archive/refs/tags/3.6.2.tar.gz",
+    "analyzed_source_filename": "sassc-3.6.2.tar.gz",
+    "analyzed_source_hash": "608dc9002b45a91d11ed59e352469ecc05e4f58fc1259fc9a9f5b8f0f8348a03",
+    "PkgProvides": ["program_names"],
+    "available_versions": ["3.6.2-1"]
+  },
+  "sdl2": {
+    "name_with_version": "SDL2-2.28.1",
+    "analyzed_version": "SDL2-2.28.1",
+    "analyzed_source_url": "https://github.com/libsdl-org/SDL/releases/download/release-2.28.1/SDL2-2.28.1.tar.gz",
+    "analyzed_source_filename": "SDL2-2.28.1.tar.gz",
+    "analyzed_source_hash": "4977ceba5c0054dbe6c2f114641aced43ce3bf2b41ea64b6a372d6ba129cb15d",
+    "PkgProvides": ["sdl2", "sdl2_test", "sdl2main"],
+    "available_versions": [
+      "2.28.1-2",
+      "2.28.1-1",
+      "2.26.5-5",
+      "2.26.5-4",
+      "2.26.5-3",
+      "2.26.5-2",
+      "2.26.5-1",
+      "2.26.0-2",
+      "2.26.0-1",
+      "2.24.2-1",
+      "2.24.1-4",
+      "2.24.1-3",
+      "2.24.1-2",
+      "2.24.1-1",
+      "2.24.0-5",
+      "2.24.0-4",
+      "2.24.0-3",
+      "2.24.0-2",
+      "2.24.0-1",
+      "2.0.20-6",
+      "2.0.20-5",
+      "2.0.20-4",
+      "2.0.20-3",
+      "2.0.20-2",
+      "2.0.20-1",
+      "2.0.18-2",
+      "2.0.18-1",
+      "2.0.12-3",
+      "2.0.12-2",
+      "2.0.12-1",
+      "2.0.3-6",
+      "2.0.3-5",
+      "2.0.3-4"
+    ]
+  },
+  "sdl2_image": {
+    "name_with_version": "SDL2_image-2.6.3",
+    "analyzed_version": "SDL2_image-2.6.3",
+    "analyzed_source_url": "https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.6.3.tar.gz",
+    "analyzed_source_filename": "SDL2_image-2.6.3.tar.gz",
+    "analyzed_source_hash": "931c9be5bf1d7c8fae9b7dc157828b7eee874e23c7f24b44ba7eff6b4836312c",
+    "PkgProvides": ["sdl2_image"],
+    "available_versions": [
+      "2.6.3-2",
+      "2.6.3-1",
+      "2.6.2-1",
+      "2.0.5-3",
+      "2.0.5-2",
+      "2.0.5-1"
+    ]
+  },
+  "sdl2_mixer": {
+    "name_with_version": "SDL2_mixer-2.6.2",
+    "analyzed_version": "SDL2_mixer-2.6.2",
+    "analyzed_source_url": "https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.6.2.tar.gz",
+    "analyzed_source_filename": "SDL2_mixer-2.6.2.tar.gz",
+    "analyzed_source_hash": "8cdea810366decba3c33d32b8071bccd1c309b2499a54946d92b48e6922aa371",
+    "PkgProvides": ["sdl2_mixer"],
+    "available_versions": [
+      "2.6.2-3",
+      "2.6.2-2",
+      "2.6.2-1",
+      "2.0.4-3",
+      "2.0.4-2",
+      "2.0.4-1"
+    ]
+  },
+  "sdl2_net": {
+    "name_with_version": "SDL2_net-2.2.0",
+    "analyzed_version": "SDL2_net-2.2.0",
+    "analyzed_source_url": "https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.2.0.tar.gz",
+    "analyzed_source_filename": "SDL2_net-2.2.0.tar.gz",
+    "analyzed_source_hash": "4e4a891988316271974ff4e9585ed1ef729a123d22c08bd473129179dc857feb",
+    "PkgProvides": ["sdl2_net"],
+    "available_versions": [
+      "2.2.0-1",
+      "2.0.1-4",
+      "2.0.1-3",
+      "2.0.1-2",
+      "2.0.1-1"
+    ]
+  },
+  "sdl2_ttf": {
+    "name_with_version": "SDL2_ttf-2.20.1",
+    "analyzed_version": "SDL2_ttf-2.20.1",
+    "analyzed_source_url": "https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.20.1.tar.gz",
+    "analyzed_source_filename": "SDL2_ttf-2.20.1.tar.gz",
+    "analyzed_source_hash": "78cdad51f3cc3ada6932b1bb6e914b33798ab970a1e817763f22ddbfd97d0c57",
+    "PkgProvides": ["sdl2_ttf"],
+    "available_versions": [
+      "2.20.1-2",
+      "2.20.1-1",
+      "2.0.12-3",
+      "2.0.12-2",
+      "2.0.12-1"
+    ]
+  },
+  "sds": {
+    "name_with_version": "sds-2.0.0",
+    "analyzed_version": "2.0.0",
+    "analyzed_source_url": "https://github.com/antirez/sds/archive/refs/tags/2.0.0.tar.gz",
+    "analyzed_source_filename": "sds-2.0.0.tar.gz",
+    "analyzed_source_hash": "379c88d31bf9957006130c00671c28612a8647d5f38ff09cb75efb7abf08f6bb",
+    "PkgProvides": ["sds"],
+    "available_versions": ["2.0.0-2", "2.0.0-1"]
+  },
+  "sergiusthebest-plog": {
+    "name_with_version": "plog-1.1.4",
+    "analyzed_version": "plog-1.1.4",
+    "analyzed_source_url": "https://github.com/SergiusTheBest/plog/archive/1.1.4.tar.gz",
+    "analyzed_source_filename": "1.1.4.tar.gz",
+    "analyzed_source_hash": "4a97f9709bef26b0d8886fe7b58962da7f5cbfc4d7c8c19bcefaacf973065e3f",
+    "PkgProvides": [],
+    "available_versions": ["1.1.4-1"]
+  },
+  "sfml": {
+    "name_with_version": "SFML-2.6.0",
+    "analyzed_version": "SFML-2.6.0",
+    "analyzed_source_url": "https://github.com/SFML/SFML/archive/refs/tags/2.6.0.tar.gz",
+    "analyzed_source_filename": "2.6.0.tar.gz",
+    "analyzed_source_hash": "0c3f84898ea1db07dc46fa92e85038d8c449e3c8653fe09997383173de96bc06",
+    "PkgProvides": ["sfml"],
+    "available_versions": [
+      "2.6.0-2",
+      "2.6.0-1",
+      "2.5.1-4",
+      "2.5.1-3",
+      "2.5.1-2",
+      "2.5.1-1"
+    ]
+  },
+  "simdjson": {
+    "name_with_version": "simdjson-3.3.0",
+    "analyzed_version": "3.3.0",
+    "analyzed_source_url": "https://github.com/simdjson/simdjson/archive/refs/tags/v3.3.0.tar.gz",
+    "analyzed_source_filename": "simdjson-3.3.0.tar.gz",
+    "analyzed_source_hash": "a8c9feff2f19c3ff281d42f0b6b4b18f02236513b99229756fa9a1b14787a58a",
+    "PkgProvides": ["simdjson"],
+    "available_versions": ["3.3.0-2", "3.3.0-1", "3.1.1-1"]
+  },
+  "slirp": {
+    "name_with_version": "libslirp-v4.7.0",
+    "analyzed_version": "libslirp-v4.7.0",
+    "analyzed_source_url": "https://gitlab.freedesktop.org/slirp/libslirp/-/archive/v4.7.0/libslirp-v4.7.0.tar.gz",
+    "analyzed_source_filename": "libslirp-v4.7.0.tar.gz",
+    "analyzed_source_hash": "9398f0ec5a581d4e1cd6856b88ae83927e458d643788c3391a39e61b75db3d3b",
+    "PkgProvides": ["slirp"],
+    "available_versions": ["4.7.0-1", "4.6.1-2", "4.6.1-1"]
+  },
+  "sparsehash-c11": {
+    "name_with_version": "sparsehash-c11-2.11.1",
+    "analyzed_version": "2.11.1",
+    "analyzed_source_url": "https://github.com/sparsehash/sparsehash-c11/archive/refs/tags/v2.11.1.tar.gz",
+    "analyzed_source_filename": "sparsehash-c11-2.11.1.tar.gz",
+    "analyzed_source_hash": "d4a43cad1e27646ff0ef3a8ce3e18540dbcb1fdec6cc1d1cb9b5095a9ca2a755",
+    "PkgProvides": ["sparsehash-c11"],
+    "available_versions": ["2.11.1-1"]
+  },
+  "spdlog": {
+    "name_with_version": "spdlog-1.12.0",
+    "analyzed_version": "1.12.0",
+    "analyzed_source_url": "https://github.com/gabime/spdlog/archive/refs/tags/v1.12.0.tar.gz",
+    "analyzed_source_filename": "spdlog-1.12.0.tar.gz",
+    "analyzed_source_hash": "4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9",
+    "PkgProvides": ["spdlog"],
+    "available_versions": [
+      "1.12.0-1",
+      "1.11.0-2",
+      "1.11.0-1",
+      "1.10.0-3",
+      "1.10.0-2",
+      "1.10.0-1",
+      "1.9.2-1",
+      "1.8.5-1",
+      "1.8.2-1",
+      "1.8.1-1",
+      "1.8.0-1",
+      "1.4.2-1",
+      "1.3.1-1",
+      "1.1.0-1",
+      "0.17.0-2",
+      "0.17.0-1",
+      "0.16.3-1",
+      "0.11.0-1"
+    ]
+  },
+  "speexdsp": {
+    "name_with_version": "speexdsp-1.2.1",
+    "analyzed_version": "1.2.1",
+    "analyzed_source_url": "https://downloads.xiph.org/releases/speex/speexdsp-1.2.1.tar.gz",
+    "analyzed_source_filename": "speexdsp-1.2.1.tar.gz",
+    "analyzed_source_hash": "8c777343e4a6399569c72abc38a95b24db56882c83dbdb6c6424a5f4aeb54d3d",
+    "PkgProvides": ["speexdsp"],
+    "available_versions": [
+      "1.2.1-7",
+      "1.2.1-6",
+      "1.2.1-5",
+      "1.2.1-4",
+      "1.2.1-3",
+      "1.2.1-2",
+      "1.2.1-1",
+      "1.2.0-1"
+    ]
+  },
+  "spng": {
+    "name_with_version": "libspng-0.7.4",
+    "analyzed_version": "libspng-0.7.4",
+    "analyzed_source_url": "https://github.com/randy408/libspng/archive/refs/tags/v0.7.4.tar.gz",
+    "analyzed_source_filename": "libspng-0.7.4.tar.gz",
+    "analyzed_source_hash": "47ec02be6c0a6323044600a9221b049f63e1953faf816903e7383d4dc4234487",
+    "PkgProvides": ["spng"],
+    "available_versions": [
+      "0.7.4-1",
+      "0.7.2-1",
+      "0.7.0-1",
+      "0.5.0-1",
+      "0.4.5-1",
+      "0.4.4-1",
+      "0.4.3-1",
+      "0.4.2-2",
+      "0.4.2-1"
+    ]
+  },
+  "sqlite3": {
+    "name_with_version": "sqlite-amalgamation-3430200",
+    "analyzed_version": "sqlite-amalgamation-3430200",
+    "analyzed_source_url": "https://www.sqlite.org/2023/sqlite-amalgamation-3430200.zip",
+    "analyzed_source_filename": "sqlite-amalgamation-3430200.zip",
+    "analyzed_source_hash": "a17ac8792f57266847d57651c5259001d1e4e4b46be96ec0d985c953925b2a1c",
+    "PkgProvides": ["sqlite3"],
+    "available_versions": [
+      "3.43.2-1",
+      "3.43.1-2",
+      "3.43.1-1",
+      "3.43.0-1",
+      "3.42.0-1",
+      "3.41.2-2",
+      "3.41.2-1",
+      "3.41.1-1",
+      "3.41.0-1",
+      "3.40.0-1",
+      "3.39.4-2",
+      "3.39.4-1",
+      "3.39.3-1",
+      "3.38.0-1",
+      "3.34.1-1"
+    ]
+  },
+  "sqlitecpp": {
+    "name_with_version": "SQLiteCpp-3.3.1",
+    "analyzed_version": "SQLiteCpp-3.3.1",
+    "analyzed_source_url": "https://github.com/SRombauts/SQLiteCpp/archive/refs/tags/3.3.1.zip",
+    "analyzed_source_filename": "sqlitecpp-3.3.1.zip",
+    "analyzed_source_hash": "e1bdc1ff47f201bc2b77703de1001ea5e525151fa57c22ed43f06335b4784603",
+    "PkgProvides": ["sqlitecpp"],
+    "available_versions": ["3.3.1-1"]
+  },
+  "stduuid": {
+    "name_with_version": "stduuid-1.2.3",
+    "analyzed_version": "1.2.3",
+    "analyzed_source_url": "https://github.com/mariusbancila/stduuid/archive/refs/tags/v1.2.3.tar.gz",
+    "analyzed_source_filename": "stduuid-1.2.3.tar.gz",
+    "analyzed_source_hash": "b1176597e789531c38481acbbed2a6894ad419aab0979c10410d59eb0ebf40d3",
+    "PkgProvides": ["stduuid"],
+    "available_versions": ["1.2.3-1"]
+  },
+  "tabulate": {
+    "name_with_version": "tabulate-1.5",
+    "analyzed_version": "1.5",
+    "analyzed_source_url": "https://github.com/p-ranav/tabulate/archive/refs/tags/v1.5.tar.gz",
+    "analyzed_source_filename": "tabulate-1.5.tar.gz",
+    "analyzed_source_hash": "16b289f46306283544bb593f4601e80d6ea51248fde52e910cc569ef08eba3fb",
+    "PkgProvides": ["tabulate"],
+    "available_versions": ["1.5-1", "1.4-2", "1.4-1"]
+  },
+  "taglib": {
+    "name_with_version": "taglib-1.13",
+    "analyzed_version": "1.13",
+    "analyzed_source_url": "https://github.com/taglib/taglib/releases/download/v1.13/taglib-1.13.tar.gz",
+    "analyzed_source_filename": "taglib-1.13.tar.gz",
+    "analyzed_source_hash": "58f08b4db3dc31ed152c04896ee9172d22052bc7ef12888028c01d8b1d60ade0",
+    "PkgProvides": ["taglib"],
+    "available_versions": [
+      "1.13-4",
+      "1.13-3",
+      "1.13-2",
+      "1.13-1",
+      "1.12-3",
+      "1.12-2",
+      "1.12-1"
+    ]
+  },
+  "tclap": {
+    "name_with_version": "tclap-1.2.4",
+    "analyzed_version": "1.2.4",
+    "analyzed_source_url": "https://sourceforge.net/projects/tclap/files/tclap-1.2.4.tar.gz",
+    "analyzed_source_filename": "tclap-1.2.4.tar.gz",
+    "analyzed_source_hash": "634c5b59dbb1ccbc9d6a5f6de494a257e29a3f59dcb6fc30445ff39b45188574",
+    "PkgProvides": ["tclap"],
+    "available_versions": ["1.2.4-2", "1.2.4-1", "1.2.2-1", "1.2.1-1"]
+  },
+  "termbox": {
+    "name_with_version": "termbox-1.1.2",
+    "analyzed_version": "1.1.2",
+    "analyzed_source_url": "https://github.com/nsf/termbox/archive/v1.1.2.tar.gz",
+    "analyzed_source_filename": "v1.1.2.tar.gz",
+    "analyzed_source_hash": "61c9940b42b3ac44bf0cba67eacba75e3c02088b8c695149528c77def04d69b1",
+    "PkgProvides": ["termbox"],
+    "available_versions": ["1.1.2-1"]
+  },
+  "theora": {
+    "name_with_version": "libtheora-1.1.1",
+    "analyzed_version": "libtheora-1.1.1",
+    "analyzed_source_url": "https://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.bz2",
+    "analyzed_source_filename": "libtheora-1.1.1.tar.bz2",
+    "analyzed_source_hash": "b6ae1ee2fa3d42ac489287d3ec34c5885730b1296f0801ae577a35193d3affbc",
+    "PkgProvides": ["theora", "theoradec", "theoraenc"],
+    "available_versions": ["1.1.1-4", "1.1.1-3", "1.1.1-2", "1.1.1-1"]
+  },
+  "tinyfsm": {
+    "name_with_version": "tinyfsm-0.3.3",
+    "analyzed_version": "0.3.3",
+    "analyzed_source_url": "https://github.com/digint/tinyfsm/archive/refs/tags/v0.3.3.tar.gz",
+    "analyzed_source_filename": "tinyfsm-0.3.3.tar.gz",
+    "analyzed_source_hash": "99aaad53ddb9b9b3fbb535a6983e9c86a0b8c8ef112181cddcb6f3857b440d09",
+    "PkgProvides": ["tinyfsm"],
+    "available_versions": ["0.3.3-1"]
+  },
+  "tinyply": {
+    "name_with_version": "tinyply-2.3.4",
+    "analyzed_version": "2.3.4",
+    "analyzed_source_url": "https://github.com/ddiakopoulos/tinyply/archive/2.3.4.tar.gz",
+    "analyzed_source_filename": "tinyply-2.3.4.tar.gz",
+    "analyzed_source_hash": "1bb1462727a363f7b77a10e51cd023095db7b281d2f201167620a83e495513c6",
+    "PkgProvides": ["tinyply"],
+    "available_versions": [
+      "2.3.4-1",
+      "2.2-2",
+      "2.2-1",
+      "2.1-2",
+      "2.1-1",
+      "2.0-1"
+    ]
+  },
+  "tinyxml2": {
+    "name_with_version": "tinyxml2-9.0.0",
+    "analyzed_version": "9.0.0",
+    "analyzed_source_url": "https://github.com/leethomason/tinyxml2/archive/9.0.0.tar.gz",
+    "analyzed_source_filename": "9.0.0.tar.gz",
+    "analyzed_source_hash": "cc2f1417c308b1f6acc54f88eb70771a0bf65f76282ce5c40e54cfe52952702c",
+    "PkgProvides": ["tinyxml2"],
+    "available_versions": ["9.0.0-1", "7.0.1-1"]
+  },
+  "tl-expected": {
+    "name_with_version": "expected-1.1.0",
+    "analyzed_version": "expected-1.1.0",
+    "analyzed_source_url": "https://github.com/TartanLlama/expected/archive/v1.1.0.tar.gz",
+    "analyzed_source_filename": "expected-1.1.0.tar.gz",
+    "analyzed_source_hash": "1db357f46dd2b24447156aaf970c4c40a793ef12a8a9c2ad9e096d9801368df6",
+    "PkgProvides": ["tl-expected"],
+    "available_versions": ["1.1.0-1", "1.0.0-1"]
+  },
+  "tl-optional": {
+    "name_with_version": "optional-1.0.0",
+    "analyzed_version": "optional-1.0.0",
+    "analyzed_source_url": "https://github.com/TartanLlama/optional/archive/refs/tags/v1.0.0.tar.gz",
+    "analyzed_source_filename": "optional-1.0.0.tar.gz",
+    "analyzed_source_hash": "e18941da05bca12a796ebbeacb83993bc0f10e817fa10bb45124a421c2384690",
+    "PkgProvides": ["tl-optional"],
+    "available_versions": ["1.0.0-1"]
+  },
+  "tomlplusplus": {
+    "name_with_version": "tomlplusplus-3.3.0",
+    "analyzed_version": "3.3.0",
+    "analyzed_source_url": "https://github.com/marzer/tomlplusplus/archive/v3.3.0.tar.gz",
+    "analyzed_source_filename": "tomlplusplus-3.3.0.tar.gz",
+    "analyzed_source_hash": "fc1a5eb410f3c67e90e5ad1264a1386d020067cfb01b633cc8c0441789aa6cf2",
+    "PkgProvides": ["dependency_names"],
+    "available_versions": [
+      "3.3.0-1",
+      "3.2.0-1",
+      "3.1.0-1",
+      "3.0.0-1",
+      "2.5.0-1"
+    ]
+  },
+  "tracy": {
+    "name_with_version": "tracy-0.10",
+    "analyzed_version": "0.10",
+    "analyzed_source_url": "https://github.com/wolfpld/tracy/archive/refs/tags/v0.10.tar.gz",
+    "analyzed_source_filename": "tracy-0.10.tar.gz",
+    "analyzed_source_hash": "a76017d928f3f2727540fb950edd3b736caa97b12dbb4e5edce66542cbea6600",
+    "PkgProvides": ["tracy"],
+    "available_versions": ["0.10-1", "0.9.1-1", "0.9-1", "0.8.2.1-1", "0.8.1-1"]
+  },
+  "trompeloeil": {
+    "name_with_version": "trompeloeil-39",
+    "analyzed_version": "39",
+    "analyzed_source_url": "https://github.com/rollbear/trompeloeil/archive/v39.tar.gz",
+    "analyzed_source_filename": "trompeloeil-39.tar.gz",
+    "analyzed_source_hash": "10506e48abd605740bc9ed43e34059f5068bc80af14476bd129a3ed3b54d522f",
+    "PkgProvides": [],
+    "available_versions": ["39-1", "38-1"]
+  },
+  "tronkko-dirent": {
+    "name_with_version": "dirent-1.23.2",
+    "analyzed_version": "dirent-1.23.2",
+    "analyzed_source_url": "https://github.com/tronkko/dirent/archive/1.23.2.tar.gz",
+    "analyzed_source_filename": "dirent-1.23.2.tar.gz",
+    "analyzed_source_hash": "f72d39e3c39610b6901e391b140aa69b51e0eb99216939ed5e547b5dad03afb1",
+    "PkgProvides": [],
+    "available_versions": ["1.23.2-1"]
+  },
+  "turtle": {
+    "name_with_version": "turtle-1.3.2",
+    "analyzed_version": "1.3.2",
+    "analyzed_source_url": "https://github.com/mat007/turtle/releases/download/v1.3.2/turtle-1.3.2.tar.gz",
+    "analyzed_source_filename": "turtle-1.3.2.tar.gz",
+    "analyzed_source_hash": "0551f0e5f19bcee5484a2dfeadd4b56f7142f89ed2a1839dd56ed2d594ef1d4c",
+    "PkgProvides": [],
+    "available_versions": ["1.3.2-1", "1.3.1-1"]
+  },
+  "uchardet": {
+    "name_with_version": "uchardet-0.0.8",
+    "analyzed_version": "0.0.8",
+    "analyzed_source_url": "https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.8.tar.xz",
+    "analyzed_source_filename": "uchardet-0.0.8.tar.xz",
+    "analyzed_source_hash": "e97a60cfc00a1c147a674b097bb1422abd9fa78a2d9ce3f3fdcc2e78a34ac5f0",
+    "PkgProvides": ["uchardet"],
+    "available_versions": ["0.0.8-1", "0.0.7-3", "0.0.7-2", "0.0.7-1"]
+  },
+  "unit-system": {
+    "name_with_version": "unit-system-0.7.1",
+    "analyzed_version": "0.7.1",
+    "analyzed_source_url": "https://github.com/noah1510/unit-system/archive/refs/tags/v0.7.1.tar.gz",
+    "analyzed_source_filename": "unit-system-0.7.1.tar.gz",
+    "analyzed_source_hash": "aa7a7e3a49d98cf571f23bec4b6a38f0a351f822667329a9a271689b81407610",
+    "PkgProvides": ["unit-system"],
+    "available_versions": [
+      "0.7.1-1",
+      "0.7.0-1",
+      "0.6.1-1",
+      "0.5.2-1",
+      "0.5.0-1"
+    ]
+  },
+  "unittest-cpp": {
+    "name_with_version": "unittest-cpp-2.0.0",
+    "analyzed_version": "2.0.0",
+    "analyzed_source_url": "https://github.com/unittest-cpp/unittest-cpp/archive/v2.0.0.tar.gz",
+    "analyzed_source_filename": "unittest-cpp-2.0.0.tar.gz",
+    "analyzed_source_hash": "74852198877dc2fdebdc4e5e9bd074018bf8ee03a13de139bfe41f4585b2f5b9",
+    "PkgProvides": ["unittest-cpp"],
+    "available_versions": ["2.0.0-2", "2.0.0-1"]
+  },
+  "unity": {
+    "name_with_version": "Unity-2.5.2",
+    "analyzed_version": "Unity-2.5.2",
+    "analyzed_source_url": "https://github.com/ThrowTheSwitch/Unity/archive/refs/tags/v2.5.2.tar.gz",
+    "analyzed_source_filename": "Unity-2.5.2.tar.gz",
+    "analyzed_source_hash": "3786de6c8f389be3894feae4f7d8680a02e70ed4dbcce36109c8f8646da2671a",
+    "PkgProvides": ["unity"],
+    "available_versions": ["2.5.2-1"]
+  },
+  "utf8proc": {
+    "name_with_version": "utf8proc-2.9.0",
+    "analyzed_version": "2.9.0",
+    "analyzed_source_url": "https://github.com/JuliaStrings/utf8proc/releases/download/v2.9.0/utf8proc-2.9.0.tar.gz",
+    "analyzed_source_filename": "utf8proc-2.9.0.tar.gz",
+    "analyzed_source_hash": "bd215d04313b5bc42c1abedbcb0a6574667e31acee1085543a232204e36384c4",
+    "PkgProvides": ["libutf8proc"],
+    "available_versions": ["2.9.0-1", "2.8.0-1", "2.7.0-1", "2.6.0-1"]
+  },
+  "utfcpp": {
+    "name_with_version": "utfcpp-3.2.4",
+    "analyzed_version": "3.2.4",
+    "analyzed_source_url": "https://github.com/nemtrif/utfcpp/archive/v3.2.4.tar.gz",
+    "analyzed_source_filename": "utfcpp-3.2.4.tar.gz",
+    "analyzed_source_hash": "fde21a4c519eed25f095a1cd8490167409cc70d7b5e9c38756142e588ccb7c7e",
+    "PkgProvides": ["utf8cpp"],
+    "available_versions": [
+      "3.2.4-1",
+      "3.2.3-1",
+      "3.2.2-1",
+      "3.2.1-1",
+      "2.3.5-1"
+    ]
+  },
+  "uthash": {
+    "name_with_version": "uthash-2.3.0",
+    "analyzed_version": "2.3.0",
+    "analyzed_source_url": "https://github.com/troydhanson/uthash/archive/v2.3.0.tar.gz",
+    "analyzed_source_filename": "uthash-2.3.0.tar.gz",
+    "analyzed_source_hash": "e10382ab75518bad8319eb922ad04f907cb20cccb451a3aa980c9d005e661acc",
+    "PkgProvides": ["uthash"],
+    "available_versions": ["2.3.0-1"]
+  },
+  "vorbis": {
+    "name_with_version": "libvorbis-1.3.7",
+    "analyzed_version": "libvorbis-1.3.7",
+    "analyzed_source_url": "https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.xz",
+    "analyzed_source_filename": "libvorbis-1.3.7.tar.xz",
+    "analyzed_source_hash": "b33cc4934322bcbf6efcbacf49e3ca01aadbea4114ec9589d1b1e9d20f72954b",
+    "PkgProvides": ["vorbis", "vorbisenc", "vorbisfile"],
+    "available_versions": [
+      "1.3.7-4",
+      "1.3.7-3",
+      "1.3.7-2",
+      "1.3.7-1",
+      "1.3.7-0",
+      "1.3.5-8",
+      "1.3.5-7",
+      "1.3.5-6",
+      "1.3.5-5",
+      "1.3.5-4",
+      "1.3.5-2"
+    ]
+  },
+  "vulkan-headers": {
+    "name_with_version": "Vulkan-Headers-1.3.265",
+    "analyzed_version": "Vulkan-Headers-1.3.265",
+    "analyzed_source_url": "https://github.com/KhronosGroup/Vulkan-Headers/archive/v1.3.265.tar.gz",
+    "analyzed_source_filename": "vulkan-headers-1.3.265.tar.gz",
+    "analyzed_source_hash": "24076540521da1eceecfb56235cb0361a01fb24a306cbefe874c949bf2d2e9a4",
+    "PkgProvides": ["vulkanheaders"],
+    "available_versions": [
+      "1.3.265-1",
+      "1.2.203-1",
+      "1.2.158-2",
+      "1.2.158-1",
+      "1.2.142-1"
+    ]
+  },
+  "vulkan-memory-allocator": {
+    "name_with_version": "VulkanMemoryAllocator-3.0.1",
+    "analyzed_version": "VulkanMemoryAllocator-3.0.1",
+    "analyzed_source_url": "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/archive/refs/tags/v3.0.1.tar.gz",
+    "analyzed_source_filename": "vulkan_memory_allocator.tar.gz",
+    "analyzed_source_hash": "2a84762b2d10bf540b9dc1802a198aca8ad1f3d795a4ae144212c595696a360c",
+    "PkgProvides": ["vulkan-memory-allocator"],
+    "available_versions": ["3.0.1-1"]
+  },
+  "vulkan-validationlayers": {
+    "name_with_version": "Vulkan-ValidationLayers-1.2.158",
+    "analyzed_version": "Vulkan-ValidationLayers-1.2.158",
+    "analyzed_source_url": "https://github.com/KhronosGroup/Vulkan-ValidationLayers/archive/v1.2.158.tar.gz",
+    "analyzed_source_filename": "vulkan-validationlayers-1.2.158.tar.gz",
+    "analyzed_source_hash": "9d7a6eba2db88b8af6457acce0b638324ca03cde2e9589ae96749114091c6e9e",
+    "PkgProvides": [],
+    "available_versions": ["1.2.158-2", "1.2.158-1"]
+  },
+  "wayland-protocols": {
+    "name_with_version": "wayland-protocols-1.32",
+    "analyzed_version": "1.32",
+    "analyzed_source_url": "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/1.32/downloads/wayland-protocols-1.32.tar.xz",
+    "analyzed_source_filename": "wayland-protocols-1.32.tar.xz",
+    "analyzed_source_hash": "7459799d340c8296b695ef857c07ddef24c5a09b09ab6a74f7b92640d2b1ba11",
+    "PkgProvides": ["wayland-protocols"],
+    "available_versions": ["1.32-1", "1.24-1"]
+  },
+  "wayland": {
+    "name_with_version": "wayland-1.20.0",
+    "analyzed_version": "1.20.0",
+    "analyzed_source_url": "https://wayland.freedesktop.org/releases/wayland-1.20.0.tar.xz",
+    "analyzed_source_filename": "wayland-1.20.0.tar.xz",
+    "analyzed_source_hash": "b8a034154c7059772e0fdbd27dbfcda6c732df29cae56a82274f6ec5d7cd8725",
+    "PkgProvides": [
+      "wayland-client",
+      "wayland-cursor",
+      "wayland-egl",
+      "wayland-server"
+    ],
+    "available_versions": ["1.20.0-1"]
+  },
+  "websocketpp": {
+    "name_with_version": "websocketpp-0.8.2",
+    "analyzed_version": "0.8.2",
+    "analyzed_source_url": "https://github.com/zaphoyd/websocketpp/archive/refs/tags/0.8.2.tar.gz",
+    "analyzed_source_filename": "0.8.2.tar.gz",
+    "analyzed_source_hash": "6ce889d85ecdc2d8fa07408d6787e7352510750daa66b5ad44aacb47bea76755",
+    "PkgProvides": ["websocketpp"],
+    "available_versions": ["0.8.2-1"]
+  },
+  "wren": {
+    "name_with_version": "wren-0.4.0",
+    "analyzed_version": "0.4.0",
+    "analyzed_source_url": "https://github.com/wren-lang/wren/archive/0.4.0.tar.gz",
+    "analyzed_source_filename": "0.4.0.tar.gz",
+    "analyzed_source_hash": "23c0ddeb6c67a4ed9285bded49f7c91714922c2e7bb88f42428386bf1cf7b339",
+    "PkgProvides": ["wren"],
+    "available_versions": ["0.4.0-1", "0.3.0-1"]
+  },
+  "xtensor": {
+    "name_with_version": "xtensor-0.21.5",
+    "analyzed_version": "0.21.5",
+    "analyzed_source_url": "https://github.com/xtensor-stack/xtensor/archive/0.21.5.tar.gz",
+    "analyzed_source_filename": "xtensor-0.21.5.tar.gz",
+    "analyzed_source_hash": "30cb896b6686683ddaefb12c98bf1109fdfe666136dd027aba1a1e9aa825c241",
+    "PkgProvides": ["xtensor"],
+    "available_versions": ["0.21.5-1"]
+  },
+  "xtl": {
+    "name_with_version": "xtl-0.6.12",
+    "analyzed_version": "0.6.12",
+    "analyzed_source_url": "https://github.com/xtensor-stack/xtl/archive/0.6.12.tar.gz",
+    "analyzed_source_filename": "xtl-0.6.12.tar.gz",
+    "analyzed_source_hash": "25a16958195f939e6fb7c8feccad89b3e450a18124be6aee119c69a1ee2b308c",
+    "PkgProvides": ["xtl"],
+    "available_versions": ["0.6.12-1"]
+  },
+  "xxhash": {
+    "name_with_version": "xxHash-0.8.2",
+    "analyzed_version": "xxHash-0.8.2",
+    "analyzed_source_url": "https://github.com/Cyan4973/xxHash/archive/v0.8.2.tar.gz",
+    "analyzed_source_filename": "xxHash-0.8.2.tar.gz",
+    "analyzed_source_hash": "baee0c6afd4f03165de7a4e67988d16f0f2b257b51d0e3cb91909302a26a79c4",
+    "PkgProvides": ["libxxhash"],
+    "available_versions": [
+      "0.8.2-1",
+      "0.8.1-2",
+      "0.8.1-1",
+      "0.8.0-2",
+      "0.8.0-1",
+      "0.6.5-1"
+    ]
+  },
+  "yajl": {
+    "name_with_version": "yajl-2.1.0",
+    "analyzed_version": "2.1.0",
+    "analyzed_source_url": "https://github.com/lloyd/yajl/archive/refs/tags/2.1.0.tar.gz",
+    "analyzed_source_filename": "yajl-2.1.0.tar.gz",
+    "analyzed_source_hash": "3fb73364a5a30efe615046d07e6db9d09fd2b41c763c5f7d3bfb121cd5c5ac5a",
+    "PkgProvides": ["yajl"],
+    "available_versions": [
+      "2.1.0-5",
+      "2.1.0-4",
+      "2.1.0-3",
+      "2.1.0-2",
+      "2.1.0-1"
+    ]
+  },
+  "zlib": {
+    "name_with_version": "zlib-1.3",
+    "analyzed_version": "1.3",
+    "analyzed_source_url": "http://zlib.net/fossils/zlib-1.3.tar.gz",
+    "analyzed_source_filename": "zlib-1.3.tar.gz",
+    "analyzed_source_hash": "ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e",
+    "PkgProvides": ["zlib"],
+    "available_versions": [
+      "1.3-4",
+      "1.3-3",
+      "1.3-2",
+      "1.3-1",
+      "1.2.13-4",
+      "1.2.13-3",
+      "1.2.13-2",
+      "1.2.13-1",
+      "1.2.12-1",
+      "1.2.11-6",
+      "1.2.11-5",
+      "1.2.11-4",
+      "1.2.11-3",
+      "1.2.11-2",
+      "1.2.11-1",
+      "1.2.8-8",
+      "1.2.8-7",
+      "1.2.8-6",
+      "1.2.8-4",
+      "1.2.8-2"
+    ]
+  },
+  "zstd": {
+    "name_with_version": "zstd-1.5.4",
+    "analyzed_version": "1.5.4",
+    "analyzed_source_url": "https://github.com/facebook/zstd/releases/download/v1.5.4/zstd-1.5.4.tar.gz",
+    "analyzed_source_filename": "zstd-1.5.4.tar.gz",
+    "analyzed_source_hash": "0f470992aedad543126d06efab344dc5f3e171893810455787d38347343a4424",
+    "PkgProvides": ["libzstd"],
+    "available_versions": ["1.5.4-1", "1.4.5-1", "1.3.3-2", "1.3.3-1"]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "deb_packages": {
+    "query": "select * from deb_packages where name like '%dev%' OR name like '%header%';",
+    "description": "Retrieves all the installed DEB packages in the target Linux system.",
+    "purlType": "deb"
+  },
+  "portage_packages": {
+    "query": "select * from portage_packages where package like '%dev%' OR package like '%header%';",
+    "description": "Retrieves all the installed packages on the target Linux system.",
+    "purlType": "ebuild"
+  },
+  "rpm_packages": {
+    "query": "select * from rpm_packages where name like '%dev%' OR name like '%header%';",
+    "description": "Retrieves all the installed RPM packages in the target Linux system.",
+    "purlType": "rpm"
+  }
+}

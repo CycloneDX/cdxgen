@@ -1,0 +1,96 @@
+
+------------------------------------------------------------
+Root project 'CdxgenAndroidTest'
+------------------------------------------------------------
+
+AGP_INTERNAL__MIN_PLUGIN_VERSION_CHECK_STARTED: true
+allprojects: [root project 'CdxgenAndroidTest', project ':app', project ':data']
+android.nonTransitiveRClass: true
+android.useAndroidX: true
+ant: org.gradle.api.internal.project.DefaultAntBuilder@3286478f
+antBuilderFactory: org.gradle.api.internal.project.DefaultAntBuilderFactory@2d411aea
+artifacts: org.gradle.api.internal.artifacts.dsl.DefaultArtifactHandler_Decorated@101b4ea4
+asDynamicObject: DynamicObject for root project 'CdxgenAndroidTest'
+baseClassLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@5fd337d3
+buildDir: /mnt/work/sandbox/cdxgenMultiModuleSample/build
+buildFile: /mnt/work/sandbox/cdxgenMultiModuleSample/build.gradle.kts
+buildPath: :
+buildScriptSource: org.gradle.groovy.scripts.TextResourceScriptSource@5f69a999
+buildscript: org.gradle.api.internal.initialization.DefaultScriptHandler@7ada6ed4
+childProjects: {app=project ':app', data=project ':data'}
+childProjectsUnchecked: {app=project ':app', data=project ':data'}
+class: class org.gradle.api.internal.project.DefaultProject_Decorated
+classLoaderScope: org.gradle.api.internal.initialization.DefaultClassLoaderScope@5ea408b9
+components: SoftwareComponentInternal set
+configurationActions: org.gradle.configuration.project.DefaultProjectConfigurationActionContainer@30fe7145
+configurationTargetIdentifier: org.gradle.configuration.ConfigurationTargetIdentifier$1@76d5a526
+configurations: configuration container
+convention: org.gradle.internal.extensibility.DefaultConvention@6462ff04
+crossProjectModelAccess: org.gradle.api.internal.project.DefaultCrossProjectModelAccess@4de79192
+defaultTasks: []
+deferredProjectConfiguration: org.gradle.api.internal.project.DeferredProjectConfiguration@ed0b532
+dependencies: org.gradle.api.internal.artifacts.dsl.dependencies.DefaultDependencyHandler_Decorated@5577dd5b
+dependencyFactory: org.gradle.api.internal.artifacts.DefaultDependencyFactory@269e922e
+dependencyLocking: org.gradle.internal.locking.DefaultDependencyLockingHandler_Decorated@5784fc6e
+dependencyMetaDataProvider: org.gradle.internal.service.scopes.ProjectScopeServices$ProjectBackedModuleMetaDataProvider@5c76aa89
+depth: 0
+description: null
+detachedState: false
+displayName: root project 'CdxgenAndroidTest'
+ext: org.gradle.internal.extensibility.DefaultExtraPropertiesExtension@37002959
+extensions: org.gradle.internal.extensibility.DefaultConvention@6462ff04
+fileOperations: org.gradle.api.internal.file.DefaultFileOperations@65ddc275
+fileResolver: org.gradle.api.internal.file.BaseDirFileResolver@15ca352c
+gradle: build 'CdxgenAndroidTest'
+group: 
+identityPath: :
+inheritedScope: org.gradle.internal.extensibility.ExtensibleDynamicObject$InheritedDynamicObject@7c81e7fe
+internalStatus: property(java.lang.Object, fixed(class java.lang.String, release))
+kotlin.code.style: official
+kotlin.plugin.loaded.in.projects.1.8.10: :app
+kotlin.properties.provider: org.jetbrains.kotlin.gradle.plugin.PropertiesProvider@4afd53d6
+layout: org.gradle.api.internal.file.DefaultProjectLayout@4138ee96
+listenerBuildOperationDecorator: org.gradle.configuration.internal.DefaultListenerBuildOperationDecorator@59fc0c8
+logger: org.gradle.internal.logging.slf4j.OutputEventListenerBackedLogger@1c9c30d5
+logging: org.gradle.internal.logging.services.DefaultLoggingManager@76d26992
+model: root project 'CdxgenAndroidTest'
+modelIdentityDisplayName: null
+modelRegistry: org.gradle.model.internal.registry.DefaultModelRegistry@5691f77d
+name: CdxgenAndroidTest
+normalization: org.gradle.normalization.internal.DefaultInputNormalizationHandler_Decorated@50dbff67
+objects: org.gradle.api.internal.model.DefaultObjectFactory@2bb9fc34
+org.gradle.jvmargs: -Xmx2048m -Dfile.encoding=UTF-8
+owner: root project 'CdxgenAndroidTest'
+parent: null
+parentIdentifier: null
+path: :
+pluginContext: false
+pluginManager: org.gradle.api.internal.plugins.DefaultPluginManager_Decorated@4e429e28
+plugins: [org.gradle.api.plugins.HelpTasksPlugin$Inject@32eaf833, org.gradle.buildinit.plugins.BuildInitPlugin$Inject@1c312a56, org.gradle.buildinit.plugins.WrapperPlugin$Inject@2f83378, org.gradle.kotlin.dsl.provider.plugins.KotlinScriptRootPlugin$Inject@49ee21ac, org.gradle.kotlin.dsl.provider.plugins.KotlinScriptBasePlugin$Inject@2583d184]
+processOperations: org.gradle.process.internal.DefaultExecActionFactory$DecoratingExecActionFactory@1731a282
+project: root project 'CdxgenAndroidTest'
+projectConfigurator: org.gradle.api.internal.project.BuildOperationCrossProjectConfigurator@181e47c4
+projectDir: /mnt/work/sandbox/cdxgenMultiModuleSample
+projectEvaluationBroadcaster: ProjectEvaluationListener broadcast
+projectEvaluator: org.gradle.configuration.project.LifecycleProjectEvaluator@7ca240af
+projectPath: :
+properties: {...}
+providers: org.gradle.api.internal.provider.DefaultProviderFactory_Decorated@264b32cd
+repositories: repository container
+resources: org.gradle.api.internal.resources.DefaultResourceHandler@3cf4b134
+rootDir: /mnt/work/sandbox/cdxgenMultiModuleSample
+rootProject: root project 'CdxgenAndroidTest'
+rootScript: false
+script: false
+scriptHandlerFactory: org.gradle.api.internal.initialization.DefaultScriptHandlerFactory@563ef109
+scriptPluginFactory: org.gradle.configuration.ScriptPluginFactorySelector@38777459
+serviceRegistryFactory: org.gradle.internal.service.scopes.BuildScopeServiceRegistryFactory@4755f4c0
+services: ProjectScopeServices
+standardOutputCapture: org.gradle.internal.logging.services.DefaultLoggingManager@76d26992
+state: project state 'EXECUTED'
+status: release
+subprojects: [project ':app', project ':data']
+taskDependencyFactory: org.gradle.api.internal.tasks.DefaultTaskDependencyFactory@5eb1800f
+taskThatOwnsThisObject: null
+tasks: task set
+version: unspecified

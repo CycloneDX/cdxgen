@@ -1,0 +1,209 @@
+{
+  "win_version": {
+    "query": "select tb1.name, tb1.build_version, (case when (arch like '%-bit') then concat('x', replace(arch,'-bit', '')) else arch end) as arch, 'Microsoft' as publisher, tb2.version from (select name, version as build_version, arch from os_version) tb1,(select data as version from registry where path = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\DisplayVersion') tb2;",
+    "name": "win_version",
+    "description": "Retrieves the name, version number, build version, and arch of the target Windows system.",
+    "purlType": "swid",
+    "componentType": "operating-system"
+  },
+  "kernel_info": {
+    "query": "select * from kernel_info;",
+    "name": "os-image",
+    "description": "Retrieves information from the current kernel in the target system.",
+    "purlType": "swid"
+  },
+  "chrome_extensions": {
+    "query": "select chrome_extensions.* from users join chrome_extensions using (uid);",
+    "description": "Retrieves the list of extensions for Chrome in the target system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "firefox_addons": {
+    "query": "select firefox_addons.* from users join firefox_addons using (uid);",
+    "description": "Retrieves the list of addons for Firefox in the target system.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "vscode_extensions": {
+    "query": "select vscode_extensions.* from users join vscode_extensions using (uid);",
+    "description": "Lists all vscode extensions.",
+    "purlType": "vsix",
+    "componentType": "application"
+  },
+  "browser_plugins": {
+    "query": "select browser_plugins.* from users join browser_plugins using (uid);",
+    "description": "Retrieves the list of C/NPAPI browser plugin in the target system.",
+    "purlType": "swid"
+  },
+  "ie_extensions": {
+    "query": "select ie_extensions.* from users join ie_extensions using (uid);",
+    "description": "Retrieves the list of extensions for IE in the target system.",
+    "purlType": "swid"
+  },
+  "opera_extensions": {
+    "query": "select opera_extensions.* from users join opera_extensions using (uid);",
+    "description": "Retrieves the list of extensions for opera in the target system.",
+    "purlType": "swid"
+  },
+  "safari_extensions": {
+    "query": "select safari_extensions.* from users join safari_extensions using (uid);",
+    "description": "Retrieves the list of extensions for safari in the target system.",
+    "purlType": "swid"
+  },
+  "python_packages": {
+    "query": "select * from python_packages;",
+    "description": "Python packages installed on system.",
+    "purlType": "pypi"
+  },
+  "windows_programs": {
+    "query": "select * from programs;",
+    "description": "Retrieves the list of products as they are installed by Windows Installer in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_patches": {
+    "query": "select * from patches;",
+    "description": "Retrieves all the information for the current windows drivers in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_drivers": {
+    "query": "select * from drivers;",
+    "description": "Retrieves all the information for the current windows drivers in the target Windows system.",
+    "purlType": "swid"
+  },
+  "windows_shared_resources": {
+    "query": "select * from shared_resources;",
+    "description": "Retrieves the list of shared resources in the target Windows system.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "appcompat_shims": {
+    "query": "SELECT * FROM appcompat_shims WHERE description!='EMET_Database' AND executable NOT IN ('setuphost.exe','setupprep.exe','iisexpress.exe');",
+    "description": "Appcompat shims (.sdb files) installed on Windows hosts.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "system_info_snapshot": {
+    "query": "SELECT * FROM system_info;",
+    "description": "System info snapshot query.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "pipes_snapshot": {
+    "query": "SELECT processes.path, processes.cmdline, processes.uid, processes.on_disk, pipes.name, pid FROM pipes JOIN processes USING (pid);",
+    "description": "Pipes snapshot query.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "services_snapshot": {
+    "query": "SELECT * FROM services;",
+    "description": "Services snapshot query.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "wmi_cli_event_consumers": {
+    "query": "SELECT * FROM wmi_cli_event_consumers;",
+    "description": "WMI CommandLineEventConsumer, which can be used for persistence on Windows. See https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Management-Instrumentation-WMI-To-Build-A-Persistent%20Asynchronous-And-Fileless-Backdoor-wp.pdf for more details.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "wmi_filter_consumer_binding": {
+    "query": "SELECT * FROM wmi_filter_consumer_binding;",
+    "description": "Lists the relationship between event consumers and filters.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "wmi_cli_event_consumers_snapshot": {
+    "query": "SELECT * FROM wmi_cli_event_consumers;",
+    "description": "Snapshot query for WMI event consumers.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "certificates": {
+    "query": "SELECT * FROM certificates WHERE path != 'Other People';",
+    "description": "List all certificates in the trust store.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "wmi_event_filters": {
+    "query": "SELECT * FROM wmi_event_filters;",
+    "description": "Lists WMI event filters.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "etc_hosts": {
+    "query": "SELECT * FROM etc_hosts;",
+    "description": "List the contents of the Windows hosts file.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "scheduled_tasks": {
+    "query": "SELECT * FROM scheduled_tasks;",
+    "description": "List all scheduled_tasks.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "chocolatey_packages": {
+    "query": "SELECT * FROM chocolatey_packages;",
+    "description": "List all chocolatey_packages.",
+    "purlType": "chocolatey"
+  },
+  "npm_packages": {
+    "query": "SELECT * FROM npm_packages;",
+    "description": "List all npm_packages.",
+    "purlType": "npm"
+  },
+  "startup_items": {
+    "query": "SELECT * FROM startup_items;",
+    "description": "List all startup_items.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "routes": {
+    "query": "SELECT * FROM routes;",
+    "description": "List all routes.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "listening_ports": {
+    "query": "SELECT DISTINCT process.name, listening.port, listening.protocol, listening.family, listening.address, process.pid, process.path, process.on_disk, process.parent, process.start_time FROM processes AS process JOIN listening_ports AS listening ON process.pid = listening.pid;",
+    "description": "List all processes and their listening_ports.",
+    "purlType": "swid",
+    "componentType": "application"
+  },
+  "processes": {
+    "query": "SELECT * FROM processes;",
+    "description": "List all processes.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "process_open_sockets": {
+    "query": "SELECT * FROM process_open_sockets;",
+    "description": "List all process_open_sockets.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "windows_update_history": {
+    "query": "SELECT * FROM windows_update_history;",
+    "description": "List all windows_update_history.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "windows_optional_features": {
+    "query": "SELECT * FROM windows_optional_features;",
+    "description": "List all windows_optional_features.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "windows_firewall_rules": {
+    "query": "SELECT * FROM windows_firewall_rules;",
+    "description": "List all windows_firewall_rules.",
+    "purlType": "swid",
+    "componentType": "data"
+  },
+  "logical_drives": {
+    "query": "SELECT * FROM logical_drives;",
+    "description": "List all logical_drives.",
+    "purlType": "swid",
+    "componentType": "device"
+  }
+}

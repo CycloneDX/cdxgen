@@ -1,24 +1,32 @@
-import { platform as _platform, arch as _arch, tmpdir } from "node:os";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
-import { join, dirname, basename } from "node:path";
+import { arch as _arch, platform as _platform, homedir, tmpdir } from "node:os";
+import process from "node:process";
+import { Buffer } from "node:buffer";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync
+} from "node:fs";
+import { basename, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
-import { DEBUG_MODE } from "./utils.js";
+import { DEBUG_MODE, TIMEOUT_MS, findLicenseId } from "./utils.js";
 
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+import { URL, fileURLToPath } from "node:url";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirName = import.meta ? path.dirname(fileURLToPath(url)) : __dirname;
+const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
 const isWin = _platform() === "win32";
 
 let platform = _platform();
 let extn = "";
-if (platform == "win32") {
+let pluginsBinSuffix = "";
+if (platform === "win32") {
   platform = "windows";
   extn = ".exe";
 }
@@ -30,6 +38,23 @@ switch (arch) {
     break;
   case "x64":
     arch = "amd64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-amd64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-amd64";
+    }
+    break;
+  case "arm64":
+    pluginsBinSuffix = "-arm64";
+    if (platform === "windows") {
+      pluginsBinSuffix = "-windows-arm64";
+    } else if (platform === "darwin") {
+      pluginsBinSuffix = "-darwin-arm64";
+    }
+    break;
+  case "ppc64":
+    arch = "ppc64le";
+    pluginsBinSuffix = "-ppc64";
     break;
 }
 
@@ -47,14 +72,20 @@ if (
 if (
   !CDXGEN_PLUGINS_DIR &&
   existsSync(
-    join(dirName, "node_modules", "@cyclonedx", "cdxgen-plugins-bin", "plugins")
+    join(
+      dirName,
+      "node_modules",
+      "@cyclonedx",
+      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      "plugins"
+    )
   ) &&
   existsSync(
     join(
       dirName,
       "node_modules",
       "@cyclonedx",
-      "cdxgen-plugins-bin",
+      "cdxgen-plugins-bin" + pluginsBinSuffix,
       "plugins",
       "goversion"
     )
@@ -64,7 +95,7 @@ if (
     dirName,
     "node_modules",
     "@cyclonedx",
-    "cdxgen-plugins-bin",
+    "cdxgen-plugins-bin" + pluginsBinSuffix,
     "plugins"
   );
 }
@@ -86,16 +117,18 @@ if (!CDXGEN_PLUGINS_DIR) {
       }
     }
   }
-  const globalPlugins = join(
-    globalNodePath,
-    "@cyclonedx",
-    "cdxgen-plugins-bin",
-    "plugins"
-  );
-  if (existsSync(globalPlugins)) {
-    CDXGEN_PLUGINS_DIR = globalPlugins;
-    if (DEBUG_MODE) {
-      console.log("Found global plugins", CDXGEN_PLUGINS_DIR);
+  if (globalNodePath) {
+    const globalPlugins = join(
+      globalNodePath,
+      "@cyclonedx",
+      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      "plugins"
+    );
+    if (existsSync(globalPlugins)) {
+      CDXGEN_PLUGINS_DIR = globalPlugins;
+      if (DEBUG_MODE) {
+        console.log("Found global plugins", CDXGEN_PLUGINS_DIR);
+      }
     }
   }
 }
@@ -143,10 +176,29 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
     "osquery",
     "osqueryi-" + platform + "-" + arch + extn
   );
+  // osqueryi-darwin-amd64.app/Contents/MacOS/osqueryd
+  if (platform === "darwin") {
+    OSQUERY_BIN = `${OSQUERY_BIN}.app/Contents/MacOS/osqueryd`;
+  }
 } else if (process.env.OSQUERY_CMD) {
   OSQUERY_BIN = process.env.OSQUERY_CMD;
 }
+let DOSAI_BIN = null;
+if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
+  let platformToUse = platform;
+  if (platform === "darwin") {
+    platformToUse = "osx";
+  }
+  DOSAI_BIN = join(
+    CDXGEN_PLUGINS_DIR,
+    "dosai",
+    "dosai-" + platformToUse + "-" + arch + extn
+  );
+} else if (process.env.DOSAI_CMD) {
+  DOSAI_BIN = process.env.DOSAI_CMD;
+}
 
+// Keep this list updated every year
 const OS_DISTRO_ALIAS = {
   "ubuntu-4.10": "warty",
   "ubuntu-5.04": "hoary",
@@ -181,6 +233,7 @@ const OS_DISTRO_ALIAS = {
   "ubuntu-19.10": "eoan",
   "ubuntu-20.04": "focal",
   "ubuntu-20.10": "groovy",
+  "ubuntu-22.04": "jammy",
   "ubuntu-23.04": "lunar",
   "debian-14": "forky",
   "debian-14.5": "forky",
@@ -216,7 +269,7 @@ export const getGoBuildInfo = (src) => {
     let result = spawnSync(GOVERSION_BIN, [src], {
       encoding: "utf-8"
     });
-    if (result.status !== 0 || result.error) {
+    if (result.status !== 0 || result.error || !result.stdout) {
       if (result.stdout || result.stderr) {
         console.error(result.stdout, result.stderr);
       }
@@ -266,9 +319,17 @@ export const getCargoAuditableInfo = (src) => {
 
 export const getOSPackages = (src) => {
   const pkgList = [];
+  const dependenciesList = [];
   const allTypes = new Set();
   if (TRIVY_BIN) {
     let imageType = "image";
+    const trivyCacheDir = join(homedir(), ".cache", "trivy");
+    try {
+      mkdirSync(join(trivyCacheDir, "db"), { recursive: true });
+      mkdirSync(join(trivyCacheDir, "java-db"), { recursive: true });
+    } catch (err) {
+      // ignore errors
+    }
     if (existsSync(src)) {
       imageType = "rootfs";
     }
@@ -277,12 +338,17 @@ export const getOSPackages = (src) => {
     const args = [
       imageType,
       "--skip-db-update",
+      "--skip-java-db-update",
       "--offline-scan",
+      "--skip-files",
+      "**/*.jar",
       "--no-progress",
       "--exit-code",
       "0",
       "--format",
       "cyclonedx",
+      "--cache-dir",
+      trivyCacheDir,
       "--output",
       bomJsonFile
     ];
@@ -321,6 +387,60 @@ export const getOSPackages = (src) => {
           rmSync(tempDir, { recursive: true, force: true });
         }
       }
+      const osReleaseData = {};
+      let osReleaseFile = undefined;
+      // Let's try to read the os-release file from various locations
+      if (existsSync(join(src, "etc", "os-release"))) {
+        osReleaseFile = join(src, "etc", "os-release");
+      } else if (existsSync(join(src, "usr", "lib", "os-release"))) {
+        osReleaseFile = join(src, "usr", "lib", "os-release");
+      }
+      if (osReleaseFile) {
+        const osReleaseInfo = readFileSync(
+          join(src, "usr", "lib", "os-release"),
+          "utf-8"
+        );
+        if (osReleaseInfo) {
+          osReleaseInfo.split("\n").forEach((l) => {
+            if (!l.startsWith("#") && l.includes("=")) {
+              const tmpA = l.split("=");
+              osReleaseData[tmpA[0]] = tmpA[1].replace(/"/g, "");
+            }
+          });
+        }
+      }
+      if (DEBUG_MODE) {
+        console.log(osReleaseData);
+      }
+      let distro_codename = osReleaseData["VERSION_CODENAME"] || "";
+      let distro_id = osReleaseData["ID"] || "";
+      const distro_id_like = osReleaseData["ID_LIKE"] || "";
+      let purl_type = "rpm";
+      switch (distro_id) {
+        case "debian":
+        case "ubuntu":
+        case "pop":
+          purl_type = "deb";
+          break;
+        default:
+          if (distro_id_like.includes("debian")) {
+            purl_type = "deb";
+          } else if (
+            distro_id_like.includes("rhel") ||
+            distro_id_like.includes("centos") ||
+            distro_id_like.includes("fedora")
+          ) {
+            purl_type = "rpm";
+          }
+          break;
+      }
+      if (osReleaseData["VERSION_ID"]) {
+        distro_id = distro_id + "-" + osReleaseData["VERSION_ID"];
+      }
+      const tmpDependencies = {};
+      (tmpBom.dependencies || []).forEach((d) => {
+        tmpDependencies[d.ref] = d.dependsOn;
+      });
       if (tmpBom && tmpBom.components) {
         for (const comp of tmpBom.components) {
           if (comp.purl) {
@@ -342,11 +462,11 @@ export const getOSPackages = (src) => {
             ) {
               continue;
             }
+            const origBomRef = comp["bom-ref"];
             // Fix the group
             let group = dirname(comp.name);
             const name = basename(comp.name);
             let purlObj = undefined;
-            let distro_codename = "";
             if (group === ".") {
               group = "";
             }
@@ -360,19 +480,24 @@ export const getOSPackages = (src) => {
                   comp.group = group;
                   purlObj.namespace = group;
                 }
+                purlObj.qualifiers = purlObj.qualifiers || {};
+                if (distro_id && distro_id.length) {
+                  purlObj.qualifiers["distro"] = distro_id;
+                }
+                if (distro_codename && distro_codename.length) {
+                  purlObj.qualifiers["distro_name"] = distro_codename;
+                }
                 // Bug fix for mageia and oracle linux
+                // Type is being returned as none for ubuntu as well!
                 if (purlObj.type === "none") {
-                  purlObj["type"] = "rpm";
+                  purlObj["type"] = purl_type;
                   purlObj["namespace"] = "";
                   comp.group = "";
-                  distro_codename = undefined;
                   if (comp.purl && comp.purl.includes(".mga")) {
                     purlObj["namespace"] = "mageia";
                     comp.group = "mageia";
                     purlObj.qualifiers["distro"] = "mageia";
                     distro_codename = "mga";
-                  } else if (comp.purl && comp.purl.includes(".el8")) {
-                    purlObj.qualifiers["distro"] = "el8";
                   }
                   comp.purl = new PackageURL(
                     purlObj.type,
@@ -412,31 +537,69 @@ export const getOSPackages = (src) => {
                       );
                     }
                   }
-                  if (distro_codename !== "") {
-                    allTypes.add(distro_codename);
-                    allTypes.add(purlObj.namespace);
-                    purlObj.qualifiers["distro_name"] = distro_codename;
-                    comp.purl = new PackageURL(
-                      purlObj.type,
-                      purlObj.namespace,
-                      name,
-                      purlObj.version,
-                      purlObj.qualifiers,
-                      purlObj.subpath
-                    ).toString();
-                    comp["bom-ref"] = decodeURIComponent(comp.purl);
-                  }
+                }
+                if (distro_codename !== "") {
+                  allTypes.add(distro_codename);
+                  allTypes.add(purlObj.namespace);
+                  comp.purl = new PackageURL(
+                    purlObj.type,
+                    purlObj.namespace,
+                    name,
+                    purlObj.version,
+                    purlObj.qualifiers,
+                    purlObj.subpath
+                  ).toString();
+                  comp["bom-ref"] = decodeURIComponent(comp.purl);
                 }
               } catch (err) {
                 // continue regardless of error
               }
             }
+            // Fix licenses
             if (
               comp.licenses &&
               Array.isArray(comp.licenses) &&
               comp.licenses.length
             ) {
-              comp.licenses = [comp.licenses[0]];
+              const newLicenses = [];
+              for (const alic of comp.licenses) {
+                if (alic.license.name) {
+                  // Licenses array can either be made of expressions or id/name but not both
+                  if (
+                    comp.licenses.length == 1 &&
+                    (alic.license.name.toUpperCase().includes(" AND ") ||
+                      alic.license.name.toUpperCase().includes(" OR "))
+                  ) {
+                    newLicenses.push({ expression: alic.license.name });
+                  } else {
+                    const possibleId = findLicenseId(alic.license.name);
+                    if (possibleId !== alic.license.name) {
+                      newLicenses.push({ license: { id: possibleId } });
+                    } else {
+                      newLicenses.push({
+                        license: { name: alic.license.name }
+                      });
+                    }
+                  }
+                } else if (
+                  Object.keys(alic).length &&
+                  Object.keys(alic.license).length
+                ) {
+                  newLicenses.push(alic);
+                }
+              }
+              comp.licenses = newLicenses;
+            }
+            // Fix hashes
+            if (
+              comp.hashes &&
+              Array.isArray(comp.hashes) &&
+              comp.hashes.length
+            ) {
+              const hashContent = comp.hashes[0].content;
+              if (!hashContent || hashContent.length < 32) {
+                delete comp.hashes;
+              }
             }
             const compProperties = comp.properties;
             let srcName = undefined;
@@ -453,6 +616,14 @@ export const getOSPackages = (src) => {
             }
             delete comp.properties;
             pkgList.push(comp);
+            const compDeps = retrieveDependencies(
+              tmpDependencies,
+              origBomRef,
+              comp
+            );
+            if (compDeps) {
+              dependenciesList.push(compDeps);
+            }
             // If there is a source package defined include it as well
             if (srcName && srcVersion && srcName !== comp.name) {
               const newComp = Object.assign({}, comp);
@@ -474,10 +645,44 @@ export const getOSPackages = (src) => {
           }
         }
       }
-      return { osPackages: pkgList, allTypes: Array.from(allTypes) };
     }
   }
-  return { osPackages: pkgList, allTypes: Array.from(allTypes) };
+  return {
+    osPackages: pkgList,
+    dependenciesList,
+    allTypes: Array.from(allTypes)
+  };
+};
+
+const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
+  try {
+    const tmpDependsOn = tmpDependencies[origBomRef] || [];
+    const dependsOn = new Set();
+    tmpDependsOn.forEach((d) => {
+      try {
+        const compPurl = PackageURL.fromString(comp.purl);
+        const tmpPurl = PackageURL.fromString(d.replace("none", compPurl.type));
+        tmpPurl.type = compPurl.type;
+        tmpPurl.namespace = compPurl.namespace;
+        tmpPurl.qualifiers = tmpPurl.qualifiers || {};
+        if (compPurl.qualifiers) {
+          if (compPurl.qualifiers.distro_name) {
+            tmpPurl.qualifiers.distro_name = compPurl.qualifiers.distro_name;
+          }
+          if (compPurl.qualifiers.distro) {
+            tmpPurl.qualifiers.distro = compPurl.qualifiers.distro;
+          }
+        }
+        dependsOn.add(decodeURIComponent(tmpPurl.toString()));
+      } catch (e) {
+        // ignore
+      }
+    });
+    return { ref: comp["bom-ref"], dependsOn: Array.from(dependsOn).sort() };
+  } catch (e) {
+    // ignore
+  }
+  return undefined;
 };
 
 export const executeOsQuery = (query) => {
@@ -486,14 +691,23 @@ export const executeOsQuery = (query) => {
       query = query + ";";
     }
     const args = ["--json", query];
+    // On darwin, we need to disable the safety check and run cdxgen with sudo
+    // https://github.com/osquery/osquery/issues/1382
+    if (platform === "darwin") {
+      args.push("--allow_unsafe");
+      args.push("--disable_logging");
+      args.push("--disable_events");
+    }
     if (DEBUG_MODE) {
-      console.log("Execuing", OSQUERY_BIN, args.join(" "));
+      console.log("Executing", OSQUERY_BIN, args.join(" "));
     }
     const result = spawnSync(OSQUERY_BIN, args, {
-      encoding: "utf-8"
+      encoding: "utf-8",
+      maxBuffer: 50 * 1024 * 1024,
+      timeout: 60 * 1000
     });
     if (result.status !== 0 || result.error) {
-      if (DEBUG_MODE && result.error) {
+      if (DEBUG_MODE && result.stderr) {
         console.error(result.stdout, result.stderr);
       }
     }
@@ -502,11 +716,54 @@ export const executeOsQuery = (query) => {
       if (stdout) {
         const cmdOutput = Buffer.from(stdout).toString();
         if (cmdOutput !== "") {
-          return JSON.parse(cmdOutput);
+          try {
+            return JSON.parse(cmdOutput);
+          } catch (err) {
+            // ignore
+            if (DEBUG_MODE) {
+              console.log("Unable to parse the output from query", query);
+              console.log(
+                "This could be due to the amount of data returned or the query being invalid for the given platform."
+              );
+            }
+          }
         }
         return undefined;
       }
     }
   }
   return undefined;
+};
+
+/**
+ * Method to execute dosai to create slices for dotnet
+ *
+ * @param {string} src
+ * @param {string} slicesFile
+ * @returns boolean
+ */
+export const getDotnetSlices = (src, slicesFile) => {
+  if (!DOSAI_BIN) {
+    return false;
+  }
+  const args = ["methods", "--path", src, "--o", slicesFile];
+  if (DEBUG_MODE) {
+    console.log("Executing", DOSAI_BIN, args.join(" "));
+  }
+  const result = spawnSync(DOSAI_BIN, args, {
+    encoding: "utf-8",
+    timeout: TIMEOUT_MS,
+    cwd: src
+  });
+  if (result.status !== 0 || result.error) {
+    if (DEBUG_MODE && result.error) {
+      if (result.stderr) {
+        console.error(result.stdout, result.stderr);
+      } else {
+        console.log("Check if dosai plugin was installed successfully.");
+      }
+    }
+    return false;
+  }
+  return true;
 };

@@ -57,12 +57,11 @@ def find_deps(idx, visited, reqs, traverse_count):
         if not d:
             continue
         r.project_name = d.project_name if d is not None else r.project_name
-        if len(visited) > 100 and visited.get(r.project_name):
+        if len(visited) > 100 or visited.get(r.project_name, 0) > 5:
             return freqs
         specs = sorted(r.specs, reverse=True)
         specs_str = ",".join(["".join(sp) for sp in specs]) if specs else ""
         dreqs = d.requires()
-        visited[r.project_name] = True
         freqs.append(
             {
                 "name": r.project_name,
@@ -71,6 +70,7 @@ def find_deps(idx, visited, reqs, traverse_count):
                 "dependencies": find_deps(idx, visited, dreqs, traverse_count + 1) if dreqs and traverse_count < 200 else [],
             }
         )
+        visited[r.project_name] = visited.get(r.project_name, 0) + 1
     return freqs
 
 

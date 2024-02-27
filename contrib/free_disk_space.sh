@@ -49,6 +49,4 @@ sudo rm -rf /usr/local/graalvm/
 sudo rm -rf /usr/local/.ghcup/
 sudo rm -rf /usr/local/share/powershell
 sudo rm -rf /usr/local/share/chromium
-sudo rm -rf /usr/local/lib/android
-sudo rm -rf /usr/local/lib/node_modules
 df -h
