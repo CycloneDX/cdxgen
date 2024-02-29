@@ -12,7 +12,7 @@ Install deno by following the [instructions](https://docs.deno.com/runtime/manua
 ## Develop and build cdxgen
 
 ```shell
-deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js <path to repo>
+deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net main.ts <path to repo>
 ```
 
 ### Produce native builds
