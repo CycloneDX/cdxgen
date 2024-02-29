@@ -3026,7 +3026,9 @@ export const parsePyProjectToml = (tomlFile) => {
           pkg.description = value;
           break;
         case "name":
-          pkg.name = value;
+          if (!pkg.name) {
+            pkg.name = value;
+          }
           break;
         case "version":
           if (value.includes("{")) {

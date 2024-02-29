@@ -2712,6 +2712,21 @@ test("parse pyproject.toml", () => {
   });
 });
 
+test("parse pyproject.toml with custom poetry source", () => {
+  const pkg = parsePyProjectToml(
+    "./test/data/pyproject_with_custom_poetry_source.toml"
+  );
+  expect(pkg).toEqual({
+    name: "cpggen",
+    version: "1.9.0",
+    description:
+      "Generate CPG for multiple languages for code and threat analysis",
+    author: "Team AppThreat <cloud@appthreat.com>",
+    homepage: { url: "https://github.com/AppThreat/cpggen" },
+    repository: { url: "https://github.com/AppThreat/cpggen" }
+  });
+});
+
 test("parse poetry.lock", async () => {
   let retMap = await parsePoetrylockData(
     readFileSync("./test/data/poetry.lock", { encoding: "utf-8" }),
