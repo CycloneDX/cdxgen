@@ -219,7 +219,7 @@ export const cdxgenAgent = got.extend({
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
  */
-export const getAllFiles = function (dirPath, pattern, options = {}) {
+export function getAllFiles(dirPath, pattern, options = {}) {
   let ignoreList = [
     "**/.hg/**",
     "**/.git/**",
@@ -236,7 +236,7 @@ export const getAllFiles = function (dirPath, pattern, options = {}) {
     ignoreList = ignoreList.concat(options.exclude);
   }
   return getAllFilesWithIgnore(dirPath, pattern, ignoreList);
-};
+}
 
 /**
  * Method to get files matching a pattern
@@ -245,7 +245,7 @@ export const getAllFiles = function (dirPath, pattern, options = {}) {
  * @param {string} pattern Glob pattern (eg: *.gradle)
  * @param {Array} ignoreList Directory patterns to ignore
  */
-export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
+export function getAllFilesWithIgnore(dirPath, pattern, ignoreList) {
   try {
     return globSync(pattern, {
       cwd: dirPath,
@@ -262,11 +262,17 @@ export const getAllFilesWithIgnore = function (dirPath, pattern, ignoreList) {
     }
     return [];
   }
-};
+}
 
-const toBase64 = (hexString) => {
+/**
+ * Method to encode hex string to base64 string
+ *
+ * @param {string} hex string
+ * @returns {string} base64 encoded string
+ */
+function toBase64(hexString) {
   return Buffer.from(hexString, "hex").toString("base64");
-};
+}
 
 /**
  * Performs a lookup + validation of the license specified in the
@@ -333,7 +339,7 @@ export function getLicenses(pkg) {
  * @param {String} pkg Bom ref
  * @return {Object} Objetct with SPDX license id or license name
  */
-export const getKnownLicense = function (licenseUrl, pkg) {
+export function getKnownLicense(licenseUrl, pkg) {
   if (licenseUrl && licenseUrl.includes("opensource.org")) {
     const possibleId = licenseUrl
       .toLowerCase()
@@ -391,7 +397,7 @@ export const getKnownLicense = function (licenseUrl, pkg) {
     }
   }
   return undefined;
-};
+}
 
 /**
  * Tries to find a file containing the license text based on commonly
@@ -452,7 +458,7 @@ export function readLicenseText(licenseFilepath, licenseContentType) {
   return null;
 }
 
-export const getSwiftPackageMetadata = async (pkgList) => {
+export async function getSwiftPackageMetadata(pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
     if (p.repository && p.repository.url) {
@@ -478,14 +484,14 @@ export const getSwiftPackageMetadata = async (pkgList) => {
     cdepList.push(p);
   }
   return cdepList;
-};
+}
 
 /**
  * Method to retrieve metadata for npm packages by querying npmjs
  *
  * @param {Array} pkgList Package list
  */
-export const getNpmMetadata = async function (pkgList) {
+export async function getNpmMetadata(pkgList) {
   const NPM_URL = "https://registry.npmjs.org/";
   const cdepList = [];
   for (const p of pkgList) {
@@ -529,7 +535,7 @@ export const getNpmMetadata = async function (pkgList) {
     }
   }
   return cdepList;
-};
+}
 
 /**
  * Parse nodejs package json file
@@ -537,7 +543,7 @@ export const getNpmMetadata = async function (pkgList) {
  * @param {string} pkgJsonFile package.json file
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
  */
-export const parsePkgJson = async (pkgJsonFile, simple = false) => {
+export async function parsePkgJson(pkgJsonFile, simple = false) {
   const pkgList = [];
   if (existsSync(pkgJsonFile)) {
     try {
@@ -617,7 +623,7 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
     return await getNpmMetadata(pkgList);
   }
   return pkgList;
-};
+}
 
 /**
  * Parse nodejs package lock file
@@ -625,7 +631,7 @@ export const parsePkgJson = async (pkgJsonFile, simple = false) => {
  * @param {string} pkgLockFile package-lock.json file
  * @param {object} options Command line options
  */
-export const parsePkgLock = async (pkgLockFile, options = {}) => {
+export async function parsePkgLock(pkgLockFile, options = {}) {
   let pkgList = [];
   let dependenciesList = [];
   if (!options) {
@@ -951,7 +957,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
     pkgList,
     dependenciesList
   };
-};
+}
 
 /**
  * Given a lock file this method would return an Object with the identiy as the key and parsed name and value
@@ -961,7 +967,7 @@ export const parsePkgLock = async (pkgLockFile, options = {}) => {
  *
  * @param {string} lockData Yarn Lockfile data
  */
-export const yarnLockToIdentMap = function (lockData) {
+export function yarnLockToIdentMap(lockData) {
   const identMap = {};
   let currentIdents = [];
   lockData.split("\n").forEach((l) => {
@@ -1015,9 +1021,9 @@ export const yarnLockToIdentMap = function (lockData) {
     }
   });
   return identMap;
-};
+}
 
-const _parseYarnLine = (l) => {
+function _parseYarnLine(l) {
   let name = "";
   let group = "";
   const prefixAtSymbol = l.startsWith("@");
@@ -1037,14 +1043,14 @@ const _parseYarnLine = (l) => {
     }
   }
   return { group, name };
-};
+}
 
 /**
  * Parse nodejs yarn lock file
  *
  * @param {string} yarnLockFile yarn.lock file
  */
-export const parseYarnLock = async function (yarnLockFile) {
+export async function parseYarnLock(yarnLockFile) {
   let pkgList = [];
   const dependenciesList = [];
   const depKeys = {};
@@ -1239,14 +1245,14 @@ export const parseYarnLock = async function (yarnLockFile) {
     pkgList,
     dependenciesList
   };
-};
+}
 
 /**
  * Parse nodejs shrinkwrap deps file
  *
  * @param {string} swFile shrinkwrap-deps.json file
  */
-export const parseNodeShrinkwrap = async function (swFile) {
+export async function parseNodeShrinkwrap(swFile) {
   const pkgList = [];
   if (existsSync(swFile)) {
     const lockData = JSON.parse(readFileSync(swFile, "utf8"));
@@ -1309,14 +1315,15 @@ export const parseNodeShrinkwrap = async function (swFile) {
     return await getNpmMetadata(pkgList);
   }
   return pkgList;
-};
+}
 
 /**
  * Parse nodejs pnpm lock file
  *
  * @param {string} pnpmLock pnpm-lock.yaml file
+ * @param {object} parentComponent parent component
  */
-export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
+export async function parsePnpmLock(pnpmLock, parentComponent = null) {
   let pkgList = [];
   const dependenciesList = [];
   let ppurl = "";
@@ -1488,14 +1495,14 @@ export const parsePnpmLock = async function (pnpmLock, parentComponent = null) {
     pkgList,
     dependenciesList
   };
-};
+}
 
 /**
  * Parse bower json file
  *
  * @param {string} bowerJsonFile bower.json file
  */
-export const parseBowerJson = async (bowerJsonFile) => {
+export async function parseBowerJson(bowerJsonFile) {
   const pkgList = [];
   if (existsSync(bowerJsonFile)) {
     try {
@@ -1540,14 +1547,14 @@ export const parseBowerJson = async (bowerJsonFile) => {
     return await getNpmMetadata(pkgList);
   }
   return pkgList;
-};
+}
 
 /**
  * Parse minified js file
  *
  * @param {string} minJsFile min.js file
  */
-export const parseMinJs = async (minJsFile) => {
+export async function parseMinJs(minJsFile) {
   const pkgList = [];
   if (existsSync(minJsFile)) {
     try {
@@ -1625,14 +1632,14 @@ export const parseMinJs = async (minJsFile) => {
     return await getNpmMetadata(pkgList);
   }
   return pkgList;
-};
+}
 
 /**
  * Parse pom file
  *
  * @param {string} pom file to parse
  */
-export const parsePom = function (pomFile) {
+export function parsePom(pomFile) {
   const deps = [];
   const xmlData = readFileSync(pomFile, "utf-8");
   const project = xml2js(xmlData, {
@@ -1685,13 +1692,13 @@ export const parsePom = function (pomFile) {
     }
   }
   return deps;
-};
+}
 
 /**
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
  */
-export const parseMavenTree = function (rawOutput) {
+export function parseMavenTree(rawOutput) {
   if (!rawOutput) {
     return {};
   }
@@ -1777,7 +1784,7 @@ export const parseMavenTree = function (rawOutput) {
     pkgList: deps,
     dependenciesList
   };
-};
+}
 
 /**
  * Parse gradle dependencies output
@@ -1786,7 +1793,7 @@ export const parseMavenTree = function (rawOutput) {
  * @param {string} rootProjectName Root project name
  * @param {string} rootProjectVersion Root project version
  */
-export const parseGradleDep = function (
+export function parseGradleDep(
   rawOutput,
   rootProjectGroup = "",
   rootProjectName = "root",
@@ -1994,13 +2001,13 @@ export const parseGradleDep = function (
     };
   }
   return {};
-};
+}
 
 /**
  * Parse clojure cli dependencies output
  * @param {string} rawOutput Raw string output
  */
-export const parseCljDep = function (rawOutput) {
+export function parseCljDep(rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const keys_cache = {};
@@ -2034,13 +2041,13 @@ export const parseCljDep = function (rawOutput) {
     return deps;
   }
   return [];
-};
+}
 
 /**
  * Parse lein dependency tree output
  * @param {string} rawOutput Raw string output
  */
-export const parseLeinDep = function (rawOutput) {
+export function parseLeinDep(rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const keys_cache = {};
@@ -2051,9 +2058,9 @@ export const parseLeinDep = function (rawOutput) {
     return parseLeinMap(ednData, keys_cache, deps);
   }
   return [];
-};
+}
 
-export const parseLeinMap = function (node, keys_cache, deps) {
+export function parseLeinMap(node, keys_cache, deps) {
   if (node["map"]) {
     for (const n of node["map"]) {
       if (n.length === 2) {
@@ -2077,14 +2084,14 @@ export const parseLeinMap = function (node, keys_cache, deps) {
     }
   }
   return deps;
-};
+}
 
 /**
  * Parse gradle projects output
  *
  * @param {string} rawOutput Raw string output
  */
-export const parseGradleProjects = function (rawOutput) {
+export function parseGradleProjects(rawOutput) {
   let rootProject = "root";
   const projects = new Set();
   if (typeof rawOutput === "string") {
@@ -2127,14 +2134,14 @@ export const parseGradleProjects = function (rawOutput) {
     rootProject,
     projects: Array.from(projects)
   };
-};
+}
 
 /**
  * Parse gradle properties output
  *
  * @param {string} rawOutput Raw string output
  */
-export const parseGradleProperties = function (rawOutput) {
+export function parseGradleProperties(rawOutput) {
   let rootProject = "root";
   const projects = new Set();
   const metadata = { group: "", version: "latest", properties: [] };
@@ -2170,7 +2177,7 @@ export const parseGradleProperties = function (rawOutput) {
     projects: Array.from(projects),
     metadata
   };
-};
+}
 
 /**
  * Execute gradle properties command and return parsed output
@@ -2179,7 +2186,7 @@ export const parseGradleProperties = function (rawOutput) {
  * @param {string} rootPath Root directory
  * @param {string} subProject Sub project name
  */
-export const executeGradleProperties = function (dir, rootPath, subProject) {
+export function executeGradleProperties(dir, rootPath, subProject) {
   const defaultProps = {
     rootProject: subProject,
     projects: [],
@@ -2245,13 +2252,13 @@ export const executeGradleProperties = function (dir, rootPath, subProject) {
     return parseGradleProperties(cmdOutput);
   }
   return {};
-};
+}
 
 /**
  * Parse bazel action graph output
  * @param {string} rawOutput Raw string output
  */
-export const parseBazelActionGraph = function (rawOutput) {
+export function parseBazelActionGraph(rawOutput) {
   const mavenPrefixRegex = RegExp(
     `^.*v1/https/[^/]*(?:${
       process.env.BAZEL_STRIP_MAVEN_PREFIX || "/maven2/"
@@ -2293,13 +2300,13 @@ export const parseBazelActionGraph = function (rawOutput) {
     return deps;
   }
   return [];
-};
+}
 
 /**
  * Parse bazel skyframe state output
  * @param {string} rawOutput Raw string output
  */
-export const parseBazelSkyframe = function (rawOutput) {
+export function parseBazelSkyframe(rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     const keys_cache = {};
@@ -2351,13 +2358,13 @@ export const parseBazelSkyframe = function (rawOutput) {
     return deps;
   }
   return [];
-};
+}
 
 /**
  * Parse bazel BUILD file
  * @param {string} rawOutput Raw string output
  */
-export const parseBazelBuild = function (rawOutput) {
+export function parseBazelBuild(rawOutput) {
   if (typeof rawOutput === "string") {
     const projs = [];
     const tmpA = rawOutput.split("\n");
@@ -2372,12 +2379,12 @@ export const parseBazelBuild = function (rawOutput) {
     return projs;
   }
   return [];
-};
+}
 
 /**
  * Parse dependencies in Key:Value format
  */
-export const parseKVDep = function (rawOutput) {
+export function parseKVDep(rawOutput) {
   if (typeof rawOutput === "string") {
     const deps = [];
     rawOutput.split("\n").forEach((l) => {
@@ -2413,14 +2420,14 @@ export const parseKVDep = function (rawOutput) {
     return deps;
   }
   return [];
-};
+}
 
 /**
  * Method to find the spdx license id from name
  *
  * @param {string} name License full name
  */
-export const findLicenseId = function (name) {
+export function findLicenseId(name) {
   if (!name) {
     return undefined;
   }
@@ -2432,14 +2439,14 @@ export const findLicenseId = function (name) {
   return name && (name.includes("\n") || name.length > MAX_LICENSE_ID_LENGTH)
     ? guessLicenseId(name)
     : name;
-};
+}
 
 /**
  * Method to guess the spdx license id from license contents
  *
  * @param {string} name License file contents
  */
-export const guessLicenseId = function (content) {
+export function guessLicenseId(content) {
   content = content.replace(/\n/g, " ");
   for (const l of licenseMapping) {
     for (const j in l.names) {
@@ -2449,7 +2456,7 @@ export const guessLicenseId = function (content) {
     }
   }
   return undefined;
-};
+}
 
 /**
  * Method to retrieve metadata for maven packages by querying maven central
@@ -2457,7 +2464,7 @@ export const guessLicenseId = function (content) {
  * @param {Array} pkgList Package list
  * @param {Object} jarNSMapping Jar Namespace mapping object
  */
-export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
+export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
   const MAVEN_CENTRAL_URL =
     process.env.MAVEN_CENTRAL_URL || "https://repo1.maven.org/maven2/";
   const ANDROID_MAVEN_URL =
@@ -2553,7 +2560,7 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
     }
   }
   return cdepList;
-};
+}
 
 /**
  * Method to compose URL of pom.xml
@@ -2565,7 +2572,7 @@ export const getMvnMetadata = async function (pkgList, jarNSMapping = {}) {
  *
  * @return {String} fullUrl
  */
-export const composePomXmlUrl = function ({ urlPrefix, group, name, version }) {
+export function composePomXmlUrl({ urlPrefix, group, name, version }) {
   const groupPart = group.replace(/\./g, "/");
   const fullUrl =
     urlPrefix +
@@ -2580,7 +2587,7 @@ export const composePomXmlUrl = function ({ urlPrefix, group, name, version }) {
     version +
     ".pom";
   return fullUrl;
-};
+}
 
 /**
  * Method to fetch pom.xml data and parse it to JSON
@@ -2592,12 +2599,7 @@ export const composePomXmlUrl = function ({ urlPrefix, group, name, version }) {
  *
  * @return {Object|undefined}
  */
-export const fetchPomXmlAsJson = async function ({
-  urlPrefix,
-  group,
-  name,
-  version
-}) {
+export async function fetchPomXmlAsJson({ urlPrefix, group, name, version }) {
   const pomXml = await fetchPomXml({ urlPrefix, group, name, version });
   const options = {
     compact: true,
@@ -2619,7 +2621,7 @@ export const fetchPomXmlAsJson = async function ({
     return result;
   }
   return pomJson;
-};
+}
 
 /**
  * Method to fetch pom.xml data
@@ -2631,23 +2633,18 @@ export const fetchPomXmlAsJson = async function ({
  *
  * @return {Promise<String>}
  */
-export const fetchPomXml = async function ({
-  urlPrefix,
-  group,
-  name,
-  version
-}) {
+export async function fetchPomXml({ urlPrefix, group, name, version }) {
   const fullUrl = composePomXmlUrl({ urlPrefix, group, name, version });
   const res = await cdxgenAgent.get(fullUrl);
   return res.body;
-};
+}
 
 /**
  * Method extract single or multiple license entries that might appear in pom.xml
  *
  * @param {Object|Array} license
  */
-export const parseLicenseEntryOrArrayFromPomXml = function (license) {
+export function parseLicenseEntryOrArrayFromPomXml(license) {
   if (!license) return;
   if (Array.isArray(license)) {
     return license.map((l) => {
@@ -2656,7 +2653,7 @@ export const parseLicenseEntryOrArrayFromPomXml = function (license) {
   } else if (Object.keys(license).length) {
     return [findLicenseId(license.name._)];
   }
-};
+}
 
 /**
  * Method to parse pom.xml in search of a comment containing license text
@@ -2668,7 +2665,7 @@ export const parseLicenseEntryOrArrayFromPomXml = function (license) {
  *
  * @return {Promise<String>} License ID
  */
-export const extractLicenseCommentFromPomXml = async function ({
+export async function extractLicenseCommentFromPomXml({
   urlPrefix,
   group,
   name,
@@ -2680,14 +2677,14 @@ export const extractLicenseCommentFromPomXml = async function ({
   if (match && match[1]) {
     return findLicenseId(match[1].trim());
   }
-};
+}
 
 /**
  * Method to parse python requires_dist attribute found in pypi setup.py
  *
  * @param requires_dist string
  */
-export const parsePyRequiresDist = function (dist_string) {
+export function parsePyRequiresDist(dist_string) {
   if (!dist_string) {
     return undefined;
   }
@@ -2707,7 +2704,7 @@ export const parsePyRequiresDist = function (dist_string) {
     name,
     version
   };
-};
+}
 
 /**
  * Method to mimic pip version solver using node-semver
@@ -2715,7 +2712,7 @@ export const parsePyRequiresDist = function (dist_string) {
  * @param {Array} versionsList List of version numbers available
  * @param {*} versionSpecifiers pip version specifier
  */
-export const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
+export function guessPypiMatchingVersion(versionsList, versionSpecifiers) {
   versionSpecifiers = versionSpecifiers.replace(/,/g, " ").split(";")[0];
   const comparator = (a, b) => {
     let c = coerce(a).compare(coerce(b));
@@ -2733,7 +2730,7 @@ export const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
   }
   // Let's try to clean and have another go
   return maxSatisfying(versionsList, clean(versionSpecifiers, { loose: true }));
-};
+}
 
 /**
  * Method to retrieve metadata for python packages by querying pypi
@@ -2741,7 +2738,7 @@ export const guessPypiMatchingVersion = (versionsList, versionSpecifiers) => {
  * @param {Array} pkgList Package list
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
  */
-export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
+export async function getPyMetadata(pkgList, fetchDepsInfo) {
   if (!FETCH_LICENSE && !fetchDepsInfo) {
     return pkgList;
   }
@@ -2953,14 +2950,14 @@ export const getPyMetadata = async function (pkgList, fetchDepsInfo) {
     }
   }
   return cdepList;
-};
+}
 
 /**
  * Method to parse bdist_wheel metadata
  *
  * @param {Object} mData bdist_wheel metadata
  */
-export const parseBdistMetadata = function (mData) {
+export function parseBdistMetadata(mData) {
   const pkg = {};
   mData.split("\n").forEach((l) => {
     l = l.replace("\r", "");
@@ -2979,14 +2976,14 @@ export const parseBdistMetadata = function (mData) {
     }
   });
   return [pkg];
-};
+}
 
 /**
  * Method to parse pipfile.lock data
  *
  * @param {Object} lockData JSON data from Pipfile.lock
  */
-export const parsePiplockData = async function (lockData) {
+export async function parsePiplockData(lockData) {
   const pkgList = [];
   Object.keys(lockData)
     .filter((i) => i !== "_meta")
@@ -3001,14 +2998,14 @@ export const parsePiplockData = async function (lockData) {
       });
     });
   return await getPyMetadata(pkgList, false);
-};
+}
 
 /**
  * Method to parse python pyproject.toml file
  *
  * @param {string} tomlFile Toml file
  */
-export const parsePyProjectToml = (tomlFile) => {
+export function parsePyProjectToml(tomlFile) {
   // Do we need a toml npm package at some point?
   const tomlData = readFileSync(tomlFile, { encoding: "utf-8" });
   const pkg = {};
@@ -3053,7 +3050,7 @@ export const parsePyProjectToml = (tomlFile) => {
     }
   });
   return pkg;
-};
+}
 
 /**
  * Method to parse poetry.lock data
@@ -3061,7 +3058,7 @@ export const parsePyProjectToml = (tomlFile) => {
  * @param {Object} lockData JSON data from poetry.lock
  * @param {string} lockFile Lock file name for evidence
  */
-export const parsePoetrylockData = async function (lockData, lockFile) {
+export async function parsePoetrylockData(lockData, lockFile) {
   let pkgList = [];
   const dependenciesList = [];
   const depsMap = {};
@@ -3176,7 +3173,7 @@ export const parsePoetrylockData = async function (lockData, lockFile) {
     rootList: pkgList,
     dependenciesList
   };
-};
+}
 
 /**
  * Method to parse requirements.txt data
@@ -3336,7 +3333,7 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
  * @param {Array} epkgList Existing package list
  * @returns List of packages
  */
-export const getPyModules = async (src, epkgList, options) => {
+export async function getPyModules(src, epkgList, options) {
   const allImports = {};
   const dependenciesList = [];
   let modList = [];
@@ -3407,14 +3404,14 @@ export const getPyModules = async (src, epkgList, options) => {
     }
   }
   return { allImports, pkgList, dependenciesList, modList };
-};
+}
 
 /**
  * Method to parse setup.py data
  *
  * @param {Object} setupPyData Contents of setup.py
  */
-export const parseSetupPyFile = async function (setupPyData) {
+export async function parseSetupPyFile(setupPyData) {
   let lines = [];
   let requires_found = false;
   let should_break = false;
@@ -3435,14 +3432,14 @@ export const parseSetupPyFile = async function (setupPyData) {
     }
   });
   return await parseReqFile(lines.join("\n"), false);
-};
+}
 
 /**
  * Method to construct a GitHub API url for the given repo metadata
  * @param {Object} repoMetadata Repo metadata with group and name
  * @return {String|undefined} github api url (or undefined - if not enough data)
  */
-export const repoMetadataToGitHubApiUrl = function (repoMetadata) {
+export function repoMetadataToGitHubApiUrl(repoMetadata) {
   if (repoMetadata) {
     const group = repoMetadata.group;
     const name = repoMetadata.name;
@@ -3455,21 +3452,21 @@ export const repoMetadataToGitHubApiUrl = function (repoMetadata) {
   } else {
     return undefined;
   }
-};
+}
 
 /**
  * Method to split GitHub url into its parts
  * @param {String} repoUrl Repository url
  * @return {[String]} parts from url
  */
-export const getGithubUrlParts = (repoUrl) => {
+export function getGithubUrlParts(repoUrl) {
   if (repoUrl.toLowerCase().endsWith(".git")) {
     repoUrl = repoUrl.slice(0, -4);
   }
   repoUrl.replace(/\/$/, "");
   const parts = repoUrl.split("/");
   return parts;
-};
+}
 
 /**
  * Method to construct GitHub api url from repo metadata or one of multiple formats of repo URLs
@@ -3477,7 +3474,7 @@ export const getGithubUrlParts = (repoUrl) => {
  * @param {Object} repoMetadata Object containing group and package name strings
  * @return {String|undefined} github api url (or undefined - if not a GitHub repo)
  */
-export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
+export function toGitHubApiUrl(repoUrl, repoMetadata) {
   if (repoMetadata) {
     return repoMetadataToGitHubApiUrl(repoMetadata);
   }
@@ -3490,7 +3487,7 @@ export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
       name: parts[4]
     });
   }
-};
+}
 
 /**
  * Method to retrieve repo license by querying github api
@@ -3499,7 +3496,7 @@ export const toGitHubApiUrl = function (repoUrl, repoMetadata) {
  * @param {Object} repoMetadata Object containing group and package name strings
  * @return {Promise<String>} SPDX license id
  */
-export const getRepoLicense = async function (repoUrl, repoMetadata) {
+export async function getRepoLicense(repoUrl, repoMetadata) {
   const apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
   // Perform github lookups
   if (apiUrl && get_repo_license_errors < MAX_GET_REPO_LICENSE_ERRORS) {
@@ -3557,14 +3554,14 @@ export const getRepoLicense = async function (repoUrl, repoMetadata) {
     }
   }
   return undefined;
-};
+}
 
 /**
  * Method to get go pkg license from go.dev site.
  *
  * @param {Object} repoMetadata Repo metadata
  */
-export const getGoPkgLicense = async function (repoMetadata) {
+export async function getGoPkgLicense(repoMetadata) {
   const group = repoMetadata.group;
   const name = repoMetadata.name;
   let pkgUrlPrefix = "https://pkg.go.dev/";
@@ -3612,9 +3609,9 @@ export const getGoPkgLicense = async function (repoMetadata) {
     return await getRepoLicense(undefined, repoMetadata);
   }
   return undefined;
-};
+}
 
-export const getGoPkgComponent = async function (group, name, version, hash) {
+export async function getGoPkgComponent(group, name, version, hash) {
   let pkg = {};
   let license = undefined;
   if (FETCH_LICENSE) {
@@ -3639,9 +3636,9 @@ export const getGoPkgComponent = async function (group, name, version, hash) {
     "bom-ref": decodeURIComponent(purlString)
   };
   return pkg;
-};
+}
 
-export const parseGoModData = async function (goModData, gosumMap) {
+export async function parseGoModData(goModData, gosumMap) {
   const pkgComponentsList = [];
   let isModReplacement = false;
 
@@ -3714,7 +3711,7 @@ export const parseGoModData = async function (goModData, gosumMap) {
   // Clear the cache
   metadata_cache = {};
   return pkgComponentsList;
-};
+}
 
 /**
  * Parse go list output
@@ -3722,7 +3719,7 @@ export const parseGoModData = async function (goModData, gosumMap) {
  * @param {string} rawOutput Output from go list invocation
  * @returns Object with parent component and List of packages
  */
-export const parseGoListDep = async function (rawOutput, gosumMap) {
+export async function parseGoListDep(rawOutput, gosumMap) {
   let parentComponent = {};
   const deps = [];
   if (typeof rawOutput === "string") {
@@ -3772,9 +3769,9 @@ export const parseGoListDep = async function (rawOutput, gosumMap) {
     parentComponent,
     pkgList: deps
   };
-};
+}
 
-const _addGoComponentEvidence = (component, goModFile) => {
+function _addGoComponentEvidence(component, goModFile) {
   component.evidence = {
     identity: {
       field: "purl",
@@ -3796,7 +3793,7 @@ const _addGoComponentEvidence = (component, goModFile) => {
     value: goModFile
   });
   return component;
-};
+}
 
 /**
  * Parse go mod graph
@@ -3808,7 +3805,7 @@ const _addGoComponentEvidence = (component, goModFile) => {
  *
  * @returns Object containing List of packages and dependencies
  */
-export const parseGoModGraph = async function (
+export async function parseGoModGraph(
   rawOutput,
   goModFile,
   gosumMap,
@@ -3895,14 +3892,14 @@ export const parseGoModGraph = async function (
     });
   }
   return { pkgList, dependenciesList };
-};
+}
 
 /**
  * Parse go mod why output
  * @param {string} rawOutput Output from go mod why
  * @returns package name or none
  */
-export const parseGoModWhy = function (rawOutput) {
+export function parseGoModWhy(rawOutput) {
   if (typeof rawOutput === "string") {
     let pkg_name = undefined;
     const lines = rawOutput.split("\n");
@@ -3914,9 +3911,14 @@ export const parseGoModWhy = function (rawOutput) {
     return pkg_name;
   }
   return undefined;
-};
+}
 
-export const parseGosumData = async function (gosumData) {
+/**
+ * Parse go sum data
+ * @param {string} gosumData Content of go.sum
+ * @returns package list
+ */
+export async function parseGosumData(gosumData) {
   const pkgList = [];
   if (!gosumData) {
     return pkgList;
@@ -3952,9 +3954,9 @@ export const parseGosumData = async function (gosumData) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseGopkgData = async function (gopkgData) {
+export async function parseGopkgData(gopkgData) {
   const pkgList = [];
   if (!gopkgData) {
     return pkgList;
@@ -4001,9 +4003,9 @@ export const parseGopkgData = async function (gopkgData) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseGoVersionData = async function (buildInfoData) {
+export async function parseGoVersionData(buildInfoData) {
   const pkgList = [];
   if (!buildInfoData) {
     return pkgList;
@@ -4027,7 +4029,7 @@ export const parseGoVersionData = async function (buildInfoData) {
     pkgList.push(component);
   }
   return pkgList;
-};
+}
 
 export const RUBY_PLATFORM_PREFIXES = [
   "-x86_64",
@@ -4047,21 +4049,21 @@ export const RUBY_PLATFORM_PREFIXES = [
  * @param {string} version Version to simplify
  * @returns {string} Simplified version
  */
-const simplifyRubyVersion = (version) => {
+function simplifyRubyVersion(version) {
   for (const prefix of RUBY_PLATFORM_PREFIXES) {
     if (version.includes(prefix)) {
       version = version.split(prefix)[0];
     }
   }
   return version;
-};
+}
 
 /**
  * Method to query rubygems api for gems details
  *
  * @param {Array} pkgList List of packages with metadata
  */
-export const getRubyGemsMetadata = async function (pkgList) {
+export async function getRubyGemsMetadata(pkgList) {
   const RUBYGEMS_V2_URL =
     process.env.RUBYGEMS_V2_URL || "https://rubygems.org/api/v2/rubygems/";
   const RUBYGEMS_V1_URL =
@@ -4158,14 +4160,14 @@ export const getRubyGemsMetadata = async function (pkgList) {
     }
   }
   return rdepList;
-};
+}
 
 /**
  * Method to parse Gemspec
  *
  * @param {string} gemspecData Gemspec data
  */
-export const parseGemspecData = async function (gemspecData) {
+export async function parseGemspecData(gemspecData) {
   let pkgList = [];
   const pkg = {};
   if (!gemspecData) {
@@ -4196,7 +4198,7 @@ export const parseGemspecData = async function (gemspecData) {
   } else {
     return pkgList;
   }
-};
+}
 
 /**
  * Method to parse Gemfile.lock
@@ -4204,7 +4206,7 @@ export const parseGemspecData = async function (gemspecData) {
  * @param {object} gemLockData Gemfile.lock data
  * @param {string} lockFile Lock file
  */
-export const parseGemfileLockData = async (gemLockData, lockFile) => {
+export async function parseGemfileLockData(gemLockData, lockFile) {
   let pkgList = [];
   const pkgnames = {};
   const dependenciesList = [];
@@ -4449,14 +4451,14 @@ export const parseGemfileLockData = async (gemLockData, lockFile) => {
     return { pkgList, dependenciesList };
   }
   return { pkgList, dependenciesList, rootList };
-};
+}
 
 /**
  * Method to retrieve metadata for rust packages by querying crates
  *
  * @param {Array} pkgList Package list
  */
-export const getCratesMetadata = async function (pkgList) {
+export async function getCratesMetadata(pkgList) {
   const CRATES_URL = "https://crates.io/api/v1/crates/";
   const cdepList = [];
   for (const p of pkgList) {
@@ -4489,14 +4491,14 @@ export const getCratesMetadata = async function (pkgList) {
     }
   }
   return cdepList;
-};
+}
 
 /**
  * Method to retrieve metadata for dart packages by querying pub.dev
  *
  * @param {Array} pkgList Package list
  */
-export const getDartMetadata = async function (pkgList) {
+export async function getDartMetadata(pkgList) {
   const RESPONSE_TYPE = "json";
   const HEADER_ACCEPT = "application/vnd.pub.v2+json";
   const PUB_DEV_URL = process.env.PUB_DEV_URL || "https://pub.dev";
@@ -4554,9 +4556,15 @@ export const getDartMetadata = async function (pkgList) {
     }
   }
   return cdepList;
-};
+}
 
-export const parseCargoTomlData = async function (cargoData) {
+/**
+ * Method to parse cargo.toml data
+ *
+ * @param {string} cargoData Content of cargo.toml
+ * @returns {array} Package list
+ */
+export async function parseCargoTomlData(cargoData) {
   const pkgList = [];
   if (!cargoData) {
     return pkgList;
@@ -4639,9 +4647,9 @@ export const parseCargoTomlData = async function (cargoData) {
   } else {
     return pkgList;
   }
-};
+}
 
-export const parseCargoData = async function (cargoData) {
+export async function parseCargoData(cargoData) {
   const pkgList = [];
   if (!cargoData) {
     return pkgList;
@@ -4687,9 +4695,9 @@ export const parseCargoData = async function (cargoData) {
   } else {
     return pkgList;
   }
-};
+}
 
-export const parseCargoAuditableData = async function (cargoData) {
+export async function parseCargoAuditableData(cargoData) {
   const pkgList = [];
   if (!cargoData) {
     return pkgList;
@@ -4716,9 +4724,9 @@ export const parseCargoAuditableData = async function (cargoData) {
   } else {
     return pkgList;
   }
-};
+}
 
-export const parsePubLockData = async function (pubLockData) {
+export async function parsePubLockData(pubLockData) {
   const pkgList = [];
   if (!pubLockData) {
     return pkgList;
@@ -4756,9 +4764,9 @@ export const parsePubLockData = async function (pubLockData) {
   } else {
     return pkgList;
   }
-};
+}
 
-export const parsePubYamlData = function (pubYamlData) {
+export function parsePubYamlData(pubYamlData) {
   const pkgList = [];
   let yamlObj = undefined;
   try {
@@ -4776,9 +4784,9 @@ export const parsePubYamlData = function (pubYamlData) {
     homepage: { url: yamlObj.homepage }
   });
   return pkgList;
-};
+}
 
-export const parseHelmYamlData = function (helmData) {
+export function parseHelmYamlData(helmData) {
   const pkgList = [];
   let yamlObj = undefined;
   try {
@@ -4841,9 +4849,9 @@ export const parseHelmYamlData = function (helmData) {
     }
   }
   return pkgList;
-};
+}
 
-export const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
+export function recurseImageNameLookup(keyValueObj, pkgList, imgList) {
   if (typeof keyValueObj === "string" || keyValueObj instanceof String) {
     return imgList;
   }
@@ -4904,9 +4912,9 @@ export const recurseImageNameLookup = (keyValueObj, pkgList, imgList) => {
     }
   }
   return imgList;
-};
+}
 
-export const parseContainerFile = function (fileContents) {
+export function parseContainerFile(fileContents) {
   const imgList = [];
 
   const buildStageNames = [];
@@ -4943,9 +4951,9 @@ export const parseContainerFile = function (fileContents) {
   }
 
   return imgList;
-};
+}
 
-export const parseBitbucketPipelinesFile = function (fileContents) {
+export function parseBitbucketPipelinesFile(fileContents) {
   const imgList = [];
 
   let privateImageBlockFound = false;
@@ -5005,9 +5013,9 @@ export const parseBitbucketPipelinesFile = function (fileContents) {
   }
 
   return imgList;
-};
+}
 
-export const parseContainerSpecData = function (dcData) {
+export function parseContainerSpecData(dcData) {
   const pkgList = [];
   const imgList = [];
   if (!dcData.includes("image") && !dcData.includes("kind")) {
@@ -5072,9 +5080,9 @@ export const parseContainerSpecData = function (dcData) {
     }
   }
   return pkgList;
-};
+}
 
-export const identifyFlow = function (processingObj) {
+export function identifyFlow(processingObj) {
   let flow = "unknown";
   if (processingObj.sinkId) {
     const sinkId = processingObj.sinkId.toLowerCase();
@@ -5087,9 +5095,9 @@ export const identifyFlow = function (processingObj) {
     }
   }
   return flow;
-};
+}
 
-const convertProcessing = function (processing_list) {
+function convertProcessing(processing_list) {
   const data_list = [];
   for (const p of processing_list) {
     data_list.push({
@@ -5098,9 +5106,9 @@ const convertProcessing = function (processing_list) {
     });
   }
   return data_list;
-};
+}
 
-export const parsePrivadoFile = function (f) {
+export function parsePrivadoFile(f) {
   const pData = readFileSync(f, { encoding: "utf-8" });
   const servlist = [];
   if (!pData) {
@@ -5183,9 +5191,9 @@ export const parsePrivadoFile = function (f) {
     servlist.push(aservice);
   }
   return servlist;
-};
+}
 
-export const parseOpenapiSpecData = function (oaData) {
+export function parseOpenapiSpecData(oaData) {
   const servlist = [];
   if (!oaData) {
     return servlist;
@@ -5237,9 +5245,9 @@ export const parseOpenapiSpecData = function (oaData) {
   aservice.authenticated = authenticated;
   servlist.push(aservice);
   return servlist;
-};
+}
 
-export const parseCabalData = function (cabalData) {
+export function parseCabalData(cabalData) {
   const pkgList = [];
   if (!cabalData) {
     return pkgList;
@@ -5265,9 +5273,9 @@ export const parseCabalData = function (cabalData) {
     }
   });
   return pkgList;
-};
+}
 
-export const parseMixLockData = function (mixData) {
+export function parseMixLockData(mixData) {
   const pkgList = [];
   if (!mixData) {
     return pkgList;
@@ -5292,9 +5300,9 @@ export const parseMixLockData = function (mixData) {
     }
   });
   return pkgList;
-};
+}
 
-export const parseGitHubWorkflowData = function (ghwData) {
+export function parseGitHubWorkflowData(ghwData) {
   const pkgList = [];
   const keys_cache = {};
   if (!ghwData) {
@@ -5334,9 +5342,9 @@ export const parseGitHubWorkflowData = function (ghwData) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseCloudBuildData = function (cbwData) {
+export function parseCloudBuildData(cbwData) {
   const pkgList = [];
   const keys_cache = {};
   if (!cbwData) {
@@ -5371,9 +5379,9 @@ export const parseCloudBuildData = function (cbwData) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseConanLockData = function (conanLockData) {
+export function parseConanLockData(conanLockData) {
   const pkgList = [];
   if (!conanLockData) {
     return pkgList;
@@ -5411,9 +5419,9 @@ export const parseConanLockData = function (conanLockData) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseConanData = function (conanData) {
+export function parseConanData(conanData) {
   const pkgList = [];
   if (!conanData) {
     return pkgList;
@@ -5466,9 +5474,9 @@ export const parseConanData = function (conanData) {
     }
   });
   return pkgList;
-};
+}
 
-export const parseLeiningenData = function (leinData) {
+export function parseLeiningenData(leinData) {
   const pkgList = [];
   if (!leinData) {
     return pkgList;
@@ -5500,9 +5508,9 @@ export const parseLeiningenData = function (leinData) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseEdnData = function (rawEdnData) {
+export function parseEdnData(rawEdnData) {
   const pkgList = [];
   if (!rawEdnData) {
     return pkgList;
@@ -5552,9 +5560,9 @@ export const parseEdnData = function (rawEdnData) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseNupkg = async function (nupkgFile) {
+export async function parseNupkg(nupkgFile) {
   let nuspecData = await readZipEntry(nupkgFile, ".nuspec");
   if (!nuspecData) {
     return [];
@@ -5563,9 +5571,9 @@ export const parseNupkg = async function (nupkgFile) {
     nuspecData = await readZipEntry(nupkgFile, ".nuspec", "ucs2");
   }
   return await parseNuspecData(nupkgFile, nuspecData);
-};
+}
 
-export const parseNuspecData = function (nupkgFile, nuspecData) {
+export function parseNuspecData(nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
   let npkg = undefined;
@@ -5616,9 +5624,9 @@ export const parseNuspecData = function (nupkgFile, nuspecData) {
   };
   pkgList.push(pkg);
   return pkgList;
-};
+}
 
-export const parseCsPkgData = function (pkgData) {
+export function parseCsPkgData(pkgData) {
   const pkgList = [];
   if (!pkgData) {
     return pkgList;
@@ -5643,9 +5651,9 @@ export const parseCsPkgData = function (pkgData) {
     pkgList.push(pkg);
   }
   return pkgList;
-};
+}
 
-export const parseCsProjData = function (csProjData, projFile) {
+export function parseCsProjData(csProjData, projFile) {
   const pkgList = [];
   if (!csProjData) {
     return pkgList;
@@ -5735,9 +5743,9 @@ export const parseCsProjData = function (csProjData, projFile) {
     }
   }
   return pkgList;
-};
+}
 
-export const parseCsProjAssetsData = function (csProjData, assetsJsonFile) {
+export function parseCsProjAssetsData(csProjData, assetsJsonFile) {
   // extract name, operator, version from .NET package representation
   // like "NLog >= 4.5.0"
   function extractNameOperatorVersion(inputStr) {
@@ -5947,9 +5955,9 @@ export const parseCsProjAssetsData = function (csProjData, assetsJsonFile) {
     pkgList,
     dependenciesList
   };
-};
+}
 
-export const parseCsPkgLockData = function (csLockData, pkgLockFile) {
+export function parseCsPkgLockData(csLockData, pkgLockFile) {
   const pkgList = [];
   const dependenciesList = [];
   const rootList = [];
@@ -6038,9 +6046,9 @@ export const parseCsPkgLockData = function (csLockData, pkgLockFile) {
     dependenciesList,
     rootList
   };
-};
+}
 
-export const parsePaketLockData = function (paketLockData, pkgLockFile) {
+export function parsePaketLockData(paketLockData, pkgLockFile) {
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
@@ -6151,7 +6159,7 @@ export const parsePaketLockData = function (paketLockData, pkgLockFile) {
     pkgList,
     dependenciesList
   };
-};
+}
 
 /**
  * Parse composer lock file
@@ -6159,7 +6167,7 @@ export const parsePaketLockData = function (paketLockData, pkgLockFile) {
  * @param {string} pkgLockFile composer.lock file
  * @param {array} rootRequires require section from composer.json
  */
-export const parseComposerLock = function (pkgLockFile, rootRequires) {
+export function parseComposerLock(pkgLockFile, rootRequires) {
   const pkgList = [];
   const dependenciesList = [];
   const dependenciesMap = {};
@@ -6295,9 +6303,9 @@ export const parseComposerLock = function (pkgLockFile, rootRequires) {
     dependenciesList,
     rootList
   };
-};
+}
 
-export const parseSbtTree = (sbtTreeFile) => {
+export function parseSbtTree(sbtTreeFile) {
   const pkgList = [];
   const dependenciesList = [];
   const keys_cache = {};
@@ -6424,14 +6432,14 @@ export const parseSbtTree = (sbtTreeFile) => {
     });
   }
   return { pkgList, dependenciesList };
-};
+}
 
 /**
  * Parse sbt lock file
  *
  * @param {string} pkgLockFile build.sbt.lock file
  */
-export const parseSbtLock = function (pkgLockFile) {
+export function parseSbtLock(pkgLockFile) {
   const pkgList = [];
   if (existsSync(pkgLockFile)) {
     const lockData = JSON.parse(
@@ -6482,9 +6490,9 @@ export const parseSbtLock = function (pkgLockFile) {
     }
   }
   return pkgList;
-};
+}
 
-const convertStdoutToList = (result) => {
+function convertStdoutToList(result) {
   if (result.status !== 0 || result.error) {
     return undefined;
   }
@@ -6499,7 +6507,7 @@ const convertStdoutToList = (result) => {
       .sort();
   }
   return undefined;
-};
+}
 
 /**
  * Method to execute dpkg --listfiles to determine the files provided by a given package
@@ -6507,12 +6515,12 @@ const convertStdoutToList = (result) => {
  * @param {string} pkgName deb package name
  * @returns
  */
-export const executeDpkgList = (pkgName) => {
+export function executeDpkgList(pkgName) {
   const result = spawnSync("dpkg", ["--listfiles", "--no-pager", pkgName], {
     encoding: "utf-8"
   });
   return convertStdoutToList(result);
-};
+}
 
 /**
  * Method to execute dnf repoquery to determine the files provided by a given package
@@ -6520,7 +6528,7 @@ export const executeDpkgList = (pkgName) => {
  * @param {string} pkgName deb package name
  * @returns
  */
-export const executeRpmList = (pkgName) => {
+export function executeRpmList(pkgName) {
   let result = spawnSync("dnf", ["repoquery", "-l", pkgName], {
     encoding: "utf-8"
   });
@@ -6531,7 +6539,7 @@ export const executeRpmList = (pkgName) => {
     });
   }
   return convertStdoutToList(result);
-};
+}
 
 /**
  * Method to execute apk -L info to determine the files provided by a given package
@@ -6539,12 +6547,12 @@ export const executeRpmList = (pkgName) => {
  * @param {string} pkgName deb package name
  * @returns
  */
-export const executeApkList = (pkgName) => {
+export function executeApkList(pkgName) {
   const result = spawnSync("apk", ["-L", "info", pkgName], {
     encoding: "utf-8"
   });
   return convertStdoutToList(result);
-};
+}
 
 /**
  * Method to execute alpm -Ql to determine the files provided by a given package
@@ -6552,12 +6560,12 @@ export const executeApkList = (pkgName) => {
  * @param {string} pkgName deb package name
  * @returns
  */
-export const executeAlpmList = (pkgName) => {
+export function executeAlpmList(pkgName) {
   const result = spawnSync("pacman", ["-Ql", pkgName], {
     encoding: "utf-8"
   });
   return convertStdoutToList(result);
-};
+}
 
 /**
  * Method to execute equery files to determine the files provided by a given package
@@ -6565,12 +6573,12 @@ export const executeAlpmList = (pkgName) => {
  * @param {string} pkgName deb package name
  * @returns
  */
-export const executeEqueryList = (pkgName) => {
+export function executeEqueryList(pkgName) {
   const result = spawnSync("equery", ["files", pkgName], {
     encoding: "utf-8"
   });
   return convertStdoutToList(result);
-};
+}
 
 /**
  * Convert OS query results
@@ -6580,7 +6588,7 @@ export const executeEqueryList = (pkgName) => {
  * @param {Array} results Query Results
  * @param {Boolean} enhance Optionally enhance results by invoking additional package manager commands
  */
-export const convertOSQueryResults = function (
+export function convertOSQueryResults(
   queryCategory,
   queryObj,
   results,
@@ -6719,9 +6727,9 @@ export const convertOSQueryResults = function (
     }
   }
   return pkgList;
-};
+}
 
-const purlFromUrlString = (type, repoUrl, version) => {
+function purlFromUrlString(type, repoUrl, version) {
   let namespace = "",
     name;
   if (repoUrl && repoUrl.startsWith("http")) {
@@ -6751,19 +6759,19 @@ const purlFromUrlString = (type, repoUrl, version) => {
 
   const purl = new PackageURL(type, namespace, name, version, null, null);
   return purl;
-};
+}
 
 /**
  * Parse swift dependency tree output json object
  * @param {string} jsonObject Swift dependencies json object
  * @param {string} pkgFile Package.swift file
  */
-export const parseSwiftJsonTreeObject = (
+export function parseSwiftJsonTreeObject(
   pkgList,
   dependenciesList,
   jsonObject,
   pkgFile
-) => {
+) {
   const urlOrPath = jsonObject.url || jsonObject.path;
   const version = jsonObject.version;
   const purl = purlFromUrlString("swift", urlOrPath, version);
@@ -6811,14 +6819,14 @@ export const parseSwiftJsonTreeObject = (
     dependsOn: depList
   });
   return purlString;
-};
+}
 
 /**
  * Parse swift dependency tree output
  * @param {string} rawOutput Swift dependencies json output
  * @param {string} pkgFile Package.swift file
  */
-export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
+export function parseSwiftJsonTree(rawOutput, pkgFile) {
   if (!rawOutput) {
     return {};
   }
@@ -6837,13 +6845,13 @@ export const parseSwiftJsonTree = (rawOutput, pkgFile) => {
     pkgList,
     dependenciesList
   };
-};
+}
 
 /**
  * Parse swift package resolved file
  * @param {string} resolvedFile Package.resolved file
  */
-export const parseSwiftResolved = (resolvedFile) => {
+export function parseSwiftResolved(resolvedFile) {
   const pkgList = [];
   if (existsSync(resolvedFile)) {
     try {
@@ -6897,7 +6905,7 @@ export const parseSwiftResolved = (resolvedFile) => {
     }
   }
   return pkgList;
-};
+}
 
 /**
  * Collect maven dependencies
@@ -6907,12 +6915,12 @@ export const parseSwiftResolved = (resolvedFile) => {
  * @param {boolean} cleanup Remove temporary directories
  * @param {boolean} includeCacheDir Include maven and gradle cache directories
  */
-export const collectMvnDependencies = async (
+export async function collectMvnDependencies(
   mavenCmd,
   basePath,
   cleanup = true,
   includeCacheDir = false
-) => {
+) {
   let jarNSMapping = {};
   const MAVEN_CACHE_DIR =
     process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository");
@@ -6966,14 +6974,14 @@ export const collectMvnDependencies = async (
     rmSync(tempDir, { recursive: true, force: true });
   }
   return jarNSMapping;
-};
+}
 
-export const collectGradleDependencies = async (
+export async function collectGradleDependencies(
   gradleCmd,
   basePath,
   cleanup = true, // eslint-disable-line no-unused-vars
   includeCacheDir = false // eslint-disable-line no-unused-vars
-) => {
+) {
   // HELP WANTED: We need an init script that mimics maven copy-dependencies that only collects the project specific jars and poms
   // Construct gradle cache directory
   let GRADLE_CACHE_DIR =
@@ -7000,7 +7008,7 @@ export const collectGradleDependencies = async (
   }
   const jarNSMapping = await collectJarNS(GRADLE_CACHE_DIR, pomPathMap);
   return jarNSMapping;
-};
+}
 
 /**
  * Method to collect class names from all jars in a directory
@@ -7010,7 +7018,7 @@ export const collectGradleDependencies = async (
  *
  * @return object containing jar name and class list
  */
-export const collectJarNS = async (jarPath, pomPathMap = {}) => {
+export async function collectJarNS(jarPath, pomPathMap = {}) {
   const jarNSMapping = {};
   console.log(
     `About to identify class names for all jars in the path ${jarPath}`
@@ -7163,9 +7171,9 @@ export const collectJarNS = async (jarPath, pomPathMap = {}) => {
     console.log(`${jarPath} did not contain any jars.`);
   }
   return jarNSMapping;
-};
+}
 
-export const convertJarNSToPackages = (jarNSMapping) => {
+export function convertJarNSToPackages(jarNSMapping) {
   const pkgList = [];
   for (const purl of Object.keys(jarNSMapping)) {
     let { jarFile, pom, namespaces } = jarNSMapping[purl];
@@ -7226,9 +7234,9 @@ export const convertJarNSToPackages = (jarNSMapping) => {
     pkgList.push(apackage);
   }
   return pkgList;
-};
+}
 
-export const parsePomXml = function (pomXmlData) {
+export function parsePomXml(pomXmlData) {
   if (!pomXmlData) {
     return undefined;
   }
@@ -7258,9 +7266,9 @@ export const parsePomXml = function (pomXmlData) {
     };
   }
   return undefined;
-};
+}
 
-export const parseJarManifest = function (jarMetadata) {
+export function parseJarManifest(jarMetadata) {
   const metadata = {};
   if (!jarMetadata) {
     return metadata;
@@ -7275,9 +7283,9 @@ export const parseJarManifest = function (jarMetadata) {
     }
   });
   return metadata;
-};
+}
 
-export const parsePomProperties = function (pomProperties) {
+export function parsePomProperties(pomProperties) {
   const properties = {};
   if (!pomProperties) {
     return properties;
@@ -7292,13 +7300,13 @@ export const parsePomProperties = function (pomProperties) {
     }
   });
   return properties;
-};
+}
 
-export const encodeForPurl = (s) => {
+export function encodeForPurl(s) {
   return s && !s.includes("%40")
     ? encodeURIComponent(s).replace(/%3A/g, ":").replace(/%2F/g, "/")
     : s;
-};
+}
 
 /**
  * Method to get pom properties from maven directory
@@ -7307,7 +7315,7 @@ export const encodeForPurl = (s) => {
  *
  * @return array with pom properties
  */
-export const getPomPropertiesFromMavenDir = function (mavenDir) {
+export function getPomPropertiesFromMavenDir(mavenDir) {
   let pomProperties = {};
   if (existsSync(mavenDir) && lstatSync(mavenDir).isDirectory()) {
     const pomPropertiesFiles = getAllFiles(mavenDir, "**/pom.properties");
@@ -7319,7 +7327,7 @@ export const getPomPropertiesFromMavenDir = function (mavenDir) {
     }
   }
   return pomProperties;
-};
+}
 
 /**
  *
@@ -7346,11 +7354,7 @@ function checksumFile(hashName, path) {
  *
  * @return pkgList Package list
  */
-export const extractJarArchive = async function (
-  jarFile,
-  tempDir,
-  jarNSMapping = {}
-) {
+export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
   const pkgList = [];
   let jarFiles = [];
   const fname = basename(jarFile);
@@ -7657,7 +7661,7 @@ export const extractJarArchive = async function (
     console.log(`Obtained only ${pkgList.length} from ${jarFiles.length} jars`);
   }
   return pkgList;
-};
+}
 
 /**
  * Determine the version of SBT used in compilation of this project.
@@ -7667,7 +7671,7 @@ export const extractJarArchive = async function (
  *
  * @param {string} projectPath Path to the SBT project
  */
-export const determineSbtVersion = function (projectPath) {
+export function determineSbtVersion(projectPath) {
   const buildPropFile = join(projectPath, "project", "build.properties");
   if (DEBUG_MODE) {
     console.log("Looking for", buildPropFile);
@@ -7680,7 +7684,7 @@ export const determineSbtVersion = function (projectPath) {
     }
   }
   return null;
-};
+}
 
 /**
  * Adds a new plugin to the SBT project by amending its plugins list.
@@ -7694,7 +7698,7 @@ export const determineSbtVersion = function (projectPath) {
  * @param {string} projectPath Path to the SBT project
  * @param {string} plugin Name of the plugin to add
  */
-export const addPlugin = function (projectPath, plugin) {
+export function addPlugin(projectPath, plugin) {
   const pluginsFile = sbtPluginsPath(projectPath);
   let originalPluginsFile = null;
   if (existsSync(pluginsFile)) {
@@ -7704,7 +7708,7 @@ export const addPlugin = function (projectPath, plugin) {
 
   writeFileSync(pluginsFile, plugin, { flag: "a" });
   return originalPluginsFile;
-};
+}
 
 /**
  * Cleans up modifications to the project's plugins' file made by the
@@ -7713,7 +7717,7 @@ export const addPlugin = function (projectPath, plugin) {
  * @param {string} projectPath Path to the SBT project
  * @param {string} originalPluginsFile Location of the original plugins file, if any
  */
-export const cleanupPlugin = function (projectPath, originalPluginsFile) {
+export function cleanupPlugin(projectPath, originalPluginsFile) {
   const pluginsFile = sbtPluginsPath(projectPath);
   if (existsSync(pluginsFile)) {
     if (!originalPluginsFile) {
@@ -7733,16 +7737,16 @@ export const cleanupPlugin = function (projectPath, originalPluginsFile) {
   } else {
     return false;
   }
-};
+}
 
 /**
  * Returns a default location of the plugins file.
  *
  * @param {string} projectPath Path to the SBT project
  */
-export const sbtPluginsPath = function (projectPath) {
+export function sbtPluginsPath(projectPath) {
   return join(projectPath, "project", "plugins.sbt");
-};
+}
 
 /**
  * Method to read a single file entry from a zip file
@@ -7753,7 +7757,7 @@ export const sbtPluginsPath = function (projectPath) {
  *
  * @returns File contents
  */
-export const readZipEntry = async function (
+export async function readZipEntry(
   zipFile,
   filePattern,
   contentEncoding = "utf-8"
@@ -7781,7 +7785,7 @@ export const readZipEntry = async function (
     console.log(e);
   }
   return retData;
-};
+}
 
 /**
  * Method to get the classes and relevant sources in a jar file
@@ -7790,7 +7794,7 @@ export const readZipEntry = async function (
  *
  * @returns List of classes and sources matching certain known patterns
  */
-export const getJarClasses = async function (jarFile) {
+export async function getJarClasses(jarFile) {
   const retList = [];
   try {
     const zip = new StreamZip.async({ file: jarFile });
@@ -7828,7 +7832,7 @@ export const getJarClasses = async function (jarFile) {
     }
   }
   return retList;
-};
+}
 
 /**
  * Method to return the gradle command to use.
@@ -7836,7 +7840,7 @@ export const getJarClasses = async function (jarFile) {
  * @param {string} srcPath Path to look for gradlew wrapper
  * @param {string} rootPath Root directory to look for gradlew wrapper
  */
-export const getGradleCommand = (srcPath, rootPath) => {
+export function getGradleCommand(srcPath, rootPath) {
   let gradleCmd = "gradle";
 
   let findGradleFile = "gradlew";
@@ -7867,7 +7871,7 @@ export const getGradleCommand = (srcPath, rootPath) => {
     gradleCmd = join(process.env.GRADLE_HOME, "bin", "gradle");
   }
   return gradleCmd;
-};
+}
 
 /**
  * Method to return the maven command to use.
@@ -7875,7 +7879,7 @@ export const getGradleCommand = (srcPath, rootPath) => {
  * @param {string} srcPath Path to look for maven wrapper
  * @param {string} rootPath Root directory to look for maven wrapper
  */
-export const getMavenCommand = (srcPath, rootPath) => {
+export function getMavenCommand(srcPath, rootPath) {
   let mavenCmd = "mvn";
   // Check if the wrapper script is both available and functional
   let isWrapperReady = false;
@@ -7943,12 +7947,12 @@ export const getMavenCommand = (srcPath, rootPath) => {
     }
   }
   return mavenCmd;
-};
+}
 
 /**
  * Retrieves the atom command by referring to various environment variables
  */
-export const getAtomCommand = () => {
+export function getAtomCommand() {
   if (process.env.ATOM_CMD) {
     return process.env.ATOM_CMD;
   }
@@ -7967,9 +7971,9 @@ export const getAtomCommand = () => {
     return `${NODE_CMD} ${localAtom}`;
   }
   return "atom";
-};
+}
 
-export const executeAtom = (src, args) => {
+export function executeAtom(src, args) {
   const cwd =
     existsSync(src) && lstatSync(src).isDirectory() ? src : dirname(src);
   let ATOM_BIN = getAtomCommand();
@@ -8042,7 +8046,7 @@ export const executeAtom = (src, args) => {
     }
   }
   return isSupported && !result.error;
-};
+}
 
 /**
  * Find the imported modules in the application with atom parsedeps command
@@ -8053,7 +8057,7 @@ export const executeAtom = (src, args) => {
  * @param {string} slicesFile
  * @returns List of imported modules
  */
-export const findAppModules = function (
+export function findAppModules(
   src,
   language,
   methodology = "usages",
@@ -8098,9 +8102,9 @@ export const findAppModules = function (
     rmSync(tempDir, { recursive: true, force: true });
   }
   return retList;
-};
+}
 
-const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
+function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
   const tRef = `pkg:pypi/${t.name.replace(/_/g, "-").toLowerCase()}@${
     t.version
   }`;
@@ -8154,7 +8158,7 @@ const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
   dependenciesMap[tRef] = (dependenciesMap[tRef] || [])
     .concat(dependsOn)
     .sort();
-};
+}
 
 /**
  * Execute pip freeze by creating a virtual env in a temp directory and construct the dependency tree
@@ -8164,7 +8168,7 @@ const flattenDeps = (dependenciesMap, pkgList, reqOrSetupFile, t) => {
  * @param {string} tempVenvDir Temp venv dir
  * @returns List of packages from the virtual env
  */
-export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
+export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
   const pkgList = [];
   const rootList = [];
   const dependenciesList = [];
@@ -8464,10 +8468,10 @@ export const getPipFrozenTree = (basePath, reqOrSetupFile, tempVenvDir) => {
     dependenciesList,
     frozen
   };
-};
+}
 
 // taken from a very old package https://github.com/keithamus/parse-packagejson-name/blob/master/index.js
-export const parsePackageJsonName = (name) => {
+export function parsePackageJsonName(name) {
   const nameRegExp = /^(?:@([^/]+)\/)?(([^.]+)(?:\.(.*))?)$/;
   const returnObject = {
     scope: null,
@@ -8486,7 +8490,7 @@ export const parsePackageJsonName = (name) => {
     returnObject.moduleName = match[4] || match[2] || null;
   }
   return returnObject;
-};
+}
 
 /**
  * Method to add occurrence evidence for components based on import statements. Currently useful for js
@@ -8495,12 +8499,12 @@ export const parsePackageJsonName = (name) => {
  * @param {object} allImports Import statements object with package name as key and an object with file and location details
  * @param {object} allExports Exported modules if available from node_modules
  */
-export const addEvidenceForImports = async (
+export async function addEvidenceForImports(
   pkgList,
   allImports,
   allExports,
   deep
-) => {
+) {
   const impPkgs = Object.keys(allImports);
   const exportedPkgs = Object.keys(allExports);
   for (const pkg of pkgList) {
@@ -8632,9 +8636,9 @@ export const addEvidenceForImports = async (
     );
   } // for pkg
   return pkgList;
-};
+}
 
-export const componentSorter = (a, b) => {
+export function componentSorter(a, b) {
   if (a && b) {
     for (const k of ["bom-ref", "purl", "name"]) {
       if (a[k] && b[k]) {
@@ -8643,9 +8647,9 @@ export const componentSorter = (a, b) => {
     }
   }
   return a.localeCompare(b);
-};
+}
 
-export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
+export function parseCmakeDotFile(dotFile, pkgType, options = {}) {
   const dotGraphData = readFileSync(dotFile, { encoding: "utf-8" });
   const pkgList = [];
   const dependenciesMap = {};
@@ -8752,9 +8756,9 @@ export const parseCmakeDotFile = (dotFile, pkgType, options = {}) => {
     pkgList,
     dependenciesList
   };
-};
+}
 
-export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
+export function parseCmakeLikeFile(cmakeListFile, pkgType, options = {}) {
   let cmakeListData = readFileSync(cmakeListFile, { encoding: "utf-8" });
   const pkgList = [];
   const pkgAddedMap = {};
@@ -9007,9 +9011,9 @@ export const parseCmakeLikeFile = (cmakeListFile, pkgType, options = {}) => {
     parentComponent,
     pkgList
   };
-};
+}
 
-export const getOSPackageForFile = (afile, osPkgsList) => {
+export function getOSPackageForFile(afile, osPkgsList) {
   for (const ospkg of osPkgsList) {
     for (const props of ospkg.properties || []) {
       if (
@@ -9038,7 +9042,7 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
     }
   }
   return undefined;
-};
+}
 
 /**
  * Method to find c/c++ modules by collecting usages with atom
@@ -9048,7 +9052,7 @@ export const getOSPackageForFile = (afile, osPkgsList) => {
  * @param {array} osPkgsList Array of OS pacakges represented as components
  * @param {array} epkgList Existing packages list
  */
-export const getCppModules = (src, options, osPkgsList, epkgList) => {
+export function getCppModules(src, options, osPkgsList, epkgList) {
   // Generic is the type to use where the package registry could not be located
   const pkgType = "generic";
   const pkgList = [];
@@ -9300,7 +9304,7 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
     pkgList: pkgList.sort((a, b) => a.purl.localeCompare(b.purl)),
     dependenciesList
   };
-};
+}
 
 /**
  * NOT IMPLEMENTED YET.
@@ -9309,11 +9313,11 @@ export const getCppModules = (src, options, osPkgsList, epkgList) => {
  * @param {object} apkg Package to locate
  * @returns Located project with precise purl or the original unmodified input.
  */
-export const locateGenericPackage = (apkg) => {
+export function locateGenericPackage(apkg) {
   return apkg;
-};
+}
 
-export const parseCUsageSlice = (sliceData) => {
+export function parseCUsageSlice(sliceData) {
   if (!sliceData) {
     return undefined;
   }
@@ -9355,7 +9359,7 @@ export const parseCUsageSlice = (sliceData) => {
     // ignore
   }
   return usageData;
-};
+}
 
 async function getNugetUrl() {
   const req = "https://api.nuget.org/v3/index.json";
@@ -9478,10 +9482,7 @@ async function queryNuget(p, NUGET_URL) {
  *
  * @param {Array} pkgList Package list
  */
-export const getNugetMetadata = async function (
-  pkgList,
-  dependencies = undefined
-) {
+export async function getNugetMetadata(pkgList, dependencies = undefined) {
   const NUGET_URL = await getNugetUrl();
   const cdepList = [];
   const depRepList = {};
@@ -9600,9 +9601,9 @@ export const getNugetMetadata = async function (
     pkgList: cdepList,
     dependencies: newDependencies
   };
-};
+}
 
-export const addEvidenceForDotnet = (pkgList, slicesFile) => {
+export function addEvidenceForDotnet(pkgList, slicesFile) {
   // We need two datastructures.
   // dll to purl mapping from the pkgList
   // purl to occurrences list using the slicesFile
@@ -9700,4 +9701,4 @@ export const addEvidenceForDotnet = (pkgList, slicesFile) => {
     }
   }
   return pkgList;
-};
+}

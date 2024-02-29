@@ -18,6 +18,9 @@ module.exports = {
     }],
     "prefer-arrow-callback": "error",
     "require-await": "error",
-    "no-useless-return": "error"
+    "no-useless-return": "error",
+    "func-style": ["error", "declaration", {
+      "allowArrowFunctions": true
+    }]
   }
 };

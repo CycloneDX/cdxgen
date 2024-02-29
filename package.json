@@ -43,7 +43,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js postgen.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint": "eslint *.js *.test.js bin/*.js --fix",
-    "pretty": "prettier --write *.js data/*.json bin/*.js *.md docs/*.md data/*.md",
+    "pretty": "prettier --write jsr.json deno.json *.js data/*.json bin/*.js *.md docs/*.md data/*.md",
     "gen-types": "npx -p typescript tsc"
   },
   "engines": {
