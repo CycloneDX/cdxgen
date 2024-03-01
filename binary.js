@@ -8,7 +8,7 @@ import {
   readFileSync,
   rmSync
 } from "node:fs";
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE, TIMEOUT_MS, findLicenseId } from "./utils.js";
@@ -784,7 +784,7 @@ export function getBinaryBom(src, binaryBomFile, deepMode) {
   if (!BLINT_BIN) {
     return false;
   }
-  const args = ["sbom", "-i", src, "-o", binaryBomFile];
+  const args = ["sbom", "-i", resolve(src), "-o", binaryBomFile];
   if (deepMode) {
     args.push("--deep");
   }
