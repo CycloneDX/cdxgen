@@ -348,9 +348,9 @@ jobs:
           pip install blint
           mkdir -p bintests
           cd bintests
-          wget -q https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai.exe
-          wget -q https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai
-          wget -q https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai-osx-arm64
+          curl -LO https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai.exe
+          curl -LO https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai
+          curl -LO https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai-osx-arm64
           cd ..
           bin/cdxgen.js -p -t dotnet --lifecycle post-build -o bomresults/bom-binary.json bintests
         shell: bash
