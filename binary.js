@@ -198,6 +198,9 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
   DOSAI_BIN = process.env.DOSAI_CMD;
 }
 
+// Blint bin
+const BLINT_BIN = process.env.BLINT_CMD || "blint";
+
 // Keep this list updated every year
 const OS_DISTRO_ALIAS = {
   "ubuntu-4.10": "warty",
@@ -264,7 +267,7 @@ const OS_DISTRO_ALIAS = {
   "debian-1.1": "buzz"
 };
 
-export const getGoBuildInfo = (src) => {
+export function getGoBuildInfo(src) {
   if (GOVERSION_BIN) {
     let result = spawnSync(GOVERSION_BIN, [src], {
       encoding: "utf-8"
@@ -294,9 +297,9 @@ export const getGoBuildInfo = (src) => {
     }
   }
   return undefined;
-};
+}
 
-export const getCargoAuditableInfo = (src) => {
+export function getCargoAuditableInfo(src) {
   if (CARGO_AUDITABLE_BIN) {
     const result = spawnSync(CARGO_AUDITABLE_BIN, [src], {
       encoding: "utf-8"
@@ -315,9 +318,9 @@ export const getCargoAuditableInfo = (src) => {
     }
   }
   return undefined;
-};
+}
 
-export const getOSPackages = (src) => {
+export function getOSPackages(src) {
   const pkgList = [];
   const dependenciesList = [];
   const allTypes = new Set();
@@ -652,7 +655,7 @@ export const getOSPackages = (src) => {
     dependenciesList,
     allTypes: Array.from(allTypes)
   };
-};
+}
 
 const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
   try {
@@ -685,7 +688,7 @@ const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
   return undefined;
 };
 
-export const executeOsQuery = (query) => {
+export function executeOsQuery(query) {
   if (OSQUERY_BIN) {
     if (!query.endsWith(";")) {
       query = query + ";";
@@ -733,16 +736,16 @@ export const executeOsQuery = (query) => {
     }
   }
   return undefined;
-};
+}
 
 /**
  * Method to execute dosai to create slices for dotnet
  *
- * @param {string} src
- * @param {string} slicesFile
+ * @param {string} src Source Path
+ * @param {string} slicesFile Slices file name
  * @returns boolean
  */
-export const getDotnetSlices = (src, slicesFile) => {
+export function getDotnetSlices(src, slicesFile) {
   if (!DOSAI_BIN) {
     return false;
   }
@@ -766,4 +769,42 @@ export const getDotnetSlices = (src, slicesFile) => {
     return false;
   }
   return true;
-};
+}
+
+/**
+ * Method to generate binary SBOM using blint
+ *
+ * @param {string} src Path to binary or its directory
+ * @param {string} binaryBomFile Path to binary
+ * @param {boolean} deepMode Deep mode flag
+ *
+ * @return {boolean} Result of the generation
+ */
+export function getBinaryBom(src, binaryBomFile, deepMode) {
+  if (!BLINT_BIN) {
+    return false;
+  }
+  const args = ["sbom", "-i", src, "-o", binaryBomFile];
+  if (deepMode) {
+    args.push("--deep");
+  }
+  if (DEBUG_MODE) {
+    console.log("Executing", BLINT_BIN, args.join(" "));
+  }
+  const result = spawnSync(BLINT_BIN, args, {
+    encoding: "utf-8",
+    timeout: TIMEOUT_MS,
+    cwd: src
+  });
+  if (result.status !== 0 || result.error) {
+    if (result.stderr) {
+      console.error(result.stdout, result.stderr);
+    } else {
+      console.log(
+        "Install blint using 'pip install blint' or use the cdxgen container image."
+      );
+    }
+    return false;
+  }
+  return true;
+}

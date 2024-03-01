@@ -67,7 +67,7 @@ RUN set -e; \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
-    && python3 -m pip install --user pipenv poetry \
+    && python3 -m pip install --user pipenv poetry blint \
     && curl -fsSL https://deno.land/x/install/install.sh | sh \
     && deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen" \
     && curl -s "https://get.sdkman.io" | bash \

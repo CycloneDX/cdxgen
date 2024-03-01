@@ -966,7 +966,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
  *
  * @returns {Object} BOM with namespace mapping
  */
-export const createJarBom = async (path, options) => {
+export async function createJarBom(path, options) {
   let pkgList = [];
   let jarFiles = [];
   let nsMapping = {};
@@ -1026,7 +1026,15 @@ export const createJarBom = async (path, options) => {
     src: path,
     parentComponent
   });
-};
+}
+
+/**
+ * Function to create bom string for Android apps
+ *
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ */
+export async function createAndroidBom(path, options) {}
 
 /**
  * Function to create bom string for Java projects
@@ -1034,7 +1042,7 @@ export const createJarBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createJavaBom = async (path, options) => {
+export async function createJavaBom(path, options) {
   let jarNSMapping = {};
   let pkgList = [];
   let dependencies = [];
@@ -1790,7 +1798,7 @@ export const createJavaBom = async (path, options) => {
       });
     }
   }
-};
+}
 
 /**
  * Function to create bom string for Node.js projects
@@ -1798,7 +1806,7 @@ export const createJavaBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createNodejsBom = async (path, options) => {
+export async function createNodejsBom(path, options) {
   let pkgList = [];
   let manifestFiles = [];
   let dependencies = [];
@@ -2197,7 +2205,7 @@ export const createNodejsBom = async (path, options) => {
     dependencies,
     parentComponent
   });
-};
+}
 
 /**
  * Function to create bom string for Python projects
@@ -2205,7 +2213,7 @@ export const createNodejsBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createPythonBom = async (path, options) => {
+export async function createPythonBom(path, options) {
   let allImports = {};
   let metadataFilename = "";
   let dependencies = [];
@@ -2554,7 +2562,7 @@ export const createPythonBom = async (path, options) => {
     dependencies,
     parentComponent
   });
-};
+}
 
 /**
  * Function to create bom string for Go projects
@@ -2562,7 +2570,7 @@ export const createPythonBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createGoBom = async (path, options) => {
+export async function createGoBom(path, options) {
   let pkgList = [];
   let dependencies = [];
   const allImports = {};
@@ -2880,7 +2888,7 @@ export const createGoBom = async (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create bom string for Rust projects
@@ -2888,7 +2896,7 @@ export const createGoBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createRustBom = async (path, options) => {
+export async function createRustBom(path, options) {
   let pkgList = [];
   // Is this a binary file
   let maybeBinary = false;
@@ -2966,7 +2974,7 @@ export const createRustBom = async (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create bom string for Dart projects
@@ -2974,7 +2982,7 @@ export const createRustBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createDartBom = async (path, options) => {
+export async function createDartBom(path, options) {
   const pubFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.lock",
@@ -3019,7 +3027,7 @@ export const createDartBom = async (path, options) => {
   }
 
   return {};
-};
+}
 
 /**
  * Function to create bom string for cpp projects
@@ -3027,7 +3035,7 @@ export const createDartBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createCppBom = (path, options) => {
+export function createCppBom(path, options) {
   let parentComponent = undefined;
   let dependencies = [];
   const addedParentComponentsMap = {};
@@ -3199,7 +3207,7 @@ export const createCppBom = (path, options) => {
     parentComponent,
     dependencies
   });
-};
+}
 
 /**
  * Function to create bom string for clojure projects
@@ -3207,7 +3215,7 @@ export const createCppBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createClojureBom = (path, options) => {
+export function createClojureBom(path, options) {
   const ednFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "deps.edn",
@@ -3321,7 +3329,7 @@ export const createClojureBom = (path, options) => {
   }
 
   return {};
-};
+}
 
 /**
  * Function to create bom string for Haskell projects
@@ -3329,7 +3337,7 @@ export const createClojureBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createHaskellBom = (path, options) => {
+export function createHaskellBom(path, options) {
   const cabalFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "cabal.project.freeze",
@@ -3353,7 +3361,7 @@ export const createHaskellBom = (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create bom string for Elixir projects
@@ -3361,7 +3369,7 @@ export const createHaskellBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createElixirBom = (path, options) => {
+export function createElixirBom(path, options) {
   const mixFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "mix.lock",
@@ -3385,7 +3393,7 @@ export const createElixirBom = (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create bom string for GitHub action workflows
@@ -3393,7 +3401,7 @@ export const createElixirBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createGitHubBom = (path, options) => {
+export function createGitHubBom(path, options) {
   const ghactionFiles = getAllFiles(
     path,
     ".github/workflows/" + "*.yml",
@@ -3417,7 +3425,7 @@ export const createGitHubBom = (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create bom string for cloudbuild yaml
@@ -3425,7 +3433,7 @@ export const createGitHubBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createCloudBuildBom = (path, options) => {
+export function createCloudBuildBom(path, options) {
   const cbFiles = getAllFiles(path, "cloudbuild.yml", options);
   let pkgList = [];
   if (cbFiles.length) {
@@ -3445,7 +3453,7 @@ export const createCloudBuildBom = (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create obom string for the current OS using osquery
@@ -3453,7 +3461,7 @@ export const createCloudBuildBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createOSBom = (path, options) => {
+export function createOSBom(path, options) {
   console.warn(
     "About to generate OBOM for the current OS installation. This will take several minutes ..."
   );
@@ -3503,7 +3511,7 @@ export const createOSBom = (path, options) => {
     getPkgPathList(exportData, undefined);
   }
   return createMultiXBom(pkgPathList, options);
-};
+}
 
 /**
  * Function to create bom string for Jenkins plugins
@@ -3511,7 +3519,7 @@ export const createOSBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createJenkinsBom = async (path, options) => {
+export async function createJenkinsBom(path, options) {
   let pkgList = [];
   const hpiFiles = getAllFiles(
     path,
@@ -3552,7 +3560,7 @@ export const createJenkinsBom = async (path, options) => {
     filename: hpiFiles.join(", "),
     nsMapping: {}
   });
-};
+}
 
 /**
  * Function to create bom string for Helm charts
@@ -3560,7 +3568,7 @@ export const createJenkinsBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createHelmBom = (path, options) => {
+export function createHelmBom(path, options) {
   let pkgList = [];
   const yamlFiles = getAllFiles(
     path,
@@ -3584,7 +3592,7 @@ export const createHelmBom = (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create bom string for swift projects
@@ -3592,7 +3600,7 @@ export const createHelmBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createSwiftBom = async (path, options) => {
+export async function createSwiftBom(path, options) {
   const swiftFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift",
@@ -3677,7 +3685,7 @@ export const createSwiftBom = async (path, options) => {
     parentComponent,
     dependencies
   });
-};
+}
 
 /**
  * Function to create bom string for docker compose
@@ -3685,7 +3693,7 @@ export const createSwiftBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createContainerSpecLikeBom = async (path, options) => {
+export async function createContainerSpecLikeBom(path, options) {
   let services = [];
   const ociSpecs = [];
   let components = [];
@@ -4004,7 +4012,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
   options.services = services;
   options.ociSpecs = ociSpecs;
   return dedupeBom(options, components, parentComponent, dependencies);
-};
+}
 
 /**
  * Function to create bom string for php projects
@@ -4012,7 +4020,7 @@ export const createContainerSpecLikeBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createPHPBom = (path, options) => {
+export function createPHPBom(path, options) {
   let dependencies = [];
   let parentComponent = {};
   const composerJsonFiles = getAllFiles(
@@ -4161,7 +4169,7 @@ export const createPHPBom = (path, options) => {
     });
   }
   return {};
-};
+}
 
 /**
  * Function to create bom string for ruby projects
@@ -4169,7 +4177,7 @@ export const createPHPBom = (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createRubyBom = async (path, options) => {
+export async function createRubyBom(path, options) {
   const gemFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile",
@@ -4249,7 +4257,7 @@ export const createRubyBom = async (path, options) => {
     parentComponent,
     filename: gemLockFiles.join(", ")
   });
-};
+}
 
 /**
  * Function to create bom string for csharp projects
@@ -4257,7 +4265,7 @@ export const createRubyBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createCsharpBom = async (path, options) => {
+export async function createCsharpBom(path, options) {
   let manifestFiles = [];
   let pkgData = undefined;
   let dependencies = [];
@@ -4450,13 +4458,13 @@ export const createCsharpBom = async (path, options) => {
     dependencies,
     parentComponent
   });
-};
+}
 
-export const mergeDependencies = (
+export function mergeDependencies(
   dependencies,
   newDependencies,
   parentComponent = {}
-) => {
+) {
   if (!parentComponent && DEBUG_MODE) {
     console.log(
       "Unable to determine parent component. Dependencies will be flattened."
@@ -4486,9 +4494,9 @@ export const mergeDependencies = (
     });
   }
   return retlist;
-};
+}
 
-export const trimComponents = (components) => {
+export function trimComponents(components) {
   const keyCache = {};
   const filteredComponents = [];
   for (const comp of components) {
@@ -4499,7 +4507,7 @@ export const trimComponents = (components) => {
     }
   }
   return filteredComponents;
-};
+}
 
 /**
  * Dedupe components
@@ -4511,12 +4519,7 @@ export const trimComponents = (components) => {
  *
  * @returns {Object} Object including BOM Json
  */
-export const dedupeBom = (
-  options,
-  components,
-  parentComponent,
-  dependencies
-) => {
+export function dedupeBom(options, components, parentComponent, dependencies) {
   if (!components) {
     return {};
   }
@@ -4545,7 +4548,7 @@ export const dedupeBom = (
       dependencies
     }
   };
-};
+}
 
 /**
  * Function to create bom string for all languages
@@ -4553,7 +4556,7 @@ export const dedupeBom = (
  * @param {string} pathList list of to the project
  * @param {Object} options Parse options from the cli
  */
-export const createMultiXBom = async (pathList, options) => {
+export async function createMultiXBom(pathList, options) {
   let components = [];
   let dependencies = [];
   let bomData = undefined;
@@ -4982,7 +4985,7 @@ export const createMultiXBom = async (pathList, options) => {
     }
   }
   return dedupeBom(options, components, parentComponent, dependencies);
-};
+}
 
 /**
  * Function to create bom string for various languages
@@ -4990,7 +4993,7 @@ export const createMultiXBom = async (pathList, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createXBom = async (path, options) => {
+export async function createXBom(path, options) {
   try {
     accessSync(path, constants.R_OK);
   } catch (err) {
@@ -5310,7 +5313,7 @@ export const createXBom = async (path, options) => {
   if (swiftFiles.length || pkgResolvedFiles.length) {
     return await createSwiftBom(path, options);
   }
-};
+}
 
 /**
  * Function to create bom string for various languages
@@ -5318,7 +5321,7 @@ export const createXBom = async (path, options) => {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export const createBom = async (path, options) => {
+export async function createBom(path, options) {
   let { projectType } = options;
   if (!projectType) {
     projectType = "";
@@ -5465,6 +5468,10 @@ export const createBom = async (path, options) => {
     case "maven":
     case "sbt":
       return await createJavaBom(path, options);
+    case "android":
+    case "apk":
+    case "aab":
+      return await createAndroidBom(path, options);
     case "jar":
       return await createJarBom(path, options);
     case "gradle-index":
@@ -5483,6 +5490,8 @@ export const createBom = async (path, options) => {
         process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository"),
         options
       );
+    case "npm":
+    case "pnpm":
     case "nodejs":
     case "js":
     case "javascript":
@@ -5492,20 +5501,25 @@ export const createBom = async (path, options) => {
       return await createNodejsBom(path, options);
     case "python":
     case "py":
+    case "pypi":
       return await createPythonBom(path, options);
     case "go":
     case "golang":
       return await createGoBom(path, options);
     case "rust":
     case "rust-lang":
+    case "cargo":
       return await createRustBom(path, options);
     case "php":
+    case "composer":
       return createPHPBom(path, options);
     case "ruby":
+    case "gems":
       return await createRubyBom(path, options);
     case "csharp":
     case "netcore":
     case "dotnet":
+    case "vb":
       return await createCsharpBom(path, options);
     case "dart":
     case "flutter":
@@ -5536,6 +5550,9 @@ export const createBom = async (path, options) => {
     case "osquery":
     case "windows":
     case "linux":
+    case "mac":
+    case "macos":
+    case "darwin":
       return await createOSBom(path, options);
     case "jenkins":
       return await createJenkinsBom(path, options);
@@ -5574,7 +5591,7 @@ export const createBom = async (path, options) => {
         return await createXBom(path, options);
       }
   }
-};
+}
 
 /**
  * Method to submit the generated bom to dependency-track or cyclonedx server
