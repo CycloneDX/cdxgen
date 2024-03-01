@@ -41,7 +41,7 @@ export const printTable = (bomJson) => {
     stream.write([
       comp.group || "",
       comp.name,
-      `\x1b[1;35m${comp.version}\x1b[0m`,
+      `\x1b[1;35m${comp.version || ""}\x1b[0m`,
       comp.scope || ""
     ]);
   }
@@ -129,7 +129,7 @@ export const printOccurrences = (bomJson) => {
     data.push([
       comp.group || "",
       comp.name,
-      comp.version,
+      comp.version || "",
       comp.evidence.occurrences
         .map((l) => l.location)
         .sort(locationComparator)
@@ -178,7 +178,7 @@ export const printCallStack = (bomJson) => {
     data.push([
       comp.group || "",
       comp.name,
-      comp.version,
+      comp.version || "",
       frameDisplay.join("\n")
     ]);
   }

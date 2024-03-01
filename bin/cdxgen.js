@@ -336,6 +336,28 @@ const applyAdvancedOptions = (options) => {
     case "pre-build":
       options.installDeps = false;
       break;
+    case "post-build":
+      if (
+        !options.projectType ||
+        ![
+          "csharp",
+          "dotnet",
+          "container",
+          "docker",
+          "podman",
+          "oci",
+          "android",
+          "apk",
+          "aab"
+        ].includes(options.projectType)
+      ) {
+        console.log(
+          "PREVIEW: post-build lifecycle SBOM generation is supported only for android and dotnet projects. Please specify the type using the -t argument."
+        );
+        process.exit(1);
+      }
+      options.installDeps = true;
+      break;
     default:
       options.installDeps = true;
       break;

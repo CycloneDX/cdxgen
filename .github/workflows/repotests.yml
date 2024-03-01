@@ -57,6 +57,10 @@ jobs:
         uses: android-actions/setup-android@v3
       - uses: swift-actions/setup-swift@v1
         if: matrix.os == 'ubuntu-latest'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
       - uses: actions/checkout@v4
         with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
@@ -338,6 +342,17 @@ jobs:
           curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/javax/jws/javax.jws-api/1.1/javax.jws-api-1.1.jar
           curl --output-dir standalone-jar-files -LO https://repo1.maven.org/maven2/org/jrobin/jrobin/1.5.9/jrobin-1.5.9.jar
           FETCH_LICENSE=true bin/cdxgen.js -p standalone-jar-files -o bomresults/bom-standalone-jar-files.json --validate
+        shell: bash
+      - name: post-build lifecycle tests
+        run: |
+          pip install blint
+          mkdir -p bintests
+          cd bintests
+          wget -q https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai.exe
+          wget -q https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai
+          wget -q https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai-osx-arm64
+          cd ..
+          bin/cdxgen.js -p -t dotnet --lifecycle post-build -o bomresults/bom-binary.json bintests
         shell: bash
       - name: repotests 1.4
         run: |

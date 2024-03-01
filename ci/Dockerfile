@@ -70,7 +70,7 @@ RUN set -e; \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
-    && python3 -m pip install --user pipenv poetry \
+    && python3 -m pip install --user pipenv poetry blint \
     && node --version \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \

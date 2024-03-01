@@ -59,7 +59,7 @@ RUN set -e; \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && source "$HOME/.cargo/env" \
     && python3 -m pip install --upgrade pip virtualenv \
-    && python3 -m pip install --user pipenv poetry \
+    && python3 -m pip install --user pipenv poetry blint \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \
