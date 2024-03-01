@@ -147,7 +147,8 @@ import {
   getCargoAuditableInfo,
   getDotnetSlices,
   getGoBuildInfo,
-  getOSPackages
+  getOSPackages,
+  getBinaryBom
 } from "./binary.js";
 import { collectOSCryptoLibs } from "./cbomutils.js";
 
@@ -1029,12 +1030,37 @@ export async function createJarBom(path, options) {
 }
 
 /**
- * Function to create bom string for Android apps
+ * Function to create bom string for Android apps using blint
  *
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export async function createAndroidBom(path, options) {}
+export function createAndroidBom(path, options) {
+  return createBinaryBom(path, options);
+}
+
+/**
+ * Function to create bom string for binaries using blint
+ *
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ */
+export function createBinaryBom(path, options) {
+  const tempDir = mkdtempSync(join(tmpdir(), "blint-tmp-"));
+  const binaryBomFile = join(tempDir, "bom.json");
+  getBinaryBom(path, binaryBomFile, options.deep);
+  if (existsSync(binaryBomFile)) {
+    const binaryBom = JSON.parse(
+      readFileSync(binaryBomFile, { encoding: "utf-8" })
+    );
+    return {
+      bomJson: binaryBom,
+      dependencies: binaryBom.dependencies,
+      parentComponent: binaryBom.parentComponent
+    };
+  }
+  return undefined;
+}
 
 /**
  * Function to create bom string for Java projects
@@ -4269,6 +4295,9 @@ export async function createCsharpBom(path, options) {
   let manifestFiles = [];
   let pkgData = undefined;
   let dependencies = [];
+  if (options.lifecycle === "post-build") {
+    return createBinaryBom(path, options);
+  }
   const parentComponent = createDefaultParentComponent(path, "nuget", options);
   let csProjFiles = getAllFiles(
     path,
