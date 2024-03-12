@@ -4299,6 +4299,11 @@ export async function createCsharpBom(path, options) {
     return createBinaryBom(path, options);
   }
   const parentComponent = createDefaultParentComponent(path, "nuget", options);
+  const slnFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") + "*.sln",
+    options
+  );
   let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
@@ -4315,7 +4320,7 @@ export async function createCsharpBom(path, options) {
     (options.multiProject ? "**/" : "") + "packages.config",
     options
   );
-  const projAssetsFiles = getAllFiles(
+  let projAssetsFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "project.assets.json",
     options
@@ -4335,6 +4340,42 @@ export async function createCsharpBom(path, options) {
     (options.multiProject ? "**/" : "") + "*.nupkg",
     options
   );
+  // Support for automatic restore
+  if (
+    options.installDeps &&
+    !projAssetsFiles.length &&
+    !pkgLockFiles.length &&
+    !paketLockFiles.length
+  ) {
+    const filesToRestore = slnFiles.length > 0 ? slnFiles : csProjFiles;
+    for (const f of filesToRestore) {
+      if (DEBUG_MODE) {
+        const basePath = dirname(f);
+        console.log("Executing 'dotnet restore' in", basePath);
+      }
+      const result = spawnSync(
+        "dotnet",
+        ["restore", "--force", "--ignore-failed-sources", f],
+        {
+          cwd: path,
+          encoding: "utf-8"
+        }
+      );
+      if (DEBUG_MODE && (result.status !== 0 || result.error)) {
+        console.error(
+          "Restore has failed. Check if dotnet is installed and available in PATH."
+        );
+        console.log(result.stderr);
+        options.failOnError && process.exit(1);
+      }
+    }
+    // Collect the assets file generated from restore
+    projAssetsFiles = getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "project.assets.json",
+      options
+    );
+  }
   let pkgList = [];
   if (nupkgFiles.length && projAssetsFiles.length === 0) {
     manifestFiles = manifestFiles.concat(nupkgFiles);
