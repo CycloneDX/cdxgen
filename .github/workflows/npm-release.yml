@@ -45,6 +45,7 @@ jobs:
     - name: jsr publish
       if: startsWith(github.ref, 'refs/tags/')
       run: |
+        npm install
         npx jsr publish
       continue-on-error: true
       env:
@@ -109,10 +110,11 @@ jobs:
     - name: Attach cdx sbom
       run: |
         npm install
-        node bin/cdxgen.js -t docker -o bom.json ${{ steps.meta.outputs.tags }}
-        oras attach --artifact-type sbom/cyclonedx ${{ steps.meta.outputs.tags }} ./bom.json:application/json
-        oras discover -o tree ${{ steps.meta.outputs.tags }}
+        node bin/cdxgen.js -t docker -o bom.json ghcr.io/cyclonedx/cdxgen:latest
+        oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen:latest ./bom.json:application/json
+        oras discover -o tree ghcr.io/cyclonedx/cdxgen:latest
       continue-on-error: true
+      if: startsWith(github.ref, 'refs/tags/')
     - name: Extract metadata (tags, labels) for Docker
       id: meta2
       uses: docker/metadata-action@v5
