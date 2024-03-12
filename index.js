@@ -4365,6 +4365,9 @@ export async function createCsharpBom(path, options) {
         console.error(
           "Restore has failed. Check if dotnet is installed and available in PATH."
         );
+        console.log(
+          "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen."
+        );
         console.log(result.stderr);
         options.failOnError && process.exit(1);
       }
