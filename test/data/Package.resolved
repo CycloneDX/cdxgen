@@ -39,7 +39,7 @@
       },
       {
         "package": "swift-http-server",
-        "repositoryURL": "git@bitbucket.org:atlassian/swift-http-server",
+        "repositoryURL": "ssh://git@bitbucket.org:7999/swift/swift-http-server.git",
         "state": {
           "branch": null,
           "revision": "72211fb4139a84b6eaa71b1e15356604c84d0d94",

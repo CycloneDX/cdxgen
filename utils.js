@@ -6746,7 +6746,16 @@ function purlFromUrlString(type, repoUrl, version) {
     const pathnameLastElement = pathnameParts.pop();
     name = pathnameLastElement.replace(".git", "");
     const urlpath = pathnameParts.join("/");
-    namespace = hostname + ":" + urlpath;
+    namespace = hostname + "/" + urlpath;
+  } else if (repoUrl && repoUrl.startsWith("ssh://git@bitbucket")) {
+    repoUrl = repoUrl.replace("ssh://git@", "");
+    const parts = repoUrl.split(":");
+    const hostname = parts[0];
+    const pathnameParts = parts[1].split("/").slice(1);
+    const pathnameLastElement = pathnameParts.pop();
+    name = pathnameLastElement.replace(".git", "");
+    const urlpath = pathnameParts.join("/");
+    namespace = hostname + "/" + urlpath;
   } else if (repoUrl && repoUrl.startsWith("/")) {
     const parts = repoUrl.split("/");
     name = parts[parts.length - 1];

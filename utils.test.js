@@ -3257,7 +3257,7 @@ test("parse swift deps files", () => {
     repository: { url: "https://github.com/apple/swift-argument-parser" }
   });
   pkgList = parseSwiftResolved("./test/data/Package2.resolved");
-  expect(pkgList.length).toEqual(6);
+  expect(pkgList.length).toEqual(7);
   expect(pkgList[0]).toEqual({
     name: "swift-argument-parser",
     group: "github.com/apple",
@@ -3279,6 +3279,54 @@ test("parse swift deps files", () => {
     },
     "bom-ref": "pkg:swift/github.com/apple/swift-argument-parser@1.2.2",
     repository: { url: "https://github.com/apple/swift-argument-parser.git" }
+  });
+  expect(pkgList[4]).toEqual({
+    name: "swift-http-server",
+    group: "github.com/swift",
+    version: "0.7.4",
+    purl: "pkg:swift/github.com/swift/swift-http-server@0.7.4",
+    properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/Package2.resolved"
+          }
+        ]
+      }
+    },
+    "bom-ref": "pkg:swift/github.com/swift/swift-http-server@0.7.4",
+    repository: {
+      url: "git@github.com:swift/swift-http-server.git"
+    }
+  });
+  expect(pkgList[5]).toEqual({
+    name: "swift-http-server",
+    group: "bitbucket.org/swift",
+    version: "0.7.4",
+    purl: "pkg:swift/bitbucket.org/swift/swift-http-server@0.7.4",
+    properties: [{ name: "SrcFile", value: "./test/data/Package2.resolved" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/Package2.resolved"
+          }
+        ]
+      }
+    },
+    "bom-ref": "pkg:swift/bitbucket.org/swift/swift-http-server@0.7.4",
+    repository: {
+      url: "ssh://git@bitbucket.org:7999/swift/swift-http-server.git"
+    }
   });
 });
 
