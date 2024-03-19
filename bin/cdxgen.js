@@ -246,7 +246,7 @@ const args = yargs(hideBin(process.argv))
   .option("make-dt-compatible", {
     type: "boolean",
     default: false,
-    description: "Just make the BOM compatible for dependency track.",
+    description: "Just make the BOM compatible with dependency track.",
     hidden: true
   })
   .completion("completion", "Generate bash/zsh completion")
