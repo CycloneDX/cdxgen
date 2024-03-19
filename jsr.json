@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.2.3",
+  "version": "10.2.4",
   "exports": "./index.js",
   "include": ["*.js", "bin/**", "data/**", "types/**"],
   "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"]

@@ -353,6 +353,16 @@ jobs:
           curl -LO https://github.com/owasp-dep-scan/dosai/releases/download/v0.1.1/Dosai-osx-arm64
           cd ..
           bin/cdxgen.js -p -t dotnet --lifecycle post-build -o bomresults/bom-binary.json bintests
+          mkdir -p gobintests
+          cd gobintests
+          curl -LO https://github.com/anchore/syft/releases/download/v1.0.1/syft_1.0.1_linux_arm64.tar.gz
+          tar -xvf syft_1.0.1_linux_arm64.tar.gz
+          rm syft_1.0.1_linux_arm64.tar.gz
+          curl -LO https://github.com/containerd/containerd/releases/download/v2.0.0-rc.0/containerd-static-2.0.0-rc.0-linux-amd64.tar.gz
+          tar -xvf containerd-static-2.0.0-rc.0-linux-amd64.tar.gz
+          rm containerd-static-2.0.0-rc.0-linux-amd64.tar.gz
+          cd ..
+          bin/cdxgen.js -p -t go --lifecycle post-build -o bomresults/bom-go-binary.json gobintests
         shell: bash
       - name: repotests 1.4
         run: |

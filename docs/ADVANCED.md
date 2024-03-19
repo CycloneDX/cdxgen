@@ -342,7 +342,7 @@ With profiles, cdxgen can generate a BOM that is optimized for a specific use ca
 
 ## BOM lifecycles
 
-By default, cdxgen attempts to generate a BOM for the `build` lifecycle [phase](https://cyclonedx.org/docs/1.5/json/#tab-pane_metadata_lifecycles_items_oneOf_i0) for applications and `post-build` phase for container images. Using the argument, `--no-install-deps` it is possible to generate `pre-build` BOM for certain languages and ecosystems (Eg: Python) by disabling the package installation feature. Or explicitly pass `--lifecycle post-build` to generate an SBOM for android and dotnet binaries.
+By default, cdxgen attempts to generate a BOM for the `build` lifecycle [phase](https://cyclonedx.org/docs/1.5/json/#tab-pane_metadata_lifecycles_items_oneOf_i0) for applications and `post-build` phase for container images. Using the argument, `--no-install-deps` it is possible to generate `pre-build` BOM for certain languages and ecosystems (Eg: Python) by disabling the package installation feature. Or explicitly pass `--lifecycle post-build` to generate an SBOM for android, dotnet, and go binaries.
 
 Example:
 
@@ -352,6 +352,10 @@ cdxgen -t android --lifecycle post-build -o bom.json <path to apks>
 
 ```shell
 cdxgen -t dotnet --lifecycle post-build -o bom.json <path to dotnet binaries>
+```
+
+```shell
+cdxgen -t go --lifecycle post-build -o bom.json <path to go binaries>
 ```
 
 ## Nydus - next-generation container image
