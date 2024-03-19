@@ -348,11 +348,13 @@ const applyAdvancedOptions = (options) => {
           "oci",
           "android",
           "apk",
-          "aab"
+          "aab",
+          "go",
+          "golang"
         ].includes(options.projectType)
       ) {
         console.log(
-          "PREVIEW: post-build lifecycle SBOM generation is supported only for android and dotnet projects. Please specify the type using the -t argument."
+          "PREVIEW: post-build lifecycle SBOM generation is supported only for android, dotnet, and go projects. Please specify the type using the -t argument."
         );
         process.exit(1);
       }
