@@ -46,7 +46,7 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/')
       run: |
         npm install
-        npx jsr publish
+        npx jsr publish --allow-dirty
       continue-on-error: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

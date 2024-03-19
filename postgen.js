@@ -1,3 +1,11 @@
+/**
+ * Enhance the generated BOM with filters, compatibility patches etc
+ *
+ * @param {Object} bomNSData BOM with namespaces data
+ * @param {Object} options CLI or server options
+ *
+ * @returns {Object} bomNSData Enhanced BOM from post processing
+ */
 export const postProcess = (bomNSData, options) => {
   let jsonPayload = bomNSData.bomJson;
   if (
@@ -7,9 +15,21 @@ export const postProcess = (bomNSData, options) => {
     jsonPayload = JSON.parse(bomNSData.bomJson);
   }
   bomNSData.bomJson = filterBom(jsonPayload, options);
+  // Make things compatible with dependency track
+  if (options["make-dt-compatible"] || (options.serverUrl && options.apiKey)) {
+    bomNSData.bomJson = compatibilityPass(bomNSData.bomJson);
+  }
   return bomNSData;
 };
 
+/**
+ * Filter BOM json
+ *
+ * @param {Object} BOM json object
+ * @param {options} CLI or server options
+ *
+ * @returns {Object} Filtered BOM data
+ */
 export const filterBom = (bomJson, options) => {
   const newPkgMap = {};
   let filtered = false;
@@ -107,6 +127,35 @@ export const filterBom = (bomJson, options) => {
         "bom-ref": bomJson.metadata.component["bom-ref"],
         aggregate: options.only ? "incomplete_first_party_only" : "incomplete"
       });
+    }
+  }
+  return bomJson;
+};
+
+/**
+ * Ensure compatibility with dependency track
+ *
+ * @param {Object} BOM json object
+ *
+ * @returns {Object} Modified BOM data
+ */
+export const compatibilityPass = (bomJson) => {
+  // Is it a namespace or name confusion
+  // See: https://github.com/CycloneDX/cdxgen/issues/897
+  if (
+    bomJson.metadata.component &&
+    bomJson.metadata.component.purl &&
+    bomJson.metadata.component.purl.startsWith("pkg:golang")
+  ) {
+    if (bomJson.metadata.component["bom-ref"]) {
+      bomJson.metadata.component.purl = bomJson.metadata.component["bom-ref"];
+    }
+  }
+  for (const comp of bomJson.components) {
+    if (comp && comp.purl && comp.purl.startsWith("pkg:golang")) {
+      if (comp["bom-ref"].startsWith("pkg:golang")) {
+        comp.purl = comp["bom-ref"];
+      }
     }
   }
   return bomJson;

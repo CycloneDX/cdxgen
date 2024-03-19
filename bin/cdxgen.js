@@ -243,6 +243,12 @@ const args = yargs(hideBin(process.argv))
     default: false,
     description: "Include crypto libraries found under formulation."
   })
+  .option("make-dt-compatible", {
+    type: "boolean",
+    default: false,
+    description: "Just make the BOM compatible for dependency track.",
+    hidden: true
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
@@ -429,7 +435,13 @@ const checkPermissions = (filePath) => {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   let bomNSData = (await createBom(filePath, options)) || {};
-  if (options.requiredOnly || options["filter"] || options["only"]) {
+  if (
+    options.requiredOnly ||
+    options["filter"] ||
+    options["only"] ||
+    options["make-dt-compatible"] ||
+    options.serverUrl
+  ) {
     bomNSData = postProcess(bomNSData, options);
   }
   if (
