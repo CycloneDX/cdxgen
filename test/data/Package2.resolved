@@ -39,7 +39,16 @@
     {
       "identity" : "swift-http-server",
       "kind" : "remoteSourceControl",
-      "location" : "git@bitbucket.org:atlassian/swift-http-server.git",
+      "location" : "git@github.com:swift/swift-http-server.git",
+      "state" : {
+        "revision" : "72211fb4139a84b6eaa71b1e15356604c84d0d94",
+        "version" : "0.7.4"
+      }
+    }, 
+    {
+      "identity" : "swift-http-server",
+      "kind" : "remoteSourceControl",
+      "location" : "ssh://git@bitbucket.org:7999/swift/swift-http-server.git",
       "state" : {
         "revision" : "72211fb4139a84b6eaa71b1e15356604c84d0d94",
         "version" : "0.7.4"
