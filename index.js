@@ -1850,12 +1850,6 @@ export async function createNodejsBom(path, options) {
           pkgList = pkgList.concat(dlist);
         }
       }
-      return buildBomNSData(options, pkgList, "npm", {
-        allImports: {},
-        src: path,
-        filename: "package.json",
-        parentComponent
-      });
     }
   }
   let allImports = {};
