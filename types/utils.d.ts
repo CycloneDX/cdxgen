@@ -526,6 +526,10 @@ export function getDartMetadata(pkgList: any[]): Promise<any[]>;
  */
 export function parseCargoTomlData(cargoData: string): any[];
 export function parseCargoData(cargoData: any): Promise<any[]>;
+export function parseCargoDependencyData(cargoLockData: any): {
+    ref: string;
+    dependsOn: any;
+}[];
 export function parseCargoAuditableData(cargoData: any): Promise<any[]>;
 export function parsePubLockData(pubLockData: any): Promise<any[]>;
 export function parsePubYamlData(pubYamlData: any): any[];
