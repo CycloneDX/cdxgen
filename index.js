@@ -62,6 +62,7 @@ import {
   parseCabalData,
   parseCargoAuditableData,
   parseCargoData,
+  parseCargoDependencyData,
   parseCargoTomlData,
   parseCljDep,
   parseCloudBuildData,
@@ -3070,6 +3071,7 @@ export async function createRustBom(path, options) {
     (options.multiProject ? "**/" : "") + "Cargo.lock",
     options
   );
+  let dependencyTree = [];
   if (cargoLockFiles.length) {
     for (const f of cargoLockFiles) {
       if (DEBUG_MODE) {
@@ -3080,10 +3082,20 @@ export async function createRustBom(path, options) {
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
+
+      if (DEBUG_MODE) {
+        console.log(`Constructing dependency tree from ${f}`);
+      }
+      const fileDependencylist = parseCargoDependencyData(cargoData);
+      if (fileDependencylist && fileDependencylist.length) {
+        dependencyTree = dependencyTree.concat(fileDependencylist);
+      }
     }
+
     return buildBomNSData(options, pkgList, "cargo", {
       src: path,
-      filename: cargoLockFiles.join(", ")
+      filename: cargoLockFiles.join(", "),
+      dependencies: dependencyTree
     });
   }
   return {};

@@ -17,6 +17,7 @@ import {
   parseCabalData,
   parseCargoAuditableData,
   parseCargoData,
+  parseCargoDependencyData,
   parseCargoTomlData,
   parseCljDep,
   parseCloudBuildData,
@@ -922,6 +923,47 @@ test("parse cargo lock", async () => {
     _integrity:
       "sha384-78d1833b3838dbe990df0f1f87baf640cf6146e898166afe401839d1b001e570"
   });
+});
+
+test("parse cargo lock dependencies tests", async () => {
+  const dependencyData = await parseCargoDependencyData(
+    readFileSync("./test/Cargo.lock", { encoding: "utf-8" })
+  );
+  const purlIsPackage = (purl, packageName) =>
+    new RegExp(`^pkg:cargo/${packageName}.+`).test(purl);
+
+  expect(dependencyData.length).toBeGreaterThan(0);
+
+  // Make sure some samples makes sense.
+  // aho-corasick has a single dependency
+  const ahoCorasick = dependencyData.find((dependency) =>
+    purlIsPackage(dependency.ref, "aho-corasick")
+  );
+  expect(ahoCorasick.dependsOn.length).toEqual(1);
+  expect(purlIsPackage(ahoCorasick.dependsOn[0], "memchr")).toBeTruthy();
+
+  // First edge case is component with a dependency of a specific version.
+  // winapi-util has a dependency on "winapi 0.3.8"
+  const winapiUtil = dependencyData.find((dependency) =>
+    purlIsPackage(dependency.ref, "winapi-util")
+  );
+  expect(purlIsPackage(winapiUtil.dependsOn[0], "winapi")).toBeTruthy();
+  expect(winapiUtil.dependsOn[0]).toContain("0.3.8");
+
+  // Second edge case is a component with a dependency of a specific version and a registry url.
+  const base64 = dependencyData.find((dependency) =>
+    purlIsPackage(dependency.ref, "base64")
+  );
+  expect(purlIsPackage(base64.dependsOn[0], "byteorder")).toBeTruthy();
+  expect(base64.dependsOn[0]).toContain("1.3.1");
+
+  // Make sure we respect packages specifying different versions of the same package.
+  // kernel32-sys is dependent on a different version of winapi than winapi-util.
+  const kernel32Sys = dependencyData.find((dependency) =>
+    purlIsPackage(dependency.ref, "kernel32-sys")
+  );
+  expect(purlIsPackage(kernel32Sys.dependsOn[0], "winapi")).toBeTruthy();
+  expect(kernel32Sys.dependsOn[0]).toContain("0.2.8");
 });
 
 test("parse cargo toml", async () => {
