@@ -4723,7 +4723,10 @@ export function parseCargoDependencyData(cargoLockData) {
   // generate-lockfile seems to consistently create them that way. Important
   // note to perform an eager match, so as to not match the first header with
   // the entire document.
-  const packagePattern = /\[\[package\]\][\s\S]+?(\r?\n){2}/g;
+  // If the Cargo.lock file do not contain a footer with metadata, the last
+  // package section only has one trailing newline trailed by the end-of-file
+  // instead.
+  const packagePattern = /\[\[package\]\][\s\S]+?(\r?\n)((\r?\n)|$)/g;
 
   // Match each key-value pair. This assumes the value to only be a string or
   // an array (either single- or multi-line).

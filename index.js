@@ -3092,10 +3092,25 @@ export async function createRustBom(path, options) {
       }
     }
 
+    // Dependencies from multiple Cargo.lock files may have an overlap in
+    // dependencies. So the dependency tree may have duplicates which needs
+    // to be removed.
+    const dependencyInList = (list, dependency) =>
+      list.some((pkg) => pkg.ref === dependency.ref);
+    const uniqueDependencyList = dependencyTree.reduce(
+      (accumulator, currentDependency) => {
+        if (!dependencyInList(accumulator, currentDependency)) {
+          accumulator.push(currentDependency);
+        }
+        return accumulator;
+      },
+      []
+    );
+
     return buildBomNSData(options, pkgList, "cargo", {
       src: path,
       filename: cargoLockFiles.join(", "),
-      dependencies: dependencyTree
+      dependencies: uniqueDependencyList
     });
   }
   return {};
