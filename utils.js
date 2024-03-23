@@ -4723,11 +4723,11 @@ export function parseCargoDependencyData(cargoLockData) {
   // generate-lockfile seems to consistently create them that way. Important
   // note to perform an eager match, so as to not match the first header with
   // the entire document.
-  const packagePattern = /\[\[package\]\][\s\S]+?\n\n/g;
+  const packagePattern = /\[\[package\]\][\s\S]+?(\r?\n){2}/g;
 
   // Match each key-value pair. This assumes the value to only be a string or
   // an array (either single- or multi-line).
-  const keyValuePattern = /\w+\s?=\s?(".+"|\[[\s\S]+\])\n/g;
+  const keyValuePattern = /\w+\s?=\s?(".+"|\[[\s\S]+\])\r?\n/g;
 
   const purlFromPackageInfo = (pkg) =>
     decodeURIComponent(

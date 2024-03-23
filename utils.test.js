@@ -966,6 +966,23 @@ test("parse cargo lock dependencies tests", async () => {
   expect(kernel32Sys.dependsOn[0]).toContain("0.2.8");
 });
 
+test("parse cargo lock dependencies tests for files on Windows", async () => {
+  const fileContent = await readFileSync("./test/Cargo.lock", {
+    encoding: "utf-8"
+  });
+
+  // Simulate Windows files by forcing CRLF line endings to the data we
+  // attempt to parse.
+  const crlfFileContent = fileContent.replace(/\n/g, "\r\n");
+
+  // The function's logic is tested by other test functions. This test will
+  // serve as a smoke test for files on Windows, to make sure the function
+  // handles both types of input.
+  const dependencyData = parseCargoDependencyData(crlfFileContent);
+  expect(dependencyData).toBeTruthy();
+  expect(dependencyData.length).toBeGreaterThan(1);
+});
+
 test("parse cargo toml", async () => {
   expect(await parseCargoTomlData(null)).toEqual([]);
   let dep_list = await parseCargoTomlData(
