@@ -30,6 +30,7 @@ import {
   addEvidenceForDotnet,
   addEvidenceForImports,
   addPlugin,
+  checksumFile,
   cleanupPlugin,
   collectGradleDependencies,
   collectJarNS,
@@ -705,7 +706,7 @@ function addComponent(
     }
     const version = pkg.version || "";
     const licenses = pkg.licenses || getLicenses(pkg);
-    const purl =
+    let purl =
       pkg.purl ||
       new PackageURL(
         ptype,
@@ -715,6 +716,10 @@ function addComponent(
         pkg.qualifiers,
         encodeForPurl(pkg.subpath)
       );
+    // There is no purl for cryptographic-asset
+    if (ptype == "cryptographic-asset") {
+      purl = undefined;
+    }
     const purlString = purl.toString();
     const description = pkg.description || undefined;
     let compScope = pkg.scope;
@@ -756,7 +761,6 @@ function addComponent(
     }
 
     processHashes(pkg, component);
-    // Retain any component properties
     // Retain evidence
     if (
       options.specVersion >= 1.5 &&
@@ -764,9 +768,30 @@ function addComponent(
       Object.keys(pkg.evidence).length
     ) {
       component.evidence = pkg.evidence;
+      // Convert evidence.identity section to an array for 1.6 and above
+      if (
+        options.specVersion >= 1.6 &&
+        pkg.evidence &&
+        pkg.evidence.identity &&
+        !Array.isArray(pkg.evidence.identity)
+      ) {
+        component.evidence.identity = [pkg.evidence.identity];
+      }
     }
+    // Retain any tags
+    if (
+      options.specVersion >= 1.6 &&
+      pkg.tags &&
+      Object.keys(pkg.tags).length
+    ) {
+      component.tags = pkg.tags;
+    }
+    // Retain any component properties and crypto properties
     if (pkg.properties && pkg.properties.length) {
       component.properties = pkg.properties;
+    }
+    if (pkg.cryptoProperties && pkg.cryptoProperties.length) {
+      component.cryptoProperties = pkg.cryptoProperties;
     }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;
@@ -796,7 +821,8 @@ function determinePackageType(pkg) {
       "firmware",
       "file",
       "machine-learning-model",
-      "data"
+      "data",
+      "cryptographic-asset"
     ].includes(pkg.type)
   ) {
     return pkg.type;
@@ -4535,6 +4561,46 @@ export async function createCsharpBom(path, options) {
   });
 }
 
+/**
+ * Function to create bom object for cryptographic certificate files
+ *
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ */
+export async function createCryptoCertsBom(path, options) {
+  const pkgList = [];
+  const certFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") +
+      "*.{p12,jks,jceks,bks,keystore,key,pem,cer,gpg,pub}",
+    options
+  );
+  for (const f of certFiles) {
+    const name = basename(f);
+    const fileHash = await checksumFile("sha256", f);
+    const apkg = {
+      name,
+      type: "cryptographic-asset",
+      version: fileHash,
+      "bom-ref": `crypto/certificate/${name}@sha256:${fileHash}`,
+      cryptoProperties: {
+        assetType: "certificate",
+        algorithmProperties: {
+          executionEnvironment: "unknown",
+          implementationPlatform: "unknown"
+        }
+      },
+      properties: [{ name: "SrcFile", value: f }]
+    };
+    pkgList.push(apkg);
+  }
+  return {
+    bomJson: {
+      components: pkgList
+    }
+  };
+}
+
 export function mergeDependencies(
   dependencies,
   newDependencies,
@@ -5008,6 +5074,23 @@ export async function createMultiXBom(pathList, options) {
         Object.keys(bomData.parentComponent).length
       ) {
         parentSubComponents.push(bomData.parentComponent);
+      }
+    }
+    // Collect any crypto keys
+    if (options.specVersion >= 1.6 && options.includeCrypto) {
+      bomData = await createCryptoCertsBom(path, options);
+      if (
+        bomData &&
+        bomData.bomJson &&
+        bomData.bomJson.components &&
+        bomData.bomJson.components.length
+      ) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} crypto assets at ${path}`
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
       }
     }
   } // for

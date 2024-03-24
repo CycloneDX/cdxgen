@@ -1,0 +1,1950 @@
+{
+  "kemRSA": {
+    "oid": "1.0.18033.2.2.4",
+    "description": "ISO 18033-2 KEM algorithms"
+  },
+  "gmtCryptographicAlgorithm": {
+    "oid": "1.2.156.10197.1",
+    "description": "China GM Standards Committee"
+  },
+  "gmtHashAlgorithm": {
+    "oid": "1.2.156.10197.1.400",
+    "description": "China GM Standards Committee"
+  },
+  "gmtAlgorithmClass": {
+    "oid": "1.2.156.10197.6.1.1",
+    "description": "China GM Standards Committee"
+  },
+  "mitsubishiSecurityAlgorithm": {
+    "oid": "1.2.392.200011.61.1.1.1",
+    "description": "Mitsubishi security algorithm"
+  },
+  "misty1-cbc": {
+    "oid": "1.2.392.200011.61.1.1.1.1",
+    "description": "Mitsubishi security algorithm"
+  },
+  "kisaAlgorithm": {
+    "oid": "1.2.410.200004.1",
+    "description": "KISA algorithm"
+  },
+  "has160": {
+    "oid": "1.2.410.200004.1.2",
+    "description": "Korean hash algorithm"
+  },
+  "seedECB": {
+    "oid": "1.2.410.200004.1.3",
+    "description": "Korean SEED algorithm, ECB mode"
+  },
+  "seedCBC": {
+    "oid": "1.2.410.200004.1.4",
+    "description": "Korean SEED algorithm, CBC mode"
+  },
+  "seedOFB": {
+    "oid": "1.2.410.200004.1.5",
+    "description": "Korean SEED algorithm, OFB mode"
+  },
+  "seedCFB": {
+    "oid": "1.2.410.200004.1.6",
+    "description": "Korean SEED algorithm, CFB mode"
+  },
+  "seedMAC": {
+    "oid": "1.2.410.200004.1.7",
+    "description": "Korean SEED algorithm, MAC mode"
+  },
+  "kcdsaWithHAS160": {
+    "oid": "1.2.410.200004.1.8",
+    "description": "Korean signature algorithm"
+  },
+  "kcdsaWithSHA1": {
+    "oid": "1.2.410.200004.1.9",
+    "description": "Korean signature algorithm"
+  },
+  "pbeWithHAS160AndSEED-ECB": {
+    "oid": "1.2.410.200004.1.10",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "pbeWithHAS160AndSEED-CBC": {
+    "oid": "1.2.410.200004.1.11",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "pbeWithHAS160AndSEED-CFB": {
+    "oid": "1.2.410.200004.1.12",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "pbeWithHAS160AndSEED-OFB": {
+    "oid": "1.2.410.200004.1.13",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "pbeWithSHA1AndSEED-ECB": {
+    "oid": "1.2.410.200004.1.14",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "pbeWithSHA1AndSEED-CBC": {
+    "oid": "1.2.410.200004.1.15",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "pbeWithSHA1AndSEED-CFB": {
+    "oid": "1.2.410.200004.1.16",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "pbeWithSHA1AndSEED-OFB": {
+    "oid": "1.2.410.200004.1.17",
+    "description": "Korean SEED algorithm, PBE key derivation"
+  },
+  "rsaWithHAS160": {
+    "oid": "1.2.410.200004.1.20",
+    "description": "Korean signature algorithm"
+  },
+  "aria1AlgorithmModes": {
+    "oid": "1.2.410.200046.1.1",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-ecb": {
+    "oid": "1.2.410.200046.1.1.1",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-cbc": {
+    "oid": "1.2.410.200046.1.1.2",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-cfb": {
+    "oid": "1.2.410.200046.1.1.3",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-ofb": {
+    "oid": "1.2.410.200046.1.1.4",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-ctr": {
+    "oid": "1.2.410.200046.1.1.5",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-ecb": {
+    "oid": "1.2.410.200046.1.1.6",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-cbc": {
+    "oid": "1.2.410.200046.1.1.7",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-cfb": {
+    "oid": "1.2.410.200046.1.1.8",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-ofb": {
+    "oid": "1.2.410.200046.1.1.9",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-ctr": {
+    "oid": "1.2.410.200046.1.1.10",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-ecb": {
+    "oid": "1.2.410.200046.1.1.11",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-cbc": {
+    "oid": "1.2.410.200046.1.1.12",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-cfb": {
+    "oid": "1.2.410.200046.1.1.13",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-ofb": {
+    "oid": "1.2.410.200046.1.1.14",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-ctr": {
+    "oid": "1.2.410.200046.1.1.15",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-cmac": {
+    "oid": "1.2.410.200046.1.1.21",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-cmac": {
+    "oid": "1.2.410.200046.1.1.22",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-cmac": {
+    "oid": "1.2.410.200046.1.1.23",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-ocb2": {
+    "oid": "1.2.410.200046.1.1.31",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-ocb2": {
+    "oid": "1.2.410.200046.1.1.32",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-ocb2": {
+    "oid": "1.2.410.200046.1.1.33",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-gcm": {
+    "oid": "1.2.410.200046.1.1.34",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-gcm": {
+    "oid": "1.2.410.200046.1.1.35",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-gcm": {
+    "oid": "1.2.410.200046.1.1.36",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-ccm": {
+    "oid": "1.2.410.200046.1.1.37",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-ccm": {
+    "oid": "1.2.410.200046.1.1.38",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-ccm": {
+    "oid": "1.2.410.200046.1.1.39",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-keywrap": {
+    "oid": "1.2.410.200046.1.1.40",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-keywrap": {
+    "oid": "1.2.410.200046.1.1.41",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-keywrap": {
+    "oid": "1.2.410.200046.1.1.42",
+    "description": "ARIA algorithm modes"
+  },
+  "aria128-keywrapWithPad": {
+    "oid": "1.2.410.200046.1.1.43",
+    "description": "ARIA algorithm modes"
+  },
+  "aria192-keywrapWithPad": {
+    "oid": "1.2.410.200046.1.1.44",
+    "description": "ARIA algorithm modes"
+  },
+  "aria256-keywrapWithPad": {
+    "oid": "1.2.410.200046.1.1.45",
+    "description": "ARIA algorithm modes"
+  },
+  "cryptoProECDH256": {
+    "oid": "1.2.643.7.1.1.6.1",
+    "description": "CryptoPro ECC DH algorithm for GOST R 34.10-2012 256 bit key"
+  },
+  "cryptoProECDH512": {
+    "oid": "1.2.643.7.1.1.6.2",
+    "description": "CryptoPro ECC DH algorithm for GOST R 34.10-2012 512 bit key"
+  },
+  "dsa": {
+    "oid": "1.2.840.10040.4.1",
+    "description": "ANSI X9.57 algorithm"
+  },
+  "dsa-match": {
+    "oid": "1.2.840.10040.4.2",
+    "description": "ANSI X9.57 algorithm"
+  },
+  "dsaWithSha1": {
+    "oid": "1.2.840.10040.4.3",
+    "description": "ANSI X9.57 algorithm"
+  },
+  "ecdsaWithSHA1": {
+    "oid": "1.2.840.10045.4.1",
+    "description": "ANSI X9.62 ECDSA algorithm with SHA1"
+  },
+  "ecdsaWithRecommended": {
+    "oid": "1.2.840.10045.4.2",
+    "description": "ANSI X9.62 ECDSA algorithm with Recommended"
+  },
+  "ecdsaWithSpecified": {
+    "oid": "1.2.840.10045.4.3",
+    "description": "ANSI X9.62 ECDSA algorithm with Specified"
+  },
+  "ecdsaWithSHA224": {
+    "oid": "1.2.840.10045.4.3.1",
+    "description": "ANSI X9.62 ECDSA algorithm with SHA224"
+  },
+  "ecdsaWithSHA256": {
+    "oid": "1.2.840.10045.4.3.2",
+    "description": "ANSI X9.62 ECDSA algorithm with SHA256"
+  },
+  "ecdsaWithSHA384": {
+    "oid": "1.2.840.10045.4.3.3",
+    "description": "ANSI X9.62 ECDSA algorithm with SHA384"
+  },
+  "ecdsaWithSHA512": {
+    "oid": "1.2.840.10045.4.3.4",
+    "description": "ANSI X9.62 ECDSA algorithm with SHA512"
+  },
+  "cmsAlgorithmProtect": {
+    "oid": "1.2.840.113549.1.9.16.2.52",
+    "description": "S/MIME Authenticated Attributes"
+  },
+  "esDHwith3DES": {
+    "oid": "1.2.840.113549.1.9.16.3.1",
+    "description": "S/MIME Algorithms. Obsolete"
+  },
+  "esDHwithRC2": {
+    "oid": "1.2.840.113549.1.9.16.3.2",
+    "description": "S/MIME Algorithms. Obsolete"
+  },
+  "3desWrap": {
+    "oid": "1.2.840.113549.1.9.16.3.3",
+    "description": "S/MIME Algorithms. Obsolete"
+  },
+  "rc2Wrap": {
+    "oid": "1.2.840.113549.1.9.16.3.4",
+    "description": "S/MIME Algorithms. Obsolete"
+  },
+  "esDH": {
+    "oid": "1.2.840.113549.1.9.16.3.5",
+    "description": "S/MIME Algorithms"
+  },
+  "cms3DESwrap": {
+    "oid": "1.2.840.113549.1.9.16.3.6",
+    "description": "S/MIME Algorithms"
+  },
+  "cmsRC2wrap": {
+    "oid": "1.2.840.113549.1.9.16.3.7",
+    "description": "S/MIME Algorithms"
+  },
+  "zlib": {
+    "oid": "1.2.840.113549.1.9.16.3.8",
+    "description": "S/MIME Algorithms"
+  },
+  "pwriKEK": {
+    "oid": "1.2.840.113549.1.9.16.3.9",
+    "description": "S/MIME Algorithms"
+  },
+  "ssDH": {
+    "oid": "1.2.840.113549.1.9.16.3.10",
+    "description": "S/MIME Algorithms"
+  },
+  "hmacWith3DESwrap": {
+    "oid": "1.2.840.113549.1.9.16.3.11",
+    "description": "S/MIME Algorithms"
+  },
+  "hmacWithAESwrap": {
+    "oid": "1.2.840.113549.1.9.16.3.12",
+    "description": "S/MIME Algorithms"
+  },
+  "md5XorExperiment": {
+    "oid": "1.2.840.113549.1.9.16.3.13",
+    "description": "S/MIME Algorithms.  Experimental"
+  },
+  "rsaKEM": {
+    "oid": "1.2.840.113549.1.9.16.3.14",
+    "description": "S/MIME Algorithms"
+  },
+  "authEnc128": {
+    "oid": "1.2.840.113549.1.9.16.3.15",
+    "description": "S/MIME Algorithms"
+  },
+  "authEnc256": {
+    "oid": "1.2.840.113549.1.9.16.3.16",
+    "description": "S/MIME Algorithms"
+  },
+  "hssLmsHashSig": {
+    "oid": "1.2.840.113549.1.9.16.3.17",
+    "description": "S/MIME Algorithms"
+  },
+  "chaCha20Poly1305": {
+    "oid": "1.2.840.113549.1.9.16.3.18",
+    "description": "S/MIME Algorithms"
+  },
+  "ecdhHKDF-SHA256": {
+    "oid": "1.2.840.113549.1.9.16.3.19",
+    "description": "S/MIME Algorithms"
+  },
+  "ecdhHKDF-SHA384": {
+    "oid": "1.2.840.113549.1.9.16.3.20",
+    "description": "S/MIME Algorithms"
+  },
+  "ecdhHKDF-SHA512": {
+    "oid": "1.2.840.113549.1.9.16.3.21",
+    "description": "S/MIME Algorithms"
+  },
+  "aesSIV-CMAC-256": {
+    "oid": "1.2.840.113549.1.9.16.3.22",
+    "description": "S/MIME Algorithms"
+  },
+  "aesSIV-CMAC-384": {
+    "oid": "1.2.840.113549.1.9.16.3.23",
+    "description": "S/MIME Algorithms"
+  },
+  "aesSIV-CMAC-512": {
+    "oid": "1.2.840.113549.1.9.16.3.24",
+    "description": "S/MIME Algorithms"
+  },
+  "aesSIV-CMAC-wrap256": {
+    "oid": "1.2.840.113549.1.9.16.3.25",
+    "description": "S/MIME Algorithms"
+  },
+  "aesSIV-CMAC-wrap384": {
+    "oid": "1.2.840.113549.1.9.16.3.26",
+    "description": "S/MIME Algorithms"
+  },
+  "aesSIV-CMAC-wrap512": {
+    "oid": "1.2.840.113549.1.9.16.3.27",
+    "description": "S/MIME Algorithms"
+  },
+  "hkdfWithSha256": {
+    "oid": "1.2.840.113549.1.9.16.3.28",
+    "description": "S/MIME Algorithms"
+  },
+  "hkdfWithSha384": {
+    "oid": "1.2.840.113549.1.9.16.3.29",
+    "description": "S/MIME Algorithms"
+  },
+  "hkdfWithSha512": {
+    "oid": "1.2.840.113549.1.9.16.3.30",
+    "description": "S/MIME Algorithms"
+  },
+  "pskcAlgorithm": {
+    "oid": "1.2.840.113549.1.9.16.12.10",
+    "description": "S/MIME Portable Symmetric Key Container Attributes"
+  },
+  "pskcAlgorithmparams": {
+    "oid": "1.2.840.113549.1.9.16.12.15",
+    "description": "S/MIME Portable Symmetric Key Container Attributes"
+  },
+  "cmsAlgorithmProtection": {
+    "oid": "1.2.840.113549.1.9.52",
+    "description": "RFC 6211"
+  },
+  "md2": {
+    "oid": "1.2.840.113549.2.2",
+    "description": "Message Digest #2 (MD2)"
+  },
+  "md4": {
+    "oid": "1.2.840.113549.2.4",
+    "description": "Rivest, Shamir and Adleman (RSA) algorithm coupled with an Message Digest 4 (MD4) message digest algorithm"
+  },
+  "md5": {
+    "oid": "1.2.840.113549.2.5",
+    "description": "Rivest, Shamir and Adleman (RSA) algorithm coupled with an Message Digest #5 (MD5) algorithm"
+  },
+  "hmacWithSHA1": {
+    "oid": "1.2.840.113549.2.7",
+    "description": "HMAC-SHA-1 pseudorandom function for key generation defined in PKCS-5 ver 2.0"
+  },
+  "hmacWithSHA224": {
+    "oid": "1.2.840.113549.2.8",
+    "description": "HMAC-SHA-224 message authentication scheme"
+  },
+  "hmacWithSHA256": {
+    "oid": "1.2.840.113549.2.9",
+    "description": "HMAC-SHA-256 message authentication scheme"
+  },
+  "hmacWithSHA384": {
+    "oid": "1.2.840.113549.2.10",
+    "description": "HMAC-SHA-384 message authentication scheme"
+  },
+  "hmacWithSHA512": {
+    "oid": "1.2.840.113549.2.11",
+    "description": "HMAC-SHA-512 message authentication scheme"
+  },
+  "encryptionAlgorithm": {
+    "oid": "1.3.36.3.1",
+    "description": "Teletrust algorithm"
+  },
+  "rc2CBC": {
+    "oid": "1.2.840.113549.3.2",
+    "description": "Voice encryption using Rivest Cipher (RC2)-compatible (56 bit) or RC2-compatible in Cipher Block Chaining (CBC) mode"
+  },
+  "rc2ECB": {
+    "oid": "1.2.840.113549.3.3",
+    "description": "RSADSI encryptionAlgorithm"
+  },
+  "rc4": {
+    "oid": "1.2.840.113549.3.4",
+    "description": "Rivest, Shamir and Adleman (RSA) that uses the Rivest Cipher 4 (RC4) block cipher algorithm coupled with a cipher-block"
+  },
+  "rc4WithMAC": {
+    "oid": "1.2.840.113549.3.5",
+    "description": "RSADSI encryptionAlgorithm"
+  },
+  "desx-CBC": {
+    "oid": "1.2.840.113549.3.6",
+    "description": "RSADSI encryptionAlgorithm"
+  },
+  "des-EDE3-CBC": {
+    "oid": "1.2.840.113549.3.7",
+    "description": "Triple Data Encryption Standard (DES) algorithm coupled with a cipher-block chaining mode of operation (szOID_RSA_DES_EDE3_CBC)"
+  },
+  "rc5CBC": {
+    "oid": "1.2.840.113549.3.8",
+    "description": "RSADSI encryptionAlgorithm"
+  },
+  "rc5-CBCPad": {
+    "oid": "1.2.840.113549.3.9",
+    "description": "Rivest Cipher 5 (RC5) symmetric cipher used with Cipher Block Chaining (CBC) pad mode of operation"
+  },
+  "desCDMF": {
+    "oid": "1.2.840.113549.3.10",
+    "description": "RSADSI encryptionAlgorithm. Formerly called CDMFCBCPad"
+  },
+  "appleSecurityAlgorithm": {
+    "oid": "1.2.840.113635.100.2",
+    "description": "Apple"
+  },
+  "appleFEE": {
+    "oid": "1.2.840.113635.100.2.1",
+    "description": "Apple security algorithm"
+  },
+  "appleASC": {
+    "oid": "1.2.840.113635.100.2.2",
+    "description": "Apple security algorithm"
+  },
+  "appleFEEMD5": {
+    "oid": "1.2.840.113635.100.2.3",
+    "description": "Apple security algorithm"
+  },
+  "appleFEESHA1": {
+    "oid": "1.2.840.113635.100.2.4",
+    "description": "Apple security algorithm"
+  },
+  "appleFEED": {
+    "oid": "1.2.840.113635.100.2.5",
+    "description": "Apple security algorithm"
+  },
+  "appleFEEDEXP": {
+    "oid": "1.2.840.113635.100.2.6",
+    "description": "Apple security algorithm"
+  },
+  "appleECDSA": {
+    "oid": "1.2.840.113635.100.2.7",
+    "description": "Apple security algorithm"
+  },
+  "blowfishECB": {
+    "oid": "1.3.6.1.4.1.3029.1.1.1",
+    "description": "cryptlib encryption algorithm"
+  },
+  "blowfishCBC": {
+    "oid": "1.3.6.1.4.1.3029.1.1.2",
+    "description": "cryptlib encryption algorithm"
+  },
+  "blowfishCFB": {
+    "oid": "1.3.6.1.4.1.3029.1.1.3",
+    "description": "cryptlib encryption algorithm"
+  },
+  "blowfishOFB": {
+    "oid": "1.3.6.1.4.1.3029.1.1.4",
+    "description": "cryptlib encryption algorithm"
+  },
+  "elgamal": {
+    "oid": "1.3.6.1.4.1.3029.1.2.1",
+    "description": "cryptlib public-key algorithm"
+  },
+  "elgamalWithSHA-1": {
+    "oid": "1.3.6.1.4.1.3029.1.2.1.1",
+    "description": "cryptlib public-key algorithm"
+  },
+  "elgamalWithRIPEMD-160": {
+    "oid": "1.3.6.1.4.1.3029.1.2.1.2",
+    "description": "cryptlib public-key algorithm"
+  },
+  "gnuDigestAlgorithm": {
+    "oid": "1.3.6.1.4.1.11591.12",
+    "description": "GNU digest algorithm"
+  },
+  "tiger": {
+    "oid": "1.3.6.1.4.1.11591.12.2",
+    "description": "GNU digest algorithm"
+  },
+  "gnuEncryptionAlgorithm": {
+    "oid": "1.3.6.1.4.1.11591.13",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent": {
+    "oid": "1.3.6.1.4.1.11591.13.2",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent128ECB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.1",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent128CBC": {
+    "oid": "1.3.6.1.4.1.11591.13.2.2",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent128OFB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.3",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent128CFB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.4",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent192ECB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.21",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent192CBC": {
+    "oid": "1.3.6.1.4.1.11591.13.2.22",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent192OFB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.23",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent192CFB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.24",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent256ECB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.41",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent256CBC": {
+    "oid": "1.3.6.1.4.1.11591.13.2.42",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent256OFB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.43",
+    "description": "GNU encryption algorithm"
+  },
+  "serpent256CFB": {
+    "oid": "1.3.6.1.4.1.11591.13.2.44",
+    "description": "GNU encryption algorithm"
+  },
+  "curve25519": {
+    "oid": "1.3.6.1.4.1.11591.15.1",
+    "description": "GNU encryption algorithm"
+  },
+  "curve448": {
+    "oid": "1.3.6.1.4.1.11591.15.2",
+    "description": "GNU encryption algorithm"
+  },
+  "curve25519ph": {
+    "oid": "1.3.6.1.4.1.11591.15.3",
+    "description": "GNU encryption algorithm"
+  },
+  "curve448ph": {
+    "oid": "1.3.6.1.4.1.11591.15.4",
+    "description": "GNU encryption algorithm"
+  },
+  "des40": {
+    "oid": "1.3.6.1.5.5.7.6.1",
+    "description": "PKIX algorithm"
+  },
+  "noSignature": {
+    "oid": "1.3.6.1.5.5.7.6.2",
+    "description": "PKIX algorithm"
+  },
+  "dhSigHmacSha1": {
+    "oid": "1.3.6.1.5.5.7.6.3",
+    "description": "PKIX algorithm"
+  },
+  "dhPop": {
+    "oid": "1.3.6.1.5.5.7.6.4",
+    "description": "PKIX algorithm"
+  },
+  "dhPopSha224": {
+    "oid": "1.3.6.1.5.5.7.6.5",
+    "description": "PKIX algorithm"
+  },
+  "dhPopSha256": {
+    "oid": "1.3.6.1.5.5.7.6.6",
+    "description": "PKIX algorithm"
+  },
+  "dhPopSha384": {
+    "oid": "1.3.6.1.5.5.7.6.7",
+    "description": "PKIX algorithm"
+  },
+  "dhPopSha512": {
+    "oid": "1.3.6.1.5.5.7.6.8",
+    "description": "PKIX algorithm"
+  },
+  "dhPopStaticSha224HmacSha224": {
+    "oid": "1.3.6.1.5.5.7.6.15",
+    "description": "PKIX algorithm"
+  },
+  "dhPopStaticSha256HmacSha256": {
+    "oid": "1.3.6.1.5.5.7.6.16",
+    "description": "PKIX algorithm"
+  },
+  "dhPopStaticSha384HmacSha384": {
+    "oid": "1.3.6.1.5.5.7.6.17",
+    "description": "PKIX algorithm"
+  },
+  "dhPopStaticSha512HmacSha512": {
+    "oid": "1.3.6.1.5.5.7.6.18",
+    "description": "PKIX algorithm"
+  },
+  "ecdhPopStaticSha224HmacSha224": {
+    "oid": "1.3.6.1.5.5.7.6.25",
+    "description": "PKIX algorithm"
+  },
+  "ecdhPopStaticSha256HmacSha256": {
+    "oid": "1.3.6.1.5.5.7.6.26",
+    "description": "PKIX algorithm"
+  },
+  "ecdhPopStaticSha384HmacSha384": {
+    "oid": "1.3.6.1.5.5.7.6.27",
+    "description": "PKIX algorithm"
+  },
+  "ecdhPopStaticSha512HmacSha512": {
+    "oid": "1.3.6.1.5.5.7.6.28",
+    "description": "PKIX algorithm"
+  },
+  "rsaPssShake128": {
+    "oid": "1.3.6.1.5.5.7.6.30",
+    "description": "PKIX algorithm"
+  },
+  "rsaPssShake256": {
+    "oid": "1.3.6.1.5.5.7.6.31",
+    "description": "PKIX algorithm"
+  },
+  "ecdsaShake128": {
+    "oid": "1.3.6.1.5.5.7.6.32",
+    "description": "PKIX algorithm"
+  },
+  "ecdsaShake256": {
+    "oid": "1.3.6.1.5.5.7.6.33",
+    "description": "PKIX algorithm"
+  },
+  "hmacMD5": {
+    "oid": "1.3.6.1.5.5.8.1.1",
+    "description": "ISAKMP HMAC algorithm"
+  },
+  "hmacSHA": {
+    "oid": "1.3.6.1.5.5.8.1.2",
+    "description": "ISAKMP HMAC algorithm"
+  },
+  "hmacTiger": {
+    "oid": "1.3.6.1.5.5.8.1.3",
+    "description": "ISAKMP HMAC algorithm"
+  },
+  "decEncryptionAlgorithm": {
+    "oid": "1.3.12.2.1011.7.1",
+    "description": "DASS algorithm"
+  },
+  "decDEA": {
+    "oid": "1.3.12.2.1011.7.1.2",
+    "description": "DASS encryption algorithm"
+  },
+  "decHashAlgorithm": {
+    "oid": "1.3.12.2.1011.7.2",
+    "description": "DASS algorithm"
+  },
+  "decMD2": {
+    "oid": "1.3.12.2.1011.7.2.1",
+    "description": "DASS hash algorithm"
+  },
+  "decMD4": {
+    "oid": "1.3.12.2.1011.7.2.2",
+    "description": "DASS hash algorithm"
+  },
+  "decSignatureAlgorithm": {
+    "oid": "1.3.12.2.1011.7.3",
+    "description": "DASS algorithm"
+  },
+  "decMD2withRSA": {
+    "oid": "1.3.12.2.1011.7.3.1",
+    "description": "DASS signature algorithm"
+  },
+  "decMD4withRSA": {
+    "oid": "1.3.12.2.1011.7.3.2",
+    "description": "DASS signature algorithm"
+  },
+  "decDEAMAC": {
+    "oid": "1.3.12.2.1011.7.3.3",
+    "description": "DASS signature algorithm"
+  },
+  "des": {
+    "oid": "1.3.36.3.1.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "desECBpad": {
+    "oid": "1.3.36.3.1.1.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "desECBISOpad": {
+    "oid": "1.3.36.3.1.1.1.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "desCBCpad": {
+    "oid": "1.3.36.3.1.1.2.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "desCBCISOpad": {
+    "oid": "1.3.36.3.1.1.2.1.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "des3": {
+    "oid": "1.3.36.3.1.3",
+    "description": "Teletrust encryption algorithm"
+  },
+  "des3ECBpad": {
+    "oid": "1.3.36.3.1.3.1.1",
+    "description": "Teletrust encryption algorithm. EDE triple DES"
+  },
+  "des3ECBISOpad": {
+    "oid": "1.3.36.3.1.3.1.1.1",
+    "description": "Teletrust encryption algorithm. EDE triple DES"
+  },
+  "des3CBCpad": {
+    "oid": "1.3.36.3.1.3.2.1",
+    "description": "Teletrust encryption algorithm. EDE triple DES"
+  },
+  "des3CBCISOpad": {
+    "oid": "1.3.36.3.1.3.2.1.1",
+    "description": "Teletrust encryption algorithm. EDE triple DES"
+  },
+  "idea": {
+    "oid": "1.3.36.3.1.2",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaECB": {
+    "oid": "1.3.36.3.1.2.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaECBpad": {
+    "oid": "1.3.36.3.1.2.1.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaECBISOpad": {
+    "oid": "1.3.36.3.1.2.1.1.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaCBC": {
+    "oid": "1.3.36.3.1.2.2",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaCBCpad": {
+    "oid": "1.3.36.3.1.2.2.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaCBCISOpad": {
+    "oid": "1.3.36.3.1.2.2.1.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaOFB": {
+    "oid": "1.3.36.3.1.2.3",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ideaCFB": {
+    "oid": "1.3.36.3.1.2.4",
+    "description": "Teletrust encryption algorithm"
+  },
+  "rsaEncryption": {
+    "oid": "1.2.840.113549.1.1.1",
+    "description": "Rivest, Shamir and Adleman (RSA) encryption (and signing)"
+  },
+  "md2WithRSAEncryption": {
+    "oid": "1.2.840.113549.1.1.2",
+    "description": "Message Digest 2 (MD2) checksum with Rivest, Shamir and Adleman (RSA) encryption"
+  },
+  "md4withRSAEncryption": {
+    "oid": "1.2.840.113549.1.1.3",
+    "description": "Message Digest 4 (MD4) checksum with Rivest, Shamir and Adleman (RSA) encryption"
+  },
+  "md5WithRSAEncryption": {
+    "oid": "1.2.840.113549.1.1.4",
+    "description": "Rivest, Shamir and Adleman (RSA) encryption with Message Digest 5 (MD5) signature"
+  },
+  "sha1-with-rsa-signature": {
+    "oid": "1.2.840.113549.1.1.5",
+    "description": "Rivest, Shamir and Adleman (RSA) with Secure Hash Algorithm (SHA-1) signature"
+  },
+  "rsaOAEPEncryptionSET": {
+    "oid": "1.2.840.113549.1.1.6",
+    "description": "Rivest, Shamir and Adleman (RSA) Optimal Asymmetric Encryption Padding (OAEP) encryption set"
+  },
+  "id-RSAES-OAEP": {
+    "oid": "1.2.840.113549.1.1.7",
+    "description": "Public-key encryption scheme combining Optimal Asymmetric Encryption Padding (OAEP)"
+  },
+  "id-mgf1": {
+    "oid": "1.2.840.113549.1.1.8",
+    "description": "Rivest, Shamir and Adleman (RSA) algorithm that uses the Mask Generator Function 1 (MGF1)"
+  },
+  "id-pSpecified": {
+    "oid": "1.2.840.113549.1.1.9",
+    "description": "Rivest, Shamir and Adleman (RSA) algorithm (szOID_RSA_PSPECIFIED)"
+  },
+  "rsassa-pss": {
+    "oid": "1.2.840.113549.1.1.10",
+    "description": "Rivest, Shamir, Adleman (RSA) Signature Scheme with Appendix - Probabilistic Signature Scheme (RSASSA-PSS)"
+  },
+  "sha384WithRSAEncryption": {
+    "oid": "1.2.840.113549.1.1.12",
+    "description": "Secure Hash Algorithm 384 (SHA384) with Rivest, Shamir and Adleman (RSA) Encryption"
+  },
+  "sha512WithRSAEncryption": {
+    "oid": "1.2.840.113549.1.1.13",
+    "description": "Secure Hash Algorithm (SHA) 512 with Rivest, Shamir and Adleman (RSA) encryption"
+  },
+  "sha224WithRSAEncryption": {
+    "oid": "1.2.840.113549.1.1.14",
+    "description": "Secure Hash Algorithm (SHA) 224 with Rivest, Shamir and Adleman (RSA) encryption"
+  },
+  "teletrustRsaEncryption": {
+    "oid": "1.3.36.3.1.4",
+    "description": "Teletrust encryption algorithm"
+  },
+  "rsaEncryptionWithlmod512expe17": {
+    "oid": "1.3.36.3.1.4.512.17",
+    "description": "Teletrust encryption algorithm"
+  },
+  "bsi-1": {
+    "oid": "1.3.36.3.1.5",
+    "description": "Teletrust encryption algorithm"
+  },
+  "bsi1ECBpad": {
+    "oid": "1.3.36.3.1.5.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "bsi1CBCpad": {
+    "oid": "1.3.36.3.1.5.2",
+    "description": "Teletrust encryption algorithm"
+  },
+  "bsi1CBCPEMpad": {
+    "oid": "1.3.36.3.1.5.2.1",
+    "description": "Teletrust encryption algorithm"
+  },
+  "ripemd160": {
+    "oid": "1.3.36.3.2.1",
+    "description": "Teletrust hash algorithm"
+  },
+  "ripemd128": {
+    "oid": "1.3.36.3.2.2",
+    "description": "Teletrust hash algorithm"
+  },
+  "ripemd256": {
+    "oid": "1.3.36.3.2.3",
+    "description": "Teletrust hash algorithm"
+  },
+  "mdc2singleLength": {
+    "oid": "1.3.36.3.2.4",
+    "description": "Teletrust hash algorithm"
+  },
+  "mdc2doubleLength": {
+    "oid": "1.3.36.3.2.5",
+    "description": "Teletrust hash algorithm"
+  },
+  "signatureAlgorithm": {
+    "oid": "1.3.36.3.3",
+    "description": "Teletrust algorithm"
+  },
+  "rsaSignature": {
+    "oid": "1.3.36.3.3.1",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaSignatureWithsha1": {
+    "oid": "1.3.36.3.3.1.1",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaSignatureWithsha1l1024l11": {
+    "oid": "1.3.36.3.3.1.1.1024.11",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaSignatureWithripemd160": {
+    "oid": "1.3.36.3.3.1.2",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaSignatureWithripemd160l1024l11": {
+    "oid": "1.3.36.3.3.1.2.1024.11",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaSignatureWithrimpemd128": {
+    "oid": "1.3.36.3.3.1.3",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaSignatureWithrimpemd256": {
+    "oid": "1.3.36.3.3.1.4",
+    "description": "Teletrust signature algorithm"
+  },
+  "ecsieSign": {
+    "oid": "1.3.36.3.3.2",
+    "description": "Teletrust signature algorithm"
+  },
+  "ecsieSignWithsha1": {
+    "oid": "1.3.36.3.3.2.1",
+    "description": "Teletrust signature algorithm"
+  },
+  "ecsieSignWithripemd160": {
+    "oid": "1.3.36.3.3.2.2",
+    "description": "Teletrust signature algorithm"
+  },
+  "ecsieSignWithmd2": {
+    "oid": "1.3.36.3.3.2.3",
+    "description": "Teletrust signature algorithm"
+  },
+  "ecsieSignWithmd5": {
+    "oid": "1.3.36.3.3.2.4",
+    "description": "Teletrust signature algorithm"
+  },
+  "signatureScheme": {
+    "oid": "1.3.36.3.4",
+    "description": "Teletrust algorithm"
+  },
+  "rsaIndicateSHA1": {
+    "oid": "1.3.36.8.5.1.1.1",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaIndicateRIPEMD160": {
+    "oid": "1.3.36.8.5.1.1.2",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaWithSHA1": {
+    "oid": "1.3.36.8.5.1.1.3",
+    "description": "Teletrust signature algorithm"
+  },
+  "rsaWithRIPEMD160": {
+    "oid": "1.3.36.8.5.1.1.4",
+    "description": "Teletrust signature algorithm"
+  },
+  "dsaExtended": {
+    "oid": "1.3.36.8.5.1.2.1",
+    "description": "Teletrust signature algorithm"
+  },
+  "dsaWithRIPEMD160": {
+    "oid": "1.3.36.8.5.1.2.2",
+    "description": "Teletrust signature algorithm"
+  },
+  "curveX25519": {
+    "oid": "1.3.101.110",
+    "description": "ECDH 25519 key agreement algorithm"
+  },
+  "curveX448": {
+    "oid": "1.3.101.111",
+    "description": "ECDH 448 key agreement algorithm"
+  },
+  "curveEd25519": {
+    "oid": "1.3.101.112",
+    "description": "EdDSA 25519 signature algorithm"
+  },
+  "curveEd448": {
+    "oid": "1.3.101.113",
+    "description": "EdDSA 448 signature algorithm"
+  },
+  "curveEd25519ph": {
+    "oid": "1.3.101.114",
+    "description": "EdDSA 25519 pre-hash signature algorithm"
+  },
+  "curveEd448ph": {
+    "oid": "1.3.101.115",
+    "description": "EdDSA 448 pre-hash signature algorithm"
+  },
+  "supportedAlgorithms": {
+    "oid": "2.5.4.52",
+    "description": "X.520 DN component"
+  },
+  "supportedPublicKeyAlgorithms": {
+    "oid": "2.5.4.103",
+    "description": "X.520 DN component"
+  },
+  "rsa": {
+    "oid": "2.5.8.1.1",
+    "description": "X.500 algorithms.  Ambiguous, since no padding rules specified"
+  },
+  "sdnsSignatureAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.1",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "fortezzaSignatureAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.2",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicSignatureAlgorithm, this OID is better known as dsaWithSHA-1."
+  },
+  "sdnsConfidentialityAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.3",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "fortezzaConfidentialityAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.4",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicConfidentialityAlgorithm"
+  },
+  "sdnsIntegrityAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.5",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "fortezzaIntegrityAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.6",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicIntegrityAlgorithm"
+  },
+  "sdnsTokenProtectionAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.7",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "fortezzaTokenProtectionAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.8",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly know as mosaicTokenProtectionAlgorithm"
+  },
+  "sdnsKeyManagementAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.9",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "fortezzaKeyManagementAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.10",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicKeyManagementAlgorithm"
+  },
+  "sdnsKMandSigAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.11",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "fortezzaKMandSigAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.12",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicKMandSigAlgorithm"
+  },
+  "suiteASignatureAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.13",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "suiteAConfidentialityAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.14",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "suiteAIntegrityAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.15",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "suiteATokenProtectionAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.16",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "suiteAKeyManagementAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.17",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "suiteAKMandSigAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.18",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "fortezzaUpdatedSigAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.19",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicUpdatedSigAlgorithm"
+  },
+  "fortezzaKMandUpdSigAlgorithms": {
+    "oid": "2.16.840.1.101.2.1.1.20",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicKMandUpdSigAlgorithms"
+  },
+  "fortezzaUpdatedIntegAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.21",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicUpdatedIntegAlgorithm"
+  },
+  "keyExchangeAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.22",
+    "description": "SDN.700 INFOSEC algorithms.  Formerly known as mosaicKeyEncryptionAlgorithm"
+  },
+  "fortezzaWrap80Algorithm": {
+    "oid": "2.16.840.1.101.2.1.1.23",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "kEAKeyEncryptionAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.1.24",
+    "description": "SDN.700 INFOSEC algorithms"
+  },
+  "algorithmsSupported": {
+    "oid": "2.16.840.1.101.2.1.5.49",
+    "description": "SDN.700 INFOSEC attributes (obsolete)"
+  },
+  "kmaKeyAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.13.1",
+    "description": "SDN.700 INFOSEC attributes and RFC 7906"
+  },
+  "kmaKeyWrapAlgorithm": {
+    "oid": "2.16.840.1.101.2.1.13.21",
+    "description": "SDN.700 INFOSEC attributes and RFC 7906"
+  },
+  "nistAlgorithm": {
+    "oid": "2.16.840.1.101.3.4",
+    "description": "NIST Algorithm"
+  },
+  "aes": {
+    "oid": "2.16.840.1.101.3.4.1",
+    "description": "NIST Algorithm"
+  },
+  "aes128-ECB": {
+    "oid": "2.16.840.1.101.3.4.1.1",
+    "description": "NIST Algorithm"
+  },
+  "aes128-CBC": {
+    "oid": "2.16.840.1.101.3.4.1.2",
+    "description": "NIST Algorithm"
+  },
+  "aes128-OFB": {
+    "oid": "2.16.840.1.101.3.4.1.3",
+    "description": "NIST Algorithm"
+  },
+  "aes128-CFB": {
+    "oid": "2.16.840.1.101.3.4.1.4",
+    "description": "NIST Algorithm"
+  },
+  "aes128-wrap": {
+    "oid": "2.16.840.1.101.3.4.1.5",
+    "description": "NIST Algorithm"
+  },
+  "aes128-GCM": {
+    "oid": "2.16.840.1.101.3.4.1.6",
+    "description": "NIST Algorithm"
+  },
+  "aes128-CCM": {
+    "oid": "2.16.840.1.101.3.4.1.7",
+    "description": "NIST Algorithm"
+  },
+  "aes128-wrap-pad": {
+    "oid": "2.16.840.1.101.3.4.1.8",
+    "description": "NIST Algorithm"
+  },
+  "aes128-GMAC": {
+    "oid": "2.16.840.1.101.3.4.1.9",
+    "description": "NIST Algorithm"
+  },
+  "aes192-ECB": {
+    "oid": "2.16.840.1.101.3.4.1.21",
+    "description": "NIST Algorithm"
+  },
+  "aes192-CBC": {
+    "oid": "2.16.840.1.101.3.4.1.22",
+    "description": "NIST Algorithm"
+  },
+  "aes192-OFB": {
+    "oid": "2.16.840.1.101.3.4.1.23",
+    "description": "NIST Algorithm"
+  },
+  "aes192-CFB": {
+    "oid": "2.16.840.1.101.3.4.1.24",
+    "description": "NIST Algorithm"
+  },
+  "aes192-wrap": {
+    "oid": "2.16.840.1.101.3.4.1.25",
+    "description": "NIST Algorithm"
+  },
+  "aes192-GCM": {
+    "oid": "2.16.840.1.101.3.4.1.26",
+    "description": "NIST Algorithm"
+  },
+  "aes192-CCM": {
+    "oid": "2.16.840.1.101.3.4.1.27",
+    "description": "NIST Algorithm"
+  },
+  "aes192-wrap-pad": {
+    "oid": "2.16.840.1.101.3.4.1.28",
+    "description": "NIST Algorithm"
+  },
+  "aes192-GMAC": {
+    "oid": "2.16.840.1.101.3.4.1.29",
+    "description": "NIST Algorithm"
+  },
+  "aes256-ECB": {
+    "oid": "2.16.840.1.101.3.4.1.41",
+    "description": "NIST Algorithm"
+  },
+  "aes256-CBC": {
+    "oid": "2.16.840.1.101.3.4.1.42",
+    "description": "NIST Algorithm"
+  },
+  "aes256-OFB": {
+    "oid": "2.16.840.1.101.3.4.1.43",
+    "description": "NIST Algorithm"
+  },
+  "aes256-CFB": {
+    "oid": "2.16.840.1.101.3.4.1.44",
+    "description": "NIST Algorithm"
+  },
+  "aes256-wrap": {
+    "oid": "2.16.840.1.101.3.4.1.45",
+    "description": "NIST Algorithm"
+  },
+  "aes256-GCM": {
+    "oid": "2.16.840.1.101.3.4.1.46",
+    "description": "NIST Algorithm"
+  },
+  "aes256-CCM": {
+    "oid": "2.16.840.1.101.3.4.1.47",
+    "description": "NIST Algorithm"
+  },
+  "aes256-wrap-pad": {
+    "oid": "2.16.840.1.101.3.4.1.48",
+    "description": "NIST Algorithm"
+  },
+  "aes256-GMAC": {
+    "oid": "2.16.840.1.101.3.4.1.49",
+    "description": "NIST Algorithm"
+  },
+  "hashAlgos": {
+    "oid": "2.16.840.1.101.3.4.2",
+    "description": "NIST Algorithm"
+  },
+  "sha-256": {
+    "oid": "2.16.840.1.101.3.4.2.1",
+    "description": "NIST Algorithm"
+  },
+  "sha-384": {
+    "oid": "2.16.840.1.101.3.4.2.2",
+    "description": "NIST Algorithm"
+  },
+  "sha-512": {
+    "oid": "2.16.840.1.101.3.4.2.3",
+    "description": "NIST Algorithm"
+  },
+  "sha-224": {
+    "oid": "2.16.840.1.101.3.4.2.4",
+    "description": "NIST Algorithm"
+  },
+  "sha3-224": {
+    "oid": "2.16.840.1.101.3.4.2.7",
+    "description": "NIST Algorithm"
+  },
+  "sha3-256": {
+    "oid": "2.16.840.1.101.3.4.2.8",
+    "description": "NIST Algorithm"
+  },
+  "sha3-384": {
+    "oid": "2.16.840.1.101.3.4.2.9",
+    "description": "NIST Algorithm"
+  },
+  "sha3-512": {
+    "oid": "2.16.840.1.101.3.4.2.10",
+    "description": "NIST Algorithm"
+  },
+  "shake128": {
+    "oid": "2.16.840.1.101.3.4.2.11",
+    "description": "NIST Algorithm"
+  },
+  "shake256": {
+    "oid": "2.16.840.1.101.3.4.2.12",
+    "description": "NIST Algorithm"
+  },
+  "shake128len": {
+    "oid": "2.16.840.1.101.3.4.2.17",
+    "description": "NIST Algorithm"
+  },
+  "shake256len": {
+    "oid": "2.16.840.1.101.3.4.2.18",
+    "description": "NIST Algorithm"
+  },
+  "kmacShake128": {
+    "oid": "2.16.840.1.101.3.4.2.19",
+    "description": "NIST Algorithm"
+  },
+  "kmacShake256": {
+    "oid": "2.16.840.1.101.3.4.2.20",
+    "description": "NIST Algorithm"
+  },
+  "dsaWithSha224": {
+    "oid": "2.16.840.1.101.3.4.3.1",
+    "description": "NIST Algorithm"
+  },
+  "dsaWithSha256": {
+    "oid": "2.16.840.1.101.3.4.3.2",
+    "description": "NIST Algorithm"
+  },
+  "novellAlgorithm": {
+    "oid": "2.16.840.1.113719.1.2.8",
+    "description": "Novell"
+  },
+  "desCbcIV8": {
+    "oid": "2.16.840.1.113719.1.2.8.22",
+    "description": "Novell encryption algorithm"
+  },
+  "desCbcPadIV8": {
+    "oid": "2.16.840.1.113719.1.2.8.23",
+    "description": "Novell encryption algorithm"
+  },
+  "desEDE2CbcIV8": {
+    "oid": "2.16.840.1.113719.1.2.8.24",
+    "description": "Novell encryption algorithm"
+  },
+  "desEDE2CbcPadIV8": {
+    "oid": "2.16.840.1.113719.1.2.8.25",
+    "description": "Novell encryption algorithm"
+  },
+  "desEDE3CbcIV8": {
+    "oid": "2.16.840.1.113719.1.2.8.26",
+    "description": "Novell encryption algorithm"
+  },
+  "desEDE3CbcPadIV8": {
+    "oid": "2.16.840.1.113719.1.2.8.27",
+    "description": "Novell encryption algorithm"
+  },
+  "rc5CbcPad": {
+    "oid": "2.16.840.1.113719.1.2.8.28",
+    "description": "Novell encryption algorithm"
+  },
+  "md2WithRSAEncryptionBSafe1": {
+    "oid": "2.16.840.1.113719.1.2.8.29",
+    "description": "Novell signature algorithm"
+  },
+  "md5WithRSAEncryptionBSafe1": {
+    "oid": "2.16.840.1.113719.1.2.8.30",
+    "description": "Novell signature algorithm"
+  },
+  "sha1WithRSAEncryptionBSafe1": {
+    "oid": "2.16.840.1.113719.1.2.8.31",
+    "description": "Novell signature algorithm"
+  },
+  "lmDigest": {
+    "oid": "2.16.840.1.113719.1.2.8.32",
+    "description": "Novell digest algorithm"
+  },
+  "ikeHmacWithSHA1-RSA": {
+    "oid": "2.16.840.1.113719.1.2.8.51",
+    "description": "Novell signature algorithm"
+  },
+  "ikeHmacWithMD5-RSA": {
+    "oid": "2.16.840.1.113719.1.2.8.52",
+    "description": "Novell signature algorithm"
+  },
+  "rc2CbcPad": {
+    "oid": "2.16.840.1.113719.1.2.8.69",
+    "description": "Novell encryption algorithm"
+  },
+  "sha-1": {
+    "oid": "2.16.840.1.113719.1.2.8.82",
+    "description": "Novell digest algorithm"
+  },
+  "rc2BSafe1Cbc": {
+    "oid": "2.16.840.1.113719.1.2.8.92",
+    "description": "Novell encryption algorithm"
+  },
+  "rsaEncryptionBsafe1": {
+    "oid": "2.16.840.1.113719.1.2.8.131",
+    "description": "Novell encryption algorithm"
+  },
+  "nwPassword": {
+    "oid": "2.16.840.1.113719.1.2.8.132",
+    "description": "Novell encryption algorithm"
+  },
+  "novellObfuscate-1": {
+    "oid": "2.16.840.1.113719.1.2.8.133",
+    "description": "Novell encryption algorithm"
+  },
+  "FRP256v1": {
+    "oid": "1.2.250.1.223.101.256.1",
+    "description": "Agence nationale de la sécurité des systèmes d'information: Publication d'un paramétrage de courbe elliptique visant des applications de passeport électronique et de l'administration électronique française. 21 November 2011"
+  },
+  "brainpoolP160r1": {
+    "oid": "1.3.36.3.3.2.8.1.1.1",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP160t1": {
+    "oid": "1.3.36.3.3.2.8.1.1.2",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP192r1": {
+    "oid": "1.3.36.3.3.2.8.1.1.3",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP192t1": {
+    "oid": "1.3.36.3.3.2.8.1.1.4",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP224r1": {
+    "oid": "1.3.36.3.3.2.8.1.1.5",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP224t1": {
+    "oid": "1.3.36.3.3.2.8.1.1.6",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP256r1": {
+    "oid": "1.3.36.3.3.2.8.1.1.7",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP256t1": {
+    "oid": "1.3.36.3.3.2.8.1.1.8",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP320r1": {
+    "oid": "1.3.36.3.3.2.8.1.1.9",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP320t1": {
+    "oid": "1.3.36.3.3.2.8.1.1.10",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP384r1": {
+    "oid": "1.3.36.3.3.2.8.1.1.11",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP384t1": {
+    "oid": "1.3.36.3.3.2.8.1.1.12",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP512r1": {
+    "oid": "1.3.36.3.3.2.8.1.1.13",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "brainpoolP512t1": {
+    "oid": "1.3.36.3.3.2.8.1.1.14",
+    "description": "ECC Brainpool Standard Curves and Curve Generation v. 1.0  19.10.2005"
+  },
+  "P-192": {
+    "oid": "1.2.840.10045.3.1.1",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "P-224": {
+    "oid": "1.3.132.0.33",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "P-256": {
+    "oid": "1.2.840.10045.3.1.7",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "P-384": {
+    "oid": "1.3.132.0.34",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "P-521": {
+    "oid": "1.3.132.0.35",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "K-163": {
+    "oid": "1.3.132.0.1",
+    "description": "Koblitz curve."
+  },
+  "B-163": {
+    "oid": "1.3.132.0.15",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "K-233": {
+    "oid": "1.3.132.0.26",
+    "description": "Koblitz curve."
+  },
+  "B-233": {
+    "oid": "1.3.132.0.27",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "K-283": {
+    "oid": "1.3.132.0.16",
+    "description": "Koblitz curve."
+  },
+  "B-283": {
+    "oid": "1.3.132.0.17",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "K-409": {
+    "oid": "1.3.132.0.36",
+    "description": "Koblitz curve."
+  },
+  "B-409": {
+    "oid": "1.3.132.0.37",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "K-571": {
+    "oid": "1.3.132.0.38",
+    "description": "Koblitz curve."
+  },
+  "B-571": {
+    "oid": "1.3.132.0.39",
+    "description": "RECOMMENDED ELLIPTIC CURVES FOR FEDERAL GOVERNMENT USE  July 1999"
+  },
+  "SM2": {
+    "oid": "1.2.156.10197.1.301",
+    "description": "http://gmssl.org/english.html"
+  },
+  "secp112r1": {
+    "oid": "1.3.132.0.6",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp112r2": {
+    "oid": "1.3.132.0.7",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp128r1": {
+    "oid": "1.3.132.0.28",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp128r2": {
+    "oid": "1.3.132.0.29",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp160k1": {
+    "oid": "1.3.132.0.9",
+    "description": "A Koblitz curve."
+  },
+  "secp160r1": {
+    "oid": "1.3.132.0.8",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp160r2": {
+    "oid": "1.3.132.0.30",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp192k1": {
+    "oid": "1.3.132.0.31",
+    "description": "A Koblitz curve."
+  },
+  "secp192r1": {
+    "oid": "1.2.840.10045.3.1.1",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp224k1": {
+    "oid": "1.3.132.0.32",
+    "description": "A Koblitz curve."
+  },
+  "secp224r1": {
+    "oid": "1.3.132.0.33",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp256k1": {
+    "oid": "1.3.132.0.10",
+    "description": "A Koblitz curve."
+  },
+  "secp256r1": {
+    "oid": "1.2.840.10045.3.1.7",
+    "description": "A randomly generated curve. [SEC2v1](https://www.secg.org/SEC2-Ver-1.0.pdf) states 'E was chosen verifiably at random as specified in ANSI X9.62 [1] from the seed'."
+  },
+  "secp384r1": {
+    "oid": "1.3.132.0.34",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "secp521r1": {
+    "oid": "1.3.132.0.35",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect113r1": {
+    "oid": "1.3.132.0.4",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect113r2": {
+    "oid": "1.3.132.0.5",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect131r1": {
+    "oid": "1.3.132.0.22",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect131r2": {
+    "oid": "1.3.132.0.23",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect163k1": {
+    "oid": "1.3.132.0.1",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect163r1": {
+    "oid": "1.3.132.0.2",
+    "description": "A randomly generated curve, using the SECG/X9.62 method. 'However for historical reasons the method used to generate E from S differs slightly from the method described in ANSI X9.62 [X9.62]. Specifically the coefficient b produced from S is the reverse of the coefficient that would have been produced by the method described in ANSI X9.62.'"
+  },
+  "sect163r2": {
+    "oid": "1.3.132.0.15",
+    "description": "A randomly generated curve. 'E was selected from S as specified in ANSI X9.62 [X9.62] in normal basis representation and converted into polynomial basis representation.'"
+  },
+  "sect193r1": {
+    "oid": "1.3.132.0.24",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect193r2": {
+    "oid": "1.3.132.0.25",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect233k1": {
+    "oid": "1.3.132.0.26",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect233r1": {
+    "oid": "1.3.132.0.27",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect239k1": {
+    "oid": "1.3.132.0.3",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect283k1": {
+    "oid": "1.3.132.0.16",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect283r1": {
+    "oid": "1.3.132.0.17",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect409k1": {
+    "oid": "1.3.132.0.36",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect409r1": {
+    "oid": "1.3.132.0.37",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect571k1": {
+    "oid": "1.3.132.0.38",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "sect571r1": {
+    "oid": "1.3.132.0.39",
+    "description": "SEC 2: Recommended Elliptic Curve Domain Parameters version 2.0  January 27, 2010"
+  },
+  "wap-wsg-idm-ecid-wtls1": {
+    "oid": "2.23.43.1.4.1",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls3": {
+    "oid": "2.23.43.1.4.3",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls4": {
+    "oid": "2.23.43.1.4.4",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls5": {
+    "oid": "2.23.43.1.4.5",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls6": {
+    "oid": "2.23.43.1.4.6",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls7": {
+    "oid": "2.23.43.1.4.7",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls8": {
+    "oid": "2.23.43.1.4.8",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls9": {
+    "oid": "2.23.43.1.4.9",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls10": {
+    "oid": "2.23.43.1.4.10",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls11": {
+    "oid": "2.23.43.1.4.11",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "wap-wsg-idm-ecid-wtls12": {
+    "oid": "2.23.43.1.4.12",
+    "description": "Wireless Application Protocol - Wireless Transport Layer Security (WAP-WTLS) curves: <https://www.wapforum.org/tech/documents/WAP-199-WTLS-20000218-a.pdf>"
+  },
+  "prime192v1": {
+    "oid": "1.2.840.10045.3.1.1",
+    "description": "ANSI x9.62 example curves."
+  },
+  "prime192v2": {
+    "oid": "1.2.840.10045.3.1.2",
+    "description": "ANSI x9.62 example curves."
+  },
+  "prime192v3": {
+    "oid": "1.2.840.10045.3.1.3",
+    "description": "ANSI x9.62 example curves."
+  },
+  "prime239v1": {
+    "oid": "1.2.840.10045.3.1.4",
+    "description": "ANSI x9.62 example curves."
+  },
+  "prime239v2": {
+    "oid": "1.2.840.10045.3.1.5",
+    "description": "ANSI x9.62 example curves."
+  },
+  "prime239v3": {
+    "oid": "1.2.840.10045.3.1.6",
+    "description": "ANSI x9.62 example curves."
+  },
+  "prime256v1": {
+    "oid": "1.2.840.10045.3.1.7",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb176w1": {
+    "oid": "1.2.840.10045.3.0.4",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb163v1": {
+    "oid": "1.2.840.10045.3.0.1",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb163v2": {
+    "oid": "1.2.840.10045.3.0.2",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb163v3": {
+    "oid": "1.2.840.10045.3.0.3",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb208w1": {
+    "oid": "1.2.840.10045.3.0.10",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb191v3": {
+    "oid": "1.2.840.10045.3.0.7",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb191v2": {
+    "oid": "1.2.840.10045.3.0.6",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb191v1": {
+    "oid": "1.2.840.10045.3.0.5",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb239v3": {
+    "oid": "1.2.840.10045.3.0.13",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb239v2": {
+    "oid": "1.2.840.10045.3.0.12",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb239v1": {
+    "oid": "1.2.840.10045.3.0.11",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb272w1": {
+    "oid": "1.2.840.10045.3.0.16",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb304w1": {
+    "oid": "1.2.840.10045.3.0.17",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2pnb368w1": {
+    "oid": "1.2.840.10045.3.0.19",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb359v1": {
+    "oid": "1.2.840.10045.3.0.18",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2tnb431r1": {
+    "oid": "1.2.840.10045.3.0.20",
+    "description": "ANSI x9.62 example curves."
+  },
+  "c2onb191v4": {
+    "oid": "1.2.840.10045.3.0.8",
+    "description": "A binary-field curve in optimal normal basis"
+  },
+  "c2onb191v5": {
+    "oid": "1.2.840.10045.3.0.9",
+    "description": "A binary-field curve in optimal normal basis"
+  },
+  "c2onb239v4": {
+    "oid": "1.2.840.10045.3.0.14",
+    "description": "A binary-field curve in optimal normal basis"
+  },
+  "c2onb239v5": {
+    "oid": "1.2.840.10045.3.0.15",
+    "description": "A binary-field curve in optimal normal basis"
+  },
+  "ansit163k1": {
+    "oid": "1.3.132.0.1",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit163r1": {
+    "oid": "1.3.132.0.2",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit163r2": {
+    "oid": "1.3.132.0.15",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit193r1": {
+    "oid": "1.3.132.0.24",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit193r2": {
+    "oid": "1.3.132.0.25",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit233k1": {
+    "oid": "1.3.132.0.26",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit233r1": {
+    "oid": "1.3.132.0.27",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit239k1": {
+    "oid": "1.3.132.0.3",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit283k1": {
+    "oid": "1.3.132.0.16",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit283r1": {
+    "oid": "1.3.132.0.17",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit409k1": {
+    "oid": "1.3.132.0.36",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit409r1": {
+    "oid": "1.3.132.0.37",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit571k1": {
+    "oid": "1.3.132.0.38",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansit571r1": {
+    "oid": "1.3.132.0.39",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip160k1": {
+    "oid": "1.3.132.0.9",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip160r1": {
+    "oid": "1.3.132.0.8",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip160r2": {
+    "oid": "1.3.132.0.30",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip192k1": {
+    "oid": "1.3.132.0.31",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip224k1": {
+    "oid": "1.3.132.0.32",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip224r1": {
+    "oid": "1.3.132.0.33",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip256k1": {
+    "oid": "1.3.132.0.10",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip384r1": {
+    "oid": "1.3.132.0.34",
+    "description": "ANSI x9.63 example curves."
+  },
+  "ansip521r1": {
+    "oid": "1.3.132.0.35",
+    "description": "ANSI x9.63 example curves."
+  },
+  "sha256WithRSAEncryption": {
+    "oid": "1.2.840.113549.1.1.11",
+    "description": "Secure Hash Algorithm 256 (SHA256) with Rivest, Shamir and Adleman (RSA) encryption"
+  },
+  "pkcs-1": {
+    "oid": "1.2.840.113549.1.1",
+    "description": "PKCS#1 (Public-Key Cryptography Standards #1)"
+  },
+  "sm6_ecb": {
+    "oid": "1.2.156.10197.1.101.1",
+    "description": "Chinese Cryptography Standardization Technology Committee (CCSTC)"
+  },
+  "sm1_ecb": {
+    "oid": "1.2.156.10197.1.102.1",
+    "description": "Chinese Cryptography Standardization Technology Committee (CCSTC)"
+  },
+  "ssf33_ecb": {
+    "oid": "1.2.156.10197.1.103.1",
+    "description": "Chinese Cryptography Standardization Technology Committee (CCSTC)"
+  },
+  "sms4_ecb": {
+    "oid": "1.2.156.10197.1.104.1",
+    "description": "Chinese Cryptography Standardization Technology Committee (CCSTC)"
+  },
+  "sm2encrypt": {
+    "oid": "1.2.156.10197.1.301.3",
+    "description": "Chinese Cryptography Standardization Technology Committee (CCSTC)"
+  },
+  "sm2sign_with_": {
+    "oid": "1.2.156.10197.1.501",
+    "description": "Chinese Cryptography Standardization Technology Committee (CCSTC)"
+  }
+}
