@@ -4820,17 +4820,34 @@ export function parseCargoDependencyData(cargoLockData) {
     }
     return {
       ref: purlFromPackageInfo(pkg),
-      dependsOn: pkg.dependencies.map((dependency) => {
-        // If the package has a dependency with a specific version, it needs
-        // to be respected.
-        if (dependency.version) {
-          return purlFromPackageInfo(dependency);
-        }
+      dependsOn: pkg.dependencies
+        .map((dependency) => {
+          // If the package has a dependency with a specific version, it needs
+          // to be respected.
+          if (dependency.version) {
+            return purlFromPackageInfo(dependency);
+          }
 
-        // If no version was specified for the dependency, default to the
-        // version known from the package table.
-        return purlFromPackageInfo(lockfileInventory[dependency.name]);
-      })
+          if (!lockfileInventory[dependency.name]) {
+            // We have found a package listed as a dependency that does not
+            // appear as a package in the Cargo.lock-file. This is an error!
+            // If this happens, the Cargo.lock-file is incomplete and have
+            // most likely been manually tampered with. Add a warning to
+            // signal to the user that the file is invalid, skip the package,
+            // and continue.
+            if (DEBUG_MODE) {
+              console.warn(
+                `The package "${dependency.name}" appears as a dependency to "${pkg.name}" but is not itself listed in the Cargo.lock-file. The Cargo.lock-file is invalid! The produced SBOM will not list ${dependency.name} as a dependency.`
+              );
+            }
+            return undefined;
+          }
+
+          // If no version was specified for the dependency, default to the
+          // version known from the package table.
+          return purlFromPackageInfo(lockfileInventory[dependency.name]);
+        })
+        .filter((pkg) => pkg) // Filter undefined entries, which should only happen when packages listed as a dependency are not defined as packages.
     };
   });
 }
