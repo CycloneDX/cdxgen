@@ -120,15 +120,51 @@ export const validatePurls = (bomJson) => {
   const warningsList = [];
   if (bomJson && bomJson.components) {
     for (const comp of bomJson.components) {
-      try {
-        const purlObj = PackageURL.fromString(comp.purl);
-        if (purlObj.type && purlObj.type !== purlObj.type.toLowerCase()) {
-          warningsList.push(
-            `purl type is not normalized to lower case ${comp.purl}`
+      if (comp.type === "cryptographic-asset") {
+        if (comp.purl && comp.purl.length) {
+          errorList.push(
+            `purl should not be defined for cryptographic-asset ${comp.purl}`
           );
         }
-      } catch (ex) {
-        errorList.push(`Invalid purl ${comp.purl}`);
+        if (!comp.cryptoProperties) {
+          errorList.push(
+            `cryptoProperties is missing for cryptographic-asset ${comp.purl}`
+          );
+        } else if (
+          comp.cryptoProperties.assetType === "algorithm" &&
+          !comp.cryptoProperties.oid
+        ) {
+          errorList.push(
+            `cryptoProperties.oid is missing for cryptographic-asset of type algorithm ${comp.purl}`
+          );
+        } else if (
+          comp.cryptoProperties.assetType === "certificate" &&
+          !comp.cryptoProperties.algorithmProperties
+        ) {
+          errorList.push(
+            `cryptoProperties.algorithmProperties is missing for cryptographic-asset of type certificate ${comp.purl}`
+          );
+        }
+      } else {
+        try {
+          const purlObj = PackageURL.fromString(comp.purl);
+          if (purlObj.type && purlObj.type !== purlObj.type.toLowerCase()) {
+            warningsList.push(
+              `purl type is not normalized to lower case ${comp.purl}`
+            );
+          }
+          if (
+            ["npm", "golang"].includes(purlObj.type) &&
+            purlObj.name.includes("%2F") &&
+            !purlObj.namespace
+          ) {
+            errorList.push(
+              `purl does not include namespace but includes encoded slash in name for npm type. ${comp.purl}`
+            );
+          }
+        } catch (ex) {
+          errorList.push(`Invalid purl ${comp.purl}`);
+        }
       }
     }
   }
@@ -189,6 +225,13 @@ export const validateRefs = (bomJson) => {
       for (const don of dep.dependsOn) {
         if (!refMap[don]) {
           warningsList.push(`Invalid ref in dependencies.dependsOn ${don}`);
+        }
+      }
+      if (dep.provides) {
+        for (const don of dep.provides) {
+          if (!refMap[don]) {
+            warningsList.push(`Invalid ref in dependencies.provides ${don}`);
+          }
         }
       }
     }

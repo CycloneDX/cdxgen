@@ -683,7 +683,9 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
         options.projectVersion || node.version,
         null,
         null
-      ).toString();
+      )
+        .toString()
+        .replace(/%2F/g, "/");
       pkg = {
         author: authorString,
         group: options.projectGroup || "",
@@ -701,7 +703,9 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
         node.version,
         null,
         null
-      ).toString();
+      )
+        .toString()
+        .replace(/%2F/g, "/");
       const pkgLockFile = join(
         srcFilePath.replace("/", _sep),
         "package-lock.json"
@@ -774,7 +778,9 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
             workspaceNode.version,
             null,
             null
-          ).toString()
+          )
+            .toString()
+            .replace(/%2F/g, "/")
         );
         if (decodeURIComponent(purlString) !== depWorkspacePurlString) {
           workspaceDependsOn.push(depWorkspacePurlString);
@@ -807,7 +813,9 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
             childNode.version,
             null,
             null
-          ).toString()
+          )
+            .toString()
+            .replace(/%2F/g, "/")
         );
         if (decodeURIComponent(purlString) !== depChildString) {
           childrenDependsOn.push(depChildString);
@@ -882,14 +890,9 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
         continue;
       }
       const depPurlString = decodeURIComponent(
-        new PackageURL(
-          "npm",
-          "",
-          targetName,
-          targetVersion,
-          null,
-          null
-        ).toString()
+        new PackageURL("npm", "", targetName, targetVersion, null, null)
+          .toString()
+          .replace(/%2F/g, "/")
       );
       if (decodeURIComponent(purlString) !== depPurlString) {
         pkgDependsOn.push(depPurlString);
@@ -3634,7 +3637,10 @@ export async function getGoPkgComponent(group, name, version, hash) {
       name: name
     });
   }
-  const purlString = new PackageURL("golang", group, name, version).toString();
+  // By replacing %2F with /, we make the purl compatible with the spec.
+  const purlString = new PackageURL("golang", group, name, version)
+    .toString()
+    .replace(/%2F/g, "/");
   pkg = {
     group: group,
     name: name,
@@ -4092,7 +4098,9 @@ export async function getRubyGemsMetadata(pkgList) {
         console.log(`Querying rubygems.org for ${p.name}`);
       }
       const fullUrl = p.version
-        ? `${RUBYGEMS_V2_URL}${p.name}/versions/${simplifyRubyVersion(p.version)}.json`
+        ? `${RUBYGEMS_V2_URL}${p.name}/versions/${simplifyRubyVersion(
+            p.version
+          )}.json`
         : `${RUBYGEMS_V1_URL}${p.name}.json`;
       const res = await cdxgenAgent.get(fullUrl, apiOptions);
       let body = res.body;
@@ -7390,7 +7398,7 @@ export function getPomPropertiesFromMavenDir(mavenDir) {
  * @param {string} path path to file
  * @returns {Promise<String>} hex value of hash
  */
-function checksumFile(hashName, path) {
+export function checksumFile(hashName, path) {
   return new Promise((resolve, reject) => {
     const hash = createHash(hashName);
     const stream = createReadStream(path);

@@ -369,6 +369,18 @@ jobs:
           cd ..
           bin/cdxgen.js -p -t go --lifecycle post-build -o bomresults/bom-go-binary.json gobintests
         shell: bash
+      - name: repotests 1.6
+        run: |
+          bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/1.6-bom-java.json --generate-key-and-sign --spec-version 1.6
+          SBOM_SIGN_ALGORITHM=RS512 SBOM_SIGN_PRIVATE_KEY=bomresults/private.key SBOM_SIGN_PUBLIC_KEY=bomresults/public.key bin/cdxgen.js -p -r -t github repotests/shiftleft-java-example -o bomresults/1.6-bom-github.json --spec-version 1.6
+          FETCH_LICENSE=0 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example -o bomresults/1.6-bom-ts-1.json --validate --spec-version 1.6
+          FETCH_LICENSE=1 bin/cdxgen.js -p -r -t js repotests/shiftleft-ts-example --required-only -o bomresults/1.6-bom-ts-2.json --validate --spec-version 1.6
+          FETCH_LICENSE=false bin/cdxgen.js -p -r -t go repotests/shiftleft-go-example -o bomresults/1.6-bom-go.json --validate --spec-version 1.6
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t csharp repotests/vulnerable_net_core -o bomresults/1.6-bom-csharp2.json --validate --spec-version 1.6
+          FETCH_LICENSE=false bin/cdxgen.js -p -r repotests/Goatly.NET -o bomresults/1.6-bom-csharp3.json --validate --spec-version 1.6
+          FETCH_LICENSE=true bin/cdxgen.js -p -r -t python repotests/DjanGoat -o bomresults/1.6-bom-python.json --validate --spec-version 1.6
+          bin/cdxgen.js -p -r -t php repotests/Vulnerable-Web-Application -o bomresults/1.6-bom-php.json --validate --spec-version 1.6
+        shell: bash
       - name: repotests 1.4
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/1.4-bom-java.json --generate-key-and-sign --spec-version 1.4

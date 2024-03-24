@@ -7,6 +7,7 @@ import {
   getGradleCommand,
   getMavenCommand
 } from "./utils.js";
+import { findCryptoAlgos } from "./cbomutils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import fs from "node:fs";
@@ -342,11 +343,13 @@ export const analyzeProject = async (dbObjMap, options) => {
   const bomFile = options.input;
   const bomJson = JSON.parse(fs.readFileSync(bomFile, "utf8"));
   const components = bomJson.components || [];
+  let cryptoComponents = [];
+  let cryptoGeneratePurls = {};
   // Load any existing purl-location information from the sbom.
   // For eg: cdxgen populates this information for javascript projects
   let { purlLocationMap, purlImportsMap } = initFromSbom(components, language);
   // Do reachables first so that usages slicing can reuse the atom file
-  if (options.withReachables) {
+  if (options.withReachables || options.includeCrypto) {
     if (
       options.reachablesSlicesFile &&
       fs.existsSync(options.reachablesSlicesFile)
@@ -366,7 +369,10 @@ export const analyzeProject = async (dbObjMap, options) => {
     }
   }
   if (reachablesSlice && Object.keys(reachablesSlice).length) {
-    dataFlowFrames = await collectReachableFrames(language, reachablesSlice);
+    const retMap = collectReachableFrames(language, reachablesSlice);
+    dataFlowFrames = retMap.dataFlowFrames;
+    cryptoComponents = retMap.cryptoComponents;
+    cryptoGeneratePurls = retMap.cryptoGeneratePurls;
   }
   // Reuse existing usages slices
   if (options.usagesSlicesFile && fs.existsSync(options.usagesSlicesFile)) {
@@ -429,7 +435,9 @@ export const analyzeProject = async (dbObjMap, options) => {
     servicesMap,
     dataFlowFrames,
     tempDir: retMap.tempDir,
-    userDefinedTypesMap
+    userDefinedTypesMap,
+    cryptoComponents,
+    cryptoGeneratePurls
   };
 };
 
@@ -979,7 +987,9 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     reachablesSlicesFile,
     purlLocationMap,
     servicesMap,
-    dataFlowFrames
+    dataFlowFrames,
+    cryptoComponents,
+    cryptoGeneratePurls
   } = sliceArtefacts;
   const bomFile = options.input;
   const evinseOutFile = options.output;
@@ -1022,6 +1032,14 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         csEvidencePresent = true;
       }
     }
+    // Add crypto tags if this purl offers any generation algorithm
+    if (
+      cryptoGeneratePurls &&
+      cryptoGeneratePurls[comp.purl] &&
+      Array.from(cryptoGeneratePurls[comp.purl]).length
+    ) {
+      comp.tags = ["crypto", "crypto-generate"];
+    }
   } // for
   if (servicesMap && Object.keys(servicesMap).length) {
     const services = [];
@@ -1036,6 +1054,28 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     // Add to existing services
     bomJson.services = (bomJson.services || []).concat(services);
     servicesPresent = true;
+  }
+  // Add the crypto components to the components list
+  if (cryptoComponents && cryptoComponents.length) {
+    bomJson.components = bomJson.components.concat(cryptoComponents);
+  }
+  // Fix the dependencies section with provides information
+  if (
+    cryptoGeneratePurls &&
+    Object.keys(cryptoGeneratePurls).length &&
+    bomJson.dependencies
+  ) {
+    const newDependencies = [];
+    for (const depObj of bomJson.dependencies) {
+      if (depObj.ref && cryptoGeneratePurls[depObj.ref]) {
+        const providedAlgos = Array.from(cryptoGeneratePurls[depObj.ref]);
+        if (providedAlgos.length) {
+          depObj.provides = providedAlgos;
+        }
+      }
+      newDependencies.push(depObj);
+    }
+    bomJson.dependencies = newDependencies;
   }
   if (options.annotate) {
     if (!bomJson.annotations) {
@@ -1213,7 +1253,8 @@ export const collectDataFlowFrames = async (
 };
 
 /**
- * Method to convert reachable slice into usable callstack frames
+ * Method to convert reachable slice into usable callstack frames and crypto components
+ *
  * Implemented based on the logic proposed here - https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#data-flow-slice
  *
  * @param {string} language Application language
@@ -1225,10 +1266,29 @@ export const collectReachableFrames = (language, reachablesSlice) => {
   // CycloneDX 1.5 currently accepts only 1 frame as evidence
   // so this method is more future-proof
   const dfFrames = {};
+  const cryptoComponentsMap = {};
+  // Track purls which provide the specific generate algorithm
+  const cryptoGeneratePurls = {};
   for (const anode of reachableNodes) {
     const aframe = [];
     let referredPurls = new Set(anode.purls || []);
+    let isCryptoFlow = false;
+    let codeSnippets = "";
+    let cpurls = [];
     for (const fnode of anode.flows) {
+      const tagStr = fnode.tags || "";
+      if (tagStr.includes("crypto")) {
+        isCryptoFlow = true;
+      }
+      if (tagStr.includes("crypto-generate")) {
+        cpurls = tagStr.split(", ").filter((t) => t.startsWith("pkg:"));
+        for (const cpurl of cpurls) {
+          cryptoGeneratePurls[cpurl] = new Set();
+        }
+      }
+      if (isCryptoFlow && fnode.code) {
+        codeSnippets = codeSnippets + "\\n" + fnode.code;
+      }
       if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
         continue;
       }
@@ -1251,8 +1311,36 @@ export const collectReachableFrames = (language, reachablesSlice) => {
         dfFrames[apurl].push(aframe);
       }
     }
+    // Detect crypto algorithms used in a crypto flow
+    if (isCryptoFlow && codeSnippets.length) {
+      const cryptoAlgos = findCryptoAlgos(codeSnippets);
+      for (const algo of cryptoAlgos) {
+        cryptoComponentsMap[algo.ref] = algo;
+        for (const cpurl of cpurls) {
+          cryptoGeneratePurls[cpurl].add(algo.ref);
+        }
+      }
+    }
   }
-  return dfFrames;
+  const cryptoComponents = [];
+  for (const cref of Object.keys(cryptoComponentsMap)) {
+    const algoObj = cryptoComponentsMap[cref];
+    cryptoComponents.push({
+      type: "cryptographic-asset",
+      name: algoObj.name,
+      "bom-ref": algoObj.ref,
+      description: algoObj.description || "",
+      cryptoProperties: {
+        assetType: "algorithm",
+        oid: algoObj.oid
+      }
+    });
+  }
+  return {
+    dataFlowFrames: dfFrames,
+    cryptoComponents,
+    cryptoGeneratePurls
+  };
 };
 
 /**

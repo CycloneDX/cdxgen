@@ -705,13 +705,13 @@ test("parseGoModData", async () => {
     version: "v1.38.47",
     _integrity: "sha256-fake-sha-for-aws-go-sdk=",
     "bom-ref": "pkg:golang/github.com/aws/aws-sdk-go@v1.38.47",
-    purl: "pkg:golang/github.com%2Faws%2Faws-sdk-go@v1.38.47"
+    purl: "pkg:golang/github.com/aws/aws-sdk-go@v1.38.47"
   });
   expect(dep_list[1]).toEqual({
     group: "",
     name: "github.com/spf13/cobra",
     "bom-ref": "pkg:golang/github.com/spf13/cobra@v1.0.0",
-    purl: "pkg:golang/github.com%2Fspf13%2Fcobra@v1.0.0",
+    purl: "pkg:golang/github.com/spf13/cobra@v1.0.0",
     license: undefined,
     version: "v1.0.0",
     _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE="
@@ -720,7 +720,7 @@ test("parseGoModData", async () => {
     group: "",
     name: "google.golang.org/grpc",
     "bom-ref": "pkg:golang/google.golang.org/grpc@v1.21.0",
-    purl: "pkg:golang/google.golang.org%2Fgrpc@v1.21.0",
+    purl: "pkg:golang/google.golang.org/grpc@v1.21.0",
     license: undefined,
     version: "v1.21.0",
     _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM="
@@ -729,7 +729,7 @@ test("parseGoModData", async () => {
     group: "",
     name: "github.com/spf13/viper",
     "bom-ref": "pkg:golang/github.com/spf13/viper@v1.0.2",
-    purl: "pkg:golang/github.com%2Fspf13%2Fviper@v1.0.2",
+    purl: "pkg:golang/github.com/spf13/viper@v1.0.2",
     license: undefined,
     version: "v1.0.2",
     _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM="
@@ -789,7 +789,7 @@ test("parse go list dependencies", async () => {
     group: "",
     name: "github.com/gorilla/mux",
     "bom-ref": "pkg:golang/github.com/gorilla/mux@v1.7.4",
-    purl: "pkg:golang/github.com%2Fgorilla%2Fmux@v1.7.4",
+    purl: "pkg:golang/github.com/gorilla/mux@v1.7.4",
     version: "v1.7.4",
     _integrity: undefined,
     license: undefined,
@@ -818,7 +818,7 @@ test("parse go mod graph", async () => {
     group: "",
     name: "github.com/sqreen/go-dvwa",
     version: null,
-    purl: "pkg:golang/github.com%2Fsqreen%2Fgo-dvwa",
+    purl: "pkg:golang/github.com/sqreen/go-dvwa",
     "bom-ref": "pkg:golang/github.com/sqreen/go-dvwa",
     evidence: {
       identity: {
@@ -877,7 +877,7 @@ test("parse go version data", async () => {
     name: "github.com/ShiftLeftSecurity/atlassian-connect-go",
     "bom-ref":
       "pkg:golang/github.com/ShiftLeftSecurity/atlassian-connect-go@v0.0.2",
-    purl: "pkg:golang/github.com%2FShiftLeftSecurity%2Fatlassian-connect-go@v0.0.2",
+    purl: "pkg:golang/github.com/ShiftLeftSecurity/atlassian-connect-go@v0.0.2",
     version: "v0.0.2",
     _integrity: "",
     license: undefined
@@ -891,7 +891,7 @@ test("parse go version data", async () => {
     group: "",
     name: "cloud.google.com/go",
     "bom-ref": "pkg:golang/cloud.google.com/go@v0.79.0",
-    purl: "pkg:golang/cloud.google.com%2Fgo@v0.79.0",
+    purl: "pkg:golang/cloud.google.com/go@v0.79.0",
     version: "v0.79.0",
     _integrity: "sha256-oqqswrt4x6b9OGBnNqdssxBl1xf0rSUNjU2BR4BZar0=",
     license: undefined
