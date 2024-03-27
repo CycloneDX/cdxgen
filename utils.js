@@ -825,19 +825,25 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
       // which isn't installed
       // Bug #795. At times, npm loses the integrity node completely and such packages are getting missed out
       // To keep things safe, we include these packages.
-      const edgeToIntegrity = edge.to ? edge.to.integrity : undefined;
-      if (!edgeToIntegrity) {
+      let edgeToIntegrityOrLocation = edge.to ? edge.to.integrity : undefined;
+      // Fallback to location based lookups when integrity is missing
+      if (!edgeToIntegrityOrLocation && edge.to && edge.to.location) {
+        edgeToIntegrityOrLocation = edge.to.location;
+      }
+      if (!edgeToIntegrityOrLocation) {
         // This hack is required to fix the package name
-        targetName = node.name.replace(/-cjs$/, "");
-        targetVersion = node.version;
-        foundMatch = true;
+        targetName = edge.name.replace(/-cjs$/, "");
+        foundMatch = false;
       } else {
         // the edges don't actually contain a version, so we need to search the root node
         // children to find the correct version. we check the node children first, then
         // we check the root node children
         for (const child of node.children) {
-          if (edgeToIntegrity) {
-            if (child[1].integrity == edgeToIntegrity) {
+          if (edgeToIntegrityOrLocation) {
+            if (
+              child[1].integrity === edgeToIntegrityOrLocation ||
+              child[1].location === edgeToIntegrityOrLocation
+            ) {
               targetName = child[0].replace(/node_modules\//g, "");
               // The package name could be different from the targetName retrieved
               // Eg: "string-width-cjs": "npm:string-width@^4.2.0",
@@ -853,7 +859,11 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
       }
       if (!foundMatch) {
         for (const child of rootNode.children) {
-          if (child[1].integrity == edgeToIntegrity) {
+          if (
+            edgeToIntegrityOrLocation &&
+            (child[1].integrity == edgeToIntegrityOrLocation ||
+              child[1].location == edgeToIntegrityOrLocation)
+          ) {
             targetName = child[0].replace(/node_modules\//g, "");
             targetVersion = child[1].version;
             // The package name could be different from the targetName retrieved
@@ -897,7 +907,6 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
       pkgList = pkgList.concat(childPkgList);
       dependenciesList = dependenciesList.concat(childDependenciesList);
     }
-
     dependenciesList.push({
       ref: decodeURIComponent(purlString),
       dependsOn: workspaceDependsOn
@@ -6025,7 +6034,8 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
       if (libData.dependencies) {
         for (const adep of Object.keys(libData.dependencies)) {
           // get the resolved version of the dependency
-          let adepResolvedVersion = assetData.dependencies[aversion][adep].resolved;
+          const adepResolvedVersion =
+            assetData.dependencies[aversion][adep].resolved;
 
           const adpurl = new PackageURL(
             "nuget",
