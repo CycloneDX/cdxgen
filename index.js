@@ -61,6 +61,7 @@ import {
   parseCabalData,
   parseCargoAuditableData,
   parseCargoData,
+  parseCargoDependencyData,
   parseCargoTomlData,
   parseCljDep,
   parseCloudBuildData,
@@ -2983,6 +2984,7 @@ export async function createRustBom(path, options) {
     (options.multiProject ? "**/" : "") + "Cargo.lock",
     options
   );
+  let dependencyTree = [];
   if (cargoLockFiles.length) {
     for (const f of cargoLockFiles) {
       if (DEBUG_MODE) {
@@ -2993,10 +2995,35 @@ export async function createRustBom(path, options) {
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
+
+      if (DEBUG_MODE) {
+        console.log(`Constructing dependency tree from ${f}`);
+      }
+      const fileDependencylist = parseCargoDependencyData(cargoData);
+      if (fileDependencylist && fileDependencylist.length) {
+        dependencyTree = dependencyTree.concat(fileDependencylist);
+      }
     }
+
+    // Dependencies from multiple Cargo.lock files may have an overlap in
+    // dependencies. So the dependency tree may have duplicates which needs
+    // to be removed.
+    const dependencyInList = (list, dependency) =>
+      list.some((pkg) => pkg.ref === dependency.ref);
+    const uniqueDependencyList = dependencyTree.reduce(
+      (accumulator, currentDependency) => {
+        if (!dependencyInList(accumulator, currentDependency)) {
+          accumulator.push(currentDependency);
+        }
+        return accumulator;
+      },
+      []
+    );
+
     return buildBomNSData(options, pkgList, "cargo", {
       src: path,
-      filename: cargoLockFiles.join(", ")
+      filename: cargoLockFiles.join(", "),
+      dependencies: uniqueDependencyList
     });
   }
   return {};
