@@ -4412,7 +4412,7 @@ export async function createCsharpBom(path, options) {
     }
   } else if (pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
-    let parentDependsOn = new Set();
+    const parentDependsOn = new Set();
     // packages.lock.json from nuget
     for (const af of pkgLockFiles) {
       if (DEBUG_MODE) {
@@ -4432,7 +4432,7 @@ export async function createCsharpBom(path, options) {
       // Keep track of the direct dependencies so that we can construct one complete
       // list after processing all lock files
       if (rootList && rootList.length) {
-        for(const p of rootList) {
+        for (const p of rootList) {
           parentDependsOn.add(p["bom-ref"]);
         }
       }
