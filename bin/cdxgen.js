@@ -294,9 +294,16 @@ if (!args.projectName) {
   }
 }
 
-// Support for obom aliases
+// Support for obom/cbom aliases
 if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
+}
+
+if (process.argv[1].includes("cbom") && !args.type) {
+  options.includeCrypto = true;
+  options.includeFormulation = true;
+  options.evidence = true;
+  options.specVersion = 1.6;
 }
 
 /**
@@ -593,7 +600,7 @@ const checkPermissions = (filePath) => {
     }
   }
   // Evidence generation
-  if (options.evidence) {
+  if (options.evidence || options.includeCrypto) {
     const evinserModule = await import("../evinser.js");
     const evinseOptions = {
       _: args._,
@@ -607,7 +614,8 @@ const checkPermissions = (filePath) => {
       usagesSlicesFile: options.usagesSlicesFile,
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile,
-      includeCrypto: options.includeCrypto
+      includeCrypto: options.includeCrypto,
+      specVersion: options.specVersion
     };
     const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {

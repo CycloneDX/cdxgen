@@ -469,3 +469,19 @@ Example:
     }
   ]
 ```
+
+## Generate Cryptography Bill of Materials (CBOM)
+
+Use the `cbom` alias to generate a CBOM. This is currently supported only for Java projects.
+
+```shell
+cbom -t java
+# cdxgen -t java --include-crypto -o bom.json .
+```
+
+Using the `cbom` alias sets the following options:
+
+- includeCrypto: true
+- includeFormulation: true
+- evidence: true
+- specVersion: 1.6

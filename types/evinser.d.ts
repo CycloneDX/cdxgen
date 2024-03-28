@@ -721,7 +721,19 @@ export function constructServiceName(language: any, slice: any): string;
 export function extractEndpoints(language: any, code: any): any;
 export function createEvinseFile(sliceArtefacts: any, options: any): any;
 export function collectDataFlowFrames(language: string, userDefinedTypesMap: any, dataFlowSlice: any, dbObjMap: any, purlLocationMap: any, purlImportsMap: any): Promise<{}>;
-export function collectReachableFrames(language: string, reachablesSlice: any): {};
+export function collectReachableFrames(language: string, reachablesSlice: any): {
+    dataFlowFrames: {};
+    cryptoComponents: {
+        type: string;
+        name: any;
+        "bom-ref": any;
+        description: any;
+        cryptoProperties: {
+            assetType: string;
+            oid: any;
+        };
+    }[];
+};
 export function framePicker(dfFrames: any[]): any;
 export function simplifyType(typeFullName: string): string;
 export function getClassTypeFromSignature(language: any, typeFullName: any): string;
