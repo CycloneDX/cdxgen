@@ -6033,10 +6033,16 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
       const dependsOn = [];
       if (libData.dependencies) {
         for (const adep of Object.keys(libData.dependencies)) {
-          // get the resolved version of the dependency
-          const adepResolvedVersion =
-            assetData.dependencies[aversion][adep].resolved;
-
+          let adepResolvedVersion = libData.dependencies[adep];
+          // Try to get the resolved version of the dependency. See #930 and #937
+          if (
+            assetData.dependencies[aversion] &&
+            assetData.dependencies[aversion][adep] &&
+            assetData.dependencies[aversion][adep].resolved
+          ) {
+            adepResolvedVersion =
+              assetData.dependencies[aversion][adep].resolved;
+          }
           const adpurl = new PackageURL(
             "nuget",
             "",
