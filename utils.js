@@ -6042,6 +6042,10 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
           ) {
             adepResolvedVersion =
               assetData.dependencies[aversion][adep].resolved;
+          } else if (DEBUG_MODE) {
+            console.warn(
+              `Unable to find the resolved version for ${adep} ${aversion}. Using ${adepResolvedVersion} which may be incorrect.`
+            );
           }
           const adpurl = new PackageURL(
             "nuget",
