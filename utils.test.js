@@ -1410,6 +1410,29 @@ test("parse packages.lock.json", async () => {
     "./test/data/packages3.lock.json"
   );
   expect(dep_list["pkgList"].length).toEqual(15);
+  expect(dep_list["pkgList"][1]).toEqual({
+    group: "",
+    name: "FSharp.Core",
+    version: "4.5.2",
+    purl: "pkg:nuget/FSharp.Core@4.5.2",
+    "bom-ref": "pkg:nuget/FSharp.Core@4.5.2",
+    _integrity:
+      "sha512-apbdQOjzsjQ637kTWQuW29jqwY18jsHMyNC5A+TPJZKFEIE2cIfQWf3V7+mXrxlbX69BueYkv293/g70wuXuRw==",
+    properties: [{ name: "SrcFile", value: "./test/data/packages3.lock.json" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./test/data/packages3.lock.json"
+          }
+        ]
+      }
+    }
+  });
   expect(dep_list["dependenciesList"].length).toEqual(15);
 });
 
