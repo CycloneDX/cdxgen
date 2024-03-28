@@ -1230,9 +1230,9 @@ test("parse github actions workflow data", () => {
   expect(dep_list.length).toEqual(3);
 });
 
-test("parse cs pkg data", async () => {
-  expect(await parseCsPkgData(null)).toEqual([]);
-  const dep_list = await parseCsPkgData(
+test("parse cs pkg data", () => {
+  expect(parseCsPkgData(null)).toEqual([]);
+  const dep_list = parseCsPkgData(
     readFileSync("./test/data/packages.config", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(21);
@@ -1243,9 +1243,9 @@ test("parse cs pkg data", async () => {
   });
 });
 
-test("parse cs pkg data 2", async () => {
-  expect(await parseCsPkgData(null)).toEqual([]);
-  const dep_list = await parseCsPkgData(
+test("parse cs pkg data 2", () => {
+  expect(parseCsPkgData(null)).toEqual([]);
+  const dep_list = parseCsPkgData(
     readFileSync("./test/data/packages2.config", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(1);
@@ -1256,9 +1256,9 @@ test("parse cs pkg data 2", async () => {
   });
 });
 
-test("parse cs proj", async () => {
-  expect(await parseCsProjData(null)).toEqual([]);
-  const dep_list = await parseCsProjData(
+test("parse cs proj", () => {
+  expect(parseCsProjData(null)).toEqual([]);
+  const dep_list = parseCsProjData(
     readFileSync("./test/sample.csproj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(5);
@@ -1269,12 +1269,12 @@ test("parse cs proj", async () => {
   });
 });
 
-test("parse project.assets.json", async () => {
-  expect(await parseCsProjAssetsData(null)).toEqual({
+test("parse project.assets.json", () => {
+  expect(parseCsProjAssetsData(null)).toEqual({
     dependenciesList: [],
     pkgList: []
   });
-  let dep_list = await parseCsProjAssetsData(
+  let dep_list = parseCsProjAssetsData(
     readFileSync("./test/data/project.assets.json", { encoding: "utf-8" }),
     "./test/data/project.assets.json"
   );
@@ -1312,7 +1312,7 @@ test("parse project.assets.json", async () => {
     ],
     ref: "pkg:nuget/Castle.Core.Tests@0.0.0"
   });
-  dep_list = await parseCsProjAssetsData(
+  dep_list = parseCsProjAssetsData(
     readFileSync("./test/data/project.assets1.json", { encoding: "utf-8" }),
     "./test/data/project.assets1.json"
   );
@@ -1334,13 +1334,13 @@ test("parse project.assets.json", async () => {
   */
 });
 
-test("parse packages.lock.json", async () => {
-  expect(await parseCsPkgLockData(null)).toEqual({
+test("parse packages.lock.json", () => {
+  expect(parseCsPkgLockData(null)).toEqual({
     dependenciesList: [],
     pkgList: [],
     rootList: []
   });
-  let dep_list = await parseCsPkgLockData(
+  let dep_list = parseCsPkgLockData(
     readFileSync("./test/data/packages.lock.json", { encoding: "utf-8" }),
     "./test/data/packages.lock.json"
   );
@@ -1368,7 +1368,7 @@ test("parse packages.lock.json", async () => {
       }
     }
   });
-  dep_list = await parseCsPkgLockData(
+  dep_list = parseCsPkgLockData(
     readFileSync("./test/data/packages2.lock.json", { encoding: "utf-8" }),
     "./test/data/packages2.lock.json"
   );
@@ -1405,7 +1405,7 @@ test("parse packages.lock.json", async () => {
       "pkg:nuget/Microsoft.Extensions.Logging.Abstractions@6.0.0"
     ]
   });
-  dep_list = await parseCsPkgLockData(
+  dep_list = parseCsPkgLockData(
     readFileSync("./test/data/packages3.lock.json", { encoding: "utf-8" }),
     "./test/data/packages3.lock.json"
   );
@@ -1436,12 +1436,12 @@ test("parse packages.lock.json", async () => {
   expect(dep_list["dependenciesList"].length).toEqual(15);
 });
 
-test("parse paket.lock", async () => {
-  expect(await parsePaketLockData(null)).toEqual({
+test("parse paket.lock", () => {
+  expect(parsePaketLockData(null)).toEqual({
     pkgList: [],
     dependenciesList: []
   });
-  const dep_list = await parsePaketLockData(
+  const dep_list = parsePaketLockData(
     readFileSync("./test/data/paket.lock", { encoding: "utf-8" }),
     "./test/data/paket.lock"
   );
@@ -1477,9 +1477,9 @@ test("parse paket.lock", async () => {
   });
 });
 
-test("parse .net cs proj", async () => {
-  expect(await parseCsProjData(null)).toEqual([]);
-  const dep_list = await parseCsProjData(
+test("parse .net cs proj", () => {
+  expect(parseCsProjData(null)).toEqual([]);
+  const dep_list = parseCsProjData(
     readFileSync("./test/data/sample-dotnet.csproj", { encoding: "utf-8" })
   );
   expect(dep_list.length).toEqual(19);
@@ -2858,7 +2858,7 @@ test("parse nupkg file", async () => {
   );
   expect(deps.length).toEqual(1);
   expect(deps[0].name).toEqual("Microsoft.Web.Infrastructure");
-  deps = await parseNuspecData(
+  deps = parseNuspecData(
     "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
     readFileSync(
       "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
