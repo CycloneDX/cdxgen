@@ -6065,9 +6065,7 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
               assetData.dependencies[aversion][adep.toLowerCase()].type ===
                 "Project") ||
             (assetData.dependencies[aversionNoRuntime] &&
-              assetData.dependencies[aversionNoRuntime][
-                adep.toLowerCase()
-              ] &&
+              assetData.dependencies[aversionNoRuntime][adep.toLowerCase()] &&
               assetData.dependencies[aversionNoRuntime][adep.toLowerCase()]
                 .type === "Project")
           ) {

@@ -4671,7 +4671,9 @@ export function mergeDependencies(
       "Unable to determine parent component. Dependencies will be flattened."
     );
   }
+  let providesFound = false;
   const deps_map = {};
+  const provides_map = {};
   const parentRef =
     parentComponent && parentComponent["bom-ref"]
       ? parentComponent["bom-ref"]
@@ -4681,18 +4683,40 @@ export function mergeDependencies(
     if (!deps_map[adep.ref]) {
       deps_map[adep.ref] = new Set();
     }
+    if (!provides_map[adep.ref]) {
+      provides_map[adep.ref] = new Set();
+    }
     for (const eachDepends of adep["dependsOn"]) {
       if (parentRef && eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
         deps_map[adep.ref].add(eachDepends);
       }
     }
+    if (adep["provides"]) {
+      providesFound = true;
+      for (const eachProvides of adep["provides"]) {
+        if (
+          parentRef &&
+          eachProvides.toLowerCase() !== parentRef.toLowerCase()
+        ) {
+          provides_map[adep.ref].add(eachProvides);
+        }
+      }
+    }
   }
   const retlist = [];
   for (const akey of Object.keys(deps_map)) {
-    retlist.push({
-      ref: akey,
-      dependsOn: Array.from(deps_map[akey]).sort()
-    });
+    if (providesFound) {
+      retlist.push({
+        ref: akey,
+        dependsOn: Array.from(deps_map[akey]).sort(),
+        provides: Array.from(provides_map[akey]).sort()
+      });
+    } else {
+      retlist.push({
+        ref: akey,
+        dependsOn: Array.from(deps_map[akey]).sort()
+      });
+    }
   }
   return retlist;
 }
