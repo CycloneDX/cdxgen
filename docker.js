@@ -24,7 +24,7 @@ import {
 } from "node:os";
 import { x } from "tar";
 import { spawnSync } from "node:child_process";
-import { DEBUG_MODE } from "./utils.js";
+import { DEBUG_MODE, getAllFiles } from "./utils.js";
 
 export const isWin = _platform() === "win32";
 
@@ -772,7 +772,7 @@ export const exportArchive = async (fullImageName) => {
           `Image archive ${fullImageName} successfully exported to directory ${tempDir}`
         );
       }
-      const allBlobs = getDirs(blobsDir, "*", false, true);
+      const allBlobs = getAllFiles(blobsDir, "*");
       for (const ablob of allBlobs) {
         if (DEBUG_MODE) {
           console.log(`Extracting ${ablob} to ${allLayersExplodedDir}`);
