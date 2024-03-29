@@ -6035,7 +6035,6 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
         for (let adep of Object.keys(libData.dependencies)) {
           let adepResolvedVersion = libData.dependencies[adep];
           const aversionNoRuntime = aversion.split("/")[0];
-          let isProjectType = false;
           // Try to get the resolved version of the dependency. See #930 and #937
           if (
             assetData.dependencies[aversion] &&
@@ -6052,53 +6051,24 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
           ) {
             adepResolvedVersion =
               assetData.dependencies[aversionNoRuntime][adep].resolved;
+          } else if (
+            (assetData.dependencies[aversion] &&
+              assetData.dependencies[aversion][adep.toLowerCase()] &&
+              assetData.dependencies[aversion][adep.toLowerCase()].type ===
+                "Project") ||
+            (assetData.dependencies[aversionNoRuntime] &&
+              assetData.dependencies[aversionNoRuntime][
+                adep.toLowerCase()
+              ] &&
+              assetData.dependencies[aversionNoRuntime][adep.toLowerCase()]
+                .type === "Project")
+          ) {
+            adepResolvedVersion = undefined;
+            adep = adep.toLowerCase();
           } else if (DEBUG_MODE) {
-            // Only Microsoft can call a lock file that uses version ranges as a "lock file" for "reproducible" builds.
-            if (adepResolvedVersion.startsWith("[")) {
-              const versionToUse = adepResolvedVersion.replace(/[[, )]/g, "");
-              if (
-                (assetData.dependencies[aversion] &&
-                  assetData.dependencies[aversion][adep] &&
-                  assetData.dependencies[aversion][adep].type === "Project") ||
-                (assetData.dependencies[aversionNoRuntime] &&
-                  assetData.dependencies[aversionNoRuntime][adep] &&
-                  assetData.dependencies[aversionNoRuntime][adep].type ===
-                    "Project")
-              ) {
-                isProjectType = true;
-              }
-              // To make matters worse, the name of the project could be all lowercased
-              // Eg: In react-native-windows repo, folly and Folly are used for the project name
-              else if (
-                (assetData.dependencies[aversion] &&
-                  assetData.dependencies[aversion][adep.toLowerCase()] &&
-                  assetData.dependencies[aversion][adep.toLowerCase()].type ===
-                    "Project") ||
-                (assetData.dependencies[aversionNoRuntime] &&
-                  assetData.dependencies[aversionNoRuntime][
-                    adep.toLowerCase()
-                  ] &&
-                  assetData.dependencies[aversionNoRuntime][adep.toLowerCase()]
-                    .type === "Project")
-              ) {
-                isProjectType = true;
-                adep = adep.toLowerCase();
-              }
-              // If this component is a project type, the version information would be often missing.
-              // So we remove the version to match based on name alone
-              if (isProjectType) {
-                adepResolvedVersion = undefined;
-              } else {
-                console.warn(
-                  `The version used for ${adep} is a range - ${adepResolvedVersion}. Using the min version ${versionToUse} which may be incorrect.`
-                );
-                adepResolvedVersion = versionToUse;
-              }
-            } else {
-              console.warn(
-                `Unable to find the resolved version for ${adep} ${aversion}. Using ${adepResolvedVersion} which may be incorrect.`
-              );
-            }
+            console.warn(
+              `Unable to find the resolved version for ${adep} ${aversion}. Using ${adepResolvedVersion} which may be incorrect.`
+            );
           }
           const adpurl = new PackageURL(
             "nuget",
