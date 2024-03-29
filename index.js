@@ -3092,25 +3092,41 @@ export async function createRustBom(path, options) {
       }
     }
 
-    // Dependencies from multiple Cargo.lock files may have an overlap in
-    // dependencies. So the dependency tree may have duplicates which needs
-    // to be removed.
-    const dependencyInList = (list, dependency) =>
-      list.some((pkg) => pkg.ref === dependency.ref);
-    const uniqueDependencyList = dependencyTree.reduce(
-      (accumulator, currentDependency) => {
-        if (!dependencyInList(accumulator, currentDependency)) {
-          accumulator.push(currentDependency);
-        }
-        return accumulator;
-      },
-      []
+    // This is almost a reimplementation of the function mergeDependencies.
+    // It's reimplemented here for the following reasons:
+    //  * mergeDependencies will not merge dependencies without a
+    //    BOM-reference of the component being described. Often
+    //    called "parent component", found in the BOM at metadata.component.
+    //  * This implementation does not look for a suitable BOM-reference for
+    //    the component being described. A component's PURL is often assigned
+    //    as BOM-reference and the parent component's PURL does not appear
+    //    inside Cargo.lock-files, and no package name is looked for in
+    //    Cargo.toml-files.
+    const packageDependencyMap = {};
+    dependencyTree.forEach((pkg) => {
+      if (!packageDependencyMap[pkg.ref]) {
+        packageDependencyMap[pkg.ref] = new Set();
+      }
+      pkg.dependsOn.forEach((dependency) => {
+        packageDependencyMap[pkg.ref].add(dependency);
+      });
+    });
+    const uniqueDependencyTree = Object.entries(packageDependencyMap).map(
+      (entry) => {
+        const [ref, dependencies] = entry;
+        const dependsOn = Array.from(dependencies).sort();
+        dependsOn.sort();
+        return {
+          ref,
+          dependsOn
+        };
+      }
     );
 
     return buildBomNSData(options, pkgList, "cargo", {
       src: path,
       filename: cargoLockFiles.join(", "),
-      dependencies: uniqueDependencyList
+      dependencies: uniqueDependencyTree
     });
   }
   return {};
