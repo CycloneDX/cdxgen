@@ -360,7 +360,7 @@ const addLifecyclesSection = (options) => {
  * @param {Object} options
  * @returns {Array} formulation array
  */
-export const addFormulationSection = (options) => {
+const addFormulationSection = (options) => {
   const formulation = [];
   let gitBranch = getBranch();
   let originUrl = getOriginUrl();

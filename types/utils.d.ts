@@ -14,6 +14,16 @@ export function getAllFiles(dirPath: string, pattern: string, options?: {}): str
  */
 export function getAllFilesWithIgnore(dirPath: string, pattern: string, ignoreList: any[]): string[];
 /**
+ * Method to get the names of files and their sha-1 hashes, uses getAllFile function
+ *
+ * @param {string} dirPath
+ * @returns {Array<{name: string, hash: string}>} files_array
+ */
+export function listFileHashes(dirPath: string): Array<{
+    name: string;
+    hash: string;
+}>;
+/**
  * Performs a lookup + validation of the license specified in the
  * package. If the license is a valid SPDX license ID, set the 'id'
  * and url of the license object, otherwise, set the 'name' of the license
