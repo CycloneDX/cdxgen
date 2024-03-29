@@ -4672,7 +4672,6 @@ export function mergeDependencies(
     );
   }
   const deps_map = {};
-  const provides_map = {};
   const parentRef =
     parentComponent && parentComponent["bom-ref"]
       ? parentComponent["bom-ref"]
@@ -4682,17 +4681,9 @@ export function mergeDependencies(
     if (!deps_map[adep.ref]) {
       deps_map[adep.ref] = new Set();
     }
-    if (!provides_map[adep.ref]) {
-      provides_map[adep.ref] = new Set();
-    }
     for (const eachDepends of adep["dependsOn"]) {
       if (parentRef && eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
         deps_map[adep.ref].add(eachDepends);
-      }
-    }
-    for (const eachProvides of adep["provides"]) {
-      if (parentRef && eachProvides.toLowerCase() !== parentRef.toLowerCase()) {
-        provides_map[adep.ref].add(eachProvides);
       }
     }
   }
