@@ -53,6 +53,7 @@ import {
   getPyModules,
   getSwiftPackageMetadata,
   includeMavenTestScope,
+  listFileHashes,
   parseBazelActionGraph,
   parseBazelSkyframe,
   parseBdistMetadata,
@@ -359,12 +360,29 @@ const addLifecyclesSection = (options) => {
  * @param {Object} options
  * @returns {Array} formulation array
  */
-const addFormulationSection = (options) => {
+export const addFormulationSection = (options) => {
   const formulation = [];
-  const gitBranch = getBranch();
-  const originUrl = getOriginUrl();
-  const gitFiles = listFiles();
+  let gitBranch = getBranch();
+  let originUrl = getOriginUrl();
+  let gitFiles = listFiles();
+  if (
+    gitBranch === undefined &&
+    originUrl === undefined &&
+    gitFiles.length === 0
+  ) {
+    // There is not .git repository to get git metadata therefore "--include-formulation" should not be run
+    console.log(
+      "git metadata could not be read while '--include-formulation' was passed"
+    );
+    // add values to gitBranch and originUrl
+    gitBranch = "NO_INFORMATION";
+    originUrl = "NO_INFORMATION";
+    // gitFiles = list_file_hashes();
+    gitFiles = listFileHashes();
+    //continue flow
+  }
   if (gitBranch && originUrl && gitFiles) {
+    console.log("Running formulation");
     const aformulation = {};
     let components = gitFiles.map((f) => ({
       type: "file",

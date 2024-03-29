@@ -265,6 +265,36 @@ export function getAllFilesWithIgnore(dirPath, pattern, ignoreList) {
 }
 
 /**
+ * Method to return sha1 hash of a file
+ *
+ * @param {string} filePath
+ * @returns {string} hash.digest("hex")
+ */
+function calculateHash(filePath) {
+  const filebuffer = readFileSync(filePath);
+  const hash = createHash("sha1");
+  hash.update(filebuffer);
+  return hash.digest("hex");
+}
+
+/**
+ * Method to get the names of files and their sha-1 hashes, uses getAllFile function
+ *
+ * @param {string} dirPath
+ * @returns {Array<{name: string, hash: string}>} files_array
+ */
+export function listFileHashes(dirPath) {
+  const files_array = [];
+  const files = getAllFiles(dirPath, "./**");
+
+  files.forEach((file) => {
+    const hash_file = calculateHash(file);
+    files_array.push({ name: file, hash: hash_file });
+  });
+  return files_array;
+}
+
+/**
  * Method to encode hex string to base64 string
  *
  * @param {string} hex string
