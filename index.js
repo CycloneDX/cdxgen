@@ -4313,6 +4313,13 @@ export async function createCsharpBom(path, options) {
     getAllFiles(path, (options.multiProject ? "**/" : "") + "*.vbproj", options)
   );
   csProjFiles = csProjFiles.concat(
+    getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "*.vcxproj",
+      options
+    )
+  );
+  csProjFiles = csProjFiles.concat(
     getAllFiles(path, (options.multiProject ? "**/" : "") + "*.fsproj", options)
   );
   const pkgConfigFiles = getAllFiles(
