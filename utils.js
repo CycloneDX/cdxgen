@@ -6033,24 +6033,48 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
       const dependsOn = [];
       if (libData.dependencies) {
         for (const adep of Object.keys(libData.dependencies)) {
-          let adepResolvedVersion = libData.dependencies[adep];
+          let adepResolvedVersion = null;
+          let adepResolvedName = adep;
+          let adepAssetDataVersion = assetData.dependencies[aversion];
+
           // Try to get the resolved version of the dependency. See #930 and #937
-          if (
-            assetData.dependencies[aversion] &&
-            assetData.dependencies[aversion][adep] &&
-            assetData.dependencies[aversion][adep].resolved
-          ) {
-            adepResolvedVersion =
-              assetData.dependencies[aversion][adep].resolved;
-          } else if (DEBUG_MODE) {
-            console.warn(
-              `Unable to find the resolved version for ${adep} ${aversion}. Using ${adepResolvedVersion} which may be incorrect.`
-            );
+          if (adepAssetDataVersion) {
+            let adepAssetData = adepAssetDataVersion[adep];
+            if (!adepAssetData) {
+              // project dependency are lowercased
+              adepAssetData = adepAssetDataVersion[adep.toLowerCase()];
+              if (adepAssetData) {
+                adepResolvedName = adep.toLowerCase();
+              } else {
+                if (aversion.indexOf("/")) {
+                  // try to find without platform moniker
+                  adepAssetDataVersion = assetData.dependencies[aversion.split("/", 2)[0]];
+                  adepAssetData = adepAssetDataVersion[adep];
+                }
+              }
+            }
+            if (adepAssetData) {
+              if (adepAssetData.type === "Project") {
+                adepResolvedVersion = "";
+              }
+              else {
+                adepResolvedVersion = adepAssetData.resolved;
+              }
+            }
+          }
+
+          if(adepResolvedVersion === null){
+            adepResolvedVersion = libData.dependencies[adep];
+            if (DEBUG_MODE) {
+              console.warn(
+                `Unable to find the resolved version for ${adep} ${aversion}. Using ${adepResolvedVersion} which may be incorrect.`
+              );
+            }
           }
           const adpurl = new PackageURL(
             "nuget",
             "",
-            adep,
+            adepResolvedName,
             adepResolvedVersion,
             null,
             null
