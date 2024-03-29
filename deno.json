@@ -1,10 +1,13 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.2.6",
+  "version": "10.3.0",
   "exports": "./index.js",
   "compilerOptions": {
     "allowJs": true,
     "lib": ["deno.window"],
+    "outDir": "types",
+    "exclude": ["*.test.js", "./types/**/*"],
+    "skipLibCheck": true,
     "strict": true
   },
   "include": ["*.js", "data/", "bin/"],
@@ -60,8 +63,8 @@
     "properties-reader": "npm:properties-reader@^2.3.0",
     "semver": "npm:semver@^7.6.0",
     "ssri": "npm:ssri@^10.0.4",
-    "table": "npm:table@^6.8.1",
-    "tar": "npm:tar@^6.2.0",
+    "table": "npm:table@^6.8.2",
+    "tar": "npm:tar@^6.2.1",
     "uuid": "npm:uuid@^9.0.1",
     "xml-js": "npm:xml-js@^1.6.11",
     "yargs": "npm:yargs@^17.7.2",

@@ -824,6 +824,13 @@ export function encodeForPurl(s: any): any;
  */
 export function getPomPropertiesFromMavenDir(mavenDir: string): {};
 /**
+ *
+ * @param {string} hashName name of hash algorithm
+ * @param {string} path path to file
+ * @returns {Promise<String>} hex value of hash
+ */
+export function checksumFile(hashName: string, path: string): Promise<string>;
+/**
  * Method to extract a war or ear file
  *
  * @param {string} jarFile Path to jar file

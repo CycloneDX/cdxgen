@@ -30,6 +30,7 @@ import {
   addEvidenceForDotnet,
   addEvidenceForImports,
   addPlugin,
+  checksumFile,
   cleanupPlugin,
   collectGradleDependencies,
   collectJarNS,
@@ -117,6 +118,7 @@ import {
 } from "./utils.js";
 import {
   collectEnvInfo,
+  gitTreeHashes,
   getBranch,
   getOriginUrl,
   listFiles
@@ -361,16 +363,60 @@ const addLifecyclesSection = (options) => {
  */
 const addFormulationSection = (options) => {
   const formulation = [];
+  const provides = [];
   const gitBranch = getBranch();
   const originUrl = getOriginUrl();
   const gitFiles = listFiles();
+  const treeHashes = gitTreeHashes();
+  let parentOmniborId;
+  let treeOmniborId;
+  let components = [];
+  if (options.specVersion >= 1.6 && Object.keys(treeHashes).length === 2) {
+    parentOmniborId = `gitoid:blob:sha1:${treeHashes.parent}`;
+    treeOmniborId = `gitoid:blob:sha1:${treeHashes.tree}`;
+    components.push({
+      type: "file",
+      name: "git-parent",
+      description: "Artifact Dependency Graph (ADG) parent.",
+      "bom-ref": parentOmniborId,
+      omniborId: [parentOmniborId]
+    });
+    components.push({
+      type: "file",
+      name: "git-tree",
+      description: "Artifact Dependency Graph (ADG) tree.",
+      "bom-ref": treeOmniborId,
+      omniborId: [treeOmniborId]
+    });
+    provides.push({
+      ref: parentOmniborId,
+      provides: [treeOmniborId]
+    });
+  }
   if (gitBranch && originUrl && gitFiles) {
     const aformulation = {};
-    let components = gitFiles.map((f) => ({
-      type: "file",
-      name: f.name,
-      version: f.hash
-    }));
+    const gitFileComponents = gitFiles.map((f) =>
+      options.specVersion >= 1.6
+        ? {
+            type: "file",
+            name: f.name,
+            version: f.hash,
+            omniborId: [f.ref]
+          }
+        : {
+            type: "file",
+            name: f.name,
+            version: f.hash
+          }
+    );
+    components = components.concat(gitFileComponents);
+    // Complete the Artifact Dependency Graph
+    if (options.specVersion >= 1.6 && treeOmniborId) {
+      provides.push({
+        ref: treeOmniborId,
+        provides: gitFiles.map((f) => f.ref)
+      });
+    }
     // Collect build environment details
     const infoComponents = collectEnvInfo(options.path);
     if (infoComponents && infoComponents.length) {
@@ -419,7 +465,7 @@ const addFormulationSection = (options) => {
     ];
     formulation.push(aformulation);
   }
-  return formulation;
+  return { formulation, provides };
 };
 
 /**
@@ -705,7 +751,7 @@ function addComponent(
     }
     const version = pkg.version || "";
     const licenses = pkg.licenses || getLicenses(pkg);
-    const purl =
+    let purl =
       pkg.purl ||
       new PackageURL(
         ptype,
@@ -715,6 +761,10 @@ function addComponent(
         pkg.qualifiers,
         encodeForPurl(pkg.subpath)
       );
+    // There is no purl for cryptographic-asset
+    if (ptype == "cryptographic-asset") {
+      purl = undefined;
+    }
     const purlString = purl.toString();
     const description = pkg.description || undefined;
     let compScope = pkg.scope;
@@ -754,9 +804,11 @@ function addComponent(
     ) {
       delete component.externalReferences;
     }
-
+    if (options.specVersion < 1.6) {
+      delete component.omniborId;
+      delete component.swhid;
+    }
     processHashes(pkg, component);
-    // Retain any component properties
     // Retain evidence
     if (
       options.specVersion >= 1.5 &&
@@ -764,9 +816,30 @@ function addComponent(
       Object.keys(pkg.evidence).length
     ) {
       component.evidence = pkg.evidence;
+      // Convert evidence.identity section to an array for 1.6 and above
+      if (
+        options.specVersion >= 1.6 &&
+        pkg.evidence &&
+        pkg.evidence.identity &&
+        !Array.isArray(pkg.evidence.identity)
+      ) {
+        component.evidence.identity = [pkg.evidence.identity];
+      }
     }
+    // Retain any tags
+    if (
+      options.specVersion >= 1.6 &&
+      pkg.tags &&
+      Object.keys(pkg.tags).length
+    ) {
+      component.tags = pkg.tags;
+    }
+    // Retain any component properties and crypto properties
     if (pkg.properties && pkg.properties.length) {
       component.properties = pkg.properties;
+    }
+    if (pkg.cryptoProperties && pkg.cryptoProperties.length) {
+      component.cryptoProperties = pkg.cryptoProperties;
     }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;
@@ -796,7 +869,8 @@ function determinePackageType(pkg) {
       "firmware",
       "file",
       "machine-learning-model",
-      "data"
+      "data",
+      "cryptographic-asset"
     ].includes(pkg.type)
   ) {
     return pkg.type;
@@ -944,12 +1018,25 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       components,
       dependencies
     };
+    const formulationData = addFormulationSection(options);
     const formulation =
       options.includeFormulation && options.specVersion >= 1.5
-        ? addFormulationSection(options)
+        ? formulationData.formulation
         : undefined;
     if (formulation) {
       jsonTpl.formulation = formulation;
+    }
+    if (
+      options.specVersion >= 1.6 &&
+      options.includeFormulation &&
+      formulationData.provides.length
+    ) {
+      const newDependencies = dependencies.concat(formulationData.provides);
+      jsonTpl.dependencies = mergeDependencies(
+        dependencies,
+        newDependencies,
+        metadata.component
+      );
     }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
@@ -4407,7 +4494,7 @@ export async function createCsharpBom(path, options) {
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      const results = await parseCsProjAssetsData(pkgData, af);
+      const results = parseCsProjAssetsData(pkgData, af);
       const deps = results["dependenciesList"];
       const dlist = results["pkgList"];
       if (dlist && dlist.length) {
@@ -4426,7 +4513,7 @@ export async function createCsharpBom(path, options) {
         console.log(`Parsing ${af}`);
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
-      const results = await parseCsPkgLockData(pkgData, af);
+      const results = parseCsPkgLockData(pkgData, af);
       const deps = results["dependenciesList"];
       const dlist = results["pkgList"];
       const rootList = results["rootList"];
@@ -4462,7 +4549,7 @@ export async function createCsharpBom(path, options) {
       if (pkgData.charCodeAt(0) === 0xfeff) {
         pkgData = pkgData.slice(1);
       }
-      const dlist = await parseCsPkgData(pkgData);
+      const dlist = parseCsPkgData(pkgData);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -4479,7 +4566,7 @@ export async function createCsharpBom(path, options) {
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const dlist = await parseCsProjData(csProjData, f);
+      const dlist = parseCsProjData(csProjData, f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -4493,7 +4580,7 @@ export async function createCsharpBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       pkgData = readFileSync(f, { encoding: "utf-8" });
-      const results = await parsePaketLockData(pkgData, f);
+      const results = parsePaketLockData(pkgData, f);
       const dlist = results.pkgList;
       const deps = results.dependenciesList;
       if (dlist && dlist.length) {
@@ -4542,6 +4629,46 @@ export async function createCsharpBom(path, options) {
   });
 }
 
+/**
+ * Function to create bom object for cryptographic certificate files
+ *
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ */
+export async function createCryptoCertsBom(path, options) {
+  const pkgList = [];
+  const certFiles = getAllFiles(
+    path,
+    (options.multiProject ? "**/" : "") +
+      "*.{p12,jks,jceks,bks,keystore,key,pem,cer,gpg,pub}",
+    options
+  );
+  for (const f of certFiles) {
+    const name = basename(f);
+    const fileHash = await checksumFile("sha256", f);
+    const apkg = {
+      name,
+      type: "cryptographic-asset",
+      version: fileHash,
+      "bom-ref": `crypto/certificate/${name}@sha256:${fileHash}`,
+      cryptoProperties: {
+        assetType: "certificate",
+        algorithmProperties: {
+          executionEnvironment: "unknown",
+          implementationPlatform: "unknown"
+        }
+      },
+      properties: [{ name: "SrcFile", value: f }]
+    };
+    pkgList.push(apkg);
+  }
+  return {
+    bomJson: {
+      components: pkgList
+    }
+  };
+}
+
 export function mergeDependencies(
   dependencies,
   newDependencies,
@@ -4552,7 +4679,9 @@ export function mergeDependencies(
       "Unable to determine parent component. Dependencies will be flattened."
     );
   }
+  let providesFound = false;
   const deps_map = {};
+  const provides_map = {};
   const parentRef =
     parentComponent && parentComponent["bom-ref"]
       ? parentComponent["bom-ref"]
@@ -4562,18 +4691,45 @@ export function mergeDependencies(
     if (!deps_map[adep.ref]) {
       deps_map[adep.ref] = new Set();
     }
-    for (const eachDepends of adep["dependsOn"]) {
-      if (parentRef && eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
-        deps_map[adep.ref].add(eachDepends);
+    if (!provides_map[adep.ref]) {
+      provides_map[adep.ref] = new Set();
+    }
+    if (adep["dependsOn"]) {
+      for (const eachDepends of adep["dependsOn"]) {
+        if (
+          parentRef &&
+          eachDepends.toLowerCase() !== parentRef.toLowerCase()
+        ) {
+          deps_map[adep.ref].add(eachDepends);
+        }
+      }
+    }
+    if (adep["provides"]) {
+      providesFound = true;
+      for (const eachProvides of adep["provides"]) {
+        if (
+          parentRef &&
+          eachProvides.toLowerCase() !== parentRef.toLowerCase()
+        ) {
+          provides_map[adep.ref].add(eachProvides);
+        }
       }
     }
   }
   const retlist = [];
   for (const akey of Object.keys(deps_map)) {
-    retlist.push({
-      ref: akey,
-      dependsOn: Array.from(deps_map[akey]).sort()
-    });
+    if (providesFound) {
+      retlist.push({
+        ref: akey,
+        dependsOn: Array.from(deps_map[akey]).sort(),
+        provides: Array.from(provides_map[akey]).sort()
+      });
+    } else {
+      retlist.push({
+        ref: akey,
+        dependsOn: Array.from(deps_map[akey]).sort()
+      });
+    }
   }
   return retlist;
 }
@@ -4996,7 +5152,7 @@ export async function createMultiXBom(pathList, options) {
     }
     // Jar scanning is enabled by default
     // See #330
-    bomData = await createJarBom(path, options);
+    bomData = createJarBom(path, options);
     if (
       bomData &&
       bomData.bomJson &&
@@ -5017,6 +5173,23 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
     }
+    // Collect any crypto keys
+    if (options.specVersion >= 1.6 && options.includeCrypto) {
+      bomData = await createCryptoCertsBom(path, options);
+      if (
+        bomData &&
+        bomData.bomJson &&
+        bomData.bomJson.components &&
+        bomData.bomJson.components.length
+      ) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} crypto assets at ${path}`
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+      }
+    }
   } // for
   if (
     options.lastWorkingDir &&
@@ -5024,7 +5197,7 @@ export async function createMultiXBom(pathList, options) {
     !options.lastWorkingDir.includes("/opt/") &&
     !options.lastWorkingDir.includes("/home/")
   ) {
-    bomData = await createJarBom(options.lastWorkingDir, options);
+    bomData = createJarBom(options.lastWorkingDir, options);
     if (
       bomData &&
       bomData.bomJson &&
@@ -5553,22 +5726,22 @@ export async function createBom(path, options) {
     case "android":
     case "apk":
     case "aab":
-      return await createAndroidBom(path, options);
+      return createAndroidBom(path, options);
     case "jar":
-      return await createJarBom(path, options);
+      return createJarBom(path, options);
     case "gradle-index":
     case "gradle-cache":
       options.useGradleCache = true;
-      return await createJarBom(GRADLE_CACHE_DIR, options);
+      return createJarBom(GRADLE_CACHE_DIR, options);
     case "sbt-index":
     case "sbt-cache":
       options.useSbtCache = true;
-      return await createJarBom(SBT_CACHE_DIR, options);
+      return createJarBom(SBT_CACHE_DIR, options);
     case "maven-index":
     case "maven-cache":
     case "maven-repo":
       options.useMavenCache = true;
-      return await createJarBom(
+      return createJarBom(
         process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository"),
         options
       );

@@ -179,6 +179,33 @@ export function createRubyBom(path: string, options: any): Promise<any>;
  * @param {Object} options Parse options from the cli
  */
 export function createCsharpBom(path: string, options: any): Promise<any>;
+/**
+ * Function to create bom object for cryptographic certificate files
+ *
+ * @param {string} path to the project
+ * @param {Object} options Parse options from the cli
+ */
+export function createCryptoCertsBom(path: string, options: any): Promise<{
+    bomJson: {
+        components: {
+            name: string;
+            type: string;
+            version: string;
+            "bom-ref": string;
+            cryptoProperties: {
+                assetType: string;
+                algorithmProperties: {
+                    executionEnvironment: string;
+                    implementationPlatform: string;
+                };
+            };
+            properties: {
+                name: string;
+                value: string;
+            }[];
+        }[];
+    };
+}>;
 export function mergeDependencies(dependencies: any, newDependencies: any, parentComponent?: {}): {
     ref: string;
     dependsOn: any[];

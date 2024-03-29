@@ -2,13 +2,18 @@
 
 ![cdxgen logo](cdxgen.png)
 
-cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Software Bill of Materials (SBOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. CycloneDX 1.5 is a lightweight SBOM specification that is easily created, human and machine-readable, and simple to parse.
+[![JSR](https://jsr.io/badges/@cyclonedx/cdxgen)](https://jsr.io/@cyclonedx/cdxgen)
 
-When used with plugins, cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems. cdxgen also includes an evinse tool to generate component evidence and SaaSBOM for some languages.
+cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse. The tool supports CycloneDX specification versions from 1.4 - 1.6.
+
+When used with plugins:
+
+- cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems
+- cdxgen also includes an evinse tool to generate component evidence, CBOM and SaaSBOM for some languages
 
 ## Why cdxgen?
 
-Most SBOM tools are like simple barcode scanners. For easy applications, they can parse a few package manifests and create a list of components only based on these files without any deep inspection. Further, a typical application might have several repos, components, and libraries with complex build requirements. Traditional techniques to generate an SBOM per language or package manifest either do not work in enterprise environments or don't provide the confidence required for both compliance and automated analysis. So we built cdxgen - the universal polyglot SBOM generator that is user-friendly, precise and comprehensive!
+Most SBOM tools are like simple barcode scanners. For easy applications, they can parse a few package manifests and create a list of components only based on these files without any deep inspection. Further, a typical application might have several repos, components, and libraries with complex build requirements. Traditional techniques to generate an SBOM per language or package manifest either do not work in enterprise environments or don't provide the confidence required for both compliance and automated analysis. So we built cdxgen - the universal polyglot SBOM generator that is user-friendly, precise, and comprehensive!
 
 <img src="./docs/why-cdxgen.jpg" alt="why cdxgen" width="256">
 
@@ -85,9 +90,6 @@ For go, `go mod why` command is used to identify required packages. For php, com
 
 ```shell
 npm install -g @cyclonedx/cdxgen
-
-# For CycloneDX 1.4 compatibility use version 8.6.0 or pass the argument `--spec-version 1.4`
-npm install -g @cyclonedx/cdxgen@8.6.0
 ```
 
 If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:
@@ -228,9 +230,13 @@ To recursively generate a single BOM for all languages pass `-r` argument.
 cdxgen -r -o bom.json
 ```
 
-To generate SBOM for an older specification version, such as 1.4, pass the version number using the `--spec-version` argument.
+The default specification used by cdxgen is 1.5. To generate BOM for a different specification version, such as 1.6 or 1.4, pass the version number using the `--spec-version` argument.
 
 ```shell
+# 1.6 is unsupported by most tools
+cdxgen -r -o bom.json --spec-version 1.6
+
+# 1.4 is supported by most tools
 cdxgen -r -o bom.json --spec-version 1.4
 ```
 
@@ -411,7 +417,7 @@ cdxgen could be extended with external binary plugins to support more SBOM use c
 sudo npm install -g @cyclonedx/cdxgen-plugins-bin
 ```
 
-### Docker / OCI container support
+## Docker / OCI container support
 
 `docker` type is automatically detected based on the presence of values such as `sha256` or `docker.io` prefix etc in the path.
 
@@ -446,7 +452,7 @@ systemctl --user start podman.socket
 podman system service -t 0 &
 ```
 
-### Generate OBOM for a live system
+## Generate OBOM for a live system
 
 You can use the `obom` command to generate an OBOM for a live system or a VM for compliance and vulnerability management purposes. Windows and Linux operating systems are supported in this mode.
 
@@ -457,6 +463,15 @@ obom
 ```
 
 This feature is powered by osquery, which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps, and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBOM file with thousands of components of various types, such as operating-system, device-drivers, files, and data.
+
+## Generate Cryptography Bill of Materials (CBOM)
+
+Use the `cbom` alias to generate a CBOM. This is currently supported only for Java projects.
+
+```shell
+cbom -t java
+# cdxgen -t java --include-crypto -o bom.json .
+```
 
 ## Generating SaaSBOM and component evidences
 
