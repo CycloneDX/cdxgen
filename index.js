@@ -382,7 +382,6 @@ const addFormulationSection = (options) => {
     //continue flow
   }
   if (gitBranch && originUrl && gitFiles) {
-    console.log("Running formulation");
     const aformulation = {};
     let components = gitFiles.map((f) => ({
       type: "file",
