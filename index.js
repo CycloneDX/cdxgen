@@ -1027,8 +1027,12 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       jsonTpl.formulation = formulation;
     }
     if (options.specVersion >= 1.6 && formulationData.provides.length) {
-      dependencies = dependencies.concat(formulationData.provides);
-      jsonTpl.dependencies = dependencies;
+      const newDependencies = dependencies.concat(formulationData.provides);
+      jsonTpl.dependencies = mergeDependencies(
+        dependencies,
+        newDependencies,
+        metadata.component
+      );
     }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
@@ -4686,9 +4690,14 @@ export function mergeDependencies(
     if (!provides_map[adep.ref]) {
       provides_map[adep.ref] = new Set();
     }
-    for (const eachDepends of adep["dependsOn"]) {
-      if (parentRef && eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
-        deps_map[adep.ref].add(eachDepends);
+    if (adep["dependsOn"]) {
+      for (const eachDepends of adep["dependsOn"]) {
+        if (
+          parentRef &&
+          eachDepends.toLowerCase() !== parentRef.toLowerCase()
+        ) {
+          deps_map[adep.ref].add(eachDepends);
+        }
       }
     }
     if (adep["provides"]) {

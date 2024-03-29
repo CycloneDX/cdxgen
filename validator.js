@@ -36,7 +36,13 @@ export const validateBom = (bomJson) => {
   const ajv = new Ajv({
     schemas: [schema, defsSchema, spdxSchema],
     strict: false,
-    logger: false
+    logger: false,
+    verbose: true,
+    code: {
+      source: true,
+      lines: true,
+      optimize: true
+    }
   });
   addFormats(ajv);
   const validate = ajv.getSchema(
