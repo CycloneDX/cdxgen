@@ -7437,7 +7437,11 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
     existsSync(manifestname)
   ) {
     tempDir = dirname(jarFile);
-  } else if (!existsSync(join(tempDir, fname)) && existsSync(jarFile) && lstatSync(jarFile).isFile()) {
+  } else if (
+    !existsSync(join(tempDir, fname)) &&
+    existsSync(jarFile) &&
+    lstatSync(jarFile).isFile()
+  ) {
     // Only copy if the file doesn't exist
     copyFileSync(jarFile, join(tempDir, fname), constants.COPYFILE_FICLONE);
   }

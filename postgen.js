@@ -85,10 +85,15 @@ export const filterBom = (bomJson, options) => {
     for (const adep of bomJson.dependencies) {
       if (newPkgMap[adep.ref]) {
         const newdepson = (adep.dependsOn || []).filter((d) => newPkgMap[d]);
-        newdependencies.push({
+        const obj = {
           ref: adep.ref,
           dependsOn: newdepson
-        });
+        };
+        // Filter provides array if needed
+        if (adep.provides && adep.provides.length) {
+          obj.provides = adep.provides.filter((d) => newPkgMap[d]);
+        }
+        newdependencies.push(obj);
       }
     }
     bomJson.components = newcomponents;

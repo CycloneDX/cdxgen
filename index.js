@@ -118,6 +118,7 @@ import {
 } from "./utils.js";
 import {
   collectEnvInfo,
+  gitTreeHashes,
   getBranch,
   getOriginUrl,
   listFiles
@@ -362,16 +363,60 @@ const addLifecyclesSection = (options) => {
  */
 const addFormulationSection = (options) => {
   const formulation = [];
+  const provides = [];
   const gitBranch = getBranch();
   const originUrl = getOriginUrl();
   const gitFiles = listFiles();
+  const treeHashes = gitTreeHashes();
+  let parentOmniborId;
+  let treeOmniborId;
+  let components = [];
+  if (options.specVersion >= 1.6 && Object.keys(treeHashes).length === 2) {
+    parentOmniborId = `gitoid:blob:sha1:${treeHashes.parent}`;
+    treeOmniborId = `gitoid:blob:sha1:${treeHashes.tree}`;
+    components.push({
+      type: "file",
+      name: "git-parent",
+      description: "Artifact Dependency Graph (ADG) parent.",
+      "bom-ref": parentOmniborId,
+      omniborId: [parentOmniborId]
+    });
+    components.push({
+      type: "file",
+      name: "git-tree",
+      description: "Artifact Dependency Graph (ADG) tree.",
+      "bom-ref": treeOmniborId,
+      omniborId: [treeOmniborId]
+    });
+    provides.push({
+      ref: parentOmniborId,
+      provides: [treeOmniborId]
+    });
+  }
   if (gitBranch && originUrl && gitFiles) {
     const aformulation = {};
-    let components = gitFiles.map((f) => ({
-      type: "file",
-      name: f.name,
-      version: f.hash
-    }));
+    const gitFileComponents = gitFiles.map((f) =>
+      options.specVersion >= 1.6
+        ? {
+            type: "file",
+            name: f.name,
+            version: f.hash,
+            omniborId: [f.ref]
+          }
+        : {
+            type: "file",
+            name: f.name,
+            version: f.hash
+          }
+    );
+    components = components.concat(gitFileComponents);
+    // Complete the Artifact Dependency Graph
+    if (options.specVersion >= 1.6 && treeOmniborId) {
+      provides.push({
+        ref: treeOmniborId,
+        provides: gitFiles.map((f) => f.ref)
+      });
+    }
     // Collect build environment details
     const infoComponents = collectEnvInfo(options.path);
     if (infoComponents && infoComponents.length) {
@@ -420,7 +465,7 @@ const addFormulationSection = (options) => {
     ];
     formulation.push(aformulation);
   }
-  return formulation;
+  return { formulation, provides };
 };
 
 /**
@@ -759,7 +804,10 @@ function addComponent(
     ) {
       delete component.externalReferences;
     }
-
+    if (options.specVersion < 1.6) {
+      delete component.omniborId;
+      delete component.swhid;
+    }
     processHashes(pkg, component);
     // Retain evidence
     if (
@@ -954,7 +1002,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
-  const dependencies = context.dependencies || [];
+  let dependencies = context.dependencies || [];
   const parentComponent =
     determineParentComponent(options) || context.parentComponent;
   const metadata = addMetadata(parentComponent, options);
@@ -970,12 +1018,17 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       components,
       dependencies
     };
+    const formulationData = addFormulationSection(options);
     const formulation =
       options.includeFormulation && options.specVersion >= 1.5
-        ? addFormulationSection(options)
+        ? formulationData.formulation
         : undefined;
     if (formulation) {
       jsonTpl.formulation = formulation;
+    }
+    if (options.specVersion >= 1.6 && formulationData.provides.length) {
+      dependencies = dependencies.concat(formulationData.provides);
+      jsonTpl.dependencies = dependencies;
     }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
@@ -4619,6 +4672,7 @@ export function mergeDependencies(
     );
   }
   const deps_map = {};
+  const provides_map = {};
   const parentRef =
     parentComponent && parentComponent["bom-ref"]
       ? parentComponent["bom-ref"]
@@ -4628,9 +4682,17 @@ export function mergeDependencies(
     if (!deps_map[adep.ref]) {
       deps_map[adep.ref] = new Set();
     }
+    if (!provides_map[adep.ref]) {
+      provides_map[adep.ref] = new Set();
+    }
     for (const eachDepends of adep["dependsOn"]) {
       if (parentRef && eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
         deps_map[adep.ref].add(eachDepends);
+      }
+    }
+    for (const eachProvides of adep["provides"]) {
+      if (parentRef && eachProvides.toLowerCase() !== parentRef.toLowerCase()) {
+        provides_map[adep.ref].add(eachProvides);
       }
     }
   }

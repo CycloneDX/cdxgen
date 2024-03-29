@@ -49,6 +49,32 @@ export const getBranch = (configKey, dir) => {
 };
 
 /**
+ * Retrieves the tree and parent hash for a git repo
+ * @param {string} dir repo directory
+ *
+ * @returns Output from git cat-file or undefined
+ */
+export const gitTreeHashes = (dir) => {
+  const treeHashes = {};
+  const output = execGitCommand(dir, ["cat-file", "commit", "HEAD"]);
+  if (output) {
+    output.split("\n").forEach((l) => {
+      l = l.replace("\r", "");
+      if (l === "\n" || l.startsWith("#")) {
+        return;
+      }
+      if (l.startsWith("tree") || l.startsWith("parent")) {
+        const tmpA = l.split(" ");
+        if (tmpA && tmpA.length == 2) {
+          treeHashes[tmpA[0]] = tmpA[1];
+        }
+      }
+    });
+  }
+  return treeHashes;
+};
+
+/**
  * Retrieves the files list from git
  * @param {string} dir repo directory
  *
@@ -74,7 +100,8 @@ export const listFiles = (dir) => {
         const lastParts = tmpA[tmpA.length - 1].split("\t");
         filesList.push({
           hash: tmpA[2],
-          name: lastParts[lastParts.length - 1]
+          name: lastParts[lastParts.length - 1],
+          ref: `gitoid:blob:sha1:${tmpA[2]}`
         });
       }
     });

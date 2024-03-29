@@ -222,9 +222,11 @@ export const validateRefs = (bomJson) => {
       if (!refMap[dep.ref]) {
         warningsList.push(`Invalid ref in dependencies ${dep.ref}`);
       }
-      for (const don of dep.dependsOn) {
-        if (!refMap[don]) {
-          warningsList.push(`Invalid ref in dependencies.dependsOn ${don}`);
+      if (dep.dependsOn) {
+        for (const don of dep.dependsOn) {
+          if (!refMap[don]) {
+            warningsList.push(`Invalid ref in dependencies.dependsOn ${don}`);
+          }
         }
       }
       if (dep.provides) {
