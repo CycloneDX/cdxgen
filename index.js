@@ -1002,7 +1002,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
-  let dependencies = context.dependencies || [];
+  const dependencies = context.dependencies || [];
   const parentComponent =
     determineParentComponent(options) || context.parentComponent;
   const metadata = addMetadata(parentComponent, options);
@@ -1026,7 +1026,11 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     if (formulation) {
       jsonTpl.formulation = formulation;
     }
-    if (options.specVersion >= 1.6 && formulationData.provides.length) {
+    if (
+      options.specVersion >= 1.6 &&
+      options.includeFormulation &&
+      formulationData.provides.length
+    ) {
       const newDependencies = dependencies.concat(formulationData.provides);
       jsonTpl.dependencies = mergeDependencies(
         dependencies,
