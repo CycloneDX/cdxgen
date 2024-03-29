@@ -4707,6 +4707,11 @@ export async function parseCargoData(cargoData) {
       }
     }
   });
+  // The last package will not be followed by a [[package]]-table, so the
+  // last package has no termination condition, other than end-of-file.
+  if (pkg) {
+    pkgList.push(pkg);
+  }
   if (FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
