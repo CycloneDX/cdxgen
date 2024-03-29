@@ -1,6 +1,7 @@
 export function getGitConfig(configKey: string, dir: string): string;
 export function getOriginUrl(dir: string): string;
 export function getBranch(configKey: string, dir: string): string;
+export function gitTreeHashes(dir: string): {};
 export function listFiles(dir: string): any[];
 export function execGitCommand(dir: string, args: any[]): string;
 export function collectJavaInfo(dir: string): {

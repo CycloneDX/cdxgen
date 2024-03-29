@@ -206,10 +206,15 @@ export function createCryptoCertsBom(path: string, options: any): Promise<{
         }[];
     };
 }>;
-export function mergeDependencies(dependencies: any, newDependencies: any, parentComponent?: {}): {
+export function mergeDependencies(dependencies: any, newDependencies: any, parentComponent?: {}): ({
     ref: string;
     dependsOn: any[];
-}[];
+    provides: any[];
+} | {
+    ref: string;
+    dependsOn: any[];
+    provides?: undefined;
+})[];
 export function trimComponents(components: any): any[];
 /**
  * Dedupe components
