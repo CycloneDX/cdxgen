@@ -1019,7 +1019,7 @@ test("parse cargo lock dependencies tests for files on Windows", async () => {
 
   // Simulate Windows files by forcing CRLF line endings to the data we
   // attempt to parse.
-  const crlfFileContent = fileContent.replace(/\n/g, "\r\n");
+  const crlfFileContent = fileContent.replace(/(\r\n|\n)/g, "\r\n");
 
   // The function's logic is tested by other test functions. This test will
   // serve as a smoke test for files on Windows, to make sure the function

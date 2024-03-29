@@ -3072,6 +3072,27 @@ export async function createRustBom(path, options) {
     options
   );
   let dependencyTree = [];
+
+  // Fallback information can all be overriden by command line arguments.
+  // Issue #939 describes that this information. should be fetched from
+  // Cargo.toml-file(s).
+  const fallbackComponentName = basename(path);
+  const fallbackComponentPurl = new PackageURL(
+    "cargo",
+    "",
+    fallbackComponentName,
+    "latest",
+    null,
+    null
+  ).toString();
+  const fallbackParentComponentInfo = {
+    type: "library",
+    "bom-ref": fallbackComponentPurl,
+    purl: fallbackComponentPurl,
+    name: fallbackComponentName,
+    version: "latest"
+  };
+
   if (cargoLockFiles.length) {
     for (const f of cargoLockFiles) {
       if (DEBUG_MODE) {
@@ -3088,45 +3109,19 @@ export async function createRustBom(path, options) {
       }
       const fileDependencylist = parseCargoDependencyData(cargoData);
       if (fileDependencylist && fileDependencylist.length) {
-        dependencyTree = dependencyTree.concat(fileDependencylist);
+        dependencyTree = mergeDependencies(
+          dependencyTree,
+          fileDependencylist,
+          fallbackParentComponentInfo
+        );
       }
     }
-
-    // This is almost a reimplementation of the function mergeDependencies.
-    // It's reimplemented here for the following reasons:
-    //  * mergeDependencies will not merge dependencies without a
-    //    BOM-reference of the component being described. Often
-    //    called "parent component", found in the BOM at metadata.component.
-    //  * This implementation does not look for a suitable BOM-reference for
-    //    the component being described. A component's PURL is often assigned
-    //    as BOM-reference and the parent component's PURL does not appear
-    //    inside Cargo.lock-files, and no package name is looked for in
-    //    Cargo.toml-files.
-    const packageDependencyMap = {};
-    dependencyTree.forEach((pkg) => {
-      if (!packageDependencyMap[pkg.ref]) {
-        packageDependencyMap[pkg.ref] = new Set();
-      }
-      pkg.dependsOn.forEach((dependency) => {
-        packageDependencyMap[pkg.ref].add(dependency);
-      });
-    });
-    const uniqueDependencyTree = Object.entries(packageDependencyMap).map(
-      (entry) => {
-        const [ref, dependencies] = entry;
-        const dependsOn = Array.from(dependencies).sort();
-        dependsOn.sort();
-        return {
-          ref,
-          dependsOn
-        };
-      }
-    );
 
     return buildBomNSData(options, pkgList, "cargo", {
       src: path,
       filename: cargoLockFiles.join(", "),
-      dependencies: uniqueDependencyTree
+      dependencies: dependencyTree,
+      parentComponent: fallbackParentComponentInfo
     });
   }
   return {};
