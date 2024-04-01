@@ -1167,7 +1167,7 @@
     },
     "hash": {
       "type": "object",
-      "title": "Hash Objects",
+      "title": "Hash",
       "required": ["alg", "content"],
       "additionalProperties": false,
       "properties": {
@@ -1603,7 +1603,8 @@
             "name": {
               "type": "string",
               "title": "Name",
-              "description": "The name of the source. For example 'National Vulnerability Database', 'NVD', and 'Apache'"
+              "description": "The name of the source.",
+              "examples": ["National Vulnerability Database", "NVD", "Apache"]
             },
             "url": {
               "type": "string",
@@ -2021,6 +2022,7 @@
       "additionalProperties": false,
       "properties": {
         "identity": {
+          "title": "Identity Evidence",
           "description": "Evidence that substantiates the identity of a component. The identify may be an object or an array of identity objects. Support for specifying identify as a single object was introduced in CycloneDX v1.5. Arrays were introduced in v1.6. It is RECOMMENDED that all implementations use arrays, even if only one identity object is specified.",
           "oneOf": [
             {
@@ -2082,6 +2084,7 @@
         },
         "callstack": {
           "type": "object",
+          "title": "Call Stack",
           "description": "Evidence of the components use through the callstack.",
           "additionalProperties": false,
           "properties": {
@@ -2138,12 +2141,12 @@
         },
         "licenses": {
           "$ref": "#/definitions/licenseChoice",
-          "title": "Component License(s)"
+          "title": "License Evidence"
         },
         "copyright": {
           "type": "array",
           "items": { "$ref": "#/definitions/copyright" },
-          "title": "Copyright"
+          "title": "Copyright Evidence"
         }
       }
     },
@@ -3175,8 +3178,10 @@
       "additionalProperties": false,
       "properties": {
         "format": {
-          "description": "The data format for input/output to the model. Example formats include string, image, time-series",
-          "type": "string"
+          "title": "Input/Output Format",
+          "description": "The data format for input/output to the model.",
+          "type": "string",
+          "examples": ["string", "image", "time-series"]
         }
       }
     },
@@ -3210,6 +3215,7 @@
           }
         },
         "name": {
+          "title": "Dataset Name",
           "description": "The name of the dataset.",
           "type": "string"
         },
@@ -3245,6 +3251,7 @@
         },
         "sensitiveData": {
           "type": "array",
+          "title": "Sensitive Data",
           "description": "A description of any sensitive data in a dataset.",
           "items": {
             "type": "string"
@@ -3252,6 +3259,7 @@
         },
         "graphics": { "$ref": "#/definitions/graphicsCollection" },
         "description": {
+          "title": "Dataset Description",
           "description": "A description of the dataset. Can describe size of dataset, whether it's used for source code, training, testing, or validation, etc.",
           "type": "string"
         },
@@ -3315,10 +3323,12 @@
       "additionalProperties": false,
       "properties": {
         "description": {
+          "title": "Description",
           "description": "A description of this collection of graphics.",
           "type": "string"
         },
         "collection": {
+          "title": "Collection",
           "description": "A collection of graphics.",
           "type": "array",
           "items": { "$ref": "#/definitions/graphic" }
@@ -3327,9 +3337,11 @@
     },
     "graphic": {
       "type": "object",
+      "title": "Graphic",
       "additionalProperties": false,
       "properties": {
         "name": {
+          "title": "Name",
           "description": "The name of the graphic.",
           "type": "string"
         },
@@ -3342,30 +3354,37 @@
     },
     "performanceMetric": {
       "type": "object",
+      "title": "Performance Metric",
       "additionalProperties": false,
       "properties": {
         "type": {
+          "title": "Type",
           "description": "The type of performance metric.",
           "type": "string"
         },
         "value": {
+          "title": "Value",
           "description": "The value of the performance metric.",
           "type": "string"
         },
         "slice": {
+          "title": "Slice",
           "description": "The name of the slice this metric was computed on. By default, assume this metric is not sliced.",
           "type": "string"
         },
         "confidenceInterval": {
+          "title": "Confidence Interval",
           "description": "The confidence interval of the metric.",
           "type": "object",
           "additionalProperties": false,
           "properties": {
             "lowerBound": {
+              "title": "Lower Bound",
               "description": "The lower bound of the confidence interval.",
               "type": "string"
             },
             "upperBound": {
+              "title": "Upper Bound",
               "description": "The upper bound of the confidence interval.",
               "type": "string"
             }
@@ -3375,13 +3394,16 @@
     },
     "risk": {
       "type": "object",
+      "title": "Risk",
       "additionalProperties": false,
       "properties": {
         "name": {
+          "title": "Name",
           "description": "The name of the risk.",
           "type": "string"
         },
         "mitigationStrategy": {
+          "title": "Mitigation Strategy",
           "description": "Strategy used to address this risk.",
           "type": "string"
         }
@@ -3395,18 +3417,22 @@
       "properties": {
         "groupAtRisk": {
           "type": "string",
+          "title": "Group at Risk",
           "description": "The groups or individuals at risk of being systematically disadvantaged by the model."
         },
         "benefits": {
           "type": "string",
+          "title": "Benefits",
           "description": "Expected benefits to the identified groups."
         },
         "harms": {
           "type": "string",
+          "title": "Harms",
           "description": "Expected harms to the identified groups."
         },
         "mitigationStrategy": {
           "type": "string",
+          "title": "Mitigation Strategy",
           "description": "With respect to the benefits and harms outlined, please describe any mitigation strategy implemented."
         }
       }
@@ -3634,27 +3660,32 @@
         "region": {
           "type": "string",
           "title": "Region",
-          "description": "The region or state in the country. For example, Texas."
+          "description": "The region or state in the country.",
+          "examples": ["Texas"]
         },
         "locality": {
           "type": "string",
           "title": "Locality",
-          "description": "The locality or city within the country. For example, Austin."
+          "description": "The locality or city within the country.",
+          "examples": ["Austin"]
         },
         "postOfficeBoxNumber ": {
           "type": "string",
           "title": "Post Office Box Number",
-          "description": "The post office box number. For example, 901."
+          "description": "The post office box number.",
+          "examples": ["901"]
         },
         "postalCode": {
           "type": "string",
           "title": "Postal Code",
-          "description": "The postal code. For example, 78758."
+          "description": "The postal code.",
+          "examples": ["78758"]
         },
         "streetAddress": {
           "type": "string",
           "title": "Street Address",
-          "description": "The street address. For example, 100 Main Street."
+          "description": "The street address.",
+          "examples": ["100 Main Street"]
         }
       }
     },
@@ -4211,6 +4242,7 @@
         },
         "conditions": {
           "type": "array",
+          "title": "Conditions",
           "uniqueItems": true,
           "items": {
             "$ref": "#/definitions/condition"
@@ -4573,6 +4605,7 @@
     },
     "componentIdentityEvidence": {
       "type": "object",
+      "title": "Identity Evidence",
       "description": "Evidence that substantiates the identity of a component.",
       "required": ["field"],
       "additionalProperties": false,
@@ -5326,26 +5359,32 @@
               "properties": {
                 "encr": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Encryption Algorithm (ENCR)",
                   "description": "Transform Type 1: encryption algorithms"
                 },
                 "prf": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Pseudorandom Function (PRF)",
                   "description": "Transform Type 2: pseudorandom functions"
                 },
                 "integ": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Integrity Algorithm (INTEG)",
                   "description": "Transform Type 3: integrity algorithms"
                 },
                 "ke": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Key Exchange Method (KE)",
                   "description": "Transform Type 4: Key Exchange Method (KE) per RFC9370, formerly called Diffie-Hellman Group (D-H)"
                 },
                 "esn": {
                   "type": "boolean",
+                  "title": "Extended Sequence Numbers (ESN)",
                   "description": "Specifies if an Extended Sequence Number (ESN) is used."
                 },
                 "auth": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "IKEv2 Authentication method",
                   "description": "IKEv2 Authentication method"
                 }
               }
