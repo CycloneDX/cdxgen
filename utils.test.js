@@ -1056,28 +1056,168 @@ dependencies = ["does-not-exist"]
 
 test("parse cargo toml", async () => {
   expect(await parseCargoTomlData(null)).toEqual([]);
-  let dep_list = await parseCargoTomlData(
-    readFileSync("./test/data/Cargo1.toml", { encoding: "utf-8" })
-  );
+  let dep_list = await parseCargoTomlData("./test/data/Cargo1.toml");
   expect(dep_list.length).toEqual(4);
   expect(dep_list).toEqual([
-    { group: "", name: "unwind", version: "0.0.0" },
-    { name: "libc", version: "0.2.79" },
-    { name: "compiler_builtins", version: "0.1.0" },
-    { name: "cfg-if", version: "0.1.8" }
-  ]);
-  dep_list = await parseCargoTomlData(
-    readFileSync("./test/data/Cargo2.toml", { encoding: "utf-8" })
-  );
-  expect(dep_list.length).toEqual(3);
-  expect(dep_list).toEqual([
-    { group: "", name: "quiche-fuzz", version: "0.1.0" },
-    { name: "lazy_static", version: "1" },
     {
-      name: "libfuzzer-sys",
-      version: "git+https://github.com/rust-fuzz/libfuzzer-sys.git"
+      author: "The Rust Project Developers",
+      group: "",
+      name: "unwind",
+      version: "0.0.0",
+      properties: [{ name: "SrcFile", value: "./test/data/Cargo1.toml" }],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: "./test/data/Cargo1.toml"
+            }
+          ]
+        }
+      },
+      purl: "pkg:cargo/unwind@0.0.0",
+      "bom-ref": "pkg:cargo/unwind@0.0.0",
+      type: "library"
+    },
+    {
+      name: "libc",
+      version: "0.2.79",
+      properties: [{ name: "SrcFile", value: "./test/data/Cargo1.toml" }],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: "./test/data/Cargo1.toml"
+            }
+          ]
+        }
+      },
+      purl: "pkg:cargo/libc@0.2.79",
+      "bom-ref": "pkg:cargo/libc@0.2.79",
+      type: "library"
+    },
+    {
+      name: "compiler_builtins",
+      version: "0.1.0",
+      properties: [{ name: "SrcFile", value: "./test/data/Cargo1.toml" }],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: "./test/data/Cargo1.toml"
+            }
+          ]
+        }
+      },
+      purl: "pkg:cargo/compiler_builtins@0.1.0",
+      "bom-ref": "pkg:cargo/compiler_builtins@0.1.0",
+      type: "library"
+    },
+    {
+      name: "cfg-if",
+      version: "0.1.8",
+      properties: [{ name: "SrcFile", value: "./test/data/Cargo1.toml" }],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: "./test/data/Cargo1.toml"
+            }
+          ]
+        }
+      },
+      purl: "pkg:cargo/cfg-if@0.1.8",
+      "bom-ref": "pkg:cargo/cfg-if@0.1.8",
+      type: "library"
     }
   ]);
+  dep_list = await parseCargoTomlData("./test/data/Cargo2.toml");
+  expect(dep_list.length).toEqual(3);
+  expect(dep_list).toEqual([
+    {
+      group: "",
+      name: "quiche-fuzz",
+      version: "0.1.0",
+      author: "Alessandro Ghedini <alessandro@ghedini.me>",
+      properties: [{ name: "SrcFile", value: "./test/data/Cargo2.toml" }],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: "./test/data/Cargo2.toml"
+            }
+          ]
+        }
+      },
+      purl: "pkg:cargo/quiche-fuzz@0.1.0",
+      "bom-ref": "pkg:cargo/quiche-fuzz@0.1.0",
+      type: "library"
+    },
+    {
+      name: "lazy_static",
+      version: "1",
+      properties: [{ name: "SrcFile", value: "./test/data/Cargo2.toml" }],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: "./test/data/Cargo2.toml"
+            }
+          ]
+        }
+      },
+      purl: "pkg:cargo/lazy_static@1",
+      "bom-ref": "pkg:cargo/lazy_static@1",
+      type: "library"
+    },
+    {
+      name: "libfuzzer-sys",
+      version: "git+https://github.com/rust-fuzz/libfuzzer-sys.git",
+      properties: [{ name: "SrcFile", value: "./test/data/Cargo2.toml" }],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: "./test/data/Cargo2.toml"
+            }
+          ]
+        }
+      },
+      purl: "pkg:cargo/libfuzzer-sys@git%2Bhttps:%2F%2Fgithub.com%2Frust-fuzz%2Flibfuzzer-sys.git",
+      "bom-ref":
+        "pkg:cargo/libfuzzer-sys@git+https://github.com/rust-fuzz/libfuzzer-sys.git",
+      type: "library"
+    }
+  ]);
+  dep_list = await parseCargoTomlData("./test/data/Cargo3.toml", true);
+  expect(dep_list.length).toEqual(10);
 });
 
 test("parse cargo auditable data", async () => {

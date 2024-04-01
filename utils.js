@@ -602,7 +602,7 @@ export async function parsePkgJson(pkgJsonFile, simple = false) {
             methods: [
               {
                 technique: "manifest-analysis",
-                confidence: 1,
+                confidence: 0.7,
                 value: pkgJsonFile
               }
             ]
@@ -4578,11 +4578,17 @@ export async function getDartMetadata(pkgList) {
 /**
  * Method to parse cargo.toml data
  *
- * @param {string} cargoData Content of cargo.toml
+ * @param {string} cargoTomlFile cargo.toml file
+ * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ *
  * @returns {array} Package list
  */
-export async function parseCargoTomlData(cargoData) {
+export async function parseCargoTomlData(cargoTomlFile, simple = false) {
   const pkgList = [];
+  if (!cargoTomlFile || !existsSync(cargoTomlFile)) {
+    return pkgList;
+  }
+  const cargoData = readFileSync(cargoTomlFile, { encoding: "utf-8" });
   if (!cargoData) {
     return pkgList;
   }
@@ -4604,7 +4610,11 @@ export async function parseCargoTomlData(cargoData) {
       dependencyMode = true;
       packageMode = false;
     }
-    if (l.startsWith("[") && !l.startsWith("[dependencies]") && !packageMode) {
+    if (
+      l.startsWith("[") &&
+      !l.startsWith("[dependencies]") &&
+      (!packageMode || l.startsWith("[["))
+    ) {
       dependencyMode = false;
       packageMode = false;
     }
@@ -4617,6 +4627,7 @@ export async function parseCargoTomlData(cargoData) {
           pkg._integrity = "sha384-" + value;
           break;
         case "name":
+          value = value.split(" ")[0];
           pkg.group = dirname(value);
           if (pkg.group === ".") {
             pkg.group = "";
@@ -4624,11 +4635,55 @@ export async function parseCargoTomlData(cargoData) {
           pkg.name = basename(value);
           break;
         case "version":
-          pkg.version = value;
+          pkg.version = value.split(" ")[0];
+          break;
+        case "authors":
+          pkg.author = value.replace(/[\[\]]/g, "");
+          break;
+        case "homepage":
+          pkg.homepage = { url: value };
+          break;
+        case "repository":
+          pkg.repository = { url: value };
+          break;
+        case "license":
+          pkg.license = value;
           break;
       }
     } else if (dependencyMode && l.indexOf("=") > -1) {
       if (pkg) {
+        if (!simple) {
+          pkg.properties = [
+            {
+              name: "SrcFile",
+              value: cargoTomlFile
+            }
+          ];
+          pkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.7,
+                  value: cargoTomlFile
+                }
+              ]
+            }
+          };
+        }
+        const ppurl = new PackageURL(
+          "cargo",
+          pkg.group,
+          pkg.name,
+          pkg.version,
+          null,
+          null
+        ).toString();
+        pkg.purl = ppurl;
+        pkg["bom-ref"] = decodeURIComponent(ppurl);
+        pkg.type = "library";
         pkgList.push(pkg);
       }
       pkg = undefined;
@@ -4652,14 +4707,58 @@ export async function parseCargoTomlData(cargoData) {
       if (name && version) {
         name = name.replace(new RegExp("[\"']", "g"), "");
         version = version.replace(new RegExp("[\"']", "g"), "");
-        pkgList.push({ name, version });
+        const apkg = { name, version };
+        if (!simple) {
+          apkg.properties = [
+            {
+              name: "SrcFile",
+              value: cargoTomlFile
+            }
+          ];
+          apkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "manifest-analysis",
+                  confidence: 0.7,
+                  value: cargoTomlFile
+                }
+              ]
+            }
+          };
+        }
+        const ppurl = new PackageURL(
+          "cargo",
+          apkg.group,
+          apkg.name,
+          apkg.version,
+          null,
+          null
+        ).toString();
+        apkg.purl = ppurl;
+        apkg["bom-ref"] = decodeURIComponent(ppurl);
+        apkg.type = "library";
+        pkgList.push(apkg);
       }
     }
   });
   if (pkg) {
+    const ppurl = new PackageURL(
+      "cargo",
+      pkg.group,
+      pkg.name,
+      pkg.version,
+      null,
+      null
+    ).toString();
+    pkg.purl = ppurl;
+    pkg["bom-ref"] = decodeURIComponent(ppurl);
+    pkg.type = "library";
     pkgList.push(pkg);
   }
-  if (FETCH_LICENSE) {
+  if (!simple && FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
     return pkgList;
