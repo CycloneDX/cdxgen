@@ -4707,11 +4707,154 @@ export async function parseCargoData(cargoData) {
       }
     }
   });
+  // The last package will not be followed by a [[package]]-table, so the
+  // last package has no termination condition, other than end-of-file.
+  if (pkg) {
+    pkgList.push(pkg);
+  }
   if (FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
     return pkgList;
   }
+}
+
+export function parseCargoDependencyData(cargoLockData) {
+  // The patterns to parse the Cargo.lock file makes no attempt to parse
+  // toml-files properly. They match the structure of Cargo.lock specifically.
+
+  // Cargo.lock files generates packages separated by blank lines. There does
+  // not seem to be a specification for the lock files, but cargo
+  // generate-lockfile seems to consistently create them that way. Important
+  // note to perform an eager match, so as to not match the first header with
+  // the entire document.
+  // If the Cargo.lock file do not contain a footer with metadata, the last
+  // package section only has one trailing newline trailed by the end-of-file
+  // instead.
+  const packagePattern = /\[\[package\]\][\s\S]+?(\r?\n)((\r?\n)|$)/g;
+
+  // Match each key-value pair. This assumes the value to only be a string or
+  // an array (either single- or multi-line).
+  const keyValuePattern = /\w+\s?=\s?(".+"|\[[\s\S]+\])\r?\n/g;
+
+  const purlFromPackageInfo = (pkg) =>
+    decodeURIComponent(
+      new PackageURL("cargo", "", pkg.name, pkg.version, null, null).toString()
+    );
+
+  // The dependency list may appear as a single-line list:
+  //  ["ansi_term", "openssl-sys"]
+  // or as a multi-line list with a trailing comma for the last item:
+  // [
+  //   "ansi_term",
+  //   "openssl-sys",
+  // ]
+  // Names in the dependency-list may appear is simple names:
+  //  "ansi_term", "openssl-sys"
+  // or with a version attached, delimited by a space:
+  //  "winapi 0.3.8", "semver-parser 0.9.0"
+  // or possibly with a registry link:
+  //  "base64 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)"
+  const parseDependencyValue = (dependencyValue) => {
+    return (
+      dependencyValue
+        // Remove starting and trailing brackets, with surrounding whitespace
+        .replace(/^\s*\[\s+/g, "")
+        .replace(/\s*\]\s+$/g, "")
+        // Remove the quotes from each dependency name, making the dependency
+        // list a comma-separated list of names.
+        .replace(/"/g, "")
+        // Trim any whitespace surrounding the commas
+        .replace(/\s*,\s*/g, ",")
+        // In order to not end up with an empty item at the end in case of a
+        // trailing comma, remove one if it exists.
+        .replace(/,$/, "")
+        // Finally, create a list from the comma separated values
+        .split(",")
+        // In order to not drop the version from the dependency name, we return
+        // both the name and the version, if one exists. If it doesn't exist, we
+        // can assume it is the version of the component in the component list.
+        // The registry link is always dropped.
+        .map((dependencyName) => {
+          const [name, version] = dependencyName.split(" ");
+          return {
+            name,
+            version
+          };
+        })
+    );
+  };
+
+  // To fulfill the specification, the list of dependencies has to be sweeped
+  // twice. References (the PURL) to entries in the component list requires
+  // both the package name and specific package version. And packages may
+  // appear as a dependency before it is "defined" in the Cargo.lock file.
+  // So, the first sweep creates an inventory of packages in the Cargo.lock
+  // file. With a full inventory of the packages in the Cargo.lock file, a
+  // second sweep can construct the objects for the depndencies-list.
+
+  // First sweep: Construct inventory of Cargo.lock contents.
+  const lockfileInventory = {};
+  const allPackages = cargoLockData.matchAll(packagePattern);
+  [...allPackages].forEach((packageObject) => {
+    const packageTable = packageObject[0].matchAll(keyValuePattern);
+    const packageInfo = {};
+    [...packageTable].forEach((keyValue) => {
+      const [key, value] = keyValue[0].split(" = ");
+      switch (key) {
+        // Only "dependencies" is expected to be a list. All other keys are
+        // expected to be strings.
+        case "dependencies":
+          packageInfo[key] = parseDependencyValue(value);
+          break;
+        default:
+          packageInfo[key] = value.replace(/\s*"\s*/g, "");
+          break;
+      }
+    });
+    lockfileInventory[packageInfo.name] = packageInfo;
+  });
+
+  // Second sweep, construct the dependencies-list.
+  return Object.values(lockfileInventory).map((pkg) => {
+    if (!pkg.dependencies) {
+      return {
+        ref: purlFromPackageInfo(pkg),
+        dependsOn: []
+      };
+    }
+    return {
+      ref: purlFromPackageInfo(pkg),
+      dependsOn: pkg.dependencies
+        .map((dependency) => {
+          // If the package has a dependency with a specific version, it needs
+          // to be respected.
+          if (dependency.version) {
+            return purlFromPackageInfo(dependency);
+          }
+
+          if (!lockfileInventory[dependency.name]) {
+            // We have found a package listed as a dependency that does not
+            // appear as a package in the Cargo.lock-file. This is an error!
+            // If this happens, the Cargo.lock-file is incomplete and have
+            // most likely been manually tampered with. Add a warning to
+            // signal to the user that the file is invalid, skip the package,
+            // and continue.
+            if (DEBUG_MODE) {
+              console.warn(
+                `The package "${dependency.name}" appears as a dependency to "${pkg.name}" but is not itself listed in the Cargo.lock-file. The Cargo.lock-file is invalid! The produced SBOM will not list ${dependency.name} as a dependency.`
+              );
+            }
+            return undefined;
+          }
+
+          // If no version was specified for the dependency, default to the
+          // version known from the package table.
+          return purlFromPackageInfo(lockfileInventory[dependency.name]);
+        })
+        .filter((pkg) => pkg) // Filter undefined entries, which should only happen when packages listed as a dependency are not defined as packages.
+    };
+  });
 }
 
 export async function parseCargoAuditableData(cargoData) {

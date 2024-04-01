@@ -62,6 +62,7 @@ import {
   parseCabalData,
   parseCargoAuditableData,
   parseCargoData,
+  parseCargoDependencyData,
   parseCargoTomlData,
   parseCljDep,
   parseCloudBuildData,
@@ -3070,6 +3071,28 @@ export async function createRustBom(path, options) {
     (options.multiProject ? "**/" : "") + "Cargo.lock",
     options
   );
+  let dependencyTree = [];
+
+  // Fallback information can all be overriden by command line arguments.
+  // Issue #939 describes that this information. should be fetched from
+  // Cargo.toml-file(s).
+  const fallbackComponentName = basename(path);
+  const fallbackComponentPurl = new PackageURL(
+    "cargo",
+    "",
+    fallbackComponentName,
+    "latest",
+    null,
+    null
+  ).toString();
+  const fallbackParentComponentInfo = {
+    type: "library",
+    "bom-ref": fallbackComponentPurl,
+    purl: fallbackComponentPurl,
+    name: fallbackComponentName,
+    version: "latest"
+  };
+
   if (cargoLockFiles.length) {
     for (const f of cargoLockFiles) {
       if (DEBUG_MODE) {
@@ -3080,10 +3103,25 @@ export async function createRustBom(path, options) {
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
+
+      if (DEBUG_MODE) {
+        console.log(`Constructing dependency tree from ${f}`);
+      }
+      const fileDependencylist = parseCargoDependencyData(cargoData);
+      if (fileDependencylist && fileDependencylist.length) {
+        dependencyTree = mergeDependencies(
+          dependencyTree,
+          fileDependencylist,
+          fallbackParentComponentInfo
+        );
+      }
     }
+
     return buildBomNSData(options, pkgList, "cargo", {
       src: path,
-      filename: cargoLockFiles.join(", ")
+      filename: cargoLockFiles.join(", "),
+      dependencies: dependencyTree,
+      parentComponent: fallbackParentComponentInfo
     });
   }
   return {};
