@@ -4638,7 +4638,7 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
           pkg.version = value.split(" ")[0];
           break;
         case "authors":
-          pkg.author = value.replace(/[\[\]]/g, "");
+          pkg.author = value.replace(/[[\]]/g, "");
           break;
         case "homepage":
           pkg.homepage = { url: value };
