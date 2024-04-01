@@ -108,7 +108,6 @@
     "types/"
   ],
   "devDependencies": {
-    "caxa": "^3.0.1",
     "docsify-cli": "^4.4.4",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
