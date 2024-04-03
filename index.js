@@ -3012,6 +3012,7 @@ export async function createGoBom(path, options) {
  */
 export async function createRustBom(path, options) {
   let pkgList = [];
+  let parentComponent = {};
   // Is this a binary file
   let maybeBinary = false;
   try {
@@ -3047,23 +3048,39 @@ export async function createRustBom(path, options) {
     (options.multiProject ? "**/" : "") + "Cargo.toml",
     options
   );
+  // This function assumes that the given path is prioritized, i.e that the
+  // Cargo.toml-file directly inside the directory `path` (or the one in the
+  // shortest distance from the `path` directory) will be the first returned
+  // object. If that assumption is broken, the parent component may be
+  // inaccurate.
+
   const cargoMode = cargoFiles.length;
   const cargoLockMode = cargoLockFiles.length;
-  if (cargoMode && !cargoLockMode) {
+  if (cargoMode) {
     for (const f of cargoFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const cargoData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parseCargoTomlData(cargoData);
+      const dlist = await parseCargoTomlData(f, cargoLockMode);
       if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
+        if (!cargoLockMode) {
+          pkgList = pkgList.concat(dlist);
+        } else {
+          if (!Object.keys(parentComponent).length) {
+            parentComponent = dlist[0];
+            parentComponent.type = "application";
+            parentComponent.components = [];
+            if (DEBUG_MODE) {
+              console.log(
+                `Assigning parent component "${parentComponent.name}" from ${f}`
+              );
+            }
+          } else {
+            parentComponent.components.push(dlist[0]);
+          }
+        }
       }
     }
-    return buildBomNSData(options, pkgList, "cargo", {
-      src: path,
-      filename: cargoFiles.join(", ")
-    });
   }
   // Get the new lock files
   cargoLockFiles = getAllFiles(
@@ -3072,27 +3089,6 @@ export async function createRustBom(path, options) {
     options
   );
   let dependencyTree = [];
-
-  // Fallback information can all be overriden by command line arguments.
-  // Issue #939 describes that this information. should be fetched from
-  // Cargo.toml-file(s).
-  const fallbackComponentName = basename(path);
-  const fallbackComponentPurl = new PackageURL(
-    "cargo",
-    "",
-    fallbackComponentName,
-    "latest",
-    null,
-    null
-  ).toString();
-  const fallbackParentComponentInfo = {
-    type: "library",
-    "bom-ref": fallbackComponentPurl,
-    purl: fallbackComponentPurl,
-    name: fallbackComponentName,
-    version: "latest"
-  };
-
   if (cargoLockFiles.length) {
     for (const f of cargoLockFiles) {
       if (DEBUG_MODE) {
@@ -3112,16 +3108,15 @@ export async function createRustBom(path, options) {
         dependencyTree = mergeDependencies(
           dependencyTree,
           fileDependencylist,
-          fallbackParentComponentInfo
+          parentComponent
         );
       }
     }
-
     return buildBomNSData(options, pkgList, "cargo", {
       src: path,
       filename: cargoLockFiles.join(", "),
       dependencies: dependencyTree,
-      parentComponent: fallbackParentComponentInfo
+      parentComponent
     });
   }
   return {};
@@ -4996,6 +4991,15 @@ export async function createMultiXBom(pathList, options) {
         Object.keys(bomData.parentComponent).length
       ) {
         parentSubComponents.push(bomData.parentComponent);
+      }
+      // Retain metadata.component.components
+      if (
+        bomData.parentComponent.components &&
+        bomData.parentComponent.components.length
+      ) {
+        parentSubComponents = parentSubComponents.concat(
+          bomData.parentComponent.components
+        );
       }
     }
     bomData = createPHPBom(path, options);

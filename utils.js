@@ -602,7 +602,7 @@ export async function parsePkgJson(pkgJsonFile, simple = false) {
             methods: [
               {
                 technique: "manifest-analysis",
-                confidence: 1,
+                confidence: 0.7,
                 value: pkgJsonFile
               }
             ]
@@ -4578,11 +4578,77 @@ export async function getDartMetadata(pkgList) {
 /**
  * Method to parse cargo.toml data
  *
- * @param {string} cargoData Content of cargo.toml
+ * The component described by a [package] section will be put at the front of
+ * the list, regardless of if [package] appears before or after
+ * [dependencies]. Found dependencies will be placed at the back of the
+ * list.
+ *
+ * The Cargo documentation specifies that the [package] section should appear
+ * first as a convention, but it is not enforced.
+ * https://doc.rust-lang.org/stable/style-guide/cargo.html#formatting-conventions
+ *
+ * @param {string} cargoTomlFile cargo.toml file
+ * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ *
  * @returns {array} Package list
  */
-export async function parseCargoTomlData(cargoData) {
+export async function parseCargoTomlData(cargoTomlFile, simple = false) {
   const pkgList = [];
+
+  // Helper function to add a component to the package list. It will uphold
+  // the guarantee that the component described by the
+  // [package]-section remains at the front of the list, and add evidence if
+  // requested.
+  const addPackageToList = (packageList, pkg, { packageMode, simple }) => {
+    if (!pkg) return;
+
+    if (!simple) {
+      pkg.properties = [
+        {
+          name: "SrcFile",
+          value: cargoTomlFile
+        }
+      ];
+      pkg.evidence = {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: cargoTomlFile
+            }
+          ]
+        }
+      };
+    }
+    const ppurl = new PackageURL(
+      "cargo",
+      pkg.group,
+      pkg.name,
+      pkg.version,
+      null,
+      null
+    ).toString();
+    pkg.purl = ppurl;
+    pkg["bom-ref"] = decodeURIComponent(ppurl);
+    pkg.type = "library";
+
+    // Ensure the component described by [package] is in front of the list to
+    // give the caller some information about which component the BOM is the
+    // parent component and which are dependencies.
+    if (packageMode) {
+      packageList.unshift(pkg);
+    } else {
+      packageList.push(pkg);
+    }
+  };
+
+  if (!cargoTomlFile || !existsSync(cargoTomlFile)) {
+    return pkgList;
+  }
+  const cargoData = readFileSync(cargoTomlFile, { encoding: "utf-8" });
   if (!cargoData) {
     return pkgList;
   }
@@ -4595,16 +4661,29 @@ export async function parseCargoTomlData(cargoData) {
     l = l.replace("\r", "");
     if (l.indexOf("[package]") > -1) {
       packageMode = true;
-      if (pkg) {
-        pkgList.push(pkg);
-      }
+      addPackageToList(pkgList, pkg, { packageMode, simple });
       pkg = {};
     }
     if (l.startsWith("[dependencies]")) {
       dependencyMode = true;
       packageMode = false;
     }
-    if (l.startsWith("[") && !l.startsWith("[dependencies]") && !packageMode) {
+
+    // Properly parsing project with workspeces is currently unsupported. Some
+    // projects may have a top-level Cargo.toml file containing only
+    // workspace definitions and no package name. That will make the parent
+    // component unreliable.
+    if (l.startsWith("[workspace]") && DEBUG_MODE) {
+      console.log(
+        `Found [workspace] section in ${cargoTomlFile}. Workspaces are currently not fully supported. Verify that the parent component is correct.`
+      );
+    }
+
+    if (
+      l.startsWith("[") &&
+      !l.startsWith("[dependencies]") &&
+      (!packageMode || l.startsWith("[["))
+    ) {
       dependencyMode = false;
       packageMode = false;
     }
@@ -4617,6 +4696,7 @@ export async function parseCargoTomlData(cargoData) {
           pkg._integrity = "sha384-" + value;
           break;
         case "name":
+          value = value.split(" ")[0];
           pkg.group = dirname(value);
           if (pkg.group === ".") {
             pkg.group = "";
@@ -4624,12 +4704,24 @@ export async function parseCargoTomlData(cargoData) {
           pkg.name = basename(value);
           break;
         case "version":
-          pkg.version = value;
+          pkg.version = value.split(" ")[0];
+          break;
+        case "authors":
+          pkg.author = value.replace(/[[\]]/g, "");
+          break;
+        case "homepage":
+          pkg.homepage = { url: value };
+          break;
+        case "repository":
+          pkg.repository = { url: value };
+          break;
+        case "license":
+          pkg.license = value;
           break;
       }
     } else if (dependencyMode && l.indexOf("=") > -1) {
       if (pkg) {
-        pkgList.push(pkg);
+        addPackageToList(pkgList, pkg, { packageMode, simple });
       }
       pkg = undefined;
       const tmpA = l.split(" = ");
@@ -4652,14 +4744,15 @@ export async function parseCargoTomlData(cargoData) {
       if (name && version) {
         name = name.replace(new RegExp("[\"']", "g"), "");
         version = version.replace(new RegExp("[\"']", "g"), "");
-        pkgList.push({ name, version });
+        const apkg = { name, version };
+        addPackageToList(pkgList, apkg, { packageMode, simple });
       }
     }
   });
   if (pkg) {
-    pkgList.push(pkg);
+    addPackageToList(pkgList, pkg, { packageMode, simple });
   }
-  if (FETCH_LICENSE) {
+  if (!simple && FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
   } else {
     return pkgList;
