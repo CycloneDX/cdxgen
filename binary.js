@@ -404,10 +404,7 @@ export function getOSPackages(src) {
         osReleaseFile = join(src, "usr", "lib", "os-release");
       }
       if (osReleaseFile) {
-        const osReleaseInfo = readFileSync(
-          join(src, "usr", "lib", "os-release"),
-          "utf-8"
-        );
+        const osReleaseInfo = readFileSync(osReleaseFile, "utf-8");
         if (osReleaseInfo) {
           osReleaseInfo.split("\n").forEach((l) => {
             if (!l.startsWith("#") && l.includes("=")) {
@@ -429,6 +426,15 @@ export function getOSPackages(src) {
         case "ubuntu":
         case "pop":
           purl_type = "deb";
+          break;
+        case "alpine":
+          purl_type = "apk";
+          if (osReleaseData.VERSION_ID) {
+            const versionParts = osReleaseData["VERSION_ID"].split(".");
+            if (versionParts.length >= 2) {
+              distro_codename = `alpine-${versionParts[0]}.${versionParts[1]}`;
+            }
+          }
           break;
         default:
           if (distro_id_like.includes("debian")) {
@@ -529,7 +535,7 @@ export function getOSPackages(src) {
                   } else if (group === "alpine") {
                     const dtmpA = purlObj.qualifiers.distro.split(".");
                     if (dtmpA && dtmpA.length > 2) {
-                      distro_codename = group + "-" + dtmpA[0] + "." + dtmpA[1];
+                      distro_codename = dtmpA[0] + "." + dtmpA[1];
                     }
                   } else if (group === "photon") {
                     const dtmpA = purlObj.qualifiers.distro.split("-");

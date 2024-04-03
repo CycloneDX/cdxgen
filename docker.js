@@ -700,7 +700,6 @@ export const extractTar = async (fullImageName, dir) => {
           if (
             path.includes("cacerts") ||
             path.includes("ssl/certs") ||
-            path.includes("etc/") ||
             path.includes("logs/") ||
             path.includes("dev/") ||
             path.includes("usr/share/zoneinfo/") ||
