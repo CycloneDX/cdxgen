@@ -521,6 +521,15 @@ export function getDartMetadata(pkgList: any[]): Promise<any[]>;
 /**
  * Method to parse cargo.toml data
  *
+ * The component described by a [package] section will be put at the front of
+ * the list, regardless of if [package] appears before or after
+ * [dependencies]. Found dependencies will be placed at the back of the
+ * list.
+ *
+ * The Cargo documentation specifies that the [package] section should appear
+ * first as a convention, but it is not enforced.
+ * https://doc.rust-lang.org/stable/style-guide/cargo.html#formatting-conventions
+ *
  * @param {string} cargoTomlFile cargo.toml file
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
  *

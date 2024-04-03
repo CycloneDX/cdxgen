@@ -4578,6 +4578,15 @@ export async function getDartMetadata(pkgList) {
 /**
  * Method to parse cargo.toml data
  *
+ * The component described by a [package] section will be put at the front of
+ * the list, regardless of if [package] appears before or after
+ * [dependencies]. Found dependencies will be placed at the back of the
+ * list.
+ *
+ * The Cargo documentation specifies that the [package] section should appear
+ * first as a convention, but it is not enforced.
+ * https://doc.rust-lang.org/stable/style-guide/cargo.html#formatting-conventions
+ *
  * @param {string} cargoTomlFile cargo.toml file
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
  *
@@ -4585,6 +4594,57 @@ export async function getDartMetadata(pkgList) {
  */
 export async function parseCargoTomlData(cargoTomlFile, simple = false) {
   const pkgList = [];
+
+  // Helper function to add a component to the package list. It will uphold
+  // the guarantee that the component described by the
+  // [package]-section remains at the front of the list, and add evidence if
+  // requested.
+  const addPackageToList = (packageList, pkg, { packageMode, simple }) => {
+    if (!pkg) return;
+
+    if (!simple) {
+      pkg.properties = [
+        {
+          name: "SrcFile",
+          value: cargoTomlFile
+        }
+      ];
+      pkg.evidence = {
+        identity: {
+          field: "purl",
+          confidence: 0.7,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.7,
+              value: cargoTomlFile
+            }
+          ]
+        }
+      };
+    }
+    const ppurl = new PackageURL(
+      "cargo",
+      pkg.group,
+      pkg.name,
+      pkg.version,
+      null,
+      null
+    ).toString();
+    pkg.purl = ppurl;
+    pkg["bom-ref"] = decodeURIComponent(ppurl);
+    pkg.type = "library";
+
+    // Ensure the component described by [package] is in front of the list to
+    // give the caller some information about which component the BOM is the
+    // parent component and which are dependencies.
+    if (packageMode) {
+      packageList.unshift(pkg);
+    } else {
+      packageList.push(pkg);
+    }
+  };
+
   if (!cargoTomlFile || !existsSync(cargoTomlFile)) {
     return pkgList;
   }
@@ -4601,9 +4661,7 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
     l = l.replace("\r", "");
     if (l.indexOf("[package]") > -1) {
       packageMode = true;
-      if (pkg) {
-        pkgList.push(pkg);
-      }
+      addPackageToList(pkgList, pkg, { packageMode, simple });
       pkg = {};
     }
     if (l.startsWith("[dependencies]")) {
@@ -4663,39 +4721,7 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
       }
     } else if (dependencyMode && l.indexOf("=") > -1) {
       if (pkg) {
-        if (!simple) {
-          pkg.properties = [
-            {
-              name: "SrcFile",
-              value: cargoTomlFile
-            }
-          ];
-          pkg.evidence = {
-            identity: {
-              field: "purl",
-              confidence: 0.7,
-              methods: [
-                {
-                  technique: "manifest-analysis",
-                  confidence: 0.7,
-                  value: cargoTomlFile
-                }
-              ]
-            }
-          };
-        }
-        const ppurl = new PackageURL(
-          "cargo",
-          pkg.group,
-          pkg.name,
-          pkg.version,
-          null,
-          null
-        ).toString();
-        pkg.purl = ppurl;
-        pkg["bom-ref"] = decodeURIComponent(ppurl);
-        pkg.type = "library";
-        pkgList.push(pkg);
+        addPackageToList(pkgList, pkg, { packageMode, simple });
       }
       pkg = undefined;
       const tmpA = l.split(" = ");
@@ -4719,55 +4745,12 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
         name = name.replace(new RegExp("[\"']", "g"), "");
         version = version.replace(new RegExp("[\"']", "g"), "");
         const apkg = { name, version };
-        if (!simple) {
-          apkg.properties = [
-            {
-              name: "SrcFile",
-              value: cargoTomlFile
-            }
-          ];
-          apkg.evidence = {
-            identity: {
-              field: "purl",
-              confidence: 0.7,
-              methods: [
-                {
-                  technique: "manifest-analysis",
-                  confidence: 0.7,
-                  value: cargoTomlFile
-                }
-              ]
-            }
-          };
-        }
-        const ppurl = new PackageURL(
-          "cargo",
-          apkg.group,
-          apkg.name,
-          apkg.version,
-          null,
-          null
-        ).toString();
-        apkg.purl = ppurl;
-        apkg["bom-ref"] = decodeURIComponent(ppurl);
-        apkg.type = "library";
-        pkgList.push(apkg);
+        addPackageToList(pkgList, apkg, { packageMode, simple });
       }
     }
   });
   if (pkg) {
-    const ppurl = new PackageURL(
-      "cargo",
-      pkg.group,
-      pkg.name,
-      pkg.version,
-      null,
-      null
-    ).toString();
-    pkg.purl = ppurl;
-    pkg["bom-ref"] = decodeURIComponent(ppurl);
-    pkg.type = "library";
-    pkgList.push(pkg);
+    addPackageToList(pkgList, pkg, { packageMode, simple });
   }
   if (!simple && FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);

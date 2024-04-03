@@ -3048,6 +3048,12 @@ export async function createRustBom(path, options) {
     (options.multiProject ? "**/" : "") + "Cargo.toml",
     options
   );
+  // This function assumes that the given path is prioritized, i.e that the
+  // Cargo.toml-file directly inside the directory `path` (or the one in the
+  // shortest distance from the `path` directory) will be the first returned
+  // object. If that assumption is broken, the parent component may be
+  // inaccurate.
+
   const cargoMode = cargoFiles.length;
   const cargoLockMode = cargoLockFiles.length;
   if (cargoMode) {
