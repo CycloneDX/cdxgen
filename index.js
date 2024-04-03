@@ -3064,6 +3064,11 @@ export async function createRustBom(path, options) {
             parentComponent = dlist[0];
             parentComponent.type = "application";
             parentComponent.components = [];
+            if (DEBUG_MODE) {
+              console.log(
+                `Assigning parent component "${parentComponent.name}" from ${f}`
+              );
+            }
           } else {
             parentComponent.components.push(dlist[0]);
           }

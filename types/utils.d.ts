@@ -521,10 +521,12 @@ export function getDartMetadata(pkgList: any[]): Promise<any[]>;
 /**
  * Method to parse cargo.toml data
  *
- * @param {string} cargoData Content of cargo.toml
+ * @param {string} cargoTomlFile cargo.toml file
+ * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ *
  * @returns {array} Package list
  */
-export function parseCargoTomlData(cargoData: string): any[];
+export function parseCargoTomlData(cargoTomlFile: string, simple?: boolean): any[];
 export function parseCargoData(cargoData: any): Promise<any[]>;
 export function parseCargoDependencyData(cargoLockData: any): {
     ref: string;

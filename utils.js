@@ -4610,6 +4610,17 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
       dependencyMode = true;
       packageMode = false;
     }
+
+    // Properly parsing project with workspeces is currently unsupported. Some
+    // projects may have a top-level Cargo.toml file containing only
+    // workspace definitions and no package name. That will make the parent
+    // component unreliable.
+    if (l.startsWith("[workspace]") && DEBUG_MODE) {
+      console.log(
+        `Found [workspace] section in ${cargoTomlFile}. Workspaces are currently not fully supported. Verify that the parent component is correct.`
+      );
+    }
+
     if (
       l.startsWith("[") &&
       !l.startsWith("[dependencies]") &&
