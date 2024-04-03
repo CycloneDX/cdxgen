@@ -759,13 +759,13 @@
         },
         "name": {
           "type": "string",
-          "title": "Name",
+          "title": "Organization Name",
           "description": "The name of the organization",
           "examples": ["Example Inc."]
         },
         "address": {
           "$ref": "#/definitions/postalAddress",
-          "title": "Address",
+          "title": "Organization Address",
           "description": "The physical address (location) of the organization"
         },
         "url": {
@@ -774,13 +774,13 @@
             "type": "string",
             "format": "iri-reference"
           },
-          "title": "URL",
+          "title": "Organization URL(s)",
           "description": "The URL of the organization. Multiple URLs are allowed.",
           "examples": ["https://example.com"]
         },
         "contact": {
           "type": "array",
-          "title": "Contact",
+          "title": "Organizational Contact",
           "description": "A contact at the organization. Multiple contacts are allowed.",
           "items": { "$ref": "#/definitions/organizationalContact" }
         }
@@ -938,6 +938,7 @@
         "hashes": {
           "type": "array",
           "title": "Component Hashes",
+          "description": "The hashes of the component.",
           "items": { "$ref": "#/definitions/hash" }
         },
         "licenses": {
@@ -1181,6 +1182,8 @@
     },
     "hash-alg": {
       "type": "string",
+      "title": "Hash Algorithm",
+      "description": "The algorithm that generated the hash value.",
       "enum": [
         "MD5",
         "SHA-1",
@@ -1194,12 +1197,12 @@
         "BLAKE2b-384",
         "BLAKE2b-512",
         "BLAKE3"
-      ],
-      "title": "Hash Algorithm"
+      ]
     },
     "hash-content": {
       "type": "string",
       "title": "Hash Value",
+      "description": "The value of the hash.",
       "examples": ["3942447fac867ae5cdb3229b658f4d48"],
       "pattern": "^([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{96}|[a-fA-F0-9]{128})$"
     },
@@ -2090,7 +2093,8 @@
           "properties": {
             "frames": {
               "type": "array",
-              "title": "Methods",
+              "title": "Frames",
+              "description": "Within a call stack, a frame is a discrete unit that encapsulates an execution context, including local variables, parameters, and the return address. As function calls are made, frames are pushed onto the stack, forming an array-like structure that orchestrates the flow of program execution and manages the sequence of function invocations.",
               "items": {
                 "type": "object",
                 "required": ["module"],
@@ -2146,7 +2150,8 @@
         "copyright": {
           "type": "array",
           "items": { "$ref": "#/definitions/copyright" },
-          "title": "Copyright Evidence"
+          "title": "Copyright Evidence",
+          "description": "Copyright evidence captures intellectual property assertions, providing evidence of possible ownership and legal protection."
         }
       }
     },
@@ -3272,6 +3277,7 @@
     "dataGovernance": {
       "type": "object",
       "title": "Data Governance",
+      "description": "Data governance captures information regarding data ownership, stewardship, and custodianship, providing insights into the individuals or entities responsible for managing, overseeing, and safeguarding the data throughout its lifecycle.",
       "additionalProperties": false,
       "properties": {
         "custodians": {
@@ -3669,7 +3675,7 @@
           "description": "The locality or city within the country.",
           "examples": ["Austin"]
         },
-        "postOfficeBoxNumber ": {
+        "postOfficeBoxNumber": {
           "type": "string",
           "title": "Post Office Box Number",
           "description": "The post office box number.",
