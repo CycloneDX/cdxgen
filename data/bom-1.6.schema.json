@@ -954,13 +954,13 @@
         "cpe": {
           "type": "string",
           "title": "Common Platform Enumeration (CPE)",
-          "description": "Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. See [https://nvd.nist.gov/products/cpe](https://nvd.nist.gov/products/cpe)",
+          "description": "Asserts the identity of the component using CPE. The CPE must conform to the CPE 2.2 or 2.3 specification. See [https://nvd.nist.gov/products/cpe](https://nvd.nist.gov/products/cpe). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "examples": ["cpe:2.3:a:acme:component_framework:-:*:*:*:*:*:*:*"]
         },
         "purl": {
           "type": "string",
           "title": "Package URL (purl)",
-          "description": "Specifies the package-url (purl). The purl, if specified, MUST be valid and conform to the specification defined at: [https://github.com/package-url/purl-spec](https://github.com/package-url/purl-spec)",
+          "description": "Asserts the identity of the component using package-url (purl). The purl, if specified, MUST be valid and conform to the specification defined at: [https://github.com/package-url/purl-spec](https://github.com/package-url/purl-spec). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "examples": [
             "pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar"
           ]
@@ -968,7 +968,7 @@
         "omniborId": {
           "type": "array",
           "title": "OmniBOR Artifact Identifier (gitoid)",
-          "description": "Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification defined at: [https://www.iana.org/assignments/uri-schemes/prov/gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid)",
+          "description": "Asserts the identity of the component using the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification defined at: [https://www.iana.org/assignments/uri-schemes/prov/gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "items": { "type": "string" },
           "examples": [
             "gitoid:blob:sha1:a94a8fe5ccb19ba61c4c0873d391e987982fbbd3",
@@ -978,14 +978,14 @@
         "swhid": {
           "type": "array",
           "title": "SoftWare Heritage Identifier",
-          "description": "Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and conform to the specification defined at: [https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html](https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html)",
+          "description": "Asserts the identity of the component using the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and conform to the specification defined at: [https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html](https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "items": { "type": "string" },
           "examples": ["swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2"]
         },
         "swid": {
           "$ref": "#/definitions/swid",
           "title": "SWID Tag",
-          "description": "Specifies metadata and content for [ISO-IEC 19770-2 Software Identification (SWID) Tags](https://www.iso.org/standard/65666.html)."
+          "description": "Asserts the identity of the component using [ISO-IEC 19770-2 Software Identification (SWID) Tags](https://www.iso.org/standard/65666.html). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity."
         },
         "modified": {
           "type": "boolean",
