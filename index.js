@@ -4474,7 +4474,7 @@ export async function createCsharpBom(path, options) {
     !pkgLockFiles.length &&
     !paketLockFiles.length
   ) {
-    const filesToRestore = slnFiles.length > 0 ? slnFiles : csProjFiles;
+    const filesToRestore = slnFiles.concat(csProjFiles);
     for (const f of filesToRestore) {
       if (DEBUG_MODE) {
         const basePath = dirname(f);
@@ -4537,6 +4537,20 @@ export async function createCsharpBom(path, options) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
+    // We are now in a scenario where the restore operation didn't yield correct project.assets.json files.
+    // This usually happens when restore was performed with an incorrect version of the SDK.
+    if (!pkgList.length || dependencies.length < 2) {
+      console.log(
+        "Unable to obtain the correct dependency tree from the project.assets.json files. Ensure the correct version of the dotnet SDK was installed and used."
+      );
+      console.log(
+        "1. Create a global.json file in the project directory to specify the required version of the dotnet SDK."
+      );
+      console.log(
+        "2. If the project uses the legacy .Net Framework 4.6/4.7, it might require Windows."
+      );
+      options.failOnError && process.exit(1);
+    }
   } else if (pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
     const parentDependsOn = new Set();
@@ -4587,23 +4601,6 @@ export async function createCsharpBom(path, options) {
         pkgList = pkgList.concat(dlist);
       }
     }
-  } else if (csProjFiles.length) {
-    manifestFiles = manifestFiles.concat(csProjFiles);
-    // .csproj parsing
-    for (const f of csProjFiles) {
-      if (DEBUG_MODE) {
-        console.log(`Parsing ${f}`);
-      }
-      let csProjData = readFileSync(f, { encoding: "utf-8" });
-      // Remove byte order mark
-      if (csProjData.charCodeAt(0) === 0xfeff) {
-        csProjData = csProjData.slice(1);
-      }
-      const dlist = parseCsProjData(csProjData, f);
-      if (dlist && dlist.length) {
-        pkgList = pkgList.concat(dlist);
-      }
-    }
   }
   if (paketLockFiles.length) {
     manifestFiles = manifestFiles.concat(paketLockFiles);
@@ -4622,6 +4619,30 @@ export async function createCsharpBom(path, options) {
       if (deps && deps.length) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
+    }
+  }
+  if (!pkgList.length && csProjFiles.length) {
+    manifestFiles = manifestFiles.concat(csProjFiles);
+    // .csproj parsing
+    for (const f of csProjFiles) {
+      if (DEBUG_MODE) {
+        console.log(`Parsing ${f}`);
+      }
+      let csProjData = readFileSync(f, { encoding: "utf-8" });
+      // Remove byte order mark
+      if (csProjData.charCodeAt(0) === 0xfeff) {
+        csProjData = csProjData.slice(1);
+      }
+      const dlist = parseCsProjData(csProjData, f);
+      if (dlist && dlist.length) {
+        pkgList = pkgList.concat(dlist);
+      }
+    }
+    if (pkgList.length) {
+      console.log(
+        `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`
+      );
+      options.failOnError && process.exit(1);
     }
   }
   if (pkgList.length) {
