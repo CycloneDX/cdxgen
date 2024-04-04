@@ -536,7 +536,15 @@ export function getDartMetadata(pkgList: any[]): Promise<any[]>;
  * @returns {array} Package list
  */
 export function parseCargoTomlData(cargoTomlFile: string, simple?: boolean): any[];
-export function parseCargoData(cargoData: any): Promise<any[]>;
+/**
+ * Parse a Cargo.lock file to find components within the Rust project.
+ *
+ * @param {string} cargoLockFile A path to a Cargo.lock file. The Cargo.lock-file path may be used as information for extended attributes, such as manifest based evidence.
+ * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ *
+ * @returns {array} A list of the project's components as described by the Cargo.lock-file.
+ */
+export function parseCargoData(cargoLockFile: string, simple?: boolean): any[];
 export function parseCargoDependencyData(cargoLockData: any): {
     ref: string;
     dependsOn: any;

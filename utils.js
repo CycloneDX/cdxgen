@@ -4759,11 +4759,87 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
   }
 }
 
-export async function parseCargoData(cargoData) {
+/**
+ * Parse a Cargo.lock file to find components within the Rust project.
+ *
+ * @param {string} cargoLockFile A path to a Cargo.lock file. The Cargo.lock-file path may be used as information for extended attributes, such as manifest based evidence.
+ * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ *
+ * @returns {array} A list of the project's components as described by the Cargo.lock-file.
+ */
+export async function parseCargoData(cargoLockFile, simple = false) {
+  const addPackageToList = (packageList, newPackage, { simple }) => {
+    if (!newPackage) {
+      return;
+    }
+
+    const purl = new PackageURL(
+      "cargo",
+      "",
+      newPackage.name,
+      newPackage.version,
+      null,
+      null
+    ).toString();
+    const component = {
+      type: "library",
+      group: newPackage.group,
+      "bom-ref": purl,
+      purl: purl,
+      name: newPackage.name,
+      version: newPackage.version
+    };
+
+    if (newPackage._integrity) {
+      component.hashes = [
+        {
+          alg: "SHA-384",
+          content: pkg._integrity
+        }
+      ];
+    }
+
+    if (!simple) {
+      // Assign evidence according to CycloneDX's confidence recommendations in section Evidence of:
+      // * https://cyclonedx.org/guides/OWASP_CycloneDX-Authoritative-Guide-to-SBOM-en.pdf
+      // The evidence is deemed to be reliable because Cargo itself generates
+      // the Cargo.lock-file based on the listed dependencies in the
+      // Cargo.toml-file and registry information. So, either we get a direct
+      // dependency (very likely), or a transitive dependency based on
+      // evidence from the package information in the Cargo registry.
+      component.evidence = {
+        identity: {
+          field: "purl",
+          confidence: 0.6,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.6,
+              value: cargoLockFile
+            }
+          ]
+        }
+      };
+      component.properties = [
+        {
+          name: "SrcFile",
+          value: cargoLockFile
+        }
+      ];
+    }
+    packageList.push(component);
+  };
+
   const pkgList = [];
+  if (!cargoLockFile) {
+    return pkgList;
+  }
+
+  const cargoData = readFileSync(cargoLockFile, { encoding: "utf-8" });
   if (!cargoData) {
     return pkgList;
   }
+
   let pkg = null;
   cargoData.split("\n").forEach((l) => {
     let key = null;
@@ -4775,7 +4851,7 @@ export async function parseCargoData(cargoData) {
     }
     if (l.indexOf("[[package]]") > -1) {
       if (pkg) {
-        pkgList.push(pkg);
+        addPackageToList(pkgList, pkg, { simple });
       }
       pkg = {};
     }
@@ -4785,7 +4861,7 @@ export async function parseCargoData(cargoData) {
       value = tmpA[1].trim().replace(/"/g, "");
       switch (key) {
         case "checksum":
-          pkg._integrity = "sha384-" + value;
+          pkg._integrity = value;
           break;
         case "name":
           pkg.group = dirname(value);
@@ -4803,9 +4879,9 @@ export async function parseCargoData(cargoData) {
   // The last package will not be followed by a [[package]]-table, so the
   // last package has no termination condition, other than end-of-file.
   if (pkg) {
-    pkgList.push(pkg);
+    addPackageToList(pkgList, pkg, { simple });
   }
-  if (FETCH_LICENSE) {
+  if (FETCH_LICENSE && !simple) {
     return await getCratesMetadata(pkgList);
   } else {
     return pkgList;
