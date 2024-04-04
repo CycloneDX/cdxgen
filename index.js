@@ -4474,7 +4474,7 @@ export async function createCsharpBom(path, options) {
     !pkgLockFiles.length &&
     !paketLockFiles.length
   ) {
-    const filesToRestore = slnFiles.length > 0 ? slnFiles : csProjFiles;
+    const filesToRestore = slnFiles.concat(csProjFiles);
     for (const f of filesToRestore) {
       if (DEBUG_MODE) {
         const basePath = dirname(f);
