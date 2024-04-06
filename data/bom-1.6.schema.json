@@ -4864,6 +4864,7 @@
       "title": "Cryptographic Properties",
       "description": "Cryptographic assets have properties that uniquely define them and that make them actionable for further reasoning. As an example, it makes a difference if one knows the algorithm family (e.g. AES) or the specific variant or instantiation (e.g. AES-128-GCM). This is because the security level and the algorithm primitive (authenticated encryption) are only defined by the definition of the algorithm variant. The presence of a weak cryptographic algorithm like SHA1 vs. HMAC-SHA1 also makes a difference.",
       "additionalProperties": false,
+      "required": ["assetType"],
       "properties": {
         "assetType": {
           "type": "string",
