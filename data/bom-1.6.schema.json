@@ -759,13 +759,13 @@
         },
         "name": {
           "type": "string",
-          "title": "Name",
+          "title": "Organization Name",
           "description": "The name of the organization",
           "examples": ["Example Inc."]
         },
         "address": {
           "$ref": "#/definitions/postalAddress",
-          "title": "Address",
+          "title": "Organization Address",
           "description": "The physical address (location) of the organization"
         },
         "url": {
@@ -774,13 +774,13 @@
             "type": "string",
             "format": "iri-reference"
           },
-          "title": "URL",
+          "title": "Organization URL(s)",
           "description": "The URL of the organization. Multiple URLs are allowed.",
           "examples": ["https://example.com"]
         },
         "contact": {
           "type": "array",
-          "title": "Contact",
+          "title": "Organizational Contact",
           "description": "A contact at the organization. Multiple contacts are allowed.",
           "items": { "$ref": "#/definitions/organizationalContact" }
         }
@@ -938,6 +938,7 @@
         "hashes": {
           "type": "array",
           "title": "Component Hashes",
+          "description": "The hashes of the component.",
           "items": { "$ref": "#/definitions/hash" }
         },
         "licenses": {
@@ -953,13 +954,13 @@
         "cpe": {
           "type": "string",
           "title": "Common Platform Enumeration (CPE)",
-          "description": "Specifies a well-formed CPE name that conforms to the CPE 2.2 or 2.3 specification. See [https://nvd.nist.gov/products/cpe](https://nvd.nist.gov/products/cpe)",
+          "description": "Asserts the identity of the component using CPE. The CPE must conform to the CPE 2.2 or 2.3 specification. See [https://nvd.nist.gov/products/cpe](https://nvd.nist.gov/products/cpe). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "examples": ["cpe:2.3:a:acme:component_framework:-:*:*:*:*:*:*:*"]
         },
         "purl": {
           "type": "string",
           "title": "Package URL (purl)",
-          "description": "Specifies the package-url (purl). The purl, if specified, MUST be valid and conform to the specification defined at: [https://github.com/package-url/purl-spec](https://github.com/package-url/purl-spec)",
+          "description": "Asserts the identity of the component using package-url (purl). The purl, if specified, MUST be valid and conform to the specification defined at: [https://github.com/package-url/purl-spec](https://github.com/package-url/purl-spec). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "examples": [
             "pkg:maven/com.acme/tomcat-catalina@9.0.14?packaging=jar"
           ]
@@ -967,7 +968,7 @@
         "omniborId": {
           "type": "array",
           "title": "OmniBOR Artifact Identifier (gitoid)",
-          "description": "Specifies the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification defined at: [https://www.iana.org/assignments/uri-schemes/prov/gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid)",
+          "description": "Asserts the identity of the component using the OmniBOR Artifact ID. The OmniBOR, if specified, MUST be valid and conform to the specification defined at: [https://www.iana.org/assignments/uri-schemes/prov/gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "items": { "type": "string" },
           "examples": [
             "gitoid:blob:sha1:a94a8fe5ccb19ba61c4c0873d391e987982fbbd3",
@@ -977,14 +978,14 @@
         "swhid": {
           "type": "array",
           "title": "SoftWare Heritage Identifier",
-          "description": "Specifies the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and conform to the specification defined at: [https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html](https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html)",
+          "description": "Asserts the identity of the component using the Software Heritage persistent identifier (SWHID). The SWHID, if specified, MUST be valid and conform to the specification defined at: [https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html](https://docs.softwareheritage.org/devel/swh-model/persistent-identifiers.html). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity.",
           "items": { "type": "string" },
           "examples": ["swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2"]
         },
         "swid": {
           "$ref": "#/definitions/swid",
           "title": "SWID Tag",
-          "description": "Specifies metadata and content for [ISO-IEC 19770-2 Software Identification (SWID) Tags](https://www.iso.org/standard/65666.html)."
+          "description": "Asserts the identity of the component using [ISO-IEC 19770-2 Software Identification (SWID) Tags](https://www.iso.org/standard/65666.html). Refer to `@.evidence.identity` to optionally provide evidence that substantiates the assertion of the component's identity."
         },
         "modified": {
           "type": "boolean",
@@ -1167,7 +1168,7 @@
     },
     "hash": {
       "type": "object",
-      "title": "Hash Objects",
+      "title": "Hash",
       "required": ["alg", "content"],
       "additionalProperties": false,
       "properties": {
@@ -1181,6 +1182,8 @@
     },
     "hash-alg": {
       "type": "string",
+      "title": "Hash Algorithm",
+      "description": "The algorithm that generated the hash value.",
       "enum": [
         "MD5",
         "SHA-1",
@@ -1194,12 +1197,12 @@
         "BLAKE2b-384",
         "BLAKE2b-512",
         "BLAKE3"
-      ],
-      "title": "Hash Algorithm"
+      ]
     },
     "hash-content": {
       "type": "string",
       "title": "Hash Value",
+      "description": "The value of the hash.",
       "examples": ["3942447fac867ae5cdb3229b658f4d48"],
       "pattern": "^([a-fA-F0-9]{32}|[a-fA-F0-9]{40}|[a-fA-F0-9]{64}|[a-fA-F0-9]{96}|[a-fA-F0-9]{128})$"
     },
@@ -1603,7 +1606,8 @@
             "name": {
               "type": "string",
               "title": "Name",
-              "description": "The name of the source. For example 'National Vulnerability Database', 'NVD', and 'Apache'"
+              "description": "The name of the source.",
+              "examples": ["National Vulnerability Database", "NVD", "Apache"]
             },
             "url": {
               "type": "string",
@@ -2021,6 +2025,7 @@
       "additionalProperties": false,
       "properties": {
         "identity": {
+          "title": "Identity Evidence",
           "description": "Evidence that substantiates the identity of a component. The identify may be an object or an array of identity objects. Support for specifying identify as a single object was introduced in CycloneDX v1.5. Arrays were introduced in v1.6. It is RECOMMENDED that all implementations use arrays, even if only one identity object is specified.",
           "oneOf": [
             {
@@ -2082,12 +2087,14 @@
         },
         "callstack": {
           "type": "object",
+          "title": "Call Stack",
           "description": "Evidence of the components use through the callstack.",
           "additionalProperties": false,
           "properties": {
             "frames": {
               "type": "array",
-              "title": "Methods",
+              "title": "Frames",
+              "description": "Within a call stack, a frame is a discrete unit that encapsulates an execution context, including local variables, parameters, and the return address. As function calls are made, frames are pushed onto the stack, forming an array-like structure that orchestrates the flow of program execution and manages the sequence of function invocations.",
               "items": {
                 "type": "object",
                 "required": ["module"],
@@ -2138,12 +2145,13 @@
         },
         "licenses": {
           "$ref": "#/definitions/licenseChoice",
-          "title": "Component License(s)"
+          "title": "License Evidence"
         },
         "copyright": {
           "type": "array",
           "items": { "$ref": "#/definitions/copyright" },
-          "title": "Copyright"
+          "title": "Copyright Evidence",
+          "description": "Copyright evidence captures intellectual property assertions, providing evidence of possible ownership and legal protection."
         }
       }
     },
@@ -3175,8 +3183,10 @@
       "additionalProperties": false,
       "properties": {
         "format": {
-          "description": "The data format for input/output to the model. Example formats include string, image, time-series",
-          "type": "string"
+          "title": "Input/Output Format",
+          "description": "The data format for input/output to the model.",
+          "type": "string",
+          "examples": ["string", "image", "time-series"]
         }
       }
     },
@@ -3210,6 +3220,7 @@
           }
         },
         "name": {
+          "title": "Dataset Name",
           "description": "The name of the dataset.",
           "type": "string"
         },
@@ -3245,6 +3256,7 @@
         },
         "sensitiveData": {
           "type": "array",
+          "title": "Sensitive Data",
           "description": "A description of any sensitive data in a dataset.",
           "items": {
             "type": "string"
@@ -3252,6 +3264,7 @@
         },
         "graphics": { "$ref": "#/definitions/graphicsCollection" },
         "description": {
+          "title": "Dataset Description",
           "description": "A description of the dataset. Can describe size of dataset, whether it's used for source code, training, testing, or validation, etc.",
           "type": "string"
         },
@@ -3264,6 +3277,7 @@
     "dataGovernance": {
       "type": "object",
       "title": "Data Governance",
+      "description": "Data governance captures information regarding data ownership, stewardship, and custodianship, providing insights into the individuals or entities responsible for managing, overseeing, and safeguarding the data throughout its lifecycle.",
       "additionalProperties": false,
       "properties": {
         "custodians": {
@@ -3315,10 +3329,12 @@
       "additionalProperties": false,
       "properties": {
         "description": {
+          "title": "Description",
           "description": "A description of this collection of graphics.",
           "type": "string"
         },
         "collection": {
+          "title": "Collection",
           "description": "A collection of graphics.",
           "type": "array",
           "items": { "$ref": "#/definitions/graphic" }
@@ -3327,9 +3343,11 @@
     },
     "graphic": {
       "type": "object",
+      "title": "Graphic",
       "additionalProperties": false,
       "properties": {
         "name": {
+          "title": "Name",
           "description": "The name of the graphic.",
           "type": "string"
         },
@@ -3342,30 +3360,37 @@
     },
     "performanceMetric": {
       "type": "object",
+      "title": "Performance Metric",
       "additionalProperties": false,
       "properties": {
         "type": {
+          "title": "Type",
           "description": "The type of performance metric.",
           "type": "string"
         },
         "value": {
+          "title": "Value",
           "description": "The value of the performance metric.",
           "type": "string"
         },
         "slice": {
+          "title": "Slice",
           "description": "The name of the slice this metric was computed on. By default, assume this metric is not sliced.",
           "type": "string"
         },
         "confidenceInterval": {
+          "title": "Confidence Interval",
           "description": "The confidence interval of the metric.",
           "type": "object",
           "additionalProperties": false,
           "properties": {
             "lowerBound": {
+              "title": "Lower Bound",
               "description": "The lower bound of the confidence interval.",
               "type": "string"
             },
             "upperBound": {
+              "title": "Upper Bound",
               "description": "The upper bound of the confidence interval.",
               "type": "string"
             }
@@ -3375,13 +3400,16 @@
     },
     "risk": {
       "type": "object",
+      "title": "Risk",
       "additionalProperties": false,
       "properties": {
         "name": {
+          "title": "Name",
           "description": "The name of the risk.",
           "type": "string"
         },
         "mitigationStrategy": {
+          "title": "Mitigation Strategy",
           "description": "Strategy used to address this risk.",
           "type": "string"
         }
@@ -3395,18 +3423,22 @@
       "properties": {
         "groupAtRisk": {
           "type": "string",
+          "title": "Group at Risk",
           "description": "The groups or individuals at risk of being systematically disadvantaged by the model."
         },
         "benefits": {
           "type": "string",
+          "title": "Benefits",
           "description": "Expected benefits to the identified groups."
         },
         "harms": {
           "type": "string",
+          "title": "Harms",
           "description": "Expected harms to the identified groups."
         },
         "mitigationStrategy": {
           "type": "string",
+          "title": "Mitigation Strategy",
           "description": "With respect to the benefits and harms outlined, please describe any mitigation strategy implemented."
         }
       }
@@ -3634,27 +3666,32 @@
         "region": {
           "type": "string",
           "title": "Region",
-          "description": "The region or state in the country. For example, Texas."
+          "description": "The region or state in the country.",
+          "examples": ["Texas"]
         },
         "locality": {
           "type": "string",
           "title": "Locality",
-          "description": "The locality or city within the country. For example, Austin."
+          "description": "The locality or city within the country.",
+          "examples": ["Austin"]
         },
-        "postOfficeBoxNumber ": {
+        "postOfficeBoxNumber": {
           "type": "string",
           "title": "Post Office Box Number",
-          "description": "The post office box number. For example, 901."
+          "description": "The post office box number.",
+          "examples": ["901"]
         },
         "postalCode": {
           "type": "string",
           "title": "Postal Code",
-          "description": "The postal code. For example, 78758."
+          "description": "The postal code.",
+          "examples": ["78758"]
         },
         "streetAddress": {
           "type": "string",
           "title": "Street Address",
-          "description": "The street address. For example, 100 Main Street."
+          "description": "The street address.",
+          "examples": ["100 Main Street"]
         }
       }
     },
@@ -4211,6 +4248,7 @@
         },
         "conditions": {
           "type": "array",
+          "title": "Conditions",
           "uniqueItems": true,
           "items": {
             "$ref": "#/definitions/condition"
@@ -4573,6 +4611,7 @@
     },
     "componentIdentityEvidence": {
       "type": "object",
+      "title": "Identity Evidence",
       "description": "Evidence that substantiates the identity of a component.",
       "required": ["field"],
       "additionalProperties": false,
@@ -4825,6 +4864,7 @@
       "title": "Cryptographic Properties",
       "description": "Cryptographic assets have properties that uniquely define them and that make them actionable for further reasoning. As an example, it makes a difference if one knows the algorithm family (e.g. AES) or the specific variant or instantiation (e.g. AES-128-GCM). This is because the security level and the algorithm primitive (authenticated encryption) are only defined by the definition of the algorithm variant. The presence of a weak cryptographic algorithm like SHA1 vs. HMAC-SHA1 also makes a difference.",
       "additionalProperties": false,
+      "required": ["assetType"],
       "properties": {
         "assetType": {
           "type": "string",
@@ -5326,26 +5366,32 @@
               "properties": {
                 "encr": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Encryption Algorithm (ENCR)",
                   "description": "Transform Type 1: encryption algorithms"
                 },
                 "prf": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Pseudorandom Function (PRF)",
                   "description": "Transform Type 2: pseudorandom functions"
                 },
                 "integ": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Integrity Algorithm (INTEG)",
                   "description": "Transform Type 3: integrity algorithms"
                 },
                 "ke": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "Key Exchange Method (KE)",
                   "description": "Transform Type 4: Key Exchange Method (KE) per RFC9370, formerly called Diffie-Hellman Group (D-H)"
                 },
                 "esn": {
                   "type": "boolean",
+                  "title": "Extended Sequence Numbers (ESN)",
                   "description": "Specifies if an Extended Sequence Number (ESN) is used."
                 },
                 "auth": {
                   "$ref": "#/definitions/cryptoRefArray",
+                  "title": "IKEv2 Authentication method",
                   "description": "IKEv2 Authentication method"
                 }
               }
