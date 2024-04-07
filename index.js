@@ -3094,8 +3094,7 @@ export async function createRustBom(path, options) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const cargoData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parseCargoData(cargoData);
+      const dlist = await parseCargoData(f);
       if (dlist && dlist.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3103,7 +3102,8 @@ export async function createRustBom(path, options) {
       if (DEBUG_MODE) {
         console.log(`Constructing dependency tree from ${f}`);
       }
-      const fileDependencylist = parseCargoDependencyData(cargoData);
+      const cargoLockData = readFileSync(f, { encoding: "utf-8" });
+      const fileDependencylist = parseCargoDependencyData(cargoLockData);
       if (fileDependencylist && fileDependencylist.length) {
         dependencyTree = mergeDependencies(
           dependencyTree,
