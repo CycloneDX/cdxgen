@@ -367,6 +367,7 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Go (go.mod)
 - PHP (composer.lock)
 - Ruby (Gemfile.lock)
+- Rust (Cargo.lock)
 
 ## Environment variables
 
