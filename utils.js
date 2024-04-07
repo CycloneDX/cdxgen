@@ -4612,11 +4612,11 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
       pkg.evidence = {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: cargoTomlFile
             }
           ]
@@ -4820,6 +4820,8 @@ export async function parseCargoData(cargoLockFile, simple = false) {
           ]
         }
       };
+
+      // Evidence information for CyclondDX specification version < 1.5.
       component.properties = [
         {
           name: "SrcFile",

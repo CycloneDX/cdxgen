@@ -1115,11 +1115,11 @@ test("parse cargo toml", async () => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: "./test/data/Cargo1.toml"
             }
           ]
@@ -1136,11 +1136,11 @@ test("parse cargo toml", async () => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: "./test/data/Cargo1.toml"
             }
           ]
@@ -1157,11 +1157,11 @@ test("parse cargo toml", async () => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: "./test/data/Cargo1.toml"
             }
           ]
@@ -1178,11 +1178,11 @@ test("parse cargo toml", async () => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: "./test/data/Cargo1.toml"
             }
           ]
@@ -1205,11 +1205,11 @@ test("parse cargo toml", async () => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: "./test/data/Cargo2.toml"
             }
           ]
@@ -1226,11 +1226,11 @@ test("parse cargo toml", async () => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: "./test/data/Cargo2.toml"
             }
           ]
@@ -1247,11 +1247,11 @@ test("parse cargo toml", async () => {
       evidence: {
         identity: {
           field: "purl",
-          confidence: 0.7,
+          confidence: 0.5,
           methods: [
             {
               technique: "manifest-analysis",
-              confidence: 0.7,
+              confidence: 0.5,
               value: "./test/data/Cargo2.toml"
             }
           ]
