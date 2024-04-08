@@ -1,8 +1,9 @@
+[![JSR](https://img.shields.io/jsr/v/%40cyclonedx/cdxgen)](https://jsr.io/@cyclonedx/cdxgen) [![NPM](https://img.shields.io/npm/v/%40cyclonedx%2Fcdxgen)](https://www.npmjs.com/package/@cyclonedx/cdxgen) [![GitHub Releases](https://img.shields.io/github/v/release/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/releases) [![GitHub Downloads - All](https://img.shields.io/github/downloads/cyclonedx/cdxgen/total)](https://github.com/CycloneDX/cdxgen/releases) [![GitHub Downloads - Latest](https://img.shields.io/github/downloads/cyclonedx/cdxgen/latest/total)](https://github.com/CycloneDX/cdxgen/releases) [![GitHub License](https://img.shields.io/github/license/cyclonedx/cdxgen)](./LICENSE.md) [![GitHub Contributors](https://img.shields.io/github/contributors/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/graphs/contributors)
+
 # CycloneDX Generator
 
 ![cdxgen logo](cdxgen.png)
 
-[![JSR](https://jsr.io/badges/@cyclonedx/cdxgen)](https://jsr.io/@cyclonedx/cdxgen)
 
 cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse. The tool supports CycloneDX specification versions from 1.4 - 1.6.
 
