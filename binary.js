@@ -6,7 +6,8 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
-  rmSync
+  rmSync,
+  lstatSync
 } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -802,10 +803,11 @@ export function getBinaryBom(src, binaryBomFile, deepMode) {
   if (DEBUG_MODE) {
     console.log("Executing", BLINT_BIN, args.join(" "));
   }
+  const cwd = lstatSync(src).isDirectory() ? src : dirname(src);
   const result = spawnSync(BLINT_BIN, args, {
     encoding: "utf-8",
     timeout: TIMEOUT_MS,
-    cwd: src
+    cwd
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
