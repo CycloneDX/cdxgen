@@ -20,12 +20,7 @@ let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-let dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
-// When cdxgen is used as a library, dirName would be inside the node_modules directory
-// we need to locate the base directory of the dependent project in this case.
-if (dirName.includes("node_modules")) {
-  dirName = dirName.split(join("node_modules", "@cyclonedx"))[0];
-}
+const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
 const isWin = _platform() === "win32";
 
