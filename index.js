@@ -4528,7 +4528,13 @@ export async function createCsharpBom(path, options) {
         "1. Create a global.json file in the project directory to specify the required version of the dotnet SDK."
       );
       console.log(
-        "2. If the project uses the legacy .Net Framework 4.6/4.7, it might require Windows."
+        "2. Use the environment variable `DOTNET_ROLL_FORWARD` to roll forward to a closest available SDK such as .Net core or dotnet 6."
+      );
+      console.log(
+        "3. If the project uses the legacy .Net Framework 4.6/4.7, it might require Windows operating system."
+      );
+      console.log(
+        "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet:v10` container image, which bundles a range of dotnet SDKs."
       );
       options.failOnError && process.exit(1);
     }
