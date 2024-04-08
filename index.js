@@ -83,7 +83,6 @@ import {
   parseGoModData,
   parseGoModGraph,
   parseGoModWhy,
-  parseGoVersionData,
   parseGopkgData,
   parseGosumData,
   parseGradleDep,
@@ -149,7 +148,6 @@ import {
   executeOsQuery,
   getCargoAuditableInfo,
   getDotnetSlices,
-  getGoBuildInfo,
   getOSPackages,
   getBinaryBom
 } from "./binary.js";
@@ -2696,25 +2694,8 @@ export async function createGoBom(path, options) {
   } catch (err) {
     maybeBinary = false;
   }
-  if (maybeBinary) {
-    const buildInfoData = getGoBuildInfo(path);
-    const dlist = await parseGoVersionData(buildInfoData);
-    if (dlist && dlist.length) {
-      pkgList = pkgList.concat(dlist);
-    }
-    // Since this pkg list is derived from the binary mark them as used.
-    const allImports = {};
-    for (const mpkg of pkgList) {
-      const pkgFullName = `${mpkg.group}/${mpkg.name}`;
-      allImports[pkgFullName] = true;
-    }
-    return buildBomNSData(options, pkgList, "golang", {
-      allImports,
-      dependencies,
-      parentComponent,
-      src: path,
-      filename: path
-    });
+  if (maybeBinary || options.lifecycle === "post-build") {
+    return createBinaryBom(path, options);
   }
 
   // Read in go.sum and merge all go.sum files.

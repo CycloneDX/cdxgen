@@ -66,7 +66,7 @@ RUN set -e; \
     && microdnf module enable php ruby -y \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python3.11 python3.11-devel python3.11-pip ruby ruby-devel glibc-common glibc-all-langpacks \
-        pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel \
+        pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel dotnet-sdk-8.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
