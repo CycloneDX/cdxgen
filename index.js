@@ -1227,7 +1227,7 @@ export async function createJavaBom(path, options) {
             `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`
           );
         }
-        const mavenCmd = getMavenCommand(basePath, path);
+        const mavenCmd = '"'+ getMavenCommand(basePath, path)+'"';
         // Should we attempt to resolve class names
         if (options.resolveClass || options.deep) {
           const tmpjarNSMapping = await collectMvnDependencies(
