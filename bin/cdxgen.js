@@ -299,6 +299,17 @@ if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
 }
 
+/**
+ * Command line options
+ */
+const options = Object.assign({}, args, {
+  projectType: args.type,
+  multiProject: args.recurse,
+  noBabel: args.noBabel || args.babel === false,
+  project: args.projectId,
+  deep: args.deep || args.evidence
+});
+
 if (process.argv[1].includes("cbom")) {
   options.includeCrypto = true;
   options.includeFormulation = true;
@@ -374,16 +385,6 @@ const applyAdvancedOptions = (options) => {
   return options;
 };
 
-/**
- * Command line options
- */
-const options = Object.assign({}, args, {
-  projectType: args.type,
-  multiProject: args.recurse,
-  noBabel: args.noBabel || args.babel === false,
-  project: args.projectId,
-  deep: args.deep || args.evidence
-});
 applyAdvancedOptions(options);
 
 /**
