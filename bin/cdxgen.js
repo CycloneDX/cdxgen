@@ -315,6 +315,7 @@ if (process.argv[1].includes("cbom")) {
   options.includeFormulation = true;
   options.evidence = true;
   options.specVersion = 1.6;
+  options.deep = true;
 }
 
 /**
