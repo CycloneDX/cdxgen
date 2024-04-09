@@ -299,7 +299,7 @@ if (process.argv[1].includes("obom") && !args.type) {
   args.type = "os";
 }
 
-if (process.argv[1].includes("cbom") && !args.type) {
+if (process.argv[1].includes("cbom")) {
   options.includeCrypto = true;
   options.includeFormulation = true;
   options.evidence = true;
