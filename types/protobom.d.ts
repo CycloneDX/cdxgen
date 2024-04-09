@@ -1,3 +1,3 @@
-export function writeBinary(bomJson: any, binFile: any): void;
-export function readBinary(binFile: any, asJson?: boolean): any;
+export function writeBinary(bomJson: string | any, binFile: string): void;
+export function readBinary(binFile: string, asJson?: boolean, specVersion?: number): any;
 //# sourceMappingURL=protobom.d.ts.map

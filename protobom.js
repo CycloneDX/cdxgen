@@ -1,6 +1,12 @@
-import { Bom } from "@appthreat/cdx-proto";
+import { cdx_15, cdx_16 } from "@appthreat/cdx-proto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
+/**
+ * Stringify the given bom json based on the type.
+ *
+ * @param {string | Object} bomJson string or object
+ * @returns {string} BOM json string
+ */
 const stringifyIfNeeded = (bomJson) => {
   if (typeof bomJson === "string" || bomJson instanceof String) {
     return bomJson;
@@ -8,9 +14,20 @@ const stringifyIfNeeded = (bomJson) => {
   return JSON.stringify(bomJson);
 };
 
+/**
+ * Method to convert the given bom json to proto binary
+ *
+ * @param {string | Object} bomJson BOM Json
+ * @param {string} binFile Binary file name
+ */
 export const writeBinary = (bomJson, binFile) => {
   if (bomJson && binFile) {
-    const bomObject = new Bom();
+    let bomObject = undefined;
+    if (+bomJson.specVersion === 1.6) {
+      bomObject = new cdx_16.Bom();
+    } else {
+      bomObject = new cdx_15.Bom();
+    }
     writeFileSync(
       binFile,
       bomObject
@@ -22,11 +39,24 @@ export const writeBinary = (bomJson, binFile) => {
   }
 };
 
-export const readBinary = (binFile, asJson = true) => {
+/**
+ * Method to read a serialized binary
+ *
+ * @param {string} binFile Binary file name
+ * @param {boolean} asJson Convert to JSON
+ * @param {number} specVersion Specification version. Defaults to 1.5
+ */
+export const readBinary = (binFile, asJson = true, specVersion = 1.5) => {
   if (!existsSync(binFile)) {
     return undefined;
   }
-  const bomObject = new Bom().fromBinary(readFileSync(binFile), {
+  let bomLib = undefined;
+  if (specVersion === 1.6) {
+    bomLib = new cdx_16.Bom();
+  } else {
+    bomLib = new cdx_15.Bom();
+  }
+  const bomObject = bomLib.fromBinary(readFileSync(binFile), {
     readUnknownFields: true
   });
   if (asJson) {
