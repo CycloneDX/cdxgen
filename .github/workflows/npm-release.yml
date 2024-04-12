@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - release/*
     tags:
     - 'v*'
   workflow_dispatch:
@@ -21,9 +22,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 18.x
+        node-version: 21.x
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -41,25 +42,56 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: jsr publish
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        npm install
+        npx jsr publish --allow-dirty
+      continue-on-error: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  containers:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 21.x
+        registry-url: https://registry.npmjs.org/
+    - name: Trim CI agent
+      run: |
+        chmod +x contrib/free_disk_space.sh
+        ./contrib/free_disk_space.sh
+    - name: Setup nydus
+      run: |
+        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
+        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
+        chmod +x nydus-static/*
+        mv nydus-static/* /usr/local/bin/
+        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
     - name: Log in to the Container registry
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Extract metadata (tags, labels) for Docker
       id: meta
-      uses: docker/metadata-action@v4
+      uses: docker/metadata-action@v5
       with:
         images: |
           ghcr.io/cyclonedx/cdxgen
     - name: Build and push Docker images
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: .
         file: ci/Dockerfile
@@ -69,14 +101,28 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha,scope=cdxgen
         cache-to: type=gha,mode=max,scope=cdxgen
+    - name: nydusify
+      run: |
+        nydusify convert --oci --oci-ref --source ${{ steps.meta.outputs.tags }} --target ${{ steps.meta.outputs.tags }}-nydus --prefetch-dir /opt/cdxgen
+        nydusify check --target ${{ steps.meta.outputs.tags }}-nydus
+      if: github.ref == 'refs/heads/master'
+      continue-on-error: true
+    - name: Attach cdx sbom
+      run: |
+        npm install
+        node bin/cdxgen.js -t docker -o bom.json ghcr.io/cyclonedx/cdxgen:latest
+        oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen:latest ./bom.json:application/json
+        oras discover -o tree ghcr.io/cyclonedx/cdxgen:latest
+      continue-on-error: true
+      if: startsWith(github.ref, 'refs/tags/')
     - name: Extract metadata (tags, labels) for Docker
       id: meta2
-      uses: docker/metadata-action@v4
+      uses: docker/metadata-action@v5
       with:
         images: |
           ghcr.io/cyclonedx/cdxgen-deno
     - name: Build and push Docker images
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: .
         file: ci/Dockerfile-deno
@@ -88,12 +134,12 @@ jobs:
         cache-to: type=gha,mode=max,scope=cdxgen-deno
     - name: Extract metadata (tags, labels) for Docker
       id: meta3
-      uses: docker/metadata-action@v4
+      uses: docker/metadata-action@v5
       with:
         images: |
           ghcr.io/cyclonedx/cdxgen-ppc64
     - name: Build and push Docker images
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: .
         file: ci/Dockerfile-ppc64
@@ -103,3 +149,10 @@ jobs:
         labels: ${{ steps.meta3.outputs.labels }}
         cache-from: type=gha,scope=cdxgen-ppc64
         cache-to: type=gha,mode=max,scope=cdxgen-ppc64
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta4
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ghcr.io/cyclonedx/cdxgen-next
+      if: github.ref == 'refs/heads/master'

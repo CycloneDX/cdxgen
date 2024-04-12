@@ -1,42 +1,41 @@
 name: docker tests
 
 on:
-  push:
-    branches:
-      - master
-      - feature/*
-      - release/*
-      - fix/*
   workflow_dispatch:
-
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 jobs:
   linux-tests:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
-        java-version: ['19']
+        os: [ubuntu-latest]
+        node-version: ['21.x']
+        java-version: ['21']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
       - name: npm install, build and test
         run: |
           npm install
-          npm run build --if-present
           npm test
-          npm install -g @cyclonedx/cdxgen-plugins-bin
           mkdir -p bomresults repotests
         env:
           CI: true
@@ -46,53 +45,47 @@ jobs:
           path: 'repotests/grafana-operator'
       - name: dockertests
         run: |
-          bin/cdxgen.js ubuntu:latest -t docker -p -o bomresults/bom-ubuntu.json
-          bin/cdxgen.js almalinux:9.2-minimal -t docker -p -o bomresults/bom-almalinux.json
-          bin/cdxgen.js centos:latest -t docker -p -o bomresults/bom-centos.json
-          bin/cdxgen.js phpmyadmin@sha256:1092481630056189e43cc0fe66fd01defcc9334d78ab4611b22f65e9a39869bd -p -o bomresults/bom-phpmyadmin.json --validate
-          bin/cdxgen.js shiftleft/scan-slim -o bomresults/bom-scanslim.json -p -t docker --validate
-          bin/cdxgen.js redmine@sha256:a5c5f8a64a0d9a436a0a6941bc3fb156be0c89996add834fe33b66ebeed2439e -p -o bomresults/bom-redmine.json --validate
-          bin/cdxgen.js rocket.chat@sha256:379f7afa0e67497c363ac9a9b3e7e6a6d31deee228233307c987e4a0c68b28e6 -p -o bomresults/bom-rocket.json --validate
-          bin/cdxgen.js sonarqube@sha256:7c0edcb99c964984db6d24330db33bb12de1e8ae0d5974d77640b1efea1483d1 -p -o bomresults/bom-sonar.json --validate
-          bin/cdxgen.js zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6 -p -o bomresults/bom-zoo.json --validate
+          bin/cdxgen.js ubuntu:latest -t docker -o bomresults/bom-ubuntu.json
+          bin/cdxgen.js almalinux:9.2-minimal -t docker -o bomresults/bom-almalinux.json
+          bin/cdxgen.js centos:latest -t docker -o bomresults/bom-centos.json
+          bin/cdxgen.js phpmyadmin@sha256:1092481630056189e43cc0fe66fd01defcc9334d78ab4611b22f65e9a39869bd -o bomresults/bom-phpmyadmin.json --validate
+          bin/cdxgen.js shiftleft/scan-slim -o bomresults/bom-scanslim.json -t docker --validate
+          bin/cdxgen.js redmine@sha256:a5c5f8a64a0d9a436a0a6941bc3fb156be0c89996add834fe33b66ebeed2439e -o bomresults/bom-redmine.json --validate
+          bin/cdxgen.js rocket.chat@sha256:379f7afa0e67497c363ac9a9b3e7e6a6d31deee228233307c987e4a0c68b28e6 -o bomresults/bom-rocket.json --validate
+          bin/cdxgen.js sonarqube@sha256:7c0edcb99c964984db6d24330db33bb12de1e8ae0d5974d77640b1efea1483d1 -o bomresults/bom-sonar.json --validate
+          bin/cdxgen.js zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6 -o bomresults/bom-zoo.json --validate
           docker pull shiftleft/scan-slim:latest
           docker save -o /tmp/scanslim.tar shiftleft/scan-slim:latest
           bin/cdxgen.js /tmp/scanslim.tar -o bomresults/bom-scanarch.json --validate
           bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --validate
           bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --validate
           ls -ltr bomresults
-      - uses: actions/upload-artifact@v3
-        with:
-          name: bomresults
-          path: bomresults
 
   os-tests:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [18.x]
-        java-version: ['19']
+        node-version: ['21.x']
+        java-version: ['21']
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
       - name: npm install, build and test
         run: |
           npm install
-          npm run build --if-present
-          npm install -g @cyclonedx/cdxgen-plugins-bin
           mkdir -p bomresults
         env:
           CI: true
@@ -101,7 +94,7 @@ jobs:
           bin/cdxgen.js -t os -o bomresults/bom-os.json --validate
         env:
           CDXGEN_DEBUG_MODE: debug
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: bomresults-os
           path: bomresults
@@ -111,29 +104,27 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
-        java-version: ['19']
+        node-version: ['21.x']
+        java-version: ['21']
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
       - name: npm install, build
         run: |
           npm install
-          npm run build --if-present
           mkdir bomresults
-          npm install -g @cyclonedx/cdxgen-plugins-bin
         env:
           CI: true
       - name: wintests
@@ -142,7 +133,7 @@ jobs:
           dir bomresults
         env:
           CDXGEN_DEBUG_MODE: debug
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: bomresults-win
           path: bomresults

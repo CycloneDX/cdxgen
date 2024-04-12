@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from "node:fs";
 import { createStream, table } from "table";
 
 // https://github.com/yangshun/tree-node-cli/blob/master/src/index.js
@@ -40,7 +41,7 @@ export const printTable = (bomJson) => {
     stream.write([
       comp.group || "",
       comp.name,
-      `\x1b[1;35m${comp.version}\x1b[0m`,
+      `\x1b[1;35m${comp.version || ""}\x1b[0m`,
       comp.scope || ""
     ]);
   }
@@ -128,7 +129,7 @@ export const printOccurrences = (bomJson) => {
     data.push([
       comp.group || "",
       comp.name,
-      comp.version,
+      comp.version || "",
       comp.evidence.occurrences
         .map((l) => l.location)
         .sort(locationComparator)
@@ -165,7 +166,7 @@ export const printCallStack = (bomJson) => {
         )
       )
     ).sort(locationComparator);
-    let frameDisplay = [frames[0]];
+    const frameDisplay = [frames[0]];
     if (frames.length > 1) {
       for (let i = 1; i < frames.length - 1; i++) {
         frameDisplay.push(`${SYMBOLS_ANSI.BRANCH} ${frames[i]}`);
@@ -177,7 +178,7 @@ export const printCallStack = (bomJson) => {
     data.push([
       comp.group || "",
       comp.name,
-      comp.version,
+      comp.version || "",
       frameDisplay.join("\n")
     ]);
   }
@@ -275,5 +276,38 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
         }
       }
     }
+  }
+};
+
+export const printReachables = (sliceArtefacts) => {
+  const reachablesSlicesFile = sliceArtefacts.reachablesSlicesFile;
+  if (!existsSync(reachablesSlicesFile)) {
+    return;
+  }
+  const purlCounts = {};
+  const reachablesSlices = JSON.parse(
+    readFileSync(reachablesSlicesFile, "utf-8")
+  );
+  for (const areachable of reachablesSlices.reachables || []) {
+    const purls = areachable.purls || [];
+    for (const apurl of purls) {
+      purlCounts[apurl] = (purlCounts[apurl] || 0) + 1;
+    }
+  }
+  const sortedPurls = Object.fromEntries(
+    Object.entries(purlCounts).sort(([, a], [, b]) => b - a)
+  );
+  const data = [["Package URL", "Reachable Flows"]];
+  for (const apurl of Object.keys(sortedPurls)) {
+    data.push([apurl, "" + sortedPurls[apurl]]);
+  }
+  const config = {
+    header: {
+      alignment: "center",
+      content: "Reachable Components\nGenerated with \u2665 by cdxgen"
+    }
+  };
+  if (data.length > 1) {
+    console.log(table(data, config));
   }
 };

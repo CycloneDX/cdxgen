@@ -24,6 +24,12 @@
     "purlType": "swid",
     "componentType": "application"
   },
+  "vscode_extensions": {
+    "query": "select vscode_extensions.* from users join vscode_extensions using (uid);",
+    "description": "Lists all vscode extensions.",
+    "purlType": "vsix",
+    "componentType": "application"
+  },
   "deb_packages": {
     "query": "select * from deb_packages;",
     "description": "Retrieves all the installed DEB packages in the target Linux system.",
@@ -54,75 +60,15 @@
     "description": "Python packages installed on system.",
     "purlType": "pypi"
   },
-  "windows_programs": {
-    "query": "select * from programs;",
-    "description": "Retrieves the list of products as they are installed by Windows Installer in the target Windows system.",
-    "purlType": "swid",
-    "componentType": "application"
-  },
-  "windows_patches": {
-    "query": "select * from patches;",
-    "description": "Retrieves all the information for the current windows drivers in the target Windows system.",
-    "purlType": "swid",
-    "componentType": "application"
-  },
-  "windows_drivers": {
-    "query": "select * from drivers;",
-    "description": "Retrieves all the information for the current windows drivers in the target Windows system.",
-    "purlType": "swid",
-    "componentType": "device-driver"
-  },
-  "windows_shared_resources": {
-    "query": "select * from shared_resources;",
-    "description": "Retrieves the list of shared resources in the target Windows system.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
   "system_info_snapshot": {
     "query": "SELECT * FROM system_info;",
     "description": "System info snapshot query.",
     "purlType": "swid",
     "componentType": "data"
   },
-  "pipes_snapshot": {
-    "query": "SELECT processes.path, processes.cmdline, processes.uid, processes.on_disk, pipes.name, pid FROM pipes JOIN processes USING (pid);",
-    "description": "Pipes snapshot query.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
-  "services_snapshot": {
-    "query": "SELECT * FROM services;",
-    "description": "Services snapshot query.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
   "etc_hosts": {
     "query": "SELECT * FROM etc_hosts;",
     "description": "List the contents of the Windows hosts file.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
-  "scheduled_tasks": {
-    "query": "SELECT * FROM scheduled_tasks;",
-    "description": "List all scheduled_tasks.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
-  "homebrew_packages": {
-    "query": "SELECT * FROM homebrew_packages;",
-    "description": "List all homebrew_packages.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
-  "installed_applications": {
-    "query": "SELECT * FROM apps;",
-    "description": "List all macos apps.",
-    "purlType": "swid",
-    "componentType": "data"
-  },
-  "kernel_integrity": {
-    "query": "SELECT * FROM kernel_integrity;",
-    "description": "Various Linux kernel integrity checked attributes.",
     "purlType": "swid",
     "componentType": "data"
   },

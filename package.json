@@ -1,7 +1,7 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "9.7.5",
-  "description": "Creates CycloneDX Software Bill-of-Materials (SBOM) from source or container image",
+  "version": "10.3.5",
+  "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
   "license": "Apache-2.0",
@@ -30,77 +30,90 @@
   ],
   "type": "module",
   "exports": "./index.js",
+  "types": "./types/index.d.ts",
   "bin": {
-    "cdxgen": "./bin/cdxgen.js",
-    "obom": "./bin/cdxgen.js",
-    "cdxi": "./bin/repl.js",
-    "evinse": "./bin/evinse.js",
-    "cdx-verify": "./bin/verify.js"
+    "cdxgen": "bin/cdxgen.js",
+    "obom": "bin/cdxgen.js",
+    "cbom": "bin/cdxgen.js",
+    "cdxi": "bin/repl.js",
+    "evinse": "bin/evinse.js",
+    "cdx-verify": "bin/verify.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js",
+    "docs": "docsify serve docs",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js postgen.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
-    "lint": "eslint *.js *.test.js bin/*.js",
-    "pretty": "prettier --write *.js data/*.json bin/*.js --trailing-comma=none"
+    "lint": "eslint *.js *.test.js bin/*.js --fix",
+    "pretty": "prettier --write jsr.json deno.json *.js data/*.json bin/*.js *.md docs/*.md data/*.md",
+    "gen-types": "npx -p typescript tsc"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CycloneDX/cdxgen"
+    "url": "git+https://github.com/CycloneDX/cdxgen.git"
   },
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
   "dependencies": {
-    "@babel/parser": "^7.22.16",
-    "@babel/traverse": "^7.22.17",
-    "@npmcli/arborist": "^7.1.0",
+    "@babel/parser": "^7.24.4",
+    "@babel/traverse": "^7.24.1",
+    "@npmcli/arborist": "7.4.1",
     "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1",
+    "ajv-formats": "^3.0.1",
     "cheerio": "^1.0.0-rc.12",
-    "edn-data": "^1.0.0",
-    "glob": "^10.3.4",
+    "edn-data": "1.1.1",
+    "find-up": "7.0.0",
+    "glob": "^10.3.12",
     "global-agent": "^3.0.0",
-    "got": "^13.0.0",
+    "got": "14.2.1",
     "iconv-lite": "^0.6.3",
     "js-yaml": "^4.1.0",
     "jws": "^4.0.0",
     "node-stream-zip": "^1.15.0",
-    "packageurl-js": "^1.0.2",
+    "packageurl-js": "1.0.2",
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.3.0",
-    "semver": "^7.5.3",
+    "semver": "^7.6.0",
     "ssri": "^10.0.4",
-    "table": "^6.8.1",
-    "tar": "^6.2.0",
-    "uuid": "^9.0.0",
+    "table": "^6.8.2",
+    "tar": "^6.2.1",
+    "uuid": "^9.0.1",
     "xml-js": "^1.6.11",
-    "xmlbuilder": "^15.1.1",
     "yargs": "^17.7.2"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "^1.1.15",
-    "@cyclonedx/cdxgen-plugins-bin": "^1.4.0",
-    "@cyclonedx/cdxgen-plugins-bin-arm64": "^1.4.0",
-    "@cyclonedx/cdxgen-plugins-bin-ppc64": "^1.4.0",
+    "@appthreat/atom": "2.0.9",
+    "@appthreat/cdx-proto": "^0.0.4",
+    "@cyclonedx/cdxgen-plugins-bin": "^1.5.8",
+    "@cyclonedx/cdxgen-plugins-bin-arm64": "^1.5.8",
+    "@cyclonedx/cdxgen-plugins-bin-darwin-amd64": "^1.5.8",
+    "@cyclonedx/cdxgen-plugins-bin-darwin-arm64": "^1.5.8",
+    "@cyclonedx/cdxgen-plugins-bin-ppc64": "^1.5.8",
+    "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "^1.5.8",
+    "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "^1.5.8",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
-    "jsonata": "^2.0.3",
-    "sequelize": "^6.33.0",
-    "sqlite3": "^5.1.6"
+    "jsonata": "^2.0.4",
+    "sequelize": "^6.37.2",
+    "sqlite3": "^5.1.7"
   },
   "files": [
     "*.js",
     "bin/",
-    "data/"
+    "data/",
+    "types/"
   ],
   "devDependencies": {
-    "caxa": "^3.0.1",
-    "eslint": "^8.48.0",
-    "jest": "^29.6.4",
-    "prettier": "3.0.3"
+    "docsify-cli": "^4.4.4",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^29.7.0",
+    "prettier": "3.2.5",
+    "typescript": "^5.4.4"
   }
 }

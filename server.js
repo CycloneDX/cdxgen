@@ -6,7 +6,10 @@ import { spawnSync } from "node:child_process";
 import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
-import { createBom } from "./index.js";
+import process from "node:process";
+import { createBom, submitBom } from "./index.js";
+import { postProcess } from "./postgen.js";
+
 import compression from "compression";
 
 // Timeout milliseconds. Default 10 mins
@@ -23,18 +26,39 @@ app.use(
 );
 app.use(compression());
 
-const gitClone = (repoUrl) => {
+const gitClone = (repoUrl, branch = null) => {
   const tempDir = fs.mkdtempSync(
     path.join(os.tmpdir(), path.basename(repoUrl))
   );
-  console.log("Cloning", repoUrl, "to", tempDir);
-  const result = spawnSync("git", ["clone", repoUrl, "--depth", "1", tempDir], {
-    encoding: "utf-8",
-    shell: false
-  });
-  if (result.status !== 0 || result.error) {
-    console.log(result.error);
+
+  if (branch == null) {
+    console.log("Cloning Repo", "to", tempDir);
+    const result = spawnSync(
+      "git",
+      ["clone", repoUrl, "--depth", "1", tempDir],
+      {
+        encoding: "utf-8",
+        shell: false
+      }
+    );
+    if (result.status !== 0 || result.error) {
+      console.log(result.error);
+    }
+  } else {
+    console.log("Cloning repo with optional branch", "to", tempDir);
+    const result = spawnSync(
+      "git",
+      ["clone", repoUrl, "--branch", branch, "--depth", "1", tempDir],
+      {
+        encoding: "utf-8",
+        shell: false
+      }
+    );
+    if (result.status !== 0 || result.error) {
+      console.log(result.error);
+    }
   }
+
   return tempDir;
 };
 
@@ -42,33 +66,37 @@ const parseQueryString = (q, body, options = {}) => {
   if (body && Object.keys(body).length) {
     options = Object.assign(options, body);
   }
-  if (q.type) {
-    options.projectType = q.type;
+
+  const queryParams = [
+    "type",
+    "multiProject",
+    "requiredOnly",
+    "noBabel",
+    "installDeps",
+    "projectId",
+    "projectName",
+    "projectGroup",
+    "projectVersion",
+    "parentUUID",
+    "serverUrl",
+    "apiKey",
+    "specVersion",
+    "filter",
+    "only",
+    "autoCompositions",
+    "gitBranch",
+    "active"
+  ];
+
+  for (const param of queryParams) {
+    if (q[param]) {
+      options[param] = q[param];
+    }
   }
-  if (q.multiProject && q.multiProject !== "false") {
-    options.multiProject = true;
-  }
-  if (q.requiredOnly && q.requiredOnly !== "false") {
-    options.requiredOnly = true;
-  }
-  if (q.noBabel) {
-    options.noBabel = q.noBabel;
-  }
-  if (q.installDeps) {
-    options.installDeps = q.installDeps;
-  }
-  if (q.project) {
-    options.project = q.project;
-  }
-  if (q.projectName) {
-    options.projectName = q.projectName;
-  }
-  if (q.projectGroup) {
-    options.projectGroup = q.projectGroup;
-  }
-  if (q.projectVersion) {
-    options.projectVersion = q.projectVersion;
-  }
+
+  options.projectType = options.type;
+  delete options.type;
+
   return options;
 };
 
@@ -85,10 +113,20 @@ const start = (options) => {
     .createServer(app)
     .listen(options.serverPort, options.serverHost);
   configureServer(cdxgenServer);
-  app.use("/sbom", async function (req, res) {
+
+  app.use("/health", (_req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ status: "OK" }, null, 2));
+  });
+
+  app.use("/sbom", async (req, res) => {
     const q = url.parse(req.url, true).query;
     let cleanup = false;
-    options = parseQueryString(q, req.body, options);
+    const reqOptions = parseQueryString(
+      q,
+      req.body,
+      Object.assign({}, options)
+    );
     const filePath = q.path || q.url || req.body.path || req.body.url;
     if (!filePath) {
       res.writeHead(500, { "Content-Type": "application/json" });
@@ -99,11 +137,14 @@ const start = (options) => {
     res.writeHead(200, { "Content-Type": "application/json" });
     let srcDir = filePath;
     if (filePath.startsWith("http") || filePath.startsWith("git")) {
-      srcDir = gitClone(filePath);
+      srcDir = gitClone(filePath, reqOptions.gitBranch);
       cleanup = true;
     }
-    console.log("Generating SBoM for", srcDir);
-    const bomNSData = (await createBom(srcDir, options)) || {};
+    console.log("Generating SBOM for", srcDir);
+    let bomNSData = (await createBom(srcDir, reqOptions)) || {};
+    if (reqOptions.requiredOnly || reqOptions["filter"] || reqOptions["only"]) {
+      bomNSData = postProcess(bomNSData, reqOptions);
+    }
     if (bomNSData.bomJson) {
       if (
         typeof bomNSData.bomJson === "string" ||
@@ -111,8 +152,12 @@ const start = (options) => {
       ) {
         res.write(bomNSData.bomJson);
       } else {
-        res.write(JSON.stringify(bomNSData.bomJson, null, 2));
+        res.write(JSON.stringify(bomNSData.bomJson, null, null));
       }
+    }
+    if (reqOptions.serverUrl && reqOptions.apiKey) {
+      console.log("Publishing SBOM to Dependency Track");
+      submitBom(reqOptions, bomNSData.bomJson);
     }
     res.end("\n");
     if (cleanup && srcDir && srcDir.startsWith(os.tmpdir()) && fs.rmSync) {

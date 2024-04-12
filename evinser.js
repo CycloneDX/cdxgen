@@ -1,11 +1,13 @@
 import {
+  DEBUG_MODE,
+  collectGradleDependencies,
+  collectMvnDependencies,
   executeAtom,
   getAllFiles,
   getGradleCommand,
-  getMavenCommand,
-  collectGradleDependencies,
-  collectMvnDependencies
+  getMavenCommand
 } from "./utils.js";
+import { findCryptoAlgos } from "./cbomutils.js";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import fs from "node:fs";
@@ -19,19 +21,33 @@ const typePurlsCache = {};
 /**
  * Function to create the db for the libraries referred in the sbom.
  *
- * @param {object} Command line options
+ * @param {Object} Command line options
  */
 export const prepareDB = async (options) => {
+  if (!options.dbPath.includes("memory") && !fs.existsSync(options.dbPath)) {
+    try {
+      fs.mkdirSync(options.dbPath, { recursive: true });
+    } catch (e) {
+      // ignore
+    }
+  }
   const dirPath = options._[0] || ".";
   const bomJsonFile = options.input;
   if (!fs.existsSync(bomJsonFile)) {
-    console.log("Bom file doesn't exist");
+    console.log(
+      "Bom file doesn't exist. Check if cdxgen was invoked with the correct type argument."
+    );
+    if (!process.env.CDXGEN_DEBUG_MODE) {
+      console.log(
+        "Set the environment variable CDXGEN_DEBUG_MODE to debug to troubleshoot the issue further."
+      );
+    }
     return;
   }
   const bomJson = JSON.parse(fs.readFileSync(bomJsonFile, "utf8"));
   if (bomJson.specVersion < 1.5) {
     console.log(
-      "Evinse requires the input SBoM in CycloneDX 1.5 format or above. You can generate one by invoking cdxgen without any --spec-version argument."
+      "Evinse requires the input SBOM in CycloneDX 1.5 format or above. You can generate one by invoking cdxgen without any --spec-version argument."
     );
     process.exit(0);
   }
@@ -54,8 +70,6 @@ export const prepareDB = async (options) => {
     if ((!usagesSlice && !namespaceSlice) || options.force) {
       if (comp.purl.startsWith("pkg:maven")) {
         hasMavenPkgs = true;
-      } else if (isSlicingRequired(comp.purl)) {
-        purlsToSlice[comp.purl] = true;
       }
     }
   }
@@ -71,7 +85,7 @@ export const prepareDB = async (options) => {
     }
   }
   for (const purl of Object.keys(purlsToSlice)) {
-    await createAndStoreSlice(purl, purlsJars, Usages);
+    await createAndStoreSlice(purl, purlsJars, Usages, options);
   }
   return { sequelize, Namespaces, Usages, DataFlows };
 };
@@ -82,15 +96,30 @@ export const catalogMavenDeps = async (
   Namespaces,
   options = {}
 ) => {
-  console.log("About to collect jar dependencies for the path", dirPath);
-  const mavenCmd = getMavenCommand(dirPath, dirPath);
-  // collect all jars including from the cache if data-flow mode is enabled
-  const jarNSMapping = collectMvnDependencies(
-    mavenCmd,
-    dirPath,
-    false,
-    options.withDeepJarCollector
-  );
+  let jarNSMapping = undefined;
+  if (fs.existsSync(path.join(dirPath, "bom.json.map"))) {
+    try {
+      const mapData = JSON.parse(
+        fs.readFileSync(path.join(dirPath, "bom.json.map"), "utf-8")
+      );
+      if (mapData && Object.keys(mapData).length) {
+        jarNSMapping = mapData;
+      }
+    } catch (err) {
+      // ignore
+    }
+  }
+  if (!jarNSMapping) {
+    console.log("About to collect jar dependencies for the path", dirPath);
+    const mavenCmd = getMavenCommand(dirPath, dirPath);
+    // collect all jars including from the cache if data-flow mode is enabled
+    jarNSMapping = await collectMvnDependencies(
+      mavenCmd,
+      dirPath,
+      false,
+      options.withDeepJarCollector
+    );
+  }
   if (jarNSMapping) {
     for (const purl of Object.keys(jarNSMapping)) {
       purlsJars[purl] = jarNSMapping[purl].jarFile;
@@ -104,7 +133,7 @@ export const catalogMavenDeps = async (
               namespaces: jarNSMapping[purl].namespaces
             },
             null,
-            2
+            null
           )
         }
       });
@@ -118,7 +147,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   );
   const gradleCmd = getGradleCommand(dirPath, dirPath);
   // collect all jars including from the cache if data-flow mode is enabled
-  const jarNSMapping = collectGradleDependencies(
+  const jarNSMapping = await collectGradleDependencies(
     gradleCmd,
     dirPath,
     false,
@@ -137,7 +166,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
               namespaces: jarNSMapping[purl].namespaces
             },
             null,
-            2
+            null
           )
         }
       });
@@ -148,8 +177,13 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   );
 };
 
-export const createAndStoreSlice = async (purl, purlsJars, Usages) => {
-  const retMap = createSlice(purl, purlsJars[purl], "usages");
+export const createAndStoreSlice = async (
+  purl,
+  purlsJars,
+  Usages,
+  options = {}
+) => {
+  const retMap = createSlice(purl, purlsJars[purl], "usages", options);
   let sliceData = undefined;
   if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
     sliceData = await Usages.findOrCreate({
@@ -166,45 +200,68 @@ export const createAndStoreSlice = async (purl, purlsJars, Usages) => {
   return sliceData;
 };
 
-export const createSlice = (purlOrLanguage, filePath, sliceType = "usages") => {
+export const createSlice = (
+  purlOrLanguage,
+  filePath,
+  sliceType = "usages",
+  options = {}
+) => {
   if (!filePath) {
     return;
   }
-  console.log(`Create ${sliceType} slice for ${purlOrLanguage} ${filePath}`);
+  console.log(
+    `Create ${sliceType} slice for ${path.resolve(filePath)}. Please wait ...`
+  );
   const language = purlOrLanguage.startsWith("pkg:")
     ? purlToLanguage(purlOrLanguage, filePath)
     : purlOrLanguage;
   if (!language) {
     return undefined;
   }
-  const tempDir = fs.mkdtempSync(path.join(tmpdir(), `atom-${sliceType}-`));
-  const atomFile = path.join(tempDir, "app.atom");
-  const slicesFile = path.join(tempDir, `${sliceType}.slices.json`);
-  const args = [
-    sliceType,
+  let sliceOutputDir = fs.mkdtempSync(
+    path.join(tmpdir(), `atom-${sliceType}-`)
+  );
+  if (options && options.output) {
+    sliceOutputDir =
+      fs.existsSync(options.output) &&
+      fs.lstatSync(options.output).isDirectory()
+        ? path.basename(options.output)
+        : path.dirname(options.output);
+  }
+  const atomFile = path.join(sliceOutputDir, "app.atom");
+  const slicesFile = path.join(sliceOutputDir, `${sliceType}.slices.json`);
+  let args = [sliceType];
+  // Support for crypto slices aka CBOM
+  if (sliceType === "reachables" && options.includeCrypto) {
+    args.push("--include-crypto");
+  }
+  args = args.concat([
     "-l",
     language,
     "-o",
     path.resolve(atomFile),
     "--slice-outfile",
     path.resolve(slicesFile)
-  ];
+  ]);
   // For projects with several layers, slice depth needs to be increased from the default 7 to 15 or 20
   // This would increase the time but would yield more deeper paths
-  if (sliceType == "data-flow" && process.env.ATOM_SLICE_DEPTH) {
+  if (sliceType === "data-flow" && process.env.ATOM_SLICE_DEPTH) {
     args.push("--slice-depth");
     args.push(process.env.ATOM_SLICE_DEPTH);
   }
+
   args.push(path.resolve(filePath));
   const result = executeAtom(filePath, args);
   if (!result || !fs.existsSync(slicesFile)) {
-    console.warn(`Unable to generate ${sliceType} slice using atom.`);
+    console.warn(
+      `Unable to generate ${sliceType} slice using atom. Check if this is a supported language.`
+    );
     console.log(
       "Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
     );
   }
   return {
-    tempDir,
+    tempDir: sliceOutputDir,
     slicesFile,
     atomFile
   };
@@ -223,25 +280,40 @@ export const purlToLanguage = (purl, filePath) => {
     case "pypi":
       language = "python";
       break;
+    case "composer":
+      language = "php";
+      break;
+    case "generic":
+      language = "c";
   }
   return language;
 };
 
-export const initFromSbom = (components) => {
+export const initFromSbom = (components, language) => {
   const purlLocationMap = {};
   const purlImportsMap = {};
   for (const comp of components) {
-    if (!comp || !comp.evidence || !comp.evidence.occurrences) {
+    if (!comp || !comp.evidence) {
       continue;
     }
-    purlLocationMap[comp.purl] = new Set(
-      comp.evidence.occurrences.map((v) => v.location)
-    );
-    (comp.properties || [])
-      .filter((v) => v.name === "ImportedModules")
-      .forEach((v) => {
-        purlImportsMap[comp.purl] = (v.value || "").split(",");
-      });
+    if (language === "php") {
+      (comp.properties || [])
+        .filter((v) => v.name === "Namespaces")
+        .forEach((v) => {
+          purlImportsMap[comp.purl] = (v.value || "").split(", ");
+        });
+    } else {
+      (comp.properties || [])
+        .filter((v) => v.name === "ImportedModules")
+        .forEach((v) => {
+          purlImportsMap[comp.purl] = (v.value || "").split(",");
+        });
+    }
+    if (comp.evidence.occurrences) {
+      purlLocationMap[comp.purl] = new Set(
+        comp.evidence.occurrences.map((v) => v.location)
+      );
+    }
   }
   return {
     purlLocationMap,
@@ -252,16 +324,18 @@ export const initFromSbom = (components) => {
 /**
  * Function to analyze the project
  *
- * @param {object} dbObjMap DB and model instances
- * @param {object} Command line options
+ * @param {Object} dbObjMap DB and model instances
+ * @param {Object} Command line options
  */
 export const analyzeProject = async (dbObjMap, options) => {
   const dirPath = options._[0] || ".";
   const language = options.language;
   let usageSlice = undefined;
   let dataFlowSlice = undefined;
+  let reachablesSlice = undefined;
   let usagesSlicesFile = undefined;
   let dataFlowSlicesFile = undefined;
+  let reachablesSlicesFile = undefined;
   let dataFlowFrames = {};
   let servicesMap = {};
   let retMap = {};
@@ -269,22 +343,47 @@ export const analyzeProject = async (dbObjMap, options) => {
   const bomFile = options.input;
   const bomJson = JSON.parse(fs.readFileSync(bomFile, "utf8"));
   const components = bomJson.components || [];
+  let cryptoComponents = [];
+  let cryptoGeneratePurls = {};
   // Load any existing purl-location information from the sbom.
   // For eg: cdxgen populates this information for javascript projects
-  let { purlLocationMap, purlImportsMap } = initFromSbom(components);
+  let { purlLocationMap, purlImportsMap } = initFromSbom(components, language);
+  // Do reachables first so that usages slicing can reuse the atom file
+  if (options.withReachables || options.includeCrypto) {
+    if (
+      options.reachablesSlicesFile &&
+      fs.existsSync(options.reachablesSlicesFile)
+    ) {
+      reachablesSlicesFile = options.reachablesSlicesFile;
+      reachablesSlice = JSON.parse(
+        fs.readFileSync(options.reachablesSlicesFile, "utf-8")
+      );
+    } else {
+      retMap = createSlice(language, dirPath, "reachables", options);
+      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+        reachablesSlicesFile = retMap.slicesFile;
+        reachablesSlice = JSON.parse(
+          fs.readFileSync(retMap.slicesFile, "utf-8")
+        );
+      }
+    }
+  }
+  if (reachablesSlice && Object.keys(reachablesSlice).length) {
+    const retMap = collectReachableFrames(language, reachablesSlice);
+    dataFlowFrames = retMap.dataFlowFrames;
+    cryptoComponents = retMap.cryptoComponents;
+    cryptoGeneratePurls = retMap.cryptoGeneratePurls;
+  }
   // Reuse existing usages slices
   if (options.usagesSlicesFile && fs.existsSync(options.usagesSlicesFile)) {
     usageSlice = JSON.parse(fs.readFileSync(options.usagesSlicesFile, "utf-8"));
     usagesSlicesFile = options.usagesSlicesFile;
   } else {
     // Generate our own slices
-    retMap = createSlice(language, dirPath, "usages");
+    retMap = createSlice(language, dirPath, "usages", options);
     if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
       usageSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
       usagesSlicesFile = retMap.slicesFile;
-      console.log(
-        `To speed up this step, cache ${usagesSlicesFile} and invoke evinse with the --usages-slices-file argument.`
-      );
     }
   }
   if (usageSlice && Object.keys(usageSlice).length) {
@@ -310,13 +409,10 @@ export const analyzeProject = async (dbObjMap, options) => {
         fs.readFileSync(options.dataFlowSlicesFile, "utf-8")
       );
     } else {
-      retMap = createSlice(language, dirPath, "data-flow");
+      retMap = createSlice(language, dirPath, "data-flow", options);
       if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
         dataFlowSlicesFile = retMap.slicesFile;
         dataFlowSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
-        console.log(
-          `To speed up this step, cache ${dataFlowSlicesFile} and invoke evinse with the --data-flow-slices-file argument.`
-        );
       }
     }
   }
@@ -334,11 +430,14 @@ export const analyzeProject = async (dbObjMap, options) => {
     atomFile: retMap.atomFile,
     usagesSlicesFile,
     dataFlowSlicesFile,
+    reachablesSlicesFile,
     purlLocationMap,
     servicesMap,
     dataFlowFrames,
     tempDir: retMap.tempDir,
-    userDefinedTypesMap
+    userDefinedTypesMap,
+    cryptoComponents,
+    cryptoGeneratePurls
   };
 };
 
@@ -365,7 +464,8 @@ export const parseObjectSlices = async (
     if (
       !slice.fileName ||
       !slice.fileName.trim().length ||
-      slice.fileName === "<empty>"
+      slice.fileName === "<empty>" ||
+      slice.fileName === "<unknown>"
     ) {
       continue;
     }
@@ -379,6 +479,7 @@ export const parseObjectSlices = async (
     );
     detectServicesFromUsages(language, slice, servicesMap);
   }
+  detectServicesFromUDT(language, usageSlice.userDefinedTypes, servicesMap);
   return {
     purlLocationMap,
     servicesMap,
@@ -391,11 +492,11 @@ export const parseObjectSlices = async (
  * https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#use
  *
  * @param {string} language Application language
- * @param {object} userDefinedTypesMap User Defined types in the application
- * @param {array} usages Usages array for each objectSlice
- * @param {object} dbObjMap DB Models
- * @param {object} purlLocationMap Object to track locations where purls are used
- * @param {object} purlImportsMap Object to track package urls and their import aliases
+ * @param {Object} userDefinedTypesMap User Defined types in the application
+ * @param {Array} usages Usages array for each objectSlice
+ * @param {Object} dbObjMap DB Models
+ * @param {Object} purlLocationMap Object to track locations where purls are used
+ * @param {Object} purlImportsMap Object to track package urls and their import aliases
  * @returns
  */
 export const parseSliceUsages = async (
@@ -406,13 +507,20 @@ export const parseSliceUsages = async (
   purlLocationMap,
   purlImportsMap
 ) => {
-  const usages = slice.usages;
-  if (!usages || !usages.length) {
-    return undefined;
-  }
   const fileName = slice.fileName;
   const typesToLookup = new Set();
   const lKeyOverrides = {};
+  const usages = slice.usages || [];
+  // Annotations from usages
+  if (slice.signature && slice.signature.startsWith("@") && !usages.length) {
+    typesToLookup.add(slice.fullName);
+    addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
+  }
+  // PHP imports from usages
+  if (slice.code && slice.code.startsWith("use") && !usages.length) {
+    typesToLookup.add(slice.fullName);
+    addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
+  }
   for (const ausage of usages) {
     const ausageLine =
       ausage?.targetObj?.lineNumber || ausage?.definedBy?.lineNumber;
@@ -428,12 +536,17 @@ export const parseSliceUsages = async (
         atype[0] !== false &&
         !isFilterableType(language, userDefinedTypesMap, atype[1])
       ) {
-        if (!atype[1].includes("(")) {
-          typesToLookup.add(atype[1]);
+        if (!atype[1].includes("(") && !atype[1].includes(".py")) {
+          typesToLookup.add(simplifyType(atype[1]));
           // Javascript calls can be resolved to a precise line number only from the call nodes
-          if (language == "javascript" && ausageLine) {
+          if (
+            ["javascript", "js", "ts", "typescript"].includes(language) &&
+            ausageLine
+          ) {
             if (atype[1].includes(":")) {
-              typesToLookup.add(atype[1].split("::")[0].replace(/:/g, "/"));
+              typesToLookup.add(
+                simplifyType(atype[1].split("::")[0].replace(/:/g, "/"))
+              );
             }
             addToOverrides(lKeyOverrides, atype[1], fileName, ausageLine);
           }
@@ -450,14 +563,27 @@ export const parseSliceUsages = async (
       .concat(ausage?.invokedCalls || [])
       .concat(ausage?.argToCalls || [])
       .concat(ausage?.procedures || [])) {
-      if (acall.isExternal == false) {
+      if (acall.resolvedMethod && acall.resolvedMethod.startsWith("@")) {
+        typesToLookup.add(acall.callName);
+        if (acall.lineNumber) {
+          addToOverrides(
+            lKeyOverrides,
+            acall.callName,
+            fileName,
+            acall.lineNumber
+          );
+        }
+      } else if (acall.isExternal == false) {
         continue;
       }
       if (
         !isFilterableType(language, userDefinedTypesMap, acall?.resolvedMethod)
       ) {
-        if (!acall?.resolvedMethod.includes("(")) {
-          typesToLookup.add(acall?.resolvedMethod);
+        if (
+          !acall?.resolvedMethod.includes("(") &&
+          !acall?.resolvedMethod.includes(".py")
+        ) {
+          typesToLookup.add(simplifyType(acall?.resolvedMethod));
           // Javascript calls can be resolved to a precise line number only from the call nodes
           if (acall.lineNumber) {
             addToOverrides(
@@ -484,11 +610,13 @@ export const parseSliceUsages = async (
       }
       for (const aparamType of acall?.paramTypes || []) {
         if (!isFilterableType(language, userDefinedTypesMap, aparamType)) {
-          if (!aparamType.includes("(")) {
-            typesToLookup.add(aparamType);
+          if (!aparamType.includes("(") && !aparamType.includes(".py")) {
+            typesToLookup.add(simplifyType(aparamType));
             if (acall.lineNumber) {
               if (aparamType.includes(":")) {
-                typesToLookup.add(aparamType.split("::")[0].replace(/:/g, "/"));
+                typesToLookup.add(
+                  simplifyType(aparamType.split("::")[0].replace(/:/g, "/"))
+                );
               }
               addToOverrides(
                 lKeyOverrides,
@@ -522,27 +650,41 @@ export const parseSliceUsages = async (
     if (purlImportsMap && Object.keys(purlImportsMap).length) {
       for (const apurl of Object.keys(purlImportsMap)) {
         const apurlImports = purlImportsMap[apurl];
-        if (apurlImports && apurlImports.includes(atype)) {
-          if (!purlLocationMap[apurl]) {
-            purlLocationMap[apurl] = new Set();
+        if (language === "php") {
+          for (const aimp of apurlImports) {
+            if (atype.startsWith(aimp)) {
+              if (!purlLocationMap[apurl]) {
+                purlLocationMap[apurl] = new Set();
+              }
+              if (lKeyOverrides[atype]) {
+                purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+              }
+            }
           }
-          if (lKeyOverrides[atype]) {
-            purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+        } else {
+          if (apurlImports && apurlImports.includes(atype)) {
+            if (!purlLocationMap[apurl]) {
+              purlLocationMap[apurl] = new Set();
+            }
+            if (lKeyOverrides[atype]) {
+              purlLocationMap[apurl].add(...lKeyOverrides[atype]);
+            }
           }
         }
       }
     } else {
       // Check the namespaces db
-      const nsHits =
-        typePurlsCache[atype] ||
-        (await dbObjMap.Namespaces.findAll({
+      let nsHits = typePurlsCache[atype];
+      if (!nsHits && ["java", "jar"].includes(language)) {
+        nsHits = await dbObjMap.Namespaces.findAll({
           attributes: ["purl"],
           where: {
             data: {
               [Op.like]: `%${atype}%`
             }
           }
-        }));
+        });
+      }
       if (nsHits && nsHits.length) {
         for (const ns of nsHits) {
           if (!purlLocationMap[ns.purl]) {
@@ -553,6 +695,9 @@ export const parseSliceUsages = async (
           }
         }
         typePurlsCache[atype] = nsHits;
+      } else {
+        // Avoid persistent lookups
+        typePurlsCache[atype] = [];
       }
     }
   }
@@ -565,16 +710,21 @@ export const isFilterableType = (
 ) => {
   if (
     !typeFullName ||
-    ["ANY", "UNKNOWN", "VOID"].includes(typeFullName.toUpperCase())
+    ["ANY", "UNKNOWN", "VOID", "IMPORT"].includes(typeFullName.toUpperCase())
   ) {
     return true;
   }
-  if (
-    typeFullName.startsWith("<operator") ||
-    typeFullName.startsWith("<unresolved") ||
-    typeFullName.startsWith("<unknownFullName")
-  ) {
-    return true;
+  for (const ab of [
+    "<operator",
+    "<unresolved",
+    "<unknownFullName",
+    "__builtin",
+    "LAMBDA",
+    "../"
+  ]) {
+    if (typeFullName.startsWith(ab)) {
+      return true;
+    }
   }
   if (language && ["java", "jar"].includes(language)) {
     if (
@@ -590,7 +740,7 @@ export const isFilterableType = (
       return true;
     }
   }
-  if (language === "javascript") {
+  if (["javascript", "js", "ts", "typescript"].includes(language)) {
     if (
       typeFullName.includes(".js") ||
       typeFullName.includes("=>") ||
@@ -598,10 +748,22 @@ export const isFilterableType = (
       typeFullName.startsWith("{ ") ||
       typeFullName.startsWith("JSON") ||
       typeFullName.startsWith("void:") ||
-      typeFullName.startsWith("LAMBDA") ||
-      typeFullName.startsWith("../") ||
       typeFullName.startsWith("node:")
     ) {
+      return true;
+    }
+  }
+  if (["python", "py"].includes(language)) {
+    if (
+      typeFullName.startsWith("tmp") ||
+      typeFullName.startsWith("self.") ||
+      typeFullName.startsWith("_")
+    ) {
+      return true;
+    }
+  }
+  if (["php"].includes(language)) {
+    if (!typeFullName.includes("\\") && !typeFullName.startsWith("use")) {
       return true;
     }
   }
@@ -615,8 +777,8 @@ export const isFilterableType = (
  * Method to detect services from annotation objects in the usage slice
  *
  * @param {string} language Application language
- * @param {array} usages Usages array for each objectSlice
- * @param {object} servicesMap Existing service map
+ * @param {Array} usages Usages array for each objectSlice
+ * @param {Object} servicesMap Existing service map
  */
 export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
   const usages = slice.usages;
@@ -629,12 +791,16 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     let endpoints = [];
     let authenticated = undefined;
     if (targetObj && targetObj?.resolvedMethod) {
-      endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
+      if (language != "php") {
+        endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
+      }
       if (targetObj?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
     } else if (definedBy && definedBy?.resolvedMethod) {
-      endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
+      if (language != "php") {
+        endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
+      }
       if (definedBy?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
@@ -642,12 +808,17 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     if (usage.invokedCalls) {
       for (const acall of usage.invokedCalls) {
         if (acall.resolvedMethod) {
-          const tmpEndpoints = extractEndpoints(language, acall.resolvedMethod);
-          if (acall.resolvedMethod.toLowerCase().includes("auth")) {
-            authenticated = true;
-          }
-          if (tmpEndpoints && tmpEndpoints.length) {
-            endpoints = (endpoints || []).concat(tmpEndpoints);
+          if (language != "php") {
+            const tmpEndpoints = extractEndpoints(
+              language,
+              acall.resolvedMethod
+            );
+            if (acall.resolvedMethod.toLowerCase().includes("auth")) {
+              authenticated = true;
+            }
+            if (tmpEndpoints && tmpEndpoints.length) {
+              endpoints = (endpoints || []).concat(tmpEndpoints);
+            }
           }
         }
       }
@@ -663,6 +834,73 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
       }
       for (const endpoint of endpoints) {
         servicesMap[serviceName].endpoints.add(endpoint);
+      }
+    }
+  }
+};
+
+/**
+ * Method to detect services from user defined types in the usage slice
+ *
+ * @param {string} language Application language
+ * @param {Array} userDefinedTypes User defined types
+ * @param {Object} servicesMap Existing service map
+ */
+export const detectServicesFromUDT = (
+  language,
+  userDefinedTypes,
+  servicesMap
+) => {
+  if (
+    ["python", "py", "c", "cpp", "c++", "php"].includes(language) &&
+    userDefinedTypes &&
+    userDefinedTypes.length
+  ) {
+    for (const audt of userDefinedTypes) {
+      if (
+        audt.name.toLowerCase().includes("route") ||
+        audt.name.toLowerCase().includes("path") ||
+        audt.name.toLowerCase().includes("url") ||
+        audt.name.toLowerCase().includes("registerhandler") ||
+        audt.name.toLowerCase().includes("endpoint") ||
+        audt.name.toLowerCase().includes("api") ||
+        audt.name.toLowerCase().includes("add_method") ||
+        audt.name.toLowerCase().includes("get") ||
+        audt.name.toLowerCase().includes("post") ||
+        audt.name.toLowerCase().includes("delete") ||
+        audt.name.toLowerCase().includes("put") ||
+        audt.name.toLowerCase().includes("head") ||
+        audt.name.toLowerCase().includes("options") ||
+        audt.name.toLowerCase().includes("addRoute") ||
+        audt.name.toLowerCase().includes("connect")
+      ) {
+        const fields = audt.fields || [];
+        if (
+          fields.length &&
+          fields[0] &&
+          fields[0].name &&
+          fields[0].name.length > 1
+        ) {
+          const endpoints = extractEndpoints(language, fields[0].name);
+          let serviceName = "service";
+          if (audt.fileName) {
+            serviceName = `${path.basename(
+              audt.fileName.replace(".py", "")
+            )}-service`;
+          }
+          if (endpoints && endpoints.length) {
+            if (!servicesMap[serviceName]) {
+              servicesMap[serviceName] = {
+                endpoints: new Set(),
+                authenticated: false,
+                xTrustBoundary: undefined
+              };
+            }
+            for (const endpoint of endpoints) {
+              servicesMap[serviceName].endpoints.add(endpoint);
+            }
+          }
+        }
       }
     }
   }
@@ -691,7 +929,7 @@ export const extractEndpoints = (language, code) => {
     case "jar":
       if (
         code.startsWith("@") &&
-        code.includes("Mapping") &&
+        (code.includes("Mapping") || code.includes("Path")) &&
         code.includes("(")
       ) {
         const matches = code.match(/['"](.*?)['"]/gi) || [];
@@ -706,7 +944,10 @@ export const extractEndpoints = (language, code) => {
           );
       }
       break;
+    case "js":
+    case "ts":
     case "javascript":
+    case "typescript":
       if (code.includes("app.") || code.includes("route")) {
         const matches = code.match(/['"](.*?)['"]/gi) || [];
         endpoints = matches
@@ -723,28 +964,19 @@ export const extractEndpoints = (language, code) => {
       }
       break;
     default:
+      endpoints = (code.match(/['"](.*?)['"]/gi) || [])
+        .map((v) => v.replace(/["']/g, "").replace("\n", ""))
+        .filter((v) => v.length > 2 && v.includes("/"));
       break;
   }
   return endpoints;
 };
 
 /**
- * Function to determine if slicing is required for the given language's dependencies.
- * For performance reasons, we make java operate only with namespaces
+ * Method to create the SBOM with evidence file called evinse file.
  *
- * @param {string} purl
- * @returns
- */
-export const isSlicingRequired = (purl) => {
-  const language = purlToLanguage(purl);
-  return ["python"].includes(language);
-};
-
-/**
- * Method to create the SBoM with evidence file called evinse file.
- *
- * @param {object} sliceArtefacts Various artefacts from the slice operation
- * @param {object} options Command line options
+ * @param {Object} sliceArtefacts Various artefacts from the slice operation
+ * @param {Object} options Command line options
  * @returns
  */
 export const createEvinseFile = (sliceArtefacts, options) => {
@@ -752,9 +984,12 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     tempDir,
     usagesSlicesFile,
     dataFlowSlicesFile,
+    reachablesSlicesFile,
     purlLocationMap,
     servicesMap,
-    dataFlowFrames
+    dataFlowFrames,
+    cryptoComponents,
+    cryptoGeneratePurls
   } = sliceArtefacts;
   const bomFile = options.input;
   const evinseOutFile = options.output;
@@ -762,6 +997,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   const components = bomJson.components || [];
   let occEvidencePresent = false;
   let csEvidencePresent = false;
+  let servicesPresent = false;
   for (const comp of components) {
     if (!comp.purl) {
       continue;
@@ -796,6 +1032,14 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         csEvidencePresent = true;
       }
     }
+    // Add crypto tags if this purl offers any generation algorithm
+    if (
+      cryptoGeneratePurls &&
+      cryptoGeneratePurls[comp.purl] &&
+      Array.from(cryptoGeneratePurls[comp.purl]).length
+    ) {
+      comp.tags = ["crypto", "crypto-generate"];
+    }
   } // for
   if (servicesMap && Object.keys(servicesMap).length) {
     const services = [];
@@ -809,6 +1053,29 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     }
     // Add to existing services
     bomJson.services = (bomJson.services || []).concat(services);
+    servicesPresent = true;
+  }
+  // Add the crypto components to the components list
+  if (cryptoComponents && cryptoComponents.length) {
+    bomJson.components = bomJson.components.concat(cryptoComponents);
+  }
+  // Fix the dependencies section with provides information
+  if (
+    cryptoGeneratePurls &&
+    Object.keys(cryptoGeneratePurls).length &&
+    bomJson.dependencies
+  ) {
+    const newDependencies = [];
+    for (const depObj of bomJson.dependencies) {
+      if (depObj.ref && cryptoGeneratePurls[depObj.ref]) {
+        const providedAlgos = Array.from(cryptoGeneratePurls[depObj.ref]);
+        if (providedAlgos.length) {
+          depObj.provides = providedAlgos;
+        }
+      }
+      newDependencies.push(depObj);
+    }
+    bomJson.dependencies = newDependencies;
   }
   if (options.annotate) {
     if (!bomJson.annotations) {
@@ -830,18 +1097,26 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         text: fs.readFileSync(dataFlowSlicesFile, "utf8")
       });
     }
+    if (reachablesSlicesFile && fs.existsSync(reachablesSlicesFile)) {
+      bomJson.annotations.push({
+        subjects: [bomJson.serialNumber],
+        annotator: { component: bomJson.metadata.tools.components[0] },
+        timestamp: new Date().toISOString(),
+        text: fs.readFileSync(reachablesSlicesFile, "utf8")
+      });
+    }
   }
   // Increment the version
   bomJson.version = (bomJson.version || 1) + 1;
   // Set the current timestamp to indicate this is newer
   bomJson.metadata.timestamp = new Date().toISOString();
   delete bomJson.signature;
-  fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, 2));
-  if (occEvidencePresent || csEvidencePresent) {
+  fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, null));
+  if (occEvidencePresent || csEvidencePresent || servicesPresent) {
     console.log(evinseOutFile, "created successfully.");
   } else {
     console.log(
-      "Unable to identify component evidence for the input SBoM. Only java, javascript and python projects are supported by evinse."
+      "Unable to identify component evidence for the input SBOM. Only java, javascript, python, and php projects are supported by evinse."
     );
   }
   if (tempDir && tempDir.startsWith(tmpdir())) {
@@ -855,11 +1130,11 @@ export const createEvinseFile = (sliceArtefacts, options) => {
  * Implemented based on the logic proposed here - https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#data-flow-slice
  *
  * @param {string} language Application language
- * @param {object} userDefinedTypesMap User Defined types in the application
- * @param {object} dataFlowSlice Data flow slice object from atom
- * @param {object} dbObjMap DB models
- * @param {object} purlLocationMap Object to track locations where purls are used
- * @param {object} purlImportsMap Object to track package urls and their import aliases
+ * @param {Object} userDefinedTypesMap User Defined types in the application
+ * @param {Object} dataFlowSlice Data flow slice object from atom
+ * @param {Object} dbObjMap DB models
+ * @param {Object} purlLocationMap Object to track locations where purls are used
+ * @param {Object} purlImportsMap Object to track package urls and their import aliases
  */
 export const collectDataFlowFrames = async (
   language,
@@ -881,7 +1156,7 @@ export const collectDataFlowFrames = async (
   }
   const paths = dataFlowSlice?.paths || [];
   for (const apath of paths) {
-    let aframe = [];
+    const aframe = [];
     let referredPurls = new Set();
     for (const nid of apath) {
       const theNode = nodeCache[nid];
@@ -889,7 +1164,10 @@ export const collectDataFlowFrames = async (
         continue;
       }
       let typeFullName = theNode.typeFullName;
-      if (language === "javascript" && typeFullName == "ANY") {
+      if (
+        ["javascript", "js", "ts", "typescript"].includes(language) &&
+        typeFullName == "ANY"
+      ) {
         if (
           theNode.code &&
           (theNode.code.startsWith("new ") ||
@@ -915,22 +1193,23 @@ export const collectDataFlowFrames = async (
           }
         } else {
           // Check the namespaces db
-          const nsHits =
-            typePurlsCache[typeFullName] ||
-            (await dbObjMap.Namespaces.findAll({
+          let nsHits = typePurlsCache[typeFullName];
+          if (["java", "jar"].includes(language)) {
+            nsHits = await dbObjMap.Namespaces.findAll({
               attributes: ["purl"],
               where: {
                 data: {
                   [Op.like]: `%${typeFullName}%`
                 }
               }
-            }));
+            });
+          }
           if (nsHits && nsHits.length) {
             for (const ns of nsHits) {
               referredPurls.add(ns.purl);
             }
             typePurlsCache[typeFullName] = nsHits;
-          } else {
+          } else if (DEBUG_MODE) {
             console.log("Unable to identify purl for", typeFullName);
           }
         }
@@ -974,9 +1253,100 @@ export const collectDataFlowFrames = async (
 };
 
 /**
+ * Method to convert reachable slice into usable callstack frames and crypto components
+ *
+ * Implemented based on the logic proposed here - https://github.com/AppThreat/atom/blob/main/specification/docs/slices.md#data-flow-slice
+ *
+ * @param {string} language Application language
+ * @param {Object} reachablesSlice Reachables slice object from atom
+ */
+export const collectReachableFrames = (language, reachablesSlice) => {
+  const reachableNodes = reachablesSlice?.reachables || [];
+  // purl key and an array of frames array
+  // CycloneDX 1.5 currently accepts only 1 frame as evidence
+  // so this method is more future-proof
+  const dfFrames = {};
+  const cryptoComponentsMap = {};
+  // Track purls which provide the specific generate algorithm
+  const cryptoGeneratePurls = {};
+  for (const anode of reachableNodes) {
+    const aframe = [];
+    let referredPurls = new Set(anode.purls || []);
+    let isCryptoFlow = false;
+    let codeSnippets = "";
+    let cpurls = [];
+    for (const fnode of anode.flows) {
+      const tagStr = fnode.tags || "";
+      if (tagStr.includes("crypto")) {
+        isCryptoFlow = true;
+      }
+      if (tagStr.includes("crypto-generate")) {
+        cpurls = tagStr.split(", ").filter((t) => t.startsWith("pkg:"));
+        for (const cpurl of cpurls) {
+          cryptoGeneratePurls[cpurl] = new Set();
+        }
+      }
+      if (isCryptoFlow && fnode.code) {
+        codeSnippets = codeSnippets + "\\n" + fnode.code;
+      }
+      if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
+        continue;
+      }
+      aframe.push({
+        package: fnode.parentPackageName,
+        module: fnode.parentClassName || "",
+        function: fnode.parentMethodName || "",
+        line: fnode.lineNumber || undefined,
+        column: fnode.columnNumber || undefined,
+        fullFilename: fnode.parentFileName || ""
+      });
+    }
+    referredPurls = Array.from(referredPurls);
+    if (referredPurls.length) {
+      for (const apurl of referredPurls) {
+        if (!dfFrames[apurl]) {
+          dfFrames[apurl] = [];
+        }
+        // Store this frame as an evidence for this purl
+        dfFrames[apurl].push(aframe);
+      }
+    }
+    // Detect crypto algorithms used in a crypto flow
+    if (isCryptoFlow && codeSnippets.length) {
+      const cryptoAlgos = findCryptoAlgos(codeSnippets);
+      for (const algo of cryptoAlgos) {
+        cryptoComponentsMap[algo.ref] = algo;
+        for (const cpurl of cpurls) {
+          cryptoGeneratePurls[cpurl].add(algo.ref);
+        }
+      }
+    }
+  }
+  const cryptoComponents = [];
+  for (const cref of Object.keys(cryptoComponentsMap)) {
+    const algoObj = cryptoComponentsMap[cref];
+    cryptoComponents.push({
+      type: "cryptographic-asset",
+      name: algoObj.name,
+      "bom-ref": algoObj.ref,
+      description: algoObj.description || "",
+      cryptoProperties: {
+        assetType: "algorithm",
+        oid: algoObj.oid
+      }
+    });
+  }
+  return {
+    dataFlowFrames: dfFrames,
+    cryptoComponents,
+    cryptoGeneratePurls
+  };
+};
+
+/**
  * Method to pick a callstack frame as an evidence. This method is required since CycloneDX 1.5 accepts only a single frame as evidence.
  *
- * @param {array} dfFrames Data flow frames
+ * @param {Array} dfFrames Data flow frames
  * @returns
  */
 export const framePicker = (dfFrames) => {
@@ -994,13 +1364,23 @@ export const framePicker = (dfFrames) => {
   return aframe;
 };
 
+/**
+ * Method to simplify types. For example, arrays ending with [] could be simplified.
+ *
+ * @param {string} typeFullName Full name of the type to simplify
+ * @returns Simplified type string
+ */
+export const simplifyType = (typeFullName) => {
+  return typeFullName.replace("[]", "");
+};
+
 export const getClassTypeFromSignature = (language, typeFullName) => {
   if (["java", "jar"].includes(language) && typeFullName.includes(":")) {
     typeFullName = typeFullName.split(":")[0];
     const tmpA = typeFullName.split(".");
     tmpA.pop();
     typeFullName = tmpA.join(".");
-  } else if (language === "javascript") {
+  } else if (["javascript", "js", "ts", "typescript"].includes(language)) {
     typeFullName = typeFullName.replace("new: ", "").replace("await ", "");
     if (typeFullName.includes(":")) {
       const tmpA = typeFullName.split("::")[0].replace(/:/g, "/").split("/");
@@ -1009,6 +1389,17 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
       }
       typeFullName = tmpA.join("/");
     }
+  } else if (["python", "py"].includes(language)) {
+    typeFullName = typeFullName
+      .replace(".py:<module>", "")
+      .replace(/\//g, ".")
+      .replace(".<metaClassCallHandler>", "")
+      .replace(".<fakeNew>", "")
+      .replace(".<body>", "")
+      .replace(".__iter__", "")
+      .replace(".__init__", "");
+  } else if (["php"].includes(language)) {
+    typeFullName = typeFullName.split("->")[0].split("::")[0];
   }
   if (
     typeFullName.startsWith("<unresolved") ||
@@ -1020,7 +1411,7 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
   if (typeFullName.includes("$")) {
     typeFullName = typeFullName.split("$")[0];
   }
-  return typeFullName;
+  return simplifyType(typeFullName);
 };
 
 const addToOverrides = (lKeyOverrides, atype, fileName, ausageLineNumber) => {

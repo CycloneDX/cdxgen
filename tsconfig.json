@@ -1,0 +1,15 @@
+{
+    "include": ["*.js"],
+    "exclude": ["*.test.js", "./types/**/*"],
+    "compilerOptions": {
+      "allowJs": true,
+      // Generate d.ts files
+      "declaration": true,
+      // This compiler run should
+      // only output d.ts files
+      "emitDeclarationOnly": true,
+      "outDir": "types",
+      "declarationMap": true,
+      "skipLibCheck": true
+    }
+  }

@@ -1,28 +1,30 @@
 import got from "got";
 import { globSync } from "glob";
-import { parse } from "url";
+import { parse } from "node:url";
 import stream from "node:stream/promises";
+import process from "node:process";
+import { Buffer } from "node:buffer";
 import {
-  existsSync,
-  readdirSync,
-  statSync,
-  lstatSync,
-  readFileSync,
   createReadStream,
-  mkdtempSync,
+  existsSync,
+  lstatSync,
   mkdirSync,
-  rmSync
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync
 } from "node:fs";
 import { join } from "node:path";
 import {
+  platform as _platform,
   userInfo as _userInfo,
   homedir,
-  platform as _platform,
   tmpdir
 } from "node:os";
 import { x } from "tar";
 import { spawnSync } from "node:child_process";
-import { DEBUG_MODE } from "./utils.js";
+import { DEBUG_MODE, getAllFiles } from "./utils.js";
 
 export const isWin = _platform() === "win32";
 
@@ -30,8 +32,24 @@ let dockerConn = undefined;
 let isPodman = false;
 let isPodmanRootless = true;
 let isDockerRootless = false;
+// https://github.com/containerd/containerd
+let isContainerd = !!process.env.CONTAINERD_ADDRESS;
 const WIN_LOCAL_TLS = "http://localhost:2375";
 let isWinLocalTLS = false;
+
+if (
+  !process.env.DOCKER_HOST &&
+  (process.env.CONTAINERD_ADDRESS ||
+    (process.env.XDG_RUNTIME_DIR &&
+      existsSync(
+        join(process.env.XDG_RUNTIME_DIR, "containerd-rootless", "api.sock")
+      )))
+) {
+  isContainerd = true;
+}
+
+// Cache the registry auth keys
+const registry_auth_keys = {};
 
 /**
  * Method to get all dirs matching a name
@@ -94,7 +112,17 @@ export const getOnlyDirs = (srcpath, dirName) => {
   ].filter((d) => d.endsWith(dirName));
 };
 
-const getDefaultOptions = () => {
+const getDefaultOptions = (forRegistry) => {
+  let authTokenSet = false;
+  if (!forRegistry && process.env.DOCKER_SERVER_ADDRESS) {
+    forRegistry = process.env.DOCKER_SERVER_ADDRESS;
+  }
+  if (forRegistry) {
+    forRegistry = forRegistry.replace("http://", "").replace("https://", "");
+    if (forRegistry.includes("/")) {
+      forRegistry = forRegistry.split("/")[0];
+    }
+  }
   const opts = {
     enableUnixSockets: true,
     throwHttpErrors: true,
@@ -102,6 +130,97 @@ const getDefaultOptions = () => {
     hooks: { beforeError: [] },
     mutableDefaults: true
   };
+  const DOCKER_CONFIG = process.env.DOCKER_CONFIG || join(homedir(), ".docker");
+  // Support for private registry
+  if (process.env.DOCKER_AUTH_CONFIG) {
+    opts.headers = {
+      "X-Registry-Auth": process.env.DOCKER_AUTH_CONFIG
+    };
+    authTokenSet = true;
+  }
+  if (
+    !authTokenSet &&
+    process.env.DOCKER_USER &&
+    process.env.DOCKER_PASSWORD &&
+    process.env.DOCKER_EMAIL &&
+    forRegistry
+  ) {
+    const authPayload = {
+      username: process.env.DOCKER_USER,
+      email: process.env.DOCKER_EMAIL,
+      serveraddress: forRegistry
+    };
+    if (process.env.DOCKER_USER === "<token>") {
+      authPayload.IdentityToken = process.env.DOCKER_PASSWORD;
+    } else {
+      authPayload.password = process.env.DOCKER_PASSWORD;
+    }
+    opts.headers = {
+      "X-Registry-Auth": Buffer.from(JSON.stringify(authPayload)).toString(
+        "base64"
+      )
+    };
+  }
+  if (!authTokenSet && existsSync(join(DOCKER_CONFIG, "config.json"))) {
+    const configData = readFileSync(
+      join(DOCKER_CONFIG, "config.json"),
+      "utf-8"
+    );
+    if (configData) {
+      try {
+        const configJson = JSON.parse(configData);
+        if (configJson.auths) {
+          // Check if there are hardcoded tokens
+          for (const serverAddress of Object.keys(configJson.auths)) {
+            if (forRegistry && !serverAddress.includes(forRegistry)) {
+              continue;
+            }
+            if (configJson.auths[serverAddress].auth) {
+              opts.headers = {
+                "X-Registry-Auth": configJson.auths[serverAddress].auth
+              };
+              authTokenSet = true;
+              break;
+            } else if (configJson.credsStore) {
+              const helperAuthToken = getCredsFromHelper(
+                configJson.credsStore,
+                serverAddress
+              );
+              if (helperAuthToken) {
+                opts.headers = {
+                  "X-Registry-Auth": helperAuthToken
+                };
+                authTokenSet = true;
+                break;
+              }
+            }
+          }
+        } else if (configJson.credHelpers) {
+          // Support for credential helpers
+          for (const serverAddress of Object.keys(configJson.credHelpers)) {
+            if (forRegistry && !serverAddress.includes(forRegistry)) {
+              continue;
+            }
+            if (configJson.credHelpers[serverAddress]) {
+              const helperAuthToken = getCredsFromHelper(
+                configJson.credHelpers[serverAddress],
+                serverAddress
+              );
+              if (helperAuthToken) {
+                opts.headers = {
+                  "X-Registry-Auth": helperAuthToken
+                };
+                authTokenSet = true;
+                break;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        // pass
+      }
+    }
+  }
   const userInfo = _userInfo();
   opts.podmanPrefixUrl = isWin ? "" : `http://unix:/run/podman/podman.sock:`;
   opts.podmanRootlessPrefixUrl = isWin
@@ -126,8 +245,8 @@ const getDefaultOptions = () => {
         opts.prefixUrl = isWin
           ? WIN_LOCAL_TLS
           : isDockerRootless
-          ? `http://unix:${homedir()}/.docker/run/docker.sock:`
-          : "http://unix:/var/run/docker.sock:";
+            ? `http://unix:${homedir()}/.docker/run/docker.sock:`
+            : "http://unix:/var/run/docker.sock:";
       }
     }
   } else {
@@ -148,22 +267,34 @@ const getDefaultOptions = () => {
         ),
         key: readFileSync(join(process.env.DOCKER_CERT_PATH, "key.pem"), "utf8")
       };
+      // Disable tls on empty values
+      // From the docker docs: Setting the DOCKER_TLS_VERIFY environment variable to any value other than the empty string is equivalent to setting the --tlsverify flag
+      if (
+        process.env.DOCKER_TLS_VERIFY &&
+        process.env.DOCKER_TLS_VERIFY === ""
+      ) {
+        opts.https.rejectUnauthorized = false;
+        console.log("TLS Verification disabled for", hostStr);
+      }
     }
   }
 
   return opts;
 };
 
-export const getConnection = async (options) => {
-  if (!dockerConn) {
-    const defaultOptions = getDefaultOptions();
+export const getConnection = async (options, forRegistry) => {
+  if (isContainerd) {
+    return undefined;
+  } else if (!dockerConn) {
+    const defaultOptions = getDefaultOptions(forRegistry);
     const opts = Object.assign(
       {},
       {
         enableUnixSockets: defaultOptions.enableUnixSockets,
         throwHttpErrors: defaultOptions.throwHttpErrors,
         method: defaultOptions.method,
-        prefixUrl: defaultOptions.prefixUrl
+        prefixUrl: defaultOptions.prefixUrl,
+        headers: defaultOptions.headers
       },
       options
     );
@@ -247,8 +378,8 @@ export const getConnection = async (options) => {
   return dockerConn;
 };
 
-export const makeRequest = async (path, method = "GET") => {
-  const client = await getConnection();
+export const makeRequest = async (path, method = "GET", forRegistry) => {
+  const client = await getConnection({}, forRegistry);
   if (!client) {
     return undefined;
   }
@@ -258,14 +389,15 @@ export const makeRequest = async (path, method = "GET") => {
     enableUnixSockets: true,
     method
   };
-  const defaultOptions = getDefaultOptions();
+  const defaultOptions = getDefaultOptions(forRegistry);
   const opts = Object.assign(
     {},
     {
       enableUnixSockets: defaultOptions.enableUnixSockets,
       throwHttpErrors: defaultOptions.throwHttpErrors,
       method: defaultOptions.method,
-      prefixUrl: defaultOptions.prefixUrl
+      prefixUrl: defaultOptions.prefixUrl,
+      headers: defaultOptions.headers
     },
     extraOptions
   );
@@ -286,11 +418,23 @@ export const parseImageName = (fullImageName) => {
     repo: "",
     tag: "",
     digest: "",
-    platform: ""
+    platform: "",
+    group: "",
+    name: ""
   };
   if (!fullImageName) {
     return nameObj;
   }
+  // ensure it's lowercased
+  fullImageName = fullImageName.toLowerCase().trim();
+
+  // Extract platform
+  if (fullImageName.startsWith("--platform=")) {
+    const tmpName = fullImageName.replace("--platform=", "").split(" ");
+    nameObj.platform = tmpName[0];
+    fullImageName = tmpName[1];
+  }
+
   // Extract registry name
   if (
     fullImageName.includes("/") &&
@@ -307,6 +451,7 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(tmpA[0] + "/", "");
     }
   }
+
   // Extract digest name
   if (fullImageName.includes("@sha256:")) {
     const tmpA = fullImageName.split("@sha256:");
@@ -315,6 +460,7 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace("@sha256:" + nameObj.digest, "");
     }
   }
+
   // Extract tag name
   if (fullImageName.includes(":")) {
     const tmpA = fullImageName.split(":");
@@ -323,9 +469,35 @@ export const parseImageName = (fullImageName) => {
       fullImageName = fullImageName.replace(":" + nameObj.tag, "");
     }
   }
+
   // The left over string is the repo name
   nameObj.repo = fullImageName;
+  nameObj.name = fullImageName;
+
+  // extract group name
+  if (fullImageName.includes("/")) {
+    const tmpA = fullImageName.split("/");
+    if (tmpA.length > 1) {
+      nameObj.name = tmpA[tmpA.length - 1];
+      nameObj.group = fullImageName.replace("/" + tmpA[tmpA.length - 1], "");
+    }
+  }
+
   return nameObj;
+};
+
+/**
+ * Prefer cli on windows or when using tcp/ssh based host.
+ *
+ * @returns boolean true if we should use the cli. false otherwise
+ */
+const needsCliFallback = () => {
+  return (
+    isWin ||
+    (process.env.DOCKER_HOST &&
+      (process.env.DOCKER_HOST.startsWith("tcp://") ||
+        process.env.DOCKER_HOST.startsWith("ssh://")))
+  );
 };
 
 /**
@@ -333,13 +505,25 @@ export const parseImageName = (fullImageName) => {
  */
 export const getImage = async (fullImageName) => {
   let localData = undefined;
-  const { repo, tag, digest } = parseImageName(fullImageName);
+  let pullData = undefined;
+  const { registry, repo, tag, digest } = parseImageName(fullImageName);
+  const repoWithTag =
+    registry && registry !== "docker.io"
+      ? fullImageName
+      : `${repo}:${tag !== "" ? tag : ":latest"}`;
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
   }
-  if (isWin) {
-    let result = spawnSync("docker", ["pull", fullImageName], {
+  if (isContainerd) {
+    console.log(
+      "containerd/nerdctl is currently unsupported. Export the image manually and run cdxgen against the tar image."
+    );
+    return undefined;
+  }
+  if (needsCliFallback()) {
+    const dockerCmd = process.env.DOCKER_CMD || "docker";
+    let result = spawnSync(dockerCmd, ["pull", fullImageName], {
       encoding: "utf-8"
     });
     if (result.status !== 0 || result.error) {
@@ -350,12 +534,16 @@ export const getImage = async (fullImageName) => {
         console.log(
           "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on."
         );
+      } else if (result.stderr && result.stderr.includes("not found")) {
+        console.log(
+          "Set the environment variable DOCKER_CMD to use an alternative command such as nerdctl or podman."
+        );
       } else {
         console.log(result.stderr);
       }
       return localData;
     } else {
-      result = spawnSync("docker", ["inspect", fullImageName], {
+      result = spawnSync(dockerCmd, ["inspect", fullImageName], {
         encoding: "utf-8"
       });
       if (result.status !== 0 || result.error) {
@@ -380,10 +568,26 @@ export const getImage = async (fullImageName) => {
     }
   }
   try {
-    localData = await makeRequest(`images/${repo}/json`);
+    localData = await makeRequest(
+      `images/${repoWithTag}/json`,
+      "GET",
+      registry
+    );
+    if (localData) {
+      return localData;
+    }
+  } catch (err) {
+    // ignore
+  }
+  try {
+    localData = await makeRequest(`images/${repo}/json`, "GET", registry);
   } catch (err) {
     try {
-      localData = await makeRequest(`images/${fullImageName}/json`);
+      localData = await makeRequest(
+        `images/${fullImageName}/json`,
+        "GET",
+        registry
+      );
       if (localData) {
         return localData;
       }
@@ -397,9 +601,10 @@ export const getImage = async (fullImageName) => {
     }
     // If the data is not available locally
     try {
-      const pullData = await makeRequest(
+      pullData = await makeRequest(
         `images/create?fromImage=${fullImageName}`,
-        "POST"
+        "POST",
+        registry
       );
       if (
         pullData &&
@@ -415,16 +620,52 @@ export const getImage = async (fullImageName) => {
         return undefined;
       }
     } catch (err) {
-      // continue regardless of error
+      try {
+        if (DEBUG_MODE) {
+          console.log(`Re-trying the pull with the name ${repoWithTag}.`);
+        }
+        pullData = await makeRequest(
+          `images/create?fromImage=${repoWithTag}`,
+          "POST",
+          registry
+        );
+      } catch (err) {
+        // continue regardless of error
+      }
     }
     try {
       if (DEBUG_MODE) {
-        console.log(`Trying with ${repo}`);
+        console.log(`Trying with ${repoWithTag}`);
       }
-      localData = await makeRequest(`images/${repo}/json`);
+      localData = await makeRequest(
+        `images/${repoWithTag}/json`,
+        "GET",
+        registry
+      );
+      if (localData) {
+        return localData;
+      }
     } catch (err) {
       try {
-        localData = await makeRequest(`images/${fullImageName}/json`);
+        if (DEBUG_MODE) {
+          console.log(`Trying with ${repo}`);
+        }
+        localData = await makeRequest(`images/${repo}/json`, "GET", registry);
+        if (localData) {
+          return localData;
+        }
+      } catch (err) {
+        // continue regardless of error
+      }
+      try {
+        if (DEBUG_MODE) {
+          console.log(`Trying with ${fullImageName}`);
+        }
+        localData = await makeRequest(
+          `images/${fullImageName}/json`,
+          "GET",
+          registry
+        );
       } catch (err) {
         // continue regardless of error
       }
@@ -450,7 +691,7 @@ export const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: true,
+        strict: false,
         C: dir,
         portable: true,
         onwarn: () => {},
@@ -459,9 +700,21 @@ export const extractTar = async (fullImageName, dir) => {
           if (
             path.includes("cacerts") ||
             path.includes("ssl/certs") ||
-            path.includes("etc/") ||
             path.includes("logs/") ||
-            ["CharacterDevice"].includes(entry.type)
+            path.includes("dev/") ||
+            path.includes("usr/share/zoneinfo/") ||
+            path.includes("usr/share/doc/") ||
+            path.includes("usr/share/i18n/") ||
+            [
+              "BlockDevice",
+              "CharacterDevice",
+              "FIFO",
+              "MultiVolume",
+              "TapeVolume",
+              "SymbolicLink",
+              "RenamedOrSymlinked",
+              "HardLink"
+            ].includes(entry.type)
           ) {
             return false;
           }
@@ -476,13 +729,19 @@ export const extractTar = async (fullImageName, dir) => {
         "Please run cdxgen from a powershell terminal with admin privileges to create symlinks."
       );
       console.log(err);
-    } else if (err.code !== "TAR_BAD_ARCHIVE") {
+    } else if (!["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO"].includes(err.code)) {
       console.log(
         `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`
       );
       console.log("------------");
       console.log(err);
       console.log("------------");
+    } else if (err.code === "TAR_BAD_ARCHIVE") {
+      if (DEBUG_MODE) {
+        console.log(`Archive ${fullImageName} is empty. Skipping.`);
+      }
+    } else {
+      console.log(err);
     }
     return false;
   }
@@ -512,7 +771,7 @@ export const exportArchive = async (fullImageName) => {
           `Image archive ${fullImageName} successfully exported to directory ${tempDir}`
         );
       }
-      const allBlobs = getDirs(blobsDir, "*", false, true);
+      const allBlobs = getAllFiles(blobsDir, "*");
       for (const ablob of allBlobs) {
         if (DEBUG_MODE) {
           console.log(`Extracting ${ablob} to ${allLayersExplodedDir}`);
@@ -588,13 +847,30 @@ export const extractFromManifest = async (
     }
     const lastLayer = layers[layers.length - 1];
     for (const layer of layers) {
+      try {
+        if (!lstatSync(join(tempDir, layer)).isFile()) {
+          console.log(
+            `Skipping layer ${layer} since it is not a readable file.`
+          );
+          continue;
+        }
+      } catch (e) {
+        console.log(`Skipping layer ${layer} since it is not a readable file.`);
+        continue;
+      }
       if (DEBUG_MODE) {
         console.log(`Extracting layer ${layer} to ${allLayersExplodedDir}`);
       }
       try {
         await extractTar(join(tempDir, layer), allLayersExplodedDir);
       } catch (err) {
-        console.log(err);
+        if (err.code === "TAR_BAD_ARCHIVE") {
+          if (DEBUG_MODE) {
+            console.log(`Layer ${layer} is empty.`);
+          }
+        } else {
+          console.log(err);
+        }
       }
     }
     if (manifest.Config) {
@@ -644,7 +920,7 @@ export const exportImage = async (fullImageName) => {
   if (!localData) {
     return undefined;
   }
-  const { tag, digest } = parseImageName(fullImageName);
+  const { registry, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
     fullImageName = fullImageName + ":latest";
@@ -655,7 +931,7 @@ export const exportImage = async (fullImageName) => {
   // Windows containers use index.json
   const manifestIndexFile = join(tempDir, "index.json");
   // On Windows, fallback to invoking cli
-  if (isWin) {
+  if (needsCliFallback()) {
     const imageTarFile = join(tempDir, "image.tar");
     console.log(
       `About to export image ${fullImageName} to ${imageTarFile} using docker cli`
@@ -682,10 +958,16 @@ export const exportImage = async (fullImageName) => {
       }
     }
   } else {
-    const client = await getConnection();
+    const client = await getConnection({}, registry);
     try {
       if (DEBUG_MODE) {
-        console.log(`About to export image ${fullImageName} to ${tempDir}`);
+        if (registry && registry.trim().length) {
+          console.log(
+            `About to export image ${fullImageName} from ${registry} to ${tempDir}`
+          );
+        } else {
+          console.log(`About to export image ${fullImageName} to ${tempDir}`);
+        }
       }
       await stream.pipeline(
         client.stream(`images/${fullImageName}/get`),
@@ -701,7 +983,26 @@ export const exportImage = async (fullImageName) => {
         })
       );
     } catch (err) {
-      console.error(err);
+      if (localData && localData.Id) {
+        console.log(`Retrying with ${localData.Id}`);
+        try {
+          await stream.pipeline(
+            client.stream(`images/${localData.Id}/get`),
+            x({
+              sync: true,
+              preserveOwner: false,
+              noMtime: true,
+              noChmod: true,
+              strict: true,
+              C: tempDir,
+              portable: true,
+              onwarn: () => {}
+            })
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
     }
   }
   // Continue with extracting the layers
@@ -789,15 +1090,23 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
     }
   }
   if (lastWorkingDir && lastWorkingDir !== "") {
-    knownSysPaths.push(lastWorkingDir);
+    if (
+      !lastWorkingDir.includes("/opt/") &&
+      !lastWorkingDir.includes("/home/")
+    ) {
+      knownSysPaths.push(lastWorkingDir);
+    }
     // Some more common app dirs
-    if (!lastWorkingDir.startsWith("/app")) {
+    if (!lastWorkingDir.includes("/app/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/app"));
     }
-    if (!lastWorkingDir.startsWith("/data")) {
+    if (!lastWorkingDir.includes("/layers/")) {
+      knownSysPaths.push(join(allLayersExplodedDir, "/layers"));
+    }
+    if (!lastWorkingDir.includes("/data/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/data"));
     }
-    if (!lastWorkingDir.startsWith("/srv")) {
+    if (!lastWorkingDir.includes("/srv/")) {
       knownSysPaths.push(join(allLayersExplodedDir, "/srv"));
     }
   }
@@ -836,4 +1145,75 @@ export const removeImage = async (fullImageName, force = false) => {
     "DELETE"
   );
   return removeData;
+};
+
+export const getCredsFromHelper = (exeSuffix, serverAddress) => {
+  if (registry_auth_keys[serverAddress]) {
+    return registry_auth_keys[serverAddress];
+  }
+  let credHelperExe = `docker-credential-${exeSuffix}`;
+  if (isWin) {
+    credHelperExe = credHelperExe + ".exe";
+  }
+  const result = spawnSync(credHelperExe, ["get"], {
+    input: serverAddress,
+    encoding: "utf-8"
+  });
+  if (result.status !== 0 || result.error) {
+    console.log(result.stdout, result.stderr);
+  } else if (result.stdout) {
+    const cmdOutput = Buffer.from(result.stdout).toString();
+    try {
+      const authPayload = JSON.parse(cmdOutput);
+      const fixedAuthPayload = {
+        username:
+          authPayload.username ||
+          authPayload.Username ||
+          process.env.DOCKER_USER,
+        password:
+          authPayload.password ||
+          authPayload.Secret ||
+          process.env.DOCKER_PASSWORD,
+        email:
+          authPayload.email || authPayload.username || process.env.DOCKER_USER,
+        serveraddress: serverAddress
+      };
+      const authKey = Buffer.from(JSON.stringify(fixedAuthPayload)).toString(
+        "base64"
+      );
+      registry_auth_keys[serverAddress] = authKey;
+      return authKey;
+    } catch (err) {
+      return undefined;
+    }
+  }
+  return undefined;
+};
+
+export const addSkippedSrcFiles = (skippedImageSrcs, components) => {
+  for (const skippedImage of skippedImageSrcs) {
+    for (const co of components) {
+      const srcFileValues = [];
+      let srcImageValue;
+      co.properties.forEach((property) => {
+        if (property.name === "oci:SrcImage") {
+          srcImageValue = property.value;
+        }
+
+        if (property.name === "SrcFile") {
+          srcFileValues.push(property.value);
+        }
+      });
+
+      if (
+        srcImageValue === skippedImage.image &&
+        !srcFileValues.includes(skippedImage.src)
+      ) {
+        co.properties = co.properties.concat({
+          name: "SrcFile",
+          value: skippedImage.src
+        });
+      }
+    }
+  }
 };

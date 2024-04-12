@@ -5,7 +5,7 @@ import { hideBin } from "yargs/helpers";
 import fs from "node:fs";
 import jws from "jws";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 let url = import.meta.url;
@@ -24,6 +24,8 @@ const args = yargs(hideBin(process.argv))
     default: "public.key",
     description: "Public key in PEM format. Default public.key"
   })
+  .completion("completion", "Generate bash/zsh completion")
+  .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .scriptName("cdx-verify")
   .version()
   .help("h").argv;
@@ -74,7 +76,7 @@ if (!bomSignature) {
   if (validationResult) {
     console.log("Signature is valid!");
   } else {
-    console.log("SBoM signature is invalid!");
+    console.log("SBOM signature is invalid!");
     process.exit(1);
   }
 }

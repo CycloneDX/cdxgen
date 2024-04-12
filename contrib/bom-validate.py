@@ -11,7 +11,7 @@ def build_args():
     Constructs command line arguments for the comparison tool
     """
     parser = argparse.ArgumentParser(
-        description="Validate SBoM files against BOM 1.5 schema."
+        description="Validate SBOM files against BOM 1.5 schema."
     )
     parser.add_argument(
         "--json",
@@ -29,7 +29,7 @@ def vsbom(bom_json):
             vex_obj = json.load(vp)
             try:
                 validate(instance=vex_obj, schema=json.load(sp))
-                print("SBoM file is valid")
+                print("SBOM file is valid")
             except ValidationError as ve:
                 print(ve)
                 sys.exit(1)

@@ -1,8 +1,8 @@
-# Advanced usage
+# Advanced Usage
 
-## Evinse Mode / SaaSBoM
+## Evinse Mode / SaaSBOM
 
-Evinse (Evinse Verification Is Nearly SBoM Evidence) is a new command with cdxgen to generate component evidence and SaaSBoM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom)
+Evinse (Evinse Verification Is Nearly SBOM Evidence) is a new command with cdxgen to generate component evidence and SaaSBOM for supported languages. The tool is powered by [atom](https://github.com/AppThreat/atom)
 
 <img src="./docs/occurrence-evidence.png" alt="occurrence evidence" width="256">
 
@@ -12,16 +12,16 @@ Evinse (Evinse Verification Is Nearly SBoM Evidence) is a new command with cdxge
 
 ### Pre-requisites
 
-- Java > 17 installed
+- Java >= 21 installed
 - Application source code
-- Input SBoM in CycloneDX >1.5 format. Use cdxgen to generate one.
+- Input SBOM in CycloneDX >1.5 format. Use cdxgen to generate one.
 
 ### Usage
 
 ```shell
 evinse -h
 Options:
-  -i, --input                    Input SBoM file. Default bom.json
+  -i, --input                    Input SBOM file. Default bom.json
                                                            [default: "bom.json"]
   -o, --output                   Output file. Default bom.evinse.json
                                                     [default: "bom.evinse.json"]
@@ -52,7 +52,7 @@ Options:
   -h                             Show help                             [boolean]
 ```
 
-To generate an SBoM with evidence for a java project.
+To generate an SBOM with evidence for a java project.
 
 ```shell
 evinse -i bom.json -o bom.evinse.json <path to the application>
@@ -76,22 +76,14 @@ For JavaScript or TypeScript projects, pass `-l javascript`.
 evinse -i bom.json -o bom.evinse.json --usages-slices-file usages.json --data-flow-slices-file data-flow.json -l javascript --with-data-flow <path to the application>
 ```
 
-## Generate SBoM from maven or gradle cache
+## Generate SBOM from maven or gradle cache
 
-There could be java applications with complex dependency requirements. Or you might be interested in cataloging your maven or gradle cache.
-
-```shell
-# export MAVEN_CACHE_DIR=<custom path>
-cdxgen -t maven-cache -o <bom json>
-# export GRADLE_CACHE_DIR=<custom path>
-cdxgen -t gradle-cache -o <bom json>
-```
-
-An added bonus of this mode is that the resulting SBoM would have a property called `Namespaces` with a list of class names belonging to each jar.
+There could be Java applications with complex dependency requirements. Or you might be interested in cataloging your Maven or gradle cache.
+A bonus of this mode is that the resulting SBOM would have a property called `Namespaces` with a list of class names belonging to each jar.
 
 ### Generate evidence of usage
 
-After generating an SBoM from a cache, we can now look for evidence of direct usage with evinse!
+After generating an SBOM from a cache, we can now look for evidence of direct usage with evinse!
 
 ```shell
 # compile or build your application
@@ -106,7 +98,7 @@ To improve performance for re-runs, pass the argument `--skip-maven-collector` t
 
 ## Interactive mode
 
-`cdxi` is a new interactive REPL server to interactively create, import and search an SBoM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
+`cdxi` is a new interactive REPL server to create, import, and search a BOM. All the exported functions from cdxgen and node.js could be used in this mode. In addition, several custom commands are defined.
 
 [![cdxi demo](https://asciinema.org/a/602361.svg)](https://asciinema.org/a/602361)
 
@@ -114,19 +106,19 @@ To improve performance for re-runs, pass the argument `--skip-maven-collector` t
 
 | Command      | Description                                                                                                                                                                                                    |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| .create      | Create an SBoM from a path                                                                                                                                                                                     |
-| .import      | Import an existing SBoM from a path. Any SBoM in CycloneDX format is supported.                                                                                                                                |
+| .create      | Create an BOM from a path                                                                                                                                                                                      |
+| .import      | Import an existing BOM from a path. Any BOM in CycloneDX format is supported.                                                                                                                                  |
 | .search      | Search the given string in the components name, group, purl and description                                                                                                                                    |
 | .sort        | Sort the components based on the given attribute. Eg: .sort name to sort by name. Accepts full jsonata [order by](http://docs.jsonata.org/path-operators#order-by-) clause too. Eg: `.sort components^(>name)` |
 | .query       | Pass a raw query in [jsonata](http://docs.jsonata.org/) format                                                                                                                                                 |
-| .print       | Print the SBoM as a table                                                                                                                                                                                      |
+| .print       | Print the BOM as a table                                                                                                                                                                                       |
 | .tree        | Print the dependency tree if available                                                                                                                                                                         |
-| .validate    | Validate the SBoM                                                                                                                                                                                              |
+| .validate    | Validate the SBOM                                                                                                                                                                                              |
 | .exit        | To exit the shell                                                                                                                                                                                              |
-| .save        | To save the modified SBoM to a new file                                                                                                                                                                        |
+| .save        | To save the modified BOM to a new file                                                                                                                                                                         |
 | .update      | Update components based on query expression. Use syntax `\| query \| new object \|`. See example.                                                                                                              |
-| .occurrences | View components with evidence.occurrences as a table. Use evinse command to generate such an SBoM                                                                                                              |
-| .callstack   | View components with evidence.callstack.frames as a table. Use evinse command to generate such an SBoM                                                                                                         |
+| .occurrences | View components with evidence.occurrences as a table. Use evinse command to generate such an SBOM                                                                                                              |
+| .callstack   | View components with evidence.callstack.frames as a table. Use evinse command to generate such an SBOM                                                                                                         |
 | .services    | View services as a table                                                                                                                                                                                       |
 
 In addition, all the keys from [queries.json](./data/queries.json) are also valid commands. Example: `processes`, `apt_sources`, etc. Type `.help` to view the full list of commands.
@@ -139,7 +131,7 @@ Start the REPL server.
 cdxi
 ```
 
-Below are some example commands to create an SBoM for a spring application and perform searches and queries.
+Below are some example commands to create an SBOM for a spring application and perform searches and queries.
 
 ```
 .create /mnt/work/vuln-spring
@@ -155,15 +147,15 @@ Below are some example commands to create an SBoM for a spring application and p
 
 ### REPL History
 
-Repl history will get persisted under `$HOME/.config/.cdxgen` directory. To override this location, use the environment variable `CDXGEN_REPL_HISTORY`.
+Repl history will persist under the `$`HOME/.config/.cdxgen`directory. To override this location, use the environment variable`CDXGEN_REPL_HISTORY`.
 
 ## Mixed Java Projects
 
-If a java project use both maven and gradle, maven is selected for SBoM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
+If a java project uses Maven and gradle, maven is selected for SBOM generation under default settings. To force cdxgen to use gradle, use the argument `-t gradle`. Similarly, use `-t scala` for scala SBT.
 
-## Generating container SBoM on Windows
+## Generating container SBOM on Windows
 
-cdxgen supports generating container SBoM for linux images on Windows. Follow the steps listed below.
+cdxgen supports generating container SBOM for Linux images on Windows. Follow the steps listed below.
 
 - Ensure cdxgen-plugins-bin > 1.4.0 is installed.
 
@@ -171,15 +163,15 @@ cdxgen supports generating container SBoM for linux images on Windows. Follow th
 npm install -g @cyclonedx/cdxgen-plugins-bin
 ```
 
-- Run "Docker for Desktop" as administrator with 'Exposing daemon on TCP without TLS' setting turned on.
-- Run powershell terminal as administrator. Without this, cdxgen would fail while extracting symlinks.
+- Run "Docker for Desktop" as an administrator with the 'Exposing daemon on TCP without TLS' setting turned on.
+  Run Powershell terminal as administrator. Without this, cdxgen would fail while extracting symlinks.
 - Invoke cdxgen with `-t docker`
 
 ```shell
 cdxgen -t docker -o bom.json <image name>
 ```
 
-## Generate SBoM with evidence for cdxgen repo
+## Generate SBOM with evidence for the cdxgen repo
 
 Why not?
 
@@ -194,7 +186,7 @@ It is currently not possible to generate data-flow evidence for cdxgen in consta
 
 ## Use Atom in Java mode
 
-For large projects (> 1 million lines of code), atom must be invoked separately for the slicing operation to perform. Follow the instructions below.
+For large projects (> 1 million lines of code), atom must be invoked separately for the slicing operation. Follow the instructions below.
 
 - Download the latest [atom.zip release](https://github.com/AppThreat/atom/releases)
 
@@ -205,4 +197,4 @@ cd atom-1.0.0/bin
 node bin/cdxgen.js -o bom.json -t c --usages-slices-file usages.json <path to repo>
 ```
 
-Change 16g to 32g etc for very large projects. For linux kernel, a minimum of 128GB is required.
+Change 16g to 32g or above for very large projects. For the Linux kernel, a minimum of 128GB is required.

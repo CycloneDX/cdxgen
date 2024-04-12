@@ -3,17 +3,20 @@
   <id>org.cyclonedx.cdxgen</id>
 
   <name>cdxgen</name>
-  <summary>Create valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects</summary>
+  <summary>Create valid CycloneDX Software Bill of Materials (SBOM) containing an aggregate of all
+    project dependencies for node.js, php, python, java and Go projects</summary>
 
   <metadata_license>FSFAP</metadata_license>
   <project_license>Apache-2.0</project_license>
 
   <description>
     <p>
-      Create valid CycloneDX Software Bill-of-Materials (SBOM) containing an aggregate of all project dependencies for node.js, php, python, java and Go projects.
+      Create valid CycloneDX Software Bill of Materials (SBOM) containing an aggregate of all
+      project dependencies for node.js, php, python, java and Go projects.
     </p>
     <p>
-    CycloneDX is a lightweight SBOM specification that is easily created, human and machine readable, and simple to parse.
+      CycloneDX is a lightweight SBOM specification that is easily created, human and machine
+      readable, and simple to parse.
     </p>
   </description>
 
