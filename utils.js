@@ -275,6 +275,71 @@ function toBase64(hexString) {
 }
 
 /**
+ * Return the current timestamp in YYYY-MM-DDTHH:MM:SSZ format.
+ *
+ * @returns {string} ISO formatted timestamp, without milliseconds.
+ */
+export function getTimestamp() {
+  return new Date().toISOString().split(".")[0] + "Z";
+}
+
+/**
+ * Method to determine if a license is a valid SPDX license expression
+ *
+ * @param {string} license License string
+ * @returns {boolean} true if the license is a valid SPDX license expression
+ * @see https://spdx.dev/learn/handling-license-info/
+ **/
+export function isSpdxLicenseExpression(license) {
+  if (!license) {
+    return false;
+  }
+
+  if (/[(\s]+/g.test(license)) {
+    return true;
+  }
+
+  if (license.endsWith("+")) {
+    return true; // GPL-2.0+ means GPL-2.0 or any later version, at the licensee’s option.
+  }
+
+  return false;
+}
+
+/**
+ * Convert the array of licenses to a CycloneDX 1.5 compliant license array.
+ * This should return an array containing:
+ * - one or more SPDX license if no expression is present
+ * - the first license expression if at least one is present
+ *
+ * @param {Array} licenses Array of licenses
+ * @returns {Array} CycloneDX 1.5 compliant license array
+ */
+export function adjustLicenseInformation(licenses) {
+  if (!licenses || !Array.isArray(licenses)) {
+    return [];
+  }
+
+  const expressions = licenses.filter((f) => {
+    return f.expression;
+  });
+  if (expressions.length >= 1) {
+    if (expressions.length > 1) {
+      console.warn("multiple license expressions found", expressions);
+    }
+    return [{ expression: expressions[0].expression }];
+  } else {
+    return licenses.map((l) => {
+      if (typeof l.license === "object") {
+        return l;
+      } else {
+        return { license: l };
+      }
+    });
+  }
+}
+
+/**
  * Performs a lookup + validation of the license specified in the
  * package. If the license is a valid SPDX license ID, set the 'id'
  * and url of the license object, otherwise, set the 'name' of the license
@@ -286,8 +351,8 @@ export function getLicenses(pkg) {
     if (!Array.isArray(license)) {
       license = [license];
     }
-    return license
-      .map((l) => {
+    return adjustLicenseInformation(
+      license.map((l) => {
         let licenseContent = {};
         if (typeof l === "string" || l instanceof String) {
           if (
@@ -309,6 +374,8 @@ export function getLicenses(pkg) {
               licenseContent.name = "CUSTOM";
             }
             licenseContent.url = l;
+          } else if (isSpdxLicenseExpression(l)) {
+            licenseContent.expression = l;
           } else {
             licenseContent.name = l;
           }
@@ -322,7 +389,7 @@ export function getLicenses(pkg) {
         }
         return licenseContent;
       })
-      .map((l) => ({ license: l }));
+    );
   } else {
     const knownLicense = getKnownLicense(undefined, pkg);
     if (knownLicense) {

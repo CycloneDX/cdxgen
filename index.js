@@ -114,7 +114,8 @@ import {
   parseSwiftJsonTree,
   parseSwiftResolved,
   parseYarnLock,
-  readZipEntry
+  readZipEntry,
+  getTimestamp
 } from "./utils.js";
 import {
   collectEnvInfo,
@@ -479,7 +480,7 @@ function addMetadata(parentComponent = {}, options = {}) {
   const lifecycles =
     options.specVersion >= 1.5 ? addLifecyclesSection(options) : undefined;
   const metadata = {
-    timestamp: new Date().toISOString(),
+    timestamp: getTimestamp(),
     tools,
     authors,
     supplier: undefined

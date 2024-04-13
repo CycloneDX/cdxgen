@@ -12,7 +12,13 @@ import {
 import { basename, dirname, join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { PackageURL } from "packageurl-js";
-import { DEBUG_MODE, TIMEOUT_MS, findLicenseId } from "./utils.js";
+import {
+  DEBUG_MODE,
+  TIMEOUT_MS,
+  findLicenseId,
+  adjustLicenseInformation,
+  isSpdxLicenseExpression
+} from "./utils.js";
 
 import { URL, fileURLToPath } from "node:url";
 
@@ -572,33 +578,28 @@ export function getOSPackages(src) {
               comp.licenses.length
             ) {
               const newLicenses = [];
-              for (const alic of comp.licenses) {
-                if (alic.license.name) {
-                  // Licenses array can either be made of expressions or id/name but not both
-                  if (
-                    comp.licenses.length == 1 &&
-                    (alic.license.name.toUpperCase().includes(" AND ") ||
-                      alic.license.name.toUpperCase().includes(" OR "))
-                  ) {
-                    newLicenses.push({ expression: alic.license.name });
+              for (const aLic of comp.licenses) {
+                if (aLic.license.name) {
+                  if (isSpdxLicenseExpression(aLic.license.name)) {
+                    newLicenses.push({ expression: aLic.license.name });
                   } else {
-                    const possibleId = findLicenseId(alic.license.name);
-                    if (possibleId !== alic.license.name) {
+                    const possibleId = findLicenseId(aLic.license.name);
+                    if (possibleId !== aLic.license.name) {
                       newLicenses.push({ license: { id: possibleId } });
                     } else {
                       newLicenses.push({
-                        license: { name: alic.license.name }
+                        license: { name: aLic.license.name }
                       });
                     }
                   }
                 } else if (
-                  Object.keys(alic).length &&
-                  Object.keys(alic.license).length
+                  Object.keys(aLic).length &&
+                  Object.keys(aLic.license).length
                 ) {
-                  newLicenses.push(alic);
+                  newLicenses.push(aLic);
                 }
               }
-              comp.licenses = newLicenses;
+              comp.licenses = adjustLicenseInformation(newLicenses);
             }
             // Fix hashes
             if (
