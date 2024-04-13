@@ -330,7 +330,13 @@ export function adjustLicenseInformation(licenses) {
     }
     return [{ expression: expressions[0].expression }];
   } else {
-    return licenses.map((l) => ({ license: l }));
+    return licenses.map((l) => {
+      if (typeof l.license === "object") {
+        return l;
+      } else {
+        return { license: l };
+      }
+    });
   }
 }
 
