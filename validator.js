@@ -50,6 +50,9 @@ export const validateBom = (bomJson) => {
   );
   const isValid = validate(bomJson);
   if (!isValid) {
+    console.log(
+      `Schema validation failed for ${bomJson.metadata.component.name}`
+    );
     console.log(validate.errors);
     return false;
   }
