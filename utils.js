@@ -290,7 +290,7 @@ export function getTimestamp() {
  * @returns {boolean} true if the license is a valid SPDX license expression
  * @see https://spdx.dev/learn/handling-license-info/
  **/
-function isSpdxLicenseExpression(license) {
+export function isSpdxLicenseExpression(license) {
   const licenseLoweCase = (license || "").toLowerCase();
   if (!licenseLoweCase) {
     return false;
