@@ -266,7 +266,7 @@ const determineParentComponent = (options) => {
   return parentComponent;
 };
 
-const addToolsSection = (options) => {
+const addToolsSection = (options, context = {}) => {
   if (options.specVersion === 1.4) {
     return [
       {
@@ -276,20 +276,35 @@ const addToolsSection = (options) => {
       }
     ];
   }
-  return {
-    components: [
-      {
-        group: "@cyclonedx",
-        name: "cdxgen",
-        version: _version,
-        purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
-        type: "application",
-        "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`,
-        author: "OWASP Foundation",
-        publisher: "OWASP Foundation"
+  let components = [];
+  const tools = options.tools || context.tools || [];
+  // tools can be an object or array
+  if (Array.isArray(tools) && tools.length) {
+    // cyclonedx-maven-plugin has the legacy tools metadata which needs to be patched
+    for (const tool of tools) {
+      if (!tool.type) {
+        tool.type = "application";
+        if (tool.vendor) {
+          tool.publisher = tool.vendor;
+          delete tool.vendor;
+        }
       }
-    ]
-  };
+    }
+    components = components.concat(tools);
+  } else if (tools && Object.keys(tools).length && tools.components) {
+    components = components.concat(tools.components);
+  }
+  components.push({
+    group: "@cyclonedx",
+    name: "cdxgen",
+    version: _version,
+    purl: `pkg:npm/%40cyclonedx/cdxgen@${_version}`,
+    type: "application",
+    "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`,
+    author: "OWASP Foundation",
+    publisher: "OWASP Foundation"
+  });
+  return { components };
 };
 
 const componentToSimpleFullName = (comp) => {
@@ -472,10 +487,10 @@ const addFormulationSection = (options) => {
  * Function to create metadata block
  *
  */
-function addMetadata(parentComponent = {}, options = {}) {
+function addMetadata(parentComponent = {}, options = {}, context = {}) {
   // DO NOT fork this project to just change the vendor or author's name
   // Try to contribute to this project by sending PR or filing issues
-  const tools = addToolsSection(options);
+  const tools = addToolsSection(options, context);
   const authors = addAuthorsSection(options);
   const lifecycles =
     options.specVersion >= 1.5 ? addLifecyclesSection(options) : undefined;
@@ -663,7 +678,7 @@ function addMetadata(parentComponent = {}, options = {}) {
  * @returns {Array}
  */
 function addExternalReferences(opkg) {
-  const externalReferences = [];
+  let externalReferences = [];
   let pkgList = [];
   if (Array.isArray(opkg)) {
     pkgList = opkg;
@@ -672,7 +687,7 @@ function addExternalReferences(opkg) {
   }
   for (const pkg of pkgList) {
     if (pkg.externalReferences) {
-      externalReferences.concat(pkg.externalReferences);
+      externalReferences = externalReferences.concat(pkg.externalReferences);
     } else {
       if (pkg.homepage && pkg.homepage.url) {
         externalReferences.push({
@@ -1005,7 +1020,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const dependencies = context.dependencies || [];
   const parentComponent =
     determineParentComponent(options) || context.parentComponent;
-  const metadata = addMetadata(parentComponent, options);
+  const metadata = addMetadata(parentComponent, options, context);
   const components = listComponents(options, allImports, pkgInfo, ptype);
   if (components && (components.length || parentComponent)) {
     // CycloneDX 1.5 Json Template
@@ -1150,6 +1165,9 @@ export async function createJavaBom(path, options) {
   // cyclone-dx-maven plugin creates a component for the app under metadata
   // This is subsequently referred to in the dependencies list
   let parentComponent = {};
+  // Support for tracking all the tools that created the BOM
+  // For java, this would correctly include the cyclonedx maven plugin.
+  let tools = undefined;
   // war/ear mode
   if (path.endsWith(".war") || path.endsWith(".jar")) {
     // Check if the file exists
@@ -1353,6 +1371,14 @@ export async function createJavaBom(path, options) {
           );
           if (bomJsonObj) {
             if (
+              !tools &&
+              bomJsonObj.metadata &&
+              bomJsonObj.metadata.tools &&
+              Array.isArray(bomJsonObj.metadata.tools)
+            ) {
+              tools = bomJsonObj.metadata.tools;
+            }
+            if (
               bomJsonObj.metadata &&
               bomJsonObj.metadata.component &&
               !Object.keys(parentComponent).length
@@ -1387,7 +1413,8 @@ export async function createJavaBom(path, options) {
           filename: pomFiles.join(", "),
           nsMapping: jarNSMapping,
           dependencies,
-          parentComponent
+          parentComponent,
+          tools
         });
       } else if (bomJsonFiles.length) {
         const bomNSData = {};
@@ -4810,7 +4837,7 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
       specVersion: "" + (options.specVersion || 1.5),
       serialNumber: serialNum,
       version: 1,
-      metadata: addMetadata(parentComponent, options),
+      metadata: addMetadata(parentComponent, options, {}),
       components,
       services: options.services || [],
       dependencies
