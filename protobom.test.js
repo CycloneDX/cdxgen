@@ -21,7 +21,7 @@ test("proto binary tests", () => {
   expect(bomObject.serialNumber).toEqual(
     "urn:uuid:cc8b5a04-2698-4375-b04c-cedfa4317fee"
   );
-  bomObject = readBinary(binFile, false);
+  bomObject = readBinary(binFile, false, 1.5);
   expect(bomObject).toBeDefined();
   expect(bomObject.serialNumber).toEqual(
     "urn:uuid:cc8b5a04-2698-4375-b04c-cedfa4317fee"
