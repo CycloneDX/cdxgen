@@ -1026,18 +1026,6 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     if (formulation) {
       jsonTpl.formulation = formulation;
     }
-    if (
-      options.specVersion >= 1.6 &&
-      options.includeFormulation &&
-      formulationData.provides.length
-    ) {
-      const newDependencies = dependencies.concat(formulationData.provides);
-      jsonTpl.dependencies = mergeDependencies(
-        dependencies,
-        newDependencies,
-        metadata.component
-      );
-    }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
     bomNSData.dependencies = dependencies;
