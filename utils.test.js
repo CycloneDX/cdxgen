@@ -2058,6 +2058,46 @@ test("get licenses", () => {
       }
     }
   ]);
+
+  licenses = getLicenses({
+    license: "GPL-2.0+"
+  });
+  expect(licenses).toEqual([
+    {
+      license: {
+        id: "GPL-2.0+",
+        url: "https://opensource.org/licenses/GPL-2.0+"
+      }
+    }
+  ]);
+
+  licenses = getLicenses({
+    license: "(MIT or Apache-2.0)"
+  });
+  expect(licenses).toEqual([
+    {
+      expression: "(MIT or Apache-2.0)"
+    }
+  ]);
+
+  // In case this is not a known license in the current build but it is a valid SPDX license expression
+  licenses = getLicenses({
+    license: "NOT-GPL-2.1+"
+  });
+  expect(licenses).toEqual([
+    {
+      expression: "NOT-GPL-2.1+"
+    }
+  ]);
+
+  licenses = getLicenses({
+    license: "GPL-3.0-only WITH Classpath-exception-2.0"
+  });
+  expect(licenses).toEqual([
+    {
+      expression: "GPL-3.0-only WITH Classpath-exception-2.0"
+    }
+  ]);
 });
 
 test("parsePkgJson", async () => {

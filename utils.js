@@ -274,6 +274,46 @@ function toBase64(hexString) {
   return Buffer.from(hexString, "hex").toString("base64");
 }
 
+const spdxLicenseExpressionOp = [
+  " with ",
+  " and ",
+  " or ", // Apache-2.0 OR MIT
+  "-or-later", // GPL-2.0-or-later
+  "-only" // GPL-2.0-only
+];
+
+/**
+ * Method to determine if a license is a valid SPDX license expression
+ *
+ * @param {string} license License string
+ * @returns {boolean} true if the license is a valid SPDX license expression
+ * @see https://spdx.dev/learn/handling-license-info/
+ **/
+function isSpdxLicenseExpression(license) {
+  const licenseLoweCase = (license || "").toLowerCase();
+  if (!licenseLoweCase) {
+    return false;
+  }
+
+  if (
+    spdxLicenseExpressionOp.some((op) => {
+      return licenseLoweCase.includes(op);
+    })
+  ) {
+    return true;
+  }
+
+  if (licenseLoweCase.endsWith("+")) {
+    return true; // GPL-2.0+ means GPL-2.0 or any later version, at the licensee’s option.
+  }
+
+  if (licenseLoweCase.includes("(") && licenseLoweCase.includes(")")) {
+    return true; // (MIT) means MIT license. It is unlikely to be used in SPDX license expression but just to be safe.
+  }
+
+  return false;
+}
+
 /**
  * Performs a lookup + validation of the license specified in the
  * package. If the license is a valid SPDX license ID, set the 'id'
@@ -286,43 +326,55 @@ export function getLicenses(pkg) {
     if (!Array.isArray(license)) {
       license = [license];
     }
-    return license
-      .map((l) => {
-        let licenseContent = {};
-        if (typeof l === "string" || l instanceof String) {
-          if (
-            spdxLicenses.some((v) => {
-              return l === v;
-            })
-          ) {
-            licenseContent.id = l;
-            licenseContent.url = "https://opensource.org/licenses/" + l;
-          } else if (l.startsWith("http")) {
-            const knownLicense = getKnownLicense(l, pkg);
-            if (knownLicense) {
-              licenseContent.id = knownLicense.id;
-              licenseContent.name = knownLicense.name;
-            }
-            // We always need a name to avoid validation errors
-            // Issue: #469
-            if (!licenseContent.name && !licenseContent.id) {
-              licenseContent.name = "CUSTOM";
-            }
-            licenseContent.url = l;
-          } else {
-            licenseContent.name = l;
+    const licensesAndExpressions = license.map((l) => {
+      let licenseContent = {};
+      if (typeof l === "string" || l instanceof String) {
+        if (
+          spdxLicenses.some((v) => {
+            return l === v;
+          })
+        ) {
+          licenseContent.id = l;
+          licenseContent.url = "https://opensource.org/licenses/" + l;
+        } else if (l.startsWith("http")) {
+          const knownLicense = getKnownLicense(l, pkg);
+          if (knownLicense) {
+            licenseContent.id = knownLicense.id;
+            licenseContent.name = knownLicense.name;
           }
-        } else if (Object.keys(l).length) {
-          licenseContent = l;
+          // We always need a name to avoid validation errors
+          // Issue: #469
+          if (!licenseContent.name && !licenseContent.id) {
+            licenseContent.name = "CUSTOM";
+          }
+          licenseContent.url = l;
+        } else if (isSpdxLicenseExpression(l)) {
+          licenseContent.expression = l;
         } else {
-          return undefined;
+          licenseContent.name = l;
         }
-        if (!licenseContent.id) {
-          addLicenseText(pkg, l, licenseContent);
-        }
-        return licenseContent;
-      })
-      .map((l) => ({ license: l }));
+      } else if (Object.keys(l).length) {
+        licenseContent = l;
+      } else {
+        return undefined;
+      }
+      if (!licenseContent.id) {
+        addLicenseText(pkg, l, licenseContent);
+      }
+      return licenseContent;
+    });
+
+    const expressions = licensesAndExpressions.filter((f) => {
+      return f.expression;
+    });
+    if (expressions.length > 1) {
+      console.warn("multiple license expressions found", expressions);
+      return [{ expression: expressions[0].expression }];
+    } else if (expressions.length === 1) {
+      return [{ expression: expressions[0].expression }];
+    } else {
+      return licensesAndExpressions.map((l) => ({ license: l }));
+    }
   } else {
     const knownLicense = getKnownLicense(undefined, pkg);
     if (knownLicense) {
