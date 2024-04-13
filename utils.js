@@ -291,16 +291,15 @@ export function getTimestamp() {
  * @see https://spdx.dev/learn/handling-license-info/
  **/
 export function isSpdxLicenseExpression(license) {
-  const licenseLoweCase = (license || "").toLowerCase();
-  if (!licenseLoweCase) {
+  if (!license) {
     return false;
   }
 
-  if (/[(\s]+/gi.test(licenseLoweCase)) {
+  if (/[(\s]+/g.test(license)) {
     return true;
   }
 
-  if (licenseLoweCase.endsWith("+")) {
+  if (license.endsWith("+")) {
     return true; // GPL-2.0+ means GPL-2.0 or any later version, at the licensee’s option.
   }
 
