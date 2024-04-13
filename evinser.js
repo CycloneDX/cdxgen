@@ -5,7 +5,8 @@ import {
   executeAtom,
   getAllFiles,
   getGradleCommand,
-  getMavenCommand
+  getMavenCommand,
+  getTimestamp
 } from "./utils.js";
 import { findCryptoAlgos } from "./cbomutils.js";
 import { tmpdir } from "node:os";
@@ -1085,7 +1086,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
       bomJson.annotations.push({
         subjects: [bomJson.serialNumber],
         annotator: { component: bomJson.metadata.tools.components[0] },
-        timestamp: new Date().toISOString(),
+        timestamp: getTimestamp(),
         text: fs.readFileSync(usagesSlicesFile, "utf8")
       });
     }
@@ -1093,7 +1094,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
       bomJson.annotations.push({
         subjects: [bomJson.serialNumber],
         annotator: { component: bomJson.metadata.tools.components[0] },
-        timestamp: new Date().toISOString(),
+        timestamp: getTimestamp(),
         text: fs.readFileSync(dataFlowSlicesFile, "utf8")
       });
     }
@@ -1101,7 +1102,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
       bomJson.annotations.push({
         subjects: [bomJson.serialNumber],
         annotator: { component: bomJson.metadata.tools.components[0] },
-        timestamp: new Date().toISOString(),
+        timestamp: getTimestamp(),
         text: fs.readFileSync(reachablesSlicesFile, "utf8")
       });
     }
@@ -1109,7 +1110,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   // Increment the version
   bomJson.version = (bomJson.version || 1) + 1;
   // Set the current timestamp to indicate this is newer
-  bomJson.metadata.timestamp = new Date().toISOString();
+  bomJson.metadata.timestamp = getTimestamp();
   delete bomJson.signature;
   fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, null));
   if (occEvidencePresent || csEvidencePresent || servicesPresent) {
