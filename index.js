@@ -1226,6 +1226,11 @@ export async function createJavaBom(path, options) {
         const addArgs = process.env.MVN_ARGS.split(" ");
         mvnArgs = mvnArgs.concat(addArgs);
       }
+      // specVersion 1.4 doesn't support externalReferences.type=disribution-intake
+      // so we need to run the plugin with the correct version
+      if (options.specVersion === 1.4) {
+        mvnArgs = mvnArgs.concat("-DschemaVersion=1.4");
+      }
       for (const f of pomFiles) {
         const basePath = dirname(f);
         const settingsXml = join(basePath, "settings.xml");
