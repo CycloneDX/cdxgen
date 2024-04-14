@@ -1,30 +1,29 @@
 {
-    "device": {
-      "backend": {
-        "type": "registry",
-        "config": {
-          "scheme": "",
-          "skip_verify": true,
-          "timeout": 5,
-          "connect_timeout": 5,
-          "retry_limit": 4,
-          "auth": ""
-        }
-      },
-      "cache": {
-        "type": "blobcache",
-        "config": {
-          "work_dir": "cache"
-        }
+  "device": {
+    "backend": {
+      "type": "registry",
+      "config": {
+        "scheme": "",
+        "skip_verify": true,
+        "timeout": 5,
+        "connect_timeout": 5,
+        "retry_limit": 4,
+        "auth": ""
       }
     },
-    "mode": "direct",
-    "digest_validate": false,
-    "iostats_files": false,
-    "enable_xattr": true,
-    "fs_prefetch": {
-      "enable": true,
-      "threads_count": 4
+    "cache": {
+      "type": "blobcache",
+      "config": {
+        "work_dir": "cache"
+      }
     }
+  },
+  "mode": "direct",
+  "digest_validate": false,
+  "iostats_files": false,
+  "enable_xattr": true,
+  "fs_prefetch": {
+    "enable": true,
+    "threads_count": 4
   }
-  
+}

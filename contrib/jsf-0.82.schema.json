@@ -3,7 +3,7 @@
   "$id": "http://cyclonedx.org/schema/jsf-0.82.schema.json",
   "type": "object",
   "title": "JSON Signature Format (JSF) standard",
-  "$comment" : "JSON Signature Format schema is published under the terms of the Apache License 2.0. JSF was developed by Anders Rundgren (anders.rundgren.net@gmail.com) as a part of the OpenKeyStore project. This schema supports the entirely of the JSF standard excluding 'extensions'.",
+  "$comment": "JSON Signature Format schema is published under the terms of the Apache License 2.0. JSF was developed by Anders Rundgren (anders.rundgren.net@gmail.com) as a part of the OpenKeyStore project. This schema supports the entirely of the JSF standard excluding 'extensions'.",
   "definitions": {
     "signature": {
       "type": "object",
@@ -16,7 +16,7 @@
               "type": "array",
               "title": "Signature",
               "description": "Unique top level property for Multiple Signatures. (multisignature)",
-              "items": {"$ref": "#/definitions/signer"}
+              "items": { "$ref": "#/definitions/signer" }
             }
           }
         },
@@ -27,7 +27,7 @@
               "type": "array",
               "title": "Signature",
               "description": "Unique top level property for Signature Chains. (signaturechain)",
-              "items": {"$ref": "#/definitions/signer"}
+              "items": { "$ref": "#/definitions/signer" }
             }
           }
         },
@@ -41,10 +41,7 @@
     "signer": {
       "type": "object",
       "title": "Signature",
-      "required": [
-        "algorithm",
-        "value"
-      ],
+      "required": ["algorithm", "value"],
       "additionalProperties": false,
       "properties": {
         "algorithm": {
@@ -115,19 +112,13 @@
       "type": "string",
       "title": "Key type",
       "description": "Key type indicator.",
-      "enum": [
-        "EC",
-        "OKP",
-        "RSA"
-      ]
+      "enum": ["EC", "OKP", "RSA"]
     },
     "publicKey": {
       "title": "Public key",
       "description": "Optional. Public key object.",
       "type": "object",
-      "required": [
-        "kty"
-      ],
+      "required": ["kty"],
       "additionalProperties": true,
       "properties": {
         "kty": {
@@ -140,12 +131,7 @@
             "properties": { "kty": { "const": "EC" } }
           },
           "then": {
-            "required": [
-              "kty",
-              "crv",
-              "x",
-              "y"
-            ],
+            "required": ["kty", "crv", "x", "y"],
             "additionalProperties": false,
             "properties": {
               "kty": {
@@ -155,11 +141,7 @@
                 "type": "string",
                 "title": "Curve name",
                 "description": "EC curve name.",
-                "enum": [
-                  "P-256",
-                  "P-384",
-                  "P-521"
-                ]
+                "enum": ["P-256", "P-384", "P-521"]
               },
               "x": {
                 "type": "string",
@@ -179,11 +161,7 @@
             "properties": { "kty": { "const": "OKP" } }
           },
           "then": {
-            "required": [
-              "kty",
-              "crv",
-              "x"
-            ],
+            "required": ["kty", "crv", "x"],
             "additionalProperties": false,
             "properties": {
               "kty": {
@@ -193,10 +171,7 @@
                 "type": "string",
                 "title": "Curve name",
                 "description": "EdDSA curve name.",
-                "enum": [
-                  "Ed25519",
-                  "Ed448"
-                ]
+                "enum": ["Ed25519", "Ed448"]
               },
               "x": {
                 "type": "string",
@@ -211,11 +186,7 @@
             "properties": { "kty": { "const": "RSA" } }
           },
           "then": {
-            "required": [
-              "kty",
-              "n",
-              "e"
-            ],
+            "required": ["kty", "n", "e"],
             "additionalProperties": false,
             "properties": {
               "kty": {

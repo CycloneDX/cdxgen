@@ -1,4 +1,6 @@
+import { Buffer } from "node:buffer";
 import { spawnSync } from "node:child_process";
+import process from "node:process";
 import {
   CARGO_CMD,
   DOTNET_CMD,
@@ -9,10 +11,8 @@ import {
   NPM_CMD,
   PYTHON_CMD,
   RUSTC_CMD,
-  isWin
+  isWin,
 } from "./utils.js";
-import process from "node:process";
-import { Buffer } from "node:buffer";
 
 const GIT_COMMAND = process.env.GIT_CMD || "git";
 
@@ -87,7 +87,7 @@ export const listFiles = (dir) => {
     "-l",
     "-r",
     "--full-tree",
-    "HEAD"
+    "HEAD",
   ]);
   if (output) {
     output.split("\n").forEach((l) => {
@@ -101,7 +101,7 @@ export const listFiles = (dir) => {
         filesList.push({
           hash: tmpA[2],
           name: lastParts[lastParts.length - 1],
-          ref: `gitoid:blob:sha1:${tmpA[2]}`
+          ref: `gitoid:blob:sha1:${tmpA[2]}`,
         });
       }
     });
@@ -139,9 +139,9 @@ export const collectJavaInfo = (dir) => {
       properties: [
         {
           name: "java:modules",
-          value: moduleDesc.replaceAll("\n", ", ")
-        }
-      ]
+          value: moduleDesc.replaceAll("\n", ", "),
+        },
+      ],
     };
   }
   return undefined;
@@ -162,7 +162,7 @@ export const collectDotnetInfo = (dir) => {
       type: "platform",
       name: "dotnet",
       version: versionDesc.trim(),
-      description: moduleDesc.replaceAll("\n", "\\n")
+      description: moduleDesc.replaceAll("\n", "\\n"),
     };
   }
   return undefined;
@@ -183,7 +183,7 @@ export const collectPythonInfo = (dir) => {
       type: "platform",
       name: "python",
       version: versionDesc.replace("Python ", ""),
-      description: moduleDesc.replaceAll("\n", "\\n")
+      description: moduleDesc.replaceAll("\n", "\\n"),
     };
   }
   return undefined;
@@ -206,7 +206,7 @@ export const collectNodeInfo = (dir) => {
       type: "platform",
       name: "node",
       version: versionDesc.trim(),
-      description: moduleDesc
+      description: moduleDesc,
     };
   }
   return undefined;
@@ -226,7 +226,7 @@ export const collectGccInfo = (dir) => {
       type: "platform",
       name: "gcc",
       version: versionDesc.split("\n")[0],
-      description: moduleDesc.replaceAll("\n", "\\n")
+      description: moduleDesc.replaceAll("\n", "\\n"),
     };
   }
   return undefined;
@@ -246,7 +246,7 @@ export const collectRustInfo = (dir) => {
       type: "platform",
       name: "rustc",
       version: versionDesc.trim(),
-      description: moduleDesc.trim()
+      description: moduleDesc.trim(),
     };
   }
   return undefined;
@@ -264,7 +264,7 @@ export const collectGoInfo = (dir) => {
     return {
       type: "platform",
       name: "go",
-      version: versionDesc.trim()
+      version: versionDesc.trim(),
     };
   }
   return undefined;
@@ -315,7 +315,7 @@ const getCommandOutput = (cmd, dir, args) => {
   const result = spawnSync(cmd, args, {
     cwd: dir,
     encoding: "utf-8",
-    shell: isWin
+    shell: isWin,
   });
   if (result.status !== 0 || result.error) {
     return undefined;

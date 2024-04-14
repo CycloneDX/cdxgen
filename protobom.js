@@ -1,5 +1,5 @@
-import { cdx_15, cdx_16 } from "@appthreat/cdx-proto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { cdx_15, cdx_16 } from "@appthreat/cdx-proto";
 
 /**
  * Stringify the given bom json based on the type.
@@ -32,9 +32,9 @@ export const writeBinary = (bomJson, binFile) => {
       binFile,
       bomObject
         .fromJsonString(stringifyIfNeeded(bomJson), {
-          ignoreUnknownFields: true
+          ignoreUnknownFields: true,
         })
-        .toBinary({ writeUnknownFields: true })
+        .toBinary({ writeUnknownFields: true }),
     );
   }
 };
@@ -57,7 +57,7 @@ export const readBinary = (binFile, asJson = true, specVersion = 1.5) => {
     bomLib = new cdx_15.Bom();
   }
   const bomObject = bomLib.fromBinary(readFileSync(binFile), {
-    readUnknownFields: true
+    readUnknownFields: true,
   });
   if (asJson) {
     return bomObject.toJson({ emitDefaultValues: true });

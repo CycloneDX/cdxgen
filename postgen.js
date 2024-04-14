@@ -87,7 +87,7 @@ export const filterBom = (bomJson, options) => {
         const newdepson = (adep.dependsOn || []).filter((d) => newPkgMap[d]);
         const obj = {
           ref: adep.ref,
-          dependsOn: newdepson
+          dependsOn: newdepson,
         };
         // Filter provides array if needed
         if (adep.provides && adep.provides.length) {
@@ -110,7 +110,7 @@ export const filterBom = (bomJson, options) => {
       }
       bomJson.compositions.push({
         "bom-ref": bomJson.metadata.component["bom-ref"],
-        aggregate: options.only ? "incomplete_first_party_only" : "incomplete"
+        aggregate: options.only ? "incomplete_first_party_only" : "incomplete",
       });
     }
   }

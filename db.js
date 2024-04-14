@@ -9,7 +9,7 @@ class DataFlows extends Model {}
 export const createOrLoad = async (dbName, dbPath, logging = false) => {
   const sequelize = new Sequelize({
     define: {
-      freezeTableName: true
+      freezeTableName: true,
     },
     dialect: "sqlite",
     dialectOptions: {
@@ -17,7 +17,7 @@ export const createOrLoad = async (dbName, dbPath, logging = false) => {
         SQLite.OPEN_READWRITE |
         SQLite.OPEN_CREATE |
         SQLite.OPEN_NOMUTEX |
-        SQLite.OPEN_SHAREDCACHE
+        SQLite.OPEN_SHAREDCACHE,
     },
     storage: dbPath.includes("memory") ? dbPath : path.join(dbPath, dbName),
     logging,
@@ -25,56 +25,56 @@ export const createOrLoad = async (dbName, dbPath, logging = false) => {
       max: 5,
       min: 0,
       acquire: 30000,
-      idle: 10000
-    }
+      idle: 10000,
+    },
   });
   Namespaces.init(
     {
       purl: {
         type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
       },
       data: {
         type: DataTypes.JSON,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
-    { sequelize, modelName: "Namespaces" }
+    { sequelize, modelName: "Namespaces" },
   );
   Usages.init(
     {
       purl: {
         type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
       },
       data: {
         type: DataTypes.JSON,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
-    { sequelize, modelName: "Usages" }
+    { sequelize, modelName: "Usages" },
   );
   DataFlows.init(
     {
       purl: {
         type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
       },
       data: {
         type: DataTypes.JSON,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
-    { sequelize, modelName: "DataFlows" }
+    { sequelize, modelName: "DataFlows" },
   );
   await sequelize.sync();
   return {
     sequelize,
     Namespaces,
     Usages,
-    DataFlows
+    DataFlows,
   };
 };

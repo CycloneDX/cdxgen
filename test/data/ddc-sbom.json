@@ -1004,9 +1004,7 @@
     },
     {
       "ref": "pkg:maven/org.springframework/spring-core@6.0.3?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.springframework/spring-jcl@6.0.3?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.springframework/spring-jcl@6.0.3?type=jar"]
     },
     {
       "ref": "pkg:maven/org.springframework/spring-jcl@6.0.3?type=jar",
@@ -1021,9 +1019,7 @@
     },
     {
       "ref": "pkg:maven/org.springframework/spring-aop@6.0.3?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.springframework/spring-beans@6.0.3?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.springframework/spring-beans@6.0.3?type=jar"]
     },
     {
       "ref": "pkg:maven/org.springframework/spring-beans@6.0.3?type=jar",
@@ -1230,9 +1226,7 @@
     },
     {
       "ref": "pkg:maven/org.flywaydb/flyway-mysql@9.18.0?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.flywaydb/flyway-core@9.18.0?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.flywaydb/flyway-core@9.18.0?type=jar"]
     },
     {
       "ref": "pkg:maven/org.flywaydb/flyway-core@9.18.0?type=jar",

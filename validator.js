@@ -1,7 +1,7 @@
-import Ajv from "ajv";
-import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
 import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE } from "./utils.js";
 
@@ -24,14 +24,14 @@ export const validateBom = (bomJson) => {
   const schema = JSON.parse(
     readFileSync(
       join(dirName, "data", `bom-${bomJson.specVersion}.schema.json`),
-      "utf-8"
-    )
+      "utf-8",
+    ),
   );
   const defsSchema = JSON.parse(
-    readFileSync(join(dirName, "data", "jsf-0.82.schema.json"), "utf-8")
+    readFileSync(join(dirName, "data", "jsf-0.82.schema.json"), "utf-8"),
   );
   const spdxSchema = JSON.parse(
-    readFileSync(join(dirName, "data", "spdx.schema.json"), "utf-8")
+    readFileSync(join(dirName, "data", "spdx.schema.json"), "utf-8"),
   );
   const ajv = new Ajv({
     schemas: [schema, defsSchema, spdxSchema],
@@ -41,17 +41,17 @@ export const validateBom = (bomJson) => {
     code: {
       source: true,
       lines: true,
-      optimize: true
-    }
+      optimize: true,
+    },
   });
   addFormats(ajv);
   const validate = ajv.getSchema(
-    `http://cyclonedx.org/schema/bom-${bomJson.specVersion}.schema.json`
+    `http://cyclonedx.org/schema/bom-${bomJson.specVersion}.schema.json`,
   );
   const isValid = validate(bomJson);
   if (!isValid) {
     console.log(
-      `Schema validation failed for ${bomJson.metadata.component.name}`
+      `Schema validation failed for ${bomJson.metadata.component.name}`,
     );
     console.log(validate.errors);
     return false;
@@ -97,11 +97,11 @@ export const validateMetadata = (bomJson) => {
         for (const comp of bomJson.metadata.component.components) {
           if (comp["bom-ref"] === bomJson.metadata.component["bom-ref"]) {
             warningsList.push(
-              `Found parent component with ref ${comp["bom-ref"]} in metadata.component.components`
+              `Found parent component with ref ${comp["bom-ref"]} in metadata.component.components`,
             );
           } else if (comp["name"] === bomJson.metadata.component["name"]) {
             warningsList.push(
-              `Found parent component with name ${comp["name"]} in metadata.component.components`
+              `Found parent component with name ${comp["name"]} in metadata.component.components`,
             );
           }
         }
@@ -132,26 +132,26 @@ export const validatePurls = (bomJson) => {
       if (comp.type === "cryptographic-asset") {
         if (comp.purl && comp.purl.length) {
           errorList.push(
-            `purl should not be defined for cryptographic-asset ${comp.purl}`
+            `purl should not be defined for cryptographic-asset ${comp.purl}`,
           );
         }
         if (!comp.cryptoProperties) {
           errorList.push(
-            `cryptoProperties is missing for cryptographic-asset ${comp.purl}`
+            `cryptoProperties is missing for cryptographic-asset ${comp.purl}`,
           );
         } else if (
           comp.cryptoProperties.assetType === "algorithm" &&
           !comp.cryptoProperties.oid
         ) {
           errorList.push(
-            `cryptoProperties.oid is missing for cryptographic-asset of type algorithm ${comp.purl}`
+            `cryptoProperties.oid is missing for cryptographic-asset of type algorithm ${comp.purl}`,
           );
         } else if (
           comp.cryptoProperties.assetType === "certificate" &&
           !comp.cryptoProperties.algorithmProperties
         ) {
           errorList.push(
-            `cryptoProperties.algorithmProperties is missing for cryptographic-asset of type certificate ${comp.purl}`
+            `cryptoProperties.algorithmProperties is missing for cryptographic-asset of type certificate ${comp.purl}`,
           );
         }
       } else {
@@ -159,7 +159,7 @@ export const validatePurls = (bomJson) => {
           const purlObj = PackageURL.fromString(comp.purl);
           if (purlObj.type && purlObj.type !== purlObj.type.toLowerCase()) {
             warningsList.push(
-              `purl type is not normalized to lower case ${comp.purl}`
+              `purl type is not normalized to lower case ${comp.purl}`,
             );
           }
           if (
@@ -168,7 +168,7 @@ export const validatePurls = (bomJson) => {
             !purlObj.namespace
           ) {
             errorList.push(
-              `purl does not include namespace but includes encoded slash in name for npm type. ${comp.purl}`
+              `purl does not include namespace but includes encoded slash in name for npm type. ${comp.purl}`,
             );
           }
         } catch (ex) {

@@ -1,12 +1,12 @@
 import { readFileSync } from "node:fs";
-import { convertOSQueryResults, dirNameStr } from "./utils.js";
-import { executeOsQuery } from "./binary.js";
 import { join } from "node:path";
+import { executeOsQuery } from "./binary.js";
+import { convertOSQueryResults, dirNameStr } from "./utils.js";
 const cbomosDbQueries = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "cbomosdb-queries.json"), "utf-8")
+  readFileSync(join(dirNameStr, "data", "cbomosdb-queries.json"), "utf-8"),
 );
 const cbomCryptoOids = JSON.parse(
-  readFileSync(join(dirNameStr, "data", "crypto-oid.json"), "utf-8")
+  readFileSync(join(dirNameStr, "data", "crypto-oid.json"), "utf-8"),
 );
 
 /**
@@ -24,7 +24,7 @@ export function collectOSCryptoLibs(options) {
       queryCategory,
       queryObj,
       results,
-      false
+      false,
     );
     if (dlist && dlist.length) {
       osPkgsList = osPkgsList.concat(dlist);
@@ -59,7 +59,7 @@ export function findCryptoAlgos(code) {
       cryptoAlgos.push({
         ...cbomCryptoOids[algoName],
         name: algoName,
-        ref: `crypto/algorithm/${algoName}@${cbomCryptoOids[algoName].oid}`
+        ref: `crypto/algorithm/${algoName}@${cbomCryptoOids[algoName].oid}`,
       });
     }
   }

@@ -1,8 +1,8 @@
-import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import process from "node:process";
 import { lstatSync, readFileSync, readdirSync } from "node:fs";
 import { basename, isAbsolute, join, relative, resolve } from "node:path";
+import process from "node:process";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
 
 const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
   ? process.env.ASTGEN_IGNORE_DIRS.split(",")
@@ -26,13 +26,13 @@ const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
       "codemods",
       "flow-typed",
       "i18n",
-      "__tests__"
+      "__tests__",
     ];
 
 const IGNORE_FILE_PATTERN = new RegExp(
   process.env.ASTGEN_IGNORE_FILE_PATTERN ||
     "(conf|config|test|spec|mock|\\.d)\\.(js|ts|tsx)$",
-  "i"
+  "i",
 );
 
 const getAllFiles = (deep, dir, extn, files, result, regex) => {
@@ -70,7 +70,7 @@ const getAllFiles = (deep, dir, extn, files, result, regex) => {
           extn,
           readdirSync(file),
           result,
-          regex
+          regex,
         );
       } catch (error) {
         continue;
@@ -105,8 +105,8 @@ const babelParserOptions = {
     "numericSeparator",
     "dynamicImport",
     "jsx",
-    "typescript"
-  ]
+    "typescript",
+  ],
 };
 
 /**
@@ -119,7 +119,7 @@ const setFileRef = (
   src,
   file,
   pathnode,
-  specifiers = []
+  specifiers = [],
 ) => {
   const pathway = pathnode.value || pathnode.name;
   const sourceLoc = pathnode.loc?.start;
@@ -144,7 +144,7 @@ const setFileRef = (
     isExternal: true,
     fileName: fileRelativeLoc,
     lineNumber: sourceLoc && sourceLoc.line ? sourceLoc.line : undefined,
-    columnNumber: sourceLoc && sourceLoc.column ? sourceLoc.column : undefined
+    columnNumber: sourceLoc && sourceLoc.column ? sourceLoc.column : undefined,
   };
   // replace relative imports with full path
   let moduleFullPath = pathway;
@@ -194,21 +194,21 @@ const fileToParseableCode = (file) => {
       .replace(vueCommentRegex, (match) => match.replaceAll(/\S/g, " "))
       .replace(
         vueCleaningRegex,
-        (match) => match.replaceAll(/\S/g, " ").substring(1) + ";"
+        (match) => match.replaceAll(/\S/g, " ").substring(1) + ";",
       )
       .replace(
         vueBindRegex,
         (match, grA, grB, grC) =>
-          grA.replaceAll(/\S/g, " ") + grB + grC.replaceAll(/\S/g, " ")
+          grA.replaceAll(/\S/g, " ") + grB + grC.replaceAll(/\S/g, " "),
       )
       .replace(
         vuePropRegex,
-        (match, grA, grB) => " " + grA.replace(/[.:@]/g, " ") + grB
+        (match, grA, grB) => " " + grA.replace(/[.:@]/g, " ") + grB,
       )
       .replace(
         vueTemplateRegex,
         (match, grA, grB, grC) =>
-          grA + grB.replaceAll("{{", "{ ").replaceAll("}}", " }") + grC
+          grA + grB.replaceAll("{{", "{ ").replaceAll("}}", " }") + grC,
       );
   }
   return code;
@@ -229,7 +229,7 @@ const parseFileASTTree = (src, file, allImports, allExports) => {
           src,
           file,
           path.node.source,
-          path.node.specifiers
+          path.node.specifiers,
         );
       }
     },
@@ -263,10 +263,10 @@ const parseFileASTTree = (src, file, allImports, allExports) => {
           src,
           file,
           path.node.source,
-          path.node.specifiers
+          path.node.specifiers,
         );
       }
-    }
+    },
   });
 };
 
@@ -282,7 +282,7 @@ const getAllSrcJSAndTSFiles = (src, deep) =>
     getAllFiles(deep, src, ".ts"),
     getAllFiles(deep, src, ".tsx"),
     getAllFiles(deep, src, ".vue"),
-    getAllFiles(deep, src, ".svelte")
+    getAllFiles(deep, src, ".svelte"),
   ]);
 
 /**

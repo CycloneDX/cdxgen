@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from "@jest/globals";
 import {
   addSkippedSrcFiles,
   exportImage,
@@ -5,9 +6,8 @@ import {
   getImage,
   isWin,
   parseImageName,
-  removeImage
+  removeImage,
 } from "./docker.js";
-import { beforeEach, describe, expect, test } from "@jest/globals";
 
 test("docker connection", async () => {
   if (!(isWin && process.env.CI === "true")) {
@@ -27,7 +27,7 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "",
     group: "",
-    name: "debian"
+    name: "debian",
   });
   expect(parseImageName("debian:latest")).toEqual({
     registry: "",
@@ -36,7 +36,7 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "",
     group: "",
-    name: "debian"
+    name: "debian",
   });
   expect(parseImageName("library/debian:latest")).toEqual({
     registry: "",
@@ -45,7 +45,7 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "",
     group: "library",
-    name: "debian"
+    name: "debian",
   });
   expect(parseImageName("shiftleft/scan:v1.15.6")).toEqual({
     registry: "",
@@ -54,7 +54,7 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "",
     group: "shiftleft",
-    name: "scan"
+    name: "scan",
   });
   expect(parseImageName("localhost:5000/shiftleft/scan:v1.15.6")).toEqual({
     registry: "localhost:5000",
@@ -63,7 +63,7 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "",
     group: "shiftleft",
-    name: "scan"
+    name: "scan",
   });
   expect(parseImageName("localhost:5000/shiftleft/scan")).toEqual({
     registry: "localhost:5000",
@@ -72,10 +72,10 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "",
     group: "shiftleft",
-    name: "scan"
+    name: "scan",
   });
   expect(
-    parseImageName("foocorp.jfrog.io/docker/library/eclipse-temurin:latest")
+    parseImageName("foocorp.jfrog.io/docker/library/eclipse-temurin:latest"),
   ).toEqual({
     registry: "foocorp.jfrog.io",
     repo: "docker/library/eclipse-temurin",
@@ -83,12 +83,12 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "",
     group: "docker/library",
-    name: "eclipse-temurin"
+    name: "eclipse-temurin",
   });
   expect(
     parseImageName(
-      "--platform=linux/amd64 foocorp.jfrog.io/docker/library/eclipse-temurin:latest"
-    )
+      "--platform=linux/amd64 foocorp.jfrog.io/docker/library/eclipse-temurin:latest",
+    ),
   ).toEqual({
     registry: "foocorp.jfrog.io",
     repo: "docker/library/eclipse-temurin",
@@ -96,12 +96,12 @@ test("parseImageName tests", () => {
     digest: "",
     platform: "linux/amd64",
     group: "docker/library",
-    name: "eclipse-temurin"
+    name: "eclipse-temurin",
   });
   expect(
     parseImageName(
-      "quay.io/shiftleft/scan-java@sha256:5d008306a7c5d09ba0161a3408fa3839dc2c9dd991ffb68adecc1040399fe9e1"
-    )
+      "quay.io/shiftleft/scan-java@sha256:5d008306a7c5d09ba0161a3408fa3839dc2c9dd991ffb68adecc1040399fe9e1",
+    ),
   ).toEqual({
     registry: "quay.io",
     repo: "shiftleft/scan-java",
@@ -109,7 +109,7 @@ test("parseImageName tests", () => {
     digest: "5d008306a7c5d09ba0161a3408fa3839dc2c9dd991ffb68adecc1040399fe9e1",
     platform: "",
     group: "shiftleft",
-    name: "scan-java"
+    name: "scan-java",
   });
 }, 120000);
 
@@ -147,14 +147,14 @@ describe("addSkippedSrcFiles tests", () => {
         properties: [
           {
             name: "SrcFile",
-            value: "/some/project/Dockerfile"
+            value: "/some/project/Dockerfile",
           },
           {
             name: "oci:SrcImage",
-            value: "node:20"
-          }
-        ]
-      }
+            value: "node:20",
+          },
+        ],
+      },
     ];
   });
 
@@ -163,10 +163,10 @@ describe("addSkippedSrcFiles tests", () => {
       [
         {
           image: "node:18",
-          src: "/some/project/bitbucket-pipeline.yml"
-        }
+          src: "/some/project/bitbucket-pipeline.yml",
+        },
       ],
-      testComponents
+      testComponents,
     );
 
     expect(testComponents[0].properties).toHaveLength(2);
@@ -177,10 +177,10 @@ describe("addSkippedSrcFiles tests", () => {
       [
         {
           image: "node:20",
-          src: "/some/project/bitbucket-pipeline.yml"
-        }
+          src: "/some/project/bitbucket-pipeline.yml",
+        },
       ],
-      testComponents
+      testComponents,
     );
 
     expect(testComponents[0].properties).toHaveLength(3);
@@ -191,10 +191,10 @@ describe("addSkippedSrcFiles tests", () => {
       [
         {
           image: "node:20",
-          src: "/some/project/Dockerfile"
-        }
+          src: "/some/project/Dockerfile",
+        },
       ],
-      testComponents
+      testComponents,
     );
 
     expect(testComponents[0].properties).toHaveLength(2);

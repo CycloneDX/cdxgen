@@ -1,34 +1,34 @@
 #!/usr/bin/env node
 
-import { createBom, submitBom } from "../index.js";
-import { validateBom } from "../validator.js";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
-import jws from "jws";
-import crypto from "node:crypto";
-import { URL, fileURLToPath } from "node:url";
-import globalAgent from "global-agent";
 import process from "node:process";
+import { URL, fileURLToPath } from "node:url";
+import { findUpSync } from "find-up";
+import globalAgent from "global-agent";
+import { load as _load } from "js-yaml";
+import jws from "jws";
 import {
   printCallStack,
   printDependencyTree,
   printOccurrences,
   printReachables,
   printServices,
-  printTable
+  printTable,
 } from "../display.js";
-import { findUpSync } from "find-up";
-import { load as _load } from "js-yaml";
+import { createBom, submitBom } from "../index.js";
 import { postProcess } from "../postgen.js";
 import { ATOM_DB } from "../utils.js";
+import { validateBom } from "../validator.js";
 
 // Support for config files
 const configPath = findUpSync([
   ".cdxgenrc",
   ".cdxgen.json",
   ".cdxgen.yml",
-  ".cdxgen.yaml"
+  ".cdxgen.yaml",
 ]);
 let config = {};
 if (configPath) {
@@ -57,150 +57,151 @@ const args = yargs(hideBin(process.argv))
   .option("output", {
     alias: "o",
     description: "Output file. Default bom.json",
-    default: "bom.json"
+    default: "bom.json",
   })
   .option("evinse-output", {
     description:
       "Create bom with evidence as a separate file. Default bom.json",
     default: "bom.json",
-    hidden: true
+    hidden: true,
   })
   .option("type", {
     alias: "t",
-    description: "Project type"
+    description: "Project type",
   })
   .option("recurse", {
     alias: "r",
     type: "boolean",
     default: true,
     description:
-      "Recurse mode suitable for mono-repos. Defaults to true. Pass --no-recurse to disable."
+      "Recurse mode suitable for mono-repos. Defaults to true. Pass --no-recurse to disable.",
   })
   .option("print", {
     alias: "p",
     type: "boolean",
-    description: "Print the SBOM as a table with tree."
+    description: "Print the SBOM as a table with tree.",
   })
   .option("resolve-class", {
     alias: "c",
     type: "boolean",
-    description: "Resolve class names for packages. jars only for now."
+    description: "Resolve class names for packages. jars only for now.",
   })
   .option("deep", {
     type: "boolean",
     description:
-      "Perform deep searches for components. Useful while scanning C/C++ apps, live OS and oci images."
+      "Perform deep searches for components. Useful while scanning C/C++ apps, live OS and oci images.",
   })
   .option("server-url", {
-    description: "Dependency track url. Eg: https://deptrack.cyclonedx.io"
+    description: "Dependency track url. Eg: https://deptrack.cyclonedx.io",
   })
   .option("api-key", {
-    description: "Dependency track api key"
+    description: "Dependency track api key",
   })
   .option("project-group", {
-    description: "Dependency track project group"
+    description: "Dependency track project group",
   })
   .option("project-name", {
-    description: "Dependency track project name. Default use the directory name"
+    description:
+      "Dependency track project name. Default use the directory name",
   })
   .option("project-version", {
     description: "Dependency track project version",
     default: "",
-    type: "string"
+    type: "string",
   })
   .option("project-id", {
     description:
       "Dependency track project id. Either provide the id or the project name and version together",
-    type: "string"
+    type: "string",
   })
   .option("parent-project-id", {
     description: "Dependency track parent project id",
-    type: "string"
+    type: "string",
   })
   .option("required-only", {
     type: "boolean",
     description:
-      "Include only the packages with required scope on the SBOM. Would set compositions.aggregate to incomplete unless --no-auto-compositions is passed."
+      "Include only the packages with required scope on the SBOM. Would set compositions.aggregate to incomplete unless --no-auto-compositions is passed.",
   })
   .option("fail-on-error", {
     type: "boolean",
-    description: "Fail if any dependency extractor fails."
+    description: "Fail if any dependency extractor fails.",
   })
   .option("no-babel", {
     type: "boolean",
     description:
-      "Do not use babel to perform usage analysis for JavaScript/TypeScript projects."
+      "Do not use babel to perform usage analysis for JavaScript/TypeScript projects.",
   })
   .option("generate-key-and-sign", {
     type: "boolean",
     description:
-      "Generate an RSA public/private key pair and then sign the generated SBOM using JSON Web Signatures."
+      "Generate an RSA public/private key pair and then sign the generated SBOM using JSON Web Signatures.",
   })
   .option("server", {
     type: "boolean",
-    description: "Run cdxgen as a server"
+    description: "Run cdxgen as a server",
   })
   .option("server-host", {
     description: "Listen address",
-    default: "127.0.0.1"
+    default: "127.0.0.1",
   })
   .option("server-port", {
     description: "Listen port",
-    default: "9090"
+    default: "9090",
   })
   .option("install-deps", {
     type: "boolean",
     description:
-      "Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature."
+      "Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature.",
   })
   .option("validate", {
     type: "boolean",
     default: true,
     description:
-      "Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to disable."
+      "Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to disable.",
   })
   .option("evidence", {
     type: "boolean",
     default: false,
-    description: "Generate SBOM with evidence for supported languages."
+    description: "Generate SBOM with evidence for supported languages.",
   })
   .option("deps-slices-file", {
     description: "Path for the parsedeps slice file created by atom.",
     default: "deps.slices.json",
-    hidden: true
+    hidden: true,
   })
   .option("usages-slices-file", {
     description: "Path for the usages slices file created by atom.",
     default: "usages.slices.json",
-    hidden: true
+    hidden: true,
   })
   .option("data-flow-slices-file", {
     description: "Path for the data-flow slices file created by atom.",
     default: "data-flow.slices.json",
-    hidden: true
+    hidden: true,
   })
   .option("reachables-slices-file", {
     description: "Path for the reachables slices file created by atom.",
     default: "reachables.slices.json",
-    hidden: true
+    hidden: true,
   })
   .option("spec-version", {
     description: "CycloneDX Specification version to use. Defaults to 1.5",
     default: 1.5,
-    type: "number"
+    type: "number",
   })
   .option("filter", {
     description:
-      "Filter components containing this word in purl or component.properties.value. Multiple values allowed."
+      "Filter components containing this word in purl or component.properties.value. Multiple values allowed.",
   })
   .option("only", {
     description:
-      "Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed."
+      "Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed.",
   })
   .option("author", {
     description:
       "The person(s) who created the BOM. Set this value if you're intending the modify the BOM and claim authorship.",
-    default: "OWASP Foundation"
+    default: "OWASP Foundation",
   })
   .option("profile", {
     description: "BOM profile to use for generation. Default generic.",
@@ -211,37 +212,37 @@ const args = yargs(hideBin(process.argv))
       "operational",
       "threat-modeling",
       "license-compliance",
-      "generic"
-    ]
+      "generic",
+    ],
   })
   .option("lifecycle", {
     description: "Product lifecycle for the generated BOM.",
     hidden: true,
-    choices: ["pre-build", "build", "post-build"]
+    choices: ["pre-build", "build", "post-build"],
   })
   .option("exclude", {
-    description: "Additional glob pattern(s) to ignore"
+    description: "Additional glob pattern(s) to ignore",
   })
   .option("export-proto", {
     type: "boolean",
     default: false,
     description: "Serialize and export BOM as protobuf binary.",
-    hidden: true
+    hidden: true,
   })
   .option("proto-bin-file", {
     description: "Path for the serialized protobuf binary.",
     default: "bom.cdx",
-    hidden: true
+    hidden: true,
   })
   .option("include-formulation", {
     type: "boolean",
     default: false,
-    description: "Generate formulation section using git metadata."
+    description: "Generate formulation section using git metadata.",
   })
   .option("include-crypto", {
     type: "boolean",
     default: false,
-    description: "Include crypto libraries found under formulation."
+    description: "Include crypto libraries found under formulation.",
   })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
@@ -252,11 +253,11 @@ const args = yargs(hideBin(process.argv))
     type: "boolean",
     default: true,
     description:
-      "Automatically set compositions when the BOM was filtered. Defaults to true"
+      "Automatically set compositions when the BOM was filtered. Defaults to true",
   })
   .example([
     ["$0 -t java .", "Generate a Java SBOM for the current directory"],
-    ["$0 --server", "Run cdxgen as a server"]
+    ["$0 --server", "Run cdxgen as a server"],
   ])
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .config(config)
@@ -269,7 +270,7 @@ const args = yargs(hideBin(process.argv))
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
     join(dirName, "..", "package.json"),
-    "utf-8"
+    "utf-8",
   );
   const packageJson = JSON.parse(packageJsonAsString);
 
@@ -307,7 +308,7 @@ const options = Object.assign({}, args, {
   multiProject: args.recurse,
   noBabel: args.noBabel || args.babel === false,
   project: args.projectId,
-  deep: args.deep || args.evidence
+  deep: args.deep || args.evidence,
 });
 
 if (process.argv[1].includes("cbom")) {
@@ -369,11 +370,11 @@ const applyAdvancedOptions = (options) => {
           "apk",
           "aab",
           "go",
-          "golang"
+          "golang",
         ].includes(options.projectType)
       ) {
         console.log(
-          "PREVIEW: post-build lifecycle SBOM generation is supported only for android, dotnet, and go projects. Please specify the type using the -t argument."
+          "PREVIEW: post-build lifecycle SBOM generation is supported only for android, dotnet, and go projects. Please specify the type using the -t argument.",
         );
         process.exit(1);
       }
@@ -401,20 +402,20 @@ const checkPermissions = (filePath) => {
   if (!process.permission.has("fs.read", filePath)) {
     console.log(
       `FileSystemRead permission required. Please invoke with the argument --allow-fs-read="${resolve(
-        filePath
-      )}"`
+        filePath,
+      )}"`,
     );
     return false;
   }
   if (!process.permission.has("fs.write", tmpdir())) {
     console.log(
-      `FileSystemWrite permission required. Please invoke with the argument --allow-fs-write="${tmpdir()}"`
+      `FileSystemWrite permission required. Please invoke with the argument --allow-fs-write="${tmpdir()}"`,
     );
     return false;
   }
   if (!process.permission.has("child")) {
     console.log(
-      "ChildProcess permission is missing. This is required to spawn commands for some languages. Please invoke with the argument --allow-child-process"
+      "ChildProcess permission is missing. This is required to spawn commands for some languages. Please invoke with the argument --allow-child-process",
     );
   }
   return true;
@@ -463,7 +464,7 @@ const checkPermissions = (filePath) => {
             ["os", "docker", "universal"].includes(options.projectType) ||
             process.env.CI
             ? null
-            : 2
+            : 2,
         );
         fs.writeFileSync(jsonFile, jsonPayload);
       }
@@ -490,19 +491,19 @@ const checkPermissions = (filePath) => {
             modulusLength: 4096,
             publicKeyEncoding: {
               type: "spki",
-              format: "pem"
+              format: "pem",
             },
             privateKeyEncoding: {
               type: "pkcs8",
-              format: "pem"
-            }
+              format: "pem",
+            },
           });
           fs.writeFileSync(publicKeyFile, publicKey);
           fs.writeFileSync(privateKeyFile, privateKey);
           console.log(
             "Created public/private key pairs for testing purposes",
             publicKeyFile,
-            privateKeyFile
+            privateKeyFile,
           );
           privateKeyToUse = privateKey;
           jwkPublicKey = crypto
@@ -511,7 +512,7 @@ const checkPermissions = (filePath) => {
         } else {
           privateKeyToUse = fs.readFileSync(
             process.env.SBOM_SIGN_PRIVATE_KEY,
-            "utf8"
+            "utf8",
           );
           if (
             process.env.SBOM_SIGN_PUBLIC_KEY &&
@@ -519,7 +520,7 @@ const checkPermissions = (filePath) => {
           ) {
             jwkPublicKey = crypto
               .createPublicKey(
-                fs.readFileSync(process.env.SBOM_SIGN_PUBLIC_KEY, "utf8")
+                fs.readFileSync(process.env.SBOM_SIGN_PUBLIC_KEY, "utf8"),
               )
               .export({ format: "jwk" });
           }
@@ -532,11 +533,11 @@ const checkPermissions = (filePath) => {
             const compSignature = jws.sign({
               header: { alg },
               payload: comp,
-              privateKey: privateKeyToUse
+              privateKey: privateKeyToUse,
             });
             const compSignatureBlock = {
               algorithm: alg,
-              value: compSignature
+              value: compSignature,
             };
             if (jwkPublicKey) {
               compSignatureBlock.publicKey = jwkPublicKey;
@@ -546,12 +547,12 @@ const checkPermissions = (filePath) => {
           const signature = jws.sign({
             header: { alg },
             payload: JSON.stringify(bomJsonUnsignedObj, null, 2),
-            privateKey: privateKeyToUse
+            privateKey: privateKeyToUse,
           });
           if (signature) {
             const signatureBlock = {
               algorithm: alg,
-              value: signature
+              value: signature,
             };
             if (jwkPublicKey) {
               signatureBlock.publicKey = jwkPublicKey;
@@ -559,25 +560,25 @@ const checkPermissions = (filePath) => {
             bomJsonUnsignedObj.signature = signatureBlock;
             fs.writeFileSync(
               jsonFile,
-              JSON.stringify(bomJsonUnsignedObj, null, null)
+              JSON.stringify(bomJsonUnsignedObj, null, null),
             );
             if (publicKeyFile) {
               // Verifying this signature
               const signatureVerification = jws.verify(
                 signature,
                 alg,
-                fs.readFileSync(publicKeyFile, "utf8")
+                fs.readFileSync(publicKeyFile, "utf8"),
               );
               if (signatureVerification) {
                 console.log(
                   "SBOM signature is verifiable with the public key and the algorithm",
                   publicKeyFile,
-                  alg
+                  alg,
                 );
               } else {
                 console.log("SBOM signature verification was unsuccessful");
                 console.log(
-                  "Check if the public key was exported in PEM format"
+                  "Check if the public key was exported in PEM format",
                 );
               }
             }
@@ -617,17 +618,17 @@ const checkPermissions = (filePath) => {
       dataFlowSlicesFile: options.dataFlowSlicesFile,
       reachablesSlicesFile: options.reachablesSlicesFile,
       includeCrypto: options.includeCrypto,
-      specVersion: options.specVersion
+      specVersion: options.specVersion,
     };
     const dbObjMap = await evinserModule.prepareDB(evinseOptions);
     if (dbObjMap) {
       const sliceArtefacts = await evinserModule.analyzeProject(
         dbObjMap,
-        evinseOptions
+        evinseOptions,
       );
       const evinseJson = evinserModule.createEvinseFile(
         sliceArtefacts,
-        evinseOptions
+        evinseOptions,
       );
       bomNSData.bomJson = evinseJson;
       if (options.print && evinseJson) {

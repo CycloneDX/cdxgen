@@ -1,11 +1,8 @@
-import { platform as _platform, homedir, tmpdir } from "node:os";
-import process from "node:process";
 import { Buffer } from "node:buffer";
-import { basename, dirname, join, resolve, sep } from "node:path";
-import { parse } from "ssri";
+import { spawnSync } from "node:child_process";
 import {
-  accessSync,
   constants,
+  accessSync,
   existsSync,
   lstatSync,
   mkdirSync,
@@ -14,11 +11,23 @@ import {
   rmSync,
   statSync,
   unlinkSync,
-  writeFileSync
+  writeFileSync,
 } from "node:fs";
+import { platform as _platform, homedir, tmpdir } from "node:os";
+import { basename, dirname, join, resolve, sep } from "node:path";
+import process from "node:process";
+import { URL, fileURLToPath } from "node:url";
 import got from "got";
-import { v4 as uuidv4 } from "uuid";
 import { PackageURL } from "packageurl-js";
+import { parse } from "ssri";
+import { v4 as uuidv4 } from "uuid";
+import {
+  collectEnvInfo,
+  getBranch,
+  getOriginUrl,
+  gitTreeHashes,
+  listFiles,
+} from "./envcontext.js";
 import {
   CLJ_CMD,
   DEBUG_MODE,
@@ -53,6 +62,7 @@ import {
   getPyMetadata,
   getPyModules,
   getSwiftPackageMetadata,
+  getTimestamp,
   includeMavenTestScope,
   parseBazelActionGraph,
   parseBazelSkyframe,
@@ -115,17 +125,7 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
-  getTimestamp
 } from "./utils.js";
-import {
-  collectEnvInfo,
-  gitTreeHashes,
-  getBranch,
-  getOriginUrl,
-  listFiles
-} from "./envcontext.js";
-import { spawnSync } from "node:child_process";
-import { URL, fileURLToPath } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
@@ -133,26 +133,26 @@ if (!url.startsWith("file://")) {
 const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
 
 const selfPJson = JSON.parse(
-  readFileSync(join(dirName, "package.json"), "utf-8")
+  readFileSync(join(dirName, "package.json"), "utf-8"),
 );
 const _version = selfPJson.version;
-import { findJSImportsExports } from "./analyzer.js";
 import { gte, lte } from "semver";
+import { findJSImportsExports } from "./analyzer.js";
+import {
+  executeOsQuery,
+  getBinaryBom,
+  getCargoAuditableInfo,
+  getDotnetSlices,
+  getOSPackages,
+} from "./binary.js";
+import { collectOSCryptoLibs } from "./cbomutils.js";
 import {
   addSkippedSrcFiles,
   exportArchive,
   exportImage,
   getPkgPathList,
-  parseImageName
+  parseImageName,
 } from "./docker.js";
-import {
-  executeOsQuery,
-  getCargoAuditableInfo,
-  getDotnetSlices,
-  getOSPackages,
-  getBinaryBom
-} from "./binary.js";
-import { collectOSCryptoLibs } from "./cbomutils.js";
 
 const isWin = _platform() === "win32";
 
@@ -160,22 +160,22 @@ let osQueries = {};
 switch (_platform()) {
   case "win32":
     osQueries = JSON.parse(
-      readFileSync(join(dirName, "data", "queries-win.json"), "utf-8")
+      readFileSync(join(dirName, "data", "queries-win.json"), "utf-8"),
     );
     break;
   case "darwin":
     osQueries = JSON.parse(
-      readFileSync(join(dirName, "data", "queries-darwin.json"), "utf-8")
+      readFileSync(join(dirName, "data", "queries-darwin.json"), "utf-8"),
     );
     break;
   default:
     osQueries = JSON.parse(
-      readFileSync(join(dirName, "data", "queries.json"), "utf-8")
+      readFileSync(join(dirName, "data", "queries.json"), "utf-8"),
     );
     break;
 }
 const cosDbQueries = JSON.parse(
-  readFileSync(join(dirName, "data", "cosdb-queries.json"), "utf-8")
+  readFileSync(join(dirName, "data", "cosdb-queries.json"), "utf-8"),
 );
 
 import { table } from "table";
@@ -189,7 +189,7 @@ if (process.env.GRADLE_USER_HOME) {
     process.env.GRADLE_USER_HOME,
     "caches",
     "modules-2",
-    "files-2.1"
+    "files-2.1",
   );
 }
 
@@ -211,7 +211,7 @@ const HASH_PATTERN =
 const createDefaultParentComponent = (
   path,
   type = "application",
-  options = {}
+  options = {},
 ) => {
   // Expands any relative path such as dot
   path = resolve(path);
@@ -226,7 +226,7 @@ const createDefaultParentComponent = (
     group: options.projectGroup || "",
     name: options.projectName || dirNameStr,
     version: "" + options.projectVersion || "latest",
-    type: "application"
+    type: "application",
   };
   const ppurl = new PackageURL(
     type,
@@ -234,7 +234,7 @@ const createDefaultParentComponent = (
     parentComponent.name,
     parentComponent.version,
     null,
-    null
+    null,
   ).toString();
   parentComponent["bom-ref"] = decodeURIComponent(ppurl);
   parentComponent["purl"] = ppurl;
@@ -250,7 +250,7 @@ const determineParentComponent = (options) => {
       group: options.projectGroup || "",
       name: options.projectName,
       version: "" + options.projectVersion || "",
-      type: "application"
+      type: "application",
     };
     const ppurl = new PackageURL(
       parentComponent.type,
@@ -258,7 +258,7 @@ const determineParentComponent = (options) => {
       parentComponent.name,
       parentComponent.version,
       null,
-      null
+      null,
     ).toString();
     parentComponent["bom-ref"] = decodeURIComponent(ppurl);
     parentComponent["purl"] = ppurl;
@@ -272,8 +272,8 @@ const addToolsSection = (options, context = {}) => {
       {
         vendor: "cyclonedx",
         name: "cdxgen",
-        version: _version
-      }
+        version: _version,
+      },
     ];
   }
   let components = [];
@@ -302,7 +302,7 @@ const addToolsSection = (options, context = {}) => {
     type: "application",
     "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`,
     author: "OWASP Foundation",
-    publisher: "OWASP Foundation"
+    publisher: "OWASP Foundation",
   });
   return { components };
 };
@@ -394,18 +394,18 @@ const addFormulationSection = (options) => {
       name: "git-parent",
       description: "Artifact Dependency Graph (ADG) parent.",
       "bom-ref": parentOmniborId,
-      omniborId: [parentOmniborId]
+      omniborId: [parentOmniborId],
     });
     components.push({
       type: "file",
       name: "git-tree",
       description: "Artifact Dependency Graph (ADG) tree.",
       "bom-ref": treeOmniborId,
-      omniborId: [treeOmniborId]
+      omniborId: [treeOmniborId],
     });
     provides.push({
       ref: parentOmniborId,
-      provides: [treeOmniborId]
+      provides: [treeOmniborId],
     });
   }
   if (gitBranch && originUrl && gitFiles) {
@@ -416,20 +416,20 @@ const addFormulationSection = (options) => {
             type: "file",
             name: f.name,
             version: f.hash,
-            omniborId: [f.ref]
+            omniborId: [f.ref],
           }
         : {
             type: "file",
             name: f.name,
-            version: f.hash
-          }
+            version: f.hash,
+          },
     );
     components = components.concat(gitFileComponents);
     // Complete the Artifact Dependency Graph
     if (options.specVersion >= 1.6 && treeOmniborId) {
       provides.push({
         ref: treeOmniborId,
-        provides: gitFiles.map((f) => f.ref)
+        provides: gitFiles.map((f) => f.ref),
       });
     }
     // Collect build environment details
@@ -458,7 +458,7 @@ const addFormulationSection = (options) => {
       ) {
         environmentVars.push({
           name: aevar,
-          value: process.env[aevar]
+          value: process.env[aevar],
         });
       }
     }
@@ -472,11 +472,11 @@ const addFormulationSection = (options) => {
         inputs: [
           {
             source: { ref: originUrl },
-            environmentVars
-          }
+            environmentVars,
+          },
         ],
-        taskTypes: ["build", "clone"]
-      }
+        taskTypes: ["build", "clone"],
+      },
     ];
     formulation.push(aformulation);
   }
@@ -498,7 +498,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
     timestamp: getTimestamp(),
     tools,
     authors,
-    supplier: undefined
+    supplier: undefined,
   };
   if (lifecycles) {
     metadata.lifecycles = lifecycles;
@@ -535,7 +535,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
           ) {
             if (!comp["bom-ref"]) {
               comp["bom-ref"] = `pkg:${comp.type}/${decodeURIComponent(
-                fullName
+                fullName,
               )}`;
             }
             if (!addedSubComponents[comp["bom-ref"]]) {
@@ -557,7 +557,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         if (inspectData.Id) {
           mproperties.push({
             name: "oci:image:Id",
-            value: inspectData.Id
+            value: inspectData.Id,
           });
         }
         if (
@@ -567,7 +567,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         ) {
           mproperties.push({
             name: "oci:image:RepoTag",
-            value: inspectData.RepoTags[0]
+            value: inspectData.RepoTags[0],
           });
         }
         if (
@@ -577,25 +577,25 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         ) {
           mproperties.push({
             name: "oci:image:RepoDigest",
-            value: inspectData.RepoDigests[0]
+            value: inspectData.RepoDigests[0],
           });
         }
         if (inspectData.Created) {
           mproperties.push({
             name: "oci:image:Created",
-            value: inspectData.Created
+            value: inspectData.Created,
           });
         }
         if (inspectData.Architecture) {
           mproperties.push({
             name: "oci:image:Architecture",
-            value: inspectData.Architecture
+            value: inspectData.Architecture,
           });
         }
         if (inspectData.Os) {
           mproperties.push({
             name: "oci:image:Os",
-            value: inspectData.Os
+            value: inspectData.Os,
           });
         }
       }
@@ -605,7 +605,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         if (manifest.Config) {
           mproperties.push({
             name: "oci:image:manifest:Config",
-            value: manifest.Config
+            value: manifest.Config,
           });
         }
         if (
@@ -615,7 +615,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         ) {
           mproperties.push({
             name: "oci:image:manifest:Layers",
-            value: manifest.Layers.join("\\n")
+            value: manifest.Layers.join("\\n"),
           });
         }
       }
@@ -624,19 +624,19 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         if (lastLayerConfig.id) {
           mproperties.push({
             name: "oci:image:lastLayer:Id",
-            value: lastLayerConfig.id
+            value: lastLayerConfig.id,
           });
         }
         if (lastLayerConfig.parent) {
           mproperties.push({
             name: "oci:image:lastLayer:ParentId",
-            value: lastLayerConfig.parent
+            value: lastLayerConfig.parent,
           });
         }
         if (lastLayerConfig.created) {
           mproperties.push({
             name: "oci:image:lastLayer:Created",
-            value: lastLayerConfig.created
+            value: lastLayerConfig.created,
           });
         }
         if (lastLayerConfig.config) {
@@ -644,14 +644,14 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
           if (env && Array.isArray(env) && env.length) {
             mproperties.push({
               name: "oci:image:lastLayer:Env",
-              value: env.join("\\n")
+              value: env.join("\\n"),
             });
           }
           const ccmd = lastLayerConfig.config.Cmd;
           if (ccmd && Array.isArray(ccmd) && ccmd.length) {
             mproperties.push({
               name: "oci:image:lastLayer:Cmd",
-              value: ccmd.join(" ")
+              value: ccmd.join(" "),
             });
           }
         }
@@ -660,7 +660,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
     if (options.allOSComponentTypes && options.allOSComponentTypes.length) {
       mproperties.push({
         name: "oci:image:componentTypes",
-        value: options.allOSComponentTypes.join("\\n")
+        value: options.allOSComponentTypes.join("\\n"),
       });
     }
 
@@ -692,19 +692,19 @@ function addExternalReferences(opkg) {
       if (pkg.homepage && pkg.homepage.url) {
         externalReferences.push({
           type: pkg.homepage.url.includes("git") ? "vcs" : "website",
-          url: pkg.homepage.url
+          url: pkg.homepage.url,
         });
       }
       if (pkg.bugs && pkg.bugs.url) {
         externalReferences.push({
           type: "issue-tracker",
-          url: pkg.bugs.url
+          url: pkg.bugs.url,
         });
       }
       if (pkg.repository && pkg.repository.url) {
         externalReferences.push({
           type: "vcs",
-          url: pkg.repository.url
+          url: pkg.repository.url,
         });
       }
     }
@@ -744,7 +744,7 @@ function addComponent(
   pkg,
   ptype,
   compMap,
-  isRootPkg = false
+  isRootPkg = false,
 ) {
   if (!pkg || pkg.extraneous) {
     return;
@@ -774,7 +774,7 @@ function addComponent(
         encodeForPurl(name),
         version,
         pkg.qualifiers,
-        encodeForPurl(pkg.subpath)
+        encodeForPurl(pkg.subpath),
       );
     // There is no purl for cryptographic-asset
     if (ptype == "cryptographic-asset") {
@@ -808,7 +808,7 @@ function addComponent(
       hashes: [],
       licenses,
       purl: purlString,
-      externalReferences: addExternalReferences(pkg)
+      externalReferences: addExternalReferences(pkg),
     };
 
     component["type"] = determinePackageType(pkg);
@@ -885,7 +885,7 @@ function determinePackageType(pkg) {
       "file",
       "machine-learning-model",
       "data",
-      "cryptographic-asset"
+      "cryptographic-asset",
     ].includes(pkg.type)
   ) {
     return pkg.type;
@@ -1009,7 +1009,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     bomJsonFiles: undefined,
     nsMapping: undefined,
     dependencies: undefined,
-    parentComponent: undefined
+    parentComponent: undefined,
   };
   const serialNum = "urn:uuid:" + uuidv4();
   let allImports = {};
@@ -1031,7 +1031,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       version: 1,
       metadata: metadata,
       components,
-      dependencies
+      dependencies,
     };
     const formulationData = addFormulationSection(options);
     const formulation =
@@ -1067,14 +1067,14 @@ export async function createJarBom(path, options) {
       getGradleCommand(path, null),
       path,
       false,
-      true
+      true,
     );
   } else if (options.useMavenCache) {
     nsMapping = await collectMvnDependencies(
       getMavenCommand(path, null),
       null,
       false,
-      true
+      true,
     );
   }
   if (path.endsWith(".jar")) {
@@ -1083,14 +1083,14 @@ export async function createJarBom(path, options) {
     jarFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "*.[jw]ar",
-      options
+      options,
     );
   }
   // Jenkins plugins
   const hpiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.hpi",
-    options
+    options,
   );
   if (hpiFiles.length) {
     jarFiles = jarFiles.concat(hpiFiles);
@@ -1115,7 +1115,7 @@ export async function createJarBom(path, options) {
   pkgList = pkgList.concat(convertJarNSToPackages(nsMapping));
   return buildBomNSData(options, pkgList, "maven", {
     src: path,
-    parentComponent
+    parentComponent,
   });
 }
 
@@ -1141,12 +1141,12 @@ export function createBinaryBom(path, options) {
   getBinaryBom(path, binaryBomFile, options.deep);
   if (existsSync(binaryBomFile)) {
     const binaryBom = JSON.parse(
-      readFileSync(binaryBomFile, { encoding: "utf-8" })
+      readFileSync(binaryBomFile, { encoding: "utf-8" }),
     );
     return {
       bomJson: binaryBom,
       dependencies: binaryBom.dependencies,
-      parentComponent: binaryBom.parentComponent
+      parentComponent: binaryBom.parentComponent,
     };
   }
   return undefined;
@@ -1194,14 +1194,14 @@ export async function createJavaBom(path, options) {
       filename: path,
       nsMapping: jarNSMapping,
       dependencies,
-      parentComponent
+      parentComponent,
     });
   } else {
     // maven - pom.xml
     const pomFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "pom.xml",
-      options
+      options,
     );
     let bomJsonFiles = [];
     if (
@@ -1236,7 +1236,7 @@ export async function createJavaBom(path, options) {
         const settingsXml = join(basePath, "settings.xml");
         if (existsSync(settingsXml)) {
           console.log(
-            `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`
+            `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`,
           );
         }
         const mavenCmd = getMavenCommand(basePath, path);
@@ -1246,7 +1246,7 @@ export async function createJavaBom(path, options) {
             mavenCmd,
             basePath,
             true,
-            false
+            false,
           );
           if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
             jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
@@ -1254,14 +1254,14 @@ export async function createJavaBom(path, options) {
         }
         console.log(
           `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
-          basePath
+          basePath,
         );
         let result = spawnSync(mavenCmd, mvnArgs, {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER
+          maxBuffer: MAX_BUFFER,
         });
         // Check if the cyclonedx plugin created the required bom.json file
         // Sometimes the plugin fails silently for complex maven projects
@@ -1280,14 +1280,14 @@ export async function createJavaBom(path, options) {
             mvnTreeArgs = mvnTreeArgs.concat(addArgs);
           }
           console.log(
-            `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`
+            `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`,
           );
           result = spawnSync(mavenCmd, mvnTreeArgs, {
             cwd: basePath,
             shell: true,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER
+            maxBuffer: MAX_BUFFER,
           });
           if (result.status !== 0 || result.error) {
             // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
@@ -1295,7 +1295,7 @@ export async function createJavaBom(path, options) {
             if (pomFiles.length === 1 || DEBUG_MODE) {
               console.error(result.stdout, result.stderr);
               console.log(
-                "Resolve the above maven error. This could be due to the following:\n"
+                "Resolve the above maven error. This could be due to the following:\n",
               );
               if (
                 result.stdout &&
@@ -1303,7 +1303,7 @@ export async function createJavaBom(path, options) {
                   result.stdout.includes("points at wrong local POM"))
               ) {
                 console.log(
-                  "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory."
+                  "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory.",
                 );
               } else if (
                 result.stdout &&
@@ -1311,33 +1311,33 @@ export async function createJavaBom(path, options) {
                   result.stdout.includes("no dependency information available"))
               ) {
                 console.log(
-                  "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen."
+                  "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
                 );
               } else if (
                 result.stdout &&
                 result.stdout.includes(
-                  "Could not resolve target platform specification"
+                  "Could not resolve target platform specification",
                 )
               ) {
                 console.log(
-                  "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option"
+                  "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option",
                 );
               } else {
                 console.log(
-                  "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible."
+                  "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible.",
                 );
               }
               console.log(
-                "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable."
+                "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable.",
               );
               console.log(
-                "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool."
+                "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool.",
               );
             }
             // Do not fall back to methods that can produce incomplete results when failOnError is set
             options.failOnError && process.exit(1);
             console.log(
-              "\nFalling back to manual pom.xml parsing. The result would be incomplete!"
+              "\nFalling back to manual pom.xml parsing. The result would be incomplete!",
             );
             const dlist = parsePom(f);
             if (dlist && dlist.length) {
@@ -1346,7 +1346,7 @@ export async function createJavaBom(path, options) {
           } else {
             if (existsSync(tempMvnTree)) {
               const mvnTreeString = readFileSync(tempMvnTree, {
-                encoding: "utf-8"
+                encoding: "utf-8",
               });
               const parsedList = parseMavenTree(mvnTreeString);
               const dlist = parsedList.pkgList;
@@ -1371,8 +1371,8 @@ export async function createJavaBom(path, options) {
           }
           bomJsonObj = JSON.parse(
             readFileSync(abjson, {
-              encoding: "utf-8"
-            })
+              encoding: "utf-8",
+            }),
           );
           if (bomJsonObj) {
             if (
@@ -1399,7 +1399,7 @@ export async function createJavaBom(path, options) {
               dependencies = mergeDependencies(
                 dependencies,
                 bomJsonObj.dependencies,
-                parentComponent
+                parentComponent,
               );
             }
           }
@@ -1419,7 +1419,7 @@ export async function createJavaBom(path, options) {
           nsMapping: jarNSMapping,
           dependencies,
           parentComponent,
-          tools
+          tools,
         });
       } else if (bomJsonFiles.length) {
         const bomNSData = {};
@@ -1434,7 +1434,7 @@ export async function createJavaBom(path, options) {
     const gradleFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "build.gradle*",
-      options
+      options,
     );
     const allProjects = [];
     const allProjectsAddedPurls = [];
@@ -1452,7 +1452,7 @@ export async function createJavaBom(path, options) {
         parentComponent = {
           name: rootProject,
           type: "application",
-          ...retMap.metadata
+          ...retMap.metadata,
         };
         const parentPurl = new PackageURL(
           "maven",
@@ -1460,7 +1460,7 @@ export async function createJavaBom(path, options) {
           parentComponent.name,
           parentComponent.version,
           { type: "jar" },
-          null
+          null,
         ).toString();
         parentComponent["purl"] = parentPurl;
         parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
@@ -1476,7 +1476,7 @@ export async function createJavaBom(path, options) {
               name: rspName,
               type: "application",
               qualifiers: { type: "jar" },
-              ...retMap.metadata
+              ...retMap.metadata,
             };
             const rootSubProjectPurl = new PackageURL(
               "maven",
@@ -1488,7 +1488,7 @@ export async function createJavaBom(path, options) {
                 ? retMap.metadata.version
                 : parentComponent.version,
               rootSubProjectObj.qualifiers,
-              null
+              null,
             ).toString();
             rootSubProjectObj["purl"] = rootSubProjectPurl;
             rootSubProjectObj["bom-ref"] =
@@ -1508,7 +1508,7 @@ export async function createJavaBom(path, options) {
         });
         dependencies.push({
           ref: parentComponent["bom-ref"],
-          dependsOn: rootDependsOn
+          dependsOn: rootDependsOn,
         });
       }
     }
@@ -1529,7 +1529,7 @@ export async function createJavaBom(path, options) {
         let gradleDepArgs = [
           sp.purl === parentComponent.purl
             ? depTaskWithArgs[0]
-            : `:${sp.name}:${depTaskWithArgs[0]}`
+            : `:${sp.name}:${depTaskWithArgs[0]}`,
         ];
         gradleDepArgs = gradleDepArgs
           .concat(depTaskWithArgs.slice(1))
@@ -1549,13 +1549,13 @@ export async function createJavaBom(path, options) {
           gradleCmd,
           gradleDepArgs.join(" "),
           "in",
-          path
+          path,
         );
         const sresult = spawnSync(gradleCmd, gradleDepArgs, {
           cwd: path,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER
+          maxBuffer: MAX_BUFFER,
         });
         if (sresult.status !== 0 || sresult.error) {
           if (options.failOnError || DEBUG_MODE) {
@@ -1572,14 +1572,14 @@ export async function createJavaBom(path, options) {
             sp.name,
             sp.version && sp.version.length && sp.version !== "latest"
               ? sp.version
-              : parentComponent.version
+              : parentComponent.version,
           );
           const dlist = parsedList.pkgList;
           if (parsedList.dependenciesList && parsedList.dependenciesList) {
             dependencies = mergeDependencies(
               dependencies,
               parsedList.dependenciesList,
-              parentComponent
+              parentComponent,
             );
           }
           if (dlist && dlist.length) {
@@ -1588,7 +1588,7 @@ export async function createJavaBom(path, options) {
                 "Found",
                 dlist.length,
                 "packages in gradle project",
-                sp.name
+                sp.name,
               );
             }
             pkgList = pkgList.concat(dlist);
@@ -1599,18 +1599,18 @@ export async function createJavaBom(path, options) {
         if (parentComponent.components && parentComponent.components.length) {
           for (const subProj of parentComponent.components) {
             pkgList = pkgList.filter(
-              (pkg) => pkg["bom-ref"] !== subProj["bom-ref"]
+              (pkg) => pkg["bom-ref"] !== subProj["bom-ref"],
             );
           }
         }
         console.log(
           "Obtained",
           pkgList.length,
-          "from this gradle project. De-duping this list ..."
+          "from this gradle project. De-duping this list ...",
         );
       } else {
         console.log(
-          "No packages found. Set the environment variable 'CDXGEN_DEBUG_MODE=debug' to troubleshoot any gradle related errors."
+          "No packages found. Set the environment variable 'CDXGEN_DEBUG_MODE=debug' to troubleshoot any gradle related errors.",
         );
         options.failOnError && process.exit(1);
       }
@@ -1627,7 +1627,7 @@ export async function createJavaBom(path, options) {
         filename: gradleFiles.join(", "),
         nsMapping: jarNSMapping,
         dependencies,
-        parentComponent
+        parentComponent,
       });
     }
 
@@ -1653,21 +1653,21 @@ export async function createJavaBom(path, options) {
           "build",
           bazelTarget,
           "in",
-          basePath
+          basePath,
         );
         let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER
+          maxBuffer: MAX_BUFFER,
         });
         if (result.status !== 0 || result.error) {
           if (result.stderr) {
             console.error(result.stdout, result.stderr);
           }
           console.log(
-            "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen"
+            "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen",
           );
           options.failOnError && process.exit(1);
         } else {
@@ -1686,13 +1686,13 @@ export async function createJavaBom(path, options) {
             "Executing",
             BAZEL_CMD,
             `${query.join(" ")} in`,
-            basePath
+            basePath,
           );
           result = spawnSync(BAZEL_CMD, query, {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER
+            maxBuffer: MAX_BUFFER,
           });
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
@@ -1706,10 +1706,10 @@ export async function createJavaBom(path, options) {
               pkgList = pkgList.concat(dlist);
             } else {
               console.log(
-                "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved."
+                "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved.",
               );
               console.log(
-                "If your project requires a different query, please file a bug at cyclonedx/cdxgen repo!"
+                "If your project requires a different query, please file a bug at cyclonedx/cdxgen repo!",
               );
               options.failOnError && process.exit(1);
             }
@@ -1724,7 +1724,7 @@ export async function createJavaBom(path, options) {
             filename: "BUILD",
             nsMapping: {},
             dependencies,
-            parentComponent
+            parentComponent,
           });
         }
       }
@@ -1741,7 +1741,7 @@ export async function createJavaBom(path, options) {
       path,
       (options.multiProject ? "**/" : "") +
         "project/{build.properties,*.sbt,*.scala}",
-      options
+      options,
     );
 
     let sbtProjects = [];
@@ -1757,7 +1757,7 @@ export async function createJavaBom(path, options) {
       sbtProjectFiles = getAllFiles(
         path,
         (options.multiProject ? "**/" : "") + "*.sbt",
-        options
+        options,
       );
       for (const i in sbtProjectFiles) {
         const baseDir = dirname(sbtProjectFiles[i]);
@@ -1766,12 +1766,12 @@ export async function createJavaBom(path, options) {
     }
     // eliminate duplicates and ignore project directories
     sbtProjects = [...new Set(sbtProjects)].filter(
-      (p) => !p.endsWith(sep + "project") && !p.includes("target" + sep)
+      (p) => !p.endsWith(sep + "project") && !p.includes("target" + sep),
     );
     const sbtLockFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "build.sbt.lock",
-      options
+      options,
     );
 
     if (sbtProjects && sbtProjects.length) {
@@ -1834,17 +1834,17 @@ export async function createJavaBom(path, options) {
           if (standalonePluginFile) {
             sbtArgs = [
               `-addPluginSbtFile=${tempSbtPlugins}`,
-              `"dependencyList::toFile ${dlFile} --force"`
+              `"dependencyList::toFile ${dlFile} --force"`,
             ];
           } else {
             // write to the existing plugins file
             if (useSlashSyntax) {
               sbtArgs = [
-                `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`
+                `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`,
               ];
             } else {
               sbtArgs = [
-                `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`
+                `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`,
               ];
             }
             pluginFile = addPlugin(basePath, sbtPluginDefinition);
@@ -1856,7 +1856,7 @@ export async function createJavaBom(path, options) {
             "in",
             basePath,
             "using plugins",
-            tempSbtgDir
+            tempSbtgDir,
           );
           // Note that the command has to be invoked with `shell: true` to properly execut sbt
           const result = spawnSync(SBT_CMD, sbtArgs, {
@@ -1864,18 +1864,18 @@ export async function createJavaBom(path, options) {
             shell: true,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER
+            maxBuffer: MAX_BUFFER,
           });
           if (result.status !== 0 || result.error) {
             console.error(result.stdout, result.stderr);
             console.log(
-              `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`
+              `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`,
             );
             console.log(
-              `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`
+              `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`,
             );
             console.log(
-              "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock"
+              "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock",
             );
             options.failOnError && process.exit(1);
           }
@@ -1896,7 +1896,7 @@ export async function createJavaBom(path, options) {
               dependencies = mergeDependencies(
                 dependencies,
                 retMap.dependenciesList,
-                parentComponent
+                parentComponent,
               );
             }
           } else {
@@ -1927,7 +1927,7 @@ export async function createJavaBom(path, options) {
         filename: sbtProjects.join(", "),
         nsMapping: jarNSMapping,
         dependencies,
-        parentComponent
+        parentComponent,
       });
     }
   }
@@ -1961,7 +1961,7 @@ export async function createNodejsBom(path, options) {
         allImports: {},
         src: path,
         filename: "package.json",
-        parentComponent
+        parentComponent,
       });
     }
   }
@@ -1973,7 +1973,7 @@ export async function createNodejsBom(path, options) {
   ) {
     if (DEBUG_MODE) {
       console.log(
-        `Performing babel-based package usage analysis with source code at ${path}`
+        `Performing babel-based package usage analysis with source code at ${path}`,
       );
     }
     const retData = await findJSImportsExports(path, options.deep);
@@ -1983,17 +1983,17 @@ export async function createNodejsBom(path, options) {
   const yarnLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "yarn.lock",
-    options
+    options,
   );
   const shrinkwrapFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "npm-shrinkwrap.json",
-    options
+    options,
   );
   let pkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "package-lock.json",
-    options
+    options,
   );
   if (shrinkwrapFiles.length) {
     pkgLockFiles = pkgLockFiles.concat(shrinkwrapFiles);
@@ -2001,17 +2001,17 @@ export async function createNodejsBom(path, options) {
   const pnpmLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pnpm-lock.yaml",
-    options
+    options,
   );
   const minJsFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*min.js",
-    options
+    options,
   );
   const bowerFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "bower.json",
-    options
+    options,
   );
   // Parse min js files
   if (minJsFiles && minJsFiles.length) {
@@ -2050,7 +2050,7 @@ export async function createNodejsBom(path, options) {
             options.projectName || parentComponent.name,
             options.projectVersion || parentComponent.version,
             null,
-            null
+            null,
           ).toString();
           parentComponent["bom-ref"] = decodeURIComponent(ppurl);
           parentComponent["purl"] = ppurl;
@@ -2062,7 +2062,7 @@ export async function createNodejsBom(path, options) {
         parentComponent = {
           group: "",
           name: dirName,
-          type: "application"
+          type: "application",
         };
         ppurl = new PackageURL(
           "npm",
@@ -2070,7 +2070,7 @@ export async function createNodejsBom(path, options) {
           options.projectName || parentComponent.name,
           options.projectVersion || parentComponent.version,
           null,
-          null
+          null,
         ).toString();
         parentComponent["bom-ref"] = decodeURIComponent(ppurl);
         parentComponent["purl"] = ppurl;
@@ -2085,7 +2085,7 @@ export async function createNodejsBom(path, options) {
         dependencies = mergeDependencies(
           dependencies,
           parsedList.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       }
     }
@@ -2113,7 +2113,7 @@ export async function createNodejsBom(path, options) {
         dependencies = mergeDependencies(
           dependencies,
           parsedList.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       }
     }
@@ -2129,8 +2129,8 @@ export async function createNodejsBom(path, options) {
         ["install", "--no-link", "--bypass-policy"],
         {
           cwd: path,
-          encoding: "utf-8"
-        }
+          encoding: "utf-8",
+        },
       );
       if (result.status == 1 || result.error) {
         console.error(result.stdout, result.stderr);
@@ -2144,7 +2144,7 @@ export async function createNodejsBom(path, options) {
       "build-tasks",
       ".rush",
       "temp",
-      "shrinkwrap-deps.json"
+      "shrinkwrap-deps.json",
     );
     const pnpmLock = join(path, "common", "config", "rush", "pnpm-lock.yaml");
     if (existsSync(swFile)) {
@@ -2154,13 +2154,13 @@ export async function createNodejsBom(path, options) {
           pkgList,
           allImports,
           allExports,
-          options.deep
+          options.deep,
         );
       }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         src: path,
-        filename: "shrinkwrap-deps.json"
+        filename: "shrinkwrap-deps.json",
       });
     } else if (existsSync(pnpmLock)) {
       let pkgList = await parsePnpmLock(pnpmLock);
@@ -2169,14 +2169,14 @@ export async function createNodejsBom(path, options) {
           pkgList,
           allImports,
           allExports,
-          options.deep
+          options.deep,
         );
       }
       return buildBomNSData(options, pkgList, "npm", {
         allImports,
         allExports,
         src: path,
-        filename: "pnpm-lock.yaml"
+        filename: "pnpm-lock.yaml",
       });
     } else {
       console.log(
@@ -2184,7 +2184,7 @@ export async function createNodejsBom(path, options) {
         swFile,
         " nor pnpm lockfile",
         pnpmLock,
-        "was found!"
+        "was found!",
       );
       options.failOnError && process.exit(1);
     }
@@ -2209,7 +2209,7 @@ export async function createNodejsBom(path, options) {
             options.projectName || tmpParentComponent.name,
             options.projectVersion || tmpParentComponent.version,
             null,
-            null
+            null,
           ).toString();
           tmpParentComponent["bom-ref"] = decodeURIComponent(ppurl);
           tmpParentComponent["purl"] = ppurl;
@@ -2226,7 +2226,7 @@ export async function createNodejsBom(path, options) {
         const tmpParentComponent = {
           group: options.projectGroup || "",
           name: options.projectName || dirName,
-          type: "application"
+          type: "application",
         };
         ppurl = new PackageURL(
           "npm",
@@ -2234,7 +2234,7 @@ export async function createNodejsBom(path, options) {
           tmpParentComponent.name,
           options.projectVersion || tmpParentComponent.version,
           null,
-          null
+          null,
         ).toString();
         tmpParentComponent["bom-ref"] = decodeURIComponent(ppurl);
         tmpParentComponent["purl"] = ppurl;
@@ -2268,17 +2268,17 @@ export async function createNodejsBom(path, options) {
             options.projectName || parentComponent.name,
             options.projectVersion || parentComponent.version,
             null,
-            null
+            null,
           ).toString();
           parsedList.dependenciesList.push({
             ref: decodeURIComponent(ppurl),
-            dependsOn: rdeplist
+            dependsOn: rdeplist,
           });
         }
         dependencies = mergeDependencies(
           dependencies,
           parsedList.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       }
     }
@@ -2289,7 +2289,7 @@ export async function createNodejsBom(path, options) {
     const pkgJsonFiles = getAllFiles(
       join(path, "node_modules"),
       "**/package.json",
-      options
+      options,
     );
     manifestFiles = manifestFiles.concat(pkgJsonFiles);
     for (const pkgjf of pkgJsonFiles) {
@@ -2310,7 +2310,7 @@ export async function createNodejsBom(path, options) {
             options.projectName || parentComponent.name,
             options.projectVersion || parentComponent.version,
             null,
-            null
+            null,
           ).toString();
           parentComponent["bom-ref"] = decodeURIComponent(ppurl);
           parentComponent["purl"] = ppurl;
@@ -2329,14 +2329,14 @@ export async function createNodejsBom(path, options) {
       pkgList,
       allImports,
       allExports,
-      options.deep
+      options.deep,
     );
   }
   return buildBomNSData(options, pkgList, "npm", {
     src: path,
     filename: manifestFiles.join(", "),
     dependencies,
-    parentComponent
+    parentComponent,
   });
 }
 
@@ -2357,12 +2357,12 @@ export async function createPythonBom(path, options) {
   let poetryFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "poetry.lock",
-    options
+    options,
   );
   const pdmLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pdm.lock",
-    options
+    options,
   );
   if (pdmLockFiles && pdmLockFiles.length) {
     poetryFiles = poetryFiles.concat(pdmLockFiles);
@@ -2370,30 +2370,30 @@ export async function createPythonBom(path, options) {
   let reqFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt",
-    options
+    options,
   );
   reqFiles = reqFiles.filter(
-    (f) => !f.includes(join("mercurial", "helptext", "internals"))
+    (f) => !f.includes(join("mercurial", "helptext", "internals")),
   );
   const reqDirFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "requirements/*.txt",
-    options
+    options,
   );
   const metadataFiles = getAllFiles(
     path,
     (options.multiProject ? "**/site-packages/**/" : "") + "METADATA",
-    options
+    options,
   );
   const whlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.whl",
-    options
+    options,
   );
   const eggInfoFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.egg-info",
-    options
+    options,
   );
   const setupPy = join(path, "setup.py");
   const pyProjectFile = join(path, "pyproject.toml");
@@ -2411,7 +2411,7 @@ export async function createPythonBom(path, options) {
         parentComponent.name,
         parentComponent.version || "latest",
         null,
-        null
+        null,
       ).toString();
       parentComponent["bom-ref"] = decodeURIComponent(ppurl);
       parentComponent["purl"] = ppurl;
@@ -2436,7 +2436,7 @@ export async function createPythonBom(path, options) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       }
       // Retrieve the tree using virtualenv in deep mode and as a fallback
@@ -2450,7 +2450,7 @@ export async function createPythonBom(path, options) {
           dependencies = mergeDependencies(
             dependencies,
             retMap.dependenciesList,
-            parentComponent
+            parentComponent,
           );
         }
       }
@@ -2461,7 +2461,7 @@ export async function createPythonBom(path, options) {
       }
       const pdependencies = {
         ref: parentComponent["bom-ref"],
-        dependsOn: parentDependsOn
+        dependsOn: parentDependsOn,
       };
       dependencies.splice(0, 0, pdependencies);
     }
@@ -2469,13 +2469,13 @@ export async function createPythonBom(path, options) {
       src: path,
       filename: poetryFiles.join(", "),
       dependencies,
-      parentComponent
+      parentComponent,
     });
   } else if (metadataFiles && metadataFiles.length) {
     // dist-info directories
     for (const mf of metadataFiles) {
       const mData = readFileSync(mf, {
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       const dlist = parseBdistMetadata(mData);
       if (dlist && dlist.length) {
@@ -2523,7 +2523,7 @@ export async function createPythonBom(path, options) {
       if (reqFiles && reqFiles.length) {
         if (options.installDeps && DEBUG_MODE) {
           console.log(
-            "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies in case of any build issues."
+            "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies in case of any build issues.",
           );
         }
         for (const f of reqFiles) {
@@ -2543,7 +2543,7 @@ export async function createPythonBom(path, options) {
               dependencies = mergeDependencies(
                 dependencies,
                 pkgMap.dependenciesList,
-                parentComponent
+                parentComponent,
               );
             }
           }
@@ -2551,7 +2551,7 @@ export async function createPythonBom(path, options) {
           if (!pkgList.length || !frozen) {
             if (DEBUG_MODE) {
               console.log(
-                `Manually parsing ${f}. The result would include only direct dependencies.`
+                `Manually parsing ${f}. The result would include only direct dependencies.`,
               );
             }
             reqData = readFileSync(f, { encoding: "utf-8" });
@@ -2604,7 +2604,7 @@ export async function createPythonBom(path, options) {
             apkg.properties = apkg.properties || [];
             apkg.properties.push({
               name: "ImportedModules",
-              value: iSymbolsMap[apkg.name]
+              value: iSymbolsMap[apkg.name],
             });
           }
         }
@@ -2627,7 +2627,7 @@ export async function createPythonBom(path, options) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       }
       if (retMap.allImports) {
@@ -2651,7 +2651,7 @@ export async function createPythonBom(path, options) {
         dependencies = mergeDependencies(
           dependencies,
           pkgMap.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       }
       let parentPresent = false;
@@ -2665,8 +2665,8 @@ export async function createPythonBom(path, options) {
         const pdependencies = {
           ref: parentComponent["bom-ref"],
           dependsOn: Array.from(parentDependsOn).filter(
-            (r) => parentComponent && r !== parentComponent["bom-ref"]
-          )
+            (r) => parentComponent && r !== parentComponent["bom-ref"],
+          ),
         };
         dependencies.splice(0, 0, pdependencies);
       }
@@ -2693,7 +2693,7 @@ export async function createPythonBom(path, options) {
     src: path,
     filename: metadataFilename,
     dependencies,
-    parentComponent
+    parentComponent,
   });
 }
 
@@ -2723,7 +2723,7 @@ export async function createGoBom(path, options) {
   const gosumFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.sum",
-    options
+    options,
   );
 
   // If USE_GOSUM is true|1, generate BOM components only using go.sum.
@@ -2732,7 +2732,7 @@ export async function createGoBom(path, options) {
   if (useGosum && gosumFiles.length) {
     console.warn(
       "Using go.sum to generate BOMs for go projects may return an inaccurate representation of transitive dependencies.\nSee: https://github.com/golang/go/wiki/Modules#is-gosum-a-lock-file-why-does-gosum-include-information-for-module-versions-i-am-no-longer-using\n",
-      "Set USE_GOSUM=false to generate BOMs using go.mod as the dependency source of truth."
+      "Set USE_GOSUM=false to generate BOMs using go.mod as the dependency source of truth.",
     );
     for (const f of gosumFiles) {
       if (DEBUG_MODE) {
@@ -2748,7 +2748,7 @@ export async function createGoBom(path, options) {
     let circuitBreak = false;
     if (DEBUG_MODE) {
       console.log(
-        `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`
+        `Attempting to detect required packages using "go mod why" command for ${pkgList.length} packages`,
       );
     }
     // Using go mod why detect required packages
@@ -2778,8 +2778,8 @@ export async function createGoBom(path, options) {
           cwd: path,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER
-        }
+          maxBuffer: MAX_BUFFER,
+        },
       );
       if (mresult.status !== 0 || mresult.error) {
         if (DEBUG_MODE) {
@@ -2813,7 +2813,7 @@ export async function createGoBom(path, options) {
       src: path,
       dependencies,
       parentComponent,
-      filename: gosumFiles.join(", ")
+      filename: gosumFiles.join(", "),
     });
   }
 
@@ -2838,14 +2838,14 @@ export async function createGoBom(path, options) {
   const gopkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gopkg.lock",
-    options
+    options,
   );
 
   // Read in go.mod files and parse BOM components with checksums from gosumData
   const gomodFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.mod",
-    options
+    options,
   );
   if (gomodFiles.length) {
     let shouldManuallyParse = false;
@@ -2868,14 +2868,14 @@ export async function createGoBom(path, options) {
             "-deps",
             "-f",
             "'{{with .Module}}{{.Path}} {{.Version}} {{.Indirect}} {{.GoMod}} {{.GoVersion}} {{.Main}}{{end}}'",
-            "./..."
+            "./...",
           ],
           {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER
-          }
+            maxBuffer: MAX_BUFFER,
+          },
         );
         if (DEBUG_MODE) {
           console.log("Executing go mod graph in", basePath);
@@ -2910,7 +2910,7 @@ export async function createGoBom(path, options) {
             cwd: basePath,
             encoding: "utf-8",
             timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER
+            maxBuffer: MAX_BUFFER,
           });
           // Check if got a mod graph successfully
           if (result.status !== 0 || result.error) {
@@ -2929,7 +2929,7 @@ export async function createGoBom(path, options) {
               f,
               gosumMap,
               pkgList,
-              parentComponent
+              parentComponent,
             );
             if (retMap.pkgList && retMap.pkgList.length) {
               pkgList = pkgList.concat(retMap.pkgList);
@@ -2939,14 +2939,14 @@ export async function createGoBom(path, options) {
               dependencies = mergeDependencies(
                 dependencies,
                 retMap.dependenciesList,
-                parentComponent
+                parentComponent,
               );
             }
           }
         } else {
           shouldManuallyParse = true;
           console.error(
-            "go unexpectedly didn't return any output. Check if the correct version of golang is installed."
+            "go unexpectedly didn't return any output. Check if the correct version of golang is installed.",
           );
           options.failOnError && process.exit(1);
         }
@@ -2957,14 +2957,14 @@ export async function createGoBom(path, options) {
           dependencies,
           parentComponent,
           src: path,
-          filename: gomodFiles.join(", ")
+          filename: gomodFiles.join(", "),
         });
       }
     }
     // Parse the gomod files manually. The resultant BOM would be incomplete
     if (!["docker", "oci", "container", "os"].includes(options.projectType)) {
       console.log(
-        "Manually parsing go.mod files. The resultant BOM would be incomplete."
+        "Manually parsing go.mod files. The resultant BOM would be incomplete.",
       );
     }
     for (const f of gomodFiles) {
@@ -2981,7 +2981,7 @@ export async function createGoBom(path, options) {
       src: path,
       dependencies,
       parentComponent,
-      filename: gomodFiles.join(", ")
+      filename: gomodFiles.join(", "),
     });
   } else if (gopkgLockFiles.length) {
     for (const f of gopkgLockFiles) {
@@ -2989,7 +2989,7 @@ export async function createGoBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const gopkgData = readFileSync(f, {
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       const dlist = await parseGopkgData(gopkgData);
       if (dlist && dlist.length) {
@@ -3000,7 +3000,7 @@ export async function createGoBom(path, options) {
       src: path,
       dependencies,
       parentComponent,
-      filename: gopkgLockFiles.join(", ")
+      filename: gopkgLockFiles.join(", "),
     });
   }
   return {};
@@ -3037,18 +3037,18 @@ export async function createRustBom(path, options) {
     return buildBomNSData(options, pkgList, "cargo", {
       allImports,
       src: path,
-      filename: path
+      filename: path,
     });
   }
   let cargoLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock",
-    options
+    options,
   );
   const cargoFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.toml",
-    options
+    options,
   );
   // This function assumes that the given path is prioritized, i.e that the
   // Cargo.toml-file directly inside the directory `path` (or the one in the
@@ -3074,7 +3074,7 @@ export async function createRustBom(path, options) {
             parentComponent.components = [];
             if (DEBUG_MODE) {
               console.log(
-                `Assigning parent component "${parentComponent.name}" from ${f}`
+                `Assigning parent component "${parentComponent.name}" from ${f}`,
               );
             }
           } else {
@@ -3088,7 +3088,7 @@ export async function createRustBom(path, options) {
   cargoLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock",
-    options
+    options,
   );
   let dependencyTree = [];
   if (cargoLockFiles.length) {
@@ -3110,7 +3110,7 @@ export async function createRustBom(path, options) {
         dependencyTree = mergeDependencies(
           dependencyTree,
           fileDependencylist,
-          parentComponent
+          parentComponent,
         );
       }
     }
@@ -3118,7 +3118,7 @@ export async function createRustBom(path, options) {
       src: path,
       filename: cargoLockFiles.join(", "),
       dependencies: dependencyTree,
-      parentComponent
+      parentComponent,
     });
   }
   return {};
@@ -3134,12 +3134,12 @@ export async function createDartBom(path, options) {
   const pubFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.lock",
-    options
+    options,
   );
   const pubSpecYamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.yaml",
-    options
+    options,
   );
   let pkgList = [];
   if (pubFiles.length) {
@@ -3155,7 +3155,7 @@ export async function createDartBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "pub", {
       src: path,
-      filename: pubFiles.join(", ")
+      filename: pubFiles.join(", "),
     });
   } else if (pubSpecYamlFiles.length) {
     for (const f of pubSpecYamlFiles) {
@@ -3170,7 +3170,7 @@ export async function createDartBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "pub", {
       src: path,
-      filename: pubSpecYamlFiles.join(", ")
+      filename: pubSpecYamlFiles.join(", "),
     });
   }
 
@@ -3190,18 +3190,18 @@ export function createCppBom(path, options) {
   const conanLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conan.lock",
-    options
+    options,
   );
   const conanFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conanfile.txt",
-    options
+    options,
   );
   let cmakeLikeFiles = [];
   const mesonBuildFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "meson.build",
-    options
+    options,
   );
   if (mesonBuildFiles && mesonBuildFiles.length) {
     cmakeLikeFiles = cmakeLikeFiles.concat(mesonBuildFiles);
@@ -3210,13 +3210,13 @@ export function createCppBom(path, options) {
     getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "CMakeLists.txt",
-      options
-    )
+      options,
+    ),
   );
   const cmakeFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.cmake",
-    options
+    options,
   );
   if (cmakeFiles && cmakeFiles.length) {
     cmakeLikeFiles = cmakeLikeFiles.concat(cmakeFiles);
@@ -3283,7 +3283,7 @@ export function createCppBom(path, options) {
           dependencies = mergeDependencies(
             dependencies,
             retMap.dependenciesList,
-            parentComponent
+            parentComponent,
           );
         } else {
           dependencies = retMap.dependenciesList;
@@ -3310,7 +3310,7 @@ export function createCppBom(path, options) {
         queryCategory,
         queryObj,
         results,
-        true
+        true,
       );
       if (dlist && dlist.length) {
         osPkgsList = osPkgsList.concat(dlist);
@@ -3328,7 +3328,7 @@ export function createCppBom(path, options) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       } else {
         dependencies = retMap.dependenciesList;
@@ -3353,7 +3353,7 @@ export function createCppBom(path, options) {
   return buildBomNSData(options, pkgList, "generic", {
     src: path,
     parentComponent,
-    dependencies
+    dependencies,
   });
 }
 
@@ -3367,12 +3367,12 @@ export function createClojureBom(path, options) {
   const ednFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "deps.edn",
-    options
+    options,
   );
   const leinFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "project.clj",
-    options
+    options,
   );
   let pkgList = [];
   if (leinFiles.length) {
@@ -3390,7 +3390,7 @@ export function createClojureBom(path, options) {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
-        maxBuffer: MAX_BUFFER
+        maxBuffer: MAX_BUFFER,
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
@@ -3398,7 +3398,7 @@ export function createClojureBom(path, options) {
           options.failOnError && process.exit(1);
         }
         console.log(
-          "Check if the correct version of lein is installed and available in PATH. Falling back to manual parsing."
+          "Check if the correct version of lein is installed and available in PATH. Falling back to manual parsing.",
         );
         if (DEBUG_MODE) {
           console.log(`Parsing ${f}`);
@@ -3424,7 +3424,7 @@ export function createClojureBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "clojars", {
       src: path,
-      filename: leinFiles.join(", ")
+      filename: leinFiles.join(", "),
     });
   } else if (ednFiles.length) {
     let CLJ_ARGS = ["-Stree"];
@@ -3438,7 +3438,7 @@ export function createClojureBom(path, options) {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
-        maxBuffer: MAX_BUFFER
+        maxBuffer: MAX_BUFFER,
       });
       if (result.status !== 0 || result.error) {
         if (result.stderr) {
@@ -3446,7 +3446,7 @@ export function createClojureBom(path, options) {
           options.failOnError && process.exit(1);
         }
         console.log(
-          "Check if the correct version of clojure cli is installed and available in PATH. Falling back to manual parsing."
+          "Check if the correct version of clojure cli is installed and available in PATH. Falling back to manual parsing.",
         );
         if (DEBUG_MODE) {
           console.log(`Parsing ${f}`);
@@ -3472,7 +3472,7 @@ export function createClojureBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "clojars", {
       src: path,
-      filename: ednFiles.join(", ")
+      filename: ednFiles.join(", "),
     });
   }
 
@@ -3489,7 +3489,7 @@ export function createHaskellBom(path, options) {
   const cabalFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "cabal.project.freeze",
-    options
+    options,
   );
   let pkgList = [];
   if (cabalFiles.length) {
@@ -3505,7 +3505,7 @@ export function createHaskellBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "hackage", {
       src: path,
-      filename: cabalFiles.join(", ")
+      filename: cabalFiles.join(", "),
     });
   }
   return {};
@@ -3521,7 +3521,7 @@ export function createElixirBom(path, options) {
   const mixFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "mix.lock",
-    options
+    options,
   );
   let pkgList = [];
   if (mixFiles.length) {
@@ -3537,7 +3537,7 @@ export function createElixirBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "hex", {
       src: path,
-      filename: mixFiles.join(", ")
+      filename: mixFiles.join(", "),
     });
   }
   return {};
@@ -3553,7 +3553,7 @@ export function createGitHubBom(path, options) {
   const ghactionFiles = getAllFiles(
     path,
     ".github/workflows/" + "*.yml",
-    options
+    options,
   );
   let pkgList = [];
   if (ghactionFiles.length) {
@@ -3569,7 +3569,7 @@ export function createGitHubBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "github", {
       src: path,
-      filename: ghactionFiles.join(", ")
+      filename: ghactionFiles.join(", "),
     });
   }
   return {};
@@ -3597,7 +3597,7 @@ export function createCloudBuildBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "cloudbuild", {
       src: path,
-      filename: cbFiles.join(", ")
+      filename: cbFiles.join(", "),
     });
   }
   return {};
@@ -3611,7 +3611,7 @@ export function createCloudBuildBom(path, options) {
  */
 export function createOSBom(path, options) {
   console.warn(
-    "About to generate OBOM for the current OS installation. This will take several minutes ..."
+    "About to generate OBOM for the current OS installation. This will take several minutes ...",
   );
   let pkgList = [];
   let bomData = {};
@@ -3623,14 +3623,14 @@ export function createOSBom(path, options) {
       queryCategory,
       queryObj,
       results,
-      false
+      false,
     );
     if (dlist && dlist.length) {
       if (!Object.keys(parentComponent).length) {
         parentComponent = dlist.splice(0, 1)[0];
       }
       pkgList = pkgList.concat(
-        dlist.sort((a, b) => a.name.localeCompare(b.name))
+        dlist.sort((a, b) => a.name.localeCompare(b.name)),
       );
     }
   } // for
@@ -3638,7 +3638,7 @@ export function createOSBom(path, options) {
     bomData = buildBomNSData(options, pkgList, "", {
       src: "",
       filename: "",
-      parentComponent
+      parentComponent,
     });
   }
   options.bomData = bomData;
@@ -3652,7 +3652,7 @@ export function createOSBom(path, options) {
   const exportData = {
     lastWorkingDir: undefined,
     allLayersDir: options.allLayersExplodedDir,
-    allLayersExplodedDir: options.allLayersExplodedDir
+    allLayersExplodedDir: options.allLayersExplodedDir,
   };
   const pkgPathList = [];
   if (options.deep) {
@@ -3672,7 +3672,7 @@ export async function createJenkinsBom(path, options) {
   const hpiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.hpi",
-    options
+    options,
   );
   const tempDir = mkdtempSync(join(tmpdir(), "hpi-deps-"));
   if (hpiFiles.length) {
@@ -3706,7 +3706,7 @@ export async function createJenkinsBom(path, options) {
   return buildBomNSData(options, pkgList, "maven", {
     src: path,
     filename: hpiFiles.join(", "),
-    nsMapping: {}
+    nsMapping: {},
   });
 }
 
@@ -3721,7 +3721,7 @@ export function createHelmBom(path, options) {
   const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yaml",
-    options
+    options,
   );
   if (yamlFiles.length) {
     for (const f of yamlFiles) {
@@ -3736,7 +3736,7 @@ export function createHelmBom(path, options) {
     }
     return buildBomNSData(options, pkgList, "helm", {
       src: path,
-      filename: yamlFiles.join(", ")
+      filename: yamlFiles.join(", "),
     });
   }
   return {};
@@ -3752,12 +3752,12 @@ export async function createSwiftBom(path, options) {
   const swiftFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift",
-    options
+    options,
   );
   const pkgResolvedFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package.resolved",
-    options
+    options,
   );
   let pkgList = [];
   let dependencies = [];
@@ -3794,8 +3794,8 @@ export async function createSwiftBom(path, options) {
           cwd: basePath,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER
-        }
+          maxBuffer: MAX_BUFFER,
+        },
       );
       if (result.status === 0 && result.stdout) {
         completedPath.push(basePath);
@@ -3810,13 +3810,13 @@ export async function createSwiftBom(path, options) {
           dependencies = mergeDependencies(
             dependencies,
             retData.dependenciesList,
-            parentComponent
+            parentComponent,
           );
         }
       } else {
         if (DEBUG_MODE) {
           console.log(
-            "Please install swift from https://www.swift.org/download/ or use the cdxgen container image"
+            "Please install swift from https://www.swift.org/download/ or use the cdxgen container image",
           );
         }
         console.error(result.stderr);
@@ -3831,7 +3831,7 @@ export async function createSwiftBom(path, options) {
     src: path,
     filename: swiftFiles.join(", "),
     parentComponent,
-    dependencies
+    dependencies,
   });
 }
 
@@ -3854,37 +3854,37 @@ export async function createContainerSpecLikeBom(path, options) {
   let dcFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yml",
-    options
+    options,
   );
   const dfFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*Dockerfile*",
-    options
+    options,
   );
   const bbPipelineFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "bitbucket-pipelines.yml",
-    options
+    options,
   );
   const cfFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*Containerfile*",
-    options
+    options,
   );
   const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.yaml",
-    options
+    options,
   );
   let oapiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "open*.json",
-    options
+    options,
   );
   const oapiYamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "open*.yaml",
-    options
+    options,
   );
   if (oapiYamlFiles && oapiYamlFiles.length) {
     oapiFiles = oapiFiles.concat(oapiYamlFiles);
@@ -3926,32 +3926,32 @@ export async function createContainerSpecLikeBom(path, options) {
           const commonProperties = [
             {
               name: "SrcFile",
-              value: f
-            }
+              value: f,
+            },
           ];
           if (img.image) {
             commonProperties.push({
               name: "oci:SrcImage",
-              value: img.image
+              value: img.image,
             });
           }
           if (img.service) {
             commonProperties.push({
               name: "ServiceName",
-              value: img.service
+              value: img.service,
             });
           }
 
           // img could have .service, .ociSpec or .image
           if (img.ociSpec) {
             console.log(
-              `NOTE: ${img.ociSpec} needs to built using docker or podman and referred with a name to get included in this SBOM.`
+              `NOTE: ${img.ociSpec} needs to built using docker or podman and referred with a name to get included in this SBOM.`,
             );
             ociSpecs.push({
               group: "",
               name: img.ociSpec,
               version: "latest",
-              properties: commonProperties
+              properties: commonProperties,
             });
           }
           if (img.service) {
@@ -3971,7 +3971,7 @@ export async function createContainerSpecLikeBom(path, options) {
                 name: name,
                 version: version,
                 group: "",
-                properties: commonProperties
+                properties: commonProperties,
               });
               doneservices.push(servbomRef);
             }
@@ -3981,7 +3981,7 @@ export async function createContainerSpecLikeBom(path, options) {
               if (DEBUG_MODE) {
                 console.log(
                   "Skipping image as it's already been processed",
-                  img.image
+                  img.image,
                 );
               }
 
@@ -4002,7 +4002,7 @@ export async function createContainerSpecLikeBom(path, options) {
                 (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
               qualifiers: {},
               properties: commonProperties,
-              type: "container"
+              type: "container",
             };
             if (imageObj.registry) {
               // Skip adding repository_url if the registry or repo contains variables.
@@ -4013,7 +4013,7 @@ export async function createContainerSpecLikeBom(path, options) {
                 if (DEBUG_MODE) {
                   console.warn(
                     "Skipping adding repository_url qualifier as it contains variables, which are not yet supported",
-                    img.image
+                    img.image,
                   );
                 }
               } else {
@@ -4031,7 +4031,7 @@ export async function createContainerSpecLikeBom(path, options) {
             const imageBomData = buildBomNSData(options, [pkg], "oci", {
               src: img.image,
               filename: f,
-              nsMapping: {}
+              nsMapping: {},
             });
             if (
               imageBomData &&
@@ -4073,8 +4073,8 @@ export async function createContainerSpecLikeBom(path, options) {
           se.properties = [
             {
               name: "SrcFile",
-              value: af
-            }
+              value: af,
+            },
           ];
         }
         services = services.concat(servlist);
@@ -4084,15 +4084,15 @@ export async function createContainerSpecLikeBom(path, options) {
   // Parse privado files
   if (privadoFiles.length) {
     console.log(
-      "Enriching your SBOM with information from privado.ai scan reports"
+      "Enriching your SBOM with information from privado.ai scan reports",
     );
     let rows = [["Classification", "Flow"]];
     const config = {
       header: {
         alignment: "center",
-        content: "Data Privacy Insights from privado.ai"
+        content: "Data Privacy Insights from privado.ai",
       },
-      columns: [{ width: 50 }, { width: 10 }]
+      columns: [{ width: 50 }, { width: 10 }],
     };
     for (const f of privadoFiles) {
       if (DEBUG_MODE) {
@@ -4116,9 +4116,9 @@ export async function createContainerSpecLikeBom(path, options) {
           console.log(
             table(rows, {
               columnDefault: {
-                width: 50
-              }
-            })
+                width: 50,
+              },
+            }),
           );
         }
       }
@@ -4128,7 +4128,7 @@ export async function createContainerSpecLikeBom(path, options) {
     // In case of universal, repeat to collect multiX Boms
     const mbomData = await createMultiXBom([path], {
       projectType: origProjectType,
-      multiProject: true
+      multiProject: true,
     });
     if (mbomData) {
       if (mbomData.components && mbomData.components.length) {
@@ -4143,7 +4143,7 @@ export async function createContainerSpecLikeBom(path, options) {
           dependencies = mergeDependencies(
             dependencies,
             mbomData.bomJson.dependencies,
-            parentComponent
+            parentComponent,
           );
         }
         if (mbomData.bomJson.services) {
@@ -4152,7 +4152,7 @@ export async function createContainerSpecLikeBom(path, options) {
       }
       if (DEBUG_MODE) {
         console.log(
-          `BOM includes ${components.length} unfiltered components ${dependencies.length} dependencies so far`
+          `BOM includes ${components.length} unfiltered components ${dependencies.length} dependencies so far`,
         );
       }
     }
@@ -4174,7 +4174,7 @@ export function createPHPBom(path, options) {
   const composerJsonFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.json",
-    options
+    options,
   );
   if (!options.exclude) {
     options.exclude = [];
@@ -4184,7 +4184,7 @@ export function createPHPBom(path, options) {
   let composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock",
-    options
+    options,
   );
   let pkgList = [];
   const composerJsonMode = composerJsonFiles.length;
@@ -4195,11 +4195,11 @@ export function createPHPBom(path, options) {
       console.log("About to invoke composer --version");
     }
     const versionResult = spawnSync("composer", ["--version"], {
-      encoding: "utf-8"
+      encoding: "utf-8",
     });
     if (versionResult.status !== 0 || versionResult.error) {
       console.error(
-        "No composer version found. Check if composer is installed and available in PATH."
+        "No composer version found. Check if composer is installed and available in PATH.",
       );
       if (DEBUG_MODE) {
         console.log(versionResult.error, versionResult.stderr);
@@ -4229,7 +4229,7 @@ export function createPHPBom(path, options) {
       }
       const result = spawnSync("composer", args, {
         cwd: basePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       if (result.status !== 0 || result.error) {
         console.error("Error running composer:");
@@ -4241,7 +4241,7 @@ export function createPHPBom(path, options) {
   composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock",
-    options
+    options,
   );
   if (composerLockFiles.length) {
     for (const f of composerLockFiles) {
@@ -4256,7 +4256,7 @@ export function createPHPBom(path, options) {
         existsSync(join(basePath, "composer.json"))
       ) {
         const composerData = JSON.parse(
-          readFileSync(join(basePath, "composer.json"), { encoding: "utf-8" })
+          readFileSync(join(basePath, "composer.json"), { encoding: "utf-8" }),
         );
         rootRequires = composerData.require;
         const pkgName = composerData.name;
@@ -4275,8 +4275,8 @@ export function createPHPBom(path, options) {
               parentComponent.name,
               parentComponent.version,
               null,
-              null
-            ).toString()
+              null,
+            ).toString(),
           );
         }
       }
@@ -4289,7 +4289,7 @@ export function createPHPBom(path, options) {
           parentComponent = createDefaultParentComponent(
             path,
             "composer",
-            options
+            options,
           );
         }
         // Complete the dependency tree by making parent component depend on the first level
@@ -4299,12 +4299,12 @@ export function createPHPBom(path, options) {
         }
         const pdependencies = {
           ref: parentComponent["bom-ref"],
-          dependsOn: parentDependsOn
+          dependsOn: parentDependsOn,
         };
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
-          parentComponent
+          parentComponent,
         );
         dependencies.splice(0, 0, pdependencies);
       }
@@ -4313,7 +4313,7 @@ export function createPHPBom(path, options) {
       src: path,
       filename: composerLockFiles.join(", "),
       dependencies,
-      parentComponent
+      parentComponent,
     });
   }
   return {};
@@ -4329,12 +4329,12 @@ export async function createRubyBom(path, options) {
   const gemFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile",
-    options
+    options,
   );
   let gemLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile*.lock",
-    options
+    options,
   );
   let pkgList = [];
   let dependencies = [];
@@ -4348,11 +4348,11 @@ export async function createRubyBom(path, options) {
       console.log("Executing 'bundle install' in", basePath);
       const result = spawnSync("bundle", ["install"], {
         cwd: basePath,
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       if (result.status !== 0 || result.error) {
         console.error(
-          "Bundle install has failed. Check if bundle is installed and available in PATH."
+          "Bundle install has failed. Check if bundle is installed and available in PATH.",
         );
         console.log(result.error, result.stderr);
         options.failOnError && process.exit(1);
@@ -4362,7 +4362,7 @@ export async function createRubyBom(path, options) {
   gemLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile*.lock",
-    options
+    options,
   );
   if (gemLockFiles.length) {
     for (const f of gemLockFiles) {
@@ -4379,7 +4379,7 @@ export async function createRubyBom(path, options) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
-          parentComponent
+          parentComponent,
         );
       }
       if (retMap.rootList && retMap.rootList.length) {
@@ -4393,17 +4393,17 @@ export async function createRubyBom(path, options) {
       [
         {
           ref: parentComponent["bom-ref"],
-          dependsOn: rootList
-        }
+          dependsOn: rootList,
+        },
       ],
-      parentComponent
+      parentComponent,
     );
   }
   return buildBomNSData(options, pkgList, "gem", {
     src: path,
     dependencies,
     parentComponent,
-    filename: gemLockFiles.join(", ")
+    filename: gemLockFiles.join(", "),
   });
 }
 
@@ -4424,50 +4424,58 @@ export async function createCsharpBom(path, options) {
   const slnFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.sln",
-    options
+    options,
   );
   let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
-    options
+    options,
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.vbproj", options)
+    getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "*.vbproj",
+      options,
+    ),
   );
   csProjFiles = csProjFiles.concat(
     getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "*.vcxproj",
-      options
-    )
+      options,
+    ),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.fsproj", options)
+    getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "*.fsproj",
+      options,
+    ),
   );
   const pkgConfigFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "packages.config",
-    options
+    options,
   );
   let projAssetsFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "project.assets.json",
-    options
+    options,
   );
   const pkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "packages.lock.json",
-    options
+    options,
   );
   const paketLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "paket.lock",
-    options
+    options,
   );
   const nupkgFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.nupkg",
-    options
+    options,
   );
   // Support for automatic restore
   if (
@@ -4487,15 +4495,15 @@ export async function createCsharpBom(path, options) {
         ["restore", "--force", "--ignore-failed-sources", f],
         {
           cwd: path,
-          encoding: "utf-8"
-        }
+          encoding: "utf-8",
+        },
       );
       if (DEBUG_MODE && (result.status !== 0 || result.error)) {
         console.error(
-          "Restore has failed. Check if dotnet is installed and available in PATH."
+          "Restore has failed. Check if dotnet is installed and available in PATH.",
         );
         console.log(
-          "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen."
+          "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
         );
         console.log(result.stderr);
         options.failOnError && process.exit(1);
@@ -4505,7 +4513,7 @@ export async function createCsharpBom(path, options) {
     projAssetsFiles = getAllFiles(
       path,
       (options.multiProject ? "**/" : "") + "project.assets.json",
-      options
+      options,
     );
   }
   let pkgList = [];
@@ -4543,19 +4551,19 @@ export async function createCsharpBom(path, options) {
     // This usually happens when restore was performed with an incorrect version of the SDK.
     if (!pkgList.length || dependencies.length < 2) {
       console.log(
-        "Unable to obtain the correct dependency tree from the project.assets.json files. Ensure the correct version of the dotnet SDK was installed and used."
+        "Unable to obtain the correct dependency tree from the project.assets.json files. Ensure the correct version of the dotnet SDK was installed and used.",
       );
       console.log(
-        "1. Create a global.json file in the project directory to specify the required version of the dotnet SDK."
+        "1. Create a global.json file in the project directory to specify the required version of the dotnet SDK.",
       );
       console.log(
-        "2. Use the environment variable `DOTNET_ROLL_FORWARD` to roll forward to a closest available SDK such as .Net core or dotnet 6."
+        "2. Use the environment variable `DOTNET_ROLL_FORWARD` to roll forward to a closest available SDK such as .Net core or dotnet 6.",
       );
       console.log(
-        "3. If the project uses the legacy .Net Framework 4.6/4.7, it might require Windows operating system."
+        "3. If the project uses the legacy .Net Framework 4.6/4.7, it might require Windows operating system.",
       );
       console.log(
-        "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet:v10` container image, which bundles a range of dotnet SDKs."
+        "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet:v10` container image, which bundles a range of dotnet SDKs.",
       );
       options.failOnError && process.exit(1);
     }
@@ -4589,7 +4597,7 @@ export async function createCsharpBom(path, options) {
     if (parentDependsOn.size) {
       dependencies.splice(0, 0, {
         ref: parentComponent["bom-ref"],
-        dependsOn: Array.from(parentDependsOn)
+        dependsOn: Array.from(parentDependsOn),
       });
     }
   } else if (pkgConfigFiles.length) {
@@ -4648,7 +4656,7 @@ export async function createCsharpBom(path, options) {
     }
     if (pkgList.length) {
       console.log(
-        `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`
+        `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`,
       );
       options.failOnError && process.exit(1);
     }
@@ -4658,14 +4666,14 @@ export async function createCsharpBom(path, options) {
     // Perform deep analysis using dosai
     if (options.deep) {
       const slicesFile = resolve(
-        options.depsSlicesFile || join(tmpdir(), "dosai.json")
+        options.depsSlicesFile || join(tmpdir(), "dosai.json"),
       );
       // Create the slices file if it doesn't exist
       if (!existsSync(slicesFile)) {
         const sliceResult = getDotnetSlices(resolve(path), resolve(slicesFile));
         if (!sliceResult && DEBUG_MODE) {
           console.log(
-            "Slicing with dosai was unsuccessful. Check the errors reported in the logs above."
+            "Slicing with dosai was unsuccessful. Check the errors reported in the logs above.",
           );
         }
       }
@@ -4678,7 +4686,7 @@ export async function createCsharpBom(path, options) {
       dependencies = mergeDependencies(
         dependencies,
         retMap.dependencies,
-        parentComponent
+        parentComponent,
       );
     }
     pkgList = trimComponents(pkgList);
@@ -4687,7 +4695,7 @@ export async function createCsharpBom(path, options) {
     src: path,
     filename: manifestFiles.join(", "),
     dependencies,
-    parentComponent
+    parentComponent,
   });
 }
 
@@ -4703,7 +4711,7 @@ export async function createCryptoCertsBom(path, options) {
     path,
     (options.multiProject ? "**/" : "") +
       "*.{p12,jks,jceks,bks,keystore,key,pem,cer,gpg,pub}",
-    options
+    options,
   );
   for (const f of certFiles) {
     const name = basename(f);
@@ -4717,28 +4725,28 @@ export async function createCryptoCertsBom(path, options) {
         assetType: "certificate",
         algorithmProperties: {
           executionEnvironment: "unknown",
-          implementationPlatform: "unknown"
-        }
+          implementationPlatform: "unknown",
+        },
       },
-      properties: [{ name: "SrcFile", value: f }]
+      properties: [{ name: "SrcFile", value: f }],
     };
     pkgList.push(apkg);
   }
   return {
     bomJson: {
-      components: pkgList
-    }
+      components: pkgList,
+    },
   };
 }
 
 export function mergeDependencies(
   dependencies,
   newDependencies,
-  parentComponent = {}
+  parentComponent = {},
 ) {
   if (!parentComponent && DEBUG_MODE) {
     console.log(
-      "Unable to determine parent component. Dependencies will be flattened."
+      "Unable to determine parent component. Dependencies will be flattened.",
     );
   }
   let providesFound = false;
@@ -4784,12 +4792,12 @@ export function mergeDependencies(
       retlist.push({
         ref: akey,
         dependsOn: Array.from(deps_map[akey]).sort(),
-        provides: Array.from(provides_map[akey]).sort()
+        provides: Array.from(provides_map[akey]).sort(),
       });
     } else {
       retlist.push({
         ref: akey,
-        dependsOn: Array.from(deps_map[akey]).sort()
+        dependsOn: Array.from(deps_map[akey]).sort(),
       });
     }
   }
@@ -4829,7 +4837,7 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
   components = trimComponents(components);
   if (DEBUG_MODE) {
     console.log(
-      `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`
+      `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`,
     );
   }
   const serialNum = "urn:uuid:" + uuidv4();
@@ -4845,8 +4853,8 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
       metadata: addMetadata(parentComponent, options, {}),
       components,
       services: options.services || [],
-      dependencies
-    }
+      dependencies,
+    },
   };
 }
 
@@ -4868,11 +4876,11 @@ export async function createMultiXBom(pathList, options) {
     options.allLayersExplodedDir
   ) {
     const { osPackages, dependenciesList, allTypes } = getOSPackages(
-      options.allLayersExplodedDir
+      options.allLayersExplodedDir,
     );
     if (DEBUG_MODE) {
       console.log(
-        `Found ${osPackages.length} OS packages at ${options.allLayersExplodedDir}`
+        `Found ${osPackages.length} OS packages at ${options.allLayersExplodedDir}`,
       );
     }
     if (allTypes && allTypes.length) {
@@ -4887,7 +4895,7 @@ export async function createMultiXBom(pathList, options) {
       const parentDependsOn = new Set(osPackages.map((p) => p["bom-ref"]));
       dependencies.splice(0, 0, {
         ref: parentComponent["bom-ref"],
-        dependsOn: Array.from(parentDependsOn).sort()
+        dependsOn: Array.from(parentDependsOn).sort(),
       });
     }
   }
@@ -4913,7 +4921,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} npm packages at ${path}`
+          `Found ${bomData.bomJson.components.length} npm packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -4930,7 +4938,7 @@ export async function createMultiXBom(pathList, options) {
         bomData.parentComponent.components.length
       ) {
         parentSubComponents = parentSubComponents.concat(
-          bomData.parentComponent.components
+          bomData.parentComponent.components,
         );
       }
     }
@@ -4943,7 +4951,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} java packages at ${path}`
+          `Found ${bomData.bomJson.components.length} java packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -4960,7 +4968,7 @@ export async function createMultiXBom(pathList, options) {
         bomData.parentComponent.components.length
       ) {
         parentSubComponents = parentSubComponents.concat(
-          bomData.parentComponent.components
+          bomData.parentComponent.components,
         );
       }
     }
@@ -4973,7 +4981,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} python packages at ${path}`
+          `Found ${bomData.bomJson.components.length} python packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -4994,7 +5002,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} go packages at ${path}`
+          `Found ${bomData.bomJson.components.length} go packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5010,7 +5018,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} rust packages at ${path}`
+          `Found ${bomData.bomJson.components.length} rust packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5027,7 +5035,7 @@ export async function createMultiXBom(pathList, options) {
         bomData.parentComponent.components.length
       ) {
         parentSubComponents = parentSubComponents.concat(
-          bomData.parentComponent.components
+          bomData.parentComponent.components,
         );
       }
     }
@@ -5035,7 +5043,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} php packages at ${path}`
+          `Found ${bomData.bomJson.components.length} php packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5051,14 +5059,14 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} ruby packages at ${path}`
+          `Found ${bomData.bomJson.components.length} ruby packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
       dependencies = mergeDependencies(
         dependencies,
         bomData.bomJson.dependencies,
-        bomData.parentComponent
+        bomData.parentComponent,
       );
       if (
         bomData.parentComponent &&
@@ -5076,7 +5084,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} csharp packages at ${path}`
+          `Found ${bomData.bomJson.components.length} csharp packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5092,7 +5100,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} pub packages at ${path}`
+          `Found ${bomData.bomJson.components.length} pub packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5108,7 +5116,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} hackage packages at ${path}`
+          `Found ${bomData.bomJson.components.length} hackage packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5124,7 +5132,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} mix packages at ${path}`
+          `Found ${bomData.bomJson.components.length} mix packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5140,7 +5148,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} cpp packages at ${path}`
+          `Found ${bomData.bomJson.components.length} cpp packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5156,7 +5164,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} clojure packages at ${path}`
+          `Found ${bomData.bomJson.components.length} clojure packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5172,7 +5180,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} GitHub action packages at ${path}`
+          `Found ${bomData.bomJson.components.length} GitHub action packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5188,7 +5196,7 @@ export async function createMultiXBom(pathList, options) {
     if (bomData && bomData.bomJson && bomData.bomJson.components) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} CloudBuild configuration at ${path}`
+          `Found ${bomData.bomJson.components.length} CloudBuild configuration at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5209,7 +5217,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} Swift packages at ${path}`
+          `Found ${bomData.bomJson.components.length} Swift packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5232,7 +5240,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} jar packages at ${path}`
+          `Found ${bomData.bomJson.components.length} jar packages at ${path}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5255,7 +5263,7 @@ export async function createMultiXBom(pathList, options) {
       ) {
         if (DEBUG_MODE) {
           console.log(
-            `Found ${bomData.bomJson.components.length} crypto assets at ${path}`
+            `Found ${bomData.bomJson.components.length} crypto assets at ${path}`,
           );
         }
         components = components.concat(bomData.bomJson.components);
@@ -5277,7 +5285,7 @@ export async function createMultiXBom(pathList, options) {
     ) {
       if (DEBUG_MODE) {
         console.log(
-          `Found ${bomData.bomJson.components.length} jar packages at ${options.lastWorkingDir}`
+          `Found ${bomData.bomJson.components.length} jar packages at ${options.lastWorkingDir}`,
         );
       }
       components = components.concat(bomData.bomJson.components);
@@ -5298,7 +5306,7 @@ export async function createMultiXBom(pathList, options) {
     // Our naive approach to appending to sub-components could result in same parent being included as a child
     // This is filtered out here
     parentSubComponents = parentSubComponents.filter(
-      (c) => c["bom-ref"] !== parentComponent["bom-ref"]
+      (c) => c["bom-ref"] !== parentComponent["bom-ref"],
     );
     parentComponent.components = trimComponents(parentSubComponents);
     if (
@@ -5338,19 +5346,19 @@ export async function createXBom(path, options) {
   const pomFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pom.xml",
-    options
+    options,
   );
   // gradle
   const gradleFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "build.gradle*",
-    options
+    options,
   );
   // scala sbt
   const sbtFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "{build.sbt,Build.scala}*",
-    options
+    options,
   );
   if (pomFiles.length || gradleFiles.length || sbtFiles.length) {
     return await createJavaBom(path, options);
@@ -5366,19 +5374,19 @@ export async function createXBom(path, options) {
   const reqFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*requirements*.txt",
-    options
+    options,
   );
   const reqDirFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "requirements/*.txt",
-    options
+    options,
   );
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const whlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.whl",
-    options
+    options,
   );
   if (requirementsMode || whlFiles.length) {
     return await createPythonBom(path, options);
@@ -5387,17 +5395,17 @@ export async function createXBom(path, options) {
   const gosumFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.sum",
-    options
+    options,
   );
   const gomodFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "go.mod",
-    options
+    options,
   );
   const gopkgLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gopkg.lock",
-    options
+    options,
   );
   if (gomodFiles.length || gosumFiles.length || gopkgLockFiles.length) {
     return await createGoBom(path, options);
@@ -5407,12 +5415,12 @@ export async function createXBom(path, options) {
   const cargoLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.lock",
-    options
+    options,
   );
   const cargoFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Cargo.toml",
-    options
+    options,
   );
   if (cargoLockFiles.length || cargoFiles.length) {
     return await createRustBom(path, options);
@@ -5422,12 +5430,12 @@ export async function createXBom(path, options) {
   const composerJsonFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.json",
-    options
+    options,
   );
   const composerLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "composer.lock",
-    options
+    options,
   );
   if (composerJsonFiles.length || composerLockFiles.length) {
     return createPHPBom(path, options);
@@ -5437,12 +5445,12 @@ export async function createXBom(path, options) {
   const gemFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile",
-    options
+    options,
   );
   const gemLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Gemfile*.lock",
-    options
+    options,
   );
   if (gemFiles.length || gemLockFiles.length) {
     return await createRubyBom(path, options);
@@ -5452,13 +5460,21 @@ export async function createXBom(path, options) {
   let csProjFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.csproj",
-    options
+    options,
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.vbproj", options)
+    getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "*.vbproj",
+      options,
+    ),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(path, (options.multiProject ? "**/" : "") + "*.fsproj", options)
+    getAllFiles(
+      path,
+      (options.multiProject ? "**/" : "") + "*.fsproj",
+      options,
+    ),
   );
   if (csProjFiles.length) {
     return await createCsharpBom(path, options);
@@ -5468,12 +5484,12 @@ export async function createXBom(path, options) {
   const pubFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.lock",
-    options
+    options,
   );
   const pubSpecFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "pubspec.yaml",
-    options
+    options,
   );
   if (pubFiles.length || pubSpecFiles.length) {
     return await createDartBom(path, options);
@@ -5483,7 +5499,7 @@ export async function createXBom(path, options) {
   const hackageFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "cabal.project.freeze",
-    options
+    options,
   );
   if (hackageFiles.length) {
     return createHaskellBom(path, options);
@@ -5493,7 +5509,7 @@ export async function createXBom(path, options) {
   const mixFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "mix.lock",
-    options
+    options,
   );
   if (mixFiles.length) {
     return createElixirBom(path, options);
@@ -5503,22 +5519,22 @@ export async function createXBom(path, options) {
   const conanLockFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conan.lock",
-    options
+    options,
   );
   const conanFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "conanfile.txt",
-    options
+    options,
   );
   const cmakeListFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "CMakeLists.txt",
-    options
+    options,
   );
   const mesonBuildFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "meson.build",
-    options
+    options,
   );
   if (
     conanLockFiles.length ||
@@ -5533,12 +5549,12 @@ export async function createXBom(path, options) {
   const ednFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "deps.edn",
-    options
+    options,
   );
   const leinFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "project.clj",
-    options
+    options,
   );
   if (ednFiles.length || leinFiles.length) {
     return createClojureBom(path, options);
@@ -5548,7 +5564,7 @@ export async function createXBom(path, options) {
   const ghactionFiles = getAllFiles(
     path,
     ".github/workflows/" + "*.yml",
-    options
+    options,
   );
   if (ghactionFiles.length) {
     return createGitHubBom(path, options);
@@ -5558,7 +5574,7 @@ export async function createXBom(path, options) {
   const hpiFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*.hpi",
-    options
+    options,
   );
   if (hpiFiles.length) {
     return await createJenkinsBom(path, options);
@@ -5568,12 +5584,12 @@ export async function createXBom(path, options) {
   const chartFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Chart.yaml",
-    options
+    options,
   );
   const yamlFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "values.yaml",
-    options
+    options,
   );
   if (chartFiles.length || yamlFiles.length) {
     return createHelmBom(path, options);
@@ -5583,27 +5599,27 @@ export async function createXBom(path, options) {
   const dcFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "docker-compose*.yml",
-    options
+    options,
   );
   const dfFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*Dockerfile*",
-    options
+    options,
   );
   const cfFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "*Containerfile*",
-    options
+    options,
   );
   const skFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "skaffold.yaml",
-    options
+    options,
   );
   const deplFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "deployment.yaml",
-    options
+    options,
   );
   if (
     dcFiles.length ||
@@ -5619,7 +5635,7 @@ export async function createXBom(path, options) {
   const cbFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "cloudbuild.yaml",
-    options
+    options,
   );
   if (cbFiles.length) {
     return createCloudBuildBom(path, options);
@@ -5629,12 +5645,12 @@ export async function createXBom(path, options) {
   const swiftFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package*.swift",
-    options
+    options,
   );
   const pkgResolvedFiles = getAllFiles(
     path,
     (options.multiProject ? "**/" : "") + "Package.resolved",
-    options
+    options,
   );
   if (swiftFiles.length || pkgResolvedFiles.length) {
     return await createSwiftBom(path, options);
@@ -5661,7 +5677,7 @@ export async function createBom(path, options) {
     exportData = await exportArchive(path);
     if (!exportData) {
       console.log(
-        `OS BOM generation has failed due to problems with exporting the image ${path}`
+        `OS BOM generation has failed due to problems with exporting the image ${path}`,
       );
       return {};
     }
@@ -5681,7 +5697,7 @@ export async function createBom(path, options) {
     exportData = await exportImage(path);
     if (!exportData) {
       console.log(
-        "BOM generation has failed due to problems with exporting the image"
+        "BOM generation has failed due to problems with exporting the image",
       );
       options.failOnError && process.exit(1);
       return {};
@@ -5693,7 +5709,7 @@ export async function createBom(path, options) {
       inspectData: undefined,
       lastWorkingDir: "",
       allLayersDir: path,
-      allLayersExplodedDir: path
+      allLayersExplodedDir: path,
     };
     if (existsSync(join(path, "all-layers"))) {
       exportData.allLayersDir = join(path, "all-layers");
@@ -5728,10 +5744,13 @@ export async function createBom(path, options) {
             version: tmpA[1],
             type: "container",
             purl: "pkg:oci/" + inspectData.RepoDigests[0],
-            _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
+            _integrity: inspectData.RepoDigests[0].replace(
+              "sha256:",
+              "sha256-",
+            ),
           };
           options.parentComponent["bom-ref"] = decodeURIComponent(
-            options.parentComponent.purl
+            options.parentComponent.purl,
           );
         }
       } else if (inspectData.Id) {
@@ -5742,17 +5761,17 @@ export async function createBom(path, options) {
             .replace("sha256:", ""),
           type: "container",
           purl: "pkg:oci/" + inspectData.RepoDigests[0],
-          _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-")
+          _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-"),
         };
         options.parentComponent["bom-ref"] = decodeURIComponent(
-          options.parentComponent.purl
+          options.parentComponent.purl,
         );
       }
     } else {
       options.parentComponent = createDefaultParentComponent(
         path,
         "container",
-        options
+        options,
       );
     }
     // Pass the entire export data about the image layers
@@ -5761,7 +5780,7 @@ export async function createBom(path, options) {
     options.allLayersExplodedDir = exportData.allLayersExplodedDir;
     const bomData = await createMultiXBom(
       [...new Set(exportData.pkgPathList)],
-      options
+      options,
     );
     if (
       exportData.allLayersDir &&
@@ -5814,7 +5833,7 @@ export async function createBom(path, options) {
       options.useMavenCache = true;
       return createJarBom(
         process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository"),
-        options
+        options,
       );
     case "npm":
     case "pnpm":
@@ -5889,7 +5908,7 @@ export async function createBom(path, options) {
     case "helm-repo":
       return createHelmBom(
         join(homedir(), ".cache", "helm", "repository"),
-        options
+        options,
       );
     case "universal":
     case "containerfile":
@@ -5928,14 +5947,14 @@ export async function createBom(path, options) {
 export async function submitBom(args, bomContents) {
   const serverUrl = args.serverUrl.replace(/\/$/, "") + "/api/v1/bom";
   let encodedBomContents = Buffer.from(JSON.stringify(bomContents)).toString(
-    "base64"
+    "base64",
   );
   if (encodedBomContents.startsWith("77u/")) {
     encodedBomContents = encodedBomContents.substring(4);
   }
   const bomPayload = {
     autoCreate: "true",
-    bom: encodedBomContents
+    bom: encodedBomContents,
   };
   const projectVersion = args.projectVersion || "master";
   if (
@@ -5954,7 +5973,7 @@ export async function submitBom(args, bomContents) {
     }
   } else {
     console.log(
-      "projectId, projectName and projectVersion, or all three must be provided."
+      "projectId, projectName and projectVersion, or all three must be provided.",
     );
     return;
   }
@@ -5970,7 +5989,7 @@ export async function submitBom(args, bomContents) {
       serverUrl,
       "params",
       args.projectName,
-      projectVersion
+      projectVersion,
     );
   }
   try {
@@ -5979,16 +5998,16 @@ export async function submitBom(args, bomContents) {
       headers: {
         "X-Api-Key": args.apiKey,
         "Content-Type": "application/json",
-        "user-agent": `@CycloneDX/cdxgen ${_version}`
+        "user-agent": `@CycloneDX/cdxgen ${_version}`,
       },
       json: bomPayload,
-      responseType: "json"
+      responseType: "json",
     }).json();
   } catch (error) {
     if (error.response && error.response.statusCode === 401) {
       // Unauthorized
       console.log(
-        "Received Unauthorized error. Check the API key used is valid and has necessary permissions to create projects and upload bom."
+        "Received Unauthorized error. Check the API key used is valid and has necessary permissions to create projects and upload bom.",
       );
     } else if (error.response && error.response.statusCode === 405) {
       // Method not allowed errors
@@ -5998,14 +6017,14 @@ export async function submitBom(args, bomContents) {
           headers: {
             "X-Api-Key": args.apiKey,
             "Content-Type": "application/json",
-            "user-agent": `@CycloneDX/cdxgen ${_version}`
+            "user-agent": `@CycloneDX/cdxgen ${_version}`,
           },
           json: bomPayload,
-          responseType: "json"
+          responseType: "json",
         }).json();
       } catch (error) {
         console.log(
-          "Unable to submit the SBOM to the Dependency-Track server using POST method"
+          "Unable to submit the SBOM to the Dependency-Track server using POST method",
         );
         console.log(error);
       }

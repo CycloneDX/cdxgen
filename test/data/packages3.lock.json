@@ -1,115 +1,115 @@
 {
-    "version": 1,
-    "dependencies": {
-      ".NETCoreApp,Version=v2.1": {
-        "Argu": {
-          "type": "Direct",
-          "requested": "[4.0.0, )",
-          "resolved": "4.0.0",
-          "contentHash": "VsQvXISvWVusc4EU/iGEx2H2C3jcMRfwl7XIpt30guaBP5R2yIuEEGHtPrQsmAvEneFUC0FcXQG0t2ecV+HfFQ==",
-          "dependencies": {
-            "FSharp.Core": "4.2.1"
-          }
-        },
-        "FSharp.Core": {
-          "type": "Direct",
-          "requested": "[4.5.2, )",
-          "resolved": "4.5.2",
-          "contentHash": "apbdQOjzsjQ637kTWQuW29jqwY18jsHMyNC5A+TPJZKFEIE2cIfQWf3V7+mXrxlbX69BueYkv293/g70wuXuRw=="
-        },
-        "Microsoft.NETCore.App": {
-          "type": "Direct",
-          "requested": "[2.1.0, )",
-          "resolved": "2.1.0",
-          "contentHash": "JNHhG+j5eIhG26+H721IDmwswGUznTwwSuJMFe/08h0X2YarHvA15sVAvUkA/2Sp3W0ENNm48t+J7KTPRqEpfA==",
-          "dependencies": {
-            "Microsoft.NETCore.DotNetHostPolicy": "2.1.0",
-            "Microsoft.NETCore.Platforms": "2.1.0",
-            "Microsoft.NETCore.Targets": "2.1.0",
-            "NETStandard.Library": "2.0.3"
-          }
-        },
-        "Microsoft.SourceLink.GitHub": {
-          "type": "Direct",
-          "requested": "[1.0.0-beta-63127-02, )",
-          "resolved": "1.0.0-beta-63127-02",
-          "contentHash": "KLR4K9dCNjyKyrzuj+gM5L/TDkQe3Eu0Amp118j6he5Mzjeb84tUBtNjLGrJtyOjqgGiShTrk/XT4g4luWzkCQ==",
-          "dependencies": {
-            "Microsoft.Build.Tasks.Git": "1.0.0-beta-63127-02",
-            "Microsoft.SourceLink.Common": "1.0.0-beta-63127-02"
-          }
-        },
-        "Nerdbank.GitVersioning": {
-          "type": "Direct",
-          "requested": "[2.3.138, )",
-          "resolved": "2.3.138",
-          "contentHash": "1fdu4Vx9XydB0z18FU5GhtqhAurwxrfR9z/2tVgMCdjqzTwJdzcQUl0hy6jL/gqcFNBtlv6/lTn8G1Lx+lBOFA=="
-        },
-        "FParsec": {
-          "type": "Transitive",
-          "resolved": "1.0.3",
-          "contentHash": "0VoZapcSUHsNCixYawx8RFZHJMRVykaKsks5OOUXRP0bZCpr7UCP6kIjbVFGHIqqBGPtICUMy7j521sH0ZcmrQ==",
-          "dependencies": {
-            "FSharp.Core": "4.2.3",
-            "NETStandard.Library": "1.6.1"
-          }
-        },
-        "Microsoft.Build.Tasks.Git": {
-          "type": "Transitive",
-          "resolved": "1.0.0-beta-63127-02",
-          "contentHash": "SDC7lMeyUEBTWDrhvAwb1wK5ujIhI5cc2s9ugTwWyDfXC7H07/7lkc9DP1Q6kjv4qTL3eoWrd3HQuZmA7J4DJQ=="
-        },
-        "Microsoft.NETCore.DotNetAppHost": {
-          "type": "Transitive",
-          "resolved": "2.1.0",
-          "contentHash": "vMn8V3GOp/SPOG2oE8WxswzAWZ/GZmc8EPiB3vc2EZ6us14ehXhsvUFXndYopGNSjCa9OdqC6L6xStF1KyUZnw=="
-        },
-        "Microsoft.NETCore.DotNetHostPolicy": {
-          "type": "Transitive",
-          "resolved": "2.1.0",
-          "contentHash": "vBUwNihtLUVS2HhO6WocYfAktRmfFihm6JB8/sJ53caVW+AelvbnYpfiGzaZDpkWjN6vA3xzOKPu9Vu8Zz3p8Q==",
-          "dependencies": {
-            "Microsoft.NETCore.DotNetHostResolver": "2.1.0"
-          }
-        },
-        "Microsoft.NETCore.DotNetHostResolver": {
-          "type": "Transitive",
-          "resolved": "2.1.0",
-          "contentHash": "o0PRql5qOHFEY3d1WvzE+T7cMFKtOsWLMg8L1oTeGNnI4u5AzOj8o6AdZT3y2GxFA1DAx7AQ9qZjpCO2/bgZRw==",
-          "dependencies": {
-            "Microsoft.NETCore.DotNetAppHost": "2.1.0"
-          }
-        },
-        "Microsoft.NETCore.Platforms": {
-          "type": "Transitive",
-          "resolved": "2.1.0",
-          "contentHash": "ok+RPAtESz/9MUXeIEz6Lv5XAGQsaNmEYXMsgVALj4D7kqC8gveKWXWXbufLySR2fWrwZf8smyN5RmHu0e4BHA=="
-        },
-        "Microsoft.NETCore.Targets": {
-          "type": "Transitive",
-          "resolved": "2.1.0",
-          "contentHash": "x188gIZXOwFXkPXyGavEcPGcR6RGvjFOES2QzskN4gERZjWPN34qhRsZVMC0CLJfQLGSButarcgWxPPM4vmg0w=="
-        },
-        "Microsoft.SourceLink.Common": {
-          "type": "Transitive",
-          "resolved": "1.0.0-beta-63127-02",
-          "contentHash": "zLqiAhXjJSKPmFTvE9W0NtOpdy3E72VETj7qUkzK85nTgQiqlNWmMHr36SBcJfpo8sizJ72kFzi2alnI2/kqog=="
-        },
-        "NETStandard.Library": {
-          "type": "Transitive",
-          "resolved": "2.0.3",
-          "contentHash": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
-          "dependencies": {
-            "Microsoft.NETCore.Platforms": "1.1.0"
-          }
-        },
-        "Froto.Parser": {
-          "type": "Project",
-          "dependencies": {
-            "FParsec": "1.0.3",
-            "FSharp.Core": "4.5.2"
-          }
+  "version": 1,
+  "dependencies": {
+    ".NETCoreApp,Version=v2.1": {
+      "Argu": {
+        "type": "Direct",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "VsQvXISvWVusc4EU/iGEx2H2C3jcMRfwl7XIpt30guaBP5R2yIuEEGHtPrQsmAvEneFUC0FcXQG0t2ecV+HfFQ==",
+        "dependencies": {
+          "FSharp.Core": "4.2.1"
+        }
+      },
+      "FSharp.Core": {
+        "type": "Direct",
+        "requested": "[4.5.2, )",
+        "resolved": "4.5.2",
+        "contentHash": "apbdQOjzsjQ637kTWQuW29jqwY18jsHMyNC5A+TPJZKFEIE2cIfQWf3V7+mXrxlbX69BueYkv293/g70wuXuRw=="
+      },
+      "Microsoft.NETCore.App": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "JNHhG+j5eIhG26+H721IDmwswGUznTwwSuJMFe/08h0X2YarHvA15sVAvUkA/2Sp3W0ENNm48t+J7KTPRqEpfA==",
+        "dependencies": {
+          "Microsoft.NETCore.DotNetHostPolicy": "2.1.0",
+          "Microsoft.NETCore.Platforms": "2.1.0",
+          "Microsoft.NETCore.Targets": "2.1.0",
+          "NETStandard.Library": "2.0.3"
+        }
+      },
+      "Microsoft.SourceLink.GitHub": {
+        "type": "Direct",
+        "requested": "[1.0.0-beta-63127-02, )",
+        "resolved": "1.0.0-beta-63127-02",
+        "contentHash": "KLR4K9dCNjyKyrzuj+gM5L/TDkQe3Eu0Amp118j6he5Mzjeb84tUBtNjLGrJtyOjqgGiShTrk/XT4g4luWzkCQ==",
+        "dependencies": {
+          "Microsoft.Build.Tasks.Git": "1.0.0-beta-63127-02",
+          "Microsoft.SourceLink.Common": "1.0.0-beta-63127-02"
+        }
+      },
+      "Nerdbank.GitVersioning": {
+        "type": "Direct",
+        "requested": "[2.3.138, )",
+        "resolved": "2.3.138",
+        "contentHash": "1fdu4Vx9XydB0z18FU5GhtqhAurwxrfR9z/2tVgMCdjqzTwJdzcQUl0hy6jL/gqcFNBtlv6/lTn8G1Lx+lBOFA=="
+      },
+      "FParsec": {
+        "type": "Transitive",
+        "resolved": "1.0.3",
+        "contentHash": "0VoZapcSUHsNCixYawx8RFZHJMRVykaKsks5OOUXRP0bZCpr7UCP6kIjbVFGHIqqBGPtICUMy7j521sH0ZcmrQ==",
+        "dependencies": {
+          "FSharp.Core": "4.2.3",
+          "NETStandard.Library": "1.6.1"
+        }
+      },
+      "Microsoft.Build.Tasks.Git": {
+        "type": "Transitive",
+        "resolved": "1.0.0-beta-63127-02",
+        "contentHash": "SDC7lMeyUEBTWDrhvAwb1wK5ujIhI5cc2s9ugTwWyDfXC7H07/7lkc9DP1Q6kjv4qTL3eoWrd3HQuZmA7J4DJQ=="
+      },
+      "Microsoft.NETCore.DotNetAppHost": {
+        "type": "Transitive",
+        "resolved": "2.1.0",
+        "contentHash": "vMn8V3GOp/SPOG2oE8WxswzAWZ/GZmc8EPiB3vc2EZ6us14ehXhsvUFXndYopGNSjCa9OdqC6L6xStF1KyUZnw=="
+      },
+      "Microsoft.NETCore.DotNetHostPolicy": {
+        "type": "Transitive",
+        "resolved": "2.1.0",
+        "contentHash": "vBUwNihtLUVS2HhO6WocYfAktRmfFihm6JB8/sJ53caVW+AelvbnYpfiGzaZDpkWjN6vA3xzOKPu9Vu8Zz3p8Q==",
+        "dependencies": {
+          "Microsoft.NETCore.DotNetHostResolver": "2.1.0"
+        }
+      },
+      "Microsoft.NETCore.DotNetHostResolver": {
+        "type": "Transitive",
+        "resolved": "2.1.0",
+        "contentHash": "o0PRql5qOHFEY3d1WvzE+T7cMFKtOsWLMg8L1oTeGNnI4u5AzOj8o6AdZT3y2GxFA1DAx7AQ9qZjpCO2/bgZRw==",
+        "dependencies": {
+          "Microsoft.NETCore.DotNetAppHost": "2.1.0"
+        }
+      },
+      "Microsoft.NETCore.Platforms": {
+        "type": "Transitive",
+        "resolved": "2.1.0",
+        "contentHash": "ok+RPAtESz/9MUXeIEz6Lv5XAGQsaNmEYXMsgVALj4D7kqC8gveKWXWXbufLySR2fWrwZf8smyN5RmHu0e4BHA=="
+      },
+      "Microsoft.NETCore.Targets": {
+        "type": "Transitive",
+        "resolved": "2.1.0",
+        "contentHash": "x188gIZXOwFXkPXyGavEcPGcR6RGvjFOES2QzskN4gERZjWPN34qhRsZVMC0CLJfQLGSButarcgWxPPM4vmg0w=="
+      },
+      "Microsoft.SourceLink.Common": {
+        "type": "Transitive",
+        "resolved": "1.0.0-beta-63127-02",
+        "contentHash": "zLqiAhXjJSKPmFTvE9W0NtOpdy3E72VETj7qUkzK85nTgQiqlNWmMHr36SBcJfpo8sizJ72kFzi2alnI2/kqog=="
+      },
+      "NETStandard.Library": {
+        "type": "Transitive",
+        "resolved": "2.0.3",
+        "contentHash": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "Froto.Parser": {
+        "type": "Project",
+        "dependencies": {
+          "FParsec": "1.0.3",
+          "FSharp.Core": "4.5.2"
         }
       }
     }
   }
+}

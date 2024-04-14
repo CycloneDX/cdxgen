@@ -5,11 +5,7 @@
   "packageManager": "yarn@4.0.0-rc.50",
   "type": "module",
   "license": "MIT",
-  "workspaces": [
-    "app",
-    "edge",
-    "scripts"
-  ],
+  "workspaces": ["app", "edge", "scripts"],
   "scripts": {
     "postinstall": "husky install && node ./scripts/postinstall.js",
     "update-schema": "node ./scripts/update-schema.js",

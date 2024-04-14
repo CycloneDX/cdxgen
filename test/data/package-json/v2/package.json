@@ -9,10 +9,7 @@
     "shopify": "cd shopify && shopify theme dev",
     "install-theme": "ts-node scripts/install-theme.ts --repo=https://github.com/Shopify/dawn.git"
   },
-  "keywords": [
-    "Shopify Theme",
-    "Online Store 2.0"
-  ],
+  "keywords": ["Shopify Theme", "Online Store 2.0"],
   "author": "Wessel van Ree <hello@wesselvanree.com>",
   "license": "MIT",
   "devDependencies": {

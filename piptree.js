@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 /**
  * The idea behind this plugin came from the excellent pipdeptree package
  * https://github.com/tox-dev/pipdeptree
@@ -9,11 +10,10 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
-  writeFileSync
+  writeFileSync,
 } from "node:fs";
-import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { spawnSync } from "node:child_process";
+import { join } from "node:path";
 
 const PIP_TREE_PLUGIN_CONTENT = `
 import importlib.metadata as importlib_metadata
@@ -129,7 +129,7 @@ export const getTreeWithPlugin = (env, python_cmd, basePath) => {
   const result = spawnSync(python_cmd, pipPluginArgs, {
     cwd: basePath,
     encoding: "utf-8",
-    env
+    env,
   });
   if (result.status !== 0 || result.error) {
     console.log(result.stdout, result.stderr);
@@ -137,8 +137,8 @@ export const getTreeWithPlugin = (env, python_cmd, basePath) => {
   if (existsSync(pipTreeJson)) {
     tree = JSON.parse(
       readFileSync(pipTreeJson, {
-        encoding: "utf-8"
-      })
+        encoding: "utf-8",
+      }),
     );
   }
   if (rmSync) {

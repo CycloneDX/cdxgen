@@ -1,9 +1,5 @@
-import got from "got";
-import { globSync } from "glob";
-import { parse } from "node:url";
-import stream from "node:stream/promises";
-import process from "node:process";
 import { Buffer } from "node:buffer";
+import { spawnSync } from "node:child_process";
 import {
   createReadStream,
   existsSync,
@@ -13,17 +9,21 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
-  statSync
+  statSync,
 } from "node:fs";
-import { join } from "node:path";
 import {
   platform as _platform,
   userInfo as _userInfo,
   homedir,
-  tmpdir
+  tmpdir,
 } from "node:os";
+import { join } from "node:path";
+import process from "node:process";
+import stream from "node:stream/promises";
+import { parse } from "node:url";
+import { globSync } from "glob";
+import got from "got";
 import { x } from "tar";
-import { spawnSync } from "node:child_process";
 import { DEBUG_MODE, getAllFiles } from "./utils.js";
 
 export const isWin = _platform() === "win32";
@@ -42,7 +42,7 @@ if (
   (process.env.CONTAINERD_ADDRESS ||
     (process.env.XDG_RUNTIME_DIR &&
       existsSync(
-        join(process.env.XDG_RUNTIME_DIR, "containerd-rootless", "api.sock")
+        join(process.env.XDG_RUNTIME_DIR, "containerd-rootless", "api.sock"),
       )))
 ) {
   isContainerd = true;
@@ -65,7 +65,7 @@ export const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
       nocase: true,
       nodir: false,
       follow: false,
-      dot: hidden
+      dot: hidden,
     });
   } catch (err) {
     return [];
@@ -107,8 +107,8 @@ export const getOnlyDirs = (srcpath, dirName) => {
             console.error(err);
           }
         })
-        .filter((p) => p !== undefined)
-    )
+        .filter((p) => p !== undefined),
+    ),
   ].filter((d) => d.endsWith(dirName));
 };
 
@@ -128,13 +128,13 @@ const getDefaultOptions = (forRegistry) => {
     throwHttpErrors: true,
     method: "GET",
     hooks: { beforeError: [] },
-    mutableDefaults: true
+    mutableDefaults: true,
   };
   const DOCKER_CONFIG = process.env.DOCKER_CONFIG || join(homedir(), ".docker");
   // Support for private registry
   if (process.env.DOCKER_AUTH_CONFIG) {
     opts.headers = {
-      "X-Registry-Auth": process.env.DOCKER_AUTH_CONFIG
+      "X-Registry-Auth": process.env.DOCKER_AUTH_CONFIG,
     };
     authTokenSet = true;
   }
@@ -148,7 +148,7 @@ const getDefaultOptions = (forRegistry) => {
     const authPayload = {
       username: process.env.DOCKER_USER,
       email: process.env.DOCKER_EMAIL,
-      serveraddress: forRegistry
+      serveraddress: forRegistry,
     };
     if (process.env.DOCKER_USER === "<token>") {
       authPayload.IdentityToken = process.env.DOCKER_PASSWORD;
@@ -157,14 +157,14 @@ const getDefaultOptions = (forRegistry) => {
     }
     opts.headers = {
       "X-Registry-Auth": Buffer.from(JSON.stringify(authPayload)).toString(
-        "base64"
-      )
+        "base64",
+      ),
     };
   }
   if (!authTokenSet && existsSync(join(DOCKER_CONFIG, "config.json"))) {
     const configData = readFileSync(
       join(DOCKER_CONFIG, "config.json"),
-      "utf-8"
+      "utf-8",
     );
     if (configData) {
       try {
@@ -177,18 +177,18 @@ const getDefaultOptions = (forRegistry) => {
             }
             if (configJson.auths[serverAddress].auth) {
               opts.headers = {
-                "X-Registry-Auth": configJson.auths[serverAddress].auth
+                "X-Registry-Auth": configJson.auths[serverAddress].auth,
               };
               authTokenSet = true;
               break;
             } else if (configJson.credsStore) {
               const helperAuthToken = getCredsFromHelper(
                 configJson.credsStore,
-                serverAddress
+                serverAddress,
               );
               if (helperAuthToken) {
                 opts.headers = {
-                  "X-Registry-Auth": helperAuthToken
+                  "X-Registry-Auth": helperAuthToken,
                 };
                 authTokenSet = true;
                 break;
@@ -204,11 +204,11 @@ const getDefaultOptions = (forRegistry) => {
             if (configJson.credHelpers[serverAddress]) {
               const helperAuthToken = getCredsFromHelper(
                 configJson.credHelpers[serverAddress],
-                serverAddress
+                serverAddress,
               );
               if (helperAuthToken) {
                 opts.headers = {
-                  "X-Registry-Auth": helperAuthToken
+                  "X-Registry-Auth": helperAuthToken,
                 };
                 authTokenSet = true;
                 break;
@@ -263,9 +263,12 @@ const getDefaultOptions = (forRegistry) => {
       opts.https = {
         certificate: readFileSync(
           join(process.env.DOCKER_CERT_PATH, "cert.pem"),
-          "utf8"
+          "utf8",
         ),
-        key: readFileSync(join(process.env.DOCKER_CERT_PATH, "key.pem"), "utf8")
+        key: readFileSync(
+          join(process.env.DOCKER_CERT_PATH, "key.pem"),
+          "utf8",
+        ),
       };
       // Disable tls on empty values
       // From the docker docs: Setting the DOCKER_TLS_VERIFY environment variable to any value other than the empty string is equivalent to setting the --tlsverify flag
@@ -294,9 +297,9 @@ export const getConnection = async (options, forRegistry) => {
         throwHttpErrors: defaultOptions.throwHttpErrors,
         method: defaultOptions.method,
         prefixUrl: defaultOptions.prefixUrl,
-        headers: defaultOptions.headers
+        headers: defaultOptions.headers,
       },
-      options
+      options,
     );
     try {
       await got.get("_ping", opts);
@@ -306,7 +309,7 @@ export const getConnection = async (options, forRegistry) => {
           console.log("Docker service in rootless mode detected.");
         } else {
           console.log(
-            "Docker service in root mode detected. Consider switching to rootless mode to improve security. See https://docs.docker.com/engine/security/rootless/"
+            "Docker service in root mode detected. Consider switching to rootless mode to improve security. See https://docs.docker.com/engine/security/rootless/",
           );
         }
       }
@@ -340,7 +343,7 @@ export const getConnection = async (options, forRegistry) => {
           dockerConn = got.extend(opts);
           if (DEBUG_MODE) {
             console.log(
-              "Podman in rootless mode detected. Thank you for using podman!"
+              "Podman in rootless mode detected. Thank you for using podman!",
             );
           }
         }
@@ -353,22 +356,22 @@ export const getConnection = async (options, forRegistry) => {
           isPodmanRootless = false;
           dockerConn = got.extend(opts);
           console.log(
-            "Podman in root mode detected. Consider switching to rootless mode to improve security. See https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md"
+            "Podman in root mode detected. Consider switching to rootless mode to improve security. See https://github.com/containers/podman/blob/main/docs/tutorials/rootless_tutorial.md",
           );
         } catch (err) {
           // console.log(err);
           if (_platform() === "win32") {
             console.warn(
               "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
-              opts
+              opts,
             );
           } else {
             console.warn(
               "Ensure docker/podman service or Docker for Desktop is running.",
-              opts
+              opts,
             );
             console.log(
-              "Check if the post-installation steps were performed correctly as per this documentation https://docs.docker.com/engine/install/linux-postinstall/"
+              "Check if the post-installation steps were performed correctly as per this documentation https://docs.docker.com/engine/install/linux-postinstall/",
             );
           }
         }
@@ -387,7 +390,7 @@ export const makeRequest = async (path, method = "GET", forRegistry) => {
     responseType: method === "GET" ? "json" : "buffer",
     resolveBodyOnly: true,
     enableUnixSockets: true,
-    method
+    method,
   };
   const defaultOptions = getDefaultOptions(forRegistry);
   const opts = Object.assign(
@@ -397,9 +400,9 @@ export const makeRequest = async (path, method = "GET", forRegistry) => {
       throwHttpErrors: defaultOptions.throwHttpErrors,
       method: defaultOptions.method,
       prefixUrl: defaultOptions.prefixUrl,
-      headers: defaultOptions.headers
+      headers: defaultOptions.headers,
     },
-    extraOptions
+    extraOptions,
   );
   return await client(path, opts);
 };
@@ -420,7 +423,7 @@ export const parseImageName = (fullImageName) => {
     digest: "",
     platform: "",
     group: "",
-    name: ""
+    name: "",
   };
   if (!fullImageName) {
     return nameObj;
@@ -517,14 +520,14 @@ export const getImage = async (fullImageName) => {
   }
   if (isContainerd) {
     console.log(
-      "containerd/nerdctl is currently unsupported. Export the image manually and run cdxgen against the tar image."
+      "containerd/nerdctl is currently unsupported. Export the image manually and run cdxgen against the tar image.",
     );
     return undefined;
   }
   if (needsCliFallback()) {
     const dockerCmd = process.env.DOCKER_CMD || "docker";
     let result = spawnSync(dockerCmd, ["pull", fullImageName], {
-      encoding: "utf-8"
+      encoding: "utf-8",
     });
     if (result.status !== 0 || result.error) {
       if (
@@ -532,11 +535,11 @@ export const getImage = async (fullImageName) => {
         result.stderr.includes("docker daemon is not running")
       ) {
         console.log(
-          "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on."
+          "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
         );
       } else if (result.stderr && result.stderr.includes("not found")) {
         console.log(
-          "Set the environment variable DOCKER_CMD to use an alternative command such as nerdctl or podman."
+          "Set the environment variable DOCKER_CMD to use an alternative command such as nerdctl or podman.",
         );
       } else {
         console.log(result.stderr);
@@ -544,7 +547,7 @@ export const getImage = async (fullImageName) => {
       return localData;
     } else {
       result = spawnSync(dockerCmd, ["inspect", fullImageName], {
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       if (result.status !== 0 || result.error) {
         console.log(result.stderr);
@@ -571,7 +574,7 @@ export const getImage = async (fullImageName) => {
     localData = await makeRequest(
       `images/${repoWithTag}/json`,
       "GET",
-      registry
+      registry,
     );
     if (localData) {
       return localData;
@@ -586,7 +589,7 @@ export const getImage = async (fullImageName) => {
       localData = await makeRequest(
         `images/${fullImageName}/json`,
         "GET",
-        registry
+        registry,
       );
       if (localData) {
         return localData;
@@ -596,7 +599,7 @@ export const getImage = async (fullImageName) => {
     }
     if (DEBUG_MODE) {
       console.log(
-        `Trying to pull the image ${fullImageName} from registry. This might take a while ...`
+        `Trying to pull the image ${fullImageName} from registry. This might take a while ...`,
       );
     }
     // If the data is not available locally
@@ -604,7 +607,7 @@ export const getImage = async (fullImageName) => {
       pullData = await makeRequest(
         `images/create?fromImage=${fullImageName}`,
         "POST",
-        registry
+        registry,
       );
       if (
         pullData &&
@@ -612,10 +615,10 @@ export const getImage = async (fullImageName) => {
           pullData.includes("Error choosing an image from manifest list"))
       ) {
         console.warn(
-          "You may have to enable experimental settings in docker to support this platform!"
+          "You may have to enable experimental settings in docker to support this platform!",
         );
         console.warn(
-          "To scan windows images, run cdxgen on a windows server with hyper-v and docker installed. Switch to windows containers in your docker settings."
+          "To scan windows images, run cdxgen on a windows server with hyper-v and docker installed. Switch to windows containers in your docker settings.",
         );
         return undefined;
       }
@@ -627,7 +630,7 @@ export const getImage = async (fullImageName) => {
         pullData = await makeRequest(
           `images/create?fromImage=${repoWithTag}`,
           "POST",
-          registry
+          registry,
         );
       } catch (err) {
         // continue regardless of error
@@ -640,7 +643,7 @@ export const getImage = async (fullImageName) => {
       localData = await makeRequest(
         `images/${repoWithTag}/json`,
         "GET",
-        registry
+        registry,
       );
       if (localData) {
         return localData;
@@ -664,7 +667,7 @@ export const getImage = async (fullImageName) => {
         localData = await makeRequest(
           `images/${fullImageName}/json`,
           "GET",
-          registry
+          registry,
         );
       } catch (err) {
         // continue regardless of error
@@ -673,10 +676,10 @@ export const getImage = async (fullImageName) => {
   }
   if (!localData) {
     console.log(
-      `Unable to pull ${fullImageName}. Check if the name is valid. Perform any authentication prior to invoking cdxgen.`
+      `Unable to pull ${fullImageName}. Check if the name is valid. Perform any authentication prior to invoking cdxgen.`,
     );
     console.log(
-      `Try manually pulling this image using docker pull ${fullImageName}`
+      `Try manually pulling this image using docker pull ${fullImageName}`,
     );
   }
   return localData;
@@ -713,25 +716,25 @@ export const extractTar = async (fullImageName, dir) => {
               "TapeVolume",
               "SymbolicLink",
               "RenamedOrSymlinked",
-              "HardLink"
+              "HardLink",
             ].includes(entry.type)
           ) {
             return false;
           }
           return true;
-        }
-      })
+        },
+      }),
     );
     return true;
   } catch (err) {
     if (err.code === "EPERM" && err.syscall === "symlink") {
       console.log(
-        "Please run cdxgen from a powershell terminal with admin privileges to create symlinks."
+        "Please run cdxgen from a powershell terminal with admin privileges to create symlinks.",
       );
       console.log(err);
     } else if (!["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO"].includes(err.code)) {
       console.log(
-        `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`
+        `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`,
       );
       console.log("------------");
       console.log(err);
@@ -768,7 +771,7 @@ export const exportArchive = async (fullImageName) => {
     if (existsSync(blobsDir)) {
       if (DEBUG_MODE) {
         console.log(
-          `Image archive ${fullImageName} successfully exported to directory ${tempDir}`
+          `Image archive ${fullImageName} successfully exported to directory ${tempDir}`,
         );
       }
       const allBlobs = getAllFiles(blobsDir, "*");
@@ -785,7 +788,7 @@ export const exportArchive = async (fullImageName) => {
         allLayersDir: tempDir,
         allLayersExplodedDir,
         lastLayerConfig,
-        lastWorkingDir
+        lastWorkingDir,
       };
       exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
       return exportData;
@@ -795,7 +798,7 @@ export const exportArchive = async (fullImageName) => {
         manifestFile,
         {},
         tempDir,
-        allLayersExplodedDir
+        allLayersExplodedDir,
       );
     } else {
       console.log(`Unable to extract image archive to ${tempDir}`);
@@ -810,15 +813,15 @@ export const extractFromManifest = async (
   manifestFile,
   localData,
   tempDir,
-  allLayersExplodedDir
+  allLayersExplodedDir,
 ) => {
   // Example of manifests
   // [{"Config":"blobs/sha256/dedc100afa8d6718f5ac537730dd4a5ceea3563e695c90f1a8ac6df32c4cb291","RepoTags":["shiftleft/core:latest"],"Layers":["blobs/sha256/eaead16dc43bb8811d4ff450935d607f9ba4baffda4fc110cc402fa43f601d83","blobs/sha256/2039af03c0e17a3025b989335e9414149577fa09e7d0dcbee80155333639d11f"]}]
   // {"schemaVersion":2,"manifests":[{"mediaType":"application/vnd.docker.distribution.manifest.list.v2+json","digest":"sha256:7706ac20c7587081dc7a00e0ec65a6633b0bb3788e0048a3e971d3eae492db63","size":318,"annotations":{"io.containerd.image.name":"docker.io/shiftleft/scan-slim:latest","org.opencontainers.image.ref.name":"latest"}}]}
   let manifest = JSON.parse(
     readFileSync(manifestFile, {
-      encoding: "utf-8"
-    })
+      encoding: "utf-8",
+    }),
   );
   let lastLayerConfig = {};
   let lastLayerConfigFile = "";
@@ -831,7 +834,7 @@ export const extractFromManifest = async (
     if (manifest.length !== 1) {
       if (DEBUG_MODE) {
         console.log(
-          "Multiple image tags was downloaded. Only the last one would be used"
+          "Multiple image tags was downloaded. Only the last one would be used",
         );
         console.log(manifest[manifest.length - 1]);
       }
@@ -850,7 +853,7 @@ export const extractFromManifest = async (
       try {
         if (!lstatSync(join(tempDir, layer)).isFile()) {
           console.log(
-            `Skipping layer ${layer} since it is not a readable file.`
+            `Skipping layer ${layer} since it is not a readable file.`,
           );
           continue;
         }
@@ -879,15 +882,15 @@ export const extractFromManifest = async (
     if (lastLayer.includes("layer.tar")) {
       lastLayerConfigFile = join(
         tempDir,
-        lastLayer.replace("layer.tar", "json")
+        lastLayer.replace("layer.tar", "json"),
       );
     }
     if (lastLayerConfigFile && existsSync(lastLayerConfigFile)) {
       try {
         lastLayerConfig = JSON.parse(
           readFileSync(lastLayerConfigFile, {
-            encoding: "utf-8"
-          })
+            encoding: "utf-8",
+          }),
         );
         lastWorkingDir =
           lastLayerConfig.config && lastLayerConfig.config.WorkingDir
@@ -904,7 +907,7 @@ export const extractFromManifest = async (
     allLayersDir: tempDir,
     allLayersExplodedDir,
     lastLayerConfig,
-    lastWorkingDir
+    lastWorkingDir,
   };
   exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
   return exportData;
@@ -934,14 +937,14 @@ export const exportImage = async (fullImageName) => {
   if (needsCliFallback()) {
     const imageTarFile = join(tempDir, "image.tar");
     console.log(
-      `About to export image ${fullImageName} to ${imageTarFile} using docker cli`
+      `About to export image ${fullImageName} to ${imageTarFile} using docker cli`,
     );
     const result = spawnSync(
       "docker",
       ["save", "-o", imageTarFile, fullImageName],
       {
-        encoding: "utf-8"
-      }
+        encoding: "utf-8",
+      },
     );
     if (result.status !== 0 || result.error) {
       if (result.stdout || result.stderr) {
@@ -963,7 +966,7 @@ export const exportImage = async (fullImageName) => {
       if (DEBUG_MODE) {
         if (registry && registry.trim().length) {
           console.log(
-            `About to export image ${fullImageName} from ${registry} to ${tempDir}`
+            `About to export image ${fullImageName} from ${registry} to ${tempDir}`,
           );
         } else {
           console.log(`About to export image ${fullImageName} to ${tempDir}`);
@@ -979,8 +982,8 @@ export const exportImage = async (fullImageName) => {
           strict: true,
           C: tempDir,
           portable: true,
-          onwarn: () => {}
-        })
+          onwarn: () => {},
+        }),
       );
     } catch (err) {
       if (localData && localData.Id) {
@@ -996,8 +999,8 @@ export const exportImage = async (fullImageName) => {
               strict: true,
               C: tempDir,
               portable: true,
-              onwarn: () => {}
-            })
+              onwarn: () => {},
+            }),
           );
         } catch (err) {
           console.log(err);
@@ -1013,13 +1016,13 @@ export const exportImage = async (fullImageName) => {
       manifestFile = manifestIndexFile;
     } else {
       console.log(
-        `Manifest file ${manifestFile} was not found after export at ${tempDir}`
+        `Manifest file ${manifestFile} was not found after export at ${tempDir}`,
       );
       return undefined;
     }
     if (DEBUG_MODE) {
       console.log(
-        `Image ${fullImageName} successfully exported to directory ${tempDir}`
+        `Image ${fullImageName} successfully exported to directory ${tempDir}`,
       );
     }
     mkdirSync(allLayersExplodedDir);
@@ -1027,7 +1030,7 @@ export const exportImage = async (fullImageName) => {
       manifestFile,
       localData,
       tempDir,
-      allLayersExplodedDir
+      allLayersExplodedDir,
     );
   } else {
     console.log(`Unable to export image to ${tempDir}`);
@@ -1054,7 +1057,7 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
       join(allLayersExplodedDir, "/usr/src"),
       join(allLayersExplodedDir, "/var/www/html"),
       join(allLayersExplodedDir, "/var/lib"),
-      join(allLayersExplodedDir, "/mnt")
+      join(allLayersExplodedDir, "/mnt"),
     ];
   } else if (allLayersExplodedDir === "") {
     knownSysPaths = [
@@ -1065,7 +1068,7 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
       join(allLayersExplodedDir, "/usr/share"),
       join(allLayersExplodedDir, "/usr/src"),
       join(allLayersExplodedDir, "/var/www/html"),
-      join(allLayersExplodedDir, "/var/lib")
+      join(allLayersExplodedDir, "/var/lib"),
     ];
   }
   if (existsSync(join(allLayersDir, "Files"))) {
@@ -1142,7 +1145,7 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
 export const removeImage = async (fullImageName, force = false) => {
   const removeData = await makeRequest(
     `images/${fullImageName}?force=${force}`,
-    "DELETE"
+    "DELETE",
   );
   return removeData;
 };
@@ -1157,7 +1160,7 @@ export const getCredsFromHelper = (exeSuffix, serverAddress) => {
   }
   const result = spawnSync(credHelperExe, ["get"], {
     input: serverAddress,
-    encoding: "utf-8"
+    encoding: "utf-8",
   });
   if (result.status !== 0 || result.error) {
     console.log(result.stdout, result.stderr);
@@ -1176,10 +1179,10 @@ export const getCredsFromHelper = (exeSuffix, serverAddress) => {
           process.env.DOCKER_PASSWORD,
         email:
           authPayload.email || authPayload.username || process.env.DOCKER_USER,
-        serveraddress: serverAddress
+        serveraddress: serverAddress,
       };
       const authKey = Buffer.from(JSON.stringify(fixedAuthPayload)).toString(
-        "base64"
+        "base64",
       );
       registry_auth_keys[serverAddress] = authKey;
       return authKey;
@@ -1211,7 +1214,7 @@ export const addSkippedSrcFiles = (skippedImageSrcs, components) => {
       ) {
         co.properties = co.properties.concat({
           name: "SrcFile",
-          value: skippedImage.src
+          value: skippedImage.src,
         });
       }
     }
