@@ -568,10 +568,8 @@ Follow the usual PR process, but before raising a PR, run the following commands
 ```bash
 # Generate types using jsdoc syntax
 npm run gen-types
-# Run eslint with auto fix
+# Run biomejs formatter and linter with auto fix
 npm run lint
-# Run prettier
-npm run pretty
 # Run jest tests
 npm test
 ```
