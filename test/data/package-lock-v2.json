@@ -3234,14 +3234,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/@esbuild/linux-loong64/-/linux-loong64-0.15.5.tgz",
       "integrity": "sha512-UHkDFCfSGTuXq08oQltXxSZmH1TXyWsL+4QhZDWvvLl6mEJQqk3u7/wq1LjhrrAXYIllaTtRSzUXl4Olkf2J8A==",
-      "cpu": [
-        "loong64"
-      ],
+      "cpu": ["loong64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -5043,9 +5039,7 @@
       "resolved": "https://registry.npmjs.org/ansi-html-community/-/ansi-html-community-0.0.8.tgz",
       "integrity": "sha512-1APHAyr3+PCamwNw3bXCPp4HFLONZt/yIH0sZp0/469KWNTEy+qN5jQ3GVX6DMZ1UXAi34yVwtTeaG/HpBuuzw==",
       "dev": true,
-      "engines": [
-        "node >= 0.8.0"
-      ],
+      "engines": ["node >= 0.8.0"],
       "bin": {
         "ansi-html": "bin/ansi-html"
       }
@@ -7866,14 +7860,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-android-64/-/esbuild-android-64-0.15.5.tgz",
       "integrity": "sha512-dYPPkiGNskvZqmIK29OPxolyY3tp+c47+Fsc2WYSOVjEPWNCHNyqhtFqQadcXMJDQt8eN0NMDukbyQgFcHquXg==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "android"
-      ],
+      "os": ["android"],
       "engines": {
         "node": ">=12"
       }
@@ -7882,14 +7872,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-android-arm64/-/esbuild-android-arm64-0.15.5.tgz",
       "integrity": "sha512-YyEkaQl08ze3cBzI/4Cm1S+rVh8HMOpCdq8B78JLbNFHhzi4NixVN93xDrHZLztlocEYqi45rHHCgA8kZFidFg==",
-      "cpu": [
-        "arm64"
-      ],
+      "cpu": ["arm64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "android"
-      ],
+      "os": ["android"],
       "engines": {
         "node": ">=12"
       }
@@ -7898,14 +7884,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-darwin-64/-/esbuild-darwin-64-0.15.5.tgz",
       "integrity": "sha512-Cr0iIqnWKx3ZTvDUAzG0H/u9dWjLE4c2gTtRLz4pqOBGjfjqdcZSfAObFzKTInLLSmD0ZV1I/mshhPoYSBMMCQ==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "darwin"
-      ],
+      "os": ["darwin"],
       "engines": {
         "node": ">=12"
       }
@@ -7914,14 +7896,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-darwin-arm64/-/esbuild-darwin-arm64-0.15.5.tgz",
       "integrity": "sha512-WIfQkocGtFrz7vCu44ypY5YmiFXpsxvz2xqwe688jFfSVCnUsCn2qkEVDo7gT8EpsLOz1J/OmqjExePL1dr1Kg==",
-      "cpu": [
-        "arm64"
-      ],
+      "cpu": ["arm64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "darwin"
-      ],
+      "os": ["darwin"],
       "engines": {
         "node": ">=12"
       }
@@ -7930,14 +7908,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-freebsd-64/-/esbuild-freebsd-64-0.15.5.tgz",
       "integrity": "sha512-M5/EfzV2RsMd/wqwR18CELcenZ8+fFxQAAEO7TJKDmP3knhWSbD72ILzrXFMMwshlPAS1ShCZ90jsxkm+8FlaA==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "freebsd"
-      ],
+      "os": ["freebsd"],
       "engines": {
         "node": ">=12"
       }
@@ -7946,14 +7920,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-freebsd-arm64/-/esbuild-freebsd-arm64-0.15.5.tgz",
       "integrity": "sha512-2JQQ5Qs9J0440F/n/aUBNvY6lTo4XP/4lt1TwDfHuo0DY3w5++anw+jTjfouLzbJmFFiwmX7SmUhMnysocx96w==",
-      "cpu": [
-        "arm64"
-      ],
+      "cpu": ["arm64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "freebsd"
-      ],
+      "os": ["freebsd"],
       "engines": {
         "node": ">=12"
       }
@@ -7962,14 +7932,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-32/-/esbuild-linux-32-0.15.5.tgz",
       "integrity": "sha512-gO9vNnIN0FTUGjvTFucIXtBSr1Woymmx/aHQtuU+2OllGU6YFLs99960UD4Dib1kFovVgs59MTXwpFdVoSMZoQ==",
-      "cpu": [
-        "ia32"
-      ],
+      "cpu": ["ia32"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -7978,14 +7944,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.15.5.tgz",
       "integrity": "sha512-ne0GFdNLsm4veXbTnYAWjbx3shpNKZJUd6XpNbKNUZaNllDZfYQt0/zRqOg0sc7O8GQ+PjSMv9IpIEULXVTVmg==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -7994,14 +7956,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-arm/-/esbuild-linux-arm-0.15.5.tgz",
       "integrity": "sha512-wvAoHEN+gJ/22gnvhZnS/+2H14HyAxM07m59RSLn3iXrQsdS518jnEWRBnJz3fR6BJa+VUTo0NxYjGaNt7RA7Q==",
-      "cpu": [
-        "arm"
-      ],
+      "cpu": ["arm"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -8010,14 +7968,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-arm64/-/esbuild-linux-arm64-0.15.5.tgz",
       "integrity": "sha512-7EgFyP2zjO065XTfdCxiXVEk+f83RQ1JsryN1X/VSX2li9rnHAt2swRbpoz5Vlrl6qjHrCmq5b6yxD13z6RheA==",
-      "cpu": [
-        "arm64"
-      ],
+      "cpu": ["arm64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -8026,14 +7980,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-mips64le/-/esbuild-linux-mips64le-0.15.5.tgz",
       "integrity": "sha512-KdnSkHxWrJ6Y40ABu+ipTZeRhFtc8dowGyFsZY5prsmMSr1ZTG9zQawguN4/tunJ0wy3+kD54GaGwdcpwWAvZQ==",
-      "cpu": [
-        "mips64el"
-      ],
+      "cpu": ["mips64el"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -8042,14 +7992,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-ppc64le/-/esbuild-linux-ppc64le-0.15.5.tgz",
       "integrity": "sha512-QdRHGeZ2ykl5P0KRmfGBZIHmqcwIsUKWmmpZTOq573jRWwmpfRmS7xOhmDHBj9pxv+6qRMH8tLr2fe+ZKQvCYw==",
-      "cpu": [
-        "ppc64"
-      ],
+      "cpu": ["ppc64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -8058,14 +8004,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-riscv64/-/esbuild-linux-riscv64-0.15.5.tgz",
       "integrity": "sha512-p+WE6RX+jNILsf+exR29DwgV6B73khEQV0qWUbzxaycxawZ8NE0wA6HnnTxbiw5f4Gx9sJDUBemh9v49lKOORA==",
-      "cpu": [
-        "riscv64"
-      ],
+      "cpu": ["riscv64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -8074,14 +8016,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-linux-s390x/-/esbuild-linux-s390x-0.15.5.tgz",
       "integrity": "sha512-J2ngOB4cNzmqLHh6TYMM/ips8aoZIuzxJnDdWutBw5482jGXiOzsPoEF4j2WJ2mGnm7FBCO4StGcwzOgic70JQ==",
-      "cpu": [
-        "s390x"
-      ],
+      "cpu": ["s390x"],
       "dev": true,
       "optional": true,
-      "os": [
-        "linux"
-      ],
+      "os": ["linux"],
       "engines": {
         "node": ">=12"
       }
@@ -8090,14 +8028,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-netbsd-64/-/esbuild-netbsd-64-0.15.5.tgz",
       "integrity": "sha512-MmKUYGDizYjFia0Rwt8oOgmiFH7zaYlsoQ3tIOfPxOqLssAsEgG0MUdRDm5lliqjiuoog8LyDu9srQk5YwWF3w==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "netbsd"
-      ],
+      "os": ["netbsd"],
       "engines": {
         "node": ">=12"
       }
@@ -8106,14 +8040,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-openbsd-64/-/esbuild-openbsd-64-0.15.5.tgz",
       "integrity": "sha512-2mMFfkLk3oPWfopA9Plj4hyhqHNuGyp5KQyTT9Rc8hFd8wAn5ZrbJg+gNcLMo2yzf8Uiu0RT6G9B15YN9WQyMA==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "openbsd"
-      ],
+      "os": ["openbsd"],
       "engines": {
         "node": ">=12"
       }
@@ -8122,14 +8052,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-sunos-64/-/esbuild-sunos-64-0.15.5.tgz",
       "integrity": "sha512-2sIzhMUfLNoD+rdmV6AacilCHSxZIoGAU2oT7XmJ0lXcZWnCvCtObvO6D4puxX9YRE97GodciRGDLBaiC6x1SA==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "sunos"
-      ],
+      "os": ["sunos"],
       "engines": {
         "node": ">=12"
       }
@@ -8150,14 +8076,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-windows-32/-/esbuild-windows-32-0.15.5.tgz",
       "integrity": "sha512-e+duNED9UBop7Vnlap6XKedA/53lIi12xv2ebeNS4gFmu7aKyTrok7DPIZyU5w/ftHD4MUDs5PJUkQPP9xJRzg==",
-      "cpu": [
-        "ia32"
-      ],
+      "cpu": ["ia32"],
       "dev": true,
       "optional": true,
-      "os": [
-        "win32"
-      ],
+      "os": ["win32"],
       "engines": {
         "node": ">=12"
       }
@@ -8166,14 +8088,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.15.5.tgz",
       "integrity": "sha512-v+PjvNtSASHOjPDMIai9Yi+aP+Vwox+3WVdg2JB8N9aivJ7lyhp4NVU+J0MV2OkWFPnVO8AE/7xH+72ibUUEnw==",
-      "cpu": [
-        "x64"
-      ],
+      "cpu": ["x64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "win32"
-      ],
+      "os": ["win32"],
       "engines": {
         "node": ">=12"
       }
@@ -8182,14 +8100,10 @@
       "version": "0.15.5",
       "resolved": "https://registry.npmjs.org/esbuild-windows-arm64/-/esbuild-windows-arm64-0.15.5.tgz",
       "integrity": "sha512-Yz8w/D8CUPYstvVQujByu6mlf48lKmXkq6bkeSZZxTA626efQOJb26aDGLzmFWx6eg/FwrXgt6SZs9V8Pwy/aA==",
-      "cpu": [
-        "arm64"
-      ],
+      "cpu": ["arm64"],
       "dev": true,
       "optional": true,
-      "os": [
-        "win32"
-      ],
+      "os": ["win32"],
       "engines": {
         "node": ">=12"
       }
@@ -9167,9 +9081,7 @@
       "resolved": "https://registry.npmjs.org/extsprintf/-/extsprintf-1.3.0.tgz",
       "integrity": "sha512-11Ndz7Nv+mvAC1j0ktTa7fAb0vLyGGX+rMHNBYQviQDGU0Hw7lhctJANqbPhu9nV9/izT/IntTgZ7Im/9LJs9g==",
       "dev": true,
-      "engines": [
-        "node >=0.6.0"
-      ]
+      "engines": ["node >=0.6.0"]
     },
     "node_modules/fast-deep-equal": {
       "version": "3.1.3",
@@ -9481,9 +9393,7 @@
       "dev": true,
       "hasInstallScript": true,
       "optional": true,
-      "os": [
-        "darwin"
-      ],
+      "os": ["darwin"],
       "engines": {
         "node": "^8.16.0 || ^10.6.0 || >=11.0.0"
       }
@@ -11210,9 +11120,7 @@
       "resolved": "https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz",
       "integrity": "sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==",
       "dev": true,
-      "engines": [
-        "node >= 0.2.0"
-      ]
+      "engines": ["node >= 0.2.0"]
     },
     "node_modules/jsprim": {
       "version": "1.4.2",
@@ -12596,9 +12504,7 @@
       "dev": true,
       "hasInstallScript": true,
       "optional": true,
-      "os": [
-        "!win32"
-      ],
+      "os": ["!win32"],
       "dependencies": {
         "node-addon-api": "^3.0.0",
         "node-gyp-build": "^4.2.2"
@@ -17286,9 +17192,7 @@
       "resolved": "https://registry.npmjs.org/verror/-/verror-1.10.0.tgz",
       "integrity": "sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=",
       "dev": true,
-      "engines": [
-        "node >=0.6.0"
-      ],
+      "engines": ["node >=0.6.0"],
       "dependencies": {
         "assert-plus": "^1.0.0",
         "core-util-is": "1.0.2",
