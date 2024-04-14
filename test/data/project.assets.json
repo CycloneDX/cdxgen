@@ -3861,10 +3861,7 @@
     ".NETFramework,Version=v4.6.2": {
       "log4net/2.0.13": {
         "type": "package",
-        "frameworkAssemblies": [
-          "System.Configuration",
-          "System.Web"
-        ],
+        "frameworkAssemblies": ["System.Configuration", "System.Web"],
         "compile": {
           "lib/net45/log4net.dll": {
             "related": ".xml"
@@ -11982,9 +11979,7 @@
         }
       },
       "warningProperties": {
-        "warnAsError": [
-          "NU1605"
-        ]
+        "warnAsError": ["NU1605"]
       }
     },
     "frameworks": {

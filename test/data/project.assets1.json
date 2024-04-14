@@ -114,9 +114,7 @@
             "related": ".xml"
           }
         },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ],
+        "frameworkReferences": ["Microsoft.AspNetCore.App"],
         "build": {
           "build/Microsoft.AspNetCore.Components.WebAssembly.Server.targets": {}
         }
@@ -1794,9 +1792,7 @@
         "/mnt/work/sandbox/dotnet-podcasts/NuGet.config",
         "/home/prabhu/.nuget/NuGet/NuGet.Config"
       ],
-      "originalTargetFrameworks": [
-        "net7.0"
-      ],
+      "originalTargetFrameworks": ["net7.0"],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -1814,9 +1810,7 @@
         }
       },
       "warningProperties": {
-        "warnAsError": [
-          "NU1605"
-        ]
+        "warnAsError": ["NU1605"]
       }
     },
     "frameworks": {

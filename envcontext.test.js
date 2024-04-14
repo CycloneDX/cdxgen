@@ -10,7 +10,7 @@ import {
   collectRustInfo,
   getBranch,
   getOriginUrl,
-  listFiles
+  listFiles,
 } from "./envcontext.js";
 
 test("git tests", () => {

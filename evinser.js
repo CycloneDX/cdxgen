@@ -1,3 +1,11 @@
+import fs from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import process from "node:process";
+import { PackageURL } from "packageurl-js";
+import { Op } from "sequelize";
+import { findCryptoAlgos } from "./cbomutils.js";
+import * as db from "./db.js";
 import {
   DEBUG_MODE,
   collectGradleDependencies,
@@ -6,16 +14,8 @@ import {
   getAllFiles,
   getGradleCommand,
   getMavenCommand,
-  getTimestamp
+  getTimestamp,
 } from "./utils.js";
-import { findCryptoAlgos } from "./cbomutils.js";
-import { tmpdir } from "node:os";
-import path from "node:path";
-import fs from "node:fs";
-import * as db from "./db.js";
-import { PackageURL } from "packageurl-js";
-import { Op } from "sequelize";
-import process from "node:process";
 const DB_NAME = "evinser.db";
 const typePurlsCache = {};
 
@@ -36,11 +36,11 @@ export const prepareDB = async (options) => {
   const bomJsonFile = options.input;
   if (!fs.existsSync(bomJsonFile)) {
     console.log(
-      "Bom file doesn't exist. Check if cdxgen was invoked with the correct type argument."
+      "Bom file doesn't exist. Check if cdxgen was invoked with the correct type argument.",
     );
     if (!process.env.CDXGEN_DEBUG_MODE) {
       console.log(
-        "Set the environment variable CDXGEN_DEBUG_MODE to debug to troubleshoot the issue further."
+        "Set the environment variable CDXGEN_DEBUG_MODE to debug to troubleshoot the issue further.",
       );
     }
     return;
@@ -48,14 +48,14 @@ export const prepareDB = async (options) => {
   const bomJson = JSON.parse(fs.readFileSync(bomJsonFile, "utf8"));
   if (bomJson.specVersion < 1.5) {
     console.log(
-      "Evinse requires the input SBOM in CycloneDX 1.5 format or above. You can generate one by invoking cdxgen without any --spec-version argument."
+      "Evinse requires the input SBOM in CycloneDX 1.5 format or above. You can generate one by invoking cdxgen without any --spec-version argument.",
     );
     process.exit(0);
   }
   const components = bomJson.components || [];
   const { sequelize, Namespaces, Usages, DataFlows } = await db.createOrLoad(
     DB_NAME,
-    options.dbPath
+    options.dbPath,
   );
   let hasMavenPkgs = false;
   // We need to slice only non-maven packages
@@ -95,13 +95,13 @@ export const catalogMavenDeps = async (
   dirPath,
   purlsJars,
   Namespaces,
-  options = {}
+  options = {},
 ) => {
   let jarNSMapping = undefined;
   if (fs.existsSync(path.join(dirPath, "bom.json.map"))) {
     try {
       const mapData = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "bom.json.map"), "utf-8")
+        fs.readFileSync(path.join(dirPath, "bom.json.map"), "utf-8"),
       );
       if (mapData && Object.keys(mapData).length) {
         jarNSMapping = mapData;
@@ -118,7 +118,7 @@ export const catalogMavenDeps = async (
       mavenCmd,
       dirPath,
       false,
-      options.withDeepJarCollector
+      options.withDeepJarCollector,
     );
   }
   if (jarNSMapping) {
@@ -131,12 +131,12 @@ export const catalogMavenDeps = async (
           data: JSON.stringify(
             {
               pom: jarNSMapping[purl].pom,
-              namespaces: jarNSMapping[purl].namespaces
+              namespaces: jarNSMapping[purl].namespaces,
             },
             null,
-            null
-          )
-        }
+            null,
+          ),
+        },
       });
     }
   }
@@ -144,7 +144,7 @@ export const catalogMavenDeps = async (
 
 export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
   console.log(
-    "About to collect jar dependencies from the gradle cache. This would take a while ..."
+    "About to collect jar dependencies from the gradle cache. This would take a while ...",
   );
   const gradleCmd = getGradleCommand(dirPath, dirPath);
   // collect all jars including from the cache if data-flow mode is enabled
@@ -152,7 +152,7 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
     gradleCmd,
     dirPath,
     false,
-    true
+    true,
   );
   if (jarNSMapping) {
     for (const purl of Object.keys(jarNSMapping)) {
@@ -164,17 +164,17 @@ export const catalogGradleDeps = async (dirPath, purlsJars, Namespaces) => {
           data: JSON.stringify(
             {
               pom: jarNSMapping[purl].pom,
-              namespaces: jarNSMapping[purl].namespaces
+              namespaces: jarNSMapping[purl].namespaces,
             },
             null,
-            null
-          )
-        }
+            null,
+          ),
+        },
       });
     }
   }
   console.log(
-    "To speed up successive re-runs, pass the argument --skip-maven-collector to evinse command."
+    "To speed up successive re-runs, pass the argument --skip-maven-collector to evinse command.",
   );
 };
 
@@ -182,7 +182,7 @@ export const createAndStoreSlice = async (
   purl,
   purlsJars,
   Usages,
-  options = {}
+  options = {},
 ) => {
   const retMap = createSlice(purl, purlsJars[purl], "usages", options);
   let sliceData = undefined;
@@ -191,8 +191,8 @@ export const createAndStoreSlice = async (
       where: { purl },
       defaults: {
         purl,
-        data: fs.readFileSync(retMap.slicesFile, "utf-8")
-      }
+        data: fs.readFileSync(retMap.slicesFile, "utf-8"),
+      },
     });
   }
   if (retMap && retMap.tempDir && retMap.tempDir.startsWith(tmpdir())) {
@@ -205,13 +205,13 @@ export const createSlice = (
   purlOrLanguage,
   filePath,
   sliceType = "usages",
-  options = {}
+  options = {},
 ) => {
   if (!filePath) {
     return;
   }
   console.log(
-    `Create ${sliceType} slice for ${path.resolve(filePath)}. Please wait ...`
+    `Create ${sliceType} slice for ${path.resolve(filePath)}. Please wait ...`,
   );
   const language = purlOrLanguage.startsWith("pkg:")
     ? purlToLanguage(purlOrLanguage, filePath)
@@ -220,7 +220,7 @@ export const createSlice = (
     return undefined;
   }
   let sliceOutputDir = fs.mkdtempSync(
-    path.join(tmpdir(), `atom-${sliceType}-`)
+    path.join(tmpdir(), `atom-${sliceType}-`),
   );
   if (options && options.output) {
     sliceOutputDir =
@@ -242,7 +242,7 @@ export const createSlice = (
     "-o",
     path.resolve(atomFile),
     "--slice-outfile",
-    path.resolve(slicesFile)
+    path.resolve(slicesFile),
   ]);
   // For projects with several layers, slice depth needs to be increased from the default 7 to 15 or 20
   // This would increase the time but would yield more deeper paths
@@ -255,16 +255,16 @@ export const createSlice = (
   const result = executeAtom(filePath, args);
   if (!result || !fs.existsSync(slicesFile)) {
     console.warn(
-      `Unable to generate ${sliceType} slice using atom. Check if this is a supported language.`
+      `Unable to generate ${sliceType} slice using atom. Check if this is a supported language.`,
     );
     console.log(
-      "Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot."
+      "Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot.",
     );
   }
   return {
     tempDir: sliceOutputDir,
     slicesFile,
-    atomFile
+    atomFile,
   };
 };
 
@@ -312,13 +312,13 @@ export const initFromSbom = (components, language) => {
     }
     if (comp.evidence.occurrences) {
       purlLocationMap[comp.purl] = new Set(
-        comp.evidence.occurrences.map((v) => v.location)
+        comp.evidence.occurrences.map((v) => v.location),
       );
     }
   }
   return {
     purlLocationMap,
-    purlImportsMap
+    purlImportsMap,
   };
 };
 
@@ -357,14 +357,14 @@ export const analyzeProject = async (dbObjMap, options) => {
     ) {
       reachablesSlicesFile = options.reachablesSlicesFile;
       reachablesSlice = JSON.parse(
-        fs.readFileSync(options.reachablesSlicesFile, "utf-8")
+        fs.readFileSync(options.reachablesSlicesFile, "utf-8"),
       );
     } else {
       retMap = createSlice(language, dirPath, "reachables", options);
       if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
         reachablesSlicesFile = retMap.slicesFile;
         reachablesSlice = JSON.parse(
-          fs.readFileSync(retMap.slicesFile, "utf-8")
+          fs.readFileSync(retMap.slicesFile, "utf-8"),
         );
       }
     }
@@ -394,7 +394,7 @@ export const analyzeProject = async (dbObjMap, options) => {
       dbObjMap,
       servicesMap,
       purlLocationMap,
-      purlImportsMap
+      purlImportsMap,
     );
     purlLocationMap = retMap.purlLocationMap;
     servicesMap = retMap.servicesMap;
@@ -407,7 +407,7 @@ export const analyzeProject = async (dbObjMap, options) => {
     ) {
       dataFlowSlicesFile = options.dataFlowSlicesFile;
       dataFlowSlice = JSON.parse(
-        fs.readFileSync(options.dataFlowSlicesFile, "utf-8")
+        fs.readFileSync(options.dataFlowSlicesFile, "utf-8"),
       );
     } else {
       retMap = createSlice(language, dirPath, "data-flow", options);
@@ -424,7 +424,7 @@ export const analyzeProject = async (dbObjMap, options) => {
       dataFlowSlice,
       dbObjMap,
       purlLocationMap,
-      purlImportsMap
+      purlImportsMap,
     );
   }
   return {
@@ -438,7 +438,7 @@ export const analyzeProject = async (dbObjMap, options) => {
     tempDir: retMap.tempDir,
     userDefinedTypesMap,
     cryptoComponents,
-    cryptoGeneratePurls
+    cryptoGeneratePurls,
   };
 };
 
@@ -448,7 +448,7 @@ export const parseObjectSlices = async (
   dbObjMap,
   servicesMap = {},
   purlLocationMap = {},
-  purlImportsMap = {}
+  purlImportsMap = {},
 ) => {
   if (!usageSlice || !Object.keys(usageSlice).length) {
     return purlLocationMap;
@@ -459,7 +459,7 @@ export const parseObjectSlices = async (
   });
   for (const slice of [
     ...(usageSlice.objectSlices || []),
-    ...(usageSlice.userDefinedTypes || [])
+    ...(usageSlice.userDefinedTypes || []),
   ]) {
     // Skip the library code typically without filename
     if (
@@ -476,7 +476,7 @@ export const parseObjectSlices = async (
       slice,
       dbObjMap,
       purlLocationMap,
-      purlImportsMap
+      purlImportsMap,
     );
     detectServicesFromUsages(language, slice, servicesMap);
   }
@@ -484,7 +484,7 @@ export const parseObjectSlices = async (
   return {
     purlLocationMap,
     servicesMap,
-    userDefinedTypesMap
+    userDefinedTypesMap,
   };
 };
 
@@ -506,7 +506,7 @@ export const parseSliceUsages = async (
   slice,
   dbObjMap,
   purlLocationMap,
-  purlImportsMap
+  purlImportsMap,
 ) => {
   const fileName = slice.fileName;
   const typesToLookup = new Set();
@@ -531,7 +531,7 @@ export const parseSliceUsages = async (
       [ausage?.targetObj?.isExternal, ausage?.targetObj?.resolvedMethod],
       [ausage?.definedBy?.isExternal, ausage?.definedBy?.typeFullName],
       [ausage?.definedBy?.isExternal, ausage?.definedBy?.resolvedMethod],
-      ...(ausage?.fields || []).map((f) => [f?.isExternal, f?.typeFullName])
+      ...(ausage?.fields || []).map((f) => [f?.isExternal, f?.typeFullName]),
     ]) {
       if (
         atype[0] !== false &&
@@ -546,7 +546,7 @@ export const parseSliceUsages = async (
           ) {
             if (atype[1].includes(":")) {
               typesToLookup.add(
-                simplifyType(atype[1].split("::")[0].replace(/:/g, "/"))
+                simplifyType(atype[1].split("::")[0].replace(/:/g, "/")),
               );
             }
             addToOverrides(lKeyOverrides, atype[1], fileName, ausageLine);
@@ -571,7 +571,7 @@ export const parseSliceUsages = async (
             lKeyOverrides,
             acall.callName,
             fileName,
-            acall.lineNumber
+            acall.lineNumber,
           );
         }
       } else if (acall.isExternal == false) {
@@ -591,13 +591,13 @@ export const parseSliceUsages = async (
               lKeyOverrides,
               acall?.resolvedMethod,
               fileName,
-              acall.lineNumber
+              acall.lineNumber,
             );
           }
         }
         const maybeClassType = getClassTypeFromSignature(
           language,
-          acall?.resolvedMethod
+          acall?.resolvedMethod,
         );
         typesToLookup.add(maybeClassType);
         if (acall.lineNumber) {
@@ -605,7 +605,7 @@ export const parseSliceUsages = async (
             lKeyOverrides,
             maybeClassType,
             fileName,
-            acall.lineNumber
+            acall.lineNumber,
           );
         }
       }
@@ -616,20 +616,20 @@ export const parseSliceUsages = async (
             if (acall.lineNumber) {
               if (aparamType.includes(":")) {
                 typesToLookup.add(
-                  simplifyType(aparamType.split("::")[0].replace(/:/g, "/"))
+                  simplifyType(aparamType.split("::")[0].replace(/:/g, "/")),
                 );
               }
               addToOverrides(
                 lKeyOverrides,
                 aparamType,
                 fileName,
-                acall.lineNumber
+                acall.lineNumber,
               );
             }
           }
           const maybeClassType = getClassTypeFromSignature(
             language,
-            aparamType
+            aparamType,
           );
           typesToLookup.add(maybeClassType);
           if (acall.lineNumber) {
@@ -637,7 +637,7 @@ export const parseSliceUsages = async (
               lKeyOverrides,
               maybeClassType,
               fileName,
-              acall.lineNumber
+              acall.lineNumber,
             );
           }
         }
@@ -681,9 +681,9 @@ export const parseSliceUsages = async (
           attributes: ["purl"],
           where: {
             data: {
-              [Op.like]: `%${atype}%`
-            }
-          }
+              [Op.like]: `%${atype}%`,
+            },
+          },
         });
       }
       if (nsHits && nsHits.length) {
@@ -707,7 +707,7 @@ export const parseSliceUsages = async (
 export const isFilterableType = (
   language,
   userDefinedTypesMap,
-  typeFullName
+  typeFullName,
 ) => {
   if (
     !typeFullName ||
@@ -721,7 +721,7 @@ export const isFilterableType = (
     "<unknownFullName",
     "__builtin",
     "LAMBDA",
-    "../"
+    "../",
   ]) {
     if (typeFullName.startsWith(ab)) {
       return true;
@@ -812,7 +812,7 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
           if (language != "php") {
             const tmpEndpoints = extractEndpoints(
               language,
-              acall.resolvedMethod
+              acall.resolvedMethod,
             );
             if (acall.resolvedMethod.toLowerCase().includes("auth")) {
               authenticated = true;
@@ -830,7 +830,7 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
         servicesMap[serviceName] = {
           endpoints: new Set(),
           authenticated,
-          xTrustBoundary: authenticated === true ? true : undefined
+          xTrustBoundary: authenticated === true ? true : undefined,
         };
       }
       for (const endpoint of endpoints) {
@@ -850,7 +850,7 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
 export const detectServicesFromUDT = (
   language,
   userDefinedTypes,
-  servicesMap
+  servicesMap,
 ) => {
   if (
     ["python", "py", "c", "cpp", "c++", "php"].includes(language) &&
@@ -886,7 +886,7 @@ export const detectServicesFromUDT = (
           let serviceName = "service";
           if (audt.fileName) {
             serviceName = `${path.basename(
-              audt.fileName.replace(".py", "")
+              audt.fileName.replace(".py", ""),
             )}-service`;
           }
           if (endpoints && endpoints.length) {
@@ -894,7 +894,7 @@ export const detectServicesFromUDT = (
               servicesMap[serviceName] = {
                 endpoints: new Set(),
                 authenticated: false,
-                xTrustBoundary: undefined
+                xTrustBoundary: undefined,
               };
             }
             for (const endpoint of endpoints) {
@@ -941,7 +941,7 @@ export const extractEndpoints = (language, code) => {
               v.length &&
               !v.startsWith(".") &&
               v.includes("/") &&
-              !v.startsWith("@")
+              !v.startsWith("@"),
           );
       }
       break;
@@ -960,7 +960,7 @@ export const extractEndpoints = (language, code) => {
               v.includes("/") &&
               !v.startsWith("@") &&
               !v.startsWith("application/") &&
-              !v.startsWith("text/")
+              !v.startsWith("text/"),
           );
       }
       break;
@@ -990,7 +990,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     servicesMap,
     dataFlowFrames,
     cryptoComponents,
-    cryptoGeneratePurls
+    cryptoGeneratePurls,
   } = sliceArtefacts;
   const bomFile = options.input;
   const evinseOutFile = options.output;
@@ -1005,7 +1005,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     }
     delete comp.signature;
     const locationOccurrences = Array.from(
-      purlLocationMap[comp.purl] || []
+      purlLocationMap[comp.purl] || [],
     ).sort();
     if (locationOccurrences.length) {
       if (!comp.evidence) {
@@ -1016,7 +1016,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
       comp.evidence.occurrences = locationOccurrences
         .filter((l) => !!l)
         .map((l) => ({
-          location: l
+          location: l,
         }));
       occEvidencePresent = true;
     }
@@ -1049,7 +1049,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         name: serviceName,
         endpoints: Array.from(servicesMap[serviceName].endpoints),
         authenticated: servicesMap[serviceName].authenticated,
-        "x-trust-boundary": servicesMap[serviceName].xTrustBoundary
+        "x-trust-boundary": servicesMap[serviceName].xTrustBoundary,
       });
     }
     // Add to existing services
@@ -1087,7 +1087,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         subjects: [bomJson.serialNumber],
         annotator: { component: bomJson.metadata.tools.components[0] },
         timestamp: getTimestamp(),
-        text: fs.readFileSync(usagesSlicesFile, "utf8")
+        text: fs.readFileSync(usagesSlicesFile, "utf8"),
       });
     }
     if (dataFlowSlicesFile && fs.existsSync(dataFlowSlicesFile)) {
@@ -1095,7 +1095,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         subjects: [bomJson.serialNumber],
         annotator: { component: bomJson.metadata.tools.components[0] },
         timestamp: getTimestamp(),
-        text: fs.readFileSync(dataFlowSlicesFile, "utf8")
+        text: fs.readFileSync(dataFlowSlicesFile, "utf8"),
       });
     }
     if (reachablesSlicesFile && fs.existsSync(reachablesSlicesFile)) {
@@ -1103,7 +1103,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
         subjects: [bomJson.serialNumber],
         annotator: { component: bomJson.metadata.tools.components[0] },
         timestamp: getTimestamp(),
-        text: fs.readFileSync(reachablesSlicesFile, "utf8")
+        text: fs.readFileSync(reachablesSlicesFile, "utf8"),
       });
     }
   }
@@ -1117,7 +1117,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     console.log(evinseOutFile, "created successfully.");
   } else {
     console.log(
-      "Unable to identify component evidence for the input SBOM. Only java, javascript, python, and php projects are supported by evinse."
+      "Unable to identify component evidence for the input SBOM. Only java, javascript, python, and php projects are supported by evinse.",
     );
   }
   if (tempDir && tempDir.startsWith(tmpdir())) {
@@ -1143,7 +1143,7 @@ export const collectDataFlowFrames = async (
   dataFlowSlice,
   dbObjMap,
   purlLocationMap,
-  purlImportsMap
+  purlImportsMap,
 ) => {
   const nodes = dataFlowSlice?.graph?.nodes || [];
   // Cache the nodes based on the id to improve lookup
@@ -1200,9 +1200,9 @@ export const collectDataFlowFrames = async (
               attributes: ["purl"],
               where: {
                 data: {
-                  [Op.like]: `%${typeFullName}%`
-                }
-              }
+                  [Op.like]: `%${typeFullName}%`,
+                },
+              },
             });
           }
           if (nsHits && nsHits.length) {
@@ -1236,7 +1236,7 @@ export const collectDataFlowFrames = async (
         function: theNode.parentMethodName || "",
         line: theNode.lineNumber || undefined,
         column: theNode.columnNumber || undefined,
-        fullFilename: theNode.parentFileName || ""
+        fullFilename: theNode.parentFileName || "",
       });
     }
     referredPurls = Array.from(referredPurls);
@@ -1299,7 +1299,7 @@ export const collectReachableFrames = (language, reachablesSlice) => {
         function: fnode.parentMethodName || "",
         line: fnode.lineNumber || undefined,
         column: fnode.columnNumber || undefined,
-        fullFilename: fnode.parentFileName || ""
+        fullFilename: fnode.parentFileName || "",
       });
     }
     referredPurls = Array.from(referredPurls);
@@ -1333,14 +1333,14 @@ export const collectReachableFrames = (language, reachablesSlice) => {
       description: algoObj.description || "",
       cryptoProperties: {
         assetType: "algorithm",
-        oid: algoObj.oid
-      }
+        oid: algoObj.oid,
+      },
     });
   }
   return {
     dataFlowFrames: dfFrames,
     cryptoComponents,
-    cryptoGeneratePurls
+    cryptoGeneratePurls,
   };
 };
 

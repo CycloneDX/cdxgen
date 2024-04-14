@@ -1,23 +1,23 @@
-import { arch as _arch, platform as _platform, homedir, tmpdir } from "node:os";
-import process from "node:process";
 import { Buffer } from "node:buffer";
+import { spawnSync } from "node:child_process";
 import {
   existsSync,
+  lstatSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
-  lstatSync
 } from "node:fs";
+import { arch as _arch, platform as _platform, homedir, tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
-import { spawnSync } from "node:child_process";
+import process from "node:process";
 import { PackageURL } from "packageurl-js";
 import {
   DEBUG_MODE,
   TIMEOUT_MS,
-  findLicenseId,
   adjustLicenseInformation,
-  isSpdxLicenseExpression
+  findLicenseId,
+  isSpdxLicenseExpression,
 } from "./utils.js";
 
 import { URL, fileURLToPath } from "node:url";
@@ -84,8 +84,8 @@ if (
       "node_modules",
       "@cyclonedx",
       "cdxgen-plugins-bin" + pluginsBinSuffix,
-      "plugins"
-    )
+      "plugins",
+    ),
   ) &&
   existsSync(
     join(
@@ -94,8 +94,8 @@ if (
       "@cyclonedx",
       "cdxgen-plugins-bin" + pluginsBinSuffix,
       "plugins",
-      "goversion"
-    )
+      "goversion",
+    ),
   )
 ) {
   CDXGEN_PLUGINS_DIR = join(
@@ -103,7 +103,7 @@ if (
     "node_modules",
     "@cyclonedx",
     "cdxgen-plugins-bin" + pluginsBinSuffix,
-    "plugins"
+    "plugins",
   );
 }
 
@@ -114,8 +114,8 @@ if (!CDXGEN_PLUGINS_DIR) {
       isWin ? "npm.cmd" : "npm",
       ["root", "--quiet", "-g"],
       {
-        encoding: "utf-8"
-      }
+        encoding: "utf-8",
+      },
     );
     if (result) {
       const stdout = result.stdout;
@@ -129,7 +129,7 @@ if (!CDXGEN_PLUGINS_DIR) {
       globalNodePath,
       "@cyclonedx",
       "cdxgen-plugins-bin" + pluginsBinSuffix,
-      "plugins"
+      "plugins",
     );
     if (existsSync(globalPlugins)) {
       CDXGEN_PLUGINS_DIR = globalPlugins;
@@ -143,7 +143,7 @@ if (!CDXGEN_PLUGINS_DIR) {
 if (!CDXGEN_PLUGINS_DIR) {
   if (DEBUG_MODE) {
     console.warn(
-      "cdxgen plugins was not found. Please install with npm install -g @cyclonedx/cdxgen-plugins-bin"
+      "cdxgen plugins was not found. Please install with npm install -g @cyclonedx/cdxgen-plugins-bin",
     );
   }
   CDXGEN_PLUGINS_DIR = "";
@@ -153,7 +153,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "goversion"))) {
   GOVERSION_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "goversion",
-    "goversion-" + platform + "-" + arch + extn
+    "goversion-" + platform + "-" + arch + extn,
   );
 }
 let TRIVY_BIN = null;
@@ -161,7 +161,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "trivy"))) {
   TRIVY_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "trivy",
-    "trivy-cdxgen-" + platform + "-" + arch + extn
+    "trivy-cdxgen-" + platform + "-" + arch + extn,
   );
 } else if (process.env.TRIVY_CMD) {
   TRIVY_BIN = process.env.TRIVY_CMD;
@@ -171,7 +171,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "cargo-auditable"))) {
   CARGO_AUDITABLE_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "cargo-auditable",
-    "cargo-auditable-cdxgen-" + platform + "-" + arch + extn
+    "cargo-auditable-cdxgen-" + platform + "-" + arch + extn,
   );
 } else if (process.env.CARGO_AUDITABLE_CMD) {
   CARGO_AUDITABLE_BIN = process.env.CARGO_AUDITABLE_CMD;
@@ -181,7 +181,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
   OSQUERY_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "osquery",
-    "osqueryi-" + platform + "-" + arch + extn
+    "osqueryi-" + platform + "-" + arch + extn,
   );
   // osqueryi-darwin-amd64.app/Contents/MacOS/osqueryd
   if (platform === "darwin") {
@@ -199,7 +199,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
   DOSAI_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "dosai",
-    "dosai-" + platformToUse + "-" + arch + extn
+    "dosai-" + platformToUse + "-" + arch + extn,
   );
 } else if (process.env.DOSAI_CMD) {
   DOSAI_BIN = process.env.DOSAI_CMD;
@@ -271,13 +271,13 @@ const OS_DISTRO_ALIAS = {
   "debian-2": "hamm",
   "debian-1.3": "bo",
   "debian-1.2": "rex",
-  "debian-1.1": "buzz"
+  "debian-1.1": "buzz",
 };
 
 export function getGoBuildInfo(src) {
   if (GOVERSION_BIN) {
     let result = spawnSync(GOVERSION_BIN, [src], {
-      encoding: "utf-8"
+      encoding: "utf-8",
     });
     if (result.status !== 0 || result.error || !result.stdout) {
       if (result.stdout || result.stderr) {
@@ -287,7 +287,7 @@ export function getGoBuildInfo(src) {
         console.log("Falling back to go version command");
       }
       result = spawnSync("go", ["version", "-v", "-m", src], {
-        encoding: "utf-8"
+        encoding: "utf-8",
       });
       if (result.status !== 0 || result.error) {
         if (result.stdout || result.stderr) {
@@ -309,7 +309,7 @@ export function getGoBuildInfo(src) {
 export function getCargoAuditableInfo(src) {
   if (CARGO_AUDITABLE_BIN) {
     const result = spawnSync(CARGO_AUDITABLE_BIN, [src], {
-      encoding: "utf-8"
+      encoding: "utf-8",
     });
     if (result.status !== 0 || result.error) {
       if (result.stdout || result.stderr) {
@@ -360,7 +360,7 @@ export function getOSPackages(src) {
       "--cache-dir",
       trivyCacheDir,
       "--output",
-      bomJsonFile
+      bomJsonFile,
     ];
     if (!DEBUG_MODE) {
       args.push("-q");
@@ -370,7 +370,7 @@ export function getOSPackages(src) {
       console.log("Executing", TRIVY_BIN, args.join(" "));
     }
     const result = spawnSync(TRIVY_BIN, args, {
-      encoding: "utf-8"
+      encoding: "utf-8",
     });
     if (result.status !== 0 || result.error) {
       if (result.stdout || result.stderr) {
@@ -382,8 +382,8 @@ export function getOSPackages(src) {
       try {
         tmpBom = JSON.parse(
           readFileSync(bomJsonFile, {
-            encoding: "utf-8"
-          })
+            encoding: "utf-8",
+          }),
         );
       } catch (e) {
         // ignore errors
@@ -521,7 +521,7 @@ export function getOSPackages(src) {
                     name,
                     purlObj.version,
                     purlObj.qualifiers,
-                    purlObj.subpath
+                    purlObj.subpath,
                   ).toString();
                   comp["bom-ref"] = decodeURIComponent(comp.purl);
                 }
@@ -549,7 +549,7 @@ export function getOSPackages(src) {
                     if (dtmpA && dtmpA.length > 1) {
                       distro_codename = dtmpA[0].replace(
                         "redhat",
-                        "enterprise_linux"
+                        "enterprise_linux",
                       );
                     }
                   }
@@ -563,7 +563,7 @@ export function getOSPackages(src) {
                     name,
                     purlObj.version,
                     purlObj.qualifiers,
-                    purlObj.subpath
+                    purlObj.subpath,
                   ).toString();
                   comp["bom-ref"] = decodeURIComponent(comp.purl);
                 }
@@ -588,7 +588,7 @@ export function getOSPackages(src) {
                       newLicenses.push({ license: { id: possibleId } });
                     } else {
                       newLicenses.push({
-                        license: { name: aLic.license.name }
+                        license: { name: aLic.license.name },
                       });
                     }
                   }
@@ -630,7 +630,7 @@ export function getOSPackages(src) {
             const compDeps = retrieveDependencies(
               tmpDependencies,
               origBomRef,
-              comp
+              comp,
             );
             if (compDeps) {
               dependenciesList.push(compDeps);
@@ -647,7 +647,7 @@ export function getOSPackages(src) {
                   srcName,
                   srcVersion,
                   purlObj.qualifiers,
-                  purlObj.subpath
+                  purlObj.subpath,
                 ).toString();
               }
               newComp["bom-ref"] = decodeURIComponent(newComp.purl);
@@ -661,7 +661,7 @@ export function getOSPackages(src) {
   return {
     osPackages: pkgList,
     dependenciesList,
-    allTypes: Array.from(allTypes)
+    allTypes: Array.from(allTypes),
   };
 }
 
@@ -715,7 +715,7 @@ export function executeOsQuery(query) {
     const result = spawnSync(OSQUERY_BIN, args, {
       encoding: "utf-8",
       maxBuffer: 50 * 1024 * 1024,
-      timeout: 60 * 1000
+      timeout: 60 * 1000,
     });
     if (result.status !== 0 || result.error) {
       if (DEBUG_MODE && result.stderr) {
@@ -734,7 +734,7 @@ export function executeOsQuery(query) {
             if (DEBUG_MODE) {
               console.log("Unable to parse the output from query", query);
               console.log(
-                "This could be due to the amount of data returned or the query being invalid for the given platform."
+                "This could be due to the amount of data returned or the query being invalid for the given platform.",
               );
             }
           }
@@ -764,7 +764,7 @@ export function getDotnetSlices(src, slicesFile) {
   const result = spawnSync(DOSAI_BIN, args, {
     encoding: "utf-8",
     timeout: TIMEOUT_MS,
-    cwd: src
+    cwd: src,
   });
   if (result.status !== 0 || result.error) {
     if (DEBUG_MODE && result.error) {
@@ -803,14 +803,14 @@ export function getBinaryBom(src, binaryBomFile, deepMode) {
   const result = spawnSync(BLINT_BIN, args, {
     encoding: "utf-8",
     timeout: TIMEOUT_MS,
-    cwd
+    cwd,
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
       console.error(result.stdout, result.stderr);
     } else {
       console.log(
-        "Install blint using 'pip install blint' or use the cdxgen container image."
+        "Install blint using 'pip install blint' or use the cdxgen container image.",
       );
     }
     return false;

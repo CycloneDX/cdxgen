@@ -9,9 +9,7 @@
     "crc32c",
     {
       "name": "curl",
-      "features": [
-        "ssl"
-      ]
+      "features": ["ssl"]
     },
     {
       "$description": "If cross-compiling, we need the gRPC protoc plugin on the 'host' environment.",

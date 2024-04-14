@@ -4,7 +4,11 @@
  * @param {string} dirPath Root directory for search
  * @param {string} pattern Glob pattern (eg: *.gradle)
  */
-export function getAllFiles(dirPath: string, pattern: string, options?: {}): string[];
+export function getAllFiles(
+  dirPath: string,
+  pattern: string,
+  options?: {},
+): string[];
 /**
  * Method to get files matching a pattern
  *
@@ -12,7 +16,11 @@ export function getAllFiles(dirPath: string, pattern: string, options?: {}): str
  * @param {string} pattern Glob pattern (eg: *.gradle)
  * @param {Array} ignoreList Directory patterns to ignore
  */
-export function getAllFilesWithIgnore(dirPath: string, pattern: string, ignoreList: any[]): string[];
+export function getAllFilesWithIgnore(
+  dirPath: string,
+  pattern: string,
+  ignoreList: any[],
+): string[];
 /**
  * Performs a lookup + validation of the license specified in the
  * package. If the license is a valid SPDX license ID, set the 'id'
@@ -38,8 +46,11 @@ export function addLicenseText(pkg: any, l: any, licenseContent: any): void;
  * Read the file from the given path to the license text object and includes
  * content-type attribute, if not default. Returns the license text object.
  */
-export function readLicenseText(licenseFilepath: any, licenseContentType: any): {
-    content: string;
+export function readLicenseText(
+  licenseFilepath: any,
+  licenseContentType: any,
+): {
+  content: string;
 };
 export function getSwiftPackageMetadata(pkgList: any): Promise<any[]>;
 /**
@@ -54,16 +65,22 @@ export function getNpmMetadata(pkgList: any[]): Promise<any[]>;
  * @param {string} pkgJsonFile package.json file
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
  */
-export function parsePkgJson(pkgJsonFile: string, simple?: boolean): Promise<any[]>;
+export function parsePkgJson(
+  pkgJsonFile: string,
+  simple?: boolean,
+): Promise<any[]>;
 /**
  * Parse nodejs package lock file
  *
  * @param {string} pkgLockFile package-lock.json file
  * @param {object} options Command line options
  */
-export function parsePkgLock(pkgLockFile: string, options?: object): Promise<{
-    pkgList: any;
-    dependenciesList: any;
+export function parsePkgLock(
+  pkgLockFile: string,
+  options?: object,
+): Promise<{
+  pkgList: any;
+  dependenciesList: any;
 }>;
 /**
  * Given a lock file this method would return an Object with the identiy as the key and parsed name and value
@@ -80,8 +97,8 @@ export function yarnLockToIdentMap(lockData: string): {};
  * @param {string} yarnLockFile yarn.lock file
  */
 export function parseYarnLock(yarnLockFile: string): Promise<{
-    pkgList: any[];
-    dependenciesList: any[];
+  pkgList: any[];
+  dependenciesList: any[];
 }>;
 /**
  * Parse nodejs shrinkwrap deps file
@@ -95,16 +112,22 @@ export function parseNodeShrinkwrap(swFile: string): Promise<any[]>;
  * @param {string} pnpmLock pnpm-lock.yaml file
  * @param {object} parentComponent parent component
  */
-export function parsePnpmLock(pnpmLock: string, parentComponent?: object): Promise<{
-    pkgList?: undefined;
-    dependenciesList?: undefined;
-} | {
-    pkgList: any[];
-    dependenciesList: {
+export function parsePnpmLock(
+  pnpmLock: string,
+  parentComponent?: object,
+): Promise<
+  | {
+      pkgList?: undefined;
+      dependenciesList?: undefined;
+    }
+  | {
+      pkgList: any[];
+      dependenciesList: {
         ref: string;
         dependsOn: string[];
-    }[];
-}>;
+      }[];
+    }
+>;
 /**
  * Parse bower json file
  *
@@ -123,42 +146,44 @@ export function parseMinJs(minJsFile: string): Promise<any[]>;
  * @param {string} pom file to parse
  */
 export function parsePom(pomFile: any): {
-    group: any;
-    name: any;
-    version: any;
-    qualifiers: {
-        type: string;
-    };
-    properties: {
-        name: string;
+  group: any;
+  name: any;
+  version: any;
+  qualifiers: {
+    type: string;
+  };
+  properties: {
+    name: string;
+    value: any;
+  }[];
+  evidence: {
+    identity: {
+      field: string;
+      confidence: number;
+      methods: {
+        technique: string;
+        confidence: number;
         value: any;
-    }[];
-    evidence: {
-        identity: {
-            field: string;
-            confidence: number;
-            methods: {
-                technique: string;
-                confidence: number;
-                value: any;
-            }[];
-        };
+      }[];
     };
+  };
 }[];
 /**
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
  */
-export function parseMavenTree(rawOutput: string): {
-    pkgList?: undefined;
-    dependenciesList?: undefined;
-} | {
-    pkgList: any[];
-    dependenciesList: {
+export function parseMavenTree(rawOutput: string):
+  | {
+      pkgList?: undefined;
+      dependenciesList?: undefined;
+    }
+  | {
+      pkgList: any[];
+      dependenciesList: {
         ref: string;
         dependsOn: any;
-    }[];
-};
+      }[];
+    };
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
@@ -166,23 +191,30 @@ export function parseMavenTree(rawOutput: string): {
  * @param {string} rootProjectName Root project name
  * @param {string} rootProjectVersion Root project version
  */
-export function parseGradleDep(rawOutput: string, rootProjectGroup?: string, rootProjectName?: string, rootProjectVersion?: string): {
-    pkgList: {
+export function parseGradleDep(
+  rawOutput: string,
+  rootProjectGroup?: string,
+  rootProjectName?: string,
+  rootProjectVersion?: string,
+):
+  | {
+      pkgList: {
         group: any;
         name: any;
         version: any;
         qualifiers: {
-            type: string;
+          type: string;
         };
-    }[];
-    dependenciesList: {
+      }[];
+      dependenciesList: {
         ref: string;
         dependsOn: any;
-    }[];
-} | {
-    pkgList?: undefined;
-    dependenciesList?: undefined;
-};
+      }[];
+    }
+  | {
+      pkgList?: undefined;
+      dependenciesList?: undefined;
+    };
 /**
  * Parse clojure cli dependencies output
  * @param {string} rawOutput Raw string output
@@ -200,8 +232,8 @@ export function parseLeinMap(node: any, keys_cache: any, deps: any): any;
  * @param {string} rawOutput Raw string output
  */
 export function parseGradleProjects(rawOutput: string): {
-    rootProject: string;
-    projects: any[];
+  rootProject: string;
+  projects: any[];
 };
 /**
  * Parse gradle properties output
@@ -209,13 +241,13 @@ export function parseGradleProjects(rawOutput: string): {
  * @param {string} rawOutput Raw string output
  */
 export function parseGradleProperties(rawOutput: string): {
-    rootProject: string;
-    projects: any[];
-    metadata: {
-        group: string;
-        version: string;
-        properties: any[];
-    };
+  rootProject: string;
+  projects: any[];
+  metadata: {
+    group: string;
+    version: string;
+    properties: any[];
+  };
 };
 /**
  * Execute gradle properties command and return parsed output
@@ -224,7 +256,11 @@ export function parseGradleProperties(rawOutput: string): {
  * @param {string} rootPath Root directory
  * @param {string} subProject Sub project name
  */
-export function executeGradleProperties(dir: string, rootPath: string, subProject: string): {};
+export function executeGradleProperties(
+  dir: string,
+  rootPath: string,
+  subProject: string,
+): {};
 /**
  * Parse bazel action graph output
  * @param {string} rawOutput Raw string output
@@ -262,7 +298,10 @@ export function guessLicenseId(content: any): any;
  * @param {Array} pkgList Package list
  * @param {Object} jarNSMapping Jar Namespace mapping object
  */
-export function getMvnMetadata(pkgList: any[], jarNSMapping?: any): Promise<any[]>;
+export function getMvnMetadata(
+  pkgList: any[],
+  jarNSMapping?: any,
+): Promise<any[]>;
 /**
  * Method to compose URL of pom.xml
  *
@@ -273,7 +312,12 @@ export function getMvnMetadata(pkgList: any[], jarNSMapping?: any): Promise<any[
  *
  * @return {String} fullUrl
  */
-export function composePomXmlUrl({ urlPrefix, group, name, version }: string): string;
+export function composePomXmlUrl({
+  urlPrefix,
+  group,
+  name,
+  version,
+}: string): string;
 /**
  * Method to fetch pom.xml data and parse it to JSON
  *
@@ -284,7 +328,12 @@ export function composePomXmlUrl({ urlPrefix, group, name, version }: string): s
  *
  * @return {Object|undefined}
  */
-export function fetchPomXmlAsJson({ urlPrefix, group, name, version }: string): any | undefined;
+export function fetchPomXmlAsJson({
+  urlPrefix,
+  group,
+  name,
+  version,
+}: string): any | undefined;
 /**
  * Method to fetch pom.xml data
  *
@@ -295,7 +344,12 @@ export function fetchPomXmlAsJson({ urlPrefix, group, name, version }: string): 
  *
  * @return {Promise<String>}
  */
-export function fetchPomXml({ urlPrefix, group, name, version }: string): Promise<string>;
+export function fetchPomXml({
+  urlPrefix,
+  group,
+  name,
+  version,
+}: string): Promise<string>;
 /**
  * Method extract single or multiple license entries that might appear in pom.xml
  *
@@ -312,15 +366,20 @@ export function parseLicenseEntryOrArrayFromPomXml(license: any | any[]): any[];
  *
  * @return {Promise<String>} License ID
  */
-export function extractLicenseCommentFromPomXml({ urlPrefix, group, name, version }: string): Promise<string>;
+export function extractLicenseCommentFromPomXml({
+  urlPrefix,
+  group,
+  name,
+  version,
+}: string): Promise<string>;
 /**
  * Method to parse python requires_dist attribute found in pypi setup.py
  *
  * @param requires_dist string
  */
 export function parsePyRequiresDist(dist_string: any): {
-    name: string;
-    version: string;
+  name: string;
+  version: string;
 };
 /**
  * Method to mimic pip version solver using node-semver
@@ -328,14 +387,20 @@ export function parsePyRequiresDist(dist_string: any): {
  * @param {Array} versionsList List of version numbers available
  * @param {*} versionSpecifiers pip version specifier
  */
-export function guessPypiMatchingVersion(versionsList: any[], versionSpecifiers: any): any;
+export function guessPypiMatchingVersion(
+  versionsList: any[],
+  versionSpecifiers: any,
+): any;
 /**
  * Method to retrieve metadata for python packages by querying pypi
  *
  * @param {Array} pkgList Package list
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
  */
-export function getPyMetadata(pkgList: any[], fetchDepsInfo: boolean): Promise<any[]>;
+export function getPyMetadata(
+  pkgList: any[],
+  fetchDepsInfo: boolean,
+): Promise<any[]>;
 /**
  * Method to parse bdist_wheel metadata
  *
@@ -360,21 +425,30 @@ export function parsePyProjectToml(tomlFile: string): {};
  * @param {Object} lockData JSON data from poetry.lock
  * @param {string} lockFile Lock file name for evidence
  */
-export function parsePoetrylockData(lockData: any, lockFile: string): Promise<any[] | {
-    pkgList: any[];
-    rootList: any[];
-    dependenciesList: {
+export function parsePoetrylockData(
+  lockData: any,
+  lockFile: string,
+): Promise<
+  | any[]
+  | {
+      pkgList: any[];
+      rootList: any[];
+      dependenciesList: {
         ref: string;
         dependsOn: any[];
-    }[];
-}>;
+      }[];
+    }
+>;
 /**
  * Method to parse requirements.txt data
  *
  * @param {Object} reqData Requirements.txt data
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
  */
-export function parseReqFile(reqData: any, fetchDepsInfo: boolean): Promise<any[]>;
+export function parseReqFile(
+  reqData: any,
+  fetchDepsInfo: boolean,
+): Promise<any[]>;
 /**
  * Method to find python modules by parsing the imports and then checking with PyPI to obtain the latest version
  *
@@ -382,14 +456,18 @@ export function parseReqFile(reqData: any, fetchDepsInfo: boolean): Promise<any[
  * @param {Array} epkgList Existing package list
  * @returns List of packages
  */
-export function getPyModules(src: string, epkgList: any[], options: any): Promise<{
-    allImports: {};
-    pkgList: any;
-    dependenciesList: {
-        ref: string;
-        dependsOn: any[];
-    }[];
-    modList: any;
+export function getPyModules(
+  src: string,
+  epkgList: any[],
+  options: any,
+): Promise<{
+  allImports: {};
+  pkgList: any;
+  dependenciesList: {
+    ref: string;
+    dependsOn: any[];
+  }[];
+  modList: any;
 }>;
 /**
  * Method to parse setup.py data
@@ -402,7 +480,9 @@ export function parseSetupPyFile(setupPyData: any): Promise<any[]>;
  * @param {Object} repoMetadata Repo metadata with group and name
  * @return {String|undefined} github api url (or undefined - if not enough data)
  */
-export function repoMetadataToGitHubApiUrl(repoMetadata: any): string | undefined;
+export function repoMetadataToGitHubApiUrl(
+  repoMetadata: any,
+): string | undefined;
 /**
  * Method to split GitHub url into its parts
  * @param {String} repoUrl Repository url
@@ -415,7 +495,10 @@ export function getGithubUrlParts(repoUrl: string): [string];
  * @param {Object} repoMetadata Object containing group and package name strings
  * @return {String|undefined} github api url (or undefined - if not a GitHub repo)
  */
-export function toGitHubApiUrl(repoUrl: string, repoMetadata: any): string | undefined;
+export function toGitHubApiUrl(
+  repoUrl: string,
+  repoMetadata: any,
+): string | undefined;
 /**
  * Method to retrieve repo license by querying github api
  *
@@ -423,14 +506,22 @@ export function toGitHubApiUrl(repoUrl: string, repoMetadata: any): string | und
  * @param {Object} repoMetadata Object containing group and package name strings
  * @return {Promise<String>} SPDX license id
  */
-export function getRepoLicense(repoUrl: string, repoMetadata: any): Promise<string>;
+export function getRepoLicense(
+  repoUrl: string,
+  repoMetadata: any,
+): Promise<string>;
 /**
  * Method to get go pkg license from go.dev site.
  *
  * @param {Object} repoMetadata Repo metadata
  */
 export function getGoPkgLicense(repoMetadata: any): Promise<any>;
-export function getGoPkgComponent(group: any, name: any, version: any, hash: any): Promise<{}>;
+export function getGoPkgComponent(
+  group: any,
+  name: any,
+  version: any,
+  hash: any,
+): Promise<{}>;
 export function parseGoModData(goModData: any, gosumMap: any): Promise<any[]>;
 /**
  * Parse go list output
@@ -438,9 +529,12 @@ export function parseGoModData(goModData: any, gosumMap: any): Promise<any[]>;
  * @param {string} rawOutput Output from go list invocation
  * @returns Object with parent component and List of packages
  */
-export function parseGoListDep(rawOutput: string, gosumMap: any): Promise<{
-    parentComponent: {};
-    pkgList: {}[];
+export function parseGoListDep(
+  rawOutput: string,
+  gosumMap: any,
+): Promise<{
+  parentComponent: {};
+  pkgList: {}[];
 }>;
 /**
  * Parse go mod graph
@@ -452,12 +546,18 @@ export function parseGoListDep(rawOutput: string, gosumMap: any): Promise<{
  *
  * @returns Object containing List of packages and dependencies
  */
-export function parseGoModGraph(rawOutput: string, goModFile: string, gosumMap: any, epkgList?: any[], parentComponent?: {}): Promise<{
-    pkgList: any[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any[];
-    }[];
+export function parseGoModGraph(
+  rawOutput: string,
+  goModFile: string,
+  gosumMap: any,
+  epkgList?: any[],
+  parentComponent?: {},
+): Promise<{
+  pkgList: any[];
+  dependenciesList: {
+    ref: string;
+    dependsOn: any[];
+  }[];
 }>;
 /**
  * Parse go mod why output
@@ -491,21 +591,28 @@ export function parseGemspecData(gemspecData: string): Promise<any[]>;
  * @param {object} gemLockData Gemfile.lock data
  * @param {string} lockFile Lock file
  */
-export function parseGemfileLockData(gemLockData: object, lockFile: string): Promise<any[] | {
-    pkgList: any[];
-    dependenciesList: {
+export function parseGemfileLockData(
+  gemLockData: object,
+  lockFile: string,
+): Promise<
+  | any[]
+  | {
+      pkgList: any[];
+      dependenciesList: {
         ref: string;
         dependsOn: any[];
-    }[];
-    rootList?: undefined;
-} | {
-    pkgList: any[];
-    dependenciesList: {
+      }[];
+      rootList?: undefined;
+    }
+  | {
+      pkgList: any[];
+      dependenciesList: {
         ref: string;
         dependsOn: any[];
-    }[];
-    rootList: any[];
-}>;
+      }[];
+      rootList: any[];
+    }
+>;
 /**
  * Method to retrieve metadata for rust packages by querying crates
  *
@@ -535,7 +642,10 @@ export function getDartMetadata(pkgList: any[]): Promise<any[]>;
  *
  * @returns {array} Package list
  */
-export function parseCargoTomlData(cargoTomlFile: string, simple?: boolean): any[];
+export function parseCargoTomlData(
+  cargoTomlFile: string,
+  simple?: boolean,
+): any[];
 /**
  * Parse a Cargo.lock file to find components within the Rust project.
  *
@@ -546,19 +656,23 @@ export function parseCargoTomlData(cargoTomlFile: string, simple?: boolean): any
  */
 export function parseCargoData(cargoLockFile: string, simple?: boolean): any[];
 export function parseCargoDependencyData(cargoLockData: any): {
-    ref: string;
-    dependsOn: any;
+  ref: string;
+  dependsOn: any;
 }[];
 export function parseCargoAuditableData(cargoData: any): Promise<any[]>;
 export function parsePubLockData(pubLockData: any): Promise<any[]>;
 export function parsePubYamlData(pubYamlData: any): any[];
 export function parseHelmYamlData(helmData: any): any[];
-export function recurseImageNameLookup(keyValueObj: any, pkgList: any, imgList: any): any;
+export function recurseImageNameLookup(
+  keyValueObj: any,
+  pkgList: any,
+  imgList: any,
+): any;
 export function parseContainerFile(fileContents: any): {
-    image: any;
+  image: any;
 }[];
 export function parseBitbucketPipelinesFile(fileContents: any): {
-    image: any;
+  image: any;
 }[];
 export function parseContainerSpecData(dcData: any): any[];
 export function identifyFlow(processingObj: any): string;
@@ -576,18 +690,27 @@ export function parseNupkg(nupkgFile: any): Promise<any[]>;
 export function parseNuspecData(nupkgFile: any, nuspecData: any): any[];
 export function parseCsPkgData(pkgData: any): any[];
 export function parseCsProjData(csProjData: any, projFile: any): any[];
-export function parseCsProjAssetsData(csProjData: any, assetsJsonFile: any): {
-    pkgList: any[];
-    dependenciesList: any[];
+export function parseCsProjAssetsData(
+  csProjData: any,
+  assetsJsonFile: any,
+): {
+  pkgList: any[];
+  dependenciesList: any[];
 };
-export function parseCsPkgLockData(csLockData: any, pkgLockFile: any): {
-    pkgList: any[];
-    dependenciesList: any[];
-    rootList: any[];
+export function parseCsPkgLockData(
+  csLockData: any,
+  pkgLockFile: any,
+): {
+  pkgList: any[];
+  dependenciesList: any[];
+  rootList: any[];
 };
-export function parsePaketLockData(paketLockData: any, pkgLockFile: any): {
-    pkgList: any[];
-    dependenciesList: any[];
+export function parsePaketLockData(
+  paketLockData: any,
+  pkgLockFile: any,
+): {
+  pkgList: any[];
+  dependenciesList: any[];
 };
 /**
  * Parse composer lock file
@@ -595,8 +718,13 @@ export function parsePaketLockData(paketLockData: any, pkgLockFile: any): {
  * @param {string} pkgLockFile composer.lock file
  * @param {array} rootRequires require section from composer.json
  */
-export function parseComposerLock(pkgLockFile: string, rootRequires: any[]): any[] | {
-    pkgList: {
+export function parseComposerLock(
+  pkgLockFile: string,
+  rootRequires: any[],
+):
+  | any[]
+  | {
+      pkgList: {
         group: string;
         name: string;
         purl: string;
@@ -607,26 +735,26 @@ export function parseComposerLock(pkgLockFile: string, rootRequires: any[]): any
         description: any;
         scope: string;
         properties: {
-            name: string;
-            value: string;
+          name: string;
+          value: string;
         }[];
         evidence: {
-            identity: {
-                field: string;
-                confidence: number;
-                methods: {
-                    technique: string;
-                    confidence: number;
-                    value: string;
-                }[];
-            };
+          identity: {
+            field: string;
+            confidence: number;
+            methods: {
+              technique: string;
+              confidence: number;
+              value: string;
+            }[];
+          };
         };
-    }[];
-    dependenciesList: {
+      }[];
+      dependenciesList: {
         ref: string;
         dependsOn: any[];
-    }[];
-    rootList: {
+      }[];
+      rootList: {
         group: string;
         name: string;
         purl: string;
@@ -637,28 +765,28 @@ export function parseComposerLock(pkgLockFile: string, rootRequires: any[]): any
         description: any;
         scope: string;
         properties: {
-            name: string;
-            value: string;
+          name: string;
+          value: string;
         }[];
         evidence: {
-            identity: {
-                field: string;
-                confidence: number;
-                methods: {
-                    technique: string;
-                    confidence: number;
-                    value: string;
-                }[];
-            };
+          identity: {
+            field: string;
+            confidence: number;
+            methods: {
+              technique: string;
+              confidence: number;
+              value: string;
+            }[];
+          };
         };
-    }[];
-};
+      }[];
+    };
 export function parseSbtTree(sbtTreeFile: any): {
-    pkgList: any[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any;
-    }[];
+  pkgList: any[];
+  dependenciesList: {
+    ref: string;
+    dependsOn: any;
+  }[];
 };
 /**
  * Parse sbt lock file
@@ -666,26 +794,26 @@ export function parseSbtTree(sbtTreeFile: any): {
  * @param {string} pkgLockFile build.sbt.lock file
  */
 export function parseSbtLock(pkgLockFile: string): {
-    group: any;
-    name: any;
-    version: any;
-    _integrity: string;
-    scope: string;
-    properties: {
-        name: string;
+  group: any;
+  name: any;
+  version: any;
+  _integrity: string;
+  scope: string;
+  properties: {
+    name: string;
+    value: string;
+  }[];
+  evidence: {
+    identity: {
+      field: string;
+      confidence: number;
+      methods: {
+        technique: string;
+        confidence: number;
         value: string;
-    }[];
-    evidence: {
-        identity: {
-            field: string;
-            confidence: number;
-            methods: {
-                technique: string;
-                confidence: number;
-                value: string;
-            }[];
-        };
+      }[];
     };
+  };
 }[];
 /**
  * Method to execute dpkg --listfiles to determine the files provided by a given package
@@ -730,60 +858,75 @@ export function executeEqueryList(pkgName: string): string[];
  * @param {Array} results Query Results
  * @param {Boolean} enhance Optionally enhance results by invoking additional package manager commands
  */
-export function convertOSQueryResults(queryCategory: any, queryObj: any, results: any[], enhance?: boolean): {
-    name: any;
-    group: string;
-    version: any;
-    description: any;
-    publisher: any;
-    "bom-ref": string;
-    purl: string;
-    scope: any;
-    type: any;
+export function convertOSQueryResults(
+  queryCategory: any,
+  queryObj: any,
+  results: any[],
+  enhance?: boolean,
+): {
+  name: any;
+  group: string;
+  version: any;
+  description: any;
+  publisher: any;
+  "bom-ref": string;
+  purl: string;
+  scope: any;
+  type: any;
 }[];
 /**
  * Parse swift dependency tree output json object
  * @param {string} jsonObject Swift dependencies json object
  * @param {string} pkgFile Package.swift file
  */
-export function parseSwiftJsonTreeObject(pkgList: any, dependenciesList: any, jsonObject: string, pkgFile: string): string;
+export function parseSwiftJsonTreeObject(
+  pkgList: any,
+  dependenciesList: any,
+  jsonObject: string,
+  pkgFile: string,
+): string;
 /**
  * Parse swift dependency tree output
  * @param {string} rawOutput Swift dependencies json output
  * @param {string} pkgFile Package.swift file
  */
-export function parseSwiftJsonTree(rawOutput: string, pkgFile: string): {
-    pkgList?: undefined;
-    dependenciesList?: undefined;
-} | {
-    pkgList: any[];
-    dependenciesList: any[];
-};
+export function parseSwiftJsonTree(
+  rawOutput: string,
+  pkgFile: string,
+):
+  | {
+      pkgList?: undefined;
+      dependenciesList?: undefined;
+    }
+  | {
+      pkgList: any[];
+      dependenciesList: any[];
+    };
 /**
  * Parse swift package resolved file
  * @param {string} resolvedFile Package.resolved file
  */
 export function parseSwiftResolved(resolvedFile: string): {
+  name: string;
+  group: string;
+  version: string;
+  purl: string;
+  "bom-ref": string;
+  properties: {
     name: string;
-    group: string;
-    version: string;
-    purl: string;
-    "bom-ref": string;
-    properties: {
-        name: string;
+    value: string;
+  }[];
+  evidence: {
+    identity: {
+      field: string;
+      confidence: number;
+      methods: {
+        technique: string;
+        confidence: number;
         value: string;
-    }[];
-    evidence: {
-        identity: {
-            field: string;
-            confidence: number;
-            methods: {
-                technique: string;
-                confidence: number;
-                value: string;
-            }[];
-        };
+      }[];
     };
+  };
 }[];
 /**
  * Collect maven dependencies
@@ -793,8 +936,18 @@ export function parseSwiftResolved(resolvedFile: string): {
  * @param {boolean} cleanup Remove temporary directories
  * @param {boolean} includeCacheDir Include maven and gradle cache directories
  */
-export function collectMvnDependencies(mavenCmd: string, basePath: string, cleanup?: boolean, includeCacheDir?: boolean): Promise<{}>;
-export function collectGradleDependencies(gradleCmd: any, basePath: any, cleanup?: boolean, includeCacheDir?: boolean): Promise<{}>;
+export function collectMvnDependencies(
+  mavenCmd: string,
+  basePath: string,
+  cleanup?: boolean,
+  includeCacheDir?: boolean,
+): Promise<{}>;
+export function collectGradleDependencies(
+  gradleCmd: any,
+  basePath: any,
+  cleanup?: boolean,
+  includeCacheDir?: boolean,
+): Promise<{}>;
 /**
  * Method to collect class names from all jars in a directory
  *
@@ -805,35 +958,35 @@ export function collectGradleDependencies(gradleCmd: any, basePath: any, cleanup
  */
 export function collectJarNS(jarPath: string, pomPathMap?: object): Promise<{}>;
 export function convertJarNSToPackages(jarNSMapping: any): {
-    name: any;
-    group: any;
-    version: any;
-    description: any;
-    purl: string;
-    "bom-ref": string;
-    evidence: {
-        identity: {
-            field: string;
-            confidence: number;
-            methods: {
-                technique: string;
-                confidence: number;
-                value: any;
-            }[];
-        };
-    };
-    properties: {
-        name: string;
+  name: any;
+  group: any;
+  version: any;
+  description: any;
+  purl: string;
+  "bom-ref": string;
+  evidence: {
+    identity: {
+      field: string;
+      confidence: number;
+      methods: {
+        technique: string;
+        confidence: number;
         value: any;
-    }[];
+      }[];
+    };
+  };
+  properties: {
+    name: string;
+    value: any;
+  }[];
 }[];
 export function parsePomXml(pomXmlData: any): {
-    artifactId: any;
-    groupId: any;
-    version: any;
-    description: any;
-    url: any;
-    scm: any;
+  artifactId: any;
+  groupId: any;
+  version: any;
+  description: any;
+  url: any;
+  scm: any;
 };
 export function parseJarManifest(jarMetadata: any): {};
 export function parsePomProperties(pomProperties: any): {};
@@ -862,7 +1015,11 @@ export function checksumFile(hashName: string, path: string): Promise<string>;
  *
  * @return pkgList Package list
  */
-export function extractJarArchive(jarFile: string, tempDir: string, jarNSMapping?: object): Promise<any[]>;
+export function extractJarArchive(
+  jarFile: string,
+  tempDir: string,
+  jarNSMapping?: object,
+): Promise<any[]>;
 /**
  * Determine the version of SBT used in compilation of this project.
  * By default it looks into a standard SBT location i.e.
@@ -892,7 +1049,10 @@ export function addPlugin(projectPath: string, plugin: string): string;
  * @param {string} projectPath Path to the SBT project
  * @param {string} originalPluginsFile Location of the original plugins file, if any
  */
-export function cleanupPlugin(projectPath: string, originalPluginsFile: string): boolean;
+export function cleanupPlugin(
+  projectPath: string,
+  originalPluginsFile: string,
+): boolean;
 /**
  * Returns a default location of the plugins file.
  *
@@ -908,7 +1068,11 @@ export function sbtPluginsPath(projectPath: string): string;
  *
  * @returns File contents
  */
-export function readZipEntry(zipFile: string, filePattern: string, contentEncoding?: string): Promise<any>;
+export function readZipEntry(
+  zipFile: string,
+  filePattern: string,
+  contentEncoding?: string,
+): Promise<any>;
 /**
  * Method to get the classes and relevant sources in a jar file
  *
@@ -945,7 +1109,12 @@ export function executeAtom(src: any, args: any): boolean;
  * @param {string} slicesFile
  * @returns List of imported modules
  */
-export function findAppModules(src: string, language: string, methodology?: string, slicesFile?: string): any;
+export function findAppModules(
+  src: string,
+  language: string,
+  methodology?: string,
+  slicesFile?: string,
+): any;
 /**
  * Execute pip freeze by creating a virtual env in a temp directory and construct the dependency tree
  *
@@ -954,39 +1123,43 @@ export function findAppModules(src: string, language: string, methodology?: stri
  * @param {string} tempVenvDir Temp venv dir
  * @returns List of packages from the virtual env
  */
-export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempVenvDir: string): {
-    pkgList: {
-        name: any;
-        version: any;
-        purl: string;
-        "bom-ref": string;
-        evidence: {
-            identity: {
-                field: string;
-                confidence: number;
-                methods: {
-                    technique: string;
-                    confidence: number;
-                    value: any;
-                }[];
-            };
-        };
-    }[];
-    rootList: {
-        name: any;
-        version: any;
-    }[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any;
-    }[];
-    frozen: boolean;
+export function getPipFrozenTree(
+  basePath: string,
+  reqOrSetupFile: string,
+  tempVenvDir: string,
+): {
+  pkgList: {
+    name: any;
+    version: any;
+    purl: string;
+    "bom-ref": string;
+    evidence: {
+      identity: {
+        field: string;
+        confidence: number;
+        methods: {
+          technique: string;
+          confidence: number;
+          value: any;
+        }[];
+      };
+    };
+  }[];
+  rootList: {
+    name: any;
+    version: any;
+  }[];
+  dependenciesList: {
+    ref: string;
+    dependsOn: any;
+  }[];
+  frozen: boolean;
 };
 export function parsePackageJsonName(name: any): {
-    scope: any;
-    fullName: string;
-    projectName: string;
-    moduleName: string;
+  scope: any;
+  fullName: string;
+  projectName: string;
+  moduleName: string;
 };
 /**
  * Method to add occurrence evidence for components based on import statements. Currently useful for js
@@ -995,19 +1168,32 @@ export function parsePackageJsonName(name: any): {
  * @param {object} allImports Import statements object with package name as key and an object with file and location details
  * @param {object} allExports Exported modules if available from node_modules
  */
-export function addEvidenceForImports(pkgList: any[], allImports: object, allExports: object, deep: any): Promise<any[]>;
+export function addEvidenceForImports(
+  pkgList: any[],
+  allImports: object,
+  allExports: object,
+  deep: any,
+): Promise<any[]>;
 export function componentSorter(a: any, b: any): any;
-export function parseCmakeDotFile(dotFile: any, pkgType: any, options?: {}): {
-    parentComponent: {};
-    pkgList: any[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any[];
-    }[];
+export function parseCmakeDotFile(
+  dotFile: any,
+  pkgType: any,
+  options?: {},
+): {
+  parentComponent: {};
+  pkgList: any[];
+  dependenciesList: {
+    ref: string;
+    dependsOn: any[];
+  }[];
 };
-export function parseCmakeLikeFile(cmakeListFile: any, pkgType: any, options?: {}): {
-    parentComponent: {};
-    pkgList: any[];
+export function parseCmakeLikeFile(
+  cmakeListFile: any,
+  pkgType: any,
+  options?: {},
+): {
+  parentComponent: {};
+  pkgList: any[];
 };
 export function getOSPackageForFile(afile: any, osPkgsList: any): any;
 /**
@@ -1018,13 +1204,18 @@ export function getOSPackageForFile(afile: any, osPkgsList: any): any;
  * @param {array} osPkgsList Array of OS pacakges represented as components
  * @param {array} epkgList Existing packages list
  */
-export function getCppModules(src: string, options: object, osPkgsList: any[], epkgList: any[]): {
-    parentComponent: {};
-    pkgList: any[];
-    dependenciesList: {
-        ref: any;
-        dependsOn: any[];
-    }[];
+export function getCppModules(
+  src: string,
+  options: object,
+  osPkgsList: any[],
+  epkgList: any[],
+): {
+  parentComponent: {};
+  pkgList: any[];
+  dependenciesList: {
+    ref: any;
+    dependsOn: any[];
+  }[];
 };
 /**
  * NOT IMPLEMENTED YET.
@@ -1040,9 +1231,12 @@ export function parseCUsageSlice(sliceData: any): {};
  *
  * @param {Array} pkgList Package list
  */
-export function getNugetMetadata(pkgList: any[], dependencies?: any): Promise<{
-    pkgList: any[];
-    dependencies: any[];
+export function getNugetMetadata(
+  pkgList: any[],
+  dependencies?: any,
+): Promise<{
+  pkgList: any[];
+  dependencies: any[];
 }>;
 export function addEvidenceForDotnet(pkgList: any, slicesFile: any): any;
 export const dirNameStr: string;

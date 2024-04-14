@@ -1,12 +1,12 @@
-import connect from "connect";
-import http from "node:http";
-import bodyParser from "body-parser";
-import url from "node:url";
 import { spawnSync } from "node:child_process";
-import os from "node:os";
 import fs from "node:fs";
+import http from "node:http";
+import os from "node:os";
 import path from "node:path";
 import process from "node:process";
+import url from "node:url";
+import bodyParser from "body-parser";
+import connect from "connect";
 import { createBom, submitBom } from "./index.js";
 import { postProcess } from "./postgen.js";
 
@@ -14,21 +14,21 @@ import compression from "compression";
 
 // Timeout milliseconds. Default 10 mins
 const TIMEOUT_MS =
-  parseInt(process.env.CDXGEN_SERVER_TIMEOUT_MS) || 10 * 60 * 1000;
+  Number.parseInt(process.env.CDXGEN_SERVER_TIMEOUT_MS) || 10 * 60 * 1000;
 
 const app = connect();
 
 app.use(
   bodyParser.json({
     deflate: true,
-    limit: "1mb"
-  })
+    limit: "1mb",
+  }),
 );
 app.use(compression());
 
 const gitClone = (repoUrl, branch = null) => {
   const tempDir = fs.mkdtempSync(
-    path.join(os.tmpdir(), path.basename(repoUrl))
+    path.join(os.tmpdir(), path.basename(repoUrl)),
   );
 
   if (branch == null) {
@@ -38,8 +38,8 @@ const gitClone = (repoUrl, branch = null) => {
       ["clone", repoUrl, "--depth", "1", tempDir],
       {
         encoding: "utf-8",
-        shell: false
-      }
+        shell: false,
+      },
     );
     if (result.status !== 0 || result.error) {
       console.log(result.error);
@@ -51,8 +51,8 @@ const gitClone = (repoUrl, branch = null) => {
       ["clone", repoUrl, "--branch", branch, "--depth", "1", tempDir],
       {
         encoding: "utf-8",
-        shell: false
-      }
+        shell: false,
+      },
     );
     if (result.status !== 0 || result.error) {
       console.log(result.error);
@@ -85,7 +85,7 @@ const parseQueryString = (q, body, options = {}) => {
     "only",
     "autoCompositions",
     "gitBranch",
-    "active"
+    "active",
   ];
 
   for (const param of queryParams) {
@@ -125,13 +125,13 @@ const start = (options) => {
     const reqOptions = parseQueryString(
       q,
       req.body,
-      Object.assign({}, options)
+      Object.assign({}, options),
     );
     const filePath = q.path || q.url || req.body.path || req.body.url;
     if (!filePath) {
       res.writeHead(500, { "Content-Type": "application/json" });
       return res.end(
-        "{'error': 'true', 'message': 'path or url is required.'}\n"
+        "{'error': 'true', 'message': 'path or url is required.'}\n",
       );
     }
     res.writeHead(200, { "Content-Type": "application/json" });

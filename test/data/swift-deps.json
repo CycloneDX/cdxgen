@@ -11,9 +11,7 @@
       "url": "https://github.com/apple/swift-cmark.git",
       "version": "unspecified",
       "path": "/Volumes/Work/sandbox/swift-markdown/.build/checkouts/swift-cmark",
-      "dependencies": [
-
-      ]
+      "dependencies": []
     },
     {
       "identity": "swift-argument-parser",
@@ -21,9 +19,7 @@
       "url": "https://github.com/apple/swift-argument-parser",
       "version": "1.0.3",
       "path": "/Volumes/Work/sandbox/swift-markdown/.build/checkouts/swift-argument-parser",
-      "dependencies": [
-
-      ]
+      "dependencies": []
     },
     {
       "identity": "swift-docc-plugin",
@@ -38,9 +34,7 @@
           "url": "https://github.com/apple/swift-docc-symbolkit",
           "version": "1.0.0",
           "path": "/Volumes/Work/sandbox/swift-markdown/.build/checkouts/swift-docc-symbolkit",
-          "dependencies": [
-
-          ]
+          "dependencies": []
         }
       ]
     }

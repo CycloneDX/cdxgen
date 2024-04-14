@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 
+import fs from "node:fs";
+import { homedir, tmpdir } from "node:os";
+import { join } from "node:path";
+import process from "node:process";
 import repl from "node:repl";
 import jsonata from "jsonata";
-import fs from "node:fs";
-import { join } from "node:path";
-import { homedir, tmpdir } from "node:os";
-import process from "node:process";
 
-import { createBom } from "../index.js";
-import { validateBom } from "../validator.js";
 import {
   printCallStack,
   printDependencyTree,
   printOSTable,
   printOccurrences,
   printServices,
-  printTable
+  printTable,
 } from "../display.js";
+import { createBom } from "../index.js";
+import { validateBom } from "../validator.js";
 
 const options = {
   useColors: true,
@@ -24,7 +24,7 @@ const options = {
   preview: true,
   prompt: "cdx ↝ ",
   ignoreUndefined: true,
-  useGlobal: true
+  useGlobal: true,
 };
 
 // Use canonical terminal settings to support custom readlines
@@ -63,9 +63,7 @@ export const importSbom = (sbomOrPath) => {
       sbom = JSON.parse(fs.readFileSync(sbomOrPath, "utf-8"));
       console.log(`✅ SBOM imported successfully from ${sbomOrPath}`);
     } catch (e) {
-      console.log(
-        `⚠ Unable to import the SBOM from ${sbomOrPath} due to ${e}`
-      );
+      console.log(`⚠ Unable to import the SBOM from ${sbomOrPath} due to ${e}`);
     }
   } else {
     console.log(`⚠ ${sbomOrPath} is invalid.`);
@@ -91,10 +89,10 @@ if (historyFile) {
     (err) => {
       if (err) {
         console.log(
-          "⚠ REPL history would not be persisted for this session. Set the environment variable CDXGEN_REPL_HISTORY to specify a custom history file"
+          "⚠ REPL history would not be persisted for this session. Set the environment variable CDXGEN_REPL_HISTORY to specify a custom history file",
         );
       }
-    }
+    },
   );
 }
 cdxgenRepl.defineCommand("create", {
@@ -106,7 +104,7 @@ cdxgenRepl.defineCommand("create", {
     const bomNSData = await createBom(sbomOrPath, {
       multiProject: true,
       installDeps: true,
-      output: bomFile
+      output: bomFile,
     });
     if (bomNSData) {
       sbom = bomNSData.bomJson;
@@ -116,7 +114,7 @@ cdxgenRepl.defineCommand("create", {
       console.log("BOM was not generated successfully");
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("import", {
   help: "import an existing BOM",
@@ -124,13 +122,13 @@ cdxgenRepl.defineCommand("import", {
     this.clearBufferedCommand();
     importSbom(sbomOrPath);
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("exit", {
   help: "exit",
   action() {
     this.close();
-  }
+  },
 });
 cdxgenRepl.defineCommand("sbom", {
   help: "show the current sbom",
@@ -139,11 +137,11 @@ cdxgenRepl.defineCommand("sbom", {
       console.log(sbom);
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("search", {
   help: "search the current bom. performs case insensitive search on various attributes.",
@@ -165,17 +163,15 @@ cdxgenRepl.defineCommand("search", {
           console.log(e);
         }
       } else {
-        console.log(
-          "⚠ Specify the search string. Eg: .search <search string>"
-        );
+        console.log("⚠ Specify the search string. Eg: .search <search string>");
       }
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("sort", {
   help: "sort the current bom based on the attribute",
@@ -205,11 +201,11 @@ cdxgenRepl.defineCommand("sort", {
       }
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("query", {
   help: "query the current bom using jsonata expression",
@@ -224,16 +220,16 @@ cdxgenRepl.defineCommand("query", {
         }
       } else {
         console.log(
-          "⚠ Specify the search specification in jsonata format. Eg: .query metadata.component"
+          "⚠ Specify the search specification in jsonata format. Eg: .query metadata.component",
         );
       }
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("print", {
   help: "print the current bom as a table",
@@ -242,11 +238,11 @@ cdxgenRepl.defineCommand("print", {
       printTable(sbom);
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("tree", {
   help: "display the dependency tree",
@@ -255,11 +251,11 @@ cdxgenRepl.defineCommand("tree", {
       printDependencyTree(sbom);
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("validate", {
   help: "validate the bom using jsonschema",
@@ -271,11 +267,11 @@ cdxgenRepl.defineCommand("validate", {
       }
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("save", {
   help: "save the bom to a new file",
@@ -288,11 +284,11 @@ cdxgenRepl.defineCommand("save", {
       console.log(`BOM saved successfully to ${saveToFile}`);
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("update", {
   help: "update the bom components based on the given query",
@@ -316,11 +312,11 @@ cdxgenRepl.defineCommand("update", {
       console.log("BOM updated successfully.");
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an existing BOM"
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("occurrences", {
   help: "view components with evidence.occurrences",
@@ -328,12 +324,12 @@ cdxgenRepl.defineCommand("occurrences", {
     if (sbom) {
       try {
         const expression = jsonata(
-          "components[$count(evidence.occurrences) > 0]"
+          "components[$count(evidence.occurrences) > 0]",
         );
         let components = await expression.evaluate(sbom);
         if (!components) {
           console.log(
-            "No results found. Use evinse command to generate an BOM with evidence."
+            "No results found. Use evinse command to generate an BOM with evidence.",
           );
         } else {
           if (!Array.isArray(components)) {
@@ -346,27 +342,27 @@ cdxgenRepl.defineCommand("occurrences", {
       }
     } else {
       console.log(
-        "⚠ No BOM is loaded. Use .import command to import an evinse BOM"
+        "⚠ No BOM is loaded. Use .import command to import an evinse BOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("discord", {
   help: "display the discord invite link for support",
   action() {
     console.log("Head to https://discord.gg/pF4BYWEJcS for support");
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("sponsor", {
   help: "display the sponsorship link to fund this project",
   action() {
     console.log(
-      "Hey, thanks a lot for considering! https://github.com/sponsors/prabhu"
+      "Hey, thanks a lot for considering! https://github.com/sponsors/prabhu",
     );
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("callstack", {
   help: "view components with evidence.callstack",
@@ -374,12 +370,12 @@ cdxgenRepl.defineCommand("callstack", {
     if (sbom) {
       try {
         const expression = jsonata(
-          "components[$count(evidence.callstack.frames) > 0]"
+          "components[$count(evidence.callstack.frames) > 0]",
         );
         let components = await expression.evaluate(sbom);
         if (!components) {
           console.log(
-            "callstack evidence was not found. Use evinse command to generate an SBOM with evidence."
+            "callstack evidence was not found. Use evinse command to generate an SBOM with evidence.",
           );
         } else {
           if (!Array.isArray(components)) {
@@ -392,11 +388,11 @@ cdxgenRepl.defineCommand("callstack", {
       }
     } else {
       console.log(
-        "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM"
+        "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("services", {
   help: "view services",
@@ -407,7 +403,7 @@ cdxgenRepl.defineCommand("services", {
         let services = await expression.evaluate(sbom);
         if (!services) {
           console.log(
-            "No services found. Use evinse command to generate an SBOM with evidence."
+            "No services found. Use evinse command to generate an SBOM with evidence.",
           );
         } else {
           if (!Array.isArray(services)) {
@@ -420,11 +416,11 @@ cdxgenRepl.defineCommand("services", {
       }
     } else {
       console.log(
-        "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM"
+        "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM",
       );
     }
     this.displayPrompt();
-  }
+  },
 });
 cdxgenRepl.defineCommand("osinfocategories", {
   help: "view the category names for the OS info from the obom",
@@ -432,12 +428,12 @@ cdxgenRepl.defineCommand("osinfocategories", {
     if (sbom) {
       try {
         const expression = jsonata(
-          '$distinct(components.properties[name="cdx:osquery:category"].value)'
+          '$distinct(components.properties[name="cdx:osquery:category"].value)',
         );
         const catgories = await expression.evaluate(sbom);
         if (!catgories) {
           console.log(
-            "Unable to retrieve the os info categories. Only OBOMs generated by cdxgen are supported by this tool."
+            "Unable to retrieve the os info categories. Only OBOMs generated by cdxgen are supported by this tool.",
           );
         } else {
           console.log(catgories.join("\n"));
@@ -446,12 +442,10 @@ cdxgenRepl.defineCommand("osinfocategories", {
         console.log(e);
       }
     } else {
-      console.log(
-        "⚠ No OBOM is loaded. Use .import command to import an OBOM"
-      );
+      console.log("⚠ No OBOM is loaded. Use .import command to import an OBOM");
     }
     this.displayPrompt();
-  }
+  },
 });
 
 // Let's dynamically define more commands from the queries
@@ -522,7 +516,7 @@ cdxgenRepl.defineCommand("osinfocategories", {
   "wmi_cli_event_consumers",
   "wmi_cli_event_consumers_snapshot",
   "wmi_event_filters",
-  "wmi_filter_consumer_binding"
+  "wmi_filter_consumer_binding",
 ].forEach((c) => {
   cdxgenRepl.defineCommand(c, {
     help: `query the ${c} category from the OS info`,
@@ -530,7 +524,7 @@ cdxgenRepl.defineCommand("osinfocategories", {
       if (sbom) {
         try {
           const expression = jsonata(
-            `components[properties[name="cdx:osquery:category" and value="${c}"]]`
+            `components[properties[name="cdx:osquery:category" and value="${c}"]]`,
           );
           let components = await expression.evaluate(sbom);
           if (!components) {
@@ -546,10 +540,10 @@ cdxgenRepl.defineCommand("osinfocategories", {
         }
       } else {
         console.log(
-          "⚠ No OBOM is loaded. Use .import command to import an OBOM"
+          "⚠ No OBOM is loaded. Use .import command to import an OBOM",
         );
       }
       this.displayPrompt();
-    }
+    },
   });
 });

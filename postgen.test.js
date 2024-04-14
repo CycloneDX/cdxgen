@@ -5,7 +5,7 @@ import { expect, test } from "@jest/globals";
 
 test("filter bom tests", () => {
   const bomJson = JSON.parse(
-    readFileSync("./test/data/bom-postgen-test.json", "utf-8")
+    readFileSync("./test/data/bom-postgen-test.json", "utf-8"),
   );
   let newBom = filterBom(bomJson, {});
   expect(bomJson).toEqual(newBom);
@@ -21,7 +21,7 @@ test("filter bom tests", () => {
 
 test("filter bom tests2", () => {
   const bomJson = JSON.parse(
-    readFileSync("./test/data/bom-postgen-test2.json", "utf-8")
+    readFileSync("./test/data/bom-postgen-test2.json", "utf-8"),
   );
   let newBom = filterBom(bomJson, {});
   expect(bomJson).toEqual(newBom);
@@ -53,7 +53,7 @@ test("filter bom tests2", () => {
   newBom = filterBom(bomJson, {
     only: ["org.springframework"],
     specVersion: 1.5,
-    autoCompositions: true
+    autoCompositions: true,
   });
   for (const comp of newBom.components) {
     if (!comp.purl.includes("org.springframework")) {
@@ -64,7 +64,7 @@ test("filter bom tests2", () => {
   expect(newBom.compositions).toEqual([
     {
       aggregate: "incomplete_first_party_only",
-      "bom-ref": "pkg:maven/sec/java-sec-code@1.0.0?type=jar"
-    }
+      "bom-ref": "pkg:maven/sec/java-sec-code@1.0.0?type=jar",
+    },
   ]);
 });

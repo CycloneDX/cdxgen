@@ -2806,9 +2806,7 @@
     },
     {
       "ref": "pkg:maven/com.squareup.okio/okio@3.2.0?type=jar",
-      "dependsOn": [
-        "pkg:maven/com.squareup.okio/okio-jvm@3.2.0?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/com.squareup.okio/okio-jvm@3.2.0?type=jar"]
     },
     {
       "ref": "pkg:maven/com.squareup.okio/okio-jvm@3.2.0?type=jar",
@@ -2868,9 +2866,7 @@
     },
     {
       "ref": "pkg:maven/io.prometheus/simpleclient_common@0.16.0?type=jar",
-      "dependsOn": [
-        "pkg:maven/io.prometheus/simpleclient@0.16.0?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/io.prometheus/simpleclient@0.16.0?type=jar"]
     },
     {
       "ref": "pkg:maven/io.prometheus/simpleclient@0.16.0?type=jar",
@@ -2927,9 +2923,7 @@
     },
     {
       "ref": "pkg:maven/org.springframework/spring-core@6.0.8?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.springframework/spring-jcl@6.0.8?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.springframework/spring-jcl@6.0.8?type=jar"]
     },
     {
       "ref": "pkg:maven/org.springframework/spring-jcl@6.0.8?type=jar",
@@ -2944,9 +2938,7 @@
     },
     {
       "ref": "pkg:maven/org.springframework/spring-aop@6.0.8?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.springframework/spring-beans@6.0.8?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.springframework/spring-beans@6.0.8?type=jar"]
     },
     {
       "ref": "pkg:maven/org.springframework/spring-beans@6.0.8?type=jar",
@@ -2980,9 +2972,7 @@
     },
     {
       "ref": "pkg:maven/org.slf4j/jul-to-slf4j@2.0.7?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.slf4j/slf4j-api@2.0.7?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.slf4j/slf4j-api@2.0.7?type=jar"]
     },
     {
       "ref": "pkg:maven/jakarta.annotation/jakarta.annotation-api@2.1.1?type=jar",
@@ -3268,15 +3258,11 @@
     },
     {
       "ref": "pkg:maven/net.minidev/json-smart@2.4.10?type=jar",
-      "dependsOn": [
-        "pkg:maven/net.minidev/accessors-smart@2.4.9?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/net.minidev/accessors-smart@2.4.9?type=jar"]
     },
     {
       "ref": "pkg:maven/net.minidev/accessors-smart@2.4.9?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.ow2.asm/asm@9.3?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.ow2.asm/asm@9.3?type=jar"]
     },
     {
       "ref": "pkg:maven/org.ow2.asm/asm@9.3?type=jar",
@@ -3294,9 +3280,7 @@
     },
     {
       "ref": "pkg:maven/org.assertj/assertj-core@3.24.2?type=jar",
-      "dependsOn": [
-        "pkg:maven/net.bytebuddy/byte-buddy@1.12.23?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/net.bytebuddy/byte-buddy@1.12.23?type=jar"]
     },
     {
       "ref": "pkg:maven/net.bytebuddy/byte-buddy@1.12.23?type=jar",
@@ -3338,15 +3322,11 @@
     },
     {
       "ref": "pkg:maven/org.junit.jupiter/junit-jupiter-params@5.10.0-M1?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.apiguardian/apiguardian-api@1.1.2?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.apiguardian/apiguardian-api@1.1.2?type=jar"]
     },
     {
       "ref": "pkg:maven/org.junit.platform/junit-platform-commons@1.9.2?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.apiguardian/apiguardian-api@1.1.2?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.apiguardian/apiguardian-api@1.1.2?type=jar"]
     },
     {
       "ref": "pkg:maven/org.opentest4j/opentest4j@1.2.0?type=jar",
@@ -3427,9 +3407,7 @@
     },
     {
       "ref": "pkg:maven/io.grpc/grpc-protobuf-lite@1.55.1?type=jar",
-      "dependsOn": [
-        "pkg:maven/com.google.code.findbugs/jsr305@3.0.2?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/com.google.code.findbugs/jsr305@3.0.2?type=jar"]
     },
     {
       "ref": "pkg:maven/io.grpc/grpc-stub@1.55.1?type=jar",
@@ -3473,9 +3451,7 @@
     },
     {
       "ref": "pkg:maven/io.netty/netty-buffer@4.1.91.Final?type=jar",
-      "dependsOn": [
-        "pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"]
     },
     {
       "ref": "pkg:maven/io.netty/netty-transport@4.1.91.Final?type=jar",
@@ -3486,15 +3462,11 @@
     },
     {
       "ref": "pkg:maven/io.netty/netty-resolver@4.1.91.Final?type=jar",
-      "dependsOn": [
-        "pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"]
     },
     {
       "ref": "pkg:maven/io.netty/netty-codec@4.1.91.Final?type=jar",
-      "dependsOn": [
-        "pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"]
     },
     {
       "ref": "pkg:maven/io.netty/netty-handler@4.1.91.Final?type=jar",
@@ -3505,21 +3477,15 @@
     },
     {
       "ref": "pkg:maven/io.netty/netty-transport-native-unix-common@4.1.91.Final?type=jar",
-      "dependsOn": [
-        "pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"]
     },
     {
       "ref": "pkg:maven/io.netty/netty-codec-http@4.1.91.Final?type=jar",
-      "dependsOn": [
-        "pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"]
     },
     {
       "ref": "pkg:maven/org.awaitility/awaitility@4.2.0?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.hamcrest/hamcrest@2.2?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.hamcrest/hamcrest@2.2?type=jar"]
     },
     {
       "ref": "pkg:maven/org.junit.jupiter/junit-jupiter-engine@5.10.0-M1?type=jar",
@@ -3529,9 +3495,7 @@
     },
     {
       "ref": "pkg:maven/org.junit.platform/junit-platform-engine@1.9.2?type=jar",
-      "dependsOn": [
-        "pkg:maven/org.opentest4j/opentest4j@1.2.0?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/org.opentest4j/opentest4j@1.2.0?type=jar"]
     },
     {
       "ref": "pkg:maven/org.objenesis/objenesis@3.2?type=jar",
@@ -3572,9 +3536,7 @@
     },
     {
       "ref": "pkg:maven/io.netty/netty-codec-socks@4.1.91.Final?type=jar",
-      "dependsOn": [
-        "pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"
-      ]
+      "dependsOn": ["pkg:maven/io.netty/netty-common@4.1.91.Final?type=jar"]
     },
     {
       "ref": "pkg:maven/org.junit.jupiter/junit-jupiter-engine@5.9.2?type=jar",

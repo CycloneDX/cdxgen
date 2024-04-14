@@ -37124,9 +37124,7 @@
     },
     {
       "ref": "pkg:npm/debug@2.6.9",
-      "dependsOn": [
-        "pkg:npm/ms@2.0.0"
-      ]
+      "dependsOn": ["pkg:npm/ms@2.0.0"]
     },
     {
       "ref": "pkg:npm/depd@1.1.2",
@@ -37159,9 +37157,7 @@
     },
     {
       "ref": "pkg:npm/iconv-lite@0.4.23",
-      "dependsOn": [
-        "pkg:npm/safer-buffer@2.1.2"
-      ]
+      "dependsOn": ["pkg:npm/safer-buffer@2.1.2"]
     },
     {
       "ref": "pkg:npm/ee-first@1.1.1",
@@ -37169,9 +37165,7 @@
     },
     {
       "ref": "pkg:npm/on-finished@2.3.0",
-      "dependsOn": [
-        "pkg:npm/ee-first@1.1.1"
-      ]
+      "dependsOn": ["pkg:npm/ee-first@1.1.1"]
     },
     {
       "ref": "pkg:npm/qs@6.5.2",
@@ -37200,16 +37194,11 @@
     },
     {
       "ref": "pkg:npm/mime-types@2.1.21",
-      "dependsOn": [
-        "pkg:npm/mime-db@1.37.0"
-      ]
+      "dependsOn": ["pkg:npm/mime-db@1.37.0"]
     },
     {
       "ref": "pkg:npm/type-is@1.6.16",
-      "dependsOn": [
-        "pkg:npm/media-typer@0.3.0",
-        "pkg:npm/mime-types@2.1.21"
-      ]
+      "dependsOn": ["pkg:npm/media-typer@0.3.0", "pkg:npm/mime-types@2.1.21"]
     },
     {
       "ref": "pkg:npm/body-parser@1.18.3",
@@ -37232,16 +37221,11 @@
     },
     {
       "ref": "pkg:npm/consolidate@0.14.5",
-      "dependsOn": [
-        "pkg:npm/bluebird@3.5.3"
-      ]
+      "dependsOn": ["pkg:npm/bluebird@3.5.3"]
     },
     {
       "ref": "pkg:npm/http-errors@1.5.1",
-      "dependsOn": [
-        "pkg:npm/inherits@2.0.3",
-        "pkg:npm/statuses@1.5.0"
-      ]
+      "dependsOn": ["pkg:npm/inherits@2.0.3", "pkg:npm/statuses@1.5.0"]
     },
     {
       "ref": "pkg:npm/setprototypeof@1.0.2",
@@ -37269,9 +37253,7 @@
     },
     {
       "ref": "pkg:npm/uid-safe@2.1.4",
-      "dependsOn": [
-        "pkg:npm/random-bytes@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/random-bytes@1.0.0"]
     },
     {
       "ref": "pkg:npm/csrf@3.0.6",
@@ -37305,10 +37287,7 @@
     },
     {
       "ref": "pkg:npm/accepts@1.3.5",
-      "dependsOn": [
-        "pkg:npm/mime-types@2.1.21",
-        "pkg:npm/negotiator@0.6.1"
-      ]
+      "dependsOn": ["pkg:npm/mime-types@2.1.21", "pkg:npm/negotiator@0.6.1"]
     },
     {
       "ref": "pkg:npm/array-flatten@1.1.1",
@@ -37372,10 +37351,7 @@
     },
     {
       "ref": "pkg:npm/proxy-addr@2.0.4",
-      "dependsOn": [
-        "pkg:npm/forwarded@0.1.2",
-        "pkg:npm/ipaddr.js@1.8.0"
-      ]
+      "dependsOn": ["pkg:npm/forwarded@0.1.2", "pkg:npm/ipaddr.js@1.8.0"]
     },
     {
       "ref": "pkg:npm/range-parser@1.2.0",
@@ -37465,9 +37441,7 @@
     },
     {
       "ref": "pkg:npm/uid-safe@2.1.5",
-      "dependsOn": [
-        "pkg:npm/random-bytes@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/random-bytes@1.0.0"]
     },
     {
       "ref": "pkg:npm/crc@3.4.4",
@@ -37565,17 +37539,11 @@
     },
     {
       "ref": "pkg:npm/optimist@0.6.0",
-      "dependsOn": [
-        "pkg:npm/minimist@0.0.10",
-        "pkg:npm/wordwrap@0.0.3"
-      ]
+      "dependsOn": ["pkg:npm/minimist@0.0.10", "pkg:npm/wordwrap@0.0.3"]
     },
     {
       "ref": "pkg:npm/cliff@0.1.9",
-      "dependsOn": [
-        "pkg:npm/colors@0.6.2",
-        "pkg:npm/eyes@0.1.8"
-      ]
+      "dependsOn": ["pkg:npm/colors@0.6.2", "pkg:npm/eyes@0.1.8"]
     },
     {
       "ref": "pkg:npm/async@0.2.9",
@@ -37587,10 +37555,7 @@
     },
     {
       "ref": "pkg:npm/nconf@0.6.9",
-      "dependsOn": [
-        "pkg:npm/async@0.2.9",
-        "pkg:npm/ini@1.3.5"
-      ]
+      "dependsOn": ["pkg:npm/async@0.2.9", "pkg:npm/ini@1.3.5"]
     },
     {
       "ref": "pkg:npm/isarray@2.0.5",
@@ -37610,9 +37575,7 @@
     },
     {
       "ref": "pkg:npm/is-symbol@1.0.3",
-      "dependsOn": [
-        "pkg:npm/has-symbols@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/has-symbols@1.0.1"]
     },
     {
       "ref": "pkg:npm/es-to-primitive@1.2.1",
@@ -37628,15 +37591,11 @@
     },
     {
       "ref": "pkg:npm/has@1.0.3",
-      "dependsOn": [
-        "pkg:npm/function-bind@1.1.1"
-      ]
+      "dependsOn": ["pkg:npm/function-bind@1.1.1"]
     },
     {
       "ref": "pkg:npm/is-regex@1.0.5",
-      "dependsOn": [
-        "pkg:npm/has@1.0.3"
-      ]
+      "dependsOn": ["pkg:npm/has@1.0.3"]
     },
     {
       "ref": "pkg:npm/object-inspect@1.7.0",
@@ -37648,9 +37607,7 @@
     },
     {
       "ref": "pkg:npm/define-properties@1.1.3",
-      "dependsOn": [
-        "pkg:npm/object-keys@1.1.1"
-      ]
+      "dependsOn": ["pkg:npm/object-keys@1.1.1"]
     },
     {
       "ref": "pkg:npm/object.assign@4.1.0",
@@ -37798,9 +37755,7 @@
     },
     {
       "ref": "pkg:npm/available-typed-arrays@1.0.2",
-      "dependsOn": [
-        "pkg:npm/array-filter@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/array-filter@1.0.0"]
     },
     {
       "ref": "pkg:npm/foreach@2.0.5",
@@ -37853,9 +37808,7 @@
     },
     {
       "ref": "pkg:npm/mkdirp@0.5.1",
-      "dependsOn": [
-        "pkg:npm/minimist@0.0.8"
-      ]
+      "dependsOn": ["pkg:npm/minimist@0.0.8"]
     },
     {
       "ref": "pkg:npm/ncp@0.4.2",
@@ -37871,16 +37824,11 @@
     },
     {
       "ref": "pkg:npm/once@1.4.0",
-      "dependsOn": [
-        "pkg:npm/wrappy@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/wrappy@1.0.2"]
     },
     {
       "ref": "pkg:npm/inflight@1.0.6",
-      "dependsOn": [
-        "pkg:npm/once@1.4.0",
-        "pkg:npm/wrappy@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/once@1.4.0", "pkg:npm/wrappy@1.0.2"]
     },
     {
       "ref": "pkg:npm/balanced-match@1.0.0",
@@ -37892,16 +37840,11 @@
     },
     {
       "ref": "pkg:npm/brace-expansion@1.1.11",
-      "dependsOn": [
-        "pkg:npm/balanced-match@1.0.0",
-        "pkg:npm/concat-map@0.0.1"
-      ]
+      "dependsOn": ["pkg:npm/balanced-match@1.0.0", "pkg:npm/concat-map@0.0.1"]
     },
     {
       "ref": "pkg:npm/minimatch@3.0.4",
-      "dependsOn": [
-        "pkg:npm/brace-expansion@1.1.11"
-      ]
+      "dependsOn": ["pkg:npm/brace-expansion@1.1.11"]
     },
     {
       "ref": "pkg:npm/path-is-absolute@1.0.1",
@@ -37920,9 +37863,7 @@
     },
     {
       "ref": "pkg:npm/rimraf@2.6.3",
-      "dependsOn": [
-        "pkg:npm/glob@7.1.3"
-      ]
+      "dependsOn": ["pkg:npm/glob@7.1.3"]
     },
     {
       "ref": "pkg:npm/utile@0.2.1",
@@ -37970,10 +37911,7 @@
     },
     {
       "ref": "pkg:npm/read@1.0.7",
-      "dependsOn": [
-        "pkg:npm/mute-stream@0.0.5",
-        "pkg:npm/mute-stream@0.0.8"
-      ]
+      "dependsOn": ["pkg:npm/mute-stream@0.0.5", "pkg:npm/mute-stream@0.0.8"]
     },
     {
       "ref": "pkg:npm/revalidator@0.1.8",
@@ -38005,9 +37943,7 @@
     },
     {
       "ref": "pkg:npm/normalize-path@2.1.1",
-      "dependsOn": [
-        "pkg:npm/remove-trailing-separator@1.1.0"
-      ]
+      "dependsOn": ["pkg:npm/remove-trailing-separator@1.1.0"]
     },
     {
       "ref": "pkg:npm/kind-of@6.0.2",
@@ -38027,9 +37963,7 @@
     },
     {
       "ref": "pkg:npm/extend-shallow@2.0.1",
-      "dependsOn": [
-        "pkg:npm/is-extendable@0.1.1"
-      ]
+      "dependsOn": ["pkg:npm/is-extendable@0.1.1"]
     },
     {
       "ref": "pkg:npm/arr-flatten@1.1.0",
@@ -38041,15 +37975,11 @@
     },
     {
       "ref": "pkg:npm/kind-of@3.2.2",
-      "dependsOn": [
-        "pkg:npm/is-buffer@1.1.6"
-      ]
+      "dependsOn": ["pkg:npm/is-buffer@1.1.6"]
     },
     {
       "ref": "pkg:npm/is-number@3.0.0",
-      "dependsOn": [
-        "pkg:npm/kind-of@3.2.2"
-      ]
+      "dependsOn": ["pkg:npm/kind-of@3.2.2"]
     },
     {
       "ref": "pkg:npm/repeat-string@1.6.1",
@@ -38057,10 +37987,7 @@
     },
     {
       "ref": "pkg:npm/to-regex-range@2.1.1",
-      "dependsOn": [
-        "pkg:npm/is-number@3.0.0",
-        "pkg:npm/repeat-string@1.6.1"
-      ]
+      "dependsOn": ["pkg:npm/is-number@3.0.0", "pkg:npm/repeat-string@1.6.1"]
     },
     {
       "ref": "pkg:npm/fill-range@4.0.0",
@@ -38085,15 +38012,11 @@
     },
     {
       "ref": "pkg:npm/is-accessor-descriptor@0.1.6",
-      "dependsOn": [
-        "pkg:npm/kind-of@3.2.2"
-      ]
+      "dependsOn": ["pkg:npm/kind-of@3.2.2"]
     },
     {
       "ref": "pkg:npm/is-data-descriptor@0.1.4",
-      "dependsOn": [
-        "pkg:npm/kind-of@3.2.2"
-      ]
+      "dependsOn": ["pkg:npm/kind-of@3.2.2"]
     },
     {
       "ref": "pkg:npm/is-descriptor@0.1.6",
@@ -38105,9 +38028,7 @@
     },
     {
       "ref": "pkg:npm/define-property@0.2.5",
-      "dependsOn": [
-        "pkg:npm/is-descriptor@0.1.6"
-      ]
+      "dependsOn": ["pkg:npm/is-descriptor@0.1.6"]
     },
     {
       "ref": "pkg:npm/define-property@1.0.0",
@@ -38127,22 +38048,15 @@
     },
     {
       "ref": "pkg:npm/object-visit@1.0.1",
-      "dependsOn": [
-        "pkg:npm/isobject@3.0.1"
-      ]
+      "dependsOn": ["pkg:npm/isobject@3.0.1"]
     },
     {
       "ref": "pkg:npm/map-visit@1.0.0",
-      "dependsOn": [
-        "pkg:npm/object-visit@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/object-visit@1.0.1"]
     },
     {
       "ref": "pkg:npm/collection-visit@1.0.0",
-      "dependsOn": [
-        "pkg:npm/map-visit@1.0.0",
-        "pkg:npm/object-visit@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/map-visit@1.0.0", "pkg:npm/object-visit@1.0.1"]
     },
     {
       "ref": "pkg:npm/component-emitter@1.2.1",
@@ -38154,16 +38068,11 @@
     },
     {
       "ref": "pkg:npm/kind-of@4.0.0",
-      "dependsOn": [
-        "pkg:npm/is-buffer@1.1.6"
-      ]
+      "dependsOn": ["pkg:npm/is-buffer@1.1.6"]
     },
     {
       "ref": "pkg:npm/has-values@1.0.0",
-      "dependsOn": [
-        "pkg:npm/is-number@3.0.0",
-        "pkg:npm/kind-of@4.0.0"
-      ]
+      "dependsOn": ["pkg:npm/is-number@3.0.0", "pkg:npm/kind-of@4.0.0"]
     },
     {
       "ref": "pkg:npm/has-value@1.0.0",
@@ -38175,15 +38084,11 @@
     },
     {
       "ref": "pkg:npm/is-plain-object@2.0.4",
-      "dependsOn": [
-        "pkg:npm/isobject@3.0.1"
-      ]
+      "dependsOn": ["pkg:npm/isobject@3.0.1"]
     },
     {
       "ref": "pkg:npm/is-extendable@1.0.1",
-      "dependsOn": [
-        "pkg:npm/is-plain-object@2.0.4"
-      ]
+      "dependsOn": ["pkg:npm/is-plain-object@2.0.4"]
     },
     {
       "ref": "pkg:npm/assign-symbols@1.0.0",
@@ -38198,9 +38103,7 @@
     },
     {
       "ref": "pkg:npm/split-string@3.1.0",
-      "dependsOn": [
-        "pkg:npm/extend-shallow@3.0.2"
-      ]
+      "dependsOn": ["pkg:npm/extend-shallow@3.0.2"]
     },
     {
       "ref": "pkg:npm/set-value@2.0.0",
@@ -38213,9 +38116,7 @@
     },
     {
       "ref": "pkg:npm/to-object-path@0.3.0",
-      "dependsOn": [
-        "pkg:npm/kind-of@3.2.2"
-      ]
+      "dependsOn": ["pkg:npm/kind-of@3.2.2"]
     },
     {
       "ref": "pkg:npm/set-value@0.4.3",
@@ -38245,16 +38146,11 @@
     },
     {
       "ref": "pkg:npm/isobject@2.1.0",
-      "dependsOn": [
-        "pkg:npm/isarray@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/isarray@1.0.0"]
     },
     {
       "ref": "pkg:npm/has-value@0.3.1",
-      "dependsOn": [
-        "pkg:npm/get-value@2.0.6",
-        "pkg:npm/isobject@2.1.0"
-      ]
+      "dependsOn": ["pkg:npm/get-value@2.0.6", "pkg:npm/isobject@2.1.0"]
     },
     {
       "ref": "pkg:npm/has-values@0.1.4",
@@ -38316,10 +38212,7 @@
     },
     {
       "ref": "pkg:npm/mixin-deep@1.3.1",
-      "dependsOn": [
-        "pkg:npm/for-in@1.0.2",
-        "pkg:npm/is-extendable@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/for-in@1.0.2", "pkg:npm/is-extendable@1.0.1"]
     },
     {
       "ref": "pkg:npm/pascalcase@0.1.1",
@@ -38398,9 +38291,7 @@
     },
     {
       "ref": "pkg:npm/snapdragon-util@3.0.1",
-      "dependsOn": [
-        "pkg:npm/kind-of@3.2.2"
-      ]
+      "dependsOn": ["pkg:npm/kind-of@3.2.2"]
     },
     {
       "ref": "pkg:npm/snapdragon-node@2.1.1",
@@ -38430,16 +38321,11 @@
     },
     {
       "ref": "pkg:npm/safe-regex@1.1.0",
-      "dependsOn": [
-        "pkg:npm/ret@0.1.15"
-      ]
+      "dependsOn": ["pkg:npm/ret@0.1.15"]
     },
     {
       "ref": "pkg:npm/regex-not@1.0.2",
-      "dependsOn": [
-        "pkg:npm/extend-shallow@3.0.2",
-        "pkg:npm/safe-regex@1.1.0"
-      ]
+      "dependsOn": ["pkg:npm/extend-shallow@3.0.2", "pkg:npm/safe-regex@1.1.0"]
     },
     {
       "ref": "pkg:npm/to-regex@3.0.2",
@@ -38487,9 +38373,7 @@
     },
     {
       "ref": "pkg:npm/fragment-cache@0.2.1",
-      "dependsOn": [
-        "pkg:npm/map-cache@0.2.2"
-      ]
+      "dependsOn": ["pkg:npm/map-cache@0.2.2"]
     },
     {
       "ref": "pkg:npm/extglob@2.0.4",
@@ -38514,9 +38398,7 @@
     },
     {
       "ref": "pkg:npm/object.pick@1.3.0",
-      "dependsOn": [
-        "pkg:npm/isobject@3.0.1"
-      ]
+      "dependsOn": ["pkg:npm/isobject@3.0.1"]
     },
     {
       "ref": "pkg:npm/nanomatch@1.2.13",
@@ -38554,10 +38436,7 @@
     },
     {
       "ref": "pkg:npm/anymatch@2.0.0",
-      "dependsOn": [
-        "pkg:npm/micromatch@3.1.10",
-        "pkg:npm/normalize-path@2.1.1"
-      ]
+      "dependsOn": ["pkg:npm/micromatch@3.1.10", "pkg:npm/normalize-path@2.1.1"]
     },
     {
       "ref": "pkg:npm/async-each@1.0.3",
@@ -38569,9 +38448,7 @@
     },
     {
       "ref": "pkg:npm/is-glob@3.1.0",
-      "dependsOn": [
-        "pkg:npm/is-extglob@2.1.1"
-      ]
+      "dependsOn": ["pkg:npm/is-extglob@2.1.1"]
     },
     {
       "ref": "pkg:npm/path-dirname@1.0.2",
@@ -38579,10 +38456,7 @@
     },
     {
       "ref": "pkg:npm/glob-parent@3.1.0",
-      "dependsOn": [
-        "pkg:npm/is-glob@3.1.0",
-        "pkg:npm/path-dirname@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/is-glob@3.1.0", "pkg:npm/path-dirname@1.0.2"]
     },
     {
       "ref": "pkg:npm/binary-extensions@1.13.1",
@@ -38590,15 +38464,11 @@
     },
     {
       "ref": "pkg:npm/is-binary-path@1.0.1",
-      "dependsOn": [
-        "pkg:npm/binary-extensions@1.13.1"
-      ]
+      "dependsOn": ["pkg:npm/binary-extensions@1.13.1"]
     },
     {
       "ref": "pkg:npm/is-glob@4.0.1",
-      "dependsOn": [
-        "pkg:npm/is-extglob@2.1.1"
-      ]
+      "dependsOn": ["pkg:npm/is-extglob@2.1.1"]
     },
     {
       "ref": "pkg:npm/normalize-path@3.0.0",
@@ -38618,9 +38488,7 @@
     },
     {
       "ref": "pkg:npm/string_decoder@1.1.1",
-      "dependsOn": [
-        "pkg:npm/safe-buffer@5.1.2"
-      ]
+      "dependsOn": ["pkg:npm/safe-buffer@5.1.2"]
     },
     {
       "ref": "pkg:npm/util-deprecate@1.0.2",
@@ -38668,21 +38536,15 @@
     },
     {
       "ref": "pkg:npm/optimist@0.2.8",
-      "dependsOn": [
-        "pkg:npm/wordwrap@0.0.3"
-      ]
+      "dependsOn": ["pkg:npm/wordwrap@0.0.3"]
     },
     {
       "ref": "pkg:npm/event-stream@0.5.3",
-      "dependsOn": [
-        "pkg:npm/optimist@0.2.8"
-      ]
+      "dependsOn": ["pkg:npm/optimist@0.2.8"]
     },
     {
       "ref": "pkg:npm/ps-tree@0.0.3",
-      "dependsOn": [
-        "pkg:npm/event-stream@0.5.3"
-      ]
+      "dependsOn": ["pkg:npm/event-stream@0.5.3"]
     },
     {
       "ref": "pkg:npm/async@0.9.2",
@@ -38746,9 +38608,7 @@
     },
     {
       "ref": "pkg:npm/strip-ansi@3.0.1",
-      "dependsOn": [
-        "pkg:npm/ansi-regex@2.1.1"
-      ]
+      "dependsOn": ["pkg:npm/ansi-regex@2.1.1"]
     },
     {
       "ref": "pkg:npm/string-width@1.0.2",
@@ -38761,10 +38621,7 @@
     },
     {
       "ref": "pkg:npm/wrap-ansi@2.1.0",
-      "dependsOn": [
-        "pkg:npm/string-width@1.0.2",
-        "pkg:npm/strip-ansi@3.0.1"
-      ]
+      "dependsOn": ["pkg:npm/string-width@1.0.2", "pkg:npm/strip-ansi@3.0.1"]
     },
     {
       "ref": "pkg:npm/cliui@3.2.0",
@@ -38784,15 +38641,11 @@
     },
     {
       "ref": "pkg:npm/lcid@1.0.0",
-      "dependsOn": [
-        "pkg:npm/invert-kv@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/invert-kv@1.0.0"]
     },
     {
       "ref": "pkg:npm/os-locale@1.4.0",
-      "dependsOn": [
-        "pkg:npm/lcid@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/lcid@1.0.0"]
     },
     {
       "ref": "pkg:npm/y18n@3.2.1",
@@ -38829,10 +38682,7 @@
     },
     {
       "ref": "pkg:npm/nssocket@0.6.0",
-      "dependsOn": [
-        "pkg:npm/eventemitter2@0.4.14",
-        "pkg:npm/lazy@1.0.11"
-      ]
+      "dependsOn": ["pkg:npm/eventemitter2@0.4.14", "pkg:npm/lazy@1.0.11"]
     },
     {
       "ref": "pkg:npm/object-assign@4.1.1",
@@ -38840,10 +38690,7 @@
     },
     {
       "ref": "pkg:npm/optimist@0.6.1",
-      "dependsOn": [
-        "pkg:npm/minimist@0.0.10",
-        "pkg:npm/wordwrap@0.0.3"
-      ]
+      "dependsOn": ["pkg:npm/minimist@0.0.10", "pkg:npm/wordwrap@0.0.3"]
     },
     {
       "ref": "pkg:npm/colors@1.4.0",
@@ -38855,10 +38702,7 @@
     },
     {
       "ref": "pkg:npm/prettyjson@1.2.1",
-      "dependsOn": [
-        "pkg:npm/colors@1.4.0",
-        "pkg:npm/minimist@1.2.5"
-      ]
+      "dependsOn": ["pkg:npm/colors@1.4.0", "pkg:npm/minimist@1.2.5"]
     },
     {
       "ref": "pkg:npm/strip-json-comments@0.1.3",
@@ -38882,9 +38726,7 @@
     },
     {
       "ref": "pkg:npm/resumer@0.0.0",
-      "dependsOn": [
-        "pkg:npm/through@2.3.8"
-      ]
+      "dependsOn": ["pkg:npm/through@2.3.8"]
     },
     {
       "ref": "pkg:npm/tape@2.3.3",
@@ -38899,16 +38741,11 @@
     },
     {
       "ref": "pkg:npm/caller@0.0.1",
-      "dependsOn": [
-        "pkg:npm/tape@2.3.3"
-      ]
+      "dependsOn": ["pkg:npm/tape@2.3.3"]
     },
     {
       "ref": "pkg:npm/shush@1.0.0",
-      "dependsOn": [
-        "pkg:npm/caller@0.0.1",
-        "pkg:npm/strip-json-comments@0.1.3"
-      ]
+      "dependsOn": ["pkg:npm/caller@0.0.1", "pkg:npm/strip-json-comments@0.1.3"]
     },
     {
       "ref": "pkg:npm/forever@2.0.0",
@@ -38933,9 +38770,7 @@
     },
     {
       "ref": "pkg:npm/debug@2.2.0",
-      "dependsOn": [
-        "pkg:npm/ms@0.7.1"
-      ]
+      "dependsOn": ["pkg:npm/ms@0.7.1"]
     },
     {
       "ref": "pkg:npm/finalhandler@0.4.1",
@@ -38981,9 +38816,7 @@
     },
     {
       "ref": "pkg:npm/content-security-policy-builder@1.0.0",
-      "dependsOn": [
-        "pkg:npm/dashify@0.2.2"
-      ]
+      "dependsOn": ["pkg:npm/dashify@0.2.2"]
     },
     {
       "ref": "pkg:npm/lodash.reduce@4.5.0",
@@ -39012,9 +38845,7 @@
     },
     {
       "ref": "pkg:npm/hsts@1.0.0",
-      "dependsOn": [
-        "pkg:npm/core-util-is@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/core-util-is@1.0.2"]
     },
     {
       "ref": "pkg:npm/ienoopen@1.0.0",
@@ -39026,9 +38857,7 @@
     },
     {
       "ref": "pkg:npm/nocache@1.0.1",
-      "dependsOn": [
-        "pkg:npm/depd@1.1.0"
-      ]
+      "dependsOn": ["pkg:npm/depd@1.1.0"]
     },
     {
       "ref": "pkg:npm/referrer-policy@1.0.0",
@@ -39079,9 +38908,7 @@
     },
     {
       "ref": "pkg:npm/string_decoder@1.0.3",
-      "dependsOn": [
-        "pkg:npm/safe-buffer@5.1.2"
-      ]
+      "dependsOn": ["pkg:npm/safe-buffer@5.1.2"]
     },
     {
       "ref": "pkg:npm/es6-promise@3.2.1",
@@ -39101,17 +38928,11 @@
     },
     {
       "ref": "pkg:npm/require_optional@1.0.1",
-      "dependsOn": [
-        "pkg:npm/resolve-from@2.0.0",
-        "pkg:npm/semver@5.6.0"
-      ]
+      "dependsOn": ["pkg:npm/resolve-from@2.0.0", "pkg:npm/semver@5.6.0"]
     },
     {
       "ref": "pkg:npm/mongodb-core@2.1.20",
-      "dependsOn": [
-        "pkg:npm/bson@1.0.9",
-        "pkg:npm/require_optional@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/bson@1.0.9", "pkg:npm/require_optional@1.0.1"]
     },
     {
       "ref": "pkg:npm/mongodb@2.2.36",
@@ -39163,9 +38984,7 @@
     },
     {
       "ref": "pkg:npm/source-map@0.1.34",
-      "dependsOn": [
-        "pkg:npm/amdefine@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/amdefine@1.0.1"]
     },
     {
       "ref": "pkg:npm/uglify-to-browserify@1.0.2",
@@ -39203,10 +39022,7 @@
     },
     {
       "ref": "pkg:npm/swig@1.4.2",
-      "dependsOn": [
-        "pkg:npm/optimist@0.6.1",
-        "pkg:npm/uglify-js@2.4.24"
-      ]
+      "dependsOn": ["pkg:npm/optimist@0.6.1", "pkg:npm/uglify-js@2.4.24"]
     },
     {
       "ref": "pkg:npm/underscore@1.9.1",
@@ -39218,9 +39034,7 @@
     },
     {
       "ref": "pkg:npm/async@2.6.1",
-      "dependsOn": [
-        "pkg:npm/lodash@4.17.11"
-      ]
+      "dependsOn": ["pkg:npm/lodash@4.17.11"]
     },
     {
       "ref": "pkg:npm/cross-spawn@7.0.3",
@@ -39244,9 +39058,7 @@
     },
     {
       "ref": "pkg:npm/which@2.0.2",
-      "dependsOn": [
-        "pkg:npm/isexe@2.0.0"
-      ]
+      "dependsOn": ["pkg:npm/isexe@2.0.0"]
     },
     {
       "ref": "pkg:npm/cross-env@7.0.2",
@@ -39292,15 +39104,11 @@
     },
     {
       "ref": "pkg:npm/shebang-command@1.2.0",
-      "dependsOn": [
-        "pkg:npm/shebang-regex@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/shebang-regex@1.0.0"]
     },
     {
       "ref": "pkg:npm/which@1.3.1",
-      "dependsOn": [
-        "pkg:npm/isexe@2.0.0"
-      ]
+      "dependsOn": ["pkg:npm/isexe@2.0.0"]
     },
     {
       "ref": "pkg:npm/cross-spawn@6.0.5",
@@ -39326,9 +39134,7 @@
     },
     {
       "ref": "pkg:npm/npm-run-path@2.0.2",
-      "dependsOn": [
-        "pkg:npm/path-key@2.0.1"
-      ]
+      "dependsOn": ["pkg:npm/path-key@2.0.1"]
     },
     {
       "ref": "pkg:npm/p-finally@1.0.0",
@@ -39363,9 +39169,7 @@
     },
     {
       "ref": "pkg:npm/combined-stream@1.0.7",
-      "dependsOn": [
-        "pkg:npm/delayed-stream@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/delayed-stream@1.0.0"]
     },
     {
       "ref": "pkg:npm/form-data@2.3.3",
@@ -39393,9 +39197,7 @@
     },
     {
       "ref": "pkg:npm/uri-js@4.2.2",
-      "dependsOn": [
-        "pkg:npm/punycode@2.1.1"
-      ]
+      "dependsOn": ["pkg:npm/punycode@2.1.1"]
     },
     {
       "ref": "pkg:npm/ajv@6.10.0",
@@ -39412,10 +39214,7 @@
     },
     {
       "ref": "pkg:npm/har-validator@5.1.3",
-      "dependsOn": [
-        "pkg:npm/ajv@6.10.0",
-        "pkg:npm/har-schema@2.0.0"
-      ]
+      "dependsOn": ["pkg:npm/ajv@6.10.0", "pkg:npm/har-schema@2.0.0"]
     },
     {
       "ref": "pkg:npm/extsprintf@1.3.0",
@@ -39444,9 +39243,7 @@
     },
     {
       "ref": "pkg:npm/asn1@0.2.4",
-      "dependsOn": [
-        "pkg:npm/safer-buffer@2.1.2"
-      ]
+      "dependsOn": ["pkg:npm/safer-buffer@2.1.2"]
     },
     {
       "ref": "pkg:npm/tweetnacl@0.14.5",
@@ -39454,15 +39251,11 @@
     },
     {
       "ref": "pkg:npm/bcrypt-pbkdf@1.0.2",
-      "dependsOn": [
-        "pkg:npm/tweetnacl@0.14.5"
-      ]
+      "dependsOn": ["pkg:npm/tweetnacl@0.14.5"]
     },
     {
       "ref": "pkg:npm/dashdash@1.14.1",
-      "dependsOn": [
-        "pkg:npm/assert-plus@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/assert-plus@1.0.0"]
     },
     {
       "ref": "pkg:npm/jsbn@0.1.1",
@@ -39470,16 +39263,11 @@
     },
     {
       "ref": "pkg:npm/ecc-jsbn@0.1.2",
-      "dependsOn": [
-        "pkg:npm/jsbn@0.1.1",
-        "pkg:npm/safer-buffer@2.1.2"
-      ]
+      "dependsOn": ["pkg:npm/jsbn@0.1.1", "pkg:npm/safer-buffer@2.1.2"]
     },
     {
       "ref": "pkg:npm/getpass@0.1.7",
-      "dependsOn": [
-        "pkg:npm/assert-plus@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/assert-plus@1.0.0"]
     },
     {
       "ref": "pkg:npm/sshpk@1.16.0",
@@ -39497,10 +39285,7 @@
     },
     {
       "ref": "pkg:npm/http-signature@1.2.0",
-      "dependsOn": [
-        "pkg:npm/jsprim@1.4.1",
-        "pkg:npm/sshpk@1.16.0"
-      ]
+      "dependsOn": ["pkg:npm/jsprim@1.4.1", "pkg:npm/sshpk@1.16.0"]
     },
     {
       "ref": "pkg:npm/minimist@1.2.0",
@@ -39561,9 +39346,7 @@
     },
     {
       "ref": "pkg:npm/tmp@0.1.0",
-      "dependsOn": [
-        "pkg:npm/rimraf@2.6.3"
-      ]
+      "dependsOn": ["pkg:npm/rimraf@2.6.3"]
     },
     {
       "ref": "pkg:npm/psl@1.1.32",
@@ -39575,16 +39358,11 @@
     },
     {
       "ref": "pkg:npm/tough-cookie@2.4.3",
-      "dependsOn": [
-        "pkg:npm/psl@1.1.32",
-        "pkg:npm/punycode@1.4.1"
-      ]
+      "dependsOn": ["pkg:npm/psl@1.1.32", "pkg:npm/punycode@1.4.1"]
     },
     {
       "ref": "pkg:npm/tunnel-agent@0.6.0",
-      "dependsOn": [
-        "pkg:npm/safe-buffer@5.1.2"
-      ]
+      "dependsOn": ["pkg:npm/safe-buffer@5.1.2"]
     },
     {
       "ref": "pkg:npm/ansi-styles@2.2.1",
@@ -39596,9 +39374,7 @@
     },
     {
       "ref": "pkg:npm/has-ansi@2.0.0",
-      "dependsOn": [
-        "pkg:npm/ansi-regex@2.1.1"
-      ]
+      "dependsOn": ["pkg:npm/ansi-regex@2.1.1"]
     },
     {
       "ref": "pkg:npm/chalk@1.1.3",
@@ -39624,16 +39400,11 @@
     },
     {
       "ref": "pkg:npm/restore-cursor@1.0.1",
-      "dependsOn": [
-        "pkg:npm/exit-hook@1.1.1",
-        "pkg:npm/onetime@1.1.0"
-      ]
+      "dependsOn": ["pkg:npm/exit-hook@1.1.1", "pkg:npm/onetime@1.1.0"]
     },
     {
       "ref": "pkg:npm/cli-cursor@1.0.2",
-      "dependsOn": [
-        "pkg:npm/restore-cursor@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/restore-cursor@1.0.1"]
     },
     {
       "ref": "pkg:npm/date-fns@1.30.1",
@@ -39679,9 +39450,7 @@
     },
     {
       "ref": "pkg:npm/cachedir@1.3.0",
-      "dependsOn": [
-        "pkg:npm/os-homedir@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/os-homedir@1.0.2"]
     },
     {
       "ref": "pkg:npm/color-name@1.1.3",
@@ -39689,15 +39458,11 @@
     },
     {
       "ref": "pkg:npm/color-convert@1.9.3",
-      "dependsOn": [
-        "pkg:npm/color-name@1.1.3"
-      ]
+      "dependsOn": ["pkg:npm/color-name@1.1.3"]
     },
     {
       "ref": "pkg:npm/ansi-styles@3.2.1",
-      "dependsOn": [
-        "pkg:npm/color-convert@1.9.3"
-      ]
+      "dependsOn": ["pkg:npm/color-convert@1.9.3"]
     },
     {
       "ref": "pkg:npm/has-flag@3.0.0",
@@ -39705,9 +39470,7 @@
     },
     {
       "ref": "pkg:npm/supports-color@5.5.0",
-      "dependsOn": [
-        "pkg:npm/has-flag@3.0.0"
-      ]
+      "dependsOn": ["pkg:npm/has-flag@3.0.0"]
     },
     {
       "ref": "pkg:npm/chalk@2.4.2",
@@ -39731,9 +39494,7 @@
     },
     {
       "ref": "pkg:npm/executable@4.1.1",
-      "dependsOn": [
-        "pkg:npm/pify@2.3.0"
-      ]
+      "dependsOn": ["pkg:npm/pify@2.3.0"]
     },
     {
       "ref": "pkg:npm/pend@1.2.0",
@@ -39741,15 +39502,11 @@
     },
     {
       "ref": "pkg:npm/fd-slicer@1.0.1",
-      "dependsOn": [
-        "pkg:npm/pend@1.2.0"
-      ]
+      "dependsOn": ["pkg:npm/pend@1.2.0"]
     },
     {
       "ref": "pkg:npm/yauzl@2.4.1",
-      "dependsOn": [
-        "pkg:npm/fd-slicer@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/fd-slicer@1.0.1"]
     },
     {
       "ref": "pkg:npm/buffer-from@1.1.1",
@@ -39779,9 +39536,7 @@
     },
     {
       "ref": "pkg:npm/jsonfile@3.0.1",
-      "dependsOn": [
-        "pkg:npm/graceful-fs@4.1.15"
-      ]
+      "dependsOn": ["pkg:npm/graceful-fs@4.1.15"]
     },
     {
       "ref": "pkg:npm/universalify@0.1.2",
@@ -39797,9 +39552,7 @@
     },
     {
       "ref": "pkg:npm/getos@3.1.1",
-      "dependsOn": [
-        "pkg:npm/async@2.6.1"
-      ]
+      "dependsOn": ["pkg:npm/async@2.6.1"]
     },
     {
       "ref": "pkg:npm/ci-info@1.6.0",
@@ -39807,15 +39560,11 @@
     },
     {
       "ref": "pkg:npm/is-ci@1.2.1",
-      "dependsOn": [
-        "pkg:npm/ci-info@1.6.0"
-      ]
+      "dependsOn": ["pkg:npm/ci-info@1.6.0"]
     },
     {
       "ref": "pkg:npm/global-dirs@0.1.1",
-      "dependsOn": [
-        "pkg:npm/ini@1.3.5"
-      ]
+      "dependsOn": ["pkg:npm/ini@1.3.5"]
     },
     {
       "ref": "pkg:npm/path-is-inside@1.0.2",
@@ -39823,16 +39572,11 @@
     },
     {
       "ref": "pkg:npm/is-path-inside@1.0.1",
-      "dependsOn": [
-        "pkg:npm/path-is-inside@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/path-is-inside@1.0.2"]
     },
     {
       "ref": "pkg:npm/is-installed-globally@0.1.0",
-      "dependsOn": [
-        "pkg:npm/global-dirs@0.1.1",
-        "pkg:npm/is-path-inside@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/global-dirs@0.1.1", "pkg:npm/is-path-inside@1.0.1"]
     },
     {
       "ref": "pkg:npm/lazy-ass@1.6.0",
@@ -39848,28 +39592,19 @@
     },
     {
       "ref": "pkg:npm/cli-truncate@0.2.1",
-      "dependsOn": [
-        "pkg:npm/slice-ansi@0.0.4",
-        "pkg:npm/string-width@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/slice-ansi@0.0.4", "pkg:npm/string-width@1.0.2"]
     },
     {
       "ref": "pkg:npm/is-finite@1.0.2",
-      "dependsOn": [
-        "pkg:npm/number-is-nan@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/number-is-nan@1.0.1"]
     },
     {
       "ref": "pkg:npm/repeating@2.0.1",
-      "dependsOn": [
-        "pkg:npm/is-finite@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/is-finite@1.0.2"]
     },
     {
       "ref": "pkg:npm/indent-string@2.1.0",
-      "dependsOn": [
-        "pkg:npm/repeating@2.0.1"
-      ]
+      "dependsOn": ["pkg:npm/repeating@2.0.1"]
     },
     {
       "ref": "pkg:npm/is-promise@2.1.0",
@@ -39893,10 +39628,7 @@
     },
     {
       "ref": "pkg:npm/log-update@1.0.2",
-      "dependsOn": [
-        "pkg:npm/ansi-escapes@1.4.0",
-        "pkg:npm/cli-cursor@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/ansi-escapes@1.4.0", "pkg:npm/cli-cursor@1.0.2"]
     },
     {
       "ref": "pkg:npm/listr-update-renderer@0.2.0",
@@ -39949,9 +39681,7 @@
     },
     {
       "ref": "pkg:npm/rxjs@5.5.12",
-      "dependsOn": [
-        "pkg:npm/symbol-observable@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/symbol-observable@1.0.1"]
     },
     {
       "ref": "pkg:npm/stream-to-observable@0.1.0",
@@ -39982,9 +39712,7 @@
     },
     {
       "ref": "pkg:npm/log-symbols@2.2.0",
-      "dependsOn": [
-        "pkg:npm/chalk@2.4.2"
-      ]
+      "dependsOn": ["pkg:npm/chalk@2.4.2"]
     },
     {
       "ref": "pkg:npm/moment@2.24.0",
@@ -40004,10 +39732,7 @@
     },
     {
       "ref": "pkg:npm/request-progress@0.4.0",
-      "dependsOn": [
-        "pkg:npm/node-eta@0.1.1",
-        "pkg:npm/throttleit@0.0.2"
-      ]
+      "dependsOn": ["pkg:npm/node-eta@0.1.1", "pkg:npm/throttleit@0.0.2"]
     },
     {
       "ref": "pkg:npm/punycode@1.3.2",
@@ -40019,16 +39744,11 @@
     },
     {
       "ref": "pkg:npm/url@0.11.0",
-      "dependsOn": [
-        "pkg:npm/punycode@1.3.2",
-        "pkg:npm/querystring@0.2.0"
-      ]
+      "dependsOn": ["pkg:npm/punycode@1.3.2", "pkg:npm/querystring@0.2.0"]
     },
     {
       "ref": "pkg:npm/fd-slicer@1.1.0",
-      "dependsOn": [
-        "pkg:npm/pend@1.2.0"
-      ]
+      "dependsOn": ["pkg:npm/pend@1.2.0"]
     },
     {
       "ref": "pkg:npm/buffer-crc32@0.2.13",
@@ -40036,10 +39756,7 @@
     },
     {
       "ref": "pkg:npm/yauzl@2.10.0",
-      "dependsOn": [
-        "pkg:npm/buffer-crc32@0.2.13",
-        "pkg:npm/fd-slicer@1.1.0"
-      ]
+      "dependsOn": ["pkg:npm/buffer-crc32@0.2.13", "pkg:npm/fd-slicer@1.1.0"]
     },
     {
       "ref": "pkg:npm/cypress@3.3.1",
@@ -40111,9 +39828,7 @@
     },
     {
       "ref": "pkg:npm/findup-sync@0.3.0",
-      "dependsOn": [
-        "pkg:npm/glob@5.0.15"
-      ]
+      "dependsOn": ["pkg:npm/glob@5.0.15"]
     },
     {
       "ref": "pkg:npm/grunt-known-options@1.1.1",
@@ -40137,9 +39852,7 @@
     },
     {
       "ref": "pkg:npm/nopt@3.0.6",
-      "dependsOn": [
-        "pkg:npm/abbrev@1.1.1"
-      ]
+      "dependsOn": ["pkg:npm/abbrev@1.1.1"]
     },
     {
       "ref": "pkg:npm/coffeescript@1.10.0",
@@ -40155,10 +39868,7 @@
     },
     {
       "ref": "pkg:npm/camelcase-keys@2.1.0",
-      "dependsOn": [
-        "pkg:npm/camelcase@2.1.1",
-        "pkg:npm/map-obj@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/camelcase@2.1.1", "pkg:npm/map-obj@1.0.1"]
     },
     {
       "ref": "pkg:npm/array-find-index@1.0.2",
@@ -40166,9 +39876,7 @@
     },
     {
       "ref": "pkg:npm/currently-unhandled@0.4.1",
-      "dependsOn": [
-        "pkg:npm/array-find-index@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/array-find-index@1.0.2"]
     },
     {
       "ref": "pkg:npm/loud-rejection@1.6.0",
@@ -40187,9 +39895,7 @@
     },
     {
       "ref": "pkg:npm/is-builtin-module@1.0.0",
-      "dependsOn": [
-        "pkg:npm/builtin-modules@1.1.1"
-      ]
+      "dependsOn": ["pkg:npm/builtin-modules@1.1.1"]
     },
     {
       "ref": "pkg:npm/spdx-exceptions@2.2.0",
@@ -40235,22 +39941,15 @@
     },
     {
       "ref": "pkg:npm/pinkie-promise@2.0.1",
-      "dependsOn": [
-        "pkg:npm/pinkie@2.0.4"
-      ]
+      "dependsOn": ["pkg:npm/pinkie@2.0.4"]
     },
     {
       "ref": "pkg:npm/path-exists@2.1.0",
-      "dependsOn": [
-        "pkg:npm/pinkie-promise@2.0.1"
-      ]
+      "dependsOn": ["pkg:npm/pinkie-promise@2.0.1"]
     },
     {
       "ref": "pkg:npm/find-up@1.1.2",
-      "dependsOn": [
-        "pkg:npm/path-exists@2.1.0",
-        "pkg:npm/pinkie-promise@2.0.1"
-      ]
+      "dependsOn": ["pkg:npm/path-exists@2.1.0", "pkg:npm/pinkie-promise@2.0.1"]
     },
     {
       "ref": "pkg:npm/is-arrayish@0.2.1",
@@ -40258,15 +39957,11 @@
     },
     {
       "ref": "pkg:npm/error-ex@1.3.2",
-      "dependsOn": [
-        "pkg:npm/is-arrayish@0.2.1"
-      ]
+      "dependsOn": ["pkg:npm/is-arrayish@0.2.1"]
     },
     {
       "ref": "pkg:npm/parse-json@2.2.0",
-      "dependsOn": [
-        "pkg:npm/error-ex@1.3.2"
-      ]
+      "dependsOn": ["pkg:npm/error-ex@1.3.2"]
     },
     {
       "ref": "pkg:npm/is-utf8@0.2.1",
@@ -40274,9 +39969,7 @@
     },
     {
       "ref": "pkg:npm/strip-bom@2.0.0",
-      "dependsOn": [
-        "pkg:npm/is-utf8@0.2.1"
-      ]
+      "dependsOn": ["pkg:npm/is-utf8@0.2.1"]
     },
     {
       "ref": "pkg:npm/load-json-file@1.1.0",
@@ -40306,23 +39999,15 @@
     },
     {
       "ref": "pkg:npm/read-pkg-up@1.0.1",
-      "dependsOn": [
-        "pkg:npm/find-up@1.1.2",
-        "pkg:npm/read-pkg@1.1.0"
-      ]
+      "dependsOn": ["pkg:npm/find-up@1.1.2", "pkg:npm/read-pkg@1.1.0"]
     },
     {
       "ref": "pkg:npm/strip-indent@1.0.1",
-      "dependsOn": [
-        "pkg:npm/get-stdin@4.0.1"
-      ]
+      "dependsOn": ["pkg:npm/get-stdin@4.0.1"]
     },
     {
       "ref": "pkg:npm/redent@1.0.0",
-      "dependsOn": [
-        "pkg:npm/indent-string@2.1.0",
-        "pkg:npm/strip-indent@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/indent-string@2.1.0", "pkg:npm/strip-indent@1.0.1"]
     },
     {
       "ref": "pkg:npm/trim-newlines@1.0.0",
@@ -40345,10 +40030,7 @@
     },
     {
       "ref": "pkg:npm/dateformat@1.0.12",
-      "dependsOn": [
-        "pkg:npm/get-stdin@4.0.1",
-        "pkg:npm/meow@3.7.0"
-      ]
+      "dependsOn": ["pkg:npm/get-stdin@4.0.1", "pkg:npm/meow@3.7.0"]
     },
     {
       "ref": "pkg:npm/exit@0.1.2",
@@ -40360,10 +40042,7 @@
     },
     {
       "ref": "pkg:npm/grunt-legacy-log-utils@2.0.1",
-      "dependsOn": [
-        "pkg:npm/chalk@2.4.2",
-        "pkg:npm/lodash@4.17.11"
-      ]
+      "dependsOn": ["pkg:npm/chalk@2.4.2", "pkg:npm/lodash@4.17.11"]
     },
     {
       "ref": "pkg:npm/hooker@0.2.3",
@@ -40388,10 +40067,7 @@
     },
     {
       "ref": "pkg:npm/underscore.string@3.3.5",
-      "dependsOn": [
-        "pkg:npm/sprintf-js@1.1.2",
-        "pkg:npm/util-deprecate@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/sprintf-js@1.1.2", "pkg:npm/util-deprecate@1.0.2"]
     },
     {
       "ref": "pkg:npm/grunt-legacy-util@1.1.1",
@@ -40411,9 +40087,7 @@
     },
     {
       "ref": "pkg:npm/argparse@1.0.10",
-      "dependsOn": [
-        "pkg:npm/sprintf-js@1.0.3"
-      ]
+      "dependsOn": ["pkg:npm/sprintf-js@1.0.3"]
     },
     {
       "ref": "pkg:npm/esprima@2.7.3",
@@ -40421,10 +40095,7 @@
     },
     {
       "ref": "pkg:npm/js-yaml@3.5.5",
-      "dependsOn": [
-        "pkg:npm/argparse@1.0.10",
-        "pkg:npm/esprima@2.7.3"
-      ]
+      "dependsOn": ["pkg:npm/argparse@1.0.10", "pkg:npm/esprima@2.7.3"]
     },
     {
       "ref": "pkg:npm/grunt@1.0.3",
@@ -40462,15 +40133,11 @@
     },
     {
       "ref": "pkg:npm/homedir-polyfill@1.0.1",
-      "dependsOn": [
-        "pkg:npm/parse-passwd@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/parse-passwd@1.0.0"]
     },
     {
       "ref": "pkg:npm/expand-tilde@2.0.2",
-      "dependsOn": [
-        "pkg:npm/homedir-polyfill@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/homedir-polyfill@1.0.1"]
     },
     {
       "ref": "pkg:npm/global-prefix@1.0.2",
@@ -40507,9 +40174,7 @@
     },
     {
       "ref": "pkg:npm/for-own@1.0.0",
-      "dependsOn": [
-        "pkg:npm/for-in@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/for-in@1.0.2"]
     },
     {
       "ref": "pkg:npm/array-each@1.0.1",
@@ -40534,22 +40199,15 @@
     },
     {
       "ref": "pkg:npm/is-unc-path@1.0.0",
-      "dependsOn": [
-        "pkg:npm/unc-path-regex@0.1.2"
-      ]
+      "dependsOn": ["pkg:npm/unc-path-regex@0.1.2"]
     },
     {
       "ref": "pkg:npm/is-relative@1.0.0",
-      "dependsOn": [
-        "pkg:npm/is-unc-path@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/is-unc-path@1.0.0"]
     },
     {
       "ref": "pkg:npm/is-absolute@1.0.0",
-      "dependsOn": [
-        "pkg:npm/is-relative@1.0.0",
-        "pkg:npm/is-windows@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/is-relative@1.0.0", "pkg:npm/is-windows@1.0.2"]
     },
     {
       "ref": "pkg:npm/path-root-regex@0.1.2",
@@ -40557,9 +40215,7 @@
     },
     {
       "ref": "pkg:npm/path-root@0.1.1",
-      "dependsOn": [
-        "pkg:npm/path-root-regex@0.1.2"
-      ]
+      "dependsOn": ["pkg:npm/path-root-regex@0.1.2"]
     },
     {
       "ref": "pkg:npm/parse-filepath@1.0.2",
@@ -40585,22 +40241,15 @@
     },
     {
       "ref": "pkg:npm/make-iterator@1.0.1",
-      "dependsOn": [
-        "pkg:npm/kind-of@6.0.2"
-      ]
+      "dependsOn": ["pkg:npm/kind-of@6.0.2"]
     },
     {
       "ref": "pkg:npm/object.map@1.0.1",
-      "dependsOn": [
-        "pkg:npm/for-own@1.0.0",
-        "pkg:npm/make-iterator@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/for-own@1.0.0", "pkg:npm/make-iterator@1.0.1"]
     },
     {
       "ref": "pkg:npm/rechoir@0.6.2",
-      "dependsOn": [
-        "pkg:npm/resolve@1.1.7"
-      ]
+      "dependsOn": ["pkg:npm/resolve@1.1.7"]
     },
     {
       "ref": "pkg:npm/liftoff@2.5.0",
@@ -40636,23 +40285,15 @@
     },
     {
       "ref": "pkg:npm/osenv@0.1.5",
-      "dependsOn": [
-        "pkg:npm/os-homedir@1.0.2",
-        "pkg:npm/os-tmpdir@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/os-homedir@1.0.2", "pkg:npm/os-tmpdir@1.0.2"]
     },
     {
       "ref": "pkg:npm/nopt@4.0.1",
-      "dependsOn": [
-        "pkg:npm/abbrev@1.1.1",
-        "pkg:npm/osenv@0.1.5"
-      ]
+      "dependsOn": ["pkg:npm/abbrev@1.1.1", "pkg:npm/osenv@0.1.5"]
     },
     {
       "ref": "pkg:npm/v8flags@3.1.2",
-      "dependsOn": [
-        "pkg:npm/homedir-polyfill@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/homedir-polyfill@1.0.1"]
     },
     {
       "ref": "pkg:npm/grunt-cli@1.3.2",
@@ -40670,9 +40311,7 @@
     },
     {
       "ref": "pkg:npm/end-of-stream@1.4.1",
-      "dependsOn": [
-        "pkg:npm/once@1.4.0"
-      ]
+      "dependsOn": ["pkg:npm/once@1.4.0"]
     },
     {
       "ref": "pkg:npm/stream-shift@1.0.0",
@@ -40689,10 +40328,7 @@
     },
     {
       "ref": "pkg:npm/pump@2.0.1",
-      "dependsOn": [
-        "pkg:npm/end-of-stream@1.4.1",
-        "pkg:npm/once@1.4.0"
-      ]
+      "dependsOn": ["pkg:npm/end-of-stream@1.4.1", "pkg:npm/once@1.4.0"]
     },
     {
       "ref": "pkg:npm/pumpify@1.5.1",
@@ -40708,16 +40344,11 @@
     },
     {
       "ref": "pkg:npm/through2@2.0.5",
-      "dependsOn": [
-        "pkg:npm/readable-stream@2.3.6",
-        "pkg:npm/xtend@4.0.1"
-      ]
+      "dependsOn": ["pkg:npm/readable-stream@2.3.6", "pkg:npm/xtend@4.0.1"]
     },
     {
       "ref": "pkg:npm/split2@1.1.1",
-      "dependsOn": [
-        "pkg:npm/through2@2.0.5"
-      ]
+      "dependsOn": ["pkg:npm/through2@2.0.5"]
     },
     {
       "ref": "pkg:npm/pad-stream@1.2.0",
@@ -40745,10 +40376,7 @@
     },
     {
       "ref": "pkg:npm/cli@1.0.1",
-      "dependsOn": [
-        "pkg:npm/exit@0.1.2",
-        "pkg:npm/glob@7.1.3"
-      ]
+      "dependsOn": ["pkg:npm/exit@0.1.2", "pkg:npm/glob@7.1.3"]
     },
     {
       "ref": "pkg:npm/date-now@0.1.4",
@@ -40756,9 +40384,7 @@
     },
     {
       "ref": "pkg:npm/console-browserify@1.1.0",
-      "dependsOn": [
-        "pkg:npm/date-now@0.1.4"
-      ]
+      "dependsOn": ["pkg:npm/date-now@0.1.4"]
     },
     {
       "ref": "pkg:npm/isarray@0.0.1",
@@ -40766,10 +40392,7 @@
     },
     {
       "ref": "pkg:npm/readable-stream@1.1.14",
-      "dependsOn": [
-        "pkg:npm/core-util-is@1.0.2",
-        "pkg:npm/inherits@2.0.3"
-      ]
+      "dependsOn": ["pkg:npm/core-util-is@1.0.2", "pkg:npm/inherits@2.0.3"]
     },
     {
       "ref": "pkg:npm/string_decoder@0.10.31",
@@ -40781,9 +40404,7 @@
     },
     {
       "ref": "pkg:npm/domhandler@2.3.0",
-      "dependsOn": [
-        "pkg:npm/domelementtype@1.3.1"
-      ]
+      "dependsOn": ["pkg:npm/domelementtype@1.3.1"]
     },
     {
       "ref": "pkg:npm/domelementtype@1.1.3",
@@ -40795,10 +40416,7 @@
     },
     {
       "ref": "pkg:npm/dom-serializer@0.1.0",
-      "dependsOn": [
-        "pkg:npm/domelementtype@1.1.3",
-        "pkg:npm/entities@1.1.2"
-      ]
+      "dependsOn": ["pkg:npm/domelementtype@1.1.3", "pkg:npm/entities@1.1.2"]
     },
     {
       "ref": "pkg:npm/domutils@1.5.1",
@@ -40861,9 +40479,7 @@
     },
     {
       "ref": "pkg:npm/gaze@1.1.3",
-      "dependsOn": [
-        "pkg:npm/globule@1.2.1"
-      ]
+      "dependsOn": ["pkg:npm/globule@1.2.1"]
     },
     {
       "ref": "pkg:npm/bytes@1.0.0",
@@ -40883,10 +40499,7 @@
     },
     {
       "ref": "pkg:npm/error@7.0.2",
-      "dependsOn": [
-        "pkg:npm/string-template@0.2.1",
-        "pkg:npm/xtend@4.0.1"
-      ]
+      "dependsOn": ["pkg:npm/string-template@0.2.1", "pkg:npm/xtend@4.0.1"]
     },
     {
       "ref": "pkg:npm/safe-json-parse@1.0.1",
@@ -40920,9 +40533,7 @@
     },
     {
       "ref": "pkg:npm/faye-websocket@0.10.0",
-      "dependsOn": [
-        "pkg:npm/websocket-driver@0.7.0"
-      ]
+      "dependsOn": ["pkg:npm/websocket-driver@0.7.0"]
     },
     {
       "ref": "pkg:npm/livereload-js@2.4.0",
@@ -40955,10 +40566,7 @@
     },
     {
       "ref": "pkg:npm/grunt-env@1.0.1",
-      "dependsOn": [
-        "pkg:npm/ini@1.3.5",
-        "pkg:npm/lodash@4.17.20"
-      ]
+      "dependsOn": ["pkg:npm/ini@1.3.5", "pkg:npm/lodash@4.17.20"]
     },
     {
       "ref": "pkg:npm/grunt-contrib-clean@1.1.0",
@@ -40986,10 +40594,7 @@
     },
     {
       "ref": "pkg:npm/js-yaml@3.6.1",
-      "dependsOn": [
-        "pkg:npm/argparse@1.0.10",
-        "pkg:npm/esprima@2.7.3"
-      ]
+      "dependsOn": ["pkg:npm/argparse@1.0.10", "pkg:npm/esprima@2.7.3"]
     },
     {
       "ref": "pkg:npm/lcov-parse@0.0.10",
@@ -41029,15 +40634,11 @@
     },
     {
       "ref": "pkg:npm/generate-function@2.3.1",
-      "dependsOn": [
-        "pkg:npm/is-property@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/is-property@1.0.2"]
     },
     {
       "ref": "pkg:npm/generate-object-property@1.2.0",
-      "dependsOn": [
-        "pkg:npm/is-property@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/is-property@1.0.2"]
     },
     {
       "ref": "pkg:npm/is-my-ip-valid@1.0.0",
@@ -41076,21 +40677,15 @@
     },
     {
       "ref": "pkg:npm/boom@2.10.1",
-      "dependsOn": [
-        "pkg:npm/hoek@2.16.3"
-      ]
+      "dependsOn": ["pkg:npm/hoek@2.16.3"]
     },
     {
       "ref": "pkg:npm/cryptiles@2.0.5",
-      "dependsOn": [
-        "pkg:npm/boom@2.10.1"
-      ]
+      "dependsOn": ["pkg:npm/boom@2.10.1"]
     },
     {
       "ref": "pkg:npm/sntp@1.0.9",
-      "dependsOn": [
-        "pkg:npm/hoek@2.16.3"
-      ]
+      "dependsOn": ["pkg:npm/hoek@2.16.3"]
     },
     {
       "ref": "pkg:npm/hawk@3.1.3",
@@ -41125,9 +40720,7 @@
     },
     {
       "ref": "pkg:npm/tough-cookie@2.3.4",
-      "dependsOn": [
-        "pkg:npm/punycode@1.4.1"
-      ]
+      "dependsOn": ["pkg:npm/punycode@1.4.1"]
     },
     {
       "ref": "pkg:npm/tunnel-agent@0.4.3",
@@ -41182,24 +40775,15 @@
     },
     {
       "ref": "pkg:npm/lru-cache@4.1.5",
-      "dependsOn": [
-        "pkg:npm/pseudomap@1.0.2",
-        "pkg:npm/yallist@2.1.2"
-      ]
+      "dependsOn": ["pkg:npm/pseudomap@1.0.2", "pkg:npm/yallist@2.1.2"]
     },
     {
       "ref": "pkg:npm/cross-spawn@4.0.2",
-      "dependsOn": [
-        "pkg:npm/lru-cache@4.1.5",
-        "pkg:npm/which@1.3.1"
-      ]
+      "dependsOn": ["pkg:npm/lru-cache@4.1.5", "pkg:npm/which@1.3.1"]
     },
     {
       "ref": "pkg:npm/foreground-child@1.5.6",
-      "dependsOn": [
-        "pkg:npm/cross-spawn@4.0.2",
-        "pkg:npm/signal-exit@3.0.2"
-      ]
+      "dependsOn": ["pkg:npm/cross-spawn@4.0.2", "pkg:npm/signal-exit@3.0.2"]
     },
     {
       "ref": "pkg:npm/align-text@0.1.4",
@@ -41267,10 +40851,7 @@
     },
     {
       "ref": "pkg:npm/brace-expansion@1.1.6",
-      "dependsOn": [
-        "pkg:npm/balanced-match@0.4.2",
-        "pkg:npm/concat-map@0.0.1"
-      ]
+      "dependsOn": ["pkg:npm/balanced-match@0.4.2", "pkg:npm/concat-map@0.0.1"]
     },
     {
       "ref": "pkg:npm/braces@1.8.5",
@@ -41286,15 +40867,11 @@
     },
     {
       "ref": "pkg:npm/cliui@2.1.0",
-      "dependsOn": [
-        "pkg:npm/wordwrap@0.0.2"
-      ]
+      "dependsOn": ["pkg:npm/wordwrap@0.0.2"]
     },
     {
       "ref": "pkg:npm/code-point-at@1.0.0",
-      "dependsOn": [
-        "pkg:npm/number-is-nan@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/number-is-nan@1.0.0"]
     },
     {
       "ref": "pkg:npm/commondir@1.0.1",
@@ -41318,9 +40895,7 @@
     },
     {
       "ref": "pkg:npm/detect-indent@3.0.1",
-      "dependsOn": [
-        "pkg:npm/minimist@1.2.0"
-      ]
+      "dependsOn": ["pkg:npm/minimist@1.2.0"]
     },
     {
       "ref": "pkg:npm/error-ex@1.3.0",
@@ -41396,9 +40971,7 @@
     },
     {
       "ref": "pkg:npm/handlebars@4.0.5",
-      "dependsOn": [
-        "pkg:npm/source-map@0.4.4"
-      ]
+      "dependsOn": ["pkg:npm/source-map@0.4.4"]
     },
     {
       "ref": "pkg:npm/has-flag@1.0.0",
@@ -41478,9 +41051,7 @@
     },
     {
       "ref": "pkg:npm/istanbul-lib-report@1.0.0-alpha.3",
-      "dependsOn": [
-        "pkg:npm/supports-color@3.1.2"
-      ]
+      "dependsOn": ["pkg:npm/supports-color@3.1.2"]
     },
     {
       "ref": "pkg:npm/istanbul-lib-source-maps@1.0.0-alpha.10",
@@ -41528,9 +41099,7 @@
     },
     {
       "ref": "pkg:npm/loose-envify@1.2.0",
-      "dependsOn": [
-        "pkg:npm/js-tokens@1.0.3"
-      ]
+      "dependsOn": ["pkg:npm/js-tokens@1.0.3"]
     },
     {
       "ref": "pkg:npm/lru-cache@4.0.1",
@@ -41554,9 +41123,7 @@
     },
     {
       "ref": "pkg:npm/normalize-package-data@2.3.5",
-      "dependsOn": [
-        "pkg:npm/is-builtin-module@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/is-builtin-module@1.0.0"]
     },
     {
       "ref": "pkg:npm/normalize-path@2.0.1",
@@ -41664,15 +41231,11 @@
     },
     {
       "ref": "pkg:npm/spawn-wrap@1.2.4",
-      "dependsOn": [
-        "pkg:npm/signal-exit@2.1.2"
-      ]
+      "dependsOn": ["pkg:npm/signal-exit@2.1.2"]
     },
     {
       "ref": "pkg:npm/spdx-correct@1.0.2",
-      "dependsOn": [
-        "pkg:npm/spdx-license-ids@1.2.0"
-      ]
+      "dependsOn": ["pkg:npm/spdx-license-ids@1.2.0"]
     },
     {
       "ref": "pkg:npm/spdx-exceptions@1.0.5",
@@ -41707,10 +41270,7 @@
     },
     {
       "ref": "pkg:npm/uglify-js@2.7.0",
-      "dependsOn": [
-        "pkg:npm/async@0.2.10",
-        "pkg:npm/yargs@3.10.0"
-      ]
+      "dependsOn": ["pkg:npm/async@0.2.10", "pkg:npm/yargs@3.10.0"]
     },
     {
       "ref": "pkg:npm/validate-npm-package-license@3.0.1",
@@ -41745,10 +41305,7 @@
     },
     {
       "ref": "pkg:npm/yargs@4.8.1",
-      "dependsOn": [
-        "pkg:npm/cliui@3.2.0",
-        "pkg:npm/window-size@0.2.0"
-      ]
+      "dependsOn": ["pkg:npm/cliui@3.2.0", "pkg:npm/window-size@0.2.0"]
     },
     {
       "ref": "pkg:npm/camelcase@3.0.0",
@@ -41756,9 +41313,7 @@
     },
     {
       "ref": "pkg:npm/yargs-parser@2.4.1",
-      "dependsOn": [
-        "pkg:npm/camelcase@3.0.0"
-      ]
+      "dependsOn": ["pkg:npm/camelcase@3.0.0"]
     },
     {
       "ref": "pkg:npm/nyc@7.1.0",
@@ -41968,10 +41523,7 @@
     },
     {
       "ref": "pkg:npm/unicode-length@1.0.3",
-      "dependsOn": [
-        "pkg:npm/punycode@1.4.1",
-        "pkg:npm/strip-ansi@3.0.1"
-      ]
+      "dependsOn": ["pkg:npm/punycode@1.4.1", "pkg:npm/strip-ansi@3.0.1"]
     },
     {
       "ref": "pkg:npm/tap-mocha-reporter@2.0.1",
@@ -42017,15 +41569,11 @@
     },
     {
       "ref": "pkg:npm/nodeunit@0.9.5",
-      "dependsOn": [
-        "pkg:npm/tap@7.1.2"
-      ]
+      "dependsOn": ["pkg:npm/tap@7.1.2"]
     },
     {
       "ref": "pkg:npm/grunt-contrib-nodeunit@1.0.0",
-      "dependsOn": [
-        "pkg:npm/nodeunit@0.9.5"
-      ]
+      "dependsOn": ["pkg:npm/nodeunit@0.9.5"]
     },
     {
       "ref": "pkg:npm/q@1.5.1",
@@ -42047,10 +41595,7 @@
     },
     {
       "ref": "pkg:npm/config-chain@1.1.12",
-      "dependsOn": [
-        "pkg:npm/ini@1.3.5",
-        "pkg:npm/proto-list@1.2.4"
-      ]
+      "dependsOn": ["pkg:npm/ini@1.3.5", "pkg:npm/proto-list@1.2.4"]
     },
     {
       "ref": "pkg:npm/@types/node@10.12.18",
@@ -42124,9 +41669,7 @@
     },
     {
       "ref": "pkg:npm/glob@3.2.11",
-      "dependsOn": [
-        "pkg:npm/inherits@2.0.3"
-      ]
+      "dependsOn": ["pkg:npm/inherits@2.0.3"]
     },
     {
       "ref": "pkg:npm/lru-cache@2.7.3",
@@ -42134,9 +41677,7 @@
     },
     {
       "ref": "pkg:npm/minimatch@0.3.0",
-      "dependsOn": [
-        "pkg:npm/sigmund@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/sigmund@1.0.1"]
     },
     {
       "ref": "pkg:npm/supports-color@1.2.0",
@@ -42156,10 +41697,7 @@
     },
     {
       "ref": "pkg:npm/jade@0.26.3",
-      "dependsOn": [
-        "pkg:npm/commander@0.6.1",
-        "pkg:npm/mkdirp@0.3.0"
-      ]
+      "dependsOn": ["pkg:npm/commander@0.6.1", "pkg:npm/mkdirp@0.3.0"]
     },
     {
       "ref": "pkg:npm/to-iso-string@0.0.2",
@@ -42229,27 +41767,19 @@
     },
     {
       "ref": "pkg:npm/defaults@1.0.3",
-      "dependsOn": [
-        "pkg:npm/clone@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/clone@1.0.2"]
     },
     {
       "ref": "pkg:npm/wcwidth@1.0.0",
-      "dependsOn": [
-        "pkg:npm/defaults@1.0.3"
-      ]
+      "dependsOn": ["pkg:npm/defaults@1.0.3"]
     },
     {
       "ref": "pkg:npm/columnify@1.5.4",
-      "dependsOn": [
-        "pkg:npm/wcwidth@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/wcwidth@1.0.0"]
     },
     {
       "ref": "pkg:npm/config-chain@1.1.11",
-      "dependsOn": [
-        "pkg:npm/proto-list@1.2.4"
-      ]
+      "dependsOn": ["pkg:npm/proto-list@1.2.4"]
     },
     {
       "ref": "pkg:npm/debuglog@1.0.1",
@@ -42257,10 +41787,7 @@
     },
     {
       "ref": "pkg:npm/dezalgo@1.0.3",
-      "dependsOn": [
-        "pkg:npm/asap@2.0.6",
-        "pkg:npm/wrappy@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/asap@2.0.6", "pkg:npm/wrappy@1.0.2"]
     },
     {
       "ref": "pkg:npm/editor@1.0.0",
@@ -42280,21 +41807,15 @@
     },
     {
       "ref": "pkg:npm/minimatch@3.0.3",
-      "dependsOn": [
-        "pkg:npm/brace-expansion@1.1.6"
-      ]
+      "dependsOn": ["pkg:npm/brace-expansion@1.1.6"]
     },
     {
       "ref": "pkg:npm/fstream-ignore@1.0.5",
-      "dependsOn": [
-        "pkg:npm/minimatch@3.0.3"
-      ]
+      "dependsOn": ["pkg:npm/minimatch@3.0.3"]
     },
     {
       "ref": "pkg:npm/fstream-npm@1.2.0",
-      "dependsOn": [
-        "pkg:npm/fstream-ignore@1.0.5"
-      ]
+      "dependsOn": ["pkg:npm/fstream-ignore@1.0.5"]
     },
     {
       "ref": "pkg:npm/glob@7.1.0",
@@ -42322,10 +41843,7 @@
     },
     {
       "ref": "pkg:npm/glob@6.0.4",
-      "dependsOn": [
-        "pkg:npm/minimatch@3.0.3",
-        "pkg:npm/path-is-absolute@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/minimatch@3.0.3", "pkg:npm/path-is-absolute@1.0.0"]
     },
     {
       "ref": "pkg:npm/promzard@0.3.0",
@@ -42333,10 +41851,7 @@
     },
     {
       "ref": "pkg:npm/init-package-json@1.9.4",
-      "dependsOn": [
-        "pkg:npm/glob@6.0.4",
-        "pkg:npm/promzard@0.3.0"
-      ]
+      "dependsOn": ["pkg:npm/glob@6.0.4", "pkg:npm/promzard@0.3.0"]
     },
     {
       "ref": "pkg:npm/lockfile@1.0.2",
@@ -42403,9 +41918,7 @@
     },
     {
       "ref": "pkg:npm/are-we-there-yet@1.1.2",
-      "dependsOn": [
-        "pkg:npm/delegates@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/delegates@1.0.0"]
     },
     {
       "ref": "pkg:npm/console-control-strings@1.1.0",
@@ -42452,29 +41965,19 @@
     },
     {
       "ref": "pkg:npm/es5-ext@0.10.12",
-      "dependsOn": [
-        "pkg:npm/es6-iterator@2.0.0"
-      ]
+      "dependsOn": ["pkg:npm/es6-iterator@2.0.0"]
     },
     {
       "ref": "pkg:npm/es6-symbol@3.1.0",
-      "dependsOn": [
-        "pkg:npm/d@0.1.1",
-        "pkg:npm/es5-ext@0.10.12"
-      ]
+      "dependsOn": ["pkg:npm/d@0.1.1", "pkg:npm/es5-ext@0.10.12"]
     },
     {
       "ref": "pkg:npm/array-index@1.0.0",
-      "dependsOn": [
-        "pkg:npm/debug@2.2.0",
-        "pkg:npm/es6-symbol@3.1.0"
-      ]
+      "dependsOn": ["pkg:npm/debug@2.2.0", "pkg:npm/es6-symbol@3.1.0"]
     },
     {
       "ref": "pkg:npm/path-array@1.0.1",
-      "dependsOn": [
-        "pkg:npm/array-index@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/array-index@1.0.0"]
     },
     {
       "ref": "pkg:npm/node-gyp@3.4.0",
@@ -42513,10 +42016,7 @@
     },
     {
       "ref": "pkg:npm/concat-stream@1.5.2",
-      "dependsOn": [
-        "pkg:npm/readable-stream@2.0.6",
-        "pkg:npm/typedarray@0.0.6"
-      ]
+      "dependsOn": ["pkg:npm/readable-stream@2.0.6", "pkg:npm/typedarray@0.0.6"]
     },
     {
       "ref": "pkg:npm/retry@0.10.0",
@@ -42553,10 +42053,7 @@
     },
     {
       "ref": "pkg:npm/osenv@0.1.3",
-      "dependsOn": [
-        "pkg:npm/os-homedir@1.0.1",
-        "pkg:npm/os-tmpdir@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/os-homedir@1.0.1", "pkg:npm/os-tmpdir@1.0.1"]
     },
     {
       "ref": "pkg:npm/mute-stream@0.0.5",
@@ -42588,9 +42085,7 @@
     },
     {
       "ref": "pkg:npm/json-parse-helpfulerror@1.0.3",
-      "dependsOn": [
-        "pkg:npm/jju@1.3.0"
-      ]
+      "dependsOn": ["pkg:npm/jju@1.3.0"]
     },
     {
       "ref": "pkg:npm/read-package-json@2.0.4",
@@ -42633,15 +42128,11 @@
     },
     {
       "ref": "pkg:npm/bl@1.1.2",
-      "dependsOn": [
-        "pkg:npm/readable-stream@2.0.6"
-      ]
+      "dependsOn": ["pkg:npm/readable-stream@2.0.6"]
     },
     {
       "ref": "pkg:npm/combined-stream@1.0.5",
-      "dependsOn": [
-        "pkg:npm/delayed-stream@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/delayed-stream@1.0.0"]
     },
     {
       "ref": "pkg:npm/extend@3.0.0",
@@ -42649,9 +42140,7 @@
     },
     {
       "ref": "pkg:npm/form-data@2.0.0",
-      "dependsOn": [
-        "pkg:npm/asynckit@0.4.0"
-      ]
+      "dependsOn": ["pkg:npm/asynckit@0.4.0"]
     },
     {
       "ref": "pkg:npm/graceful-readlink@1.0.1",
@@ -42659,9 +42148,7 @@
     },
     {
       "ref": "pkg:npm/commander@2.9.0",
-      "dependsOn": [
-        "pkg:npm/graceful-readlink@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/graceful-readlink@1.0.1"]
     },
     {
       "ref": "pkg:npm/generate-function@2.0.0",
@@ -42748,9 +42235,7 @@
     },
     {
       "ref": "pkg:npm/mime-types@2.1.12",
-      "dependsOn": [
-        "pkg:npm/mime-db@1.24.0"
-      ]
+      "dependsOn": ["pkg:npm/mime-db@1.24.0"]
     },
     {
       "ref": "pkg:npm/node-uuid@1.4.7",
@@ -42808,9 +42293,7 @@
     },
     {
       "ref": "pkg:npm/tar@2.2.1",
-      "dependsOn": [
-        "pkg:npm/block-stream@0.0.8"
-      ]
+      "dependsOn": ["pkg:npm/block-stream@0.0.8"]
     },
     {
       "ref": "pkg:npm/text-table@0.2.0",
@@ -42830,9 +42313,7 @@
     },
     {
       "ref": "pkg:npm/unique-filename@1.1.0",
-      "dependsOn": [
-        "pkg:npm/unique-slug@2.0.0"
-      ]
+      "dependsOn": ["pkg:npm/unique-slug@2.0.0"]
     },
     {
       "ref": "pkg:npm/spdx-license-ids@1.2.0",
@@ -42848,15 +42329,11 @@
     },
     {
       "ref": "pkg:npm/validate-npm-package-name@2.2.2",
-      "dependsOn": [
-        "pkg:npm/builtins@0.0.7"
-      ]
+      "dependsOn": ["pkg:npm/builtins@0.0.7"]
     },
     {
       "ref": "pkg:npm/which@1.2.11",
-      "dependsOn": [
-        "pkg:npm/isexe@1.1.2"
-      ]
+      "dependsOn": ["pkg:npm/isexe@1.1.2"]
     },
     {
       "ref": "pkg:npm/write-file-atomic@1.2.0",
@@ -42951,10 +42428,7 @@
     },
     {
       "ref": "pkg:npm/grunt-npm-install@0.3.1",
-      "dependsOn": [
-        "pkg:npm/grunt@1.0.3",
-        "pkg:npm/npm@3.10.10"
-      ]
+      "dependsOn": ["pkg:npm/grunt@1.0.3", "pkg:npm/npm@3.10.10"]
     },
     {
       "ref": "pkg:npm/form-data@1.0.1",
@@ -43088,21 +42562,15 @@
     },
     {
       "ref": "pkg:npm/nopt@1.0.10",
-      "dependsOn": [
-        "pkg:npm/abbrev@1.1.1"
-      ]
+      "dependsOn": ["pkg:npm/abbrev@1.1.1"]
     },
     {
       "ref": "pkg:npm/touch@3.1.0",
-      "dependsOn": [
-        "pkg:npm/nopt@1.0.10"
-      ]
+      "dependsOn": ["pkg:npm/nopt@1.0.10"]
     },
     {
       "ref": "pkg:npm/undefsafe@2.0.2",
-      "dependsOn": [
-        "pkg:npm/debug@2.6.9"
-      ]
+      "dependsOn": ["pkg:npm/debug@2.6.9"]
     },
     {
       "ref": "pkg:npm/ansi-regex@3.0.0",
@@ -43159,9 +42627,7 @@
     },
     {
       "ref": "pkg:npm/term-size@1.2.0",
-      "dependsOn": [
-        "pkg:npm/execa@0.7.0"
-      ]
+      "dependsOn": ["pkg:npm/execa@0.7.0"]
     },
     {
       "ref": "pkg:npm/widest-line@2.0.1",
@@ -43193,9 +42659,7 @@
     },
     {
       "ref": "pkg:npm/dot-prop@4.2.0",
-      "dependsOn": [
-        "pkg:npm/is-obj@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/is-obj@1.0.1"]
     },
     {
       "ref": "pkg:npm/pify@3.0.0",
@@ -43203,9 +42667,7 @@
     },
     {
       "ref": "pkg:npm/make-dir@1.3.0",
-      "dependsOn": [
-        "pkg:npm/pify@3.0.0"
-      ]
+      "dependsOn": ["pkg:npm/pify@3.0.0"]
     },
     {
       "ref": "pkg:npm/crypto-random-string@1.0.0",
@@ -43213,9 +42675,7 @@
     },
     {
       "ref": "pkg:npm/unique-string@1.0.0",
-      "dependsOn": [
-        "pkg:npm/crypto-random-string@1.0.0"
-      ]
+      "dependsOn": ["pkg:npm/crypto-random-string@1.0.0"]
     },
     {
       "ref": "pkg:npm/write-file-atomic@2.4.3",
@@ -43254,9 +42714,7 @@
     },
     {
       "ref": "pkg:npm/create-error-class@3.0.2",
-      "dependsOn": [
-        "pkg:npm/capture-stack-trace@1.0.1"
-      ]
+      "dependsOn": ["pkg:npm/capture-stack-trace@1.0.1"]
     },
     {
       "ref": "pkg:npm/duplexer3@0.1.4",
@@ -43288,9 +42746,7 @@
     },
     {
       "ref": "pkg:npm/url-parse-lax@1.0.0",
-      "dependsOn": [
-        "pkg:npm/prepend-http@1.0.4"
-      ]
+      "dependsOn": ["pkg:npm/prepend-http@1.0.4"]
     },
     {
       "ref": "pkg:npm/got@6.7.1",
@@ -43310,16 +42766,11 @@
     },
     {
       "ref": "pkg:npm/registry-auth-token@3.4.0",
-      "dependsOn": [
-        "pkg:npm/rc@1.2.8",
-        "pkg:npm/safe-buffer@5.1.2"
-      ]
+      "dependsOn": ["pkg:npm/rc@1.2.8", "pkg:npm/safe-buffer@5.1.2"]
     },
     {
       "ref": "pkg:npm/registry-url@3.1.0",
-      "dependsOn": [
-        "pkg:npm/rc@1.2.8"
-      ]
+      "dependsOn": ["pkg:npm/rc@1.2.8"]
     },
     {
       "ref": "pkg:npm/package-json@4.0.1",
@@ -43332,15 +42783,11 @@
     },
     {
       "ref": "pkg:npm/latest-version@3.1.0",
-      "dependsOn": [
-        "pkg:npm/package-json@4.0.1"
-      ]
+      "dependsOn": ["pkg:npm/package-json@4.0.1"]
     },
     {
       "ref": "pkg:npm/semver-diff@2.1.0",
-      "dependsOn": [
-        "pkg:npm/semver@5.6.0"
-      ]
+      "dependsOn": ["pkg:npm/semver@5.6.0"]
     },
     {
       "ref": "pkg:npm/update-notifier@2.5.0",
@@ -43391,10 +42838,7 @@
     },
     {
       "ref": "pkg:npm/ws@1.1.5",
-      "dependsOn": [
-        "pkg:npm/options@0.0.6",
-        "pkg:npm/ultron@1.0.2"
-      ]
+      "dependsOn": ["pkg:npm/options@0.0.6", "pkg:npm/ultron@1.0.2"]
     },
     {
       "ref": "pkg:npm/sax@0.6.1",
@@ -43406,10 +42850,7 @@
     },
     {
       "ref": "pkg:npm/xml2js@0.4.4",
-      "dependsOn": [
-        "pkg:npm/sax@0.6.1",
-        "pkg:npm/xmlbuilder@10.1.1"
-      ]
+      "dependsOn": ["pkg:npm/sax@0.6.1", "pkg:npm/xmlbuilder@10.1.1"]
     },
     {
       "ref": "pkg:npm/selenium-webdriver@2.53.3",
@@ -43427,15 +42868,11 @@
     },
     {
       "ref": "pkg:npm/should-equal@0.8.0",
-      "dependsOn": [
-        "pkg:npm/should-type@0.2.0"
-      ]
+      "dependsOn": ["pkg:npm/should-type@0.2.0"]
     },
     {
       "ref": "pkg:npm/should-format@0.3.2",
-      "dependsOn": [
-        "pkg:npm/should-type@0.2.0"
-      ]
+      "dependsOn": ["pkg:npm/should-type@0.2.0"]
     },
     {
       "ref": "pkg:npm/should@8.4.0",
@@ -43495,9 +42932,7 @@
     },
     {
       "ref": "pkg:npm/http-signature@0.10.1",
-      "dependsOn": [
-        "pkg:npm/ctype@0.5.3"
-      ]
+      "dependsOn": ["pkg:npm/ctype@0.5.3"]
     },
     {
       "ref": "pkg:npm/lodash@2.4.2",

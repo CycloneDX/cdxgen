@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
 import fs from "node:fs";
-import jws from "jws";
+import { dirname, join } from "node:path";
 import process from "node:process";
 import { URL, fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import jws from "jws";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -18,11 +18,11 @@ const args = yargs(hideBin(process.argv))
   .option("input", {
     alias: "i",
     default: "bom.json",
-    description: "Input json to validate. Default bom.json"
+    description: "Input json to validate. Default bom.json",
   })
   .option("public-key", {
     default: "public.key",
-    description: "Public key in PEM format. Default public.key"
+    description: "Public key in PEM format. Default public.key",
   })
   .completion("completion", "Generate bash/zsh completion")
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
@@ -33,7 +33,7 @@ const args = yargs(hideBin(process.argv))
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
     join(dirName, "..", "package.json"),
-    "utf-8"
+    "utf-8",
   );
   const packageJson = JSON.parse(packageJsonAsString);
 
@@ -50,7 +50,7 @@ for (const comp of bomJson.components) {
     const validationResult = jws.verify(
       compSignature,
       comp.signature.algorithm,
-      fs.readFileSync(args.publicKey, "utf8")
+      fs.readFileSync(args.publicKey, "utf8"),
     );
     if (!validationResult) {
       console.log(`${comp["bom-ref"]} signature is invalid!`);
@@ -71,7 +71,7 @@ if (!bomSignature) {
   const validationResult = jws.verify(
     bomSignature,
     bomJson.signature.algorithm,
-    fs.readFileSync(args.publicKey, "utf8")
+    fs.readFileSync(args.publicKey, "utf8"),
   );
   if (validationResult) {
     console.log("Signature is valid!");

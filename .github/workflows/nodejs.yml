@@ -29,7 +29,6 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-          npm run lint
           npm test
         env:
           CI: true
@@ -67,7 +66,6 @@ jobs:
           deno-version: v1.x
       - name: deno compile
         run: |
-          deno lint
           mkdir build
           ${{ matrix.build }}
         continue-on-error: true

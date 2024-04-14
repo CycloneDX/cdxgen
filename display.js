@@ -7,7 +7,7 @@ const SYMBOLS_ANSI = {
   EMPTY: "",
   INDENT: "  ",
   LAST_BRANCH: "└── ",
-  VERTICAL: "│ "
+  VERTICAL: "│ ",
 };
 
 const MAX_TREE_DEPTH = 6;
@@ -25,15 +25,15 @@ export const printTable = (bomJson) => {
   }
   const config = {
     columnDefault: {
-      width: 30
+      width: 30,
     },
     columnCount: 4,
     columns: [
       { width: 25 },
       { width: 35 },
       { width: 25, alignment: "right" },
-      { width: 15 }
-    ]
+      { width: 15 },
+    ],
   };
   const stream = createStream(config);
   stream.write(["Group", "Name", "Version", "Scope"]);
@@ -42,7 +42,7 @@ export const printTable = (bomJson) => {
       comp.group || "",
       comp.name,
       `\x1b[1;35m${comp.version || ""}\x1b[0m`,
-      comp.scope || ""
+      comp.scope || "",
     ]);
   }
   console.log();
@@ -51,7 +51,7 @@ export const printTable = (bomJson) => {
     bomJson.components.length,
     "components and",
     bomJson.dependencies.length,
-    "dependencies"
+    "dependencies",
   );
 };
 const formatProps = (props) => {
@@ -64,10 +64,10 @@ const formatProps = (props) => {
 export const printOSTable = (bomJson) => {
   const config = {
     columnDefault: {
-      width: 50
+      width: 50,
     },
     columnCount: 3,
-    columns: [{ width: 20 }, { width: 40 }, { width: 50 }]
+    columns: [{ width: 20 }, { width: 40 }, { width: 50 }],
   };
   const stream = createStream(config);
   stream.write(["Type", "Title", "Properties"]);
@@ -75,7 +75,7 @@ export const printOSTable = (bomJson) => {
     stream.write([
       comp.type,
       `\x1b[1;35m${comp.name.replace(/\+/g, " ").replace(/--/g, "::")}\x1b[0m`,
-      formatProps(comp.properties || [])
+      formatProps(comp.properties || []),
     ]);
   }
   console.log();
@@ -90,14 +90,14 @@ export const printServices = (bomJson) => {
       aservice.name || "",
       aservice.endpoints ? aservice.endpoints.join("\n") : "",
       aservice.authenticated ? "\x1b[1;35mYes\x1b[0m" : "",
-      aservice.xTrustBoundary ? "\x1b[1;35mYes\x1b[0m" : ""
+      aservice.xTrustBoundary ? "\x1b[1;35mYes\x1b[0m" : "",
     ]);
   }
   const config = {
     header: {
       alignment: "center",
-      content: "List of Services\nGenerated with \u2665 by cdxgen"
-    }
+      content: "List of Services\nGenerated with \u2665 by cdxgen",
+    },
   };
   if (data.length > 1) {
     console.log(table(data, config));
@@ -133,14 +133,14 @@ export const printOccurrences = (bomJson) => {
       comp.evidence.occurrences
         .map((l) => l.location)
         .sort(locationComparator)
-        .join("\n")
+        .join("\n"),
     ]);
   }
   const config = {
     header: {
       alignment: "center",
-      content: "Component Evidence\nGenerated with \u2665 by cdxgen"
-    }
+      content: "Component Evidence\nGenerated with \u2665 by cdxgen",
+    },
   };
   if (data.length > 1) {
     console.log(table(data, config));
@@ -162,9 +162,9 @@ export const printCallStack = (bomJson) => {
     const frames = Array.from(
       new Set(
         comp.evidence.callstack.frames.map(
-          (c) => `${c.fullFilename}${c.line ? "#" + c.line : ""}`
-        )
-      )
+          (c) => `${c.fullFilename}${c.line ? "#" + c.line : ""}`,
+        ),
+      ),
     ).sort(locationComparator);
     const frameDisplay = [frames[0]];
     if (frames.length > 1) {
@@ -172,21 +172,21 @@ export const printCallStack = (bomJson) => {
         frameDisplay.push(`${SYMBOLS_ANSI.BRANCH} ${frames[i]}`);
       }
       frameDisplay.push(
-        `${SYMBOLS_ANSI.LAST_BRANCH} ${frames[frames.length - 1]}`
+        `${SYMBOLS_ANSI.LAST_BRANCH} ${frames[frames.length - 1]}`,
       );
     }
     data.push([
       comp.group || "",
       comp.name,
       comp.version || "",
-      frameDisplay.join("\n")
+      frameDisplay.join("\n"),
     ]);
   }
   const config = {
     header: {
       alignment: "center",
-      content: "Component Call Stack Evidence\nGenerated with \u2665 by cdxgen"
-    }
+      content: "Component Call Stack Evidence\nGenerated with \u2665 by cdxgen",
+    },
   };
   if (data.length > 1) {
     console.log(table(data, config));
@@ -212,8 +212,8 @@ export const printDependencyTree = (bomJson) => {
     const config = {
       header: {
         alignment: "center",
-        content: "Dependency Tree\nGenerated with \u2665 by cdxgen"
-      }
+        content: "Dependency Tree\nGenerated with \u2665 by cdxgen",
+      },
     };
     console.log(table([[treeGraphics.join("\n")]], config));
   } else {
@@ -261,7 +261,7 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
       level > 0
     ) {
       treeGraphics.push(
-        `${levelPrefix(level, i == listToUse.length - 1)}${refStr}`
+        `${levelPrefix(level, i == listToUse.length - 1)}${refStr}`,
       );
       shownList.push(refStr.toLowerCase());
       if (l && depMap[refStr]) {
@@ -271,7 +271,7 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
             depMap[refStr],
             level + 1,
             shownList,
-            treeGraphics
+            treeGraphics,
           );
         }
       }
@@ -286,7 +286,7 @@ export const printReachables = (sliceArtefacts) => {
   }
   const purlCounts = {};
   const reachablesSlices = JSON.parse(
-    readFileSync(reachablesSlicesFile, "utf-8")
+    readFileSync(reachablesSlicesFile, "utf-8"),
   );
   for (const areachable of reachablesSlices.reachables || []) {
     const purls = areachable.purls || [];
@@ -295,7 +295,7 @@ export const printReachables = (sliceArtefacts) => {
     }
   }
   const sortedPurls = Object.fromEntries(
-    Object.entries(purlCounts).sort(([, a], [, b]) => b - a)
+    Object.entries(purlCounts).sort(([, a], [, b]) => b - a),
   );
   const data = [["Package URL", "Reachable Flows"]];
   for (const apurl of Object.keys(sortedPurls)) {
@@ -304,8 +304,8 @@ export const printReachables = (sliceArtefacts) => {
   const config = {
     header: {
       alignment: "center",
-      content: "Reachable Components\nGenerated with \u2665 by cdxgen"
-    }
+      content: "Reachable Components\nGenerated with \u2665 by cdxgen",
+    },
   };
   if (data.length > 1) {
     console.log(table(data, config));
