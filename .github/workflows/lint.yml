@@ -1,4 +1,4 @@
-name: Node CI
+name: Formatting and Linting
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-      - name: Lint Check
+      - name: Check Linting
         run: |
           npm install
           npm run lint:check
