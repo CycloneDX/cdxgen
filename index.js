@@ -245,7 +245,8 @@ const determineParentComponent = (options) => {
   let parentComponent = undefined;
   if (options.parentComponent && Object.keys(options.parentComponent).length) {
     return options.parentComponent;
-  } else if (options.projectName && options.projectVersion) {
+  }
+  if (options.projectName && options.projectVersion) {
     parentComponent = {
       group: options.projectGroup || "",
       name: options.projectName,
@@ -1192,457 +1193,89 @@ export async function createJavaBom(path, options) {
       dependencies,
       parentComponent,
     });
-  } else {
-    // maven - pom.xml
-    const pomFiles = getAllFiles(
-      path,
-      `${options.multiProject ? "**/" : ""}pom.xml`,
-      options,
-    );
-    let bomJsonFiles = [];
-    if (
-      pomFiles?.length &&
-      !["scala", "sbt", "gradle"].includes(options.projectType)
-    ) {
-      const cdxMavenPlugin =
-        process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.8.0";
-      const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
-      let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
-      if (includeMavenTestScope) {
-        mvnArgs.push("-DincludeTestScope=true");
-      }
-      // By using quiet mode we can reduce the maxBuffer used and avoid crashes
-      if (!DEBUG_MODE) {
-        mvnArgs.push("-q");
-      }
-      // Support for passing additional settings and profile to maven
-      if (process.env.MVN_ARGS) {
-        const addArgs = process.env.MVN_ARGS.split(" ");
-        mvnArgs = mvnArgs.concat(addArgs);
-      }
-      // specVersion 1.4 doesn't support externalReferences.type=disribution-intake
-      // so we need to run the plugin with the correct version
-      if (options.specVersion === 1.4) {
-        mvnArgs = mvnArgs.concat("-DschemaVersion=1.4");
-      }
-      for (const f of pomFiles) {
-        const basePath = dirname(f);
-        const settingsXml = join(basePath, "settings.xml");
-        if (existsSync(settingsXml)) {
-          console.log(
-            `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`,
-          );
-        }
-        const mavenCmd = getMavenCommand(basePath, path);
-        // Should we attempt to resolve class names
-        if (options.resolveClass || options.deep) {
-          const tmpjarNSMapping = await collectMvnDependencies(
-            mavenCmd,
-            basePath,
-            true,
-            false,
-          );
-          if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
-            jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
-          }
-        }
-        console.log(
-          `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
-          basePath,
-        );
-        let result = spawnSync(mavenCmd, mvnArgs, {
-          cwd: basePath,
-          shell: true,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER,
-        });
-        // Check if the cyclonedx plugin created the required bom.json file
-        // Sometimes the plugin fails silently for complex maven projects
-        bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
-        // Check if the bom json files got created in a directory other than target
-        if (!bomJsonFiles.length) {
-          bomJsonFiles = getAllFiles(path, "**/bom*.json", options);
-        }
-        const bomGenerated = bomJsonFiles.length;
-        if (!bomGenerated || result.status !== 0 || result.error) {
-          const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
-          const tempMvnTree = join(tempDir, "mvn-tree.txt");
-          let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
-          if (process.env.MVN_ARGS) {
-            const addArgs = process.env.MVN_ARGS.split(" ");
-            mvnTreeArgs = mvnTreeArgs.concat(addArgs);
-          }
-          console.log(
-            `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`,
-          );
-          result = spawnSync(mavenCmd, mvnTreeArgs, {
-            cwd: basePath,
-            shell: true,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER,
-          });
-          if (result.status !== 0 || result.error) {
-            // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
-            // These could be due to a range of reasons that are covered below.
-            if (pomFiles.length === 1 || DEBUG_MODE) {
-              console.error(result.stdout, result.stderr);
-              console.log(
-                "Resolve the above maven error. This could be due to the following:\n",
-              );
-              if (
-                result.stdout &&
-                (result.stdout.includes("Non-resolvable parent POM") ||
-                  result.stdout.includes("points at wrong local POM"))
-              ) {
-                console.log(
-                  "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory.",
-                );
-              } else if (
-                result.stdout &&
-                (result.stdout.includes("Could not resolve dependencies") ||
-                  result.stdout.includes("no dependency information available"))
-              ) {
-                console.log(
-                  "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
-                );
-              } else if (
-                result.stdout?.includes(
-                  "Could not resolve target platform specification",
-                )
-              ) {
-                console.log(
-                  "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option",
-                );
-              } else {
-                console.log(
-                  "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible.",
-                );
-              }
-              console.log(
-                "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable.",
-              );
-              console.log(
-                "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool.",
-              );
-            }
-            // Do not fall back to methods that can produce incomplete results when failOnError is set
-            options.failOnError && process.exit(1);
-            console.log(
-              "\nFalling back to manual pom.xml parsing. The result would be incomplete!",
-            );
-            const dlist = parsePom(f);
-            if (dlist?.length) {
-              pkgList = pkgList.concat(dlist);
-            }
-          } else {
-            if (existsSync(tempMvnTree)) {
-              const mvnTreeString = readFileSync(tempMvnTree, {
-                encoding: "utf-8",
-              });
-              const parsedList = parseMavenTree(mvnTreeString);
-              const dlist = parsedList.pkgList;
-              parentComponent = dlist.splice(0, 1)[0];
-              parentComponent.type = "application";
-              if (dlist?.length) {
-                pkgList = pkgList.concat(dlist);
-              }
-              if (parsedList.dependenciesList && parsedList.dependenciesList) {
-                dependencies = dependencies.concat(parsedList.dependenciesList);
-              }
-              unlinkSync(tempMvnTree);
-            }
-          }
-        }
-      } // for
-      for (const abjson of bomJsonFiles) {
-        let bomJsonObj = undefined;
-        try {
-          if (DEBUG_MODE) {
-            console.log(`Extracting data from generated bom file ${abjson}`);
-          }
-          bomJsonObj = JSON.parse(
-            readFileSync(abjson, {
-              encoding: "utf-8",
-            }),
-          );
-          if (bomJsonObj) {
-            if (
-              !tools &&
-              bomJsonObj.metadata &&
-              bomJsonObj.metadata.tools &&
-              Array.isArray(bomJsonObj.metadata.tools)
-            ) {
-              tools = bomJsonObj.metadata.tools;
-            }
-            if (
-              bomJsonObj.metadata?.component &&
-              !Object.keys(parentComponent).length
-            ) {
-              parentComponent = bomJsonObj.metadata.component;
-              options.parentComponent = parentComponent;
-              pkgList = [];
-            }
-            if (bomJsonObj.components) {
-              pkgList = pkgList.concat(bomJsonObj.components);
-            }
-            if (bomJsonObj.dependencies) {
-              dependencies = mergeDependencies(
-                dependencies,
-                bomJsonObj.dependencies,
-                parentComponent,
-              );
-            }
-          }
-        } catch (err) {
-          if (options.failOnError || DEBUG_MODE) {
-            console.log(err);
-            options.failOnError && process.exit(1);
-          }
-        }
-      }
-      if (pkgList) {
-        pkgList = trimComponents(pkgList);
-        pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-        return buildBomNSData(options, pkgList, "maven", {
-          src: path,
-          filename: pomFiles.join(", "),
-          nsMapping: jarNSMapping,
-          dependencies,
-          parentComponent,
-          tools,
-        });
-      } else if (bomJsonFiles.length) {
-        const bomNSData = {};
-        bomNSData.bomJsonFiles = bomJsonFiles;
-        bomNSData.nsMapping = jarNSMapping;
-        bomNSData.dependencies = dependencies;
-        bomNSData.parentComponent = parentComponent;
-        return bomNSData;
-      }
+  }
+  // maven - pom.xml
+  const pomFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}pom.xml`,
+    options,
+  );
+  let bomJsonFiles = [];
+  if (
+    pomFiles?.length &&
+    !["scala", "sbt", "gradle"].includes(options.projectType)
+  ) {
+    const cdxMavenPlugin =
+      process.env.CDX_MAVEN_PLUGIN ||
+      "org.cyclonedx:cyclonedx-maven-plugin:2.8.0";
+    const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
+    let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
+    if (includeMavenTestScope) {
+      mvnArgs.push("-DincludeTestScope=true");
     }
-    // gradle
-    const gradleFiles = getAllFiles(
-      path,
-      `${options.multiProject ? "**/" : ""}build.gradle*`,
-      options,
-    );
-    const allProjects = [];
-    const allProjectsAddedPurls = [];
-    const rootDependsOn = [];
-    // Execute gradle properties
-    if (
-      gradleFiles?.length &&
-      !["scala", "sbt"].includes(options.projectType)
-    ) {
-      let retMap = executeGradleProperties(path, null, null);
-      const allProjectsStr = retMap.projects || [];
-      const rootProject = retMap.rootProject;
-      if (rootProject) {
-        parentComponent = {
-          name: rootProject,
-          type: "application",
-          ...retMap.metadata,
-        };
-        const parentPurl = new PackageURL(
-          "maven",
-          parentComponent.group || "",
-          parentComponent.name,
-          parentComponent.version,
-          { type: "jar" },
-          null,
-        ).toString();
-        parentComponent["purl"] = parentPurl;
-        parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
-      }
-      // Get the sub-project properties and set the root dependencies
-      if (allProjectsStr?.length) {
-        for (const spstr of allProjectsStr) {
-          retMap = executeGradleProperties(path, null, spstr);
-          const rootSubProject = retMap.rootProject;
-          if (rootSubProject) {
-            const rspName = rootSubProject.replace(/^:/, "");
-            const rootSubProjectObj = {
-              name: rspName,
-              type: "application",
-              qualifiers: { type: "jar" },
-              ...retMap.metadata,
-            };
-            const rootSubProjectPurl = new PackageURL(
-              "maven",
-              rootSubProjectObj.group?.length
-                ? rootSubProjectObj.group
-                : parentComponent.group,
-              rootSubProjectObj.name,
-              retMap.metadata.version && retMap.metadata.version !== "latest"
-                ? retMap.metadata.version
-                : parentComponent.version,
-              rootSubProjectObj.qualifiers,
-              null,
-            ).toString();
-            rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] =
-              decodeURIComponent(rootSubProjectPurl);
-            if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
-              allProjects.push(rootSubProjectObj);
-              rootDependsOn.push(rootSubProjectPurl);
-              allProjectsAddedPurls.push(rootSubProjectPurl);
-            }
-          }
-        }
-        // Bug #317 fix
-        parentComponent.components = allProjects.flatMap((s) => {
-          delete s.qualifiers;
-          delete s.evidence;
-          return s;
-        });
-        dependencies.push({
-          ref: parentComponent["bom-ref"],
-          dependsOn: rootDependsOn,
-        });
-      }
+    // By using quiet mode we can reduce the maxBuffer used and avoid crashes
+    if (!DEBUG_MODE) {
+      mvnArgs.push("-q");
     }
-    if (
-      gradleFiles?.length &&
-      options.installDeps &&
-      !["scala", "sbt"].includes(options.projectType)
-    ) {
-      const gradleCmd = getGradleCommand(path, null);
-      const defaultDepTaskArgs = ["-q", "--console", "plain", "--build-cache"];
-      allProjects.push(parentComponent);
-      let depTaskWithArgs = ["dependencies"];
-      if (process.env.GRADLE_DEPENDENCY_TASK) {
-        depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
+    // Support for passing additional settings and profile to maven
+    if (process.env.MVN_ARGS) {
+      const addArgs = process.env.MVN_ARGS.split(" ");
+      mvnArgs = mvnArgs.concat(addArgs);
+    }
+    // specVersion 1.4 doesn't support externalReferences.type=disribution-intake
+    // so we need to run the plugin with the correct version
+    if (options.specVersion === 1.4) {
+      mvnArgs = mvnArgs.concat("-DschemaVersion=1.4");
+    }
+    for (const f of pomFiles) {
+      const basePath = dirname(f);
+      const settingsXml = join(basePath, "settings.xml");
+      if (existsSync(settingsXml)) {
+        console.log(
+          `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`,
+        );
       }
-      for (const sp of allProjects) {
-        let gradleDepArgs = [
-          sp.purl === parentComponent.purl
-            ? depTaskWithArgs[0]
-            : `:${sp.name}:${depTaskWithArgs[0]}`,
-        ];
-        gradleDepArgs = gradleDepArgs
-          .concat(depTaskWithArgs.slice(1))
-          .concat(defaultDepTaskArgs);
-        // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
-        if (process.env.GRADLE_ARGS) {
-          const addArgs = process.env.GRADLE_ARGS.split(" ");
-          gradleDepArgs = gradleDepArgs.concat(addArgs);
-        }
-        // gradle args only for the dependencies task
-        if (process.env.GRADLE_ARGS_DEPENDENCIES) {
-          const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
-          gradleDepArgs = gradleDepArgs.concat(addArgs);
-        }
-        console.log(
-          "Executing",
-          gradleCmd,
-          gradleDepArgs.join(" "),
-          "in",
-          path,
-        );
-        const sresult = spawnSync(gradleCmd, gradleDepArgs, {
-          cwd: path,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER,
-        });
-        if (sresult.status !== 0 || sresult.error) {
-          if (options.failOnError || DEBUG_MODE) {
-            console.error(sresult.stdout, sresult.stderr);
-          }
-          options.failOnError && process.exit(1);
-        }
-        const sstdout = sresult.stdout;
-        if (sstdout) {
-          const cmdOutput = Buffer.from(sstdout).toString();
-          const parsedList = parseGradleDep(
-            cmdOutput,
-            sp.group || parentComponent.group,
-            sp.name,
-            sp.version?.length && sp.version !== "latest"
-              ? sp.version
-              : parentComponent.version,
-          );
-          const dlist = parsedList.pkgList;
-          if (parsedList.dependenciesList && parsedList.dependenciesList) {
-            dependencies = mergeDependencies(
-              dependencies,
-              parsedList.dependenciesList,
-              parentComponent,
-            );
-          }
-          if (dlist?.length) {
-            if (DEBUG_MODE) {
-              console.log(
-                "Found",
-                dlist.length,
-                "packages in gradle project",
-                sp.name,
-              );
-            }
-            pkgList = pkgList.concat(dlist);
-          }
-        }
-      } // for
-      if (pkgList.length) {
-        if (parentComponent.components?.length) {
-          for (const subProj of parentComponent.components) {
-            pkgList = pkgList.filter(
-              (pkg) => pkg["bom-ref"] !== subProj["bom-ref"],
-            );
-          }
-        }
-        console.log(
-          "Obtained",
-          pkgList.length,
-          "from this gradle project. De-duping this list ...",
-        );
-      } else {
-        console.log(
-          "No packages found. Set the environment variable 'CDXGEN_DEBUG_MODE=debug' to troubleshoot any gradle related errors.",
-        );
-        options.failOnError && process.exit(1);
-      }
+      const mavenCmd = getMavenCommand(basePath, path);
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        const tmpjarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+        const tmpjarNSMapping = await collectMvnDependencies(
+          mavenCmd,
+          basePath,
+          true,
+          false,
+        );
         if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
           jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
         }
       }
-      pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-      return buildBomNSData(options, pkgList, "maven", {
-        src: path,
-        filename: gradleFiles.join(", "),
-        nsMapping: jarNSMapping,
-        dependencies,
-        parentComponent,
+      console.log(`Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`, basePath);
+      let result = spawnSync(mavenCmd, mvnArgs, {
+        cwd: basePath,
+        shell: true,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER,
       });
-    }
-
-    // Bazel
-    // Look for the BUILD file only in the root directory
-    const bazelFiles = getAllFiles(path, "BUILD", options);
-    if (bazelFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
-      let BAZEL_CMD = "bazel";
-      if (process.env.BAZEL_HOME) {
-        BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
+      // Check if the cyclonedx plugin created the required bom.json file
+      // Sometimes the plugin fails silently for complex maven projects
+      bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
+      // Check if the bom json files got created in a directory other than target
+      if (!bomJsonFiles.length) {
+        bomJsonFiles = getAllFiles(path, "**/bom*.json", options);
       }
-      for (const f of bazelFiles) {
-        const basePath = dirname(f);
-        // Invoke bazel build first
-        const bazelTarget = process.env.BAZEL_TARGET || ":all";
+      const bomGenerated = bomJsonFiles.length;
+      if (!bomGenerated || result.status !== 0 || result.error) {
+        const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
+        const tempMvnTree = join(tempDir, "mvn-tree.txt");
+        let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
+        if (process.env.MVN_ARGS) {
+          const addArgs = process.env.MVN_ARGS.split(" ");
+          mvnTreeArgs = mvnTreeArgs.concat(addArgs);
+        }
         console.log(
-          "Executing",
-          BAZEL_CMD,
-          "build",
-          bazelTarget,
-          "in",
-          basePath,
+          `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`,
         );
-        let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
+        result = spawnSync(mavenCmd, mvnTreeArgs, {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
@@ -1650,274 +1283,617 @@ export async function createJavaBom(path, options) {
           maxBuffer: MAX_BUFFER,
         });
         if (result.status !== 0 || result.error) {
-          if (result.stderr) {
+          // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
+          // These could be due to a range of reasons that are covered below.
+          if (pomFiles.length === 1 || DEBUG_MODE) {
             console.error(result.stdout, result.stderr);
-          }
-          console.log(
-            "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen",
-          );
-          options.failOnError && process.exit(1);
-        } else {
-          const target = process.env.BAZEL_TARGET || "//...";
-          let query;
-          let bazelParser;
-          if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
-            query = ["aquery", `outputs('.*.jar',deps(${target}))`];
-            bazelParser = parseBazelActionGraph;
-          } else {
-            query = ["aquery", "--output=textproto", "--skyframe_state"];
-            bazelParser = parseBazelSkyframe;
-          }
-
-          console.log(
-            "Executing",
-            BAZEL_CMD,
-            `${query.join(" ")} in`,
-            basePath,
-          );
-          result = spawnSync(BAZEL_CMD, query, {
-            cwd: basePath,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER,
-          });
-          if (result.status !== 0 || result.error) {
-            console.error(result.stdout, result.stderr);
-            options.failOnError && process.exit(1);
-          }
-          const stdout = result.stdout;
-          if (stdout) {
-            const cmdOutput = Buffer.from(stdout).toString();
-            const dlist = bazelParser(cmdOutput);
-            if (dlist?.length) {
-              pkgList = pkgList.concat(dlist);
+            console.log(
+              "Resolve the above maven error. This could be due to the following:\n",
+            );
+            if (
+              result.stdout &&
+              (result.stdout.includes("Non-resolvable parent POM") ||
+                result.stdout.includes("points at wrong local POM"))
+            ) {
+              console.log(
+                "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory.",
+              );
+            } else if (
+              result.stdout &&
+              (result.stdout.includes("Could not resolve dependencies") ||
+                result.stdout.includes("no dependency information available"))
+            ) {
+              console.log(
+                "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
+              );
+            } else if (
+              result.stdout?.includes(
+                "Could not resolve target platform specification",
+              )
+            ) {
+              console.log(
+                "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option",
+              );
             } else {
               console.log(
-                "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved.",
+                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible.",
               );
-              console.log(
-                "If your project requires a different query, please file a bug at cyclonedx/cdxgen repo!",
-              );
-              options.failOnError && process.exit(1);
             }
-          } else {
-            console.log("Bazel unexpectedly didn't produce any output");
-            options.failOnError && process.exit(1);
+            console.log(
+              "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable.",
+            );
+            console.log(
+              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool.",
+            );
           }
-          // FIXME: How do we retrieve jarNSMapping for bazel projects?
-          pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-          return buildBomNSData(options, pkgList, "maven", {
-            src: path,
-            filename: "BUILD",
-            nsMapping: {},
-            dependencies,
-            parentComponent,
-          });
-        }
-      }
-    }
-
-    // scala sbt
-    // Identify sbt projects via its `project` directory:
-    // - all SBT project _should_ define build.properties file with sbt version info
-    // - SBT projects _typically_ have some configs/plugins defined in .sbt files
-    // - SBT projects that are still on 0.13.x, can still use the old approach,
-    //   where configs are defined via Scala files
-    // Detecting one of those should be enough to determine an SBT project.
-    let sbtProjectFiles = getAllFiles(
-      path,
-      `${
-        options.multiProject ? "**/" : ""
-      }project/{build.properties,*.sbt,*.scala}`,
-      options,
-    );
-
-    let sbtProjects = [];
-    for (const i in sbtProjectFiles) {
-      // parent dir of sbtProjectFile is the `project` directory
-      // parent dir of `project` is the sbt root project directory
-      const baseDir = dirname(dirname(sbtProjectFiles[i]));
-      sbtProjects = sbtProjects.concat(baseDir);
-    }
-
-    // Fallback in case sbt's project directory is non-existent
-    if (!sbtProjects.length) {
-      sbtProjectFiles = getAllFiles(
-        path,
-        `${options.multiProject ? "**/" : ""}*.sbt`,
-        options,
-      );
-      for (const i in sbtProjectFiles) {
-        const baseDir = dirname(sbtProjectFiles[i]);
-        sbtProjects = sbtProjects.concat(baseDir);
-      }
-    }
-    // eliminate duplicates and ignore project directories
-    sbtProjects = [...new Set(sbtProjects)].filter(
-      (p) => !p.endsWith(`${sep}project`) && !p.includes(`target${sep}`),
-    );
-    const sbtLockFiles = getAllFiles(
-      path,
-      `${options.multiProject ? "**/" : ""}build.sbt.lock`,
-      options,
-    );
-
-    if (sbtProjects?.length) {
-      let pkgList = [];
-      // If the project use sbt lock files
-      if (sbtLockFiles?.length) {
-        for (const f of sbtLockFiles) {
-          const dlist = parseSbtLock(f);
+          // Do not fall back to methods that can produce incomplete results when failOnError is set
+          options.failOnError && process.exit(1);
+          console.log(
+            "\nFalling back to manual pom.xml parsing. The result would be incomplete!",
+          );
+          const dlist = parsePom(f);
           if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
-        }
-      } else {
-        const SBT_CMD = process.env.SBT_CMD || "sbt";
-        let sbtVersion = determineSbtVersion(path);
-        // If can't find sbt version at the root of repository then search in
-        // sbt project array too because sometimes the project folder isn't at
-        // root of repository
-        if (sbtVersion == null) {
-          for (const i in sbtProjects) {
-            sbtVersion = determineSbtVersion(sbtProjects[i]);
-            if (sbtVersion != null) {
-              break;
+        } else {
+          if (existsSync(tempMvnTree)) {
+            const mvnTreeString = readFileSync(tempMvnTree, {
+              encoding: "utf-8",
+            });
+            const parsedList = parseMavenTree(mvnTreeString);
+            const dlist = parsedList.pkgList;
+            parentComponent = dlist.splice(0, 1)[0];
+            parentComponent.type = "application";
+            if (dlist?.length) {
+              pkgList = pkgList.concat(dlist);
             }
+            if (parsedList.dependenciesList && parsedList.dependenciesList) {
+              dependencies = dependencies.concat(parsedList.dependenciesList);
+            }
+            unlinkSync(tempMvnTree);
           }
         }
+      }
+    } // for
+    for (const abjson of bomJsonFiles) {
+      let bomJsonObj = undefined;
+      try {
         if (DEBUG_MODE) {
-          console.log(`Detected sbt version: ${sbtVersion}`);
+          console.log(`Extracting data from generated bom file ${abjson}`);
         }
-        // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
-        // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
-        const standalonePluginFile =
-          sbtVersion != null &&
-          gte(sbtVersion, "1.3.4") &&
-          lte(sbtVersion, "1.4.0");
-        const useSlashSyntax = gte(sbtVersion, "1.5.0");
-        const isDependencyTreeBuiltIn =
-          sbtVersion != null && gte(sbtVersion, "1.4.0");
-        const tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));
-        const tempSbtgDir = mkdtempSync(join(tmpdir(), "cdxsbtg-"));
-        mkdirSync(tempSbtgDir, { recursive: true });
-        // Create temporary plugins file
-        const tempSbtPlugins = join(tempSbtgDir, "dep-plugins.sbt");
-
-        // Requires a custom version of `sbt-dependency-graph` that
-        // supports `--append` for `toFile` subtask.
-        let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
-        if (isDependencyTreeBuiltIn) {
-          sbtPluginDefinition = `\naddDependencyTreePlugin\n`;
-          if (DEBUG_MODE) {
-            console.log("Using addDependencyTreePlugin as the custom plugin");
-          }
-        }
-        writeFileSync(tempSbtPlugins, sbtPluginDefinition);
-        for (const i in sbtProjects) {
-          const basePath = sbtProjects[i];
-          const dlFile = join(tempDir, `dl-${i}.tmp`);
-          let sbtArgs = [];
-          let pluginFile = null;
-          if (standalonePluginFile) {
-            sbtArgs = [
-              `-addPluginSbtFile=${tempSbtPlugins}`,
-              `"dependencyList::toFile ${dlFile} --force"`,
-            ];
-          } else {
-            // write to the existing plugins file
-            if (useSlashSyntax) {
-              sbtArgs = [
-                `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`,
-              ];
-            } else {
-              sbtArgs = [
-                `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`,
-              ];
-            }
-            pluginFile = addPlugin(basePath, sbtPluginDefinition);
-          }
-          console.log(
-            "Executing",
-            SBT_CMD,
-            sbtArgs.join(" "),
-            "in",
-            basePath,
-            "using plugins",
-            tempSbtgDir,
-          );
-          // Note that the command has to be invoked with `shell: true` to properly execut sbt
-          const result = spawnSync(SBT_CMD, sbtArgs, {
-            cwd: basePath,
-            shell: true,
+        bomJsonObj = JSON.parse(
+          readFileSync(abjson, {
             encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER,
-          });
-          if (result.status !== 0 || result.error) {
-            console.error(result.stdout, result.stderr);
-            console.log(
-              `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`,
-            );
-            console.log(
-              `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`,
-            );
-            console.log(
-              "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock",
-            );
-            options.failOnError && process.exit(1);
+          }),
+        );
+        if (bomJsonObj) {
+          if (
+            !tools &&
+            bomJsonObj.metadata &&
+            bomJsonObj.metadata.tools &&
+            Array.isArray(bomJsonObj.metadata.tools)
+          ) {
+            tools = bomJsonObj.metadata.tools;
           }
-          if (!standalonePluginFile) {
-            cleanupPlugin(basePath, pluginFile);
+          if (
+            bomJsonObj.metadata?.component &&
+            !Object.keys(parentComponent).length
+          ) {
+            parentComponent = bomJsonObj.metadata.component;
+            options.parentComponent = parentComponent;
+            pkgList = [];
           }
-          if (existsSync(dlFile)) {
-            const retMap = parseSbtTree(dlFile);
-            if (retMap.pkgList?.length) {
-              const tmpParentComponent = retMap.pkgList.splice(0, 1)[0];
-              tmpParentComponent.type = "application";
-              pkgList = pkgList.concat(retMap.pkgList);
-              if (!parentComponent || !Object.keys(parentComponent).length) {
-                parentComponent = tmpParentComponent;
-              }
-            }
-            if (retMap.dependenciesList) {
-              dependencies = mergeDependencies(
-                dependencies,
-                retMap.dependenciesList,
-                parentComponent,
-              );
-            }
-          } else {
-            if (options.failOnError || DEBUG_MODE) {
-              console.log(`sbt dependencyList did not yield ${dlFile}`);
-            }
-            options.failOnError && process.exit(1);
+          if (bomJsonObj.components) {
+            pkgList = pkgList.concat(bomJsonObj.components);
+          }
+          if (bomJsonObj.dependencies) {
+            dependencies = mergeDependencies(
+              dependencies,
+              bomJsonObj.dependencies,
+              parentComponent,
+            );
           }
         }
-
-        // Cleanup
-        unlinkSync(tempSbtPlugins);
-      } // else
-
-      if (DEBUG_MODE) {
-        console.log(`Found ${pkgList.length} packages`);
-      }
-      // Should we attempt to resolve class names
-      if (options.resolveClass || options.deep) {
-        const tmpjarNSMapping = await collectJarNS(SBT_CACHE_DIR);
-        if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
-          jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+      } catch (err) {
+        if (options.failOnError || DEBUG_MODE) {
+          console.log(err);
+          options.failOnError && process.exit(1);
         }
       }
+    }
+    if (pkgList) {
+      pkgList = trimComponents(pkgList);
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
         src: path,
-        filename: sbtProjects.join(", "),
+        filename: pomFiles.join(", "),
         nsMapping: jarNSMapping,
         dependencies,
         parentComponent,
+        tools,
       });
     }
+    if (bomJsonFiles.length) {
+      const bomNSData = {};
+      bomNSData.bomJsonFiles = bomJsonFiles;
+      bomNSData.nsMapping = jarNSMapping;
+      bomNSData.dependencies = dependencies;
+      bomNSData.parentComponent = parentComponent;
+      return bomNSData;
+    }
+  }
+  // gradle
+  const gradleFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}build.gradle*`,
+    options,
+  );
+  const allProjects = [];
+  const allProjectsAddedPurls = [];
+  const rootDependsOn = [];
+  // Execute gradle properties
+  if (gradleFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
+    let retMap = executeGradleProperties(path, null, null);
+    const allProjectsStr = retMap.projects || [];
+    const rootProject = retMap.rootProject;
+    if (rootProject) {
+      parentComponent = {
+        name: rootProject,
+        type: "application",
+        ...retMap.metadata,
+      };
+      const parentPurl = new PackageURL(
+        "maven",
+        parentComponent.group || "",
+        parentComponent.name,
+        parentComponent.version,
+        { type: "jar" },
+        null,
+      ).toString();
+      parentComponent["purl"] = parentPurl;
+      parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
+    }
+    // Get the sub-project properties and set the root dependencies
+    if (allProjectsStr?.length) {
+      for (const spstr of allProjectsStr) {
+        retMap = executeGradleProperties(path, null, spstr);
+        const rootSubProject = retMap.rootProject;
+        if (rootSubProject) {
+          const rspName = rootSubProject.replace(/^:/, "");
+          const rootSubProjectObj = {
+            name: rspName,
+            type: "application",
+            qualifiers: { type: "jar" },
+            ...retMap.metadata,
+          };
+          const rootSubProjectPurl = new PackageURL(
+            "maven",
+            rootSubProjectObj.group?.length
+              ? rootSubProjectObj.group
+              : parentComponent.group,
+            rootSubProjectObj.name,
+            retMap.metadata.version && retMap.metadata.version !== "latest"
+              ? retMap.metadata.version
+              : parentComponent.version,
+            rootSubProjectObj.qualifiers,
+            null,
+          ).toString();
+          rootSubProjectObj["purl"] = rootSubProjectPurl;
+          rootSubProjectObj["bom-ref"] = decodeURIComponent(rootSubProjectPurl);
+          if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
+            allProjects.push(rootSubProjectObj);
+            rootDependsOn.push(rootSubProjectPurl);
+            allProjectsAddedPurls.push(rootSubProjectPurl);
+          }
+        }
+      }
+      // Bug #317 fix
+      parentComponent.components = allProjects.flatMap((s) => {
+        delete s.qualifiers;
+        delete s.evidence;
+        return s;
+      });
+      dependencies.push({
+        ref: parentComponent["bom-ref"],
+        dependsOn: rootDependsOn,
+      });
+    }
+  }
+  if (
+    gradleFiles?.length &&
+    options.installDeps &&
+    !["scala", "sbt"].includes(options.projectType)
+  ) {
+    const gradleCmd = getGradleCommand(path, null);
+    const defaultDepTaskArgs = ["-q", "--console", "plain", "--build-cache"];
+    allProjects.push(parentComponent);
+    let depTaskWithArgs = ["dependencies"];
+    if (process.env.GRADLE_DEPENDENCY_TASK) {
+      depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
+    }
+    for (const sp of allProjects) {
+      let gradleDepArgs = [
+        sp.purl === parentComponent.purl
+          ? depTaskWithArgs[0]
+          : `:${sp.name}:${depTaskWithArgs[0]}`,
+      ];
+      gradleDepArgs = gradleDepArgs
+        .concat(depTaskWithArgs.slice(1))
+        .concat(defaultDepTaskArgs);
+      // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
+      if (process.env.GRADLE_ARGS) {
+        const addArgs = process.env.GRADLE_ARGS.split(" ");
+        gradleDepArgs = gradleDepArgs.concat(addArgs);
+      }
+      // gradle args only for the dependencies task
+      if (process.env.GRADLE_ARGS_DEPENDENCIES) {
+        const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
+        gradleDepArgs = gradleDepArgs.concat(addArgs);
+      }
+      console.log("Executing", gradleCmd, gradleDepArgs.join(" "), "in", path);
+      const sresult = spawnSync(gradleCmd, gradleDepArgs, {
+        cwd: path,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER,
+      });
+      if (sresult.status !== 0 || sresult.error) {
+        if (options.failOnError || DEBUG_MODE) {
+          console.error(sresult.stdout, sresult.stderr);
+        }
+        options.failOnError && process.exit(1);
+      }
+      const sstdout = sresult.stdout;
+      if (sstdout) {
+        const cmdOutput = Buffer.from(sstdout).toString();
+        const parsedList = parseGradleDep(
+          cmdOutput,
+          sp.group || parentComponent.group,
+          sp.name,
+          sp.version?.length && sp.version !== "latest"
+            ? sp.version
+            : parentComponent.version,
+        );
+        const dlist = parsedList.pkgList;
+        if (parsedList.dependenciesList && parsedList.dependenciesList) {
+          dependencies = mergeDependencies(
+            dependencies,
+            parsedList.dependenciesList,
+            parentComponent,
+          );
+        }
+        if (dlist?.length) {
+          if (DEBUG_MODE) {
+            console.log(
+              "Found",
+              dlist.length,
+              "packages in gradle project",
+              sp.name,
+            );
+          }
+          pkgList = pkgList.concat(dlist);
+        }
+      }
+    } // for
+    if (pkgList.length) {
+      if (parentComponent.components?.length) {
+        for (const subProj of parentComponent.components) {
+          pkgList = pkgList.filter(
+            (pkg) => pkg["bom-ref"] !== subProj["bom-ref"],
+          );
+        }
+      }
+      console.log(
+        "Obtained",
+        pkgList.length,
+        "from this gradle project. De-duping this list ...",
+      );
+    } else {
+      console.log(
+        "No packages found. Set the environment variable 'CDXGEN_DEBUG_MODE=debug' to troubleshoot any gradle related errors.",
+      );
+      options.failOnError && process.exit(1);
+    }
+    // Should we attempt to resolve class names
+    if (options.resolveClass || options.deep) {
+      const tmpjarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+      if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+        jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+      }
+    }
+    pkgList = await getMvnMetadata(pkgList, jarNSMapping);
+    return buildBomNSData(options, pkgList, "maven", {
+      src: path,
+      filename: gradleFiles.join(", "),
+      nsMapping: jarNSMapping,
+      dependencies,
+      parentComponent,
+    });
+  }
+
+  // Bazel
+  // Look for the BUILD file only in the root directory
+  const bazelFiles = getAllFiles(path, "BUILD", options);
+  if (bazelFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
+    let BAZEL_CMD = "bazel";
+    if (process.env.BAZEL_HOME) {
+      BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
+    }
+    for (const f of bazelFiles) {
+      const basePath = dirname(f);
+      // Invoke bazel build first
+      const bazelTarget = process.env.BAZEL_TARGET || ":all";
+      console.log("Executing", BAZEL_CMD, "build", bazelTarget, "in", basePath);
+      let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
+        cwd: basePath,
+        shell: true,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER,
+      });
+      if (result.status !== 0 || result.error) {
+        if (result.stderr) {
+          console.error(result.stdout, result.stderr);
+        }
+        console.log(
+          "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen",
+        );
+        options.failOnError && process.exit(1);
+      } else {
+        const target = process.env.BAZEL_TARGET || "//...";
+        let query;
+        let bazelParser;
+        if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
+          query = ["aquery", `outputs('.*.jar',deps(${target}))`];
+          bazelParser = parseBazelActionGraph;
+        } else {
+          query = ["aquery", "--output=textproto", "--skyframe_state"];
+          bazelParser = parseBazelSkyframe;
+        }
+
+        console.log("Executing", BAZEL_CMD, `${query.join(" ")} in`, basePath);
+        result = spawnSync(BAZEL_CMD, query, {
+          cwd: basePath,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        });
+        if (result.status !== 0 || result.error) {
+          console.error(result.stdout, result.stderr);
+          options.failOnError && process.exit(1);
+        }
+        const stdout = result.stdout;
+        if (stdout) {
+          const cmdOutput = Buffer.from(stdout).toString();
+          const dlist = bazelParser(cmdOutput);
+          if (dlist?.length) {
+            pkgList = pkgList.concat(dlist);
+          } else {
+            console.log(
+              "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved.",
+            );
+            console.log(
+              "If your project requires a different query, please file a bug at cyclonedx/cdxgen repo!",
+            );
+            options.failOnError && process.exit(1);
+          }
+        } else {
+          console.log("Bazel unexpectedly didn't produce any output");
+          options.failOnError && process.exit(1);
+        }
+        // FIXME: How do we retrieve jarNSMapping for bazel projects?
+        pkgList = await getMvnMetadata(pkgList, jarNSMapping);
+        return buildBomNSData(options, pkgList, "maven", {
+          src: path,
+          filename: "BUILD",
+          nsMapping: {},
+          dependencies,
+          parentComponent,
+        });
+      }
+    }
+  }
+
+  // scala sbt
+  // Identify sbt projects via its `project` directory:
+  // - all SBT project _should_ define build.properties file with sbt version info
+  // - SBT projects _typically_ have some configs/plugins defined in .sbt files
+  // - SBT projects that are still on 0.13.x, can still use the old approach,
+  //   where configs are defined via Scala files
+  // Detecting one of those should be enough to determine an SBT project.
+  let sbtProjectFiles = getAllFiles(
+    path,
+    `${
+      options.multiProject ? "**/" : ""
+    }project/{build.properties,*.sbt,*.scala}`,
+    options,
+  );
+
+  let sbtProjects = [];
+  for (const i in sbtProjectFiles) {
+    // parent dir of sbtProjectFile is the `project` directory
+    // parent dir of `project` is the sbt root project directory
+    const baseDir = dirname(dirname(sbtProjectFiles[i]));
+    sbtProjects = sbtProjects.concat(baseDir);
+  }
+
+  // Fallback in case sbt's project directory is non-existent
+  if (!sbtProjects.length) {
+    sbtProjectFiles = getAllFiles(
+      path,
+      `${options.multiProject ? "**/" : ""}*.sbt`,
+      options,
+    );
+    for (const i in sbtProjectFiles) {
+      const baseDir = dirname(sbtProjectFiles[i]);
+      sbtProjects = sbtProjects.concat(baseDir);
+    }
+  }
+  // eliminate duplicates and ignore project directories
+  sbtProjects = [...new Set(sbtProjects)].filter(
+    (p) => !p.endsWith(`${sep}project`) && !p.includes(`target${sep}`),
+  );
+  const sbtLockFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}build.sbt.lock`,
+    options,
+  );
+
+  if (sbtProjects?.length) {
+    let pkgList = [];
+    // If the project use sbt lock files
+    if (sbtLockFiles?.length) {
+      for (const f of sbtLockFiles) {
+        const dlist = parseSbtLock(f);
+        if (dlist?.length) {
+          pkgList = pkgList.concat(dlist);
+        }
+      }
+    } else {
+      const SBT_CMD = process.env.SBT_CMD || "sbt";
+      let sbtVersion = determineSbtVersion(path);
+      // If can't find sbt version at the root of repository then search in
+      // sbt project array too because sometimes the project folder isn't at
+      // root of repository
+      if (sbtVersion == null) {
+        for (const i in sbtProjects) {
+          sbtVersion = determineSbtVersion(sbtProjects[i]);
+          if (sbtVersion != null) {
+            break;
+          }
+        }
+      }
+      if (DEBUG_MODE) {
+        console.log(`Detected sbt version: ${sbtVersion}`);
+      }
+      // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
+      // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
+      const standalonePluginFile =
+        sbtVersion != null &&
+        gte(sbtVersion, "1.3.4") &&
+        lte(sbtVersion, "1.4.0");
+      const useSlashSyntax = gte(sbtVersion, "1.5.0");
+      const isDependencyTreeBuiltIn =
+        sbtVersion != null && gte(sbtVersion, "1.4.0");
+      const tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));
+      const tempSbtgDir = mkdtempSync(join(tmpdir(), "cdxsbtg-"));
+      mkdirSync(tempSbtgDir, { recursive: true });
+      // Create temporary plugins file
+      const tempSbtPlugins = join(tempSbtgDir, "dep-plugins.sbt");
+
+      // Requires a custom version of `sbt-dependency-graph` that
+      // supports `--append` for `toFile` subtask.
+      let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
+      if (isDependencyTreeBuiltIn) {
+        sbtPluginDefinition = `\naddDependencyTreePlugin\n`;
+        if (DEBUG_MODE) {
+          console.log("Using addDependencyTreePlugin as the custom plugin");
+        }
+      }
+      writeFileSync(tempSbtPlugins, sbtPluginDefinition);
+      for (const i in sbtProjects) {
+        const basePath = sbtProjects[i];
+        const dlFile = join(tempDir, `dl-${i}.tmp`);
+        let sbtArgs = [];
+        let pluginFile = null;
+        if (standalonePluginFile) {
+          sbtArgs = [
+            `-addPluginSbtFile=${tempSbtPlugins}`,
+            `"dependencyList::toFile ${dlFile} --force"`,
+          ];
+        } else {
+          // write to the existing plugins file
+          if (useSlashSyntax) {
+            sbtArgs = [
+              `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`,
+            ];
+          } else {
+            sbtArgs = [
+              `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`,
+            ];
+          }
+          pluginFile = addPlugin(basePath, sbtPluginDefinition);
+        }
+        console.log(
+          "Executing",
+          SBT_CMD,
+          sbtArgs.join(" "),
+          "in",
+          basePath,
+          "using plugins",
+          tempSbtgDir,
+        );
+        // Note that the command has to be invoked with `shell: true` to properly execut sbt
+        const result = spawnSync(SBT_CMD, sbtArgs, {
+          cwd: basePath,
+          shell: true,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        });
+        if (result.status !== 0 || result.error) {
+          console.error(result.stdout, result.stderr);
+          console.log(
+            `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`,
+          );
+          console.log(
+            `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`,
+          );
+          console.log(
+            "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock",
+          );
+          options.failOnError && process.exit(1);
+        }
+        if (!standalonePluginFile) {
+          cleanupPlugin(basePath, pluginFile);
+        }
+        if (existsSync(dlFile)) {
+          const retMap = parseSbtTree(dlFile);
+          if (retMap.pkgList?.length) {
+            const tmpParentComponent = retMap.pkgList.splice(0, 1)[0];
+            tmpParentComponent.type = "application";
+            pkgList = pkgList.concat(retMap.pkgList);
+            if (!parentComponent || !Object.keys(parentComponent).length) {
+              parentComponent = tmpParentComponent;
+            }
+          }
+          if (retMap.dependenciesList) {
+            dependencies = mergeDependencies(
+              dependencies,
+              retMap.dependenciesList,
+              parentComponent,
+            );
+          }
+        } else {
+          if (options.failOnError || DEBUG_MODE) {
+            console.log(`sbt dependencyList did not yield ${dlFile}`);
+          }
+          options.failOnError && process.exit(1);
+        }
+      }
+
+      // Cleanup
+      unlinkSync(tempSbtPlugins);
+    } // else
+
+    if (DEBUG_MODE) {
+      console.log(`Found ${pkgList.length} packages`);
+    }
+    // Should we attempt to resolve class names
+    if (options.resolveClass || options.deep) {
+      const tmpjarNSMapping = await collectJarNS(SBT_CACHE_DIR);
+      if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+        jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+      }
+    }
+    pkgList = await getMvnMetadata(pkgList, jarNSMapping);
+    return buildBomNSData(options, pkgList, "maven", {
+      src: path,
+      filename: sbtProjects.join(", "),
+      nsMapping: jarNSMapping,
+      dependencies,
+      parentComponent,
+    });
   }
 }
 
@@ -2150,7 +2126,8 @@ export async function createNodejsBom(path, options) {
         src: path,
         filename: "shrinkwrap-deps.json",
       });
-    } else if (existsSync(pnpmLock)) {
+    }
+    if (existsSync(pnpmLock)) {
       let pkgList = await parsePnpmLock(pnpmLock);
       if (allImports && Object.keys(allImports).length) {
         pkgList = await addEvidenceForImports(
@@ -2166,16 +2143,15 @@ export async function createNodejsBom(path, options) {
         src: path,
         filename: "pnpm-lock.yaml",
       });
-    } else {
-      console.log(
-        "Neither shrinkwrap file: ",
-        swFile,
-        " nor pnpm lockfile",
-        pnpmLock,
-        "was found!",
-      );
-      options.failOnError && process.exit(1);
     }
+    console.log(
+      "Neither shrinkwrap file: ",
+      swFile,
+      " nor pnpm lockfile",
+      pnpmLock,
+      "was found!",
+    );
+    options.failOnError && process.exit(1);
   }
   if (yarnLockFiles?.length) {
     manifestFiles = manifestFiles.concat(yarnLockFiles);
@@ -2458,7 +2434,8 @@ export async function createPythonBom(path, options) {
       dependencies,
       parentComponent,
     });
-  } else if (metadataFiles?.length) {
+  }
+  if (metadataFiles?.length) {
     // dist-info directories
     for (const mf of metadataFiles) {
       const mData = readFileSync(mf, {
@@ -2970,7 +2947,8 @@ export async function createGoBom(path, options) {
       parentComponent,
       filename: gomodFiles.join(", "),
     });
-  } else if (gopkgLockFiles.length) {
+  }
+  if (gopkgLockFiles.length) {
     for (const f of gopkgLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
@@ -3144,7 +3122,8 @@ export async function createDartBom(path, options) {
       src: path,
       filename: pubFiles.join(", "),
     });
-  } else if (pubSpecYamlFiles.length) {
+  }
+  if (pubSpecYamlFiles.length) {
     for (const f of pubSpecYamlFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
@@ -3413,7 +3392,8 @@ export function createClojureBom(path, options) {
       src: path,
       filename: leinFiles.join(", "),
     });
-  } else if (ednFiles.length) {
+  }
+  if (ednFiles.length) {
     let CLJ_ARGS = ["-Stree"];
     if (process.env.CLJ_ARGS) {
       CLJ_ARGS = process.env.CLJ_ARGS.split(" ");
@@ -5836,9 +5816,8 @@ export async function createBom(path, options) {
       // https://github.com/cyclonedx/cdxgen/issues/95
       if (options.multiProject) {
         return await createMultiXBom([path], options);
-      } else {
-        return await createXBom(path, options);
       }
+      return await createXBom(path, options);
   }
 }
 

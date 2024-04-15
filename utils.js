@@ -328,15 +328,13 @@ export function adjustLicenseInformation(licenses) {
       console.warn("multiple license expressions found", expressions);
     }
     return [{ expression: expressions[0].expression }];
-  } else {
-    return licenses.map((l) => {
-      if (typeof l.license === "object") {
-        return l;
-      } else {
-        return { license: l };
-      }
-    });
   }
+  return licenses.map((l) => {
+    if (typeof l.license === "object") {
+      return l;
+    }
+    return { license: l };
+  });
 }
 
 /**
@@ -390,11 +388,10 @@ export function getLicenses(pkg) {
         return licenseContent;
       }),
     );
-  } else {
-    const knownLicense = getKnownLicense(undefined, pkg);
-    if (knownLicense) {
-      return [{ license: knownLicense }];
-    }
+  }
+  const knownLicense = getKnownLicense(undefined, pkg);
+  if (knownLicense) {
+    return [{ license: knownLicense }];
   }
   return undefined;
 }
@@ -438,7 +435,8 @@ export function getKnownLicense(licenseUrl, pkg) {
         if (akLic.group && akLic.name) {
           if (akLic.group === "." && akLic.name === pkg.name) {
             return { id: akLic.license, name: akLic.licenseName };
-          } else if (
+          }
+          if (
             pkg.group?.includes(akLic.group) &&
             (akLic.name === pkg.name || akLic.name === "*")
           ) {
@@ -2312,12 +2310,11 @@ export function executeGradleProperties(dir, rootPath, subProject) {
     if (result.stderr) {
       if (result.stderr.includes("does not exist")) {
         return defaultProps;
-      } else {
-        console.error(result.stdout, result.stderr);
-        console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
-        );
       }
+      console.error(result.stdout, result.stderr);
+      console.log(
+        "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
+      );
       if (result.stderr.includes("not get unknown property")) {
         console.log(
           "2. Check if the SBOM is generated for the correct root project for your application.",
@@ -2719,7 +2716,8 @@ export function parseLicenseEntryOrArrayFromPomXml(license) {
     return license.map((l) => {
       return findLicenseId(l.name._);
     });
-  } else if (Object.keys(license).length) {
+  }
+  if (Object.keys(license).length) {
     return [findLicenseId(license.name._)];
   }
 }
@@ -2762,7 +2760,8 @@ export function parsePyRequiresDist(dist_string) {
   let version = "";
   if (!tmpA) {
     return undefined;
-  } else if (tmpA.length == 1) {
+  }
+  if (tmpA.length == 1) {
     name = tmpA[0];
   } else if (tmpA.length > 1) {
     name = tmpA[0];
@@ -3514,9 +3513,8 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
     }
     ghUrl = `${ghUrl}/${name}`;
     return ghUrl;
-  } else {
-    return undefined;
   }
+  return undefined;
 }
 
 /**
@@ -3546,12 +3544,11 @@ export function toGitHubApiUrl(repoUrl, repoMetadata) {
   const parts = getGithubUrlParts(repoUrl);
   if (parts.length < 5 || parts[2] !== "github.com") {
     return undefined; // Not a valid GitHub repo URL
-  } else {
-    return repoMetadataToGitHubApiUrl({
-      group: parts[3],
-      name: parts[4],
-    });
   }
+  return repoMetadataToGitHubApiUrl({
+    group: parts[3],
+    name: parts[4],
+  });
 }
 
 /**
@@ -3731,10 +3728,12 @@ export async function parseGoModData(goModData, gosumMap) {
     if (l.includes("require (")) {
       isModReplacement = false;
       continue;
-    } else if (l.includes("replace (")) {
+    }
+    if (l.includes("replace (")) {
       isModReplacement = true;
       continue;
-    } else if (l.includes("replace ")) {
+    }
+    if (l.includes("replace ")) {
       // If this is an inline replacement, drop the word replace
       // (eg; "replace google.golang.org/grpc => google.golang.org/grpc v1.21.0" becomes " google.golang.org/grpc => google.golang.org/grpc v1.21.0")
       l = l.replace("replace", "");
@@ -4265,9 +4264,8 @@ export async function parseGemspecData(gemspecData) {
   pkgList = [pkg];
   if (FETCH_LICENSE) {
     return await getRubyGemsMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 /**
@@ -4807,9 +4805,8 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
   }
   if (!simple && FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 /**
@@ -4938,9 +4935,8 @@ export async function parseCargoData(cargoLockFile, simple = false) {
   }
   if (FETCH_LICENSE && !simple) {
     return await getCratesMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 export function parseCargoDependencyData(cargoLockData) {
@@ -5105,9 +5101,8 @@ export async function parseCargoAuditableData(cargoData) {
   });
   if (FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 export async function parsePubLockData(pubLockData) {
@@ -5145,9 +5140,8 @@ export async function parsePubLockData(pubLockData) {
   });
   if (FETCH_LICENSE) {
     return await getDartMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 export function parsePubYamlData(pubYamlData) {
@@ -5375,16 +5369,15 @@ export function parseBitbucketPipelinesFile(fileContents) {
       if (imageName === "") {
         privateImageBlockFound = true;
         continue;
-      } else {
-        /**
-         * Assume this is a public build image
-         * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-public-build-images
-         */
-
-        imgList.push({
-          image: imageName,
-        });
       }
+      /**
+       * Assume this is a public build image
+       * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-public-build-images
+       */
+
+      imgList.push({
+        image: imageName,
+      });
     }
 
     // Pipe usage
@@ -6141,9 +6134,8 @@ export function parseCsProjAssetsData(csProjData, assetsJsonFile) {
         operator: match[2],
         version: match[3],
       };
-    } else {
-      return null;
     }
+    return null;
   }
 
   const pkgList = [];
@@ -8139,19 +8131,13 @@ export function cleanupPlugin(projectPath, originalPluginsFile) {
       // just remove the file, it was never there
       unlinkSync(pluginsFile);
       return !existsSync(pluginsFile);
-    } else {
-      // Bring back the original file
-      copyFileSync(
-        originalPluginsFile,
-        pluginsFile,
-        constants.COPYFILE_FICLONE,
-      );
-      unlinkSync(originalPluginsFile);
-      return true;
     }
-  } else {
-    return false;
+    // Bring back the original file
+    copyFileSync(originalPluginsFile, pluginsFile, constants.COPYFILE_FICLONE);
+    unlinkSync(originalPluginsFile);
+    return true;
   }
+  return false;
 }
 
 /**
@@ -9795,24 +9781,24 @@ async function queryNuget(p, NUGET_URL) {
         Number(tmpVersionArray.slice(-1)) === 0
       ) {
         return upper;
-      } else if (upper.split("-").length > 1) {
+      }
+      if (upper.split("-").length > 1) {
         tmpVersionArray[tmpVersionArray.length - 1] = (
           Number(tmpVersionArray.slice(-1)) - 1
         ).toString();
       }
       return tmpVersionArray.join(".");
-    } else {
-      const tmpVersion = parse(upper);
-      let version = `${tmpVersion.major}.${tmpVersion.minor}.${tmpVersion.patch}`;
-      if (compare(version, upper) === 1) {
-        if (tmpVersion.patch > 0) {
-          version = `${tmpVersion.major}.${tmpVersion.minor}.${(
-            tmpVersion.patch - 1
-          ).toString()}`;
-        }
-      }
-      return version;
     }
+    const tmpVersion = parse(upper);
+    let version = `${tmpVersion.major}.${tmpVersion.minor}.${tmpVersion.patch}`;
+    if (compare(version, upper) === 1) {
+      if (tmpVersion.patch > 0) {
+        version = `${tmpVersion.major}.${tmpVersion.minor}.${(
+          tmpVersion.patch - 1
+        ).toString()}`;
+      }
+    }
+    return version;
   }
   // Coerce only when missing patch/minor version
   function coerceUp(version) {

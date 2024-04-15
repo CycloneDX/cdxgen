@@ -319,11 +319,10 @@ const getCommandOutput = (cmd, dir, args) => {
   });
   if (result.status !== 0 || result.error) {
     return undefined;
-  } else {
-    const stdout = result.stdout;
-    if (stdout) {
-      const cmdOutput = Buffer.from(stdout).toString();
-      return cmdOutput.trim();
-    }
+  }
+  const stdout = result.stdout;
+  if (stdout) {
+    const cmdOutput = Buffer.from(stdout).toString();
+    return cmdOutput.trim();
   }
 };
