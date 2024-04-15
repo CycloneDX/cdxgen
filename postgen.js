@@ -20,7 +20,6 @@ export const filterBom = (bomJson, options) => {
       ["optional", "excluded"].includes(comp.scope)
     ) {
       filtered = true;
-      continue;
     } else if (options.only && options.only.length) {
       if (!Array.isArray(options.only)) {
         options.only = [options.only];
@@ -33,7 +32,6 @@ export const filterBom = (bomJson, options) => {
         ) {
           filtered = true;
           purlfiltered = true;
-          continue;
         }
       }
       if (!purlfiltered) {
@@ -65,7 +63,6 @@ export const filterBom = (bomJson, options) => {
           ) {
             filtered = true;
             purlfiltered = true;
-            continue;
           }
         }
       }

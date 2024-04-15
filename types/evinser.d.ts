@@ -86,7 +86,7 @@ export function prepareDB(options: any): Promise<{
       ): Promise<any>;
       equals(other: any): boolean;
       equalsOneOf(others: readonly any[]): boolean;
-      toJSON<T>(): T;
+      toJSON<T extends any>(): T;
       toJSON(): object;
       isSoftDeleted(): boolean;
       _model: import("sequelize").Model<any, any>;
@@ -372,7 +372,7 @@ export function prepareDB(options: any): Promise<{
       rows: M_17[];
       count: import("sequelize").GroupedCountResultItem[];
     }>;
-    max<T_3, M_18 extends import("sequelize").Model<any, any>>(
+    max<T_3 extends unknown, M_18 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_18>,
       field: keyof import("sequelize").Attributes<M_18>,
       options?: import("sequelize").AggregateOptions<
@@ -380,7 +380,7 @@ export function prepareDB(options: any): Promise<{
         import("sequelize").Attributes<M_18>
       >,
     ): Promise<T_3>;
-    min<T_4, M_19 extends import("sequelize").Model<any, any>>(
+    min<T_4 extends unknown, M_19 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_19>,
       field: keyof import("sequelize").Attributes<M_19>,
       options?: import("sequelize").AggregateOptions<
@@ -388,7 +388,7 @@ export function prepareDB(options: any): Promise<{
         import("sequelize").Attributes<M_19>
       >,
     ): Promise<T_4>;
-    sum<T_5, M_20 extends import("sequelize").Model<any, any>>(
+    sum<T_5 extends unknown, M_20 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_20>,
       field: keyof import("sequelize").Attributes<M_20>,
       options?: import("sequelize").AggregateOptions<
@@ -1200,7 +1200,7 @@ export function prepareDB(options: any): Promise<{
       ): Promise<any>;
       equals(other: any): boolean;
       equalsOneOf(others: readonly any[]): boolean;
-      toJSON<T>(): T;
+      toJSON<T extends any>(): T;
       toJSON(): object;
       isSoftDeleted(): boolean;
       _model: import("sequelize").Model<any, any>;
@@ -1486,7 +1486,7 @@ export function prepareDB(options: any): Promise<{
       rows: M_17[];
       count: import("sequelize").GroupedCountResultItem[];
     }>;
-    max<T_3, M_18 extends import("sequelize").Model<any, any>>(
+    max<T_3 extends unknown, M_18 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_18>,
       field: keyof import("sequelize").Attributes<M_18>,
       options?: import("sequelize").AggregateOptions<
@@ -1494,7 +1494,7 @@ export function prepareDB(options: any): Promise<{
         import("sequelize").Attributes<M_18>
       >,
     ): Promise<T_3>;
-    min<T_4, M_19 extends import("sequelize").Model<any, any>>(
+    min<T_4 extends unknown, M_19 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_19>,
       field: keyof import("sequelize").Attributes<M_19>,
       options?: import("sequelize").AggregateOptions<
@@ -1502,7 +1502,7 @@ export function prepareDB(options: any): Promise<{
         import("sequelize").Attributes<M_19>
       >,
     ): Promise<T_4>;
-    sum<T_5, M_20 extends import("sequelize").Model<any, any>>(
+    sum<T_5 extends unknown, M_20 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_20>,
       field: keyof import("sequelize").Attributes<M_20>,
       options?: import("sequelize").AggregateOptions<
@@ -2314,7 +2314,7 @@ export function prepareDB(options: any): Promise<{
       ): Promise<any>;
       equals(other: any): boolean;
       equalsOneOf(others: readonly any[]): boolean;
-      toJSON<T>(): T;
+      toJSON<T extends any>(): T;
       toJSON(): object;
       isSoftDeleted(): boolean;
       _model: import("sequelize").Model<any, any>;
@@ -2600,7 +2600,7 @@ export function prepareDB(options: any): Promise<{
       rows: M_17[];
       count: import("sequelize").GroupedCountResultItem[];
     }>;
-    max<T_3, M_18 extends import("sequelize").Model<any, any>>(
+    max<T_3 extends unknown, M_18 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_18>,
       field: keyof import("sequelize").Attributes<M_18>,
       options?: import("sequelize").AggregateOptions<
@@ -2608,7 +2608,7 @@ export function prepareDB(options: any): Promise<{
         import("sequelize").Attributes<M_18>
       >,
     ): Promise<T_3>;
-    min<T_4, M_19 extends import("sequelize").Model<any, any>>(
+    min<T_4 extends unknown, M_19 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_19>,
       field: keyof import("sequelize").Attributes<M_19>,
       options?: import("sequelize").AggregateOptions<
@@ -2616,7 +2616,7 @@ export function prepareDB(options: any): Promise<{
         import("sequelize").Attributes<M_19>
       >,
     ): Promise<T_4>;
-    sum<T_5, M_20 extends import("sequelize").Model<any, any>>(
+    sum<T_5 extends unknown, M_20 extends import("sequelize").Model<any, any>>(
       this: import("sequelize").ModelStatic<M_20>,
       field: keyof import("sequelize").Attributes<M_20>,
       options?: import("sequelize").AggregateOptions<
