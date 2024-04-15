@@ -25,8 +25,7 @@
         "noUnusedTemplateLiteral": "off",
         "noUselessElse": "off",
         "useDefaultParameterLast": "warn",
-        "useTemplate": "off",
-        "useSingleVarDeclarator": "off"
+        "useTemplate": "off"
       },
       "suspicious": {
         "noDoubleEquals": "off",
