@@ -7168,8 +7168,8 @@ export function convertOSQueryResults(
 }
 
 function purlFromUrlString(type, repoUrl, version) {
-  let namespace = "",
-    name;
+  let namespace = "";
+  let name;
   if (repoUrl && repoUrl.startsWith("http")) {
     const url = new URL(repoUrl);
     const pathnameParts = url.pathname.split("/");
@@ -7919,11 +7919,11 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
         const pomProperties = getPomPropertiesFromMavenDir(mavenDir);
-        let group = pomProperties["groupId"],
-          name = pomProperties["artifactId"],
-          version = pomProperties["version"],
-          confidence = 1,
-          technique = "manifest-analysis";
+        let group = pomProperties["groupId"];
+        let name = pomProperties["artifactId"];
+        let version = pomProperties["version"];
+        let confidence = 1;
+        let technique = "manifest-analysis";
         if (
           (!group || !name || !version) &&
           SEARCH_MAVEN_ORG &&
