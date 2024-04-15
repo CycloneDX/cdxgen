@@ -65,7 +65,7 @@ export const gitTreeHashes = (dir) => {
       }
       if (l.startsWith("tree") || l.startsWith("parent")) {
         const tmpA = l.split(" ");
-        if (tmpA && tmpA.length == 2) {
+        if (tmpA && tmpA.length === 2) {
           treeHashes[tmpA[0]] = tmpA[1];
         }
       }
@@ -319,11 +319,10 @@ const getCommandOutput = (cmd, dir, args) => {
   });
   if (result.status !== 0 || result.error) {
     return undefined;
-  } else {
-    const stdout = result.stdout;
-    if (stdout) {
-      const cmdOutput = Buffer.from(stdout).toString();
-      return cmdOutput.trim();
-    }
+  }
+  const stdout = result.stdout;
+  if (stdout) {
+    const cmdOutput = Buffer.from(stdout).toString();
+    return cmdOutput.trim();
   }
 };

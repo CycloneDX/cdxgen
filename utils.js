@@ -232,7 +232,7 @@ export function getAllFiles(dirPath, pattern, options = {}) {
   if (!pattern.includes("package.json")) {
     ignoreList.push("**/node_modules/**");
   }
-  if (options && options.exclude && Array.isArray(options.exclude)) {
+  if (options?.exclude && Array.isArray(options.exclude)) {
     ignoreList = ignoreList.concat(options.exclude);
   }
   return getAllFilesWithIgnore(dirPath, pattern, ignoreList);
@@ -280,7 +280,7 @@ function toBase64(hexString) {
  * @returns {string} ISO formatted timestamp, without milliseconds.
  */
 export function getTimestamp() {
-  return new Date().toISOString().split(".")[0] + "Z";
+  return `${new Date().toISOString().split(".")[0]}Z`;
 }
 
 /**
@@ -328,15 +328,13 @@ export function adjustLicenseInformation(licenses) {
       console.warn("multiple license expressions found", expressions);
     }
     return [{ expression: expressions[0].expression }];
-  } else {
-    return licenses.map((l) => {
-      if (typeof l.license === "object") {
-        return l;
-      } else {
-        return { license: l };
-      }
-    });
   }
+  return licenses.map((l) => {
+    if (typeof l.license === "object") {
+      return l;
+    }
+    return { license: l };
+  });
 }
 
 /**
@@ -361,7 +359,7 @@ export function getLicenses(pkg) {
             })
           ) {
             licenseContent.id = l;
-            licenseContent.url = "https://opensource.org/licenses/" + l;
+            licenseContent.url = `https://opensource.org/licenses/${l}`;
           } else if (l.startsWith("http")) {
             const knownLicense = getKnownLicense(l, pkg);
             if (knownLicense) {
@@ -390,11 +388,10 @@ export function getLicenses(pkg) {
         return licenseContent;
       }),
     );
-  } else {
-    const knownLicense = getKnownLicense(undefined, pkg);
-    if (knownLicense) {
-      return [{ license: knownLicense }];
-    }
+  }
+  const knownLicense = getKnownLicense(undefined, pkg);
+  if (knownLicense) {
+    return [{ license: knownLicense }];
   }
   return undefined;
 }
@@ -407,7 +404,7 @@ export function getLicenses(pkg) {
  * @return {Object} Objetct with SPDX license id or license name
  */
 export function getKnownLicense(licenseUrl, pkg) {
-  if (licenseUrl && licenseUrl.includes("opensource.org")) {
+  if (licenseUrl?.includes("opensource.org")) {
     const possibleId = licenseUrl
       .toLowerCase()
       .replace("https://", "http://")
@@ -417,7 +414,7 @@ export function getKnownLicense(licenseUrl, pkg) {
         return { id: spdxLicense };
       }
     }
-  } else if (licenseUrl && licenseUrl.includes("apache.org")) {
+  } else if (licenseUrl?.includes("apache.org")) {
     const possibleId = licenseUrl
       .toLowerCase()
       .replace("https://", "http://")
@@ -432,15 +429,15 @@ export function getKnownLicense(licenseUrl, pkg) {
   for (const akLicGroup of knownLicenses) {
     if (
       akLicGroup.packageNamespace === "*" ||
-      (pkg.purl && pkg.purl.startsWith(akLicGroup.packageNamespace))
+      pkg.purl?.startsWith(akLicGroup.packageNamespace)
     ) {
       for (const akLic of akLicGroup.knownLicenses) {
         if (akLic.group && akLic.name) {
           if (akLic.group === "." && akLic.name === pkg.name) {
             return { id: akLic.license, name: akLic.licenseName };
-          } else if (
-            pkg.group &&
-            pkg.group.includes(akLic.group) &&
+          }
+          if (
+            pkg.group?.includes(akLic.group) &&
             (akLic.name === pkg.name || akLic.name === "*")
           ) {
             return { id: akLic.license, name: akLic.licenseName };
@@ -518,7 +515,7 @@ export function readLicenseText(licenseFilepath, licenseContentType) {
   if (licenseText) {
     const licenseContentText = { content: licenseText };
     if (licenseContentType !== "text/plain") {
-      licenseContentText["contentType"] = licenseContentType;
+      licenseContentText.contentType = licenseContentType;
     }
     return licenseContentText;
   }
@@ -528,7 +525,7 @@ export function readLicenseText(licenseFilepath, licenseContentType) {
 export async function getSwiftPackageMetadata(pkgList) {
   const cdepList = [];
   for (const p of pkgList) {
-    if (p.repository && p.repository.url) {
+    if (p.repository?.url) {
       if (p.repository.url.includes("://github.com/")) {
         try {
           p.license = await getRepoLicense(p.repository.url, undefined);
@@ -567,9 +564,9 @@ export async function getNpmMetadata(pkgList) {
       if (p.group && p.group !== "") {
         let group = p.group;
         if (!group.startsWith("@")) {
-          group = "@" + group;
+          group = `@${group}`;
         }
-        key = group + "/" + p.name;
+        key = `${group}/${p.name}`;
       }
       let body = {};
       if (metadata_cache[key]) {
@@ -587,7 +584,7 @@ export async function getNpmMetadata(pkgList) {
         body.versions?.[p.version]?.license ||
         body.license ||
         (await getRepoLicense(body.repository?.url, undefined));
-      if (body.repository && body.repository.url) {
+      if (body.repository?.url) {
         p.repository = { url: body.repository.url };
       }
       if (body.homepage) {
@@ -652,7 +649,7 @@ export async function parsePkgJson(pkgJsonFile, simple = false) {
       if (pkgData.homepage) {
         apkg.homepage = { url: pkgData.homepage };
       }
-      if (pkgData.repository && pkgData.repository.url) {
+      if (pkgData.repository?.url) {
         apkg.repository = { url: pkgData.repository.url };
       }
       if (!simple) {
@@ -742,7 +739,7 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
             author.url ? ` (${author.url})` : ""
           }`
         : author;
-    if (node == rootNode) {
+    if (node === rootNode) {
       purlString = new PackageURL(
         "npm",
         options.projectGroup || "",
@@ -858,7 +855,7 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
     // this handles the case when a node has ["dependencies"] key in a package-lock.json
     // for a node. We exclude the root node because it's already been handled
     const childrenDependsOn = [];
-    if (node != rootNode) {
+    if (node !== rootNode) {
       for (const child of node.children) {
         const childNode = child[1];
         const {
@@ -936,8 +933,8 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
         for (const child of rootNode.children) {
           if (
             edgeToIntegrityOrLocation &&
-            (child[1].integrity == edgeToIntegrityOrLocation ||
-              child[1].location == edgeToIntegrityOrLocation)
+            (child[1].integrity === edgeToIntegrityOrLocation ||
+              child[1].location === edgeToIntegrityOrLocation)
           ) {
             targetName = child[0].replace(/node_modules\//g, "");
             targetVersion = child[1].version;
@@ -1057,7 +1054,7 @@ export function yarnLockToIdentMap(lockData) {
     // "@actions/core@^1.2.6", "@actions/core@^1.6.0":
     if (!l.startsWith(" ") && l.trim().length > 0) {
       const tmpA = l.replace(/["']/g, "").split(", ");
-      if (tmpA && tmpA.length) {
+      if (tmpA?.length) {
         for (let s of tmpA) {
           if (!s.startsWith("__")) {
             if (s.endsWith(":")) {
@@ -1079,7 +1076,7 @@ export function yarnLockToIdentMap(lockData) {
             // - npm:@types/ioredis@^4.28.10
             // - npm:strip-ansi@^6.0.1
             // See test cases with yarn3.lock and yarn6.lock
-            if (range && range.startsWith("npm:")) {
+            if (range?.startsWith("npm:")) {
               if (range.includes("@")) {
                 range = range.split("@").slice(-1)[0];
               } else {
@@ -1236,7 +1233,7 @@ export async function parseYarnLock(yarnLockFile) {
             name = parsedline.name;
           } else {
             let fullName = parsedline.name;
-            if (parsedline.group && parsedline.group.length) {
+            if (parsedline.group?.length) {
               fullName = `${parsedline.group}/${parsedline.name}`;
             }
             if (
@@ -1295,14 +1292,15 @@ export async function parseYarnLock(yarnLockFile) {
           // in some cases yarn 4 will add a prefix to the checksum, containing the cachekey and compression level
           // example: 10c0/53c2b231a61a46792b39a0d43bc4f4f77...
           const checksum = parts[1].split("/").pop();
-          integrity =
-            "sha512-" + Buffer.from(checksum, "hex").toString("base64");
+          integrity = `sha512-${Buffer.from(checksum, "hex").toString(
+            "base64",
+          )}`;
         }
         if (l.startsWith("resolved")) {
           const tmpB = parts[1].split("#");
           if (tmpB.length > 1) {
             const digest = tmpB[1].replace(/"/g, "");
-            integrity = "sha256-" + digest;
+            integrity = `sha256-${digest}`;
           }
         }
       }
@@ -1340,7 +1338,7 @@ export async function parseNodeShrinkwrap(swFile) {
       const fullName = pkgKeys[k];
       const integrity = lockData[fullName];
       const parts = fullName.split("@");
-      if (parts && parts.length) {
+      if (parts?.length) {
         let name = "";
         let version = "";
         let group = "";
@@ -1406,7 +1404,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
   let pkgList = [];
   const dependenciesList = [];
   let ppurl = "";
-  if (parentComponent && parentComponent.name) {
+  if (parentComponent?.name) {
     ppurl =
       parentComponent.purl ||
       new PackageURL(
@@ -1471,7 +1469,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
       const integrity = packages[pkgKeys[k]].resolution.integrity;
       const deps = packages[pkgKeys[k]].dependencies || [];
       const scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
-      if (parts && parts.length) {
+      if (parts?.length) {
         let name = "";
         let version = "";
         let group = "";
@@ -1669,7 +1667,7 @@ export async function parseMinJs(minJsFile) {
               return;
             }
             const pkgIdentifier = parsePackageJsonName(name);
-            if (pkgIdentifier.fullName != "") {
+            if (pkgIdentifier.fullName !== "") {
               pkgList.push({
                 name: pkgIdentifier.fullName,
                 group: pkgIdentifier.scope || "",
@@ -1728,7 +1726,7 @@ export function parsePom(pomFile) {
     attributesKey: "$",
     commentKey: "value",
   }).project;
-  if (project && project.dependencies) {
+  if (project?.dependencies) {
     let dependencies = project.dependencies.dependency;
     // Convert to an array
     if (!dependencies) {
@@ -1739,7 +1737,7 @@ export function parsePom(pomFile) {
     for (const adep of dependencies) {
       const version = adep.version;
       let versionStr = undefined;
-      if (version && version._ && version._.indexOf("$") == -1) {
+      if (version?._ && version._.indexOf("$") === -1) {
         versionStr = version._;
         if (includeMavenTestScope || !adep.scope || adep.scope !== "test")
           deps.push({
@@ -1796,7 +1794,7 @@ export function parseMavenTree(rawOutput) {
     }
     let level = 0;
     const tmpline = l.split(" ");
-    if (tmpline && tmpline.length) {
+    if (tmpline?.length) {
       if (l.includes(" ")) {
         level = l.replace(tmpline[tmpline.length - 1], "").length / 3;
       }
@@ -1804,10 +1802,10 @@ export function parseMavenTree(rawOutput) {
       const pkgArr = l.split(":");
       if (pkgArr && pkgArr.length > 2) {
         let versionStr = pkgArr[pkgArr.length - 2];
-        if (pkgArr.length == 4) {
+        if (pkgArr.length === 4) {
           versionStr = pkgArr[pkgArr.length - 1];
         }
-        const key = pkgArr[0] + "-" + pkgArr[1] + "-" + versionStr;
+        const key = `${pkgArr[0]}-${pkgArr[1]}-${versionStr}`;
         if (!keys_cache[key]) {
           keys_cache[key] = key;
           let purlString = new PackageURL(
@@ -1828,7 +1826,7 @@ export function parseMavenTree(rawOutput) {
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
           }
-          if (level == 0 || last_purl === "") {
+          if (level === 0 || last_purl === "") {
             stack.push(purlString);
           } else if (level > last_level) {
             const cnodes = level_trees[last_purl] || [];
@@ -1921,7 +1919,7 @@ export function parseGradleDep(
     level_trees[last_purl] = [];
     let scope = undefined;
     let profileName = undefined;
-    if (retMap && retMap.projects) {
+    if (retMap?.projects) {
       const subDependsOn = [];
       for (const sd of retMap.projects) {
         subDependsOn.push(
@@ -2008,7 +2006,7 @@ export function parseGradleDep(
             null,
           ).toString();
           purlString = decodeURIComponent(purlString);
-          keys_cache[purlString + "_" + last_purl] = true;
+          keys_cache[`${purlString}_${last_purl}`] = true;
           // Filter duplicates
           if (!deps_keys_cache[purlString]) {
             deps_keys_cache[purlString] = true;
@@ -2018,10 +2016,10 @@ export function parseGradleDep(
               version: version !== undefined ? version : rootProjectVersion,
               qualifiers: { type: "jar" },
             };
-            adep["purl"] = purlString;
+            adep.purl = purlString;
             adep["bom-ref"] = decodeURIComponent(purlString);
             if (scope) {
-              adep["scope"] = scope;
+              adep.scope = scope;
             }
             if (profileName) {
               adep.properties = [
@@ -2036,7 +2034,7 @@ export function parseGradleDep(
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
           }
-          if (level == 0) {
+          if (level === 0) {
             stack = [first_purl];
             stack.push(purlString);
           } else if (last_purl === "") {
@@ -2098,14 +2096,14 @@ export function parseCljDep(rawOutput) {
           l = l.replace(". ", "");
         }
         const tmpArr = l.split(" ");
-        if (tmpArr.length == 2) {
+        if (tmpArr.length === 2) {
           let group = dirname(tmpArr[0]);
           if (group === ".") {
             group = "";
           }
           const name = basename(tmpArr[0]);
           const version = tmpArr[1];
-          const cacheKey = group + "-" + name + "-" + version;
+          const cacheKey = `${group}-${name}-${version}`;
           if (!keys_cache[cacheKey]) {
             keys_cache[cacheKey] = true;
             deps.push({
@@ -2131,7 +2129,7 @@ export function parseLeinDep(rawOutput) {
     const deps = [];
     const keys_cache = {};
     if (rawOutput.includes("{[") && !rawOutput.startsWith("{[")) {
-      rawOutput = "{[" + rawOutput.split("{[")[1];
+      rawOutput = `{[${rawOutput.split("{[")[1]}`;
     }
     const ednData = parseEDNString(rawOutput);
     return parseLeinMap(ednData, keys_cache, deps);
@@ -2140,8 +2138,8 @@ export function parseLeinDep(rawOutput) {
 }
 
 export function parseLeinMap(node, keys_cache, deps) {
-  if (node["map"]) {
-    for (const n of node["map"]) {
+  if (node.map) {
+    for (const n of node.map) {
       if (n.length === 2) {
         const rootNode = n[0];
         const psym = rootNode[0].sym;
@@ -2151,7 +2149,7 @@ export function parseLeinMap(node, keys_cache, deps) {
           group = "";
         }
         const name = basename(psym);
-        const cacheKey = group + "-" + name + "-" + version;
+        const cacheKey = `${group}-${name}-${version}`;
         if (!keys_cache[cacheKey]) {
           keys_cache[cacheKey] = true;
           deps.push({ group, name, version });
@@ -2312,12 +2310,11 @@ export function executeGradleProperties(dir, rootPath, subProject) {
     if (result.stderr) {
       if (result.stderr.includes("does not exist")) {
         return defaultProps;
-      } else {
-        console.error(result.stdout, result.stderr);
-        console.log(
-          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
-        );
       }
+      console.error(result.stdout, result.stderr);
+      console.log(
+        "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
+      );
       if (result.stderr.includes("not get unknown property")) {
         console.log(
           "2. Check if the SBOM is generated for the correct root project for your application.",
@@ -2357,7 +2354,7 @@ export function parseBazelActionGraph(rawOutput) {
       ) {
         const matches = Array.from(l.matchAll(mavenPrefixRegex));
 
-        if (matches[0] && matches[0][1]) {
+        if (matches[0]?.[1]) {
           const group = matches[0][1].split("/").join(".");
           const name = matches[0][2];
           const version = matches[0][3];
@@ -2399,7 +2396,7 @@ export function parseBazelSkyframe(rawOutput) {
           l = l.split(",")[0];
         }
         const mparts = l.split("external/maven/v1/");
-        if (mparts && mparts[mparts.length - 1].endsWith(".jar")) {
+        if (mparts?.[mparts.length - 1].endsWith(".jar")) {
           // Example
           // https/jcenter.bintray.com/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar
           // https/repo1.maven.org/maven2/org/simpleflatmapper/sfm-util/8.2.2/header_sfmutil-8.2.2.jar
@@ -2615,12 +2612,11 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
         );
       }
       const bodyJson = await fetchPomXmlAsJson(pomMetadata);
-      p.publisher =
-        bodyJson.organization && bodyJson.organization.name
-          ? bodyJson.organization.name._
-          : "";
+      p.publisher = bodyJson.organization?.name
+        ? bodyJson.organization.name._
+        : "";
       p.description = bodyJson.description ? bodyJson.description._ : "";
-      if (bodyJson.scm && bodyJson.scm.url) {
+      if (bodyJson.scm?.url) {
         p.repository = { url: bodyJson.scm.url._ };
       }
       p.license =
@@ -2653,18 +2649,9 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
  */
 export function composePomXmlUrl({ urlPrefix, group, name, version }) {
   const groupPart = group.replace(/\./g, "/");
-  const fullUrl =
-    urlPrefix +
-    groupPart +
-    "/" +
-    name +
-    "/" +
-    version +
-    "/" +
-    name +
-    "-" +
-    version +
-    ".pom";
+  const fullUrl = `${
+    urlPrefix + groupPart
+  }/${name}/${version}/${name}-${version}.pom`;
   return fullUrl;
 }
 
@@ -2729,7 +2716,8 @@ export function parseLicenseEntryOrArrayFromPomXml(license) {
     return license.map((l) => {
       return findLicenseId(l.name._);
     });
-  } else if (Object.keys(license).length) {
+  }
+  if (Object.keys(license).length) {
     return [findLicenseId(license.name._)];
   }
 }
@@ -2753,7 +2741,7 @@ export async function extractLicenseCommentFromPomXml({
   const pom_xml = await fetchPomXml({ urlPrefix, group, name, version });
   const licenseRegex = /<!--([\s\S]*?)-->[\s\n]*<project/m;
   const match = licenseRegex.exec(pom_xml);
-  if (match && match[1]) {
+  if (match?.[1]) {
     return findLicenseId(match[1].trim());
   }
 }
@@ -2772,7 +2760,8 @@ export function parsePyRequiresDist(dist_string) {
   let version = "";
   if (!tmpA) {
     return undefined;
-  } else if (tmpA.length == 1) {
+  }
+  if (tmpA.length === 1) {
     name = tmpA[0];
   } else if (tmpA.length > 1) {
     name = tmpA[0];
@@ -2840,15 +2829,15 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
       }
       let res = undefined;
       try {
-        res = await cdxgenAgent.get(PYPI_URL + p.name + "/json", {
+        res = await cdxgenAgent.get(`${PYPI_URL + p.name}/json`, {
           responseType: "json",
         });
       } catch (err) {
         // retry by prefixing django- to the package name
-        res = await cdxgenAgent.get(PYPI_URL + "django-" + p.name + "/json", {
+        res = await cdxgenAgent.get(`${PYPI_URL}django-${p.name}/json`, {
           responseType: "json",
         });
-        p.name = "django-" + p.name;
+        p.name = `django-${p.name}`;
       }
       const body = res.body;
       if (body.info.author && body.info.author.trim() !== "") {
@@ -2892,7 +2881,7 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
       // Use the latest version if none specified
       if (!p.version || !p.version.trim().length) {
         let versionSpecifiers = undefined;
-        if (p.properties && p.properties.length) {
+        if (p.properties?.length) {
           for (const pprop of p.properties) {
             if (pprop.name === "cdx:pypi:versionSpecifiers") {
               versionSpecifiers = pprop.value;
@@ -2960,16 +2949,12 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
           value: origName,
         });
       }
-      if (
-        body.releases &&
-        body.releases[p.version] &&
-        body.releases[p.version].length
-      ) {
+      if (body.releases?.[p.version] && body.releases[p.version].length) {
         const digest = body.releases[p.version][0].digests;
-        if (digest["sha256"]) {
-          p._integrity = "sha256-" + digest["sha256"];
-        } else if (digest["md5"]) {
-          p._integrity = "md5-" + digest["md5"];
+        if (digest.sha256) {
+          p._integrity = `sha256-${digest.sha256}`;
+        } else if (digest.md5) {
+          p._integrity = `md5-${digest.md5}`;
         }
       }
       const purlString = new PackageURL(
@@ -3163,7 +3148,7 @@ export async function parsePoetrylockData(lockData, lockFile) {
     ) {
       // Package dependencies starts with this marker
       depsMode = l.includes("[package.dependencies]");
-      if (pkg && pkg.name && pkg.version) {
+      if (pkg?.name && pkg.version) {
         const purlString = new PackageURL(
           "pypi",
           "",
@@ -3222,7 +3207,7 @@ export async function parsePoetrylockData(lockData, lockFile) {
             pkg.version = value;
             break;
           case "optional":
-            pkg.scope = value == "true" ? "optional" : undefined;
+            pkg.scope = value === "true" ? "optional" : undefined;
             break;
         }
       }
@@ -3236,8 +3221,8 @@ export async function parsePoetrylockData(lockData, lockFile) {
         dependsOnList.push(adep);
       } else if (existingPkgMap[adep]) {
         dependsOnList.push(existingPkgMap[adep]);
-      } else if (existingPkgMap["py" + adep]) {
-        dependsOnList.push(existingPkgMap["py" + adep]);
+      } else if (existingPkgMap[`py${adep}`]) {
+        dependsOnList.push(existingPkgMap[`py${adep}`]);
       } else if (existingPkgMap[adep.replace(/-/g, "_")]) {
         dependsOnList.push(existingPkgMap[adep.replace(/-/g, "_")]);
       }
@@ -3443,7 +3428,7 @@ export async function getPyModules(src, epkgList, options) {
         PYPI_MODULE_PACKAGE_MAPPING[p.name.toLowerCase()] ||
         PYPI_MODULE_PACKAGE_MAPPING[p.name.replace(/_/g, "-").toLowerCase()] ||
         p.name.replace(/_/g, "-").toLowerCase(),
-      version: p.version && p.version.trim().length ? p.version : undefined,
+      version: p.version?.trim().length ? p.version : undefined,
       scope: "required",
       properties: [
         {
@@ -3463,13 +3448,13 @@ export async function getPyModules(src, epkgList, options) {
   pkgList = pkgList.filter(
     (obj, index) => pkgList.findIndex((i) => i.name === obj.name) === index,
   );
-  if (epkgList && epkgList.length) {
+  if (epkgList?.length) {
     const pkgMaps = epkgList.map((p) => p.name);
     pkgList = pkgList.filter((p) => !pkgMaps.includes(p.name));
   }
   pkgList = await getPyMetadata(pkgList, true);
   // Populate the imports list after dealiasing
-  if (pkgList && pkgList.length) {
+  if (pkgList?.length) {
     pkgList.forEach((p) => {
       allImports[p.name] = true;
     });
@@ -3523,14 +3508,13 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
     const group = repoMetadata.group;
     const name = repoMetadata.name;
     let ghUrl = "https://api.github.com/repos";
-    if (group && group !== "." && group != "") {
-      ghUrl = ghUrl + "/" + group.replace("github.com/", "");
+    if (group && group !== "." && group !== "") {
+      ghUrl = `${ghUrl}/${group.replace("github.com/", "")}`;
     }
-    ghUrl = ghUrl + "/" + name;
+    ghUrl = `${ghUrl}/${name}`;
     return ghUrl;
-  } else {
-    return undefined;
   }
+  return undefined;
 }
 
 /**
@@ -3560,12 +3544,11 @@ export function toGitHubApiUrl(repoUrl, repoMetadata) {
   const parts = getGithubUrlParts(repoUrl);
   if (parts.length < 5 || parts[2] !== "github.com") {
     return undefined; // Not a valid GitHub repo URL
-  } else {
-    return repoMetadataToGitHubApiUrl({
-      group: parts[3],
-      name: parts[4],
-    });
   }
+  return repoMetadataToGitHubApiUrl({
+    group: parts[3],
+    name: parts[4],
+  });
 }
 
 /**
@@ -3579,17 +3562,17 @@ export async function getRepoLicense(repoUrl, repoMetadata) {
   const apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
   // Perform github lookups
   if (apiUrl && get_repo_license_errors < MAX_GET_REPO_LICENSE_ERRORS) {
-    const licenseUrl = apiUrl + "/license";
+    const licenseUrl = `${apiUrl}/license`;
     const headers = {};
     if (process.env.GITHUB_TOKEN) {
-      headers["Authorization"] = "Bearer " + process.env.GITHUB_TOKEN;
+      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
     }
     try {
       const res = await cdxgenAgent.get(licenseUrl, {
         responseType: "json",
         headers: headers,
       });
-      if (res && res.body) {
+      if (res?.body) {
         const license = res.body.license;
         let licenseId = license.spdx_id;
         const licObj = {
@@ -3605,16 +3588,16 @@ export async function getRepoLicense(repoUrl, repoMetadata) {
           // If content match fails attempt to find by name
           if (!licenseId && license.name.toLowerCase() !== "other") {
             licenseId = findLicenseId(license.name);
-            licObj["name"] = license.name;
+            licObj.name = license.name;
           }
         }
-        licObj["id"] = licenseId;
-        if (licObj["id"] || licObj["name"]) {
+        licObj.id = licenseId;
+        if (licObj.id || licObj.name) {
           return licObj;
         }
       }
     } catch (err) {
-      if (err && err.message) {
+      if (err?.message) {
         if (
           err.message.includes("rate limit exceeded") &&
           !process.env.GITHUB_TOKEN
@@ -3645,16 +3628,16 @@ export async function getGoPkgLicense(repoMetadata) {
   const name = repoMetadata.name;
   let pkgUrlPrefix = "https://pkg.go.dev/";
   if (group && group !== "." && group !== name) {
-    pkgUrlPrefix = pkgUrlPrefix + group + "/";
+    pkgUrlPrefix = `${pkgUrlPrefix + group}/`;
   }
-  pkgUrlPrefix = pkgUrlPrefix + name + "?tab=licenses";
+  pkgUrlPrefix = `${pkgUrlPrefix + name}?tab=licenses`;
   // Check the metadata cache first
   if (metadata_cache[pkgUrlPrefix]) {
     return metadata_cache[pkgUrlPrefix];
   }
   try {
     const res = await cdxgenAgent.get(pkgUrlPrefix);
-    if (res && res.body) {
+    if (res?.body) {
       const $ = load(res.body);
       let licenses = $("#LICENSE > h2").text().trim();
       if (licenses === "") {
@@ -3674,7 +3657,7 @@ export async function getGoPkgLicense(repoMetadata) {
           } else {
             alicense.id = id.trim();
           }
-          alicense["url"] = pkgUrlPrefix;
+          alicense.url = pkgUrlPrefix;
           licList.push(alicense);
         }
       }
@@ -3745,10 +3728,12 @@ export async function parseGoModData(goModData, gosumMap) {
     if (l.includes("require (")) {
       isModReplacement = false;
       continue;
-    } else if (l.includes("replace (")) {
+    }
+    if (l.includes("replace (")) {
       isModReplacement = true;
       continue;
-    } else if (l.includes("replace ")) {
+    }
+    if (l.includes("replace ")) {
       // If this is an inline replacement, drop the word replace
       // (eg; "replace google.golang.org/grpc => google.golang.org/grpc v1.21.0" becomes " google.golang.org/grpc => google.golang.org/grpc v1.21.0")
       l = l.replace("replace", "");
@@ -3811,7 +3796,7 @@ export async function parseGoListDep(rawOutput, gosumMap) {
       const verArr = l.trim().replace(/[\"']/g, "").split(" ");
 
       if (verArr && verArr.length >= 5) {
-        const key = verArr[0] + "-" + verArr[1];
+        const key = `${verArr[0]}-${verArr[1]}`;
         // Filter duplicates
         if (!keys_cache[key]) {
           keys_cache[key] = key;
@@ -3915,8 +3900,8 @@ export async function parseGoModGraph(
       const tmpA = l.replace("\r", "").split(" ");
       if (tmpA && tmpA.length === 2) {
         try {
-          const sourcePurl = PackageURL.fromString("pkg:golang/" + tmpA[0]);
-          const dependsPurl = PackageURL.fromString("pkg:golang/" + tmpA[1]);
+          const sourcePurl = PackageURL.fromString(`pkg:golang/${tmpA[0]}`);
+          const dependsPurl = PackageURL.fromString(`pkg:golang/${tmpA[1]}`);
           const sourceRefString = decodeURIComponent(sourcePurl.toString());
           const dependsRefString = decodeURIComponent(dependsPurl.toString());
           // Since go mod graph over-reports direct dependencies we use the existing list
@@ -3933,7 +3918,7 @@ export async function parseGoModGraph(
           if (!addedPkgs[tmpA[0]]) {
             const component = await getGoPkgComponent(
               "",
-              `${sourcePurl.namespace ? sourcePurl.namespace + "/" : ""}${
+              `${sourcePurl.namespace ? `${sourcePurl.namespace}/` : ""}${
                 sourcePurl.name
               }`,
               sourcePurl.version,
@@ -3945,7 +3930,7 @@ export async function parseGoModGraph(
           if (!addedPkgs[tmpA[1]]) {
             const component = await getGoPkgComponent(
               "",
-              `${dependsPurl.namespace ? dependsPurl.namespace + "/" : ""}${
+              `${dependsPurl.namespace ? `${dependsPurl.namespace}/` : ""}${
                 dependsPurl.name
               }`,
               dependsPurl.version,
@@ -4062,7 +4047,7 @@ export async function parseGopkgData(gopkgData) {
       switch (key) {
         case "digest":
           digestStr = value.replace("1:", "");
-          pkg._integrity = "sha256-" + toBase64(digestStr);
+          pkg._integrity = `sha256-${toBase64(digestStr)}`;
           break;
         case "name":
           pkg.group = "";
@@ -4104,7 +4089,7 @@ export async function parseGoVersionData(buildInfoData) {
     }
     const name = tmpA[1].trim();
     let hash = "";
-    if (tmpA.length == 4) {
+    if (tmpA.length === 4) {
       hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
     }
     const component = await getGoPkgComponent("", name, tmpA[2].trim(), hash);
@@ -4171,7 +4156,7 @@ export async function getRubyGemsMetadata(pkgList) {
         : `${RUBYGEMS_V1_URL}${p.name}.json`;
       const res = await cdxgenAgent.get(fullUrl, apiOptions);
       let body = res.body;
-      if (body && body.length) {
+      if (body?.length) {
         body = body[0];
       }
       p.description = body.description || body.summary || "";
@@ -4193,7 +4178,7 @@ export async function getRubyGemsMetadata(pkgList) {
         }
       }
       if (body.sha) {
-        p._integrity = "sha256-" + body.sha;
+        p._integrity = `sha256-${body.sha}`;
       }
       if (body.authors) {
         p.author = body.authors;
@@ -4222,13 +4207,13 @@ export async function getRubyGemsMetadata(pkgList) {
       if (body.yanked) {
         p.properties.push({
           name: "cdx:gem:yanked",
-          value: "" + body.yanked,
+          value: `${body.yanked}`,
         });
       }
       if (body.prerelease) {
         p.properties.push({
           name: "cdx:gem:prerelease",
-          value: "" + body.prerelease,
+          value: `${body.prerelease}`,
         });
       }
       // Use the latest version if none specified
@@ -4279,9 +4264,8 @@ export async function parseGemspecData(gemspecData) {
   pkgList = [pkg];
   if (FETCH_LICENSE) {
     return await getRubyGemsMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 /**
@@ -4309,7 +4293,7 @@ export async function parseGemfileLockData(gemLockData, lockFile) {
     l = l.replace("\r", "");
     if (specsFound) {
       const tmpA = l.split(" ");
-      if (tmpA && tmpA.length == 2) {
+      if (tmpA && tmpA.length === 2) {
         const name = tmpA[0];
         if (name === "remote:") {
           return;
@@ -4375,7 +4359,7 @@ export async function parseGemfileLockData(gemLockData, lockFile) {
     if (l.trim().startsWith("tag:")) {
       lastTag = l.trim().split(" ")[1];
     }
-    if (l.trim() == l.trim().toUpperCase()) {
+    if (l.trim() === l.trim().toUpperCase()) {
       specsFound = false;
       lastRemote = undefined;
       lastRevision = undefined;
@@ -4586,7 +4570,7 @@ export async function getDartMetadata(pkgList) {
   const RESPONSE_TYPE = "json";
   const HEADER_ACCEPT = "application/vnd.pub.v2+json";
   const PUB_DEV_URL = process.env.PUB_DEV_URL || "https://pub.dev";
-  const PUB_PACKAGES_URL = PUB_DEV_URL + "/api/packages/";
+  const PUB_PACKAGES_URL = `${PUB_DEV_URL}/api/packages/`;
   const PUB_LICENSE_REGEX = /^license:/i;
   const cdepList = [];
 
@@ -4601,7 +4585,7 @@ export async function getDartMetadata(pkgList) {
           Accept: HEADER_ACCEPT,
         },
       });
-      if (res && res.body) {
+      if (res?.body) {
         const version = res.body.versions.find((v) => p.version === v.version);
         if (version) {
           const pubspec = version.pubspec;
@@ -4613,7 +4597,7 @@ export async function getDartMetadata(pkgList) {
             p.homepage = { url: pubspec.homepage };
           }
           const res2 = await cdxgenAgent.get(
-            PUB_PACKAGES_URL + p.name + "/score",
+            `${PUB_PACKAGES_URL + p.name}/score`,
             {
               responseType: RESPONSE_TYPE,
               headers: {
@@ -4621,7 +4605,7 @@ export async function getDartMetadata(pkgList) {
               },
             },
           );
-          if (res2 && res2.body) {
+          if (res2?.body) {
             const tags = res2.body.tags;
             const license = tags.find((tag) => PUB_LICENSE_REGEX.test(tag));
             if (license) {
@@ -4760,7 +4744,7 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
       value = tmpA[1].trim().replace(/"/g, "");
       switch (key) {
         case "checksum":
-          pkg._integrity = "sha384-" + value;
+          pkg._integrity = `sha384-${value}`;
           break;
         case "name":
           value = value.split(" ")[0];
@@ -4803,9 +4787,9 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
       } else if (l.includes("git =")) {
         tmpB = l.split(" { git = ");
         if (tmpB && tmpB.length > 1) {
-          version = "git+" + tmpB[1].split(" }")[0];
+          version = `git+${tmpB[1].split(" }")[0]}`;
         }
-      } else if (l.indexOf("path =") == -1 && tmpA.length > 1) {
+      } else if (l.indexOf("path =") === -1 && tmpA.length > 1) {
         version = tmpA[1];
       }
       if (name && version) {
@@ -4821,9 +4805,8 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
   }
   if (!simple && FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 /**
@@ -4952,9 +4935,8 @@ export async function parseCargoData(cargoLockFile, simple = false) {
   }
   if (FETCH_LICENSE && !simple) {
     return await getCratesMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 export function parseCargoDependencyData(cargoLockData) {
@@ -5119,9 +5101,8 @@ export async function parseCargoAuditableData(cargoData) {
   });
   if (FETCH_LICENSE) {
     return await getCratesMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 export async function parsePubLockData(pubLockData) {
@@ -5159,9 +5140,8 @@ export async function parsePubLockData(pubLockData) {
   });
   if (FETCH_LICENSE) {
     return await getDartMetadata(pkgList);
-  } else {
-    return pkgList;
   }
+  return pkgList;
 }
 
 export function parsePubYamlData(pubYamlData) {
@@ -5202,7 +5182,7 @@ export function parseHelmYamlData(helmData) {
       version: yamlObj.version,
     };
     if (yamlObj.home) {
-      pkg["homepage"] = { url: yamlObj.home };
+      pkg.homepage = { url: yamlObj.home };
     }
     pkgList.push(pkg);
   }
@@ -5213,7 +5193,7 @@ export function parseHelmYamlData(helmData) {
         version: hd.version, // This could have * so not precise
       };
       if (hd.repository) {
-        pkg["repository"] = { url: hd.repository };
+        pkg.repository = { url: hd.repository };
       }
       pkgList.push(pkg);
     }
@@ -5229,16 +5209,16 @@ export function parseHelmYamlData(helmData) {
             description: hd.description || "",
           };
           if (hd.sources && Array.isArray(hd.sources) && hd.sources.length) {
-            pkg["repository"] = { url: hd.sources[0] };
+            pkg.repository = { url: hd.sources[0] };
             if (hd.home && hd.home !== hd.sources[0]) {
-              pkg["homepage"] = { url: hd.home };
+              pkg.homepage = { url: hd.home };
             }
           }
-          if (hd.home && !pkg["homepage"]) {
-            pkg["homepage"] = { url: hd.home };
+          if (hd.home && !pkg.homepage) {
+            pkg.homepage = { url: hd.home };
           }
           if (hd.digest) {
-            pkg._integrity = "sha256-" + hd.digest;
+            pkg._integrity = `sha256-${hd.digest}`;
           }
 
           pkgList.push(pkg);
@@ -5269,7 +5249,7 @@ export function recurseImageNameLookup(keyValueObj, pkgList, imgList) {
       keyValueObj.packImage ||
       keyValueObj.koImage ||
       keyValueObj.kanikoImage;
-    if (keyValueObj.name && keyValueObj.name.includes("/")) {
+    if (keyValueObj.name?.includes("/")) {
       imageLike = keyValueObj.name;
     }
     if (
@@ -5384,16 +5364,15 @@ export function parseBitbucketPipelinesFile(fileContents) {
       if (imageName === "") {
         privateImageBlockFound = true;
         continue;
-      } else {
-        /**
-         * Assume this is a public build image
-         * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-public-build-images
-         */
-
-        imgList.push({
-          image: imageName,
-        });
       }
+      /**
+       * Assume this is a public build image
+       * See: https://support.atlassian.com/bitbucket-cloud/docs/use-docker-images-as-build-environments/#Using-public-build-images
+       */
+
+      imgList.push({
+        image: imageName,
+      });
     }
 
     // Pipe usage
@@ -5544,13 +5523,13 @@ export function parsePrivadoFile(f) {
       });
     }
     // Capture processing
-    if (jsonData.processing && jsonData.processing.length) {
+    if (jsonData.processing?.length) {
       aservice.data = aservice.data.concat(
         convertProcessing(jsonData.processing),
       );
     }
     // Capture sink processing
-    if (jsonData.sinkProcessing && jsonData.sinkProcessing.length) {
+    if (jsonData.sinkProcessing?.length) {
       aservice.data = aservice.data.concat(
         convertProcessing(jsonData.sinkProcessing),
       );
@@ -5579,11 +5558,7 @@ export function parsePrivadoFile(f) {
       }
     }
     // If there are third party libraries detected, then there are cross boundary calls happening
-    if (
-      jsonData.dataFlow &&
-      jsonData.dataFlow.third_parties &&
-      jsonData.dataFlow.third_parties.length
-    ) {
+    if (jsonData.dataFlow?.third_parties?.length) {
       aservice["x-trust-boundary"] = true;
     }
     servlist.push(aservice);
@@ -5606,12 +5581,10 @@ export function parseOpenapiSpecData(oaData) {
     return servlist;
   }
 
-  const name =
-    oaData.info && oaData.info.title
-      ? oaData.info.title.replace(/ /g, "-")
-      : "default-name";
-  const version =
-    oaData.info && oaData.info.version ? oaData.info.version : "latest";
+  const name = oaData.info?.title
+    ? oaData.info.title.replace(/ /g, "-")
+    : "default-name";
+  const version = oaData.info?.version ? oaData.info.version : "latest";
   const aservice = {
     "bom-ref": `urn:service:${name}:${version}`,
     name,
@@ -5619,10 +5592,10 @@ export function parseOpenapiSpecData(oaData) {
     version,
   };
   let serverName = [];
-  if (oaData.servers && oaData.servers.length && oaData.servers[0].url) {
+  if (oaData.servers?.length && oaData.servers[0].url) {
     serverName = oaData.servers[0].url;
     if (!serverName.startsWith("http") || !serverName.includes("//")) {
-      serverName = "http://" + serverName;
+      serverName = `http://${serverName}`;
     }
   }
   if (oaData.paths) {
@@ -5637,7 +5610,7 @@ export function parseOpenapiSpecData(oaData) {
     aservice.endpoints = endpoints;
   }
   let authenticated = false;
-  if (oaData.components && oaData.components.securitySchemes) {
+  if (oaData.components?.securitySchemes) {
     authenticated = true;
   }
   aservice.authenticated = authenticated;
@@ -5721,11 +5694,11 @@ export function parseGitHubWorkflowData(ghwData) {
             let group = "";
             const version = tmpA[1];
             const tmpB = groupName.split("/");
-            if (tmpB.length == 2) {
+            if (tmpB.length === 2) {
               name = tmpB[1];
               group = tmpB[0];
             }
-            const key = group + "-" + name + "-" + version;
+            const key = `${group}-${name}-${version}`;
             if (!keys_cache[key] && name && version) {
               keys_cache[key] = key;
               pkgList.push({
@@ -5763,7 +5736,7 @@ export function parseCloudBuildData(cbwData) {
             group = "";
           }
           const version = tmpA[1];
-          const key = group + "-" + name + "-" + version;
+          const key = `${group}-${name}-${version}`;
           if (!keys_cache[key] && name && version) {
             keys_cache[key] = key;
             pkgList.push({
@@ -5881,7 +5854,7 @@ export function parseLeiningenData(leinData) {
   }
   const tmpArr = leinData.split("(defproject");
   if (tmpArr.length > 1) {
-    leinData = "(defproject" + tmpArr[1];
+    leinData = `(defproject${tmpArr[1]}`;
   }
   const ednData = parseEDNString(leinData);
   for (const k of Object.keys(ednData)) {
@@ -5931,15 +5904,15 @@ export function parseEdnData(rawEdnData) {
                         if (e.sym) {
                           psym = e.sym;
                         }
-                        if (e["map"]) {
-                          if (e["map"][0].length > 1) {
-                            const version = e["map"][0][1];
+                        if (e.map) {
+                          if (e.map[0].length > 1) {
+                            const version = e.map[0][1];
                             let group = dirname(psym) || "";
                             if (group === ".") {
                               group = "";
                             }
                             const name = basename(psym);
-                            const cacheKey = group + "-" + name + "-" + version;
+                            const cacheKey = `${group}-${name}-${version}`;
                             if (!pkgCache[cacheKey]) {
                               pkgList.push({ group, name, version });
                               pkgCache[cacheKey] = true;
@@ -6037,7 +6010,7 @@ export function parseCsPkgData(pkgData) {
     attributesKey: "$",
     commentKey: "value",
   }).packages;
-  if (!packages || packages.length == 0) {
+  if (!packages || packages.length === 0) {
     return pkgList;
   }
   packages = packages[0].package;
@@ -6064,11 +6037,11 @@ export function parseCsProjData(csProjData, projFile) {
     attributesKey: "$",
     commentKey: "value",
   }).Project;
-  if (!projects || projects.length == 0) {
+  if (!projects || projects.length === 0) {
     return pkgList;
   }
   const project = projects[0];
-  if (project.ItemGroup && project.ItemGroup.length) {
+  if (project.ItemGroup?.length) {
     for (const i in project.ItemGroup) {
       const item = project.ItemGroup[i];
       // .net core use PackageReference
@@ -6156,9 +6129,8 @@ export function parseCsProjAssetsData(csProjData, assetsJsonFile) {
         operator: match[2],
         version: match[3],
       };
-    } else {
-      return null;
     }
+    return null;
   }
 
   const pkgList = [];
@@ -6256,9 +6228,9 @@ export function parseCsProjAssetsData(csProjData, assetsJsonFile) {
         };
         if (lib[rootDep]) {
           if (lib[rootDep].sha512) {
-            pkg["_integrity"] = "sha512-" + lib[rootDep].sha512;
+            pkg._integrity = `sha512-${lib[rootDep].sha512}`;
           } else if (lib[rootDep].sha256) {
-            pkg["_integrity"] = "sha256-" + lib[rootDep].sha256;
+            pkg._integrity = `sha256-${lib[rootDep].sha256}`;
           }
           if (lib[rootDep].files && Array.isArray(lib[rootDep].files)) {
             const dllFiles = new Set();
@@ -6393,7 +6365,7 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
         purl,
         "bom-ref": decodeURIComponent(purl),
         _integrity: libData.contentHash
-          ? "sha512-" + libData.contentHash
+          ? `sha512-${libData.contentHash}`
           : undefined,
         properties: [
           {
@@ -6425,11 +6397,7 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
           let adepResolvedVersion = libData.dependencies[adep];
           const aversionNoRuntime = aversion.split("/")[0];
           // Try to get the resolved version of the dependency. See #930 and #937
-          if (
-            assetData.dependencies[aversion] &&
-            assetData.dependencies[aversion][adep] &&
-            assetData.dependencies[aversion][adep].resolved
-          ) {
+          if (assetData.dependencies[aversion]?.[adep]?.resolved) {
             adepResolvedVersion =
               assetData.dependencies[aversion][adep].resolved;
           } else if (
@@ -6441,12 +6409,10 @@ export function parseCsPkgLockData(csLockData, pkgLockFile) {
             adepResolvedVersion =
               assetData.dependencies[aversionNoRuntime][adep].resolved;
           } else if (
-            (assetData.dependencies[aversion] &&
-              assetData.dependencies[aversion][adep.toLowerCase()] &&
+            (assetData.dependencies[aversion]?.[adep.toLowerCase()] &&
               assetData.dependencies[aversion][adep.toLowerCase()].type ===
                 "Project") ||
-            (assetData.dependencies[aversionNoRuntime] &&
-              assetData.dependencies[aversionNoRuntime][adep.toLowerCase()] &&
+            (assetData.dependencies[aversionNoRuntime]?.[adep.toLowerCase()] &&
               assetData.dependencies[aversionNoRuntime][adep.toLowerCase()]
                 .type === "Project")
           ) {
@@ -6622,11 +6588,11 @@ export function parseComposerLock(pkgLockFile, rootRequires) {
     }
     if (lockData) {
       const packages = {};
-      if (lockData["packages"]) {
-        packages["required"] = lockData["packages"];
+      if (lockData.packages) {
+        packages.required = lockData.packages;
       }
       if (lockData["packages-dev"]) {
-        packages["optional"] = lockData["packages-dev"];
+        packages.optional = lockData["packages-dev"];
       }
       // Pass 1: Collect all packages
       for (const compScope in packages) {
@@ -6818,7 +6784,7 @@ export function parseSbtTree(sbtTreeFile) {
         },
       };
       if (isLibrary) {
-        adep["type"] = "library";
+        adep.type = "library";
       }
       pkgList.push(adep);
       keys_cache[purlString] = true;
@@ -6827,7 +6793,7 @@ export function parseSbtTree(sbtTreeFile) {
     if (!level_trees[purlString]) {
       level_trees[purlString] = [];
     }
-    if (level == 0) {
+    if (level === 0) {
       first_purl = purlString;
       stack = [first_purl];
       stack.push(purlString);
@@ -6878,11 +6844,11 @@ export function parseSbtLock(pkgLockFile) {
     const lockData = JSON.parse(
       readFileSync(pkgLockFile, { encoding: "utf-8" }),
     );
-    if (lockData && lockData.dependencies) {
+    if (lockData?.dependencies) {
       for (const pkg of lockData.dependencies) {
         const artifacts = pkg.artifacts || undefined;
         let integrity = "";
-        if (artifacts && artifacts.length) {
+        if (artifacts?.length) {
           integrity = artifacts[0].hash.replace("sha1:", "sha1-");
         }
         let compScope = undefined;
@@ -7028,7 +6994,7 @@ export function convertOSQueryResults(
   enhance = false,
 ) {
   const pkgList = [];
-  if (results && results.length) {
+  if (results?.length) {
     for (const res of results) {
       const version =
         res.version ||
@@ -7083,7 +7049,7 @@ export function convertOSQueryResults(
         name = queryObj.name;
       }
       let qualifiers = undefined;
-      if (res.identifying_number && res.identifying_number.length) {
+      if (res.identifying_number?.length) {
         qualifiers = {
           tag_id: res.identifying_number.replace("{", "").replace("}", ""),
         };
@@ -7163,24 +7129,24 @@ export function convertOSQueryResults(
 }
 
 function purlFromUrlString(type, repoUrl, version) {
-  let namespace = "",
-    name;
-  if (repoUrl && repoUrl.startsWith("http")) {
+  let namespace = "";
+  let name;
+  if (repoUrl?.startsWith("http")) {
     const url = new URL(repoUrl);
     const pathnameParts = url.pathname.split("/");
     const pathnameLastElement = pathnameParts.pop(); // pop() returns last element and removes it from pathnameParts
     name = pathnameLastElement.replace(".git", "");
     const urlpath = pathnameParts.join("/");
     namespace = url.hostname + urlpath;
-  } else if (repoUrl && repoUrl.startsWith("git@")) {
+  } else if (repoUrl?.startsWith("git@")) {
     const parts = repoUrl.split(":");
     const hostname = parts[0].split("@")[1];
     const pathnameParts = parts[1].split("/");
     const pathnameLastElement = pathnameParts.pop();
     name = pathnameLastElement.replace(".git", "");
     const urlpath = pathnameParts.join("/");
-    namespace = hostname + "/" + urlpath;
-  } else if (repoUrl && repoUrl.startsWith("ssh://git@bitbucket")) {
+    namespace = `${hostname}/${urlpath}`;
+  } else if (repoUrl?.startsWith("ssh://git@bitbucket")) {
     repoUrl = repoUrl.replace("ssh://git@", "");
     const parts = repoUrl.split(":");
     const hostname = parts[0];
@@ -7188,8 +7154,8 @@ function purlFromUrlString(type, repoUrl, version) {
     const pathnameLastElement = pathnameParts.pop();
     name = pathnameLastElement.replace(".git", "");
     const urlpath = pathnameParts.join("/");
-    namespace = hostname + "/" + urlpath;
-  } else if (repoUrl && repoUrl.startsWith("/")) {
+    namespace = `${hostname}/${urlpath}`;
+  } else if (repoUrl?.startsWith("/")) {
     const parts = repoUrl.split("/");
     name = parts[parts.length - 1];
   } else {
@@ -7303,7 +7269,7 @@ export function parseSwiftResolved(resolvedFile) {
       let resolvedList = [];
       if (pkgData.pins) {
         resolvedList = pkgData.pins;
-      } else if (pkgData.object && pkgData.object.pins) {
+      } else if (pkgData.object?.pins) {
         resolvedList = pkgData.object.pins;
       }
       for (const adep of resolvedList) {
@@ -7374,8 +7340,8 @@ export async function collectMvnDependencies(
     "-Dmdep.copyPom=true",
     "-Dmdep.useRepositoryLayout=true",
     "-Dmdep.includeScope=compile",
-    "-Dmdep.prependGroupId=" + (process.env.MAVEN_PREPEND_GROUP || "false"),
-    "-Dmdep.stripVersion=" + (process.env.MAVEN_STRIP_VERSION || "false"),
+    `-Dmdep.prependGroupId=${process.env.MAVEN_PREPEND_GROUP || "false"}`,
+    `-Dmdep.stripVersion=${process.env.MAVEN_STRIP_VERSION || "false"}`,
   ];
   if (process.env.MVN_ARGS) {
     const addArgs = process.env.MVN_ARGS.split(" ");
@@ -7477,7 +7443,7 @@ export async function collectJarNS(jarPath, pomPathMap = {}) {
   }
   // Parse jar files to get class names
   const jarFiles = getAllFiles(jarPath, "**/*.jar");
-  if (jarFiles && jarFiles.length) {
+  if (jarFiles?.length) {
     for (const jf of jarFiles) {
       const jarname = jf;
       let pomname =
@@ -7515,7 +7481,7 @@ export async function collectJarNS(jarPath, pomPathMap = {}) {
         // Let's try our best to construct a purl for .m2 cache entries of the form
         // .m2/repository/org/apache/logging/log4j/log4j-web/3.0.0-SNAPSHOT/log4j-web-3.0.0-SNAPSHOT.jar
         const tmpA = jf.split(join(".m2", "repository", ""));
-        if (tmpA && tmpA.length) {
+        if (tmpA?.length) {
           const tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield log4j-web-3.0.0-SNAPSHOT.jar
           const jarFileName = basename(tmpJarPath).replace(".jar", "");
@@ -7561,7 +7527,7 @@ export async function collectJarNS(jarPath, pomPathMap = {}) {
         // Let's try our best to construct a purl for gradle cache entries of the form
         // .gradle/caches/modules-2/files-2.1/org.xmlresolver/xmlresolver/4.2.0/f4dbdaa83d636dcac91c9003ffa7fb173173fe8d/xmlresolver-4.2.0-data.jar
         const tmpA = jf.split(join("files-2.1", ""));
-        if (tmpA && tmpA.length) {
+        if (tmpA?.length) {
           const tmpJarPath = tmpA[tmpA.length - 1];
           // This would yield xmlresolver-4.2.0-data.jar
           const jarFileName = basename(tmpJarPath).replace(".jar", "");
@@ -7574,7 +7540,7 @@ export async function collectJarNS(jarPath, pomPathMap = {}) {
           // The result would form the group name
           let jarGroupName = tmpDirParts.join(".").replace(/^\./, "");
           if (jarGroupName.includes(pkgName)) {
-            jarGroupName = jarGroupName.replace("." + pkgName, "");
+            jarGroupName = jarGroupName.replace(`.${pkgName}`, "");
           }
           const purlObj = new PackageURL(
             "maven",
@@ -7668,10 +7634,10 @@ export function convertJarNSToPackages(jarNSMapping) {
       ],
     };
     if (pom.url) {
-      apackage["homepage"] = { url: pom.url };
+      apackage.homepage = { url: pom.url };
     }
     if (pom.scm) {
-      apackage["repository"] = { url: pom.scm };
+      apackage.repository = { url: pom.scm };
     }
     pkgList.push(apackage);
   }
@@ -7704,7 +7670,7 @@ export function parsePomXml(pomXmlData) {
       version,
       description: project.description ? project.description._ : "",
       url: project.url ? project.url._ : "",
-      scm: project.scm && project.scm.url ? project.scm.url._ : "",
+      scm: project.scm?.url ? project.scm.url._ : "",
     };
   }
   return undefined;
@@ -7761,7 +7727,7 @@ export function getPomPropertiesFromMavenDir(mavenDir) {
   let pomProperties = {};
   if (existsSync(mavenDir) && lstatSync(mavenDir).isDirectory()) {
     const pomPropertiesFiles = getAllFiles(mavenDir, "**/pom.properties");
-    if (pomPropertiesFiles && pomPropertiesFiles.length) {
+    if (pomPropertiesFiles?.length) {
       const pomPropertiesString = readFileSync(pomPropertiesFiles[0], {
         encoding: "utf-8",
       });
@@ -7866,7 +7832,7 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
   if (DEBUG_MODE) {
     console.log(`List of jars: ${jarFiles}`);
   }
-  if (jarFiles && jarFiles.length) {
+  if (jarFiles?.length) {
     for (const jf of jarFiles) {
       // If the jar file doesn't exist at the point of use, skip it
       if (!existsSync(jf)) {
@@ -7914,11 +7880,11 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
         // META-INF/maven/${groupId}/${artifactId}/pom.properties
         // see https://maven.apache.org/shared/maven-archiver/index.html
         const pomProperties = getPomPropertiesFromMavenDir(mavenDir);
-        let group = pomProperties["groupId"],
-          name = pomProperties["artifactId"],
-          version = pomProperties["version"],
-          confidence = 1,
-          technique = "manifest-analysis";
+        let group = pomProperties.groupId;
+        let name = pomProperties.artifactId;
+        let version = pomProperties.version;
+        let confidence = 1;
+        let technique = "manifest-analysis";
         if (
           (!group || !name || !version) &&
           SEARCH_MAVEN_ORG &&
@@ -7926,10 +7892,7 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
         ) {
           try {
             const sha = await checksumFile("sha1", jf);
-            const searchurl =
-              "https://search.maven.org/solrsearch/select?q=1:%22" +
-              sha +
-              "%22&rows=20&wt=json";
+            const searchurl = `https://search.maven.org/solrsearch/select?q=1:%22${sha}%22&rows=20&wt=json`;
             const res = await cdxgenAgent.get(searchurl, {
               responseType: "json",
               timeout: {
@@ -7941,16 +7904,16 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
                 response: 1000,
               },
             });
-            const data = res && res.body ? res.body["response"] : undefined;
-            if (data && data["numFound"] == 1) {
-              const jarInfo = data["docs"][0];
-              group = jarInfo["g"];
-              name = jarInfo["a"];
-              version = jarInfo["v"];
+            const data = res?.body ? res.body.response : undefined;
+            if (data && data.numFound === 1) {
+              const jarInfo = data.docs[0];
+              group = jarInfo.g;
+              name = jarInfo.a;
+              version = jarInfo.v;
               technique = "hash-comparison";
             }
           } catch (err) {
-            if (err && err.message && !err.message.includes("404")) {
+            if (err?.message && !err.message.includes("404")) {
               if (err.message.includes("Timeout")) {
                 console.log(
                   "Maven search appears to be unavailable. Search will be skipped for all remaining packages.",
@@ -7982,7 +7945,7 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
             jarMetadata["Bundle-Version"] ||
             jarMetadata["Implementation-Version"] ||
             jarMetadata["Specification-Version"];
-          if (version && version.includes(" ")) {
+          if (version?.includes(" ")) {
             version = version.split(" ")[0];
           }
           // Prefer jar filename to construct name and version
@@ -7998,7 +7961,7 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
                 if (!version || version === "") {
                   version = lastPart.replace(".jar", "");
                 }
-                name = jarname.replace("-" + lastPart, "") || "";
+                name = jarname.replace(`-${lastPart}`, "") || "";
               }
             }
           }
@@ -8018,21 +7981,18 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
           // Sometimes the group might already contain the name
           // Eg: group: org.checkerframework.checker.qual name: checker-qual
           if (name && group && !group.startsWith("javax")) {
-            if (group.includes("." + name.toLowerCase().replace(/-/g, "."))) {
+            if (group.includes(`.${name.toLowerCase().replace(/-/g, ".")}`)) {
               group = group.replace(
-                new RegExp("." + name.toLowerCase().replace(/-/g, ".") + "$"),
+                new RegExp(`.${name.toLowerCase().replace(/-/g, ".")}$`),
                 "",
               );
-            } else if (group.includes("." + name.toLowerCase())) {
-              group = group.replace(
-                new RegExp("." + name.toLowerCase() + "$"),
-                "",
-              );
+            } else if (group.includes(`.${name.toLowerCase()}`)) {
+              group = group.replace(new RegExp(`.${name.toLowerCase()}$`), "");
             }
           }
           // Patch the group string
           for (const aprefix in vendorAliases) {
-            if (name && name.startsWith(aprefix)) {
+            if (name?.startsWith(aprefix)) {
               group = vendorAliases[aprefix];
               break;
             }
@@ -8073,11 +8033,7 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
               },
             ],
           };
-          if (
-            jarNSMapping &&
-            jarNSMapping[apkg.purl] &&
-            jarNSMapping[apkg.purl].namespaces
-          ) {
+          if (jarNSMapping?.[apkg.purl] && jarNSMapping[apkg.purl].namespaces) {
             apkg.properties.push({
               name: "Namespaces",
               value: jarNSMapping[apkg.purl].namespaces.join("\n"),
@@ -8148,7 +8104,7 @@ export function addPlugin(projectPath, plugin) {
   const pluginsFile = sbtPluginsPath(projectPath);
   let originalPluginsFile = null;
   if (existsSync(pluginsFile)) {
-    originalPluginsFile = pluginsFile + ".cdxgen";
+    originalPluginsFile = `${pluginsFile}.cdxgen`;
     copyFileSync(pluginsFile, originalPluginsFile, constants.COPYFILE_FICLONE);
   }
 
@@ -8170,19 +8126,13 @@ export function cleanupPlugin(projectPath, originalPluginsFile) {
       // just remove the file, it was never there
       unlinkSync(pluginsFile);
       return !existsSync(pluginsFile);
-    } else {
-      // Bring back the original file
-      copyFileSync(
-        originalPluginsFile,
-        pluginsFile,
-        constants.COPYFILE_FICLONE,
-      );
-      unlinkSync(originalPluginsFile);
-      return true;
     }
-  } else {
-    return false;
+    // Bring back the original file
+    copyFileSync(originalPluginsFile, pluginsFile, constants.COPYFILE_FICLONE);
+    unlinkSync(originalPluginsFile);
+    return true;
   }
+  return false;
 }
 
 /**
@@ -8290,7 +8240,7 @@ export function getGradleCommand(srcPath, rootPath) {
   let gradleCmd = "gradle";
 
   let findGradleFile = "gradlew";
-  if (platform() == "win32") {
+  if (platform() === "win32") {
     findGradleFile = "gradlew.bat";
   }
 
@@ -8332,7 +8282,7 @@ export function getMavenCommand(srcPath, rootPath) {
   let isWrapperFound = false;
   let findMavenFile = "mvnw";
   let mavenWrapperCmd = null;
-  if (platform() == "win32") {
+  if (platform() === "win32") {
     findMavenFile = "mvnw.bat";
     if (
       !existsSync(join(srcPath, findMavenFile)) &&
@@ -8470,7 +8420,7 @@ export function executeAtom(src, args) {
       console.log(
         "Atom requires Java 21 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image.",
       );
-      console.log(`Current JAVA_HOME: ${env["JAVA_HOME"] || ""}`);
+      console.log(`Current JAVA_HOME: ${env.JAVA_HOME || ""}`);
     } else if (result.stderr.includes("astgen")) {
       console.warn(
         "WARN: Unable to locate astgen command. Install atom globally using sudo npm install -g @appthreat/atom to resolve this issue.",
@@ -8544,7 +8494,7 @@ export function findAppModules(
     );
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
   return retList;
@@ -8642,10 +8592,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
       frozen = false;
       if (DEBUG_MODE) {
         console.log("Virtual env creation has failed");
-        if (
-          result.stderr &&
-          result.stderr.includes("spawnSync python ENOENT")
-        ) {
+        if (result.stderr?.includes("spawnSync python ENOENT")) {
           console.log(
             "Install suitable version of python or set the environment variable PYTHON_CMD.",
           );
@@ -8701,7 +8648,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         shell: isWin,
       });
       if (result.status !== 0 || result.error) {
-        if (result.stderr && result.stderr.includes("No module named poetry")) {
+        if (result.stderr?.includes("No module named poetry")) {
           poetryInstallArgs = ["install", "-n", "--no-root"];
           // Attempt to perform poetry install
           result = spawnSync("poetry", poetryInstallArgs, {
@@ -8751,7 +8698,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
           env,
         });
         tempVenvDir = result.stdout.replaceAll(/[\r\n]+/g, "");
-        if (tempVenvDir && tempVenvDir.length) {
+        if (tempVenvDir?.length) {
           env.VIRTUAL_ENV = tempVenvDir;
           env.PATH = `${join(
             tempVenvDir,
@@ -8837,10 +8784,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
     }
   }
   // Bug #375. Attempt pip freeze on existing and new virtual environments
-  if (
-    (env.VIRTUAL_ENV && env.VIRTUAL_ENV.length) ||
-    (env.CONDA_PREFIX && env.CONDA_PREFIX.length)
-  ) {
+  if (env.VIRTUAL_ENV?.length || env.CONDA_PREFIX?.length) {
     /**
      * At this point, the previous attempt to do a pip install might have failed and we might have an unclean virtual environment with an incomplete list
      * The position taken by cdxgen is "Some SBOM is better than no SBOM", so we proceed to collecting the dependencies that got installed with pip freeze
@@ -8930,7 +8874,7 @@ export function parsePackageJsonName(name) {
   );
   if (match) {
     returnObject.scope =
-      (match[1] && name.includes("@") ? "@" + match[1] : match[1]) || null;
+      (match[1] && name.includes("@") ? `@${match[1]}` : match[1]) || null;
     returnObject.fullName = match[2] || match[0];
     returnObject.projectName = match[3] === match[2] ? null : match[3];
     returnObject.moduleName = match[4] || match[2] || null;
@@ -8954,7 +8898,7 @@ export async function addEvidenceForImports(
   const impPkgs = Object.keys(allImports);
   const exportedPkgs = Object.keys(allExports);
   for (const pkg of pkgList) {
-    if (impPkgs && impPkgs.length) {
+    if (impPkgs?.length) {
       // Assume that all packages are optional until we see an evidence
       pkg.scope = "optional";
     }
@@ -8963,10 +8907,9 @@ export async function addEvidenceForImports(
     if (group === "@types") {
       continue;
     }
-    const aliases =
-      group && group.length
-        ? [name, `${group}/${name}`, `@${group}/${name}`]
-        : [name];
+    const aliases = group?.length
+      ? [name, `${group}/${name}`, `@${group}/${name}`]
+      : [name];
     for (const alias of aliases) {
       const all_includes = impPkgs.filter(
         (find_pkg) =>
@@ -8976,7 +8919,7 @@ export async function addEvidenceForImports(
       const all_exports = exportedPkgs.filter((find_pkg) =>
         find_pkg.startsWith(alias),
       );
-      if (all_exports && all_exports.length) {
+      if (all_exports?.length) {
         let exportedModules = new Set(all_exports);
         pkg.properties = pkg.properties || [];
         for (const subevidence of all_exports) {
@@ -9025,7 +8968,7 @@ export async function addEvidenceForImports(
               pkg.evidence.occurrences = pkg.evidence.occurrences || [];
               pkg.evidence.occurrences.push({
                 location: `${evidence.fileName}${
-                  evidence.lineNumber ? "#" + evidence.lineNumber : ""
+                  evidence.lineNumber ? `#${evidence.lineNumber}` : ""
                 }`,
               });
               importedModules.add(evidence.importedAs);
@@ -9131,7 +9074,7 @@ export function parseCmakeDotFile(dotFile, pkgType, options = {}) {
       } else if (l.includes("// ")) {
         // Indirect dependencies are represented with comments
         const tmpA = l.split("// ");
-        if (tmpA && tmpA.length) {
+        if (tmpA?.length) {
           const relationship = tmpA[1];
           if (relationship.includes("->")) {
             const tmpB = relationship.split(" -> ");
@@ -9162,7 +9105,7 @@ export function parseCmakeDotFile(dotFile, pkgType, options = {}) {
         version: options.projectVersion || "",
         type: "application",
       };
-      parentComponent["purl"] = new PackageURL(
+      parentComponent.purl = new PackageURL(
         pkgType,
         parentComponent.group,
         parentComponent.name,
@@ -9170,7 +9113,7 @@ export function parseCmakeDotFile(dotFile, pkgType, options = {}) {
         null,
         path,
       ).toString();
-      parentComponent["bom-ref"] = decodeURIComponent(parentComponent["purl"]);
+      parentComponent["bom-ref"] = decodeURIComponent(parentComponent.purl);
     } else if (name) {
       const apkg = {
         name: name,
@@ -9184,7 +9127,7 @@ export function parseCmakeDotFile(dotFile, pkgType, options = {}) {
           path,
         ).toString(),
       };
-      apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
+      apkg["bom-ref"] = decodeURIComponent(apkg.purl);
       pkgList.push(apkg);
       pkgBomRefMap[name] = apkg["bom-ref"];
     }
@@ -9237,7 +9180,7 @@ export function parseCmakeLikeFile(cmakeListFile, pkgType, options = {}) {
     ) {
       if (l.includes("${")) {
         for (const tmplKey of Object.keys(templateValues)) {
-          l = l.replace("${" + tmplKey + "}", templateValues[tmplKey] || "");
+          l = l.replace(`\${${tmplKey}}`, templateValues[tmplKey] || "");
         }
       }
       const tmpA = l.replace("project (", "project(").split("project(");
@@ -9257,14 +9200,14 @@ export function parseCmakeLikeFile(cmakeListFile, pkgType, options = {}) {
         if (versionIndex > -1 && tmpB.length > versionIndex) {
           parentVersion = tmpB[versionIndex + 1];
         }
-        if (parentName && parentName.length && !parentName.includes("$")) {
+        if (parentName?.length && !parentName.includes("$")) {
           parentComponent = {
             group: options.projectGroup || "",
             name: parentName,
             version: parentVersion || options.projectVersion || "",
             type: "application",
           };
-          parentComponent["purl"] = new PackageURL(
+          parentComponent.purl = new PackageURL(
             pkgType,
             parentComponent.group,
             parentComponent.name,
@@ -9272,9 +9215,7 @@ export function parseCmakeLikeFile(cmakeListFile, pkgType, options = {}) {
             null,
             path,
           ).toString();
-          parentComponent["bom-ref"] = decodeURIComponent(
-            parentComponent["purl"],
-          );
+          parentComponent["bom-ref"] = decodeURIComponent(parentComponent.purl);
         }
       }
     } else if (l.startsWith("find_")) {
@@ -9353,7 +9294,7 @@ export function parseCmakeLikeFile(cmakeListFile, pkgType, options = {}) {
       }
     } else if (l.includes("dependency(")) {
       let tmpA = l.split("dependency(");
-      if (tmpA && tmpA.length) {
+      if (tmpA?.length) {
         if (!l.includes("_dependency") && !l.includes(".dependency")) {
           tmpA = tmpA[tmpA.length - 1]
             .split(", ")
@@ -9447,7 +9388,7 @@ export function parseCmakeLikeFile(cmakeListFile, pkgType, options = {}) {
           },
           properties: props,
         };
-        apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
+        apkg["bom-ref"] = decodeURIComponent(apkg.purl);
         pkgList.push(apkg);
         pkgAddedMap[n] = true;
       }
@@ -9466,7 +9407,7 @@ export function getOSPackageForFile(afile, osPkgsList) {
         props.name === "PkgProvides" &&
         props.value.includes(afile.toLowerCase())
       ) {
-        delete ospkg.scope;
+        ospkg.scope = undefined;
         // dev packages are libraries
         ospkg.type = "library";
         // Set the evidence to indicate how we identified this package from the header or .so file
@@ -9508,7 +9449,7 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
   let parentComponent = undefined;
   const dependsOn = [];
   (epkgList || []).forEach((p) => {
-    epkgMap[p.group + "/" + p.name] = p;
+    epkgMap[`${p.group}/${p.name}`] = p;
   });
   // Let's look for any vcpkg.json file to tell us about the directory we're scanning
   // users can use this file to give us a clue even if they do not use vcpkg library manager
@@ -9553,9 +9494,9 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
           // Is this a dependency we haven't seen before including the all lower and upper case version?
           if (
             avcpkgName &&
-            !epkgMap["/" + avcpkgName] &&
-            !epkgMap["/" + avcpkgName.toLowerCase()] &&
-            !epkgMap["/" + avcpkgName.toUpperCase()]
+            !epkgMap[`/${avcpkgName}`] &&
+            !epkgMap[`/${avcpkgName.toLowerCase()}`] &&
+            !epkgMap[`/${avcpkgName.toUpperCase()}`]
           ) {
             const pkgPurl = new PackageURL(
               pkgType,
@@ -9605,7 +9546,7 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
     parentComponent = {
       group: options.projectGroup || "",
       name: options.projectName || "",
-      version: "" + options.projectVersion || "latest",
+      version: `${options.projectVersion}` || "latest",
       type: "application",
     };
     const parentPurl = new PackageURL(
@@ -9656,7 +9597,7 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
     // We need to resolve the name to an os package here
     const name = fileName.replace(extn, "");
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
-      epkgMap[group + "/" + name] || {
+      epkgMap[`${group}/${name}`] || {
         name,
         group,
         version: "",
@@ -9688,7 +9629,7 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
           ],
         },
       };
-      apkg["bom-ref"] = decodeURIComponent(apkg["purl"]);
+      apkg["bom-ref"] = decodeURIComponent(apkg.purl);
     }
     if (usageData[afile]) {
       const usymbols = Array.from(usageData[afile])
@@ -9701,16 +9642,16 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
             !v.includes(afile),
         )
         .sort();
-      if (!apkg["properties"] && usymbols.length) {
-        apkg["properties"] = [
+      if (!apkg.properties && usymbols.length) {
+        apkg.properties = [
           { name: "ImportedSymbols", value: usymbols.join(", ") },
         ];
       } else {
-        apkg["properties"] = [];
+        apkg.properties = [];
       }
       const newProps = [];
       let symbolsPropertyFound = false;
-      for (const prop of apkg["properties"]) {
+      for (const prop of apkg.properties) {
         if (prop.name === "ImportedSymbols") {
           symbolsPropertyFound = true;
           let existingSymbols = prop.value.split(", ");
@@ -9720,12 +9661,12 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
         newProps.push(prop);
       }
       if (!symbolsPropertyFound && usymbols.length) {
-        apkg["properties"].push({
+        apkg.properties.push({
           name: "ImportedSymbols",
           value: usymbols.join(", "),
         });
       }
-      apkg["properties"] = newProps;
+      apkg.properties = newProps;
     }
     // At this point, we have a package but we don't know what it's called
     // So let's try to locate this generic package using some heuristics
@@ -9782,7 +9723,7 @@ export function parseCUsageSlice(sliceData) {
       const slFileName = slice.fileName;
       const allLines = usageData[slFileName] || new Set();
       if (slice.fullName && slice.fullName.length > 3) {
-        if (slice.code && slice.code.startsWith("#include")) {
+        if (slice.code?.startsWith("#include")) {
           usageData[slice.fullName] = new Set();
         } else {
           allLines.add(slice.fullName);
@@ -9833,28 +9774,24 @@ async function queryNuget(p, NUGET_URL) {
         Number(tmpVersionArray.slice(-1)) === 0
       ) {
         return upper;
-      } else if (upper.split("-").length > 1) {
+      }
+      if (upper.split("-").length > 1) {
         tmpVersionArray[tmpVersionArray.length - 1] = (
           Number(tmpVersionArray.slice(-1)) - 1
         ).toString();
       }
       return tmpVersionArray.join(".");
-    } else {
-      const tmpVersion = parse(upper);
-      let version =
-        tmpVersion.major + "." + tmpVersion.minor + "." + tmpVersion.patch;
-      if (compare(version, upper) === 1) {
-        if (tmpVersion.patch > 0) {
-          version =
-            tmpVersion.major +
-            "." +
-            tmpVersion.minor +
-            "." +
-            (tmpVersion.patch - 1).toString();
-        }
-      }
-      return version;
     }
+    const tmpVersion = parse(upper);
+    let version = `${tmpVersion.major}.${tmpVersion.minor}.${tmpVersion.patch}`;
+    if (compare(version, upper) === 1) {
+      if (tmpVersion.patch > 0) {
+        version = `${tmpVersion.major}.${tmpVersion.minor}.${(
+          tmpVersion.patch - 1
+        ).toString()}`;
+      }
+    }
+    return version;
   }
   // Coerce only when missing patch/minor version
   function coerceUp(version) {
@@ -9867,7 +9804,7 @@ async function queryNuget(p, NUGET_URL) {
   const body = [];
   const newBody = [];
   let res = await cdxgenAgent.get(
-    NUGET_URL + np.name.toLowerCase() + "/index.json",
+    `${NUGET_URL + np.name.toLowerCase()}/index.json`,
     { responseType: "json" },
   );
   const items = res.body.items;
@@ -9940,7 +9877,7 @@ export async function getNugetMetadata(pkgList, dependencies = undefined) {
       cacheKey = `${p.name}|${p.version}`;
       let body = metadata_cache[cacheKey];
 
-      if (body && body.error) {
+      if (body?.error) {
         cdepList.push(p);
         continue;
       }
@@ -9994,12 +9931,7 @@ export async function getNugetMetadata(pkgList, dependencies = undefined) {
           if (body.catalogEntry.projectUrl) {
             p.repository = { url: body.catalogEntry.projectUrl };
             p.homepage = {
-              url:
-                "https://www.nuget.org/packages/" +
-                p.name +
-                "/" +
-                p.version +
-                "/",
+              url: `https://www.nuget.org/packages/${p.name}/${p.version}/`,
             };
             if (
               (!p.license || typeof p.license === "string") &&
@@ -10032,13 +9964,13 @@ export async function getNugetMetadata(pkgList, dependencies = undefined) {
     //   }
     // }
     for (const d of newDependencies) {
-      if (changed.length > 0 && changed.includes(d["ref"])) {
-        d["ref"] = depRepList[d["ref"]];
+      if (changed.length > 0 && changed.includes(d.ref)) {
+        d.ref = depRepList[d.ref];
       }
-      for (const dd in d["dependsOn"]) {
-        if (changed.includes(d["dependsOn"][dd])) {
-          const replace = d["dependsOn"][dd];
-          d["dependsOn"][dd] = depRepList[replace];
+      for (const dd in d.dependsOn) {
+        if (changed.includes(d.dependsOn[dd])) {
+          const replace = d.dependsOn[dd];
+          d.dependsOn[dd] = depRepList[replace];
         }
       }
     }
@@ -10067,7 +9999,7 @@ export function addEvidenceForDotnet(pkgList, slicesFile) {
         .forEach((aprop) => {
           if (aprop.value) {
             const tmpA = aprop.value.split(", ");
-            if (tmpA && tmpA.length) {
+            if (tmpA?.length) {
               tmpA.forEach((dllFile) => {
                 pkgFilePurlMap[dllFile] = apkg.purl;
               });
@@ -10080,11 +10012,7 @@ export function addEvidenceForDotnet(pkgList, slicesFile) {
   if (slicesData && Object.keys(slicesData)) {
     if (slicesData.Dependencies) {
       for (const adep of slicesData.Dependencies) {
-        if (
-          adep.Module &&
-          adep.Module.endsWith(".dll") &&
-          pkgFilePurlMap[adep.Module]
-        ) {
+        if (adep.Module?.endsWith(".dll") && pkgFilePurlMap[adep.Module]) {
           const modPurl = pkgFilePurlMap[adep.Module];
           if (!purlLocationMap[modPurl]) {
             purlLocationMap[modPurl] = new Set();
@@ -10096,8 +10024,7 @@ export function addEvidenceForDotnet(pkgList, slicesFile) {
     if (slicesData.MethodCalls) {
       for (const amethodCall of slicesData.MethodCalls) {
         if (
-          amethodCall.Module &&
-          amethodCall.Module.endsWith(".dll") &&
+          amethodCall.Module?.endsWith(".dll") &&
           pkgFilePurlMap[amethodCall.Module]
         ) {
           const modPurl = pkgFilePurlMap[amethodCall.Module];

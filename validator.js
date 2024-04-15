@@ -70,7 +70,7 @@ export const validateBom = (bomJson) => {
 export const validateMetadata = (bomJson) => {
   const errorList = [];
   const warningsList = [];
-  if (bomJson && bomJson.metadata) {
+  if (bomJson?.metadata) {
     if (
       !bomJson.metadata.component ||
       !Object.keys(bomJson.metadata.component).length
@@ -80,28 +80,25 @@ export const validateMetadata = (bomJson) => {
     if (bomJson.metadata.component) {
       // Do we have a purl and bom-ref for metadata.component
       if (!bomJson.metadata.component.purl) {
-        warningsList.push(`purl is missing for metadata.component`);
+        warningsList.push("purl is missing for metadata.component");
       }
       if (!bomJson.metadata.component["bom-ref"]) {
-        warningsList.push(`bom-ref is missing for metadata.component`);
+        warningsList.push("bom-ref is missing for metadata.component");
       }
       // Do we have a version for metadata.component
       if (!bomJson.metadata.component.version) {
-        warningsList.push(`Version is missing for metadata.component`);
+        warningsList.push("Version is missing for metadata.component");
       }
       // Is the same component getting repeated inside the components block
-      if (
-        bomJson.metadata.component.components &&
-        bomJson.metadata.component.components.length
-      ) {
+      if (bomJson.metadata.component.components?.length) {
         for (const comp of bomJson.metadata.component.components) {
           if (comp["bom-ref"] === bomJson.metadata.component["bom-ref"]) {
             warningsList.push(
               `Found parent component with ref ${comp["bom-ref"]} in metadata.component.components`,
             );
-          } else if (comp["name"] === bomJson.metadata.component["name"]) {
+          } else if (comp.name === bomJson.metadata.component.name) {
             warningsList.push(
-              `Found parent component with name ${comp["name"]} in metadata.component.components`,
+              `Found parent component with name ${comp.name} in metadata.component.components`,
             );
           }
         }
@@ -112,7 +109,7 @@ export const validateMetadata = (bomJson) => {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
-  if (errorList.length != 0) {
+  if (errorList.length !== 0) {
     console.log(errorList);
     return false;
   }
@@ -127,10 +124,10 @@ export const validateMetadata = (bomJson) => {
 export const validatePurls = (bomJson) => {
   const errorList = [];
   const warningsList = [];
-  if (bomJson && bomJson.components) {
+  if (bomJson?.components) {
     for (const comp of bomJson.components) {
       if (comp.type === "cryptographic-asset") {
-        if (comp.purl && comp.purl.length) {
+        if (comp.purl?.length) {
           errorList.push(
             `purl should not be defined for cryptographic-asset ${comp.purl}`,
           );
@@ -181,7 +178,7 @@ export const validatePurls = (bomJson) => {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
-  if (errorList.length != 0) {
+  if (errorList.length !== 0) {
     console.log(errorList);
     return false;
   }
@@ -219,7 +216,7 @@ export const validateRefs = (bomJson) => {
   const errorList = [];
   const warningsList = [];
   const refMap = buildRefs(bomJson);
-  if (bomJson && bomJson.dependencies) {
+  if (bomJson?.dependencies) {
     for (const dep of bomJson.dependencies) {
       if (
         dep.ref.includes("%40") ||
@@ -251,7 +248,7 @@ export const validateRefs = (bomJson) => {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
-  if (errorList.length != 0) {
+  if (errorList.length !== 0) {
     console.log(errorList);
     return false;
   }

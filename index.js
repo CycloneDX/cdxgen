@@ -225,7 +225,7 @@ const createDefaultParentComponent = (
   const parentComponent = {
     group: options.projectGroup || "",
     name: options.projectName || dirNameStr,
-    version: "" + options.projectVersion || "latest",
+    version: `${options.projectVersion}` || "latest",
     type: "application",
   };
   const ppurl = new PackageURL(
@@ -237,7 +237,7 @@ const createDefaultParentComponent = (
     null,
   ).toString();
   parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-  parentComponent["purl"] = ppurl;
+  parentComponent.purl = ppurl;
   return parentComponent;
 };
 
@@ -245,11 +245,12 @@ const determineParentComponent = (options) => {
   let parentComponent = undefined;
   if (options.parentComponent && Object.keys(options.parentComponent).length) {
     return options.parentComponent;
-  } else if (options.projectName && options.projectVersion) {
+  }
+  if (options.projectName && options.projectVersion) {
     parentComponent = {
       group: options.projectGroup || "",
       name: options.projectName,
-      version: "" + options.projectVersion || "",
+      version: `${options.projectVersion}` || "",
       type: "application",
     };
     const ppurl = new PackageURL(
@@ -261,7 +262,7 @@ const determineParentComponent = (options) => {
       null,
     ).toString();
     parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-    parentComponent["purl"] = ppurl;
+    parentComponent.purl = ppurl;
   }
   return parentComponent;
 };
@@ -286,7 +287,7 @@ const addToolsSection = (options, context = {}) => {
         tool.type = "application";
         if (tool.vendor) {
           tool.publisher = tool.vendor;
-          delete tool.vendor;
+          tool.vendor = undefined;
         }
       }
     }
@@ -308,9 +309,8 @@ const addToolsSection = (options, context = {}) => {
 };
 
 const componentToSimpleFullName = (comp) => {
-  let fullName =
-    comp.group && comp.group.length ? `${comp.group}/${comp.name}` : comp.name;
-  if (comp.version && comp.version.length) {
+  let fullName = comp.group?.length ? `${comp.group}/${comp.name}` : comp.name;
+  if (comp.version?.length) {
     fullName = `${fullName}@${comp.version}`;
   }
   return fullName;
@@ -318,12 +318,12 @@ const componentToSimpleFullName = (comp) => {
 
 // Remove unwanted properties from parent component
 const cleanParentComponent = (comp) => {
-  delete comp.evidence;
-  delete comp._integrity;
-  delete comp.license;
-  delete comp.qualifiers;
-  delete comp.repository;
-  delete comp.homepage;
+  comp.evidence = undefined;
+  comp._integrity = undefined;
+  comp.license = undefined;
+  comp.qualifiers = undefined;
+  comp.repository = undefined;
+  comp.homepage = undefined;
   return comp;
 };
 
@@ -434,13 +434,13 @@ const addFormulationSection = (options) => {
     }
     // Collect build environment details
     const infoComponents = collectEnvInfo(options.path);
-    if (infoComponents && infoComponents.length) {
+    if (infoComponents?.length) {
       components = components.concat(infoComponents);
     }
     // Should we include the OS crypto libraries
     if (options.includeCrypto) {
       const cryptoLibs = collectOSCryptoLibs(options);
-      if (cryptoLibs && cryptoLibs.length) {
+      if (cryptoLibs?.length) {
         components = components.concat(cryptoLibs);
       }
     }
@@ -506,11 +506,11 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
   if (parentComponent && Object.keys(parentComponent).length) {
     if (parentComponent) {
       cleanParentComponent(parentComponent);
-      if (!parentComponent["purl"] && parentComponent["bom-ref"]) {
-        parentComponent["purl"] = encodeForPurl(parentComponent["bom-ref"]);
+      if (!parentComponent.purl && parentComponent["bom-ref"]) {
+        parentComponent.purl = encodeForPurl(parentComponent["bom-ref"]);
       }
     }
-    if (parentComponent && parentComponent.components) {
+    if (parentComponent?.components) {
       const parentFullName = componentToSimpleFullName(parentComponent);
       const subComponents = [];
       const addedSubComponents = {};
@@ -529,7 +529,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
             fullName !== parentFullName &&
             !(
               (comp.name === parentComponent.name ||
-                comp.name === parentComponent.name + ":latest") &&
+                comp.name === `${parentComponent.name}:latest`) &&
               comp.version === "latest"
             )
           ) {
@@ -657,7 +657,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         }
       }
     }
-    if (options.allOSComponentTypes && options.allOSComponentTypes.length) {
+    if (options.allOSComponentTypes?.length) {
       mproperties.push({
         name: "oci:image:componentTypes",
         value: options.allOSComponentTypes.join("\\n"),
@@ -689,19 +689,19 @@ function addExternalReferences(opkg) {
     if (pkg.externalReferences) {
       externalReferences = externalReferences.concat(pkg.externalReferences);
     } else {
-      if (pkg.homepage && pkg.homepage.url) {
+      if (pkg.homepage?.url) {
         externalReferences.push({
           type: pkg.homepage.url.includes("git") ? "vcs" : "website",
           url: pkg.homepage.url,
         });
       }
-      if (pkg.bugs && pkg.bugs.url) {
+      if (pkg.bugs?.url) {
         externalReferences.push({
           type: "issue-tracker",
           url: pkg.bugs.url,
         });
       }
-      if (pkg.repository && pkg.repository.url) {
+      if (pkg.repository?.url) {
         externalReferences.push({
           type: "vcs",
           url: pkg.repository.url,
@@ -777,7 +777,7 @@ function addComponent(
         encodeForPurl(pkg.subpath),
       );
     // There is no purl for cryptographic-asset
-    if (ptype == "cryptographic-asset") {
+    if (ptype === "cryptographic-asset") {
       purl = undefined;
     }
     const purlString = purl.toString();
@@ -787,10 +787,10 @@ function addComponent(
       const impPkgs = Object.keys(allImports);
       if (
         impPkgs.includes(name) ||
-        impPkgs.includes(group + "/" + name) ||
-        impPkgs.includes("@" + group + "/" + name) ||
+        impPkgs.includes(`${group}/${name}`) ||
+        impPkgs.includes(`@${group}/${name}`) ||
         impPkgs.includes(group) ||
-        impPkgs.includes("@" + group)
+        impPkgs.includes(`@${group}`)
       ) {
         compScope = "required";
       } else if (impPkgs.length) {
@@ -811,17 +811,17 @@ function addComponent(
       externalReferences: addExternalReferences(pkg),
     };
 
-    component["type"] = determinePackageType(pkg);
+    component.type = determinePackageType(pkg);
     component["bom-ref"] = decodeURIComponent(purlString);
     if (
       component.externalReferences === undefined ||
       component.externalReferences.length === 0
     ) {
-      delete component.externalReferences;
+      component.externalReferences = undefined;
     }
     if (options.specVersion < 1.6) {
-      delete component.omniborId;
-      delete component.swhid;
+      component.omniborId = undefined;
+      component.swhid = undefined;
     }
     processHashes(pkg, component);
     // Retain evidence
@@ -850,10 +850,10 @@ function addComponent(
       component.tags = pkg.tags;
     }
     // Retain any component properties and crypto properties
-    if (pkg.properties && pkg.properties.length) {
+    if (pkg.properties?.length) {
       component.properties = pkg.properties;
     }
-    if (pkg.cryptoProperties && pkg.cryptoProperties.length) {
+    if (pkg.cryptoProperties?.length) {
       component.cryptoProperties = pkg.cryptoProperties;
     }
     if (compMap[component.purl]) return; //remove cycles
@@ -904,7 +904,7 @@ function determinePackageType(pkg) {
       for (const cf of frameworksList.all) {
         if (
           pkg.purl.startsWith(cf) ||
-          (purl.namespace && purl.namespace.includes(cf)) ||
+          purl.namespace?.includes(cf) ||
           purl.name.toLowerCase().includes(cf)
         ) {
           return "framework";
@@ -919,10 +919,7 @@ function determinePackageType(pkg) {
     }
   }
   if (Object.prototype.hasOwnProperty.call(pkg, "description")) {
-    if (
-      pkg.description &&
-      pkg.description.toLowerCase().includes("framework")
-    ) {
+    if (pkg.description?.toLowerCase().includes("framework")) {
       return "framework";
     }
   }
@@ -969,7 +966,7 @@ function processHashes(pkg, component) {
     }
   }
   if (component.hashes.length === 0) {
-    delete component.hashes; // If no hashes exist, delete the hashes node (it's optional)
+    component.hashes = undefined; // If no hashes exist, delete the hashes node (it's optional)
   }
 }
 
@@ -1011,9 +1008,9 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     dependencies: undefined,
     parentComponent: undefined,
   };
-  const serialNum = "urn:uuid:" + uuidv4();
+  const serialNum = `urn:uuid:${uuidv4()}`;
   let allImports = {};
-  if (context && context.allImports) {
+  if (context?.allImports) {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
@@ -1026,7 +1023,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     // CycloneDX 1.5 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
-      specVersion: "" + (options.specVersion || "1.5"),
+      specVersion: `${options.specVersion || "1.5"}`,
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
@@ -1082,14 +1079,14 @@ export async function createJarBom(path, options) {
   } else {
     jarFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "*.[jw]ar",
+      `${options.multiProject ? "**/" : ""}*.[jw]ar`,
       options,
     );
   }
   // Jenkins plugins
   const hpiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.hpi",
+    `${options.multiProject ? "**/" : ""}*.hpi`,
     options,
   );
   if (hpiFiles.length) {
@@ -1101,7 +1098,7 @@ export async function createJarBom(path, options) {
       console.log(`Parsing ${jar}`);
     }
     const dlist = await extractJarArchive(jar, tempDir);
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
     }
     if (pkgList.length) {
@@ -1109,7 +1106,7 @@ export async function createJarBom(path, options) {
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
   pkgList = pkgList.concat(convertJarNSToPackages(nsMapping));
@@ -1182,7 +1179,7 @@ export async function createJavaBom(path, options) {
         pkgList = await getMvnMetadata(pkgList);
       }
       // Clean up
-      if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+      if (tempDir?.startsWith(tmpdir()) && rmSync) {
         console.log(`Cleaning up ${tempDir}`);
         rmSync(tempDir, { recursive: true, force: true });
       }
@@ -1196,466 +1193,89 @@ export async function createJavaBom(path, options) {
       dependencies,
       parentComponent,
     });
-  } else {
-    // maven - pom.xml
-    const pomFiles = getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "pom.xml",
-      options,
-    );
-    let bomJsonFiles = [];
-    if (
-      pomFiles &&
-      pomFiles.length &&
-      !["scala", "sbt", "gradle"].includes(options.projectType)
-    ) {
-      const cdxMavenPlugin =
-        process.env.CDX_MAVEN_PLUGIN ||
-        "org.cyclonedx:cyclonedx-maven-plugin:2.8.0";
-      const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
-      let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
-      if (includeMavenTestScope) {
-        mvnArgs.push("-DincludeTestScope=true");
-      }
-      // By using quiet mode we can reduce the maxBuffer used and avoid crashes
-      if (!DEBUG_MODE) {
-        mvnArgs.push("-q");
-      }
-      // Support for passing additional settings and profile to maven
-      if (process.env.MVN_ARGS) {
-        const addArgs = process.env.MVN_ARGS.split(" ");
-        mvnArgs = mvnArgs.concat(addArgs);
-      }
-      // specVersion 1.4 doesn't support externalReferences.type=disribution-intake
-      // so we need to run the plugin with the correct version
-      if (options.specVersion === 1.4) {
-        mvnArgs = mvnArgs.concat("-DschemaVersion=1.4");
-      }
-      for (const f of pomFiles) {
-        const basePath = dirname(f);
-        const settingsXml = join(basePath, "settings.xml");
-        if (existsSync(settingsXml)) {
-          console.log(
-            `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`,
-          );
-        }
-        const mavenCmd = getMavenCommand(basePath, path);
-        // Should we attempt to resolve class names
-        if (options.resolveClass || options.deep) {
-          const tmpjarNSMapping = await collectMvnDependencies(
-            mavenCmd,
-            basePath,
-            true,
-            false,
-          );
-          if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
-            jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
-          }
-        }
-        console.log(
-          `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
-          basePath,
-        );
-        let result = spawnSync(mavenCmd, mvnArgs, {
-          cwd: basePath,
-          shell: true,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER,
-        });
-        // Check if the cyclonedx plugin created the required bom.json file
-        // Sometimes the plugin fails silently for complex maven projects
-        bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
-        // Check if the bom json files got created in a directory other than target
-        if (!bomJsonFiles.length) {
-          bomJsonFiles = getAllFiles(path, "**/bom*.json", options);
-        }
-        const bomGenerated = bomJsonFiles.length;
-        if (!bomGenerated || result.status !== 0 || result.error) {
-          const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
-          const tempMvnTree = join(tempDir, "mvn-tree.txt");
-          let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
-          if (process.env.MVN_ARGS) {
-            const addArgs = process.env.MVN_ARGS.split(" ");
-            mvnTreeArgs = mvnTreeArgs.concat(addArgs);
-          }
-          console.log(
-            `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`,
-          );
-          result = spawnSync(mavenCmd, mvnTreeArgs, {
-            cwd: basePath,
-            shell: true,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER,
-          });
-          if (result.status !== 0 || result.error) {
-            // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
-            // These could be due to a range of reasons that are covered below.
-            if (pomFiles.length === 1 || DEBUG_MODE) {
-              console.error(result.stdout, result.stderr);
-              console.log(
-                "Resolve the above maven error. This could be due to the following:\n",
-              );
-              if (
-                result.stdout &&
-                (result.stdout.includes("Non-resolvable parent POM") ||
-                  result.stdout.includes("points at wrong local POM"))
-              ) {
-                console.log(
-                  "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory.",
-                );
-              } else if (
-                result.stdout &&
-                (result.stdout.includes("Could not resolve dependencies") ||
-                  result.stdout.includes("no dependency information available"))
-              ) {
-                console.log(
-                  "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
-                );
-              } else if (
-                result.stdout &&
-                result.stdout.includes(
-                  "Could not resolve target platform specification",
-                )
-              ) {
-                console.log(
-                  "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option",
-                );
-              } else {
-                console.log(
-                  "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible.",
-                );
-              }
-              console.log(
-                "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable.",
-              );
-              console.log(
-                "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool.",
-              );
-            }
-            // Do not fall back to methods that can produce incomplete results when failOnError is set
-            options.failOnError && process.exit(1);
-            console.log(
-              "\nFalling back to manual pom.xml parsing. The result would be incomplete!",
-            );
-            const dlist = parsePom(f);
-            if (dlist && dlist.length) {
-              pkgList = pkgList.concat(dlist);
-            }
-          } else {
-            if (existsSync(tempMvnTree)) {
-              const mvnTreeString = readFileSync(tempMvnTree, {
-                encoding: "utf-8",
-              });
-              const parsedList = parseMavenTree(mvnTreeString);
-              const dlist = parsedList.pkgList;
-              parentComponent = dlist.splice(0, 1)[0];
-              parentComponent.type = "application";
-              if (dlist && dlist.length) {
-                pkgList = pkgList.concat(dlist);
-              }
-              if (parsedList.dependenciesList && parsedList.dependenciesList) {
-                dependencies = dependencies.concat(parsedList.dependenciesList);
-              }
-              unlinkSync(tempMvnTree);
-            }
-          }
-        }
-      } // for
-      for (const abjson of bomJsonFiles) {
-        let bomJsonObj = undefined;
-        try {
-          if (DEBUG_MODE) {
-            console.log(`Extracting data from generated bom file ${abjson}`);
-          }
-          bomJsonObj = JSON.parse(
-            readFileSync(abjson, {
-              encoding: "utf-8",
-            }),
-          );
-          if (bomJsonObj) {
-            if (
-              !tools &&
-              bomJsonObj.metadata &&
-              bomJsonObj.metadata.tools &&
-              Array.isArray(bomJsonObj.metadata.tools)
-            ) {
-              tools = bomJsonObj.metadata.tools;
-            }
-            if (
-              bomJsonObj.metadata &&
-              bomJsonObj.metadata.component &&
-              !Object.keys(parentComponent).length
-            ) {
-              parentComponent = bomJsonObj.metadata.component;
-              options.parentComponent = parentComponent;
-              pkgList = [];
-            }
-            if (bomJsonObj.components) {
-              pkgList = pkgList.concat(bomJsonObj.components);
-            }
-            if (bomJsonObj.dependencies) {
-              dependencies = mergeDependencies(
-                dependencies,
-                bomJsonObj.dependencies,
-                parentComponent,
-              );
-            }
-          }
-        } catch (err) {
-          if (options.failOnError || DEBUG_MODE) {
-            console.log(err);
-            options.failOnError && process.exit(1);
-          }
-        }
-      }
-      if (pkgList) {
-        pkgList = trimComponents(pkgList);
-        pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-        return buildBomNSData(options, pkgList, "maven", {
-          src: path,
-          filename: pomFiles.join(", "),
-          nsMapping: jarNSMapping,
-          dependencies,
-          parentComponent,
-          tools,
-        });
-      } else if (bomJsonFiles.length) {
-        const bomNSData = {};
-        bomNSData.bomJsonFiles = bomJsonFiles;
-        bomNSData.nsMapping = jarNSMapping;
-        bomNSData.dependencies = dependencies;
-        bomNSData.parentComponent = parentComponent;
-        return bomNSData;
-      }
+  }
+  // maven - pom.xml
+  const pomFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}pom.xml`,
+    options,
+  );
+  let bomJsonFiles = [];
+  if (
+    pomFiles?.length &&
+    !["scala", "sbt", "gradle"].includes(options.projectType)
+  ) {
+    const cdxMavenPlugin =
+      process.env.CDX_MAVEN_PLUGIN ||
+      "org.cyclonedx:cyclonedx-maven-plugin:2.8.0";
+    const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
+    let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
+    if (includeMavenTestScope) {
+      mvnArgs.push("-DincludeTestScope=true");
     }
-    // gradle
-    const gradleFiles = getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "build.gradle*",
-      options,
-    );
-    const allProjects = [];
-    const allProjectsAddedPurls = [];
-    const rootDependsOn = [];
-    // Execute gradle properties
-    if (
-      gradleFiles &&
-      gradleFiles.length &&
-      !["scala", "sbt"].includes(options.projectType)
-    ) {
-      let retMap = executeGradleProperties(path, null, null);
-      const allProjectsStr = retMap.projects || [];
-      const rootProject = retMap.rootProject;
-      if (rootProject) {
-        parentComponent = {
-          name: rootProject,
-          type: "application",
-          ...retMap.metadata,
-        };
-        const parentPurl = new PackageURL(
-          "maven",
-          parentComponent.group || "",
-          parentComponent.name,
-          parentComponent.version,
-          { type: "jar" },
-          null,
-        ).toString();
-        parentComponent["purl"] = parentPurl;
-        parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
-      }
-      // Get the sub-project properties and set the root dependencies
-      if (allProjectsStr && allProjectsStr.length) {
-        for (const spstr of allProjectsStr) {
-          retMap = executeGradleProperties(path, null, spstr);
-          const rootSubProject = retMap.rootProject;
-          if (rootSubProject) {
-            const rspName = rootSubProject.replace(/^:/, "");
-            const rootSubProjectObj = {
-              name: rspName,
-              type: "application",
-              qualifiers: { type: "jar" },
-              ...retMap.metadata,
-            };
-            const rootSubProjectPurl = new PackageURL(
-              "maven",
-              rootSubProjectObj.group && rootSubProjectObj.group.length
-                ? rootSubProjectObj.group
-                : parentComponent.group,
-              rootSubProjectObj.name,
-              retMap.metadata.version && retMap.metadata.version !== "latest"
-                ? retMap.metadata.version
-                : parentComponent.version,
-              rootSubProjectObj.qualifiers,
-              null,
-            ).toString();
-            rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] =
-              decodeURIComponent(rootSubProjectPurl);
-            if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
-              allProjects.push(rootSubProjectObj);
-              rootDependsOn.push(rootSubProjectPurl);
-              allProjectsAddedPurls.push(rootSubProjectPurl);
-            }
-          }
-        }
-        // Bug #317 fix
-        parentComponent.components = allProjects.flatMap((s) => {
-          delete s.qualifiers;
-          delete s.evidence;
-          return s;
-        });
-        dependencies.push({
-          ref: parentComponent["bom-ref"],
-          dependsOn: rootDependsOn,
-        });
-      }
+    // By using quiet mode we can reduce the maxBuffer used and avoid crashes
+    if (!DEBUG_MODE) {
+      mvnArgs.push("-q");
     }
-    if (
-      gradleFiles &&
-      gradleFiles.length &&
-      options.installDeps &&
-      !["scala", "sbt"].includes(options.projectType)
-    ) {
-      const gradleCmd = getGradleCommand(path, null);
-      const defaultDepTaskArgs = ["-q", "--console", "plain", "--build-cache"];
-      allProjects.push(parentComponent);
-      let depTaskWithArgs = ["dependencies"];
-      if (process.env.GRADLE_DEPENDENCY_TASK) {
-        depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
+    // Support for passing additional settings and profile to maven
+    if (process.env.MVN_ARGS) {
+      const addArgs = process.env.MVN_ARGS.split(" ");
+      mvnArgs = mvnArgs.concat(addArgs);
+    }
+    // specVersion 1.4 doesn't support externalReferences.type=disribution-intake
+    // so we need to run the plugin with the correct version
+    if (options.specVersion === 1.4) {
+      mvnArgs = mvnArgs.concat("-DschemaVersion=1.4");
+    }
+    for (const f of pomFiles) {
+      const basePath = dirname(f);
+      const settingsXml = join(basePath, "settings.xml");
+      if (existsSync(settingsXml)) {
+        console.log(
+          `maven settings.xml found in ${basePath}. Please set the MVN_ARGS environment variable based on the full mvn build command used for this project.\nExample: MVN_ARGS='--settings ${settingsXml}'`,
+        );
       }
-      for (const sp of allProjects) {
-        let gradleDepArgs = [
-          sp.purl === parentComponent.purl
-            ? depTaskWithArgs[0]
-            : `:${sp.name}:${depTaskWithArgs[0]}`,
-        ];
-        gradleDepArgs = gradleDepArgs
-          .concat(depTaskWithArgs.slice(1))
-          .concat(defaultDepTaskArgs);
-        // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
-        if (process.env.GRADLE_ARGS) {
-          const addArgs = process.env.GRADLE_ARGS.split(" ");
-          gradleDepArgs = gradleDepArgs.concat(addArgs);
-        }
-        // gradle args only for the dependencies task
-        if (process.env.GRADLE_ARGS_DEPENDENCIES) {
-          const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
-          gradleDepArgs = gradleDepArgs.concat(addArgs);
-        }
-        console.log(
-          "Executing",
-          gradleCmd,
-          gradleDepArgs.join(" "),
-          "in",
-          path,
-        );
-        const sresult = spawnSync(gradleCmd, gradleDepArgs, {
-          cwd: path,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER,
-        });
-        if (sresult.status !== 0 || sresult.error) {
-          if (options.failOnError || DEBUG_MODE) {
-            console.error(sresult.stdout, sresult.stderr);
-          }
-          options.failOnError && process.exit(1);
-        }
-        const sstdout = sresult.stdout;
-        if (sstdout) {
-          const cmdOutput = Buffer.from(sstdout).toString();
-          const parsedList = parseGradleDep(
-            cmdOutput,
-            sp.group || parentComponent.group,
-            sp.name,
-            sp.version && sp.version.length && sp.version !== "latest"
-              ? sp.version
-              : parentComponent.version,
-          );
-          const dlist = parsedList.pkgList;
-          if (parsedList.dependenciesList && parsedList.dependenciesList) {
-            dependencies = mergeDependencies(
-              dependencies,
-              parsedList.dependenciesList,
-              parentComponent,
-            );
-          }
-          if (dlist && dlist.length) {
-            if (DEBUG_MODE) {
-              console.log(
-                "Found",
-                dlist.length,
-                "packages in gradle project",
-                sp.name,
-              );
-            }
-            pkgList = pkgList.concat(dlist);
-          }
-        }
-      } // for
-      if (pkgList.length) {
-        if (parentComponent.components && parentComponent.components.length) {
-          for (const subProj of parentComponent.components) {
-            pkgList = pkgList.filter(
-              (pkg) => pkg["bom-ref"] !== subProj["bom-ref"],
-            );
-          }
-        }
-        console.log(
-          "Obtained",
-          pkgList.length,
-          "from this gradle project. De-duping this list ...",
-        );
-      } else {
-        console.log(
-          "No packages found. Set the environment variable 'CDXGEN_DEBUG_MODE=debug' to troubleshoot any gradle related errors.",
-        );
-        options.failOnError && process.exit(1);
-      }
+      const mavenCmd = getMavenCommand(basePath, path);
       // Should we attempt to resolve class names
       if (options.resolveClass || options.deep) {
-        const tmpjarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+        const tmpjarNSMapping = await collectMvnDependencies(
+          mavenCmd,
+          basePath,
+          true,
+          false,
+        );
         if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
           jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
         }
       }
-      pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-      return buildBomNSData(options, pkgList, "maven", {
-        src: path,
-        filename: gradleFiles.join(", "),
-        nsMapping: jarNSMapping,
-        dependencies,
-        parentComponent,
+      console.log(`Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`, basePath);
+      let result = spawnSync(mavenCmd, mvnArgs, {
+        cwd: basePath,
+        shell: true,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER,
       });
-    }
-
-    // Bazel
-    // Look for the BUILD file only in the root directory
-    const bazelFiles = getAllFiles(path, "BUILD", options);
-    if (
-      bazelFiles &&
-      bazelFiles.length &&
-      !["scala", "sbt"].includes(options.projectType)
-    ) {
-      let BAZEL_CMD = "bazel";
-      if (process.env.BAZEL_HOME) {
-        BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
+      // Check if the cyclonedx plugin created the required bom.json file
+      // Sometimes the plugin fails silently for complex maven projects
+      bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
+      // Check if the bom json files got created in a directory other than target
+      if (!bomJsonFiles.length) {
+        bomJsonFiles = getAllFiles(path, "**/bom*.json", options);
       }
-      for (const f of bazelFiles) {
-        const basePath = dirname(f);
-        // Invoke bazel build first
-        const bazelTarget = process.env.BAZEL_TARGET || ":all";
+      const bomGenerated = bomJsonFiles.length;
+      if (!bomGenerated || result.status !== 0 || result.error) {
+        const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
+        const tempMvnTree = join(tempDir, "mvn-tree.txt");
+        let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
+        if (process.env.MVN_ARGS) {
+          const addArgs = process.env.MVN_ARGS.split(" ");
+          mvnTreeArgs = mvnTreeArgs.concat(addArgs);
+        }
         console.log(
-          "Executing",
-          BAZEL_CMD,
-          "build",
-          bazelTarget,
-          "in",
-          basePath,
+          `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`,
         );
-        let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
+        result = spawnSync(mavenCmd, mvnTreeArgs, {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
@@ -1663,273 +1283,617 @@ export async function createJavaBom(path, options) {
           maxBuffer: MAX_BUFFER,
         });
         if (result.status !== 0 || result.error) {
-          if (result.stderr) {
+          // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
+          // These could be due to a range of reasons that are covered below.
+          if (pomFiles.length === 1 || DEBUG_MODE) {
             console.error(result.stdout, result.stderr);
-          }
-          console.log(
-            "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen",
-          );
-          options.failOnError && process.exit(1);
-        } else {
-          const target = process.env.BAZEL_TARGET || "//...";
-          let query;
-          let bazelParser;
-          if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
-            query = ["aquery", `outputs('.*.jar',deps(${target}))`];
-            bazelParser = parseBazelActionGraph;
-          } else {
-            query = ["aquery", "--output=textproto", "--skyframe_state"];
-            bazelParser = parseBazelSkyframe;
-          }
-
-          console.log(
-            "Executing",
-            BAZEL_CMD,
-            `${query.join(" ")} in`,
-            basePath,
-          );
-          result = spawnSync(BAZEL_CMD, query, {
-            cwd: basePath,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER,
-          });
-          if (result.status !== 0 || result.error) {
-            console.error(result.stdout, result.stderr);
-            options.failOnError && process.exit(1);
-          }
-          const stdout = result.stdout;
-          if (stdout) {
-            const cmdOutput = Buffer.from(stdout).toString();
-            const dlist = bazelParser(cmdOutput);
-            if (dlist && dlist.length) {
-              pkgList = pkgList.concat(dlist);
+            console.log(
+              "Resolve the above maven error. This could be due to the following:\n",
+            );
+            if (
+              result.stdout &&
+              (result.stdout.includes("Non-resolvable parent POM") ||
+                result.stdout.includes("points at wrong local POM"))
+            ) {
+              console.log(
+                "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory.",
+              );
+            } else if (
+              result.stdout &&
+              (result.stdout.includes("Could not resolve dependencies") ||
+                result.stdout.includes("no dependency information available"))
+            ) {
+              console.log(
+                "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
+              );
+            } else if (
+              result.stdout?.includes(
+                "Could not resolve target platform specification",
+              )
+            ) {
+              console.log(
+                "1. Some projects can be built only from the root directory. Invoke cdxgen with --no-recurse option",
+              );
             } else {
               console.log(
-                "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved.",
+                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible.",
               );
-              console.log(
-                "If your project requires a different query, please file a bug at cyclonedx/cdxgen repo!",
-              );
-              options.failOnError && process.exit(1);
             }
-          } else {
-            console.log("Bazel unexpectedly didn't produce any output");
-            options.failOnError && process.exit(1);
+            console.log(
+              "2. Private dependencies cannot be downloaded: Check if any additional arguments must be passed to maven and set them via MVN_ARGS environment variable.",
+            );
+            console.log(
+              "3. Check if all required environment variables including any maven profile arguments are passed correctly to this tool.",
+            );
           }
-          // FIXME: How do we retrieve jarNSMapping for bazel projects?
-          pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-          return buildBomNSData(options, pkgList, "maven", {
-            src: path,
-            filename: "BUILD",
-            nsMapping: {},
-            dependencies,
-            parentComponent,
-          });
-        }
-      }
-    }
-
-    // scala sbt
-    // Identify sbt projects via its `project` directory:
-    // - all SBT project _should_ define build.properties file with sbt version info
-    // - SBT projects _typically_ have some configs/plugins defined in .sbt files
-    // - SBT projects that are still on 0.13.x, can still use the old approach,
-    //   where configs are defined via Scala files
-    // Detecting one of those should be enough to determine an SBT project.
-    let sbtProjectFiles = getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}",
-      options,
-    );
-
-    let sbtProjects = [];
-    for (const i in sbtProjectFiles) {
-      // parent dir of sbtProjectFile is the `project` directory
-      // parent dir of `project` is the sbt root project directory
-      const baseDir = dirname(dirname(sbtProjectFiles[i]));
-      sbtProjects = sbtProjects.concat(baseDir);
-    }
-
-    // Fallback in case sbt's project directory is non-existent
-    if (!sbtProjects.length) {
-      sbtProjectFiles = getAllFiles(
-        path,
-        (options.multiProject ? "**/" : "") + "*.sbt",
-        options,
-      );
-      for (const i in sbtProjectFiles) {
-        const baseDir = dirname(sbtProjectFiles[i]);
-        sbtProjects = sbtProjects.concat(baseDir);
-      }
-    }
-    // eliminate duplicates and ignore project directories
-    sbtProjects = [...new Set(sbtProjects)].filter(
-      (p) => !p.endsWith(sep + "project") && !p.includes("target" + sep),
-    );
-    const sbtLockFiles = getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "build.sbt.lock",
-      options,
-    );
-
-    if (sbtProjects && sbtProjects.length) {
-      let pkgList = [];
-      // If the project use sbt lock files
-      if (sbtLockFiles && sbtLockFiles.length) {
-        for (const f of sbtLockFiles) {
-          const dlist = parseSbtLock(f);
-          if (dlist && dlist.length) {
+          // Do not fall back to methods that can produce incomplete results when failOnError is set
+          options.failOnError && process.exit(1);
+          console.log(
+            "\nFalling back to manual pom.xml parsing. The result would be incomplete!",
+          );
+          const dlist = parsePom(f);
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
-        }
-      } else {
-        const SBT_CMD = process.env.SBT_CMD || "sbt";
-        let sbtVersion = determineSbtVersion(path);
-        // If can't find sbt version at the root of repository then search in
-        // sbt project array too because sometimes the project folder isn't at
-        // root of repository
-        if (sbtVersion == null) {
-          for (const i in sbtProjects) {
-            sbtVersion = determineSbtVersion(sbtProjects[i]);
-            if (sbtVersion != null) {
-              break;
+        } else {
+          if (existsSync(tempMvnTree)) {
+            const mvnTreeString = readFileSync(tempMvnTree, {
+              encoding: "utf-8",
+            });
+            const parsedList = parseMavenTree(mvnTreeString);
+            const dlist = parsedList.pkgList;
+            parentComponent = dlist.splice(0, 1)[0];
+            parentComponent.type = "application";
+            if (dlist?.length) {
+              pkgList = pkgList.concat(dlist);
             }
+            if (parsedList.dependenciesList && parsedList.dependenciesList) {
+              dependencies = dependencies.concat(parsedList.dependenciesList);
+            }
+            unlinkSync(tempMvnTree);
           }
         }
+      }
+    } // for
+    for (const abjson of bomJsonFiles) {
+      let bomJsonObj = undefined;
+      try {
         if (DEBUG_MODE) {
-          console.log("Detected sbt version: " + sbtVersion);
+          console.log(`Extracting data from generated bom file ${abjson}`);
         }
-        // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
-        // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
-        const standalonePluginFile =
-          sbtVersion != null &&
-          gte(sbtVersion, "1.3.4") &&
-          lte(sbtVersion, "1.4.0");
-        const useSlashSyntax = gte(sbtVersion, "1.5.0");
-        const isDependencyTreeBuiltIn =
-          sbtVersion != null && gte(sbtVersion, "1.4.0");
-        const tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));
-        const tempSbtgDir = mkdtempSync(join(tmpdir(), "cdxsbtg-"));
-        mkdirSync(tempSbtgDir, { recursive: true });
-        // Create temporary plugins file
-        const tempSbtPlugins = join(tempSbtgDir, "dep-plugins.sbt");
-
-        // Requires a custom version of `sbt-dependency-graph` that
-        // supports `--append` for `toFile` subtask.
-        let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
-        if (isDependencyTreeBuiltIn) {
-          sbtPluginDefinition = `\naddDependencyTreePlugin\n`;
-          if (DEBUG_MODE) {
-            console.log("Using addDependencyTreePlugin as the custom plugin");
-          }
-        }
-        writeFileSync(tempSbtPlugins, sbtPluginDefinition);
-        for (const i in sbtProjects) {
-          const basePath = sbtProjects[i];
-          const dlFile = join(tempDir, "dl-" + i + ".tmp");
-          let sbtArgs = [];
-          let pluginFile = null;
-          if (standalonePluginFile) {
-            sbtArgs = [
-              `-addPluginSbtFile=${tempSbtPlugins}`,
-              `"dependencyList::toFile ${dlFile} --force"`,
-            ];
-          } else {
-            // write to the existing plugins file
-            if (useSlashSyntax) {
-              sbtArgs = [
-                `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`,
-              ];
-            } else {
-              sbtArgs = [
-                `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`,
-              ];
-            }
-            pluginFile = addPlugin(basePath, sbtPluginDefinition);
-          }
-          console.log(
-            "Executing",
-            SBT_CMD,
-            sbtArgs.join(" "),
-            "in",
-            basePath,
-            "using plugins",
-            tempSbtgDir,
-          );
-          // Note that the command has to be invoked with `shell: true` to properly execut sbt
-          const result = spawnSync(SBT_CMD, sbtArgs, {
-            cwd: basePath,
-            shell: true,
+        bomJsonObj = JSON.parse(
+          readFileSync(abjson, {
             encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER,
-          });
-          if (result.status !== 0 || result.error) {
-            console.error(result.stdout, result.stderr);
-            console.log(
-              `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`,
-            );
-            console.log(
-              `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`,
-            );
-            console.log(
-              "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock",
-            );
-            options.failOnError && process.exit(1);
+          }),
+        );
+        if (bomJsonObj) {
+          if (
+            !tools &&
+            bomJsonObj.metadata &&
+            bomJsonObj.metadata.tools &&
+            Array.isArray(bomJsonObj.metadata.tools)
+          ) {
+            tools = bomJsonObj.metadata.tools;
           }
-          if (!standalonePluginFile) {
-            cleanupPlugin(basePath, pluginFile);
+          if (
+            bomJsonObj.metadata?.component &&
+            !Object.keys(parentComponent).length
+          ) {
+            parentComponent = bomJsonObj.metadata.component;
+            options.parentComponent = parentComponent;
+            pkgList = [];
           }
-          if (existsSync(dlFile)) {
-            const retMap = parseSbtTree(dlFile);
-            if (retMap.pkgList && retMap.pkgList.length) {
-              const tmpParentComponent = retMap.pkgList.splice(0, 1)[0];
-              tmpParentComponent.type = "application";
-              pkgList = pkgList.concat(retMap.pkgList);
-              if (!parentComponent || !Object.keys(parentComponent).length) {
-                parentComponent = tmpParentComponent;
-              }
-            }
-            if (retMap.dependenciesList) {
-              dependencies = mergeDependencies(
-                dependencies,
-                retMap.dependenciesList,
-                parentComponent,
-              );
-            }
-          } else {
-            if (options.failOnError || DEBUG_MODE) {
-              console.log(`sbt dependencyList did not yield ${dlFile}`);
-            }
-            options.failOnError && process.exit(1);
+          if (bomJsonObj.components) {
+            pkgList = pkgList.concat(bomJsonObj.components);
+          }
+          if (bomJsonObj.dependencies) {
+            dependencies = mergeDependencies(
+              dependencies,
+              bomJsonObj.dependencies,
+              parentComponent,
+            );
           }
         }
-
-        // Cleanup
-        unlinkSync(tempSbtPlugins);
-      } // else
-
-      if (DEBUG_MODE) {
-        console.log(`Found ${pkgList.length} packages`);
-      }
-      // Should we attempt to resolve class names
-      if (options.resolveClass || options.deep) {
-        const tmpjarNSMapping = await collectJarNS(SBT_CACHE_DIR);
-        if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
-          jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+      } catch (err) {
+        if (options.failOnError || DEBUG_MODE) {
+          console.log(err);
+          options.failOnError && process.exit(1);
         }
       }
+    }
+    if (pkgList) {
+      pkgList = trimComponents(pkgList);
       pkgList = await getMvnMetadata(pkgList, jarNSMapping);
       return buildBomNSData(options, pkgList, "maven", {
         src: path,
-        filename: sbtProjects.join(", "),
+        filename: pomFiles.join(", "),
         nsMapping: jarNSMapping,
         dependencies,
         parentComponent,
+        tools,
       });
     }
+    if (bomJsonFiles.length) {
+      const bomNSData = {};
+      bomNSData.bomJsonFiles = bomJsonFiles;
+      bomNSData.nsMapping = jarNSMapping;
+      bomNSData.dependencies = dependencies;
+      bomNSData.parentComponent = parentComponent;
+      return bomNSData;
+    }
+  }
+  // gradle
+  const gradleFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}build.gradle*`,
+    options,
+  );
+  const allProjects = [];
+  const allProjectsAddedPurls = [];
+  const rootDependsOn = [];
+  // Execute gradle properties
+  if (gradleFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
+    let retMap = executeGradleProperties(path, null, null);
+    const allProjectsStr = retMap.projects || [];
+    const rootProject = retMap.rootProject;
+    if (rootProject) {
+      parentComponent = {
+        name: rootProject,
+        type: "application",
+        ...retMap.metadata,
+      };
+      const parentPurl = new PackageURL(
+        "maven",
+        parentComponent.group || "",
+        parentComponent.name,
+        parentComponent.version,
+        { type: "jar" },
+        null,
+      ).toString();
+      parentComponent.purl = parentPurl;
+      parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
+    }
+    // Get the sub-project properties and set the root dependencies
+    if (allProjectsStr?.length) {
+      for (const spstr of allProjectsStr) {
+        retMap = executeGradleProperties(path, null, spstr);
+        const rootSubProject = retMap.rootProject;
+        if (rootSubProject) {
+          const rspName = rootSubProject.replace(/^:/, "");
+          const rootSubProjectObj = {
+            name: rspName,
+            type: "application",
+            qualifiers: { type: "jar" },
+            ...retMap.metadata,
+          };
+          const rootSubProjectPurl = new PackageURL(
+            "maven",
+            rootSubProjectObj.group?.length
+              ? rootSubProjectObj.group
+              : parentComponent.group,
+            rootSubProjectObj.name,
+            retMap.metadata.version && retMap.metadata.version !== "latest"
+              ? retMap.metadata.version
+              : parentComponent.version,
+            rootSubProjectObj.qualifiers,
+            null,
+          ).toString();
+          rootSubProjectObj.purl = rootSubProjectPurl;
+          rootSubProjectObj["bom-ref"] = decodeURIComponent(rootSubProjectPurl);
+          if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
+            allProjects.push(rootSubProjectObj);
+            rootDependsOn.push(rootSubProjectPurl);
+            allProjectsAddedPurls.push(rootSubProjectPurl);
+          }
+        }
+      }
+      // Bug #317 fix
+      parentComponent.components = allProjects.flatMap((s) => {
+        s.qualifiers = undefined;
+        s.evidence = undefined;
+        return s;
+      });
+      dependencies.push({
+        ref: parentComponent["bom-ref"],
+        dependsOn: rootDependsOn,
+      });
+    }
+  }
+  if (
+    gradleFiles?.length &&
+    options.installDeps &&
+    !["scala", "sbt"].includes(options.projectType)
+  ) {
+    const gradleCmd = getGradleCommand(path, null);
+    const defaultDepTaskArgs = ["-q", "--console", "plain", "--build-cache"];
+    allProjects.push(parentComponent);
+    let depTaskWithArgs = ["dependencies"];
+    if (process.env.GRADLE_DEPENDENCY_TASK) {
+      depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
+    }
+    for (const sp of allProjects) {
+      let gradleDepArgs = [
+        sp.purl === parentComponent.purl
+          ? depTaskWithArgs[0]
+          : `:${sp.name}:${depTaskWithArgs[0]}`,
+      ];
+      gradleDepArgs = gradleDepArgs
+        .concat(depTaskWithArgs.slice(1))
+        .concat(defaultDepTaskArgs);
+      // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
+      if (process.env.GRADLE_ARGS) {
+        const addArgs = process.env.GRADLE_ARGS.split(" ");
+        gradleDepArgs = gradleDepArgs.concat(addArgs);
+      }
+      // gradle args only for the dependencies task
+      if (process.env.GRADLE_ARGS_DEPENDENCIES) {
+        const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
+        gradleDepArgs = gradleDepArgs.concat(addArgs);
+      }
+      console.log("Executing", gradleCmd, gradleDepArgs.join(" "), "in", path);
+      const sresult = spawnSync(gradleCmd, gradleDepArgs, {
+        cwd: path,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER,
+      });
+      if (sresult.status !== 0 || sresult.error) {
+        if (options.failOnError || DEBUG_MODE) {
+          console.error(sresult.stdout, sresult.stderr);
+        }
+        options.failOnError && process.exit(1);
+      }
+      const sstdout = sresult.stdout;
+      if (sstdout) {
+        const cmdOutput = Buffer.from(sstdout).toString();
+        const parsedList = parseGradleDep(
+          cmdOutput,
+          sp.group || parentComponent.group,
+          sp.name,
+          sp.version?.length && sp.version !== "latest"
+            ? sp.version
+            : parentComponent.version,
+        );
+        const dlist = parsedList.pkgList;
+        if (parsedList.dependenciesList && parsedList.dependenciesList) {
+          dependencies = mergeDependencies(
+            dependencies,
+            parsedList.dependenciesList,
+            parentComponent,
+          );
+        }
+        if (dlist?.length) {
+          if (DEBUG_MODE) {
+            console.log(
+              "Found",
+              dlist.length,
+              "packages in gradle project",
+              sp.name,
+            );
+          }
+          pkgList = pkgList.concat(dlist);
+        }
+      }
+    } // for
+    if (pkgList.length) {
+      if (parentComponent.components?.length) {
+        for (const subProj of parentComponent.components) {
+          pkgList = pkgList.filter(
+            (pkg) => pkg["bom-ref"] !== subProj["bom-ref"],
+          );
+        }
+      }
+      console.log(
+        "Obtained",
+        pkgList.length,
+        "from this gradle project. De-duping this list ...",
+      );
+    } else {
+      console.log(
+        "No packages found. Set the environment variable 'CDXGEN_DEBUG_MODE=debug' to troubleshoot any gradle related errors.",
+      );
+      options.failOnError && process.exit(1);
+    }
+    // Should we attempt to resolve class names
+    if (options.resolveClass || options.deep) {
+      const tmpjarNSMapping = await collectJarNS(GRADLE_CACHE_DIR);
+      if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+        jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+      }
+    }
+    pkgList = await getMvnMetadata(pkgList, jarNSMapping);
+    return buildBomNSData(options, pkgList, "maven", {
+      src: path,
+      filename: gradleFiles.join(", "),
+      nsMapping: jarNSMapping,
+      dependencies,
+      parentComponent,
+    });
+  }
+
+  // Bazel
+  // Look for the BUILD file only in the root directory
+  const bazelFiles = getAllFiles(path, "BUILD", options);
+  if (bazelFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
+    let BAZEL_CMD = "bazel";
+    if (process.env.BAZEL_HOME) {
+      BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
+    }
+    for (const f of bazelFiles) {
+      const basePath = dirname(f);
+      // Invoke bazel build first
+      const bazelTarget = process.env.BAZEL_TARGET || ":all";
+      console.log("Executing", BAZEL_CMD, "build", bazelTarget, "in", basePath);
+      let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
+        cwd: basePath,
+        shell: true,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER,
+      });
+      if (result.status !== 0 || result.error) {
+        if (result.stderr) {
+          console.error(result.stdout, result.stderr);
+        }
+        console.log(
+          "1. Check if bazel is installed and available in PATH.\n2. Try building your app with bazel prior to invoking cdxgen",
+        );
+        options.failOnError && process.exit(1);
+      } else {
+        const target = process.env.BAZEL_TARGET || "//...";
+        let query;
+        let bazelParser;
+        if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
+          query = ["aquery", `outputs('.*.jar',deps(${target}))`];
+          bazelParser = parseBazelActionGraph;
+        } else {
+          query = ["aquery", "--output=textproto", "--skyframe_state"];
+          bazelParser = parseBazelSkyframe;
+        }
+
+        console.log("Executing", BAZEL_CMD, `${query.join(" ")} in`, basePath);
+        result = spawnSync(BAZEL_CMD, query, {
+          cwd: basePath,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        });
+        if (result.status !== 0 || result.error) {
+          console.error(result.stdout, result.stderr);
+          options.failOnError && process.exit(1);
+        }
+        const stdout = result.stdout;
+        if (stdout) {
+          const cmdOutput = Buffer.from(stdout).toString();
+          const dlist = bazelParser(cmdOutput);
+          if (dlist?.length) {
+            pkgList = pkgList.concat(dlist);
+          } else {
+            console.log(
+              "No packages were detected.\n1. Build your project using bazel build command before running cdxgen\n2. Try running the bazel aquery command manually to see if skyframe state can be retrieved.",
+            );
+            console.log(
+              "If your project requires a different query, please file a bug at cyclonedx/cdxgen repo!",
+            );
+            options.failOnError && process.exit(1);
+          }
+        } else {
+          console.log("Bazel unexpectedly didn't produce any output");
+          options.failOnError && process.exit(1);
+        }
+        // FIXME: How do we retrieve jarNSMapping for bazel projects?
+        pkgList = await getMvnMetadata(pkgList, jarNSMapping);
+        return buildBomNSData(options, pkgList, "maven", {
+          src: path,
+          filename: "BUILD",
+          nsMapping: {},
+          dependencies,
+          parentComponent,
+        });
+      }
+    }
+  }
+
+  // scala sbt
+  // Identify sbt projects via its `project` directory:
+  // - all SBT project _should_ define build.properties file with sbt version info
+  // - SBT projects _typically_ have some configs/plugins defined in .sbt files
+  // - SBT projects that are still on 0.13.x, can still use the old approach,
+  //   where configs are defined via Scala files
+  // Detecting one of those should be enough to determine an SBT project.
+  let sbtProjectFiles = getAllFiles(
+    path,
+    `${
+      options.multiProject ? "**/" : ""
+    }project/{build.properties,*.sbt,*.scala}`,
+    options,
+  );
+
+  let sbtProjects = [];
+  for (const i in sbtProjectFiles) {
+    // parent dir of sbtProjectFile is the `project` directory
+    // parent dir of `project` is the sbt root project directory
+    const baseDir = dirname(dirname(sbtProjectFiles[i]));
+    sbtProjects = sbtProjects.concat(baseDir);
+  }
+
+  // Fallback in case sbt's project directory is non-existent
+  if (!sbtProjects.length) {
+    sbtProjectFiles = getAllFiles(
+      path,
+      `${options.multiProject ? "**/" : ""}*.sbt`,
+      options,
+    );
+    for (const i in sbtProjectFiles) {
+      const baseDir = dirname(sbtProjectFiles[i]);
+      sbtProjects = sbtProjects.concat(baseDir);
+    }
+  }
+  // eliminate duplicates and ignore project directories
+  sbtProjects = [...new Set(sbtProjects)].filter(
+    (p) => !p.endsWith(`${sep}project`) && !p.includes(`target${sep}`),
+  );
+  const sbtLockFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}build.sbt.lock`,
+    options,
+  );
+
+  if (sbtProjects?.length) {
+    let pkgList = [];
+    // If the project use sbt lock files
+    if (sbtLockFiles?.length) {
+      for (const f of sbtLockFiles) {
+        const dlist = parseSbtLock(f);
+        if (dlist?.length) {
+          pkgList = pkgList.concat(dlist);
+        }
+      }
+    } else {
+      const SBT_CMD = process.env.SBT_CMD || "sbt";
+      let sbtVersion = determineSbtVersion(path);
+      // If can't find sbt version at the root of repository then search in
+      // sbt project array too because sometimes the project folder isn't at
+      // root of repository
+      if (sbtVersion == null) {
+        for (const i in sbtProjects) {
+          sbtVersion = determineSbtVersion(sbtProjects[i]);
+          if (sbtVersion != null) {
+            break;
+          }
+        }
+      }
+      if (DEBUG_MODE) {
+        console.log(`Detected sbt version: ${sbtVersion}`);
+      }
+      // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
+      // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
+      const standalonePluginFile =
+        sbtVersion != null &&
+        gte(sbtVersion, "1.3.4") &&
+        lte(sbtVersion, "1.4.0");
+      const useSlashSyntax = gte(sbtVersion, "1.5.0");
+      const isDependencyTreeBuiltIn =
+        sbtVersion != null && gte(sbtVersion, "1.4.0");
+      const tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));
+      const tempSbtgDir = mkdtempSync(join(tmpdir(), "cdxsbtg-"));
+      mkdirSync(tempSbtgDir, { recursive: true });
+      // Create temporary plugins file
+      const tempSbtPlugins = join(tempSbtgDir, "dep-plugins.sbt");
+
+      // Requires a custom version of `sbt-dependency-graph` that
+      // supports `--append` for `toFile` subtask.
+      let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
+      if (isDependencyTreeBuiltIn) {
+        sbtPluginDefinition = "\naddDependencyTreePlugin\n";
+        if (DEBUG_MODE) {
+          console.log("Using addDependencyTreePlugin as the custom plugin");
+        }
+      }
+      writeFileSync(tempSbtPlugins, sbtPluginDefinition);
+      for (const i in sbtProjects) {
+        const basePath = sbtProjects[i];
+        const dlFile = join(tempDir, `dl-${i}.tmp`);
+        let sbtArgs = [];
+        let pluginFile = null;
+        if (standalonePluginFile) {
+          sbtArgs = [
+            `-addPluginSbtFile=${tempSbtPlugins}`,
+            `"dependencyList::toFile ${dlFile} --force"`,
+          ];
+        } else {
+          // write to the existing plugins file
+          if (useSlashSyntax) {
+            sbtArgs = [
+              `'set ThisBuild / asciiGraphWidth := 400' "dependencyTree / toFile ${dlFile} --force"`,
+            ];
+          } else {
+            sbtArgs = [
+              `'set asciiGraphWidth in ThisBuild := 400' "dependencyTree::toFile ${dlFile} --force"`,
+            ];
+          }
+          pluginFile = addPlugin(basePath, sbtPluginDefinition);
+        }
+        console.log(
+          "Executing",
+          SBT_CMD,
+          sbtArgs.join(" "),
+          "in",
+          basePath,
+          "using plugins",
+          tempSbtgDir,
+        );
+        // Note that the command has to be invoked with `shell: true` to properly execut sbt
+        const result = spawnSync(SBT_CMD, sbtArgs, {
+          cwd: basePath,
+          shell: true,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        });
+        if (result.status !== 0 || result.error) {
+          console.error(result.stdout, result.stderr);
+          console.log(
+            "1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.",
+          );
+          console.log(
+            "2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment",
+          );
+          console.log(
+            "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock",
+          );
+          options.failOnError && process.exit(1);
+        }
+        if (!standalonePluginFile) {
+          cleanupPlugin(basePath, pluginFile);
+        }
+        if (existsSync(dlFile)) {
+          const retMap = parseSbtTree(dlFile);
+          if (retMap.pkgList?.length) {
+            const tmpParentComponent = retMap.pkgList.splice(0, 1)[0];
+            tmpParentComponent.type = "application";
+            pkgList = pkgList.concat(retMap.pkgList);
+            if (!parentComponent || !Object.keys(parentComponent).length) {
+              parentComponent = tmpParentComponent;
+            }
+          }
+          if (retMap.dependenciesList) {
+            dependencies = mergeDependencies(
+              dependencies,
+              retMap.dependenciesList,
+              parentComponent,
+            );
+          }
+        } else {
+          if (options.failOnError || DEBUG_MODE) {
+            console.log(`sbt dependencyList did not yield ${dlFile}`);
+          }
+          options.failOnError && process.exit(1);
+        }
+      }
+
+      // Cleanup
+      unlinkSync(tempSbtPlugins);
+    } // else
+
+    if (DEBUG_MODE) {
+      console.log(`Found ${pkgList.length} packages`);
+    }
+    // Should we attempt to resolve class names
+    if (options.resolveClass || options.deep) {
+      const tmpjarNSMapping = await collectJarNS(SBT_CACHE_DIR);
+      if (tmpjarNSMapping && Object.keys(tmpjarNSMapping).length) {
+        jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
+      }
+    }
+    pkgList = await getMvnMetadata(pkgList, jarNSMapping);
+    return buildBomNSData(options, pkgList, "maven", {
+      src: path,
+      filename: sbtProjects.join(", "),
+      nsMapping: jarNSMapping,
+      dependencies,
+      parentComponent,
+    });
   }
 }
 
@@ -1953,7 +1917,7 @@ export async function createNodejsBom(path, options) {
     if (pkgJsonFiles.length) {
       for (const pj of pkgJsonFiles) {
         const dlist = await parsePkgJson(pj);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       }
@@ -1982,17 +1946,17 @@ export async function createNodejsBom(path, options) {
   }
   const yarnLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "yarn.lock",
+    `${options.multiProject ? "**/" : ""}yarn.lock`,
     options,
   );
   const shrinkwrapFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "npm-shrinkwrap.json",
+    `${options.multiProject ? "**/" : ""}npm-shrinkwrap.json`,
     options,
   );
   let pkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "package-lock.json",
+    `${options.multiProject ? "**/" : ""}package-lock.json`,
     options,
   );
   if (shrinkwrapFiles.length) {
@@ -2000,40 +1964,40 @@ export async function createNodejsBom(path, options) {
   }
   const pnpmLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pnpm-lock.yaml",
+    `${options.multiProject ? "**/" : ""}pnpm-lock.yaml`,
     options,
   );
   const minJsFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*min.js",
+    `${options.multiProject ? "**/" : ""}*min.js`,
     options,
   );
   const bowerFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "bower.json",
+    `${options.multiProject ? "**/" : ""}bower.json`,
     options,
   );
   // Parse min js files
-  if (minJsFiles && minJsFiles.length) {
+  if (minJsFiles?.length) {
     manifestFiles = manifestFiles.concat(minJsFiles);
     for (const f of minJsFiles) {
       const dlist = await parseMinJs(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
   // Parse bower json files
-  if (bowerFiles && bowerFiles.length) {
+  if (bowerFiles?.length) {
     manifestFiles = manifestFiles.concat(bowerFiles);
     for (const f of bowerFiles) {
       const dlist = await parseBowerJson(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
-  if (pnpmLockFiles && pnpmLockFiles.length) {
+  if (pnpmLockFiles?.length) {
     manifestFiles = manifestFiles.concat(pnpmLockFiles);
     for (const f of pnpmLockFiles) {
       const basePath = dirname(f);
@@ -2053,7 +2017,7 @@ export async function createNodejsBom(path, options) {
             null,
           ).toString();
           parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-          parentComponent["purl"] = ppurl;
+          parentComponent.purl = ppurl;
         }
       } else {
         let dirName = dirname(f);
@@ -2073,12 +2037,12 @@ export async function createNodejsBom(path, options) {
           null,
         ).toString();
         parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-        parentComponent["purl"] = ppurl;
+        parentComponent.purl = ppurl;
       }
       // Parse the pnpm file
       const parsedList = await parsePnpmLock(f, parentComponent);
       const dlist = parsedList.pkgList;
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
@@ -2090,7 +2054,7 @@ export async function createNodejsBom(path, options) {
       }
     }
   }
-  if (pkgLockFiles && pkgLockFiles.length) {
+  if (pkgLockFiles?.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
     for (const f of pkgLockFiles) {
       if (DEBUG_MODE) {
@@ -2106,7 +2070,7 @@ export async function createNodejsBom(path, options) {
       } else {
         parentSubComponents.push(tmpParentComponent);
       }
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
@@ -2132,7 +2096,7 @@ export async function createNodejsBom(path, options) {
           encoding: "utf-8",
         },
       );
-      if (result.status == 1 || result.error) {
+      if (result.status === 1 || result.error) {
         console.error(result.stdout, result.stderr);
         options.failOnError && process.exit(1);
       }
@@ -2162,7 +2126,8 @@ export async function createNodejsBom(path, options) {
         src: path,
         filename: "shrinkwrap-deps.json",
       });
-    } else if (existsSync(pnpmLock)) {
+    }
+    if (existsSync(pnpmLock)) {
       let pkgList = await parsePnpmLock(pnpmLock);
       if (allImports && Object.keys(allImports).length) {
         pkgList = await addEvidenceForImports(
@@ -2178,18 +2143,17 @@ export async function createNodejsBom(path, options) {
         src: path,
         filename: "pnpm-lock.yaml",
       });
-    } else {
-      console.log(
-        "Neither shrinkwrap file: ",
-        swFile,
-        " nor pnpm lockfile",
-        pnpmLock,
-        "was found!",
-      );
-      options.failOnError && process.exit(1);
     }
+    console.log(
+      "Neither shrinkwrap file: ",
+      swFile,
+      " nor pnpm lockfile",
+      pnpmLock,
+      "was found!",
+    );
+    options.failOnError && process.exit(1);
   }
-  if (yarnLockFiles && yarnLockFiles.length) {
+  if (yarnLockFiles?.length) {
     manifestFiles = manifestFiles.concat(yarnLockFiles);
     for (const f of yarnLockFiles) {
       if (DEBUG_MODE) {
@@ -2212,7 +2176,7 @@ export async function createNodejsBom(path, options) {
             null,
           ).toString();
           tmpParentComponent["bom-ref"] = decodeURIComponent(ppurl);
-          tmpParentComponent["purl"] = ppurl;
+          tmpParentComponent.purl = ppurl;
           if (!Object.keys(parentComponent).length) {
             parentComponent = tmpParentComponent;
           } else {
@@ -2237,7 +2201,7 @@ export async function createNodejsBom(path, options) {
           null,
         ).toString();
         tmpParentComponent["bom-ref"] = decodeURIComponent(ppurl);
-        tmpParentComponent["purl"] = ppurl;
+        tmpParentComponent.purl = ppurl;
         if (!Object.keys(parentComponent).length) {
           parentComponent = tmpParentComponent;
         } else {
@@ -2248,7 +2212,7 @@ export async function createNodejsBom(path, options) {
       // rush.js could include yarn.lock :(
       const parsedList = await parseYarnLock(f);
       const dlist = parsedList.pkgList;
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
       const rdeplist = [];
@@ -2294,7 +2258,7 @@ export async function createNodejsBom(path, options) {
     manifestFiles = manifestFiles.concat(pkgJsonFiles);
     for (const pkgjf of pkgJsonFiles) {
       const dlist = await parsePkgJson(pkgjf);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2313,7 +2277,7 @@ export async function createNodejsBom(path, options) {
             null,
           ).toString();
           parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-          parentComponent["purl"] = ppurl;
+          parentComponent.purl = ppurl;
         }
       }
     }
@@ -2356,20 +2320,20 @@ export async function createPythonBom(path, options) {
   const pipenvMode = existsSync(join(path, "Pipfile"));
   let poetryFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "poetry.lock",
+    `${options.multiProject ? "**/" : ""}poetry.lock`,
     options,
   );
   const pdmLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pdm.lock",
+    `${options.multiProject ? "**/" : ""}pdm.lock`,
     options,
   );
-  if (pdmLockFiles && pdmLockFiles.length) {
+  if (pdmLockFiles?.length) {
     poetryFiles = poetryFiles.concat(pdmLockFiles);
   }
   let reqFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements*.txt",
+    `${options.multiProject ? "**/" : ""}*requirements*.txt`,
     options,
   );
   reqFiles = reqFiles.filter(
@@ -2377,22 +2341,22 @@ export async function createPythonBom(path, options) {
   );
   const reqDirFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "requirements/*.txt",
+    `${options.multiProject ? "**/" : ""}requirements/*.txt`,
     options,
   );
   const metadataFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/site-packages/**/" : "") + "METADATA",
+    `${options.multiProject ? "**/site-packages/**/" : ""}METADATA`,
     options,
   );
   const whlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.whl",
+    `${options.multiProject ? "**/" : ""}*.whl`,
     options,
   );
   const eggInfoFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.egg-info",
+    `${options.multiProject ? "**/" : ""}*.egg-info`,
     options,
   );
   const setupPy = join(path, "setup.py");
@@ -2400,10 +2364,10 @@ export async function createPythonBom(path, options) {
   const pyProjectMode = existsSync(pyProjectFile);
   if (pyProjectMode) {
     const tmpParentComponent = parsePyProjectToml(pyProjectFile);
-    if (tmpParentComponent && tmpParentComponent.name) {
+    if (tmpParentComponent?.name) {
       parentComponent = tmpParentComponent;
-      delete parentComponent.homepage;
-      delete parentComponent.repository;
+      parentComponent.homepage = undefined;
+      parentComponent.repository = undefined;
       parentComponent.type = "application";
       const ppurl = new PackageURL(
         "pypi",
@@ -2414,12 +2378,11 @@ export async function createPythonBom(path, options) {
         null,
       ).toString();
       parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-      parentComponent["purl"] = ppurl;
+      parentComponent.purl = ppurl;
     }
   }
-  const requirementsMode =
-    (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
-  const poetryMode = poetryFiles && poetryFiles.length;
+  const requirementsMode = reqFiles?.length || reqDirFiles?.length;
+  const poetryMode = poetryFiles?.length;
   const setupPyMode = existsSync(setupPy);
   // Poetry sets up its own virtual env containing site-packages so
   // we give preference to poetry lock file. Issue# 129
@@ -2428,11 +2391,11 @@ export async function createPythonBom(path, options) {
       const basePath = dirname(f);
       const lockData = readFileSync(f, { encoding: "utf-8" });
       let retMap = await parsePoetrylockData(lockData, f);
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         pkgList = trimComponents(pkgList);
       }
-      if (retMap.dependenciesList && retMap.dependenciesList.length) {
+      if (retMap.dependenciesList?.length) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
@@ -2443,7 +2406,7 @@ export async function createPythonBom(path, options) {
       // This is a slow operation
       if (options.deep || !dependencies.length) {
         retMap = getPipFrozenTree(basePath, f, tempDir);
-        if (retMap.pkgList && retMap.pkgList.length) {
+        if (retMap.pkgList?.length) {
           pkgList = pkgList.concat(retMap.pkgList);
         }
         if (retMap.dependenciesList) {
@@ -2471,35 +2434,36 @@ export async function createPythonBom(path, options) {
       dependencies,
       parentComponent,
     });
-  } else if (metadataFiles && metadataFiles.length) {
+  }
+  if (metadataFiles?.length) {
     // dist-info directories
     for (const mf of metadataFiles) {
       const mData = readFileSync(mf, {
         encoding: "utf-8",
       });
       const dlist = parseBdistMetadata(mData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
   // .whl files. Zip file containing dist-info directory
-  if (whlFiles && whlFiles.length) {
+  if (whlFiles?.length) {
     for (const wf of whlFiles) {
       const mData = await readZipEntry(wf, "METADATA");
       if (mData) {
         const dlist = parseBdistMetadata(mData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       }
     }
   }
   // .egg-info files
-  if (eggInfoFiles && eggInfoFiles.length) {
+  if (eggInfoFiles?.length) {
     for (const ef of eggInfoFiles) {
       const dlist = parseBdistMetadata(readFileSync(ef, { encoding: "utf-8" }));
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2511,7 +2475,7 @@ export async function createPythonBom(path, options) {
       if (existsSync(piplockFile)) {
         const lockData = JSON.parse(readFileSync(piplockFile));
         const dlist = await parsePiplockData(lockData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       } else {
@@ -2520,7 +2484,7 @@ export async function createPythonBom(path, options) {
       }
     } else if (requirementsMode) {
       metadataFilename = "requirements.txt";
-      if (reqFiles && reqFiles.length) {
+      if (reqFiles?.length) {
         if (options.installDeps && DEBUG_MODE) {
           console.log(
             "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies in case of any build issues.",
@@ -2535,7 +2499,7 @@ export async function createPythonBom(path, options) {
             // If there are multiple requirements files then the tree is getting constructed for each one
             // adding to the delay.
             const pkgMap = getPipFrozenTree(basePath, f, tempDir);
-            if (pkgMap.pkgList && pkgMap.pkgList.length) {
+            if (pkgMap.pkgList?.length) {
               pkgList = pkgList.concat(pkgMap.pkgList);
               frozen = pkgMap.frozen;
             }
@@ -2556,18 +2520,18 @@ export async function createPythonBom(path, options) {
             }
             reqData = readFileSync(f, { encoding: "utf-8" });
             const dlist = await parseReqFile(reqData, true);
-            if (dlist && dlist.length) {
+            if (dlist?.length) {
               pkgList = pkgList.concat(dlist);
             }
           }
         } // for
         metadataFilename = reqFiles.join(", ");
-      } else if (reqDirFiles && reqDirFiles.length) {
+      } else if (reqDirFiles?.length) {
         for (const j in reqDirFiles) {
           const f = reqDirFiles[j];
           const reqData = readFileSync(f, { encoding: "utf-8" });
           const dlist = await parseReqFile(reqData, false);
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
         }
@@ -2593,7 +2557,7 @@ export async function createPythonBom(path, options) {
       const parentDependsOn = new Set();
       const retMap = await getPyModules(path, pkgList, options);
       // We need to patch the existing package list to add ImportedModules for evinse to work
-      if (retMap.modList && retMap.modList.length) {
+      if (retMap.modList?.length) {
         const iSymbolsMap = {};
         retMap.modList.forEach((v) => {
           iSymbolsMap[v.name] = v.importedSymbols;
@@ -2609,7 +2573,7 @@ export async function createPythonBom(path, options) {
           }
         }
       }
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         for (const p of retMap.pkgList) {
           if (
@@ -2644,7 +2608,7 @@ export async function createPythonBom(path, options) {
         }
         parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
       }
-      if (pkgMap.pkgList && pkgMap.pkgList.length) {
+      if (pkgMap.pkgList?.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
       }
       if (pkgMap.dependenciesList) {
@@ -2677,12 +2641,12 @@ export async function createPythonBom(path, options) {
   if (!pkgList.length && setupPyMode) {
     const setupPyData = readFileSync(setupPy, { encoding: "utf-8" });
     const dlist = await parseSetupPyFile(setupPyData);
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
   if (FETCH_LICENSE) {
@@ -2722,7 +2686,7 @@ export async function createGoBom(path, options) {
   // Read in go.sum and merge all go.sum files.
   const gosumFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.sum",
+    `${options.multiProject ? "**/" : ""}go.sum`,
     options,
   );
 
@@ -2740,7 +2704,7 @@ export async function createGoBom(path, options) {
       }
       const gosumData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parseGosumData(gosumData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2799,7 +2763,7 @@ export async function createGoBom(path, options) {
           // whyPkg would include this package string
           // github.com/golang/protobuf/proto github.com/golang/protobuf
           // golang.org/x/tools/cmd/goimports golang.org/x/tools
-          if (whyPkg && whyPkg.includes(pkgFullName)) {
+          if (whyPkg?.includes(pkgFullName)) {
             allImports[pkgFullName] = true;
           }
           doneList[pkgFullName] = true;
@@ -2826,7 +2790,7 @@ export async function createGoBom(path, options) {
       }
       const gosumData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parseGosumData(gosumData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         dlist.forEach((pkg) => {
           gosumMap[`${pkg.name}@${pkg.version}`] = pkg._integrity;
         });
@@ -2837,14 +2801,14 @@ export async function createGoBom(path, options) {
   // Read in data from Gopkg.lock files if they exist
   const gopkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gopkg.lock",
+    `${options.multiProject ? "**/" : ""}Gopkg.lock`,
     options,
   );
 
   // Read in go.mod files and parse BOM components with checksums from gosumData
   const gomodFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.mod",
+    `${options.multiProject ? "**/" : ""}go.mod`,
     options,
   );
   if (gomodFiles.length) {
@@ -2894,7 +2858,7 @@ export async function createGoBom(path, options) {
         if (stdout) {
           let cmdOutput = Buffer.from(stdout).toString();
           const retMap = await parseGoListDep(cmdOutput, gosumMap);
-          if (retMap.pkgList && retMap.pkgList.length) {
+          if (retMap.pkgList?.length) {
             pkgList = pkgList.concat(retMap.pkgList);
           }
           // We treat the main module as our parent
@@ -2931,11 +2895,11 @@ export async function createGoBom(path, options) {
               pkgList,
               parentComponent,
             );
-            if (retMap.pkgList && retMap.pkgList.length) {
+            if (retMap.pkgList?.length) {
               pkgList = pkgList.concat(retMap.pkgList);
               pkgList = trimComponents(pkgList);
             }
-            if (retMap.dependenciesList && retMap.dependenciesList.length) {
+            if (retMap.dependenciesList?.length) {
               dependencies = mergeDependencies(
                 dependencies,
                 retMap.dependenciesList,
@@ -2973,7 +2937,7 @@ export async function createGoBom(path, options) {
       }
       const gomodData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parseGoModData(gomodData, gosumMap);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2983,7 +2947,8 @@ export async function createGoBom(path, options) {
       parentComponent,
       filename: gomodFiles.join(", "),
     });
-  } else if (gopkgLockFiles.length) {
+  }
+  if (gopkgLockFiles.length) {
     for (const f of gopkgLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
@@ -2992,7 +2957,7 @@ export async function createGoBom(path, options) {
         encoding: "utf-8",
       });
       const dlist = await parseGopkgData(gopkgData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3025,7 +2990,7 @@ export async function createRustBom(path, options) {
   if (maybeBinary) {
     const cargoData = getCargoAuditableInfo(path);
     const dlist = await parseCargoAuditableData(cargoData);
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
     }
     // Since this pkg list is derived from the binary mark them as used.
@@ -3042,12 +3007,12 @@ export async function createRustBom(path, options) {
   }
   let cargoLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.lock",
+    `${options.multiProject ? "**/" : ""}Cargo.lock`,
     options,
   );
   const cargoFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.toml",
+    `${options.multiProject ? "**/" : ""}Cargo.toml`,
     options,
   );
   // This function assumes that the given path is prioritized, i.e that the
@@ -3064,7 +3029,7 @@ export async function createRustBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await parseCargoTomlData(f, cargoLockMode);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         if (!cargoLockMode) {
           pkgList = pkgList.concat(dlist);
         } else {
@@ -3087,7 +3052,7 @@ export async function createRustBom(path, options) {
   // Get the new lock files
   cargoLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.lock",
+    `${options.multiProject ? "**/" : ""}Cargo.lock`,
     options,
   );
   let dependencyTree = [];
@@ -3097,7 +3062,7 @@ export async function createRustBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await parseCargoData(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
 
@@ -3106,7 +3071,7 @@ export async function createRustBom(path, options) {
       }
       const cargoLockData = readFileSync(f, { encoding: "utf-8" });
       const fileDependencylist = parseCargoDependencyData(cargoLockData);
-      if (fileDependencylist && fileDependencylist.length) {
+      if (fileDependencylist?.length) {
         dependencyTree = mergeDependencies(
           dependencyTree,
           fileDependencylist,
@@ -3133,12 +3098,12 @@ export async function createRustBom(path, options) {
 export async function createDartBom(path, options) {
   const pubFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.lock",
+    `${options.multiProject ? "**/" : ""}pubspec.lock`,
     options,
   );
   const pubSpecYamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.yaml",
+    `${options.multiProject ? "**/" : ""}pubspec.yaml`,
     options,
   );
   let pkgList = [];
@@ -3149,7 +3114,7 @@ export async function createDartBom(path, options) {
       }
       const pubLockData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parsePubLockData(pubLockData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3157,14 +3122,15 @@ export async function createDartBom(path, options) {
       src: path,
       filename: pubFiles.join(", "),
     });
-  } else if (pubSpecYamlFiles.length) {
+  }
+  if (pubSpecYamlFiles.length) {
     for (const f of pubSpecYamlFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
       const pubYamlData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parsePubYamlData(pubYamlData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3189,36 +3155,36 @@ export function createCppBom(path, options) {
   const addedParentComponentsMap = {};
   const conanLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conan.lock",
+    `${options.multiProject ? "**/" : ""}conan.lock`,
     options,
   );
   const conanFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conanfile.txt",
+    `${options.multiProject ? "**/" : ""}conanfile.txt`,
     options,
   );
   let cmakeLikeFiles = [];
   const mesonBuildFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "meson.build",
+    `${options.multiProject ? "**/" : ""}meson.build`,
     options,
   );
-  if (mesonBuildFiles && mesonBuildFiles.length) {
+  if (mesonBuildFiles?.length) {
     cmakeLikeFiles = cmakeLikeFiles.concat(mesonBuildFiles);
   }
   cmakeLikeFiles = cmakeLikeFiles.concat(
     getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "CMakeLists.txt",
+      `${options.multiProject ? "**/" : ""}CMakeLists.txt`,
       options,
     ),
   );
   const cmakeFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.cmake",
+    `${options.multiProject ? "**/" : ""}*.cmake`,
     options,
   );
-  if (cmakeFiles && cmakeFiles.length) {
+  if (cmakeFiles?.length) {
     cmakeLikeFiles = cmakeLikeFiles.concat(cmakeFiles);
   }
   let pkgList = [];
@@ -3229,7 +3195,7 @@ export function createCppBom(path, options) {
       }
       const conanLockData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseConanLockData(conanLockData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3240,7 +3206,7 @@ export function createCppBom(path, options) {
       }
       const conanData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseConanData(conanData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3252,7 +3218,7 @@ export function createCppBom(path, options) {
       }
       const basePath = dirname(f);
       const retMap = parseCmakeLikeFile(f, "generic");
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (
@@ -3312,7 +3278,7 @@ export function createCppBom(path, options) {
         results,
         true,
       );
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         osPkgsList = osPkgsList.concat(dlist);
       }
     }
@@ -3320,7 +3286,7 @@ export function createCppBom(path, options) {
     // We pass the current list of packages so that we enhance the current list and replace
     // components inadvertently. For example, we might resolved a name, version and url information already via cmake
     const retMap = getCppModules(path, options, osPkgsList, pkgList);
-    if (retMap.pkgList && retMap.pkgList.length) {
+    if (retMap.pkgList?.length) {
       pkgList = pkgList.concat(retMap.pkgList);
     }
     if (retMap.dependenciesList) {
@@ -3366,12 +3332,12 @@ export function createCppBom(path, options) {
 export function createClojureBom(path, options) {
   const ednFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "deps.edn",
+    `${options.multiProject ? "**/" : ""}deps.edn`,
     options,
   );
   const leinFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "project.clj",
+    `${options.multiProject ? "**/" : ""}project.clj`,
     options,
   );
   let pkgList = [];
@@ -3405,7 +3371,7 @@ export function createClojureBom(path, options) {
         }
         const leinData = readFileSync(f, { encoding: "utf-8" });
         const dlist = parseLeiningenData(leinData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       } else {
@@ -3413,7 +3379,7 @@ export function createClojureBom(path, options) {
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
           const dlist = parseLeinDep(cmdOutput);
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
         } else {
@@ -3426,7 +3392,8 @@ export function createClojureBom(path, options) {
       src: path,
       filename: leinFiles.join(", "),
     });
-  } else if (ednFiles.length) {
+  }
+  if (ednFiles.length) {
     let CLJ_ARGS = ["-Stree"];
     if (process.env.CLJ_ARGS) {
       CLJ_ARGS = process.env.CLJ_ARGS.split(" ");
@@ -3453,7 +3420,7 @@ export function createClojureBom(path, options) {
         }
         const ednData = readFileSync(f, { encoding: "utf-8" });
         const dlist = parseEdnData(ednData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       } else {
@@ -3461,7 +3428,7 @@ export function createClojureBom(path, options) {
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
           const dlist = parseCljDep(cmdOutput);
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
         } else {
@@ -3488,7 +3455,7 @@ export function createClojureBom(path, options) {
 export function createHaskellBom(path, options) {
   const cabalFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "cabal.project.freeze",
+    `${options.multiProject ? "**/" : ""}cabal.project.freeze`,
     options,
   );
   let pkgList = [];
@@ -3499,7 +3466,7 @@ export function createHaskellBom(path, options) {
       }
       const cabalData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseCabalData(cabalData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3520,7 +3487,7 @@ export function createHaskellBom(path, options) {
 export function createElixirBom(path, options) {
   const mixFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "mix.lock",
+    `${options.multiProject ? "**/" : ""}mix.lock`,
     options,
   );
   let pkgList = [];
@@ -3531,7 +3498,7 @@ export function createElixirBom(path, options) {
       }
       const mixData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseMixLockData(mixData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3563,7 +3530,7 @@ export function createGitHubBom(path, options) {
       }
       const ghwData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseGitHubWorkflowData(ghwData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3591,7 +3558,7 @@ export function createCloudBuildBom(path, options) {
       }
       const cbwData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseCloudBuildData(cbwData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3625,7 +3592,7 @@ export function createOSBom(path, options) {
       results,
       false,
     );
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       if (!Object.keys(parentComponent).length) {
         parentComponent = dlist.splice(0, 1)[0];
       }
@@ -3671,7 +3638,7 @@ export async function createJenkinsBom(path, options) {
   let pkgList = [];
   const hpiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.hpi",
+    `${options.multiProject ? "**/" : ""}*.hpi`,
     options,
   );
   const tempDir = mkdtempSync(join(tmpdir(), "hpi-deps-"));
@@ -3681,7 +3648,7 @@ export async function createJenkinsBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await extractJarArchive(f, tempDir);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3693,13 +3660,13 @@ export async function createJenkinsBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await parseMinJs(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     console.log(`Cleaning up ${tempDir}`);
     rmSync(tempDir, { recursive: true, force: true });
   }
@@ -3720,7 +3687,7 @@ export function createHelmBom(path, options) {
   let pkgList = [];
   const yamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.yaml",
+    `${options.multiProject ? "**/" : ""}*.yaml`,
     options,
   );
   if (yamlFiles.length) {
@@ -3730,7 +3697,7 @@ export function createHelmBom(path, options) {
       }
       const helmData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseHelmYamlData(helmData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3751,12 +3718,12 @@ export function createHelmBom(path, options) {
 export async function createSwiftBom(path, options) {
   const swiftFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package*.swift",
+    `${options.multiProject ? "**/" : ""}Package*.swift`,
     options,
   );
   const pkgResolvedFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package.resolved",
+    `${options.multiProject ? "**/" : ""}Package.resolved`,
     options,
   );
   let pkgList = [];
@@ -3772,7 +3739,7 @@ export async function createSwiftBom(path, options) {
         console.log("Parsing", f);
       }
       const dlist = parseSwiftResolved(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3801,7 +3768,7 @@ export async function createSwiftBom(path, options) {
         completedPath.push(basePath);
         treeData = Buffer.from(result.stdout).toString();
         const retData = parseSwiftJsonTree(treeData, f);
-        if (retData.pkgList && retData.pkgList.length) {
+        if (retData.pkgList?.length) {
           parentComponent = retData.pkgList.splice(0, 1)[0];
           parentComponent.type = "application";
           pkgList = pkgList.concat(retData.pkgList);
@@ -3853,40 +3820,40 @@ export async function createContainerSpecLikeBom(path, options) {
   const origProjectType = options.projectType;
   let dcFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.yml",
+    `${options.multiProject ? "**/" : ""}*.yml`,
     options,
   );
   const dfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    `${options.multiProject ? "**/" : ""}*Dockerfile*`,
     options,
   );
   const bbPipelineFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "bitbucket-pipelines.yml",
+    `${options.multiProject ? "**/" : ""}bitbucket-pipelines.yml`,
     options,
   );
   const cfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Containerfile*",
+    `${options.multiProject ? "**/" : ""}*Containerfile*`,
     options,
   );
   const yamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.yaml",
+    `${options.multiProject ? "**/" : ""}*.yaml`,
     options,
   );
   let oapiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "open*.json",
+    `${options.multiProject ? "**/" : ""}open*.json`,
     options,
   );
   const oapiYamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "open*.yaml",
+    `${options.multiProject ? "**/" : ""}open*.yaml`,
     options,
   );
-  if (oapiYamlFiles && oapiYamlFiles.length) {
+  if (oapiYamlFiles?.length) {
     oapiFiles = oapiFiles.concat(oapiYamlFiles);
   }
   if (yamlFiles.length) {
@@ -3918,7 +3885,7 @@ export async function createContainerSpecLikeBom(path, options) {
         imgList = parseContainerFile(dData);
       }
 
-      if (imgList && imgList.length) {
+      if (imgList?.length) {
         if (DEBUG_MODE) {
           console.log("Images identified in", f, "are", imgList);
         }
@@ -3999,7 +3966,7 @@ export async function createContainerSpecLikeBom(path, options) {
               group: imageObj.group,
               version:
                 imageObj.tag ||
-                (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
+                (imageObj.digest ? `sha256:${imageObj.digest}` : "latest"),
               qualifiers: {},
               properties: commonProperties,
               type: "container",
@@ -4017,15 +3984,14 @@ export async function createContainerSpecLikeBom(path, options) {
                   );
                 }
               } else {
-                pkg["qualifiers"]["repository_url"] =
-                  `${imageObj.registry}/${imageObj.repo}`;
+                pkg.qualifiers.repository_url = `${imageObj.registry}/${imageObj.repo}`;
               }
             }
             if (imageObj.platform) {
-              pkg["qualifiers"]["platform"] = imageObj.platform;
+              pkg.qualifiers.platform = imageObj.platform;
             }
             if (imageObj.tag) {
-              pkg["qualifiers"]["tag"] = imageObj.tag;
+              pkg.qualifiers.tag = imageObj.tag;
             }
             // Create an entry for the oci image
             const imageBomData = buildBomNSData(options, [pkg], "oci", {
@@ -4033,17 +3999,13 @@ export async function createContainerSpecLikeBom(path, options) {
               filename: f,
               nsMapping: {},
             });
-            if (
-              imageBomData &&
-              imageBomData.bomJson &&
-              imageBomData.bomJson.components
-            ) {
+            if (imageBomData?.bomJson?.components) {
               components = components.concat(imageBomData.bomJson.components);
             }
             const bomData = await createBom(img.image, { projectType: "oci" });
             doneimages.push(img.image);
             if (bomData) {
-              if (bomData.components && bomData.components.length) {
+              if (bomData.components?.length) {
                 // Inject properties
                 for (const co of bomData.components) {
                   co.properties = commonProperties;
@@ -4067,7 +4029,7 @@ export async function createContainerSpecLikeBom(path, options) {
       }
       const oaData = readFileSync(af, { encoding: "utf-8" });
       const servlist = parseOpenapiSpecData(oaData);
-      if (servlist && servlist.length) {
+      if (servlist?.length) {
         // Inject SrcFile property
         for (const se of servlist) {
           se.properties = [
@@ -4131,7 +4093,7 @@ export async function createContainerSpecLikeBom(path, options) {
       multiProject: true,
     });
     if (mbomData) {
-      if (mbomData.components && mbomData.components.length) {
+      if (mbomData.components?.length) {
         components = components.concat(mbomData.components);
       }
       // We need to retain the parentComponent. See #527
@@ -4173,7 +4135,7 @@ export function createPHPBom(path, options) {
   let parentComponent = {};
   const composerJsonFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.json",
+    `${options.multiProject ? "**/" : ""}composer.json`,
     options,
   );
   if (!options.exclude) {
@@ -4183,7 +4145,7 @@ export function createPHPBom(path, options) {
   options.exclude.push("**/vendor/**");
   let composerLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.lock",
+    `${options.multiProject ? "**/" : ""}composer.lock`,
     options,
   );
   let pkgList = [];
@@ -4211,7 +4173,7 @@ export function createPHPBom(path, options) {
       console.log("Parsing version", versionResult.stdout);
     }
     const tmpV = undefined;
-    if (versionResult && versionResult.stdout) {
+    if (versionResult?.stdout) {
       versionResult.stdout.split(" ");
     }
     if (tmpV && tmpV.length > 1) {
@@ -4240,7 +4202,7 @@ export function createPHPBom(path, options) {
   }
   composerLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.lock",
+    `${options.multiProject ? "**/" : ""}composer.lock`,
     options,
   );
   if (composerLockFiles.length) {
@@ -4281,7 +4243,7 @@ export function createPHPBom(path, options) {
         }
       }
       const retMap = parseComposerLock(f, rootRequires);
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (retMap.dependenciesList) {
@@ -4328,12 +4290,12 @@ export function createPHPBom(path, options) {
 export async function createRubyBom(path, options) {
   const gemFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile",
+    `${options.multiProject ? "**/" : ""}Gemfile`,
     options,
   );
   let gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
+    `${options.multiProject ? "**/" : ""}Gemfile*.lock`,
     options,
   );
   let pkgList = [];
@@ -4361,7 +4323,7 @@ export async function createRubyBom(path, options) {
   }
   gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
+    `${options.multiProject ? "**/" : ""}Gemfile*.lock`,
     options,
   );
   if (gemLockFiles.length) {
@@ -4371,18 +4333,18 @@ export async function createRubyBom(path, options) {
       }
       const gemLockData = readFileSync(f, { encoding: "utf-8" });
       const retMap = await parseGemfileLockData(gemLockData, f);
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         pkgList = trimComponents(pkgList);
       }
-      if (retMap.dependenciesList && retMap.dependenciesList.length) {
+      if (retMap.dependenciesList?.length) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
           parentComponent,
         );
       }
-      if (retMap.rootList && retMap.rootList.length) {
+      if (retMap.rootList?.length) {
         rootList = rootList.concat(retMap.rootList);
       }
     }
@@ -4423,58 +4385,46 @@ export async function createCsharpBom(path, options) {
   const parentComponent = createDefaultParentComponent(path, "nuget", options);
   const slnFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.sln",
+    `${options.multiProject ? "**/" : ""}*.sln`,
     options,
   );
   let csProjFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.csproj",
+    `${options.multiProject ? "**/" : ""}*.csproj`,
     options,
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.vbproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.vbproj`, options),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.vcxproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.vcxproj`, options),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.fsproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.fsproj`, options),
   );
   const pkgConfigFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "packages.config",
+    `${options.multiProject ? "**/" : ""}packages.config`,
     options,
   );
   let projAssetsFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "project.assets.json",
+    `${options.multiProject ? "**/" : ""}project.assets.json`,
     options,
   );
   const pkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "packages.lock.json",
+    `${options.multiProject ? "**/" : ""}packages.lock.json`,
     options,
   );
   const paketLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "paket.lock",
+    `${options.multiProject ? "**/" : ""}paket.lock`,
     options,
   );
   const nupkgFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.nupkg",
+    `${options.multiProject ? "**/" : ""}*.nupkg`,
     options,
   );
   // Support for automatic restore
@@ -4512,7 +4462,7 @@ export async function createCsharpBom(path, options) {
     // Collect the assets file generated from restore
     projAssetsFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "project.assets.json",
+      `${options.multiProject ? "**/" : ""}project.assets.json`,
       options,
     );
   }
@@ -4524,7 +4474,7 @@ export async function createCsharpBom(path, options) {
         console.log(`Parsing ${nf}`);
       }
       const dlist = await parseNupkg(nf);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -4538,12 +4488,12 @@ export async function createCsharpBom(path, options) {
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
       const results = parseCsProjAssetsData(pkgData, af);
-      const deps = results["dependenciesList"];
-      const dlist = results["pkgList"];
-      if (dlist && dlist.length) {
+      const deps = results.dependenciesList;
+      const dlist = results.pkgList;
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
-      if (deps && deps.length) {
+      if (deps?.length) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
@@ -4577,18 +4527,18 @@ export async function createCsharpBom(path, options) {
       }
       pkgData = readFileSync(af, { encoding: "utf-8" });
       const results = parseCsPkgLockData(pkgData, af);
-      const deps = results["dependenciesList"];
-      const dlist = results["pkgList"];
-      const rootList = results["rootList"];
-      if (dlist && dlist.length) {
+      const deps = results.dependenciesList;
+      const dlist = results.pkgList;
+      const rootList = results.rootList;
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
-      if (deps && deps.length) {
+      if (deps?.length) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
       // Keep track of the direct dependencies so that we can construct one complete
       // list after processing all lock files
-      if (rootList && rootList.length) {
+      if (rootList?.length) {
         for (const p of rootList) {
           parentDependsOn.add(p["bom-ref"]);
         }
@@ -4613,7 +4563,7 @@ export async function createCsharpBom(path, options) {
         pkgData = pkgData.slice(1);
       }
       const dlist = parseCsPkgData(pkgData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -4629,10 +4579,10 @@ export async function createCsharpBom(path, options) {
       const results = parsePaketLockData(pkgData, f);
       const dlist = results.pkgList;
       const deps = results.dependenciesList;
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
-      if (deps && deps.length) {
+      if (deps?.length) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
@@ -4650,7 +4600,7 @@ export async function createCsharpBom(path, options) {
         csProjData = csProjData.slice(1);
       }
       const dlist = parseCsProjData(csProjData, f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -4682,7 +4632,7 @@ export async function createCsharpBom(path, options) {
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
-    if (retMap.dependencies && retMap.dependencies.length) {
+    if (retMap.dependencies?.length) {
       dependencies = mergeDependencies(
         dependencies,
         retMap.dependencies,
@@ -4709,8 +4659,9 @@ export async function createCryptoCertsBom(path, options) {
   const pkgList = [];
   const certFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") +
-      "*.{p12,jks,jceks,bks,keystore,key,pem,cer,gpg,pub}",
+    `${
+      options.multiProject ? "**/" : ""
+    }*.{p12,jks,jceks,bks,keystore,key,pem,cer,gpg,pub}`,
     options,
   );
   for (const f of certFiles) {
@@ -4752,10 +4703,9 @@ export function mergeDependencies(
   let providesFound = false;
   const deps_map = {};
   const provides_map = {};
-  const parentRef =
-    parentComponent && parentComponent["bom-ref"]
-      ? parentComponent["bom-ref"]
-      : undefined;
+  const parentRef = parentComponent?.["bom-ref"]
+    ? parentComponent["bom-ref"]
+    : undefined;
   const combinedDeps = dependencies.concat(newDependencies || []);
   for (const adep of combinedDeps) {
     if (!deps_map[adep.ref]) {
@@ -4764,8 +4714,8 @@ export function mergeDependencies(
     if (!provides_map[adep.ref]) {
       provides_map[adep.ref] = new Set();
     }
-    if (adep["dependsOn"]) {
-      for (const eachDepends of adep["dependsOn"]) {
+    if (adep.dependsOn) {
+      for (const eachDepends of adep.dependsOn) {
         if (
           parentRef &&
           eachDepends.toLowerCase() !== parentRef.toLowerCase()
@@ -4774,9 +4724,9 @@ export function mergeDependencies(
         }
       }
     }
-    if (adep["provides"]) {
+    if (adep.provides) {
       providesFound = true;
-      for (const eachProvides of adep["provides"]) {
+      for (const eachProvides of adep.provides) {
         if (
           parentRef &&
           eachProvides.toLowerCase() !== parentRef.toLowerCase()
@@ -4840,14 +4790,14 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
       `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`,
     );
   }
-  const serialNum = "urn:uuid:" + uuidv4();
+  const serialNum = `urn:uuid:${uuidv4()}`;
   return {
     options,
     parentComponent,
     components,
     bomJson: {
       bomFormat: "CycloneDX",
-      specVersion: "" + (options.specVersion || 1.5),
+      specVersion: `${options.specVersion || 1.5}`,
       serialNumber: serialNum,
       version: 1,
       metadata: addMetadata(parentComponent, options, {}),
@@ -4883,11 +4833,11 @@ export async function createMultiXBom(pathList, options) {
         `Found ${osPackages.length} OS packages at ${options.allLayersExplodedDir}`,
       );
     }
-    if (allTypes && allTypes.length) {
+    if (allTypes?.length) {
       options.allOSComponentTypes = allTypes;
     }
     components = components.concat(osPackages);
-    if (dependenciesList && dependenciesList.length) {
+    if (dependenciesList?.length) {
       dependencies = dependencies.concat(dependenciesList);
     }
     if (parentComponent && Object.keys(parentComponent).length) {
@@ -4901,7 +4851,7 @@ export async function createMultiXBom(pathList, options) {
   }
   if (options.projectType === "os" && options.bomData) {
     bomData = options.bomData;
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(`Found ${bomData.bomJson.components.length} OS components`);
       }
@@ -4913,12 +4863,7 @@ export async function createMultiXBom(pathList, options) {
       console.log("Scanning", path);
     }
     bomData = await createNodejsBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} npm packages at ${path}`,
@@ -4933,22 +4878,14 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
       // Retain metadata.component.components
-      if (
-        bomData.parentComponent.components &&
-        bomData.parentComponent.components.length
-      ) {
+      if (bomData.parentComponent.components?.length) {
         parentSubComponents = parentSubComponents.concat(
           bomData.parentComponent.components,
         );
       }
     }
     bomData = await createJavaBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} java packages at ${path}`,
@@ -4963,22 +4900,14 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
       // Retain metadata.component.components
-      if (
-        bomData.parentComponent.components &&
-        bomData.parentComponent.components.length
-      ) {
+      if (bomData.parentComponent.components?.length) {
         parentSubComponents = parentSubComponents.concat(
           bomData.parentComponent.components,
         );
       }
     }
     bomData = await createPythonBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} python packages at ${path}`,
@@ -4994,12 +4923,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createGoBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} go packages at ${path}`,
@@ -5015,7 +4939,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createRustBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} rust packages at ${path}`,
@@ -5030,17 +4954,14 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
       // Retain metadata.component.components
-      if (
-        bomData.parentComponent.components &&
-        bomData.parentComponent.components.length
-      ) {
+      if (bomData.parentComponent.components?.length) {
         parentSubComponents = parentSubComponents.concat(
           bomData.parentComponent.components,
         );
       }
     }
     bomData = createPHPBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} php packages at ${path}`,
@@ -5056,7 +4977,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createRubyBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} ruby packages at ${path}`,
@@ -5076,12 +4997,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createCsharpBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} csharp packages at ${path}`,
@@ -5097,7 +5013,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createDartBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} pub packages at ${path}`,
@@ -5113,7 +5029,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createHaskellBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} hackage packages at ${path}`,
@@ -5129,7 +5045,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createElixirBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} mix packages at ${path}`,
@@ -5145,7 +5061,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createCppBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} cpp packages at ${path}`,
@@ -5161,7 +5077,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createClojureBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} clojure packages at ${path}`,
@@ -5177,7 +5093,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createGitHubBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} GitHub action packages at ${path}`,
@@ -5193,7 +5109,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createCloudBuildBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} CloudBuild configuration at ${path}`,
@@ -5209,12 +5125,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createSwiftBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} Swift packages at ${path}`,
@@ -5232,12 +5143,7 @@ export async function createMultiXBom(pathList, options) {
     // Jar scanning is enabled by default
     // See #330
     bomData = createJarBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} jar packages at ${path}`,
@@ -5255,12 +5161,7 @@ export async function createMultiXBom(pathList, options) {
     // Collect any crypto keys
     if (options.specVersion >= 1.6 && options.includeCrypto) {
       bomData = await createCryptoCertsBom(path, options);
-      if (
-        bomData &&
-        bomData.bomJson &&
-        bomData.bomJson.components &&
-        bomData.bomJson.components.length
-      ) {
+      if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
           console.log(
             `Found ${bomData.bomJson.components.length} crypto assets at ${path}`,
@@ -5277,12 +5178,7 @@ export async function createMultiXBom(pathList, options) {
     !options.lastWorkingDir.includes("/home/")
   ) {
     bomData = createJarBom(options.lastWorkingDir, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} jar packages at ${options.lastWorkingDir}`,
@@ -5310,12 +5206,12 @@ export async function createMultiXBom(pathList, options) {
     );
     parentComponent.components = trimComponents(parentSubComponents);
     if (
-      parentComponent.components.length == 1 &&
-      parentComponent.components[0].name == parentComponent.name &&
+      parentComponent.components.length === 1 &&
+      parentComponent.components[0].name === parentComponent.name &&
       !parentComponent.purl.startsWith("pkg:container")
     ) {
       parentComponent = parentComponent.components[0];
-      delete parentComponent.components;
+      parentComponent.components = undefined;
     }
   }
   return dedupeBom(options, components, parentComponent, dependencies);
@@ -5345,19 +5241,19 @@ export async function createXBom(path, options) {
   // maven - pom.xml
   const pomFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pom.xml",
+    `${options.multiProject ? "**/" : ""}pom.xml`,
     options,
   );
   // gradle
   const gradleFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "build.gradle*",
+    `${options.multiProject ? "**/" : ""}build.gradle*`,
     options,
   );
   // scala sbt
   const sbtFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "{build.sbt,Build.scala}*",
+    `${options.multiProject ? "**/" : ""}{build.sbt,Build.scala}*`,
     options,
   );
   if (pomFiles.length || gradleFiles.length || sbtFiles.length) {
@@ -5373,19 +5269,18 @@ export async function createXBom(path, options) {
   }
   const reqFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements*.txt",
+    `${options.multiProject ? "**/" : ""}*requirements*.txt`,
     options,
   );
   const reqDirFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "requirements/*.txt",
+    `${options.multiProject ? "**/" : ""}requirements/*.txt`,
     options,
   );
-  const requirementsMode =
-    (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
+  const requirementsMode = reqFiles?.length || reqDirFiles?.length;
   const whlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.whl",
+    `${options.multiProject ? "**/" : ""}*.whl`,
     options,
   );
   if (requirementsMode || whlFiles.length) {
@@ -5394,17 +5289,17 @@ export async function createXBom(path, options) {
   // go
   const gosumFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.sum",
+    `${options.multiProject ? "**/" : ""}go.sum`,
     options,
   );
   const gomodFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.mod",
+    `${options.multiProject ? "**/" : ""}go.mod`,
     options,
   );
   const gopkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gopkg.lock",
+    `${options.multiProject ? "**/" : ""}Gopkg.lock`,
     options,
   );
   if (gomodFiles.length || gosumFiles.length || gopkgLockFiles.length) {
@@ -5414,12 +5309,12 @@ export async function createXBom(path, options) {
   // rust
   const cargoLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.lock",
+    `${options.multiProject ? "**/" : ""}Cargo.lock`,
     options,
   );
   const cargoFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.toml",
+    `${options.multiProject ? "**/" : ""}Cargo.toml`,
     options,
   );
   if (cargoLockFiles.length || cargoFiles.length) {
@@ -5429,12 +5324,12 @@ export async function createXBom(path, options) {
   // php
   const composerJsonFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.json",
+    `${options.multiProject ? "**/" : ""}composer.json`,
     options,
   );
   const composerLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.lock",
+    `${options.multiProject ? "**/" : ""}composer.lock`,
     options,
   );
   if (composerJsonFiles.length || composerLockFiles.length) {
@@ -5444,12 +5339,12 @@ export async function createXBom(path, options) {
   // Ruby
   const gemFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile",
+    `${options.multiProject ? "**/" : ""}Gemfile`,
     options,
   );
   const gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
+    `${options.multiProject ? "**/" : ""}Gemfile*.lock`,
     options,
   );
   if (gemFiles.length || gemLockFiles.length) {
@@ -5459,22 +5354,14 @@ export async function createXBom(path, options) {
   // .Net
   let csProjFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.csproj",
+    `${options.multiProject ? "**/" : ""}*.csproj`,
     options,
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.vbproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.vbproj`, options),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.fsproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.fsproj`, options),
   );
   if (csProjFiles.length) {
     return await createCsharpBom(path, options);
@@ -5483,12 +5370,12 @@ export async function createXBom(path, options) {
   // Dart
   const pubFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.lock",
+    `${options.multiProject ? "**/" : ""}pubspec.lock`,
     options,
   );
   const pubSpecFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.yaml",
+    `${options.multiProject ? "**/" : ""}pubspec.yaml`,
     options,
   );
   if (pubFiles.length || pubSpecFiles.length) {
@@ -5498,7 +5385,7 @@ export async function createXBom(path, options) {
   // Haskell
   const hackageFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "cabal.project.freeze",
+    `${options.multiProject ? "**/" : ""}cabal.project.freeze`,
     options,
   );
   if (hackageFiles.length) {
@@ -5508,7 +5395,7 @@ export async function createXBom(path, options) {
   // Elixir
   const mixFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "mix.lock",
+    `${options.multiProject ? "**/" : ""}mix.lock`,
     options,
   );
   if (mixFiles.length) {
@@ -5518,22 +5405,22 @@ export async function createXBom(path, options) {
   // cpp
   const conanLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conan.lock",
+    `${options.multiProject ? "**/" : ""}conan.lock`,
     options,
   );
   const conanFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conanfile.txt",
+    `${options.multiProject ? "**/" : ""}conanfile.txt`,
     options,
   );
   const cmakeListFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "CMakeLists.txt",
+    `${options.multiProject ? "**/" : ""}CMakeLists.txt`,
     options,
   );
   const mesonBuildFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "meson.build",
+    `${options.multiProject ? "**/" : ""}meson.build`,
     options,
   );
   if (
@@ -5548,12 +5435,12 @@ export async function createXBom(path, options) {
   // clojure
   const ednFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "deps.edn",
+    `${options.multiProject ? "**/" : ""}deps.edn`,
     options,
   );
   const leinFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "project.clj",
+    `${options.multiProject ? "**/" : ""}project.clj`,
     options,
   );
   if (ednFiles.length || leinFiles.length) {
@@ -5573,7 +5460,7 @@ export async function createXBom(path, options) {
   // Jenkins plugins
   const hpiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.hpi",
+    `${options.multiProject ? "**/" : ""}*.hpi`,
     options,
   );
   if (hpiFiles.length) {
@@ -5583,12 +5470,12 @@ export async function createXBom(path, options) {
   // Helm charts
   const chartFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Chart.yaml",
+    `${options.multiProject ? "**/" : ""}Chart.yaml`,
     options,
   );
   const yamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "values.yaml",
+    `${options.multiProject ? "**/" : ""}values.yaml`,
     options,
   );
   if (chartFiles.length || yamlFiles.length) {
@@ -5598,27 +5485,27 @@ export async function createXBom(path, options) {
   // Docker compose, dockerfile, containerfile, kubernetes and skaffold
   const dcFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "docker-compose*.yml",
+    `${options.multiProject ? "**/" : ""}docker-compose*.yml`,
     options,
   );
   const dfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    `${options.multiProject ? "**/" : ""}*Dockerfile*`,
     options,
   );
   const cfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Containerfile*",
+    `${options.multiProject ? "**/" : ""}*Containerfile*`,
     options,
   );
   const skFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "skaffold.yaml",
+    `${options.multiProject ? "**/" : ""}skaffold.yaml`,
     options,
   );
   const deplFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "deployment.yaml",
+    `${options.multiProject ? "**/" : ""}deployment.yaml`,
     options,
   );
   if (
@@ -5634,7 +5521,7 @@ export async function createXBom(path, options) {
   // Google CloudBuild
   const cbFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "cloudbuild.yaml",
+    `${options.multiProject ? "**/" : ""}cloudbuild.yaml`,
     options,
   );
   if (cbFiles.length) {
@@ -5644,12 +5531,12 @@ export async function createXBom(path, options) {
   // Swift
   const swiftFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package*.swift",
+    `${options.multiProject ? "**/" : ""}Package*.swift`,
     options,
   );
   const pkgResolvedFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package.resolved",
+    `${options.multiProject ? "**/" : ""}Package.resolved`,
     options,
   );
   if (swiftFiles.length || pkgResolvedFiles.length) {
@@ -5727,8 +5614,7 @@ export async function createBom(path, options) {
     // Create parent component based on the inspect config
     const inspectData = exportData.inspectData;
     if (
-      inspectData &&
-      inspectData.RepoDigests &&
+      inspectData?.RepoDigests &&
       inspectData.RepoTags &&
       Array.isArray(inspectData.RepoDigests) &&
       Array.isArray(inspectData.RepoTags) &&
@@ -5743,7 +5629,7 @@ export async function createBom(path, options) {
             name: tmpA[0],
             version: tmpA[1],
             type: "container",
-            purl: "pkg:oci/" + inspectData.RepoDigests[0],
+            purl: `pkg:oci/${inspectData.RepoDigests[0]}`,
             _integrity: inspectData.RepoDigests[0].replace(
               "sha256:",
               "sha256-",
@@ -5760,7 +5646,7 @@ export async function createBom(path, options) {
             .split("@")[1]
             .replace("sha256:", ""),
           type: "container",
-          purl: "pkg:oci/" + inspectData.RepoDigests[0],
+          purl: `pkg:oci/${inspectData.RepoDigests[0]}`,
           _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-"),
         };
         options.parentComponent["bom-ref"] = decodeURIComponent(
@@ -5782,10 +5668,7 @@ export async function createBom(path, options) {
       [...new Set(exportData.pkgPathList)],
       options,
     );
-    if (
-      exportData.allLayersDir &&
-      exportData.allLayersDir.startsWith(tmpdir())
-    ) {
+    if (exportData.allLayersDir?.startsWith(tmpdir())) {
       if (DEBUG_MODE) {
         console.log(`Cleaning up ${exportData.allLayersDir}`);
       }
@@ -5932,9 +5815,8 @@ export async function createBom(path, options) {
       // https://github.com/cyclonedx/cdxgen/issues/95
       if (options.multiProject) {
         return await createMultiXBom([path], options);
-      } else {
-        return await createXBom(path, options);
       }
+      return await createXBom(path, options);
   }
 }
 
@@ -5945,7 +5827,7 @@ export async function createBom(path, options) {
  * @param {Object} bomContents BOM Json
  */
 export async function submitBom(args, bomContents) {
-  const serverUrl = args.serverUrl.replace(/\/$/, "") + "/api/v1/bom";
+  const serverUrl = `${args.serverUrl.replace(/\/$/, "")}/api/v1/bom`;
   let encodedBomContents = Buffer.from(JSON.stringify(bomContents)).toString(
     "base64",
   );

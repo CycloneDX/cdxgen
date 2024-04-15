@@ -78,10 +78,10 @@ export const prepareDB = async (options) => {
   if (!options.skipMavenCollector && hasMavenPkgs) {
     const pomXmlFiles = getAllFiles(dirPath, "**/" + "pom.xml");
     const gradleFiles = getAllFiles(dirPath, "**/" + "build.gradle*");
-    if (pomXmlFiles && pomXmlFiles.length) {
+    if (pomXmlFiles?.length) {
       await catalogMavenDeps(dirPath, purlsJars, Namespaces, options);
     }
-    if (gradleFiles && gradleFiles.length) {
+    if (gradleFiles?.length) {
       await catalogGradleDeps(dirPath, purlsJars, Namespaces);
     }
   }
@@ -186,7 +186,7 @@ export const createAndStoreSlice = async (
 ) => {
   const retMap = createSlice(purl, purlsJars[purl], "usages", options);
   let sliceData = undefined;
-  if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+  if (retMap?.slicesFile && fs.existsSync(retMap.slicesFile)) {
     sliceData = await Usages.findOrCreate({
       where: { purl },
       defaults: {
@@ -195,7 +195,7 @@ export const createAndStoreSlice = async (
       },
     });
   }
-  if (retMap && retMap.tempDir && retMap.tempDir.startsWith(tmpdir())) {
+  if (retMap?.tempDir?.startsWith(tmpdir())) {
     fs.rmSync(retMap.tempDir, { recursive: true, force: true });
   }
   return sliceData;
@@ -222,7 +222,7 @@ export const createSlice = (
   let sliceOutputDir = fs.mkdtempSync(
     path.join(tmpdir(), `atom-${sliceType}-`),
   );
-  if (options && options.output) {
+  if (options?.output) {
     sliceOutputDir =
       fs.existsSync(options.output) &&
       fs.lstatSync(options.output).isDirectory()
@@ -273,7 +273,7 @@ export const purlToLanguage = (purl, filePath) => {
   const purlObj = PackageURL.fromString(purl);
   switch (purlObj.type) {
     case "maven":
-      language = filePath && filePath.endsWith(".jar") ? "jar" : "java";
+      language = filePath?.endsWith(".jar") ? "jar" : "java";
       break;
     case "npm":
       language = "javascript";
@@ -361,7 +361,7 @@ export const analyzeProject = async (dbObjMap, options) => {
       );
     } else {
       retMap = createSlice(language, dirPath, "reachables", options);
-      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+      if (retMap?.slicesFile && fs.existsSync(retMap.slicesFile)) {
         reachablesSlicesFile = retMap.slicesFile;
         reachablesSlice = JSON.parse(
           fs.readFileSync(retMap.slicesFile, "utf-8"),
@@ -382,7 +382,7 @@ export const analyzeProject = async (dbObjMap, options) => {
   } else {
     // Generate our own slices
     retMap = createSlice(language, dirPath, "usages", options);
-    if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+    if (retMap?.slicesFile && fs.existsSync(retMap.slicesFile)) {
       usageSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
       usagesSlicesFile = retMap.slicesFile;
     }
@@ -411,7 +411,7 @@ export const analyzeProject = async (dbObjMap, options) => {
       );
     } else {
       retMap = createSlice(language, dirPath, "data-flow", options);
-      if (retMap && retMap.slicesFile && fs.existsSync(retMap.slicesFile)) {
+      if (retMap?.slicesFile && fs.existsSync(retMap.slicesFile)) {
         dataFlowSlicesFile = retMap.slicesFile;
         dataFlowSlice = JSON.parse(fs.readFileSync(retMap.slicesFile, "utf-8"));
       }
@@ -513,12 +513,12 @@ export const parseSliceUsages = async (
   const lKeyOverrides = {};
   const usages = slice.usages || [];
   // Annotations from usages
-  if (slice.signature && slice.signature.startsWith("@") && !usages.length) {
+  if (slice.signature?.startsWith("@") && !usages.length) {
     typesToLookup.add(slice.fullName);
     addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
   }
   // PHP imports from usages
-  if (slice.code && slice.code.startsWith("use") && !usages.length) {
+  if (slice.code?.startsWith("use") && !usages.length) {
     typesToLookup.add(slice.fullName);
     addToOverrides(lKeyOverrides, slice.fullName, fileName, slice.lineNumber);
   }
@@ -564,7 +564,7 @@ export const parseSliceUsages = async (
       .concat(ausage?.invokedCalls || [])
       .concat(ausage?.argToCalls || [])
       .concat(ausage?.procedures || [])) {
-      if (acall.resolvedMethod && acall.resolvedMethod.startsWith("@")) {
+      if (acall.resolvedMethod?.startsWith("@")) {
         typesToLookup.add(acall.callName);
         if (acall.lineNumber) {
           addToOverrides(
@@ -574,7 +574,7 @@ export const parseSliceUsages = async (
             acall.lineNumber,
           );
         }
-      } else if (acall.isExternal == false) {
+      } else if (acall.isExternal === false) {
         continue;
       }
       if (
@@ -663,7 +663,7 @@ export const parseSliceUsages = async (
             }
           }
         } else {
-          if (apurlImports && apurlImports.includes(atype)) {
+          if (apurlImports?.includes(atype)) {
             if (!purlLocationMap[apurl]) {
               purlLocationMap[apurl] = new Set();
             }
@@ -686,7 +686,7 @@ export const parseSliceUsages = async (
           },
         });
       }
-      if (nsHits && nsHits.length) {
+      if (nsHits?.length) {
         for (const ns of nsHits) {
           if (!purlLocationMap[ns.purl]) {
             purlLocationMap[ns.purl] = new Set();
@@ -791,15 +791,15 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     const definedBy = usage?.definedBy;
     let endpoints = [];
     let authenticated = undefined;
-    if (targetObj && targetObj?.resolvedMethod) {
-      if (language != "php") {
+    if (targetObj?.resolvedMethod) {
+      if (language !== "php") {
         endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
       }
       if (targetObj?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
-    } else if (definedBy && definedBy?.resolvedMethod) {
-      if (language != "php") {
+    } else if (definedBy?.resolvedMethod) {
+      if (language !== "php") {
         endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
       }
       if (definedBy?.resolvedMethod.toLowerCase().includes("auth")) {
@@ -809,7 +809,7 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     if (usage.invokedCalls) {
       for (const acall of usage.invokedCalls) {
         if (acall.resolvedMethod) {
-          if (language != "php") {
+          if (language !== "php") {
             const tmpEndpoints = extractEndpoints(
               language,
               acall.resolvedMethod,
@@ -817,14 +817,14 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
             if (acall.resolvedMethod.toLowerCase().includes("auth")) {
               authenticated = true;
             }
-            if (tmpEndpoints && tmpEndpoints.length) {
+            if (tmpEndpoints?.length) {
               endpoints = (endpoints || []).concat(tmpEndpoints);
             }
           }
         }
       }
     }
-    if (endpoints && endpoints.length) {
+    if (endpoints?.length) {
       const serviceName = constructServiceName(language, slice);
       if (!servicesMap[serviceName]) {
         servicesMap[serviceName] = {
@@ -889,7 +889,7 @@ export const detectServicesFromUDT = (
               audt.fileName.replace(".py", ""),
             )}-service`;
           }
-          if (endpoints && endpoints.length) {
+          if (endpoints?.length) {
             if (!servicesMap[serviceName]) {
               servicesMap[serviceName] = {
                 endpoints: new Set(),
@@ -915,7 +915,7 @@ export const constructServiceName = (language, slice) => {
     serviceName = path.basename(slice.fileName).split(".")[0];
   }
   if (!serviceName.endsWith("service")) {
-    serviceName = serviceName + "-service";
+    serviceName = `${serviceName}-service`;
   }
   return serviceName;
 };
@@ -1003,7 +1003,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     if (!comp.purl) {
       continue;
     }
-    delete comp.signature;
+    comp.signature = undefined;
     const locationOccurrences = Array.from(
       purlLocationMap[comp.purl] || [],
     ).sort();
@@ -1021,7 +1021,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
       occEvidencePresent = true;
     }
     const dfFrames = dataFlowFrames[comp.purl];
-    if (dfFrames && dfFrames.length) {
+    if (dfFrames?.length) {
       if (!comp.evidence) {
         comp.evidence = {};
       }
@@ -1035,8 +1035,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     }
     // Add crypto tags if this purl offers any generation algorithm
     if (
-      cryptoGeneratePurls &&
-      cryptoGeneratePurls[comp.purl] &&
+      cryptoGeneratePurls?.[comp.purl] &&
       Array.from(cryptoGeneratePurls[comp.purl]).length
     ) {
       comp.tags = ["crypto", "crypto-generate"];
@@ -1057,7 +1056,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     servicesPresent = true;
   }
   // Add the crypto components to the components list
-  if (cryptoComponents && cryptoComponents.length) {
+  if (cryptoComponents?.length) {
     bomJson.components = bomJson.components.concat(cryptoComponents);
   }
   // Fix the dependencies section with provides information
@@ -1111,7 +1110,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   bomJson.version = (bomJson.version || 1) + 1;
   // Set the current timestamp to indicate this is newer
   bomJson.metadata.timestamp = getTimestamp();
-  delete bomJson.signature;
+  bomJson.signature = undefined;
   fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, null));
   if (occEvidencePresent || csEvidencePresent || servicesPresent) {
     console.log(evinseOutFile, "created successfully.");
@@ -1120,7 +1119,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
       "Unable to identify component evidence for the input SBOM. Only java, javascript, python, and php projects are supported by evinse.",
     );
   }
-  if (tempDir && tempDir.startsWith(tmpdir())) {
+  if (tempDir?.startsWith(tmpdir())) {
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
   return bomJson;
@@ -1167,7 +1166,7 @@ export const collectDataFlowFrames = async (
       let typeFullName = theNode.typeFullName;
       if (
         ["javascript", "js", "ts", "typescript"].includes(language) &&
-        typeFullName == "ANY"
+        typeFullName === "ANY"
       ) {
         if (
           theNode.code &&
@@ -1205,7 +1204,7 @@ export const collectDataFlowFrames = async (
               },
             });
           }
-          if (nsHits && nsHits.length) {
+          if (nsHits?.length) {
             for (const ns of nsHits) {
               referredPurls.add(ns.purl);
             }
@@ -1217,7 +1216,7 @@ export const collectDataFlowFrames = async (
       }
       let parentPackageName = theNode.parentPackageName || "";
       if (
-        parentPackageName == "<global>" &&
+        parentPackageName === "<global>" &&
         theNode.parentClassName &&
         theNode.parentClassName.includes("::")
       ) {
@@ -1288,7 +1287,7 @@ export const collectReachableFrames = (language, reachablesSlice) => {
         }
       }
       if (isCryptoFlow && fnode.code) {
-        codeSnippets = codeSnippets + "\\n" + fnode.code;
+        codeSnippets = `${codeSnippets}\\n${fnode.code}`;
       }
       if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
         continue;

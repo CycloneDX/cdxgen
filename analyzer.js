@@ -72,9 +72,7 @@ const getAllFiles = (deep, dir, extn, files, result, regex) => {
           result,
           regex,
         );
-      } catch (error) {
-        continue;
-      }
+      } catch (error) {}
     } else {
       if (regex.test(file)) {
         result.push(file);
@@ -143,8 +141,8 @@ const setFileRef = (
     exportedModules,
     isExternal: true,
     fileName: fileRelativeLoc,
-    lineNumber: sourceLoc && sourceLoc.line ? sourceLoc.line : undefined,
-    columnNumber: sourceLoc && sourceLoc.column ? sourceLoc.column : undefined,
+    lineNumber: sourceLoc?.line ? sourceLoc.line : undefined,
+    columnNumber: sourceLoc?.column ? sourceLoc.column : undefined,
   };
   // replace relative imports with full path
   let moduleFullPath = pathway;
@@ -169,7 +167,7 @@ const setFileRef = (
     allImports[modPkg] = allImports[modPkg] || new Set();
     allImports[modPkg].add(occurrence);
   }
-  if (exportedModules && exportedModules.length) {
+  if (exportedModules?.length) {
     moduleFullPath = moduleFullPath
       .replace("node_modules/", "")
       .replace("dist/", "")
@@ -194,7 +192,7 @@ const fileToParseableCode = (file) => {
       .replace(vueCommentRegex, (match) => match.replaceAll(/\S/g, " "))
       .replace(
         vueCleaningRegex,
-        (match) => match.replaceAll(/\S/g, " ").substring(1) + ";",
+        (match) => `${match.replaceAll(/\S/g, " ").substring(1)};`,
       )
       .replace(
         vueBindRegex,
@@ -203,7 +201,7 @@ const fileToParseableCode = (file) => {
       )
       .replace(
         vuePropRegex,
-        (match, grA, grB) => " " + grA.replace(/[.:@]/g, " ") + grB,
+        (match, grA, grB) => ` ${grA.replace(/[.:@]/g, " ")}${grB}`,
       )
       .replace(
         vueTemplateRegex,
@@ -222,7 +220,7 @@ const parseFileASTTree = (src, file, allImports, allExports) => {
   const ast = parse(fileToParseableCode(file), babelParserOptions);
   traverse.default(ast, {
     ImportDeclaration: (path) => {
-      if (path && path.node) {
+      if (path?.node) {
         setFileRef(
           allImports,
           allExports,
@@ -236,8 +234,7 @@ const parseFileASTTree = (src, file, allImports, allExports) => {
     // For require('') statements
     Identifier: (path) => {
       if (
-        path &&
-        path.node &&
+        path?.node &&
         path.node.name === "require" &&
         path.parent.type === "CallExpression"
       ) {
@@ -246,7 +243,7 @@ const parseFileASTTree = (src, file, allImports, allExports) => {
     },
     // Use for dynamic imports like routes.jsx
     CallExpression: (path) => {
-      if (path && path.node && path.node.callee.type === "Import") {
+      if (path?.node && path.node.callee.type === "Import") {
         setFileRef(allImports, allExports, src, file, path.node.arguments[0]);
       }
     },
@@ -256,7 +253,7 @@ const parseFileASTTree = (src, file, allImports, allExports) => {
     },
     ExportNamedDeclaration: (path) => {
       // ensure there is a path export
-      if (path && path.node && path.node.source) {
+      if (path?.node?.source) {
         setFileRef(
           allImports,
           allExports,

@@ -95,7 +95,7 @@ const parseQueryString = (q, body, options = {}) => {
   }
 
   options.projectType = options.type;
-  delete options.type;
+  options.type = undefined;
 
   return options;
 };
@@ -142,7 +142,7 @@ const start = (options) => {
     }
     console.log("Generating SBOM for", srcDir);
     let bomNSData = (await createBom(srcDir, reqOptions)) || {};
-    if (reqOptions.requiredOnly || reqOptions["filter"] || reqOptions["only"]) {
+    if (reqOptions.requiredOnly || reqOptions.filter || reqOptions.only) {
       bomNSData = postProcess(bomNSData, reqOptions);
     }
     if (bomNSData.bomJson) {
