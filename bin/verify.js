@@ -61,10 +61,9 @@ for (const comp of bomJson.components) {
 if (hasInvalidComp) {
   process.exit(1);
 }
-const bomSignature =
-  bomJson.signature && bomJson.signature.value
-    ? bomJson.signature.value
-    : undefined;
+const bomSignature = bomJson.signature?.value
+  ? bomJson.signature.value
+  : undefined;
 if (!bomSignature) {
   console.log("No signature was found!");
 } else {

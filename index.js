@@ -308,9 +308,8 @@ const addToolsSection = (options, context = {}) => {
 };
 
 const componentToSimpleFullName = (comp) => {
-  let fullName =
-    comp.group && comp.group.length ? `${comp.group}/${comp.name}` : comp.name;
-  if (comp.version && comp.version.length) {
+  let fullName = comp.group?.length ? `${comp.group}/${comp.name}` : comp.name;
+  if (comp.version?.length) {
     fullName = `${fullName}@${comp.version}`;
   }
   return fullName;
@@ -434,13 +433,13 @@ const addFormulationSection = (options) => {
     }
     // Collect build environment details
     const infoComponents = collectEnvInfo(options.path);
-    if (infoComponents && infoComponents.length) {
+    if (infoComponents?.length) {
       components = components.concat(infoComponents);
     }
     // Should we include the OS crypto libraries
     if (options.includeCrypto) {
       const cryptoLibs = collectOSCryptoLibs(options);
-      if (cryptoLibs && cryptoLibs.length) {
+      if (cryptoLibs?.length) {
         components = components.concat(cryptoLibs);
       }
     }
@@ -510,7 +509,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         parentComponent["purl"] = encodeForPurl(parentComponent["bom-ref"]);
       }
     }
-    if (parentComponent && parentComponent.components) {
+    if (parentComponent?.components) {
       const parentFullName = componentToSimpleFullName(parentComponent);
       const subComponents = [];
       const addedSubComponents = {};
@@ -657,7 +656,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
         }
       }
     }
-    if (options.allOSComponentTypes && options.allOSComponentTypes.length) {
+    if (options.allOSComponentTypes?.length) {
       mproperties.push({
         name: "oci:image:componentTypes",
         value: options.allOSComponentTypes.join("\\n"),
@@ -689,19 +688,19 @@ function addExternalReferences(opkg) {
     if (pkg.externalReferences) {
       externalReferences = externalReferences.concat(pkg.externalReferences);
     } else {
-      if (pkg.homepage && pkg.homepage.url) {
+      if (pkg.homepage?.url) {
         externalReferences.push({
           type: pkg.homepage.url.includes("git") ? "vcs" : "website",
           url: pkg.homepage.url,
         });
       }
-      if (pkg.bugs && pkg.bugs.url) {
+      if (pkg.bugs?.url) {
         externalReferences.push({
           type: "issue-tracker",
           url: pkg.bugs.url,
         });
       }
-      if (pkg.repository && pkg.repository.url) {
+      if (pkg.repository?.url) {
         externalReferences.push({
           type: "vcs",
           url: pkg.repository.url,
@@ -850,10 +849,10 @@ function addComponent(
       component.tags = pkg.tags;
     }
     // Retain any component properties and crypto properties
-    if (pkg.properties && pkg.properties.length) {
+    if (pkg.properties?.length) {
       component.properties = pkg.properties;
     }
-    if (pkg.cryptoProperties && pkg.cryptoProperties.length) {
+    if (pkg.cryptoProperties?.length) {
       component.cryptoProperties = pkg.cryptoProperties;
     }
     if (compMap[component.purl]) return; //remove cycles
@@ -904,7 +903,7 @@ function determinePackageType(pkg) {
       for (const cf of frameworksList.all) {
         if (
           pkg.purl.startsWith(cf) ||
-          (purl.namespace && purl.namespace.includes(cf)) ||
+          purl.namespace?.includes(cf) ||
           purl.name.toLowerCase().includes(cf)
         ) {
           return "framework";
@@ -919,10 +918,7 @@ function determinePackageType(pkg) {
     }
   }
   if (Object.prototype.hasOwnProperty.call(pkg, "description")) {
-    if (
-      pkg.description &&
-      pkg.description.toLowerCase().includes("framework")
-    ) {
+    if (pkg.description?.toLowerCase().includes("framework")) {
       return "framework";
     }
   }
@@ -1013,7 +1009,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   };
   const serialNum = `urn:uuid:${uuidv4()}`;
   let allImports = {};
-  if (context && context.allImports) {
+  if (context?.allImports) {
     allImports = context.allImports;
   }
   const nsMapping = context.nsMapping || {};
@@ -1101,7 +1097,7 @@ export async function createJarBom(path, options) {
       console.log(`Parsing ${jar}`);
     }
     const dlist = await extractJarArchive(jar, tempDir);
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
     }
     if (pkgList.length) {
@@ -1109,7 +1105,7 @@ export async function createJarBom(path, options) {
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
   pkgList = pkgList.concat(convertJarNSToPackages(nsMapping));
@@ -1182,7 +1178,7 @@ export async function createJavaBom(path, options) {
         pkgList = await getMvnMetadata(pkgList);
       }
       // Clean up
-      if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+      if (tempDir?.startsWith(tmpdir()) && rmSync) {
         console.log(`Cleaning up ${tempDir}`);
         rmSync(tempDir, { recursive: true, force: true });
       }
@@ -1205,8 +1201,7 @@ export async function createJavaBom(path, options) {
     );
     let bomJsonFiles = [];
     if (
-      pomFiles &&
-      pomFiles.length &&
+      pomFiles?.length &&
       !["scala", "sbt", "gradle"].includes(options.projectType)
     ) {
       const cdxMavenPlugin =
@@ -1314,8 +1309,7 @@ export async function createJavaBom(path, options) {
                   "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
                 );
               } else if (
-                result.stdout &&
-                result.stdout.includes(
+                result.stdout?.includes(
                   "Could not resolve target platform specification",
                 )
               ) {
@@ -1340,7 +1334,7 @@ export async function createJavaBom(path, options) {
               "\nFalling back to manual pom.xml parsing. The result would be incomplete!",
             );
             const dlist = parsePom(f);
-            if (dlist && dlist.length) {
+            if (dlist?.length) {
               pkgList = pkgList.concat(dlist);
             }
           } else {
@@ -1352,7 +1346,7 @@ export async function createJavaBom(path, options) {
               const dlist = parsedList.pkgList;
               parentComponent = dlist.splice(0, 1)[0];
               parentComponent.type = "application";
-              if (dlist && dlist.length) {
+              if (dlist?.length) {
                 pkgList = pkgList.concat(dlist);
               }
               if (parsedList.dependenciesList && parsedList.dependenciesList) {
@@ -1384,8 +1378,7 @@ export async function createJavaBom(path, options) {
               tools = bomJsonObj.metadata.tools;
             }
             if (
-              bomJsonObj.metadata &&
-              bomJsonObj.metadata.component &&
+              bomJsonObj.metadata?.component &&
               !Object.keys(parentComponent).length
             ) {
               parentComponent = bomJsonObj.metadata.component;
@@ -1441,8 +1434,7 @@ export async function createJavaBom(path, options) {
     const rootDependsOn = [];
     // Execute gradle properties
     if (
-      gradleFiles &&
-      gradleFiles.length &&
+      gradleFiles?.length &&
       !["scala", "sbt"].includes(options.projectType)
     ) {
       let retMap = executeGradleProperties(path, null, null);
@@ -1466,7 +1458,7 @@ export async function createJavaBom(path, options) {
         parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
       }
       // Get the sub-project properties and set the root dependencies
-      if (allProjectsStr && allProjectsStr.length) {
+      if (allProjectsStr?.length) {
         for (const spstr of allProjectsStr) {
           retMap = executeGradleProperties(path, null, spstr);
           const rootSubProject = retMap.rootProject;
@@ -1480,7 +1472,7 @@ export async function createJavaBom(path, options) {
             };
             const rootSubProjectPurl = new PackageURL(
               "maven",
-              rootSubProjectObj.group && rootSubProjectObj.group.length
+              rootSubProjectObj.group?.length
                 ? rootSubProjectObj.group
                 : parentComponent.group,
               rootSubProjectObj.name,
@@ -1513,8 +1505,7 @@ export async function createJavaBom(path, options) {
       }
     }
     if (
-      gradleFiles &&
-      gradleFiles.length &&
+      gradleFiles?.length &&
       options.installDeps &&
       !["scala", "sbt"].includes(options.projectType)
     ) {
@@ -1570,7 +1561,7 @@ export async function createJavaBom(path, options) {
             cmdOutput,
             sp.group || parentComponent.group,
             sp.name,
-            sp.version && sp.version.length && sp.version !== "latest"
+            sp.version?.length && sp.version !== "latest"
               ? sp.version
               : parentComponent.version,
           );
@@ -1582,7 +1573,7 @@ export async function createJavaBom(path, options) {
               parentComponent,
             );
           }
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             if (DEBUG_MODE) {
               console.log(
                 "Found",
@@ -1596,7 +1587,7 @@ export async function createJavaBom(path, options) {
         }
       } // for
       if (pkgList.length) {
-        if (parentComponent.components && parentComponent.components.length) {
+        if (parentComponent.components?.length) {
           for (const subProj of parentComponent.components) {
             pkgList = pkgList.filter(
               (pkg) => pkg["bom-ref"] !== subProj["bom-ref"],
@@ -1634,11 +1625,7 @@ export async function createJavaBom(path, options) {
     // Bazel
     // Look for the BUILD file only in the root directory
     const bazelFiles = getAllFiles(path, "BUILD", options);
-    if (
-      bazelFiles &&
-      bazelFiles.length &&
-      !["scala", "sbt"].includes(options.projectType)
-    ) {
+    if (bazelFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
       let BAZEL_CMD = "bazel";
       if (process.env.BAZEL_HOME) {
         BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
@@ -1702,7 +1689,7 @@ export async function createJavaBom(path, options) {
           if (stdout) {
             const cmdOutput = Buffer.from(stdout).toString();
             const dlist = bazelParser(cmdOutput);
-            if (dlist && dlist.length) {
+            if (dlist?.length) {
               pkgList = pkgList.concat(dlist);
             } else {
               console.log(
@@ -1775,13 +1762,13 @@ export async function createJavaBom(path, options) {
       options,
     );
 
-    if (sbtProjects && sbtProjects.length) {
+    if (sbtProjects?.length) {
       let pkgList = [];
       // If the project use sbt lock files
-      if (sbtLockFiles && sbtLockFiles.length) {
+      if (sbtLockFiles?.length) {
         for (const f of sbtLockFiles) {
           const dlist = parseSbtLock(f);
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
         }
@@ -1885,7 +1872,7 @@ export async function createJavaBom(path, options) {
           }
           if (existsSync(dlFile)) {
             const retMap = parseSbtTree(dlFile);
-            if (retMap.pkgList && retMap.pkgList.length) {
+            if (retMap.pkgList?.length) {
               const tmpParentComponent = retMap.pkgList.splice(0, 1)[0];
               tmpParentComponent.type = "application";
               pkgList = pkgList.concat(retMap.pkgList);
@@ -1954,7 +1941,7 @@ export async function createNodejsBom(path, options) {
     if (pkgJsonFiles.length) {
       for (const pj of pkgJsonFiles) {
         const dlist = await parsePkgJson(pj);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       }
@@ -2015,26 +2002,26 @@ export async function createNodejsBom(path, options) {
     options,
   );
   // Parse min js files
-  if (minJsFiles && minJsFiles.length) {
+  if (minJsFiles?.length) {
     manifestFiles = manifestFiles.concat(minJsFiles);
     for (const f of minJsFiles) {
       const dlist = await parseMinJs(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
   // Parse bower json files
-  if (bowerFiles && bowerFiles.length) {
+  if (bowerFiles?.length) {
     manifestFiles = manifestFiles.concat(bowerFiles);
     for (const f of bowerFiles) {
       const dlist = await parseBowerJson(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
-  if (pnpmLockFiles && pnpmLockFiles.length) {
+  if (pnpmLockFiles?.length) {
     manifestFiles = manifestFiles.concat(pnpmLockFiles);
     for (const f of pnpmLockFiles) {
       const basePath = dirname(f);
@@ -2079,7 +2066,7 @@ export async function createNodejsBom(path, options) {
       // Parse the pnpm file
       const parsedList = await parsePnpmLock(f, parentComponent);
       const dlist = parsedList.pkgList;
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
@@ -2091,7 +2078,7 @@ export async function createNodejsBom(path, options) {
       }
     }
   }
-  if (pkgLockFiles && pkgLockFiles.length) {
+  if (pkgLockFiles?.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
     for (const f of pkgLockFiles) {
       if (DEBUG_MODE) {
@@ -2107,7 +2094,7 @@ export async function createNodejsBom(path, options) {
       } else {
         parentSubComponents.push(tmpParentComponent);
       }
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
       if (parsedList.dependenciesList && parsedList.dependenciesList) {
@@ -2190,7 +2177,7 @@ export async function createNodejsBom(path, options) {
       options.failOnError && process.exit(1);
     }
   }
-  if (yarnLockFiles && yarnLockFiles.length) {
+  if (yarnLockFiles?.length) {
     manifestFiles = manifestFiles.concat(yarnLockFiles);
     for (const f of yarnLockFiles) {
       if (DEBUG_MODE) {
@@ -2249,7 +2236,7 @@ export async function createNodejsBom(path, options) {
       // rush.js could include yarn.lock :(
       const parsedList = await parseYarnLock(f);
       const dlist = parsedList.pkgList;
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
       const rdeplist = [];
@@ -2295,7 +2282,7 @@ export async function createNodejsBom(path, options) {
     manifestFiles = manifestFiles.concat(pkgJsonFiles);
     for (const pkgjf of pkgJsonFiles) {
       const dlist = await parsePkgJson(pkgjf);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2365,7 +2352,7 @@ export async function createPythonBom(path, options) {
     `${options.multiProject ? "**/" : ""}pdm.lock`,
     options,
   );
-  if (pdmLockFiles && pdmLockFiles.length) {
+  if (pdmLockFiles?.length) {
     poetryFiles = poetryFiles.concat(pdmLockFiles);
   }
   let reqFiles = getAllFiles(
@@ -2401,7 +2388,7 @@ export async function createPythonBom(path, options) {
   const pyProjectMode = existsSync(pyProjectFile);
   if (pyProjectMode) {
     const tmpParentComponent = parsePyProjectToml(pyProjectFile);
-    if (tmpParentComponent && tmpParentComponent.name) {
+    if (tmpParentComponent?.name) {
       parentComponent = tmpParentComponent;
       delete parentComponent.homepage;
       delete parentComponent.repository;
@@ -2418,9 +2405,8 @@ export async function createPythonBom(path, options) {
       parentComponent["purl"] = ppurl;
     }
   }
-  const requirementsMode =
-    (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
-  const poetryMode = poetryFiles && poetryFiles.length;
+  const requirementsMode = reqFiles?.length || reqDirFiles?.length;
+  const poetryMode = poetryFiles?.length;
   const setupPyMode = existsSync(setupPy);
   // Poetry sets up its own virtual env containing site-packages so
   // we give preference to poetry lock file. Issue# 129
@@ -2429,11 +2415,11 @@ export async function createPythonBom(path, options) {
       const basePath = dirname(f);
       const lockData = readFileSync(f, { encoding: "utf-8" });
       let retMap = await parsePoetrylockData(lockData, f);
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         pkgList = trimComponents(pkgList);
       }
-      if (retMap.dependenciesList && retMap.dependenciesList.length) {
+      if (retMap.dependenciesList?.length) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
@@ -2444,7 +2430,7 @@ export async function createPythonBom(path, options) {
       // This is a slow operation
       if (options.deep || !dependencies.length) {
         retMap = getPipFrozenTree(basePath, f, tempDir);
-        if (retMap.pkgList && retMap.pkgList.length) {
+        if (retMap.pkgList?.length) {
           pkgList = pkgList.concat(retMap.pkgList);
         }
         if (retMap.dependenciesList) {
@@ -2472,35 +2458,35 @@ export async function createPythonBom(path, options) {
       dependencies,
       parentComponent,
     });
-  } else if (metadataFiles && metadataFiles.length) {
+  } else if (metadataFiles?.length) {
     // dist-info directories
     for (const mf of metadataFiles) {
       const mData = readFileSync(mf, {
         encoding: "utf-8",
       });
       const dlist = parseBdistMetadata(mData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
   // .whl files. Zip file containing dist-info directory
-  if (whlFiles && whlFiles.length) {
+  if (whlFiles?.length) {
     for (const wf of whlFiles) {
       const mData = await readZipEntry(wf, "METADATA");
       if (mData) {
         const dlist = parseBdistMetadata(mData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       }
     }
   }
   // .egg-info files
-  if (eggInfoFiles && eggInfoFiles.length) {
+  if (eggInfoFiles?.length) {
     for (const ef of eggInfoFiles) {
       const dlist = parseBdistMetadata(readFileSync(ef, { encoding: "utf-8" }));
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2512,7 +2498,7 @@ export async function createPythonBom(path, options) {
       if (existsSync(piplockFile)) {
         const lockData = JSON.parse(readFileSync(piplockFile));
         const dlist = await parsePiplockData(lockData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       } else {
@@ -2521,7 +2507,7 @@ export async function createPythonBom(path, options) {
       }
     } else if (requirementsMode) {
       metadataFilename = "requirements.txt";
-      if (reqFiles && reqFiles.length) {
+      if (reqFiles?.length) {
         if (options.installDeps && DEBUG_MODE) {
           console.log(
             "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies in case of any build issues.",
@@ -2536,7 +2522,7 @@ export async function createPythonBom(path, options) {
             // If there are multiple requirements files then the tree is getting constructed for each one
             // adding to the delay.
             const pkgMap = getPipFrozenTree(basePath, f, tempDir);
-            if (pkgMap.pkgList && pkgMap.pkgList.length) {
+            if (pkgMap.pkgList?.length) {
               pkgList = pkgList.concat(pkgMap.pkgList);
               frozen = pkgMap.frozen;
             }
@@ -2557,18 +2543,18 @@ export async function createPythonBom(path, options) {
             }
             reqData = readFileSync(f, { encoding: "utf-8" });
             const dlist = await parseReqFile(reqData, true);
-            if (dlist && dlist.length) {
+            if (dlist?.length) {
               pkgList = pkgList.concat(dlist);
             }
           }
         } // for
         metadataFilename = reqFiles.join(", ");
-      } else if (reqDirFiles && reqDirFiles.length) {
+      } else if (reqDirFiles?.length) {
         for (const j in reqDirFiles) {
           const f = reqDirFiles[j];
           const reqData = readFileSync(f, { encoding: "utf-8" });
           const dlist = await parseReqFile(reqData, false);
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
         }
@@ -2594,7 +2580,7 @@ export async function createPythonBom(path, options) {
       const parentDependsOn = new Set();
       const retMap = await getPyModules(path, pkgList, options);
       // We need to patch the existing package list to add ImportedModules for evinse to work
-      if (retMap.modList && retMap.modList.length) {
+      if (retMap.modList?.length) {
         const iSymbolsMap = {};
         retMap.modList.forEach((v) => {
           iSymbolsMap[v.name] = v.importedSymbols;
@@ -2610,7 +2596,7 @@ export async function createPythonBom(path, options) {
           }
         }
       }
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         for (const p of retMap.pkgList) {
           if (
@@ -2645,7 +2631,7 @@ export async function createPythonBom(path, options) {
         }
         parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
       }
-      if (pkgMap.pkgList && pkgMap.pkgList.length) {
+      if (pkgMap.pkgList?.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
       }
       if (pkgMap.dependenciesList) {
@@ -2678,12 +2664,12 @@ export async function createPythonBom(path, options) {
   if (!pkgList.length && setupPyMode) {
     const setupPyData = readFileSync(setupPy, { encoding: "utf-8" });
     const dlist = await parseSetupPyFile(setupPyData);
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
   if (FETCH_LICENSE) {
@@ -2741,7 +2727,7 @@ export async function createGoBom(path, options) {
       }
       const gosumData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parseGosumData(gosumData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2800,7 +2786,7 @@ export async function createGoBom(path, options) {
           // whyPkg would include this package string
           // github.com/golang/protobuf/proto github.com/golang/protobuf
           // golang.org/x/tools/cmd/goimports golang.org/x/tools
-          if (whyPkg && whyPkg.includes(pkgFullName)) {
+          if (whyPkg?.includes(pkgFullName)) {
             allImports[pkgFullName] = true;
           }
           doneList[pkgFullName] = true;
@@ -2827,7 +2813,7 @@ export async function createGoBom(path, options) {
       }
       const gosumData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parseGosumData(gosumData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         dlist.forEach((pkg) => {
           gosumMap[`${pkg.name}@${pkg.version}`] = pkg._integrity;
         });
@@ -2895,7 +2881,7 @@ export async function createGoBom(path, options) {
         if (stdout) {
           let cmdOutput = Buffer.from(stdout).toString();
           const retMap = await parseGoListDep(cmdOutput, gosumMap);
-          if (retMap.pkgList && retMap.pkgList.length) {
+          if (retMap.pkgList?.length) {
             pkgList = pkgList.concat(retMap.pkgList);
           }
           // We treat the main module as our parent
@@ -2932,11 +2918,11 @@ export async function createGoBom(path, options) {
               pkgList,
               parentComponent,
             );
-            if (retMap.pkgList && retMap.pkgList.length) {
+            if (retMap.pkgList?.length) {
               pkgList = pkgList.concat(retMap.pkgList);
               pkgList = trimComponents(pkgList);
             }
-            if (retMap.dependenciesList && retMap.dependenciesList.length) {
+            if (retMap.dependenciesList?.length) {
               dependencies = mergeDependencies(
                 dependencies,
                 retMap.dependenciesList,
@@ -2974,7 +2960,7 @@ export async function createGoBom(path, options) {
       }
       const gomodData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parseGoModData(gomodData, gosumMap);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -2993,7 +2979,7 @@ export async function createGoBom(path, options) {
         encoding: "utf-8",
       });
       const dlist = await parseGopkgData(gopkgData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3026,7 +3012,7 @@ export async function createRustBom(path, options) {
   if (maybeBinary) {
     const cargoData = getCargoAuditableInfo(path);
     const dlist = await parseCargoAuditableData(cargoData);
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
     }
     // Since this pkg list is derived from the binary mark them as used.
@@ -3065,7 +3051,7 @@ export async function createRustBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await parseCargoTomlData(f, cargoLockMode);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         if (!cargoLockMode) {
           pkgList = pkgList.concat(dlist);
         } else {
@@ -3098,7 +3084,7 @@ export async function createRustBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await parseCargoData(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
 
@@ -3107,7 +3093,7 @@ export async function createRustBom(path, options) {
       }
       const cargoLockData = readFileSync(f, { encoding: "utf-8" });
       const fileDependencylist = parseCargoDependencyData(cargoLockData);
-      if (fileDependencylist && fileDependencylist.length) {
+      if (fileDependencylist?.length) {
         dependencyTree = mergeDependencies(
           dependencyTree,
           fileDependencylist,
@@ -3150,7 +3136,7 @@ export async function createDartBom(path, options) {
       }
       const pubLockData = readFileSync(f, { encoding: "utf-8" });
       const dlist = await parsePubLockData(pubLockData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3165,7 +3151,7 @@ export async function createDartBom(path, options) {
       }
       const pubYamlData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parsePubYamlData(pubYamlData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3204,7 +3190,7 @@ export function createCppBom(path, options) {
     `${options.multiProject ? "**/" : ""}meson.build`,
     options,
   );
-  if (mesonBuildFiles && mesonBuildFiles.length) {
+  if (mesonBuildFiles?.length) {
     cmakeLikeFiles = cmakeLikeFiles.concat(mesonBuildFiles);
   }
   cmakeLikeFiles = cmakeLikeFiles.concat(
@@ -3219,7 +3205,7 @@ export function createCppBom(path, options) {
     `${options.multiProject ? "**/" : ""}*.cmake`,
     options,
   );
-  if (cmakeFiles && cmakeFiles.length) {
+  if (cmakeFiles?.length) {
     cmakeLikeFiles = cmakeLikeFiles.concat(cmakeFiles);
   }
   let pkgList = [];
@@ -3230,7 +3216,7 @@ export function createCppBom(path, options) {
       }
       const conanLockData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseConanLockData(conanLockData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3241,7 +3227,7 @@ export function createCppBom(path, options) {
       }
       const conanData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseConanData(conanData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3253,7 +3239,7 @@ export function createCppBom(path, options) {
       }
       const basePath = dirname(f);
       const retMap = parseCmakeLikeFile(f, "generic");
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (
@@ -3313,7 +3299,7 @@ export function createCppBom(path, options) {
         results,
         true,
       );
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         osPkgsList = osPkgsList.concat(dlist);
       }
     }
@@ -3321,7 +3307,7 @@ export function createCppBom(path, options) {
     // We pass the current list of packages so that we enhance the current list and replace
     // components inadvertently. For example, we might resolved a name, version and url information already via cmake
     const retMap = getCppModules(path, options, osPkgsList, pkgList);
-    if (retMap.pkgList && retMap.pkgList.length) {
+    if (retMap.pkgList?.length) {
       pkgList = pkgList.concat(retMap.pkgList);
     }
     if (retMap.dependenciesList) {
@@ -3406,7 +3392,7 @@ export function createClojureBom(path, options) {
         }
         const leinData = readFileSync(f, { encoding: "utf-8" });
         const dlist = parseLeiningenData(leinData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       } else {
@@ -3414,7 +3400,7 @@ export function createClojureBom(path, options) {
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
           const dlist = parseLeinDep(cmdOutput);
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
         } else {
@@ -3454,7 +3440,7 @@ export function createClojureBom(path, options) {
         }
         const ednData = readFileSync(f, { encoding: "utf-8" });
         const dlist = parseEdnData(ednData);
-        if (dlist && dlist.length) {
+        if (dlist?.length) {
           pkgList = pkgList.concat(dlist);
         }
       } else {
@@ -3462,7 +3448,7 @@ export function createClojureBom(path, options) {
         if (stdout) {
           const cmdOutput = Buffer.from(stdout).toString();
           const dlist = parseCljDep(cmdOutput);
-          if (dlist && dlist.length) {
+          if (dlist?.length) {
             pkgList = pkgList.concat(dlist);
           }
         } else {
@@ -3500,7 +3486,7 @@ export function createHaskellBom(path, options) {
       }
       const cabalData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseCabalData(cabalData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3532,7 +3518,7 @@ export function createElixirBom(path, options) {
       }
       const mixData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseMixLockData(mixData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3564,7 +3550,7 @@ export function createGitHubBom(path, options) {
       }
       const ghwData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseGitHubWorkflowData(ghwData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3592,7 +3578,7 @@ export function createCloudBuildBom(path, options) {
       }
       const cbwData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseCloudBuildData(cbwData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3626,7 +3612,7 @@ export function createOSBom(path, options) {
       results,
       false,
     );
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       if (!Object.keys(parentComponent).length) {
         parentComponent = dlist.splice(0, 1)[0];
       }
@@ -3682,7 +3668,7 @@ export async function createJenkinsBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await extractJarArchive(f, tempDir);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3694,13 +3680,13 @@ export async function createJenkinsBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const dlist = await parseMinJs(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
   }
   // Clean up
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     console.log(`Cleaning up ${tempDir}`);
     rmSync(tempDir, { recursive: true, force: true });
   }
@@ -3731,7 +3717,7 @@ export function createHelmBom(path, options) {
       }
       const helmData = readFileSync(f, { encoding: "utf-8" });
       const dlist = parseHelmYamlData(helmData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3773,7 +3759,7 @@ export async function createSwiftBom(path, options) {
         console.log("Parsing", f);
       }
       const dlist = parseSwiftResolved(f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -3802,7 +3788,7 @@ export async function createSwiftBom(path, options) {
         completedPath.push(basePath);
         treeData = Buffer.from(result.stdout).toString();
         const retData = parseSwiftJsonTree(treeData, f);
-        if (retData.pkgList && retData.pkgList.length) {
+        if (retData.pkgList?.length) {
           parentComponent = retData.pkgList.splice(0, 1)[0];
           parentComponent.type = "application";
           pkgList = pkgList.concat(retData.pkgList);
@@ -3887,7 +3873,7 @@ export async function createContainerSpecLikeBom(path, options) {
     `${options.multiProject ? "**/" : ""}open*.yaml`,
     options,
   );
-  if (oapiYamlFiles && oapiYamlFiles.length) {
+  if (oapiYamlFiles?.length) {
     oapiFiles = oapiFiles.concat(oapiYamlFiles);
   }
   if (yamlFiles.length) {
@@ -3919,7 +3905,7 @@ export async function createContainerSpecLikeBom(path, options) {
         imgList = parseContainerFile(dData);
       }
 
-      if (imgList && imgList.length) {
+      if (imgList?.length) {
         if (DEBUG_MODE) {
           console.log("Images identified in", f, "are", imgList);
         }
@@ -4034,17 +4020,13 @@ export async function createContainerSpecLikeBom(path, options) {
               filename: f,
               nsMapping: {},
             });
-            if (
-              imageBomData &&
-              imageBomData.bomJson &&
-              imageBomData.bomJson.components
-            ) {
+            if (imageBomData?.bomJson?.components) {
               components = components.concat(imageBomData.bomJson.components);
             }
             const bomData = await createBom(img.image, { projectType: "oci" });
             doneimages.push(img.image);
             if (bomData) {
-              if (bomData.components && bomData.components.length) {
+              if (bomData.components?.length) {
                 // Inject properties
                 for (const co of bomData.components) {
                   co.properties = commonProperties;
@@ -4068,7 +4050,7 @@ export async function createContainerSpecLikeBom(path, options) {
       }
       const oaData = readFileSync(af, { encoding: "utf-8" });
       const servlist = parseOpenapiSpecData(oaData);
-      if (servlist && servlist.length) {
+      if (servlist?.length) {
         // Inject SrcFile property
         for (const se of servlist) {
           se.properties = [
@@ -4132,7 +4114,7 @@ export async function createContainerSpecLikeBom(path, options) {
       multiProject: true,
     });
     if (mbomData) {
-      if (mbomData.components && mbomData.components.length) {
+      if (mbomData.components?.length) {
         components = components.concat(mbomData.components);
       }
       // We need to retain the parentComponent. See #527
@@ -4212,7 +4194,7 @@ export function createPHPBom(path, options) {
       console.log("Parsing version", versionResult.stdout);
     }
     const tmpV = undefined;
-    if (versionResult && versionResult.stdout) {
+    if (versionResult?.stdout) {
       versionResult.stdout.split(" ");
     }
     if (tmpV && tmpV.length > 1) {
@@ -4282,7 +4264,7 @@ export function createPHPBom(path, options) {
         }
       }
       const retMap = parseComposerLock(f, rootRequires);
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (retMap.dependenciesList) {
@@ -4372,18 +4354,18 @@ export async function createRubyBom(path, options) {
       }
       const gemLockData = readFileSync(f, { encoding: "utf-8" });
       const retMap = await parseGemfileLockData(gemLockData, f);
-      if (retMap.pkgList && retMap.pkgList.length) {
+      if (retMap.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
         pkgList = trimComponents(pkgList);
       }
-      if (retMap.dependenciesList && retMap.dependenciesList.length) {
+      if (retMap.dependenciesList?.length) {
         dependencies = mergeDependencies(
           dependencies,
           retMap.dependenciesList,
           parentComponent,
         );
       }
-      if (retMap.rootList && retMap.rootList.length) {
+      if (retMap.rootList?.length) {
         rootList = rootList.concat(retMap.rootList);
       }
     }
@@ -4513,7 +4495,7 @@ export async function createCsharpBom(path, options) {
         console.log(`Parsing ${nf}`);
       }
       const dlist = await parseNupkg(nf);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -4529,10 +4511,10 @@ export async function createCsharpBom(path, options) {
       const results = parseCsProjAssetsData(pkgData, af);
       const deps = results["dependenciesList"];
       const dlist = results["pkgList"];
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
-      if (deps && deps.length) {
+      if (deps?.length) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
@@ -4569,15 +4551,15 @@ export async function createCsharpBom(path, options) {
       const deps = results["dependenciesList"];
       const dlist = results["pkgList"];
       const rootList = results["rootList"];
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
-      if (deps && deps.length) {
+      if (deps?.length) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
       // Keep track of the direct dependencies so that we can construct one complete
       // list after processing all lock files
-      if (rootList && rootList.length) {
+      if (rootList?.length) {
         for (const p of rootList) {
           parentDependsOn.add(p["bom-ref"]);
         }
@@ -4602,7 +4584,7 @@ export async function createCsharpBom(path, options) {
         pkgData = pkgData.slice(1);
       }
       const dlist = parseCsPkgData(pkgData);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -4618,10 +4600,10 @@ export async function createCsharpBom(path, options) {
       const results = parsePaketLockData(pkgData, f);
       const dlist = results.pkgList;
       const deps = results.dependenciesList;
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
-      if (deps && deps.length) {
+      if (deps?.length) {
         dependencies = mergeDependencies(dependencies, deps, parentComponent);
       }
     }
@@ -4639,7 +4621,7 @@ export async function createCsharpBom(path, options) {
         csProjData = csProjData.slice(1);
       }
       const dlist = parseCsProjData(csProjData, f);
-      if (dlist && dlist.length) {
+      if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
     }
@@ -4671,7 +4653,7 @@ export async function createCsharpBom(path, options) {
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
-    if (retMap.dependencies && retMap.dependencies.length) {
+    if (retMap.dependencies?.length) {
       dependencies = mergeDependencies(
         dependencies,
         retMap.dependencies,
@@ -4742,10 +4724,9 @@ export function mergeDependencies(
   let providesFound = false;
   const deps_map = {};
   const provides_map = {};
-  const parentRef =
-    parentComponent && parentComponent["bom-ref"]
-      ? parentComponent["bom-ref"]
-      : undefined;
+  const parentRef = parentComponent?.["bom-ref"]
+    ? parentComponent["bom-ref"]
+    : undefined;
   const combinedDeps = dependencies.concat(newDependencies || []);
   for (const adep of combinedDeps) {
     if (!deps_map[adep.ref]) {
@@ -4873,11 +4854,11 @@ export async function createMultiXBom(pathList, options) {
         `Found ${osPackages.length} OS packages at ${options.allLayersExplodedDir}`,
       );
     }
-    if (allTypes && allTypes.length) {
+    if (allTypes?.length) {
       options.allOSComponentTypes = allTypes;
     }
     components = components.concat(osPackages);
-    if (dependenciesList && dependenciesList.length) {
+    if (dependenciesList?.length) {
       dependencies = dependencies.concat(dependenciesList);
     }
     if (parentComponent && Object.keys(parentComponent).length) {
@@ -4891,7 +4872,7 @@ export async function createMultiXBom(pathList, options) {
   }
   if (options.projectType === "os" && options.bomData) {
     bomData = options.bomData;
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(`Found ${bomData.bomJson.components.length} OS components`);
       }
@@ -4903,12 +4884,7 @@ export async function createMultiXBom(pathList, options) {
       console.log("Scanning", path);
     }
     bomData = await createNodejsBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} npm packages at ${path}`,
@@ -4923,22 +4899,14 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
       // Retain metadata.component.components
-      if (
-        bomData.parentComponent.components &&
-        bomData.parentComponent.components.length
-      ) {
+      if (bomData.parentComponent.components?.length) {
         parentSubComponents = parentSubComponents.concat(
           bomData.parentComponent.components,
         );
       }
     }
     bomData = await createJavaBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} java packages at ${path}`,
@@ -4953,22 +4921,14 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
       // Retain metadata.component.components
-      if (
-        bomData.parentComponent.components &&
-        bomData.parentComponent.components.length
-      ) {
+      if (bomData.parentComponent.components?.length) {
         parentSubComponents = parentSubComponents.concat(
           bomData.parentComponent.components,
         );
       }
     }
     bomData = await createPythonBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} python packages at ${path}`,
@@ -4984,12 +4944,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createGoBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} go packages at ${path}`,
@@ -5005,7 +4960,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createRustBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} rust packages at ${path}`,
@@ -5020,17 +4975,14 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
       // Retain metadata.component.components
-      if (
-        bomData.parentComponent.components &&
-        bomData.parentComponent.components.length
-      ) {
+      if (bomData.parentComponent.components?.length) {
         parentSubComponents = parentSubComponents.concat(
           bomData.parentComponent.components,
         );
       }
     }
     bomData = createPHPBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} php packages at ${path}`,
@@ -5046,7 +4998,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createRubyBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} ruby packages at ${path}`,
@@ -5066,12 +5018,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createCsharpBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} csharp packages at ${path}`,
@@ -5087,7 +5034,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createDartBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} pub packages at ${path}`,
@@ -5103,7 +5050,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createHaskellBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} hackage packages at ${path}`,
@@ -5119,7 +5066,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createElixirBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} mix packages at ${path}`,
@@ -5135,7 +5082,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createCppBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} cpp packages at ${path}`,
@@ -5151,7 +5098,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createClojureBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} clojure packages at ${path}`,
@@ -5167,7 +5114,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createGitHubBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} GitHub action packages at ${path}`,
@@ -5183,7 +5130,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = createCloudBuildBom(path, options);
-    if (bomData && bomData.bomJson && bomData.bomJson.components) {
+    if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} CloudBuild configuration at ${path}`,
@@ -5199,12 +5146,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     bomData = await createSwiftBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} Swift packages at ${path}`,
@@ -5222,12 +5164,7 @@ export async function createMultiXBom(pathList, options) {
     // Jar scanning is enabled by default
     // See #330
     bomData = createJarBom(path, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} jar packages at ${path}`,
@@ -5245,12 +5182,7 @@ export async function createMultiXBom(pathList, options) {
     // Collect any crypto keys
     if (options.specVersion >= 1.6 && options.includeCrypto) {
       bomData = await createCryptoCertsBom(path, options);
-      if (
-        bomData &&
-        bomData.bomJson &&
-        bomData.bomJson.components &&
-        bomData.bomJson.components.length
-      ) {
+      if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
           console.log(
             `Found ${bomData.bomJson.components.length} crypto assets at ${path}`,
@@ -5267,12 +5199,7 @@ export async function createMultiXBom(pathList, options) {
     !options.lastWorkingDir.includes("/home/")
   ) {
     bomData = createJarBom(options.lastWorkingDir, options);
-    if (
-      bomData &&
-      bomData.bomJson &&
-      bomData.bomJson.components &&
-      bomData.bomJson.components.length
-    ) {
+    if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
           `Found ${bomData.bomJson.components.length} jar packages at ${options.lastWorkingDir}`,
@@ -5371,8 +5298,7 @@ export async function createXBom(path, options) {
     `${options.multiProject ? "**/" : ""}requirements/*.txt`,
     options,
   );
-  const requirementsMode =
-    (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
+  const requirementsMode = reqFiles?.length || reqDirFiles?.length;
   const whlFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}*.whl`,
@@ -5709,8 +5635,7 @@ export async function createBom(path, options) {
     // Create parent component based on the inspect config
     const inspectData = exportData.inspectData;
     if (
-      inspectData &&
-      inspectData.RepoDigests &&
+      inspectData?.RepoDigests &&
       inspectData.RepoTags &&
       Array.isArray(inspectData.RepoDigests) &&
       Array.isArray(inspectData.RepoTags) &&
@@ -5764,10 +5689,7 @@ export async function createBom(path, options) {
       [...new Set(exportData.pkgPathList)],
       options,
     );
-    if (
-      exportData.allLayersDir &&
-      exportData.allLayersDir.startsWith(tmpdir())
-    ) {
+    if (exportData.allLayersDir?.startsWith(tmpdir())) {
       if (DEBUG_MODE) {
         console.log(`Cleaning up ${exportData.allLayersDir}`);
       }

@@ -26,10 +26,10 @@ export function collectOSCryptoLibs(options) {
       results,
       false,
     );
-    if (dlist && dlist.length) {
+    if (dlist?.length) {
       osPkgsList = osPkgsList.concat(dlist);
       // Should we downgrade from cryptographic-asset to data for < 1.6 spec
-      if (options && options.specVersion && options.specVersion < 1.6) {
+      if (options?.specVersion && options.specVersion < 1.6) {
         for (const apkg of osPkgsList) {
           if (apkg.type === "cryptographic-asset") {
             apkg.type = "data";

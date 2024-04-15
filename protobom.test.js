@@ -26,7 +26,7 @@ test("proto binary tests", () => {
   expect(bomObject.serialNumber).toEqual(
     "urn:uuid:cc8b5a04-2698-4375-b04c-cedfa4317fee",
   );
-  if (tempDir && tempDir.startsWith(tmpdir()) && rmSync) {
+  if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
 });
