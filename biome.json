@@ -9,13 +9,9 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noBannedTypes": "warn",
         "noForEach": "off",
         "useLiteralKeys": "off",
         "useOptionalChain": "off"
-      },
-      "correctness": {
-        "noUnnecessaryContinue": "warn"
       },
       "performance": {
         "noDelete": "off"
@@ -23,12 +19,10 @@
       "style": {
         "noParameterAssign": "off",
         "noUnusedTemplateLiteral": "off",
-        "noUselessElse": "off",
-        "useDefaultParameterLast": "warn"
+        "noUselessElse": "off"
       },
       "suspicious": {
         "noDoubleEquals": "off",
-        "noExplicitAny": "warn",
         "noAssignInExpressions": "off"
       }
     }
