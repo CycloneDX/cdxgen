@@ -915,7 +915,7 @@ export const constructServiceName = (language, slice) => {
     serviceName = path.basename(slice.fileName).split(".")[0];
   }
   if (!serviceName.endsWith("service")) {
-    serviceName = serviceName + "-service";
+    serviceName = `${serviceName}-service`;
   }
   return serviceName;
 };
@@ -1288,7 +1288,7 @@ export const collectReachableFrames = (language, reachablesSlice) => {
         }
       }
       if (isCryptoFlow && fnode.code) {
-        codeSnippets = codeSnippets + "\\n" + fnode.code;
+        codeSnippets = `${codeSnippets}\\n${fnode.code}`;
       }
       if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
         continue;

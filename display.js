@@ -162,7 +162,7 @@ export const printCallStack = (bomJson) => {
     const frames = Array.from(
       new Set(
         comp.evidence.callstack.frames.map(
-          (c) => `${c.fullFilename}${c.line ? "#" + c.line : ""}`,
+          (c) => `${c.fullFilename}${c.line ? `#${c.line}` : ""}`,
         ),
       ),
     ).sort(locationComparator);
@@ -299,7 +299,7 @@ export const printReachables = (sliceArtefacts) => {
   );
   const data = [["Package URL", "Reachable Flows"]];
   for (const apurl of Object.keys(sortedPurls)) {
-    data.push([apurl, "" + sortedPurls[apurl]]);
+    data.push([apurl, `${sortedPurls[apurl]}`]);
   }
   const config = {
     header: {

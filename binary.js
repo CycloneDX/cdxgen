@@ -83,7 +83,7 @@ if (
       dirName,
       "node_modules",
       "@cyclonedx",
-      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      `cdxgen-plugins-bin${pluginsBinSuffix}`,
       "plugins",
     ),
   ) &&
@@ -92,7 +92,7 @@ if (
       dirName,
       "node_modules",
       "@cyclonedx",
-      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      `cdxgen-plugins-bin${pluginsBinSuffix}`,
       "plugins",
       "goversion",
     ),
@@ -102,7 +102,7 @@ if (
     dirName,
     "node_modules",
     "@cyclonedx",
-    "cdxgen-plugins-bin" + pluginsBinSuffix,
+    `cdxgen-plugins-bin${pluginsBinSuffix}`,
     "plugins",
   );
 }
@@ -120,7 +120,7 @@ if (!CDXGEN_PLUGINS_DIR) {
     if (result) {
       const stdout = result.stdout;
       if (stdout) {
-        globalNodePath = Buffer.from(stdout).toString().trim() + "/";
+        globalNodePath = `${Buffer.from(stdout).toString().trim()}/`;
       }
     }
   }
@@ -128,7 +128,7 @@ if (!CDXGEN_PLUGINS_DIR) {
     const globalPlugins = join(
       globalNodePath,
       "@cyclonedx",
-      "cdxgen-plugins-bin" + pluginsBinSuffix,
+      `cdxgen-plugins-bin${pluginsBinSuffix}`,
       "plugins",
     );
     if (existsSync(globalPlugins)) {
@@ -153,7 +153,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "goversion"))) {
   GOVERSION_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "goversion",
-    "goversion-" + platform + "-" + arch + extn,
+    `goversion-${platform}-${arch}${extn}`,
   );
 }
 let TRIVY_BIN = null;
@@ -161,7 +161,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "trivy"))) {
   TRIVY_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "trivy",
-    "trivy-cdxgen-" + platform + "-" + arch + extn,
+    `trivy-cdxgen-${platform}-${arch}${extn}`,
   );
 } else if (process.env.TRIVY_CMD) {
   TRIVY_BIN = process.env.TRIVY_CMD;
@@ -171,7 +171,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "cargo-auditable"))) {
   CARGO_AUDITABLE_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "cargo-auditable",
-    "cargo-auditable-cdxgen-" + platform + "-" + arch + extn,
+    `cargo-auditable-cdxgen-${platform}-${arch}${extn}`,
   );
 } else if (process.env.CARGO_AUDITABLE_CMD) {
   CARGO_AUDITABLE_BIN = process.env.CARGO_AUDITABLE_CMD;
@@ -181,7 +181,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
   OSQUERY_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "osquery",
-    "osqueryi-" + platform + "-" + arch + extn,
+    `osqueryi-${platform}-${arch}${extn}`,
   );
   // osqueryi-darwin-amd64.app/Contents/MacOS/osqueryd
   if (platform === "darwin") {
@@ -199,7 +199,7 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
   DOSAI_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "dosai",
-    "dosai-" + platformToUse + "-" + arch + extn,
+    `dosai-${platformToUse}-${arch}${extn}`,
   );
 } else if (process.env.DOSAI_CMD) {
   DOSAI_BIN = process.env.DOSAI_CMD;
@@ -451,7 +451,7 @@ export function getOSPackages(src) {
           break;
       }
       if (osReleaseData["VERSION_ID"]) {
-        distro_id = distro_id + "-" + osReleaseData["VERSION_ID"];
+        distro_id = `${distro_id}-${osReleaseData["VERSION_ID"]}`;
       }
       const tmpDependencies = {};
       (tmpBom.dependencies || []).forEach((d) => {
@@ -537,7 +537,7 @@ export function getOSPackages(src) {
                   } else if (group === "alpine") {
                     const dtmpA = purlObj.qualifiers.distro.split(".");
                     if (dtmpA && dtmpA.length > 2) {
-                      distro_codename = dtmpA[0] + "." + dtmpA[1];
+                      distro_codename = `${dtmpA[0]}.${dtmpA[1]}`;
                     }
                   } else if (group === "photon") {
                     const dtmpA = purlObj.qualifiers.distro.split("-");
@@ -699,7 +699,7 @@ const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
 export function executeOsQuery(query) {
   if (OSQUERY_BIN) {
     if (!query.endsWith(";")) {
-      query = query + ";";
+      query = `${query};`;
     }
     const args = ["--json", query];
     // On darwin, we need to disable the safety check and run cdxgen with sudo

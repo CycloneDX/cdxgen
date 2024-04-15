@@ -59,7 +59,7 @@ const registry_auth_keys = {};
  */
 export const getDirs = (dirPath, dirName, hidden = false, recurse = true) => {
   try {
-    return globSync(recurse ? "**/" : "" + dirName, {
+    return globSync(recurse ? "**/" : `${dirName}`, {
       cwd: dirPath,
       absolute: true,
       nocase: true,
@@ -451,7 +451,7 @@ export const parseImageName = (fullImageName) => {
       tmpA[0].includes(":")
     ) {
       nameObj.registry = tmpA[0];
-      fullImageName = fullImageName.replace(tmpA[0] + "/", "");
+      fullImageName = fullImageName.replace(`${tmpA[0]}/`, "");
     }
   }
 
@@ -460,7 +460,7 @@ export const parseImageName = (fullImageName) => {
     const tmpA = fullImageName.split("@sha256:");
     if (tmpA.length > 1) {
       nameObj.digest = tmpA[tmpA.length - 1];
-      fullImageName = fullImageName.replace("@sha256:" + nameObj.digest, "");
+      fullImageName = fullImageName.replace(`@sha256:${nameObj.digest}`, "");
     }
   }
 
@@ -469,7 +469,7 @@ export const parseImageName = (fullImageName) => {
     const tmpA = fullImageName.split(":");
     if (tmpA.length > 1) {
       nameObj.tag = tmpA[tmpA.length - 1];
-      fullImageName = fullImageName.replace(":" + nameObj.tag, "");
+      fullImageName = fullImageName.replace(`:${nameObj.tag}`, "");
     }
   }
 
@@ -482,7 +482,7 @@ export const parseImageName = (fullImageName) => {
     const tmpA = fullImageName.split("/");
     if (tmpA.length > 1) {
       nameObj.name = tmpA[tmpA.length - 1];
-      nameObj.group = fullImageName.replace("/" + tmpA[tmpA.length - 1], "");
+      nameObj.group = fullImageName.replace(`/${tmpA[tmpA.length - 1]}`, "");
     }
   }
 
@@ -516,7 +516,7 @@ export const getImage = async (fullImageName) => {
       : `${repo}:${tag !== "" ? tag : ":latest"}`;
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
-    fullImageName = fullImageName + ":latest";
+    fullImageName = `${fullImageName}:latest`;
   }
   if (isContainerd) {
     console.log(
@@ -926,7 +926,7 @@ export const exportImage = async (fullImageName) => {
   const { registry, tag, digest } = parseImageName(fullImageName);
   // Fetch only the latest tag if none is specified
   if (tag === "" && digest === "") {
-    fullImageName = fullImageName + ":latest";
+    fullImageName = `${fullImageName}:latest`;
   }
   const tempDir = mkdtempSync(join(tmpdir(), "docker-images-"));
   const allLayersExplodedDir = join(tempDir, "all-layers");
@@ -1156,7 +1156,7 @@ export const getCredsFromHelper = (exeSuffix, serverAddress) => {
   }
   let credHelperExe = `docker-credential-${exeSuffix}`;
   if (isWin) {
-    credHelperExe = credHelperExe + ".exe";
+    credHelperExe = `${credHelperExe}.exe`;
   }
   const result = spawnSync(credHelperExe, ["get"], {
     input: serverAddress,

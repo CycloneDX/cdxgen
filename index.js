@@ -225,7 +225,7 @@ const createDefaultParentComponent = (
   const parentComponent = {
     group: options.projectGroup || "",
     name: options.projectName || dirNameStr,
-    version: "" + options.projectVersion || "latest",
+    version: `${options.projectVersion}` || "latest",
     type: "application",
   };
   const ppurl = new PackageURL(
@@ -249,7 +249,7 @@ const determineParentComponent = (options) => {
     parentComponent = {
       group: options.projectGroup || "",
       name: options.projectName,
-      version: "" + options.projectVersion || "",
+      version: `${options.projectVersion}` || "",
       type: "application",
     };
     const ppurl = new PackageURL(
@@ -529,7 +529,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
             fullName !== parentFullName &&
             !(
               (comp.name === parentComponent.name ||
-                comp.name === parentComponent.name + ":latest") &&
+                comp.name === `${parentComponent.name}:latest`) &&
               comp.version === "latest"
             )
           ) {
@@ -787,10 +787,10 @@ function addComponent(
       const impPkgs = Object.keys(allImports);
       if (
         impPkgs.includes(name) ||
-        impPkgs.includes(group + "/" + name) ||
-        impPkgs.includes("@" + group + "/" + name) ||
+        impPkgs.includes(`${group}/${name}`) ||
+        impPkgs.includes(`@${group}/${name}`) ||
         impPkgs.includes(group) ||
-        impPkgs.includes("@" + group)
+        impPkgs.includes(`@${group}`)
       ) {
         compScope = "required";
       } else if (impPkgs.length) {
@@ -1011,7 +1011,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     dependencies: undefined,
     parentComponent: undefined,
   };
-  const serialNum = "urn:uuid:" + uuidv4();
+  const serialNum = `urn:uuid:${uuidv4()}`;
   let allImports = {};
   if (context && context.allImports) {
     allImports = context.allImports;
@@ -1026,7 +1026,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     // CycloneDX 1.5 Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
-      specVersion: "" + (options.specVersion || "1.5"),
+      specVersion: `${options.specVersion || "1.5"}`,
       serialNumber: serialNum,
       version: 1,
       metadata: metadata,
@@ -1082,14 +1082,14 @@ export async function createJarBom(path, options) {
   } else {
     jarFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "*.[jw]ar",
+      `${options.multiProject ? "**/" : ""}*.[jw]ar`,
       options,
     );
   }
   // Jenkins plugins
   const hpiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.hpi",
+    `${options.multiProject ? "**/" : ""}*.hpi`,
     options,
   );
   if (hpiFiles.length) {
@@ -1200,7 +1200,7 @@ export async function createJavaBom(path, options) {
     // maven - pom.xml
     const pomFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "pom.xml",
+      `${options.multiProject ? "**/" : ""}pom.xml`,
       options,
     );
     let bomJsonFiles = [];
@@ -1274,7 +1274,7 @@ export async function createJavaBom(path, options) {
         if (!bomGenerated || result.status !== 0 || result.error) {
           const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
           const tempMvnTree = join(tempDir, "mvn-tree.txt");
-          let mvnTreeArgs = ["dependency:tree", "-DoutputFile=" + tempMvnTree];
+          let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
           if (process.env.MVN_ARGS) {
             const addArgs = process.env.MVN_ARGS.split(" ");
             mvnTreeArgs = mvnTreeArgs.concat(addArgs);
@@ -1433,7 +1433,7 @@ export async function createJavaBom(path, options) {
     // gradle
     const gradleFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "build.gradle*",
+      `${options.multiProject ? "**/" : ""}build.gradle*`,
       options,
     );
     const allProjects = [];
@@ -1739,8 +1739,9 @@ export async function createJavaBom(path, options) {
     // Detecting one of those should be enough to determine an SBT project.
     let sbtProjectFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") +
-        "project/{build.properties,*.sbt,*.scala}",
+      `${
+        options.multiProject ? "**/" : ""
+      }project/{build.properties,*.sbt,*.scala}`,
       options,
     );
 
@@ -1756,7 +1757,7 @@ export async function createJavaBom(path, options) {
     if (!sbtProjects.length) {
       sbtProjectFiles = getAllFiles(
         path,
-        (options.multiProject ? "**/" : "") + "*.sbt",
+        `${options.multiProject ? "**/" : ""}*.sbt`,
         options,
       );
       for (const i in sbtProjectFiles) {
@@ -1766,11 +1767,11 @@ export async function createJavaBom(path, options) {
     }
     // eliminate duplicates and ignore project directories
     sbtProjects = [...new Set(sbtProjects)].filter(
-      (p) => !p.endsWith(sep + "project") && !p.includes("target" + sep),
+      (p) => !p.endsWith(`${sep}project`) && !p.includes(`target${sep}`),
     );
     const sbtLockFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "build.sbt.lock",
+      `${options.multiProject ? "**/" : ""}build.sbt.lock`,
       options,
     );
 
@@ -1799,7 +1800,7 @@ export async function createJavaBom(path, options) {
           }
         }
         if (DEBUG_MODE) {
-          console.log("Detected sbt version: " + sbtVersion);
+          console.log(`Detected sbt version: ${sbtVersion}`);
         }
         // Introduced in 1.2.0 https://www.scala-sbt.org/1.x/docs/sbt-1.2-Release-Notes.html#addPluginSbtFile+command,
         // however working properly for real only since 1.3.4: https://github.com/sbt/sbt/releases/tag/v1.3.4
@@ -1828,7 +1829,7 @@ export async function createJavaBom(path, options) {
         writeFileSync(tempSbtPlugins, sbtPluginDefinition);
         for (const i in sbtProjects) {
           const basePath = sbtProjects[i];
-          const dlFile = join(tempDir, "dl-" + i + ".tmp");
+          const dlFile = join(tempDir, `dl-${i}.tmp`);
           let sbtArgs = [];
           let pluginFile = null;
           if (standalonePluginFile) {
@@ -1982,17 +1983,17 @@ export async function createNodejsBom(path, options) {
   }
   const yarnLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "yarn.lock",
+    `${options.multiProject ? "**/" : ""}yarn.lock`,
     options,
   );
   const shrinkwrapFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "npm-shrinkwrap.json",
+    `${options.multiProject ? "**/" : ""}npm-shrinkwrap.json`,
     options,
   );
   let pkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "package-lock.json",
+    `${options.multiProject ? "**/" : ""}package-lock.json`,
     options,
   );
   if (shrinkwrapFiles.length) {
@@ -2000,17 +2001,17 @@ export async function createNodejsBom(path, options) {
   }
   const pnpmLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pnpm-lock.yaml",
+    `${options.multiProject ? "**/" : ""}pnpm-lock.yaml`,
     options,
   );
   const minJsFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*min.js",
+    `${options.multiProject ? "**/" : ""}*min.js`,
     options,
   );
   const bowerFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "bower.json",
+    `${options.multiProject ? "**/" : ""}bower.json`,
     options,
   );
   // Parse min js files
@@ -2356,12 +2357,12 @@ export async function createPythonBom(path, options) {
   const pipenvMode = existsSync(join(path, "Pipfile"));
   let poetryFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "poetry.lock",
+    `${options.multiProject ? "**/" : ""}poetry.lock`,
     options,
   );
   const pdmLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pdm.lock",
+    `${options.multiProject ? "**/" : ""}pdm.lock`,
     options,
   );
   if (pdmLockFiles && pdmLockFiles.length) {
@@ -2369,7 +2370,7 @@ export async function createPythonBom(path, options) {
   }
   let reqFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements*.txt",
+    `${options.multiProject ? "**/" : ""}*requirements*.txt`,
     options,
   );
   reqFiles = reqFiles.filter(
@@ -2377,22 +2378,22 @@ export async function createPythonBom(path, options) {
   );
   const reqDirFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "requirements/*.txt",
+    `${options.multiProject ? "**/" : ""}requirements/*.txt`,
     options,
   );
   const metadataFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/site-packages/**/" : "") + "METADATA",
+    `${options.multiProject ? "**/site-packages/**/" : ""}METADATA`,
     options,
   );
   const whlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.whl",
+    `${options.multiProject ? "**/" : ""}*.whl`,
     options,
   );
   const eggInfoFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.egg-info",
+    `${options.multiProject ? "**/" : ""}*.egg-info`,
     options,
   );
   const setupPy = join(path, "setup.py");
@@ -2722,7 +2723,7 @@ export async function createGoBom(path, options) {
   // Read in go.sum and merge all go.sum files.
   const gosumFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.sum",
+    `${options.multiProject ? "**/" : ""}go.sum`,
     options,
   );
 
@@ -2837,14 +2838,14 @@ export async function createGoBom(path, options) {
   // Read in data from Gopkg.lock files if they exist
   const gopkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gopkg.lock",
+    `${options.multiProject ? "**/" : ""}Gopkg.lock`,
     options,
   );
 
   // Read in go.mod files and parse BOM components with checksums from gosumData
   const gomodFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.mod",
+    `${options.multiProject ? "**/" : ""}go.mod`,
     options,
   );
   if (gomodFiles.length) {
@@ -3042,12 +3043,12 @@ export async function createRustBom(path, options) {
   }
   let cargoLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.lock",
+    `${options.multiProject ? "**/" : ""}Cargo.lock`,
     options,
   );
   const cargoFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.toml",
+    `${options.multiProject ? "**/" : ""}Cargo.toml`,
     options,
   );
   // This function assumes that the given path is prioritized, i.e that the
@@ -3087,7 +3088,7 @@ export async function createRustBom(path, options) {
   // Get the new lock files
   cargoLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.lock",
+    `${options.multiProject ? "**/" : ""}Cargo.lock`,
     options,
   );
   let dependencyTree = [];
@@ -3133,12 +3134,12 @@ export async function createRustBom(path, options) {
 export async function createDartBom(path, options) {
   const pubFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.lock",
+    `${options.multiProject ? "**/" : ""}pubspec.lock`,
     options,
   );
   const pubSpecYamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.yaml",
+    `${options.multiProject ? "**/" : ""}pubspec.yaml`,
     options,
   );
   let pkgList = [];
@@ -3189,18 +3190,18 @@ export function createCppBom(path, options) {
   const addedParentComponentsMap = {};
   const conanLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conan.lock",
+    `${options.multiProject ? "**/" : ""}conan.lock`,
     options,
   );
   const conanFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conanfile.txt",
+    `${options.multiProject ? "**/" : ""}conanfile.txt`,
     options,
   );
   let cmakeLikeFiles = [];
   const mesonBuildFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "meson.build",
+    `${options.multiProject ? "**/" : ""}meson.build`,
     options,
   );
   if (mesonBuildFiles && mesonBuildFiles.length) {
@@ -3209,13 +3210,13 @@ export function createCppBom(path, options) {
   cmakeLikeFiles = cmakeLikeFiles.concat(
     getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "CMakeLists.txt",
+      `${options.multiProject ? "**/" : ""}CMakeLists.txt`,
       options,
     ),
   );
   const cmakeFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.cmake",
+    `${options.multiProject ? "**/" : ""}*.cmake`,
     options,
   );
   if (cmakeFiles && cmakeFiles.length) {
@@ -3366,12 +3367,12 @@ export function createCppBom(path, options) {
 export function createClojureBom(path, options) {
   const ednFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "deps.edn",
+    `${options.multiProject ? "**/" : ""}deps.edn`,
     options,
   );
   const leinFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "project.clj",
+    `${options.multiProject ? "**/" : ""}project.clj`,
     options,
   );
   let pkgList = [];
@@ -3488,7 +3489,7 @@ export function createClojureBom(path, options) {
 export function createHaskellBom(path, options) {
   const cabalFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "cabal.project.freeze",
+    `${options.multiProject ? "**/" : ""}cabal.project.freeze`,
     options,
   );
   let pkgList = [];
@@ -3520,7 +3521,7 @@ export function createHaskellBom(path, options) {
 export function createElixirBom(path, options) {
   const mixFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "mix.lock",
+    `${options.multiProject ? "**/" : ""}mix.lock`,
     options,
   );
   let pkgList = [];
@@ -3671,7 +3672,7 @@ export async function createJenkinsBom(path, options) {
   let pkgList = [];
   const hpiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.hpi",
+    `${options.multiProject ? "**/" : ""}*.hpi`,
     options,
   );
   const tempDir = mkdtempSync(join(tmpdir(), "hpi-deps-"));
@@ -3720,7 +3721,7 @@ export function createHelmBom(path, options) {
   let pkgList = [];
   const yamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.yaml",
+    `${options.multiProject ? "**/" : ""}*.yaml`,
     options,
   );
   if (yamlFiles.length) {
@@ -3751,12 +3752,12 @@ export function createHelmBom(path, options) {
 export async function createSwiftBom(path, options) {
   const swiftFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package*.swift",
+    `${options.multiProject ? "**/" : ""}Package*.swift`,
     options,
   );
   const pkgResolvedFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package.resolved",
+    `${options.multiProject ? "**/" : ""}Package.resolved`,
     options,
   );
   let pkgList = [];
@@ -3853,37 +3854,37 @@ export async function createContainerSpecLikeBom(path, options) {
   const origProjectType = options.projectType;
   let dcFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.yml",
+    `${options.multiProject ? "**/" : ""}*.yml`,
     options,
   );
   const dfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    `${options.multiProject ? "**/" : ""}*Dockerfile*`,
     options,
   );
   const bbPipelineFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "bitbucket-pipelines.yml",
+    `${options.multiProject ? "**/" : ""}bitbucket-pipelines.yml`,
     options,
   );
   const cfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Containerfile*",
+    `${options.multiProject ? "**/" : ""}*Containerfile*`,
     options,
   );
   const yamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.yaml",
+    `${options.multiProject ? "**/" : ""}*.yaml`,
     options,
   );
   let oapiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "open*.json",
+    `${options.multiProject ? "**/" : ""}open*.json`,
     options,
   );
   const oapiYamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "open*.yaml",
+    `${options.multiProject ? "**/" : ""}open*.yaml`,
     options,
   );
   if (oapiYamlFiles && oapiYamlFiles.length) {
@@ -3999,7 +4000,7 @@ export async function createContainerSpecLikeBom(path, options) {
               group: imageObj.group,
               version:
                 imageObj.tag ||
-                (imageObj.digest ? "sha256:" + imageObj.digest : "latest"),
+                (imageObj.digest ? `sha256:${imageObj.digest}` : "latest"),
               qualifiers: {},
               properties: commonProperties,
               type: "container",
@@ -4173,7 +4174,7 @@ export function createPHPBom(path, options) {
   let parentComponent = {};
   const composerJsonFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.json",
+    `${options.multiProject ? "**/" : ""}composer.json`,
     options,
   );
   if (!options.exclude) {
@@ -4183,7 +4184,7 @@ export function createPHPBom(path, options) {
   options.exclude.push("**/vendor/**");
   let composerLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.lock",
+    `${options.multiProject ? "**/" : ""}composer.lock`,
     options,
   );
   let pkgList = [];
@@ -4240,7 +4241,7 @@ export function createPHPBom(path, options) {
   }
   composerLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.lock",
+    `${options.multiProject ? "**/" : ""}composer.lock`,
     options,
   );
   if (composerLockFiles.length) {
@@ -4328,12 +4329,12 @@ export function createPHPBom(path, options) {
 export async function createRubyBom(path, options) {
   const gemFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile",
+    `${options.multiProject ? "**/" : ""}Gemfile`,
     options,
   );
   let gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
+    `${options.multiProject ? "**/" : ""}Gemfile*.lock`,
     options,
   );
   let pkgList = [];
@@ -4361,7 +4362,7 @@ export async function createRubyBom(path, options) {
   }
   gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
+    `${options.multiProject ? "**/" : ""}Gemfile*.lock`,
     options,
   );
   if (gemLockFiles.length) {
@@ -4423,58 +4424,46 @@ export async function createCsharpBom(path, options) {
   const parentComponent = createDefaultParentComponent(path, "nuget", options);
   const slnFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.sln",
+    `${options.multiProject ? "**/" : ""}*.sln`,
     options,
   );
   let csProjFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.csproj",
+    `${options.multiProject ? "**/" : ""}*.csproj`,
     options,
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.vbproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.vbproj`, options),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.vcxproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.vcxproj`, options),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.fsproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.fsproj`, options),
   );
   const pkgConfigFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "packages.config",
+    `${options.multiProject ? "**/" : ""}packages.config`,
     options,
   );
   let projAssetsFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "project.assets.json",
+    `${options.multiProject ? "**/" : ""}project.assets.json`,
     options,
   );
   const pkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "packages.lock.json",
+    `${options.multiProject ? "**/" : ""}packages.lock.json`,
     options,
   );
   const paketLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "paket.lock",
+    `${options.multiProject ? "**/" : ""}paket.lock`,
     options,
   );
   const nupkgFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.nupkg",
+    `${options.multiProject ? "**/" : ""}*.nupkg`,
     options,
   );
   // Support for automatic restore
@@ -4512,7 +4501,7 @@ export async function createCsharpBom(path, options) {
     // Collect the assets file generated from restore
     projAssetsFiles = getAllFiles(
       path,
-      (options.multiProject ? "**/" : "") + "project.assets.json",
+      `${options.multiProject ? "**/" : ""}project.assets.json`,
       options,
     );
   }
@@ -4709,8 +4698,9 @@ export async function createCryptoCertsBom(path, options) {
   const pkgList = [];
   const certFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") +
-      "*.{p12,jks,jceks,bks,keystore,key,pem,cer,gpg,pub}",
+    `${
+      options.multiProject ? "**/" : ""
+    }*.{p12,jks,jceks,bks,keystore,key,pem,cer,gpg,pub}`,
     options,
   );
   for (const f of certFiles) {
@@ -4840,14 +4830,14 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
       `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`,
     );
   }
-  const serialNum = "urn:uuid:" + uuidv4();
+  const serialNum = `urn:uuid:${uuidv4()}`;
   return {
     options,
     parentComponent,
     components,
     bomJson: {
       bomFormat: "CycloneDX",
-      specVersion: "" + (options.specVersion || 1.5),
+      specVersion: `${options.specVersion || 1.5}`,
       serialNumber: serialNum,
       version: 1,
       metadata: addMetadata(parentComponent, options, {}),
@@ -5345,19 +5335,19 @@ export async function createXBom(path, options) {
   // maven - pom.xml
   const pomFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pom.xml",
+    `${options.multiProject ? "**/" : ""}pom.xml`,
     options,
   );
   // gradle
   const gradleFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "build.gradle*",
+    `${options.multiProject ? "**/" : ""}build.gradle*`,
     options,
   );
   // scala sbt
   const sbtFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "{build.sbt,Build.scala}*",
+    `${options.multiProject ? "**/" : ""}{build.sbt,Build.scala}*`,
     options,
   );
   if (pomFiles.length || gradleFiles.length || sbtFiles.length) {
@@ -5373,19 +5363,19 @@ export async function createXBom(path, options) {
   }
   const reqFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*requirements*.txt",
+    `${options.multiProject ? "**/" : ""}*requirements*.txt`,
     options,
   );
   const reqDirFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "requirements/*.txt",
+    `${options.multiProject ? "**/" : ""}requirements/*.txt`,
     options,
   );
   const requirementsMode =
     (reqFiles && reqFiles.length) || (reqDirFiles && reqDirFiles.length);
   const whlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.whl",
+    `${options.multiProject ? "**/" : ""}*.whl`,
     options,
   );
   if (requirementsMode || whlFiles.length) {
@@ -5394,17 +5384,17 @@ export async function createXBom(path, options) {
   // go
   const gosumFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.sum",
+    `${options.multiProject ? "**/" : ""}go.sum`,
     options,
   );
   const gomodFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "go.mod",
+    `${options.multiProject ? "**/" : ""}go.mod`,
     options,
   );
   const gopkgLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gopkg.lock",
+    `${options.multiProject ? "**/" : ""}Gopkg.lock`,
     options,
   );
   if (gomodFiles.length || gosumFiles.length || gopkgLockFiles.length) {
@@ -5414,12 +5404,12 @@ export async function createXBom(path, options) {
   // rust
   const cargoLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.lock",
+    `${options.multiProject ? "**/" : ""}Cargo.lock`,
     options,
   );
   const cargoFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Cargo.toml",
+    `${options.multiProject ? "**/" : ""}Cargo.toml`,
     options,
   );
   if (cargoLockFiles.length || cargoFiles.length) {
@@ -5429,12 +5419,12 @@ export async function createXBom(path, options) {
   // php
   const composerJsonFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.json",
+    `${options.multiProject ? "**/" : ""}composer.json`,
     options,
   );
   const composerLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "composer.lock",
+    `${options.multiProject ? "**/" : ""}composer.lock`,
     options,
   );
   if (composerJsonFiles.length || composerLockFiles.length) {
@@ -5444,12 +5434,12 @@ export async function createXBom(path, options) {
   // Ruby
   const gemFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile",
+    `${options.multiProject ? "**/" : ""}Gemfile`,
     options,
   );
   const gemLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Gemfile*.lock",
+    `${options.multiProject ? "**/" : ""}Gemfile*.lock`,
     options,
   );
   if (gemFiles.length || gemLockFiles.length) {
@@ -5459,22 +5449,14 @@ export async function createXBom(path, options) {
   // .Net
   let csProjFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.csproj",
+    `${options.multiProject ? "**/" : ""}*.csproj`,
     options,
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.vbproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.vbproj`, options),
   );
   csProjFiles = csProjFiles.concat(
-    getAllFiles(
-      path,
-      (options.multiProject ? "**/" : "") + "*.fsproj",
-      options,
-    ),
+    getAllFiles(path, `${options.multiProject ? "**/" : ""}*.fsproj`, options),
   );
   if (csProjFiles.length) {
     return await createCsharpBom(path, options);
@@ -5483,12 +5465,12 @@ export async function createXBom(path, options) {
   // Dart
   const pubFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.lock",
+    `${options.multiProject ? "**/" : ""}pubspec.lock`,
     options,
   );
   const pubSpecFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "pubspec.yaml",
+    `${options.multiProject ? "**/" : ""}pubspec.yaml`,
     options,
   );
   if (pubFiles.length || pubSpecFiles.length) {
@@ -5498,7 +5480,7 @@ export async function createXBom(path, options) {
   // Haskell
   const hackageFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "cabal.project.freeze",
+    `${options.multiProject ? "**/" : ""}cabal.project.freeze`,
     options,
   );
   if (hackageFiles.length) {
@@ -5508,7 +5490,7 @@ export async function createXBom(path, options) {
   // Elixir
   const mixFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "mix.lock",
+    `${options.multiProject ? "**/" : ""}mix.lock`,
     options,
   );
   if (mixFiles.length) {
@@ -5518,22 +5500,22 @@ export async function createXBom(path, options) {
   // cpp
   const conanLockFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conan.lock",
+    `${options.multiProject ? "**/" : ""}conan.lock`,
     options,
   );
   const conanFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "conanfile.txt",
+    `${options.multiProject ? "**/" : ""}conanfile.txt`,
     options,
   );
   const cmakeListFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "CMakeLists.txt",
+    `${options.multiProject ? "**/" : ""}CMakeLists.txt`,
     options,
   );
   const mesonBuildFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "meson.build",
+    `${options.multiProject ? "**/" : ""}meson.build`,
     options,
   );
   if (
@@ -5548,12 +5530,12 @@ export async function createXBom(path, options) {
   // clojure
   const ednFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "deps.edn",
+    `${options.multiProject ? "**/" : ""}deps.edn`,
     options,
   );
   const leinFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "project.clj",
+    `${options.multiProject ? "**/" : ""}project.clj`,
     options,
   );
   if (ednFiles.length || leinFiles.length) {
@@ -5573,7 +5555,7 @@ export async function createXBom(path, options) {
   // Jenkins plugins
   const hpiFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*.hpi",
+    `${options.multiProject ? "**/" : ""}*.hpi`,
     options,
   );
   if (hpiFiles.length) {
@@ -5583,12 +5565,12 @@ export async function createXBom(path, options) {
   // Helm charts
   const chartFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Chart.yaml",
+    `${options.multiProject ? "**/" : ""}Chart.yaml`,
     options,
   );
   const yamlFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "values.yaml",
+    `${options.multiProject ? "**/" : ""}values.yaml`,
     options,
   );
   if (chartFiles.length || yamlFiles.length) {
@@ -5598,27 +5580,27 @@ export async function createXBom(path, options) {
   // Docker compose, dockerfile, containerfile, kubernetes and skaffold
   const dcFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "docker-compose*.yml",
+    `${options.multiProject ? "**/" : ""}docker-compose*.yml`,
     options,
   );
   const dfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Dockerfile*",
+    `${options.multiProject ? "**/" : ""}*Dockerfile*`,
     options,
   );
   const cfFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "*Containerfile*",
+    `${options.multiProject ? "**/" : ""}*Containerfile*`,
     options,
   );
   const skFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "skaffold.yaml",
+    `${options.multiProject ? "**/" : ""}skaffold.yaml`,
     options,
   );
   const deplFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "deployment.yaml",
+    `${options.multiProject ? "**/" : ""}deployment.yaml`,
     options,
   );
   if (
@@ -5634,7 +5616,7 @@ export async function createXBom(path, options) {
   // Google CloudBuild
   const cbFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "cloudbuild.yaml",
+    `${options.multiProject ? "**/" : ""}cloudbuild.yaml`,
     options,
   );
   if (cbFiles.length) {
@@ -5644,12 +5626,12 @@ export async function createXBom(path, options) {
   // Swift
   const swiftFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package*.swift",
+    `${options.multiProject ? "**/" : ""}Package*.swift`,
     options,
   );
   const pkgResolvedFiles = getAllFiles(
     path,
-    (options.multiProject ? "**/" : "") + "Package.resolved",
+    `${options.multiProject ? "**/" : ""}Package.resolved`,
     options,
   );
   if (swiftFiles.length || pkgResolvedFiles.length) {
@@ -5743,7 +5725,7 @@ export async function createBom(path, options) {
             name: tmpA[0],
             version: tmpA[1],
             type: "container",
-            purl: "pkg:oci/" + inspectData.RepoDigests[0],
+            purl: `pkg:oci/${inspectData.RepoDigests[0]}`,
             _integrity: inspectData.RepoDigests[0].replace(
               "sha256:",
               "sha256-",
@@ -5760,7 +5742,7 @@ export async function createBom(path, options) {
             .split("@")[1]
             .replace("sha256:", ""),
           type: "container",
-          purl: "pkg:oci/" + inspectData.RepoDigests[0],
+          purl: `pkg:oci/${inspectData.RepoDigests[0]}`,
           _integrity: inspectData.RepoDigests[0].replace("sha256:", "sha256-"),
         };
         options.parentComponent["bom-ref"] = decodeURIComponent(
@@ -5945,7 +5927,7 @@ export async function createBom(path, options) {
  * @param {Object} bomContents BOM Json
  */
 export async function submitBom(args, bomContents) {
-  const serverUrl = args.serverUrl.replace(/\/$/, "") + "/api/v1/bom";
+  const serverUrl = `${args.serverUrl.replace(/\/$/, "")}/api/v1/bom`;
   let encodedBomContents = Buffer.from(JSON.stringify(bomContents)).toString(
     "base64",
   );

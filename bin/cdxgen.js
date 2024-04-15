@@ -591,7 +591,7 @@ const checkPermissions = (filePath) => {
     }
     // bom ns mapping
     if (bomNSData.nsMapping && Object.keys(bomNSData.nsMapping).length) {
-      const nsFile = jsonFile + ".map";
+      const nsFile = `${jsonFile}.map`;
       fs.writeFileSync(nsFile, JSON.stringify(bomNSData.nsMapping));
     }
   } else if (!options.print) {
