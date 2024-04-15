@@ -5269,7 +5269,12 @@ export function recurseImageNameLookup(keyValueObj, pkgList, imgList) {
       keyValueObj.packImage ||
       keyValueObj.koImage ||
       keyValueObj.kanikoImage;
-    if (!imageLike && keyValueObj.name && typeof keyValueObj.name === "string" && keyValueObj.name.includes("/")) {
+    if (
+      !imageLike &&
+      keyValueObj.name &&
+      typeof keyValueObj.name === "string" &&
+      keyValueObj.name.includes("/")
+    ) {
       imageLike = keyValueObj.name;
     }
     if (
