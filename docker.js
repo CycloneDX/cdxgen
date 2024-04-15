@@ -381,7 +381,7 @@ export const getConnection = async (options, forRegistry) => {
   return dockerConn;
 };
 
-export const makeRequest = async (path, method = "GET", forRegistry) => {
+export const makeRequest = async (path, method, forRegistry) => {
   const client = await getConnection({}, forRegistry);
   if (!client) {
     return undefined;

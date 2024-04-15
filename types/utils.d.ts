@@ -22,12 +22,36 @@ export function getAllFilesWithIgnore(
   ignoreList: any[],
 ): string[];
 /**
+ * Return the current timestamp in YYYY-MM-DDTHH:MM:SSZ format.
+ *
+ * @returns {string} ISO formatted timestamp, without milliseconds.
+ */
+export function getTimestamp(): string;
+/**
+ * Method to determine if a license is a valid SPDX license expression
+ *
+ * @param {string} license License string
+ * @returns {boolean} true if the license is a valid SPDX license expression
+ * @see https://spdx.dev/learn/handling-license-info/
+ **/
+export function isSpdxLicenseExpression(license: string): boolean;
+/**
+ * Convert the array of licenses to a CycloneDX 1.5 compliant license array.
+ * This should return an array containing:
+ * - one or more SPDX license if no expression is present
+ * - the first license expression if at least one is present
+ *
+ * @param {Array} licenses Array of licenses
+ * @returns {Array} CycloneDX 1.5 compliant license array
+ */
+export function adjustLicenseInformation(licenses: any[]): any[];
+/**
  * Performs a lookup + validation of the license specified in the
  * package. If the license is a valid SPDX license ID, set the 'id'
  * and url of the license object, otherwise, set the 'name' of the license
  * object.
  */
-export function getLicenses(pkg: any): any;
+export function getLicenses(pkg: any): any[];
 /**
  * Method to retrieve known license by known-licenses.json
  *

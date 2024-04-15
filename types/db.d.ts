@@ -8,7 +8,7 @@ export function createOrLoad(
   Usages: typeof Usages;
   DataFlows: typeof DataFlows;
 }>;
-import type { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 declare class Namespaces extends Model<any, any> {
   constructor(
     values?: import("sequelize").Optional<any, string>,
@@ -28,4 +28,5 @@ declare class DataFlows extends Model<any, any> {
   );
 }
 import { Model } from "sequelize";
+export {};
 //# sourceMappingURL=db.d.ts.map

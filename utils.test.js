@@ -3377,6 +3377,10 @@ test("parse container spec like files", () => {
   expect(dep_list[0]).toEqual({
     image: "gcr.io/google-samples/microservices-demo/adservice",
   });
+  dep_list = parseContainerSpecData(
+    readFileSync("./test/data/service.yaml", { encoding: "utf-8" }),
+  );
+  expect(dep_list.length).toEqual(0);
 });
 
 test("parse containerfiles / dockerfiles", () => {

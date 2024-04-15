@@ -9,7 +9,7 @@ export function getOnlyDirs(srcpath: any, dirName: any): any;
 export function getConnection(options: any, forRegistry: any): Promise<any>;
 export function makeRequest(
   path: any,
-  method: string,
+  method: any,
   forRegistry: any,
 ): Promise<any>;
 export function parseImageName(fullImageName: any): {

@@ -72,9 +72,7 @@ const getAllFiles = (deep, dir, extn, files, result, regex) => {
           result,
           regex,
         );
-      } catch (error) {
-        continue;
-      }
+      } catch (error) {}
     } else {
       if (regex.test(file)) {
         result.push(file);
