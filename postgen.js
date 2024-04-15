@@ -20,7 +20,7 @@ export const filterBom = (bomJson, options) => {
       ["optional", "excluded"].includes(comp.scope)
     ) {
       filtered = true;
-    } else if (options.only && options.only.length) {
+    } else if (options.only?.length) {
       if (!Array.isArray(options.only)) {
         options.only = [options.only];
       }
@@ -37,7 +37,7 @@ export const filterBom = (bomJson, options) => {
       if (!purlfiltered) {
         newPkgMap[comp["bom-ref"]] = comp;
       }
-    } else if (options.filter && options.filter.length) {
+    } else if (options.filter?.length) {
       if (!Array.isArray(options.filter)) {
         options.filter = [options.filter];
       }
@@ -87,7 +87,7 @@ export const filterBom = (bomJson, options) => {
           dependsOn: newdepson,
         };
         // Filter provides array if needed
-        if (adep.provides && adep.provides.length) {
+        if (adep.provides?.length) {
           obj.provides = adep.provides.filter((d) => newPkgMap[d]);
         }
         newdependencies.push(obj);

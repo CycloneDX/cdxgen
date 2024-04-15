@@ -530,14 +530,11 @@ export const getImage = async (fullImageName) => {
       encoding: "utf-8",
     });
     if (result.status !== 0 || result.error) {
-      if (
-        result.stderr &&
-        result.stderr.includes("docker daemon is not running")
-      ) {
+      if (result.stderr?.includes("docker daemon is not running")) {
         console.log(
           "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
         );
-      } else if (result.stderr && result.stderr.includes("not found")) {
+      } else if (result.stderr?.includes("not found")) {
         console.log(
           "Set the environment variable DOCKER_CMD to use an alternative command such as nerdctl or podman.",
         );
@@ -842,7 +839,7 @@ export const extractFromManifest = async (
     const layers = manifest[manifest.length - 1]["Layers"] || [];
     if (!layers.length && existsSync(tempDir)) {
       const blobFiles = readdirSync(join(tempDir, "blobs", "sha256"));
-      if (blobFiles && blobFiles.length) {
+      if (blobFiles?.length) {
         for (const blobf of blobFiles) {
           layers.push(join("blobs", "sha256", blobf));
         }
@@ -892,10 +889,9 @@ export const extractFromManifest = async (
             encoding: "utf-8",
           }),
         );
-        lastWorkingDir =
-          lastLayerConfig.config && lastLayerConfig.config.WorkingDir
-            ? join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
-            : "";
+        lastWorkingDir = lastLayerConfig.config?.WorkingDir
+          ? join(allLayersExplodedDir, lastLayerConfig.config.WorkingDir)
+          : "";
       } catch (err) {
         console.log(err);
       }
@@ -964,7 +960,7 @@ export const exportImage = async (fullImageName) => {
     const client = await getConnection({}, registry);
     try {
       if (DEBUG_MODE) {
-        if (registry && registry.trim().length) {
+        if (registry?.trim().length) {
           console.log(
             `About to export image ${fullImageName} from ${registry} to ${tempDir}`,
           );
@@ -986,7 +982,7 @@ export const exportImage = async (fullImageName) => {
         }),
       );
     } catch (err) {
-      if (localData && localData.Id) {
+      if (localData?.Id) {
         console.log(`Retrying with ${localData.Id}`);
         try {
           await stream.pipeline(
@@ -1084,10 +1080,10 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
     knownSysPaths.push(join(allLayersDir, "ProgramData"));
   }
   const pyInstalls = getDirs(allLayersDir, "Python*/", false, false);
-  if (pyInstalls && pyInstalls.length) {
+  if (pyInstalls?.length) {
     for (const pyiPath of pyInstalls) {
       const pyDirs = getOnlyDirs(pyiPath, "site-packages");
-      if (pyDirs && pyDirs.length) {
+      if (pyDirs?.length) {
         pathList = pathList.concat(pyDirs);
       }
     }
@@ -1120,19 +1116,19 @@ export const getPkgPathList = (exportData, lastWorkingDir) => {
   for (const wpath of knownSysPaths) {
     pathList = pathList.concat(wpath);
     const pyDirs = getOnlyDirs(wpath, "site-packages");
-    if (pyDirs && pyDirs.length) {
+    if (pyDirs?.length) {
       pathList = pathList.concat(pyDirs);
     }
     const gemsDirs = getOnlyDirs(wpath, "gems");
-    if (gemsDirs && gemsDirs.length) {
+    if (gemsDirs?.length) {
       pathList = pathList.concat(gemsDirs);
     }
     const cargoDirs = getOnlyDirs(wpath, ".cargo");
-    if (cargoDirs && cargoDirs.length) {
+    if (cargoDirs?.length) {
       pathList = pathList.concat(cargoDirs);
     }
     const composerDirs = getOnlyDirs(wpath, ".composer");
-    if (composerDirs && composerDirs.length) {
+    if (composerDirs?.length) {
       pathList = pathList.concat(composerDirs);
     }
   }

@@ -389,7 +389,7 @@ export function getOSPackages(src) {
         // ignore errors
       }
       // Clean up
-      if (tempDir && tempDir.startsWith(tmpdir())) {
+      if (tempDir?.startsWith(tmpdir())) {
         if (DEBUG_MODE) {
           console.log(`Cleaning up ${tempDir}`);
         }
@@ -457,7 +457,7 @@ export function getOSPackages(src) {
       (tmpBom.dependencies || []).forEach((d) => {
         tmpDependencies[d.ref] = d.dependsOn;
       });
-      if (tmpBom && tmpBom.components) {
+      if (tmpBom?.components) {
         for (const comp of tmpBom.components) {
           if (comp.purl) {
             // Retain go components alone from trivy
@@ -497,10 +497,10 @@ export function getOSPackages(src) {
                   purlObj.namespace = group;
                 }
                 purlObj.qualifiers = purlObj.qualifiers || {};
-                if (distro_id && distro_id.length) {
+                if (distro_id?.length) {
                   purlObj.qualifiers["distro"] = distro_id;
                 }
-                if (distro_codename && distro_codename.length) {
+                if (distro_codename?.length) {
                   purlObj.qualifiers["distro_name"] = distro_codename;
                 }
                 // Bug fix for mageia and oracle linux
@@ -509,7 +509,7 @@ export function getOSPackages(src) {
                   purlObj["type"] = purl_type;
                   purlObj["namespace"] = "";
                   comp.group = "";
-                  if (comp.purl && comp.purl.includes(".mga")) {
+                  if (comp.purl?.includes(".mga")) {
                     purlObj["namespace"] = "mageia";
                     comp.group = "mageia";
                     purlObj.qualifiers["distro"] = "mageia";
@@ -529,7 +529,7 @@ export function getOSPackages(src) {
                   allTypes.add(purlObj.type);
                 }
                 // Prefix distro codename for ubuntu
-                if (purlObj.qualifiers && purlObj.qualifiers.distro) {
+                if (purlObj.qualifiers?.distro) {
                   allTypes.add(purlObj.qualifiers.distro);
                   if (OS_DISTRO_ALIAS[purlObj.qualifiers.distro]) {
                     distro_codename =

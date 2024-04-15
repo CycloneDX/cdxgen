@@ -58,7 +58,7 @@ if (!process.env.CDXGEN_REPL_HISTORY && !fs.existsSync(historyConfigDir)) {
 }
 
 export const importSbom = (sbomOrPath) => {
-  if (sbomOrPath && sbomOrPath.endsWith(".json") && fs.existsSync(sbomOrPath)) {
+  if (sbomOrPath?.endsWith(".json") && fs.existsSync(sbomOrPath)) {
     try {
       sbom = JSON.parse(fs.readFileSync(sbomOrPath, "utf-8"));
       console.log(`✅ SBOM imported successfully from ${sbomOrPath}`);

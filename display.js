@@ -17,8 +17,7 @@ export const printTable = (bomJson) => {
     return;
   }
   if (
-    bomJson.metadata &&
-    bomJson.metadata.component &&
+    bomJson.metadata?.component &&
     ["operating-system", "platform"].includes(bomJson.metadata.component.type)
   ) {
     return printOSTable(bomJson);
@@ -199,7 +198,7 @@ export const printDependencyTree = (bomJson) => {
   }
   const depMap = {};
   for (const d of dependencies) {
-    if (d.dependsOn && d.dependsOn.length) {
+    if (d.dependsOn?.length) {
       depMap[d.ref] = d.dependsOn.sort();
     }
   }

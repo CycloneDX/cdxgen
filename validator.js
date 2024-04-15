@@ -70,7 +70,7 @@ export const validateBom = (bomJson) => {
 export const validateMetadata = (bomJson) => {
   const errorList = [];
   const warningsList = [];
-  if (bomJson && bomJson.metadata) {
+  if (bomJson?.metadata) {
     if (
       !bomJson.metadata.component ||
       !Object.keys(bomJson.metadata.component).length
@@ -90,10 +90,7 @@ export const validateMetadata = (bomJson) => {
         warningsList.push(`Version is missing for metadata.component`);
       }
       // Is the same component getting repeated inside the components block
-      if (
-        bomJson.metadata.component.components &&
-        bomJson.metadata.component.components.length
-      ) {
+      if (bomJson.metadata.component.components?.length) {
         for (const comp of bomJson.metadata.component.components) {
           if (comp["bom-ref"] === bomJson.metadata.component["bom-ref"]) {
             warningsList.push(
@@ -127,10 +124,10 @@ export const validateMetadata = (bomJson) => {
 export const validatePurls = (bomJson) => {
   const errorList = [];
   const warningsList = [];
-  if (bomJson && bomJson.components) {
+  if (bomJson?.components) {
     for (const comp of bomJson.components) {
       if (comp.type === "cryptographic-asset") {
-        if (comp.purl && comp.purl.length) {
+        if (comp.purl?.length) {
           errorList.push(
             `purl should not be defined for cryptographic-asset ${comp.purl}`,
           );
@@ -219,7 +216,7 @@ export const validateRefs = (bomJson) => {
   const errorList = [];
   const warningsList = [];
   const refMap = buildRefs(bomJson);
-  if (bomJson && bomJson.dependencies) {
+  if (bomJson?.dependencies) {
     for (const dep of bomJson.dependencies) {
       if (
         dep.ref.includes("%40") ||
