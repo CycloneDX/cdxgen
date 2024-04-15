@@ -24,8 +24,7 @@
         "noParameterAssign": "off",
         "noUnusedTemplateLiteral": "off",
         "noUselessElse": "off",
-        "useDefaultParameterLast": "warn",
-        "useSingleVarDeclarator": "off"
+        "useDefaultParameterLast": "warn"
       },
       "suspicious": {
         "noDoubleEquals": "off",
