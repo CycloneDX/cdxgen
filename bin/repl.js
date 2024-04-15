@@ -298,12 +298,12 @@ cdxgenRepl.defineCommand("update", {
         return;
       }
       if (!updateSpec.startsWith("|")) {
-        updateSpec = "|" + updateSpec;
+        updateSpec = `|${updateSpec}`;
       }
       if (!updateSpec.endsWith("|")) {
-        updateSpec = updateSpec + "|";
+        updateSpec = `${updateSpec}|`;
       }
-      updateSpec = "$ ~> " + updateSpec;
+      updateSpec = `$ ~> ${updateSpec}`;
       const expression = jsonata(updateSpec);
       const newSbom = await expression.evaluate(sbom);
       if (newSbom && newSbom.components.length <= sbom.components.length) {

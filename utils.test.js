@@ -98,11 +98,10 @@ test("SSRI test", () => {
     "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
   );
   ss = parse(
-    "sha256-" +
-      Buffer.from(
-        "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
-        "hex",
-      ).toString("base64"),
+    `sha256-${Buffer.from(
+      "2ca532a6bc655663344004ba102436d29031018eab236247678db1d8978627bf",
+      "hex",
+    ).toString("base64")}`,
   );
   expect(ss.sha256[0].digest).toStrictEqual(
     "LKUyprxlVmM0QAS6ECQ20pAxAY6rI2JHZ42x2JeGJ78=",

@@ -192,7 +192,7 @@ const fileToParseableCode = (file) => {
       .replace(vueCommentRegex, (match) => match.replaceAll(/\S/g, " "))
       .replace(
         vueCleaningRegex,
-        (match) => match.replaceAll(/\S/g, " ").substring(1) + ";",
+        (match) => `${match.replaceAll(/\S/g, " ").substring(1)};`,
       )
       .replace(
         vueBindRegex,
@@ -201,7 +201,7 @@ const fileToParseableCode = (file) => {
       )
       .replace(
         vuePropRegex,
-        (match, grA, grB) => " " + grA.replace(/[.:@]/g, " ") + grB,
+        (match, grA, grB) => ` ${grA.replace(/[.:@]/g, " ")}${grB}`,
       )
       .replace(
         vueTemplateRegex,
