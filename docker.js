@@ -181,7 +181,8 @@ const getDefaultOptions = (forRegistry) => {
               };
               authTokenSet = true;
               break;
-            } else if (configJson.credsStore) {
+            }
+            if (configJson.credsStore) {
               const helperAuthToken = getCredsFromHelper(
                 configJson.credsStore,
                 serverAddress,
@@ -288,7 +289,8 @@ const getDefaultOptions = (forRegistry) => {
 export const getConnection = async (options, forRegistry) => {
   if (isContainerd) {
     return undefined;
-  } else if (!dockerConn) {
+  }
+  if (!dockerConn) {
     const defaultOptions = getDefaultOptions(forRegistry);
     const opts = Object.assign(
       {},
@@ -542,29 +544,26 @@ export const getImage = async (fullImageName) => {
         console.log(result.stderr);
       }
       return localData;
-    } else {
-      result = spawnSync(dockerCmd, ["inspect", fullImageName], {
-        encoding: "utf-8",
-      });
-      if (result.status !== 0 || result.error) {
-        console.log(result.stderr);
-        return localData;
-      } else {
-        try {
-          const stdout = result.stdout;
-          if (stdout) {
-            const inspectData = JSON.parse(Buffer.from(stdout).toString());
-            if (inspectData && Array.isArray(inspectData)) {
-              return inspectData[0];
-            } else {
-              return inspectData;
-            }
-          }
-        } catch (err) {
-          // continue regardless of error
-          console.log(err);
+    }
+    result = spawnSync(dockerCmd, ["inspect", fullImageName], {
+      encoding: "utf-8",
+    });
+    if (result.status !== 0 || result.error) {
+      console.log(result.stderr);
+      return localData;
+    }
+    try {
+      const stdout = result.stdout;
+      if (stdout) {
+        const inspectData = JSON.parse(Buffer.from(stdout).toString());
+        if (inspectData && Array.isArray(inspectData)) {
+          return inspectData[0];
         }
+        return inspectData;
       }
+    } catch (err) {
+      // continue regardless of error
+      console.log(err);
     }
   }
   try {
@@ -789,7 +788,8 @@ export const exportArchive = async (fullImageName) => {
       };
       exportData.pkgPathList = getPkgPathList(exportData, lastWorkingDir);
       return exportData;
-    } else if (existsSync(manifestFile)) {
+    }
+    if (existsSync(manifestFile)) {
       // docker manifest file
       return await extractFromManifest(
         manifestFile,
@@ -797,9 +797,8 @@ export const exportArchive = async (fullImageName) => {
         tempDir,
         allLayersExplodedDir,
       );
-    } else {
-      console.log(`Unable to extract image archive to ${tempDir}`);
     }
+    console.log(`Unable to extract image archive to ${tempDir}`);
   } catch (err) {
     console.log(err);
   }
@@ -947,14 +946,13 @@ export const exportImage = async (fullImageName) => {
         console.log(result.stdout, result.stderr);
       }
       return localData;
-    } else {
-      await extractTar(imageTarFile, tempDir);
-      if (DEBUG_MODE) {
-        console.log(`Cleaning up ${imageTarFile}`);
-      }
-      if (rmSync) {
-        rmSync(imageTarFile, { force: true });
-      }
+    }
+    await extractTar(imageTarFile, tempDir);
+    if (DEBUG_MODE) {
+      console.log(`Cleaning up ${imageTarFile}`);
+    }
+    if (rmSync) {
+      rmSync(imageTarFile, { force: true });
     }
   } else {
     const client = await getConnection({}, registry);
@@ -1028,9 +1026,8 @@ export const exportImage = async (fullImageName) => {
       tempDir,
       allLayersExplodedDir,
     );
-  } else {
-    console.log(`Unable to export image to ${tempDir}`);
   }
+  console.log(`Unable to export image to ${tempDir}`);
   return undefined;
 };
 
