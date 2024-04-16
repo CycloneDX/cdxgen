@@ -223,7 +223,7 @@ const getDefaultOptions = (forRegistry) => {
     }
   }
   const userInfo = _userInfo();
-  opts.podmanPrefixUrl = isWin ? "" : `http://unix:/run/podman/podman.sock:`;
+  opts.podmanPrefixUrl = isWin ? "" : "http://unix:/run/podman/podman.sock:";
   opts.podmanRootlessPrefixUrl = isWin
     ? ""
     : `http://unix:/run/user/${userInfo.uid}/podman/podman.sock:`;

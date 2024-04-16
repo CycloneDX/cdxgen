@@ -1785,7 +1785,7 @@ export async function createJavaBom(path, options) {
       // supports `--append` for `toFile` subtask.
       let sbtPluginDefinition = `\naddSbtPlugin("io.shiftleft" % "sbt-dependency-graph" % "0.10.0-append-to-file3")\n`;
       if (isDependencyTreeBuiltIn) {
-        sbtPluginDefinition = `\naddDependencyTreePlugin\n`;
+        sbtPluginDefinition = "\naddDependencyTreePlugin\n";
         if (DEBUG_MODE) {
           console.log("Using addDependencyTreePlugin as the custom plugin");
         }
@@ -1834,10 +1834,10 @@ export async function createJavaBom(path, options) {
         if (result.status !== 0 || result.error) {
           console.error(result.stdout, result.stderr);
           console.log(
-            `1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.`,
+            "1. Check if scala and sbt is installed and available in PATH. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ is supported for now.",
           );
           console.log(
-            `2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment`,
+            "2. Check if the plugin net.virtual-void:sbt-dependency-graph 0.10.0-RC1 can be used in the environment",
           );
           console.log(
             "3. Consider creating a lockfile using sbt-dependency-lock plugin. See https://github.com/stringbean/sbt-dependency-lock",
