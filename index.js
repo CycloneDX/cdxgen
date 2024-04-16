@@ -287,7 +287,7 @@ const addToolsSection = (options, context = {}) => {
         tool.type = "application";
         if (tool.vendor) {
           tool.publisher = tool.vendor;
-          delete tool.vendor;
+          tool.vendor = undefined;
         }
       }
     }
@@ -318,12 +318,12 @@ const componentToSimpleFullName = (comp) => {
 
 // Remove unwanted properties from parent component
 const cleanParentComponent = (comp) => {
-  delete comp.evidence;
-  delete comp._integrity;
-  delete comp.license;
-  delete comp.qualifiers;
-  delete comp.repository;
-  delete comp.homepage;
+  comp.evidence = undefined;
+  comp._integrity = undefined;
+  comp.license = undefined;
+  comp.qualifiers = undefined;
+  comp.repository = undefined;
+  comp.homepage = undefined;
   return comp;
 };
 
@@ -817,11 +817,11 @@ function addComponent(
       component.externalReferences === undefined ||
       component.externalReferences.length === 0
     ) {
-      delete component.externalReferences;
+      component.externalReferences = undefined;
     }
     if (options.specVersion < 1.6) {
-      delete component.omniborId;
-      delete component.swhid;
+      component.omniborId = undefined;
+      component.swhid = undefined;
     }
     processHashes(pkg, component);
     // Retain evidence
@@ -966,7 +966,7 @@ function processHashes(pkg, component) {
     }
   }
   if (component.hashes.length === 0) {
-    delete component.hashes; // If no hashes exist, delete the hashes node (it's optional)
+    component.hashes = undefined; // If no hashes exist, delete the hashes node (it's optional)
   }
 }
 
@@ -1489,8 +1489,8 @@ export async function createJavaBom(path, options) {
       }
       // Bug #317 fix
       parentComponent.components = allProjects.flatMap((s) => {
-        delete s.qualifiers;
-        delete s.evidence;
+        s.qualifiers = undefined;
+        s.evidence = undefined;
         return s;
       });
       dependencies.push({
@@ -2366,8 +2366,8 @@ export async function createPythonBom(path, options) {
     const tmpParentComponent = parsePyProjectToml(pyProjectFile);
     if (tmpParentComponent?.name) {
       parentComponent = tmpParentComponent;
-      delete parentComponent.homepage;
-      delete parentComponent.repository;
+      parentComponent.homepage = undefined;
+      parentComponent.repository = undefined;
       parentComponent.type = "application";
       const ppurl = new PackageURL(
         "pypi",
@@ -5212,7 +5212,7 @@ export async function createMultiXBom(pathList, options) {
       !parentComponent.purl.startsWith("pkg:container")
     ) {
       parentComponent = parentComponent.components[0];
-      delete parentComponent.components;
+      parentComponent.components = undefined;
     }
   }
   return dedupeBom(options, components, parentComponent, dependencies);

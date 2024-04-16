@@ -9414,7 +9414,7 @@ export function getOSPackageForFile(afile, osPkgsList) {
         props.name === "PkgProvides" &&
         props.value.includes(afile.toLowerCase())
       ) {
-        delete ospkg.scope;
+        ospkg.scope = undefined;
         // dev packages are libraries
         ospkg.type = "library";
         // Set the evidence to indicate how we identified this package from the header or .so file

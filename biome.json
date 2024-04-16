@@ -12,9 +12,6 @@
         "noForEach": "off",
         "useLiteralKeys": "off"
       },
-      "performance": {
-        "noDelete": "off"
-      },
       "style": {
         "noParameterAssign": "off"
       },

@@ -609,7 +609,7 @@ export function getOSPackages(src) {
             ) {
               const hashContent = comp.hashes[0].content;
               if (!hashContent || hashContent.length < 32) {
-                delete comp.hashes;
+                comp.hashes = undefined;
               }
             }
             const compProperties = comp.properties;
@@ -625,7 +625,7 @@ export function getOSPackages(src) {
                 }
               }
             }
-            delete comp.properties;
+            comp.properties = undefined;
             pkgList.push(comp);
             const compDeps = retrieveDependencies(
               tmpDependencies,

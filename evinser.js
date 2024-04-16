@@ -1003,7 +1003,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
     if (!comp.purl) {
       continue;
     }
-    delete comp.signature;
+    comp.signature = undefined;
     const locationOccurrences = Array.from(
       purlLocationMap[comp.purl] || [],
     ).sort();
@@ -1110,7 +1110,7 @@ export const createEvinseFile = (sliceArtefacts, options) => {
   bomJson.version = (bomJson.version || 1) + 1;
   // Set the current timestamp to indicate this is newer
   bomJson.metadata.timestamp = getTimestamp();
-  delete bomJson.signature;
+  bomJson.signature = undefined;
   fs.writeFileSync(evinseOutFile, JSON.stringify(bomJson, null, null));
   if (occEvidencePresent || csEvidencePresent || servicesPresent) {
     console.log(evinseOutFile, "created successfully.");
