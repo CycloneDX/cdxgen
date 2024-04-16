@@ -16,8 +16,7 @@
         "noDelete": "off"
       },
       "style": {
-        "noParameterAssign": "off",
-        "noUnusedTemplateLiteral": "off"
+        "noParameterAssign": "off"
       },
       "suspicious": {
         "noDoubleEquals": "off",
