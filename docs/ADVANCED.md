@@ -358,9 +358,9 @@ cdxgen -t dotnet --lifecycle post-build -o bom.json <path to dotnet binaries>
 cdxgen -t go --lifecycle post-build -o bom.json <path to go binaries>
 ```
 
-## csharp and dotnet projects
+## Legacy dotnet and Java projects
 
-To obtain transitive dependencies and a complete dependency tree for dotnet projects, `dotnet restore` command needs to be executed. Recent versions of cdxgen would attempt to restore all the solution, and .csproj files when there are no `project.assets.json` files found.
+To obtain transitive dependencies and a complete dependency tree for dotnet projects, `dotnet restore` command needs to be executed. Recent versions of cdxgen would attempt to restore all the solution and .csproj files when there are no `project.assets.json` files found.
 
 This, however, requires the correct version of dotnet SDK to be installed. The official container image bundles version 8.0 of the SDK.
 
@@ -374,7 +374,9 @@ If the project requires a different version of the SDK, such as .Net core 3.1 or
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -it ghcr.io/appthreat/cdxgen-dotnet:v10 -r /app -o bom.json -t dotnet
 ```
 
-If the project requires legacy frameworks such as .Net Framework 4.6/4.7, then a Windows operating system or container is required to generate the SBOM correctly. A workaround is to commit the project.assets.json and lock files to the repository from Windows and run cdxgen from Linux as normal.
+If the project requires legacy frameworks such as .Net Framework 4.6/4.7, then a Windows operating system or container is required to generate the SBOM correctly. A workaround is to commit the project.assets.json and the lock files to the repository from Windows and run cdxgen from Linux as normal.
+
+For legacy Java projects, use the un-official image `ghcr.io/appthreat/cdxgen-java:v10`.
 
 ## Nydus - next-generation container image
 

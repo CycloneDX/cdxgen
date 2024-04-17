@@ -350,6 +350,7 @@ export const analyzeProject = async (dbObjMap, options) => {
   // For eg: cdxgen populates this information for javascript projects
   let { purlLocationMap, purlImportsMap } = initFromSbom(components, language);
   // Do reachables first so that usages slicing can reuse the atom file
+  // We need reachables slicing even when trying to infer crypto packages
   if (options.withReachables || options.includeCrypto) {
     if (
       options.reachablesSlicesFile &&

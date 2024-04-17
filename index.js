@@ -1296,7 +1296,7 @@ export async function createJavaBom(path, options) {
                 result.stdout.includes("points at wrong local POM"))
             ) {
               console.log(
-                "1. Check if the pom.xml contains valid settings such `parent.relativePath` to make mvn command work from within the sub-directory.",
+                "1. Check if the pom.xml contains valid settings for parent and modules. Some projects can be built only from a specific directory.",
               );
             } else if (
               result.stdout &&
@@ -1316,7 +1316,7 @@ export async function createJavaBom(path, options) {
               );
             } else {
               console.log(
-                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible.",
+                "1. Java version requirement: cdxgen container image bundles Java 21 with maven 3.9 which might be incompatible. Try running cdxgen with the un-official JDK11-based image `ghcr.io/appthreat/cdxgen-java:v10`.",
               );
             }
             console.log(
@@ -1329,7 +1329,7 @@ export async function createJavaBom(path, options) {
           // Do not fall back to methods that can produce incomplete results when failOnError is set
           options.failOnError && process.exit(1);
           console.log(
-            "\nFalling back to manual pom.xml parsing. The result would be incomplete!",
+            "\nFalling back to parsing pom.xml files. Only direct dependencies would get included!",
           );
           const dlist = parsePom(f);
           if (dlist?.length) {
