@@ -19,7 +19,6 @@
         "noParameterAssign": "off"
       },
       "suspicious": {
-        "noDoubleEquals": "off",
         "noAssignInExpressions": "off"
       }
     }

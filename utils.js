@@ -739,7 +739,7 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
             author.url ? ` (${author.url})` : ""
           }`
         : author;
-    if (node == rootNode) {
+    if (node === rootNode) {
       purlString = new PackageURL(
         "npm",
         options.projectGroup || "",
@@ -855,7 +855,7 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
     // this handles the case when a node has ["dependencies"] key in a package-lock.json
     // for a node. We exclude the root node because it's already been handled
     const childrenDependsOn = [];
-    if (node != rootNode) {
+    if (node !== rootNode) {
       for (const child of node.children) {
         const childNode = child[1];
         const {
@@ -933,8 +933,8 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
         for (const child of rootNode.children) {
           if (
             edgeToIntegrityOrLocation &&
-            (child[1].integrity == edgeToIntegrityOrLocation ||
-              child[1].location == edgeToIntegrityOrLocation)
+            (child[1].integrity === edgeToIntegrityOrLocation ||
+              child[1].location === edgeToIntegrityOrLocation)
           ) {
             targetName = child[0].replace(/node_modules\//g, "");
             targetVersion = child[1].version;
@@ -1667,7 +1667,7 @@ export async function parseMinJs(minJsFile) {
               return;
             }
             const pkgIdentifier = parsePackageJsonName(name);
-            if (pkgIdentifier.fullName != "") {
+            if (pkgIdentifier.fullName !== "") {
               pkgList.push({
                 name: pkgIdentifier.fullName,
                 group: pkgIdentifier.scope || "",
@@ -1737,7 +1737,7 @@ export function parsePom(pomFile) {
     for (const adep of dependencies) {
       const version = adep.version;
       let versionStr = undefined;
-      if (version?._ && version._.indexOf("$") == -1) {
+      if (version?._ && version._.indexOf("$") === -1) {
         versionStr = version._;
         if (includeMavenTestScope || !adep.scope || adep.scope !== "test")
           deps.push({
@@ -1802,7 +1802,7 @@ export function parseMavenTree(rawOutput) {
       const pkgArr = l.split(":");
       if (pkgArr && pkgArr.length > 2) {
         let versionStr = pkgArr[pkgArr.length - 2];
-        if (pkgArr.length == 4) {
+        if (pkgArr.length === 4) {
           versionStr = pkgArr[pkgArr.length - 1];
         }
         const key = `${pkgArr[0]}-${pkgArr[1]}-${versionStr}`;
@@ -1826,7 +1826,7 @@ export function parseMavenTree(rawOutput) {
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
           }
-          if (level == 0 || last_purl === "") {
+          if (level === 0 || last_purl === "") {
             stack.push(purlString);
           } else if (level > last_level) {
             const cnodes = level_trees[last_purl] || [];
@@ -2034,7 +2034,7 @@ export function parseGradleDep(
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
           }
-          if (level == 0) {
+          if (level === 0) {
             stack = [first_purl];
             stack.push(purlString);
           } else if (last_purl === "") {
@@ -2096,7 +2096,7 @@ export function parseCljDep(rawOutput) {
           l = l.replace(". ", "");
         }
         const tmpArr = l.split(" ");
-        if (tmpArr.length == 2) {
+        if (tmpArr.length === 2) {
           let group = dirname(tmpArr[0]);
           if (group === ".") {
             group = "";
@@ -2761,7 +2761,7 @@ export function parsePyRequiresDist(dist_string) {
   if (!tmpA) {
     return undefined;
   }
-  if (tmpA.length == 1) {
+  if (tmpA.length === 1) {
     name = tmpA[0];
   } else if (tmpA.length > 1) {
     name = tmpA[0];
@@ -3207,7 +3207,7 @@ export async function parsePoetrylockData(lockData, lockFile) {
             pkg.version = value;
             break;
           case "optional":
-            pkg.scope = value == "true" ? "optional" : undefined;
+            pkg.scope = value === "true" ? "optional" : undefined;
             break;
         }
       }
@@ -3508,7 +3508,7 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
     const group = repoMetadata.group;
     const name = repoMetadata.name;
     let ghUrl = "https://api.github.com/repos";
-    if (group && group !== "." && group != "") {
+    if (group && group !== "." && group !== "") {
       ghUrl = `${ghUrl}/${group.replace("github.com/", "")}`;
     }
     ghUrl = `${ghUrl}/${name}`;
@@ -4089,7 +4089,7 @@ export async function parseGoVersionData(buildInfoData) {
     }
     const name = tmpA[1].trim();
     let hash = "";
-    if (tmpA.length == 4) {
+    if (tmpA.length === 4) {
       hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
     }
     const component = await getGoPkgComponent("", name, tmpA[2].trim(), hash);
@@ -4293,7 +4293,7 @@ export async function parseGemfileLockData(gemLockData, lockFile) {
     l = l.replace("\r", "");
     if (specsFound) {
       const tmpA = l.split(" ");
-      if (tmpA && tmpA.length == 2) {
+      if (tmpA && tmpA.length === 2) {
         const name = tmpA[0];
         if (name === "remote:") {
           return;
@@ -4359,7 +4359,7 @@ export async function parseGemfileLockData(gemLockData, lockFile) {
     if (l.trim().startsWith("tag:")) {
       lastTag = l.trim().split(" ")[1];
     }
-    if (l.trim() == l.trim().toUpperCase()) {
+    if (l.trim() === l.trim().toUpperCase()) {
       specsFound = false;
       lastRemote = undefined;
       lastRevision = undefined;
@@ -4789,7 +4789,7 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
         if (tmpB && tmpB.length > 1) {
           version = `git+${tmpB[1].split(" }")[0]}`;
         }
-      } else if (l.indexOf("path =") == -1 && tmpA.length > 1) {
+      } else if (l.indexOf("path =") === -1 && tmpA.length > 1) {
         version = tmpA[1];
       }
       if (name && version) {
@@ -5699,7 +5699,7 @@ export function parseGitHubWorkflowData(ghwData) {
             let group = "";
             const version = tmpA[1];
             const tmpB = groupName.split("/");
-            if (tmpB.length == 2) {
+            if (tmpB.length === 2) {
               name = tmpB[1];
               group = tmpB[0];
             }
@@ -6015,7 +6015,7 @@ export function parseCsPkgData(pkgData) {
     attributesKey: "$",
     commentKey: "value",
   }).packages;
-  if (!packages || packages.length == 0) {
+  if (!packages || packages.length === 0) {
     return pkgList;
   }
   packages = packages[0].package;
@@ -6042,7 +6042,7 @@ export function parseCsProjData(csProjData, projFile) {
     attributesKey: "$",
     commentKey: "value",
   }).Project;
-  if (!projects || projects.length == 0) {
+  if (!projects || projects.length === 0) {
     return pkgList;
   }
   const project = projects[0];
@@ -6798,7 +6798,7 @@ export function parseSbtTree(sbtTreeFile) {
     if (!level_trees[purlString]) {
       level_trees[purlString] = [];
     }
-    if (level == 0) {
+    if (level === 0) {
       first_purl = purlString;
       stack = [first_purl];
       stack.push(purlString);
@@ -7910,7 +7910,7 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
               },
             });
             const data = res?.body ? res.body["response"] : undefined;
-            if (data && data["numFound"] == 1) {
+            if (data && data["numFound"] === 1) {
               const jarInfo = data["docs"][0];
               group = jarInfo["g"];
               name = jarInfo["a"];
@@ -8245,7 +8245,7 @@ export function getGradleCommand(srcPath, rootPath) {
   let gradleCmd = "gradle";
 
   let findGradleFile = "gradlew";
-  if (platform() == "win32") {
+  if (platform() === "win32") {
     findGradleFile = "gradlew.bat";
   }
 
@@ -8287,7 +8287,7 @@ export function getMavenCommand(srcPath, rootPath) {
   let isWrapperFound = false;
   let findMavenFile = "mvnw";
   let mavenWrapperCmd = null;
-  if (platform() == "win32") {
+  if (platform() === "win32") {
     findMavenFile = "mvnw.bat";
     if (
       !existsSync(join(srcPath, findMavenFile)) &&

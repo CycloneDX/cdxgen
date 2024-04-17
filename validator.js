@@ -109,7 +109,7 @@ export const validateMetadata = (bomJson) => {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
-  if (errorList.length != 0) {
+  if (errorList.length !== 0) {
     console.log(errorList);
     return false;
   }
@@ -178,7 +178,7 @@ export const validatePurls = (bomJson) => {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
-  if (errorList.length != 0) {
+  if (errorList.length !== 0) {
     console.log(errorList);
     return false;
   }
@@ -248,7 +248,7 @@ export const validateRefs = (bomJson) => {
     console.log("===== WARNINGS =====");
     console.log(warningsList);
   }
-  if (errorList.length != 0) {
+  if (errorList.length !== 0) {
     console.log(errorList);
     return false;
   }

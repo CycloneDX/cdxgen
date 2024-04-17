@@ -574,7 +574,7 @@ export const parseSliceUsages = async (
             acall.lineNumber,
           );
         }
-      } else if (acall.isExternal == false) {
+      } else if (acall.isExternal === false) {
         continue;
       }
       if (
@@ -792,14 +792,14 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     let endpoints = [];
     let authenticated = undefined;
     if (targetObj?.resolvedMethod) {
-      if (language != "php") {
+      if (language !== "php") {
         endpoints = extractEndpoints(language, targetObj?.resolvedMethod);
       }
       if (targetObj?.resolvedMethod.toLowerCase().includes("auth")) {
         authenticated = true;
       }
     } else if (definedBy?.resolvedMethod) {
-      if (language != "php") {
+      if (language !== "php") {
         endpoints = extractEndpoints(language, definedBy?.resolvedMethod);
       }
       if (definedBy?.resolvedMethod.toLowerCase().includes("auth")) {
@@ -809,7 +809,7 @@ export const detectServicesFromUsages = (language, slice, servicesMap = {}) => {
     if (usage.invokedCalls) {
       for (const acall of usage.invokedCalls) {
         if (acall.resolvedMethod) {
-          if (language != "php") {
+          if (language !== "php") {
             const tmpEndpoints = extractEndpoints(
               language,
               acall.resolvedMethod,
@@ -1166,7 +1166,7 @@ export const collectDataFlowFrames = async (
       let typeFullName = theNode.typeFullName;
       if (
         ["javascript", "js", "ts", "typescript"].includes(language) &&
-        typeFullName == "ANY"
+        typeFullName === "ANY"
       ) {
         if (
           theNode.code &&
@@ -1216,7 +1216,7 @@ export const collectDataFlowFrames = async (
       }
       let parentPackageName = theNode.parentPackageName || "";
       if (
-        parentPackageName == "<global>" &&
+        parentPackageName === "<global>" &&
         theNode.parentClassName &&
         theNode.parentClassName.includes("::")
       ) {
