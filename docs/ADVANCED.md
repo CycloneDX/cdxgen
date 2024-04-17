@@ -376,7 +376,7 @@ docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -it ghcr.io/appthreat/cdxgen-dotn
 
 If the project requires legacy frameworks such as .Net Framework 4.6/4.7, then a Windows operating system or container is required to generate the SBOM correctly. A workaround is to commit the project.assets.json and the lock files to the repository from Windows and run cdxgen from Linux as normal.
 
-For legacy Java projects, use the un-official image `ghcr.io/appthreat/cdxgen-java:v10`.
+For legacy Java projects, use the unofficial image `ghcr.io/appthreat/cdxgen-java:v10`.
 
 ## Nydus - next-generation container image
 
