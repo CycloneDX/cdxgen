@@ -1384,6 +1384,36 @@ export async function createJavaBom(path, options) {
             pkgList = [];
           }
           if (bomJsonObj.components) {
+            // Inject evidence into the components. #994
+            if (options.specVersion >= 1.5) {
+              // maven would usually generate a target directory closest to the pom.xml
+              // I am sure there would be cases where this assumption is not true :)
+              const srcPomFile = join(dirname(abjson), "..", "pom.xml");
+              for (const acomp of bomJsonObj.components) {
+                if (!acomp.evidence) {
+                  acomp.evidence = {
+                    identity: {
+                      field: "purl",
+                      confidence: 0.8,
+                      methods: [
+                        {
+                          technique: "manifest-analysis",
+                          confidence: 0.8,
+                          value: srcPomFile,
+                        },
+                      ],
+                    },
+                  };
+                }
+                if (!acomp.properties) {
+                  acomp.properties = [];
+                }
+                acomp.properties.push({
+                  name: "SrcFile",
+                  value: srcPomFile,
+                });
+              }
+            }
             pkgList = pkgList.concat(bomJsonObj.components);
           }
           if (bomJsonObj.dependencies) {
