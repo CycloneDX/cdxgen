@@ -44,7 +44,7 @@ jobs:
           vdb --download-image
           vdb --bom bom.json
         env:
-          COLUMNS: 220
+          COLUMNS: 140
   deno-build:
     strategy:
       matrix:
