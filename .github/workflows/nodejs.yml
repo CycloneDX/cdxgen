@@ -14,7 +14,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     strategy:
       matrix:
         node-version: ['20.x', '21.x']
@@ -25,6 +26,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
       - name: npm install, build and test
         run: |
           npm install
@@ -32,6 +37,12 @@ jobs:
           npm test
         env:
           CI: true
+      - name: check sbom for vulns
+        run: |
+          node bin/cdxgen.js -t js -o bom.json --no-recurse
+          pip install appthreat-vulnerability-db[all]
+          vdb --download-image
+          vdb --bom bom.json
   deno-build:
     strategy:
       matrix:
@@ -69,13 +80,3 @@ jobs:
           mkdir build
           ${{ matrix.build }}
         continue-on-error: true
-      # - name: Release
-      #   uses: softprops/action-gh-release@v1
-      #   if: startsWith(github.ref, 'refs/tags/')
-      #   with:
-      #     files: |
-      #       ${{ matrix.artifact }}
-      #       ${{ matrix.artifact }}.sha256
-      #       cdxgenx-darwin-arm64
-      #       cdxgenx-darwin-arm64.sha256
-
