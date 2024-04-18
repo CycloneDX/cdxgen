@@ -777,7 +777,7 @@ function addComponent(
         encodeForPurl(pkg.subpath),
       );
     // There is no purl for cryptographic-asset
-    if (ptype == "cryptographic-asset") {
+    if (ptype === "cryptographic-asset") {
       purl = undefined;
     }
     const purlString = purl.toString();
@@ -2126,7 +2126,7 @@ export async function createNodejsBom(path, options) {
           encoding: "utf-8",
         },
       );
-      if (result.status == 1 || result.error) {
+      if (result.status === 1 || result.error) {
         console.error(result.stdout, result.stderr);
         options.failOnError && process.exit(1);
       }
@@ -5237,8 +5237,8 @@ export async function createMultiXBom(pathList, options) {
     );
     parentComponent.components = trimComponents(parentSubComponents);
     if (
-      parentComponent.components.length == 1 &&
-      parentComponent.components[0].name == parentComponent.name &&
+      parentComponent.components.length === 1 &&
+      parentComponent.components[0].name === parentComponent.name &&
       !parentComponent.purl.startsWith("pkg:container")
     ) {
       parentComponent = parentComponent.components[0];

@@ -646,6 +646,7 @@ const checkPermissions = (filePath) => {
     }
   }
   // Automatically submit the bom data
+  // biome-ignore lint/suspicious/noDoubleEquals: yargs passes true for empty values
   if (options.serverUrl && options.serverUrl != true && options.apiKey) {
     try {
       const dbody = await submitBom(options, bomNSData.bomJson);

@@ -108,7 +108,7 @@ const locationComparator = (a, b) => {
     const tmpA = a.split("#");
     const tmpB = b.split("#");
     if (tmpA.length === 2 && tmpB.length === 2) {
-      if (tmpA[0] == tmpB[0]) {
+      if (tmpA[0] === tmpB[0]) {
         return tmpA[1] - tmpB[1];
       }
     }
@@ -260,7 +260,7 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
       level > 0
     ) {
       treeGraphics.push(
-        `${levelPrefix(level, i == listToUse.length - 1)}${refStr}`,
+        `${levelPrefix(level, i === listToUse.length - 1)}${refStr}`,
       );
       shownList.push(refStr.toLowerCase());
       if (l && depMap[refStr]) {
