@@ -44,7 +44,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js postgen.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint:check": "biome check *",
-    "lint": "biome check --apply *",
+    "lint": "biome check --apply-unsafe *",
     "gen-types": "npx -p typescript tsc"
   },
   "engines": {
@@ -103,7 +103,7 @@
   },
   "files": ["*.js", "bin/", "data/", "types/"],
   "devDependencies": {
-    "@biomejs/biome": "1.6.4",
+    "@biomejs/biome": "1.7.0",
     "docsify-cli": "^4.4.4",
     "jest": "^29.7.0",
     "typescript": "^5.4.5"
