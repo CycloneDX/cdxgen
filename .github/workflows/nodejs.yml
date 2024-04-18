@@ -43,6 +43,8 @@ jobs:
           pip install appthreat-vulnerability-db[all]
           vdb --download-image
           vdb --bom bom.json
+        env:
+          COLUMNS: 270
   deno-build:
     strategy:
       matrix:
