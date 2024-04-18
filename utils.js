@@ -2315,9 +2315,12 @@ export function executeGradleProperties(dir, rootPath, subProject) {
       console.log(
         "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
       );
+      console.log(
+        "2. Try running cdxgen with the unofficial JDK11-based image `ghcr.io/appthreat/cdxgen-java:v10`.",
+      );
       if (result.stderr.includes("not get unknown property")) {
         console.log(
-          "2. Check if the SBOM is generated for the correct root project for your application.",
+          "3. Check if the SBOM is generated for the correct root project for your application.",
         );
       }
     }
