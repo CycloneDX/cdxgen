@@ -3017,23 +3017,8 @@ export async function createRustBom(path, options) {
   } catch (err) {
     maybeBinary = false;
   }
-  if (maybeBinary) {
-    const cargoData = getCargoAuditableInfo(path);
-    const dlist = await parseCargoAuditableData(cargoData);
-    if (dlist?.length) {
-      pkgList = pkgList.concat(dlist);
-    }
-    // Since this pkg list is derived from the binary mark them as used.
-    const allImports = {};
-    for (const mpkg of pkgList) {
-      const pkgFullName = `${mpkg.group}/${mpkg.name}`;
-      allImports[pkgFullName] = true;
-    }
-    return buildBomNSData(options, pkgList, "cargo", {
-      allImports,
-      src: path,
-      filename: path,
-    });
+  if (maybeBinary || options.lifecycle === "post-build") {
+    return createBinaryBom(path, options);
   }
   let cargoLockFiles = getAllFiles(
     path,

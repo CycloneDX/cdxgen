@@ -31,6 +31,7 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
+      - uses: oven-sh/setup-bun@v1
       - name: Trim CI agent
         run: |
           chmod +x contrib/free_disk_space.sh
@@ -397,6 +398,12 @@ jobs:
         run: |
           ls -ltr bomresults
         shell: bash
+      - name: buntests
+        run: |
+          rm -rf node_modules
+          bun install --frozen-lockfile
+          bun --bun bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-bun.json --deep
+          bun --bun bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-bun.json
       - name: denotests
         run: |
           deno info bin/cdxgen.js

@@ -71,7 +71,7 @@ let CDXGEN_PLUGINS_DIR = process.env.CDXGEN_PLUGINS_DIR;
 if (
   !CDXGEN_PLUGINS_DIR &&
   existsSync(join(dirName, "plugins")) &&
-  existsSync(join(dirName, "plugins", "goversion"))
+  existsSync(join(dirName, "plugins", "trivy"))
 ) {
   CDXGEN_PLUGINS_DIR = join(dirName, "plugins");
 }
@@ -94,7 +94,7 @@ if (
       "@cyclonedx",
       `cdxgen-plugins-bin${pluginsBinSuffix}`,
       "plugins",
-      "goversion",
+      "trivy",
     ),
   )
 ) {
