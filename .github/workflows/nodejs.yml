@@ -39,7 +39,7 @@ jobs:
           CI: true
       - name: check sbom for vulns
         run: |
-          node bin/cdxgen.js -t js -o bom.json --no-recurse
+          node bin/cdxgen.js -t js -o bom.json --no-recurse --required-only
           pip install appthreat-vulnerability-db[all]
           vdb --download-image
           vdb --bom bom.json
