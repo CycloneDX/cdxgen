@@ -80,7 +80,7 @@ For node.js projects, lock files are parsed initially, so the SBOM would include
 
 This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/cyclonedx/dep-scan) uses this attribute to prioritize vulnerabilities. Unfortunately, tools such as dependency track, do not include this feature and might over-report the CVEs.
 
-By passing the argument `--required-only`, you can limit the SBOM only to include packages with the scope "required", commonly called production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
+With the argument `--required-only`, you can limit the SBOM only to include packages with the scope "required", commonly called production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
 
 For go, `go mod why` command is used to identify required packages. For php, composer lock file is parsed to distinguish required (packages) from optional (packages-dev).
 
@@ -98,24 +98,30 @@ If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](ht
 $ brew install cdxgen
 ```
 
-Deno install is also supported.
+Deno and bun runtime can be used with limited support.
 
 ```shell
 deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen"
 ```
 
-You can also use the cdxgen container image
+You can also use the cdxgen container image with node, deno, or bun runtime versions.
+
+The default version uses Node.js 20
 
 ```bash
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
-
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:v8.6.0 -r /app -o /app/bom.json
 ```
 
 To use the deno version, use `ghcr.io/cyclonedx/cdxgen-deno` as the image name.
 
 ```bash
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-deno -r /app -o /app/bom.json
+```
+
+For the bun version, use `ghcr.io/cyclonedx/cdxgen-bun` as the image name.
+
+```bash
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-bun -r /app -o /app/bom.json
 ```
 
 In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as library](#integration-as-library)
