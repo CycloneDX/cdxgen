@@ -1030,13 +1030,12 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
       components,
       dependencies,
     };
-    const formulationData = addFormulationSection(options);
-    const formulation =
+    const formulationData =
       options.includeFormulation && options.specVersion >= 1.5
-        ? formulationData.formulation
+        ? addFormulationSection(options)
         : undefined;
-    if (formulation) {
-      jsonTpl.formulation = formulation;
+    if (formulationData) {
+      jsonTpl.formulation = formulationData.formulation;
     }
     bomNSData.bomJson = jsonTpl;
     bomNSData.nsMapping = nsMapping;
