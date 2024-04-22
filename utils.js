@@ -2262,15 +2262,15 @@ export function parseGradleProperties(rawOutput) {
  * @param {string} dir Directory to execute the command
  * @param {string} rootPath Root directory
  * @param {array} allProjectsStr List of all sub-projects (including the preceding `:`)
- * 
- * @returns {string} The combined output for all subprojects of the Gradle properties task 
+ *
+ * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
   let parallelPropTaskArgs = [];
   for (const spstr of allProjectsStr) {
-    parallelPropTaskArgs.push(spstr + ":properties")
+    parallelPropTaskArgs.push(`${spstr}:properties`);
   }
-        
+
   let gradlePropertiesArgs = [
     "--console",
     "plain",

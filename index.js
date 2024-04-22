@@ -49,8 +49,8 @@ import {
   determineSbtVersion,
   encodeForPurl,
   executeGradleProperties,
-  extractJarArchive,
   executeParallelGradleProperties,
+  extractJarArchive,
   frameworksList,
   getAllFiles,
   getCppModules,
@@ -1488,8 +1488,13 @@ export async function createJavaBom(path, options) {
     // Get the sub-project properties and set the root dependencies
     if (allProjectsStr?.length) {
       if (process.env.GRADLE_MULTI_THREADED) {
-        const parallelPropTaskOut = executeParallelGradleProperties(path, null, allProjectsStr);
-        const splitPropTaskOut = splitOutputByGradleProjects(parallelPropTaskOut)
+        const parallelPropTaskOut = executeParallelGradleProperties(
+          path,
+          null,
+          allProjectsStr,
+        );
+        const splitPropTaskOut =
+          splitOutputByGradleProjects(parallelPropTaskOut);
         for (const [key, propTaskOut] of splitPropTaskOut.entries()) {
           const retMap = parseGradleProperties(propTaskOut);
           const rootSubProject = retMap.rootProject;
@@ -1514,7 +1519,8 @@ export async function createJavaBom(path, options) {
               null,
             ).toString();
             rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] = decodeURIComponent(rootSubProjectPurl);
+            rootSubProjectObj["bom-ref"] =
+              decodeURIComponent(rootSubProjectPurl);
             if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
               allProjects.push(rootSubProjectObj);
               rootDependsOn.push(rootSubProjectPurl);
@@ -1547,7 +1553,8 @@ export async function createJavaBom(path, options) {
               null,
             ).toString();
             rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] = decodeURIComponent(rootSubProjectPurl);
+            rootSubProjectObj["bom-ref"] =
+              decodeURIComponent(rootSubProjectPurl);
             if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
               allProjects.push(rootSubProjectObj);
               rootDependsOn.push(rootSubProjectPurl);
