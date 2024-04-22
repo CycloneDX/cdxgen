@@ -50,6 +50,7 @@ import {
   encodeForPurl,
   executeGradleProperties,
   extractJarArchive,
+  executeParallelGradleProperties,
   frameworksList,
   getAllFiles,
   getCppModules,
@@ -96,6 +97,7 @@ import {
   parseGopkgData,
   parseGosumData,
   parseGradleDep,
+  parseGradleProperties,
   parseHelmYamlData,
   parseLeinDep,
   parseLeiningenData,
@@ -1485,38 +1487,75 @@ export async function createJavaBom(path, options) {
     }
     // Get the sub-project properties and set the root dependencies
     if (allProjectsStr?.length) {
-      for (const spstr of allProjectsStr) {
-        retMap = executeGradleProperties(path, null, spstr);
-        const rootSubProject = retMap.rootProject;
-        if (rootSubProject) {
-          const rspName = rootSubProject.replace(/^:/, "");
-          const rootSubProjectObj = {
-            name: rspName,
-            type: "application",
-            qualifiers: { type: "jar" },
-            ...retMap.metadata,
-          };
-          const rootSubProjectPurl = new PackageURL(
-            "maven",
-            rootSubProjectObj.group?.length
-              ? rootSubProjectObj.group
-              : parentComponent.group,
-            rootSubProjectObj.name,
-            retMap.metadata.version && retMap.metadata.version !== "latest"
-              ? retMap.metadata.version
-              : parentComponent.version,
-            rootSubProjectObj.qualifiers,
-            null,
-          ).toString();
-          rootSubProjectObj["purl"] = rootSubProjectPurl;
-          rootSubProjectObj["bom-ref"] = decodeURIComponent(rootSubProjectPurl);
-          if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
-            allProjects.push(rootSubProjectObj);
-            rootDependsOn.push(rootSubProjectPurl);
-            allProjectsAddedPurls.push(rootSubProjectPurl);
+      if (process.env.GRADLE_MULTI_THREADED) {
+        const parallelPropTaskOut = executeParallelGradleProperties(path, null, allProjectsStr);
+        const splitPropTaskOut = splitOutputByGradleProjects(parallelPropTaskOut)
+        for (const [key, propTaskOut] of splitPropTaskOut.entries()) {
+          const retMap = parseGradleProperties(propTaskOut);
+          const rootSubProject = retMap.rootProject;
+          if (rootSubProject) {
+            const rspName = rootSubProject.replace(/^:/, "");
+            const rootSubProjectObj = {
+              name: rspName,
+              type: "application",
+              qualifiers: { type: "jar" },
+              ...retMap.metadata,
+            };
+            const rootSubProjectPurl = new PackageURL(
+              "maven",
+              rootSubProjectObj.group?.length
+                ? rootSubProjectObj.group
+                : parentComponent.group,
+              rootSubProjectObj.name,
+              retMap.metadata.version && retMap.metadata.version !== "latest"
+                ? retMap.metadata.version
+                : parentComponent.version,
+              rootSubProjectObj.qualifiers,
+              null,
+            ).toString();
+            rootSubProjectObj["purl"] = rootSubProjectPurl;
+            rootSubProjectObj["bom-ref"] = decodeURIComponent(rootSubProjectPurl);
+            if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
+              allProjects.push(rootSubProjectObj);
+              rootDependsOn.push(rootSubProjectPurl);
+              allProjectsAddedPurls.push(rootSubProjectPurl);
+            }
           }
         }
-      }
+      } else {
+        for (const spstr of allProjectsStr) {
+          retMap = executeGradleProperties(path, null, spstr);
+          const rootSubProject = retMap.rootProject;
+          if (rootSubProject) {
+            const rspName = rootSubProject.replace(/^:/, "");
+            const rootSubProjectObj = {
+              name: rspName,
+              type: "application",
+              qualifiers: { type: "jar" },
+              ...retMap.metadata,
+            };
+            const rootSubProjectPurl = new PackageURL(
+              "maven",
+              rootSubProjectObj.group?.length
+                ? rootSubProjectObj.group
+                : parentComponent.group,
+              rootSubProjectObj.name,
+              retMap.metadata.version && retMap.metadata.version !== "latest"
+                ? retMap.metadata.version
+                : parentComponent.version,
+              rootSubProjectObj.qualifiers,
+              null,
+            ).toString();
+            rootSubProjectObj["purl"] = rootSubProjectPurl;
+            rootSubProjectObj["bom-ref"] = decodeURIComponent(rootSubProjectPurl);
+            if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
+              allProjects.push(rootSubProjectObj);
+              rootDependsOn.push(rootSubProjectPurl);
+              allProjectsAddedPurls.push(rootSubProjectPurl);
+            }
+          }
+        }
+      } //end else
       // Bug #317 fix
       parentComponent.components = allProjects.flatMap((s) => {
         delete s.qualifiers;

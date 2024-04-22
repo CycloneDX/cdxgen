@@ -2257,6 +2257,79 @@ export function parseGradleProperties(rawOutput) {
 }
 
 /**
+ * Execute gradle properties command using multi-threading and return parsed output
+ *
+ * @param {string} dir Directory to execute the command
+ * @param {string} rootPath Root directory
+ * @param {array} allProjectsStr List of all sub-projects (including the preceding `:`)
+ * 
+ * @returns {string} The combined output for all subprojects of the Gradle properties task 
+ */
+export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
+  let parallelPropTaskArgs = [];
+  for (const spstr of allProjectsStr) {
+    parallelPropTaskArgs.push(spstr + ":properties")
+  }
+        
+  let gradlePropertiesArgs = [
+    "--console",
+    "plain",
+    "--build-cache",
+    "--parallel",
+  ];
+  const gradleCmd = getGradleCommand(dir, rootPath);
+
+  // common gradle args, used for all tasks
+  if (process.env.GRADLE_ARGS) {
+    const addArgs = process.env.GRADLE_ARGS.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
+  // gradle args only for the properties task
+  if (process.env.GRADLE_ARGS_PROPERTIES) {
+    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
+  parallelPropTaskArgs = parallelPropTaskArgs.concat(gradlePropertiesArgs);
+
+  console.log(
+    "Executing",
+    gradleCmd,
+    parallelPropTaskArgs.join(" "),
+    "in",
+    dir,
+  );
+  const result = spawnSync(gradleCmd, parallelPropTaskArgs, {
+    cwd: dir,
+    encoding: "utf-8",
+    shell: isWin,
+  });
+  if (result.status !== 0 || result.error) {
+    if (result.stderr) {
+      if (result.stderr.includes("does not exist")) {
+        return defaultProps;
+      }
+      console.error(result.stdout, result.stderr);
+      console.log(
+        "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
+      );
+      console.log(
+        "2. Try running cdxgen with the unofficial JDK11-based image `ghcr.io/appthreat/cdxgen-java:v10`.",
+      );
+      if (result.stderr.includes("not get unknown property")) {
+        console.log(
+          "3. Check if the SBOM is generated for the correct root project for your application.",
+        );
+      }
+    }
+  }
+  const stdout = result.stdout;
+  if (stdout) {
+    return Buffer.from(stdout).toString();
+  }
+  return "";
+}
+
+/**
  * Execute gradle properties command and return parsed output
  *
  * @param {string} dir Directory to execute the command
@@ -8280,16 +8353,11 @@ export function getGradleCommand(srcPath, rootPath) {
  * Method to split the output produced by Gradle using parallel processing by project
  *
  * @param {string} rawOutput Full output produced by Gradle using parallel processing
- * @param {array} allProjects List of Gradle (sub)projects
  * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
  */
 
-export function splitOutputByGradleProjects(rawOutput, allProjects) {
+export function splitOutputByGradleProjects(rawOutput) {
   const outputSplitBySubprojects = new Map();
-  for (const sp of allProjects) {
-    outputSplitBySubprojects.set(sp.name, "");
-  }
-
   let subProjectOut = "";
   const outSplitByLine = rawOutput.split("\n");
   let currentProjectName = "";
@@ -8302,6 +8370,7 @@ export function splitOutputByGradleProjects(rawOutput, allProjects) {
     if (line.startsWith("Root project '") || line.startsWith("Project ':")) {
       currentProjectName = line.split("'")[1];
       currentProjectName = currentProjectName.replace(":", "");
+      outputSplitBySubprojects.set(currentProjectName, "");
     }
     // if previous subProject has ended, push to array and reset subProject string
     if (line.startsWith("> Task :") && subProjectOut !== "") {
