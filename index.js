@@ -126,7 +126,7 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
-  splitDepOutputByProjectFromMultiprojectOutput
+  splitOutputByGradleProjects
 } from "./utils.js";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -1565,7 +1565,7 @@ export async function createJavaBom(path, options) {
         const sstdout = sresult.stdout;
         if (sstdout) {
           const cmdOutput = Buffer.from(sstdout).toString();
-          const perProjectOutput = splitDepOutputByProjectFromMultiprojectOutput(cmdOutput, allProjects);
+          const perProjectOutput = splitOutputByGradleProjects(cmdOutput, allProjects);
           for (const [key, singleProjectDepOut] of perProjectOutput.entries()) {
             const sp = allProjects.filter((project) => project.name === key).pop();
             const parsedList = parseGradleDep(

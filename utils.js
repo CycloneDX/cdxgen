@@ -8297,7 +8297,7 @@ export function getGradleCommand(srcPath, rootPath) {
  * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
  */
 
-export function splitDepOutputByProjectFromMultiprojectOutput(rawOutput, allProjects) {
+export function splitOutputByGradleProjects(rawOutput, allProjects) {
   const outputSplitBySubprojects = new Map();
   for (const sp of allProjects) {
     outputSplitBySubprojects.set(sp.name, "");
