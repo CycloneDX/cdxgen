@@ -402,9 +402,9 @@ jobs:
         run: |
           rm -rf node_modules
           bun install --frozen-lockfile
-          bun --bun bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-bun.json --deep
-          bun --bun bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-bun.json
-        continue-on-error: true
+          FETCH_LICENSE=true bun --bun bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-bun.json --deep
+          FETCH_LICENSE=true bun --bun bin/cdxgen.js -p -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-bun.json
+        continue-on-error: true       
       - name: denotests
         run: |
           deno info bin/cdxgen.js
