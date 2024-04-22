@@ -156,3 +156,20 @@ jobs:
         images: |
           ghcr.io/cyclonedx/cdxgen-next
       if: github.ref == 'refs/heads/master'
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta5
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ghcr.io/cyclonedx/cdxgen-bun
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ci/Dockerfile-bun
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta5.outputs.tags }}
+        labels: ${{ steps.meta5.outputs.labels }}
+        cache-from: type=gha,scope=cdxgen-bun
+        cache-to: type=gha,mode=max,scope=cdxgen-bun

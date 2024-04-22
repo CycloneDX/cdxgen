@@ -371,10 +371,13 @@ const applyAdvancedOptions = (options) => {
           "aab",
           "go",
           "golang",
+          "rust",
+          "rust-lang",
+          "cargo",
         ].includes(options.projectType)
       ) {
         console.log(
-          "PREVIEW: post-build lifecycle SBOM generation is supported only for android, dotnet, and go projects. Please specify the type using the -t argument.",
+          "PREVIEW: post-build lifecycle SBOM generation is supported only for android, dotnet, go, and Rust projects. Please specify the type using the -t argument.",
         );
         process.exit(1);
       }
