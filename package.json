@@ -101,12 +101,7 @@
     "sequelize": "^6.37.2",
     "sqlite3": "^5.1.7"
   },
-  "files": [
-    "*.js",
-    "bin/",
-    "data/",
-    "types/"
-  ],
+  "files": ["*.js", "bin/", "data/", "types/"],
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
     "docsify-cli": "^4.4.4",
