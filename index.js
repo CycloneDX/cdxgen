@@ -125,6 +125,7 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
+  splitOutputByGradleProjects,
 } from "./utils.js";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -1534,31 +1535,36 @@ export async function createJavaBom(path, options) {
     !["scala", "sbt"].includes(options.projectType)
   ) {
     const gradleCmd = getGradleCommand(path, null);
-    const defaultDepTaskArgs = ["-q", "--console", "plain", "--build-cache"];
+    const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
     allProjects.push(parentComponent);
     let depTaskWithArgs = ["dependencies"];
     if (process.env.GRADLE_DEPENDENCY_TASK) {
       depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
     }
-    for (const sp of allProjects) {
-      let gradleDepArgs = [
-        sp.purl === parentComponent.purl
-          ? depTaskWithArgs[0]
-          : `:${sp.name}:${depTaskWithArgs[0]}`,
-      ];
-      gradleDepArgs = gradleDepArgs
-        .concat(depTaskWithArgs.slice(1))
-        .concat(defaultDepTaskArgs);
-      // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
-      if (process.env.GRADLE_ARGS) {
-        const addArgs = process.env.GRADLE_ARGS.split(" ");
-        gradleDepArgs = gradleDepArgs.concat(addArgs);
+    let gradleDepArgs = [];
+    gradleDepArgs = gradleDepArgs
+      .concat(depTaskWithArgs.slice(1))
+      .concat(defaultDepTaskArgs);
+    // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
+    if (process.env.GRADLE_ARGS) {
+      const addArgs = process.env.GRADLE_ARGS.split(" ");
+      gradleDepArgs = gradleDepArgs.concat(addArgs);
+    }
+    // gradle args only for the dependencies task
+    if (process.env.GRADLE_ARGS_DEPENDENCIES) {
+      const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
+      gradleDepArgs = gradleDepArgs.concat(addArgs);
+    }
+
+    if (process.env.GRADLE_MULTI_THREADED) {
+      gradleDepArgs.push(depTaskWithArgs[0]);
+      for (const sp of allProjects) {
+        //create single command for dependencies tasks on all subprojects
+        if (sp.purl !== parentComponent.purl) {
+          gradleDepArgs.push(`:${sp.name}:${depTaskWithArgs[0]}`);
+        }
       }
-      // gradle args only for the dependencies task
-      if (process.env.GRADLE_ARGS_DEPENDENCIES) {
-        const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
-        gradleDepArgs = gradleDepArgs.concat(addArgs);
-      }
+      gradleDepArgs.push("--parallel"); //flag to enable multi-threading
       console.log("Executing", gradleCmd, gradleDepArgs.join(" "), "in", path);
       const sresult = spawnSync(gradleCmd, gradleDepArgs, {
         cwd: path,
@@ -1566,6 +1572,7 @@ export async function createJavaBom(path, options) {
         timeout: TIMEOUT_MS,
         maxBuffer: MAX_BUFFER,
       });
+
       if (sresult.status !== 0 || sresult.error) {
         if (options.failOnError || DEBUG_MODE) {
           console.error(sresult.stdout, sresult.stderr);
@@ -1575,35 +1582,105 @@ export async function createJavaBom(path, options) {
       const sstdout = sresult.stdout;
       if (sstdout) {
         const cmdOutput = Buffer.from(sstdout).toString();
-        const parsedList = parseGradleDep(
+        const perProjectOutput = splitOutputByGradleProjects(
           cmdOutput,
-          sp.group || parentComponent.group,
-          sp.name,
-          sp.version?.length && sp.version !== "latest"
-            ? sp.version
-            : parentComponent.version,
+          allProjects,
         );
-        const dlist = parsedList.pkgList;
-        if (parsedList.dependenciesList && parsedList.dependenciesList) {
-          dependencies = mergeDependencies(
-            dependencies,
-            parsedList.dependenciesList,
-            parentComponent,
+        for (const [key, singleProjectDepOut] of perProjectOutput.entries()) {
+          const sp = allProjects
+            .filter((project) => project.name === key)
+            .pop();
+          const parsedList = parseGradleDep(
+            singleProjectDepOut,
+            sp.group || parentComponent.group,
+            sp.name,
+            sp.version?.length && sp.version !== "latest"
+              ? sp.version
+              : parentComponent.version,
           );
-        }
-        if (dlist?.length) {
-          if (DEBUG_MODE) {
-            console.log(
-              "Found",
-              dlist.length,
-              "packages in gradle project",
-              sp.name,
+          const dlist = parsedList.pkgList;
+          if (parsedList.dependenciesList && parsedList.dependenciesList) {
+            dependencies = mergeDependencies(
+              dependencies,
+              parsedList.dependenciesList,
+              parentComponent,
             );
           }
-          pkgList = pkgList.concat(dlist);
+          if (dlist?.length) {
+            if (DEBUG_MODE) {
+              console.log(
+                "Found",
+                dlist.length,
+                "packages in gradle project",
+                sp.name,
+              );
+            }
+            pkgList = pkgList.concat(dlist);
+          }
         }
       }
-    } // for
+    } else {
+      for (const sp of allProjects) {
+        let gradleSubProjectDepArgs = [
+          sp.purl === parentComponent.purl
+            ? depTaskWithArgs[0]
+            : `:${sp.name}:${depTaskWithArgs[0]}`,
+        ];
+        gradleSubProjectDepArgs = gradleSubProjectDepArgs.concat(gradleDepArgs);
+
+        gradleSubProjectDepArgs.push("-q");
+        console.log(
+          "Executing",
+          gradleCmd,
+          gradleSubProjectDepArgs.join(" "),
+          "in",
+          path,
+        );
+        const sresult = spawnSync(gradleCmd, gradleSubProjectDepArgs, {
+          cwd: path,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        });
+        if (sresult.status !== 0 || sresult.error) {
+          if (options.failOnError || DEBUG_MODE) {
+            console.error(sresult.stdout, sresult.stderr);
+          }
+          options.failOnError && process.exit(1);
+        }
+        const sstdout = sresult.stdout;
+        if (sstdout) {
+          const cmdOutput = Buffer.from(sstdout).toString();
+          const parsedList = parseGradleDep(
+            cmdOutput,
+            sp.group || parentComponent.group,
+            sp.name,
+            sp.version?.length && sp.version !== "latest"
+              ? sp.version
+              : parentComponent.version,
+          );
+          const dlist = parsedList.pkgList;
+          if (parsedList.dependenciesList && parsedList.dependenciesList) {
+            dependencies = mergeDependencies(
+              dependencies,
+              parsedList.dependenciesList,
+              parentComponent,
+            );
+          }
+          if (dlist?.length) {
+            if (DEBUG_MODE) {
+              console.log(
+                "Found",
+                dlist.length,
+                "packages in gradle project",
+                sp.name,
+              );
+            }
+            pkgList = pkgList.concat(dlist);
+          }
+        }
+      } // for
+    }
     if (pkgList.length) {
       if (parentComponent.components?.length) {
         for (const subProj of parentComponent.components) {

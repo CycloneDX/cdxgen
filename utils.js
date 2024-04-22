@@ -8276,7 +8276,49 @@ export function getGradleCommand(srcPath, rootPath) {
   }
   return gradleCmd;
 }
+/**
+ * Method to split the output produced by Gradle using parallel processing by project
+ *
+ * @param {string} rawOutput Full output produced by Gradle using parallel processing
+ * @param {array} allProjects List of Gradle (sub)projects
+ * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
+ */
 
+export function splitOutputByGradleProjects(rawOutput, allProjects) {
+  const outputSplitBySubprojects = new Map();
+  for (const sp of allProjects) {
+    outputSplitBySubprojects.set(sp.name, "");
+  }
+
+  let subProjectOut = "";
+  const outSplitByLine = rawOutput.split("\n");
+  let currentProjectName = "";
+  for (const [i, line] of outSplitByLine.entries()) {
+    //filter out everything before first dependencies task output
+    if (!line.startsWith("> Task :") && subProjectOut === "") {
+      continue;
+    }
+
+    if (line.startsWith("Root project '") || line.startsWith("Project ':")) {
+      currentProjectName = line.split("'")[1];
+      currentProjectName = currentProjectName.replace(":", "");
+    }
+    // if previous subProject has ended, push to array and reset subProject string
+    if (line.startsWith("> Task :") && subProjectOut !== "") {
+      outputSplitBySubprojects.set(currentProjectName, subProjectOut);
+      subProjectOut = "";
+    }
+    //if in subproject block, keep appending to string
+    subProjectOut += `${line}\n`;
+
+    //if end of last dependencies output block, push to array
+    if (i === outSplitByLine.length - 1) {
+      outputSplitBySubprojects.set(currentProjectName, subProjectOut);
+    }
+  }
+
+  return outputSplitBySubprojects;
+}
 /**
  * Method to return the maven command to use.
  *
