@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.4.1",
+  "version": "10.4.31-SNAPSHOT",
   "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
@@ -101,7 +101,12 @@
     "sequelize": "^6.37.2",
     "sqlite3": "^5.1.7"
   },
-  "files": ["*.js", "bin/", "data/", "types/"],
+  "files": [
+    "*.js",
+    "bin/",
+    "data/",
+    "types/"
+  ],
   "devDependencies": {
     "@biomejs/biome": "1.6.4",
     "docsify-cli": "^4.4.4",

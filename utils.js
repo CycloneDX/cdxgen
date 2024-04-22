@@ -2257,7 +2257,74 @@ export function parseGradleProperties(rawOutput) {
     metadata,
   };
 }
+export function executeGradlePropertiesParallel(dir, rootPath, allProjects) {
+  const defaultProps = {
+    rootProject: null,
+    projects: [],
+    metadata: {
+      version: "latest",
+    },
+  };
 
+  // To optimize performance and reduce errors do not query for properties
+  // beyond the first level
+  if (subProject && subProject.match(/:/g).length >= 2) {
+    return defaultProps;
+  }
+  let gradlePropertiesArgs = [
+    "--console",
+    "plain",
+    "--build-cache",
+    "--parallel",
+  ];
+  const gradleCmd = getGradleCommand(dir, rootPath);
+  // common gradle args, used for all tasks
+  if (process.env.GRADLE_ARGS) {
+    const addArgs = process.env.GRADLE_ARGS.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
+  // gradle args only for the properties task
+  if (process.env.GRADLE_ARGS_PROPERTIES) {
+    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
+    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+  }
+  console.log(
+    "Executing",
+    gradleCmd,
+    gradlePropertiesArgs.join(" "),
+    "in",
+    dir,
+  );
+  const result = spawnSync(gradleCmd, gradlePropertiesArgs, {
+    cwd: dir,
+    encoding: "utf-8",
+    shell: isWin,
+  });
+  if (result.status !== 0 || result.error) {
+    if (result.stderr) {
+      if (result.stderr.includes("does not exist")) {
+        return defaultProps;
+      } else {
+        console.error(result.stdout, result.stderr);
+        console.log(
+          "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
+        );
+      }
+      if (result.stderr.includes("not get unknown property")) {
+        console.log(
+          "2. Check if the SBOM is generated for the correct root project for your application.",
+        );
+      }
+    }
+  }
+  const stdout = result.stdout;
+  if (stdout) {
+    const cmdOutput = Buffer.from(stdout).toString();
+    return cmdOutput;
+  }
+  return {};
+  
+}
 /**
  * Execute gradle properties command and return parsed output
  *
@@ -8286,6 +8353,51 @@ export function getGradleCommand(srcPath, rootPath) {
     gradleCmd = join(process.env.GRADLE_HOME, "bin", "gradle");
   }
   return gradleCmd;
+}
+
+
+/**
+ * Method to split the output produced by Gradle using parallel processing by project
+ * 
+ * @param {string} rawOutput Full output produced by Gradle using parallel processing
+ * @param {array} allProjects List of Gradle (sub)projects 
+ * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
+ */
+
+export function splitDepOutputByProjectFromMultiprojectOutput(rawOutput, allProjects) {
+  const outputSplitBySubprojects = new Map();
+  for (const sp of allProjects) {
+    outputSplitBySubprojects.set(sp.name, "");
+  }
+
+  let subProjectOut = ""
+  const outSplitByLine = rawOutput.split("\n");
+  let currentProjectName = ""
+  for (const [i,line] of outSplitByLine.entries()) {
+      //filter out everything before first dependencies task output
+      if (!line.startsWith("> Task :") && subProjectOut == "") {
+          continue;
+      }
+
+      if (line.startsWith("Root project \'") || line.startsWith("Project \':")) {
+        currentProjectName = line.split("\'")[1];
+        currentProjectName = currentProjectName.replace(":", "");
+      }
+      // if previous subProject has ended, push to array and reset subProject string
+      if (line.startsWith("> Task :") && subProjectOut != "") {
+          outputSplitBySubprojects.set(currentProjectName, subProjectOut);
+          subProjectOut = "" ;
+      }
+      //if in subproject block, keep appending to string
+      subProjectOut += line + "\n";
+
+      //if end of last dependencies output block, push to array
+      if (i == outSplitByLine.length-1){
+          outputSplitBySubprojects.set(currentProjectName, subProjectOut);
+      }
+  }
+  
+  return outputSplitBySubprojects;
 }
 
 /**
