@@ -26,7 +26,6 @@ const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
       "codemods",
       "flow-typed",
       "i18n",
-      "__tests__",
     ];
 
 const IGNORE_FILE_PATTERN = new RegExp(
@@ -54,6 +53,7 @@ const getAllFiles = (deep, dir, extn, files, result, regex) => {
       const dirName = basename(file);
       if (
         dirName.startsWith(".") ||
+        dirName.startsWith("__") ||
         IGNORE_DIRS.includes(dirName.toLowerCase())
       ) {
         continue;
