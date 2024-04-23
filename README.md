@@ -1,5 +1,7 @@
 [![JSR](https://img.shields.io/jsr/v/%40cyclonedx/cdxgen)](https://jsr.io/@cyclonedx/cdxgen) [![NPM](https://img.shields.io/npm/v/%40cyclonedx%2Fcdxgen)](https://www.npmjs.com/package/@cyclonedx/cdxgen) [![GitHub Releases](https://img.shields.io/github/v/release/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/releases) [![NPM Downloads](https://img.shields.io/npm/dy/%40cyclonedx%2Fcdxgen)](<(https://www.npmjs.com/package/@cyclonedx/cdxgen)>) [![GitHub License](https://img.shields.io/github/license/cyclonedx/cdxgen)](./LICENSE.md) [![GitHub Contributors](https://img.shields.io/github/contributors/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/graphs/contributors)
 
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CycloneDX/cdxgen)
+
 # CycloneDX Generator
 
 ![cdxgen logo](cdxgen.png)

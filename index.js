@@ -395,16 +395,18 @@ const addFormulationSection = (options) => {
     components.push({
       type: "file",
       name: "git-parent",
-      description: "Artifact Dependency Graph (ADG) parent.",
+      description: "Git Parent Node.",
       "bom-ref": parentOmniborId,
       omniborId: [parentOmniborId],
+      swhid: [`swh:1:rev:${treeHashes.parent}`],
     });
     components.push({
       type: "file",
       name: "git-tree",
-      description: "Artifact Dependency Graph (ADG) tree.",
+      description: "Git Tree Node.",
       "bom-ref": treeOmniborId,
       omniborId: [treeOmniborId],
+      swhid: [`swh:1:rev:${treeHashes.tree}`],
     });
     provides.push({
       ref: parentOmniborId,
@@ -419,7 +421,8 @@ const addFormulationSection = (options) => {
             type: "file",
             name: f.name,
             version: f.hash,
-            omniborId: [f.ref],
+            omniborId: [f.omniborId],
+            swhid: [f.swhid],
           }
         : {
             type: "file",
