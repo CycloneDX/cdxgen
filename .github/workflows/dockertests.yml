@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: ['21.x']
+        node-version: ['22.x']
         java-version: ['21']
     runs-on: ${{ matrix.os }}
     steps:
@@ -66,7 +66,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['21.x']
+        node-version: ['22.x']
         java-version: ['21']
     steps:
       - uses: actions/checkout@v4
@@ -104,7 +104,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['21.x']
+        node-version: ['22.x']
         java-version: ['21']
     steps:
       - uses: actions/checkout@v4
