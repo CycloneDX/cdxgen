@@ -11,7 +11,7 @@ cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a val
 When used with plugins:
 
 - cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems
-- cdxgen also includes an evinse tool to generate component evidence, CBOM and SaaSBOM for some languages
+- cdxgen also includes an evinse tool to generate component evidence, CBOM, and SaaSBOM for some languages
 
 ## Why cdxgen?
 
@@ -126,7 +126,7 @@ For the bun version, use `ghcr.io/cyclonedx/cdxgen-bun` as the image name.
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-bun -r /app -o /app/bom.json
 ```
 
-In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as library](#integration-as-library)
+In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as a library](#integration-as-library)
 
 ```ts
 import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
