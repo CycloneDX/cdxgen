@@ -5095,7 +5095,7 @@ export async function createMultiXBom(pathList, options) {
         parentSubComponents.push(bomData.parentComponent);
       }
       // Retain metadata.component.components
-      if (bomData.parentComponent.components?.length) {
+      if (bomData.parentComponent?.components?.length) {
         parentSubComponents = parentSubComponents.concat(
           bomData.parentComponent.components,
         );
@@ -5951,6 +5951,9 @@ export async function createBom(path, options) {
       return createCloudBuildBom(path, options);
     case "swift":
       return await createSwiftBom(path, options);
+    case "binary":
+    case "blint":
+      return await createBinaryBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/cyclonedx/cdxgen/issues/95
