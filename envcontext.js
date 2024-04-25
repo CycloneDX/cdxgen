@@ -101,7 +101,8 @@ export const listFiles = (dir) => {
         filesList.push({
           hash: tmpA[2],
           name: lastParts[lastParts.length - 1],
-          ref: `gitoid:blob:sha1:${tmpA[2]}`,
+          omniborId: `gitoid:blob:sha1:${tmpA[2]}`,
+          swhid: `swh:1:rev:${tmpA[2]}`,
         });
       }
     });

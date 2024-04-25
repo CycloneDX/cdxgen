@@ -227,6 +227,8 @@ export function getAllFiles(dirPath, pattern, options = {}) {
     "**/docs/**",
     "**/examples/**",
     "**/site-packages/**",
+    "**/flow-typed/**",
+    "**/coverage/**",
   ];
   // Only ignore node_modules if the caller is not looking for package.json
   if (!pattern.includes("package.json")) {
@@ -7819,6 +7821,7 @@ export function getPomPropertiesFromMavenDir(mavenDir) {
 }
 
 /**
+ * Computes the checksum for a file path using the given hash algorithm
  *
  * @param {string} hashName name of hash algorithm
  * @param {string} path path to file

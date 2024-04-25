@@ -26,6 +26,7 @@ const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
       "codemods",
       "flow-typed",
       "i18n",
+      "coverage",
     ];
 
 const IGNORE_FILE_PATTERN = new RegExp(

@@ -1024,6 +1024,7 @@ export function encodeForPurl(s: any): any;
  */
 export function getPomPropertiesFromMavenDir(mavenDir: string): {};
 /**
+ * Computes the checksum for a file path using the given hash algorithm
  *
  * @param {string} hashName name of hash algorithm
  * @param {string} path path to file

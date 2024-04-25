@@ -1,5 +1,7 @@
 [![JSR](https://img.shields.io/jsr/v/%40cyclonedx/cdxgen)](https://jsr.io/@cyclonedx/cdxgen) [![NPM](https://img.shields.io/npm/v/%40cyclonedx%2Fcdxgen)](https://www.npmjs.com/package/@cyclonedx/cdxgen) [![GitHub Releases](https://img.shields.io/github/v/release/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/releases) [![NPM Downloads](https://img.shields.io/npm/dy/%40cyclonedx%2Fcdxgen)](<(https://www.npmjs.com/package/@cyclonedx/cdxgen)>) [![GitHub License](https://img.shields.io/github/license/cyclonedx/cdxgen)](./LICENSE.md) [![GitHub Contributors](https://img.shields.io/github/contributors/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/graphs/contributors)
 
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CycloneDX/cdxgen)
+
 # CycloneDX Generator
 
 ![cdxgen logo](cdxgen.png)
@@ -9,7 +11,7 @@ cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a val
 When used with plugins:
 
 - cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems
-- cdxgen also includes an evinse tool to generate component evidence, CBOM and SaaSBOM for some languages
+- cdxgen also includes an evinse tool to generate component evidence, CBOM, and SaaSBOM for some languages
 
 ## Why cdxgen?
 
@@ -124,7 +126,7 @@ For the bun version, use `ghcr.io/cyclonedx/cdxgen-bun` as the image name.
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-bun -r /app -o /app/bom.json
 ```
 
-In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as library](#integration-as-library)
+In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as a library](#integration-as-library)
 
 ```ts
 import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";

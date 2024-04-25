@@ -95,7 +95,7 @@ export const printServices = (bomJson) => {
   const config = {
     header: {
       alignment: "center",
-      content: "List of Services\nGenerated with \u2665 by cdxgen",
+      content: "List of Services\nGenerated with \u2665  by cdxgen",
     },
   };
   if (data.length > 1) {
@@ -138,7 +138,7 @@ export const printOccurrences = (bomJson) => {
   const config = {
     header: {
       alignment: "center",
-      content: "Component Evidence\nGenerated with \u2665 by cdxgen",
+      content: "Component Evidence\nGenerated with \u2665  by cdxgen",
     },
   };
   if (data.length > 1) {
@@ -184,7 +184,8 @@ export const printCallStack = (bomJson) => {
   const config = {
     header: {
       alignment: "center",
-      content: "Component Call Stack Evidence\nGenerated with \u2665 by cdxgen",
+      content:
+        "Component Call Stack Evidence\nGenerated with \u2665  by cdxgen",
     },
   };
   if (data.length > 1) {
@@ -211,7 +212,7 @@ export const printDependencyTree = (bomJson) => {
     const config = {
       header: {
         alignment: "center",
-        content: "Dependency Tree\nGenerated with \u2665 by cdxgen",
+        content: "Dependency Tree\nGenerated with \u2665  by cdxgen",
       },
     };
     console.log(table([[treeGraphics.join("\n")]], config));
@@ -303,7 +304,7 @@ export const printReachables = (sliceArtefacts) => {
   const config = {
     header: {
       alignment: "center",
-      content: "Reachable Components\nGenerated with \u2665 by cdxgen",
+      content: "Reachable Components\nGenerated with \u2665  by cdxgen",
     },
   };
   if (data.length > 1) {
