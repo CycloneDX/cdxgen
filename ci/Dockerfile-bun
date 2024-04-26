@@ -123,7 +123,7 @@ RUN set -e; \
     && rm -rf /var/cache/yum \
     && microdnf clean all
 COPY . /opt/cdxgen
-RUN cd /opt/cdxgen && bun install --silent --frozen-lockfile --production \
+RUN cd /opt/cdxgen && bun install --silent --production \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen \
     && chmod a-w -R /opt \
     && rm -rf /var/cache/yum \
