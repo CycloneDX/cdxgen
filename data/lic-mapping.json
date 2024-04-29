@@ -192,6 +192,7 @@
       "LGPL v3.0",
       "LGPL-3.0",
       "LGPL3.0",
+      "LGPL 3",
       "GNU Lesser General Public License (LGPL), version 3",
       "GNU Lesser General Public License (LGPL), version 3.0",
       "GNU Lesser General Public License v3.0",
@@ -203,8 +204,14 @@
     "names": [
       "GNU Lesser General Public License (LGPL), version 3 or later",
       "GNU Lesser General Public License (LGPL), version 3.0 or later",
-      "GNU Lesser General Public License v3.0 or later"
+      "GNU Lesser General Public License v3.0 or later",
+      "GNU Lesser General Public License v3 or later (LGPLv3+)",
+      "LGPLv3+"
     ]
+  },
+  {
+    "exp": "GPL-1.0-only",
+    "names": ["GNU General Public License (GPL)"]
   },
   {
     "exp": "GPL-2.0-only",
@@ -217,7 +224,8 @@
       "GNU General Public License v2.0",
       "GNU General Public License Version 2",
       "GNU General Public License, version 2",
-      "GNU General Public License as published by the Free Software Foundation; version 2."
+      "GNU General Public License as published by the Free Software Foundation; version 2.",
+      "GNU General Public License v2 (GPLv2)"
     ]
   },
   {
@@ -251,7 +259,8 @@
       "GNU General Public License v3.0",
       "GNU General Public License as published by the Free Software Foundation, version 3.",
       "GPL-3",
-      "GPL-3.0"
+      "GPL-3.0",
+      "GNU GPL 3"
     ]
   },
   {
