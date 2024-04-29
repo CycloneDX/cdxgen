@@ -12,7 +12,7 @@ const SYMBOLS_ANSI = {
 
 const MAX_TREE_DEPTH = 6;
 
-export const printTable = (bomJson) => {
+export const printTable = (bomJson, filterTypes = undefined) => {
   if (!bomJson || !bomJson.components) {
     return;
   }
@@ -35,14 +35,31 @@ export const printTable = (bomJson) => {
     ],
   };
   const stream = createStream(config);
-  stream.write(["Group", "Name", "Version", "Scope"]);
+  stream.write([
+    "Group",
+    "Name",
+    filterTypes?.includes("cryptographic-asset") ? "Version / oid" : "Version",
+    "Scope",
+  ]);
   for (const comp of bomJson.components) {
-    stream.write([
-      comp.group || "",
-      comp.name,
-      `\x1b[1;35m${comp.version || ""}\x1b[0m`,
-      comp.scope || "",
-    ]);
+    if (filterTypes && !filterTypes.includes(comp.type)) {
+      continue;
+    }
+    if (comp.type === "cryptographic-asset") {
+      stream.write([
+        comp.group || "",
+        comp.name,
+        `\x1b[1;35m${comp.cryptoProperties?.oid || ""}\x1b[0m`,
+        comp.scope || "",
+      ]);
+    } else {
+      stream.write([
+        comp.group || "",
+        comp.name,
+        `\x1b[1;35m${comp.version || ""}\x1b[0m`,
+        comp.scope || "",
+      ]);
+    }
   }
   console.log();
   console.log(
@@ -192,15 +209,15 @@ export const printCallStack = (bomJson) => {
     console.log(table(data, config));
   }
 };
-export const printDependencyTree = (bomJson) => {
+export const printDependencyTree = (bomJson, mode = "dependsOn") => {
   const dependencies = bomJson.dependencies || [];
   if (!dependencies.length) {
     return;
   }
   const depMap = {};
   for (const d of dependencies) {
-    if (d.dependsOn?.length) {
-      depMap[d.ref] = d.dependsOn.sort();
+    if (d[mode]?.length) {
+      depMap[d.ref] = d[mode].sort();
     }
   }
   const shownList = [];
@@ -209,10 +226,12 @@ export const printDependencyTree = (bomJson) => {
   // table library is too slow for display large lists.
   // Fixes #491
   if (treeGraphics.length < 100) {
+    const treeType =
+      mode && mode === "provides" ? "Implementation" : "Dependency";
     const config = {
       header: {
         alignment: "center",
-        content: "Dependency Tree\nGenerated with \u2665  by cdxgen",
+        content: `${treeType} Tree\nGenerated with \u2665  by cdxgen`,
       },
     };
     console.log(table([[treeGraphics.join("\n")]], config));

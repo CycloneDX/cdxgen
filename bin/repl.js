@@ -244,11 +244,50 @@ cdxgenRepl.defineCommand("print", {
     this.displayPrompt();
   },
 });
+cdxgenRepl.defineCommand("cryptos", {
+  help: "print the components of type cryptographic-asset as a table",
+  action() {
+    if (sbom) {
+      printTable(sbom, ["cryptographic-asset"]);
+    } else {
+      console.log(
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
+      );
+    }
+    this.displayPrompt();
+  },
+});
+cdxgenRepl.defineCommand("frameworks", {
+  help: "print the components of type framework as a table",
+  action() {
+    if (sbom) {
+      printTable(sbom, ["framework"]);
+    } else {
+      console.log(
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
+      );
+    }
+    this.displayPrompt();
+  },
+});
 cdxgenRepl.defineCommand("tree", {
   help: "display the dependency tree",
   action() {
     if (sbom) {
       printDependencyTree(sbom);
+    } else {
+      console.log(
+        "⚠ No BOM is loaded. Use .import command to import an existing BOM",
+      );
+    }
+    this.displayPrompt();
+  },
+});
+cdxgenRepl.defineCommand("provides", {
+  help: "display the provides tree",
+  action() {
+    if (sbom) {
+      printDependencyTree(sbom, "provides");
     } else {
       console.log(
         "⚠ No BOM is loaded. Use .import command to import an existing BOM",
