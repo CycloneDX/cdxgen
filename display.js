@@ -36,7 +36,9 @@ export const printTable = (bomJson, filterTypes = undefined) => {
   };
   const stream = createStream(config);
   stream.write([
-    "Group",
+    filterTypes?.includes("cryptographic-asset")
+      ? "Asset Type / Group"
+      : "Group",
     "Name",
     filterTypes?.includes("cryptographic-asset") ? "Version / oid" : "Version",
     "Scope",
@@ -47,7 +49,7 @@ export const printTable = (bomJson, filterTypes = undefined) => {
     }
     if (comp.type === "cryptographic-asset") {
       stream.write([
-        comp.group || "",
+        comp.cryptoProperties?.assetType || comp.group || "",
         comp.name,
         `\x1b[1;35m${comp.cryptoProperties?.oid || ""}\x1b[0m`,
         comp.scope || "",
@@ -62,13 +64,17 @@ export const printTable = (bomJson, filterTypes = undefined) => {
     }
   }
   console.log();
-  console.log(
-    "BOM includes",
-    bomJson.components.length,
-    "components and",
-    bomJson.dependencies.length,
-    "dependencies",
-  );
+  if (!filterTypes) {
+    console.log(
+      "BOM includes",
+      bomJson.components.length,
+      "components and",
+      bomJson.dependencies.length,
+      "dependencies",
+    );
+  } else {
+    console.log(`Components filtered based on type: ${filterTypes.join(", ")}`);
+  }
 };
 const formatProps = (props) => {
   const retList = [];
@@ -215,19 +221,23 @@ export const printDependencyTree = (bomJson, mode = "dependsOn") => {
     return;
   }
   const depMap = {};
+  const shownList = [];
   for (const d of dependencies) {
     if (d[mode]?.length) {
       depMap[d.ref] = d[mode].sort();
+    } else {
+      if (mode === "provides") {
+        shownList.push(d.ref);
+      }
     }
   }
-  const shownList = [];
   const treeGraphics = [];
   recursePrint(depMap, dependencies, 0, shownList, treeGraphics);
   // table library is too slow for display large lists.
   // Fixes #491
   if (treeGraphics.length < 100) {
     const treeType =
-      mode && mode === "provides" ? "Implementation" : "Dependency";
+      mode && mode === "provides" ? "Crypto Implementation" : "Dependency";
     const config = {
       header: {
         alignment: "center",
