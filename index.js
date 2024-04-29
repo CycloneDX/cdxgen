@@ -1292,9 +1292,7 @@ export async function createJavaBom(path, options) {
           // These could be due to a range of reasons that are covered below.
           if (pomFiles.length === 1 || DEBUG_MODE) {
             console.error(result.stdout, result.stderr);
-            console.log(
-              "Resolve the above maven error. This could be due to the following:\n",
-            );
+            console.log("The above build errors could be due to:\n");
             if (
               result.stdout &&
               (result.stdout.includes("Non-resolvable parent POM") ||
@@ -2642,7 +2640,7 @@ export async function createPythonBom(path, options) {
       if (reqFiles?.length) {
         if (options.installDeps && DEBUG_MODE) {
           console.log(
-            "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM without installing the dependencies in case of any build issues.",
+            "cdxgen will now attempt to generate an SBOM for 'build' lifecycle phase for Python. This would take some time ...\nTo speed up this step, invoke cdxgen from within a virtual environment with all the dependencies installed.\nAlternatively, pass the argument '--lifecycle pre-build' to generate a faster but less precise SBOM.",
           );
         }
         for (const f of reqFiles) {

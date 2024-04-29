@@ -7440,10 +7440,10 @@ export async function collectMvnDependencies(
     if (result.status !== 0 || result.error) {
       console.error(result.stdout, result.stderr);
       console.log(
-        "Resolve the above maven error. You can try the following remediation tips:\n",
+        "You can try the following remediation tips to resolve this error:\n",
       );
       console.log(
-        "1. Check if the correct version of maven is installed and available in the PATH.",
+        "1. Check if the correct version of maven is installed and available in the PATH. Check if the environment variable MVN_ARGS needs to be set.",
       );
       console.log(
         "2. Perform 'mvn compile package' before invoking this command. Fix any errors found during this invocation.",
@@ -8884,17 +8884,17 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
               );
             } else {
               console.log(
-                "- For example, you may have to install gcc, gcc-c++ compiler, make tools and additional development libraries using apt-get or yum package manager.",
+                "- For example, you may have to install gcc, gcc-c++ compiler, make tools, and additional development libraries using apt-get or yum package manager.",
               );
             }
             console.log(
-              "- Certain projects would only build with specific versions of python and OS. Data science and ML related projects might require a conda/anaconda distribution.",
+              "- Certain projects would only build with specific versions of Python. Data science and ML related projects might require a conda/anaconda distribution.",
             );
             console.log(
               "- Check if any git submodules have to be initialized.",
             );
             console.log(
-              "- If the application has its own Dockerfile, look for additional clues in there. You can also run cdxgen npm package during the container build step.",
+              "- If the application has its own Dockerfile, look for any clues for build dependencies. Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-python:v10` container image, which bundles a range of build tools and development libraries.",
             );
           } else {
             console.log(
