@@ -235,7 +235,7 @@ export const printDependencyTree = (bomJson, mode = "dependsOn") => {
   recursePrint(depMap, dependencies, 0, shownList, treeGraphics);
   // table library is too slow for display large lists.
   // Fixes #491
-  if (treeGraphics.length < 100) {
+  if (treeGraphics.length && treeGraphics.length < 100) {
     const treeType =
       mode && mode === "provides" ? "Crypto Implementation" : "Dependency";
     const config = {
