@@ -1281,14 +1281,21 @@ export const collectReachableFrames = (language, reachablesSlice) => {
       if (tagStr.includes("crypto")) {
         isCryptoFlow = true;
       }
-      if (tagStr.includes("crypto-generate")) {
-        cpurls = tagStr.split(", ").filter((t) => t.startsWith("pkg:"));
-        for (const cpurl of cpurls) {
-          cryptoGeneratePurls[cpurl] = new Set();
-        }
-      }
       if (isCryptoFlow && fnode.code) {
         codeSnippets = `${codeSnippets}\\n${fnode.code}`;
+      }
+      if (
+        tagStr.includes("crypto-generate") ||
+        fnode.code.includes("encrypt") ||
+        fnode.code.includes("decrypt") ||
+        fnode.code.includes("sign")
+      ) {
+        cpurls = tagStr.split(", ").filter((t) => t.startsWith("pkg:"));
+        for (const cpurl of cpurls) {
+          if (!cryptoGeneratePurls[cpurl]) {
+            cryptoGeneratePurls[cpurl] = new Set();
+          }
+        }
       }
       if (!fnode.parentFileName || fnode.parentFileName === "<unknown>") {
         continue;

@@ -1946,5 +1946,37 @@
   "sm2sign_with_": {
     "oid": "1.2.156.10197.1.501",
     "description": "Chinese Cryptography Standardization Technology Committee (CCSTC)"
+  },
+  "PBKDF2": {
+    "oid": "1.2.840.113549.1.5.12",
+    "description": "PBKDF2 key derivation algorithm"
+  },
+  "pbeWithMD2AndDES-CBC": {
+    "oid": "1.2.840.113549.1.5.1",
+    "description": "Password Based Encryption Algorithm"
+  },
+  "pbeWithMD5AndDES-CBC": {
+    "oid": "1.2.840.113549.1.5.3",
+    "description": "Password Based Encryption Algorithm"
+  },
+  "pbeWithMD2AndRC2-CBC": {
+    "oid": "1.2.840.113549.1.5.4",
+    "description": "Password Based Encryption Algorithm. Uses RC2 in Cipher Block Chaining Mode (RC2-CBC)"
+  },
+  "pbeWithMD5AndRC2-CBC": {
+    "oid": "1.2.840.113549.1.5.6",
+    "description": "Password Based Encryption Algorithm. Uses RC2 in Cipher Block Chaining Mode (RC2-CBC)"
+  },
+  "pbeWithMD5AndXOR": {
+    "oid": "1.2.840.113549.1.5.9",
+    "description": "Password Based Encryption Algorithm. Uses XOR. Uses MD5 to hash a password & salt to get Key and IV."
+  },
+  "pbeWithSHA1AndDES-CBC": {
+    "oid": "1.2.840.113549.1.5.10",
+    "description": "Password Based Encryption Algorithm. Uses Data Encryption Standard in Cipher Block Chaining Mode (DES-CBC)"
+  },
+  "pbeWithSHA1AndRC2-CBC": {
+    "oid": "1.2.840.113549.1.5.11",
+    "description": "Password Based Encryption Algorithm. Uses RC2 in Cipher Block Chaining Mode (RC2-CBC)."
   }
 }
