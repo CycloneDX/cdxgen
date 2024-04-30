@@ -211,7 +211,9 @@ export const createSlice = (
     return;
   }
   console.log(
-    `Create ${sliceType} slice for ${path.resolve(filePath)}. Please wait ...`,
+    `Creating ${sliceType} slice for ${path.resolve(
+      filePath,
+    )}. Please wait ...`,
   );
   const language = purlOrLanguage.startsWith("pkg:")
     ? purlToLanguage(purlOrLanguage, filePath)
