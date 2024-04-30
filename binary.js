@@ -245,6 +245,8 @@ const OS_DISTRO_ALIAS = {
   "ubuntu-20.10": "groovy",
   "ubuntu-22.04": "jammy",
   "ubuntu-23.04": "lunar",
+  "ubuntu-23.10": "mantic",
+  "ubuntu-24.04": "noble",
   "debian-14": "forky",
   "debian-14.5": "forky",
   "debian-13": "trixie",
