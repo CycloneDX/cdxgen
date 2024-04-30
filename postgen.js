@@ -43,6 +43,14 @@ export const applyStandards = (bomJson, options) => {
       );
       if (existsSync(templateFile)) {
         const templateData = JSON.parse(readFileSync(templateFile, "utf-8"));
+        if (templateData?.metadata?.licenses) {
+          if (!bomJson.metadata.licenses) {
+            bomJson.metadata.licenses = [];
+          }
+          bomJson.metadata.licenses = bomJson.metadata.licenses.concat(
+            templateData.metadata.licenses,
+          );
+        }
         if (templateData?.definitions?.standards) {
           if (!bomJson.definitions) {
             bomJson.definitions = { standards: [] };
