@@ -9,7 +9,7 @@ In this lesson, we will learn about signing and attaching a signed SBOM to a con
 Ensure the following tools are installed.
 
 - ORAS [CLI](https://oras.land/docs/installation)
-- Node.js > 18
+- Node.js > 20
 - docker or podman
 
 Additionally, you need to have access to a container registry to push the image.
