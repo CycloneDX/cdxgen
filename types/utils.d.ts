@@ -274,6 +274,20 @@ export function parseGradleProperties(rawOutput: string): {
   };
 };
 /**
+ * Execute gradle properties command using multi-threading and return parsed output
+ *
+ * @param {string} dir Directory to execute the command
+ * @param {string} rootPath Root directory
+ * @param {array} allProjectsStr List of all sub-projects (including the preceding `:`)
+ *
+ * @returns {string} The combined output for all subprojects of the Gradle properties task
+ */
+export function executeParallelGradleProperties(
+  dir: string,
+  rootPath: string,
+  allProjectsStr: any[],
+): string;
+/**
  * Execute gradle properties command and return parsed output
  *
  * @param {string} dir Directory to execute the command
@@ -1113,6 +1127,13 @@ export function getJarClasses(jarFile: string): Promise<any[]>;
  * @param {string} rootPath Root directory to look for gradlew wrapper
  */
 export function getGradleCommand(srcPath: string, rootPath: string): string;
+/**
+ * Method to split the output produced by Gradle using parallel processing by project
+ *
+ * @param {string} rawOutput Full output produced by Gradle using parallel processing
+ * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
+ */
+export function splitOutputByGradleProjects(rawOutput: string): map;
 /**
  * Method to return the maven command to use.
  *
