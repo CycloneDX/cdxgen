@@ -332,7 +332,9 @@ if (process.argv[1].includes("cbom")) {
   options.specVersion = 1.6;
   options.deep = true;
 }
-
+if (options.standard) {
+  options.specVersion = 1.6;
+}
 /**
  * Method to apply advanced options such as profile and lifecycles
  *
@@ -456,7 +458,12 @@ const checkPermissions = (filePath) => {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   let bomNSData = (await createBom(filePath, options)) || {};
-  if (options.requiredOnly || options["filter"] || options["only"]) {
+  if (
+    options.requiredOnly ||
+    options["filter"] ||
+    options["only"] ||
+    options.standard
+  ) {
     bomNSData = postProcess(bomNSData, options);
   }
   if (

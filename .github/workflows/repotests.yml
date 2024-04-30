@@ -200,7 +200,7 @@ jobs:
       - name: repotests java-sec-code
         run: |
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation --include-crypto
-          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --author foo --author bar
+          bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-2.json --author foo --author bar --standard asvs-4.0.3
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-3.json --required-only
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-4.json --filter postgres --filter json
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-5.json --only spring
