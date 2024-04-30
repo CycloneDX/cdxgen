@@ -1,0 +1,813 @@
+{
+  "metadata": {
+    "licenses": [
+      {
+        "license": {
+          "id": "CC-BY-SA-4.0",
+          "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt"
+        }
+      }
+    ]
+  },
+  "definitions": {
+    "standards": [
+      {
+        "bom-ref": "SCVS-1.0",
+        "name": "Software Component Verification Standard (SCVS)",
+        "version": "1.0",
+        "description": "The Software Component Verification Standard is a grouping of controls, separated by control family, which can be used by architects, developers, security, legal, and compliance to define, build, and verify the integrity of their software supply chain.",
+        "owner": "OWASP Software Component Verification Standard Project",
+        "requirements": [
+          {
+            "bom-ref": "V1-Inventory",
+            "identifier": "V1-Inventory",
+            "title": "Inventory",
+            "text": "An accurate inventory of all components used in the creation of software is a foundational requirement for further analysis. The following controls incorporate single application inventories, organizational inventories, and approaches to enable software transparency when procuring new software or systems. Component identification varies based on the ecosystem the component is part of. Therefore, for all inventory purposes, the use of identifiers, such as Package URL, may be used to standardize and normalize naming conventions for managed dependencies. An organization-wide inventory of all first-party and third-party (including open source) components allows for greater transparency within the organization, promotes software standardization and reuse, and allows for rapid impact analysis."
+          },
+          {
+            "bom-ref": "1.1",
+            "identifier": "1.1",
+            "text": "All direct and transitive components and their versions are known at completion of a build",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.2",
+            "identifier": "1.2",
+            "text": "Package managers are used to manage all third-party binary components",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.3",
+            "identifier": "1.3",
+            "text": "An accurate inventory of all third-party components is available in a machine-readable format",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.4",
+            "identifier": "1.4",
+            "text": "Software bill of materials are generated for publicly or commercially available applications",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.5",
+            "identifier": "1.5",
+            "text": "Software bill of materials are required for new procurements",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.6",
+            "identifier": "1.6",
+            "text": "Software bill of materials continuously maintained and current for all systems",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.7",
+            "identifier": "1.7",
+            "text": "Components are uniquely identified in a consistent, machine-readable format",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.8",
+            "identifier": "1.8",
+            "text": "The component type is known throughout inventory",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.9",
+            "identifier": "1.9",
+            "text": "The component function is known throughout inventory ",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "1.10",
+            "identifier": "1.10",
+            "text": "Point of origin is known for all components",
+            "parent": "V1-Inventory"
+          },
+          {
+            "bom-ref": "V2-Software_Bill_of_Materials",
+            "identifier": "V2-Software_Bill_of_Materials",
+            "title": "Software Bill of Materials",
+            "text": "Automatically creating accurate Software Bill of Materials (SBOM) in the build pipeline is one indicator of mature development processes. SBOMs should be a machine readable format. Each format has different capabilities and use-cases they excel in. Part of SBOM adoption is identifying the use-cases and capabilities best suited to specific purposes. While SBOM format standardization across an organization may be desirable, it may be necessary to adopt more than one to meet functional, contractual, compliance, or regulatory requirements."
+          },
+          {
+            "bom-ref": "2.1",
+            "identifier": "2.1",
+            "text": "A structured, machine readable software bill of materials (SBOM) format is present",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.2",
+            "identifier": "2.2",
+            "text": "SBOM creation is automated and reproducible",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.3",
+            "identifier": "2.3",
+            "text": "Each SBOM has a unique identifier",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.4",
+            "identifier": "2.4",
+            "text": "SBOM has been signed by publisher, supplier, or certifying authority",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.5",
+            "identifier": "2.5",
+            "text": "SBOM signature verification exists",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.6",
+            "identifier": "2.6",
+            "text": "SBOM signature verification is performed",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.7",
+            "identifier": "2.7",
+            "text": "SBOM is timestamped",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.8",
+            "identifier": "2.8",
+            "text": "SBOM is analyzed for risk",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.9",
+            "identifier": "2.9",
+            "text": "SBOM contains a complete and accurate inventory of all components the SBOM describes",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.10",
+            "identifier": "2.10",
+            "text": "SBOM contains an accurate inventory of all test components for the asset or application it describes",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.11",
+            "identifier": "2.11",
+            "text": "SBOM contains metadata about the asset or software the SBOM describes",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.12",
+            "identifier": "2.12",
+            "text": "Component identifiers are derived from their native ecosystems (if applicable)",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.13",
+            "identifier": "2.13",
+            "text": "Component point of origin is identified in a consistent, machine readable format (e.g. PURL)",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.14",
+            "identifier": "2.14",
+            "text": "Components defined in SBOM have accurate license information",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.15",
+            "identifier": "2.15",
+            "text": "Components defined in SBOM have valid SPDX license ID's or expressions (if applicable)",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.16",
+            "identifier": "2.16",
+            "text": "Components defined in SBOM have valid copyright statements",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.17",
+            "identifier": "2.17",
+            "text": "Components defined in SBOM which have been modified from the original have detailed provenance and pedigree information ",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "2.18",
+            "identifier": "2.18",
+            "text": "Components defined in SBOM have one or more file hashes (SHA-256, SHA-512, etc)",
+            "parent": "V2-Software_Bill_of_Materials"
+          },
+          {
+            "bom-ref": "V3-Build_Environment",
+            "identifier": "V3-Build_Environment",
+            "title": "Build Environment",
+            "text": "Software build pipelines may consist of source code repositories, package repositories, continuous integration and delivery processes, and test procedures, along with the network infrastructure and services that enable these capabilities. Every system in the pipeline may provide an entry-point in which flaws, failures, and misconfigurations can compromise the software supply chain. Hardening the systems involved and implementing best practices reduces the likelihood of compromise."
+          },
+          {
+            "bom-ref": "3.1",
+            "identifier": "3.1",
+            "text": "Application uses a repeatable build",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.2",
+            "identifier": "3.2",
+            "text": "Documentation exists on how the application is built and instructions for repeating the build",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.3",
+            "identifier": "3.3",
+            "text": "Application uses a continuous integration build pipeline",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.4",
+            "identifier": "3.4",
+            "text": "Application build pipeline prohibits alteration of build outside of the job performing the build",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.5",
+            "identifier": "3.5",
+            "text": "Application build pipeline prohibits alteration of package management settings",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.6",
+            "identifier": "3.6",
+            "text": "Application build pipeline prohibits the execution of arbitrary code outside of the context of a jobs build script",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.7",
+            "identifier": "3.7",
+            "text": "Application build pipeline may only perform builds of source code maintained in version control systems",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.8",
+            "identifier": "3.8",
+            "text": "Application build pipeline prohibits alteration of DNS and network settings during build",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.9",
+            "identifier": "3.9",
+            "text": "Application build pipeline prohibits alteration of certificate trust stores",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.10",
+            "identifier": "3.10",
+            "text": "Application build pipeline enforces authentication and defaults to deny",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.11",
+            "identifier": "3.11",
+            "text": "Application build pipeline enforces authorization and defaults to deny",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.12",
+            "identifier": "3.12",
+            "text": "Application build pipeline requires separation of concerns for the modification of system settings",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.13",
+            "identifier": "3.13",
+            "text": "Application build pipeline maintains a verifiable audit log of all system changes",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.14",
+            "identifier": "3.14",
+            "text": "Application build pipeline maintains a verifiable audit log of all build job changes",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.15",
+            "identifier": "3.15",
+            "text": "Application build pipeline has required maintenance cadence where the entire stack is updated, patched, and re-certified for use",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.16",
+            "identifier": "3.16",
+            "text": "Compilers, version control clients, development utilities, and software development kits are analyzed and monitored for tampering, trojans, or malicious code",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.17",
+            "identifier": "3.17",
+            "text": "All build-time manipulations to source or binaries are known and well defined",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.18",
+            "identifier": "3.18",
+            "text": "Checksums of all first-party and third-party components are documented for every build",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.19",
+            "identifier": "3.19",
+            "text": "Checksums of all components are accessible and delivered out-of-band whenever those components are packaged or distributed",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.20",
+            "identifier": "3.20",
+            "text": "Unused direct and transitive components have been identified",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "3.21",
+            "identifier": "3.21",
+            "text": "Unused direct and transitive components have been removed from the application",
+            "parent": "V3-Build_Environment"
+          },
+          {
+            "bom-ref": "V4-Package_Management",
+            "identifier": "V4-Package_Management",
+            "title": "Package Management",
+            "text": "Open source components intended for reuse are often published to ecosystem-specific package repositories. Centralized repositories exist for many build systems including Maven, .NET, NPM and Python. Repositories internal to an organization may additionally provide reuse of first-party components as well as access to trusted third-party components. Package managers are often invoked during the build process and are responsible for resolving component versions and retrieving components from repositories. While there are tremendous business, technical, and security benefits to using package managers and centralized repositories, they are often targets for adversaries. Implementing best practices can dramatically reduce risk of compromise in the software supply chain."
+          },
+          {
+            "bom-ref": "4.1",
+            "identifier": "4.1",
+            "text": "Binary components are retrieved from a package repository",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.2",
+            "identifier": "4.2",
+            "text": "Package repository contents are congruent to an authoritative point of origin for open source components",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.3",
+            "identifier": "4.3",
+            "text": "Package repository requires strong authentication",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.4",
+            "identifier": "4.4",
+            "text": "Package repository supports multi-factor authentication component publishing",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.5",
+            "identifier": "4.5",
+            "text": "Package repository components have been published with multi-factor authentication",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.6",
+            "identifier": "4.6",
+            "text": "Package repository supports security incident reporting",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.7",
+            "identifier": "4.7",
+            "text": "Package repository automates security incident reporting",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.8",
+            "identifier": "4.8",
+            "text": "Package repository notifies publishers of security issues",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.9",
+            "identifier": "4.9",
+            "text": "Package repository notifies users of security issues",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.10",
+            "identifier": "4.10",
+            "text": "Package repository provides a verifiable way of correlating component versions to specific source codes in version control",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.11",
+            "identifier": "4.11",
+            "text": "Package repository provides auditability when components are updated",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.12",
+            "identifier": "4.12",
+            "text": "Package repository requires code signing to publish packages to production repositories",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.13",
+            "identifier": "4.13",
+            "text": "Package manager verifies the integrity of packages when they are retrieved from remote repository",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.14",
+            "identifier": "4.14",
+            "text": "Package manager verifies the integrity of packages when they are retrieved from file system",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.15",
+            "identifier": "4.15",
+            "text": "Package repository enforces use of TLS for all interactions",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.16",
+            "identifier": "4.16",
+            "text": "Package manager validates TLS certificate chain to repository and fails securely when validation fails",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.17",
+            "identifier": "4.17",
+            "text": "Package repository requires and/or performs static code analysis prior to publishing a component and makes results available for others to consume",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.18",
+            "identifier": "4.18",
+            "text": "Package manager does not execute component code",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "4.19",
+            "identifier": "4.19",
+            "text": "Package manager documents package installation in machine-readable form",
+            "parent": "V4-Package_Management"
+          },
+          {
+            "bom-ref": "V5-Component_Analysis",
+            "identifier": "V5-Component_Analysis",
+            "title": "Component Analysis",
+            "text": "Component Analysis is the process of identifying potential areas of risk from the use of third-party and open-source software components. Every component, direct or transitive, is a candidate for analysis. Risk inherited through the use of third-party software may directly affect the application or systems that rely on them. #### Known Vulnerabilities There are multiple public and commercial sources of vulnerability intelligence. Vulnerabilities become known when they are published to services such as the National Vulnerability Database (NVD), or are otherwise documented in public defect trackers, commit logs, or other public source. #### Component Version Currency If component versions are specified, then determining if a component is out-of-date or end-of-life is possible. Outdated and end-of-life components are more likely to be vulnerable and less likely to be supported as first-class entities. Out-of-date components can slow down system remediation due to interoperability issues. Using up-to-date components reduces exposure time and may include remediations of non-disclosed vulnerabilities.  #### Component Type Frameworks and libraries have unique upgrade challenges and associated risk. Abstractions, coupling, and architectural design patterns may affect the risk of using a given component type. Libraries, frameworks, applications, containers, and operating systems are common component types. #### Component Function Identifying and analyzing the purpose of each component may reveal the existence of components with duplicate or similar functionality. Potential risk can be reduced by minimizing the number of components for each function and by choosing the highest quality components for each function. #### Component Quantity The operational and maintenance cost of using open source may increase with the adoption of every new component. Decreased ability to maintain growing sets of components over time can be expected. This is especially true for teams with time-boxed constraints. #### License Third-party and open-source software is typically released under one or more licenses. The chosen license may or may not allow certain types of usage, contain distribution requirements or limitations, or require specific actions if the component is modified. Utilizing components with licenses which conflict with an organizations objectives or ability can create risk to the business."
+          },
+          {
+            "bom-ref": "5.1",
+            "identifier": "5.1",
+            "text": "Component can be analyzed with linters and/or static analysis tools",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.2",
+            "identifier": "5.2",
+            "text": "Component is analyzed using linters and/or static analysis tools prior to use",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.3",
+            "identifier": "5.3",
+            "text": "Linting and/or static analysis is performed with every upgrade of a component",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.4",
+            "identifier": "5.4",
+            "text": "An automated process of identifying all publicly disclosed vulnerabilities in third-party and open source components is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.5",
+            "identifier": "5.5",
+            "text": "An automated process of identifying confirmed dataflow exploitability is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.6",
+            "identifier": "5.6",
+            "text": "An automated process of identifying non-specified component versions is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.7",
+            "identifier": "5.7",
+            "text": "An automated process of identifying out-of-date components is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.8",
+            "identifier": "5.8",
+            "text": "An automated process of identifying end-of-life / end-of-support components is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.9",
+            "identifier": "5.9",
+            "text": "An automated process of identifying component type is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.10",
+            "identifier": "5.10",
+            "text": "An automated process of identifying component function is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.11",
+            "identifier": "5.11",
+            "text": "An automated process of identifying component quantity is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "5.12",
+            "identifier": "5.12",
+            "text": "An automated process of identifying component license is used",
+            "parent": "V5-Component_Analysis"
+          },
+          {
+            "bom-ref": "V6-Pedigree_and_Provenance",
+            "identifier": "V6-Pedigree_and_Provenance",
+            "title": "Pedigree and Provenance",
+            "text": "Identify point of origin and chain of custody in order to manage system risk if either point of origin or chain of custody is compromised. For internal package managers and repositories it is important to maintain pedigree and provenance data for imported components."
+          },
+          {
+            "bom-ref": "6.1",
+            "identifier": "6.1",
+            "text": "Point of origin is verifiable for source code and binary components",
+            "parent": "V6-Pedigree_and_Provenance"
+          },
+          {
+            "bom-ref": "6.2",
+            "identifier": "6.2",
+            "text": "Chain of custody if auditable for source code and binary components",
+            "parent": "V6-Pedigree_and_Provenance"
+          },
+          {
+            "bom-ref": "6.3",
+            "identifier": "6.3",
+            "text": "Provenance of modified components is known and documented",
+            "parent": "V6-Pedigree_and_Provenance"
+          },
+          {
+            "bom-ref": "6.4",
+            "identifier": "6.4",
+            "text": "Pedigree of component modification is documented and verifiable",
+            "parent": "V6-Pedigree_and_Provenance"
+          },
+          {
+            "bom-ref": "6.5",
+            "identifier": "6.5",
+            "text": "Modified components are uniquely identified and distinct from origin component",
+            "parent": "V6-Pedigree_and_Provenance"
+          },
+          {
+            "bom-ref": "6.6",
+            "identifier": "6.6",
+            "text": "Modified components are analyzed with the same level of precision as unmodified components",
+            "parent": "V6-Pedigree_and_Provenance"
+          },
+          {
+            "bom-ref": "6.7",
+            "identifier": "6.7",
+            "text": "Risk unique to modified components can be analyzed and associated specifically to modified variant",
+            "parent": "V6-Pedigree_and_Provenance"
+          }
+        ],
+        "levels": [
+          {
+            "bom-ref": "level-1",
+            "identifier": "Level 1",
+            "description": "SCVS level 1 lays the groundwork from which to build upon.",
+            "requirements": [
+              "1.1",
+              "1.2",
+              "1.3",
+              "1.4",
+              "1.7",
+              "2.1",
+              "2.3",
+              "2.7",
+              "2.8",
+              "2.9",
+              "2.12",
+              "2.14",
+              "3.1",
+              "3.2",
+              "3.3",
+              "3.7",
+              "3.17",
+              "3.18",
+              "4.1",
+              "4.2",
+              "4.11",
+              "4.13",
+              "4.14",
+              "4.15",
+              "4.16",
+              "4.18",
+              "4.19",
+              "5.1",
+              "5.4",
+              "5.6",
+              "5.7",
+              "5.11",
+              "5.12",
+              "6.3",
+              "6.6",
+              "6.7"
+            ]
+          },
+          {
+            "bom-ref": "level-2",
+            "identifier": "Level 2",
+            "description": "SCVS level 2 expands the breadth of level 1 capabilities. Level 2 is appropriate for software intensive enterprises and organizations with existing risk management frameworks and regulatory and/or contractual requirements. Level 2 also expands the number of stakeholders including those with non-technical roles. Adoption of level 2 may require additional resources and domain expertise to achieve.",
+            "requirements": [
+              "1.1",
+              "1.2",
+              "1.3",
+              "1.4",
+              "1.5",
+              "1.7",
+              "2.1",
+              "2.2",
+              "2.3",
+              "2.4",
+              "2.5",
+              "2.7",
+              "2.8",
+              "2.9",
+              "2.10",
+              "2.11",
+              "2.12",
+              "2.14",
+              "2.15",
+              "3.1",
+              "3.2",
+              "3.3",
+              "3.4",
+              "3.5",
+              "3.6",
+              "3.7",
+              "3.10",
+              "3.11",
+              "3.15",
+              "3.17",
+              "3.18",
+              "3.19",
+              "4.1",
+              "4.2",
+              "4.3",
+              "4.4",
+              "4.6",
+              "4.8",
+              "4.10",
+              "4.11",
+              "4.12",
+              "4.13",
+              "4.14",
+              "4.15",
+              "4.16",
+              "4.18",
+              "4.19",
+              "5.1",
+              "5.2",
+              "5.3",
+              "5.4",
+              "5.6",
+              "5.7",
+              "5.9",
+              "5.11",
+              "5.12",
+              "6.1",
+              "6.3",
+              "6.4",
+              "6.5",
+              "6.6",
+              "6.7"
+            ]
+          },
+          {
+            "bom-ref": "level-3",
+            "identifier": "Level 3",
+            "description": "SCVS level 3 extends the depth of level 2 capabilities. Level 3 is applicable in critical infrastructure and systems with safety requirements. Auditability and end-to-end transparency in the supply chain is required to maintain a high security posture in these systems and the organizations that produce and maintain them.",
+            "requirements": [
+              "1.1",
+              "1.2",
+              "1.3",
+              "1.4",
+              "1.5",
+              "1.6",
+              "1.7",
+              "1.8",
+              "1.9",
+              "1.10",
+              "2.1",
+              "2.2",
+              "2.3",
+              "2.4",
+              "2.5",
+              "2.6",
+              "2.7",
+              "2.8",
+              "2.9",
+              "2.10",
+              "2.11",
+              "2.12",
+              "2.13",
+              "2.14",
+              "2.15",
+              "2.16",
+              "2.17",
+              "2.18",
+              "3.1",
+              "3.2",
+              "3.3",
+              "3.4",
+              "3.5",
+              "3.6",
+              "3.7",
+              "3.8",
+              "3.9",
+              "3.10",
+              "3.11",
+              "3.12",
+              "3.13",
+              "3.14",
+              "3.15",
+              "3.16",
+              "3.17",
+              "3.18",
+              "3.19",
+              "3.20",
+              "3.21",
+              "4.1",
+              "4.2",
+              "4.3",
+              "4.4",
+              "4.5",
+              "4.6",
+              "4.7",
+              "4.8",
+              "4.9",
+              "4.10",
+              "4.11",
+              "4.12",
+              "4.13",
+              "4.14",
+              "4.15",
+              "4.16",
+              "4.17",
+              "4.18",
+              "4.19",
+              "5.1",
+              "5.2",
+              "5.3",
+              "5.4",
+              "5.5",
+              "5.6",
+              "5.7",
+              "5.8",
+              "5.9",
+              "5.10",
+              "5.11",
+              "5.12",
+              "6.1",
+              "6.2",
+              "6.3",
+              "6.4",
+              "6.5",
+              "6.6",
+              "6.7"
+            ]
+          }
+        ],
+        "externalReferences": [
+          {
+            "type": "website",
+            "url": "https://owasp.org/scvs"
+          },
+          {
+            "type": "website",
+            "url": "https://scvs.owasp.org"
+          },
+          {
+            "type": "vcs",
+            "url": "https://github.com/OWASP/Software-Component-Verification-Standard"
+          },
+          {
+            "type": "issue-tracker",
+            "url": "https://github.com/OWASP/Software-Component-Verification-Standard/issues"
+          },
+          {
+            "type": "social",
+            "url": "https://twitter.com/OWASP_SCVS"
+          }
+        ]
+      }
+    ]
+  }
+}

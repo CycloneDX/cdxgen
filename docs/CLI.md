@@ -131,6 +131,13 @@ Options:
                                                       [boolean] [default: false]
       --include-crypto         Include crypto libraries found under formulation.
                                                       [boolean] [default: false]
+      --standard               The list of standards which may consist of regula
+                               tions, industry or organizational-specific standa
+                               rds, maturity models, best practices, or any othe
+                               r requirements which can be evaluated against or
+                               attested to.
+  [array] [choices: "asvs-4.0.3", "bsimm-v13", "masvs-2.0.0", "nist_ssdf-1.1", "
+                     pcissc-secure-slc-1.1", "scvs-1.0.0", "ssaf-DRAFT-2023-11"]
       --auto-compositions      Automatically set compositions when the BOM was f
                                iltered. Defaults to true
                                                        [boolean] [default: true]

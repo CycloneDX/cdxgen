@@ -1,3 +1,15 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { dirNameStr } from "./utils.js";
+
+/**
+ * Filter and enhance BOM post generation.
+ *
+ * @param {Object} bomNSData BOM with namespaces object
+ * @param {Object} options CLI options
+ *
+ * @returns {Object} Modified bomNSData
+ */
 export const postProcess = (bomNSData, options) => {
   let jsonPayload = bomNSData.bomJson;
   if (
@@ -6,10 +18,61 @@ export const postProcess = (bomNSData, options) => {
   ) {
     jsonPayload = JSON.parse(bomNSData.bomJson);
   }
+
   bomNSData.bomJson = filterBom(jsonPayload, options);
+  bomNSData.bomJson = applyStandards(bomNSData.bomJson, options);
   return bomNSData;
 };
 
+/**
+ * Apply definitions.standards based on options
+ *
+ * @param {Object} bomJson BOM JSON Object
+ * @param {Object} options CLI options
+ *
+ * @returns {Object} Filtered BOM JSON
+ */
+export const applyStandards = (bomJson, options) => {
+  if (options.standard && Array.isArray(options.standard)) {
+    for (const astandard of options.standard) {
+      const templateFile = join(
+        dirNameStr,
+        "data",
+        "templates",
+        `${astandard}.cdx.json`,
+      );
+      if (existsSync(templateFile)) {
+        const templateData = JSON.parse(readFileSync(templateFile, "utf-8"));
+        if (templateData?.metadata?.licenses) {
+          if (!bomJson.metadata.licenses) {
+            bomJson.metadata.licenses = [];
+          }
+          bomJson.metadata.licenses = bomJson.metadata.licenses.concat(
+            templateData.metadata.licenses,
+          );
+        }
+        if (templateData?.definitions?.standards) {
+          if (!bomJson.definitions) {
+            bomJson.definitions = { standards: [] };
+          }
+          bomJson.definitions.standards = bomJson.definitions.standards.concat(
+            templateData.definitions.standards,
+          );
+        }
+      }
+    }
+  }
+  return bomJson;
+};
+
+/**
+ * Filter BOM based on options
+ *
+ * @param {Object} bomJson BOM JSON Object
+ * @param {Object} options CLI options
+ *
+ * @returns {Object} Filtered BOM JSON
+ */
 export const filterBom = (bomJson, options) => {
   const newPkgMap = {};
   let filtered = false;

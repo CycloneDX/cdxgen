@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "licenses": []
+  },
+  "definitions": {
+    "standards": [
+      {
+        "bom-ref": "ssaf-DRAFT-2023-11",
+        "name": "Secure Software Development Attestation Form",
+        "description": "This self-attestation form identifies the minimum secure software development requirements a software producer must meet, and attest to meeting, before software subject to the requirements of M-22-18 and M-23-16 may be used by Federal agencies. This form is used by software producers to attest that the software they produce is developed in conformity with specified secure software development practices.",
+        "version": "DRAFT-2023-11",
+        "owner": "Cybersecurity and Infrastructure Security Agency",
+        "requirements": [
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-1",
+            "identifier": "1",
+            "text": "The software was developed and built in secure environments. Those environments were secured by the following actions, at a minimum:  ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(i)",
+              "Related SSDF Practices and Tasks: [See rows below]"
+            ]
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-1-a",
+            "identifier": "1-a",
+            "text": "Separating and protecting each environment involved in developing and building software; ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(i)(A)",
+              "Related SSDF Practices and Tasks: PO.5.1"
+            ],
+            "parent": "ssaf-DRAFT-2023-11-1"
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-1-b",
+            "identifier": "1-b",
+            "text": "Regularly logging, monitoring, and auditing trust relationships used for authorization and access:   i) to any software development and build environments; and   ii) among components within each environment; ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(i)(B)",
+              "Related SSDF Practices and Tasks: PO.5.1"
+            ],
+            "parent": "ssaf-DRAFT-2023-11-1"
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-1-c",
+            "identifier": "1-c",
+            "text": "Enforcing multi-factor authentication and conditional access across the environments relevant to developing and building software in a manner that minimizes security risk; ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(i)(C)",
+              "Related SSDF Practices and Tasks: PO.5.1, PO.5.2"
+            ],
+            "parent": "ssaf-DRAFT-2023-11-1"
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-1-d",
+            "identifier": "1-d",
+            "text": "Taking consistent and reasonable steps to document, as well as minimize use or inclusion of software products that create undue risk, within the environments used to develop and build software; ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(i)(D)",
+              "Related SSDF Practices and Tasks: PO.5.1"
+            ],
+            "parent": "ssaf-DRAFT-2023-11-1"
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-1-e",
+            "identifier": "1-e",
+            "text": "Encrypting sensitive data, such as credentials, to the extent practicable and based on risk; ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(i)(E)",
+              "Related SSDF Practices and Tasks: PO.5.2"
+            ],
+            "parent": "ssaf-DRAFT-2023-11-1"
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-1-f",
+            "identifier": "1-f",
+            "text": "Implementing defensive cybersecurity practices, including continuous monitoring of operations and alerts and, as necessary, responding to suspected and confirmed cyber incidents; ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(i)(F)",
+              "Related SSDF Practices and Tasks: PO.3.2, PO.3.3, PO.5.1, PO.5.2"
+            ],
+            "parent": "ssaf-DRAFT-2023-11-1"
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-2",
+            "identifier": "2",
+            "text": "The software producer has made a good-faith effort to maintain trusted source code supply chains by employing automated tools or comparable processes to address the security of internal code and third-party components and manage related vulnerabilities; ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(iii)",
+              "Related SSDF Practices and Tasks: PO 1.1, PO.3.1, PO.3.2, PO.5.1, PO.5.2, PS.1.1, PS.2.1, PS.3.1, PW.4.1, PW.4.4, PW 7.1, PW 8.1, RV 1.1"
+            ]
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-3",
+            "identifier": "3",
+            "text": "The software producer maintains provenance for internal code and third-party components incorporated into the software;  ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(vi)",
+              "Related SSDF Practices and Tasks: PO.1.3, PO.3.2, PO.5.1, PO.5.2, PS.3.1, PS.3.2, PW.4.1, PW.4.4, RV.1.1, RV.1.2"
+            ]
+          },
+          {
+            "bom-ref": "ssaf-DRAFT-2023-11-4",
+            "identifier": "4",
+            "text": "The software producer employed automated tools or comparable processes that check for security vulnerabilities. In addition:   a) The software producer operates these processes on an ongoing basis and, at a minimum, prior to product, version, or update releases;   b) The software producer has a policy or process to address discovered security vulnerabilities prior to product release; and   c) The software producer operates a vulnerability disclosure program and accepts, reviews, and addresses disclosed software vulnerabilities in a timely fashion and according to any timelines specified in the vulnerability disclosure program or appliable policies. ",
+            "descriptions": [
+              "Related EO 14028 Subsection: 4(e)(iv)",
+              "Related SSDF Practices and Tasks: PO.4.1, PO.4.2, PS.1.1, PW.2.1, PW.4.4, PW.5.1, PW.6.1, PW.6.2, PW.7.1, PW.7.2, PW.8.2, PW.9.1, PW.9.2, RV.1.1, RV.1.2, RV.1.3, RV.2.1, RV.2.2, RV.3.3"
+            ]
+          }
+        ],
+        "externalReferences": [
+          {
+            "type": "documentation",
+            "url": "https://www.cisa.gov/sites/default/files/2023-11/Secure%20Software%20Development%20Attestation%20Form_508c.pdf",
+            "comment": "Secure Software Development Attestation Form_508c.pdf",
+            "hashes": [
+              {
+                "alg": "SHA3-256",
+                "content": "438c9f431b0a73ed4eee432c6e25d521ce3932eaeee6fcc52928dbbb36694aa1"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

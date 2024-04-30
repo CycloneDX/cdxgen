@@ -1,0 +1,1027 @@
+{
+  "metadata": {
+    "licenses": []
+  },
+  "definitions": {
+    "standards": [
+      {
+        "bom-ref": "pcissc-sslc-1.1",
+        "name": "PCI Secure Software Lifecycle (Secure SLC) Requirements and Assessment Procedures",
+        "version": "1.1",
+        "description": "PCI Secure SLC provides a baseline of security requirements with corresponding assessment procedures and guidance to help software vendors design, develop, and maintain secure software throughout the software lifecycle.",
+        "owner": "PCI Security Standards Council",
+        "requirements": [
+          {
+            "bom-ref": "pcissc-sslc-1.1-1",
+            "identifier": "1",
+            "title": "Security Responsibilities and Resources",
+            "text": "The software vendor’s senior leadership team establishes formal responsibility and authority for the security of the software vendor’s products and services. The software vendor allocates resources to execute the strategy and ensure that personnel are appropriately skilled."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.1",
+            "identifier": "1.1",
+            "text": "Overall responsibility for the security of the software vendor’s products and services is assigned by the vendor’s senior leadership team.",
+            "parent": "pcissc-sslc-1.1-1",
+            "descriptions": [
+              "The formal assignment of responsibility by the software vendor’s senior leadership team ensures strategic-level visibility into and influence over the vendor’s software security practices. Senior leadership typically represents those individuals or teams with the responsibility and authority to make strategic business decisions for the software vendor organization. In many cases, senior leadership teams are comprised of members of the executive team such as the chief executive officer (CEO), chief financial officer (CFO), chief technology officer (CTO), chief information officer (CIO), chief risk officer (CRO), or similar roles, but that is not the case in all organizations. The distinct structure of the senior leadership team is ultimately determined by the software vendor.\n\nAssignment of overall responsibility for the vendor’s software security program should include the authority to enforce and execute the organization’s software security strategy. Without appropriate authority, those responsible for the security of the software vendor’s products and services cannot be reasonably held accountable for ensuring the organization’s security strategy is followed. Those responsible for the vendor’s software security should provide periodic updates on the state of the vendor’s software security program and the performance of its strategy to senior leadership. This allows senior leadership to ensure the strategy is being properly prioritized and resourced, and that changes required as a result of its performance are approved in a timely manner.\n\nEvidence to support this control objective might include job descriptions, organization charts, presentations, audio recordings, senior leadership meeting minutes, reports, e-mails, formal communications from senior leadership to the rest of the organization, or any other records that clearly reflect the formal assignment of responsibility and authority, and communications between senior leadership and those responsible for the vendor’s software security program regarding program performance."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.1.1",
+            "identifier": "1.1.1",
+            "text": "Accountability for ensuring the security of the software vendor’s products and services is formally assigned to an individual or team by the software vendor’s senior leadership.",
+            "parent": "pcissc-sslc-1.1-1.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.1.2",
+            "identifier": "1.1.2",
+            "text": "Responsibilities include keeping senior leadership informed of security updates, issues, and other matters related to the security of the software vendor’s products and services.",
+            "parent": "pcissc-sslc-1.1-1.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.1.3",
+            "identifier": "1.1.3",
+            "text": "Updates are provided to senior leadership at least annually on the performance of and changes to the software vendor’s software security policy and strategy described in Objective 2.",
+            "parent": "pcissc-sslc-1.1-1.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.2",
+            "identifier": "1.2",
+            "text": "Software security responsibilities are assigned.",
+            "parent": "pcissc-sslc-1.1-1",
+            "descriptions": [
+              "Individuals (including third-party personnel) involved in the design, development, testing and maintenance of the software vendor’s products and services should be assigned responsibility and accountability for ensuring that software is designed and maintained in accordance with the software vendor’s security strategy and all applicable security requirements, including software-specific requirements. Responsibilities can be assigned to an individual, group, or role; however, individuals assigned to a particular group or role should clearly understand how those software security responsibilities affect their individual job functions, the organization’s security expectations, and the individual’s role in fulfilling those expectations. Individuals assigned software security responsibilities should be able to demonstrate an understanding of their responsibilities and accountability.\n\nEvidence to support this objective might include job descriptions, employee agreements, presentations, company communications, training materials, e-mails, intranet content, or any other documentation or records that clearly and consistently illustrate the assignment of security responsibilities, and the acknowledgement and understanding of those roles and responsibilities."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.2.1",
+            "identifier": "1.2.1",
+            "text": "Software security responsibilities are clearly defined and assigned to appropriate individuals or teams, including software development personnel.",
+            "parent": "pcissc-sslc-1.1-1.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.2.2",
+            "identifier": "1.2.2",
+            "text": "Assignment of responsibilities for ensuring the security of the software vendor’s products and services covers the entire software lifecycle.",
+            "parent": "pcissc-sslc-1.1-1.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.2.3",
+            "identifier": "1.2.3",
+            "text": "Personnel are aware of and understand their responsibilities.",
+            "parent": "pcissc-sslc-1.1-1.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.3",
+            "identifier": "1.3",
+            "text": "Software development personnel maintain skills in software security matters relevant to their specific role, responsibility, and job function.",
+            "parent": "pcissc-sslc-1.1-1",
+            "descriptions": [
+              "To be effective in meeting their software security responsibilities, software development personnel must be trained or have experience in performing such responsibilities and must maintain the appropriate skills to properly carry out those responsibilities.\n\nAt a minimum, all software development personnel must have a basic understanding of general software security concepts and best practices. Individuals with specialized roles and responsibilities should additionally possess specialized skills relevant to the functions they perform. Examples of specialized skills include secure software design (software architects), secure coding techniques (software developers), and security-testing techniques (software testers).\n\nEfforts to maintain those skills may include software vendor- provided training, ongoing participation in local or regional user groups, or the achievement and maintenance of industry-specific certifications. It is up to the software vendor to define the necessary criteria for maintaining appropriate job-specific skills and confirm individual adherence at least annually.\n\nEvidence to support this control objective might include policies and processes, training materials or content, records of on-the-job training or course attendance, individual qualification certificates, continuing education credits, or any other documentation or evidence that clearly and consistently demonstrates that software development personnel possess and maintain appropriate skills and knowledge for their specific job function and responsibilities."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.3.1",
+            "identifier": "1.3.1",
+            "text": "A mature process is implemented and maintained for managing and maintaining software security skills for software development personnel.",
+            "parent": "pcissc-sslc-1.1-1.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.3.2",
+            "identifier": "1.3.2",
+            "text": "The skills required for each defined role, responsibility, and job function are clearly defined.",
+            "parent": "pcissc-sslc-1.1-1.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.3.3",
+            "identifier": "1.3.3",
+            "text": "The criteria for maintaining individual skills are clearly defined.",
+            "parent": "pcissc-sslc-1.1-1.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.3.4",
+            "identifier": "1.3.4",
+            "text": "The process includes a review at least annually to ensure software development personnel are maintaining the necessary skills for the security responsibilities they have been assigned.",
+            "parent": "pcissc-sslc-1.1-1.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.3.5",
+            "identifier": "1.3.5",
+            "text": "Software development personnel demonstrate that they possess the skills required for their role, responsibility, or job function.",
+            "parent": "pcissc-sslc-1.1-1.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-1.3.6",
+            "identifier": "1.3.6",
+            "text": "Software development personnel satisfy the criteria for maintaining their indivudal skills.",
+            "parent": "pcissc-sslc-1.1-1.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2",
+            "identifier": "2",
+            "title": "Software Security Policy and Strategy",
+            "text": "The software vendor defines, maintains, and communicates a software security policy and a strategy for ensuring the secure design, development, and management of its products and services. Performance against the software security strategy is monitored and tracked.",
+            "descriptions": ["."]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.1",
+            "identifier": "2.1",
+            "text": "Regulatory and industry security and compliance requirements applicable to the software vendor’s operations, products, and services and the data stored, processed, or transmitted by the software vendor are identified and monitored.",
+            "parent": "pcissc-sslc-1.1-2",
+            "descriptions": [
+              "Many organizations are subject to requirements for the protection of certain types of information and data such as personally identifiable information (PII), cardholder data (CHD), and protected health information (PHI).\n\nSoftware vendors should maintain awareness of evolving industry and regulatory requirements applicable to their operations and products. Maintaining ongoing awareness of external security and compliance obligations allows the software vendor to ensure its processes adequately address those requirements at all times, including whenever those requirements are updated or new requirements are introduced.\n\nEvidence to support this control objective might include documented policies and processes, internal standards, requirement mappings, internal presentations, training materials, or any other documentation or records that clearly and consistently illustrate that the software vendor has made reasonable efforts to understand and monitor its external security and compliance requirements"
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.1.1",
+            "identifier": "2.1.1",
+            "text": "A mature process exists to identify and monitor external regulatory and industry security and compliance requirements.",
+            "parent": "pcissc-sslc-1.1-2.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.1.2",
+            "identifier": "2.1.2",
+            "text": "The process includes reviewing sources of regulatory and industry security and compliance requirements for changes at least annually.",
+            "parent": "pcissc-sslc-1.1-2.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.1.3",
+            "identifier": "2.1.3",
+            "text": "The process results in an inventory of external regulatory and industry security and compliance requirements.",
+            "parent": "pcissc-sslc-1.1-2.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.1.4",
+            "identifier": "2.1.4",
+            "text": "The inventory is updated as external security and compliance requirements change.",
+            "parent": "pcissc-sslc-1.1-2.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.2",
+            "identifier": "2.2",
+            "text": "A software security policy is defined and establishes the specific rules and goals for ensuring the software vendor’s products and services are designed, developed, and maintained to be secure, resistant to attack, and in a manner that satisfies the software vendor’s security and compliance obligations.",
+            "parent": "pcissc-sslc-1.1-2",
+            "descriptions": [
+              "Software vendors must establish a company-wide software security policy to ensure that all individuals or teams⎯including relevant business partners⎯involved in software design, development, and maintenance are aware and have a consistent understanding of how the vendor’s software products and services should be securely built and maintained, and how any critical assets should be handled. The software security policy (or policies) should be known and thoroughly understood by those with the responsibility to ensure they are met, as well as those individuals and teams who have the ability to affect the security of the software vendor’s products and services. The software vendor’s senior leadership team should openly support the establishment and enforcement of the software security policy through appropriate communications to software vendor personnel, to reinforce the importance of software security to the vendor organization and its leadership.\n\nEvidence to support this control objective might include documented policies and processes, presentations, mission statements, e-mails, company intranet content, or other formal company communications that clearly and consistently illustrate efforts to ensure appropriate personnel and business partners are aware of and understand the vendor’s software security policy."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.2.1",
+            "identifier": "2.2.1",
+            "text": "A software security policy exists and is communicated to appropriate software vendor personnel and business partners, including all software development personnel.",
+            "parent": "pcissc-sslc-1.1-2.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.2.2",
+            "identifier": "2.2.2",
+            "text": "At a minimum, the policy covers all control objectives within this standard (either explicitly or implicitly).",
+            "parent": "pcissc-sslc-1.1-2.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.2.3",
+            "identifier": "2.2.3",
+            "text": "The policy is defined in sufficient detail such that the security rules and goals are measurable.",
+            "parent": "pcissc-sslc-1.1-2.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.2.4",
+            "identifier": "2.2.4",
+            "text": "The software vendor’s senior leadership team has approved the software security policy.",
+            "parent": "pcissc-sslc-1.1-2.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.2.5",
+            "identifier": "2.2.5",
+            "text": "Software development personnel are aware of and understand the software security policy.",
+            "parent": "pcissc-sslc-1.1-2.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3",
+            "identifier": "2.3",
+            "text": "A formal software security strategy for ensuring the security of the software vendor’s products and services and satisfying its software security policy is established and maintained.",
+            "parent": "pcissc-sslc-1.1-2",
+            "descriptions": [
+              "A software security strategy is a high-level plan, roadmap, or methodology for ensuring the secure design, development, and maintenance of the software vendor’s products and services, and adherence to the software vendor’s software security policy.\n\nSoftware vendors should either adopt existing or develop their own frameworks or methodologies in accordance with industry-accepted practices for secure software lifecycle management. By aligning its software security strategy with industry-accepted methodologies, the software vendor is less likely to overlook important aspects of secure software lifecycle management.\n\nSoftware vendors that develop their own methodologies should understand how they differ from industry-accepted methodologies, identify any gaps, and ensure that sufficient evidence is maintained to clearly illustrate how their methodologies are at least as effective as those accepted by the industry. \n\nExamples of industry-accepted methodologies that are commonly used as benchmarks for secure software development and management include, but are not limited to, current versions of: ISO/IEC 27034 Application Security Guidelines; Building Security In Maturity Model (BSIMM); OWASP Software Assurance Maturity Model (OpenSAMM); and NIST .Special Publication 800-160 and its Appendixes.\n\nThe software security strategy should evolve as internal factors— such as the software vendor’s business strategy or product/service offerings—or external factors—such as external security and compliance requirements—evolve. Therefore, the software security strategy is not static and should be periodically reviewed and updated to maintain alignment with business needs and priorities.\n\nEvidence to support this requirement might include documented security plans or methodologies, presentations, policies and processes, training materials, meeting minutes, interviewer notes, e-mails or executive communications, mappings, or references to industry-accepted methodologies, gap analysis results, or any other records or documentation that clearly and consistently illustrates that the vendor has made a reasonable effort to develop, maintain, and keep current a formal strategy for satisfying the vendor’s software security policy."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3.1",
+            "identifier": "2.3.1",
+            "text": "A strategy for ensuring the security of the software vendor’s products and services is defined.",
+            "parent": "pcissc-sslc-1.1-2.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3.2",
+            "identifier": "2.3.2",
+            "text": "The software security strategy clearly outlines how the software security policy is to be satisfied.",
+            "parent": "pcissc-sslc-1.1-2.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3.3",
+            "identifier": "2.3.3",
+            "text": "The software security strategy is based on or aligned with industry-accepted methodologies.",
+            "parent": "pcissc-sslc-1.1-2.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3.4",
+            "identifier": "2.3.4",
+            "text": "The software security strategy covers the entire lifecycle of the software vendor’s products and services.",
+            "parent": "pcissc-sslc-1.1-2.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3.5",
+            "identifier": "2.3.5",
+            "text": "The software security strategy is communicated to appropriate personnel, including software development personnel.",
+            "parent": "pcissc-sslc-1.1-2.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3.6",
+            "identifier": "2.3.6",
+            "text": "The software security strategy is reviewed at least annually and updated as needed (such as when business needs, external drivers, and products and services evolve).",
+            "parent": "pcissc-sslc-1.1-2.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.3.7",
+            "identifier": "2.3.7",
+            "text": "Software development personnel are aware of and understand the software security strategy.",
+            "parent": "pcissc-sslc-1.1-2.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4",
+            "identifier": "2.4",
+            "text": "Software security assurance processes are implemented and maintained throughout the entire software lifecycle.",
+            "parent": "pcissc-sslc-1.1-2",
+            "descriptions": [
+              "Software security assurance processes are activities that are implemented to carry out the software vendor’s software security strategy and to facilitate secure software design, development, and maintenance. To ensure that security and compliance requirements are met, software security policy is satisfied, and the software vendor’s products and services are secure and resistant to attack, software vendors need to define such processes throughout all phases of the software lifecycle. These may include security “checkpoints,” which are distinct points within the software development process where software is checked to make sure security requirements are met. Examples of software security assurance processes and controls include software-design reviews, automated code reviews, security-specific functional testing, and change-management processes. For organizations that leverage Agile software development methodologies, security checkpoints may be incorporated into the “story” acceptance criteria or the criteria for determining when work is considered “done.”\n\nEvidence to support this requirement might include documented policies and processes, security-control inventories, output from Governance Risk and Compliance (GRC) or other management tools, software-specific requirements documentation, or any other evidence that clearly and consistently identifies the software security assurance processes that have been implemented and illustrates that the security assurance processes are appropriate for the function they are intended to provide. Additionally, evidence to illustrate the software security assurance processes are implemented properly may include system or process outputs such as threat models, security test results, bug tracking data, audit log data, incident response, etc."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4.1",
+            "identifier": "2.4.1",
+            "text": "Software security assurance processes are defined, implemented and maintained.",
+            "parent": "pcissc-sslc-1.1-2.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4.2",
+            "identifier": "2.4.2",
+            "text": "An inventory of software security assurance processes is maintained.",
+            "parent": "pcissc-sslc-1.1-2.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4.3",
+            "identifier": "2.4.3",
+            "text": "Software security assurance processes clearly address the specific rules and goals within the software vendor’s software security policy.",
+            "parent": "pcissc-sslc-1.1-2.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4.4",
+            "identifier": "2.4.4",
+            "text": "Software security assurance processes are aligned with the software vendor’s software security strategy",
+            "parent": "pcissc-sslc-1.1-2.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4.5",
+            "identifier": "2.4.5",
+            "text": "Software vendor personnel, including software development personnel, are assigned responsibility and accountability for the execution and performance of the security assurance process in accordance with Requirement 1.2.",
+            "parent": "pcissc-sslc-1.1-2.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4.6",
+            "identifier": "2.4.6",
+            "text": "The individuals or teams responsible for performing and maintaining each security assurance process are clearly aware of their responsibilities.",
+            "parent": "pcissc-sslc-1.1-2.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.4.7",
+            "identifier": "2.4.7",
+            "text": "The results or outcomes of each security assurance process are monitored in accordance with Requirement 2.6.",
+            "parent": "pcissc-sslc-1.1-2.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.5",
+            "identifier": "2.5",
+            "text": "Evidence is generated and maintained to demonstrate the effectiveness of software security assurance processes.",
+            "parent": "pcissc-sslc-1.1-2",
+            "descriptions": [
+              "To demonstrate the effectiveness of software security assurance processes, evidence should be generated and maintained for each process to illustrate that it directly results in or contributes to the expected security outcomes—e.g., fewer vulnerabilities or greater resistance to attacks.\n\nEvidence needs to be frequently collected and kept up to date to ensure it accurately reflects the ongoing effectiveness of security assurance processes. Without a track record of performance for software security assurance processes, it becomes almost impossible to effectively perform root-cause analysis when such processes fail to produce the expected results.\n\nEvidence to support this objective might include security control and evidence generation inventories, vulnerability reports, penetration testing results, or any other records and evidence that clearly and consistently illustrates evidence is generated for each software security assurance process and that the evidence clearly illustrates the effectiveness of the processes."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.5.1",
+            "identifier": "2.5.1",
+            "text": "Evidence is generated and maintained for each security assurance process.",
+            "parent": "pcissc-sslc-1.1-2.5"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.5.2",
+            "identifier": "2.5.2",
+            "text": "The evidence generated for each process reasonably demonstrates the process is operating effectively and as intended.",
+            "parent": "pcissc-sslc-1.1-2.5"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.6",
+            "identifier": "2.6",
+            "text": "Failures or weaknesses in software security assurance processes are detected. Weak or ineffective security assurance processes are updated, augmented or replaced.",
+            "parent": "pcissc-sslc-1.1-2",
+            "descriptions": [
+              "Software vendors should monitor their security assurance processes to confirm that they remain appropriate (i.e., fit for purpose) and effective for their intended purpose and function. For example, the use of manual code reviews may be sufficient to detect all coding errors and vulnerabilities for software with a very limited code base. However, as the code base grows, the use of manual code reviews for the same purpose becomes increasingly impractical or insufficient, and automated testing tools (such as automated static-code scanners and dynamic software-analysis tools) should be utilized.\n\nOne method for detecting weak or ineffective security controls is to define a set of metrics or trends that can be used to measure the effectiveness of security assurance processes. For example, the results from a vendor’s security testing may provide greater insight into the effectiveness of security assurance processes. If security tests repeatedly find vulnerabilities within the software, it may be an indication that applicable security assurance processes are not being executed properly or working as intended. Another method to detect weak or ineffective security assurance processes would be to perform regular reviews of those processes and the evidence generated by those processes to verify they continue to be appropriate for their intended purpose.\n\nEvidence to support this requirement might include process- generated evidence, security test results, root-cause analysis, documented remediation actions, or any other evidence that clearly and consistently illustrates that the effectiveness of software security assurance processes is monitored, failures and weaknesses are detected, and security assurance processes are updated, augmented or replaced when no longer effective at satisfying their intended purpose."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.6.1",
+            "identifier": "2.6.1",
+            "text": "A mature process exists to detect and evaluate weak or ineffective security assurance processes.",
+            "parent": "pcissc-sslc-1.1-2.6"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.6.2",
+            "identifier": "2.6.2",
+            "text": "The criteria for determining a weak or ineffective security assurance process is defined and justified.",
+            "parent": "pcissc-sslc-1.1-2.6"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-2.6.3",
+            "identifier": "2.6.3",
+            "text": "Security assurance processes are updated, augmented or replaced when deemed weak or ineffective.",
+            "parent": "pcissc-sslc-1.1-2.6"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3",
+            "identifier": "3",
+            "title": "Threat Identification and Mitigation",
+            "text": "The software vendor continuously identifies, assesses, and manages risk to its software and services."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.1",
+            "identifier": "3.1",
+            "text": "Critical assets are identified and classified.",
+            "parent": "pcissc-sslc-1.1-3",
+            "descriptions": [
+              "Before the software vendor can determine how to effectively secure and defend its software against attacks, it must first develop a thorough understanding of the software’s critical assets that could be targeted by attackers.\n\nCritical assets include any sensitive data collected, stored, processed, or transmitted by the vendor’s software, as well as any sensitive functions and sensitive resources within or used by the software. Examples of analysis techniques that could be used to identify critical assets include, but are not limited to, Mission Impact Analysis (MIA), Functional Dependency Network Analysis (FDNA), and Mission Threat Analysis."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.1.1",
+            "identifier": "3.1.1",
+            "text": "A mature process exists to identify and classify critical assets.",
+            "parent": "pcissc-sslc-1.1-3.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.1.2",
+            "identifier": "3.1.2",
+            "text": "The criteria for identifying critical assets and determining the confidentiality, integrity, and resiliency requirements for each critical asset are defined.",
+            "parent": "pcissc-sslc-1.1-3.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.1.3",
+            "identifier": "3.1.3",
+            "text": "The process accounts for all types of critical assets—including sensitive data, sensitive resources, and sensitive functions—for the vendor’s software.",
+            "parent": "pcissc-sslc-1.1-3.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.1.4",
+            "identifier": "3.1.4",
+            "text": "The process results in an inventory of critical assets used by the vendor’s software.",
+            "parent": "pcissc-sslc-1.1-3.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2",
+            "identifier": "3.2",
+            "text": "Threats to the software and weaknesses within its design are continuously identified and assessed.",
+            "parent": "pcissc-sslc-1.1-3",
+            "descriptions": [
+              "Determining how to effectively secure and defend software against attacks requires a thorough understanding of the specific threats and vulnerabilities applicable to the vendor’s software. This typically involves understanding the motivations an attacker may have for attacking software; weaknesses in the software design that an attacker might attempt to exploit; the exploitability of identified weaknesses; and the impact of a successful attack.\n\nThis information helps the software vendor to identify the threats and design flaws that present the most significant and immediate risk, and to prioritize remediation activities necessary to address them.\n\nInformation regarding software threats can be obtained from a variety of sources, both external and internal. Examples of external sources include publications from organizations such as SANS, MITRE, and CERT that specialize in tracking common system vulnerabilities and attack techniques, or industry-specific sources that provide threat intelligence for specific sectors, such as FS-ISAC for the financial services industry and R-CISC for the retail industry. Other external sources of threat information and design weaknesses could include technology vendors, open-source user communities, industry publications, and academic papers. Internal sources could include reports from internal research and design teams, formal threat models, or actual activity data from internal security or operations teams.\n\nWhere open-source software components are used, the software vendor should consider any risks associated with the use of the open-source components and the extent to which the open-source software provider manages the security of those components. Additionally, the software vendor will need to confirm that support—including up-to-date security patches—is available (whether provided by an internal or external entity) for the open-source component. The use of open-source components should be supported by a clear policy about how those components are evaluated and implemented. A reliable support system should be in place to identify errors or problems and evaluate and address them in a timely manner.\n\nWhere vulnerabilities are identified in open-source components that are applicable to their software, software vendors should have processes in place to analyze those vulnerabilities and update the components to appropriate, non-vulnerable versions in a timely manner. When patches for open-source components are no longer available, those components should be replaced by actively supported ones. Vendors should identify and establish sources and processes for managing vulnerabilities in open-source components that are appropriate for their software design and release frequency."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.1",
+            "identifier": "3.2.1",
+            "text": "A mature process exists to identify, assess, and monitor software threats and design weaknesses (i.e., flaws).",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.2",
+            "identifier": "3.2.2",
+            "text": "The assessment accounts for all software inputs/outputs, process/data flows, trust boundaries and decision points, and how they may be exploited by an attacker.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.3",
+            "identifier": "3.2.3",
+            "text": "The assessment accounts for the entire code base, including how the use of third-party, open-source, or shared components or libraries, APIs, services, and applications used for the delivery and operation of the software may be leveraged in an attack.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.4",
+            "identifier": "3.2.4",
+            "text": "The assessment results in a recorded inventory of threats and design flaws.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.5",
+            "identifier": "3.2.5",
+            "text": "Assessments are routinely performed to account for changes to existing or the emergence of new threats or design flaws.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.6",
+            "identifier": "3.2.6",
+            "text": "An inventory of open-source components used in the vendor’s software is maintained.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.7",
+            "identifier": "3.2.7",
+            "text": "A mature process exists to analyze and mitigate the use of open-source components with known vulnerabilities.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.8",
+            "identifier": "3.2.8",
+            "text": "The software vendor monitors vulnerabilities in open-source components throughout their use or inclusion in the vendor’s software.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.2.9",
+            "identifier": "3.2.9",
+            "text": "An appropriate patching strategy for open- source components is defined.",
+            "parent": "pcissc-sslc-1.1-3.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.3",
+            "identifier": "3.3",
+            "text": "Software security controls are implemented in the software to mitigate threats and design weaknesses.",
+            "parent": "pcissc-sslc-1.1-3",
+            "descriptions": [
+              "To ensure that its software is resistant to attacks, software vendors must implement software-specific controls or countermeasures in their software to mitigate the specific threats and design weaknesses. Examples of such controls include the use of multi-factor authentication mechanisms to prevent unauthorized individuals gaining access to critical assets, and logging mechanisms to detect if and when authentication mechanisms might have been circumvented. Other examples include the use of input validation routines or parameterized queries to protect software from SQL-injection attacks. Except where specific software security controls and countermeasures are defined within this standard, it is up to the vendor to determine the most appropriate software security controls to implement. The specific controls used will be dependent on the software threats identified in Requirement 3.2 as well as the software’s architecture, the software’s intended function, the data it handles, and the external resources it utilizes.\n\nEvidence to support this control objective may include software- specific requirements documentation, feature lists, security control inventories, change-management documentation, risk assessment reports, test results, or any other evidence or information that clearly and consistently illustrates that the software vendor implements and maintains security controls in software to address the risks to that software."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.3.1",
+            "identifier": "3.3.1",
+            "text": "A mature process exists for defining software- specific security requirements and implementing software security controls within the software to mitigate software threats and design flaws.",
+            "parent": "pcissc-sslc-1.1-3.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.3.2",
+            "identifier": "3.3.2",
+            "text": "Decisions on whether and how to mitigate a specific threat or design flaw are recorded, justified, and approved by appropriate personnel.",
+            "parent": "pcissc-sslc-1.1-3.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.3.3",
+            "identifier": "3.3.3",
+            "text": "Any remaining residual risk is recorded, justified, and approved by appropriate personnel.",
+            "parent": "pcissc-sslc-1.1-3.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.4",
+            "identifier": "3.4",
+            "text": "Failures or weaknesses in software security controls are detected. Weak or ineffective security controls are updated, augmented or replaced.",
+            "parent": "pcissc-sslc-1.1-3",
+            "descriptions": [
+              "Vendors should monitor and/or routinely test their software to confirm that implemented software security controls remain appropriate (i.e., fit for purpose) and effective for sufficiently mitigating evolving risks or design flaws. For example, a software-specific security requirement may call for cryptography to be used to protect software communications. While the use of SSL may have been sufficient upon the initial design and release of the software, SSL is no longer sufficient to adequately protect communications as new threats and attack methods have significantly reduced its effectiveness as a security control. Therefore, it is imperative that vendors have processes in place to continuously monitor implemented security controls to make sure that they remain appropriate and sufficient to mitigate evolving threats and design flaws throughout the entire lifetime of the software.\n\nEvidence to support this requirement might include software- specific documentation, features lists, software-specific security control inventories, change-management documentation, risk- assessment reports, penetration test results, output from active monitoring systems, bug bounty program data, or any other evidence or information that clearly and consistently illustrates that the effectiveness of software security controls is monitored and that software-specific software security controls are updated, augmented, or replaced when no longer effective at satisfying their intended purpose of resisting attacks."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.4.1",
+            "identifier": "3.4.1",
+            "text": "A mature process exists to identify weak or ineffective software security controls and to update, augment, or replace them.",
+            "parent": "pcissc-sslc-1.1-3.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.4.2",
+            "identifier": "3.4.2",
+            "text": "The criteria for determining a weak or ineffective security control is defined and justified.",
+            "parent": "pcissc-sslc-1.1-3.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.4.3",
+            "identifier": "3.4.3",
+            "text": "The process involves monitoring security control effectiveness throughout the software lifecycle.",
+            "parent": "pcissc-sslc-1.1-3.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.4.4",
+            "identifier": "3.4.4",
+            "text": "Weak or ineffective security controls are updated, augmented, or replaced in a timely manner upon detection.",
+            "parent": "pcissc-sslc-1.1-3.4"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-3.5.5",
+            "identifier": "3.5.5",
+            "text": "Decisions on whether and how to replace and augment weak or ineffective security controls are made in accordance with defined criteria and with Requirement 3.3.",
+            "parent": "pcissc-sslc-1.1-3.5"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4",
+            "identifier": "4",
+            "title": "Vulnerability Detection and Mitigation",
+            "text": "The software vendor detects and mitigates vulnerabilities in software to ensure that its software remains resistant to attacks throughout its entire lifecycle."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1",
+            "identifier": "4.1",
+            "text": "Existing and emerging software vulnerabilities are detected in a timely manner.",
+            "parent": "pcissc-sslc-1.1-4",
+            "descriptions": [
+              "Software should be monitored or routinely tested to confirm that vulnerabilities are identified and mitigated before software or code updates are released into production, and to address any vulnerabilities that may have been discovered since release.\n\nRoutine security testing should be performed prior to or as part of the code-commit process to detect coding errors or the use of insecure functions. It could also be performed during unit, integration, regression, or interoperability testing, or during separate security testing. Security testing should be performed consistently and throughout all stages of the software lifecycle, including during various pre-release phases of the software development process and after code release, to ensure the software is free from vulnerabilities upon launch and any subsequent updates, and remains free from vulnerabilities throughout its lifetime.\n\nSecurity testing should be performed by appropriately skilled vendor personnel or third parties. In addition, security testing personnel should be able to conduct tests in an objective manner and be authorized to escalate any identified vulnerabilities to appropriate management or development personnel so they can be properly addressed.\n\nEvidence to support this control objective could include software- specific requirements documentation, security test results, feature lists, change-management documentation, entries in the vendor’s workflow (bug tracking) database, or any other evidence or information that clearly and consistently shows that security testing is performed routinely to detect vulnerabilities in code prior to release as well as vulnerabilities discovered since code launch."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1.1",
+            "identifier": "4.1.1",
+            "text": "A mature process exists for testing software for the existence and emergence of vulnerabilities (i.e., security testing).",
+            "parent": "pcissc-sslc-1.1-4.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1.2",
+            "identifier": "4.1.2",
+            "text": "Tools or methods used for security testing are appropriate for detecting applicable vulnerabilities in the vendor’s software, and are suitable for the software architectures, and the software development languages and frameworks employed.",
+            "parent": "pcissc-sslc-1.1-4.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1.3",
+            "identifier": "4.1.3",
+            "text": "Security testing is performed throughout the entire software lifecycle, including after release.",
+            "parent": "pcissc-sslc-1.1-4.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1.4",
+            "identifier": "4.1.4",
+            "text": "Security testing accounts for the entire code base, including detecting vulnerabilities in any third-party, open-source, and shared components and libraries.",
+            "parent": "pcissc-sslc-1.1-4.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1.5",
+            "identifier": "4.1.5",
+            "text": "Security testing is performed by authorized and objective vendor personnel or third parties.",
+            "parent": "pcissc-sslc-1.1-4.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1.6",
+            "identifier": "4.1.6",
+            "text": "Security testing results in an inventory of identified vulnerabilities.",
+            "parent": "pcissc-sslc-1.1-4.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.1.7",
+            "identifier": "4.1.7",
+            "text": "Security-testing details including the tools used, their configurations, and the specific tests performed are recorded and retained.",
+            "parent": "pcissc-sslc-1.1-4.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.2",
+            "identifier": "4.2",
+            "text": "Newly discovered vulnerabilities are fixed in a timely manner. The reintroduction of similar or previously resolved vulnerabilities is prevented.",
+            "parent": "pcissc-sslc-1.1-4",
+            "descriptions": [
+              "Vulnerabilities should be addressed in a manner commensurate with the risk they pose to the software or its stakeholders. The most critical or severe vulnerabilities⎯i.e., those with the highest exploitability and/or the greatest impact to stakeholders⎯should be patched immediately, followed by those with moderate-to-low exploitability and/or impact. Additionally, the discovery of new classes of vulnerabilities should be used as a source of input for process improvement. Software should be reviewed for instances of similar vulnerabilities, and the vendor’s development processes updated to enable detection and mitigation of such vulnerabilities in the future.\n\nIn some cases, it may be impractical for a vendor to fix all identified vulnerabilities prior to the release of production code or updates. In such circumstances, the vendor should have a methodology with clear criteria defined for prioritizing vulnerability fixes. The default outcome should always be that vulnerabilities are fixed before the software is released. In cases where it is not possible to fix a vulnerability prior to release, an exception process involving management at a level commensurate with the severity of the vulnerability should be invoked. The process should include documented justification for why a fix for was not provided to address the vulnerability.\n\nIf it is not possible to mitigate a certain vulnerability prior to release, the vendor should provide stakeholders with additional guidance to mitigate the risk of exploitation until a security update to fix the vulnerability can be made available.\n\nUnder no circumstances should a previously resolved vulnerability be reintroduced into production code, nor should similar vulnerabilities within the same class of vulnerabilities be reintroduced. Additional assurance processes and safeguards should be implemented to ensure that such incidents are avoided. The specific processes to prevent such occurrences will largely depend on how the vendor’s software is structured and how the vendor manages software updates. It is up to the software vendor to determine the most appropriate methods to prevent the reintroduction of vulnerabilities into production code."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.2.1",
+            "identifier": "4.2.1",
+            "text": "A mature process exists for distributing and deploying fixes for newly discovered vulnerabilities and preventing the reintroduction of previously resolved vulnerabilities.",
+            "parent": "pcissc-sslc-1.1-4.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.2.2",
+            "identifier": "4.2.2",
+            "text": "The process includes methods to prevent previously resolved vulnerabilities or other similar vulnerabilities from being reintroduced into the software.",
+            "parent": "pcissc-sslc-1.1-4.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.2.3",
+            "identifier": "4.2.3",
+            "text": "The criteria for determining the “criticality” or “severity” of vulnerabilities and how to address vulnerabilities are defined and justified.",
+            "parent": "pcissc-sslc-1.1-4.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.2.4",
+            "identifier": "4.2.4",
+            "text": "Fixes to address vulnerabilities in production code are made available and deployed in accordance with defined criteria.",
+            "parent": "pcissc-sslc-1.1-4.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-4.2.5",
+            "identifier": "4.2.5",
+            "text": "Decisions not to provide fixes in accordance with defined criteria are approved and justified by appropriate personnel on a case-by-case basis.",
+            "parent": "pcissc-sslc-1.1-4.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5",
+            "identifier": "5",
+            "title": "Change Management",
+            "text": "The software vendor identifies and manages all software changes throughout the software lifecycle."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1",
+            "identifier": "5.1",
+            "text": "All changes to software are identified, assessed, and approved.",
+            "parent": "pcissc-sslc-1.1-5",
+            "descriptions": [
+              "All changes to software should be defined, documented, approved, and tracked so that any vulnerabilities attributed to such changes may be identified and resolved as quickly as possible. The harder it is to trace vulnerabilities back to the changes that introduced them, the longer it takes to resolve those vulnerabilities⎯thus placing the software at greater risk of attack or compromise.\n\nIt is imperative to understand the security risk of a change to the software to ensure that it is addressed accordingly. It often involves understanding the types of software functionality the change impacts (e.g., functionality that deals with encryption or authentication processes), the type of information assets that the functionality can access or manipulate, the likelihood of successful vulnerability exploitation, and the impact a successful attack may have on stakeholders."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1.1",
+            "identifier": "5.1.1",
+            "text": "A mature process exists to identify, assess, and approve all changes to software.",
+            "parent": "pcissc-sslc-1.1-5.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1.2",
+            "identifier": "5.1.2",
+            "text": "The process includes an analysis of the security impact of all changes.",
+            "parent": "pcissc-sslc-1.1-5.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1.3",
+            "identifier": "5.1.3",
+            "text": "The process results in an inventory of all changes made to software, including a record of the determined security impact.",
+            "parent": "pcissc-sslc-1.1-5.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1.4",
+            "identifier": "5.1.4",
+            "text": "All change-management decisions are recorded.",
+            "parent": "pcissc-sslc-1.1-5.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1.5",
+            "identifier": "5.1.5",
+            "text": "All implemented changes are authorized by\nresponsible personnel.",
+            "parent": "pcissc-sslc-1.1-5.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1.6",
+            "identifier": "5.1.6",
+            "text": "The inventory of changes identifies the individual creator of the code and individual authorizing the change, for each code change.",
+            "parent": "pcissc-sslc-1.1-5.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.1.7",
+            "identifier": "5.1.7",
+            "text": "All decisions to implement changes are justified.",
+            "parent": "pcissc-sslc-1.1-5.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.2",
+            "identifier": "5.2",
+            "text": "All software versions are uniquely identified and tracked throughout the software lifecycle.",
+            "parent": "pcissc-sslc-1.1-5",
+            "descriptions": [
+              "Without a thoroughly defined versioning methodology, changes to software may not be properly identified, and customers and integrators/resellers may not understand the impact of such changes.\n\nThe system or methodology adopted by the vendor should allow different release versions of a software product to be easily distinguishable. To ensure a software version accurately represents the release version, the versioning system or methodology should be integrated with applicable lifecycle functions, such as code control and change management.\n\nThe versioning system or methodology should encompass all changes to all relevant software components. As several iterations of a software component may be produced for a single software release, the versioning system or methodology should easily identify the version of each component associated with a specific software release version.\n\nThe method used for identifying the software release versions—for example, a version numbering scheme— should be documented and reflect the type of change and its impact on the software.\n\nFor software intended to be validated under the PCI Software Security Framework, the vendor’s versioning system or methodology is important in determining updates to the PCI SSC List of Validated Payment Software. Refer to the PCI Secure Software Program Guide for further information."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.2.1",
+            "identifier": "5.2.1",
+            "text": "A formal system or methodology for uniquely identifying each version of software is defined.",
+            "parent": "pcissc-sslc-1.1-5.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.2.2",
+            "identifier": "5.2.2",
+            "text": "The system or methodology includes arranging unique identifiers or version elements in a sequential and logical manner.",
+            "parent": "pcissc-sslc-1.1-5.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.2.3",
+            "identifier": "5.2.3",
+            "text": "All changes to software functionality are clearly associated with a unique software version.",
+            "parent": "pcissc-sslc-1.1-5.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-5.2.4",
+            "identifier": "5.2.4",
+            "text": "Software versions are updated in accordance with the defined versioning system or methodology.",
+            "parent": "pcissc-sslc-1.1-5.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6",
+            "identifier": "6",
+            "title": "Software Integrity Protection",
+            "text": "The integrity of software is protected throughout the software lifecycle."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.1",
+            "identifier": "6.1",
+            "text": "The integrity of all software code, including third-party components, is maintained throughout the entire software lifecycle.",
+            "parent": "pcissc-sslc-1.1-6",
+            "descriptions": [
+              "Effective software-code control practices help ensure that all changes to code are authorized and performed only by those with a legitimate reason to change the code. Examples of these practices include code check-in and check-out procedures with strict access controls, and a comparison—for example, using a checksum—immediately before updating code to confirm that the last approved version has not been changed. It is important that controls cover all software code, third-party components and libraries, configuration files, etc. that are controlled by the vendor.\n\nThe integrity and confidentiality of these assets need to be maintained, as they often contain sensitive data such as intellectual property⎯for example, business logic—logic of security functions, configuration of cryptographic functions (e.g., white-box cryptography), etc."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.1.1",
+            "identifier": "6.1.1",
+            "text": "A mature process, mechanism, and/or tool(s) exist to protect the integrity of the software code, including third-party components.",
+            "parent": "pcissc-sslc-1.1-6.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.1.2",
+            "identifier": "6.1.2",
+            "text": "The processes, mechanisms, and/or tools are reasonable and appropriate for protecting the integrity of software code.",
+            "parent": "pcissc-sslc-1.1-6.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.1.3",
+            "identifier": "6.1.3",
+            "text": "Processes, mechanisms, or the use of tools results in the timely detection of any unauthorized attempts to tamper with or access software code.",
+            "parent": "pcissc-sslc-1.1-6.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.1.4",
+            "identifier": "6.1.4",
+            "text": "Unauthorized attempts to tamper with or access software code are investigated in a timely manner.",
+            "parent": "pcissc-sslc-1.1-6.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.2",
+            "identifier": "6.2",
+            "text": "Software releases and updates are delivered in a secure manner that ensures the integrity of the updated code.",
+            "parent": "pcissc-sslc-1.1-6",
+            "descriptions": [
+              "Security updates should include a mechanism within the update process to verify the updated code has not been replaced or tampered with. Examples of integrity checks include checksums and properly implemented digitally signed certificates.\n\nTo ensure the implemented controls are adequate to address the evolving attack vectors, software vendors should perform periodic reviews to confirm their continued effectiveness."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.2.1",
+            "identifier": "6.2.1",
+            "text": "A mature process, mechanism, and/or tool(s) exist to ensure the integrity of software updates during delivery.",
+            "parent": "pcissc-sslc-1.1-6.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.2.2",
+            "identifier": "6.2.2",
+            "text": "The processes, mechanisms, and/or tools are reasonable and appropriate for protecting the update code.",
+            "parent": "pcissc-sslc-1.1-6.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-6.2.3",
+            "identifier": "6.2.3",
+            "text": "Processes, mechanisms, and/or the use of tools results in the secure delivery of updated code.",
+            "parent": "pcissc-sslc-1.1-6.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7",
+            "identifier": "7",
+            "title": "Sensitive Data Protection",
+            "text": "The confidentiality of sensitive production data is maintained on vendor systems."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.1",
+            "identifier": "7.1",
+            "text": "Sensitive production data is only collected and retained on software vendor systems where there is a legitimate business or technical need.",
+            "parent": "pcissc-sslc-1.1-7",
+            "descriptions": [
+              "To protect the confidentiality of any sensitive production data—that is, sensitive data that is owned by an entity other than the software vendor— and stored on software vendor systems, such data should never be used for purposes other than those for which the data was originally collected. If the software vendor provides services to its stakeholders that could result in the collection of sensitive production data⎯for example, for troubleshooting or debugging purposes⎯then the software vendor should record which specific data elements it collects and retains, and clearly communicate what data elements are collected and why they are collected to its customers and other relevant stakeholders.\n\nThe inventory of sensitive production data retained by the software vendor should include identification of the specific data elements captured, whether storage of each element is permitted, and the security controls required—for example, to protect confidentiality and/or integrity—for each data element during storage and transmission"
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.1.1",
+            "identifier": "7.1.1",
+            "text": "A mature process exists to record and authorize the collection and retention of any sensitive production data.",
+            "parent": "pcissc-sslc-1.1-7.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.1.2",
+            "identifier": "7.1.2",
+            "text": "An inventory of sensitive production data captured or stored by the software vendor’s products and services is maintained.",
+            "parent": "pcissc-sslc-1.1-7.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.1.3",
+            "identifier": "7.1.3",
+            "text": "Decisions to use sensitive production data are approved by appropriate software vendor personnel.",
+            "parent": "pcissc-sslc-1.1-7.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.1.4",
+            "identifier": "7.1.4",
+            "text": "Decisions to use sensitive production data are recorded and reasonably justified.",
+            "parent": "pcissc-sslc-1.1-7.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.2",
+            "identifier": "7.2",
+            "text": "Sensitive production data is protected when retained on software vendor systems and securely deleted when no longer needed.",
+            "parent": "pcissc-sslc-1.1-7",
+            "descriptions": [
+              "When software vendors collect sensitive production data from their stakeholders—for example, for debugging or other customer support purposes—the vendor should coordinate with its stakeholders to identify which data elements require protection. Vendor stakeholders may have their own definition and associated security requirements for sensitive data, and appropriate protection efforts should be agreed upon by both parties.\n\nWhere the software vendor collects or retains sensitive production data, the software vendor should ensure it is secured—for example, by using robust access control measures and/or strong cryptography with industry- accepted key-management processes. As soon as it is no longer needed for its collected purpose, sensitive production data should be securely deleted such that it is not possible to reconstruct or recover the data from any software vendor system."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.2.1",
+            "identifier": "7.2.1",
+            "text": "A mature process exists to ensure sensitive production data is protected when retained on software vendor systems and is securely deleted when no longer needed.",
+            "parent": "pcissc-sslc-1.1-7.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.2.2",
+            "identifier": "7.2.2",
+            "text": "Sensitive production data is not resident on software vendor systems unless appropriate evidence of approval and justification exists.",
+            "parent": "pcissc-sslc-1.1-7.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.2.3",
+            "identifier": "7.2.3",
+            "text": "Sensitive production data is appropriately protected where it is retained.",
+            "parent": "pcissc-sslc-1.1-7.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-7.2.4",
+            "identifier": "7.2.4",
+            "text": "Secure deletion processes or mechanisms are sufficient to render sensitive production data irretrievable.",
+            "parent": "pcissc-sslc-1.1-7.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8",
+            "identifier": "8",
+            "title": "Software Vendor Implementation Guidance",
+            "text": "The vendor provides stakeholders with clear and thorough guidance on the secure implementation, configuration, and operation of its software."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.1",
+            "identifier": "8.1",
+            "text": "The software vendor provides stakeholders with clear and thorough guidance on the secure implementation, configuration and operation of its software.",
+            "parent": "pcissc-sslc-1.1-8",
+            "descriptions": [
+              "When followed, the software vendor's implementation guidance provides assurance that the software and patches are securely installed, configured, and maintained in the customer environment, and that all desired security functionality is active and working as intended. "
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.1.1",
+            "identifier": "8.1.1",
+            "text": "A mature process exists to produce, maintain, and make available to stakeholders guidance on the secure implementation, configuration, and operation of its software.",
+            "parent": "pcissc-sslc-1.1-8.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.1.2",
+            "identifier": "8.1.2",
+            "text": "The implementation guidance includes documentation of all configurable security-related options and parameters for the vendor’s software, and instructions for properly configuring and securing each of those options and parameters.",
+            "parent": "pcissc-sslc-1.1-8.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.2",
+            "identifier": "8.2",
+            "text": "Secure implementation guidance includes detailed instructions on how to securely install, configure, and maintain all software components and supported platforms.",
+            "parent": "pcissc-sslc-1.1-8",
+            "descriptions": [
+              "The guidance should cover all options and functionality available to software users that could affect the security of the software or the data it interacts with. The guidance should also include secure configuration options for any components provided with or supported by the software, such as external software and underlying platforms.\n\nExamples of configurable options include changing default credentials and passwords; enabling and disabling application accounts, services and features; changes in resource access permissions; integration with third-party cryptographic libraries, random number generators, etc.\n\nFollowing the secure implementation guidance should result in a secure configuration across all configurable options."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.2.1",
+            "identifier": "8.2.1",
+            "text": "The secure implementation guidance includes instructions on how to securely install or initialize, configure, and maintain the software.",
+            "parent": "pcissc-sslc-1.1-8.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.2.2",
+            "identifier": "8.2.2",
+            "text": "The secure implementation guidance is sufficiently detailed.",
+            "parent": "pcissc-sslc-1.1-8.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.2.3",
+            "identifier": "8.2.3",
+            "text": "Evidence exists or is obtained to illustrate that following the secure implementation guidance results in a secure software configuration.",
+            "parent": "pcissc-sslc-1.1-8.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.3",
+            "identifier": "8.3",
+            "text": "Secure implementation guidance is aligned with software updates.",
+            "parent": "pcissc-sslc-1.1-8",
+            "descriptions": [
+              "As the software vendor is expected to continuously identify, assess, and manage risks to its software, the vendor’s software-change processes should include determining the impact of the change to software vendor guidance. Software changes that impact a configurable feature or option should result in an update to the secure implementation guidance."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.3.1",
+            "identifier": "8.3.1",
+            "text": "The process to produce and maintain secure implementation guidance includes generation of updated guidance when new software updates are released, or security-related options or parameters are introduced or modified.",
+            "parent": "pcissc-sslc-1.1-8.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-8.3.2",
+            "identifier": "8.3.2",
+            "text": "Secure implementation guidance is reviewed at least annually for accuracy even if updates to security-related options and parameters are not issued.",
+            "parent": "pcissc-sslc-1.1-8.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9",
+            "identifier": "9",
+            "title": "Stakeholder Communications",
+            "text": "The software vendor maintains communication channels with stakeholders regarding potential security issues and mitigation options."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.1",
+            "identifier": "9.1",
+            "text": "Communication channels are defined and made available for customers, installers, integrators, and other relevant parties to report and receive information on security issues and mitigation options.",
+            "parent": "pcissc-sslc-1.1-9",
+            "descriptions": [
+              "Software vendors should monitor the threat landscape in order to identify new vulnerabilities and security issues that impact their software on the market. Software vendors should also provide open lines of communication to enable researchers or other stakeholders to report newly discovered vulnerabilities in the software vendor’s products and services. Communication channels could include a publicly disclosed e-mail address, website page, or other method to facilitate interactions with external researchers—for example, through a formal bug bounty program. The software vendor should also maintain teams to respond to such reports and drive processes to fix vulnerabilities in the vendor’s software.\n\n"
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.1.1",
+            "identifier": "9.1.1",
+            "text": "A mature process exists to support open, bi- directional communications with stakeholders for reporting and receiving security information regarding the software vendor’s products and services.",
+            "parent": "pcissc-sslc-1.1-9.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.1.2",
+            "identifier": "9.1.2",
+            "text": "Communication channels provide stakeholders the ability to report security-related issues and to receive timely status updates on their queries.",
+            "parent": "pcissc-sslc-1.1-9.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.1.3",
+            "identifier": "9.1.3",
+            "text": "The software vendor maintains resources to respond to reports or inquiries regarding the security of the vendor’s products and services.",
+            "parent": "pcissc-sslc-1.1-9.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.2",
+            "identifier": "9.2",
+            "text": "Stakeholders are notified about security updates in a timely manner.",
+            "parent": "pcissc-sslc-1.1-9",
+            "descriptions": [
+              "In addition to supporting the receipt of information about vulnerabilities within its software products, the software vendor should also issue communications to customers, installers, and integrators to provide information about known vulnerabilities and when fixes will be available. Fixes/patches should be developed and released in a timely manner, based on criticality and in accordance with Requirement 4.2.\n\nSoftware vendor security notifications should include the criticality and potential impact of the vulnerability, as well as clear guidance for addressing the vulnerability⎯for example, how to install a patch or software update. "
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.2.1",
+            "identifier": "9.2.1",
+            "text": "A mature process exists to notify stakeholders about security updates in a timely manner.",
+            "parent": "pcissc-sslc-1.1-9.2"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.3",
+            "identifier": "9.3",
+            "text": "Where security updates are not readily available to address known vulnerabilities or exploits, security notifications are issued to all relevant stakeholders to provide instructions for mitigating the risks associated with the known vulnerabilities and exploits.",
+            "parent": "pcissc-sslc-1.1-9",
+            "descriptions": [
+              "Where a fix is not readily available, the software vendor should communicate the risk and provide guidance on mitigation options. Software vendor-initiated communications could include e-mail notifications, website alerts, written notices, social media posts, and any other channels the vendor maintains for stakeholder engagement. Communication channels should be publicized so that stakeholders know how to access them⎯for example, by signing up for e-mail notifications. Software vendor contact information should also be provided for stakeholders to submit further questions regarding security notifications."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-9.3.1",
+            "identifier": "9.3.1",
+            "text": "Stakeholders are provided instructions for mitigating the threat, or reducing the likelihood and/or impact of exploitation of known security issues where a timely patch cannot provided.",
+            "parent": "pcissc-sslc-1.1-9.3"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-10",
+            "identifier": "10",
+            "title": "Software Update Information",
+            "text": "The software vendor provides stakeholders with detailed explanations of all software changes."
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-10.1",
+            "identifier": "10.1",
+            "text": "Upon release of any software updates, a summary of the specific changes made to the software is provided to stakeholders.",
+            "parent": "pcissc-sslc-1.1-10",
+            "descriptions": [
+              "Release notes should be provided for all software updates, including details of any impact on software functionality and security controls. Informing stakeholders of the impact of a software update enables them to make informed decisions on whether and when to implement it."
+            ]
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-10.1.1",
+            "identifier": "10.1.1",
+            "text": "A mature process exists to communicate all software changes to stakeholders upon software updates.",
+            "parent": "pcissc-sslc-1.1-10.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-10.1.2",
+            "identifier": "10.1.2",
+            "text": "The process results in a clear and detailed summary of all software changes.",
+            "parent": "pcissc-sslc-1.1-10.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-10.1.3",
+            "identifier": "10.1.3",
+            "text": "The change summary information clearly outlines the specific software functionality impacted by the changes.",
+            "parent": "pcissc-sslc-1.1-10.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-10.1.4",
+            "identifier": "10.1.4",
+            "text": "Change details are easily accessible to stakeholders.",
+            "parent": "pcissc-sslc-1.1-10.1"
+          },
+          {
+            "bom-ref": "pcissc-sslc-1.1-10.1.5",
+            "identifier": "10.1.5",
+            "text": "Change summary information accurately reflects the changes made to the software.",
+            "parent": "pcissc-sslc-1.1-10.1"
+          }
+        ]
+      }
+    ]
+  }
+}

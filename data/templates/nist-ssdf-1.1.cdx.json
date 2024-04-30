@@ -1,0 +1,828 @@
+{
+  "metadata": {
+    "licenses": [
+      {
+        "license": {
+          "name": "Fair Use of Other NIST Data/Works",
+          "url": "https://www.nist.gov/open/license",
+          "text": {
+            "content": "VGhpcyBkYXRhL3dvcmsgd2FzIGNyZWF0ZWQgYnkgZW1wbG95ZWVzIG9mIHRoZSBOYXRpb25hbCBJbnN0aXR1dGUgb2YgU3RhbmRhcmRzIGFuZCBUZWNobm9sb2d5IChOSVNUKSwgYW4gYWdlbmN5IG9mIHRoZSBGZWRlcmFsIEdvdmVybm1lbnQuIFB1cnN1YW50IHRvIHRpdGxlIDE3IFVuaXRlZCBTdGF0ZXMgQ29kZSBTZWN0aW9uIDEwNSwgd29ya3Mgb2YgTklTVCBlbXBsb3llZXMgYXJlIG5vdCBzdWJqZWN0IHRvIGNvcHlyaWdodCBwcm90ZWN0aW9uIGluIHRoZSBVbml0ZWQgU3RhdGVzLiAgVGhpcyBkYXRhL3dvcmsgbWF5IGJlIHN1YmplY3QgdG8gZm9yZWlnbiBjb3B5cmlnaHQuCgpUaGUgZGF0YS93b3JrIGlzIHByb3ZpZGVkIGJ5IE5JU1QgYXMgYSBwdWJsaWMgc2VydmljZSBhbmQgaXMgZXhwcmVzc2x5IHByb3ZpZGVkIOKAnEFTIElTLuKAnSBOSVNUIE1BS0VTIE5PIFdBUlJBTlRZIE9GIEFOWSBLSU5ELCBFWFBSRVNTLCBJTVBMSUVEIE9SIFNUQVRVVE9SWSwgSU5DTFVESU5HLCBXSVRIT1VUIExJTUlUQVRJT04sIFRIRSBJTVBMSUVEIFdBUlJBTlRZIE9GIE1FUkNIQU5UQUJJTElUWSwgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBPU0UsIE5PTi1JTkZSSU5HRU1FTlQgQU5EIERBVEEgQUNDVVJBQ1kuIE5JU1QgZG9lcyBub3Qgd2FycmFudCBvciBtYWtlIGFueSByZXByZXNlbnRhdGlvbnMgcmVnYXJkaW5nIHRoZSB1c2Ugb2YgdGhlIGRhdGEgb3IgdGhlIHJlc3VsdHMgdGhlcmVvZiwgaW5jbHVkaW5nIGJ1dCBub3QgbGltaXRlZCB0byB0aGUgY29ycmVjdG5lc3MsIGFjY3VyYWN5LCByZWxpYWJpbGl0eSBvciB1c2VmdWxuZXNzIG9mIHRoZSBkYXRhLiBOSVNUIFNIQUxMIE5PVCBCRSBMSUFCTEUgQU5EIFlPVSBIRVJFQlkgUkVMRUFTRSBOSVNUIEZST00gTElBQklMSVRZIEZPUiBBTlkgSU5ESVJFQ1QsIENPTlNFUVVFTlRJQUwsIFNQRUNJQUwsIE9SIElOQ0lERU5UQUwgREFNQUdFUyAoSU5DTFVESU5HIERBTUFHRVMgRk9SIExPU1MgT0YgQlVTSU5FU1MgUFJPRklUUywgQlVTSU5FU1MgSU5URVJSVVBUSU9OLCBMT1NTIE9GIEJVU0lORVNTIElORk9STUFUSU9OLCBBTkQgVEhFIExJS0UpLCBXSEVUSEVSIEFSSVNJTkcgSU4gVE9SVCwgQ09OVFJBQ1QsIE9SIE9USEVSV0lTRSwgQVJJU0lORyBGUk9NIE9SIFJFTEFUSU5HIFRPIFRIRSBEQVRBIChPUiBUSEUgVVNFIE9GIE9SIElOQUJJTElUWSBUTyBVU0UgVEhJUyBEQVRBKSwgRVZFTiBJRiBOSVNUIEhBUyBCRUVOIEFEVklTRUQgT0YgVEhFIFBPU1NJQklMSVRZIE9GIFNVQ0ggREFNQUdFUy4KClRvIHRoZSBleHRlbnQgdGhhdCBOSVNUIG1heSBob2xkIGNvcHlyaWdodCBpbiBjb3VudHJpZXMgb3RoZXIgdGhhbiB0aGUgVW5pdGVkIFN0YXRlcywgeW91IGFyZSBoZXJlYnkgZ3JhbnRlZCB0aGUgbm9uLWV4Y2x1c2l2ZSBpcnJldm9jYWJsZSBhbmQgdW5jb25kaXRpb25hbCByaWdodCB0byBwcmludCwgcHVibGlzaCwgcHJlcGFyZSBkZXJpdmF0aXZlIHdvcmtzIGFuZCBkaXN0cmlidXRlIHRoZSBOSVNUIGRhdGEsIGluIGFueSBtZWRpdW0sIG9yIGF1dGhvcml6ZSBvdGhlcnMgdG8gZG8gc28gb24geW91ciBiZWhhbGYsIG9uIGEgcm95YWx0eS1mcmVlIGJhc2lzIHRocm91Z2hvdXQgdGhlIHdvcmxkLgoKWW91IG1heSBpbXByb3ZlLCBtb2RpZnksIGFuZCBjcmVhdGUgZGVyaXZhdGl2ZSB3b3JrcyBvZiB0aGUgZGF0YSBvciBhbnkgcG9ydGlvbiBvZiB0aGUgZGF0YSwgYW5kIHlvdSBtYXkgY29weSBhbmQgZGlzdHJpYnV0ZSBzdWNoIG1vZGlmaWNhdGlvbnMgb3Igd29ya3MuIE1vZGlmaWVkIHdvcmtzIHNob3VsZCBjYXJyeSBhIG5vdGljZSBzdGF0aW5nIHRoYXQgeW91IGNoYW5nZWQgdGhlIGRhdGEgYW5kIHNob3VsZCBub3RlIHRoZSBkYXRlIGFuZCBuYXR1cmUgb2YgYW55IHN1Y2ggY2hhbmdlLiBQbGVhc2UgZXhwbGljaXRseSBhY2tub3dsZWRnZSB0aGUgTmF0aW9uYWwgSW5zdGl0dXRlIG9mIFN0YW5kYXJkcyBhbmQgVGVjaG5vbG9neSBhcyB0aGUgc291cmNlIG9mIHRoZSBkYXRhOiAgRGF0YSBjaXRhdGlvbiByZWNvbW1lbmRhdGlvbnMgYXJlIHByb3ZpZGVkIGF0IGh0dHBzOi8vd3d3Lm5pc3QuZ292L29wZW4vbGljZW5zZS4KClBlcm1pc3Npb24gdG8gdXNlIHRoaXMgZGF0YSBpcyBjb250aW5nZW50IHVwb24geW91ciBhY2NlcHRhbmNlIG9mIHRoZSB0ZXJtcyBvZiB0aGlzIGFncmVlbWVudCBhbmQgdXBvbiB5b3VyIHByb3ZpZGluZyBhcHByb3ByaWF0ZSBhY2tub3dsZWRnbWVudHMgb2YgTklTVOKAmXMgY3JlYXRpb24gb2YgdGhlIGRhdGEvd29yay4="
+          }
+        }
+      }
+    ]
+  },
+  "definitions": {
+    "standards": [
+      {
+        "bom-ref": "ssdf-1.1",
+        "name": "Secure Software Development Framework (SSDF) Version 1.1",
+        "description": "NIST Special Publication 800-218",
+        "version": "1.1",
+        "owner": "National Institute of Standards and Technology",
+        "requirements": [
+          {
+            "bom-ref": "ssdf-1.1-PO",
+            "identifier": "PO",
+            "text": "Organizations should ensure that their people, processes, and technology are prepared to perform secure software development at the organization level. Many organizations will find some PO practices to also be applicable to subsets of their software development, like individual development groups or projects.",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#Groups!A1"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.1",
+            "identifier": "PO.1",
+            "text": "Ensure that security requirements for software development are known at all times so that they can be taken into account throughout the SDLC and duplication of effort can be minimized because the requirements information can be collected once and shared. This includes requirements from internal sources (e.g., the organization’s policies, business objectives, and risk management strategy) and external sources (e.g., applicable laws and regulations).",
+            "parent": "ssdf-1.1-PO",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A2"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.1.1",
+            "identifier": "PO.1.1",
+            "text": "Identify and document all security requirements for the organization’s software development infrastructures and processes, and maintain the requirements over time.",
+            "parent": "ssdf-1.1-PO.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B2"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.1.2",
+            "identifier": "PO.1.2",
+            "text": "Identify and document all security requirements for organization-developed software to meet, and maintain the requirements over time.",
+            "parent": "ssdf-1.1-PO.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B3"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.1.3",
+            "identifier": "PO.1.3",
+            "text": "Communicate requirements to all third parties who will provide commercial software components to the organization for reuse by the organization’s own software. [Formerly PW.3.1]",
+            "parent": "ssdf-1.1-PO.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B4"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.2",
+            "identifier": "PO.2",
+            "text": "Ensure that everyone inside and outside of the organization involved in the SDLC is prepared to perform their SDLC-related roles and responsibilities throughout the SDLC.",
+            "parent": "ssdf-1.1-PO",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A5"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.2.1",
+            "identifier": "PO.2.1",
+            "text": "Create new roles and alter responsibilities for existing roles as needed to encompass all parts of the SDLC. Periodically review and maintain the defined roles and responsibilities, updating them as needed.",
+            "parent": "ssdf-1.1-PO.2",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B5"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.2.2",
+            "identifier": "PO.2.2",
+            "text": "Provide role-based training for all personnel with responsibilities that contribute to secure development. Periodically review personnel proficiency and role-based training, and update the training as needed.",
+            "parent": "ssdf-1.1-PO.2",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B6"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.2.3",
+            "identifier": "PO.2.3",
+            "text": "Obtain upper management or authorizing official commitment to secure development, and convey that commitment to all with development-related roles and responsibilities.",
+            "parent": "ssdf-1.1-PO.2",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B7"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.3",
+            "identifier": "PO.3",
+            "text": "Use automation to reduce human effort and improve the accuracy, reproducibility, usability, and comprehensiveness of security practices throughout the SDLC, as well as provide a way to document and demonstrate the use of these practices. Toolchains and tools may be used at different levels of the organization, such as organization-wide or project-specific, and may address a particular part of the SDLC, like a build pipeline.",
+            "parent": "ssdf-1.1-PO",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A8"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.3.1",
+            "identifier": "PO.3.1",
+            "text": "Specify which tools or tool types must or should be included in each toolchain to mitigate identified risks, as well as how the toolchain components are to be integrated with each other.",
+            "parent": "ssdf-1.1-PO.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B8"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.3.2",
+            "identifier": "PO.3.2",
+            "text": "Follow recommended security practices to deploy, operate, and maintain tools and toolchains.",
+            "parent": "ssdf-1.1-PO.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B9"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.3.3",
+            "identifier": "PO.3.3",
+            "text": "Configure tools to generate artifacts  of their support of secure software development practices as defined by the organization.",
+            "parent": "ssdf-1.1-PO.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B10"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.4",
+            "identifier": "PO.4",
+            "text": "Help ensure that the software resulting from the SDLC meets the organization’s expectations by defining and using criteria for checking the software’s security during development.",
+            "parent": "ssdf-1.1-PO",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A11"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.4.1",
+            "identifier": "PO.4.1",
+            "text": "Define criteria for software security checks and track throughout the SDLC.",
+            "parent": "ssdf-1.1-PO.4",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B11"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.4.2",
+            "identifier": "PO.4.2",
+            "text": "Implement processes, mechanisms, etc. to gather and safeguard the necessary information in support of the criteria.",
+            "parent": "ssdf-1.1-PO.4",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B12"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.5",
+            "identifier": "PO.5",
+            "text": "Ensure that all components of the environments for software development are strongly protected from internal and external threats to prevent compromises of the environments or the software being developed or maintained within them. Examples of environments for software development include development, build, test, and distribution environments.",
+            "parent": "ssdf-1.1-PO",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A13"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.5.1",
+            "identifier": "PO.5.1",
+            "text": "Separate and protect each environment involved in software development.",
+            "parent": "ssdf-1.1-PO.5",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B13"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PO.5.2",
+            "identifier": "PO.5.2",
+            "text": "Secure and harden development endpoints (i.e., endpoints for software designers, developers, testers, builders, etc.) to perform development-related tasks using a risk-based approach.",
+            "parent": "ssdf-1.1-PO.5",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B14"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS",
+            "identifier": "PS",
+            "text": "Organizations should protect all components of their software from tampering and unauthorized access.",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#Groups!A2"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS.1",
+            "identifier": "PS.1",
+            "text": "Help prevent unauthorized changes to code, both inadvertent and intentional, which could circumvent or negate the intended security characteristics of the software. For code that is not intended to be publicly accessible, this helps prevent theft of the software and may make it more difficult or time-consuming for attackers to find vulnerabilities in the software.",
+            "parent": "ssdf-1.1-PS",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A15"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS.1.1",
+            "identifier": "PS.1.1",
+            "text": "Store all forms of code – including source code, executable code, and configuration-as-code –  based on the principle of least privilege so that only authorized personnel, tools, services, etc. have access.",
+            "parent": "ssdf-1.1-PS.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B15"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS.2",
+            "identifier": "PS.2",
+            "text": "Help software acquirers ensure that the software they acquire is legitimate and has not been tampered with.",
+            "parent": "ssdf-1.1-PS",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A16"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS.2.1",
+            "identifier": "PS.2.1",
+            "text": "Make software integrity verification information available to software acquirers.",
+            "parent": "ssdf-1.1-PS.2",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B16"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS.3",
+            "identifier": "PS.3",
+            "text": "Preserve software releases in order to help identify, analyze, and eliminate vulnerabilities discovered in the software after release.",
+            "parent": "ssdf-1.1-PS",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A17"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS.3.1",
+            "identifier": "PS.3.1",
+            "text": "Securely archive the necessary files and supporting data (e.g., integrity verification information, provenance data) to be retained for each software release.",
+            "parent": "ssdf-1.1-PS.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B17"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PS.3.2",
+            "identifier": "PS.3.2",
+            "text": "Collect, safeguard, maintain, and share provenance data for all components of each software release (e.g., in a software bill of materials [SBOM]).",
+            "parent": "ssdf-1.1-PS.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B18"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW",
+            "identifier": "PW",
+            "text": "Organizations should produce well-secured software with minimal security vulnerabilities in its releases.",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#Groups!A3"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.1",
+            "identifier": "PW.1",
+            "text": "Identify and evaluate the security requirements for the software; determine what security risks the software is likely to face during operation and how the software’s design and architecture should mitigate those risks; and justify any cases where risk-based analysis indicates that security requirements should be relaxed or waived. Addressing security requirements and risks during software design (secure by design) is key for improving software security and also helps improve development efficiency.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A19"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.1.1",
+            "identifier": "PW.1.1",
+            "text": "Use forms of risk modeling – such as threat modeling, attack modeling, or attack surface mapping – to help assess the security risk for the software.",
+            "parent": "ssdf-1.1-PW.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B19"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.1.2",
+            "identifier": "PW.1.2",
+            "text": "Track and maintain the software’s security requirements, risks, and design decisions.",
+            "parent": "ssdf-1.1-PW.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B20"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.1.3",
+            "identifier": "PW.1.3",
+            "text": "Where appropriate, build in support for using standardized security features and services (e.g., enabling software to integrate with existing log management, identity management, access control, and vulnerability management systems) instead of creating proprietary implementations of security features and services. [Formerly PW.4.3]",
+            "parent": "ssdf-1.1-PW.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B21"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.2",
+            "identifier": "PW.2",
+            "text": "Help ensure that the software will meet the security requirements and satisfactorily address the identified risk information.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A22"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.2.1",
+            "identifier": "PW.2.1",
+            "text": "Have 1) a qualified person (or people) who were not involved with the design and/or 2) automated processes instantiated in the toolchain review the software design to confirm and enforce that it meets all of the security requirements and satisfactorily addresses the identified risk information.",
+            "parent": "ssdf-1.1-PW.2",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B22"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.4",
+            "identifier": "PW.4",
+            "text": "Lower the costs of software development, expedite software development, and decrease the likelihood of introducing additional security vulnerabilities into the software by reusing software modules and services that have already had their security posture checked. This is particularly important for software that implements security functionality, such as cryptographic modules and protocols.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A23"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.4.1",
+            "identifier": "PW.4.1",
+            "text": "Acquire and maintain well-secured software components (e.g., software libraries, modules, middleware, frameworks) from commercial, open-source, and other third-party developers for use by the organization’s software.",
+            "parent": "ssdf-1.1-PW.4",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B23"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.4.2",
+            "identifier": "PW.4.2",
+            "text": "Create and maintain well-secured software components in-house following SDLC processes to meet common internal software development needs that cannot be better met by third-party software components.",
+            "parent": "ssdf-1.1-PW.4",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B24"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.4.4",
+            "identifier": "PW.4.4",
+            "text": "Verify that acquired commercial, open-source, and all other third-party software components comply with the requirements, as defined by the organization, throughout their life cycles.",
+            "parent": "ssdf-1.1-PW.4",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B25"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.5",
+            "identifier": "PW.5",
+            "text": "Decrease the number of security vulnerabilities in the software, and reduce costs by minimizing vulnerabilities introduced during source code creation that meet or exceed organization-defined vulnerability severity criteria.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A26"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.5.1",
+            "identifier": "PW.5.1",
+            "text": "Follow all secure coding practices that are appropriate to the development languages and environment to meet the organization’s requirements.",
+            "parent": "ssdf-1.1-PW.5",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B26"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.6",
+            "identifier": "PW.6",
+            "text": "Decrease the number of security vulnerabilities in the software and reduce costs by eliminating vulnerabilities before testing occurs.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A27"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.6.1",
+            "identifier": "PW.6.1",
+            "text": "Use compiler, interpreter, and build tools that offer features to improve executable security.",
+            "parent": "ssdf-1.1-PW.6",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B27"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.6.2",
+            "identifier": "PW.6.2",
+            "text": "Determine which compiler, interpreter, and build tool features should be used and how each should be configured, then implement and use the approved configurations.",
+            "parent": "ssdf-1.1-PW.6",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B28"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.7",
+            "identifier": "PW.7",
+            "text": "Help identify vulnerabilities so that they can be corrected before the software is released to prevent exploitation. Using automated methods lowers the effort and resources needed to detect vulnerabilities. Human-readable code includes source code, scripts, and any other form of code that an organization deems human-readable.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A29"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.7.1",
+            "identifier": "PW.7.1",
+            "text": "Determine whether code review (a person looks directly at the code to find issues) and/or code analysis (tools are used to find issues in code, either in a fully automated way or in conjunction with a person) should be used, as defined by the organization.",
+            "parent": "ssdf-1.1-PW.7",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B29"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.7.2",
+            "identifier": "PW.7.2",
+            "text": "Perform the code review and/or code analysis based on the organization’s secure coding standards, and record and triage all discovered issues and recommended remediations in the development team’s workflow or issue tracking system.",
+            "parent": "ssdf-1.1-PW.7",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B30"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.8",
+            "identifier": "PW.8",
+            "text": "Help identify vulnerabilities so that they can be corrected before the software is released in order to prevent exploitation. Using automated methods lowers the effort and resources needed to detect vulnerabilities and improves traceability and repeatability. Executable code includes binaries, directly executed bytecode and source code, and any other form of code that an organization deems executable.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A31"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.8.1",
+            "identifier": "PW.8.1",
+            "text": "Determine whether executable code testing should be performed to find vulnerabilities not identified by previous reviews, analysis, or testing and, if so, which types of testing should be used.",
+            "parent": "ssdf-1.1-PW.8",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B31"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.8.2",
+            "identifier": "PW.8.2",
+            "text": "Scope the testing, design the tests, perform the testing, and document the results, including recording and triaging all discovered issues and recommended remediations in the development team’s workflow or issue tracking system.",
+            "parent": "ssdf-1.1-PW.8",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B32"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.9",
+            "identifier": "PW.9",
+            "text": "Help improve the security of the software at the time of installation to reduce the likelihood of the software being deployed with weak security settings, putting it at greater risk of compromise.",
+            "parent": "ssdf-1.1-PW",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A33"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.9.1",
+            "identifier": "PW.9.1",
+            "text": "Define a secure baseline by determining how to configure each setting that has an effect on security or a security-related setting so that the default settings are secure and do not weaken the security functions provided by the platform, network infrastructure, or services.",
+            "parent": "ssdf-1.1-PW.9",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B33"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-PW.9.2",
+            "identifier": "PW.9.2",
+            "text": "Implement the default settings (or groups of default settings, if applicable), and document each setting for software administrators.",
+            "parent": "ssdf-1.1-PW.9",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B34"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV",
+            "identifier": "RV",
+            "text": "Organizations should identify residual vulnerabilities in their software releases and respond appropriately to address those vulnerabilities and prevent similar ones from occurring in the future.",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#Groups!A4"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.1",
+            "identifier": "RV.1",
+            "text": "Help ensure that vulnerabilities are identified more quickly so that they can be remediated more quickly in accordance with risk, reducing the window of opportunity for attackers.",
+            "parent": "ssdf-1.1-RV",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A35"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.1.1",
+            "identifier": "RV.1.1",
+            "text": "Gather information from software acquirers, users, and public sources on potential vulnerabilities in the software and third-party components that the software uses, and investigate all credible reports.",
+            "parent": "ssdf-1.1-RV.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B35"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.1.2",
+            "identifier": "RV.1.2",
+            "text": "Review, analyze, and/or test the software’s code to identify or confirm the presence of previously undetected vulnerabilities.",
+            "parent": "ssdf-1.1-RV.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B36"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.1.3",
+            "identifier": "RV.1.3",
+            "text": "Have a policy that addresses vulnerability disclosure and remediation, and implement the roles, responsibilities, and processes needed to support that policy.",
+            "parent": "ssdf-1.1-RV.1",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B37"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.2",
+            "identifier": "RV.2",
+            "text": "Help ensure that vulnerabilities are remediated in accordance with risk to reduce the window of opportunity for attackers.",
+            "parent": "ssdf-1.1-RV",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A38"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.2.1",
+            "identifier": "RV.2.1",
+            "text": "Analyze each vulnerability to gather sufficient information about risk to plan its remediation or other risk response.",
+            "parent": "ssdf-1.1-RV.2",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B38"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.2.2",
+            "identifier": "RV.2.2",
+            "text": "Plan and implement risk responses for vulnerabilities.",
+            "parent": "ssdf-1.1-RV.2",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B39"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.3",
+            "identifier": "RV.3",
+            "text": "Help reduce the frequency of vulnerabilities in the future.",
+            "parent": "ssdf-1.1-RV",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!A40"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.3.1",
+            "identifier": "RV.3.1",
+            "text": "Analyze identified vulnerabilities to determine their root causes.",
+            "parent": "ssdf-1.1-RV.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B40"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.3.2",
+            "identifier": "RV.3.2",
+            "text": "Analyze the root causes over time to identify patterns, such as a particular secure coding practice not being followed consistently.",
+            "parent": "ssdf-1.1-RV.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B41"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.3.3",
+            "identifier": "RV.3.3",
+            "text": "Review the software for similar vulnerabilities to eradicate a class of vulnerabilities, and proactively fix them rather than waiting for external reports.",
+            "parent": "ssdf-1.1-RV.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B42"
+              }
+            ]
+          },
+          {
+            "bom-ref": "ssdf-1.1-RV.3.4",
+            "identifier": "RV.3.4",
+            "text": "Review the SDLC process, and update it if appropriate to prevent (or reduce the likelihood of) the root cause recurring in updates to the software or in new software that is created.",
+            "parent": "ssdf-1.1-RV.3",
+            "externalReferences": [
+              {
+                "type": "documentation",
+                "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx#SSDF!B43"
+              }
+            ]
+          }
+        ],
+        "externalReferences": [
+          {
+            "type": "documentation",
+            "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf",
+            "comment": "NIST SP 800-218",
+            "hashes": [
+              {
+                "alg": "SHA3-256",
+                "content": "88b0683941e1fb5900dc2723555321320520c9d9075b4c82163545992d6389fd"
+              }
+            ]
+          },
+          {
+            "type": "documentation",
+            "url": "https://csrc.nist.gov/csrc/media/Publications/sp/800-218/final/documents/NIST.SP.800-218.SSDF-table.xlsx",
+            "comment": "NIST SP 800-218 in excel",
+            "hashes": [
+              {
+                "alg": "SHA3-256",
+                "content": "260d88cf62c8742116a7be95e9257848e836eb11ecd8779b0099efd3a25422e7"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
