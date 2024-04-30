@@ -244,11 +244,25 @@ const args = yargs(hideBin(process.argv))
     default: false,
     description: "Include crypto libraries found under formulation.",
   })
+  .option("standard", {
+    description:
+      "The list of standards which may consist of regulations, industry or organizational-specific standards, maturity models, best practices, or any other requirements which can be evaluated against or attested to.",
+    choices: [
+      "asvs-4.0.3",
+      "bsimm-v13",
+      "masvs-2.0.0",
+      "nist_ssdf-1.1",
+      "pcissc-secure-slc-1.1",
+      "scvs-1.0.0",
+      "ssaf-DRAFT-2023-11",
+    ],
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
   .array("author")
   .array("exclude")
+  .array("standard")
   .option("auto-compositions", {
     type: "boolean",
     default: true,
