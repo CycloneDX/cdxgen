@@ -2686,7 +2686,9 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
     try {
       if (DEBUG_MODE) {
         console.log(
-          `Querying ${pomMetadata} from ${composePomXmlUrl(pomMetadata)}`,
+          `Querying ${pomMetadata.urlPrefix} from ${composePomXmlUrl(
+            pomMetadata,
+          )}`,
         );
       }
       const bodyJson = await fetchPomXmlAsJson(pomMetadata);
@@ -2779,8 +2781,12 @@ export async function fetchPomXmlAsJson({ urlPrefix, group, name, version }) {
  */
 export async function fetchPomXml({ urlPrefix, group, name, version }) {
   const fullUrl = composePomXmlUrl({ urlPrefix, group, name, version });
-  const res = await cdxgenAgent.get(fullUrl);
-  return res.body;
+  try {
+    const res = await cdxgenAgent.get(fullUrl);
+    return res.body;
+  } catch (err) {
+    return undefined;
+  }
 }
 
 /**
@@ -2792,11 +2798,11 @@ export function parseLicenseEntryOrArrayFromPomXml(license) {
   if (!license) return;
   if (Array.isArray(license)) {
     return license.map((l) => {
-      return findLicenseId(l.name._);
+      return findLicenseId(l.name?._);
     });
   }
   if (Object.keys(license).length) {
-    return [findLicenseId(license.name._)];
+    return [findLicenseId(license.name?._)];
   }
 }
 
@@ -3637,6 +3643,9 @@ export function toGitHubApiUrl(repoUrl, repoMetadata) {
  * @return {Promise<String>} SPDX license id
  */
 export async function getRepoLicense(repoUrl, repoMetadata) {
+  if (!repoUrl) {
+    return undefined;
+  }
   const apiUrl = toGitHubApiUrl(repoUrl, repoMetadata);
   // Perform github lookups
   if (apiUrl && get_repo_license_errors < MAX_GET_REPO_LICENSE_ERRORS) {
@@ -3687,7 +3696,6 @@ export async function getRepoLicense(repoUrl, repoMetadata) {
           );
           get_repo_license_errors++;
         } else if (!err.message.includes("404")) {
-          console.log(err);
           get_repo_license_errors++;
         }
       }
@@ -8307,8 +8315,42 @@ export async function getJarClasses(jarFile) {
     }
     zip.close();
   } catch (e) {
-    if (DEBUG_MODE) {
-      console.log(`Unable to parse ${jarFile}. Skipping.`);
+    // node-stream-zip seems to fail on deno with a RangeError.
+    // So we fallback to using jar -tf command
+    if (e.name === "RangeError") {
+      const jarResult = spawnSync("jar", ["-tf", jarFile], {
+        encoding: "utf-8",
+        shell: isWin,
+        maxBuffer: 50 * 1024 * 1024,
+      });
+      if (
+        jarResult?.stderr.includes(
+          "is not recognized as an internal or external command",
+        )
+      ) {
+        jarCommandAvailable = false;
+        return retList;
+      }
+      const consolelines = (jarResult.stdout || "").split("\n");
+      return consolelines
+        .filter((l) => {
+          return (
+            (l.includes(".class") ||
+              l.includes(".java") ||
+              l.includes(".scala") ||
+              l.includes(".groovy") ||
+              l.includes(".kt")) &&
+            !l.includes("-INF") &&
+            !l.includes("module-info")
+          );
+        })
+        .map((e) => {
+          return e
+            .replace("\r", "")
+            .replace(/.(class|java|kt|scala|groovy)/, "")
+            .replace(/\/$/, "")
+            .replace(/\//g, ".");
+        });
     }
   }
   return retList;
