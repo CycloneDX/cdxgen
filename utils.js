@@ -8337,6 +8337,8 @@ export async function getJarClasses(jarFile) {
           return (
             (l.includes(".class") ||
               l.includes(".java") ||
+              l.includes(".scala") ||
+              l.includes(".groovy") ||
               l.includes(".kt")) &&
             !l.includes("-INF") &&
             !l.includes("module-info")
@@ -8345,7 +8347,7 @@ export async function getJarClasses(jarFile) {
         .map((e) => {
           return e
             .replace("\r", "")
-            .replace(/.(class|java|kt)/, "")
+            .replace(/.(class|java|kt|scala|groovy)/, "")
             .replace(/\/$/, "")
             .replace(/\//g, ".");
         });
