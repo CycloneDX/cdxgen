@@ -367,6 +367,10 @@ export const getConnection = async (options, forRegistry) => {
               "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
               opts,
             );
+          } else if (_platform() === "darwin") {
+            console.warn(
+              "Ensure Podman Desktop (open-source) or Docker for Desktop (May require subscription) is running.",
+            );
           } else {
             console.warn(
               "Ensure docker/podman service or Docker for Desktop is running.",

@@ -206,10 +206,17 @@ if (process.env.SWIFT_CMD) {
   SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
+// HTTP cache
+const gotHttpCache = new Map();
+
 // Custom user-agent for cdxgen
 export const cdxgenAgent = got.extend({
   headers: {
     "user-agent": `@CycloneDX/cdxgen ${_version}`,
+  },
+  cache: gotHttpCache,
+  retry: {
+    limit: 0,
   },
 });
 
