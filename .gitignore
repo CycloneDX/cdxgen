@@ -124,3 +124,4 @@ oci/
 roots/
 .python-version
 build/
+.mise.toml
