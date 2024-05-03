@@ -5,9 +5,7 @@
   "compilerOptions": {
     "allowJs": true,
     "lib": ["deno.window"],
-    "outDir": "types",
     "exclude": ["*.test.js", "./types/**/*"],
-    "skipLibCheck": true,
     "strict": true
   },
   "include": ["*.js", "data/", "bin/"],
@@ -38,7 +36,10 @@
   },
   "tasks": {
     "start": "deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net bin/cdxgen.js",
-    "exe": "deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --output build/cdxgenx-devel bin/cdxgen.js"
+    "exe": "deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --output build/cdxgenx-devel bin/cdxgen.js",
+    "lint:check": "biome check *",
+    "lint": "biome check --apply-unsafe *",
+    "gen-types": "npx -p typescript tsc"
   },
   "imports": {
     "@appthreat/atom": "npm:@appthreat/atom@2.0.12",
