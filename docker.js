@@ -694,13 +694,17 @@ export const extractTar = async (fullImageName, dir) => {
         preserveOwner: false,
         noMtime: true,
         noChmod: true,
-        strict: false,
+        strict: true,
         C: dir,
         portable: true,
         onwarn: () => {},
         filter: (path, entry) => {
           // Some files are known to cause issues with extract
           if (
+            path.endsWith("etc/machine-id") ||
+            path.includes("usr/lib/systemd/") ||
+            path.includes("usr/lib64/libdevmapper.so") ||
+            path.includes("usr/sbin/") ||
             path.includes("cacerts") ||
             path.includes("ssl/certs") ||
             path.includes("logs/") ||
@@ -708,6 +712,7 @@ export const extractTar = async (fullImageName, dir) => {
             path.includes("usr/share/zoneinfo/") ||
             path.includes("usr/share/doc/") ||
             path.includes("usr/share/i18n/") ||
+            path.includes("usr/share/licenses/device-mapper-libs") ||
             [
               "BlockDevice",
               "CharacterDevice",
@@ -732,7 +737,9 @@ export const extractTar = async (fullImageName, dir) => {
         "Please run cdxgen from a powershell terminal with admin privileges to create symlinks.",
       );
       console.log(err);
-    } else if (!["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO"].includes(err.code)) {
+    } else if (
+      !["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO", "EACCES"].includes(err.code)
+    ) {
       console.log(
         `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`,
       );
@@ -743,6 +750,8 @@ export const extractTar = async (fullImageName, dir) => {
       if (DEBUG_MODE) {
         console.log(`Archive ${fullImageName} is empty. Skipping.`);
       }
+    } else if (["EACCES"].includes(err.code)) {
+      console.log(err);
     } else {
       console.log(err);
     }

@@ -5807,18 +5807,6 @@ export async function createBom(path, options) {
       [...new Set(exportData.pkgPathList)],
       options,
     );
-    if (exportData.allLayersDir?.startsWith(tmpdir())) {
-      if (DEBUG_MODE) {
-        console.log(`Cleaning up ${exportData.allLayersDir}`);
-      }
-      try {
-        if (rmSync) {
-          rmSync(exportData.allLayersDir, { recursive: true, force: true });
-        }
-      } catch (err) {
-        // continue regardless of error
-      }
-    }
     return bomData;
   }
   if (path.endsWith(".war")) {
