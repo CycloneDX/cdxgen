@@ -21,6 +21,7 @@ ARG SBT_VERSION=1.9.8
 ARG MAVEN_VERSION=3.9.6
 ARG GRADLE_VERSION=8.7
 ARG GO_VERSION=1.22.2
+ARG NODE_VERSION=22.1.0
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -45,8 +46,10 @@ ENV GOPATH=/opt/app-root/go \
     SWIFT_WEBROOT=$SWIFT_WEBROOT \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8
-ENV PATH=${PATH}:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
+    LANGUAGE=en_US.UTF-8 \
+    NVM_DIR="/root/.nvm" \
+    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -62,15 +65,17 @@ RUN set -e; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac; \
-    echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
-    && microdnf module enable php ruby -y \
+    microdnf module enable php ruby -y \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python3.11 python3.11-devel python3.11-pip ruby ruby-devel glibc-common glibc-all-langpacks \
-        pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel dotnet-sdk-8.0 \
+        pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel dotnet-sdk-8.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip virtualenv \
     && python3 -m pip install --user pipenv poetry blint \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
+    && source /root/.nvm/nvm.sh \
+    && nvm install ${NODE_VERSION} \
     && node --version \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
@@ -127,8 +132,10 @@ RUN set -e; \
     && bundler --version
 COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && npm install --omit=dev \
-    && chown -R cyclonedx:cyclonedx /opt/cdxgen \
+    && mkdir -p /opt/cdxgen-node-cache \
+    && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
+    && node /opt/cdxgen/bin/cdxgen.js --help \
     && rm -rf /var/cache/yum \
     && microdnf clean all
 
