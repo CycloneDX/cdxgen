@@ -104,7 +104,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['21.x']
+        node-version: ['22.x']
         java-version: ['21']
     steps:
       - uses: actions/checkout@v4
