@@ -32,6 +32,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
           npm install
@@ -45,6 +49,7 @@ jobs:
           path: 'repotests/grafana-operator'
       - name: dockertests
         run: |
+          bin/cdxgen.js elasticsearch:7.2.1 -t docker -o bomresults/bom-elastic.json
           bin/cdxgen.js ubuntu:latest -t docker -o bomresults/bom-ubuntu.json
           bin/cdxgen.js almalinux:9.2-minimal -t docker -o bomresults/bom-almalinux.json
           bin/cdxgen.js centos:latest -t docker -o bomresults/bom-centos.json
@@ -83,6 +88,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
           npm install

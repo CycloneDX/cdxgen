@@ -421,7 +421,12 @@ export function getOSPackages(src) {
       if (DEBUG_MODE) {
         console.log(osReleaseData);
       }
-      let distro_codename = osReleaseData["VERSION_CODENAME"] || "";
+      let distro_codename =
+        osReleaseData["VERSION_CODENAME"] ||
+        osReleaseData["CENTOS_MANTISBT_PROJECT"] ||
+        osReleaseData["REDHAT_SUPPORT_PRODUCT"] ||
+        "";
+      distro_codename = distro_codename.toLowerCase();
       let distro_id = osReleaseData["ID"] || "";
       const distro_id_like = osReleaseData["ID_LIKE"] || "";
       let purl_type = "rpm";
@@ -505,6 +510,8 @@ export function getOSPackages(src) {
                 if (distro_codename?.length) {
                   purlObj.qualifiers["distro_name"] = distro_codename;
                 }
+                // Remove any epoch values
+                delete purlObj.qualifiers.epoch;
                 // Bug fix for mageia and oracle linux
                 // Type is being returned as none for ubuntu as well!
                 if (purlObj.type === "none") {
@@ -571,6 +578,32 @@ export function getOSPackages(src) {
                 }
               } catch (err) {
                 // continue regardless of error
+              }
+            }
+            if (comp.purl.includes("epoch=")) {
+              try {
+                purlObj = PackageURL.fromString(comp.purl);
+                purlObj.qualifiers = purlObj.qualifiers || {};
+                if (distro_id?.length) {
+                  purlObj.qualifiers["distro"] = distro_id;
+                }
+                if (distro_codename?.length) {
+                  purlObj.qualifiers["distro_name"] = distro_codename;
+                }
+                delete purlObj.qualifiers.epoch;
+                allTypes.add(purlObj.namespace);
+                comp.purl = new PackageURL(
+                  purlObj.type,
+                  purlObj.namespace,
+                  name,
+                  purlObj.version,
+                  purlObj.qualifiers,
+                  purlObj.subpath,
+                ).toString();
+                comp["bom-ref"] = decodeURIComponent(comp.purl);
+              } catch (err) {
+                // continue regardless of error
+                console.log(err);
               }
             }
             // Fix licenses
@@ -685,6 +718,7 @@ const retrieveDependencies = (tmpDependencies, origBomRef, comp) => {
           if (compPurl.qualifiers.distro) {
             tmpPurl.qualifiers.distro = compPurl.qualifiers.distro;
           }
+          delete tmpPurl.qualifiers.epoch;
         }
         dependsOn.add(decodeURIComponent(tmpPurl.toString()));
       } catch (e) {

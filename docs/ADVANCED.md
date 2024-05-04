@@ -492,11 +492,16 @@ Example:
 
 ## Generate Cryptography Bill of Materials (CBOM)
 
-Use the `cbom` alias to generate a CBOM. This is currently supported only for Java projects.
+Use the `cbom` alias to generate a CBOM. This is currently supported only for Java and Python projects.
 
 ```shell
 cbom -t java
-# cdxgen -t java --include-crypto -o bom.json .
+# cdxgen -t java --include-crypto -o bom.json --spec-version 1.6 .
+```
+
+```shell
+cbom -t python
+# cdxgen -t python --include-crypto -o bom.json --spec-version .
 ```
 
 Using the `cbom` alias sets the following options:

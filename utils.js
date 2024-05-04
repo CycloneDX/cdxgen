@@ -206,10 +206,17 @@ if (process.env.SWIFT_CMD) {
   SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
+// HTTP cache
+const gotHttpCache = new Map();
+
 // Custom user-agent for cdxgen
 export const cdxgenAgent = got.extend({
   headers: {
     "user-agent": `@CycloneDX/cdxgen ${_version}`,
+  },
+  cache: gotHttpCache,
+  retry: {
+    limit: 0,
   },
 });
 
@@ -7897,13 +7904,15 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
     jarFile.endsWith(".hpi") ||
     jarFile.endsWith(".jar")
   ) {
-    try {
-      const zip = new StreamZip.async({ file: join(tempDir, fname) });
-      await zip.extract(null, tempDir);
-      await zip.close();
-    } catch (e) {
-      console.log(`Unable to extract ${join(tempDir, fname)}. Skipping.`);
-      return pkgList;
+    if (existsSync(join(tempDir, fname))) {
+      try {
+        const zip = new StreamZip.async({ file: join(tempDir, fname) });
+        await zip.extract(null, tempDir);
+        await zip.close();
+      } catch (e) {
+        console.log(`Unable to extract ${join(tempDir, fname)}. Skipping.`, e);
+        return pkgList;
+      }
     }
     jarFiles = getAllFiles(join(tempDir, "WEB-INF", "lib"), "**/*.jar");
     if (jarFile.endsWith(".hpi")) {
@@ -7929,7 +7938,7 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
       // If the jar file doesn't exist at the point of use, skip it
       if (!existsSync(jf)) {
         if (DEBUG_MODE) {
-          console.log(jf, "is not a readable file");
+          console.log(jf, jarFile, "is not a readable file.");
         }
         continue;
       }
