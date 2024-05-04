@@ -1,6 +1,16 @@
-version: "3.9"
+name: cdxgen
+
 services:
   cdxgen:
+    # For custom builds, use the annotations to describe the pedigree.variants
+    annotations:
+      org.opencontainers.image.vendor: cyclonedx
+      org.opencontainers.image.licenses: Apache-2.0
+      org.opencontainers.image.title: cdxgen
+    environment:
+      - NODE_COMPILE_CACHE=/tmp/cdxgen-node-cache # Using compile cache improves cold start performance
+      - FETCH_LICENSE=false # Set this to true to always include license
+      - CDXGEN_DEBUG_MODE=info # Set this to debug to get more console output
     build:
       dockerfile: ./ci/Dockerfile
       context: .
