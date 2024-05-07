@@ -1,0 +1,87 @@
+name: Update slices
+
+on:
+  workflow_dispatch:
+    inputs:
+      debug-cmds:
+        description: Don't execute commands, just print and upload shell files
+        required: false
+        type: boolean
+        default: false
+
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.run_id }}"
+  cancel-in-progress: true
+
+
+jobs:
+
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Echo inputs
+        run: |
+          echo "debug-cmds: ${{ inputs.debug-cmds }}"
+          echo "github.actor: ${{ github.actor }}"
+          echo "FILTER: ${{ env.FILTER }}"
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 21
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      -  name: Atom, cdxgen, sdkman, custom-json-diff installs
+         run: |
+           npm install -g @cyclonedx/cdxgen
+           npm install -g @appthreat/atom
+           python -m pip install --upgrade pip
+#           python -m pip install custom-json-diff
+           curl -s "https://get.sdkman.io" | bash
+           source "/home/runner/.sdkman/bin/sdkman-init.sh"
+
+      - name: sdkman install cache
+        uses: actions/cache@v4
+        id: sdkman-cache
+        with:
+          path: /home/runner/.sdkman/candidates
+          key: "${{ runner.os }}-sdkman-${{ hashFiles('sources.csv') }}"
+
+      - name: Generate scripts
+        if: ${{ ! inputs.debug-cmds }}
+        env:
+          SDKMAN_DIR: /home/runner/.sdkman
+          CDXGEN_DEBUG_MODE: debug
+        run: |
+          python generate.py
+          bash /home/runner/work/cdxgen-samples/cdxgen-samples/sdkman_installs.sh
+          bash /home/runner/work/cdxgen-samples/cdxgen-samples/cdxgen_commands.sh
+
+      - name: Generate shell scripts only
+        if: inputs.debug-cmds
+        run: |
+          python generate.py --debug-cmds
+
+      - name: Upload shell scripts generated as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scripts
+          path: /home/runner/work/cdxgen-samples/cdxgen-samples/*.sh
+
+      - name: Upload cdxgen boms
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdxgen_boms
+          path: |
+            /home/runner/work/src_repos/**/**/bom.json
+
+      #TODO Add generation of boms for checked out version of cdxgen
+      #TODO: Run python tests against the two different cdxgen versions
