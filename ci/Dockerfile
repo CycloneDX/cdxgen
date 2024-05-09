@@ -64,7 +64,7 @@ RUN set -e; \
             GOBIN_VERSION='arm64'; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
-    esac;
+    esac; 
 RUN microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
     python3.11 python3.11-devel python3.11-pip ruby ruby-devel glibc-common glibc-all-langpacks \
     pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel dotnet-sdk-8.0 
@@ -73,25 +73,25 @@ RUN python3.11 --version
 RUN python3.11 -m pip install --upgrade pip virtualenv
 RUN python3.11 -m pip install --user pipenv poetry blint
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-RUN source /root/.nvm/nvm.sh
-RUN nvm install ${NODE_VERSION}
+RUN source /root/.nvm/nvm.sh \
+    && nvm install ${NODE_VERSION}
 RUN node --version
 RUN curl -s "https://get.sdkman.io" | bash
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
 RUN echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config
-RUN sdk install java $JAVA_VERSION
-RUN sdk install maven $MAVEN_VERSION
-RUN sdk install gradle $GRADLE_VERSION
-RUN sdk install sbt $SBT_VERSION
-RUN sdk offline enable
+RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install java $JAVA_VERSION
+RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install maven $MAVEN_VERSION
+RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install gradle $GRADLE_VERSION
+RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk install sbt $SBT_VERSION
+RUN source "$HOME/.sdkman/bin/sdkman-init.sh" && sdk offline enable
 RUN mv /root/.sdkman/candidates/* /opt/
 RUN rm -rf /root/.sdkman
-RUN SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX"
-RUN SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz"
-RUN SWIFT_SIG_URL="$SWIFT_BIN_URL.sig"
+RUN SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
+    && SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz" \
+    && SWIFT_SIG_URL="$SWIFT_BIN_URL.sig" \
 #- Download the GPG keys, Swift toolchain, and toolchain signature, and verif
-RUN export GNUPGHOME="$(mktemp -d)"
-RUN curl -fsSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig
+    && export GNUPGHOME="$(mktemp -d)" \
+    && curl -fsSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig
 RUN gpg --batch --quiet --keyserver keyserver.ubuntu.com --recv-keys "$SWIFT_SIGNING_KEY"
 RUN gpg --batch --verify swift.tar.gz.sig swift.tar.gz
 RUN tar -xzf swift.tar.gz --directory / --strip-components=1
@@ -109,9 +109,24 @@ RUN yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --licenses 
 RUN /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platform-tools' --sdk_root=/opt/android-sdk-linux
 RUN /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platforms;android-34' --sdk_root=/opt/android-sdk-linux
 RUN /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;34.0.0' --sdk_root=/opt/android-sdk-linux
-RUN curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz"
-RUN tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz
-RUN rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz
+RUN set -e; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    url=; \
+    case "${ARCH_NAME##*-}" in \
+        'x86_64') \
+            OS_ARCH_SUFFIX=''; \
+            GOBIN_VERSION='amd64'; \
+            ;; \
+        'aarch64') \
+            OS_ARCH_SUFFIX='-aarch64'; \
+            GOBIN_VERSION='arm64'; \
+            ;; \
+        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
+    esac;
+RUN GOBIN_VERSION='amd64';
+RUN GOBIN_VERSION='amd64' && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz"
+RUN GOBIN_VERSION='amd64' && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz
+RUN GOBIN_VERSION='amd64' && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz
 RUN curl -LO "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein"
 RUN chmod +x lein
 RUN mv lein /usr/local/bin/
