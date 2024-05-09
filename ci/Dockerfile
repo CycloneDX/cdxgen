@@ -122,11 +122,10 @@ RUN set -e; \
             GOBIN_VERSION='arm64'; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
-    esac;
-RUN GOBIN_VERSION='amd64';
-RUN GOBIN_VERSION='amd64' && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz"
-RUN GOBIN_VERSION='amd64' && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz
-RUN GOBIN_VERSION='amd64' && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz
+    esac; \
+    curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz"; \
+    GOBIN_VERSION='amd64' && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz; \
+    GOBIN_VERSION='amd64' && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz
 RUN curl -LO "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein"
 RUN chmod +x lein
 RUN mv lein /usr/local/bin/
