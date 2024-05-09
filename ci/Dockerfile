@@ -51,20 +51,6 @@ ENV GOPATH=/opt/app-root/go \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
 
-RUN set -e; \
-    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
-    url=; \
-    case "${ARCH_NAME##*-}" in \
-        'x86_64') \
-            OS_ARCH_SUFFIX=''; \
-            GOBIN_VERSION='amd64'; \
-            ;; \
-        'aarch64') \
-            OS_ARCH_SUFFIX='-aarch64'; \
-            GOBIN_VERSION='arm64'; \
-            ;; \
-        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
-    esac; 
 RUN microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
     python3.11 python3.11-devel python3.11-pip ruby ruby-devel glibc-common glibc-all-langpacks \
     pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel dotnet-sdk-8.0 
