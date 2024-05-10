@@ -1,10 +1,10 @@
-FROM almalinux:9.3-minimal
+FROM almalinux:9.4-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="10.5.x" \
+      org.opencontainers.image.version="10.6.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -22,6 +22,7 @@ ARG MAVEN_VERSION=3.9.6
 ARG GRADLE_VERSION=8.7
 ARG GO_VERSION=1.22.2
 ARG NODE_VERSION=22.1.0
+ARG PYTHON_VERSION=3.12
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -64,15 +65,14 @@ RUN set -e; \
             GOBIN_VERSION='arm64'; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
-    esac; \
-    microdnf module enable php ruby -y \
+    esac \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
-        python3.11 python3.11-devel python3.11-pip ruby ruby-devel glibc-common glibc-all-langpacks \
+    python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
         pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel dotnet-sdk-8.0 \
-    && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
-    && python3 --version \
-    && python3 -m pip install --upgrade pip virtualenv \
-    && python3 -m pip install --user pipenv poetry blint \
+    && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
+    && python${PYTHON_VERSION} --version \
+    && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
+    && python${PYTHON_VERSION} -m pip install --user pipenv poetry blint \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && source /root/.nvm/nvm.sh \
     && nvm install ${NODE_VERSION} \
@@ -90,7 +90,6 @@ RUN set -e; \
     && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
     && SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz" \
     && SWIFT_SIG_URL="$SWIFT_BIN_URL.sig" \
-    # - Download the GPG keys, Swift toolchain, and toolchain signature, and verify.
     && export GNUPGHOME="$(mktemp -d)" \
     && curl -fsSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig \
     && gpg --batch --quiet --keyserver keyserver.ubuntu.com --recv-keys "$SWIFT_SIGNING_KEY" \
