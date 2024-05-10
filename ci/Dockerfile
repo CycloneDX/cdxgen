@@ -1,4 +1,4 @@
-FROM almalinux:9.3-minimal
+FROM almalinux:9.4-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
@@ -64,14 +64,14 @@ RUN set -e; \
             GOBIN_VERSION='arm64'; \
             ;; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
-    esac; \
-    microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
+    esac \
+    && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
         python3.11 python3.11-devel python3.11-pip ruby ruby-devel glibc-common glibc-all-langpacks \
         pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel dotnet-sdk-8.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
-    && python3 --version \
-    && python3 -m pip install --upgrade pip virtualenv \
-    && python3 -m pip install --user pipenv poetry blint \
+    && python3.11 --version \
+    && python3.11 -m pip install --upgrade pip virtualenv \
+    && python3.11 -m pip install --user pipenv poetry blint \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && source /root/.nvm/nvm.sh \
     && nvm install ${NODE_VERSION} \
@@ -85,49 +85,49 @@ RUN set -e; \
     && sdk install sbt $SBT_VERSION \
     && sdk offline enable \
     && mv /root/.sdkman/candidates/* /opt/ \
-    && rm -rf /root/.sdkman; \
-    SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX"; \
-    SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz"; \
-    SWIFT_SIG_URL="$SWIFT_BIN_URL.sig"; \
-    export GNUPGHOME="$(mktemp -d)"; \
-    curl -fsSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig; \
-    gpg --batch --quiet --keyserver keyserver.ubuntu.com --recv-keys "$SWIFT_SIGNING_KEY"; \
-    gpg --batch --verify swift.tar.gz.sig swift.tar.gz; \
-    tar -xzf swift.tar.gz --directory / --strip-components=1; \
-    chmod -R o+r /usr/lib/swift; \
-    chmod +x /usr/bin/swift; \
-    rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz; \
-    swift --version; \
-    microdnf install -y epel-release; \
-    mkdir -p ${ANDROID_HOME}/cmdline-tools; \
-    curl -L https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip; \
-    unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/; \
-    rm ${ANDROID_HOME}/cmdline-tools/android_tools.zip; \
-    mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest; \
-    yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=/opt/android-sdk-linux; \
-    /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platform-tools' --sdk_root=/opt/android-sdk-linux; \
-    /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platforms;android-34' --sdk_root=/opt/android-sdk-linux; \
-    /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;34.0.0' --sdk_root=/opt/android-sdk-linux; \
-    curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz"; \
-    GOBIN_VERSION='amd64' && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz; \
-    GOBIN_VERSION='amd64' && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz; \
-    curl -LO "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein"; \
-    chmod +x lein; \
-    mv lein /usr/local/bin/; \
-    /usr/local/bin/lein; \
-    curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh; \
-    chmod +x linux-install.sh; \
-    sudo ./linux-install.sh; \
-    useradd -ms /bin/bash cyclonedx; \
-    npm install --unsafe-perm -g @microsoft/rush --omit=dev; \
-    pecl channel-update pecl.php.net; \
-    pecl install timezonedb; \
-    echo 'extension=timezonedb.so' >> /etc/php.ini; \
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php; \
-    mv composer.phar /usr/local/bin/composer; \
-    gem install bundler; \
-    gem --version; \
-    bundler --version;
+    && rm -rf /root/.sdkman \
+    && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
+    && SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz" \
+    && SWIFT_SIG_URL="$SWIFT_BIN_URL.sig" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && curl -fsSL "$SWIFT_BIN_URL" -o swift.tar.gz "$SWIFT_SIG_URL" -o swift.tar.gz.sig \
+    && gpg --batch --quiet --keyserver keyserver.ubuntu.com --recv-keys "$SWIFT_SIGNING_KEY" \
+    && gpg --batch --verify swift.tar.gz.sig swift.tar.gz \
+    && tar -xzf swift.tar.gz --directory / --strip-components=1 \
+    && chmod -R o+r /usr/lib/swift \
+    && chmod +x /usr/bin/swift \
+    && rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz \
+    && swift --version \
+    && microdnf install -y epel-release \
+    && mkdir -p ${ANDROID_HOME}/cmdline-tools \
+    && curl -L https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
+    && unzip ${ANDROID_HOME}/cmdline-tools/android_tools.zip -d ${ANDROID_HOME}/cmdline-tools/ \
+    && rm ${ANDROID_HOME}/cmdline-tools/android_tools.zip \
+    && mv ${ANDROID_HOME}/cmdline-tools/cmdline-tools ${ANDROID_HOME}/cmdline-tools/latest \
+    && yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platform-tools' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'platforms;android-34' --sdk_root=/opt/android-sdk-linux \
+    && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;34.0.0' --sdk_root=/opt/android-sdk-linux \
+    && curl -LO "https://dl.google.com/go/go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz" \
+    && tar -C /usr/local -xzf go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+    && rm go${GO_VERSION}.linux-${GOBIN_VERSION}.tar.gz \
+    && curl -LO "https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein" \
+    && chmod +x lein \
+    && mv lein /usr/local/bin/ \
+    && /usr/local/bin/lein \
+    && curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh \
+    && chmod +x linux-install.sh \
+    && sudo ./linux-install.sh \
+    && useradd -ms /bin/bash cyclonedx \
+    && npm install --unsafe-perm -g @microsoft/rush --omit=dev \
+    && pecl channel-update pecl.php.net \
+    && pecl install timezonedb \
+    && echo 'extension=timezonedb.so' >> /etc/php.ini \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php \
+    && mv composer.phar /usr/local/bin/composer \
+    && gem install bundler \
+    && gem --version \
+    && bundler --version
 COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && npm install --omit=dev \
     && mkdir -p /opt/cdxgen-node-cache \
