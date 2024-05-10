@@ -67,12 +67,12 @@ RUN set -e; \
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
     esac \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
-    ${PYTHON_VERSION} ${PYTHON_VERSION}-devel ${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
+    python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
         pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel dotnet-sdk-8.0 \
-    && alternatives --install /usr/bin/python3 python /usr/bin/${PYTHON_VERSION} 1 \
-    && ${PYTHON_VERSION} --version \
-    && ${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
-    && ${PYTHON_VERSION} -m pip install --user pipenv poetry blint \
+    && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
+    && python${PYTHON_VERSION} --version \
+    && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
+    && python${PYTHON_VERSION} -m pip install --user pipenv poetry blint \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && source /root/.nvm/nvm.sh \
     && nvm install ${NODE_VERSION} \
