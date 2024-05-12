@@ -21,60 +21,8 @@ Most SBOM tools are like simple barcode scanners. For easy applications, they ca
 
 ## Supported languages and package format
 
-| Language/Platform               | Package format                                                                                                      | Transitive dependencies                                                                           | Evidence |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------- |
-| Node.js                         | npm-shrinkwrap.json, package-lock.json, pnpm-lock.yaml, yarn.lock, rush.js, bower.json, .min.js                     | Yes except .min.js                                                                                | Yes      |
-| Java                            | maven (pom.xml [1]), gradle (build.gradle, .kts), scala (sbt), bazel                                                | Yes unless pom.xml is manually parsed due to unavailability of maven or errors                    | Yes      |
-| Android                         | apk, aab                                                                                                            |                                                                                                   |
-| PHP                             | composer.lock                                                                                                       | Yes                                                                                               | Yes      |
-| Python                          | pyproject.toml, setup.py, requirements.txt [2], Pipfile.lock, poetry.lock, pdm.lock, bdist_wheel, .whl, .egg-info   | Yes using the automatic pip install/freeze. When disabled, only with Pipfile.lock and poetry.lock | Yes      |
-| Go                              | binary, go.mod, go.sum, Gopkg.lock                                                                                  | Yes except binary                                                                                 | Yes      |
-| Ruby                            | Gemfile.lock, gemspec                                                                                               | Only for Gemfile.lock                                                                             |          |
-| Rust                            | binary, Cargo.toml, Cargo.lock                                                                                      | Only for Cargo.lock                                                                               |          |
-| .Net                            | .csproj, .vbproj, .fsproj, packages.config, project.assets.json [3], packages.lock.json, .nupkg, paket.lock, binary | Only for project.assets.json, packages.lock.json, paket.lock                                      |          |
-| Dart                            | pubspec.lock, pubspec.yaml                                                                                          | Only for pubspec.lock                                                                             |          |
-| Haskell                         | cabal.project.freeze                                                                                                | Yes                                                                                               |          |
-| Elixir                          | mix.lock                                                                                                            | Yes                                                                                               |          |
-| C/C++/Objective C/C++11         | conan.lock, conanfile.txt, \*.cmake, CMakeLists.txt, meson.build, codebase without package managers!                | Yes only for conan.lock. Best effort basis for cmake without version numbers.                     | Yes      |
-| Clojure                         | Clojure CLI (deps.edn), Leiningen (project.clj)                                                                     | Yes unless the files are parsed manually due to lack of clojure cli or leiningen command          |          |
-| Swift                           | Package.resolved, Package.swift (swiftpm)                                                                           | Yes                                                                                               |          |
-| Docker / oci image              | All supported languages. Linux OS packages with plugins [4]                                                         | Best effort based on lock files                                                                   | Yes      |
-| GitHub Actions                  | .github/workflows/\*.yml                                                                                            | N/A                                                                                               | Yes      |
-| Linux                           | All supported languages. Linux OS packages with plugins [5]                                                         | Best effort based on lock files                                                                   | Yes      |
-| Windows                         | All supported languages. OS packages with best effort [5]                                                           | Best effort based on lock files                                                                   | Yes      |
-| Jenkins Plugins                 | .hpi files                                                                                                          |                                                                                                   | Yes      |
-| Helm Charts                     | .yaml                                                                                                               | N/A                                                                                               |          |
-| Skaffold                        | .yaml                                                                                                               | N/A                                                                                               |          |
-| kustomization                   | .yaml                                                                                                               | N/A                                                                                               |          |
-| Tekton tasks                    | .yaml                                                                                                               | N/A                                                                                               |          |
-| Kubernetes                      | .yaml                                                                                                               | N/A                                                                                               |          |
-| Maven Cache                     | $HOME/.m2/repository/\*\*/\*.jar                                                                                    | N/A                                                                                               |          |
-| SBT Cache                       | $HOME/.ivy2/cache/\*\*/\*.jar                                                                                       | N/A                                                                                               |          |
-| Gradle Cache                    | $HOME/caches/modules-2/files-2.1/\*\*/\*.jar                                                                        | N/A                                                                                               |          |
-| Helm Index                      | $HOME/.cache/helm/repository/\*\*/\*.yaml                                                                           | N/A                                                                                               |          |
-| Docker compose                  | docker-compose\*.yml. Images would also be scanned.                                                                 | N/A                                                                                               |          |
-| Dockerfile                      | `*Dockerfile*` Images would also be scanned.                                                                        | N/A                                                                                               |          |
-| Containerfile                   | `*Containerfile*`. Images would also be scanned.                                                                    | N/A                                                                                               |          |
-| Bitbucket Pipelines             | `bitbucket-pipelines.yml` images and pipes would also be scanned.                                                   | N/A                                                                                               |          |
-| Google CloudBuild configuration | cloudbuild.yaml                                                                                                     | N/A                                                                                               |          |
-| OpenAPI                         | openapi\*.json, openapi\*.yaml                                                                                      | N/A                                                                                               |          |
+See our [Supported Project Types](https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES) documentation
 
-NOTE:
-
-- Apache maven 3.x is required for parsing pom.xml
-- gradle or gradlew is required to parse gradle projects
-- sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ are currently supported.
-  - Alternatively, create a lock file using sbt-dependency-lock [plugin](https://github.com/stringbean/sbt-dependency-lock)
-
-Footnotes:
-
-- [1] - For multi-module applications, the BOM file could include components not included in the packaged war or ear file.
-- [2] - Pip freeze is automatically performed to improve precision. Requires virtual environment.
-- [3] - Perform dotnet or nuget restore to generate project.assets.json. Without this file, cdxgen would not include indirect dependencies.
-- [4] - See the section on plugins
-- [5] - Powered by osquery. See the section on plugins
-
-<img src="./docs/cdxgen-tree.jpg" alt="cdxgen tree" width="256">
 
 ### Automatic usage detection
 
