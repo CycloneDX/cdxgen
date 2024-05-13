@@ -589,8 +589,11 @@ npm run lint
 npm test
 ```
 
-If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels "good first issue" or "help wanted".
+If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels ["good first issue" or "help wanted"][cdxgen-labels-contribute].
 
 ## Enterprise support
 
 Enterprise support, including custom development and integration services, is available via [AppThreat Ltd](https://www.appthreat.com). Free community support is also available via [Discord](https://discord.gg/tmmtjCEHNV).
+
+
+[cdxgen-labels-contribute]: https://github.com/CycloneDX/cdxgen/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22
