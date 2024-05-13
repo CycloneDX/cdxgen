@@ -549,8 +549,7 @@ Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for adv
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for the full license.
 
-[license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
-[cyclonedx-homepage]: https://cyclonedx.org
+
 
 ## Integration as library
 
@@ -591,6 +590,16 @@ npm test
 
 If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels "good first issue" or "help wanted".
 
-## Enterprise support
+## Enterprise & Community Support
 
-Enterprise support, including custom development and integration services, is available via [AppThreat Ltd](https://www.appthreat.com). Free community support is also available via [Discord](https://discord.gg/tmmtjCEHNV).
+Enterprise support, including custom development and integration services, is available via [AppThreat Ltd][appthreat-homepage]. 
+
+Free community support is also available via our [GitHub Discussions][cdxgen-discussions] or the [OWASP CycloneDX Slack][cyclonedx-homepage].
+
+
+[license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
+[cdxgen-discussions]: https://github.com/CycloneDX/cdxgen/discussions
+
+[appthreat-homepage]: https://www.appthreat.com
+[cyclonedx-homepage]: https://cyclonedx.org
+[cyclonedx-cdxgen-slack]: https://cyclonedx.slack.com/archives/C04NFFE1962
