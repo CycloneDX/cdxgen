@@ -1,4 +1,4 @@
-name: Update slices
+name: Snapshot Tests
 
 on:
   workflow_dispatch:
@@ -44,7 +44,6 @@ jobs:
            npm install -g @cyclonedx/cdxgen
            npm install -g @appthreat/atom
            python -m pip install --upgrade pip
-#           python -m pip install custom-json-diff
            curl -s "https://get.sdkman.io" | bash
            source "/home/runner/.sdkman/bin/sdkman-init.sh"
 
@@ -53,35 +52,30 @@ jobs:
         id: sdkman-cache
         with:
           path: /home/runner/.sdkman/candidates
-          key: "${{ runner.os }}-sdkman-${{ hashFiles('sources.csv') }}"
+          key: "${{ runner.os }}-sdkman-${{ hashFiles('test/repos.csv') }}"
 
-      - name: Generate scripts
-        if: ${{ ! inputs.debug-cmds }}
+      - name: Generate and run scripts
         env:
           SDKMAN_DIR: /home/runner/.sdkman
           CDXGEN_DEBUG_MODE: debug
         run: |
+          mkdir /home/runner/work/cdxgen-samples
           python generate.py
-          bash /home/runner/work/cdxgen-samples/cdxgen-samples/sdkman_installs.sh
-          bash /home/runner/work/cdxgen-samples/cdxgen-samples/cdxgen_commands.sh
-
-      - name: Generate shell scripts only
-        if: inputs.debug-cmds
-        run: |
-          python generate.py --debug-cmds
+          bash /home/runner/work/cdxgen-samples/sdkman_installs.sh
+          bash /home/runner/work/cdxgen-samples/cdxgen_commands.sh
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
         with:
           name: scripts
-          path: /home/runner/work/cdxgen-samples/cdxgen-samples/*.sh
+          path: /home/runner/work/cdxgen-samples/*.sh
 
       - name: Upload cdxgen boms
         uses: actions/upload-artifact@v4
         with:
           name: cdxgen_boms
           path: |
-            /home/runner/work/src_repos/**/**/bom.json
+            /home/runner/work/cdxgen-samples
 
-      #TODO Add generation of boms for checked out version of cdxgen
+      #TODO Switch generation of boms for checked out version of cdxgen
       #TODO: Run python tests against the two different cdxgen versions

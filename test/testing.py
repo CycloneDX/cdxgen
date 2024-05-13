@@ -32,7 +32,7 @@ def build_args():
         '-o',
         '--output-dir',
         type=Path,
-        default='/home/runner/work/atom-samples/atom-samples',
+        default='/home/runner/work/cdxgen-samples',
         help='Path to output',
         dest='output_dir',
     )
@@ -42,15 +42,6 @@ def build_args():
         help='Filter to these sample projects',
         dest='projects',
         nargs='*'
-    )
-    parser.add_argument(
-        '-s',
-        '--slice-type',
-        choices=['usages', 'reachables'],
-        help='Slice type to generate',
-        dest='slice_types',
-        const=['usages', 'reachables'],
-        nargs='?'
     )
     parser.add_argument(
         '--skip-clone',
@@ -70,15 +61,15 @@ def build_args():
         action='store_true',
         dest='skip_build',
         default=False,
-        help='Skip building the samples and just run atom. Should be used with --skip-clone'
+        help='Skip building the samples and just run cdxgen. Should be used with --skip-clone'
     )
-    parser.add_argument(
-        '--cleanup',
-        action='store_true',
-        dest='cleanup',
-        default=False,
-        help='Remove slices that are <= 1kb or > 100MB.'
-    )
+    # parser.add_argument(
+    #     '--cleanup',
+    #     action='store_true',
+    #     dest='cleanup',
+    #     default=False,
+    #     help='Remove slices that are <= 1kb or > 100MB.'
+    # )
     return parser.parse_args()
 
 
@@ -104,18 +95,10 @@ def generate(args):
         run_pre_builds(repo_data, args.output_dir, args.debug_cmds)
 
     commands = ''.join(
-        exec_on_repo(
-            args.skip_clone,
-            args.output_dir,
-            args.skip_build,
-            args.slice_types
-            if isinstance(args.slice_types, list)
-            else [args.slice_types],
-            repo,
-        )
+        exec_on_repo(args.skip_clone, args.output_dir, args.skip_build, repo)
         for repo in processed_repos
     )
-    sh_path = Path.joinpath(args.output_dir, 'atom_commands.sh')
+    sh_path = Path.joinpath(args.output_dir, 'cdxgen_commands.sh')
     write_script_file(sh_path, commands, args.debug_cmds)
 
 
@@ -132,12 +115,12 @@ def add_repo_dirs(clone_dir, repo_data):
     """
     new_data = []
     for r in repo_data:
-        r['repo_dir'] = Path.joinpath(clone_dir, r['language'], r['project'])
+        r['repo_dir'] = Path.joinpath(clone_dir, r['project'])
         new_data.append(r)
     return new_data
 
 
-def exec_on_repo(clone, output_dir, skip_build, slice_types, repo):
+def exec_on_repo(clone, output_dir, skip_build, repo):
     """
     Determines a sequence of commands on a repository.
 
@@ -152,16 +135,13 @@ def exec_on_repo(clone, output_dir, skip_build, slice_types, repo):
     Returns:
         str: The sequence of commands to be executed.
     """
-    project = repo['project']
-    lang = repo['language']
-    loc = Path.cwd()
     repo_dir = repo['repo_dir']
     commands = ''
 
     if clone:
-        commands += f'\n{clone_repo(repo["link"], repo_dir)}'
+        commands += f'\n{clone_repo(repo["link"], repo["repo_dir"])}'
+        commands += f'\n{subprocess.list2cmdline(["cd", repo["repo_dir"]])}'
         commands += f'\n{checkout_commit(repo["commit"])}'
-    commands += f'\n{subprocess.list2cmdline(["cd", repo_dir])}'
     if not skip_build and len(repo['pre_build_cmd']) > 0:
         cmds = repo['pre_build_cmd'].split(';')
         cmds = [cmd.lstrip().rstrip() for cmd in cmds]
@@ -174,7 +154,7 @@ def exec_on_repo(clone, output_dir, skip_build, slice_types, repo):
         for cmd in cmds:
             new_cmd = list(cmd.split(' '))
             commands += f"\n{subprocess.list2cmdline(new_cmd)}"
-    commands += f"\n{repo['cdxgen_cmd']}"
+    commands += f'\n{run_cdxgen(repo, output_dir)}'
     commands += '\n\n'
     return commands
 
@@ -298,29 +278,7 @@ def check_dirs(clone, clone_dir, output_dir):
         Path.mkdir(output_dir)
 
 
-def cleanup(output_dir):
-    """
-    Remove slice files 1kb or less, or 100MB or more (due to GitHub limits).
-
-    Args:
-        output_dir (pathlib.Path): The path to the output directory.
-
-    Returns:
-        None
-    """
-    for root, dirs, files in os.walk(output_dir):
-        for file in files:
-            if file.endswith('.json'):
-                path = os.path.join(root, file)
-                size = os.path.getsize(path)
-                if size <= 1024:
-                    os.remove(path)
-                elif size > 100000000:
-                    os.remove(path)
-                    logging.warning('File %s exceeds the GitHub size limit of 100MB.', path)
-
-
-def run_cdxgen(repos):
+def run_cdxgen(repo, output_dir):
     """
     Generates cdxgen commands.
 
@@ -330,21 +288,15 @@ def run_cdxgen(repos):
     Returns:
         str: The repository data with cdxgen commands
     """
-    new_repos = []
-    for r in repos:
-        cdxgen_cmd = [
-            'cdxgen',
-            '-t',
-            r['language'],
-            '--deep',
-            '-o',
-            Path.joinpath(r['repo_dir'], 'bom.json'),
-            r['repo_dir']
-        ]
-        r['cdxgen_cmd'] = subprocess.list2cmdline(cdxgen_cmd)
-        new_repos.append(r)
-
-    return new_repos
+    cdxgen_cmd = [
+        'cdxgen',
+        '-t',
+        repo['language'],
+        '-o',
+        Path.joinpath(output_dir, f'{repo["project"]}-bom.json'),
+        repo['repo_dir']
+    ]
+    return subprocess.list2cmdline(cdxgen_cmd)
 
 
 def process_repo_data(repo_data, clone_dir):
@@ -362,7 +314,7 @@ def process_repo_data(repo_data, clone_dir):
     for r in repo_data:
         r['repo_dir'] = Path.joinpath(clone_dir, r['language'], r['project'])
         new_data.append(r)
-    return run_cdxgen(new_data)
+    return new_data
 
 
 def main():
@@ -370,10 +322,10 @@ def main():
     Runs the main function of the program.
     """
     args = build_args()
-    if args.cleanup:
-        cleanup(args.output_dir)
-    else:
-        generate(args)
+    # if args.cleanup:
+    #     cleanup(args.output_dir)
+    # else:
+    generate(args)
 
 
 if __name__ == '__main__':
