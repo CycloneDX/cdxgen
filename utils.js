@@ -261,7 +261,7 @@ export function getAllFilesWithIgnore(dirPath, pattern, ignoreList) {
       absolute: true,
       nocase: true,
       nodir: true,
-      dot: pattern.startsWith(".") ? true : false,
+      dot: pattern.startsWith("."),
       follow: false,
       ignore: ignoreList,
     });
