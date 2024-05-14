@@ -67,7 +67,8 @@ const args = yargs(hideBin(process.argv))
   })
   .option("type", {
     alias: "t",
-    description: "Project type",
+    description:
+      "Project type. Please refer to https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES for supported languages/platforms.",
   })
   .option("recurse", {
     alias: "r",

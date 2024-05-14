@@ -124,6 +124,9 @@ This feature is powered by osquery, which is [installed](https://github.com/cycl
 Invoke cdxgen with the below arguments to automatically submit the BOM to your organization's Dependency Track server.
 
 ```shell
+      --type                   Project type. Please refer to https://cyclonedx.g
+                               ithub.io/cdxgen/#/PROJECT_TYPES for supported lan
+                               guages/platforms.
       --server-url             Dependency track url. Eg: https://deptrack.cyclon
                                edx.io
       --api-key                Dependency track api key
