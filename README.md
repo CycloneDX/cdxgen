@@ -4,7 +4,7 @@
 
 # CycloneDX Generator
 
-![cdxgen logo](cdxgen.png)
+![cdxgen logo](./docs/_media/cdxgen.png)
 
 cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse. The tool supports CycloneDX specification versions from 1.4 - 1.6.
 
@@ -17,7 +17,7 @@ When used with plugins:
 
 Most SBOM tools are like simple barcode scanners. For easy applications, they can parse a few package manifests and create a list of components only based on these files without any deep inspection. Further, a typical application might have several repos, components, and libraries with complex build requirements. Traditional techniques to generate an SBOM per language or package manifest either do not work in enterprise environments or don't provide the confidence required for both compliance and automated analysis. So we built cdxgen - the universal polyglot SBOM generator that is user-friendly, precise, and comprehensive!
 
-<img src="./docs/why-cdxgen.jpg" alt="why cdxgen" width="256">
+<img src="./docs/_media/why-cdxgen.jpg" alt="why cdxgen" width="256">
 
 ## Supported languages and package format
 
@@ -336,44 +336,8 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 
 ## Environment variables
 
-| Variable                     | Description                                                                                                                          |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| CDXGEN_DEBUG_MODE            | Set to `debug` to enable debug messages                                                                                              |
-| GITHUB_TOKEN                 | Specify GitHub token to prevent traffic shaping while querying license and repo information                                          |
-| MVN_CMD                      | Set to override maven command                                                                                                        |
-| MVN_ARGS                     | Set to pass additional arguments such as profile or settings to maven                                                                |
-| MAVEN_HOME                   | Specify maven home                                                                                                                   |
-| MAVEN_CENTRAL_URL            | Specify URL of Maven Central for metadata fetching (e.g. when private repo is used)                                                  |
-| ANDROID_MAVEN_URL            | Specify URL of Android Maven Repository for metadata fetching (e.g. when private repo is used)                                       |
-| BAZEL_TARGET                 | Bazel target to build. Default :all (Eg: //java-maven)                                                                               |
-| BAZEL_STRIP_MAVEN_PREFIX     | Strip Maven group prefix (e.g. useful when private repo is used, defaults to `/maven2/`)                                             |
-| BAZEL_USE_ACTION_GRAPH       | SBOM for specific Bazel target, uses `bazel aquery 'outputs(".*.jar", deps(<BAZEL_TARGET>))'` (defaults to `false`)                  |
-| GRADLE_CACHE_DIR             | Specify gradle cache directory. Useful for class name resolving                                                                      |
-| GRADLE_MULTI_PROJECT_MODE    | Unused. Automatically handled                                                                                                        |
-| GRADLE_ARGS                  | Set to pass additional arguments such as profile or settings to gradle (all tasks). Eg: --configuration runtimeClassPath             |
-| GRADLE_ARGS_PROPERTIES       | Set to pass additional arguments only to the `gradle properties` task, used for collecting metadata about the project                |
-| GRADLE_ARGS_DEPENDENCIES     | Set to pass additional arguments only to the `gradle dependencies` task, used for listing actual project dependencies                |
-| GRADLE_HOME                  | Specify gradle home                                                                                                                  |
-| GRADLE_CMD                   | Set to override gradle command                                                                                                       |
-| GRADLE_DEPENDENCY_TASK       | By default cdxgen use the task "dependencies" to collect packages. Set to override the task name.                                    |
-| SBT_CACHE_DIR                | Specify sbt cache directory. Useful for class name resolving                                                                         |
-| FETCH_LICENSE                | Set this variable to `true` or `1` to fetch license information from the registry. npm and golang                                    |
-| SEARCH_MAVEN_ORG             | If maven metadata is missing in jar file, a search is performed on search.maven.org. Set to `false` or `0` to disable search.        |
-| USE_GOSUM                    | Set to `true` or `1` to generate BOMs for golang projects using go.sum as the dependency source of truth, instead of go.mod          |
-| CDXGEN_TIMEOUT_MS            | Default timeout for known execution involving maven, gradle or sbt                                                                   |
-| CDXGEN_SERVER_TIMEOUT_MS     | Default timeout in server mode                                                                                                       |
-| CDXGEN_MAX_BUFFER            | Max buffer for stdout and stderr. Defaults to 100MB                                                                                  |
-| CLJ_CMD                      | Set to override the clojure cli command                                                                                              |
-| LEIN_CMD                     | Set to override the leiningen command                                                                                                |
-| SBOM_SIGN_ALGORITHM          | Signature algorithm. Some valid values are RS256, RS384, RS512, PS256, PS384, PS512, ES256 etc                                       |
-| SBOM_SIGN_PRIVATE_KEY        | Private key to use for signing                                                                                                       |
-| SBOM_SIGN_PUBLIC_KEY         | Optional. Public key to include in the SBOM signature                                                                                |
-| CDX_MAVEN_PLUGIN             | CycloneDX Maven plugin to use. Default "org.cyclonedx:cyclonedx-maven-plugin:2.7.11"                                                 |
-| CDX_MAVEN_GOAL               | CycloneDX Maven plugin goal to use. Default makeAggregateBom. Other options: makeBom, makePackageBom                                 |
-| CDX_MAVEN_INCLUDE_TEST_SCOPE | Whether test scoped dependencies should be included from Maven projects, Default: true                                               |
-| ASTGEN_IGNORE_DIRS           | Comma separated list of directories to ignore while analyzing using babel. The environment variable is also used by atom and astgen. |
-| ASTGEN_IGNORE_FILE_PATTERN   | Ignore regex to use                                                                                                                  |
-| PYPI_URL                     | Override pypi url. Default: https://pypi.org/pypi/                                                                                   |
+See our [Environment Variables][cdxgen-env-vars] documentation
+                                                                      |
 
 ## Plugins
 
@@ -453,7 +417,7 @@ cdxgen can sign the generated BOM json file to increase authenticity and non-rep
 
 To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature`, which could be used for validation. [jwt.io](https://jwt.io) is a known site that could be used for such signature validation.
 
-![SBOM signing](sbom-sign.jpg)
+![SBOM signing](./docs/_media/sbom-sign.jpg)
 
 ### Verifying the signature
 
@@ -540,15 +504,16 @@ npm test
 
 If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels ["good first issue" or "help wanted"][cdxgen-labels-contribute].
 
-## Enterprise & Community Support
+## Support (Enterprise & Community)
 
-Enterprise support, including custom development and integration services, is available via [AppThreat Ltd][appthreat-homepage]. 
+See our [Support][cdxgen-web-support] documentation
 
-Free community support is also available via our [GitHub Discussions][cdxgen-discussions] or the [OWASP CycloneDX Slack][cyclonedx-homepage].
 
 [license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [cdxgen-discussions]: https://github.com/CycloneDX/cdxgen/discussions
+[cdxgen-env-vars]: https://cyclonedx.github.io/cdxgen/#/ENV
 [cdxgen-web-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+[cdxgen-web-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
