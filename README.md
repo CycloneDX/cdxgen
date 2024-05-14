@@ -240,7 +240,7 @@ Arguments can be passed either via the query string or as a JSON body. The follo
 
 | Argument       | Description                                                                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| type           | Project type. Please refer to [Supported Project Types][cdxgen-project-types].                                                              |
+| type           | Project type. Please refer to [Supported Project Types][cdxgen-web-project-types].                                                              |
 | multiProject   | [boolean]                                                                                                                                   |
 | requiredOnly   | Include only the packages with required scope on the SBOM. [boolean]                                                                        |
 | noBabel        | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                    |
