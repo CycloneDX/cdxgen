@@ -2,7 +2,7 @@
 - [CLI Usage](CLI.md)
 - [Server Usage](SERVER.md)
 - [Supported Project Types](PROJECT_TYPES.md)
-- [Configuration](ENV.md)
+- [Environment Variables](ENV.md)
 - [Advanced Usage](ADVANCED.md)
 - [Tutorials - Java](LESSON1.md)
 - [Tutorials - JavaScript](LESSON2.md)
