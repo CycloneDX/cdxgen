@@ -21,7 +21,7 @@ Most SBOM tools are like simple barcode scanners. For easy applications, they ca
 
 ## Supported languages and package format
 
-See our [Supported Project Types](https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES) documentation
+See our [Supported Project Types][cdxgen-project-types) documentation
 
 
 ### Automatic usage detection
@@ -87,7 +87,9 @@ $ cdxgen -h
 Options:
   -o, --output                 Output file. Default bom.json
                                                            [default: "bom.json"]
-  -t, --type                   Project type
+  -t, --type                   Project type. Please refer to https://cyclonedx.g
+                               ithub.io/cdxgen/#/PROJECT_TYPES for supported lan
+                               guages/platforms.
   -r, --recurse                Recurse mode suitable for mono-repos. Defaults to
                                 true. Pass --no-recurse to disable.
                                                        [boolean] [default: true]
@@ -238,7 +240,7 @@ Arguments can be passed either via the query string or as a JSON body. The follo
 
 | Argument       | Description                                                                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| type           | Project type                                                                                                                                |
+| type           | Project type. Please refer to [Supported Project Types][cdxgen-project-types].                                                              |
 | multiProject   | [boolean]                                                                                                                                   |
 | requiredOnly   | Include only the packages with required scope on the SBOM. [boolean]                                                                        |
 | noBabel        | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                    |
@@ -546,6 +548,7 @@ Free community support is also available via our [GitHub Discussions][cdxgen-dis
 
 [license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [cdxgen-discussions]: https://github.com/CycloneDX/cdxgen/discussions
+[cdxgen-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
