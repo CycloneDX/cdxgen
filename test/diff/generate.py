@@ -2,7 +2,6 @@ import csv
 import logging
 import pathlib
 import subprocess
-import os
 import argparse
 
 from pathlib import Path
@@ -17,7 +16,7 @@ def build_args():
     parser.add_argument(
         '--repo-csv',
         type=Path,
-        default='repos.csv',
+        default='test/diff/repos.csv',
         help='Path to sources.csv',
         dest='repo_csv'
     )
