@@ -95,7 +95,7 @@
     "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.0",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
-    "connect": "^3.7.0",
+    "express": "^4.19.2",
     "jsonata": "^2.0.4",
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"

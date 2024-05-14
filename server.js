@@ -6,7 +6,7 @@ import path from "node:path";
 import process from "node:process";
 import url from "node:url";
 import bodyParser from "body-parser";
-import connect from "connect";
+import express from "express";
 import { createBom, submitBom } from "./index.js";
 import { postProcess } from "./postgen.js";
 
@@ -16,7 +16,7 @@ import compression from "compression";
 const TIMEOUT_MS =
   Number.parseInt(process.env.CDXGEN_SERVER_TIMEOUT_MS) || 10 * 60 * 1000;
 
-const app = connect();
+const app = express();
 
 app.use(
   bodyParser.json({
