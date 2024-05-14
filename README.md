@@ -538,14 +538,14 @@ npm test
 
 If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels ["good first issue" or "help wanted"][cdxgen-labels-contribute].
 
-## Enterprise & Community Support
+## Support (Enterprise & Community)
 
-Enterprise support, including custom development and integration services, is available via [AppThreat Ltd][appthreat-homepage]. 
+See our [Support][cdxgen-web-support] documentation
 
-Free community support is also available via our [GitHub Discussions][cdxgen-discussions] or the [OWASP CycloneDX Slack][cyclonedx-homepage].
 
 [license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [cdxgen-discussions]: https://github.com/CycloneDX/cdxgen/discussions
+[cdxgen-web-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
