@@ -514,5 +514,4 @@ See our [Support][cdxgen-web-support] documentation
 
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
-[cyclonedx-cdxgen-slack]: https://cyclonedx.slack.com/archives/C04NFFE1962
 [cdxgen-labels-contribute]: https://github.com/CycloneDX/cdxgen/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22
