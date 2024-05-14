@@ -57,4 +57,4 @@ _Note: there are multiple project types / aliases that will produce the same out
 - [4] - See the section on plugins
 - [5] - Powered by osquery. See the section on plugins
 
-<img src="./cdxgen-tree.jpg" alt="cdxgen tree" width="256">
+<img src="_media/cdxgen-tree.jpg" alt="cdxgen tree" width="256">

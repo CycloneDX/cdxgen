@@ -27,6 +27,7 @@ import { x } from "tar";
 import { DEBUG_MODE, getAllFiles } from "./utils.js";
 
 export const isWin = _platform() === "win32";
+export const DOCKER_HUB_REGISTRY = "docker.io";
 
 let dockerConn = undefined;
 let isPodman = false;
@@ -114,8 +115,8 @@ export const getOnlyDirs = (srcpath, dirName) => {
 
 const getDefaultOptions = (forRegistry) => {
   let authTokenSet = false;
-  if (!forRegistry && process.env.DOCKER_SERVER_ADDRESS) {
-    forRegistry = process.env.DOCKER_SERVER_ADDRESS;
+  if (!forRegistry) {
+    forRegistry = process.env.DOCKER_SERVER_ADDRESS ?? DOCKER_HUB_REGISTRY;
   }
   if (forRegistry) {
     forRegistry = forRegistry.replace("http://", "").replace("https://", "");
@@ -517,7 +518,7 @@ export const getImage = async (fullImageName) => {
   let pullData = undefined;
   const { registry, repo, tag, digest } = parseImageName(fullImageName);
   const repoWithTag =
-    registry && registry !== "docker.io"
+    registry && registry !== DOCKER_HUB_REGISTRY
       ? fullImageName
       : `${repo}:${tag !== "" ? tag : ":latest"}`;
   // Fetch only the latest tag if none is specified
