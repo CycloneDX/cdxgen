@@ -4,7 +4,7 @@
 
 # CycloneDX Generator
 
-![cdxgen logo](cdxgen.png)
+![cdxgen logo](./docs/_media/cdxgen.png)
 
 cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse. The tool supports CycloneDX specification versions from 1.4 - 1.6.
 
@@ -17,7 +17,7 @@ When used with plugins:
 
 Most SBOM tools are like simple barcode scanners. For easy applications, they can parse a few package manifests and create a list of components only based on these files without any deep inspection. Further, a typical application might have several repos, components, and libraries with complex build requirements. Traditional techniques to generate an SBOM per language or package manifest either do not work in enterprise environments or don't provide the confidence required for both compliance and automated analysis. So we built cdxgen - the universal polyglot SBOM generator that is user-friendly, precise, and comprehensive!
 
-<img src="./docs/why-cdxgen.jpg" alt="why cdxgen" width="256">
+<img src="./docs/_media/why-cdxgen.jpg" alt="why cdxgen" width="256">
 
 ## Supported languages and package format
 
@@ -451,7 +451,7 @@ cdxgen can sign the generated BOM json file to increase authenticity and non-rep
 
 To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature`, which could be used for validation. [jwt.io](https://jwt.io) is a known site that could be used for such signature validation.
 
-![SBOM signing](sbom-sign.jpg)
+![SBOM signing](./docs/_media/sbom-sign.jpg)
 
 ### Verifying the signature
 
