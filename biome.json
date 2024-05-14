@@ -10,7 +10,6 @@
       "recommended": true,
       "complexity": {
         "noForEach": "off",
-        "noUselessTernary": "off",
         "useLiteralKeys": "off"
       },
       "performance": {
