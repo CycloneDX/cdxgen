@@ -21,7 +21,7 @@ Most SBOM tools are like simple barcode scanners. For easy applications, they ca
 
 ## Supported languages and package format
 
-See our [Supported Project Types][cdxgen-project-types) documentation
+See our [Supported Project Types][cdxgen-web-project-types] documentation
 
 
 ### Automatic usage detection
@@ -548,7 +548,7 @@ Free community support is also available via our [GitHub Discussions][cdxgen-dis
 
 [license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [cdxgen-discussions]: https://github.com/CycloneDX/cdxgen/discussions
-[cdxgen-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+[cdxgen-web-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
