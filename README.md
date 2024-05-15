@@ -2,11 +2,11 @@
 [![NPM][badge-npm]][npmjs-cdxgen]
 [![GitHub Releases][badge-github-releases]][github-releases]
 [![NPM Downloads][badge-npm-downloads]][npmjs-cdxgen] 
-[![GitHub License][badge-github-license]][cdxgen-license] 
+[![GitHub License][badge-github-license]][github-license] 
 [![GitHub Contributors][badge-github-contributors]][github-contributors]
 [![SWH][badge-swh]][swh-cdxgen]
 
-# CycloneDX Generator
+# CycloneDX Generator (cdxgen)
 
 ![cdxgen logo](./docs/_media/cdxgen.png)
 
@@ -23,16 +23,25 @@ Most SBOM tools are like simple barcode scanners. For easy applications, they ca
 
 <img src="./docs/_media/why-cdxgen.jpg" alt="why cdxgen" width="256">
 
-## Supported languages and package format
+## Documentation
 
-See our [Supported Project Types][cdxgen-web-project-types] documentation
+Please visit our [documentation site][docs-homepage] for detailed usage, tutorials and support documentation.
+
+Sections include:
+- [Getting Started][docs-homepage]
+- [CLI Usage][docs-cli]
+- [Server Usage][docs-server]
+- [Supported Project Types][docs-project-types]
+- [Environment Variables][docs-env-vars]
+- [Advanced Usage][docs-advanced-usage]
+- [Support (Enterprise & Community)][docs-support]
 
 
 ### Automatic usage detection
 
 For node.js projects, lock files are parsed initially, so the SBOM would include all dependencies, including dev ones. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically set their scope property to `required` in the resulting SBOM. You can turn off this analysis by passing the argument `--no-babel`. Scope property would then be set based on the `dev` attribute in the lock file.
 
-This attribute can be later used for various purposes. For example, [dep-scan](https://github.com/cyclonedx/dep-scan) uses this attribute to prioritize vulnerabilities. Unfortunately, tools such as dependency track, do not include this feature and might over-report the CVEs.
+This attribute can be later used for various purposes. For example, [dep-scan][depscan-github] uses this attribute to prioritize vulnerabilities. Unfortunately, tools such as dependency track, do not include this feature and might over-report the CVEs.
 
 With the argument `--required-only`, you can limit the SBOM only to include packages with the scope "required", commonly called production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
 
@@ -46,7 +55,7 @@ For go, `go mod why` command is used to identify required packages. For php, com
 npm install -g @cyclonedx/cdxgen
 ```
 
-If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:
+If you are a [Homebrew][homebrew-homepage] user, you can also install [cdxgen][homebrew-cdxgen] via:
 
 ```shell
 $ brew install cdxgen
@@ -244,7 +253,7 @@ Arguments can be passed either via the query string or as a JSON body. The follo
 
 | Argument       | Description                                                                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| type           | Project type. Please refer to [Supported Project Types][cdxgen-web-project-types].                                                              |
+| type           | Project type. Please refer to [Supported Project Types][docs-project-types].                                                                |
 | multiProject   | [boolean]                                                                                                                                   |
 | requiredOnly   | Include only the packages with required scope on the SBOM. [boolean]                                                                        |
 | noBabel        | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                    |
@@ -315,7 +324,7 @@ This would create a bom.json.map file with the jar - class name mapping. Refer t
 
 ## Resolving licenses
 
-cdxgen can automatically query public registries such as maven, npm, or nuget to resolve the package licenses. This is a time-consuming operation and is disabled by default. To enable, set the environment variable `FETCH_LICENSE` to `true`, as shown. Ensure that `GITHUB_TOKEN` is set or provided by [built-in GITHUB_TOKEN in GitHub Actions](https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api#primary-rate-limit-for-github_token-in-github-actions), otherwise rate limiting might prevent license resolving.
+cdxgen can automatically query public registries such as maven, npm, or nuget to resolve the package licenses. This is a time-consuming operation and is disabled by default. To enable, set the environment variable `FETCH_LICENSE` to `true`, as shown. Ensure that `GITHUB_TOKEN` is set or provided by [built-in GITHUB_TOKEN in GitHub Actions][github-rate-limit], otherwise rate limiting might prevent license resolving.
 
 ```bash
 export FETCH_LICENSE=true
@@ -337,11 +346,6 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - PHP (composer.lock)
 - Ruby (Gemfile.lock)
 - Rust (Cargo.lock)
-
-## Environment variables
-
-See our [Environment Variables][cdxgen-env-vars] documentation
-                                                                      |
 
 ## Plugins
 
@@ -376,7 +380,7 @@ cdxgen /tmp/slim.tar -o /tmp/bom.json -t docker
 
 ### Podman in rootless mode
 
-Setup podman in either [rootless](https://github.com/containers/podman/blob/master/docs/tutorials/rootless_tutorial.md) or [remote](https://github.com/containers/podman/blob/master/docs/tutorials/mac_win_client.md) mode
+Setup podman in either [rootless][podman-github-rootless] or [remote][podman-github-remote] mode
 
 Do not forget to start the podman socket required for API access on Linux.
 
@@ -419,7 +423,7 @@ cdxgen can sign the generated BOM json file to increase authenticity and non-rep
 - SBOM_SIGN_PRIVATE_KEY: Location to the RSA private key
 - SBOM_SIGN_PUBLIC_KEY: Optional. Location to the RSA public key
 
-To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature`, which could be used for validation. [jwt.io](https://jwt.io) is a known site that could be used for such signature validation.
+To generate test public/private key pairs, you can run cdxgen by passing the argument `--generate-key-and-sign`. The generated json file would have an attribute called `signature`, which could be used for validation. [jwt.io][jwt-homepage] is a known site that could be used for such signature validation.
 
 ![SBOM signing](./docs/_media/sbom-sign.jpg)
 
@@ -434,7 +438,7 @@ cdx-verify -i bom.json --public-key public.key
 
 ### Custom verification tool (Node.js example)
 
-There are many [libraries](https://jwt.io/#libraries-io) available to validate JSON Web Tokens. Below is a javascript example.
+There are many [libraries][jwt-libraries] available to validate JSON Web Tokens. Below is a javascript example.
 
 ```js
 # npm install jws
@@ -461,11 +465,11 @@ cdxgen can automatically detect names of services from YAML manifests such as do
 
 ## Conversion to SPDX format
 
-Use the [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) tool for advanced use cases such as conversion, diff and merging.
+Use the [CycloneDX CLI][cyclonedx-cli-github] tool for advanced use cases such as conversion, diff and merging.
 
 ## License
 
-Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for the full license.
+Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE][github-license] file for the full license.
 
 
 
@@ -506,11 +510,7 @@ npm run lint
 npm test
 ```
 
-If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels ["good first issue" or "help wanted"][cdxgen-labels-contribute].
-
-## Support (Enterprise & Community)
-
-See our [Support][cdxgen-web-support] documentation
+If you are completely new to contributing to open-source projects, then look for [issues][github-issues] with the [labels `good first issue` or `help wanted`][github-labels-contribute].
 
 
 <!-- LINK LABELS -->
@@ -525,19 +525,32 @@ See our [Support][cdxgen-web-support] documentation
 
 <!-- cdxgen github project -->
 [github-contributors]: https://github.com/CycloneDX/cdxgen/graphs/contributors
-[github-discussions]: https://github.com/CycloneDX/cdxgen/discussions
+[github-issues]: https://github.com/CycloneDX/cdxgen/issues
 [github-labels-contribute]: https://github.com/CycloneDX/cdxgen/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22
 [github-license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [github-releases]: https://github.com/CycloneDX/cdxgen/releases
 
 <!-- cdxgen documentation site -->
+[docs-homepage]: https://cyclonedx.github.io/cdxgen
+[docs-advanced-usage]: https://cyclonedx.github.io/cdxgen/#/ADVANCED
+[docs-cli]: https://cyclonedx.github.io/cdxgen/#/CLI
 [docs-env-vars]: https://cyclonedx.github.io/cdxgen/#/ENV
 [docs-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+[docs-server]: https://cyclonedx.github.io/cdxgen/#/SERVER
 [docs-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 
 <!-- web links-->
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
+[cyclonedx-cli-github]: https://github.com/CycloneDX/cyclonedx-cli
+[depscan-github]: https://github.com/cyclonedx/dep-scan
+[github-rate-limit]: https://docs.github.com/en/rest/overview/rate-limits-for-the-rest-api#primary-rate-limit-for-github_token-in-github-actions
+[homebrew-homepage]: https://brew.sh
+[homebrew-cdxgen]: https://formulae.brew.sh/formula/cdxgen
 [jsr-cdxgen]: https://jsr.io/@cyclonedx/cdxgen
+[jwt-homepage]: https://jwt.io
+[jwt-libraries]: https://jwt.io/libraries
 [npmjs-cdxgen]: https://www.npmjs.com/package/@cyclonedx/cdxgen
+[podman-github-rootless]: https://github.com/containers/podman/blob/master/docs/tutorials/rootless_tutorial.md
+[podman-github-remote]: https://github.com/containers/podman/blob/master/docs/tutorials/mac_win_client.md
 [swh-cdxgen]: https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CycloneDX/cdxgen
