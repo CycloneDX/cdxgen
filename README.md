@@ -30,6 +30,7 @@ Sections include:
 - [Supported Project Types][cdxgen-web-project-types]
 - [Environment Variables][cdxgen-web-env-vars]
 - [Advanced Usage][cdxgen-web-advanced-usage]
+- [Permissions][docs-permissions]
 - [Support (Enterprise & Community)][cdxgen-web-support]
 
 
@@ -489,10 +490,6 @@ const bomNSData = await createBom(filePath, options);
 const dbody = await submitBom(args, bomNSData.bomJson);
 ```
 
-## Node.js >= 20 permission model
-
-Refer to the [permissions document](./docs/PERMISSIONS.md)
-
 ## Contributing
 
 Follow the usual PR process, but before raising a PR, run the following commands.
@@ -523,3 +520,6 @@ If you are completely new to contributing to open-source projects, then look for
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
 [cdxgen-labels-contribute]: https://github.com/CycloneDX/cdxgen/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22
+
+
+[docs-permissions]: https://cyclonedx.github.io/cdxgen/#/PERMISSIONS
