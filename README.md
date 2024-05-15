@@ -19,9 +19,18 @@ Most SBOM tools are like simple barcode scanners. For easy applications, they ca
 
 <img src="./docs/_media/why-cdxgen.jpg" alt="why cdxgen" width="256">
 
-## Supported languages and package format
+## Documentation
 
-See our [Supported Project Types][cdxgen-web-project-types] documentation
+Please visit our [documentation site][cdxgen-web-home] for detailed usage, tutorials and support documentation.
+
+Sections include:
+- [Getting Started][cdxgen-web-home]
+- [CLI Usage][cdxgen-web-cli]
+- [Server Usage][cdxgen-web-server]
+- [Supported Project Types][cdxgen-web-project-types]
+- [Environment Variables][cdxgen-web-env-vars]
+- [Advanced Usage][cdxgen-web-advanced-usage]
+- [Support (Enterprise & Community)][cdxgen-web-support]
 
 
 ### Automatic usage detection
@@ -334,11 +343,6 @@ cdxgen can retain the dependency tree under the `dependencies` attribute for a s
 - Ruby (Gemfile.lock)
 - Rust (Cargo.lock)
 
-## Environment variables
-
-See our [Environment Variables][cdxgen-env-vars] documentation
-                                                                      |
-
 ## Plugins
 
 cdxgen could be extended with external binary plugins to support more SBOM use cases. These are now installed as an optional dependency.
@@ -504,15 +508,16 @@ npm test
 
 If you are completely new to contributing to open-source projects, then look for [issues](https://github.com/CycloneDX/cdxgen/issues) with the labels ["good first issue" or "help wanted"][cdxgen-labels-contribute].
 
-## Support (Enterprise & Community)
-
-See our [Support][cdxgen-web-support] documentation
-
 
 [license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [cdxgen-discussions]: https://github.com/CycloneDX/cdxgen/discussions
-[cdxgen-env-vars]: https://cyclonedx.github.io/cdxgen/#/ENV
+
+[cdxgen-web-home]: https://cyclonedx.github.io/cdxgen
+[cdxgen-web-advanced-usage]: https://cyclonedx.github.io/cdxgen/#/ADVANCED
+[cdxgen-web-cli]: https://cyclonedx.github.io/cdxgen/#/CLI
+[cdxgen-web-env-vars]: https://cyclonedx.github.io/cdxgen/#/ENV
 [cdxgen-web-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+[cdxgen-web-server]: https://cyclonedx.github.io/cdxgen/#/SERVER
 [cdxgen-web-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 
 [appthreat-homepage]: https://www.appthreat.com
