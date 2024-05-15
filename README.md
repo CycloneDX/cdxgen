@@ -2,7 +2,7 @@
 
 [![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CycloneDX/cdxgen)
 
-# CycloneDX Generator
+# CycloneDX Generator (cdxgen)
 
 ![cdxgen logo](./docs/_media/cdxgen.png)
 
