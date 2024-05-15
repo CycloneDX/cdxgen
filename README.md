@@ -1,6 +1,10 @@
-[![JSR](https://img.shields.io/jsr/v/%40cyclonedx/cdxgen)](https://jsr.io/@cyclonedx/cdxgen) [![NPM](https://img.shields.io/npm/v/%40cyclonedx%2Fcdxgen)](https://www.npmjs.com/package/@cyclonedx/cdxgen) [![GitHub Releases](https://img.shields.io/github/v/release/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/releases) [![NPM Downloads](https://img.shields.io/npm/dy/%40cyclonedx%2Fcdxgen)](<(https://www.npmjs.com/package/@cyclonedx/cdxgen)>) [![GitHub License](https://img.shields.io/github/license/cyclonedx/cdxgen)](./LICENSE.md) [![GitHub Contributors](https://img.shields.io/github/contributors/cyclonedx/cdxgen)](https://github.com/CycloneDX/cdxgen/graphs/contributors)
-
-[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CycloneDX/cdxgen)
+[![JSR][badge-jsr]][jsr-cdxgen]
+[![NPM][badge-npm]][npmjs-cdxgen]
+[![GitHub Releases][badge-github-releases]][github-releases]
+[![NPM Downloads][badge-npm-downloads]][npmjs-cdxgen] 
+[![GitHub License][badge-github-license]][cdxgen-license] 
+[![GitHub Contributors][badge-github-contributors]][github-contributors]
+[![SWH][badge-swh]][swh-cdxgen]
 
 # CycloneDX Generator
 
@@ -509,12 +513,31 @@ If you are completely new to contributing to open-source projects, then look for
 See our [Support][cdxgen-web-support] documentation
 
 
-[license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
-[cdxgen-discussions]: https://github.com/CycloneDX/cdxgen/discussions
-[cdxgen-env-vars]: https://cyclonedx.github.io/cdxgen/#/ENV
-[cdxgen-web-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
-[cdxgen-web-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+<!-- LINK LABELS -->
+<!-- Badges -->
+[badge-github-contributors]: https://img.shields.io/github/contributors/cyclonedx/cdxgen
+[badge-github-license]: https://img.shields.io/github/license/cyclonedx/cdxgen
+[badge-github-releases]: https://img.shields.io/github/v/release/cyclonedx/cdxgen
+[badge-jsr]: https://img.shields.io/jsr/v/%40cyclonedx/cdxgen
+[badge-npm]: https://img.shields.io/npm/v/%40cyclonedx%2Fcdxgen
+[badge-npm-downloads]: https://img.shields.io/npm/dy/%40cyclonedx%2Fcdxgen
+[badge-swh]: https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/
 
+<!-- cdxgen github project -->
+[github-contributors]: https://github.com/CycloneDX/cdxgen/graphs/contributors
+[github-discussions]: https://github.com/CycloneDX/cdxgen/discussions
+[github-labels-contribute]: https://github.com/CycloneDX/cdxgen/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22
+[github-license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
+[github-releases]: https://github.com/CycloneDX/cdxgen/releases
+
+<!-- cdxgen documentation site -->
+[docs-env-vars]: https://cyclonedx.github.io/cdxgen/#/ENV
+[docs-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+[docs-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+
+<!-- web links-->
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
-[cdxgen-labels-contribute]: https://github.com/CycloneDX/cdxgen/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22
+[jsr-cdxgen]: https://jsr.io/@cyclonedx/cdxgen
+[npmjs-cdxgen]: https://www.npmjs.com/package/@cyclonedx/cdxgen
+[swh-cdxgen]: https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CycloneDX/cdxgen
