@@ -34,6 +34,7 @@ Sections include:
 - [Supported Project Types][docs-project-types]
 - [Environment Variables][docs-env-vars]
 - [Advanced Usage][docs-advanced-usage]
+- [Permissions][docs-permissions]
 - [Support (Enterprise & Community)][docs-support]
 
 
@@ -400,7 +401,7 @@ obom
 # cdxgen -t os
 ```
 
-This feature is powered by osquery, which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps, and extensions as possible using the [default queries](queries.json). The process would take several minutes and result in an SBOM file with thousands of components of various types, such as operating-system, device-drivers, files, and data.
+This feature is powered by osquery, which is [installed](https://github.com/cyclonedx/cdxgen-plugins-bin/blob/main/build.sh#L8) along with the binary plugins. cdxgen would opportunistically try to detect as many components, apps, and extensions as possible using the [default queries](data/queries.json). The process would take several minutes and result in an SBOM file with thousands of components of various types, such as operating-system, device-drivers, files, and data.
 
 ## Generate Cryptography Bill of Materials (CBOM)
 
@@ -493,10 +494,6 @@ const bomNSData = await createBom(filePath, options);
 const dbody = await submitBom(args, bomNSData.bomJson);
 ```
 
-## Node.js >= 20 permission model
-
-Refer to the [permissions document](./docs/PERMISSIONS.md)
-
 ## Contributing
 
 Follow the usual PR process, but before raising a PR, run the following commands.
@@ -535,6 +532,7 @@ If you are completely new to contributing to open-source projects, then look for
 [docs-advanced-usage]: https://cyclonedx.github.io/cdxgen/#/ADVANCED
 [docs-cli]: https://cyclonedx.github.io/cdxgen/#/CLI
 [docs-env-vars]: https://cyclonedx.github.io/cdxgen/#/ENV
+[docs-permissions]: https://cyclonedx.github.io/cdxgen/#/PERMISSIONS
 [docs-project-types]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 [docs-server]: https://cyclonedx.github.io/cdxgen/#/SERVER
 [docs-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
