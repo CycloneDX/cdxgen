@@ -26,6 +26,14 @@
       "name": "Steve Springett",
       "email": "steve.springett@owasp.org",
       "url": "https://about.me/stevespringett"
+    },
+    {
+      "name": "Prabhu S",
+      "url": "https://github.com/prabhu"
+    },
+    {
+      "name": "Adam Setch",
+      "url": "https://github.com/setchy"
     }
   ],
   "type": "module",
