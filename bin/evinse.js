@@ -136,7 +136,8 @@ const args = yargs(hideBin(process.argv))
   .config(config)
   .scriptName("evinse")
   .version()
-  .help("h").argv;
+  .help("h")
+  .wrap(yargs().terminalWidth()).argv;
 
 const evinseArt = `
 ███████╗██╗   ██╗██╗███╗   ██╗███████╗███████╗
