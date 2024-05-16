@@ -496,7 +496,10 @@ const dbody = await submitBom(args, bomNSData.bomJson);
 
 ## Contributing
 
-Follow the usual PR process, but before raising a PR, run the following commands.
+Please check out our [contribute to CycloneDX/cdxgen documentation][github-contribute] if you are interested in helping.
+
+
+Before raising a PR, please run the following commands.
 
 ```bash
 # Generate types using jsdoc syntax
@@ -506,8 +509,6 @@ npm run lint
 # Run jest tests
 npm test
 ```
-
-If you are completely new to contributing to open-source projects, then look for [issues][github-issues] with the [labels `good first issue` or `help wanted`][github-labels-contribute].
 
 
 <!-- LINK LABELS -->
@@ -521,9 +522,9 @@ If you are completely new to contributing to open-source projects, then look for
 [badge-swh]: https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/
 
 <!-- cdxgen github project -->
+[github-contribute]: https://github.com/CycloneDX/cdxgen/contribute
 [github-contributors]: https://github.com/CycloneDX/cdxgen/graphs/contributors
 [github-issues]: https://github.com/CycloneDX/cdxgen/issues
-[github-labels-contribute]: https://github.com/CycloneDX/cdxgen/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22
 [github-license]: https://github.com/cyclonedx/cdxgen/blob/master/LICENSE
 [github-releases]: https://github.com/CycloneDX/cdxgen/releases
 
