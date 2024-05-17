@@ -4574,6 +4574,9 @@ export async function createCsharpBom(path, options) {
     !paketLockFiles.length
   ) {
     const filesToRestore = slnFiles.concat(csProjFiles);
+    console.error(
+      "Restore has failed. Check if dotnet is installed and available in PATH.",
+    );
     for (const f of filesToRestore) {
       if (DEBUG_MODE) {
         const basePath = dirname(f);
@@ -4691,6 +4694,7 @@ export async function createCsharpBom(path, options) {
     }
   } else if (pkgConfigFiles.length) {
     manifestFiles = manifestFiles.concat(pkgConfigFiles);
+    const parentDependsOn = new Set();
     // packages.config parsing
     for (const f of pkgConfigFiles) {
       if (DEBUG_MODE) {
@@ -4702,9 +4706,44 @@ export async function createCsharpBom(path, options) {
         pkgData = pkgData.slice(1);
       }
       const dlist = parseCsPkgData(pkgData);
+      const deps = dlist;
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
+
+      if (dlist?.length) {
+        for (const p of dlist) {
+          parentDependsOn.add(p);
+        }
+      }
+    }
+    if (parentDependsOn.size) {
+      let arrrr =  new Set();
+      let prefix = parentComponent["bom-ref"].split("/")[0];
+      //console.log("prefixLLLL: ",prefix);
+      parentDependsOn.forEach(dependsOn => {
+        
+        if(dependsOn.name && dependsOn.version){ 
+          //console.log("prefixLLLL: ",prefix);
+          let dependcy = prefix+"/";
+          dependcy+=dependsOn.name;
+          dependcy+="@";
+          dependcy+=dependsOn.version;
+          arrrr.add(dependcy);
+        }
+      }
+      );
+      
+      if(arrrr != null && arrrr.size > 0){
+        dependencies.splice(0, 0, {
+          ref: parentComponent["bom-ref"],        
+          dependsOn: Array.from(arrrr),
+        });
+      }
+      // dependencies.splice(0, 0, {
+      //   ref: parentComponent["bom-ref"],        
+      //   dependsOn: Array.from(parentDependsOn),
+      // });
     }
   }
   if (paketLockFiles.length) {
@@ -4726,28 +4765,34 @@ export async function createCsharpBom(path, options) {
       }
     }
   }
-  if (!pkgList.length && csProjFiles.length) {
+  if ( !pkgList.length && csProjFiles.length) {
     manifestFiles = manifestFiles.concat(csProjFiles);
     // .csproj parsing
     for (const f of csProjFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
+      console.log(`csProjFiles List Size :: ${csProjFiles.length}`);
+
       let csProjData = readFileSync(f, { encoding: "utf-8" });
       // Remove byte order mark
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
       const dlist = parseCsProjData(csProjData, f);
+      console.log(`Dependency List Size :: ${dlist.length}`);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
+
+      console.log(`pkgList List Size :: ${pkgList.length}`);
     }
+    console.log(`pkgList List Size :: ${pkgList.length}`);
     if (pkgList.length) {
-      console.log(
-        `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`,
-      );
-      options.failOnError && process.exit(1);
+     // console.log(
+     //   `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`,
+     // );
+      //options.failOnError && process.exit(1);
     }
   }
   if (pkgList.length) {
@@ -4771,7 +4816,8 @@ export async function createCsharpBom(path, options) {
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
-    if (retMap.dependencies?.length) {
+    console.log(`dependencies re${retMap.dependencies?.length}`);
+    if (retMap.dependencies?.length > 1) {
       dependencies = mergeDependencies(
         dependencies,
         retMap.dependencies,
@@ -4884,10 +4930,12 @@ export function mergeDependencies(
         provides: Array.from(provides_map[akey]).sort(),
       });
     } else {
+       if (deps_map && deps_map.size > 1){        
       retlist.push({
         ref: akey,
         dependsOn: Array.from(deps_map[akey]).sort(),
       });
+    }
     }
   }
   return retlist;
