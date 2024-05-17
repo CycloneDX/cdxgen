@@ -17,7 +17,7 @@ def build_args():
         '--repo-csv',
         type=Path,
         default='test/diff/repos.csv',
-        help='Path to sources.csv',
+        help='Path to sources repo csv',
         dest='repo_csv'
     )
     parser.add_argument(
@@ -62,13 +62,6 @@ def build_args():
         default=False,
         help='Skip building the samples and just run cdxgen. Should be used with --skip-clone'
     )
-    # parser.add_argument(
-    #     '--cleanup',
-    #     action='store_true',
-    #     dest='cleanup',
-    #     default=False,
-    #     help='Remove slices that are <= 1kb or > 100MB.'
-    # )
     return parser.parse_args()
 
 
@@ -321,9 +314,6 @@ def main():
     Runs the main function of the program.
     """
     args = build_args()
-    # if args.cleanup:
-    #     cleanup(args.output_dir)
-    # else:
     generate(args)
 
 
