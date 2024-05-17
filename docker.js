@@ -740,7 +740,7 @@ export const extractTar = async (fullImageName, dir) => {
       );
       console.log(err);
     } else if (
-      !["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO", "TAR_ENTRY_INVALID", "EACCES"].includes(err.code)
+      !["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO", "TAR_ENTRY_INVALID", "TAR_ENTRY_ERROR", "TAR_ENTRY_UNSUPPORTED", "TAR_ABORT", "EACCES"].includes(err.code)
     ) {
       console.log(
         `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`,
