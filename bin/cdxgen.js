@@ -281,7 +281,7 @@ const args = yargs(hideBin(process.argv))
   .alias("v", "version")
   .help("h")
   .alias("h", "help")
-  .wrap(yargs().terminalWidth()).argv;
+  .wrap(Math.min(120, yargs().terminalWidth())).argv;
 
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(

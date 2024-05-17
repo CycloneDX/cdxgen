@@ -29,7 +29,7 @@ const args = yargs(hideBin(process.argv))
   .scriptName("cdx-verify")
   .version()
   .help("h")
-  .wrap(yargs().terminalWidth()).argv;
+  .wrap(Math.min(120, yargs().terminalWidth())).argv;
 
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
