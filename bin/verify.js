@@ -28,8 +28,7 @@ const args = yargs(hideBin(process.argv))
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
   .scriptName("cdx-verify")
   .version()
-  .help("h")
-  .argv;
+  .help("h").argv;
 
 if (args.version) {
   const packageJsonAsString = fs.readFileSync(
