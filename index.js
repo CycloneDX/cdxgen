@@ -4332,7 +4332,7 @@ export function createPHPBom(path, options) {
         cwd: basePath,
         encoding: "utf-8",
       });
-      if (result.status !== 0 || result.error) {
+      if (result.status !== 0 || result.error) {        
         console.error("Error running composer:");
         console.log(result.error, result.stderr);
         options.failOnError && process.exit(1);
