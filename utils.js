@@ -4635,11 +4635,19 @@ export async function getCratesMetadata(pkgList) {
       const res = await cdxgenAgent.get(CRATES_URL + p.name, {
         responseType: "json",
       });
+      let versionToUse = res?.body?.versions[0];
+      if (p.version) {
+        for (const aversion of res.body.versions) {
+          if (aversion.num === p.version) {
+            versionToUse = aversion;
+            break;
+          }
+        }
+      }
       const body = res.body.crate;
       p.description = body.description;
-      if (res.body.versions) {
-        const licenseString = res.body.versions[0].license;
-        p.license = licenseString.split("/");
+      if (versionToUse?.license) {
+        p.license = versionToUse.license;
       }
       if (body.repository) {
         p.repository = { url: body.repository };
@@ -4650,6 +4658,36 @@ export async function getCratesMetadata(pkgList) {
       // Use the latest version if none specified
       if (!p.version) {
         p.version = body.newest_version;
+      }
+      if (!p._integrity && versionToUse.checksum) {
+        p._integrity = `sha384-${versionToUse.checksum}`;
+      }
+      if (!p.properties) {
+        p.properties = [];
+      }
+      p.properties.push({
+        name: "cdx:cargo:crate_id",
+        value: `${versionToUse.id}`,
+      });
+      if (versionToUse.rust_version) {
+        p.properties.push({
+          name: "cdx:cargo:rust_version",
+          value: `${versionToUse.rust_version}`,
+        });
+      }
+      p.properties.push({
+        name: "cdx:cargo:latest_version",
+        value: body.newest_version,
+      });
+      p.properties.push({
+        name: "cdx:cargo:download_path",
+        value: `https://crates.io${versionToUse.dl_path}`,
+      });
+      if (versionToUse.features) {
+        p.properties.push({
+          name: "cdx:cargo:features",
+          value: JSON.stringify(versionToUse.features),
+        });
       }
       cdepList.push(p);
     } catch (err) {
