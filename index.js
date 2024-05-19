@@ -29,6 +29,7 @@ import {
   listFiles,
 } from "./envcontext.js";
 import {
+  CARGO_CMD,
   CLJ_CMD,
   DEBUG_MODE,
   FETCH_LICENSE,
@@ -3223,12 +3224,53 @@ export async function createRustBom(path, options) {
   // inaccurate.
 
   const cargoMode = cargoFiles.length;
-  const cargoLockMode = cargoLockFiles.length;
+  let cargoLockMode = cargoLockFiles.length;
   if (cargoMode) {
     for (const f of cargoFiles) {
+      // If there are no cargo.lock files, we can attempt a cargo install when
+      //    options.deep is true or options.lifecycle == build or post-build with installDeps
+      // Why the need for installDeps? It currently defaults to true, so let's obey if someone wants no installs
+      if (
+        !existsSync(f.replace(".toml", ".lock")) &&
+        (options.deep === true ||
+          (options.installDeps &&
+            ["build", "post-build"].includes(options.lifecycle)))
+      ) {
+        const basePath = dirname(f);
+        const cargoArgs = ["generate-lockfile", "--manifest-path", f];
+        if (!DEBUG_MODE) {
+          cargoArgs.push("--quiet");
+        }
+        if (DEBUG_MODE) {
+          console.log(
+            "Executing ",
+            CARGO_CMD,
+            cargoArgs.join(" "),
+            "in",
+            basePath,
+          );
+        }
+        const cargoInstallResult = spawnSync(CARGO_CMD, cargoArgs, {
+          cwd: basePath,
+          encoding: "utf-8",
+          shell: isWin,
+        });
+        if (cargoInstallResult.status !== 0 || cargoInstallResult.error) {
+          console.error("Error running cargo install");
+          console.log(cargoInstallResult.error, cargoInstallResult.stderr);
+          options.failOnError && process.exit(1);
+        }
+      }
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
+      // Get the new lock files
+      cargoLockFiles = getAllFiles(
+        path,
+        `${options.multiProject ? "**/" : ""}Cargo.lock`,
+        options,
+      );
+      cargoLockMode = cargoLockFiles.length;
       const dlist = await parseCargoTomlData(f, cargoLockMode);
       if (dlist?.length) {
         if (!cargoLockMode) {
@@ -3250,12 +3292,6 @@ export async function createRustBom(path, options) {
       }
     }
   }
-  // Get the new lock files
-  cargoLockFiles = getAllFiles(
-    path,
-    `${options.multiProject ? "**/" : ""}Cargo.lock`,
-    options,
-  );
   let dependencyTree = [];
   if (cargoLockFiles.length) {
     for (const f of cargoLockFiles) {

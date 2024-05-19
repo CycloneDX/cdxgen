@@ -4630,7 +4630,7 @@ export async function getCratesMetadata(pkgList) {
   for (const p of pkgList) {
     try {
       if (DEBUG_MODE) {
-        console.log(`Querying crates.io for ${p.name}`);
+        console.log(`Querying crates.io for ${p.name}@${p.version}`);
       }
       const res = await cdxgenAgent.get(CRATES_URL + p.name, {
         responseType: "json",
@@ -4856,7 +4856,7 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
       packageMode = false;
     }
 
-    // Properly parsing project with workspeces is currently unsupported. Some
+    // Properly parsing project with workspaces is currently unsupported. Some
     // projects may have a top-level Cargo.toml file containing only
     // workspace definitions and no package name. That will make the parent
     // component unreliable.
