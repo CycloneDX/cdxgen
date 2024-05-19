@@ -52,21 +52,21 @@ jobs:
         include:
           - os: windows
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease --allow-write --allow-net --output cdxgenx.exe bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,osRelease,homedir --allow-write --allow-net --output cdxgenx.exe bin/cdxgen.js
               .\cdxgenx.exe --help
               (Get-FileHash .\cdxgenx.exe).hash | Out-File -FilePath .\cdxgenx.exe.sha256
             artifact: cdxgenx.exe
           - os: macos
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target x86_64-apple-darwin --output cdxgenx-darwin-amd64 bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --target x86_64-apple-darwin --output cdxgenx-darwin-amd64 bin/cdxgen.js
               ./cdxgenx-darwin-amd64 --help
               shasum -a 256 cdxgenx-darwin-amd64 > cdxgenx-darwin-amd64.sha256
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --target aarch64-apple-darwin --output cdxgenx-darwin-arm64 bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --target aarch64-apple-darwin --output cdxgenx-darwin-arm64 bin/cdxgen.js
               shasum -a 256 cdxgenx-darwin-arm64 > cdxgenx-darwin-arm64.sha256
             artifact: cdxgenx-darwin-amd64
           - os: ubuntu
             build: |
-              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net --output cdxgenx bin/cdxgen.js
+              deno compile --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net --output cdxgenx bin/cdxgen.js
               shasum -a 256 cdxgenx > cdxgenx.sha256
               chmod + cdxgenx
               ./cdxgenx --help

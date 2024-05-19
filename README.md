@@ -1,8 +1,8 @@
 [![JSR][badge-jsr]][jsr-cdxgen]
 [![NPM][badge-npm]][npmjs-cdxgen]
 [![GitHub Releases][badge-github-releases]][github-releases]
-[![NPM Downloads][badge-npm-downloads]][npmjs-cdxgen] 
-[![GitHub License][badge-github-license]][github-license] 
+[![NPM Downloads][badge-npm-downloads]][npmjs-cdxgen]
+[![GitHub License][badge-github-license]][github-license]
 [![GitHub Contributors][badge-github-contributors]][github-contributors]
 [![SWH][badge-swh]][swh-cdxgen]
 
@@ -65,7 +65,7 @@ $ brew install cdxgen
 Deno and bun runtime can be used with limited support.
 
 ```shell
-deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen"
+deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen"
 ```
 
 You can also use the cdxgen container image with node, deno, or bun runtime versions.
