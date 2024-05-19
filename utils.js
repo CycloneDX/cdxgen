@@ -3901,7 +3901,7 @@ export async function parseGoListDep(rawOutput, gosumMap) {
             version,
             gosumHash,
           );
-          // This is mis-using the scope attribute to represent direct vs indirect
+          // This is misusing the scope attribute to represent direct vs indirect
           if (verArr[2] === "false") {
             component.scope = "required";
           } else if (verArr[2] === "true") {
