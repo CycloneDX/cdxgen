@@ -2,12 +2,9 @@ name: Test BOM Snapshots
 
 on:
   workflow_dispatch:
-    inputs:
-      debug-cmds:
-        description: Don't execute commands, just print and upload shell files
-        required: false
-        type: boolean
-        default: false
+  pull_request:
+    branches:
+      - main
 
 
 concurrency:
@@ -20,12 +17,6 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-
-      - name: Echo inputs
-        run: |
-          echo "debug-cmds: ${{ inputs.debug-cmds }}"
-          echo "github.actor: ${{ github.actor }}"
-          echo "FILTER: ${{ env.FILTER }}"
 
       - uses: actions/checkout@v4
 
@@ -45,6 +36,7 @@ jobs:
            npm install -g "$cdxgen_version"
            python -m pip install --upgrade pip
            python -m pip install pytest
+           git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/samples
            git clone https://github.com/appthreat/custom-json-diff.git /home/runner/work/custom-json-diff
            cd /home/runner/work/custom-json-diff
            python -m pip install .
@@ -63,6 +55,7 @@ jobs:
         env:
           SDKMAN_DIR: /home/runner/.sdkman
           CDXGEN_DEBUG_MODE: debug
+          CDXGEN_LOG: /home/runner/work/cdxgen-samples/generate.log
         run: |
           mkdir /home/runner/work/cdxgen-samples
           python test/diff/generate.py
@@ -82,7 +75,20 @@ jobs:
           path: |
             /home/runner/work/cdxgen-samples
 
-      - name: Run python tests
+      - name: Test BOMs
         run: |
-          git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/samples
-          python -m pytest test/diff/diff_tests.py
+          python test/diff/diff_tests.py
+          if test -f /home/runner/work/cdxgen-samples/diffs.json; then
+            echo "status=FAILED" >> "$GITHUB_ENV"
+          fi
+
+      - name: Upload diff
+        if: ${{ env.status == 'FAILED' }}
+        uses: actions/upload-artifact@v4
+        with:
+            name: diff
+            path: /home/runner/work/cdxgen-samples/diffs.json
+
+      - name: Exit with error
+        if: ${{ env.status == 'FAILED' }}
+        run: exit 1
