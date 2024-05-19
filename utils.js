@@ -4858,6 +4858,7 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
     // projects may have a top-level Cargo.toml file containing only
     // workspace definitions and no package name. That will make the parent
     // component unreliable.
+    // See: https://doc.rust-lang.org/cargo/reference/workspaces.html#virtual-workspace
     if (l.startsWith("[workspace]") && DEBUG_MODE) {
       console.log(
         `Found [workspace] section in ${cargoTomlFile}. Workspaces are currently not fully supported. Verify that the parent component is correct.`,
