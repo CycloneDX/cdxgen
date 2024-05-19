@@ -818,6 +818,7 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
           name: "ResolvedUrl",
           value: node.resolved,
         });
+        pkg.distribution = { url: node.resolved };
       }
       if (node.location) {
         pkg.properties.push({

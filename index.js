@@ -714,6 +714,12 @@ function addExternalReferences(opkg) {
           url: pkg.repository.url,
         });
       }
+      if (pkg.distribution?.url) {
+        externalReferences.push({
+          type: "distribution",
+          url: pkg.distribution.url,
+        });
+      }
     }
   }
   return externalReferences;
@@ -1465,9 +1471,20 @@ export async function createJavaBom(path, options) {
   const allProjects = [];
   const allProjectsAddedPurls = [];
   const rootDependsOn = [];
+  // Determine the root path for gradle
+  // Fixes gradle invocation for microservices-demo
+  let gradleRootPath = path;
+  if (
+    !existsSync(join(path, "settings.gradle")) &&
+    !existsSync(join(path, "settings.gradle.kts")) &&
+    !existsSync(join(path, "build.gradle")) &&
+    !existsSync(join(path, "build.gradle.kts"))
+  ) {
+    gradleRootPath = dirname(gradleFiles[0]);
+  }
   // Execute gradle properties
   if (gradleFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
-    let retMap = executeGradleProperties(path, null, null);
+    let retMap = executeGradleProperties(gradleRootPath, null, null);
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
     if (rootProject) {
@@ -1491,7 +1508,7 @@ export async function createJavaBom(path, options) {
     if (allProjectsStr?.length) {
       if (process.env.GRADLE_MULTI_THREADED) {
         const parallelPropTaskOut = executeParallelGradleProperties(
-          path,
+          gradleRootPath,
           null,
           allProjectsStr,
         );
@@ -1532,7 +1549,7 @@ export async function createJavaBom(path, options) {
         }
       } else {
         for (const spstr of allProjectsStr) {
-          retMap = executeGradleProperties(path, null, spstr);
+          retMap = executeGradleProperties(gradleRootPath, null, spstr);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");
@@ -1582,7 +1599,7 @@ export async function createJavaBom(path, options) {
     options.installDeps &&
     !["scala", "sbt"].includes(options.projectType)
   ) {
-    const gradleCmd = getGradleCommand(path, null);
+    const gradleCmd = getGradleCommand(gradleRootPath, null);
     const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
     allProjects.push(parentComponent);
     let depTaskWithArgs = ["dependencies"];
@@ -1613,9 +1630,15 @@ export async function createJavaBom(path, options) {
         }
       }
       gradleDepArgs.push("--parallel"); //flag to enable multi-threading
-      console.log("Executing", gradleCmd, gradleDepArgs.join(" "), "in", path);
+      console.log(
+        "Executing",
+        gradleCmd,
+        gradleDepArgs.join(" "),
+        "in",
+        gradleRootPath,
+      );
       const sresult = spawnSync(gradleCmd, gradleDepArgs, {
-        cwd: path,
+        cwd: gradleRootPath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
         maxBuffer: MAX_BUFFER,
@@ -1682,10 +1705,10 @@ export async function createJavaBom(path, options) {
           gradleCmd,
           gradleSubProjectDepArgs.join(" "),
           "in",
-          path,
+          gradleRootPath,
         );
         const sresult = spawnSync(gradleCmd, gradleSubProjectDepArgs, {
-          cwd: path,
+          cwd: gradleRootPath,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
           maxBuffer: MAX_BUFFER,
@@ -1757,7 +1780,7 @@ export async function createJavaBom(path, options) {
     }
     pkgList = await getMvnMetadata(pkgList, jarNSMapping);
     return buildBomNSData(options, pkgList, "maven", {
-      src: path,
+      src: gradleRootPath,
       filename: gradleFiles.join(", "),
       nsMapping: jarNSMapping,
       dependencies,
@@ -4992,15 +5015,46 @@ export function mergeDependencies(
   return retlist;
 }
 
+/**
+ * Trim duplicate components by retaining all the properties
+ *
+ * @param {Array} components Components
+ *
+ * @returns {Array} Filtered components
+ */
 export function trimComponents(components) {
   const keyCache = {};
   const filteredComponents = [];
   for (const comp of components) {
     const key = comp.purl || comp["bom-ref"] || comp.name + comp.version;
     if (!keyCache[key]) {
-      keyCache[key] = true;
-      filteredComponents.push(comp);
+      keyCache[key] = comp;
+    } else {
+      const existingComponent = keyCache[key];
+      // We need to retain any properties that differ
+      const compProps = existingComponent.properties || [];
+      const compPropsMap = {};
+      for (const aprop of compProps) {
+        compPropsMap[aprop.name] = aprop.value;
+      }
+      if (comp.properties) {
+        for (const newprop of comp.properties) {
+          if (
+            !compPropsMap[newprop.name] ||
+            (newprop.value && compPropsMap[newprop.name] !== newprop.value)
+          ) {
+            compProps.push(newprop);
+          }
+        }
+      }
+      if (compProps.length) {
+        existingComponent.properties = compProps;
+        keyCache[key] = existingComponent;
+      }
     }
+  }
+  for (const akey of Object.keys(keyCache)) {
+    filteredComponents.push(keyCache[akey]);
   }
   return filteredComponents;
 }
