@@ -2994,10 +2994,8 @@ export async function createGoBom(path, options) {
             maxBuffer: MAX_BUFFER,
           },
         );
-        if (DEBUG_MODE) {
-          console.log("Executing go mod graph in", basePath);
-        }
         if (result.status !== 0 || result.error) {
+          console.log("go list -deps command has failed.");
           shouldManuallyParse = true;
           if (DEBUG_MODE && result.stdout) {
             console.log(result.stdout);
@@ -3022,6 +3020,9 @@ export async function createGoBom(path, options) {
             parentComponent = retMap.parentComponent;
             parentComponent.type = "application";
           }
+          if (DEBUG_MODE) {
+            console.log("Executing go mod graph in", basePath);
+          }
           // Next we use the go mod graph command to construct the dependency tree
           result = spawnSync("go", ["mod", "graph"], {
             cwd: basePath,
@@ -3031,8 +3032,14 @@ export async function createGoBom(path, options) {
           });
           // Check if got a mod graph successfully
           if (result.status !== 0 || result.error) {
+            console.log("go mod graph command has failed.");
             if (DEBUG_MODE && result.stdout) {
               console.log(result.stdout);
+              if (result?.stdout.includes("unrecognized import path")) {
+                console.log(
+                  "go couldn't download all the modules, including any private modules. Dependency tree would be missing.",
+                );
+              }
             }
             if (DEBUG_MODE && result.stderr) {
               console.log(result.stderr);
@@ -3062,8 +3069,14 @@ export async function createGoBom(path, options) {
           }
         } else {
           shouldManuallyParse = true;
-          console.error(
-            "go unexpectedly didn't return any output. Check if the correct version of golang is installed.",
+          console.log(
+            "1. Check if the correct version of golang is installed. Try building the application using go build or make command to troubleshoot.",
+          );
+          console.log(
+            "2. If the application uses private go modules, ensure the environment variable GOPRIVATE is set with the comma-separated repo names.\nEnsure $HOME/.netrc file contains a valid username and password for the private repos.",
+          );
+          console.log(
+            "3. Alternatively, consider generating a post-build SBOM from the built binary using blint. Use the official container image and invoke cdxgen with the arguments `-t binary --lifecycle post-build`.",
           );
           options.failOnError && process.exit(1);
         }

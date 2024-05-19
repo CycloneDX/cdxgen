@@ -803,6 +803,10 @@ test("parse go list dependencies", async () => {
           "/home/almalinux/go/pkg/mod/cache/download/github.com/gorilla/mux/@v/v1.7.4.mod",
       },
       { name: "ModuleGoVersion", value: "1.12" },
+      {
+        name: "cdx:go:indirect",
+        value: "false",
+      },
     ],
   });
 });
