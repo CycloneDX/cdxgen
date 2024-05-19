@@ -124,7 +124,6 @@ test("parseImageName tests", () => {
     group: "",
     name: "elasticsearch",
   });
-  
 }, 120000);
 
 test("docker getImage", async () => {

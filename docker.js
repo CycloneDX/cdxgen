@@ -762,11 +762,11 @@ export const extractTar = async (fullImageName, dir) => {
       }
     } else if (["EACCES"].includes(err.code)) {
       console.log(err);
-    /*
-    * We do not display errors messages for errors:
-    * 1) TAR_ENTRY_INFO is an informative error indicating that an entry is being modified.
-    * 2) TAR_ENTRY_INVALID indicates that a given entry is not valid tar archive entry and will be skipped.
-    */
+      /*
+       * We do not display errors messages for errors:
+       * 1) TAR_ENTRY_INFO is an informative error indicating that an entry is being modified.
+       * 2) TAR_ENTRY_INVALID indicates that a given entry is not valid tar archive entry and will be skipped.
+       */
     } else if (!["TAR_ENTRY_INFO", "TAR_ENTRY_INVALID"].includes(err.code)) {
       console.log(err);
     }
