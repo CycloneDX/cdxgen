@@ -3901,6 +3901,7 @@ export async function parseGoListDep(rawOutput, gosumMap) {
             version,
             gosumHash,
           );
+          // This is mis-using the scope attribute to represent direct vs indirect
           if (verArr[2] === "false") {
             component.scope = "required";
           } else if (verArr[2] === "true") {
@@ -3914,6 +3915,10 @@ export async function parseGoListDep(rawOutput, gosumMap) {
             {
               name: "ModuleGoVersion",
               value: verArr[4] || "",
+            },
+            {
+              name: "cdx:go:indirect",
+              value: verArr[2],
             },
           ];
           if (verArr.length > 5 && verArr[5] === "true") {
@@ -5155,7 +5160,7 @@ export function parseCargoDependencyData(cargoLockData) {
             // and continue.
             if (DEBUG_MODE) {
               console.warn(
-                `The package "${dependency.name}" appears as a dependency to "${pkg.name}" but is not itself listed in the Cargo.lock-file. The Cargo.lock-file is invalid! The produced SBOM will not list ${dependency.name} as a dependency.`,
+                `The package "${dependency.name}" appears as a dependency to "${pkg.name}" but is not itself listed in the Cargo.lock file. The Cargo.lock file is invalid! The produced SBOM will not list ${dependency.name} as a dependency.`,
               );
             }
             return undefined;
