@@ -3070,13 +3070,13 @@ export async function createGoBom(path, options) {
         } else {
           shouldManuallyParse = true;
           console.log(
-            "Check if the correct version of golang is installed. Try building the application using go build or make command to troubleshoot.",
+            "1. Check if the correct version of golang is installed. Try building the application using go build or make command to troubleshoot.",
           );
           console.log(
-            "If the application uses private go modules, ensure the environment variable GOPRIVATE is set with the comma-separated repo names.\nEnsure $HOME/.netrc file contains a valid username and password for the private repos.",
+            "2. If the application uses private go modules, ensure the environment variable GOPRIVATE is set with the comma-separated repo names.\nEnsure $HOME/.netrc file contains a valid username and password for the private repos.",
           );
           console.log(
-            "Alternatively, consider generating a post-build SBOM from the built binary using blint. Use the cdxgen container image and invoke it with the arguments `-t binary --lifecycle post-build`.",
+            "3. Alternatively, consider generating a post-build SBOM from the built binary using blint. Use the official container image and invoke cdxgen with the arguments `-t binary --lifecycle post-build`.",
           );
           options.failOnError && process.exit(1);
         }
