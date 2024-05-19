@@ -4653,7 +4653,7 @@ export async function getCratesMetadata(pkgList) {
       if (body.repository) {
         p.repository = { url: body.repository };
       }
-      if (body.homepage) {
+      if (body.homepage && body.homepage !== body.repository) {
         p.homepage = { url: body.homepage };
       }
       // Use the latest version if none specified
@@ -4680,11 +4680,8 @@ export async function getCratesMetadata(pkgList) {
         name: "cdx:cargo:latest_version",
         value: body.newest_version,
       });
-      p.properties.push({
-        name: "cdx:cargo:download_path",
-        value: `https://crates.io${versionToUse.dl_path}`,
-      });
-      if (versionToUse.features) {
+      p.distribution = { url: `https://crates.io${versionToUse.dl_path}` };
+      if (versionToUse.features && Object.keys(versionToUse.features).length) {
         p.properties.push({
           name: "cdx:cargo:features",
           value: JSON.stringify(versionToUse.features),
