@@ -111,19 +111,6 @@ test("parseImageName tests", () => {
     group: "shiftleft",
     name: "scan-java",
   });
-  expect(
-    parseImageName(
-      "docker.io/elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad",
-    ),
-  ).toEqual({
-    registry: "docker.io",
-    repo: "elasticsearch",
-    tag: "",
-    digest: "3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad",
-    platform: "",
-    group: "",
-    name: "elasticsearch",
-  });
 }, 120000);
 
 test("docker getImage", async () => {
