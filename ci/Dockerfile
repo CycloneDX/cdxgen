@@ -21,7 +21,7 @@ ARG SBT_VERSION=1.9.8
 ARG MAVEN_VERSION=3.9.6
 ARG GRADLE_VERSION=8.7
 ARG GO_VERSION=1.22.2
-ARG NODE_VERSION=22.1.0
+ARG NODE_VERSION=22.2.0
 ARG PYTHON_VERSION=3.12
 
 ENV GOPATH=/opt/app-root/go \
@@ -50,7 +50,7 @@ ENV GOPATH=/opt/app-root/go \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm" \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:$HOME/.cargo/bin:
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -73,6 +73,7 @@ RUN set -e; \
     && python${PYTHON_VERSION} --version \
     && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
     && python${PYTHON_VERSION} -m pip install --user pipenv poetry blint \
+    && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && source /root/.nvm/nvm.sh \
     && nvm install ${NODE_VERSION} \

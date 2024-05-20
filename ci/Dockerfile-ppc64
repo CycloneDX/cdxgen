@@ -1,10 +1,10 @@
-FROM almalinux:9.3-minimal
+FROM almalinux:9.4-minimal
 
 LABEL maintainer="cyclonedx" \
       org.opencontainers.image.authors="Prabhu Subramanian <prabhu@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/cyclonedx/cdxgen" \
       org.opencontainers.image.url="https://github.com/cyclonedx/cdxgen" \
-      org.opencontainers.image.version="10.5.x" \
+      org.opencontainers.image.version="10.6.x" \
       org.opencontainers.image.vendor="cyclonedx" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opencontainers.image.title="cdxgen" \
@@ -15,6 +15,7 @@ ARG SBT_VERSION=1.9.8
 ARG MAVEN_VERSION=3.9.6
 ARG GRADLE_VERSION=8.7
 ARG GO_VERSION=1.22.2
+ARG PYTHON_VERSION=3.12
 
 ENV GOPATH=/opt/app-root/go \
     SBT_VERSION=$SBT_VERSION \
@@ -52,14 +53,14 @@ RUN set -e; \
     echo -e "[nodejs]\nname=nodejs\nstream=20\nprofiles=\nstate=enabled\n" > /etc/dnf/modules.d/nodejs.module \
     && microdnf module enable php ruby -y \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
-        python3.11 python3.11-devel python3.11-pip ruby ruby-devel java-21-openjdk-headless \
+        python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel java-21-openjdk-headless \
         pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel \
-    && alternatives --install /usr/bin/python3 python /usr/bin/python3.11 1 \
-    && python3 --version \
-    && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
+    && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
+    && python3${PYTHON_VERSION} --version \
     && source "$HOME/.cargo/env" \
-    && python3 -m pip install --upgrade pip virtualenv \
-    && python3 -m pip install --user pipenv poetry \
+    && python3${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
+    && python3${PYTHON_VERSION} -m pip install --user pipenv poetry \
+    && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \

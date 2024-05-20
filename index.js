@@ -3260,7 +3260,9 @@ export async function createRustBom(path, options) {
             ["build", "post-build"].includes(options.lifecycle)))
       ) {
         const basePath = dirname(f);
-        const cargoArgs = ["generate-lockfile", "--manifest-path", f];
+        const cargoArgs = options.deep
+          ? ["check", "--all-features", "--manifest-path", f]
+          : ["generate-lockfile", "--manifest-path", f];
         if (!DEBUG_MODE) {
           cargoArgs.push("--quiet");
         }
@@ -3279,7 +3281,7 @@ export async function createRustBom(path, options) {
           shell: isWin,
         });
         if (cargoInstallResult.status !== 0 || cargoInstallResult.error) {
-          console.error("Error running cargo install");
+          console.error("Error running the cargo command");
           console.log(cargoInstallResult.error, cargoInstallResult.stderr);
           options.failOnError && process.exit(1);
         }
