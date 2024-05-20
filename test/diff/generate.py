@@ -1,7 +1,7 @@
 import csv
 import logging
+import os
 import pathlib
-import subprocess
 import argparse
 
 from pathlib import Path
@@ -64,6 +64,112 @@ def build_args():
     return parser.parse_args()
 
 
+def add_repo_dirs(clone_dir, repo_data):
+    """
+    Adds a key for the repository directory to the repository data.
+
+    Args:
+        clone_dir (pathlib.Path): The directory to store sample repositories.
+        repo_data (list[dict]): Contains the sample repository data
+
+    Returns:
+        list[dict]: The updated repository data with the 'repo_dir' key
+    """
+    new_data = []
+    for r in repo_data:
+        r['repo_dir'] = Path.joinpath(clone_dir, r['project'])
+        new_data.append(r)
+    return new_data
+
+
+def check_dirs(clone, clone_dir, output_dir):
+    """
+    Create directories if they don't exist.
+
+    Args:
+        clone (bool): Whether to create the clone directory or not.
+        clone_dir (pathlib.Path): The path to the clone directory.
+        output_dir (pathlib.Path): The path to the output directory.
+
+    Returns:
+        None
+    """
+    if clone and not Path.exists(clone_dir):
+        Path.mkdir(clone_dir)
+    if not Path.exists(output_dir):
+        Path.mkdir(output_dir)
+
+
+def checkout_commit(commit):
+    """
+    Checks out a specific commit in a repository.
+
+    Args:
+        commit (str): The commit hash to check out.
+
+    Returns:
+        str: The command to check out the commit.
+    """
+    checkout_cmd = ['git', 'checkout', commit]
+    return list2cmdline(checkout_cmd)
+
+
+def clone_repo(url, repo_dir):
+    """
+    Clones a repository from a given URL to a specified directory.
+
+    Args:
+        url (str): The URL of the repository to clone.
+        repo_dir (pathlib.Path): The directory to store the cloned repository.
+
+    Returns:
+        str: The command to clone the repository.
+    """
+    if Path.exists(repo_dir):
+        logging.info('%s already exists, skipping clone.', repo_dir)
+        return ''
+
+    clone_cmd = ['git', 'clone', url, repo_dir]
+    return list2cmdline(clone_cmd)
+
+
+def exec_on_repo(clone, output_dir, skip_build, repo):
+    """
+    Determines a sequence of commands on a repository.
+
+    Args:
+        clone (bool): Indicates whether to clone the repository.
+        output_dir (pathlib.Path): The directory to output the slices.
+        skip_build (bool): Indicates whether to skip the build phase.
+        repo (dict): The repository information.
+
+
+    Returns:
+        str: The sequence of commands to be executed.
+    """
+    commands = []
+
+    if clone:
+        commands.append(f'{clone_repo(repo["link"], repo["repo_dir"])}')
+        commands.append(f'{list2cmdline(["cd", repo["repo_dir"]])}')
+        commands.append(f'{checkout_commit(repo["commit"])}')
+    if not skip_build and len(repo['pre_build_cmd']) > 0:
+        cmds = repo['pre_build_cmd'].split(';')
+        cmds = [cmd.lstrip().rstrip() for cmd in cmds]
+        for cmd in cmds:
+            new_cmd = list(cmd.split(' '))
+            commands.append(f'{list2cmdline(new_cmd)}')
+    if not skip_build and len(repo['build_cmd']) > 0:
+        cmds = repo['build_cmd'].split(';')
+        cmds = [cmd.lstrip().rstrip() for cmd in cmds]
+        for cmd in cmds:
+            new_cmd = list(cmd.split(' '))
+            commands.append(f'{list2cmdline(new_cmd)}')
+    commands.append(f'{run_cdxgen(repo, output_dir)}')
+    commands = '\n'.join(commands)
+    return commands
+
+
 def generate(args):
     """
     Generate commands for executing a series of tasks on a repository.
@@ -96,59 +202,94 @@ def generate(args):
     write_script_file(sh_path, commands, args.debug_cmds)
 
 
-def add_repo_dirs(clone_dir, repo_data):
+def list2cmdline(seq):
     """
-    Adds a key for the repository directory to the repository data.
+    Taken from the subprocess module in the Python Standard Library.
+
+    Translate a sequence of arguments into a command line
+    string, using the same rules as the MS C runtime:
+
+    1) Arguments are delimited by white space, which is either a
+       space or a tab.
+
+    2) A string surrounded by double quotation marks is
+       interpreted as a single argument, regardless of white space
+       contained within.  A quoted string can be embedded in an
+       argument.
+
+    3) A double quotation mark preceded by a backslash is
+       interpreted as a literal double quotation mark.
+
+    4) Backslashes are interpreted literally, unless they
+       immediately precede a double quotation mark.
+
+    5) If backslashes immediately precede a double quotation mark,
+       every pair of backslashes is interpreted as a literal
+       backslash.  If the number of backslashes is odd, the last
+       backslash escapes the next double quotation mark as
+       described in rule 3.
+    """
+
+    # See
+    # http://msdn.microsoft.com/en-us/library/17w5ykft.aspx
+    # or search http://msdn.microsoft.com for
+    # "Parsing C++ Command-Line Arguments"
+    result = []
+    needquote = False
+    for arg in map(os.fsdecode, seq):
+        bs_buf = []
+
+        # Add a space to separate this argument from the others
+        if result:
+            result.append(' ')
+
+        needquote = (" " in arg) or ("\t" in arg) or not arg
+        if needquote:
+            result.append('"')
+
+        for c in arg:
+            if c == '\\':
+                # Don't know if we need to double yet.
+                bs_buf.append(c)
+            elif c == '"':
+                # Double backslashes.
+                result.append('\\' * len(bs_buf)*2)
+                bs_buf = []
+                result.append('\\"')
+            else:
+                # Normal char
+                if bs_buf:
+                    result.extend(bs_buf)
+                    bs_buf = []
+                result.append(c)
+
+        # Add remaining backslashes, if any.
+        if bs_buf:
+            result.extend(bs_buf)
+
+        if needquote:
+            result.extend(bs_buf)
+            result.append('"')
+
+    return ''.join(result)
+
+
+def process_repo_data(repo_data, clone_dir):
+    """
+    Process the repo data, adding the 'repo_dir' key and filtering as required.
 
     Args:
-        clone_dir (pathlib.Path): The directory to store sample repositories.
-        repo_data (list[dict]): Contains the sample repository data
+        repo_data (list[dict]): Repository data
+        clone_dir (pathlib.Path): Destination for cloned repo.
 
     Returns:
-        list[dict]: The updated repository data with the 'repo_dir' key
+        list[dict]: The processed repository data
     """
     new_data = []
     for r in repo_data:
-        r['repo_dir'] = Path.joinpath(clone_dir, r['project'])
+        r['repo_dir'] = Path.joinpath(clone_dir, r['language'], r['project'])
         new_data.append(r)
     return new_data
-
-
-def exec_on_repo(clone, output_dir, skip_build, repo):
-    """
-    Determines a sequence of commands on a repository.
-
-    Args:
-        clone (bool): Indicates whether to clone the repository.
-        output_dir (pathlib.Path): The directory to output the slices.
-        skip_build (bool): Indicates whether to skip the build phase.
-        repo (dict): The repository information.
-
-
-    Returns:
-        str: The sequence of commands to be executed.
-    """
-    commands = []
-
-    if clone:
-        commands.append(f'{clone_repo(repo["link"], repo["repo_dir"])}')
-        commands.append(f'{subprocess.list2cmdline(["cd", repo["repo_dir"]])}')
-        commands.append(f'{checkout_commit(repo["commit"])}')
-    if not skip_build and len(repo['pre_build_cmd']) > 0:
-        cmds = repo['pre_build_cmd'].split(';')
-        cmds = [cmd.lstrip().rstrip() for cmd in cmds]
-        for cmd in cmds:
-            new_cmd = list(cmd.split(' '))
-            commands.append(f'{subprocess.list2cmdline(new_cmd)}')
-    if not skip_build and len(repo['build_cmd']) > 0:
-        cmds = repo['build_cmd'].split(';')
-        cmds = [cmd.lstrip().rstrip() for cmd in cmds]
-        for cmd in cmds:
-            new_cmd = list(cmd.split(' '))
-            commands.append(f'{subprocess.list2cmdline(new_cmd)}')
-    commands.append(f'{run_cdxgen(repo, output_dir)}')
-    commands = '\n'.join(commands)
-    return commands
 
 
 def read_csv(csv_file, projects, clone_dir):
@@ -171,37 +312,26 @@ def read_csv(csv_file, projects, clone_dir):
     return add_repo_dirs(clone_dir, repo_data)
 
 
-def clone_repo(url, repo_dir):
+def run_cdxgen(repo, output_dir):
     """
-    Clones a repository from a given URL to a specified directory.
+    Generates cdxgen commands.
 
     Args:
-        url (str): The URL of the repository to clone.
-        repo_dir (pathlib.Path): The directory to store the cloned repository.
+        repo (dict): Repository data
+        output_dir (pathlib.Path): Directory path for bom export
 
     Returns:
-        str: The command to clone the repository.
+        str: The repository data with cdxgen commands
     """
-    if Path.exists(repo_dir):
-        logging.info('%s already exists, skipping clone.', repo_dir)
-        return ''
-
-    clone_cmd = ['git', 'clone', url, repo_dir]
-    return subprocess.list2cmdline(clone_cmd)
-
-
-def checkout_commit(commit):
-    """
-    Checks out a specific commit in a repository.
-
-    Args:
-        commit (str): The commit hash to check out.
-
-    Returns:
-        str: The command to check out the commit.
-    """
-    checkout_cmd = ['git', 'checkout', commit]
-    return subprocess.list2cmdline(checkout_cmd)
+    cdxgen_cmd = [
+        'cdxgen',
+        '-t',
+        repo['language'],
+        '-o',
+        Path.joinpath(output_dir, f'{repo["project"]}-bom.json'),
+        repo['repo_dir']
+    ]
+    return list2cmdline(cdxgen_cmd)
 
 
 def run_pre_builds(repo_data, output_dir, debug_cmds):
@@ -250,64 +380,6 @@ def write_script_file(file_path, commands, debug_cmds):
         f.write(commands)
     if debug_cmds:
         print(commands)
-
-
-def check_dirs(clone, clone_dir, output_dir):
-    """
-    Create directories if they don't exist.
-
-    Args:
-        clone (bool): Whether to create the clone directory or not.
-        clone_dir (pathlib.Path): The path to the clone directory.
-        output_dir (pathlib.Path): The path to the output directory.
-
-    Returns:
-        None
-    """
-    if clone and not Path.exists(clone_dir):
-        Path.mkdir(clone_dir)
-    if not Path.exists(output_dir):
-        Path.mkdir(output_dir)
-
-
-def run_cdxgen(repo, output_dir):
-    """
-    Generates cdxgen commands.
-
-    Args:
-        repo (dict): Repository data
-        output_dir (pathlib.Path): Directory path for bom export
-
-    Returns:
-        str: The repository data with cdxgen commands
-    """
-    cdxgen_cmd = [
-        'cdxgen',
-        '-t',
-        repo['language'],
-        '-o',
-        Path.joinpath(output_dir, f'{repo["project"]}-bom.json'),
-        repo['repo_dir']
-    ]
-    return subprocess.list2cmdline(cdxgen_cmd)
-
-
-def process_repo_data(repo_data, clone_dir):
-    """
-    Process the repo data, adding the 'repo_dir' key and filtering as required.
-
-    Args:
-        repo_data (list[dict]): Repository data
-        clone_dir (pathlib.Path): Destination for cloned repo.
-
-    Returns:
-        list[dict]: The processed repository data
-    """
-    new_data = []
-    for r in repo_data:
-        r['repo_dir'] = Path.joinpath(clone_dir, r['language'], r['project'])
-        new_data.append(r)
-    return new_data
 
 
 def main():
