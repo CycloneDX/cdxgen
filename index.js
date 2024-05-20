@@ -102,6 +102,7 @@ import {
   parseHelmYamlData,
   parseLeinDep,
   parseLeiningenData,
+  parseMakeDFile,
   parseMavenTree,
   parseMinJs,
   parseMixLockData,
@@ -869,6 +870,10 @@ function addComponent(
     if (pkg.cryptoProperties?.length) {
       component.cryptoProperties = pkg.cryptoProperties;
     }
+    // Retain nested components
+    if (pkg.components) {
+      component.components = pkg.components;
+    }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;
   }
@@ -1033,7 +1038,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const metadata = addMetadata(parentComponent, options, context);
   const components = listComponents(options, allImports, pkgInfo, ptype);
   if (components && (components.length || parentComponent)) {
-    // CycloneDX 1.5 Json Template
+    // CycloneDX Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
       specVersion: `${options.specVersion || "1.5"}`,
@@ -3230,100 +3235,99 @@ export async function createRustBom(path, options) {
   if (maybeBinary || options.lifecycle === "post-build") {
     return createBinaryBom(path, options);
   }
-  let cargoLockFiles = getAllFiles(
-    path,
-    `${options.multiProject ? "**/" : ""}Cargo.lock`,
-    options,
-  );
-  const cargoFiles = getAllFiles(
-    path,
-    `${options.multiProject ? "**/" : ""}Cargo.toml`,
-    options,
-  );
+
   // This function assumes that the given path is prioritized, i.e that the
   // Cargo.toml-file directly inside the directory `path` (or the one in the
   // shortest distance from the `path` directory) will be the first returned
   // object. If that assumption is broken, the parent component may be
   // inaccurate.
-
-  const cargoMode = cargoFiles.length;
-  let cargoLockMode = cargoLockFiles.length;
-  if (cargoMode) {
-    for (const f of cargoFiles) {
-      // If there are no cargo.lock files, we can attempt a cargo install when
-      //    options.deep is true or options.lifecycle == build or post-build with installDeps
-      // Why the need for installDeps? It currently defaults to true, so let's obey if someone wants no installs
-      if (
+  const cargoFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}Cargo.toml`,
+    options,
+  );
+  // Attempt to build or generate lock files automatically
+  for (const f of cargoFiles) {
+    // If there are no cargo.lock files, we can attempt a cargo install when
+    //    options.deep is true or options.lifecycle == build or post-build with installDeps
+    // Why the need for installDeps? It currently defaults to true, so let's obey if someone wants no installs
+    if (
+      options.deep === true ||
+      (options.installDeps &&
         !existsSync(f.replace(".toml", ".lock")) &&
-        (options.deep === true ||
-          (options.installDeps &&
-            ["build", "post-build"].includes(options.lifecycle)))
-      ) {
-        const basePath = dirname(f);
-        const cargoArgs = options.deep
-          ? ["check", "--all-features", "--manifest-path", f]
-          : ["generate-lockfile", "--manifest-path", f];
-        if (!DEBUG_MODE) {
-          cargoArgs.push("--quiet");
-        }
-        if (DEBUG_MODE) {
-          console.log(
-            "Executing ",
-            CARGO_CMD,
-            cargoArgs.join(" "),
-            "in",
-            basePath,
-          );
-        }
-        const cargoInstallResult = spawnSync(CARGO_CMD, cargoArgs, {
-          cwd: basePath,
-          encoding: "utf-8",
-          shell: isWin,
-        });
-        if (cargoInstallResult.status !== 0 || cargoInstallResult.error) {
-          console.error("Error running the cargo command");
-          console.log(cargoInstallResult.error, cargoInstallResult.stderr);
-          options.failOnError && process.exit(1);
-        }
+        ["build", "post-build"].includes(options.lifecycle))
+    ) {
+      const basePath = dirname(f);
+      const cargoArgs = options.deep
+        ? ["check", "--all-features", "--manifest-path", f]
+        : ["generate-lockfile", "--manifest-path", f];
+      if (!DEBUG_MODE) {
+        cargoArgs.push("--quiet");
       }
       if (DEBUG_MODE) {
-        console.log(`Parsing ${f}`);
+        console.log(
+          "Executing ",
+          CARGO_CMD,
+          cargoArgs.join(" "),
+          "in",
+          basePath,
+        );
       }
-      // Get the new lock files
-      cargoLockFiles = getAllFiles(
-        path,
-        `${options.multiProject ? "**/" : ""}Cargo.lock`,
-        options,
-      );
-      cargoLockMode = cargoLockFiles.length;
-      const dlist = await parseCargoTomlData(f, cargoLockMode);
-      if (dlist?.length) {
-        if (!cargoLockMode) {
-          pkgList = pkgList.concat(dlist);
-        } else {
-          if (!Object.keys(parentComponent).length) {
-            parentComponent = dlist[0];
-            parentComponent.type = "application";
-            parentComponent.components = [];
-            if (DEBUG_MODE) {
-              console.log(
-                `Assigning parent component "${parentComponent.name}" from ${f}`,
-              );
-            }
-          } else {
-            parentComponent.components.push(dlist[0]);
+      const cargoInstallResult = spawnSync(CARGO_CMD, cargoArgs, {
+        cwd: basePath,
+        encoding: "utf-8",
+        shell: isWin,
+      });
+      if (cargoInstallResult.status !== 0 || cargoInstallResult.error) {
+        console.error("Error running the cargo command");
+        console.log(cargoInstallResult.error, cargoInstallResult.stderr);
+        options.failOnError && process.exit(1);
+      }
+    }
+  }
+  // After running cargo check, .d files would get created
+  const makeDFiles = getAllFiles(path, "target/**/*.d", options);
+  let pkgFilesMap = {};
+  for (const dfile of makeDFiles) {
+    pkgFilesMap = { ...pkgFilesMap, ...parseMakeDFile(dfile) };
+  }
+  const cargoLockFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}Cargo.lock`,
+    options,
+  );
+  const cargoLockMode = cargoLockFiles.length;
+  for (const f of cargoFiles) {
+    if (DEBUG_MODE) {
+      console.log(`Parsing ${f}`);
+    }
+    const dlist = await parseCargoTomlData(f, cargoLockMode, pkgFilesMap);
+    if (dlist?.length) {
+      if (!cargoLockMode) {
+        pkgList = pkgList.concat(dlist);
+      } else {
+        if (!Object.keys(parentComponent).length) {
+          parentComponent = dlist[0];
+          parentComponent.type = "application";
+          parentComponent.components = [];
+          if (DEBUG_MODE) {
+            console.log(
+              `Assigning parent component "${parentComponent.name}" from ${f}`,
+            );
           }
+        } else {
+          parentComponent.components.push(dlist[0]);
         }
       }
     }
   }
   let dependencyTree = [];
-  if (cargoLockFiles.length) {
+  if (cargoLockMode) {
     for (const f of cargoLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = await parseCargoData(f);
+      const dlist = await parseCargoData(f, false, pkgFilesMap);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3341,14 +3345,13 @@ export async function createRustBom(path, options) {
         );
       }
     }
-    return buildBomNSData(options, pkgList, "cargo", {
-      src: path,
-      filename: cargoLockFiles.join(", "),
-      dependencies: dependencyTree,
-      parentComponent,
-    });
   }
-  return {};
+  return buildBomNSData(options, pkgList, "cargo", {
+    src: path,
+    filename: cargoLockFiles.join(", "),
+    dependencies: dependencyTree,
+    parentComponent,
+  });
 }
 
 /**

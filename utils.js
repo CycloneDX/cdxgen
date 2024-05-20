@@ -4761,6 +4761,30 @@ export async function getDartMetadata(pkgList) {
 }
 
 /**
+ * Convert list of file paths to components
+ *
+ * @param {Array} fileList List of file paths
+ *
+ * @returns {Array} List of components
+ */
+function fileListToComponents(fileList) {
+  const components = [];
+  for (const afile of fileList) {
+    components.push({
+      name: basename(afile),
+      type: "file",
+      properties: [
+        {
+          name: "SrcFile",
+          value: afile,
+        },
+      ],
+    });
+  }
+  return components;
+}
+
+/**
  * Method to parse cargo.toml data
  *
  * The component described by a [package] section will be put at the front of
@@ -4772,12 +4796,17 @@ export async function getDartMetadata(pkgList) {
  * first as a convention, but it is not enforced.
  * https://doc.rust-lang.org/stable/style-guide/cargo.html#formatting-conventions
  *
- * @param {string} cargoTomlFile cargo.toml file
+ * @param {String} cargoTomlFile cargo.toml file
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ * @param {Object} pkgFilesMap Object with package name and list of files
  *
- * @returns {array} Package list
+ * @returns {Array} Package list
  */
-export async function parseCargoTomlData(cargoTomlFile, simple = false) {
+export async function parseCargoTomlData(
+  cargoTomlFile,
+  simple = false,
+  pkgFilesMap = {},
+) {
   const pkgList = [];
 
   // Helper function to add a component to the package list. It will uphold
@@ -4794,6 +4823,9 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
           value: cargoTomlFile,
         },
       ];
+      if (pkgFilesMap?.[pkg.name]) {
+        pkg.components = fileListToComponents(pkgFilesMap[pkg.name]);
+      }
       pkg.evidence = {
         identity: {
           field: "purl",
@@ -4947,12 +4979,17 @@ export async function parseCargoTomlData(cargoTomlFile, simple = false) {
 /**
  * Parse a Cargo.lock file to find components within the Rust project.
  *
- * @param {string} cargoLockFile A path to a Cargo.lock file. The Cargo.lock-file path may be used as information for extended attributes, such as manifest based evidence.
+ * @param {String} cargoLockFile A path to a Cargo.lock file. The Cargo.lock-file path may be used as information for extended attributes, such as manifest based evidence.
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ * @param {Object} pkgFilesMap Object with package name and list of files
  *
- * @returns {array} A list of the project's components as described by the Cargo.lock-file.
+ * @returns {Array} A list of the project's components as described by the Cargo.lock-file.
  */
-export async function parseCargoData(cargoLockFile, simple = false) {
+export async function parseCargoData(
+  cargoLockFile,
+  simple = false,
+  pkgFilesMap = {},
+) {
   const addPackageToList = (packageList, newPackage, { simple }) => {
     if (!newPackage) {
       return;
@@ -5013,6 +5050,11 @@ export async function parseCargoData(cargoLockFile, simple = false) {
           value: cargoLockFile,
         },
       ];
+      if (pkgFilesMap?.[pkg.name]) {
+        component.components = fileListToComponents(
+          pkgFilesMap[component.name],
+        );
+      }
     }
     packageList.push(component);
   };
@@ -10291,4 +10333,31 @@ export function addEvidenceForDotnet(pkgList, slicesFile) {
     }
   }
   return pkgList;
+}
+
+/**
+ * Function to parse the .d make files
+ *
+ * @param {String} dfile .d file path
+ *
+ * @returns {Object} pkgFilesMap Object with package name and list of files
+ */
+export function parseMakeDFile(dfile) {
+  const pkgFilesMap = {};
+  const dData = readFileSync(dfile, { encoding: "utf-8" });
+  const pkgName = basename(dfile).split("-").shift();
+  const filesList = new Set();
+  dData.split("\n").forEach((l) => {
+    l = l.replace("\r", "");
+    if (!l.endsWith(".rs:")) {
+      return;
+    }
+    const fileName = `.cargo/${l.split(".cargo/").pop()}`.replace(
+      ".rs:",
+      ".rs",
+    );
+    filesList.add(fileName);
+  });
+  pkgFilesMap[pkgName] = Array.from(filesList);
+  return pkgFilesMap;
 }
