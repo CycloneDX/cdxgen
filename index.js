@@ -457,7 +457,10 @@ const addFormulationSection = (options) => {
     let environmentVars = [{ name: "GIT_BRANCH", value: gitBranch }];
     for (const aevar of Object.keys(process.env)) {
       if (
-        (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
+        (aevar.startsWith("GIT") ||
+          aevar.startsWith("CI_") ||
+          aevar.startsWith("CARGO") ||
+          aevar.startsWith("RUST")) &&
         !aevar.toLowerCase().includes("key") &&
         !aevar.toLowerCase().includes("token") &&
         !aevar.toLowerCase().includes("pass") &&
