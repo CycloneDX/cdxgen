@@ -2063,38 +2063,6 @@ export async function createNodejsBom(path, options) {
   let parentComponent = {};
   const parentSubComponents = [];
   let ppurl = "";
-  // Install deps for npm
-  const pkgJsonLockFile = getAllFiles(path, "package-lock.json", options);
-  const pkgJsonFile = getAllFiles(path, "package.json", options);
-  if (
-    pkgJsonLockFile?.length === 0 &&
-    pkgJsonFile?.length === 1 &&
-    options.installDeps
-  ) {
-    let pkgMgr = "npm";
-    const supPkgMgrs = ["npm", "yarn", "yarnpkg", "pnpm", "pnpx"];
-    const pkgData = JSON.parse(readFileSync(`${path}/package.json`, "utf8"));
-    const mgrData = pkgData.packageManager;
-    let mgr = "";
-    if (mgrData) {
-      mgr = mgrData.split("@")[0];
-    }
-    if (supPkgMgrs.includes(mgr)) {
-      pkgMgr = mgr;
-    }
-    console.log(`Executing '${pkgMgr} install' in`, path);
-    const result = spawnSync(pkgMgr, ["install"], {
-      cwd: path,
-      encoding: "utf-8",
-    });
-    if (result.status !== 0 || result.error) {
-      console.error(
-        `${pkgMgr} install has failed. Check if ${pkgMgr} is installed and available in PATH.`,
-      );
-      console.log(result.error, result.stderr);
-      options.failOnError && process.exit(1);
-    }
-  }
   // Docker mode requires special handling
   if (["docker", "oci", "container", "os"].includes(options.projectType)) {
     const pkgJsonFiles = getAllFiles(path, "**/package.json", options);
@@ -2238,6 +2206,42 @@ export async function createNodejsBom(path, options) {
         );
       }
     }
+  }
+  const pkgJsonLockFile = getAllFiles(path, "package-lock.json", options);
+  const pkgJsonFile = getAllFiles(path, "package.json", options);
+  if (
+    pkgJsonLockFile?.length === 0 &&
+    pkgJsonFile?.length === 1 &&
+    options.installDeps
+  ) {
+    let pkgMgr = "npm";
+    const supPkgMgrs = ["npm", "yarn", "yarnpkg", "pnpm", "pnpx"];
+    const pkgData = JSON.parse(readFileSync(`${path}/package.json`, "utf8"));
+    const mgrData = pkgData.packageManager;
+    let mgr = "";
+    if (mgrData) {
+      mgr = mgrData.split("@")[0];
+    }
+    if (supPkgMgrs.includes(mgr)) {
+      pkgMgr = mgr;
+    }
+    console.log(`Executing '${pkgMgr} install' in`, path);
+    const result = spawnSync(pkgMgr, ["install"], {
+      cwd: path,
+      encoding: "utf-8",
+    });
+    if (result.status !== 0 || result.error) {
+      console.error(
+        `${pkgMgr} install has failed. Check if ${pkgMgr} is installed and available in PATH.`,
+      );
+      console.log(result.error, result.stderr);
+      options.failOnError && process.exit(1);
+    }
+    pkgLockFiles = getAllFiles(
+      path,
+      `${options.multiProject ? "**/" : ""}package-lock.json`,
+      options,
+    );
   }
   if (pkgLockFiles?.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
