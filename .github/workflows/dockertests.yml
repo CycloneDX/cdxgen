@@ -64,6 +64,7 @@ jobs:
           bin/cdxgen.js /tmp/scanslim.tar -o bomresults/bom-scanarch.json --validate
           bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --validate
           bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --validate
+          bin/cdxgen.js elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad -t docker  -o bomresults/bom-elastic.json --validate
           ls -ltr bomresults
 
   os-tests:
