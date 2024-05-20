@@ -2064,9 +2064,13 @@ export async function createNodejsBom(path, options) {
   const parentSubComponents = [];
   let ppurl = "";
   // Install deps for npm
-  let pkgJsonLockFile = getAllFiles(path, "package-lock.json", options);
-  let pkgJsonFile = getAllFiles(path, "package.json", options);
-  if (pkgJsonLockFile?.length === 0 && pkgJsonFile?.length === 1 && options.installDeps) {
+  const pkgJsonLockFile = getAllFiles(path, "package-lock.json", options);
+  const pkgJsonFile = getAllFiles(path, "package.json", options);
+  if (
+    pkgJsonLockFile?.length === 0 &&
+    pkgJsonFile?.length === 1 &&
+    options.installDeps
+  ) {
     console.log("Executing 'npm install' in", path);
     const result = spawnSync("npm", ["install"], {
       cwd: path,
@@ -2074,7 +2078,7 @@ export async function createNodejsBom(path, options) {
     });
     if (result.status !== 0 || result.error) {
       console.error(
-          "NPM install has failed. Check if npm is installed and available in PATH.",
+        "NPM install has failed. Check if npm is installed and available in PATH.",
       );
       console.log(result.error, result.stderr);
       options.failOnError && process.exit(1);
