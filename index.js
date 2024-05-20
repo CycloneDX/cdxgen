@@ -1483,6 +1483,7 @@ export async function createJavaBom(path, options) {
   // Fixes gradle invocation for microservices-demo
   let gradleRootPath = path;
   if (
+    gradleFiles?.length &&
     !existsSync(join(path, "settings.gradle")) &&
     !existsSync(join(path, "settings.gradle.kts")) &&
     !existsSync(join(path, "build.gradle")) &&
