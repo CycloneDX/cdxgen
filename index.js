@@ -2097,7 +2097,7 @@ export async function createNodejsBom(path, options) {
     allImports = retData.allImports;
     allExports = retData.allExports;
   }
-  const yarnLockFiles = getAllFiles(
+  let yarnLockFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}yarn.lock`,
     options,
@@ -2115,7 +2115,7 @@ export async function createNodejsBom(path, options) {
   if (shrinkwrapFiles.length) {
     pkgLockFiles = pkgLockFiles.concat(shrinkwrapFiles);
   }
-  const pnpmLockFiles = getAllFiles(
+  let pnpmLockFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}pnpm-lock.yaml`,
     options,
