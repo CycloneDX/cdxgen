@@ -2155,9 +2155,9 @@ export async function createNodejsBom(path, options) {
   const yarnLockFile = getAllFiles(path, "yarn.lock", options);
   const pnpmLockFile = getAllFiles(path, "pnpm-lock.yaml", options);
   if (
-    (pkgJsonLockFile?.length === 0 ||
-      yarnLockFile?.length === 0 ||
-      pnpmLockFile?.length === 0) &&
+    pkgJsonLockFile?.length === 0 &&
+    yarnLockFile?.length === 0 &&
+    pnpmLockFile?.length === 0 &&
     pkgJsonFile?.length === 1 &&
     options.installDeps
   ) {
