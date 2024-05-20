@@ -387,22 +387,6 @@ cdxgenRepl.defineCommand("occurrences", {
     this.displayPrompt();
   },
 });
-cdxgenRepl.defineCommand("discord", {
-  help: "display the discord invite link for support",
-  action() {
-    console.log("Head to https://discord.gg/pF4BYWEJcS for support");
-    this.displayPrompt();
-  },
-});
-cdxgenRepl.defineCommand("sponsor", {
-  help: "display the sponsorship link to fund this project",
-  action() {
-    console.log(
-      "Hey, thanks a lot for considering! https://github.com/sponsors/prabhu",
-    );
-    this.displayPrompt();
-  },
-});
 cdxgenRepl.defineCommand("callstack", {
   help: "view components with evidence.callstack",
   async action() {
