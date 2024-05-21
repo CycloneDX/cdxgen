@@ -29,6 +29,7 @@ import {
   listFiles,
 } from "./envcontext.js";
 import {
+  CARGO_CMD,
   CLJ_CMD,
   DEBUG_MODE,
   FETCH_LICENSE,
@@ -101,6 +102,7 @@ import {
   parseHelmYamlData,
   parseLeinDep,
   parseLeiningenData,
+  parseMakeDFile,
   parseMavenTree,
   parseMinJs,
   parseMixLockData,
@@ -455,7 +457,10 @@ const addFormulationSection = (options) => {
     let environmentVars = [{ name: "GIT_BRANCH", value: gitBranch }];
     for (const aevar of Object.keys(process.env)) {
       if (
-        (aevar.startsWith("GIT") || aevar.startsWith("CI_")) &&
+        (aevar.startsWith("GIT") ||
+          aevar.startsWith("CI_") ||
+          aevar.startsWith("CARGO") ||
+          aevar.startsWith("RUST")) &&
         !aevar.toLowerCase().includes("key") &&
         !aevar.toLowerCase().includes("token") &&
         !aevar.toLowerCase().includes("pass") &&
@@ -713,6 +718,12 @@ function addExternalReferences(opkg) {
           url: pkg.repository.url,
         });
       }
+      if (pkg.distribution?.url) {
+        externalReferences.push({
+          type: "distribution",
+          url: pkg.distribution.url,
+        });
+      }
     }
   }
   return externalReferences;
@@ -861,6 +872,10 @@ function addComponent(
     }
     if (pkg.cryptoProperties?.length) {
       component.cryptoProperties = pkg.cryptoProperties;
+    }
+    // Retain nested components
+    if (pkg.components) {
+      component.components = pkg.components;
     }
     if (compMap[component.purl]) return; //remove cycles
     compMap[component.purl] = component;
@@ -1026,7 +1041,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
   const metadata = addMetadata(parentComponent, options, context);
   const components = listComponents(options, allImports, pkgInfo, ptype);
   if (components && (components.length || parentComponent)) {
-    // CycloneDX 1.5 Json Template
+    // CycloneDX Json Template
     const jsonTpl = {
       bomFormat: "CycloneDX",
       specVersion: `${options.specVersion || "1.5"}`,
@@ -1464,9 +1479,21 @@ export async function createJavaBom(path, options) {
   const allProjects = [];
   const allProjectsAddedPurls = [];
   const rootDependsOn = [];
+  // Determine the root path for gradle
+  // Fixes gradle invocation for microservices-demo
+  let gradleRootPath = path;
+  if (
+    gradleFiles?.length &&
+    !existsSync(join(path, "settings.gradle")) &&
+    !existsSync(join(path, "settings.gradle.kts")) &&
+    !existsSync(join(path, "build.gradle")) &&
+    !existsSync(join(path, "build.gradle.kts"))
+  ) {
+    gradleRootPath = dirname(gradleFiles[0]);
+  }
   // Execute gradle properties
   if (gradleFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
-    let retMap = executeGradleProperties(path, null, null);
+    let retMap = executeGradleProperties(gradleRootPath, null, null);
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
     if (rootProject) {
@@ -1490,7 +1517,7 @@ export async function createJavaBom(path, options) {
     if (allProjectsStr?.length) {
       if (process.env.GRADLE_MULTI_THREADED) {
         const parallelPropTaskOut = executeParallelGradleProperties(
-          path,
+          gradleRootPath,
           null,
           allProjectsStr,
         );
@@ -1531,7 +1558,7 @@ export async function createJavaBom(path, options) {
         }
       } else {
         for (const spstr of allProjectsStr) {
-          retMap = executeGradleProperties(path, null, spstr);
+          retMap = executeGradleProperties(gradleRootPath, null, spstr);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");
@@ -1581,7 +1608,7 @@ export async function createJavaBom(path, options) {
     options.installDeps &&
     !["scala", "sbt"].includes(options.projectType)
   ) {
-    const gradleCmd = getGradleCommand(path, null);
+    const gradleCmd = getGradleCommand(gradleRootPath, null);
     const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
     allProjects.push(parentComponent);
     let depTaskWithArgs = ["dependencies"];
@@ -1612,9 +1639,15 @@ export async function createJavaBom(path, options) {
         }
       }
       gradleDepArgs.push("--parallel"); //flag to enable multi-threading
-      console.log("Executing", gradleCmd, gradleDepArgs.join(" "), "in", path);
+      console.log(
+        "Executing",
+        gradleCmd,
+        gradleDepArgs.join(" "),
+        "in",
+        gradleRootPath,
+      );
       const sresult = spawnSync(gradleCmd, gradleDepArgs, {
-        cwd: path,
+        cwd: gradleRootPath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
         maxBuffer: MAX_BUFFER,
@@ -1681,10 +1714,10 @@ export async function createJavaBom(path, options) {
           gradleCmd,
           gradleSubProjectDepArgs.join(" "),
           "in",
-          path,
+          gradleRootPath,
         );
         const sresult = spawnSync(gradleCmd, gradleSubProjectDepArgs, {
-          cwd: path,
+          cwd: gradleRootPath,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
           maxBuffer: MAX_BUFFER,
@@ -1756,7 +1789,7 @@ export async function createJavaBom(path, options) {
     }
     pkgList = await getMvnMetadata(pkgList, jarNSMapping);
     return buildBomNSData(options, pkgList, "maven", {
-      src: path,
+      src: gradleRootPath,
       filename: gradleFiles.join(", "),
       nsMapping: jarNSMapping,
       dependencies,
@@ -3206,63 +3239,99 @@ export async function createRustBom(path, options) {
   if (maybeBinary || options.lifecycle === "post-build") {
     return createBinaryBom(path, options);
   }
-  let cargoLockFiles = getAllFiles(
-    path,
-    `${options.multiProject ? "**/" : ""}Cargo.lock`,
-    options,
-  );
-  const cargoFiles = getAllFiles(
-    path,
-    `${options.multiProject ? "**/" : ""}Cargo.toml`,
-    options,
-  );
+
   // This function assumes that the given path is prioritized, i.e that the
   // Cargo.toml-file directly inside the directory `path` (or the one in the
   // shortest distance from the `path` directory) will be the first returned
   // object. If that assumption is broken, the parent component may be
   // inaccurate.
-
-  const cargoMode = cargoFiles.length;
-  const cargoLockMode = cargoLockFiles.length;
-  if (cargoMode) {
-    for (const f of cargoFiles) {
-      if (DEBUG_MODE) {
-        console.log(`Parsing ${f}`);
+  const cargoFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}Cargo.toml`,
+    options,
+  );
+  // Attempt to build or generate lock files automatically
+  for (const f of cargoFiles) {
+    // If there are no cargo.lock files, we can attempt a cargo install when
+    //    options.deep is true or options.lifecycle == build or post-build with installDeps
+    // Why the need for installDeps? It currently defaults to true, so let's obey if someone wants no installs
+    if (
+      options.deep === true ||
+      (options.installDeps &&
+        !existsSync(f.replace(".toml", ".lock")) &&
+        ["build", "post-build"].includes(options.lifecycle))
+    ) {
+      const basePath = dirname(f);
+      const cargoArgs = options.deep
+        ? ["check", "--all-features", "--manifest-path", f]
+        : ["generate-lockfile", "--manifest-path", f];
+      if (!DEBUG_MODE) {
+        cargoArgs.push("--quiet");
       }
-      const dlist = await parseCargoTomlData(f, cargoLockMode);
-      if (dlist?.length) {
-        if (!cargoLockMode) {
-          pkgList = pkgList.concat(dlist);
-        } else {
-          if (!Object.keys(parentComponent).length) {
-            parentComponent = dlist[0];
-            parentComponent.type = "application";
-            parentComponent.components = [];
-            if (DEBUG_MODE) {
-              console.log(
-                `Assigning parent component "${parentComponent.name}" from ${f}`,
-              );
-            }
-          } else {
-            parentComponent.components.push(dlist[0]);
-          }
-        }
+      if (DEBUG_MODE) {
+        console.log(
+          "Executing ",
+          CARGO_CMD,
+          cargoArgs.join(" "),
+          "in",
+          basePath,
+        );
+      }
+      const cargoInstallResult = spawnSync(CARGO_CMD, cargoArgs, {
+        cwd: basePath,
+        encoding: "utf-8",
+        shell: isWin,
+      });
+      if (cargoInstallResult.status !== 0 || cargoInstallResult.error) {
+        console.error("Error running the cargo command");
+        console.log(cargoInstallResult.error, cargoInstallResult.stderr);
+        options.failOnError && process.exit(1);
       }
     }
   }
-  // Get the new lock files
-  cargoLockFiles = getAllFiles(
+  // After running cargo check, .d files would get created
+  const makeDFiles = getAllFiles(path, "target/**/*.d", options);
+  let pkgFilesMap = {};
+  for (const dfile of makeDFiles) {
+    pkgFilesMap = { ...pkgFilesMap, ...parseMakeDFile(dfile) };
+  }
+  const cargoLockFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}Cargo.lock`,
     options,
   );
+  const cargoLockMode = cargoLockFiles.length;
+  for (const f of cargoFiles) {
+    if (DEBUG_MODE) {
+      console.log(`Parsing ${f}`);
+    }
+    const dlist = await parseCargoTomlData(f, cargoLockMode, pkgFilesMap);
+    if (dlist?.length) {
+      if (!cargoLockMode) {
+        pkgList = pkgList.concat(dlist);
+      } else {
+        if (!Object.keys(parentComponent).length) {
+          parentComponent = dlist[0];
+          parentComponent.type = "application";
+          parentComponent.components = [];
+          if (DEBUG_MODE) {
+            console.log(
+              `Assigning parent component "${parentComponent.name}" from ${f}`,
+            );
+          }
+        } else {
+          parentComponent.components.push(dlist[0]);
+        }
+      }
+    }
+  }
   let dependencyTree = [];
-  if (cargoLockFiles.length) {
+  if (cargoLockMode) {
     for (const f of cargoLockFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      const dlist = await parseCargoData(f);
+      const dlist = await parseCargoData(f, false, pkgFilesMap);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -3280,14 +3349,13 @@ export async function createRustBom(path, options) {
         );
       }
     }
-    return buildBomNSData(options, pkgList, "cargo", {
-      src: path,
-      filename: cargoLockFiles.join(", "),
-      dependencies: dependencyTree,
-      parentComponent,
-    });
   }
-  return {};
+  return buildBomNSData(options, pkgList, "cargo", {
+    src: path,
+    filename: cargoLockFiles.join(", "),
+    dependencies: dependencyTree,
+    parentComponent,
+  });
 }
 
 /**
@@ -4956,15 +5024,46 @@ export function mergeDependencies(
   return retlist;
 }
 
+/**
+ * Trim duplicate components by retaining all the properties
+ *
+ * @param {Array} components Components
+ *
+ * @returns {Array} Filtered components
+ */
 export function trimComponents(components) {
   const keyCache = {};
   const filteredComponents = [];
   for (const comp of components) {
     const key = comp.purl || comp["bom-ref"] || comp.name + comp.version;
     if (!keyCache[key]) {
-      keyCache[key] = true;
-      filteredComponents.push(comp);
+      keyCache[key] = comp;
+    } else {
+      const existingComponent = keyCache[key];
+      // We need to retain any properties that differ
+      const compProps = existingComponent.properties || [];
+      const compPropsMap = {};
+      for (const aprop of compProps) {
+        compPropsMap[aprop.name] = aprop.value;
+      }
+      if (comp.properties) {
+        for (const newprop of comp.properties) {
+          if (
+            !compPropsMap[newprop.name] ||
+            (newprop.value && compPropsMap[newprop.name] !== newprop.value)
+          ) {
+            compProps.push(newprop);
+          }
+        }
+      }
+      if (compProps.length) {
+        existingComponent.properties = compProps;
+        keyCache[key] = existingComponent;
+      }
     }
+  }
+  for (const akey of Object.keys(keyCache)) {
+    filteredComponents.push(keyCache[akey]);
   }
   return filteredComponents;
 }

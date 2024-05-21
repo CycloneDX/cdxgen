@@ -55,6 +55,7 @@ import {
   parseKVDep,
   parseLeinDep,
   parseLeiningenData,
+  parseMakeDFile,
   parseMavenTree,
   parseMixLockData,
   parseNodeShrinkwrap,
@@ -1304,11 +1305,23 @@ test("get crates metadata", async () => {
       "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
     description:
       "Application microframework with support for command-line option parsing,\nconfiguration, error handling, logging, and terminal interactions.\nThis crate contains the framework's core functionality.\n",
-    license: ["Apache-2.0"],
+    distribution: {
+      url: "https://crates.io/api/v1/crates/abscissa_core/0.5.2/download",
+    },
+    license: "Apache-2.0",
     repository: {
       url: "https://github.com/iqlusioninc/abscissa/tree/main/core/",
     },
     homepage: { url: "https://github.com/iqlusioninc/abscissa/" },
+    properties: [
+      { name: "cdx:cargo:crate_id", value: "207912" },
+      { name: "cdx:cargo:latest_version", value: "0.7.0" },
+      {
+        name: "cdx:cargo:features",
+        value:
+          '{"application":["config","generational-arena","trace","options","semver/serde","terminal"],"config":["secrets","serde","terminal","toml"],"default":["application","signals","secrets","testing","time"],"gimli-backtrace":["backtrace/gimli-symbolize","color-backtrace/gimli-symbolize"],"options":["gumdrop"],"secrets":["secrecy"],"signals":["libc","signal-hook"],"terminal":["color-backtrace","termcolor"],"testing":["regex","wait-timeout"],"time":["chrono"],"trace":["tracing","tracing-log","tracing-subscriber"]}',
+      },
+    ],
   });
 }, 20000);
 
@@ -3854,4 +3867,15 @@ test("parseCmakeLikeFile tests", () => {
     version: "20230125.1",
   });
   expect(retMap.pkgList.length).toEqual(2);
+});
+
+test("parseMakeDFile tests", () => {
+  const pkgFilesMap = parseMakeDFile("test/data/zstd_sys-dc50c4de2e4e7df8.d");
+  expect(pkgFilesMap).toEqual({
+    zstd_sys: [
+      ".cargo/registry/src/index.crates.io-hash/zstd-sys-2.0.10+zstd.1.5.6/src/lib.rs",
+      ".cargo/registry/src/index.crates.io-hash/zstd-sys-2.0.10+zstd.1.5.6/src/bindings_zstd.rs",
+      ".cargo/registry/src/index.crates.io-hash/zstd-sys-2.0.10+zstd.1.5.6/src/bindings_zdict.rs",
+    ],
+  });
 });

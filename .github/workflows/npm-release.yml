@@ -217,48 +217,6 @@ jobs:
         labels: ${{ steps.meta3.outputs.labels }}
         cache-from: type=gha,scope=cdxgen-ppc64
         cache-to: type=gha,mode=max,scope=cdxgen-ppc64
-  containers-next:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-    steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 21.x
-        registry-url: https://registry.npmjs.org/
-    - name: Trim CI agent
-      run: |
-        chmod +x contrib/free_disk_space.sh
-        ./contrib/free_disk_space.sh
-    - name: Setup nydus
-      run: |
-        curl -LO https://github.com/dragonflyoss/nydus/releases/download/v2.2.4/nydus-static-v2.2.4-linux-amd64.tgz
-        tar -xvf nydus-static-v2.2.4-linux-amd64.tgz
-        chmod +x nydus-static/*
-        mv nydus-static/* /usr/local/bin/
-        rm -rf nydus-static-v2.2.4-linux-amd64.tgz nydus-static
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Log in to the Container registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Extract metadata (tags, labels) for Docker
-      id: meta4
-      uses: docker/metadata-action@v5
-      with:
-        images: |
-          ghcr.io/cyclonedx/cdxgen-next
-      if: github.ref == 'refs/heads/master'
   containers-bun:
     runs-on: ubuntu-latest
     permissions:
