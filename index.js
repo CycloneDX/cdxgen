@@ -4574,9 +4574,6 @@ export async function createCsharpBom(path, options) {
     !paketLockFiles.length
   ) {
     const filesToRestore = slnFiles.concat(csProjFiles);
-    console.error(
-      "Restore has failed. Check if dotnet is installed and available in PATH.",
-    );
     for (const f of filesToRestore) {
       if (DEBUG_MODE) {
         const basePath = dirname(f);
@@ -4718,14 +4715,12 @@ export async function createCsharpBom(path, options) {
       }
     }
     if (parentDependsOn.size) {
-      let arrrr =  new Set();
-      let prefix = parentComponent["bom-ref"].split("/")[0];
-      //console.log("prefixLLLL: ",prefix);
-      parentDependsOn.forEach(dependsOn => {
-        
+      const arrrr =  new Set();
+      const prefix = parentComponent["bom-ref"].split("/")[0];
+      parentDependsOn.forEach((dependsOn) => {
         if(dependsOn.name && dependsOn.version){ 
-          //console.log("prefixLLLL: ",prefix);
-          let dependcy = prefix+"/";
+          //console.log("prefix: ",prefix);
+          let dependcy = `${prefix}/`;
           dependcy+=dependsOn.name;
           dependcy+="@";
           dependcy+=dependsOn.version;
@@ -4772,15 +4767,12 @@ export async function createCsharpBom(path, options) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      console.log(`csProjFiles List Size :: ${csProjFiles.length}`);
-
       let csProjData = readFileSync(f, { encoding: "utf-8" });
       // Remove byte order mark
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
       const dlist = parseCsProjData(csProjData, f);
-      console.log(`Dependency List Size :: ${dlist.length}`);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
@@ -4931,10 +4923,10 @@ export function mergeDependencies(
       });
     } else {
        if (deps_map && deps_map.size > 1){        
-      retlist.push({
-        ref: akey,
-        dependsOn: Array.from(deps_map[akey]).sort(),
-      });
+        retlist.push({
+          ref: akey,
+          dependsOn: Array.from(deps_map[akey]).sort(),
+        });
     }
     }
   }
