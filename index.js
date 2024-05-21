@@ -4734,11 +4734,7 @@ export async function createCsharpBom(path, options) {
           ref: parentComponent["bom-ref"],        
           dependsOn: Array.from(arrrr),
         });
-      }
-      // dependencies.splice(0, 0, {
-      //   ref: parentComponent["bom-ref"],        
-      //   dependsOn: Array.from(parentDependsOn),
-      // });
+      } 
     }
   }
   if (paketLockFiles.length) {
