@@ -4720,10 +4720,7 @@ export async function createCsharpBom(path, options) {
       parentDependsOn.forEach((dependsOn) => {
         if(dependsOn.name && dependsOn.version){ 
           //console.log("prefix: ",prefix);
-          let dependcy = `${prefix}/`;
-          dependcy+=dependsOn.name;
-          dependcy+="@";
-          dependcy+=dependsOn.version;
+          const dependcy = `${prefix}/${dependsOn.name}@${dependsOn.version}`;
           arrrr.add(dependcy);
         }
       }
@@ -4772,10 +4769,11 @@ export async function createCsharpBom(path, options) {
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
       }
-
-      console.log(`pkgList List Size :: ${pkgList.length}`);
+      if(DEBUG_MODE){
+        console.log(`pkgList List Size :: ${pkgList.length}`);
+      }
     }
-    console.log(`pkgList List Size :: ${pkgList.length}`);
+    
     if (pkgList.length) {
      // console.log(
      //   `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`,
@@ -4804,8 +4802,8 @@ export async function createCsharpBom(path, options) {
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
-    console.log(`dependencies re${retMap.dependencies?.length}`);
-    if (retMap.dependencies?.length > 1) {
+    
+    if (retMap.dependencies?.length > 0) {
       dependencies = mergeDependencies(
         dependencies,
         retMap.dependencies,
@@ -4918,7 +4916,7 @@ export function mergeDependencies(
         provides: Array.from(provides_map[akey]).sort(),
       });
     } else {
-       if (deps_map && deps_map.size > 1){        
+       if (deps_map && deps_map.size > 0){        
         retlist.push({
           ref: akey,
           dependsOn: Array.from(deps_map[akey]).sort(),
