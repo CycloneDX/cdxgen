@@ -17,7 +17,7 @@ import {
   homedir,
   tmpdir,
 } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import process from "node:process";
 import stream from "node:stream/promises";
 import { parse } from "node:url";
@@ -713,6 +713,7 @@ export const extractTar = async (fullImageName, dir) => {
             path.includes("usr/share/zoneinfo/") ||
             path.includes("usr/share/doc/") ||
             path.includes("usr/share/i18n/") ||
+            basename(path).startsWith(".") ||
             path.includes("usr/share/licenses/device-mapper-libs") ||
             [
               "BlockDevice",
@@ -739,7 +740,15 @@ export const extractTar = async (fullImageName, dir) => {
       );
       console.log(err);
     } else if (
-      !["TAR_BAD_ARCHIVE", "TAR_ENTRY_INFO", "EACCES"].includes(err.code)
+      ![
+        "TAR_BAD_ARCHIVE",
+        "TAR_ENTRY_INFO",
+        "TAR_ENTRY_INVALID",
+        "TAR_ENTRY_ERROR",
+        "TAR_ENTRY_UNSUPPORTED",
+        "TAR_ABORT",
+        "EACCES",
+      ].includes(err.code)
     ) {
       console.log(
         `Error while extracting image ${fullImageName} to ${dir}. Please file this bug to the cdxgen repo. https://github.com/CycloneDX/cdxgen/issues`,
@@ -753,7 +762,12 @@ export const extractTar = async (fullImageName, dir) => {
       }
     } else if (["EACCES"].includes(err.code)) {
       console.log(err);
-    } else {
+      /*
+       * We do not display errors messages for errors:
+       * 1) TAR_ENTRY_INFO is an informative error indicating that an entry is being modified.
+       * 2) TAR_ENTRY_INVALID indicates that a given entry is not valid tar archive entry and will be skipped.
+       */
+    } else if (!["TAR_ENTRY_INFO", "TAR_ENTRY_INVALID"].includes(err.code)) {
       console.log(err);
     }
     return false;

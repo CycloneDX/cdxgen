@@ -236,7 +236,14 @@ export function mergeDependencies(
       provides?: undefined;
     }
 )[];
-export function trimComponents(components: any): any[];
+/**
+ * Trim duplicate components by retaining all the properties
+ *
+ * @param {Array} components Components
+ *
+ * @returns {Array} Filtered components
+ */
+export function trimComponents(components: any[]): any[];
 /**
  * Dedupe components
  *

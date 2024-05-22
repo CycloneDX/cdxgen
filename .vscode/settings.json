@@ -6,5 +6,5 @@
     "quickfix.biome": "explicit"
   },
   "editor.defaultFormatter": "biomejs.biome",
-  "deno.enable": true
+  "deno.enable": false
 }

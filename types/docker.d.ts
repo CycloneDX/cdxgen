@@ -1,4 +1,5 @@
 export const isWin: boolean;
+export const DOCKER_HUB_REGISTRY: "docker.io";
 export function getDirs(
   dirPath: string,
   dirName: string,

@@ -65,6 +65,50 @@ jobs:
           bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --validate
           bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --validate
           ls -ltr bomresults
+  linux-dockertar-tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ['22.x']
+        java-version: ['21']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java-version }}
+      - name: Trim CI agent
+        run: |
+          chmod +x contrib/free_disk_space.sh
+          ./contrib/free_disk_space.sh
+      - name: npm install, build and test
+        run: |
+          npm install
+          npm test
+          mkdir -p bomresults repotests
+        env:
+          CI: true
+      - uses: actions/checkout@v4
+        with:
+          repository: 'grafana-operator/grafana-operator'
+          path: 'repotests/grafana-operator'
+      - name: dockertests
+        run: |
+          echo "Test docker container image using a `.tar` file"
+          docker pull elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
+          docker save -o /tmp/elastic.tar elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
+          bin/cdxgen.js /tmp/elastic.tar -t docker -o bomresults/bom-elastic.tar.json --validate
+          ls -ltr bomresults
 
   os-tests:
     runs-on: ubuntu-latest
