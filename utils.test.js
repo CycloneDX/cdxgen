@@ -3851,3 +3851,16 @@ test("parseCmakeLikeFile tests", () => {
   });
   expect(retMap.pkgList.length).toEqual(2);
 });
+//To read the packages.configs
+test("parse csproj", () => {
+  expect(parseCsProjData(null)).toEqual([]);
+  const dep_list = parseCsProjData(
+    readFileSync("./test/sample_4x.csproj", { encoding: "utf-8" }),
+  );
+  expect(dep_list.length).toEqual(4);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "System.Memory",
+    version: "4.0.1.1",
+  });
+});
