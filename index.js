@@ -4837,30 +4837,24 @@ export async function createCsharpBom(path, options) {
       const deps = dlist;
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
-      }
-
-      if (dlist?.length) {
-        for (const p of dlist) {
-          parentDependsOn.add(p);
-        }
-      }
+      } 
     }
     if (parentDependsOn.size) {
-      const arrrr =  new Set();
+      const depenciesSet =  new Set();
       const prefix = parentComponent["bom-ref"].split("/")[0];
       parentDependsOn.forEach((dependsOn) => {
         if(dependsOn.name && dependsOn.version){ 
           //console.log("prefix: ",prefix);
           const dependcy = `${prefix}/${dependsOn.name}@${dependsOn.version}`;
-          arrrr.add(dependcy);
+          depenciesSet.add(dependcy);
         }
       }
       );
       
-      if(arrrr != null && arrrr.size > 0){
+      if(depenciesSet != null && depenciesSet.size > 0){
         dependencies.splice(0, 0, {
           ref: parentComponent["bom-ref"],        
-          dependsOn: Array.from(arrrr),
+          dependsOn: Array.from(depenciesSet),
         });
       } 
     }
