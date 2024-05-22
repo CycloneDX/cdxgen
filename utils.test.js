@@ -55,6 +55,7 @@ import {
   parseKVDep,
   parseLeinDep,
   parseLeiningenData,
+  parseMakeDFile,
   parseMavenTree,
   parseMixLockData,
   parseNodeShrinkwrap,
@@ -803,6 +804,10 @@ test("parse go list dependencies", async () => {
           "/home/almalinux/go/pkg/mod/cache/download/github.com/gorilla/mux/@v/v1.7.4.mod",
       },
       { name: "ModuleGoVersion", value: "1.12" },
+      {
+        name: "cdx:go:indirect",
+        value: "false",
+      },
     ],
   });
 });
@@ -1300,11 +1305,23 @@ test("get crates metadata", async () => {
       "sha256-6a07677093120a02583717b6dd1ef81d8de1e8d01bd226c83f0f9bdf3e56bb3a",
     description:
       "Application microframework with support for command-line option parsing,\nconfiguration, error handling, logging, and terminal interactions.\nThis crate contains the framework's core functionality.\n",
-    license: ["Apache-2.0"],
+    distribution: {
+      url: "https://crates.io/api/v1/crates/abscissa_core/0.5.2/download",
+    },
+    license: "Apache-2.0",
     repository: {
       url: "https://github.com/iqlusioninc/abscissa/tree/main/core/",
     },
     homepage: { url: "https://github.com/iqlusioninc/abscissa/" },
+    properties: [
+      { name: "cdx:cargo:crate_id", value: "207912" },
+      { name: "cdx:cargo:latest_version", value: "0.7.0" },
+      {
+        name: "cdx:cargo:features",
+        value:
+          '{"application":["config","generational-arena","trace","options","semver/serde","terminal"],"config":["secrets","serde","terminal","toml"],"default":["application","signals","secrets","testing","time"],"gimli-backtrace":["backtrace/gimli-symbolize","color-backtrace/gimli-symbolize"],"options":["gumdrop"],"secrets":["secrecy"],"signals":["libc","signal-hook"],"terminal":["color-backtrace","termcolor"],"testing":["regex","wait-timeout"],"time":["chrono"],"trace":["tracing","tracing-log","tracing-subscriber"]}',
+      },
+    ],
   });
 }, 20000);
 
@@ -3850,4 +3867,17 @@ test("parseCmakeLikeFile tests", () => {
     version: "20230125.1",
   });
   expect(retMap.pkgList.length).toEqual(2);
+});
+//To read the packages.configs
+test("parse csproj", () => {
+  expect(parseCsProjData(null)).toEqual([]);
+  const dep_list = parseCsProjData(
+    readFileSync("./test/sample_4x.csproj", { encoding: "utf-8" }),
+  );
+  expect(dep_list.length).toEqual(4);
+  expect(dep_list[0]).toEqual({
+    group: "",
+    name: "System.Memory",
+    version: "4.0.1.1",
+  });
 });

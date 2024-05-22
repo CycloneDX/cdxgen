@@ -675,24 +675,31 @@ export function getDartMetadata(pkgList: any[]): Promise<any[]>;
  * first as a convention, but it is not enforced.
  * https://doc.rust-lang.org/stable/style-guide/cargo.html#formatting-conventions
  *
- * @param {string} cargoTomlFile cargo.toml file
+ * @param {String} cargoTomlFile cargo.toml file
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ * @param {Object} pkgFilesMap Object with package name and list of files
  *
- * @returns {array} Package list
+ * @returns {Array} Package list
  */
 export function parseCargoTomlData(
   cargoTomlFile: string,
   simple?: boolean,
+  pkgFilesMap?: any,
 ): any[];
 /**
  * Parse a Cargo.lock file to find components within the Rust project.
  *
- * @param {string} cargoLockFile A path to a Cargo.lock file. The Cargo.lock-file path may be used as information for extended attributes, such as manifest based evidence.
+ * @param {String} cargoLockFile A path to a Cargo.lock file. The Cargo.lock-file path may be used as information for extended attributes, such as manifest based evidence.
  * @param {boolean} simple Return a simpler representation of the component by skipping extended attributes and license fetch.
+ * @param {Object} pkgFilesMap Object with package name and list of files
  *
- * @returns {array} A list of the project's components as described by the Cargo.lock-file.
+ * @returns {Array} A list of the project's components as described by the Cargo.lock-file.
  */
-export function parseCargoData(cargoLockFile: string, simple?: boolean): any[];
+export function parseCargoData(
+  cargoLockFile: string,
+  simple?: boolean,
+  pkgFilesMap?: any,
+): any[];
 export function parseCargoDependencyData(cargoLockData: any): {
   ref: string;
   dependsOn: any;
@@ -1285,6 +1292,14 @@ export function getNugetMetadata(
   dependencies: any[];
 }>;
 export function addEvidenceForDotnet(pkgList: any, slicesFile: any): any;
+/**
+ * Function to parse the .d make files
+ *
+ * @param {String} dfile .d file path
+ *
+ * @returns {Object} pkgFilesMap Object with package name and list of files
+ */
+export function parseMakeDFile(dfile: string): any;
 export const dirNameStr: string;
 export const isWin: boolean;
 export const isMac: boolean;

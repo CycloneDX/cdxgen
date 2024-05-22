@@ -36,7 +36,7 @@ $ brew install cdxgen
 Deno install is also supported.
 
 ```shell
-deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen"
+deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net -n cdxgen "npm:@cyclonedx/cdxgen/cdxgen"
 ```
 
 You can also use the cdxgen container image
@@ -69,45 +69,61 @@ Commands:
   cdxgen completion  Generate bash/zsh completion
 
 Options:
-  -o, --output                 Output file. Default bom.json                                                                                                                   [default: "bom.json"]
-  -t, --type                   Project type. Please refer to https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES for supported languages/platforms.
-  -r, --recurse                Recurse mode suitable for mono-repos. Defaults to true. Pass --no-recurse to disable.                                                       [boolean] [default: true]
-  -p, --print                  Print the SBOM as a table with tree.                                                                                                                        [boolean]
-  -c, --resolve-class          Resolve class names for packages. jars only for now.                                                                                                        [boolean]
-      --deep                   Perform deep searches for components. Useful while scanning C/C++ apps, live OS and oci images.                                                             [boolean]
+  -o, --output                 Output file. Default bom.json                             [default: "bom.json"]
+  -t, --type                   Project type. Please refer to https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPE
+                               S for supported languages/platforms.
+  -r, --recurse                Recurse mode suitable for mono-repos. Defaults to true. Pass --no-recurse to di
+                               sable.                                                [boolean] [default: true]
+  -p, --print                  Print the SBOM as a table with tree.                                  [boolean]
+  -c, --resolve-class          Resolve class names for packages. jars only for now.                  [boolean]
+      --deep                   Perform deep searches for components. Useful while scanning C/C++ apps, live OS
+                                and oci images.                                                      [boolean]
       --server-url             Dependency track url. Eg: https://deptrack.cyclonedx.io
       --api-key                Dependency track api key
       --project-group          Dependency track project group
       --project-name           Dependency track project name. Default use the directory name
-      --project-version        Dependency track project version                                                                                                               [string] [default: ""]
-      --project-id             Dependency track project id. Either provide the id or the project name and version together                                                                  [string]
-      --parent-project-id      Dependency track parent project id                                                                                                                           [string]
-      --required-only          Include only the packages with required scope on the SBOM. Would set compositions.aggregate to incomplete unless --no-auto-compositions is passed.          [boolean]
-      --fail-on-error          Fail if any dependency extractor fails.                                                                                                                     [boolean]
-      --no-babel               Do not use babel to perform usage analysis for JavaScript/TypeScript projects.                                                                              [boolean]
-      --generate-key-and-sign  Generate an RSA public/private key pair and then sign the generated SBOM using JSON Web Signatures.                                                         [boolean]
-      --server                 Run cdxgen as a server                                                                                                                                      [boolean]
-      --server-host            Listen address                                                                                                                                 [default: "127.0.0.1"]
-      --server-port            Listen port                                                                                                                                         [default: "9090"]
-      --install-deps           Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. Use --no-install-deps to disable this feature.
-                                                                                                                                                                                           [boolean]
-      --validate               Validate the generated SBOM using json schema. Defaults to true. Pass --no-validate to disable.                                             [boolean] [default: true]
-      --evidence               Generate SBOM with evidence for supported languages.                                                                                       [boolean] [default: false]
-      --spec-version           CycloneDX Specification version to use. Defaults to 1.5                                                                                       [number] [default: 1.5]
-      --filter                 Filter components containing this word in purl or component.properties.value. Multiple values allowed.                                                        [array]
-      --only                   Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed.                      [array]
-      --author                 The person(s) who created the BOM. Set this value if you're intending the modify the BOM and claim authorship.                  [array] [default: "OWASP Foundation"]
+      --project-version        Dependency track project version                         [string] [default: ""]
+      --project-id             Dependency track project id. Either provide the id or the project name and vers
+                               ion together                                                           [string]
+      --parent-project-id      Dependency track parent project id                                     [string]
+      --required-only          Include only the packages with required scope on the SBOM. Would set compositio
+                               ns.aggregate to incomplete unless --no-auto-compositions is passed.   [boolean]
+      --fail-on-error          Fail if any dependency extractor fails.                               [boolean]
+      --no-babel               Do not use babel to perform usage analysis for JavaScript/TypeScript projects.
+                                                                                                     [boolean]
+      --generate-key-and-sign  Generate an RSA public/private key pair and then sign the generated SBOM using
+                               JSON Web Signatures.                                                  [boolean]
+      --server                 Run cdxgen as a server                                                [boolean]
+      --server-host            Listen address                                           [default: "127.0.0.1"]
+      --server-port            Listen port                                                   [default: "9090"]
+      --install-deps           Install dependencies automatically for some projects. Defaults to true but disa
+                               bled for containers and oci scans. Use --no-install-deps to disable this featur
+                               e.                                                                    [boolean]
+      --validate               Validate the generated SBOM using json schema. Defaults to true. Pass --no-vali
+                               date to disable.                                      [boolean] [default: true]
+      --evidence               Generate SBOM with evidence for supported languages. [boolean] [default: false]
+      --spec-version           CycloneDX Specification version to use. Defaults to 1.5 [number] [default: 1.5]
+      --filter                 Filter components containing this word in purl or component.properties.value. M
+                               ultiple values allowed.                                                 [array]
+      --only                   Include components only containing this word in purl. Useful to generate BOM wi
+                               th first party components alone. Multiple values allowed.               [array]
+      --author                 The person(s) who created the BOM. Set this value if you're intending the modif
+                               y the BOM and claim authorship.           [array] [default: "OWASP Foundation"]
       --profile                BOM profile to use for generation. Default generic.
-                                                                             [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic"] [default: "generic"]
-      --exclude                Additional glob pattern(s) to ignore                                                                                                                          [array]
-      --include-formulation    Generate formulation section using git metadata.                                                                                           [boolean] [default: false]
-      --include-crypto         Include crypto libraries found under formulation.                                                                                          [boolean] [default: false]
-      --standard               The list of standards which may consist of regulations, industry or organizational-specific standards, maturity models, best practices, or any other requirements whi
-                               ch can be evaluated against or attested to.
-                                                           [array] [choices: "asvs-4.0.3", "bsimm-v13", "masvs-2.0.0", "nist_ssdf-1.1", "pcissc-secure-slc-1.1", "scvs-1.0.0", "ssaf-DRAFT-2023-11"]
-      --auto-compositions      Automatically set compositions when the BOM was filtered. Defaults to true                                                                  [boolean] [default: true]
-  -h, --help                   Show help                                                                                                                                                   [boolean]
-  -v, --version                Show version number                                                                                                                                         [boolean]
+  [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic"] [default:
+                                                                                                    "generic"]
+      --exclude                Additional glob pattern(s) to ignore                                    [array]
+      --include-formulation    Generate formulation section using git metadata.     [boolean] [default: false]
+      --include-crypto         Include crypto libraries found under formulation.    [boolean] [default: false]
+      --standard               The list of standards which may consist of regulations, industry or organizatio
+                               nal-specific standards, maturity models, best practices, or any other requireme
+                               nts which can be evaluated against or attested to.
+  [array] [choices: "asvs-4.0.3", "bsimm-v13", "masvs-2.0.0", "nist_ssdf-1.1", "pcissc-secure-slc-1.1", "scvs-
+                                                                                 1.0.0", "ssaf-DRAFT-2023-11"]
+      --auto-compositions      Automatically set compositions when the BOM was filtered. Defaults to true
+                                                                                     [boolean] [default: true]
+  -h, --help                   Show help                                                             [boolean]
+  -v, --version                Show version number                                                   [boolean]
 
 Examples:
   cdxgen -t java .  Generate a Java SBOM for the current directory
