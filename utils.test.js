@@ -3875,6 +3875,7 @@ test("parse csproj", () => {
     readFileSync("./test/sample_4x.csproj", { encoding: "utf-8" }),
   );
   expect(dep_list.length).toEqual(4);
+  
   expect(dep_list[0]).toEqual({
     group: "",
     name: "System.Memory",
