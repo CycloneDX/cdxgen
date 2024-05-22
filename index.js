@@ -4916,12 +4916,10 @@ export function mergeDependencies(
         provides: Array.from(provides_map[akey]).sort(),
       });
     } else {
-       if (deps_map && deps_map.size > 0){        
-        retlist.push({
+         retlist.push({
           ref: akey,
           dependsOn: Array.from(deps_map[akey]).sort(),
         });
-    }
     }
   }
   return retlist;
