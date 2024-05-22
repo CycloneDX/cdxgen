@@ -56,12 +56,12 @@ RUN set -e; \
         pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
     && python${PYTHON_VERSION} --version \
-    && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
-    && python${PYTHON_VERSION} -m pip install --user pipenv poetry \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && source "$HOME/.cargo/env" \
     && cargo --version \
     && rustc --version \
+    && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
+    && python${PYTHON_VERSION} -m pip install --user pipenv poetry \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \
