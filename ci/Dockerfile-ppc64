@@ -55,10 +55,10 @@ RUN set -e; \
         python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel java-21-openjdk-headless \
         pcre2 which tar gzip zip unzip sudo nodejs ncurses sqlite-devel \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
-    && python3${PYTHON_VERSION} --version \
+    && python${PYTHON_VERSION} --version \
     && source "$HOME/.cargo/env" \
-    && python3${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
-    && python3${PYTHON_VERSION} -m pip install --user pipenv poetry \
+    && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
+    && python${PYTHON_VERSION} -m pip install --user pipenv poetry \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && cargo --version \
     && rustc --version \
