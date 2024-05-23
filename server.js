@@ -131,10 +131,11 @@ const start = (options) => {
     if (!filePath) {
       res.writeHead(500, { "Content-Type": "application/json" });
       return res.end(
-        "{'error': 'true', 'message': 'path or url is required.'}\n",
+        JSON.stringify({
+          error: "path or url is required.",
+        }),
       );
     }
-    res.writeHead(200, { "Content-Type": "application/json" });
     let srcDir = filePath;
     if (filePath.startsWith("http") || filePath.startsWith("git")) {
       srcDir = gitClone(filePath, reqOptions.gitBranch);
@@ -145,6 +146,21 @@ const start = (options) => {
     if (reqOptions.requiredOnly || reqOptions["filter"] || reqOptions["only"]) {
       bomNSData = postProcess(bomNSData, reqOptions);
     }
+    if (reqOptions.serverUrl && reqOptions.apiKey) {
+      console.log("Publishing SBOM to Dependency Track");
+      const response = await submitBom(reqOptions, bomNSData.bomJson);
+      const errorMessages = response?.errors;
+      if (errorMessages) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        return res.end(
+          JSON.stringify({
+            error: "Unable to submit the SBOM to the Dependency-Track server",
+            details: errorMessages,
+          }),
+        );
+      }
+    }
+    res.writeHead(200, { "Content-Type": "application/json" });
     if (bomNSData.bomJson) {
       if (
         typeof bomNSData.bomJson === "string" ||
@@ -154,10 +170,6 @@ const start = (options) => {
       } else {
         res.write(JSON.stringify(bomNSData.bomJson, null, null));
       }
-    }
-    if (reqOptions.serverUrl && reqOptions.apiKey) {
-      console.log("Publishing SBOM to Dependency Track");
-      submitBom(reqOptions, bomNSData.bomJson);
     }
     res.end("\n");
     if (cleanup && srcDir && srcDir.startsWith(os.tmpdir()) && fs.rmSync) {

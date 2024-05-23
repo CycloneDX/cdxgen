@@ -6305,6 +6305,7 @@ export async function createBom(path, options) {
  *
  * @param {Object} args CLI args
  * @param {Object} bomContents BOM Json
+ * @return {Promise<{ token: string } | { errors: string[] } | undefined>} a promise with a token (if request was successful), a body with errors (if request failed) or undefined (in case of invalid arguments)
  */
 export async function submitBom(args, bomContents) {
   const serverUrl = `${args.serverUrl.replace(/\/$/, "")}/api/v1/bom`;
@@ -6388,11 +6389,11 @@ export async function submitBom(args, bomContents) {
         console.log(
           "Unable to submit the SBOM to the Dependency-Track server using POST method",
         );
-        console.log(error);
       }
     } else {
       console.log("Unable to submit the SBOM to the Dependency-Track server");
-      console.log(error);
     }
+    console.log(error.response?.body);
+    return error.response?.body;
   }
 }
