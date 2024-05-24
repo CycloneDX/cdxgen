@@ -30,6 +30,7 @@
   },
   "formatter": {
     "enabled": true,
+    "ignore": ["types/**"],
     "indentStyle": "space",
     "indentWidth": 2
   },
