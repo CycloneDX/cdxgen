@@ -1,0 +1,288 @@
+openapi: 3.0.3
+info:
+  title: CycloneDX Generator (cdxgen) Server
+  description: |-
+    [cdxgen](https://github.com/CycloneDX/cdxgen) is a CLI tool, library, REPL, and server to create a valid and compliant CycloneDX Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. 
+    
+    CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse.
+
+
+    Some useful links:
+    - [Documentation](https://cyclonedx.github.io/cdxgen/#/)
+    - [Source API definition](https://github.com/CycloneDX/cdxgen/blob/master/lib/server/openapi.yaml)
+    - [CycloneDX Specification](https://cyclonedx.org/specification/overview/)
+    - [CycloneDX JSON Schema Specification](https://github.com/CycloneDX/specification/blob/1.6/schema/bom-1.6.schema.json)
+  contact:
+    name: Slack (CycloneDX Workspace)
+    url: https://cyclonedx.slack.com/archives/C04NFFE1962
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: latest
+servers:
+  - url: http://localhost:9090
+tags:
+  - name: health
+    description: Service health checks
+  - name: sbom
+    description: Generate Software Bill of Materials
+paths:
+  /health:
+    get:
+      tags:
+        - health
+      summary: Check service health
+      description: Check the health of the cdxgen server endpoint
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service operational
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Health'   
+  /sbom:
+    get:
+      tags:
+        - sbom
+      summary: Generate Software Bill of Materials (SBOM)
+      description: Generate a new Software Bill of Materials (SBOM)
+      operationId: GetSBOM
+      parameters:
+        - name: type
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/type'
+        - name: multiProject
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/multiProject'
+        - name: requiredOnly
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/requiredOnly'
+        - name: noBabel
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/noBabel'
+        - name: installDeps
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/installDeps'
+        - name: projectId
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/projectId'
+        - name: projectName
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/projectName'
+        - name: projectGroup
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/projectGroup'
+        - name: projectVersion
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/projectVersion'
+        - name: parentUUID
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/parentUUID'
+        - name: serverUrl
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/serverUrl'
+        - name: apiKey
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/apiKey'
+        - name: specVersion
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/specVersion'
+        - name: filter
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/filter'
+        - name: only
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/only'
+        - name: autoCompositions
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/autoCompositions'
+        - name: gitBranch
+          in: query
+          required: false 
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/gitBranch'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CycloneDXSBOM'          
+
+    post:
+      tags:
+        - sbom
+      summary: Generate Software Bill of Materials (SBOM)
+      description: Generate a new Software Bill of Materials (SBOM)
+      operationId: generateSBOM
+      requestBody:
+        description: cdxgen server configuration options
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CDXGEN'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CycloneDXSBOM'
+       
+components:
+  schemas:
+    Health:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "OK"
+    CDXGEN:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Project Type
+          default: "universal"
+          externalDocs:
+            description: See supported project types
+            url: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
+        multiProject:
+          type: boolean
+        requiredOnly:
+          type: boolean
+          description: Include only the packages with required scope on the SBOM
+        noBabel: 
+          type: boolean
+          description: Do not use babel to perform usage analysis for JavaScript/TypeScript projects
+        installDeps:
+          type: boolean
+          description: Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans
+          default: true
+        projectId: 
+          type: string
+          description: The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three)
+        projectName: 
+          type: string
+          description: Dependency Track project name. Default use the directory name
+        projectGroup:
+          type: string
+          description: Dependency Track project group
+        projectVersion:
+          type: string
+          description: Dependency Track project version
+          default: ""
+        parentUUID:
+          type: string
+          description: UUID of the parent Dependency Track project
+        serverUrl:
+          type: string
+          description: URL to the Dependency Track API server
+        apiKey:
+          type: string
+          description: API key for the Dependency Track API server
+        specVersion:
+          type: string
+          description: CycloneDX Specification version to use
+          default: "1.5"
+        filter:
+          type: array
+          items:
+            type: string
+          description: Filter components containing this word in purl. Multiple values allowed
+        only:
+          type: array
+          items:
+            type: string
+          description: Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed
+        autoCompositions:
+          type: boolean 
+          description: Automatically set compositions when the BOM was filtered. [boolean]
+          default: true
+        gitBranch:
+          type: string
+          description: Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository
+          
+          
+    CycloneDXSBOM:
+      type: object
+      externalDocs:
+        description: See JSON Schema
+        url: https://github.com/CycloneDX/specification/blob/1.6/schema/bom-1.6.schema.json
+      properties:
+        bomFormat:
+          type: string
+          description: Bill of Material format
+          example: CycloneDX
+        specVersion:
+          type: string
+          description: Specification version
+          example: "1.6"
+          enum:
+            - "1.4"
+            - "1.5"
+            - "1.6"
+        serialNumber:
+          type: string
+          description: Unique serial number
+          example: "urn:uuid:f8f03e77-3c04-4c10-b1c2-ddaf0bd955ec"
+        version:
+          type: integer
+          format: int64
+          example: 1
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        components:
+          $ref: '#/components/schemas/Components'
+        services:
+          $ref: '#/components/schemas/Services'
+        dependencies:
+          $ref: '#/components/schemas/Dependencies'
+          
+    Metadata:
+      type: object
+      
+    Components:
+      type: object
+      
+    Services:
+      type: object
+      
+    Dependencies:
+      type: object
+      xml:
+        name: pet
