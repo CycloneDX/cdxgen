@@ -7,12 +7,7 @@
  * @param {Object} pkg Package object
  * @param {string} ptype Package type
  */
-export function listComponents(
-  options: any,
-  allImports: any,
-  pkg: any,
-  ptype?: string,
-): any[];
+export function listComponents(options: any, allImports: any, pkg: any, ptype?: string): any[];
 /**
  * Function to create bom string for Java jars
  *
@@ -28,13 +23,10 @@ export function createJarBom(path: string, options: any): any;
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export function createAndroidBom(
-  path: string,
-  options: any,
-): {
-  bomJson: any;
-  dependencies: any;
-  parentComponent: any;
+export function createAndroidBom(path: string, options: any): {
+    bomJson: any;
+    dependencies: any;
+    parentComponent: any;
 };
 /**
  * Function to create bom string for binaries using blint
@@ -42,13 +34,10 @@ export function createAndroidBom(
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export function createBinaryBom(
-  path: string,
-  options: any,
-): {
-  bomJson: any;
-  dependencies: any;
-  parentComponent: any;
+export function createBinaryBom(path: string, options: any): {
+    bomJson: any;
+    dependencies: any;
+    parentComponent: any;
 };
 /**
  * Function to create bom string for Java projects
@@ -196,46 +185,36 @@ export function createCsharpBom(path: string, options: any): Promise<any>;
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export function createCryptoCertsBom(
-  path: string,
-  options: any,
-): Promise<{
-  bomJson: {
-    components: {
-      name: string;
-      type: string;
-      version: string;
-      "bom-ref": string;
-      cryptoProperties: {
-        assetType: string;
-        algorithmProperties: {
-          executionEnvironment: string;
-          implementationPlatform: string;
-        };
-      };
-      properties: {
-        name: string;
-        value: string;
-      }[];
-    }[];
-  };
+export function createCryptoCertsBom(path: string, options: any): Promise<{
+    bomJson: {
+        components: {
+            name: string;
+            type: string;
+            version: string;
+            "bom-ref": string;
+            cryptoProperties: {
+                assetType: string;
+                algorithmProperties: {
+                    executionEnvironment: string;
+                    implementationPlatform: string;
+                };
+            };
+            properties: {
+                name: string;
+                value: string;
+            }[];
+        }[];
+    };
 }>;
-export function mergeDependencies(
-  dependencies: any,
-  newDependencies: any,
-  parentComponent?: {},
-): (
-  | {
-      ref: string;
-      dependsOn: any[];
-      provides: any[];
-    }
-  | {
-      ref: string;
-      dependsOn: any[];
-      provides?: undefined;
-    }
-)[];
+export function mergeDependencies(dependencies: any, newDependencies: any, parentComponent?: {}): ({
+    ref: string;
+    dependsOn: any[];
+    provides: any[];
+} | {
+    ref: string;
+    dependsOn: any[];
+    provides?: undefined;
+})[];
 /**
  * Trim duplicate components by retaining all the properties
  *
@@ -254,12 +233,7 @@ export function trimComponents(components: any[]): any[];
  *
  * @returns {Object} Object including BOM Json
  */
-export function dedupeBom(
-  options: any,
-  components: any[],
-  parentComponent: any,
-  dependencies: any[],
-): any;
+export function dedupeBom(options: any, components: any[], parentComponent: any, dependencies: any[]): any;
 /**
  * Function to create bom string for all languages
  *
