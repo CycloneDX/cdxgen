@@ -25,6 +25,11 @@ docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx
 
 Use curl or your favorite tool to pass arguments to the `/sbom` route.
 
+## API Specification
+
+View cdxgen API specification via [Swagger Editor](https://editor.swagger.io?url=https://github.com/CycloneDX/cdxgen/blob/master/lib/server/openapi.yaml)
+
+
 ## Server arguments
 
 Arguments can be passed either via the query string or as a JSON body. The following arguments are supported.
