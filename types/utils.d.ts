@@ -611,7 +611,15 @@ export function parseEdnData(rawEdnData: any): any[];
 export function parseNupkg(nupkgFile: any): Promise<any[]>;
 export function parseNuspecData(nupkgFile: any, nuspecData: any): any[];
 export function parseCsPkgData(pkgData: any): any[];
-export function parseCsProjData(csProjData: any, projFile: any): any[];
+/**
+ * Method to parse .csproj like xml files
+ *
+ * @param {String} csProjData Raw data
+ * @param {String} projFile File name
+ *
+ * @returns {Object} Containing parent component, package, and dependencies
+ */
+export function parseCsProjData(csProjData: string, projFile: string): any;
 export function parseCsProjAssetsData(csProjData: any, assetsJsonFile: any): {
     pkgList: any[];
     dependenciesList: any[];

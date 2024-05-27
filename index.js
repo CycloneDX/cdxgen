@@ -4652,7 +4652,7 @@ export async function createCsharpBom(path, options) {
   if (options.lifecycle === "post-build") {
     return createBinaryBom(path, options);
   }
-  const parentComponent = createDefaultParentComponent(path, "nuget", options);
+  let parentComponent = createDefaultParentComponent(path, "nuget", options);
   const slnFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}*.sln`,
@@ -4697,9 +4697,10 @@ export async function createCsharpBom(path, options) {
     `${options.multiProject ? "**/" : ""}*.nupkg`,
     options,
   );
-  // Support for automatic restore
+  // Support for automatic restore for .Net projects
   if (
     options.installDeps &&
+    options.projectType !== "dotnet-framework" &&
     !projAssetsFiles.length &&
     !pkgLockFiles.length &&
     !paketLockFiles.length
@@ -4857,7 +4858,10 @@ export async function createCsharpBom(path, options) {
       }
     }
   }
-  if (!pkgList.length && csProjFiles.length) {
+  if (
+    options.projectType === "dotnet-framework" ||
+    (!pkgList.length && csProjFiles.length)
+  ) {
     manifestFiles = manifestFiles.concat(csProjFiles);
     // .csproj parsing
     for (const f of csProjFiles) {
@@ -4869,12 +4873,31 @@ export async function createCsharpBom(path, options) {
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const dlist = parseCsProjData(csProjData, f);
-      if (dlist?.length) {
-        pkgList = pkgList.concat(dlist);
+      const retMap = parseCsProjData(csProjData, f);
+      if (retMap?.parentComponent) {
+        // If there are multiple project files, track the parent components using nested components
+        if (csProjFiles.length > 1) {
+          if (!parentComponent.components) {
+            parentComponent.components = [];
+          }
+          parentComponent.components.push(retMap.parentComponent);
+        } else {
+          // There is only one project file. Make it the parent.
+          parentComponent = retMap.parentComponent;
+        }
+      }
+      if (retMap?.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+      }
+      if (retMap.dependencies?.length) {
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependencies,
+          parentComponent,
+        );
       }
     }
-    if (pkgList.length) {
+    if (pkgList.length && options.projectType !== "dotnet-framework") {
       console.log(
         `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`,
       );
@@ -6036,6 +6059,7 @@ export async function createBom(path, options) {
     case "csharp":
     case "netcore":
     case "dotnet":
+    case "dotnet-framework":
     case "vb":
       return await createCsharpBom(path, options);
     case "dart":

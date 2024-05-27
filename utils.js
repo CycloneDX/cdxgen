@@ -6206,8 +6206,17 @@ export function parseCsPkgData(pkgData) {
   return pkgList;
 }
 
+/**
+ * Method to parse .csproj like xml files
+ *
+ * @param {String} csProjData Raw data
+ * @param {String} projFile File name
+ *
+ * @returns {Object} Containing parent component, package, and dependencies
+ */
 export function parseCsProjData(csProjData, projFile) {
   const pkgList = [];
+  let parentComponent = { type: "application", properties: [] };
   if (!csProjData) {
     return pkgList;
   }
@@ -6223,6 +6232,70 @@ export function parseCsProjData(csProjData, projFile) {
     return pkgList;
   }
   const project = projects[0];
+  // Collect details about the parent component
+  if (project?.PropertyGroup?.length) {
+    for (const apg of project.PropertyGroup) {
+      if (
+        apg?.AssemblyName &&
+        Array.isArray(apg.AssemblyName) &&
+        apg.AssemblyName[0]._ &&
+        Array.isArray(apg.AssemblyName[0]._)
+      ) {
+        parentComponent.name = apg.AssemblyName[0]._[0];
+      }
+      if (
+        apg?.ProductVersion &&
+        Array.isArray(apg.ProductVersion) &&
+        apg.ProductVersion[0]._ &&
+        Array.isArray(apg.ProductVersion[0]._)
+      ) {
+        parentComponent.version = apg.ProductVersion[0]._[0];
+      }
+      if (
+        apg?.OutputType &&
+        Array.isArray(apg.OutputType) &&
+        apg.OutputType[0]._ &&
+        Array.isArray(apg.OutputType[0]._)
+      ) {
+        if (apg.OutputType[0]._[0] === "Library") {
+          parentComponent.type = "library";
+          parentComponent.purl = `pkg:nuget/${parentComponent.name}@${
+            parentComponent.version || "latest"
+          }`;
+        } else {
+          parentComponent.purl = `pkg:nuget/${parentComponent.name}@${
+            parentComponent.version || "latest"
+          }?output_type=${apg.OutputType[0]._[0]}`;
+        }
+      }
+      if (
+        apg?.ProjectGuid &&
+        Array.isArray(apg.ProjectGuid) &&
+        apg.ProjectGuid[0]._ &&
+        Array.isArray(apg.ProjectGuid[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:project_guid",
+          value: apg.ProjectGuid[0]._[0],
+        });
+      }
+      if (
+        apg?.TargetFrameworkVersion &&
+        Array.isArray(apg.TargetFrameworkVersion) &&
+        apg.TargetFrameworkVersion[0]._ &&
+        Array.isArray(apg.TargetFrameworkVersion[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:target_framework",
+          value: apg.TargetFrameworkVersion[0]._[0],
+        });
+      }
+    }
+  }
+  // If we are unable to determine the name of the parent component, clear the object
+  if (!parentComponent.purl) {
+    parentComponent = undefined;
+  }
   if (project.ItemGroup?.length) {
     for (const i in project.ItemGroup) {
       const item = project.ItemGroup[i];
@@ -6235,6 +6308,8 @@ export function parseCsProjData(csProjData, projFile) {
         }
         pkg.name = pref.Include;
         pkg.version = pref.Version;
+        pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+        pkg["bom-ref"] = pkg.purl;
         if (projFile) {
           pkg.properties = [
             {
@@ -6270,13 +6345,18 @@ export function parseCsProjData(csProjData, projFile) {
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
+        if (pkg.version) {
+          pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+        } else {
+          pkg.purl = `pkg:nuget/${pkg.name}`;
+        }
+        pkg["bom-ref"] = pkg.purl;
+        pkg.properties = [];
         if (projFile) {
-          pkg.properties = [
-            {
-              name: "SrcFile",
-              value: projFile,
-            },
-          ];
+          pkg.properties.push({
+            name: "SrcFile",
+            value: projFile,
+          });
           pkg.evidence = {
             identity: {
               field: "purl",
@@ -6291,11 +6371,41 @@ export function parseCsProjData(csProjData, projFile) {
             },
           };
         }
+        if (
+          item.Reference[j]?.HintPath &&
+          Array.isArray(item.Reference[j].HintPath) &&
+          Array.isArray(item.Reference[j].HintPath[0]._)
+        ) {
+          pkg.properties.push({
+            name: "cdx:dotnet:dll_path",
+            value: item.Reference[j].HintPath[0]._[0],
+          });
+        }
         pkgList.push(pkg);
       }
     }
   }
-  return pkgList;
+  if (
+    parentComponent &&
+    Object.keys(parentComponent).length &&
+    parentComponent.purl
+  ) {
+    parentComponent["bom-ref"] = parentComponent.purl;
+  }
+  let dependencies = [];
+  if (parentComponent?.["bom-ref"]) {
+    dependencies = [
+      {
+        ref: parentComponent.purl,
+        dependsOn: pkgList.map((p) => p["bom-ref"]),
+      },
+    ];
+  }
+  return {
+    pkgList,
+    parentComponent,
+    dependencies,
+  };
 }
 
 export function parseCsProjAssetsData(csProjData, assetsJsonFile) {
