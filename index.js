@@ -4682,7 +4682,7 @@ export async function createCsharpBom(path, options) {
     `${options.multiProject ? "**/" : ""}project.assets.json`,
     options,
   );
-  const pkgLockFiles = getAllFiles(
+  let pkgLockFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}packages.lock.json`,
     options,
@@ -4700,20 +4700,32 @@ export async function createCsharpBom(path, options) {
   // Support for automatic restore for .Net projects
   if (
     options.installDeps &&
-    options.projectType !== "dotnet-framework" &&
     !projAssetsFiles.length &&
     !pkgLockFiles.length &&
     !paketLockFiles.length
   ) {
     const filesToRestore = slnFiles.concat(csProjFiles);
     for (const f of filesToRestore) {
+      const buildCmd =
+        options.projectType === "dotnet-framework" ? "nuget" : "dotnet";
       if (DEBUG_MODE) {
         const basePath = dirname(f);
-        console.log("Executing 'dotnet restore' in", basePath);
+        console.log(`Executing '${buildCmd} restore' in ${basePath}`);
       }
       const result = spawnSync(
-        "dotnet",
-        ["restore", "--force", "--ignore-failed-sources", f],
+        buildCmd,
+        options.projectType === "dotnet-framework"
+          ? [
+              "restore",
+              "-NonInteractive",
+              "-Recursive",
+              "-UseLockFile",
+              "-PackageSaveMode",
+              "nuspec;nupkg",
+              "-Verbosity",
+              "quiet",
+            ]
+          : ["restore", "--force", "--ignore-failed-sources", f],
         {
           cwd: path,
           encoding: "utf-8",
@@ -4730,10 +4742,15 @@ export async function createCsharpBom(path, options) {
         options.failOnError && process.exit(1);
       }
     }
-    // Collect the assets file generated from restore
+    // Collect the assets and lock files generated from restore
     projAssetsFiles = getAllFiles(
       path,
       `${options.multiProject ? "**/" : ""}project.assets.json`,
+      options,
+    );
+    pkgLockFiles = getAllFiles(
+      path,
+      `${options.multiProject ? "**/" : ""}packages.lock.json`,
       options,
     );
   }
@@ -4859,7 +4876,7 @@ export async function createCsharpBom(path, options) {
     }
   }
   if (
-    options.projectType === "dotnet-framework" ||
+    (options.projectType === "dotnet-framework" && !pkgLockFiles.length) ||
     (!pkgList.length && csProjFiles.length)
   ) {
     manifestFiles = manifestFiles.concat(csProjFiles);
