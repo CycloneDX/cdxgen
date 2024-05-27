@@ -192,14 +192,10 @@ if (existsSync(join(CDXGEN_PLUGINS_DIR, "osquery"))) {
 }
 let DOSAI_BIN = null;
 if (existsSync(join(CDXGEN_PLUGINS_DIR, "dosai"))) {
-  let platformToUse = platform;
-  if (platform === "darwin") {
-    platformToUse = "osx";
-  }
   DOSAI_BIN = join(
     CDXGEN_PLUGINS_DIR,
     "dosai",
-    `dosai-${platformToUse}-${arch}${extn}`,
+    `dosai-${platform}-${arch}${extn}`,
   );
 } else if (process.env.DOSAI_CMD) {
   DOSAI_BIN = process.env.DOSAI_CMD;

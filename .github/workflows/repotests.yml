@@ -312,7 +312,7 @@ jobs:
         shell: bash
       - name: repotests dotnet-paket
         run: |
-          bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
+          bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --deep
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket-2.json --validate
           bin/cdxgen.js -p -r -t dotnet repotests/dotnet-podcasts -o bomresults/bom-dotnet-podcasts.json --profile research --export-proto
           bin/cdxgen.js -p -r -t dotnet repotests/react-native-windows -o bomresults/bom-react-native-windows.json
