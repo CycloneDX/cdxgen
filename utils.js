@@ -6376,9 +6376,13 @@ export function parseCsProjData(csProjData, projFile) {
           Array.isArray(item.Reference[j].HintPath) &&
           Array.isArray(item.Reference[j].HintPath[0]._)
         ) {
+          let packageFileName = basename(item.Reference[j].HintPath[0]._[0]);
+          if (packageFileName.includes("\\")) {
+            packageFileName = packageFileName.split("\\").pop();
+          }
           pkg.properties.push({
-            name: "cdx:dotnet:dll_path",
-            value: item.Reference[j].HintPath[0]._[0],
+            name: "PackageFiles",
+            value: packageFileName,
           });
         }
         pkgList.push(pkg);

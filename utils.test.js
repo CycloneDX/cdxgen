@@ -1633,8 +1633,8 @@ test("parse cs proj", () => {
     "bom-ref": "pkg:nuget/activeup.net.common",
     properties: [
       {
-        name: "cdx:dotnet:dll_path",
-        value: "..\\activeup.net.common.dll",
+        name: "PackageFiles",
+        value: "activeup.net.common.dll",
       },
     ],
   });
@@ -1929,8 +1929,8 @@ test("parse .net cs proj", () => {
     "bom-ref": "pkg:nuget/Antlr3.Runtime@3.5.0.2",
     properties: [
       {
-        name: "cdx:dotnet:dll_path",
-        value: "..\\packages\\Antlr.3.5.0.2\\lib\\Antlr3.Runtime.dll",
+        name: "PackageFiles",
+        value: "Antlr3.Runtime.dll",
       },
     ],
   });
