@@ -173,6 +173,11 @@ jobs:
           path: 'repotests/SimpleFrameworkApp'
       - uses: actions/checkout@v4
         with:
+          repository: 'chabbasaad/Reporting-Windows-Application'
+          ref: 'master'
+          path: 'repotests/Reporting-Windows-Application'
+      - uses: actions/checkout@v4
+        with:
           repository: 'appthreat/blint'
           ref: 'v1.0.34'
           path: 'repotests/blint'
@@ -325,6 +330,7 @@ jobs:
       - name: repotests SimpleFrameworkApp
         run: |
           bin/cdxgen.js -p -r -t dotnet-framework repotests/SimpleFrameworkApp -o bomresults/bom-dotnet-framework.json
+          bin/cdxgen.js -p -r -t dotnet-framework repotests/Reporting-Windows-Application -o bomresults/bom-dotnet-framework-reporting.json --deep
         shell: bash
       - name: repotests blint
         run: |
