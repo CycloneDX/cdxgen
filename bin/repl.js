@@ -14,6 +14,7 @@ import {
   printOccurrences,
   printServices,
   printTable,
+  printVulnerabilities,
 } from "../display.js";
 import { createBom } from "../index.js";
 import { validateBom } from "../validator.js";
@@ -441,6 +442,32 @@ cdxgenRepl.defineCommand("services", {
       console.log(
         "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM",
       );
+    }
+    this.displayPrompt();
+  },
+});
+cdxgenRepl.defineCommand("vulnerabilities", {
+  help: "view vulnerabilities",
+  async action() {
+    if (sbom) {
+      try {
+        const expression = jsonata("vulnerabilities");
+        let vulnerabilities = await expression.evaluate(sbom);
+        if (!vulnerabilities) {
+          console.log(
+            "No vulnerabilities found. Use depscan to generate a VDR file with vulnerabilities.",
+          );
+        } else {
+          if (!Array.isArray(vulnerabilities)) {
+            vulnerabilities = [vulnerabilities];
+          }
+          printVulnerabilities(vulnerabilities);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log("⚠ No BOM is loaded. Use .import command to import a VDR");
     }
     this.displayPrompt();
   },
