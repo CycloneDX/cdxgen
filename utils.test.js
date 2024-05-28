@@ -1702,6 +1702,26 @@ test("parse cs proj", () => {
       ],
     },
   ]);
+  retMap = parseCsProjData(
+    readFileSync("./test/data/Server.csproj", {
+      encoding: "utf-8",
+    }),
+  );
+  expect(retMap.parentComponent).toEqual({
+    type: "library",
+    properties: [
+      {
+        name: "cdx:dotnet:project_guid",
+        value: "{6BA9F9E1-E43C-489D-A3B4-8916CA2D4C5F}",
+      },
+      { name: "cdx:dotnet:target_framework", value: "v4.8" },
+    ],
+    name: "Server",
+    version: "9.0.21022",
+    purl: "pkg:nuget/Server@9.0.21022",
+    "bom-ref": "pkg:nuget/Server@9.0.21022",
+  });
+  expect(retMap.pkgList.length).toEqual(34);
 });
 
 test("parse project.assets.json", () => {
