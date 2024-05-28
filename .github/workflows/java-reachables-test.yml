@@ -35,6 +35,7 @@ jobs:
         with:
           repository: 'DependencyTrack/dependency-track'
           path: 'repotests/dependency-track'
+          ref: '4.11.1'
       - uses: actions/checkout@v4
         with:
           repository: 'drogonframework/drogon'
