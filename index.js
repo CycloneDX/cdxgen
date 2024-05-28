@@ -4719,7 +4719,6 @@ export async function createCsharpBom(path, options) {
               "restore",
               "-NonInteractive",
               "-Recursive",
-              "-UseLockFile",
               "-PackageSaveMode",
               "nuspec;nupkg",
               "-Verbosity",
@@ -4733,10 +4732,13 @@ export async function createCsharpBom(path, options) {
       );
       if (DEBUG_MODE && (result.status !== 0 || result.error)) {
         console.error(
-          "Restore has failed. Check if dotnet is installed and available in PATH.",
+          `Restore has failed. Check if ${buildCmd} is installed and available in PATH.`,
         );
         console.log(
           "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
+        );
+        console.log(
+          "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
         );
         console.log(result.stderr);
         options.failOnError && process.exit(1);
@@ -4798,7 +4800,7 @@ export async function createCsharpBom(path, options) {
         "2. Use the environment variable `DOTNET_ROLL_FORWARD` to roll forward to a closest available SDK such as .Net core or dotnet 6.",
       );
       console.log(
-        "3. If the project uses the legacy .Net Framework 4.6/4.7, it might require Windows operating system.",
+        "3. If the project uses the legacy .Net Framework 4.6/4.7/4.8, it might require execution on Windows.",
       );
       console.log(
         "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet:v10` container image, which bundles a range of dotnet SDKs.",
