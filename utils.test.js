@@ -1572,9 +1572,11 @@ test("parse cs pkg data", () => {
   );
   expect(dep_list.length).toEqual(21);
   expect(dep_list[0]).toEqual({
+    "bom-ref": "pkg:nuget/Antlr@3.5.0.2",
     group: "",
     name: "Antlr",
     version: "3.5.0.2",
+    purl: "pkg:nuget/Antlr@3.5.0.2",
   });
 });
 
@@ -1585,23 +1587,141 @@ test("parse cs pkg data 2", () => {
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
+    "bom-ref": "pkg:nuget/EntityFramework@6.2.0",
     group: "",
     name: "EntityFramework",
     version: "6.2.0",
+    purl: "pkg:nuget/EntityFramework@6.2.0",
   });
 });
 
 test("parse cs proj", () => {
   expect(parseCsProjData(null)).toEqual([]);
-  const dep_list = parseCsProjData(
+  let retMap = parseCsProjData(
     readFileSync("./test/sample.csproj", { encoding: "utf-8" }),
   );
-  expect(dep_list.length).toEqual(5);
-  expect(dep_list[0]).toEqual({
+  expect(retMap.parentComponent).toBeUndefined();
+  expect(retMap.pkgList.length).toEqual(5);
+  expect(retMap.pkgList[0]).toEqual({
+    "bom-ref": "pkg:nuget/Microsoft.AspNetCore.Mvc.NewtonsoftJson@3.1.1",
     group: "",
     name: "Microsoft.AspNetCore.Mvc.NewtonsoftJson",
     version: "3.1.1",
+    purl: "pkg:nuget/Microsoft.AspNetCore.Mvc.NewtonsoftJson@3.1.1",
   });
+  retMap = parseCsProjData(
+    readFileSync("./test/data/WindowsFormsApplication1.csproj", {
+      encoding: "utf-8",
+    }),
+  );
+  expect(retMap.parentComponent).toEqual({
+    type: "application",
+    properties: [
+      {
+        name: "cdx:dotnet:project_guid",
+        value: "{3336A23A-6F2C-46D4-89FA-93C726CEB23D}",
+      },
+      { name: "cdx:dotnet:target_framework", value: "v4.8" },
+    ],
+    name: "WindowsFormsApplication1",
+    version: "8.0.30703",
+    purl: "pkg:nuget/WindowsFormsApplication1@8.0.30703?output_type=WinExe",
+    "bom-ref":
+      "pkg:nuget/WindowsFormsApplication1@8.0.30703?output_type=WinExe",
+  });
+  expect(retMap.pkgList.length).toEqual(53);
+  expect(retMap.pkgList[0]).toEqual({
+    group: "",
+    name: "activeup.net.common",
+    purl: "pkg:nuget/activeup.net.common",
+    "bom-ref": "pkg:nuget/activeup.net.common",
+    properties: [
+      {
+        name: "PackageFiles",
+        value: "activeup.net.common.dll",
+      },
+    ],
+  });
+  expect(retMap.dependencies).toEqual([
+    {
+      ref: "pkg:nuget/WindowsFormsApplication1@8.0.30703?output_type=WinExe",
+      dependsOn: [
+        "pkg:nuget/activeup.net.common",
+        "pkg:nuget/activeup.net.imap4",
+        "pkg:nuget/BespokeFusion@1.0.1.10",
+        "pkg:nuget/BouncyCastle.Crypto@1.7.4137.9688",
+        "pkg:nuget/Bunifu_UI_v1.5.3",
+        "pkg:nuget/Google.Apis@1.10.0.25332",
+        "pkg:nuget/Google.Apis.Auth@1.10.0.25333",
+        "pkg:nuget/Google.Apis.Auth.PlatformServices@1.10.0.25333",
+        "pkg:nuget/Google.Apis.Calendar.v3",
+        "pkg:nuget/Google.Apis.Core@1.10.0.25331",
+        "pkg:nuget/Google.Apis.Oauth2.v2",
+        "pkg:nuget/Google.Apis.PlatformServices@1.10.0.25332",
+        "pkg:nuget/Google.Apis.Sheets.v4@1.35.2.1356",
+        "pkg:nuget/Google.Apis.Tasks.v1",
+        "pkg:nuget/Google.GData.Apps",
+        "pkg:nuget/Google.GData.Client",
+        "pkg:nuget/Google.GData.Contacts",
+        "pkg:nuget/Google.GData.Extensions",
+        "pkg:nuget/Google.GData.Spreadsheets",
+        "pkg:nuget/HtmlAgilityPack@1.4.6.0",
+        "pkg:nuget/log4net@1.2.13.0",
+        "pkg:nuget/MailKit",
+        "pkg:nuget/Microsoft.Threading.Tasks@1.0.12.0",
+        "pkg:nuget/Microsoft.Threading.Tasks.Extensions@1.0.12.0",
+        "pkg:nuget/Microsoft.Threading.Tasks.Extensions.Desktop@1.0.168.0",
+        "pkg:nuget/Microsoft.VisualBasic",
+        "pkg:nuget/MimeKit",
+        "pkg:nuget/Newtonsoft.Json@7.0.0.0",
+        "pkg:nuget/nunit.framework@3.10.1.0",
+        "pkg:nuget/Proxy@3.0.16061.1530",
+        "pkg:nuget/S22.Imap",
+        "pkg:nuget/SKGL",
+        "pkg:nuget/System",
+        "pkg:nuget/System.Core",
+        "pkg:nuget/System.IO@2.6.10.0",
+        "pkg:nuget/System.Management",
+        "pkg:nuget/System.Net",
+        "pkg:nuget/System.Net.Http@2.2.29.0",
+        "pkg:nuget/System.Net.Http.Extensions@2.2.29.0",
+        "pkg:nuget/System.Net.Http.Primitives@2.2.29.0",
+        "pkg:nuget/System.Net.Http.WebRequest@2.2.29.0",
+        "pkg:nuget/System.Runtime@2.6.10.0",
+        "pkg:nuget/System.Threading.Tasks@2.6.10.0",
+        "pkg:nuget/System.Xml.Linq",
+        "pkg:nuget/System.Data.DataSetExtensions",
+        "pkg:nuget/Microsoft.CSharp",
+        "pkg:nuget/System.Data",
+        "pkg:nuget/System.Deployment",
+        "pkg:nuget/System.Drawing",
+        "pkg:nuget/System.Windows.Forms",
+        "pkg:nuget/System.Xml",
+        "pkg:nuget/WebDriver@3.13.1.0",
+        "pkg:nuget/Zlib.Portable@1.11.0.0",
+      ],
+    },
+  ]);
+  retMap = parseCsProjData(
+    readFileSync("./test/data/Server.csproj", {
+      encoding: "utf-8",
+    }),
+  );
+  expect(retMap.parentComponent).toEqual({
+    type: "library",
+    properties: [
+      {
+        name: "cdx:dotnet:project_guid",
+        value: "{6BA9F9E1-E43C-489D-A3B4-8916CA2D4C5F}",
+      },
+      { name: "cdx:dotnet:target_framework", value: "v4.8" },
+    ],
+    name: "Server",
+    version: "9.0.21022",
+    purl: "pkg:nuget/Server@9.0.21022",
+    "bom-ref": "pkg:nuget/Server@9.0.21022",
+  });
+  expect(retMap.pkgList.length).toEqual(34);
 });
 
 test("parse project.assets.json", () => {
@@ -1814,15 +1934,56 @@ test("parse paket.lock", () => {
 
 test("parse .net cs proj", () => {
   expect(parseCsProjData(null)).toEqual([]);
-  const dep_list = parseCsProjData(
+  const retMap = parseCsProjData(
     readFileSync("./test/data/sample-dotnet.csproj", { encoding: "utf-8" }),
   );
-  expect(dep_list.length).toEqual(19);
-  expect(dep_list[0]).toEqual({
+  expect(retMap.parentComponent).toEqual({
+    type: "library",
+    properties: [{ name: "cdx:dotnet:target_framework", value: "v4.6.2" }],
+    name: "Calculator",
+    purl: "pkg:nuget/Calculator@latest",
+    "bom-ref": "pkg:nuget/Calculator@latest",
+  });
+  expect(retMap.pkgList.length).toEqual(19);
+  expect(retMap.pkgList[0]).toEqual({
     group: "",
     name: "Antlr3.Runtime",
     version: "3.5.0.2",
+    purl: "pkg:nuget/Antlr3.Runtime@3.5.0.2",
+    "bom-ref": "pkg:nuget/Antlr3.Runtime@3.5.0.2",
+    properties: [
+      {
+        name: "PackageFiles",
+        value: "Antlr3.Runtime.dll",
+      },
+    ],
   });
+  expect(retMap.dependencies).toEqual([
+    {
+      ref: "pkg:nuget/Calculator@latest",
+      dependsOn: [
+        "pkg:nuget/Antlr3.Runtime@3.5.0.2",
+        "pkg:nuget/Microsoft.AI.Agent.Intercept@2.4.0.0",
+        "pkg:nuget/Microsoft.AI.DependencyCollector@2.5.1.0",
+        "pkg:nuget/Microsoft.AI.PerfCounterCollector@2.5.1.0",
+        "pkg:nuget/Microsoft.AI.ServerTelemetryChannel@2.5.1.0",
+        "pkg:nuget/Microsoft.AI.Web@2.5.1.0",
+        "pkg:nuget/Microsoft.AI.WindowsServer@2.5.1.0",
+        "pkg:nuget/Microsoft.ApplicationInsights@2.5.1.0",
+        "pkg:nuget/Microsoft.AspNet.SessionState.SessionStateModule@1.1.0.0",
+        "pkg:nuget/Microsoft.AspNet.TelemetryCorrelation@1.0.0.0",
+        "pkg:nuget/Microsoft.CodeDom.Providers.DotNetCompilerPlatform@1.0.8.0",
+        "pkg:nuget/Microsoft.CSharp",
+        "pkg:nuget/Microsoft.Web.Infrastructure@1.0.0.0",
+        "pkg:nuget/Microsoft.Web.RedisSessionStateProvider@4.0.1.0",
+        "pkg:nuget/Microsoft.WindowsAzure.Diagnostics@2.8.0.0",
+        "pkg:nuget/Newtonsoft.Json@11.0.0.0",
+        "pkg:nuget/Pipelines.Sockets.Unofficial@1.0.0.0",
+        "pkg:nuget/StackExchange.Redis@2.0.0.0",
+        "pkg:nuget/WebGrease@1.6.5135.21930",
+      ],
+    },
+  ]);
 });
 
 test("get nget metadata", async () => {
@@ -3228,23 +3389,23 @@ test("parse scala sbt lock", () => {
 });
 
 test("parse nupkg file", async () => {
-  let deps = await parseNupkg(
+  let retMap = await parseNupkg(
     "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nupkg",
   );
-  expect(deps.length).toEqual(1);
-  expect(deps[0].name).toEqual("Microsoft.Web.Infrastructure");
-  deps = parseNuspecData(
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.pkgList[0].name).toEqual("Microsoft.Web.Infrastructure");
+  retMap = parseNuspecData(
     "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
     readFileSync(
       "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
       "ascii",
     ),
   );
-  expect(deps.length).toEqual(1);
-  expect(deps[0].name).toEqual("Microsoft.Web.Infrastructure");
-  deps = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
-  expect(deps.length).toEqual(1);
-  expect(deps[0].name).toEqual("jQuery");
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.pkgList[0].name).toEqual("Microsoft.Web.Infrastructure");
+  retMap = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.pkgList[0].name).toEqual("jQuery");
 });
 
 test("parse bazel skyframe", () => {

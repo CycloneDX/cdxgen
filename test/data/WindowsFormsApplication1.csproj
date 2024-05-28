@@ -1,0 +1,524 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3336A23A-6F2C-46D4-89FA-93C726CEB23D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WindowsFormsApplication1</RootNamespace>
+    <AssemblyName>WindowsFormsApplication1</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="activeup.net.common">
+      <HintPath>..\activeup.net.common.dll</HintPath>
+    </Reference>
+    <Reference Include="activeup.net.imap4">
+      <HintPath>..\activeup.net.imap4.dll</HintPath>
+    </Reference>
+    <Reference Include="BespokeFusion, Version=1.0.1.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialMessageBox.1.0.0.11\lib\BespokeFusion.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Bunifu_UI_v1.5.3">
+      <HintPath>C:\Users\Saad-Chaba\Desktop\Bunifu_UI_v1.5.3.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.10.0.25332, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.10.0\lib\net40\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.10.0.25333, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.10.0\lib\net40\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.10.0.25333, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.10.0\lib\net40\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Calendar.v3">
+      <HintPath>bin\Google.Apis.Calendar.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.10.0.25331, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.10.0\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Oauth2.v2">
+      <HintPath>bin\Google.Apis.Oauth2.v2.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.10.0.25332, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.10.0\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Sheets.v4, Version=1.35.2.1356, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Sheets.v4.1.35.2.1356\lib\net40\Google.Apis.Sheets.v4.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Tasks.v1">
+      <HintPath>bin\Google.Apis.Tasks.v1.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Apps">
+      <HintPath>bin\Google.GData.Apps.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Client">
+      <HintPath>bin\Google.GData.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Contacts">
+      <HintPath>bin\Google.GData.Contacts.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Extensions">
+      <HintPath>bin\Google.GData.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.GData.Spreadsheets">
+      <HintPath>bin\Google.GData.Spreadsheets.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit">
+      <HintPath>..\..\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MimeKit">
+      <HintPath>..\..\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.10.1\lib\net40\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Proxy, Version=3.0.16061.1530, Culture=neutral, PublicKeyToken=6dc438ab78a525b3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="S22.Imap">
+      <HintPath>..\..\S22.Imap\S22.Imap.dll</HintPath>
+    </Reference>
+    <Reference Include="SKGL">
+      <HintPath>..\SKGL.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebDriver, Version=3.13.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.WebDriver.3.13.1\lib\net40\WebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="Zlib.Portable, Version=1.11.0.0, Culture=neutral, PublicKeyToken=431cba815f6a8b5b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zlib.Portable.Signed.1.11.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="design.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="design.Designer.cs">
+      <DependentUpon>design.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="design.resx">
+      <DependentUpon>design.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="credentials.json" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Oxygen-Icons.org-Oxygen-Actions-media-playback-start.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\save.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\1461730065_txts.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\save %281%29.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\edit_clear.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\1461730489_EditDocument.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\inbox.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\inbox %281%29.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\folder_open_go.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\folder_open.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\copy.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\archive_extract.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\united_kingdom_great_britain.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\united_states_of_america_usa.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\australia.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\morocco.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\folder_developer.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\applications_development.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\script_code.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\script_code_red.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Icons8-Windows-8-Editing-Compare.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\gnome_edit_clear.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\move_waiting_up_alternative.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\agt_add_to_desktop.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\mail_move.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\move_waiting_up_grey.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\move-up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-slide-up-40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-slide-up-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\icons8-web-address-40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-microsoft-outlook-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\archive_extract.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-web-address-40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-individual-server-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-web-address-401.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Iconstoc-Ms-Office-2013-Outlook.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stats-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-up-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Oxygen-Icons.org-Oxygen-Actions-media-playback-start.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mail_move.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\inbox.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_clear.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-slide-up-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-slide-up-40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-web-address-402.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-microsoft-outlook-481.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-microsoft-outlook-482.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-web-address-403.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-individual-server-321.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\archive_extract1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\morocco.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\united_kingdom_great_britain.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\australia.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\united_states_of_america_usa.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_clear1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1461730489_EditDocument.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_open.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_open_go.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-microsoft-outlook-483.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_clear2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons8-Windows-8-Editing-Compare.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Oxygen-Icons.org-Oxygen-Actions-media-playback-start1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1461730489_EditDocument1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-slide-up-401.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-slide-up-481.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_clear3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_open1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1461730489_EditDocument2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\inbox1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\inbox2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_clear4.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\morocco1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\united_kingdom_great_britain1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\australia1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\united_states_of_america_usa1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-web-address-404.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-individual-server-322.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\archive_extract2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy4.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-microsoft-outlook-484.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons8-Windows-8-Editing-Compare1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit_clear5.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Oxygen-Icons.org-Oxygen-Actions-media-playback-start2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1461730489_EditDocument3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-gmail-login-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\aol.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Iconstoc-Ms-Office-2013-Outlook.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-wipes-48.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.10.1\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

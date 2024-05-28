@@ -6115,6 +6115,12 @@ export function parseEdnData(rawEdnData) {
   return pkgList;
 }
 
+/**
+ * Method to parse .nupkg files
+ *
+ * @param {String} nupkgFile .nupkg file
+ * @returns {Object} Object containing package list and dependencies
+ */
 export async function parseNupkg(nupkgFile) {
   let nuspecData = await readZipEntry(nupkgFile, ".nuspec");
   if (!nuspecData) {
@@ -6123,13 +6129,21 @@ export async function parseNupkg(nupkgFile) {
   if (nuspecData.charCodeAt(0) === 65533) {
     nuspecData = await readZipEntry(nupkgFile, ".nuspec", "ucs2");
   }
-  return await parseNuspecData(nupkgFile, nuspecData);
+  return parseNuspecData(nupkgFile, nuspecData);
 }
 
+/**
+ * Method to parse .nuspec files
+ *
+ * @param {String} nupkgFile .nupkg file
+ * @param {String} nuspecData Raw nuspec data
+ * @returns {Object} Object containing package list and dependencies
+ */
 export function parseNuspecData(nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
   let npkg = undefined;
+  const dependenciesMap = [];
   try {
     npkg = xml2js(nuspecData, {
       compact: true,
@@ -6156,6 +6170,14 @@ export function parseNuspecData(nupkgFile, nuspecData) {
   pkg.name = m.id._;
   pkg.version = m.version._;
   pkg.description = m.description._;
+  pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+  pkg["bom-ref"] = pkg.purl;
+  if (m.licenseUrl) {
+    pkg.license = findLicenseId(m.licenseUrl._);
+  }
+  if (m.authors) {
+    pkg.author = m.authors._;
+  }
   pkg.properties = [
     {
       name: "SrcFile",
@@ -6176,10 +6198,26 @@ export function parseNuspecData(nupkgFile, nuspecData) {
     },
   };
   pkgList.push(pkg);
-  return pkgList;
+  if (m?.dependencies?.dependency) {
+    const dependsOn = [];
+    if (Array.isArray(m.dependencies.dependency)) {
+      for (const adep of m.dependencies.dependency) {
+        const d = adep.$;
+        dependsOn.push(d.id);
+      }
+    } else {
+      const d = m.dependencies.dependency.$;
+      dependsOn.push(d.id);
+    }
+    dependenciesMap[pkg["bom-ref"]] = dependsOn;
+  }
+  return {
+    pkgList,
+    dependenciesMap,
+  };
 }
 
-export function parseCsPkgData(pkgData) {
+export function parseCsPkgData(pkgData, pkgFile) {
   const pkgList = [];
   if (!pkgData) {
     return pkgList;
@@ -6201,13 +6239,46 @@ export function parseCsPkgData(pkgData) {
     const pkg = { group: "" };
     pkg.name = p.id;
     pkg.version = p.version;
+    pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+    pkg["bom-ref"] = pkg.purl;
+    if (pkgFile) {
+      pkg.properties = [
+        {
+          name: "SrcFile",
+          value: pkgFile,
+        },
+      ];
+      pkg.evidence = {
+        identity: {
+          field: "purl",
+          confidence: 1,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.6,
+              value: pkgFile,
+            },
+          ],
+        },
+      };
+    }
     pkgList.push(pkg);
   }
   return pkgList;
 }
 
-export function parseCsProjData(csProjData, projFile) {
+/**
+ * Method to parse .csproj like xml files
+ *
+ * @param {String} csProjData Raw data
+ * @param {String} projFile File name
+ * @param {Object} pkgNameVersions Package name - version map object
+ *
+ * @returns {Object} Containing parent component, package, and dependencies
+ */
+export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   const pkgList = [];
+  let parentComponent = { type: "application", properties: [] };
   if (!csProjData) {
     return pkgList;
   }
@@ -6223,6 +6294,70 @@ export function parseCsProjData(csProjData, projFile) {
     return pkgList;
   }
   const project = projects[0];
+  // Collect details about the parent component
+  if (project?.PropertyGroup?.length) {
+    for (const apg of project.PropertyGroup) {
+      if (
+        apg?.AssemblyName &&
+        Array.isArray(apg.AssemblyName) &&
+        apg.AssemblyName[0]._ &&
+        Array.isArray(apg.AssemblyName[0]._)
+      ) {
+        parentComponent.name = apg.AssemblyName[0]._[0];
+      }
+      if (
+        apg?.ProductVersion &&
+        Array.isArray(apg.ProductVersion) &&
+        apg.ProductVersion[0]._ &&
+        Array.isArray(apg.ProductVersion[0]._)
+      ) {
+        parentComponent.version = apg.ProductVersion[0]._[0];
+      }
+      if (
+        apg?.OutputType &&
+        Array.isArray(apg.OutputType) &&
+        apg.OutputType[0]._ &&
+        Array.isArray(apg.OutputType[0]._)
+      ) {
+        if (apg.OutputType[0]._[0] === "Library") {
+          parentComponent.type = "library";
+          parentComponent.purl = `pkg:nuget/${parentComponent.name}@${
+            parentComponent.version || "latest"
+          }`;
+        } else {
+          parentComponent.purl = `pkg:nuget/${parentComponent.name}@${
+            parentComponent.version || "latest"
+          }?output_type=${apg.OutputType[0]._[0]}`;
+        }
+      }
+      if (
+        apg?.ProjectGuid &&
+        Array.isArray(apg.ProjectGuid) &&
+        apg.ProjectGuid[0]._ &&
+        Array.isArray(apg.ProjectGuid[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:project_guid",
+          value: apg.ProjectGuid[0]._[0],
+        });
+      }
+      if (
+        apg?.TargetFrameworkVersion &&
+        Array.isArray(apg.TargetFrameworkVersion) &&
+        apg.TargetFrameworkVersion[0]._ &&
+        Array.isArray(apg.TargetFrameworkVersion[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:target_framework",
+          value: apg.TargetFrameworkVersion[0]._[0],
+        });
+      }
+    }
+  }
+  // If we are unable to determine the name of the parent component, clear the object
+  if (!parentComponent.purl) {
+    parentComponent = undefined;
+  }
   if (project.ItemGroup?.length) {
     for (const i in project.ItemGroup) {
       const item = project.ItemGroup[i];
@@ -6235,6 +6370,8 @@ export function parseCsProjData(csProjData, projFile) {
         }
         pkg.name = pref.Include;
         pkg.version = pref.Version;
+        pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+        pkg["bom-ref"] = pkg.purl;
         if (projFile) {
           pkg.properties = [
             {
@@ -6270,13 +6407,19 @@ export function parseCsProjData(csProjData, projFile) {
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
+        const version = pkg.version || pkgNameVersions[pkg.name];
+        if (version) {
+          pkg.purl = `pkg:nuget/${pkg.name}@${version}`;
+        } else {
+          pkg.purl = `pkg:nuget/${pkg.name}`;
+        }
+        pkg["bom-ref"] = pkg.purl;
+        pkg.properties = [];
         if (projFile) {
-          pkg.properties = [
-            {
-              name: "SrcFile",
-              value: projFile,
-            },
-          ];
+          pkg.properties.push({
+            name: "SrcFile",
+            value: projFile,
+          });
           pkg.evidence = {
             identity: {
               field: "purl",
@@ -6291,11 +6434,45 @@ export function parseCsProjData(csProjData, projFile) {
             },
           };
         }
+        if (
+          item.Reference[j]?.HintPath &&
+          Array.isArray(item.Reference[j].HintPath) &&
+          Array.isArray(item.Reference[j].HintPath[0]._)
+        ) {
+          let packageFileName = basename(item.Reference[j].HintPath[0]._[0]);
+          if (packageFileName.includes("\\")) {
+            packageFileName = packageFileName.split("\\").pop();
+          }
+          pkg.properties.push({
+            name: "PackageFiles",
+            value: packageFileName,
+          });
+        }
         pkgList.push(pkg);
       }
     }
   }
-  return pkgList;
+  if (
+    parentComponent &&
+    Object.keys(parentComponent).length &&
+    parentComponent.purl
+  ) {
+    parentComponent["bom-ref"] = parentComponent.purl;
+  }
+  let dependencies = [];
+  if (parentComponent?.["bom-ref"]) {
+    dependencies = [
+      {
+        ref: parentComponent.purl,
+        dependsOn: pkgList.map((p) => p["bom-ref"]),
+      },
+    ];
+  }
+  return {
+    pkgList,
+    parentComponent,
+    dependencies,
+  };
 }
 
 export function parseCsProjAssetsData(csProjData, assetsJsonFile) {
@@ -10315,6 +10492,8 @@ export function addEvidenceForDotnet(pkgList, slicesFile) {
         apkg.evidence.occurrences = locationOccurrences.map((l) => ({
           location: l,
         }));
+        // Set the package scope
+        apkg.scope = "required";
       }
       // Add the imported modules to properties
       if (purlModulesMap[apkg.purl]) {

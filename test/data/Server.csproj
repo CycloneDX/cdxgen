@@ -1,0 +1,1527 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6BA9F9E1-E43C-489D-A3B4-8916CA2D4C5F}</ProjectGuid>
+    <SccProjectName>Rational ClearCase</SccProjectName>
+    <SccLocalPath>Rational ClearCase</SccLocalPath>
+    <SccProvider>Rational ClearCase</SccProvider>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Server</AssemblyName>
+    <AssemblyOriginatorKeyFile>OutputMgr.Server.snk</AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>OutputMgr.Server</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <SignAssembly>true</SignAssembly>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <SccAuxPath>Rational ClearCase</SccAuxPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE;EOM_SERVICE;SMTP_SENDING</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE;EOM_SERVICE;SMTP_SENDING</DefineConstants>
+    <DocumentationFile>bin\Release\ServerDoc.xml</DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>1591</NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;EOM_SERVICE;SMTP_SENDING</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;EOM_SERVICE;SMTP_SENDING;_WIN64_</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\ServerDoc.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;EOM_SERVICE;SMTP_SENDING</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;EOM_SERVICE;SMTP_SENDING</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\ServerDoc.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Foxit.PDF.Printing, Version=2.0.1.25123, Culture=neutral, PublicKeyToken=3d05fb91323a0e7e, processorArchitecture=$(Platform)">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SolutionItems\Foxit\$(Platform)\Foxit.PDF.Printing.40.$(Platform).dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SolutionItems\SharpZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SolutionItems\ExchangeWebServices\Microsoft.Exchange.WebServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Identity.Client, Version=4.52.0.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Identity.Client.4.52.0\lib\net461\Microsoft.Identity.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=6.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.6.22.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Neodynamic.SDK.Barcode">
+      <HintPath>..\SolutionItems\NeoDynamicSDK\Neodynamic.SDK.Barcode.dll</HintPath>
+    </Reference>
+    <Reference Include="nsoftware.IPWorks">
+      <HintPath>..\SolutionItems\nsoftware\nsoftware.IPWorks.dll</HintPath>
+    </Reference>
+    <Reference Include="nsoftware.IPWorksSMIME">
+      <HintPath>..\SolutionItems\nsoftware\nsoftware.IPWorksSMIME.dll</HintPath>
+    </Reference>
+    <Reference Include="nsoftware.IPWorksSSH, Version=9.0.5724.0, Culture=neutral, PublicKeyToken=cdc168f89cffe9cf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SolutionItems\nsoftware\nsoftware.IPWorksSSH.dll</HintPath>
+    </Reference>
+    <Reference Include="nsoftware.IPWorksSSH.System">
+      <HintPath>..\SolutionItems\nsoftware\nsoftware.IPWorksSSH.System.dll</HintPath>
+    </Reference>
+    <Reference Include="nsoftware.IPWorksSSL">
+      <HintPath>..\SolutionItems\nsoftware\nsoftware.IPWorksSSL.dll</HintPath>
+    </Reference>
+    <Reference Include="Spo.SPClib, Version=16.2.0.0, Culture=neutral, PublicKeyToken=23bd062a94e26d58, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SolutionItems\SASLibraries\x64\Spo.SPClib.dll</HintPath>
+    </Reference>
+    <Reference Include="Spo.SPDlib, Version=16.2.0.0, Culture=neutral, PublicKeyToken=23bd062a94e26d58, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SolutionItems\SASLibraries\x64\Spo.SPDlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Spo.Utilities, Version=16.2.0.0, Culture=neutral, PublicKeyToken=23bd062a94e26d58, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SolutionItems\SASLibraries\x64\Spo.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Management">
+      <Name>System.Management</Name>
+    </Reference>
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Remoting">
+      <Name>System.Runtime.Remoting</Name>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceProcess">
+      <Name>System.ServiceProcess</Name>
+    </Reference>
+    <Reference Include="System.Web">
+      <Name>System.Web</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <ProjectReference Include="..\Conversion\Conversion.csproj">
+      <Name>Conversion</Name>
+      <Project>{320BB6C0-F26E-40A4-9936-2119DD93FC1C}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Interface\Interface.csproj">
+      <Name>Interface</Name>
+      <Project>{89EA99E7-E72C-4FBE-BCF1-5EAC6B8C3122}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Logging\Logging.csproj">
+      <Name>Logging</Name>
+      <Project>{42332A0E-CB58-4E6B-849A-E809601C3AFE}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\Threading\Threading.csproj">
+      <Name>Threading</Name>
+      <Project>{601A3A03-0F96-4874-B9FF-DB8156EEB83E}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <ProjectReference Include="..\UserFacts\UserFacts.csproj">
+      <Name>UserFacts</Name>
+      <Project>{6F41E19B-5C6E-4F02-BD87-6DD54D3926BF}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="XlateEBCDICLib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=de744343d823ab88, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\SolutionItems\ThirdPartyTypeLibraries\XYx\$(Platform)\XlateEBCDICLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonSourceCode\Constants.cs">
+      <Link>Constants.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\EightBitEncoding.cs">
+      <Link>I18N\EightBitEncoding.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\EomCreateProcess.cs">
+      <Link>EomCreateProcess.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\EomMath.cs">
+      <Link>EomMath.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\EomResourceManager.cs">
+      <Link>EomResourceManager.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\EomString.cs">
+      <Link>EomString.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\File\FileSearcher.cs">
+      <Link>FileSearcher.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\InteropServices\Kernel32.cs">
+      <Link>InteropServices\Kernel32.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\InteropServices\Msvcrt.cs">
+      <Link>InteropServices\Msvcrt.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\InteropServices\SafeMemoryHandle.cs">
+      <Link>InteropServices\SafeMemoryHandle.cs</Link>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\Network\NetHelper.cs">
+      <Link>Network\NetHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\Preferences.cs">
+      <Link>Preferences.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\RegistryAccess.cs">
+      <Link>RegistryAccess.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\Security\XmlEncryptor.cs">
+      <Link>XmlEncryptor.cs</Link>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\ThreadManagedQueue.cs">
+      <Link>ThreadManagedQueue.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\TransientTimer.cs">
+      <Link>TransientTimer.cs</Link>
+    </Compile>
+    <Compile Include="..\CommonSourceCode\XmlHelper.cs">
+      <Link>XmlHelper.cs</Link>
+    </Compile>
+    <Compile Include="AlertMessageArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AlertMessageSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AutoConfigBackupSettings.cs" />
+    <Compile Include="AutoDirectoryMonitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\AttributeCollectionsAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\BackupFileAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\BackupIndexedFileAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\ClientController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\ClientInformation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\CreateTaskAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\EmailExpansionAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\EomServerSponsor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\IndexedFileAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\InterfaceAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\ManagedObjectCollectionAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\NamedAttributeAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\OutputManagerServerAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\OutputManagerServerConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\PreviewController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\PrinterAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\PrinterCollectionAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\PrintPreviewAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientAgents\ServicePropertiesAgent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\AttributeChangedEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\AttributeChangedEvents.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ClientEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ClientEventCustomizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ClientEventFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ClientEventRegistrant.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ClientEventSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\EventMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\EventMessageArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\FileJobSummaryEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\FileJobSummaryEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\JobViaFileMaskCompleteEvent.cs" />
+    <Compile Include="ClientEvents\JobViaFileMaskCompleteEventArgs.cs" />
+    <Compile Include="ClientEvents\ManagedCollectionAddEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ManagedCollectionAddModifyEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ManagedCollectionDeleteEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ManagedCollectionDeleteEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ManagedCollectionModifyEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ManagedObjectEventCustomizer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ManagedObjectEventFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ManagementWindowAddEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ServicePropertyEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ServicePropertyEventFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ClientEvents\ServicePropertyEvents.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\AttributeCollections.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\AttributeErrors.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\BackupAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\BackupAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CertificateInfo.cs" />
+    <Compile Include="Configuration\CodedCharacterSetTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CodedCharacterSetTableCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CommunicationListeningPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CommunicationListeningPathCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CommunicationPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CommunicationPollingPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CommunicationPollingPathCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CommunicationSendingPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CommunicationSendingPathCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationSerializationBinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\ConfigurationSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CertificateAlias.cs" />
+    <Compile Include="Configuration\CertificateAliasCollection.cs" />
+    <Compile Include="Configuration\Credentials.cs" />
+    <Compile Include="Configuration\CredentialsCollection.cs" />
+    <Compile Include="Configuration\CustomJobAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\CustomJobAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DataDependentAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DataDependentAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\Dda.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdCallItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdCancelQueuedPrintAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdChangeWindowsFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdComputeVariable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdConcatenateVariable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdConvertVariable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdDataTable.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdDisplayVariable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdDrawChart.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdDrawLine.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdDrawRectangle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdDumpVariables.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdElse.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdElseIf.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdEndReport.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdExecuteCommandFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdExitItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdGetFieldCoordinates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdGetUserInput.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdIf.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdPerformLogicalFormFeed.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdPerformPhysicalFormFeed.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdPositionGraphic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdPositionToLine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdPrintBarCode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdPrintData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdQueuePrintAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdSetUserKeyword.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdSearchVariable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdSetDataOutputOff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdSetDataOutputOn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdSetVariable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdStartBackupJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdStartCustomJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdStartEmailJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdStartPrintJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdStartTransferJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdStartTransformJob.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdSwapFormFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdSwapPrintAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdWriteIndex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCommandIndexArgumentException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaCmdIfElseIf.cs" />
+    <Compile Include="Configuration\DataDependentAttribute\DdaItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaOperand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DataDependentAttribute\DdaOutputLocation.cs" />
+    <Compile Include="Configuration\DirectoryAlias.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DirectoryAliasCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DirectoryMonitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\DirectoryMonitorCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\EmailAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\EmailAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\EomFont.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileExpirationSearch.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileExpirationSearchCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileGroup.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileGroupCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileJobThreshold.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileMask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileMaskCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FileMaskJobs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\FontCallbacks.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\HeaderTrailerPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\HeaderTrailerPageCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\IndexAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\IndexAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Limits.cs" />
+    <Compile Include="Configuration\LinkedAttribute.cs" />
+    <Compile Include="Configuration\LinkedAttributeCollection.cs" />
+    <Compile Include="Configuration\ListeningPathThreshold.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\LogicalPageAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\LogicalPageAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\LogicalPrinter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\LogicalPrinterCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\MessageQueueMonitor.cs" />
+    <Compile Include="Configuration\MessageQueueMonitorCollection.cs" />
+    <Compile Include="Configuration\Metering.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\NamedAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\NamedAttributeBank.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\NamedAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\NameValuePair.cs" />
+    <Compile Include="Configuration\PhysicalPrinter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\PhysicalPrinterCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\PrintAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\PrintAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\SecurityPermissions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\SecurityRole.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\SecurityRoleCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Threshold.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\ThresholdCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\TransferAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\TransferAttributeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\TransformAttribute.cs" />
+    <Compile Include="Configuration\TransformAttributeCollection.cs" />
+    <Compile Include="Configuration\TranslateTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\TranslateTableCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlProcessingDirective\XpdEmail.cs" />
+    <Compile Include="Configuration\XmlProcessingDirective\XmlProcessingDirective.cs" />
+    <Compile Include="Configuration\XmlProcessingDirective\XmlProcessingDirectiveCollection.cs" />
+    <Compile Include="Configuration\XmlProcessingDirective\XpdLoopback.cs" />
+    <Compile Include="Configuration\XmlProcessingDirective\XpdOperand.cs" />
+    <Compile Include="DdaSystemVariableDefinition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DdaSystemVariables.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DisplayFieldDefinition.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DisplayFields.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="E-mail\DualEmailClients.cs" />
+    <Compile Include="E-mail\EmailCertificateExplorer.cs" />
+    <Compile Include="E-mail\EmailExpansionClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="E-mail\EmailMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="E-mail\EmailReceiver.cs" />
+    <Compile Include="E-mail\EmailSendEWS.cs" />
+    <Compile Include="E-mail\EmailSmtpOutput.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="E-mail\EWSReceiveEmailTransportSettings.cs" />
+    <Compile Include="E-mail\ReceiveEmailSettings.cs" />
+    <Compile Include="E-mail\ReceiveEmailTransportSettings.cs" />
+    <Compile Include="E-mail\SecureEmail.cs" />
+    <Compile Include="E-mail\SendEmailSettings.cs" />
+    <Compile Include="E-mail\SmtpTransportSettings.cs" />
+    <Compile Include="EnumExtensionMethods.cs" />
+    <Compile Include="FileAndJobManagement\BackupIndexedFileReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\BackupJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\BackupJobCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\BackupJobProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\CompactedDateTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\CustomJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\CustomJobCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\CustomJobProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\DatabaseFileControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\DatabaseReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\DatabaseWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\DayTimeSchedule.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\DisplayFieldSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\EmailJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\EmailJobCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\EmailJobProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\EomFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileDatabaseException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileEntryChain.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileHeader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileJobFieldSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileJobSummaryEventSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FileProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FilterExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\FixedRecordDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\IDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\Job.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\JobCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\JobCollections.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\JobDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\JobDatabaseRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\JobFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\JobOrderList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\JobProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\Keywords.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\LOGFONT.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\PersonalizeStatement.cs" />
+    <Compile Include="Configuration\EmailPersonalization.cs" />
+    <Compile Include="FileAndJobManagement\PrintJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\PrintJobCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\PrintJobProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\RecordManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\TransferJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\TransferJobCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\TransferJobProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\TransformJob.cs" />
+    <Compile Include="FileAndJobManagement\TransformJobCollection.cs" />
+    <Compile Include="FileAndJobManagement\TransformJobProperties.cs" />
+    <Compile Include="FileAndJobManagement\UniqueFilenaming.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileAndJobManagement\UniqueIdGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FileExpirationSearchMonitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="I18N\EnumSystemCodePages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="I18N\WritePrinterEncoding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Indexing\IndexDataPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Indexing\IndexedFileBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Indexing\IndexedFileHeader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Indexing\IndexedFileSearchOperation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Indexing\IndexedFileSearchResults.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Indexing\IndexedSearchParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Indexing\IndexRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\EUDCSERV.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\Gdi32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\NetApi32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\Ole32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\User32.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\Wasp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\Win32Error.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="InteropServices\Winspool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="COM\LegacyComObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="JobViaFileMaskCompletedEventSource.cs" />
+    <Compile Include="MessageEventSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MessageQueueExtension.cs" />
+    <Compile Include="Network\Connection.cs" />
+    <Compile Include="Network\ConnectionCollection.cs" />
+    <Compile Include="Network\FtpSender.cs" />
+    <Compile Include="Network\HttpSender.cs" />
+    <Compile Include="Network\IppDefinition.cs" />
+    <Compile Include="Network\IppListener.cs" />
+    <Compile Include="Network\IppReceiver.cs" />
+    <Compile Include="Network\IppSender.cs" />
+    <Compile Include="Network\SftpSender.cs" />
+    <Compile Include="Network\TcpListener.cs" />
+    <Compile Include="Network\HttpListener.cs" />
+    <Compile Include="Network\HttpReceiver.cs" />
+    <Compile Include="Network\EncodingFileStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\ExtendedTcpTable.cs" />
+    <Compile Include="Network\Listener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\LpdProtocol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\LpdReceiver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\LpdSender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\NetworkByteOrder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\OutputMgrProtocol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\RawReceiver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\RawSender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\TcpConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\Tp0FieldAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\Tp0FieldTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\Tp0Poller.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\Tp0Protocol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\Tp0Receiver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\Tp0Sender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\TransferStatusFieldSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Network\WebRequestSender.cs" />
+    <Compile Include="OutputManagerServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PeriodicStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\ActiveDevice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\AustralianPost.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\BarcodeFactory.cs" />
+    <Compile Include="Printing\BarCodes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\BitmapDeviceContext.cs" />
+    <Compile Include="Printing\ChannelSkip.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\ChartExtensions.cs" />
+    <Compile Include="Printing\CommandFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\DataFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\DataStagingArea.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\DataTables.cs" />
+    <Compile Include="Printing\DdaVariable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\DdaVariableCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\EomIo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\EomMetafile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Esc60Handler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\FontChangeFileCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\FormattedPageLabel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\FormFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\HeaderTrailerPage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\ImageCache.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\InputBinMappings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\LiveDda.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Misc2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PageComp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PageRange.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PageSizes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PdfPrinter.cs" />
+    <Compile Include="Printing\PdfWriter.cs" />
+    <Compile Include="Printing\PreviewObjects.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PreviewReaderWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PreviewWorker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrintBuffer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrintDefinitions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrintDrivers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Printer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrinterCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrinterDebug.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrinterPaperTypeAssociation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrinterStatusFieldSource.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\PrintToFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\ShiftJIS.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Spooler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Spooler2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Spooler3.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Spooler5.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Spooler6.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Spooler7.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\Spooler8.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\SpoolerLogging.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\SwapPA.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\TiffImageEncoder.cs" />
+    <Compile Include="Printing\UsageTable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\WindowsDriverPrinterReset.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Printing\WordWrapper.cs" />
+    <Compile Include="RemotingChannel.cs" />
+    <Compile Include="ResourceAccessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Resources\AlertMessagesStrong.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AlertMessagesStrong.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\BarcodeErrors.Designer.cs">
+      <DependentUpon>BarcodeErrors.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\EventMessagesStrong.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EventMessagesStrong.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\IppResponses.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IppResponses.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\MessageInserts.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MessageInserts.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Usps4cbErrors.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Usps4cbErrors.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ScmBridge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServerEnvironment.cs" />
+    <Compile Include="ServiceOperations.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServicePreferences.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServiceProperties.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServiceProperties.Email.cs">
+      <DependentUpon>ServiceProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceProperties.Xslfo.cs">
+      <DependentUpon>ServiceProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceProperties.AutoConfigBackup.cs">
+      <DependentUpon>ServiceProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SnmpAgentExchange.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ThresholdMonitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Transform\TextToXmlConverter.cs" />
+    <Compile Include="Transform\TransformOperation.cs" />
+    <Compile Include="Transform\TransformOperationException.cs" />
+    <Compile Include="Transform\TransformResult.cs" />
+    <None Include="BuildSchemas.bat" />
+    <None Include="BuildXsdStaticAttributes.bat" />
+    <None Include="EomSchema.xsd">
+      <SubType>
+      </SubType>
+    </None>
+    <None Include="OutputMgr.Server.snk" />
+    <EmbeddedResource Include="licenses.licx" />
+    <EmbeddedResource Include="Resources\AlertMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AlertMessagesStrong.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AlertMessagesStrong.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <CustomToolNamespace>OutputMgr.Server</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ApplicationExceptionMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\AttributeNames.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ConfigurationErrorMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\BarcodeErrors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BarcodeErrors.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>OutputMgr.Server</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\DataDependentAttributeStrings.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\E-mail.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>E-mail.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\EventLogMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\EventMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\EventMessagesStrong.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EventMessagesStrong.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+      <CustomToolNamespace>OutputMgr.Server</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\BooleanField.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\CodePage.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\DeleteType.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\DisplayFieldFormats.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\DisplayFields.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\EmailBodyFormat.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\EmailImportance.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\EmailSensitivity.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\FileType.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\OutputFileAction.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\PrinterSpooling.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\PrinterStatus.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\PrinterType.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\PrintOutputOption.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\RemoveType.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\TransferAction.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\TransferStatus.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FieldsResources\TransportType.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FileDatabaseExceptionMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\General.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\HttpResponses.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\InputBins.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\IppResponses.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>IppResponses.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MessageInserts.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MessageInserts.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\OutputBins.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PageOrientation.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PageSizes.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PageSizeUnits.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PlexMode.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PrintDrivers.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PrinterKinds.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PrintOutputMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\PrintQuality.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SmtpErrorNotification.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StyleKey.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Uniadex.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Usps4cbErrors.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Usps4cbErrors.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>OutputMgr.Server</CustomToolNamespace>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="COM\OutputManager.rgs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="CDIntfEx">
+      <Guid>{E65E5B85-B34C-4669-AB04-BFAD0434ED0C}</Guid>
+      <VersionMajor>6</VersionMajor>
+      <VersionMinor>5</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

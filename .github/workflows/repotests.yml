@@ -168,6 +168,16 @@ jobs:
           path: 'repotests/dotnet-paket'
       - uses: actions/checkout@v4
         with:
+          repository: 'timheuer/SimpleFrameworkApp'
+          ref: 'master'
+          path: 'repotests/SimpleFrameworkApp'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'chabbasaad/Reporting-Windows-Application'
+          ref: 'master'
+          path: 'repotests/Reporting-Windows-Application'
+      - uses: actions/checkout@v4
+        with:
           repository: 'appthreat/blint'
           ref: 'v1.0.34'
           path: 'repotests/blint'
@@ -312,10 +322,15 @@ jobs:
         shell: bash
       - name: repotests dotnet-paket
         run: |
-          bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --validate
+          bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket.json --deep
           FETCH_LICENSE=true bin/cdxgen.js -p -r -t dotnet repotests/dotnet-paket -o bomresults/bom-dotnet-paket-2.json --validate
           bin/cdxgen.js -p -r -t dotnet repotests/dotnet-podcasts -o bomresults/bom-dotnet-podcasts.json --profile research --export-proto
           bin/cdxgen.js -p -r -t dotnet repotests/react-native-windows -o bomresults/bom-react-native-windows.json
+        shell: bash
+      - name: repotests SimpleFrameworkApp
+        run: |
+          bin/cdxgen.js -p -r -t dotnet-framework repotests/SimpleFrameworkApp -o bomresults/bom-dotnet-framework.json
+          bin/cdxgen.js -p -r -t dotnet-framework repotests/Reporting-Windows-Application -o bomresults/bom-dotnet-framework-reporting.json --deep
         shell: bash
       - name: repotests blint
         run: |

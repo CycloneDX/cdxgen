@@ -4652,7 +4652,7 @@ export async function createCsharpBom(path, options) {
   if (options.lifecycle === "post-build") {
     return createBinaryBom(path, options);
   }
-  const parentComponent = createDefaultParentComponent(path, "nuget", options);
+  let parentComponent = createDefaultParentComponent(path, "nuget", options);
   const slnFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}*.sln`,
@@ -4682,7 +4682,7 @@ export async function createCsharpBom(path, options) {
     `${options.multiProject ? "**/" : ""}project.assets.json`,
     options,
   );
-  const pkgLockFiles = getAllFiles(
+  let pkgLockFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}packages.lock.json`,
     options,
@@ -4692,12 +4692,12 @@ export async function createCsharpBom(path, options) {
     `${options.multiProject ? "**/" : ""}paket.lock`,
     options,
   );
-  const nupkgFiles = getAllFiles(
+  let nupkgFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}*.nupkg`,
     options,
   );
-  // Support for automatic restore
+  // Support for automatic restore for .Net projects
   if (
     options.installDeps &&
     !projAssetsFiles.length &&
@@ -4706,13 +4706,25 @@ export async function createCsharpBom(path, options) {
   ) {
     const filesToRestore = slnFiles.concat(csProjFiles);
     for (const f of filesToRestore) {
+      const buildCmd =
+        options.projectType === "dotnet-framework" ? "nuget" : "dotnet";
       if (DEBUG_MODE) {
         const basePath = dirname(f);
-        console.log("Executing 'dotnet restore' in", basePath);
+        console.log(`Executing '${buildCmd} restore' in ${basePath}`);
       }
       const result = spawnSync(
-        "dotnet",
-        ["restore", "--force", "--ignore-failed-sources", f],
+        buildCmd,
+        options.projectType === "dotnet-framework"
+          ? [
+              "restore",
+              "-NonInteractive",
+              "-Recursive",
+              "-PackageSaveMode",
+              "nuspec;nupkg",
+              "-Verbosity",
+              "quiet",
+            ]
+          : ["restore", "--force", "--ignore-failed-sources", f],
         {
           cwd: path,
           encoding: "utf-8",
@@ -4720,33 +4732,64 @@ export async function createCsharpBom(path, options) {
       );
       if (DEBUG_MODE && (result.status !== 0 || result.error)) {
         console.error(
-          "Restore has failed. Check if dotnet is installed and available in PATH.",
+          `Restore has failed. Check if ${buildCmd} is installed and available in PATH.`,
         );
         console.log(
           "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
+        );
+        console.log(
+          "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
         );
         console.log(result.stderr);
         options.failOnError && process.exit(1);
       }
     }
-    // Collect the assets file generated from restore
+    // Collect the assets, lock, and nupkg files generated from restore
     projAssetsFiles = getAllFiles(
       path,
       `${options.multiProject ? "**/" : ""}project.assets.json`,
       options,
     );
+    pkgLockFiles = getAllFiles(
+      path,
+      `${options.multiProject ? "**/" : ""}packages.lock.json`,
+      options,
+    );
+    nupkgFiles = getAllFiles(
+      path,
+      `${options.multiProject ? "**/" : ""}*.nupkg`,
+      options,
+    );
   }
   let pkgList = [];
+  const parentDependsOn = new Set();
   if (nupkgFiles.length && projAssetsFiles.length === 0) {
     manifestFiles = manifestFiles.concat(nupkgFiles);
+    // When parsing nupkg files, only version ranges will be specified under dependencies
+    // To resolve the version, we need to track the mapping between name and resolved versions here
+    let dependenciesMap = {};
+    const pkgNameVersions = {};
     for (const nf of nupkgFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${nf}`);
       }
-      const dlist = await parseNupkg(nf);
-      if (dlist?.length) {
-        pkgList = pkgList.concat(dlist);
+      const retMap = await parseNupkg(nf);
+      if (retMap?.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+        for (const d of retMap.pkgList) {
+          parentDependsOn.add(d["bom-ref"]);
+          pkgNameVersions[d.name] = d.version;
+        }
       }
+      if (retMap?.dependenciesMap) {
+        dependenciesMap = { ...dependenciesMap, ...retMap.dependenciesMap };
+      }
+    } // end for
+    for (const k of Object.keys(dependenciesMap)) {
+      const dependsOn = dependenciesMap[k].map(
+        (p) => `pkg:nuget/${p}@${pkgNameVersions[p] || "latest"}`,
+      );
+      dependencies.push({ ref: k, dependsOn: dependsOn.sort() });
     }
   }
   // project.assets.json parsing
@@ -4780,7 +4823,7 @@ export async function createCsharpBom(path, options) {
         "2. Use the environment variable `DOTNET_ROLL_FORWARD` to roll forward to a closest available SDK such as .Net core or dotnet 6.",
       );
       console.log(
-        "3. If the project uses the legacy .Net Framework 4.6/4.7, it might require Windows operating system.",
+        "3. If the project uses the legacy .Net Framework 4.6/4.7/4.8, it might require execution on Windows.",
       );
       console.log(
         "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet:v10` container image, which bundles a range of dotnet SDKs.",
@@ -4789,7 +4832,6 @@ export async function createCsharpBom(path, options) {
     }
   } else if (pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
-    const parentDependsOn = new Set();
     // packages.lock.json from nuget
     for (const af of pkgLockFiles) {
       if (DEBUG_MODE) {
@@ -4814,12 +4856,6 @@ export async function createCsharpBom(path, options) {
         }
       }
     }
-    if (parentDependsOn.size) {
-      dependencies.splice(0, 0, {
-        ref: parentComponent["bom-ref"],
-        dependsOn: Array.from(parentDependsOn),
-      });
-    }
   } else if (pkgConfigFiles.length) {
     manifestFiles = manifestFiles.concat(pkgConfigFiles);
     // packages.config parsing
@@ -4832,9 +4868,12 @@ export async function createCsharpBom(path, options) {
       if (pkgData.charCodeAt(0) === 0xfeff) {
         pkgData = pkgData.slice(1);
       }
-      const dlist = parseCsPkgData(pkgData);
+      const dlist = parseCsPkgData(pkgData, f);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
+        for (const d of dlist) {
+          parentDependsOn.add(d["bom-ref"]);
+        }
       }
     }
   }
@@ -4857,8 +4896,19 @@ export async function createCsharpBom(path, options) {
       }
     }
   }
-  if (!pkgList.length && csProjFiles.length) {
+  if (
+    options.projectType === "dotnet-framework" ||
+    (!pkgList.length && csProjFiles.length && !nupkgFiles.length)
+  ) {
     manifestFiles = manifestFiles.concat(csProjFiles);
+    // Parsing csproj is quite error prone. Some project files may not have versions specified
+    // To work around this, we make use of the version from the existing list
+    const pkgNameVersions = {};
+    for (const p of pkgList) {
+      if (p.version) {
+        pkgNameVersions[p.name] = p.version;
+      }
+    }
     // .csproj parsing
     for (const f of csProjFiles) {
       if (DEBUG_MODE) {
@@ -4869,12 +4919,31 @@ export async function createCsharpBom(path, options) {
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const dlist = parseCsProjData(csProjData, f);
-      if (dlist?.length) {
-        pkgList = pkgList.concat(dlist);
+      const retMap = parseCsProjData(csProjData, f, pkgNameVersions);
+      if (retMap?.parentComponent) {
+        // If there are multiple project files, track the parent components using nested components
+        if (csProjFiles.length > 1) {
+          if (!parentComponent.components) {
+            parentComponent.components = [];
+          }
+          parentComponent.components.push(retMap.parentComponent);
+        } else {
+          // There is only one project file. Make it the parent.
+          parentComponent = retMap.parentComponent;
+        }
+      }
+      if (retMap?.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+      }
+      if (retMap.dependencies?.length) {
+        dependencies = mergeDependencies(
+          dependencies,
+          retMap.dependencies,
+          parentComponent,
+        );
       }
     }
-    if (pkgList.length) {
+    if (pkgList.length && options.projectType !== "dotnet-framework") {
       console.log(
         `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`,
       );
@@ -4899,6 +4968,13 @@ export async function createCsharpBom(path, options) {
       }
       pkgList = addEvidenceForDotnet(pkgList, slicesFile, options);
     }
+  }
+  // Parent dependency tree
+  if (parentDependsOn.size && parentComponent && parentComponent["bom-ref"]) {
+    dependencies.splice(0, 0, {
+      ref: parentComponent["bom-ref"],
+      dependsOn: Array.from(parentDependsOn),
+    });
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
@@ -6036,6 +6112,7 @@ export async function createBom(path, options) {
     case "csharp":
     case "netcore":
     case "dotnet":
+    case "dotnet-framework":
     case "vb":
       return await createCsharpBom(path, options);
     case "dart":
