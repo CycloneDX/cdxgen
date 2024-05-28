@@ -4784,19 +4784,12 @@ export async function createCsharpBom(path, options) {
       if (retMap?.dependenciesMap) {
         dependenciesMap = { ...dependenciesMap, ...retMap.dependenciesMap };
       }
-      // if (retMap.dependencies?.length) {
-      //   dependencies = mergeDependencies(
-      //     dependencies,
-      //     retMap.dependencies,
-      //     parentComponent,
-      //   );
-      // }
     } // end for
     for (const k of Object.keys(dependenciesMap)) {
       const dependsOn = dependenciesMap[k].map(
         (p) => `pkg:nuget/${p}@${pkgNameVersions[p] || "latest"}`,
       );
-      dependencies.push({ ref: k, dependsOn });
+      dependencies.push({ ref: k, dependsOn: dependsOn.sort() });
     }
   }
   // project.assets.json parsing

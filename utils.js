@@ -6211,7 +6211,10 @@ export function parseNuspecData(nupkgFile, nuspecData) {
     }
     dependenciesMap[pkg["bom-ref"]] = dependsOn;
   }
-  return { pkgList, dependenciesMap };
+  return {
+    pkgList,
+    dependenciesMap,
+  };
 }
 
 export function parseCsPkgData(pkgData, pkgFile) {
