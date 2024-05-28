@@ -6115,6 +6115,12 @@ export function parseEdnData(rawEdnData) {
   return pkgList;
 }
 
+/**
+ * Method to parse .nupkg files
+ *
+ * @param {String} nupkgFile .nupkg file
+ * @returns {Object} Object containing package list and dependencies
+ */
 export async function parseNupkg(nupkgFile) {
   let nuspecData = await readZipEntry(nupkgFile, ".nuspec");
   if (!nuspecData) {
@@ -6123,13 +6129,21 @@ export async function parseNupkg(nupkgFile) {
   if (nuspecData.charCodeAt(0) === 65533) {
     nuspecData = await readZipEntry(nupkgFile, ".nuspec", "ucs2");
   }
-  return await parseNuspecData(nupkgFile, nuspecData);
+  return parseNuspecData(nupkgFile, nuspecData);
 }
 
+/**
+ * Method to parse .nuspec files
+ *
+ * @param {String} nupkgFile .nupkg file
+ * @param {String} nuspecData Raw nuspec data
+ * @returns {Object} Object containing package list and dependencies
+ */
 export function parseNuspecData(nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
   let npkg = undefined;
+  const dependenciesMap = [];
   try {
     npkg = xml2js(nuspecData, {
       compact: true,
@@ -6156,6 +6170,14 @@ export function parseNuspecData(nupkgFile, nuspecData) {
   pkg.name = m.id._;
   pkg.version = m.version._;
   pkg.description = m.description._;
+  pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+  pkg["bom-ref"] = pkg.purl;
+  if (m.licenseUrl) {
+    pkg.license = findLicenseId(m.licenseUrl._);
+  }
+  if (m.authors) {
+    pkg.author = m.authors._;
+  }
   pkg.properties = [
     {
       name: "SrcFile",
@@ -6176,10 +6198,23 @@ export function parseNuspecData(nupkgFile, nuspecData) {
     },
   };
   pkgList.push(pkg);
-  return pkgList;
+  if (m?.dependencies?.dependency) {
+    const dependsOn = [];
+    if (Array.isArray(m.dependencies.dependency)) {
+      for (const adep of m.dependencies.dependency) {
+        const d = adep.$;
+        dependsOn.push(d.id);
+      }
+    } else {
+      const d = m.dependencies.dependency.$;
+      dependsOn.push(d.id);
+    }
+    dependenciesMap[pkg["bom-ref"]] = dependsOn;
+  }
+  return { pkgList, dependenciesMap };
 }
 
-export function parseCsPkgData(pkgData) {
+export function parseCsPkgData(pkgData, pkgFile) {
   const pkgList = [];
   if (!pkgData) {
     return pkgList;
@@ -6201,6 +6236,29 @@ export function parseCsPkgData(pkgData) {
     const pkg = { group: "" };
     pkg.name = p.id;
     pkg.version = p.version;
+    pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+    pkg["bom-ref"] = pkg.purl;
+    if (pkgFile) {
+      pkg.properties = [
+        {
+          name: "SrcFile",
+          value: pkgFile,
+        },
+      ];
+      pkg.evidence = {
+        identity: {
+          field: "purl",
+          confidence: 1,
+          methods: [
+            {
+              technique: "manifest-analysis",
+              confidence: 0.6,
+              value: pkgFile,
+            },
+          ],
+        },
+      };
+    }
     pkgList.push(pkg);
   }
   return pkgList;

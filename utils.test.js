@@ -1572,9 +1572,11 @@ test("parse cs pkg data", () => {
   );
   expect(dep_list.length).toEqual(21);
   expect(dep_list[0]).toEqual({
+    "bom-ref": "pkg:nuget/Antlr@3.5.0.2",
     group: "",
     name: "Antlr",
     version: "3.5.0.2",
+    purl: "pkg:nuget/Antlr@3.5.0.2",
   });
 });
 
@@ -1585,9 +1587,11 @@ test("parse cs pkg data 2", () => {
   );
   expect(dep_list.length).toEqual(1);
   expect(dep_list[0]).toEqual({
+    "bom-ref": "pkg:nuget/EntityFramework@6.2.0",
     group: "",
     name: "EntityFramework",
     version: "6.2.0",
+    purl: "pkg:nuget/EntityFramework@6.2.0",
   });
 });
 
@@ -3365,23 +3369,23 @@ test("parse scala sbt lock", () => {
 });
 
 test("parse nupkg file", async () => {
-  let deps = await parseNupkg(
+  let retMap = await parseNupkg(
     "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nupkg",
   );
-  expect(deps.length).toEqual(1);
-  expect(deps[0].name).toEqual("Microsoft.Web.Infrastructure");
-  deps = parseNuspecData(
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.pkgList[0].name).toEqual("Microsoft.Web.Infrastructure");
+  retMap = parseNuspecData(
     "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
     readFileSync(
       "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
       "ascii",
     ),
   );
-  expect(deps.length).toEqual(1);
-  expect(deps[0].name).toEqual("Microsoft.Web.Infrastructure");
-  deps = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
-  expect(deps.length).toEqual(1);
-  expect(deps[0].name).toEqual("jQuery");
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.pkgList[0].name).toEqual("Microsoft.Web.Infrastructure");
+  retMap = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.pkgList[0].name).toEqual("jQuery");
 });
 
 test("parse bazel skyframe", () => {

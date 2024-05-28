@@ -608,9 +608,22 @@ export function parseConanLockData(conanLockData: any): any[];
 export function parseConanData(conanData: any): any[];
 export function parseLeiningenData(leinData: any): any[];
 export function parseEdnData(rawEdnData: any): any[];
-export function parseNupkg(nupkgFile: any): Promise<any[]>;
-export function parseNuspecData(nupkgFile: any, nuspecData: any): any[];
-export function parseCsPkgData(pkgData: any): any[];
+/**
+ * Method to parse .nupkg files
+ *
+ * @param {String} nupkgFile .nupkg file
+ * @returns {Object} Object containing package list and dependencies
+ */
+export function parseNupkg(nupkgFile: string): any;
+/**
+ * Method to parse .nuspec files
+ *
+ * @param {String} nupkgFile .nupkg file
+ * @param {String} nuspecData Raw nuspec data
+ * @returns {Object} Object containing package list and dependencies
+ */
+export function parseNuspecData(nupkgFile: string, nuspecData: string): any;
+export function parseCsPkgData(pkgData: any, pkgFile: any): any[];
 /**
  * Method to parse .csproj like xml files
  *

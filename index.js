@@ -4692,7 +4692,7 @@ export async function createCsharpBom(path, options) {
     `${options.multiProject ? "**/" : ""}paket.lock`,
     options,
   );
-  const nupkgFiles = getAllFiles(
+  let nupkgFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}*.nupkg`,
     options,
@@ -4744,7 +4744,7 @@ export async function createCsharpBom(path, options) {
         options.failOnError && process.exit(1);
       }
     }
-    // Collect the assets and lock files generated from restore
+    // Collect the assets, lock, and nupkg files generated from restore
     projAssetsFiles = getAllFiles(
       path,
       `${options.multiProject ? "**/" : ""}project.assets.json`,
@@ -4755,18 +4755,48 @@ export async function createCsharpBom(path, options) {
       `${options.multiProject ? "**/" : ""}packages.lock.json`,
       options,
     );
+    nupkgFiles = getAllFiles(
+      path,
+      `${options.multiProject ? "**/" : ""}*.nupkg`,
+      options,
+    );
   }
   let pkgList = [];
+  const parentDependsOn = new Set();
   if (nupkgFiles.length && projAssetsFiles.length === 0) {
     manifestFiles = manifestFiles.concat(nupkgFiles);
+    // When parsing nupkg files, only version ranges will be specified under dependencies
+    // To resolve the version, we need to track the mapping between name and resolved versions here
+    let dependenciesMap = {};
+    const pkgNameVersions = {};
     for (const nf of nupkgFiles) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${nf}`);
       }
-      const dlist = await parseNupkg(nf);
-      if (dlist?.length) {
-        pkgList = pkgList.concat(dlist);
+      const retMap = await parseNupkg(nf);
+      if (retMap?.pkgList.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+        for (const d of retMap.pkgList) {
+          parentDependsOn.add(d["bom-ref"]);
+          pkgNameVersions[d.name] = d.version;
+        }
       }
+      if (retMap?.dependenciesMap) {
+        dependenciesMap = { ...dependenciesMap, ...retMap.dependenciesMap };
+      }
+      // if (retMap.dependencies?.length) {
+      //   dependencies = mergeDependencies(
+      //     dependencies,
+      //     retMap.dependencies,
+      //     parentComponent,
+      //   );
+      // }
+    } // end for
+    for (const k of Object.keys(dependenciesMap)) {
+      const dependsOn = dependenciesMap[k].map(
+        (p) => `pkg:nuget/${p}@${pkgNameVersions[p] || "latest"}`,
+      );
+      dependencies.push({ ref: k, dependsOn });
     }
   }
   // project.assets.json parsing
@@ -4809,7 +4839,6 @@ export async function createCsharpBom(path, options) {
     }
   } else if (pkgLockFiles.length) {
     manifestFiles = manifestFiles.concat(pkgLockFiles);
-    const parentDependsOn = new Set();
     // packages.lock.json from nuget
     for (const af of pkgLockFiles) {
       if (DEBUG_MODE) {
@@ -4834,12 +4863,6 @@ export async function createCsharpBom(path, options) {
         }
       }
     }
-    if (parentDependsOn.size) {
-      dependencies.splice(0, 0, {
-        ref: parentComponent["bom-ref"],
-        dependsOn: Array.from(parentDependsOn),
-      });
-    }
   } else if (pkgConfigFiles.length) {
     manifestFiles = manifestFiles.concat(pkgConfigFiles);
     // packages.config parsing
@@ -4852,9 +4875,12 @@ export async function createCsharpBom(path, options) {
       if (pkgData.charCodeAt(0) === 0xfeff) {
         pkgData = pkgData.slice(1);
       }
-      const dlist = parseCsPkgData(pkgData);
+      const dlist = parseCsPkgData(pkgData, f);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
+        for (const d of dlist) {
+          parentDependsOn.add(d["bom-ref"]);
+        }
       }
     }
   }
@@ -4878,8 +4904,10 @@ export async function createCsharpBom(path, options) {
     }
   }
   if (
-    (options.projectType === "dotnet-framework" && !pkgLockFiles.length) ||
-    (!pkgList.length && csProjFiles.length)
+    (options.projectType === "dotnet-framework" &&
+      !pkgLockFiles.length &&
+      !nupkgFiles.length) ||
+    (!pkgList.length && csProjFiles.length && !nupkgFiles.length)
   ) {
     manifestFiles = manifestFiles.concat(csProjFiles);
     // .csproj parsing
@@ -4941,6 +4969,13 @@ export async function createCsharpBom(path, options) {
       }
       pkgList = addEvidenceForDotnet(pkgList, slicesFile, options);
     }
+  }
+  // Parent dependency tree
+  if (parentDependsOn.size && parentComponent && parentComponent["bom-ref"]) {
+    dependencies.splice(0, 0, {
+      ref: parentComponent["bom-ref"],
+      dependsOn: Array.from(parentDependsOn),
+    });
   }
   if (FETCH_LICENSE) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
