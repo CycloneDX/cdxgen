@@ -10492,6 +10492,8 @@ export function addEvidenceForDotnet(pkgList, slicesFile) {
         apkg.evidence.occurrences = locationOccurrences.map((l) => ({
           location: l,
         }));
+        // Set the package scope
+        apkg.scope = "required";
       }
       // Add the imported modules to properties
       if (purlModulesMap[apkg.purl]) {
