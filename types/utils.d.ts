@@ -629,10 +629,11 @@ export function parseCsPkgData(pkgData: any, pkgFile: any): any[];
  *
  * @param {String} csProjData Raw data
  * @param {String} projFile File name
+ * @param {Object} pkgNameVersions Package name - version map object
  *
  * @returns {Object} Containing parent component, package, and dependencies
  */
-export function parseCsProjData(csProjData: string, projFile: string): any;
+export function parseCsProjData(csProjData: string, projFile: string, pkgNameVersions?: any): any;
 export function parseCsProjAssetsData(csProjData: any, assetsJsonFile: any): {
     pkgList: any[];
     dependenciesList: any[];

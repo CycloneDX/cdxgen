@@ -6272,10 +6272,11 @@ export function parseCsPkgData(pkgData, pkgFile) {
  *
  * @param {String} csProjData Raw data
  * @param {String} projFile File name
+ * @param {Object} pkgNameVersions Package name - version map object
  *
  * @returns {Object} Containing parent component, package, and dependencies
  */
-export function parseCsProjData(csProjData, projFile) {
+export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   const pkgList = [];
   let parentComponent = { type: "application", properties: [] };
   if (!csProjData) {
@@ -6406,8 +6407,9 @@ export function parseCsProjData(csProjData, projFile) {
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
-        if (pkg.version) {
-          pkg.purl = `pkg:nuget/${pkg.name}@${pkg.version}`;
+        const version = pkg.version || pkgNameVersions[pkg.name];
+        if (version) {
+          pkg.purl = `pkg:nuget/${pkg.name}@${version}`;
         } else {
           pkg.purl = `pkg:nuget/${pkg.name}`;
         }

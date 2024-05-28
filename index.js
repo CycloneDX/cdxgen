@@ -4897,12 +4897,18 @@ export async function createCsharpBom(path, options) {
     }
   }
   if (
-    (options.projectType === "dotnet-framework" &&
-      !pkgLockFiles.length &&
-      !nupkgFiles.length) ||
+    options.projectType === "dotnet-framework" ||
     (!pkgList.length && csProjFiles.length && !nupkgFiles.length)
   ) {
     manifestFiles = manifestFiles.concat(csProjFiles);
+    // Parsing csproj is quite error prone. Some project files may not have versions specified
+    // To work around this, we make use of the version from the existing list
+    const pkgNameVersions = {};
+    for (const p of pkgList) {
+      if (p.version) {
+        pkgNameVersions[p.name] = p.version;
+      }
+    }
     // .csproj parsing
     for (const f of csProjFiles) {
       if (DEBUG_MODE) {
@@ -4913,7 +4919,7 @@ export async function createCsharpBom(path, options) {
       if (csProjData.charCodeAt(0) === 0xfeff) {
         csProjData = csProjData.slice(1);
       }
-      const retMap = parseCsProjData(csProjData, f);
+      const retMap = parseCsProjData(csProjData, f, pkgNameVersions);
       if (retMap?.parentComponent) {
         // If there are multiple project files, track the parent components using nested components
         if (csProjFiles.length > 1) {
