@@ -340,3 +340,31 @@ export const printReachables = (sliceArtefacts) => {
     console.log(table(data, config));
   }
 };
+
+export function printVulnerabilities(vulnerabilities) {
+  if (!vulnerabilities) {
+    return;
+  }
+  const data = [["Ref", "Ratings", "State", "Justification"]];
+  for (const avuln of vulnerabilities) {
+    const arow = [
+      avuln["bom-ref"],
+      `${avuln?.ratings
+        .map((r) => r?.severity?.toUpperCase())
+        .join("\n")}\n${avuln?.ratings.map((r) => r?.score).join("\n")}`,
+      avuln?.analysis?.state || "",
+      avuln?.analysis?.justification || "",
+    ];
+    data.push(arow);
+  }
+  const config = {
+    header: {
+      alignment: "center",
+      content: "Vulnerabilities\nGenerated with \u2665  by cdxgen",
+    },
+  };
+  if (data.length > 1) {
+    console.log(table(data, config));
+  }
+  console.log(`${vulnerabilities.length} vulnerabilities found.`);
+}

@@ -14,6 +14,7 @@ import {
   printOccurrences,
   printServices,
   printTable,
+  printVulnerabilities,
 } from "../display.js";
 import { createBom } from "../index.js";
 import { validateBom } from "../validator.js";
@@ -61,9 +62,13 @@ export const importSbom = (sbomOrPath) => {
   if (sbomOrPath?.endsWith(".json") && fs.existsSync(sbomOrPath)) {
     try {
       sbom = JSON.parse(fs.readFileSync(sbomOrPath, "utf-8"));
-      console.log(`✅ SBOM imported successfully from ${sbomOrPath}`);
+      let bomType = "SBOM";
+      if (sbom?.vulnerabilities && Array.isArray(sbom.vulnerabilities)) {
+        bomType = "VDR";
+      }
+      console.log(`✅ ${bomType} imported successfully from ${sbomOrPath}`);
     } catch (e) {
-      console.log(`⚠ Unable to import the SBOM from ${sbomOrPath} due to ${e}`);
+      console.log(`⚠ Unable to import the BOM from ${sbomOrPath} due to ${e}`);
     }
   } else {
     console.log(`⚠ ${sbomOrPath} is invalid.`);
@@ -72,13 +77,13 @@ export const importSbom = (sbomOrPath) => {
 // Load any sbom passed from the command line
 if (process.argv.length > 2) {
   importSbom(process.argv[process.argv.length - 1]);
-  console.log("💭 Type .print to view the SBOM as a table");
+  console.log("💭 Type .print to view the BOM as a table");
 } else if (fs.existsSync("bom.json")) {
   // If the current directory has a bom.json load it
   importSbom("bom.json");
 } else {
   console.log("💭 Use .create <path> to create an SBOM for the given path.");
-  console.log("💭 Use .import <json> to import an existing SBOM.");
+  console.log("💭 Use .import <json> to import an existing BOM.");
   console.log("💭 Type .exit or press ctrl+d to close.");
 }
 
@@ -302,7 +307,7 @@ cdxgenRepl.defineCommand("validate", {
     if (sbom) {
       const result = validateBom(sbom);
       if (result) {
-        console.log("SBOM is valid!");
+        console.log("BOM is valid!");
       }
     } else {
       console.log(
@@ -426,7 +431,7 @@ cdxgenRepl.defineCommand("services", {
         let services = await expression.evaluate(sbom);
         if (!services) {
           console.log(
-            "No services found. Use evinse command to generate an SBOM with evidence.",
+            "No services found. Use evinse command to generate a SaaSBOM with evidence.",
           );
         } else {
           if (!Array.isArray(services)) {
@@ -439,8 +444,34 @@ cdxgenRepl.defineCommand("services", {
       }
     } else {
       console.log(
-        "⚠ No SBOM is loaded. Use .import command to import an evinse SBOM",
+        "⚠ No SaaSBOM is loaded. Use .import command to import a SaaSBOM",
       );
+    }
+    this.displayPrompt();
+  },
+});
+cdxgenRepl.defineCommand("vulnerabilities", {
+  help: "view vulnerabilities",
+  async action() {
+    if (sbom) {
+      try {
+        const expression = jsonata("vulnerabilities");
+        let vulnerabilities = await expression.evaluate(sbom);
+        if (!vulnerabilities) {
+          console.log(
+            "No vulnerabilities found. Use depscan to generate a VDR file with vulnerabilities.",
+          );
+        } else {
+          if (!Array.isArray(vulnerabilities)) {
+            vulnerabilities = [vulnerabilities];
+          }
+          printVulnerabilities(vulnerabilities);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log("⚠ No BOM is loaded. Use .import command to import a VDR");
     }
     this.displayPrompt();
   },
