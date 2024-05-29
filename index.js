@@ -1281,7 +1281,7 @@ export async function createJavaBom(path, options) {
       bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
       // Check if the bom json files got created in a directory other than target
       if (!bomJsonFiles.length) {
-        bomJsonFiles = getAllFiles(path, "**/bom*.json", options);
+        bomJsonFiles = getAllFiles(path, "**/*{cdx,bom}*.json", options);
       }
       const bomGenerated = bomJsonFiles.length;
       if (!bomGenerated || result.status !== 0 || result.error) {
