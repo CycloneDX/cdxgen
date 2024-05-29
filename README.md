@@ -10,12 +10,16 @@
 
 ![cdxgen logo](./docs/_media/cdxgen.png)
 
-cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse. The tool supports CycloneDX specification versions from 1.4 - 1.6.
+cdxgen is a CLI tool, library, [REPL](./ADVANCED.md), and server to create a valid and compliant [CycloneDX][cyclonedx-homepage] Bill of Materials (BOM) containing an aggregate of all project dependencies in JSON format. CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse. The tool supports CycloneDX specification versions from 1.4 - 1.6.
 
-When used with plugins:
+Supported BOM formats:
 
-- cdxgen could generate an OBOM for Linux docker images and even VMs running Linux or Windows operating systems
-- cdxgen also includes an evinse tool to generate component evidence, CBOM, and SaaSBOM for some languages
+- Software (SBOM) - For many languages and container images.
+- Cryptography (CBOM) - For Java and Python projects.
+- Operations (OBOM) - For Linux container images and VMs running Linux or Windows operating systems.
+- Software-as-a-Service (SaaSBOM) - For Java, Python, JavaScript, TypeScript, and PHP projects.
+- Attestations (CDXA) - Generate SBOM with templates for multiple standards. Sign the BOM document at a granular level to improve authenticity.
+- Vulnerability Disclosure Report (VDR) - Use cdxgen with [OWASP depscan](https://github.com/owasp-dep-scan/dep-scan) to automate the generation of VDR at scale.
 
 ## Why cdxgen?
 
@@ -23,11 +27,19 @@ Most SBOM tools are like simple barcode scanners. For easy applications, they ca
 
 <img src="./docs/_media/why-cdxgen.jpg" alt="why cdxgen" width="256">
 
+Our philosophy:
+
+- Explainability: Don't list, but explain with evidence.
+- Precision: Try using multiple techniques to improve precision, even if it takes extra time.
+- Personas: Cater to the needs of a range of personas such as security researchers, compliance auditors, developers, and SOC.
+- Lifecycle: Support BOM generation for various product lifecycles.
+
 ## Documentation
 
-Please visit our [documentation site][docs-homepage] for detailed usage, tutorials and support documentation.
+Please visit our [documentation site][docs-homepage] for detailed usage, tutorials, and support documentation.
 
 Sections include:
+
 - [Getting Started][docs-homepage]
 - [CLI Usage][docs-cli]
 - [Server Usage][docs-server]
@@ -36,7 +48,6 @@ Sections include:
 - [Advanced Usage][docs-advanced-usage]
 - [Permissions][docs-permissions]
 - [Support (Enterprise & Community)][docs-support]
-
 
 ### Automatic usage detection
 
@@ -472,8 +483,6 @@ Use the [CycloneDX CLI][cyclonedx-cli-github] tool for advanced use cases such a
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE][github-license] file for the full license.
 
-
-
 ## Integration as library
 
 cdxgen is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c) and could be imported and used with both deno and Node.js >= 20
@@ -498,7 +507,6 @@ const dbody = await submitBom(args, bomNSData.bomJson);
 
 Please check out our [contribute to CycloneDX/cdxgen documentation][github-contribute] if you are interested in helping.
 
-
 Before raising a PR, please run the following commands.
 
 ```bash
@@ -510,9 +518,9 @@ npm run lint
 npm test
 ```
 
-
 <!-- LINK LABELS -->
 <!-- Badges -->
+
 [badge-github-contributors]: https://img.shields.io/github/contributors/cyclonedx/cdxgen
 [badge-github-license]: https://img.shields.io/github/license/cyclonedx/cdxgen
 [badge-github-releases]: https://img.shields.io/github/v/release/cyclonedx/cdxgen
@@ -522,6 +530,7 @@ npm test
 [badge-swh]: https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/
 
 <!-- cdxgen github project -->
+
 [github-contribute]: https://github.com/CycloneDX/cdxgen/contribute
 [github-contributors]: https://github.com/CycloneDX/cdxgen/graphs/contributors
 [github-issues]: https://github.com/CycloneDX/cdxgen/issues
@@ -529,6 +538,7 @@ npm test
 [github-releases]: https://github.com/CycloneDX/cdxgen/releases
 
 <!-- cdxgen documentation site -->
+
 [docs-homepage]: https://cyclonedx.github.io/cdxgen
 [docs-advanced-usage]: https://cyclonedx.github.io/cdxgen/#/ADVANCED
 [docs-cli]: https://cyclonedx.github.io/cdxgen/#/CLI
@@ -539,6 +549,7 @@ npm test
 [docs-support]: https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES
 
 <!-- web links-->
+
 [appthreat-homepage]: https://www.appthreat.com
 [cyclonedx-homepage]: https://cyclonedx.org
 [cyclonedx-cli-github]: https://github.com/CycloneDX/cyclonedx-cli
