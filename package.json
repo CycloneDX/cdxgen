@@ -71,6 +71,7 @@
     "@npmcli/arborist": "7.5.2",
     "ajv": "^8.14.0",
     "ajv-formats": "^3.0.1",
+    "ajv-formats-draft2019": "^1.6.1",
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "1.1.1",
     "find-up": "7.0.0",
@@ -90,7 +91,8 @@
     "tar": "^6.2.1",
     "uuid": "^9.0.1",
     "xml-js": "^1.6.11",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "hosted-git-info": "^7.0.2"
   },
   "optionalDependencies": {
     "@appthreat/atom": "2.0.12",
