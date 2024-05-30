@@ -1,11 +1,12 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { URL, fileURLToPath } from "node:url";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
+import addFormatsDraft2019 from "ajv-formats-draft2019";
 import { PackageURL } from "packageurl-js";
 import { DEBUG_MODE } from "./utils.js";
 
-import { URL, fileURLToPath } from "node:url";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
@@ -35,7 +36,8 @@ export const validateBom = (bomJson) => {
   );
   const ajv = new Ajv({
     schemas: [schema, defsSchema, spdxSchema],
-    strict: false,
+    strict: true,
+    strictRequired: false, // Required as oneOf combined with required is not working well (see https://github.com/ajv-validator/ajv/issues/1571)
     logger: false,
     verbose: true,
     code: {
@@ -45,6 +47,7 @@ export const validateBom = (bomJson) => {
     },
   });
   addFormats(ajv);
+  addFormatsDraft2019(ajv);
   const validate = ajv.getSchema(
     `http://cyclonedx.org/schema/bom-${bomJson.specVersion}.schema.json`,
   );
