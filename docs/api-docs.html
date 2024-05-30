@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf8" />
+  <title>CycloneDX Generator (cdxgen) Server</title>
+  <!-- needed for adaptive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <script src="https://cdn.redoc.ly/redoc/v2.1.3/bundles/redoc.standalone.js"></script><style data-styled="true" data-styled-version="6.1.11">.jLkFlo{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.jLkFlo{width:100%;padding:40px 40px;}}/*!sc*/
+.gDjRxY{width:calc(100% - 40%);padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.gDjRxY{width:100%;padding:0px 40px;}}/*!sc*/
+data-styled.g4[id="sc-fqkwJk"]{content:"jLkFlo,gDjRxY,"}/*!sc*/
+.gWwwsw{padding:40px 0;}/*!sc*/
+.gWwwsw:last-child{min-height:calc(100vh + 1px);}/*!sc*/
+.gWwwsw>.gWwwsw:last-child{min-height:initial;}/*!sc*/
+@media print,screen and (max-width: 75rem){.gWwwsw{padding:0;}}/*!sc*/
+.dNqlFH{padding:40px 0;position:relative;}/*!sc*/
+.dNqlFH:last-child{min-height:calc(100vh + 1px);}/*!sc*/
+.dNqlFH>.dNqlFH:last-child{min-height:initial;}/*!sc*/
+@media print,screen and (max-width: 75rem){.dNqlFH{padding:0;}}/*!sc*/
+.dNqlFH:not(:last-of-type):after{position:absolute;bottom:0;width:100%;display:block;content:'';border-bottom:1px solid rgba(0, 0, 0, 0.2);}/*!sc*/
+data-styled.g5[id="sc-dcJtft"]{content:"gWwwsw,dNqlFH,"}/*!sc*/
+.hqwGrr{width:40%;color:#ffffff;background-color:#263238;padding:0 40px;}/*!sc*/
+@media print,screen and (max-width: 75rem){.hqwGrr{width:100%;padding:40px 40px;}}/*!sc*/
+data-styled.g6[id="sc-iGgVNO"]{content:"hqwGrr,"}/*!sc*/
+.ggsSF{background-color:#263238;}/*!sc*/
+data-styled.g7[id="sc-gsFSjX"]{content:"ggsSF,"}/*!sc*/
+.NrBoN{display:flex;width:100%;padding:0;}/*!sc*/
+@media print,screen and (max-width: 75rem){.NrBoN{flex-direction:column;}}/*!sc*/
+data-styled.g8[id="sc-kAycRU"]{content:"NrBoN,"}/*!sc*/
+.cDCvoe{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#333333;}/*!sc*/
+data-styled.g9[id="sc-imWZod"]{content:"cDCvoe,"}/*!sc*/
+.hXYRhd{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;margin:0 0 20px;}/*!sc*/
+data-styled.g10[id="sc-jXbVAB"]{content:"hXYRhd,"}/*!sc*/
+.cgzTaG{color:#ffffff;}/*!sc*/
+data-styled.g12[id="sc-kpDprT"]{content:"cgzTaG,"}/*!sc*/
+.fZUozT{border-bottom:1px solid rgba(38, 50, 56, 0.3);margin:1em 0 1em 0;color:rgba(38, 50, 56, 0.5);font-weight:normal;text-transform:uppercase;font-size:0.929em;line-height:20px;}/*!sc*/
+data-styled.g13[id="sc-dAlxHm"]{content:"fZUozT,"}/*!sc*/
+.buKOug{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.buKOug:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+h1:hover>.buKOug::before,h2:hover>.buKOug::before,.buKOug:hover::before{visibility:visible;}/*!sc*/
+data-styled.g14[id="sc-jlZhRR"]{content:"buKOug,"}/*!sc*/
+.fPWjto{height:18px;width:18px;min-width:18px;vertical-align:middle;float:right;transition:transform 0.2s ease-out;transform:rotateZ(-90deg);}/*!sc*/
+.jqLwgG{height:1.5em;width:1.5em;min-width:1.5em;vertical-align:middle;float:left;transition:transform 0.2s ease-out;transform:rotateZ(-90deg);}/*!sc*/
+.jqLwgG polygon{fill:#1d8127;}/*!sc*/
+.fxsrq{height:20px;width:20px;min-width:20px;vertical-align:middle;float:right;transition:transform 0.2s ease-out;transform:rotateZ(0);}/*!sc*/
+.fxsrq polygon{fill:white;}/*!sc*/
+data-styled.g15[id="sc-cwHqhk"]{content:"fPWjto,jqLwgG,fxsrq,"}/*!sc*/
+.fCxZSn{border-left:1px solid #7c7cbb;box-sizing:border-box;position:relative;padding:10px 10px 10px 0;}/*!sc*/
+@media screen and (max-width: 50rem){.fCxZSn{display:block;overflow:hidden;}}/*!sc*/
+tr:first-of-type>.fCxZSn,tr.last>.fCxZSn{border-left-width:0;background-position:top left;background-repeat:no-repeat;background-size:1px 100%;}/*!sc*/
+tr:first-of-type>.fCxZSn{background-image:linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 22px,
+      #7c7cbb 22px,
+      #7c7cbb 100%
+    );}/*!sc*/
+tr.last>.fCxZSn{background-image:linear-gradient(
+      to bottom,
+      #7c7cbb 0%,
+      #7c7cbb 22px,
+      transparent 22px,
+      transparent 100%
+    );}/*!sc*/
+tr.last+tr>.fCxZSn{border-left-color:transparent;}/*!sc*/
+tr.last:first-child>.fCxZSn{background:none;border-left-color:transparent;}/*!sc*/
+data-styled.g18[id="sc-dLNtp"]{content:"fCxZSn,"}/*!sc*/
+.jTSwDU{vertical-align:top;line-height:20px;white-space:nowrap;font-size:13px;font-family:Courier,monospace;}/*!sc*/
+.jTSwDU.deprecated{text-decoration:line-through;color:#707070;}/*!sc*/
+data-styled.g20[id="sc-eldOKa"]{content:"jTSwDU,"}/*!sc*/
+.kdholP{border-bottom:1px solid #9fb4be;padding:10px 0;width:75%;box-sizing:border-box;}/*!sc*/
+tr.expanded .kdholP{border-bottom:none;}/*!sc*/
+@media screen and (max-width: 50rem){.kdholP{padding:0 20px;border-bottom:none;border-left:1px solid #7c7cbb;}tr.last>.kdholP{border-left:none;}}/*!sc*/
+data-styled.g21[id="sc-fPXMhL"]{content:"kdholP,"}/*!sc*/
+.fWSzIS{color:#7c7cbb;font-family:Courier,monospace;margin-right:10px;}/*!sc*/
+.fWSzIS::before{content:'';display:inline-block;vertical-align:middle;width:10px;height:1px;background:#7c7cbb;}/*!sc*/
+.fWSzIS::after{content:'';display:inline-block;vertical-align:middle;width:1px;background:#7c7cbb;height:7px;}/*!sc*/
+data-styled.g22[id="sc-gFqAYk"]{content:"fWSzIS,"}/*!sc*/
+.hPLMVw{border-collapse:separate;border-radius:3px;font-size:14px;border-spacing:0;width:100%;}/*!sc*/
+.hPLMVw >tr{vertical-align:middle;}/*!sc*/
+@media screen and (max-width: 50rem){.hPLMVw{display:block;}.hPLMVw >tr,.hPLMVw >tbody>tr{display:block;}}/*!sc*/
+@media screen and (max-width: 50rem) and (-ms-high-contrast:none){.hPLMVw td{float:left;width:100%;}}/*!sc*/
+.hPLMVw .sc-ikkyvV,.hPLMVw .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV,.hPLMVw .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV{margin:1em;margin-right:0;background:#fafafa;}/*!sc*/
+.hPLMVw .sc-ikkyvV .sc-ikkyvV,.hPLMVw .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV,.hPLMVw .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV .sc-ikkyvV{background:#ffffff;}/*!sc*/
+data-styled.g24[id="sc-dAbbbq"]{content:"hPLMVw,"}/*!sc*/
+.tlGxN >ul{list-style:none;padding:0;margin:0;margin:0 -5px;}/*!sc*/
+.tlGxN >ul >li{padding:5px 10px;display:inline-block;background-color:#11171a;border-bottom:1px solid rgba(0, 0, 0, 0.5);cursor:pointer;text-align:center;outline:none;color:#ccc;margin:0 5px 5px 5px;border:1px solid #07090b;border-radius:5px;min-width:60px;font-size:0.9em;font-weight:bold;}/*!sc*/
+.tlGxN >ul >li.react-tabs__tab--selected{color:#333333;background:#ffffff;}/*!sc*/
+.tlGxN >ul >li.react-tabs__tab--selected:focus{outline:auto;}/*!sc*/
+.tlGxN >ul >li:only-child{flex:none;min-width:100px;}/*!sc*/
+.tlGxN >ul >li.tab-success{color:#1d8127;}/*!sc*/
+.tlGxN >ul >li.tab-redirect{color:#ffa500;}/*!sc*/
+.tlGxN >ul >li.tab-info{color:#87ceeb;}/*!sc*/
+.tlGxN >ul >li.tab-error{color:#d41f1c;}/*!sc*/
+.tlGxN >.react-tabs__tab-panel{background:#11171a;}/*!sc*/
+.tlGxN >.react-tabs__tab-panel>div,.tlGxN >.react-tabs__tab-panel>pre{padding:20px;margin:0;}/*!sc*/
+.tlGxN >.react-tabs__tab-panel>div>pre{padding:0;}/*!sc*/
+data-styled.g30[id="sc-bXCLgj"]{content:"tlGxN,"}/*!sc*/
+.bSgSrX code[class*='language-'],.bSgSrX pre[class*='language-']{text-shadow:0 -0.1em 0.2em black;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none;}/*!sc*/
+@media print{.bSgSrX code[class*='language-'],.bSgSrX pre[class*='language-']{text-shadow:none;}}/*!sc*/
+.bSgSrX pre[class*='language-']{padding:1em;margin:0.5em 0;overflow:auto;}/*!sc*/
+.bSgSrX .token.comment,.bSgSrX .token.prolog,.bSgSrX .token.doctype,.bSgSrX .token.cdata{color:hsl(30, 20%, 50%);}/*!sc*/
+.bSgSrX .token.punctuation{opacity:0.7;}/*!sc*/
+.bSgSrX .namespace{opacity:0.7;}/*!sc*/
+.bSgSrX .token.property,.bSgSrX .token.tag,.bSgSrX .token.number,.bSgSrX .token.constant,.bSgSrX .token.symbol{color:#4a8bb3;}/*!sc*/
+.bSgSrX .token.boolean{color:#e64441;}/*!sc*/
+.bSgSrX .token.selector,.bSgSrX .token.attr-name,.bSgSrX .token.string,.bSgSrX .token.char,.bSgSrX .token.builtin,.bSgSrX .token.inserted{color:#a0fbaa;}/*!sc*/
+.bSgSrX .token.selector+a,.bSgSrX .token.attr-name+a,.bSgSrX .token.string+a,.bSgSrX .token.char+a,.bSgSrX .token.builtin+a,.bSgSrX .token.inserted+a,.bSgSrX .token.selector+a:visited,.bSgSrX .token.attr-name+a:visited,.bSgSrX .token.string+a:visited,.bSgSrX .token.char+a:visited,.bSgSrX .token.builtin+a:visited,.bSgSrX .token.inserted+a:visited{color:#4ed2ba;text-decoration:underline;}/*!sc*/
+.bSgSrX .token.property.string{color:white;}/*!sc*/
+.bSgSrX .token.operator,.bSgSrX .token.entity,.bSgSrX .token.url,.bSgSrX .token.variable{color:hsl(40, 90%, 60%);}/*!sc*/
+.bSgSrX .token.atrule,.bSgSrX .token.attr-value,.bSgSrX .token.keyword{color:hsl(350, 40%, 70%);}/*!sc*/
+.bSgSrX .token.regex,.bSgSrX .token.important{color:#e90;}/*!sc*/
+.bSgSrX .token.important,.bSgSrX .token.bold{font-weight:bold;}/*!sc*/
+.bSgSrX .token.italic{font-style:italic;}/*!sc*/
+.bSgSrX .token.entity{cursor:help;}/*!sc*/
+.bSgSrX .token.deleted{color:red;}/*!sc*/
+data-styled.g32[id="sc-eeDSqt"]{content:"bSgSrX,"}/*!sc*/
+.kEwLiZ{opacity:0.7;transition:opacity 0.3s ease;text-align:right;}/*!sc*/
+.kEwLiZ:focus-within{opacity:1;}/*!sc*/
+.kEwLiZ >button{background-color:transparent;border:0;color:inherit;padding:2px 10px;font-family:Roboto,sans-serif;font-size:14px;line-height:1.5em;cursor:pointer;outline:0;}/*!sc*/
+.kEwLiZ >button :hover,.kEwLiZ >button :focus{background:rgba(255, 255, 255, 0.1);}/*!sc*/
+data-styled.g33[id="sc-koYCI"]{content:"kEwLiZ,"}/*!sc*/
+.eyrQrY{position:relative;}/*!sc*/
+data-styled.g37[id="sc-dtBeHJ"]{content:"eyrQrY,"}/*!sc*/
+.fpgAnb{margin-left:10px;text-transform:none;font-size:0.929em;color:black;}/*!sc*/
+data-styled.g41[id="sc-cWSIco"]{content:"fpgAnb,"}/*!sc*/
+.cWARBq{font-family:Roboto,sans-serif;font-weight:400;line-height:1.5em;}/*!sc*/
+.cWARBq p:last-child{margin-bottom:0;}/*!sc*/
+.cWARBq h1{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#32329f;margin-top:0;}/*!sc*/
+.cWARBq h2{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;}/*!sc*/
+.cWARBq code{color:#e53935;background-color:rgba(38, 50, 56, 0.05);font-family:Courier,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
+.cWARBq pre{font-family:Courier,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
+.cWARBq pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
+.cWARBq pre code:before,.cWARBq pre code:after{content:none;}/*!sc*/
+.cWARBq blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
+.cWARBq img{max-width:100%;box-sizing:content-box;}/*!sc*/
+.cWARBq ul,.cWARBq ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
+.cWARBq ul ul,.cWARBq ol ul,.cWARBq ul ol,.cWARBq ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
+.cWARBq table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
+.cWARBq table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
+.cWARBq table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
+.cWARBq table th,.cWARBq table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
+.cWARBq table th{text-align:left;font-weight:bold;}/*!sc*/
+.cWARBq .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.cWARBq .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+.cWARBq h1:hover>.share-link::before,.cWARBq h2:hover>.share-link::before,.cWARBq .share-link:hover::before{visibility:visible;}/*!sc*/
+.cWARBq a{text-decoration:auto;color:#32329f;}/*!sc*/
+.cWARBq a:visited{color:#32329f;}/*!sc*/
+.cWARBq a:hover{color:#6868cf;text-decoration:auto;}/*!sc*/
+.gayXgA{font-family:Roboto,sans-serif;font-weight:400;line-height:1.5em;}/*!sc*/
+.gayXgA p:last-child{margin-bottom:0;}/*!sc*/
+.gayXgA p:first-child{margin-top:0;}/*!sc*/
+.gayXgA p:last-child{margin-bottom:0;}/*!sc*/
+.gayXgA h1{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.85714em;line-height:1.6em;color:#32329f;margin-top:0;}/*!sc*/
+.gayXgA h2{font-family:Montserrat,sans-serif;font-weight:400;font-size:1.57143em;line-height:1.6em;color:#333333;}/*!sc*/
+.gayXgA code{color:#e53935;background-color:rgba(38, 50, 56, 0.05);font-family:Courier,monospace;border-radius:2px;border:1px solid rgba(38, 50, 56, 0.1);padding:0 5px;font-size:13px;font-weight:400;word-break:break-word;}/*!sc*/
+.gayXgA pre{font-family:Courier,monospace;white-space:pre;background-color:#11171a;color:white;padding:20px;overflow-x:auto;line-height:normal;border-radius:0;border:1px solid rgba(38, 50, 56, 0.1);}/*!sc*/
+.gayXgA pre code{background-color:transparent;color:white;padding:0;}/*!sc*/
+.gayXgA pre code:before,.gayXgA pre code:after{content:none;}/*!sc*/
+.gayXgA blockquote{margin:0;margin-bottom:1em;padding:0 15px;color:#777;border-left:4px solid #ddd;}/*!sc*/
+.gayXgA img{max-width:100%;box-sizing:content-box;}/*!sc*/
+.gayXgA ul,.gayXgA ol{padding-left:2em;margin:0;margin-bottom:1em;}/*!sc*/
+.gayXgA ul ul,.gayXgA ol ul,.gayXgA ul ol,.gayXgA ol ol{margin-bottom:0;margin-top:0;}/*!sc*/
+.gayXgA table{display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all;border-collapse:collapse;border-spacing:0;margin-top:1.5em;margin-bottom:1.5em;}/*!sc*/
+.gayXgA table tr{background-color:#fff;border-top:1px solid #ccc;}/*!sc*/
+.gayXgA table tr:nth-child(2n){background-color:#fafafa;}/*!sc*/
+.gayXgA table th,.gayXgA table td{padding:6px 13px;border:1px solid #ddd;}/*!sc*/
+.gayXgA table th{text-align:left;font-weight:bold;}/*!sc*/
+.gayXgA .share-link{cursor:pointer;margin-left:-20px;padding:0;line-height:1;width:20px;display:inline-block;outline:0;}/*!sc*/
+.gayXgA .share-link:before{content:'';width:15px;height:15px;background-size:contain;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMCIgeT0iMCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cGF0aCBmaWxsPSIjMDEwMTAxIiBkPSJNNDU5LjcgMjMzLjRsLTkwLjUgOTAuNWMtNTAgNTAtMTMxIDUwLTE4MSAwIC03LjktNy44LTE0LTE2LjctMTkuNC0yNS44bDQyLjEtNDIuMWMyLTIgNC41LTMuMiA2LjgtNC41IDIuOSA5LjkgOCAxOS4zIDE1LjggMjcuMiAyNSAyNSA2NS42IDI0LjkgOTAuNSAwbDkwLjUtOTAuNWMyNS0yNSAyNS02NS42IDAtOTAuNSAtMjQuOS0yNS02NS41LTI1LTkwLjUgMGwtMzIuMiAzMi4yYy0yNi4xLTEwLjItNTQuMi0xMi45LTgxLjYtOC45bDY4LjYtNjguNmM1MC01MCAxMzEtNTAgMTgxIDBDNTA5LjYgMTAyLjMgNTA5LjYgMTgzLjQgNDU5LjcgMjMzLjR6TTIyMC4zIDM4Mi4ybC0zMi4yIDMyLjJjLTI1IDI0LjktNjUuNiAyNC45LTkwLjUgMCAtMjUtMjUtMjUtNjUuNiAwLTkwLjVsOTAuNS05MC41YzI1LTI1IDY1LjUtMjUgOTAuNSAwIDcuOCA3LjggMTIuOSAxNy4yIDE1LjggMjcuMSAyLjQtMS40IDQuOC0yLjUgNi44LTQuNWw0Mi4xLTQyYy01LjQtOS4yLTExLjYtMTgtMTkuNC0yNS44IC01MC01MC0xMzEtNTAtMTgxIDBsLTkwLjUgOTAuNWMtNTAgNTAtNTAgMTMxIDAgMTgxIDUwIDUwIDEzMSA1MCAxODEgMGw2OC42LTY4LjZDMjc0LjYgMzk1LjEgMjQ2LjQgMzkyLjMgMjIwLjMgMzgyLjJ6Ii8+PC9zdmc+Cg==');opacity:0.5;visibility:hidden;display:inline-block;vertical-align:middle;}/*!sc*/
+.gayXgA h1:hover>.share-link::before,.gayXgA h2:hover>.share-link::before,.gayXgA .share-link:hover::before{visibility:visible;}/*!sc*/
+.gayXgA a{text-decoration:auto;color:#32329f;}/*!sc*/
+.gayXgA a:visited{color:#32329f;}/*!sc*/
+.gayXgA a:hover{color:#6868cf;text-decoration:auto;}/*!sc*/
+data-styled.g42[id="sc-eBMFzZ"]{content:"cWARBq,gayXgA,"}/*!sc*/
+.gKOXES{display:inline;}/*!sc*/
+data-styled.g43[id="sc-dCFGXG"]{content:"gKOXES,"}/*!sc*/
+.gpWFPc{position:relative;}/*!sc*/
+data-styled.g44[id="sc-fhzEvr"]{content:"gpWFPc,"}/*!sc*/
+.hxmTDe:hover>.sc-koYCI{opacity:1;}/*!sc*/
+data-styled.g49[id="sc-esYjtY"]{content:"hxmTDe,"}/*!sc*/
+.dXllNu{font-family:Courier,monospace;font-size:13px;white-space:pre;contain:content;overflow-x:auto;}/*!sc*/
+.dXllNu .redoc-json code>.collapser{display:none;pointer-events:none;}/*!sc*/
+.dXllNu .callback-function{color:gray;}/*!sc*/
+.dXllNu .collapser:after{content:'-';cursor:pointer;}/*!sc*/
+.dXllNu .collapsed>.collapser:after{content:'+';cursor:pointer;}/*!sc*/
+.dXllNu .ellipsis:after{content:' … ';}/*!sc*/
+.dXllNu .collapsible{margin-left:2em;}/*!sc*/
+.dXllNu .hoverable{padding-top:1px;padding-bottom:1px;padding-left:2px;padding-right:2px;border-radius:2px;}/*!sc*/
+.dXllNu .hovered{background-color:rgba(235, 238, 249, 1);}/*!sc*/
+.dXllNu .collapser{background-color:transparent;border:0;color:#fff;font-family:Courier,monospace;font-size:13px;padding-right:6px;padding-left:6px;padding-top:0;padding-bottom:0;display:flex;align-items:center;justify-content:center;width:15px;height:15px;position:absolute;top:4px;left:-1.5em;cursor:default;user-select:none;-webkit-user-select:none;padding:2px;}/*!sc*/
+.dXllNu .collapser:focus{outline-color:#fff;outline-style:dotted;outline-width:1px;}/*!sc*/
+.dXllNu ul{list-style-type:none;padding:0px;margin:0px 0px 0px 26px;}/*!sc*/
+.dXllNu li{position:relative;display:block;}/*!sc*/
+.dXllNu .hoverable{display:inline-block;}/*!sc*/
+.dXllNu .selected{outline-style:solid;outline-width:1px;outline-style:dotted;}/*!sc*/
+.dXllNu .collapsed>.collapsible{display:none;}/*!sc*/
+.dXllNu .ellipsis{display:none;}/*!sc*/
+.dXllNu .collapsed>.ellipsis{display:inherit;}/*!sc*/
+data-styled.g50[id="sc-fXSgRJ"]{content:"dXllNu,"}/*!sc*/
+.OirWV{padding:0.9em;background-color:rgba(38,50,56,0.4);margin:0 0 10px 0;display:block;font-family:Montserrat,sans-serif;font-size:0.929em;line-height:1.5em;}/*!sc*/
+data-styled.g51[id="sc-JrEyx"]{content:"OirWV,"}/*!sc*/
+.bLpZTa{font-family:Montserrat,sans-serif;font-size:12px;position:absolute;z-index:1;top:-11px;left:12px;font-weight:600;color:rgba(255,255,255,0.7);}/*!sc*/
+data-styled.g52[id="sc-fjvwmM"]{content:"bLpZTa,"}/*!sc*/
+.kIESIX{position:relative;}/*!sc*/
+data-styled.g53[id="sc-bbSYpP"]{content:"kIESIX,"}/*!sc*/
+.fszzxn{margin-top:15px;}/*!sc*/
+data-styled.g56[id="sc-uVXKs"]{content:"fszzxn,"}/*!sc*/
+.kMMoBE{vertical-align:middle;font-size:13px;line-height:20px;}/*!sc*/
+data-styled.g58[id="sc-NxrBK"]{content:"kMMoBE,"}/*!sc*/
+.hMkdpJ{color:rgba(102,102,102,0.9);}/*!sc*/
+data-styled.g59[id="sc-cfxfQh"]{content:"hMkdpJ,"}/*!sc*/
+.ffgeXz{color:#666;}/*!sc*/
+data-styled.g60[id="sc-gFAXEw"]{content:"ffgeXz,"}/*!sc*/
+.gypzqL{color:#d41f1c;font-size:0.9em;font-weight:normal;margin-left:20px;line-height:1;}/*!sc*/
+data-styled.g62[id="sc-hRJeED"]{content:"gypzqL,"}/*!sc*/
+.jnfAav{border-radius:2px;word-break:break-word;background-color:rgba(51,51,51,0.05);color:rgba(51,51,51,0.9);padding:0 5px;border:1px solid rgba(51,51,51,0.1);font-family:Courier,monospace;}/*!sc*/
++{margin-left:0;}/*!sc*/
+data-styled.g66[id="sc-ddjGcj"]{content:"jnfAav,"}/*!sc*/
+.iSJQuQ a{text-decoration:auto;color:#32329f;}/*!sc*/
+.iSJQuQ a:visited{color:#32329f;}/*!sc*/
+.iSJQuQ a:hover{color:#6868cf;text-decoration:auto;}/*!sc*/
+data-styled.g70[id="sc-jnOFWn"]{content:"iSJQuQ,"}/*!sc*/
+.hJudwp{margin-top:0;margin-bottom:0.5em;}/*!sc*/
+data-styled.g91[id="sc-fTFkHh"]{content:"hJudwp,"}/*!sc*/
+.dyWjRw{border:1px solid #32329f;color:#32329f;font-weight:normal;margin-left:0.5em;padding:4px 8px 4px;display:inline-block;text-decoration:none;cursor:pointer;}/*!sc*/
+data-styled.g92[id="sc-ktJcvw"]{content:"dyWjRw,"}/*!sc*/
+.fOljxM::before{content:'|';display:inline-block;opacity:0.5;width:15px;text-align:center;}/*!sc*/
+.fOljxM:last-child::after{display:none;}/*!sc*/
+data-styled.g93[id="sc-gmgEyz"]{content:"fOljxM,"}/*!sc*/
+.knZeAO{overflow:hidden;}/*!sc*/
+data-styled.g94[id="sc-kMkwmO"]{content:"knZeAO,"}/*!sc*/
+.foAXyM{display:flex;flex-wrap:wrap;margin-left:-15px;}/*!sc*/
+data-styled.g95[id="sc-fiCwYx"]{content:"foAXyM,"}/*!sc*/
+.hkxktA{width:9ex;display:inline-block;height:13px;line-height:13px;background-color:#333;border-radius:3px;background-repeat:no-repeat;background-position:6px 4px;font-size:7px;font-family:Verdana,sans-serif;color:white;text-transform:uppercase;text-align:center;font-weight:bold;vertical-align:middle;margin-right:6px;margin-top:2px;}/*!sc*/
+.hkxktA.get{background-color:#2F8132;}/*!sc*/
+.hkxktA.post{background-color:#186FAF;}/*!sc*/
+.hkxktA.put{background-color:#95507c;}/*!sc*/
+.hkxktA.options{background-color:#947014;}/*!sc*/
+.hkxktA.patch{background-color:#bf581d;}/*!sc*/
+.hkxktA.delete{background-color:#cc3333;}/*!sc*/
+.hkxktA.basic{background-color:#707070;}/*!sc*/
+.hkxktA.link{background-color:#07818F;}/*!sc*/
+.hkxktA.head{background-color:#A23DAD;}/*!sc*/
+.hkxktA.hook{background-color:#32329f;}/*!sc*/
+.hkxktA.schema{background-color:#707070;}/*!sc*/
+data-styled.g99[id="sc-ehiymJ"]{content:"hkxktA,"}/*!sc*/
+.gVzKKH{margin:0;padding:0;}/*!sc*/
+.gVzKKH:first-child{padding-bottom:32px;}/*!sc*/
+.sc-iHmqaY .sc-iHmqaY{font-size:0.929em;}/*!sc*/
+.eNA-DKG{margin:0;padding:0;display:none;}/*!sc*/
+.eNA-DKG:first-child{padding-bottom:32px;}/*!sc*/
+.sc-iHmqaY .sc-iHmqaY{font-size:0.929em;}/*!sc*/
+data-styled.g100[id="sc-iHmqaY"]{content:"gVzKKH,eNA-DKG,"}/*!sc*/
+.jiiTgL{list-style:none inside none;overflow:hidden;text-overflow:ellipsis;padding:0;}/*!sc*/
+data-styled.g101[id="sc-kYxEyd"]{content:"jiiTgL,"}/*!sc*/
+.kyKUpm{cursor:pointer;color:#333333;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Montserrat,sans-serif;font-size:0.929em;text-transform:none;background-color:#fafafa;}/*!sc*/
+.kyKUpm:hover{color:#32329f;background-color:#e1e1e1;}/*!sc*/
+.kyKUpm .sc-cwHqhk{height:1.5em;width:1.5em;}/*!sc*/
+.kyKUpm .sc-cwHqhk polygon{fill:#333333;}/*!sc*/
+.iwtEuE{cursor:pointer;color:#333333;margin:0;padding:12.5px 20px;display:flex;justify-content:space-between;font-family:Montserrat,sans-serif;background-color:#fafafa;}/*!sc*/
+.iwtEuE:hover{color:#32329f;background-color:#ededed;}/*!sc*/
+.iwtEuE .sc-cwHqhk{height:1.5em;width:1.5em;}/*!sc*/
+.iwtEuE .sc-cwHqhk polygon{fill:#333333;}/*!sc*/
+data-styled.g102[id="sc-bpUCxw"]{content:"kyKUpm,iwtEuE,"}/*!sc*/
+.kgCeIH{display:inline-block;vertical-align:middle;width:calc(100% - 38px);overflow:hidden;text-overflow:ellipsis;}/*!sc*/
+data-styled.g103[id="sc-eyvHYj"]{content:"kgCeIH,"}/*!sc*/
+.fGEtTM{font-size:0.8em;margin-top:10px;text-align:center;position:fixed;width:260px;bottom:0;background:#fafafa;}/*!sc*/
+.fGEtTM a,.fGEtTM a:visited,.fGEtTM a:hover{color:#333333!important;padding:5px 0;border-top:1px solid #e1e1e1;text-decoration:none;display:flex;align-items:center;justify-content:center;}/*!sc*/
+.fGEtTM img{width:15px;margin-right:5px;}/*!sc*/
+@media screen and (max-width: 50rem){.fGEtTM{width:100%;}}/*!sc*/
+data-styled.g104[id="sc-gfopwy"]{content:"fGEtTM,"}/*!sc*/
+.ciDfNo{cursor:pointer;position:relative;margin-bottom:5px;}/*!sc*/
+data-styled.g110[id="sc-dkmVhU"]{content:"ciDfNo,"}/*!sc*/
+.gHPYVn{font-family:Courier,monospace;margin-left:10px;flex:1;overflow-x:hidden;text-overflow:ellipsis;}/*!sc*/
+data-styled.g111[id="sc-ejfMNw"]{content:"gHPYVn,"}/*!sc*/
+.jJBChh{outline:0;color:inherit;width:100%;text-align:left;cursor:pointer;padding:10px 30px 10px 20px;border-radius:4px 4px 0 0;background-color:#11171a;display:flex;white-space:nowrap;align-items:center;border:1px solid transparent;border-bottom:0;transition:border-color 0.25s ease;}/*!sc*/
+.jJBChh ..sc-ejfMNw{color:#ffffff;}/*!sc*/
+.jJBChh:focus{box-shadow:inset 0 2px 2px rgba(0, 0, 0, 0.45),0 2px 0 rgba(128, 128, 128, 0.25);}/*!sc*/
+data-styled.g112[id="sc-iEXLnV"]{content:"jJBChh,"}/*!sc*/
+.fPaeRy{font-size:0.929em;line-height:20px;background-color:#2F8132;color:#ffffff;padding:3px 10px;text-transform:uppercase;font-family:Montserrat,sans-serif;margin:0;}/*!sc*/
+.bBtSVQ{font-size:0.929em;line-height:20px;background-color:#186FAF;color:#ffffff;padding:3px 10px;text-transform:uppercase;font-family:Montserrat,sans-serif;margin:0;}/*!sc*/
+data-styled.g113[id="sc-EgOky"]{content:"fPaeRy,bBtSVQ,"}/*!sc*/
+.fuVsyo{position:absolute;width:100%;z-index:100;background:#fafafa;color:#263238;box-sizing:border-box;box-shadow:0 0 6px rgba(0, 0, 0, 0.33);overflow:hidden;border-bottom-left-radius:4px;border-bottom-right-radius:4px;transition:all 0.25s ease;visibility:hidden;transform:translateY(-50%) scaleY(0);}/*!sc*/
+data-styled.g114[id="sc-eZYMKX"]{content:"fuVsyo,"}/*!sc*/
+.kyqjNC{padding:10px;}/*!sc*/
+data-styled.g115[id="sc-dlWDvs"]{content:"kyqjNC,"}/*!sc*/
+.lhFNhe{padding:5px;border:1px solid #ccc;background:#fff;word-break:break-all;color:#32329f;}/*!sc*/
+.lhFNhe >span{color:#333333;}/*!sc*/
+data-styled.g116[id="sc-hHOBVR"]{content:"lhFNhe,"}/*!sc*/
+.kRQFMp{text-transform:lowercase;margin-left:0;line-height:1.5em;}/*!sc*/
+data-styled.g117[id="sc-kWtorq"]{content:"kRQFMp,"}/*!sc*/
+.hDzmxh{display:block;border:0;width:100%;text-align:left;padding:10px;border-radius:2px;margin-bottom:4px;line-height:1.5em;cursor:pointer;color:#1d8127;background-color:rgba(29,129,39,0.07);}/*!sc*/
+.hDzmxh:focus{outline:auto #1d8127;}/*!sc*/
+data-styled.g119[id="sc-gdyfxU"]{content:"hDzmxh,"}/*!sc*/
+.eBHfiv{vertical-align:top;}/*!sc*/
+data-styled.g122[id="sc-bVHBsO"]{content:"eBHfiv,"}/*!sc*/
+.hePoiW{font-size:1.3em;padding:0.2em 0;margin:3em 0 1.1em;color:#333333;font-weight:normal;}/*!sc*/
+data-styled.g123[id="sc-dSIJcR"]{content:"hePoiW,"}/*!sc*/
+.bFMrcX{margin-bottom:30px;}/*!sc*/
+data-styled.g128[id="sc-ePDMnc"]{content:"bFMrcX,"}/*!sc*/
+.fztUTL{user-select:none;width:20px;height:20px;align-self:center;display:flex;flex-direction:column;color:#32329f;}/*!sc*/
+data-styled.g129[id="sc-bVVHAX"]{content:"fztUTL,"}/*!sc*/
+.fGVzNH{width:260px;background-color:#fafafa;overflow:hidden;display:flex;flex-direction:column;backface-visibility:hidden;height:100vh;position:sticky;position:-webkit-sticky;top:0;}/*!sc*/
+@media screen and (max-width: 50rem){.fGVzNH{position:fixed;z-index:20;width:100%;background:#fafafa;display:none;}}/*!sc*/
+@media print{.fGVzNH{display:none;}}/*!sc*/
+data-styled.g130[id="sc-dPZUdm"]{content:"fGVzNH,"}/*!sc*/
+.bjfrnL{outline:none;user-select:none;background-color:#f2f2f2;color:#32329f;display:none;cursor:pointer;position:fixed;right:20px;z-index:100;border-radius:50%;box-shadow:0 0 20px rgba(0, 0, 0, 0.3);bottom:44px;width:60px;height:60px;padding:0 20px;}/*!sc*/
+@media screen and (max-width: 50rem){.bjfrnL{display:flex;}}/*!sc*/
+.bjfrnL svg{color:#0065FB;}/*!sc*/
+@media print{.bjfrnL{display:none;}}/*!sc*/
+data-styled.g131[id="sc-eBHgEO"]{content:"bjfrnL,"}/*!sc*/
+.cyBpUp{font-family:Roboto,sans-serif;font-size:14px;font-weight:400;line-height:1.5em;color:#333333;display:flex;position:relative;text-align:left;-webkit-font-smoothing:antialiased;font-smoothing:antialiased;text-rendering:optimizeSpeed!important;tap-highlight-color:rgba(0, 0, 0, 0);text-size-adjust:100%;}/*!sc*/
+.cyBpUp *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(255, 255, 255, 0);}/*!sc*/
+data-styled.g132[id="sc-iXzffn"]{content:"cyBpUp,"}/*!sc*/
+.exixUa{z-index:1;position:relative;overflow:hidden;width:calc(100% - 260px);contain:layout;}/*!sc*/
+@media print,screen and (max-width: 50rem){.exixUa{width:100%;}}/*!sc*/
+data-styled.g133[id="sc-lnPyOc"]{content:"exixUa,"}/*!sc*/
+.bYFiUR{background:#263238;position:absolute;top:0;bottom:0;right:0;width:calc((100% - 260px) * 0.4);}/*!sc*/
+@media print,screen and (max-width: 75rem){.bYFiUR{display:none;}}/*!sc*/
+data-styled.g134[id="sc-eulNPF"]{content:"bYFiUR,"}/*!sc*/
+.fcCKrX{padding:5px 0;}/*!sc*/
+data-styled.g135[id="sc-dExXmK"]{content:"fcCKrX,"}/*!sc*/
+.ivCUtK{width:calc(100% - 40px);box-sizing:border-box;margin:0 20px;padding:5px 10px 5px 20px;border:0;border-bottom:1px solid #e1e1e1;font-family:Roboto,sans-serif;font-weight:bold;font-size:13px;color:#333333;background-color:transparent;outline:none;}/*!sc*/
+data-styled.g136[id="sc-iapVNj"]{content:"ivCUtK,"}/*!sc*/
+.bAFwPb{position:absolute;left:20px;height:1.8em;width:0.9em;}/*!sc*/
+.bAFwPb path{fill:#333333;}/*!sc*/
+data-styled.g137[id="sc-kqGpvY"]{content:"bAFwPb,"}/*!sc*/
+</style>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+</head>
+
+<body>
+  
+      <div id="redoc"><div class="sc-iXzffn cyBpUp redoc-wrap"><div class="sc-dPZUdm fGVzNH menu-content" style="top:0px;height:calc(100vh - 0px)"><div role="search" class="sc-dExXmK fcCKrX"><svg class="sc-kqGpvY bAFwPb search-icon" version="1.1" viewBox="0 0 1000 1000" x="0px" xmlns="http://www.w3.org/2000/svg" y="0px"><path d="M968.2,849.4L667.3,549c83.9-136.5,66.7-317.4-51.7-435.6C477.1-25,252.5-25,113.9,113.4c-138.5,138.3-138.5,362.6,0,501C219.2,730.1,413.2,743,547.6,666.5l301.9,301.4c43.6,43.6,76.9,14.9,104.2-12.4C981,928.3,1011.8,893,968.2,849.4z M524.5,522c-88.9,88.7-233,88.7-321.8,0c-88.9-88.7-88.9-232.6,0-321.3c88.9-88.7,233-88.7,321.8,0C613.4,289.4,613.4,433.3,524.5,522z"></path></svg><input placeholder="Search..." aria-label="Search" type="text" class="sc-iapVNj ivCUtK search-input" value=""/></div><div class="sc-dtBeHJ eyrQrY scrollbar-container undefined"><ul role="menu" class="sc-iHmqaY gVzKKH"><li tabindex="0" depth="1" data-item-id="tag/health" role="menuitem" class="sc-kYxEyd jiiTgL"><label class="sc-bpUCxw kyKUpm -depth1"><span width="calc(100% - 38px)" title="health" class="sc-eyvHYj kgCeIH">health</span><svg class="sc-cwHqhk fPWjto" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></label><ul class="sc-iHmqaY eNA-DKG"><li tabindex="0" depth="2" data-item-id="tag/health/operation/healthCheck" role="menuitem" class="sc-kYxEyd jiiTgL"><label class="sc-bpUCxw iwtEuE -depth2"><span type="get" class="sc-ehiymJ hkxktA operation-type get">get</span><span tabindex="0" width="calc(100% - 38px)" class="sc-eyvHYj kgCeIH">Check service health</span></label></li></ul></li><li tabindex="0" depth="1" data-item-id="tag/sbom" role="menuitem" class="sc-kYxEyd jiiTgL"><label class="sc-bpUCxw kyKUpm -depth1"><span width="calc(100% - 38px)" title="sbom" class="sc-eyvHYj kgCeIH">sbom</span><svg class="sc-cwHqhk fPWjto" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></label><ul class="sc-iHmqaY eNA-DKG"><li tabindex="0" depth="2" data-item-id="tag/sbom/operation/GetSBOM" role="menuitem" class="sc-kYxEyd jiiTgL"><label class="sc-bpUCxw iwtEuE -depth2"><span type="get" class="sc-ehiymJ hkxktA operation-type get">get</span><span tabindex="0" width="calc(100% - 38px)" class="sc-eyvHYj kgCeIH">Generate Software Bill of Materials (SBOM)</span></label></li><li tabindex="0" depth="2" data-item-id="tag/sbom/operation/generateSBOM" role="menuitem" class="sc-kYxEyd jiiTgL"><label class="sc-bpUCxw iwtEuE -depth2"><span type="post" class="sc-ehiymJ hkxktA operation-type post">post</span><span tabindex="0" width="calc(100% - 38px)" class="sc-eyvHYj kgCeIH">Generate Software Bill of Materials (SBOM)</span></label></li></ul></li></ul><div class="sc-gfopwy fGEtTM"><a target="_blank" rel="noopener noreferrer" href="https://redocly.com/redoc/">API docs by Redocly</a></div></div></div><div class="sc-eBHgEO bjfrnL"><div class="sc-bVVHAX fztUTL"><svg class="" style="transform:translate(2px, -4px) rotate(180deg);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
+          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
+          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
+          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
+          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
+          -174.68583 0.6895,0 26.281,25.03215 56.8701,
+          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
+          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
+          -104.0616 -231.873,-231.248 z
+        " fill="currentColor"></path></g></svg><svg class="" style="transform:translate(2px, 4px);transition:transform 0.2s ease" viewBox="0 0 926.23699 573.74994" version="1.1" x="0px" y="0px" width="15" height="15"><g transform="translate(904.92214,-879.1482)"><path d="
+          m -673.67664,1221.6502 -231.2455,-231.24803 55.6165,
+          -55.627 c 30.5891,-30.59485 56.1806,-55.627 56.8701,-55.627 0.6894,
+          0 79.8637,78.60862 175.9427,174.68583 l 174.6892,174.6858 174.6892,
+          -174.6858 c 96.079,-96.07721 175.253196,-174.68583 175.942696,
+          -174.68583 0.6895,0 26.281,25.03215 56.8701,
+          55.627 l 55.6165,55.627 -231.245496,231.24803 c -127.185,127.1864
+          -231.5279,231.248 -231.873,231.248 -0.3451,0 -104.688,
+          -104.0616 -231.873,-231.248 z
+        " fill="currentColor"></path></g></svg></div></div><div class="sc-lnPyOc exixUa api-content"><div class="sc-dcJtft gWwwsw"><div class="sc-kAycRU NrBoN"><div class="sc-fqkwJk jLkFlo api-info"><h1 class="sc-imWZod sc-fTFkHh cDCvoe hJudwp">CycloneDX Generator (cdxgen) Server<!-- --> <span>(<!-- -->latest<!-- -->)</span></h1><p>Download OpenAPI specification<!-- -->:<a download="openapi.json" target="_blank" class="sc-ktJcvw dyWjRw">Download</a></p><div class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq"><div class="sc-kMkwmO knZeAO"><div class="sc-fiCwYx foAXyM"> <span class="sc-gmgEyz fOljxM">URL: <a href="https://cyclonedx.slack.com/archives/C04NFFE1962">https://cyclonedx.slack.com/archives/C04NFFE1962</a></span> <span class="sc-gmgEyz fOljxM">License:<!-- --> <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0</a></span> </div></div></div><div data-role="redoc-summary" html="" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq"></div><div data-role="redoc-description" html="&lt;p&gt;&lt;a href=&quot;https://github.com/CycloneDX/cdxgen&quot;&gt;cdxgen&lt;/a&gt; is a CLI tool, library, REPL, and server to create a valid and compliant CycloneDX Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. &lt;/p&gt;
+&lt;p&gt;CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse.&lt;/p&gt;
+&lt;p&gt;Some useful links:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://cyclonedx.github.io/cdxgen/#/&quot;&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/CycloneDX/cdxgen/blob/master/lib/server/openapi.yaml&quot;&gt;Source API definition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://cyclonedx.org/specification/overview/&quot;&gt;CycloneDX Specification&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/CycloneDX/specification/blob/1.6/schema/bom-1.6.schema.json&quot;&gt;CycloneDX JSON Schema Specification&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq"><p><a href="https://github.com/CycloneDX/cdxgen">cdxgen</a> is a CLI tool, library, REPL, and server to create a valid and compliant CycloneDX Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. </p>
+<p>CycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse.</p>
+<p>Some useful links:</p>
+<ul>
+<li><a href="https://cyclonedx.github.io/cdxgen/#/">Documentation</a></li>
+<li><a href="https://github.com/CycloneDX/cdxgen/blob/master/lib/server/openapi.yaml">Source API definition</a></li>
+<li><a href="https://cyclonedx.org/specification/overview/">CycloneDX Specification</a></li>
+<li><a href="https://github.com/CycloneDX/specification/blob/1.6/schema/bom-1.6.schema.json">CycloneDX JSON Schema Specification</a></li>
+</ul>
+</div></div></div></div><div id="tag/health" data-section-id="tag/health" class="sc-dcJtft gWwwsw"><div class="sc-kAycRU NrBoN"><div class="sc-fqkwJk jLkFlo"><h2 class="sc-jXbVAB hXYRhd"><a class="sc-jlZhRR buKOug" href="#tag/health" aria-label="tag/health"></a>health</h2></div></div><div class="sc-fqkwJk gDjRxY"><div class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq redoc-markdown " html="&lt;p&gt;Service health checks&lt;/p&gt;
+"><p>Service health checks</p>
+</div></div></div><div id="tag/health/operation/healthCheck" data-section-id="tag/health/operation/healthCheck" class="sc-dcJtft dNqlFH"><div data-section-id="operation/healthCheck" id="operation/healthCheck" class="sc-kAycRU NrBoN"><div class="sc-fqkwJk jLkFlo"><h2 class="sc-jXbVAB hXYRhd"><a class="sc-jlZhRR buKOug" href="#tag/health/operation/healthCheck" aria-label="tag/health/operation/healthCheck"></a>Check service health<!-- --> </h2><div class="sc-ePDMnc bFMrcX"><div html="&lt;p&gt;Check the health of the cdxgen server endpoint&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq"><p>Check the health of the cdxgen server endpoint</p>
+</div></div><div><h3 class="sc-dSIJcR hePoiW">Responses</h3><div><button class="sc-gdyfxU hDzmxh"><svg class="sc-cwHqhk jqLwgG" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-bVHBsO eBHfiv">200<!-- --> </strong><div html="&lt;p&gt;Service operational&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq sc-dCFGXG gKOXES"><p>Service operational</p>
+</div></button></div></div></div><div class="sc-iGgVNO sc-gsFSjX hqwGrr ggsSF"><div class="sc-dkmVhU ciDfNo"><button class="sc-iEXLnV jJBChh"><span type="get" class="sc-EgOky fPaeRy http-verb get">get</span><span class="sc-ejfMNw gHPYVn">/health</span><svg class="sc-cwHqhk fxsrq" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-eZYMKX fuVsyo"><div class="sc-dlWDvs kyqjNC"><div html="" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"></div><div tabindex="0" role="button"><div class="sc-hHOBVR lhFNhe"><span>http://localhost:9090</span>/health</div></div></div></div></div><div><h3 class="sc-kpDprT cgzTaG"> <!-- -->Response samples<!-- --> </h3><div class="sc-bXCLgj tlGxN" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="tab-success react-tabs__tab--selected" role="tab" id="react-tabs-0" aria-selected="true" aria-disabled="false" aria-controls="react-tabs-1" tabindex="0" data-rttab="true">200</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="react-tabs-1" aria-labelledby="react-tabs-0"><div><div class="sc-bbSYpP kIESIX"><span class="sc-fjvwmM bLpZTa">Content type</span><div class="sc-JrEyx OirWV">application/json</div></div><div class="sc-uVXKs fszzxn"><div class="sc-esYjtY hxmTDe"><div class="sc-koYCI kEwLiZ"><button><div class="sc-fhzEvr gpWFPc">Copy</div></button></div><div class="sc-eeDSqt bSgSrX sc-fXSgRJ dXllNu"><div class="redoc-json"><code><button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable "><span class="property token string">"status"</span>: <span class="token string">&quot;OK&quot;</span></div></li></ul><span class="token punctuation">}</span></code></div></div></div></div></div></div></div></div></div></div></div><div id="tag/sbom" data-section-id="tag/sbom" class="sc-dcJtft gWwwsw"><div class="sc-kAycRU NrBoN"><div class="sc-fqkwJk jLkFlo"><h2 class="sc-jXbVAB hXYRhd"><a class="sc-jlZhRR buKOug" href="#tag/sbom" aria-label="tag/sbom"></a>sbom</h2></div></div><div class="sc-fqkwJk gDjRxY"><div class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq redoc-markdown " html="&lt;p&gt;Generate Software Bill of Materials&lt;/p&gt;
+"><p>Generate Software Bill of Materials</p>
+</div></div></div><div id="tag/sbom/operation/GetSBOM" data-section-id="tag/sbom/operation/GetSBOM" class="sc-dcJtft dNqlFH"><div data-section-id="operation/GetSBOM" id="operation/GetSBOM" class="sc-kAycRU NrBoN"><div class="sc-fqkwJk jLkFlo"><h2 class="sc-jXbVAB hXYRhd"><a class="sc-jlZhRR buKOug" href="#tag/sbom/operation/GetSBOM" aria-label="tag/sbom/operation/GetSBOM"></a>Generate Software Bill of Materials (SBOM)<!-- --> </h2><div class="sc-ePDMnc bFMrcX"><div html="&lt;p&gt;Generate a new Software Bill of Materials (SBOM)&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq"><p>Generate a new Software Bill of Materials (SBOM)</p>
+</div></div><div><h5 class="sc-dAlxHm fZUozT">query<!-- --> Parameters</h5><table class="sc-dAbbbq hPLMVw"><tbody><tr class=""><td kind="field" title="type" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">type</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">&quot;universal&quot;</span></div> <div><div html="&lt;p&gt;Project Type&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Project Type</p>
+</div></div><div class="sc-jnOFWn iSJQuQ"><a href="https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES">See supported project types</a></div></div></td></tr><tr class=""><td kind="field" title="multiProject" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">multiProject</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div> <div><div html="" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"></div></div></div></td></tr><tr class=""><td kind="field" title="requiredOnly" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">requiredOnly</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div> <div><div html="&lt;p&gt;Include only the packages with required scope on the SBOM&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Include only the packages with required scope on the SBOM</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="noBabel" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">noBabel</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div> <div><div html="&lt;p&gt;Do not use babel to perform usage analysis for JavaScript/TypeScript projects&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Do not use babel to perform usage analysis for JavaScript/TypeScript projects</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="installDeps" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">installDeps</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">true</span></div> <div><div html="&lt;p&gt;Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectId" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectId</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three)&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three)</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectName" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectName</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;Dependency Track project name. Default use the directory name&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Dependency Track project name. Default use the directory name</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectGroup" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectGroup</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;Dependency Track project group&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Dependency Track project group</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectVersion" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectVersion</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">&quot;&quot;</span></div> <div><div html="&lt;p&gt;Dependency Track project version&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Dependency Track project version</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="parentUUID" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">parentUUID</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;UUID of the parent Dependency Track project&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>UUID of the parent Dependency Track project</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="serverUrl" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">serverUrl</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;URL to the Dependency Track API server&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>URL to the Dependency Track API server</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="apiKey" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">apiKey</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;API key for the Dependency Track API server&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>API key for the Dependency Track API server</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="specVersion" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">specVersion</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">&quot;1.5&quot;</span></div> <div><div html="&lt;p&gt;CycloneDX Specification version to use&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>CycloneDX Specification version to use</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="filter" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">filter</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ">Array of </span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">strings</span></div> <div><div html="&lt;p&gt;Filter components containing this word in purl. Multiple values allowed&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Filter components containing this word in purl. Multiple values allowed</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="only" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">only</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ">Array of </span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">strings</span></div> <div><div html="&lt;p&gt;Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="autoCompositions" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">autoCompositions</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">true</span></div> <div><div html="&lt;p&gt;Automatically set compositions when the BOM was filtered. [boolean]&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Automatically set compositions when the BOM was filtered. [boolean]</p>
+</div></div></div></td></tr><tr class="last "><td kind="field" title="gitBranch" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">gitBranch</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository</p>
+</div></div></div></td></tr></tbody></table></div><div><h3 class="sc-dSIJcR hePoiW">Responses</h3><div><button class="sc-gdyfxU hDzmxh"><svg class="sc-cwHqhk jqLwgG" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-bVHBsO eBHfiv">200<!-- --> </strong><div html="&lt;p&gt;Successful operation&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq sc-dCFGXG gKOXES"><p>Successful operation</p>
+</div></button></div></div></div><div class="sc-iGgVNO sc-gsFSjX hqwGrr ggsSF"><div class="sc-dkmVhU ciDfNo"><button class="sc-iEXLnV jJBChh"><span type="get" class="sc-EgOky fPaeRy http-verb get">get</span><span class="sc-ejfMNw gHPYVn">/sbom</span><svg class="sc-cwHqhk fxsrq" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-eZYMKX fuVsyo"><div class="sc-dlWDvs kyqjNC"><div html="" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"></div><div tabindex="0" role="button"><div class="sc-hHOBVR lhFNhe"><span>http://localhost:9090</span>/sbom</div></div></div></div></div><div><h3 class="sc-kpDprT cgzTaG"> <!-- -->Response samples<!-- --> </h3><div class="sc-bXCLgj tlGxN" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="tab-success react-tabs__tab--selected" role="tab" id="react-tabs-2" aria-selected="true" aria-disabled="false" aria-controls="react-tabs-3" tabindex="0" data-rttab="true">200</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="react-tabs-3" aria-labelledby="react-tabs-2"><div><div class="sc-bbSYpP kIESIX"><span class="sc-fjvwmM bLpZTa">Content type</span><div class="sc-JrEyx OirWV">application/json</div></div><div class="sc-uVXKs fszzxn"><div class="sc-esYjtY hxmTDe"><div class="sc-koYCI kEwLiZ"><button><div class="sc-fhzEvr gpWFPc">Copy</div></button><button> Expand all </button><button> Collapse all </button></div><div class="sc-eeDSqt bSgSrX sc-fXSgRJ dXllNu"><div class="redoc-json"><code><button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable "><span class="property token string">"bomFormat"</span>: <span class="token string">&quot;CycloneDX&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"specVersion"</span>: <span class="token string">&quot;1.6&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"serialNumber"</span>: <span class="token string">&quot;urn:uuid:f8f03e77-3c04-4c10-b1c2-ddaf0bd955ec&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"version"</span>: <span class="token number">1</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"metadata"</span>: <span class="token punctuation">{ }</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"components"</span>: <span class="token punctuation">{ }</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"services"</span>: <span class="token punctuation">{ }</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"dependencies"</span>: <span class="token punctuation">{ }</span></div></li></ul><span class="token punctuation">}</span></code></div></div></div></div></div></div></div></div></div></div></div><div id="tag/sbom/operation/generateSBOM" data-section-id="tag/sbom/operation/generateSBOM" class="sc-dcJtft dNqlFH"><div data-section-id="operation/generateSBOM" id="operation/generateSBOM" class="sc-kAycRU NrBoN"><div class="sc-fqkwJk jLkFlo"><h2 class="sc-jXbVAB hXYRhd"><a class="sc-jlZhRR buKOug" href="#tag/sbom/operation/generateSBOM" aria-label="tag/sbom/operation/generateSBOM"></a>Generate Software Bill of Materials (SBOM)<!-- --> </h2><div class="sc-ePDMnc bFMrcX"><div html="&lt;p&gt;Generate a new Software Bill of Materials (SBOM)&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq"><p>Generate a new Software Bill of Materials (SBOM)</p>
+</div></div><h5 class="sc-dAlxHm fZUozT">Request Body schema: <span class="sc-cWSIco fpgAnb">application/json</span><div class="sc-NxrBK sc-hRJeED sc-kWtorq kMMoBE gypzqL kRQFMp">required</div></h5><div html="&lt;p&gt;cdxgen server configuration options&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq"><p>cdxgen server configuration options</p>
+</div><table class="sc-dAbbbq hPLMVw"><tbody><tr class=""><td kind="field" title="type" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">type</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">&quot;universal&quot;</span></div> <div><div html="&lt;p&gt;Project Type&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Project Type</p>
+</div></div><div class="sc-jnOFWn iSJQuQ"><a href="https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES">See supported project types</a></div></div></td></tr><tr class=""><td kind="field" title="multiProject" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">multiProject</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div> <div><div html="" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"></div></div></div></td></tr><tr class=""><td kind="field" title="requiredOnly" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">requiredOnly</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div> <div><div html="&lt;p&gt;Include only the packages with required scope on the SBOM&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Include only the packages with required scope on the SBOM</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="noBabel" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">noBabel</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div> <div><div html="&lt;p&gt;Do not use babel to perform usage analysis for JavaScript/TypeScript projects&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Do not use babel to perform usage analysis for JavaScript/TypeScript projects</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="installDeps" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">installDeps</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">true</span></div> <div><div html="&lt;p&gt;Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectId" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectId</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three)&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three)</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectName" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectName</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;Dependency Track project name. Default use the directory name&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Dependency Track project name. Default use the directory name</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectGroup" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectGroup</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;Dependency Track project group&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Dependency Track project group</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="projectVersion" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">projectVersion</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">&quot;&quot;</span></div> <div><div html="&lt;p&gt;Dependency Track project version&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Dependency Track project version</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="parentUUID" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">parentUUID</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;UUID of the parent Dependency Track project&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>UUID of the parent Dependency Track project</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="serverUrl" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">serverUrl</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;URL to the Dependency Track API server&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>URL to the Dependency Track API server</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="apiKey" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">apiKey</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;API key for the Dependency Track API server&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>API key for the Dependency Track API server</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="specVersion" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">specVersion</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">&quot;1.5&quot;</span></div> <div><div html="&lt;p&gt;CycloneDX Specification version to use&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>CycloneDX Specification version to use</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="filter" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">filter</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ">Array of </span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">strings</span></div> <div><div html="&lt;p&gt;Filter components containing this word in purl. Multiple values allowed&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Filter components containing this word in purl. Multiple values allowed</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="only" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">only</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ">Array of </span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">strings</span></div> <div><div html="&lt;p&gt;Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed</p>
+</div></div></div></td></tr><tr class=""><td kind="field" title="autoCompositions" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">autoCompositions</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">boolean</span></div><div><span class="sc-NxrBK kMMoBE"> <!-- -->Default:<!-- --> </span> <span class="sc-NxrBK sc-ddjGcj kMMoBE jnfAav">true</span></div> <div><div html="&lt;p&gt;Automatically set compositions when the BOM was filtered. [boolean]&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Automatically set compositions when the BOM was filtered. [boolean]</p>
+</div></div></div></td></tr><tr class="last "><td kind="field" title="gitBranch" class="sc-dLNtp sc-eldOKa fCxZSn jTSwDU"><span class="sc-gFqAYk fWSzIS"></span><span class="property-name">gitBranch</span></td><td class="sc-fPXMhL kdholP"><div><div><span class="sc-NxrBK sc-cfxfQh kMMoBE hMkdpJ"></span><span class="sc-NxrBK sc-gFAXEw kMMoBE ffgeXz">string</span></div> <div><div html="&lt;p&gt;Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"><p>Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository</p>
+</div></div></div></td></tr></tbody></table><div><h3 class="sc-dSIJcR hePoiW">Responses</h3><div><button class="sc-gdyfxU hDzmxh"><svg class="sc-cwHqhk jqLwgG" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg><strong class="sc-bVHBsO eBHfiv">200<!-- --> </strong><div html="&lt;p&gt;Successful operation&lt;/p&gt;
+" class="sc-eeDSqt sc-eBMFzZ bSgSrX cWARBq sc-dCFGXG gKOXES"><p>Successful operation</p>
+</div></button></div></div></div><div class="sc-iGgVNO sc-gsFSjX hqwGrr ggsSF"><div class="sc-dkmVhU ciDfNo"><button class="sc-iEXLnV jJBChh"><span type="post" class="sc-EgOky bBtSVQ http-verb post">post</span><span class="sc-ejfMNw gHPYVn">/sbom</span><svg class="sc-cwHqhk fxsrq" style="margin-right:-25px" version="1.1" viewBox="0 0 24 24" x="0" xmlns="http://www.w3.org/2000/svg" y="0" aria-hidden="true"><polygon points="17.3 8.3 12 13.6 6.7 8.3 5.3 9.7 12 16.4 18.7 9.7 "></polygon></svg></button><div aria-hidden="true" class="sc-eZYMKX fuVsyo"><div class="sc-dlWDvs kyqjNC"><div html="" class="sc-eeDSqt sc-eBMFzZ bSgSrX gayXgA"></div><div tabindex="0" role="button"><div class="sc-hHOBVR lhFNhe"><span>http://localhost:9090</span>/sbom</div></div></div></div></div><div><h3 class="sc-kpDprT cgzTaG"> <!-- -->Request samples<!-- --> </h3><div class="sc-bXCLgj tlGxN" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="react-tabs__tab react-tabs__tab--selected" role="tab" id="react-tabs-4" aria-selected="true" aria-disabled="false" aria-controls="react-tabs-5" tabindex="0" data-rttab="true">Payload</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="react-tabs-5" aria-labelledby="react-tabs-4"><div><div class="sc-bbSYpP kIESIX"><span class="sc-fjvwmM bLpZTa">Content type</span><div class="sc-JrEyx OirWV">application/json</div></div><div class="sc-uVXKs fszzxn"><div class="sc-esYjtY hxmTDe"><div class="sc-koYCI kEwLiZ"><button><div class="sc-fhzEvr gpWFPc">Copy</div></button><button> Expand all </button><button> Collapse all </button></div><div class="sc-eeDSqt bSgSrX sc-fXSgRJ dXllNu"><div class="redoc-json"><code><button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable "><span class="property token string">"type"</span>: <span class="token string">&quot;universal&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"multiProject"</span>: <span class="token boolean">true</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"requiredOnly"</span>: <span class="token boolean">true</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"noBabel"</span>: <span class="token boolean">true</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"installDeps"</span>: <span class="token boolean">true</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"projectId"</span>: <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"projectName"</span>: <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"projectGroup"</span>: <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"projectVersion"</span>: <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"parentUUID"</span>: <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"serverUrl"</span>: <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"apiKey"</span>: <span class="token string">&quot;string&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"specVersion"</span>: <span class="token string">&quot;1.5&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"filter"</span>: <button class="collapser" aria-label="collapse"></button><span class="token punctuation">[</span><span class="ellipsis"></span><ul class="array collapsible"><li><div class="hoverable collapsed"><span class="token string">&quot;string&quot;</span></div></li></ul><span class="token punctuation">]</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"only"</span>: <button class="collapser" aria-label="collapse"></button><span class="token punctuation">[</span><span class="ellipsis"></span><ul class="array collapsible"><li><div class="hoverable collapsed"><span class="token string">&quot;string&quot;</span></div></li></ul><span class="token punctuation">]</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"autoCompositions"</span>: <span class="token boolean">true</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"gitBranch"</span>: <span class="token string">&quot;string&quot;</span></div></li></ul><span class="token punctuation">}</span></code></div></div></div></div></div></div></div></div><div><h3 class="sc-kpDprT cgzTaG"> <!-- -->Response samples<!-- --> </h3><div class="sc-bXCLgj tlGxN" data-rttabs="true"><ul class="react-tabs__tab-list" role="tablist"><li class="tab-success react-tabs__tab--selected" role="tab" id="react-tabs-6" aria-selected="true" aria-disabled="false" aria-controls="react-tabs-7" tabindex="0" data-rttab="true">200</li></ul><div class="react-tabs__tab-panel react-tabs__tab-panel--selected" role="tabpanel" id="react-tabs-7" aria-labelledby="react-tabs-6"><div><div class="sc-bbSYpP kIESIX"><span class="sc-fjvwmM bLpZTa">Content type</span><div class="sc-JrEyx OirWV">application/json</div></div><div class="sc-uVXKs fszzxn"><div class="sc-esYjtY hxmTDe"><div class="sc-koYCI kEwLiZ"><button><div class="sc-fhzEvr gpWFPc">Copy</div></button><button> Expand all </button><button> Collapse all </button></div><div class="sc-eeDSqt bSgSrX sc-fXSgRJ dXllNu"><div class="redoc-json"><code><button class="collapser" aria-label="collapse"></button><span class="token punctuation">{</span><span class="ellipsis"></span><ul class="obj collapsible"><li><div class="hoverable "><span class="property token string">"bomFormat"</span>: <span class="token string">&quot;CycloneDX&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"specVersion"</span>: <span class="token string">&quot;1.6&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"serialNumber"</span>: <span class="token string">&quot;urn:uuid:f8f03e77-3c04-4c10-b1c2-ddaf0bd955ec&quot;</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"version"</span>: <span class="token number">1</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"metadata"</span>: <span class="token punctuation">{ }</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"components"</span>: <span class="token punctuation">{ }</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"services"</span>: <span class="token punctuation">{ }</span><span class="token punctuation">,</span></div></li><li><div class="hoverable "><span class="property token string">"dependencies"</span>: <span class="token punctuation">{ }</span></div></li></ul><span class="token punctuation">}</span></code></div></div></div></div></div></div></div></div></div></div></div></div><div class="sc-eulNPF bYFiUR"></div></div></div>
+      <script>
+      const __redoc_state = {"menu":{"activeItemIdx":-1},"spec":{"data":{"openapi":"3.0.3","info":{"title":"CycloneDX Generator (cdxgen) Server","description":"[cdxgen](https://github.com/CycloneDX/cdxgen) is a CLI tool, library, REPL, and server to create a valid and compliant CycloneDX Bill of Materials (BOM) containing an aggregate of all project dependencies for C/C++, Node.js, PHP, Python, Ruby, Rust, Java, .Net, Dart, Haskell, Elixir, and Go projects in JSON format. \n\nCycloneDX is a full-stack BOM specification that is easily created, human and machine-readable, and simple to parse.\n\n\nSome useful links:\n- [Documentation](https://cyclonedx.github.io/cdxgen/#/)\n- [Source API definition](https://github.com/CycloneDX/cdxgen/blob/master/lib/server/openapi.yaml)\n- [CycloneDX Specification](https://cyclonedx.org/specification/overview/)\n- [CycloneDX JSON Schema Specification](https://github.com/CycloneDX/specification/blob/1.6/schema/bom-1.6.schema.json)","contact":{"name":"Slack (CycloneDX Workspace)","url":"https://cyclonedx.slack.com/archives/C04NFFE1962"},"license":{"name":"Apache 2.0","url":"http://www.apache.org/licenses/LICENSE-2.0.html"},"version":"latest"},"servers":[{"url":"http://localhost:9090"}],"tags":[{"name":"health","description":"Service health checks"},{"name":"sbom","description":"Generate Software Bill of Materials"}],"paths":{"/health":{"get":{"tags":["health"],"summary":"Check service health","description":"Check the health of the cdxgen server endpoint","operationId":"healthCheck","responses":{"200":{"description":"Service operational","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Health"}}}}}}},"/sbom":{"get":{"tags":["sbom"],"summary":"Generate Software Bill of Materials (SBOM)","description":"Generate a new Software Bill of Materials (SBOM)","operationId":"GetSBOM","parameters":[{"name":"type","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/type"}},{"name":"multiProject","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/multiProject"}},{"name":"requiredOnly","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/requiredOnly"}},{"name":"noBabel","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/noBabel"}},{"name":"installDeps","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/installDeps"}},{"name":"projectId","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/projectId"}},{"name":"projectName","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/projectName"}},{"name":"projectGroup","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/projectGroup"}},{"name":"projectVersion","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/projectVersion"}},{"name":"parentUUID","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/parentUUID"}},{"name":"serverUrl","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/serverUrl"}},{"name":"apiKey","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/apiKey"}},{"name":"specVersion","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/specVersion"}},{"name":"filter","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/filter"}},{"name":"only","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/only"}},{"name":"autoCompositions","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/autoCompositions"}},{"name":"gitBranch","in":"query","required":false,"schema":{"$ref":"#/components/schemas/CDXGEN/properties/gitBranch"}}],"responses":{"200":{"description":"Successful operation","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CycloneDXSBOM"}}}}}},"post":{"tags":["sbom"],"summary":"Generate Software Bill of Materials (SBOM)","description":"Generate a new Software Bill of Materials (SBOM)","operationId":"generateSBOM","requestBody":{"description":"cdxgen server configuration options","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CDXGEN"}}},"required":true},"responses":{"200":{"description":"Successful operation","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CycloneDXSBOM"}}}}}}}},"components":{"schemas":{"Health":{"type":"object","properties":{"status":{"type":"string","example":"OK"}}},"CDXGEN":{"type":"object","properties":{"type":{"type":"string","description":"Project Type","default":"universal","externalDocs":{"description":"See supported project types","url":"https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES"}},"multiProject":{"type":"boolean"},"requiredOnly":{"type":"boolean","description":"Include only the packages with required scope on the SBOM"},"noBabel":{"type":"boolean","description":"Do not use babel to perform usage analysis for JavaScript/TypeScript projects"},"installDeps":{"type":"boolean","description":"Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans","default":true},"projectId":{"type":"string","description":"The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three)"},"projectName":{"type":"string","description":"Dependency Track project name. Default use the directory name"},"projectGroup":{"type":"string","description":"Dependency Track project group"},"projectVersion":{"type":"string","description":"Dependency Track project version","default":""},"parentUUID":{"type":"string","description":"UUID of the parent Dependency Track project"},"serverUrl":{"type":"string","description":"URL to the Dependency Track API server"},"apiKey":{"type":"string","description":"API key for the Dependency Track API server"},"specVersion":{"type":"string","description":"CycloneDX Specification version to use","default":"1.5"},"filter":{"type":"array","items":{"type":"string"},"description":"Filter components containing this word in purl. Multiple values allowed"},"only":{"type":"array","items":{"type":"string"},"description":"Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed"},"autoCompositions":{"type":"boolean","description":"Automatically set compositions when the BOM was filtered. [boolean]","default":true},"gitBranch":{"type":"string","description":"Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository"}}},"CycloneDXSBOM":{"type":"object","externalDocs":{"description":"See JSON Schema","url":"https://github.com/CycloneDX/specification/blob/1.6/schema/bom-1.6.schema.json"},"properties":{"bomFormat":{"type":"string","description":"Bill of Material format","example":"CycloneDX"},"specVersion":{"type":"string","description":"Specification version","example":"1.6","enum":["1.4","1.5","1.6"]},"serialNumber":{"type":"string","description":"Unique serial number","example":"urn:uuid:f8f03e77-3c04-4c10-b1c2-ddaf0bd955ec"},"version":{"type":"integer","format":"int64","example":1},"metadata":{"$ref":"#/components/schemas/Metadata"},"components":{"$ref":"#/components/schemas/Components"},"services":{"$ref":"#/components/schemas/Services"},"dependencies":{"$ref":"#/components/schemas/Dependencies"}}},"Metadata":{"type":"object"},"Components":{"type":"object"},"Services":{"type":"object"},"Dependencies":{"type":"object","xml":{"name":"pet"}}}}}},"searchIndex":{"store":["tag/health","tag/health/operation/healthCheck","tag/sbom","tag/sbom/operation/GetSBOM","tag/sbom/operation/generateSBOM"],"index":{"version":"2.3.9","fields":["title","description"],"fieldVectors":[["title/0",[0,0.396]],["description/0",[0,0.352,1,1.07,2,0.659]],["title/1",[0,0.288,1,0.875,2,0.539]],["description/1",[0,0.384,2,0.516,3,1.326,4,1.326,5,1.326]],["title/2",[6,0.12]],["description/2",[7,0.097,8,0.097,9,0.097,10,0.097]],["title/3",[6,0.068,7,0.068,8,0.068,9,0.068,10,0.068]],["description/3",[6,0.11,7,0.078,8,0.078,9,0.078,10,0.078,11,0.781]],["title/4",[6,0.068,7,0.068,8,0.068,9,0.068,10,0.068]],["description/4",[6,0.11,7,0.078,8,0.078,9,0.078,10,0.078,11,0.781]]],"invertedIndex":[["bill",{"_index":9,"title":{"3":{},"4":{}},"description":{"2":{},"3":{},"4":{}}}],["cdxgen",{"_index":3,"title":{},"description":{"1":{}}}],["check",{"_index":2,"title":{"1":{}},"description":{"0":{},"1":{}}}],["endpoint",{"_index":5,"title":{},"description":{"1":{}}}],["gener",{"_index":7,"title":{"3":{},"4":{}},"description":{"2":{},"3":{},"4":{}}}],["health",{"_index":0,"title":{"0":{},"1":{}},"description":{"0":{},"1":{}}}],["materi",{"_index":10,"title":{"3":{},"4":{}},"description":{"2":{},"3":{},"4":{}}}],["new",{"_index":11,"title":{},"description":{"3":{},"4":{}}}],["sbom",{"_index":6,"title":{"2":{},"3":{},"4":{}},"description":{"3":{},"4":{}}}],["server",{"_index":4,"title":{},"description":{"1":{}}}],["servic",{"_index":1,"title":{"1":{}},"description":{"0":{}}}],["softwar",{"_index":8,"title":{"3":{},"4":{}},"description":{"2":{},"3":{},"4":{}}}]],"pipeline":[]}},"options":{}};
+
+      var container = document.getElementById('redoc');
+      Redoc.hydrate(__redoc_state, container);
+
+      </script>
+</body>
+
+</html>

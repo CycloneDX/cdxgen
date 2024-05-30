@@ -29,6 +29,7 @@ Use curl or your favorite tool to pass arguments to the `/sbom` route.
 
 View the latest [cdxgen server API specification](https://github.com/CycloneDX/cdxgen/blob/master/lib/server/openapi.yaml) online via [Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/CycloneDX/cdxgen/master/lib/server/openapi.yaml).
 
+[API Docs](./api-docs.html ':include :type=iframe')
 
 ## Server arguments
 

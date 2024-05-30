@@ -53,7 +53,8 @@
     "lint:check": "biome check *",
     "lint": "biome check --apply *",
     "lint:errors": "biome check * --diagnostic-level=error",
-    "gen-types": "npx -p typescript tsc"
+    "gen-types": "npx -p typescript tsc",
+    "generate:api-docs": "npx @redocly/cli build-docs ./lib/server/openapi.yaml --output ./docs/api-docs.html"
   },
   "engines": {
     "node": ">=20"
@@ -109,7 +110,12 @@
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
   },
-  "files": ["*.js", "bin/", "data/", "types/"],
+  "files": [
+    "*.js",
+    "bin/",
+    "data/",
+    "types/"
+  ],
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
     "jest": "^29.7.0",
