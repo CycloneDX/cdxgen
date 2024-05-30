@@ -66,6 +66,7 @@ import {
   getSwiftPackageMetadata,
   getTimestamp,
   includeMavenTestScope,
+  isValidIriReference,
   parseBazelActionGraph,
   parseBazelSkyframe,
   parseBdistMetadata,
@@ -129,6 +130,7 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
+  sanitizeUrlAsIri,
   splitOutputByGradleProjects,
 } from "./utils.js";
 let url = import.meta.url;
@@ -726,7 +728,9 @@ function addExternalReferences(opkg) {
       }
     }
   }
-  return externalReferences;
+  return externalReferences
+    .map((ref) => ({ ...ref, url: sanitizeUrlAsIri(ref.url) }))
+    .filter((ref) => isValidIriReference(ref.url));
 }
 
 /**

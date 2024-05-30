@@ -4,6 +4,7 @@ import path from "node:path";
 import { expect, test } from "@jest/globals";
 import { parse } from "ssri";
 import {
+  convertGitRepoUrlToHttpUrl,
   encodeForPurl,
   findLicenseId,
   getCratesMetadata,
@@ -13,6 +14,7 @@ import {
   getNugetMetadata,
   getPyMetadata,
   guessPypiMatchingVersion,
+  isValidIriReference,
   parseBazelActionGraph,
   parseBazelBuild,
   parseBazelSkyframe,
@@ -83,6 +85,7 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
+  sanitizeUrlAsIri,
   yarnLockToIdentMap,
 } from "./utils.js";
 
@@ -4039,4 +4042,81 @@ test("parseMakeDFile tests", () => {
       ".cargo/registry/src/index.crates.io-hash/zstd-sys-2.0.10+zstd.1.5.6/src/bindings_zdict.rs",
     ],
   });
+});
+
+test.each([
+  ["", false],
+  ["git@gitlab.com:behat-chrome/chrome-mink-driver.git", false],
+  ["     git@gitlab.com:behat-chrome/chrome-mink-driver.git      ", false],
+  ["${repository.url}", false],
+  // bomLink - https://cyclonedx.org/capabilities/bomlink/]
+  ["urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1#componentA", true],
+  // http uri - https://www.ietf.org/rfc/rfc7230.txt]
+  ["https://gitlab.com/behat-chrome/chrome-mink-driver.git", true],
+  ["     https://gitlab.com/behat-chrome/chrome-mink-driver.git     ", false],
+  ["http://gitlab.com/behat-chrome/chrome-mink-driver.git", true],
+  // mailto uri - https://www.ietf.org/rfc/rfc2368.txt]
+  ["mailto:privacy@owasp.org", true],
+  ["privacy@owasp.org", false],
+  // tel uri - https://www.ietf.org/rfc/rfc3966.txt]
+  ["tel:+1-212-555-1234", true],
+  ["+1-212-555-1234", false],
+  // dns uri - https://www.ietf.org/rfc/rfc4501.txt]
+  ["dns:world%20wide%20web.example%5c.domain.org?TYPE=TXT", true],
+  ["world%20wide%20web.example%5c.domain.org?TYPE=TXT", false],
+  ["UNKNOWN", false],
+])("isValidIriReference tests: %s", (url, isValid) => {
+  expect(isValidIriReference(url)).toBe(isValid);
+});
+
+test.each([
+  [
+    "git@github.com:npm/hosted-git-info.git",
+    "https://github.com/npm/hosted-git-info.git",
+  ],
+  [
+    "git@gitlab.com:behat-chrome/chrome-mink-driver.git",
+    "https://gitlab.com/behat-chrome/chrome-mink-driver.git",
+  ],
+  [
+    "git@gitunknown.com:npm/hosted-git-info.git",
+    "git@gitunknown.com:npm/hosted-git-info.git",
+  ],
+  ["UNKNOWN", "UNKNOWN"],
+  ["${repository.url}", "${repository.url}"],
+])("convertGitRepoUrlToHttpUrl tests", (uri, expected) => {
+  expect(convertGitRepoUrlToHttpUrl(uri)).toEqual(expected);
+});
+
+test.each([
+  [
+    "git@github.com:npm/hosted-git-info.git",
+    "https://github.com/npm/hosted-git-info.git",
+  ],
+  [
+    "   git@github.com:npm/hosted-git-info.git   ",
+    "https://github.com/npm/hosted-git-info.git",
+  ],
+  [
+    "git@gitlab.com:behat-chrome/chrome-mink-driver.git",
+    "https://gitlab.com/behat-chrome/chrome-mink-driver.git",
+  ],
+  [
+    "   git@gitlab.com:behat-chrome/chrome-mink-driver.git   ",
+    "https://gitlab.com/behat-chrome/chrome-mink-driver.git",
+  ],
+  [
+    "git@gitunknown.com:npm/hosted-git-info.git",
+    "git@gitunknown.com:npm/hosted-git-info.git",
+  ],
+  [
+    "   git@gitunknown.com:npm/hosted-git-info.git   ",
+    "git@gitunknown.com:npm/hosted-git-info.git",
+  ],
+  ["UNKNOWN", "UNKNOWN"],
+  ["   UNKNOWN   ", "UNKNOWN"],
+  ["${repository.url}", "${repository.url}"],
+  ["   ${repository.url}   ", "${repository.url}"],
+])("sanitizeUrlAsIri tests", (uri, expected) => {
+  expect(sanitizeUrlAsIri(uri)).toEqual(expected);
 });

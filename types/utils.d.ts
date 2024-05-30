@@ -1119,6 +1119,37 @@ export function addEvidenceForDotnet(pkgList: any, slicesFile: any): any;
  * @returns {Object} pkgFilesMap Object with package name and list of files
  */
 export function parseMakeDFile(dfile: string): any;
+/**
+ * Function to validate an externalReference URL for conforming to the JSON schema or bomLink
+ * https://github.com/CycloneDX/cyclonedx-core-java/blob/75575318b268dda9e2a290761d7db11b4f414255/src/main/resources/bom-1.5.schema.json#L1140
+ * https://datatracker.ietf.org/doc/html/rfc3987#section-2.2
+ * https://cyclonedx.org/capabilities/bomlink/
+ *
+ * @param {String} url URL to validate
+ *
+ * @returns {Boolean} Flag indicating whether the supplied URL is valid or not
+ *
+ */
+export function isValidIriReference(url: string): boolean;
+/**
+ * Function to convert a Git repository URL to its HTTP URL counterpart
+ * Example: git@github.com:npm/hosted-git-info.git     converts to     https://github.com/npm/hosted-git-info.git
+ *
+ * @param {String} url URL to convert
+ *
+ * @returns {String} Converted URL, or original URL if conversion was not possible
+ *
+ */
+export function convertGitRepoUrlToHttpUrl(url: string): string;
+/**
+ * Function that sanitizes an URL to try to make it conform to IRI RFC 3987.
+ *
+ * @param {String} url URL to sanitize
+ *
+ * @returns {String} Sanitized URL
+ *
+ */
+export function sanitizeUrlAsIri(url: string): string;
 export const dirNameStr: string;
 export const isWin: boolean;
 export const isMac: boolean;
