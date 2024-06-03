@@ -32,9 +32,10 @@ jobs:
           python-version: 3.11
       - name: npm install, build and test
         run: |
-          npm install
-          npm run build --if-present
-          npm test
+          corepack enable
+          corepack pnpm install
+          corepack pnpm run build --if-present
+          corepack pnpm test
         env:
           CI: true
       - name: check sbom for vulns

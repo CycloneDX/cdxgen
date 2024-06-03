@@ -27,8 +27,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: npm install, build
         run: |
-          npm install
-          npm run build --if-present
+          corepack enable
+          corepack pnpm install
+          corepack pnpm run build --if-present
           mkdir -p repotests
           mkdir -p bomresults
       - uses: actions/checkout@v4

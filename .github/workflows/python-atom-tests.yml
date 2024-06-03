@@ -24,8 +24,9 @@ jobs:
           java-version: '21'
       - name: npm install, build and test
         run: |
-          npm install
-          npm run build --if-present
+          corepack enable
+          corepack pnpm install
+          corepack pnpm run build --if-present
           mkdir -p repotests
           mkdir -p bomresults
         env:

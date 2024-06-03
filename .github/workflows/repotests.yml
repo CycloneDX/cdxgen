@@ -46,9 +46,10 @@ jobs:
         run: choco install -y bazel
       - name: npm install, build and test
         run: |
-          npm install
-          npm run build --if-present
-          npm test
+          corepack enable
+          corepack pnpm install
+          corepack pnpm run build --if-present
+          corepack pnpm test
           mkdir -p repotests
           mkdir -p bomresults
           mkdir -p denoresults

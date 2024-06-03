@@ -38,8 +38,9 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
-          npm install
-          npm test
+          corepack enable
+          corepack pnpm install
+          corepack pnpm test
           mkdir -p bomresults repotests
         env:
           CI: true
@@ -93,8 +94,9 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
-          npm install
-          npm test
+          corepack enable
+          corepack pnpm install
+          corepack pnpm test
           mkdir -p bomresults repotests
         env:
           CI: true
@@ -138,7 +140,8 @@ jobs:
           ./contrib/free_disk_space.sh
       - name: npm install, build and test
         run: |
-          npm install
+          corepack enable
+          corepack pnpm install
           mkdir -p bomresults
         env:
           CI: true
@@ -176,7 +179,8 @@ jobs:
           java-version: ${{ matrix.java-version }}
       - name: npm install, build
         run: |
-          npm install
+          corepack enable
+          corepack pnpm install
           mkdir bomresults
         env:
           CI: true

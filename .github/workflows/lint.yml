@@ -18,7 +18,8 @@ jobs:
           node-version-file: .nvmrc
       - name: Check Linting
         run: |
-          npm install
-          npm run lint:check
+          corepack enable
+          corepack pnpm install
+          corepack pnpm run lint:check
         env:
           CI: true
