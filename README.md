@@ -510,12 +510,14 @@ Please check out our [contribute to CycloneDX/cdxgen documentation][github-contr
 Before raising a PR, please run the following commands.
 
 ```bash
+corepack enable
+corepack pnpm install
 # Generate types using jsdoc syntax
-npm run gen-types
+corepack pnpm run gen-types
 # Run biomejs formatter and linter with auto fix
-npm run lint
+corepack pnpm run lint
 # Run jest tests
-npm test
+corepack pnpm test
 ```
 
 <!-- LINK LABELS -->
