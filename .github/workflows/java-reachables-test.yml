@@ -29,7 +29,6 @@ jobs:
         run: |
           corepack enable
           corepack pnpm install
-          corepack pnpm run build --if-present
           mkdir -p repotests
           mkdir -p bomresults
       - uses: actions/checkout@v4
