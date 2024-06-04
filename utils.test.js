@@ -2369,14 +2369,14 @@ test("parsePkgLock v2 workspace", async () => {
 });
 
 test("parsePkgLock v3", async () => {
-  let parsedList = await parsePkgLock(
+  const parsedList = await parsePkgLock(
     "./test/data/package-json/v3/package-lock.json",
     {
       projectVersion: "latest",
       projectName: "cdxgen",
     },
   );
-  let deps = parsedList.pkgList;
+  const deps = parsedList.pkgList;
   expect(deps.length).toEqual(161);
   expect(deps[1]._integrity).toEqual(
     "sha512-s93jiP6GkRApn5duComx6RLwtP23YrulPxShz+8peX7svd6Q+MS8nKLhKCCazbP92C13eTVaIOxgeLt0ezIiCg==",
@@ -2393,13 +2393,6 @@ test("parsePkgLock v3", async () => {
   });
   expect(deps[deps.length - 1].name).toEqual("uid2");
   expect(parsedList.dependenciesList.length).toEqual(161);
-  parsedList = await parsePkgLock("./package-lock.json", {
-    projectVersion: "latest",
-    projectName: "cdxgen",
-  });
-  deps = parsedList.pkgList;
-  expect(deps.length).toEqual(848);
-  expect(parsedList.dependenciesList.length).toEqual(848);
 });
 
 test("parseBowerJson", async () => {
@@ -2663,6 +2656,39 @@ test("parsePnpmLock", async () => {
         ],
       },
     },
+  });
+  parsedList = await parsePnpmLock("./pnpm-lock.yaml");
+  expect(parsedList.pkgList.length).toEqual(643);
+  expect(parsedList.dependenciesList.length).toEqual(643);
+  expect(parsedList.pkgList[0]).toEqual({
+    group: "@ampproject",
+    name: "remapping",
+    version: "2.3.0",
+    purl: "pkg:npm/%40ampproject/remapping@2.3.0",
+    "bom-ref": "pkg:npm/@ampproject/remapping@2.3.0",
+    _integrity:
+      "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==",
+    properties: [{ name: "SrcFile", value: "./pnpm-lock.yaml" }],
+    evidence: {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: "./pnpm-lock.yaml",
+          },
+        ],
+      },
+    },
+  });
+  expect(parsedList.dependenciesList[0]).toEqual({
+    ref: "pkg:npm/@ampproject/remapping@2.3.0",
+    dependsOn: [
+      "pkg:npm/@jridgewell/gen-mapping@0.3.5",
+      "pkg:npm/@jridgewell/trace-mapping@0.3.25",
+    ],
   });
 });
 

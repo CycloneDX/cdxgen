@@ -1435,14 +1435,28 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
     if (!yamlObj) {
       return {};
     }
+    let lockfileVersion = yamlObj.lockfileVersion;
+    try {
+      lockfileVersion = Number.parseFloat(lockfileVersion, 10);
+    } catch (e) {
+      // ignore parse errors
+    }
     // This logic matches the pnpm list command to include only direct dependencies
     if (ppurl !== "") {
-      const ddeps = yamlObj.dependencies || {};
+      // In lock file version 9, direct dependencies is under importers
+      const ddeps =
+        lockfileVersion >= 9
+          ? yamlObj.importers["."]?.dependencies || {}
+          : yamlObj.dependencies || {};
       const ddeplist = [];
       for (const dk of Object.keys(ddeps)) {
         let version = ddeps[dk];
         if (typeof version === "object" && version.version) {
           version = version.version;
+        }
+        // version: 3.0.1(ajv@8.14.0)
+        if (version?.includes("(")) {
+          version = version.split("(")[0];
         }
         const dpurl = new PackageURL(
           "npm",
@@ -1459,13 +1473,9 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
         dependsOn: ddeplist,
       });
     }
-    let lockfileVersion = yamlObj.lockfileVersion;
-    try {
-      lockfileVersion = Number.parseInt(lockfileVersion, 10);
-    } catch (e) {
-      // ignore parse errors
-    }
     const packages = yamlObj.packages || {};
+    // snapshots is a new key under lockfile version 9
+    const snapshots = yamlObj.snapshots || {};
     const pkgKeys = Object.keys(packages);
     for (const k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
@@ -1477,20 +1487,40 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
       }
       const parts = fullName.split("/");
       const integrity = packages[pkgKeys[k]].resolution.integrity;
-      const deps = packages[pkgKeys[k]].dependencies || [];
+      // In lock file version 9, dependencies is under snapshots
+      const deps =
+        packages[pkgKeys[k]].dependencies ||
+        snapshots[pkgKeys[k]]?.dependencies ||
+        [];
       const scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
       if (parts?.length) {
         let name = "";
         let version = "";
         let group = "";
-        if (lockfileVersion >= 6 && fullName.includes("@")) {
+        const hasBin = packages[pkgKeys[k]]?.hasBin;
+        const deprecatedMessage = packages[pkgKeys[k]]?.deprecated;
+        if (lockfileVersion >= 9 && fullName.includes("@")) {
+          group = parts.length > 1 ? parts[0] : "";
+          const tmpA = parts[parts.length - 1].split("@");
+          if (tmpA.length > 1) {
+            name = tmpA[0];
+            version = tmpA[1];
+          }
+          if (version?.includes("(")) {
+            version = version.split("(")[0];
+          }
+        } else if (
+          lockfileVersion >= 6 &&
+          lockfileVersion < 9 &&
+          fullName.includes("@")
+        ) {
           const tmpA = parts[parts.length - 1].split("@");
           group = parts[0];
           if (parts.length === 2 && tmpA.length > 1) {
             name = tmpA[0];
             version = tmpA[1];
           } else {
-            console.log(parts, fullName);
+            console.log("Missed", parts, fullName);
           }
         } else {
           if (parts.length === 2) {
@@ -1519,12 +1549,24 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
             null,
           ).toString();
           const deplist = [];
-          for (const dpkgName of Object.keys(deps)) {
+          for (let dpkgName of Object.keys(deps)) {
+            let vers = deps[dpkgName];
+            if (vers?.includes("(")) {
+              vers = vers.split("(")[0];
+            }
+            // string-width-cjs: string-width@4.2.3
+            if (dpkgName.endsWith("-cjs")) {
+              const tmpB = vers.split("@");
+              if (tmpB.length > 1) {
+                dpkgName = tmpB[0];
+                vers = tmpB[1];
+              }
+            }
             const dpurlString = new PackageURL(
               "npm",
               "",
               dpkgName,
-              deps[dpkgName],
+              vers,
               null,
               null,
             ).toString();
@@ -1534,6 +1576,24 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
             ref: decodeURIComponent(purlString),
             dependsOn: deplist,
           });
+          const properties = [
+            {
+              name: "SrcFile",
+              value: pnpmLock,
+            },
+          ];
+          if (hasBin) {
+            properties.push({
+              name: "cdx:npm:has_binary",
+              value: `${hasBin}`,
+            });
+          }
+          if (deprecatedMessage) {
+            properties.push({
+              name: "cdx:npm:deprecation_notice",
+              value: deprecatedMessage,
+            });
+          }
           pkgList.push({
             group: group,
             name: name,
@@ -1542,12 +1602,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
             "bom-ref": decodeURIComponent(purlString),
             scope,
             _integrity: integrity,
-            properties: [
-              {
-                name: "SrcFile",
-                value: pnpmLock,
-              },
-            ],
+            properties,
             evidence: {
               identity: {
                 field: "purl",

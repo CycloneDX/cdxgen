@@ -104,8 +104,8 @@ export function prepareDB(options: any): Promise<{
             count: number;
         }>;
         findAndCountAll<M_17 extends import("sequelize").Model<any, any>>(this: import("sequelize").ModelStatic<M_17>, options: {
-            type?: string;
             attributes?: import("sequelize").FindAttributeOptions;
+            type?: string;
             plain?: boolean;
             logging?: boolean | ((sql: string, timing?: number) => void);
             where?: import("sequelize").WhereOptions<import("sequelize").Attributes<M_17>>;
@@ -127,7 +127,7 @@ export function prepareDB(options: any): Promise<{
             bind?: import("sequelize").BindOrReplacements;
             instance?: import("sequelize").Model<any, any>;
             mapToModel?: boolean;
-            retry?: import("retry-as-promised").Options;
+            retry?: import(".pnpm/retry-as-promised@7.0.4/node_modules/retry-as-promised").Options;
             fieldMap?: import("sequelize").FieldMap;
             benchmark?: boolean;
             transaction?: import("sequelize").Transaction;
@@ -333,8 +333,8 @@ export function prepareDB(options: any): Promise<{
             count: number;
         }>;
         findAndCountAll<M_17 extends import("sequelize").Model<any, any>>(this: import("sequelize").ModelStatic<M_17>, options: {
-            type?: string;
             attributes?: import("sequelize").FindAttributeOptions;
+            type?: string;
             plain?: boolean;
             logging?: boolean | ((sql: string, timing?: number) => void);
             where?: import("sequelize").WhereOptions<import("sequelize").Attributes<M_17>>;
@@ -356,7 +356,7 @@ export function prepareDB(options: any): Promise<{
             bind?: import("sequelize").BindOrReplacements;
             instance?: import("sequelize").Model<any, any>;
             mapToModel?: boolean;
-            retry?: import("retry-as-promised").Options;
+            retry?: import(".pnpm/retry-as-promised@7.0.4/node_modules/retry-as-promised").Options;
             fieldMap?: import("sequelize").FieldMap;
             benchmark?: boolean;
             transaction?: import("sequelize").Transaction;
@@ -562,8 +562,8 @@ export function prepareDB(options: any): Promise<{
             count: number;
         }>;
         findAndCountAll<M_17 extends import("sequelize").Model<any, any>>(this: import("sequelize").ModelStatic<M_17>, options: {
-            type?: string;
             attributes?: import("sequelize").FindAttributeOptions;
+            type?: string;
             plain?: boolean;
             logging?: boolean | ((sql: string, timing?: number) => void);
             where?: import("sequelize").WhereOptions<import("sequelize").Attributes<M_17>>;
@@ -585,7 +585,7 @@ export function prepareDB(options: any): Promise<{
             bind?: import("sequelize").BindOrReplacements;
             instance?: import("sequelize").Model<any, any>;
             mapToModel?: boolean;
-            retry?: import("retry-as-promised").Options;
+            retry?: import(".pnpm/retry-as-promised@7.0.4/node_modules/retry-as-promised").Options;
             fieldMap?: import("sequelize").FieldMap;
             benchmark?: boolean;
             transaction?: import("sequelize").Transaction;

@@ -32,15 +32,16 @@ jobs:
 
       -  name: Atom, cdxgen, sdkman, custom-json-diff installs
          run: |
-           cdxgen_version=$(npm pack | tail -1)
-           npm install -g "$cdxgen_version"
+           corepack enable
+           cdxgen_version=$(corepack pnpm pack | tail -1)
+           corepack pnpm install -g "$cdxgen_version"
            python -m pip install --upgrade pip
            python -m pip install pytest
            git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/samples
            git clone https://github.com/appthreat/custom-json-diff.git /home/runner/work/custom-json-diff
            cd /home/runner/work/custom-json-diff
            python -m pip install .
-           npm install -g @appthreat/atom
+           corepack pnpm install -g @appthreat/atom
            curl -s "https://get.sdkman.io" | bash
            source "/home/runner/.sdkman/bin/sdkman-init.sh"
 
