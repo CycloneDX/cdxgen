@@ -1232,7 +1232,7 @@ export async function createJavaBom(path, options) {
       process.env.CDX_MAVEN_PLUGIN ||
       "org.cyclonedx:cyclonedx-maven-plugin:2.8.0";
     const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
-    let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
+    let mvnArgs = ["-fn", `${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
     if (includeMavenTestScope) {
       mvnArgs.push("-DincludeTestScope=true");
     }
@@ -1290,7 +1290,7 @@ export async function createJavaBom(path, options) {
       if (!bomGenerated || result.status !== 0 || result.error) {
         const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
         const tempMvnTree = join(tempDir, "mvn-tree.txt");
-        let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
+        let mvnTreeArgs = ["-fn", "dependency:tree", `-DoutputFile=${tempMvnTree}`];
         if (process.env.MVN_ARGS) {
           const addArgs = process.env.MVN_ARGS.split(" ");
           mvnTreeArgs = mvnTreeArgs.concat(addArgs);
