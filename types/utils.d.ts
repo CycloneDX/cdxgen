@@ -173,17 +173,10 @@ export function parsePom(pomFile: any): {
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
  * @param {string} pomFile .pom file for evidence
+ *
+ * @returns {Object} Object containing packages and dependencies
  */
-export function parseMavenTree(rawOutput: string, pomFile: string): {
-    pkgList?: undefined;
-    dependenciesList?: undefined;
-} | {
-    pkgList: any[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any;
-    }[];
-};
+export function parseMavenTree(rawOutput: string, pomFile: string): any;
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
