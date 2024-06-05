@@ -18,6 +18,23 @@ Brace expansion is supported. `{openshift,kubernetes}-maven-plugin` in the below
 --exclude "**/quickstarts/**" --exclude "**/{openshift,kubernetes}-maven-plugin/**"
 ```
 
+### Excluding packages using package manager configuration
+
+Some package managers support filtering dependencies. For example, maven `dependency:tree` command supports [filtering](https://maven.apache.org/plugins/maven-dependency-plugin/examples/filtering-the-dependency-tree.html). It is possible to use some of the existing [environment variables](./ENV.md) to utilize these features.
+
+Java maven example:
+
+```shell
+export PREFER_MAVEN_DEPS_TREE=true
+export MVN_ARGS="-Dexcludes=:::*-SNAPSHOT"
+```
+
+Gradle example:
+
+```shell
+export GRADLE_ARGS="--configuration runtimeClasspath"
+```
+
 ## Filtering components
 
 cdxgen can filter the components and the dependency tree before writing to a BOM json file. Three kinds of filters are allowed:
