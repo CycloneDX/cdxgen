@@ -1531,9 +1531,15 @@ export async function createJavaBom(path, options) {
       }
     }
     if (possible_misses) {
-      console.warn(
-        "Multiple errors occurred while building this project with maven. The SBOM is therefore incomplete!",
-      );
+      if (!DEBUG_MODE) {
+        console.warn(
+          "Multiple errors occurred while building this project with maven. The SBOM is therefore incomplete!",
+        );
+      } else if (!PREFER_MAVEN_DEPS_TREE) {
+        console.log(
+          "Try generating an SBOM with the maven dependency tree plugin. Set the environment variable PREFER_MAVEN_DEPS_TREE to true to enable this.",
+        );
+      }
     }
     if (pkgList) {
       pkgList = trimComponents(pkgList);
