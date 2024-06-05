@@ -4711,12 +4711,7 @@ export async function createCsharpBom(path, options) {
     for (const f of filesToRestore) {
       const buildCmd =
         options.projectType === "dotnet-framework" ? "nuget" : "dotnet";
-      if (DEBUG_MODE) {
-        const basePath = dirname(f);
-        console.log(`Executing '${buildCmd} restore' in ${basePath}`);
-      }
-      const result = spawnSync(
-        buildCmd,
+      const buildArgs =
         options.projectType === "dotnet-framework"
           ? [
               "restore",
@@ -4727,23 +4722,38 @@ export async function createCsharpBom(path, options) {
               "-Verbosity",
               "quiet",
             ]
-          : ["restore", "--force", "--ignore-failed-sources", f],
-        {
-          cwd: path,
-          encoding: "utf-8",
-        },
-      );
+          : ["restore", "--force", "--ignore-failed-sources", f];
+      if (DEBUG_MODE) {
+        const basePath = dirname(f);
+        console.log(
+          `Executing '${buildCmd} ${buildArgs.join(" ")}' in ${basePath}`,
+        );
+      }
+      const result = spawnSync(buildCmd, buildArgs, {
+        cwd: path,
+        encoding: "utf-8",
+        env: { ...process.env, DOTNET_ROLL_FORWARD: "Major" },
+      });
       if (DEBUG_MODE && (result.status !== 0 || result.error)) {
-        console.error(
-          `Restore has failed. Check if ${buildCmd} is installed and available in PATH.`,
-        );
-        console.log(
-          "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
-        );
-        console.log(
-          "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
-        );
-        console.log(result.stderr);
+        if (result?.stderr?.includes("To install missing framework")) {
+          console.log(
+            "This project requires a specific version of dotnet sdk to be installed. The cdxgen container image bundles dotnet SDK 8.0, which might be incompatible.",
+          );
+          console.log(
+            "Try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` or `ghcr.io/appthreat/cdxgen-dotnet7:v10` container images.",
+          );
+        } else {
+          console.error(
+            `Restore has failed. Check if ${buildCmd} is installed and available in PATH.`,
+          );
+          console.log(
+            "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
+          );
+          console.log(
+            "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
+          );
+        }
+        console.log(result.stdout, result.stderr);
         options.failOnError && process.exit(1);
       }
     }
@@ -4935,7 +4945,7 @@ export async function createCsharpBom(path, options) {
           parentComponent = retMap.parentComponent;
         }
       }
-      if (retMap?.pkgList.length) {
+      if (retMap?.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (retMap.dependencies?.length) {

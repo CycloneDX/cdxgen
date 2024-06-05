@@ -6338,14 +6338,19 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   if (!csProjData) {
     return pkgList;
   }
-  const projects = xml2js(csProjData, {
-    compact: true,
-    alwaysArray: true,
-    spaces: 4,
-    textKey: "_",
-    attributesKey: "$",
-    commentKey: "value",
-  }).Project;
+  let projects = undefined;
+  try {
+    projects = xml2js(csProjData, {
+      compact: true,
+      alwaysArray: true,
+      spaces: 4,
+      textKey: "_",
+      attributesKey: "$",
+      commentKey: "value",
+    }).Project;
+  } catch (e) {
+    console.log(`Unable to parse ${projFile} with utf-8 encoding!`);
+  }
   if (!projects || projects.length === 0) {
     return pkgList;
   }
