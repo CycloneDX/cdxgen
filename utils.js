@@ -122,6 +122,11 @@ export const includeMavenTestScope =
   !process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE ||
   ["true", "1"].includes(process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE);
 
+// Whether to use the native maven dependency tree command
+export const PREFER_MAVEN_DEPS_TREE =
+  process.env.PREFER_MAVEN_DEPS_TREE &&
+  ["true", "1"].includes(process.env.PREFER_MAVEN_DEPS_TREE);
+
 // Whether license information should be fetched
 export const FETCH_LICENSE =
   process.env.FETCH_LICENSE &&
@@ -1868,6 +1873,19 @@ export function parseMavenTree(rawOutput) {
       const pkgArr = l.split(":");
       if (pkgArr && pkgArr.length > 2) {
         let versionStr = pkgArr[pkgArr.length - 2];
+        const componentScope = pkgArr[pkgArr.length - 1];
+        // Ignore test scope
+        if (!includeMavenTestScope && componentScope === "test") {
+          return;
+        }
+        let scope = undefined;
+        if (["compile", "runtime"].includes(componentScope)) {
+          scope = "required";
+        } else if (componentScope === "test") {
+          scope = "optional";
+        } else if (componentScope === "provided") {
+          scope = "excluded";
+        }
         if (pkgArr.length === 4) {
           versionStr = pkgArr[pkgArr.length - 1];
         }
@@ -1883,11 +1901,20 @@ export function parseMavenTree(rawOutput) {
             null,
           ).toString();
           purlString = decodeURIComponent(purlString);
+          const properties = [];
+          if (scope) {
+            properties.push({
+              name: "cdx:maven:component_scope",
+              value: componentScope,
+            });
+          }
           deps.push({
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
             qualifiers: { type: pkgArr[2] },
+            scope,
+            properties,
           });
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];

@@ -530,6 +530,8 @@ test("parse maven tree", () => {
     name: "copper-server",
     version: "1.15.2",
     qualifiers: { type: "war" },
+    properties: [],
+    scope: undefined,
   });
   expect(parsedList.dependenciesList[0]).toEqual({
     ref: "pkg:maven/com.pogeyan.cmis/copper-server@1.15.2?type=war",
@@ -567,6 +569,8 @@ test("parse maven tree", () => {
     name: "java-maven",
     version: "1.0-SNAPSHOT",
     qualifiers: { type: "jar" },
+    properties: [],
+    scope: undefined,
   });
   expect(parsedList.dependenciesList[0]).toEqual({
     ref: "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
@@ -591,12 +595,16 @@ test("parse maven tree", () => {
     name: "eclipse-repository",
     version: "1.0.0-SNAPSHOT",
     qualifiers: { type: "eclipse-repository" },
+    scope: undefined,
+    properties: [],
   });
   expect(parsedList.pkgList[4]).toEqual({
     group: "p2.eclipse.plugin",
     name: "com.ibm.icu",
     version: "67.1.0.v20200706-1749",
     qualifiers: { type: "eclipse-plugin" },
+    scope: undefined,
+    properties: [],
   });
   expect(parsedList.dependenciesList.length).toEqual(79);
   expect(parsedList.dependenciesList[0]).toEqual({

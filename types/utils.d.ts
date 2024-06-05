@@ -1141,6 +1141,7 @@ export const TIMEOUT_MS: number;
 export const MAX_BUFFER: number;
 export let metadata_cache: {};
 export const includeMavenTestScope: boolean;
+export const PREFER_MAVEN_DEPS_TREE: boolean;
 export const FETCH_LICENSE: boolean;
 export const SEARCH_MAVEN_ORG: boolean;
 export let JAVA_CMD: string;

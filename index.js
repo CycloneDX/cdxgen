@@ -35,6 +35,7 @@ import {
   FETCH_LICENSE,
   LEIN_CMD,
   MAX_BUFFER,
+  PREFER_MAVEN_DEPS_TREE,
   SWIFT_CMD,
   TIMEOUT_MS,
   addEvidenceForDotnet,
@@ -1228,6 +1229,7 @@ export async function createJavaBom(path, options) {
     pomFiles?.length &&
     !["scala", "sbt", "gradle"].includes(options.projectType)
   ) {
+    let result = undefined;
     const cdxMavenPlugin =
       process.env.CDX_MAVEN_PLUGIN ||
       "org.cyclonedx:cyclonedx-maven-plugin:2.8.0";
@@ -1275,23 +1277,38 @@ export async function createJavaBom(path, options) {
           jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
         }
       }
-      console.log(`Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`, basePath);
-      let result = spawnSync(mavenCmd, mvnArgs, {
-        cwd: basePath,
-        shell: true,
-        encoding: "utf-8",
-        timeout: TIMEOUT_MS,
-        maxBuffer: MAX_BUFFER,
-      });
-      // Check if the cyclonedx plugin created the required bom.json file
-      // Sometimes the plugin fails silently for complex maven projects
-      bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
-      // Check if the bom json files got created in a directory other than target
-      if (!bomJsonFiles.length) {
-        bomJsonFiles = getAllFiles(path, "target/**/*{cdx,bom}*.json", options);
+      // Use the cyclonedx maven plugin if there is no preference for maven deps tree
+      if (!PREFER_MAVEN_DEPS_TREE) {
+        console.log(
+          `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
+          basePath,
+        );
+        result = spawnSync(mavenCmd, mvnArgs, {
+          cwd: basePath,
+          shell: true,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        });
+        // Check if the cyclonedx plugin created the required bom.json file
+        // Sometimes the plugin fails silently for complex maven projects
+        bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
+        // Check if the bom json files got created in a directory other than target
+        if (!bomJsonFiles.length) {
+          bomJsonFiles = getAllFiles(
+            path,
+            "target/**/*{cdx,bom}*.json",
+            options,
+          );
+        }
       }
-      const bomGenerated = bomJsonFiles.length;
-      if (!bomGenerated || result.status !== 0 || result.error) {
+      // Also check if the user has a preference for maven deps tree command
+      if (
+        PREFER_MAVEN_DEPS_TREE ||
+        !bomJsonFiles.length ||
+        result?.status !== 0 ||
+        result?.error
+      ) {
         const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
         const tempMvnTree = join(tempDir, "mvn-tree.txt");
         let mvnTreeArgs = [
@@ -1308,16 +1325,19 @@ export async function createJavaBom(path, options) {
           mvnTreeArgs.push("-s");
           mvnTreeArgs.push(settingsXml);
         }
-        console.log(
-          `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`,
+        console.log(`Executing mvn ${mvnTreeArgs.join(" ")}`);
+        // Prefer the built-in maven
+        result = spawnSync(
+          PREFER_MAVEN_DEPS_TREE ? "mvn" : mavenCmd,
+          mvnTreeArgs,
+          {
+            cwd: basePath,
+            shell: true,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER,
+          },
         );
-        result = spawnSync(mavenCmd, mvnTreeArgs, {
-          cwd: basePath,
-          shell: true,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER,
-        });
         if (result.status !== 0 || result.error) {
           // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
           // These could be due to a range of reasons that are covered below.
