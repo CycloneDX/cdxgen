@@ -51,20 +51,31 @@ jobs:
       - name: dockertests
         run: |
           bin/cdxgen.js elasticsearch:7.2.1 -t docker -o bomresults/bom-elastic.json
+          docker rmi elasticsearch:7.2.1
           bin/cdxgen.js ubuntu:latest -t docker -o bomresults/bom-ubuntu.json
+          docker rmi ubuntu:latest
           bin/cdxgen.js almalinux:9.2-minimal -t docker -o bomresults/bom-almalinux.json
+          docker rmi almalinux:9.2-minimal
           bin/cdxgen.js centos:latest -t docker -o bomresults/bom-centos.json
+          docker rmi centos:latest
           bin/cdxgen.js phpmyadmin@sha256:1092481630056189e43cc0fe66fd01defcc9334d78ab4611b22f65e9a39869bd -o bomresults/bom-phpmyadmin.json --validate
+          docker rmi phpmyadmin@sha256:1092481630056189e43cc0fe66fd01defcc9334d78ab4611b22f65e9a39869bd
           bin/cdxgen.js shiftleft/scan-slim -o bomresults/bom-scanslim.json -t docker --validate
+          docker rmi shiftleft/scan-slim
           bin/cdxgen.js redmine@sha256:a5c5f8a64a0d9a436a0a6941bc3fb156be0c89996add834fe33b66ebeed2439e -o bomresults/bom-redmine.json --validate
+          docker rmi redmine@sha256:a5c5f8a64a0d9a436a0a6941bc3fb156be0c89996add834fe33b66ebeed2439e
           bin/cdxgen.js rocket.chat@sha256:379f7afa0e67497c363ac9a9b3e7e6a6d31deee228233307c987e4a0c68b28e6 -o bomresults/bom-rocket.json --validate
+          docker rmi rocket.chat@sha256:379f7afa0e67497c363ac9a9b3e7e6a6d31deee228233307c987e4a0c68b28e6
           bin/cdxgen.js sonarqube@sha256:7c0edcb99c964984db6d24330db33bb12de1e8ae0d5974d77640b1efea1483d1 -o bomresults/bom-sonar.json --validate
+          docker rmi sonarqube@sha256:7c0edcb99c964984db6d24330db33bb12de1e8ae0d5974d77640b1efea1483d1
           bin/cdxgen.js zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6 -o bomresults/bom-zoo.json --validate
+          docker rmi zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6
           docker pull shiftleft/scan-slim:latest
           docker save -o /tmp/scanslim.tar shiftleft/scan-slim:latest
           bin/cdxgen.js /tmp/scanslim.tar -o bomresults/bom-scanarch.json --validate
           bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --validate
           bin/cdxgen.js -t operator repotests/grafana-operator -o bomresults/bom-op.json --validate
+          rm /tmp/scanslim.tar
           ls -ltr bomresults
   linux-dockertar-tests:
     strategy:

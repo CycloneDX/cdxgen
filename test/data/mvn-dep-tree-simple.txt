@@ -1,4 +1,6 @@
 com.gitlab.security_products.tests:java-maven:jar:1.0-SNAPSHOT
++- com.github.jnr:jffi:jar:1.3.11:compile
++- com.github.jnr:jffi:jar:native:1.3.11:runtime
 +- org.powermock:powermock-api-mockito:jar:1.7.3:test
 |  +- org.powermock:powermock-api-mockito-common:jar:1.7.3:test
 |  |  \- org.powermock:powermock-api-support:jar:1.7.3:test

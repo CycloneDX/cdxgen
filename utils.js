@@ -122,6 +122,11 @@ export const includeMavenTestScope =
   !process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE ||
   ["true", "1"].includes(process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE);
 
+// Whether to use the native maven dependency tree command
+export const PREFER_MAVEN_DEPS_TREE =
+  process.env.PREFER_MAVEN_DEPS_TREE &&
+  ["true", "1"].includes(process.env.PREFER_MAVEN_DEPS_TREE);
+
 // Whether license information should be fetched
 export const FETCH_LICENSE =
   process.env.FETCH_LICENSE &&
@@ -1840,8 +1845,11 @@ export function parsePom(pomFile) {
 /**
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
+ * @param {string} pomFile .pom file for evidence
+ *
+ * @returns {Object} Object containing packages and dependencies
  */
-export function parseMavenTree(rawOutput) {
+export function parseMavenTree(rawOutput, pomFile) {
   if (!rawOutput) {
     return {};
   }
@@ -1866,29 +1874,83 @@ export function parseMavenTree(rawOutput) {
       }
       l = tmpline[tmpline.length - 1];
       const pkgArr = l.split(":");
+      // Support for classifiers
+      // com.github.jnr:jffi:jar:1.3.11:compile
+      // com.github.jnr:jffi:jar:native:1.3.11:runtime
+      let classifier = undefined;
       if (pkgArr && pkgArr.length > 2) {
         let versionStr = pkgArr[pkgArr.length - 2];
+        const componentScope = pkgArr[pkgArr.length - 1];
+        if (pkgArr.length >= 6 && pkgArr[3] !== versionStr) {
+          classifier = pkgArr[3];
+        }
+        // Ignore test scope
+        if (!includeMavenTestScope && componentScope === "test") {
+          return;
+        }
+        let scope = undefined;
+        if (["compile", "runtime"].includes(componentScope)) {
+          scope = "required";
+        } else if (componentScope === "test") {
+          scope = "optional";
+        } else if (componentScope === "provided") {
+          scope = "excluded";
+        }
         if (pkgArr.length === 4) {
           versionStr = pkgArr[pkgArr.length - 1];
         }
-        const key = `${pkgArr[0]}-${pkgArr[1]}-${versionStr}`;
+        const qualifiers = { type: pkgArr[2] };
+        if (classifier) {
+          qualifiers.classifier = classifier;
+        }
+        const purlString = new PackageURL(
+          "maven",
+          pkgArr[0],
+          pkgArr[1],
+          versionStr,
+          qualifiers,
+          null,
+        ).toString();
+        const key = purlString;
         if (!keys_cache[key]) {
           keys_cache[key] = key;
-          let purlString = new PackageURL(
-            "maven",
-            pkgArr[0],
-            pkgArr[1],
-            versionStr,
-            { type: pkgArr[2] },
-            null,
-          ).toString();
-          purlString = decodeURIComponent(purlString);
-          deps.push({
+          const properties = [];
+          if (scope) {
+            properties.push({
+              name: "cdx:maven:component_scope",
+              value: componentScope,
+            });
+          }
+          const apkg = {
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
-            qualifiers: { type: pkgArr[2] },
-          });
+            qualifiers,
+            scope,
+            properties,
+            purl: purlString,
+            "bom-ref": decodeURIComponent(purlString),
+          };
+          if (pomFile) {
+            properties.push({
+              name: "SrcFile",
+              value: pomFile,
+            });
+            apkg.evidence = {
+              identity: {
+                field: "purl",
+                confidence: 0.5,
+                methods: [
+                  {
+                    technique: "manifest-analysis",
+                    confidence: 0.5,
+                    value: pomFile,
+                  },
+                ],
+              },
+            };
+          }
+          deps.push(apkg);
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
           }
@@ -6338,14 +6400,19 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   if (!csProjData) {
     return pkgList;
   }
-  const projects = xml2js(csProjData, {
-    compact: true,
-    alwaysArray: true,
-    spaces: 4,
-    textKey: "_",
-    attributesKey: "$",
-    commentKey: "value",
-  }).Project;
+  let projects = undefined;
+  try {
+    projects = xml2js(csProjData, {
+      compact: true,
+      alwaysArray: true,
+      spaces: 4,
+      textKey: "_",
+      attributesKey: "$",
+      commentKey: "value",
+    }).Project;
+  } catch (e) {
+    console.log(`Unable to parse ${projFile} with utf-8 encoding!`);
+  }
   if (!projects || projects.length === 0) {
     return pkgList;
   }

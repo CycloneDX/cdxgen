@@ -172,17 +172,11 @@ export function parsePom(pomFile: any): {
 /**
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
+ * @param {string} pomFile .pom file for evidence
+ *
+ * @returns {Object} Object containing packages and dependencies
  */
-export function parseMavenTree(rawOutput: string): {
-    pkgList?: undefined;
-    dependenciesList?: undefined;
-} | {
-    pkgList: any[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any;
-    }[];
-};
+export function parseMavenTree(rawOutput: string, pomFile: string): any;
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
@@ -1141,6 +1135,7 @@ export const TIMEOUT_MS: number;
 export const MAX_BUFFER: number;
 export let metadata_cache: {};
 export const includeMavenTestScope: boolean;
+export const PREFER_MAVEN_DEPS_TREE: boolean;
 export const FETCH_LICENSE: boolean;
 export const SEARCH_MAVEN_ORG: boolean;
 export let JAVA_CMD: string;

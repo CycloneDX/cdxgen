@@ -35,6 +35,7 @@ import {
   FETCH_LICENSE,
   LEIN_CMD,
   MAX_BUFFER,
+  PREFER_MAVEN_DEPS_TREE,
   SWIFT_CMD,
   TIMEOUT_MS,
   addEvidenceForDotnet,
@@ -1188,6 +1189,7 @@ export async function createJavaBom(path, options) {
   // Support for tracking all the tools that created the BOM
   // For java, this would correctly include the cyclonedx maven plugin.
   let tools = undefined;
+  let possible_misses = false;
   // war/ear mode
   if (path.endsWith(".war") || path.endsWith(".jar")) {
     // Check if the file exists
@@ -1228,11 +1230,16 @@ export async function createJavaBom(path, options) {
     pomFiles?.length &&
     !["scala", "sbt", "gradle"].includes(options.projectType)
   ) {
+    let result = undefined;
     const cdxMavenPlugin =
       process.env.CDX_MAVEN_PLUGIN ||
       "org.cyclonedx:cyclonedx-maven-plugin:2.8.0";
     const cdxMavenGoal = process.env.CDX_MAVEN_GOAL || "makeAggregateBom";
-    let mvnArgs = [`${cdxMavenPlugin}:${cdxMavenGoal}`, "-DoutputName=bom"];
+    let mvnArgs = [
+      "-fn",
+      `${cdxMavenPlugin}:${cdxMavenGoal}`,
+      "-DoutputName=bom",
+    ];
     if (includeMavenTestScope) {
       mvnArgs.push("-DincludeTestScope=true");
     }
@@ -1250,6 +1257,7 @@ export async function createJavaBom(path, options) {
     if (options.specVersion === 1.4) {
       mvnArgs = mvnArgs.concat("-DschemaVersion=1.4");
     }
+    const firstPom = pomFiles.length ? pomFiles[0] : undefined;
     for (const f of pomFiles) {
       const basePath = dirname(f);
       const settingsXml = join(basePath, "settings.xml");
@@ -1271,44 +1279,97 @@ export async function createJavaBom(path, options) {
           jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
         }
       }
-      console.log(`Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`, basePath);
-      let result = spawnSync(mavenCmd, mvnArgs, {
-        cwd: basePath,
-        shell: true,
-        encoding: "utf-8",
-        timeout: TIMEOUT_MS,
-        maxBuffer: MAX_BUFFER,
-      });
-      // Check if the cyclonedx plugin created the required bom.json file
-      // Sometimes the plugin fails silently for complex maven projects
-      bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
-      // Check if the bom json files got created in a directory other than target
-      if (!bomJsonFiles.length) {
-        bomJsonFiles = getAllFiles(path, "target/**/*{cdx,bom}*.json", options);
-      }
-      const bomGenerated = bomJsonFiles.length;
-      if (!bomGenerated || result.status !== 0 || result.error) {
-        const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
-        const tempMvnTree = join(tempDir, "mvn-tree.txt");
-        let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
-        if (process.env.MVN_ARGS) {
-          const addArgs = process.env.MVN_ARGS.split(" ");
-          mvnTreeArgs = mvnTreeArgs.concat(addArgs);
-        }
+      // Use the cyclonedx maven plugin if there is no preference for maven deps tree
+      if (!PREFER_MAVEN_DEPS_TREE) {
         console.log(
-          `Fallback to executing ${mavenCmd} ${mvnTreeArgs.join(" ")}`,
+          `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
+          basePath,
         );
-        result = spawnSync(mavenCmd, mvnTreeArgs, {
+        result = spawnSync(mavenCmd, mvnArgs, {
           cwd: basePath,
           shell: true,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,
           maxBuffer: MAX_BUFFER,
         });
+        // Check if the cyclonedx plugin created the required bom.json file
+        // Sometimes the plugin fails silently for complex maven projects
+        bomJsonFiles = getAllFiles(path, "**/target/*.json", options);
+        // Check if the bom json files got created in a directory other than target
+        if (!bomJsonFiles.length) {
+          bomJsonFiles = getAllFiles(
+            path,
+            "target/**/*{cdx,bom}*.json",
+            options,
+          );
+        }
+      }
+      // Also check if the user has a preference for maven deps tree command
+      if (
+        PREFER_MAVEN_DEPS_TREE ||
+        !bomJsonFiles.length ||
+        result?.status !== 0 ||
+        result?.error
+      ) {
+        const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
+        const tempMvnTree = join(tempDir, "mvn-tree.txt");
+        const tempMvnParentTree = join(tempDir, "mvn-parent-tree.txt");
+        let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
+        if (process.env.MVN_ARGS) {
+          const addArgs = process.env.MVN_ARGS.split(" ");
+          mvnTreeArgs = mvnTreeArgs.concat(addArgs);
+        }
+        // Automatically use settings.xml to improve the success for fallback
+        if (existsSync(settingsXml)) {
+          mvnTreeArgs.push("-s");
+          mvnTreeArgs.push(settingsXml);
+        }
+        // For the first pom alone, we need to execute first in non-recursive mode to capture
+        // the parent component. Then, we execute all of them in recursive mode
+        if (f === firstPom) {
+          result = spawnSync(
+            "mvn",
+            ["dependency:tree", "-N", `-DoutputFile=${tempMvnParentTree}`],
+            {
+              cwd: basePath,
+              shell: true,
+              encoding: "utf-8",
+              timeout: TIMEOUT_MS,
+              maxBuffer: MAX_BUFFER,
+            },
+          );
+          if (result.status === 0) {
+            if (existsSync(tempMvnParentTree)) {
+              const mvnTreeString = readFileSync(tempMvnParentTree, {
+                encoding: "utf-8",
+              });
+              const parsedList = parseMavenTree(mvnTreeString, f);
+              const dlist = parsedList.pkgList;
+              const tmpParentComponent = dlist.splice(0, 1)[0];
+              tmpParentComponent.type = "application";
+              parentComponent = tmpParentComponent;
+              parentComponent.components = [];
+            }
+          }
+        }
+        console.log(`Executing 'mvn ${mvnTreeArgs.join(" ")}' in ${basePath}`);
+        // Prefer the built-in maven
+        result = spawnSync(
+          PREFER_MAVEN_DEPS_TREE ? "mvn" : mavenCmd,
+          mvnTreeArgs,
+          {
+            cwd: basePath,
+            shell: true,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER,
+          },
+        );
         if (result.status !== 0 || result.error) {
+          possible_misses = true;
           // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
           // These could be due to a range of reasons that are covered below.
-          if (pomFiles.length === 1 || DEBUG_MODE) {
+          if (pomFiles.length === 1 || DEBUG_MODE || PREFER_MAVEN_DEPS_TREE) {
             console.error(result.stdout, result.stderr);
             console.log("The above build errors could be due to:\n");
             if (
@@ -1322,7 +1383,10 @@ export async function createJavaBom(path, options) {
             } else if (
               result.stdout &&
               (result.stdout.includes("Could not resolve dependencies") ||
-                result.stdout.includes("no dependency information available"))
+                result.stdout.includes("no dependency information available") ||
+                result.stdout.includes(
+                  "The following artifacts could not be resolved",
+                ))
             ) {
               console.log(
                 "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
@@ -1361,95 +1425,120 @@ export async function createJavaBom(path, options) {
             const mvnTreeString = readFileSync(tempMvnTree, {
               encoding: "utf-8",
             });
-            const parsedList = parseMavenTree(mvnTreeString);
+            const parsedList = parseMavenTree(mvnTreeString, f);
             const dlist = parsedList.pkgList;
-            parentComponent = dlist.splice(0, 1)[0];
-            parentComponent.type = "application";
+            const tmpParentComponent = dlist.splice(0, 1)[0];
+            tmpParentComponent.type = "application";
             if (dlist?.length) {
               pkgList = pkgList.concat(dlist);
             }
+            // Retain the parent hierarchy
+            if (!Object.keys(parentComponent).length) {
+              parentComponent = tmpParentComponent;
+              parentComponent.components = [];
+            } else {
+              parentComponent.components.push(tmpParentComponent);
+            }
             if (parsedList.dependenciesList && parsedList.dependenciesList) {
-              dependencies = dependencies.concat(parsedList.dependenciesList);
+              dependencies = mergeDependencies(
+                dependencies,
+                parsedList.dependenciesList,
+                tmpParentComponent,
+              );
             }
             unlinkSync(tempMvnTree);
           }
         }
       }
     } // for
-    for (const abjson of bomJsonFiles) {
-      let bomJsonObj = undefined;
-      try {
-        if (DEBUG_MODE) {
-          console.log(`Extracting data from generated bom file ${abjson}`);
-        }
-        bomJsonObj = JSON.parse(
-          readFileSync(abjson, {
-            encoding: "utf-8",
-          }),
-        );
-        if (bomJsonObj) {
-          if (
-            !tools &&
-            bomJsonObj.metadata &&
-            bomJsonObj.metadata.tools &&
-            Array.isArray(bomJsonObj.metadata.tools)
-          ) {
-            tools = bomJsonObj.metadata.tools;
+    // Locate and parse all bom.json files from the maven plugin
+    if (!PREFER_MAVEN_DEPS_TREE) {
+      for (const abjson of bomJsonFiles) {
+        let bomJsonObj = undefined;
+        try {
+          if (DEBUG_MODE) {
+            console.log(`Extracting data from generated bom file ${abjson}`);
           }
-          if (
-            bomJsonObj.metadata?.component &&
-            !Object.keys(parentComponent).length
-          ) {
-            parentComponent = bomJsonObj.metadata.component;
-            options.parentComponent = parentComponent;
-            pkgList = [];
-          }
-          if (bomJsonObj.components) {
-            // Inject evidence into the components. #994
-            if (options.specVersion >= 1.5) {
-              // maven would usually generate a target directory closest to the pom.xml
-              // I am sure there would be cases where this assumption is not true :)
-              const srcPomFile = join(dirname(abjson), "..", "pom.xml");
-              for (const acomp of bomJsonObj.components) {
-                if (!acomp.evidence) {
-                  acomp.evidence = {
-                    identity: {
-                      field: "purl",
-                      confidence: 0.8,
-                      methods: [
-                        {
-                          technique: "manifest-analysis",
-                          confidence: 0.8,
-                          value: srcPomFile,
-                        },
-                      ],
-                    },
-                  };
-                }
-                if (!acomp.properties) {
-                  acomp.properties = [];
-                }
-                acomp.properties.push({
-                  name: "SrcFile",
-                  value: srcPomFile,
-                });
-              }
+          bomJsonObj = JSON.parse(
+            readFileSync(abjson, {
+              encoding: "utf-8",
+            }),
+          );
+          if (bomJsonObj) {
+            if (
+              !tools &&
+              bomJsonObj.metadata &&
+              bomJsonObj.metadata.tools &&
+              Array.isArray(bomJsonObj.metadata.tools)
+            ) {
+              tools = bomJsonObj.metadata.tools;
             }
-            pkgList = pkgList.concat(bomJsonObj.components);
+            if (
+              bomJsonObj.metadata?.component &&
+              !Object.keys(parentComponent).length
+            ) {
+              parentComponent = bomJsonObj.metadata.component;
+              options.parentComponent = parentComponent;
+              pkgList = [];
+            }
+            if (bomJsonObj.components) {
+              // Inject evidence into the components. #994
+              if (options.specVersion >= 1.5) {
+                // maven would usually generate a target directory closest to the pom.xml
+                // I am sure there would be cases where this assumption is not true :)
+                const srcPomFile = join(dirname(abjson), "..", "pom.xml");
+                for (const acomp of bomJsonObj.components) {
+                  if (!acomp.evidence) {
+                    acomp.evidence = {
+                      identity: {
+                        field: "purl",
+                        confidence: 0.8,
+                        methods: [
+                          {
+                            technique: "manifest-analysis",
+                            confidence: 0.8,
+                            value: srcPomFile,
+                          },
+                        ],
+                      },
+                    };
+                  }
+                  if (!acomp.properties) {
+                    acomp.properties = [];
+                  }
+                  acomp.properties.push({
+                    name: "SrcFile",
+                    value: srcPomFile,
+                  });
+                }
+              }
+              pkgList = pkgList.concat(bomJsonObj.components);
+            }
+            if (bomJsonObj.dependencies) {
+              dependencies = mergeDependencies(
+                dependencies,
+                bomJsonObj.dependencies,
+                parentComponent,
+              );
+            }
           }
-          if (bomJsonObj.dependencies) {
-            dependencies = mergeDependencies(
-              dependencies,
-              bomJsonObj.dependencies,
-              parentComponent,
-            );
+        } catch (err) {
+          if (options.failOnError || DEBUG_MODE) {
+            console.log(err);
+            options.failOnError && process.exit(1);
           }
         }
-      } catch (err) {
-        if (options.failOnError || DEBUG_MODE) {
-          console.log(err);
-          options.failOnError && process.exit(1);
-        }
+      }
+    }
+    if (possible_misses) {
+      if (!DEBUG_MODE) {
+        console.warn(
+          "Multiple errors occurred while building this project with maven. The SBOM is therefore incomplete!",
+        );
+      } else if (!PREFER_MAVEN_DEPS_TREE) {
+        console.log(
+          "Try generating an SBOM with the maven dependency tree plugin. Set the environment variable PREFER_MAVEN_DEPS_TREE to true to enable this.",
+        );
       }
     }
     if (pkgList) {
@@ -4711,12 +4800,7 @@ export async function createCsharpBom(path, options) {
     for (const f of filesToRestore) {
       const buildCmd =
         options.projectType === "dotnet-framework" ? "nuget" : "dotnet";
-      if (DEBUG_MODE) {
-        const basePath = dirname(f);
-        console.log(`Executing '${buildCmd} restore' in ${basePath}`);
-      }
-      const result = spawnSync(
-        buildCmd,
+      const buildArgs =
         options.projectType === "dotnet-framework"
           ? [
               "restore",
@@ -4727,23 +4811,38 @@ export async function createCsharpBom(path, options) {
               "-Verbosity",
               "quiet",
             ]
-          : ["restore", "--force", "--ignore-failed-sources", f],
-        {
-          cwd: path,
-          encoding: "utf-8",
-        },
-      );
+          : ["restore", "--force", "--ignore-failed-sources", f];
+      if (DEBUG_MODE) {
+        const basePath = dirname(f);
+        console.log(
+          `Executing '${buildCmd} ${buildArgs.join(" ")}' in ${basePath}`,
+        );
+      }
+      const result = spawnSync(buildCmd, buildArgs, {
+        cwd: path,
+        encoding: "utf-8",
+        env: { ...process.env, DOTNET_ROLL_FORWARD: "Major" },
+      });
       if (DEBUG_MODE && (result.status !== 0 || result.error)) {
-        console.error(
-          `Restore has failed. Check if ${buildCmd} is installed and available in PATH.`,
-        );
-        console.log(
-          "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
-        );
-        console.log(
-          "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
-        );
-        console.log(result.stderr);
+        if (result?.stderr?.includes("To install missing framework")) {
+          console.log(
+            "This project requires a specific version of dotnet sdk to be installed. The cdxgen container image bundles dotnet SDK 8.0, which might be incompatible.",
+          );
+          console.log(
+            "Try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` or `ghcr.io/appthreat/cdxgen-dotnet7:v10` container images.",
+          );
+        } else {
+          console.error(
+            `Restore has failed. Check if ${buildCmd} is installed and available in PATH.`,
+          );
+          console.log(
+            "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
+          );
+          console.log(
+            "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
+          );
+        }
+        console.log(result.stdout, result.stderr);
         options.failOnError && process.exit(1);
       }
     }
@@ -4935,7 +5034,7 @@ export async function createCsharpBom(path, options) {
           parentComponent = retMap.parentComponent;
         }
       }
-      if (retMap?.pkgList.length) {
+      if (retMap?.pkgList?.length) {
         pkgList = pkgList.concat(retMap.pkgList);
       }
       if (retMap.dependencies?.length) {
@@ -5065,10 +5164,11 @@ export function mergeDependencies(
     }
     if (adep["dependsOn"]) {
       for (const eachDepends of adep["dependsOn"]) {
-        if (
-          parentRef &&
-          eachDepends.toLowerCase() !== parentRef.toLowerCase()
-        ) {
+        if (parentRef) {
+          if (eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
+            deps_map[adep.ref].add(eachDepends);
+          }
+        } else {
           deps_map[adep.ref].add(eachDepends);
         }
       }

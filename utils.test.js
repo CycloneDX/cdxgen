@@ -526,10 +526,14 @@ test("parse maven tree", () => {
   expect(parsedList.pkgList.length).toEqual(61);
   expect(parsedList.dependenciesList.length).toEqual(61);
   expect(parsedList.pkgList[0]).toEqual({
+    "bom-ref": "pkg:maven/com.pogeyan.cmis/copper-server@1.15.2?type=war",
     group: "com.pogeyan.cmis",
     name: "copper-server",
     version: "1.15.2",
     qualifiers: { type: "war" },
+    properties: [],
+    purl: "pkg:maven/com.pogeyan.cmis/copper-server@1.15.2?type=war",
+    scope: undefined,
   });
   expect(parsedList.dependenciesList[0]).toEqual({
     ref: "pkg:maven/com.pogeyan.cmis/copper-server@1.15.2?type=war",
@@ -560,17 +564,24 @@ test("parse maven tree", () => {
       encoding: "utf-8",
     }),
   );
-  expect(parsedList.pkgList.length).toEqual(37);
-  expect(parsedList.dependenciesList.length).toEqual(37);
+  expect(parsedList.pkgList.length).toEqual(39);
+  expect(parsedList.dependenciesList.length).toEqual(39);
   expect(parsedList.pkgList[0]).toEqual({
+    "bom-ref":
+      "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
+    purl: "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
     group: "com.gitlab.security_products.tests",
     name: "java-maven",
     version: "1.0-SNAPSHOT",
     qualifiers: { type: "jar" },
+    properties: [],
+    scope: undefined,
   });
   expect(parsedList.dependenciesList[0]).toEqual({
     ref: "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
     dependsOn: [
+      "pkg:maven/com.github.jnr/jffi@1.3.11?type=jar",
+      "pkg:maven/com.github.jnr/jffi@1.3.11?classifier=native&type=jar",
       "pkg:maven/org.powermock/powermock-api-mockito@1.7.3?type=jar",
       "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
       "pkg:maven/junit/junit@3.8.1?type=jar",
@@ -587,16 +598,26 @@ test("parse maven tree", () => {
   );
   expect(parsedList.pkgList.length).toEqual(79);
   expect(parsedList.pkgList[0]).toEqual({
+    "bom-ref":
+      "pkg:maven/example.group/eclipse-repository@1.0.0-SNAPSHOT?type=eclipse-repository",
+    purl: "pkg:maven/example.group/eclipse-repository@1.0.0-SNAPSHOT?type=eclipse-repository",
     group: "example.group",
     name: "eclipse-repository",
     version: "1.0.0-SNAPSHOT",
     qualifiers: { type: "eclipse-repository" },
+    scope: undefined,
+    properties: [],
   });
   expect(parsedList.pkgList[4]).toEqual({
+    "bom-ref":
+      "pkg:maven/p2.eclipse.plugin/com.ibm.icu@67.1.0.v20200706-1749?type=eclipse-plugin",
+    purl: "pkg:maven/p2.eclipse.plugin/com.ibm.icu@67.1.0.v20200706-1749?type=eclipse-plugin",
     group: "p2.eclipse.plugin",
     name: "com.ibm.icu",
     version: "67.1.0.v20200706-1749",
     qualifiers: { type: "eclipse-plugin" },
+    scope: undefined,
+    properties: [],
   });
   expect(parsedList.dependenciesList.length).toEqual(79);
   expect(parsedList.dependenciesList[0]).toEqual({
