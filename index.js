@@ -1352,7 +1352,7 @@ export async function createJavaBom(path, options) {
             }
           }
         }
-        console.log(`Executing mvn ${mvnTreeArgs.join(" ")} in ${basePath}`);
+        console.log(`Executing 'mvn ${mvnTreeArgs.join(" ")}' in ${basePath}`);
         // Prefer the built-in maven
         result = spawnSync(
           PREFER_MAVEN_DEPS_TREE ? "mvn" : mavenCmd,
