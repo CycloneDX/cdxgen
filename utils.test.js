@@ -13,6 +13,7 @@ import {
   getNugetMetadata,
   getPyMetadata,
   guessPypiMatchingVersion,
+  isValidIriReference,
   parseBazelActionGraph,
   parseBazelBuild,
   parseBazelSkyframe,
@@ -84,7 +85,6 @@ import {
   parseYarnLock,
   readZipEntry,
   yarnLockToIdentMap,
-  isValidIriReference,
 } from "./utils.js";
 
 test("SSRI test", () => {
@@ -4067,7 +4067,6 @@ test("parseMakeDFile tests", () => {
     ],
   });
 });
-
 
 test.each([
   ["", false],

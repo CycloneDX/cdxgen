@@ -46,9 +46,9 @@ import {
   satisfies,
   valid,
 } from "semver";
+import { IriValidationStrategy, validateIri } from "validate-iri";
 import { xml2js } from "xml-js";
 import { getTreeWithPlugin } from "./piptree.js";
-import { validateIri, IriValidationStrategy } from 'validate-iri'
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -10609,11 +10609,11 @@ export function parseMakeDFile(dfile) {
  *
  */
 export function isValidIriReference(iri) {
-    const result = validateIri(iri, IriValidationStrategy.Strict);
+  const result = validateIri(iri, IriValidationStrategy.Strict);
 
-    if (result instanceof Error) {
-      return false;
-    }
+  if (result instanceof Error) {
+    return false;
+  }
 
-    return true;
+  return true;
 }

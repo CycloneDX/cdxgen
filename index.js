@@ -66,6 +66,7 @@ import {
   getSwiftPackageMetadata,
   getTimestamp,
   includeMavenTestScope,
+  isValidIriReference,
   parseBazelActionGraph,
   parseBazelSkyframe,
   parseBdistMetadata,
@@ -130,7 +131,6 @@ import {
   parseYarnLock,
   readZipEntry,
   splitOutputByGradleProjects,
-  isValidIriReference,
 } from "./utils.js";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
