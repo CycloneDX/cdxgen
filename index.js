@@ -130,6 +130,7 @@ import {
   parseYarnLock,
   readZipEntry,
   splitOutputByGradleProjects,
+  isValidIriReference,
 } from "./utils.js";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -726,7 +727,9 @@ function addExternalReferences(opkg) {
       }
     }
   }
-  return externalReferences;
+  return externalReferences
+    .map((reference) => ({ ...reference, url: reference.url.trim() }))
+    .filter((reference) => isValidIriReference(reference.url));
 }
 
 /**

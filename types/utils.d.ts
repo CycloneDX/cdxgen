@@ -1119,6 +1119,18 @@ export function addEvidenceForDotnet(pkgList: any, slicesFile: any): any;
  * @returns {Object} pkgFilesMap Object with package name and list of files
  */
 export function parseMakeDFile(dfile: string): any;
+/**
+ * Function to validate an externalReference URL for conforming to the JSON schema or bomLink
+ * https://github.com/CycloneDX/cyclonedx-core-java/blob/75575318b268dda9e2a290761d7db11b4f414255/src/main/resources/bom-1.5.schema.json#L1140
+ * https://datatracker.ietf.org/doc/html/rfc3987#section-2.2
+ * https://cyclonedx.org/capabilities/bomlink/
+ *
+ * @param {String} iri IRI to validate
+ *
+ * @returns {Boolean} Flag indicating whether the supplied URL is valid or not
+ *
+ */
+export function isValidIriReference(iri: string): boolean;
 export const dirNameStr: string;
 export const isWin: boolean;
 export const isMac: boolean;
