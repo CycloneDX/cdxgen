@@ -1,5 +1,23 @@
 # Advanced Usage
 
+## Exclude files and directories
+
+Use the argument `--exclude` to provide a glob pattern for files and directories to exclude from the BOM. Multiple values are allowed.
+
+Example:
+
+Exclude quickstarts directory.
+
+```shell
+--exclude "**/quickstarts/**"
+```
+
+Brace expansion is supported. `{openshift,kubernetes}-maven-plugin` in the below example, expands to `openshift-maven-plugin` and `kubernetes-maven-plugin`.
+
+```shell
+--exclude "**/quickstarts/**" --exclude "**/{openshift,kubernetes}-maven-plugin/**"
+```
+
 ## Filtering components
 
 cdxgen can filter the components and the dependency tree before writing to a BOM json file. Three kinds of filters are allowed:

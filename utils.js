@@ -1845,8 +1845,11 @@ export function parsePom(pomFile) {
 /**
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
+ * @param {string} pomFile .pom file for evidence
+ *
+ * @returns {Object} Object containing packages and dependencies
  */
-export function parseMavenTree(rawOutput) {
+export function parseMavenTree(rawOutput, pomFile) {
   if (!rawOutput) {
     return {};
   }
@@ -1908,14 +1911,36 @@ export function parseMavenTree(rawOutput) {
               value: componentScope,
             });
           }
-          deps.push({
+          const apkg = {
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
             qualifiers: { type: pkgArr[2] },
             scope,
             properties,
-          });
+            purl: purlString,
+            "bom-ref": decodeURIComponent(purlString),
+          };
+          if (pomFile) {
+            properties.push({
+              name: "SrcFile",
+              value: pomFile,
+            });
+            apkg.evidence = {
+              identity: {
+                field: "purl",
+                confidence: 0.5,
+                methods: [
+                  {
+                    technique: "manifest-analysis",
+                    confidence: 0.5,
+                    value: pomFile,
+                  },
+                ],
+              },
+            };
+          }
+          deps.push(apkg);
           if (!level_trees[purlString]) {
             level_trees[purlString] = [];
           }

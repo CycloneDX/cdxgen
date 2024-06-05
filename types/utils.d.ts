@@ -172,8 +172,9 @@ export function parsePom(pomFile: any): {
 /**
  * Parse maven tree output
  * @param {string} rawOutput Raw string output
+ * @param {string} pomFile .pom file for evidence
  */
-export function parseMavenTree(rawOutput: string): {
+export function parseMavenTree(rawOutput: string, pomFile: string): {
     pkgList?: undefined;
     dependenciesList?: undefined;
 } | {

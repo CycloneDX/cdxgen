@@ -1325,7 +1325,7 @@ export async function createJavaBom(path, options) {
           mvnTreeArgs.push("-s");
           mvnTreeArgs.push(settingsXml);
         }
-        console.log(`Executing mvn ${mvnTreeArgs.join(" ")}`);
+        console.log(`Executing mvn ${mvnTreeArgs.join(" ")} in ${basePath}`);
         // Prefer the built-in maven
         result = spawnSync(
           PREFER_MAVEN_DEPS_TREE ? "mvn" : mavenCmd,
@@ -1394,15 +1394,26 @@ export async function createJavaBom(path, options) {
             const mvnTreeString = readFileSync(tempMvnTree, {
               encoding: "utf-8",
             });
-            const parsedList = parseMavenTree(mvnTreeString);
+            const parsedList = parseMavenTree(mvnTreeString, f);
             const dlist = parsedList.pkgList;
-            parentComponent = dlist.splice(0, 1)[0];
-            parentComponent.type = "application";
+            const tmpParentComponent = dlist.splice(0, 1)[0];
+            tmpParentComponent.type = "application";
             if (dlist?.length) {
               pkgList = pkgList.concat(dlist);
             }
+            // Retain the parent hierarchy
+            if (!Object.keys(parentComponent).length) {
+              parentComponent = tmpParentComponent;
+              parentComponent.components = [];
+            } else {
+              parentComponent.components.push(tmpParentComponent);
+            }
             if (parsedList.dependenciesList && parsedList.dependenciesList) {
-              dependencies = dependencies.concat(parsedList.dependenciesList);
+              dependencies = mergeDependencies(
+                dependencies,
+                parsedList.dependenciesList,
+                tmpParentComponent,
+              );
             }
             unlinkSync(tempMvnTree);
           }
@@ -5108,10 +5119,11 @@ export function mergeDependencies(
     }
     if (adep["dependsOn"]) {
       for (const eachDepends of adep["dependsOn"]) {
-        if (
-          parentRef &&
-          eachDepends.toLowerCase() !== parentRef.toLowerCase()
-        ) {
+        if (parentRef) {
+          if (eachDepends.toLowerCase() !== parentRef.toLowerCase()) {
+            deps_map[adep.ref].add(eachDepends);
+          }
+        } else {
           deps_map[adep.ref].add(eachDepends);
         }
       }
