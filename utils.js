@@ -1899,22 +1899,21 @@ export function parseMavenTree(rawOutput, pomFile) {
         if (pkgArr.length === 4) {
           versionStr = pkgArr[pkgArr.length - 1];
         }
-        const key = `${pkgArr[0]}-${pkgArr[1]}-${versionStr}`;
+        const qualifiers = { type: pkgArr[2] };
+        if (classifier) {
+          qualifiers.classifier = classifier;
+        }
+        const purlString = new PackageURL(
+          "maven",
+          pkgArr[0],
+          pkgArr[1],
+          versionStr,
+          qualifiers,
+          null,
+        ).toString();
+        const key = purlString;
         if (!keys_cache[key]) {
           keys_cache[key] = key;
-          const qualifiers = { type: pkgArr[2] };
-          if (classifier) {
-            qualifiers.classifier = classifier;
-          }
-          let purlString = new PackageURL(
-            "maven",
-            pkgArr[0],
-            pkgArr[1],
-            versionStr,
-            qualifiers,
-            null,
-          ).toString();
-          purlString = decodeURIComponent(purlString);
           const properties = [];
           if (scope) {
             properties.push({
@@ -1926,7 +1925,7 @@ export function parseMavenTree(rawOutput, pomFile) {
             group: pkgArr[0],
             name: pkgArr[1],
             version: versionStr,
-            qualifiers: { type: pkgArr[2] },
+            qualifiers,
             scope,
             properties,
             purl: purlString,
