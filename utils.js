@@ -1874,9 +1874,16 @@ export function parseMavenTree(rawOutput, pomFile) {
       }
       l = tmpline[tmpline.length - 1];
       const pkgArr = l.split(":");
+      // Support for classifiers
+      // com.github.jnr:jffi:jar:1.3.11:compile
+      // com.github.jnr:jffi:jar:native:1.3.11:runtime
+      let classifier = undefined;
       if (pkgArr && pkgArr.length > 2) {
         let versionStr = pkgArr[pkgArr.length - 2];
         const componentScope = pkgArr[pkgArr.length - 1];
+        if (pkgArr.length >= 6 && pkgArr[3] !== versionStr) {
+          classifier = pkgArr[3];
+        }
         // Ignore test scope
         if (!includeMavenTestScope && componentScope === "test") {
           return;
@@ -1895,12 +1902,16 @@ export function parseMavenTree(rawOutput, pomFile) {
         const key = `${pkgArr[0]}-${pkgArr[1]}-${versionStr}`;
         if (!keys_cache[key]) {
           keys_cache[key] = key;
+          const qualifiers = { type: pkgArr[2] };
+          if (classifier) {
+            qualifiers.classifier = classifier;
+          }
           let purlString = new PackageURL(
             "maven",
             pkgArr[0],
             pkgArr[1],
             versionStr,
-            { type: pkgArr[2] },
+            qualifiers,
             null,
           ).toString();
           purlString = decodeURIComponent(purlString);

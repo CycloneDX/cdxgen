@@ -564,8 +564,8 @@ test("parse maven tree", () => {
       encoding: "utf-8",
     }),
   );
-  expect(parsedList.pkgList.length).toEqual(37);
-  expect(parsedList.dependenciesList.length).toEqual(37);
+  expect(parsedList.pkgList.length).toEqual(38);
+  expect(parsedList.dependenciesList.length).toEqual(38);
   expect(parsedList.pkgList[0]).toEqual({
     "bom-ref":
       "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
@@ -580,6 +580,7 @@ test("parse maven tree", () => {
   expect(parsedList.dependenciesList[0]).toEqual({
     ref: "pkg:maven/com.gitlab.security_products.tests/java-maven@1.0-SNAPSHOT?type=jar",
     dependsOn: [
+      "pkg:maven/com.github.jnr/jffi@1.3.11?classifier=native&type=jar",
       "pkg:maven/org.powermock/powermock-api-mockito@1.7.3?type=jar",
       "pkg:maven/io.netty/netty@3.9.1.Final?type=jar",
       "pkg:maven/junit/junit@3.8.1?type=jar",
