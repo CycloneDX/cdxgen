@@ -1189,6 +1189,7 @@ export async function createJavaBom(path, options) {
   // Support for tracking all the tools that created the BOM
   // For java, this would correctly include the cyclonedx maven plugin.
   let tools = undefined;
+  let possible_misses = false;
   // war/ear mode
   if (path.endsWith(".war") || path.endsWith(".jar")) {
     // Check if the file exists
@@ -1314,7 +1315,6 @@ export async function createJavaBom(path, options) {
         // Since we have a loop running for each pom file, we need to invoke this command
         // with non-recursive option (-N)
         let mvnTreeArgs = [
-          "-fn",
           "dependency:tree",
           "-N",
           `-DoutputFile=${tempMvnTree}`,
@@ -1342,9 +1342,10 @@ export async function createJavaBom(path, options) {
           },
         );
         if (result.status !== 0 || result.error) {
+          possible_misses = true;
           // Our approach to recursively invoking the maven plugin for each sub-module is bound to result in failures
           // These could be due to a range of reasons that are covered below.
-          if (pomFiles.length === 1 || DEBUG_MODE) {
+          if (pomFiles.length === 1 || DEBUG_MODE || PREFER_MAVEN_DEPS_TREE) {
             console.error(result.stdout, result.stderr);
             console.log("The above build errors could be due to:\n");
             if (
@@ -1358,7 +1359,10 @@ export async function createJavaBom(path, options) {
             } else if (
               result.stdout &&
               (result.stdout.includes("Could not resolve dependencies") ||
-                result.stdout.includes("no dependency information available"))
+                result.stdout.includes("no dependency information available") ||
+                result.stdout.includes(
+                  "The following artifacts could not be resolved",
+                ))
             ) {
               console.log(
                 "1. Try building the project with 'mvn package -Dmaven.test.skip=true' using the correct version of Java and maven before invoking cdxgen.",
@@ -1423,81 +1427,89 @@ export async function createJavaBom(path, options) {
         }
       }
     } // for
-    for (const abjson of bomJsonFiles) {
-      let bomJsonObj = undefined;
-      try {
-        if (DEBUG_MODE) {
-          console.log(`Extracting data from generated bom file ${abjson}`);
-        }
-        bomJsonObj = JSON.parse(
-          readFileSync(abjson, {
-            encoding: "utf-8",
-          }),
-        );
-        if (bomJsonObj) {
-          if (
-            !tools &&
-            bomJsonObj.metadata &&
-            bomJsonObj.metadata.tools &&
-            Array.isArray(bomJsonObj.metadata.tools)
-          ) {
-            tools = bomJsonObj.metadata.tools;
+    // Locate and parse all bom.json files from the maven plugin
+    if (!PREFER_MAVEN_DEPS_TREE) {
+      for (const abjson of bomJsonFiles) {
+        let bomJsonObj = undefined;
+        try {
+          if (DEBUG_MODE) {
+            console.log(`Extracting data from generated bom file ${abjson}`);
           }
-          if (
-            bomJsonObj.metadata?.component &&
-            !Object.keys(parentComponent).length
-          ) {
-            parentComponent = bomJsonObj.metadata.component;
-            options.parentComponent = parentComponent;
-            pkgList = [];
-          }
-          if (bomJsonObj.components) {
-            // Inject evidence into the components. #994
-            if (options.specVersion >= 1.5) {
-              // maven would usually generate a target directory closest to the pom.xml
-              // I am sure there would be cases where this assumption is not true :)
-              const srcPomFile = join(dirname(abjson), "..", "pom.xml");
-              for (const acomp of bomJsonObj.components) {
-                if (!acomp.evidence) {
-                  acomp.evidence = {
-                    identity: {
-                      field: "purl",
-                      confidence: 0.8,
-                      methods: [
-                        {
-                          technique: "manifest-analysis",
-                          confidence: 0.8,
-                          value: srcPomFile,
-                        },
-                      ],
-                    },
-                  };
-                }
-                if (!acomp.properties) {
-                  acomp.properties = [];
-                }
-                acomp.properties.push({
-                  name: "SrcFile",
-                  value: srcPomFile,
-                });
-              }
+          bomJsonObj = JSON.parse(
+            readFileSync(abjson, {
+              encoding: "utf-8",
+            }),
+          );
+          if (bomJsonObj) {
+            if (
+              !tools &&
+              bomJsonObj.metadata &&
+              bomJsonObj.metadata.tools &&
+              Array.isArray(bomJsonObj.metadata.tools)
+            ) {
+              tools = bomJsonObj.metadata.tools;
             }
-            pkgList = pkgList.concat(bomJsonObj.components);
+            if (
+              bomJsonObj.metadata?.component &&
+              !Object.keys(parentComponent).length
+            ) {
+              parentComponent = bomJsonObj.metadata.component;
+              options.parentComponent = parentComponent;
+              pkgList = [];
+            }
+            if (bomJsonObj.components) {
+              // Inject evidence into the components. #994
+              if (options.specVersion >= 1.5) {
+                // maven would usually generate a target directory closest to the pom.xml
+                // I am sure there would be cases where this assumption is not true :)
+                const srcPomFile = join(dirname(abjson), "..", "pom.xml");
+                for (const acomp of bomJsonObj.components) {
+                  if (!acomp.evidence) {
+                    acomp.evidence = {
+                      identity: {
+                        field: "purl",
+                        confidence: 0.8,
+                        methods: [
+                          {
+                            technique: "manifest-analysis",
+                            confidence: 0.8,
+                            value: srcPomFile,
+                          },
+                        ],
+                      },
+                    };
+                  }
+                  if (!acomp.properties) {
+                    acomp.properties = [];
+                  }
+                  acomp.properties.push({
+                    name: "SrcFile",
+                    value: srcPomFile,
+                  });
+                }
+              }
+              pkgList = pkgList.concat(bomJsonObj.components);
+            }
+            if (bomJsonObj.dependencies) {
+              dependencies = mergeDependencies(
+                dependencies,
+                bomJsonObj.dependencies,
+                parentComponent,
+              );
+            }
           }
-          if (bomJsonObj.dependencies) {
-            dependencies = mergeDependencies(
-              dependencies,
-              bomJsonObj.dependencies,
-              parentComponent,
-            );
+        } catch (err) {
+          if (options.failOnError || DEBUG_MODE) {
+            console.log(err);
+            options.failOnError && process.exit(1);
           }
-        }
-      } catch (err) {
-        if (options.failOnError || DEBUG_MODE) {
-          console.log(err);
-          options.failOnError && process.exit(1);
         }
       }
+    }
+    if (possible_misses) {
+      console.warn(
+        "Multiple errors occurred while building this project with maven. The SBOM is therefore incomplete!",
+      );
     }
     if (pkgList) {
       pkgList = trimComponents(pkgList);
