@@ -46,6 +46,7 @@ import {
   satisfies,
   valid,
 } from "semver";
+import { IriValidationStrategy, validateIri } from "validate-iri";
 import { xml2js } from "xml-js";
 import { getTreeWithPlugin } from "./piptree.js";
 
@@ -10592,4 +10593,28 @@ export function parseMakeDFile(dfile) {
   });
   pkgFilesMap[pkgName] = Array.from(filesList);
   return pkgFilesMap;
+}
+
+/**
+ * Function to validate an externalReference URL for conforming to the JSON schema or bomLink
+ * https://github.com/CycloneDX/cyclonedx-core-java/blob/75575318b268dda9e2a290761d7db11b4f414255/src/main/resources/bom-1.5.schema.json#L1140
+ * https://datatracker.ietf.org/doc/html/rfc3987#section-2.2
+ * https://cyclonedx.org/capabilities/bomlink/
+ *
+ * @param {String} iri IRI to validate
+ *
+ * @returns {Boolean} Flag indicating whether the supplied URL is valid or not
+ *
+ */
+export function isValidIriReference(iri) {
+  const result = validateIri(iri, IriValidationStrategy.Strict);
+
+  if (result instanceof Error) {
+    if (DEBUG_MODE) {
+      console.log(`IRI failed validation ${iri}`);
+    }
+    return false;
+  }
+
+  return true;
 }

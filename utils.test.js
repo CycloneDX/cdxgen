@@ -13,6 +13,7 @@ import {
   getNugetMetadata,
   getPyMetadata,
   guessPypiMatchingVersion,
+  isValidIriReference,
   parseBazelActionGraph,
   parseBazelBuild,
   parseBazelSkyframe,
@@ -2658,8 +2659,8 @@ test("parsePnpmLock", async () => {
     },
   });
   parsedList = await parsePnpmLock("./pnpm-lock.yaml");
-  expect(parsedList.pkgList.length).toEqual(643);
-  expect(parsedList.dependenciesList.length).toEqual(643);
+  expect(parsedList.pkgList.length).toEqual(644);
+  expect(parsedList.dependenciesList.length).toEqual(644);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@ampproject",
     name: "remapping",
@@ -4065,4 +4066,21 @@ test("parseMakeDFile tests", () => {
       ".cargo/registry/src/index.crates.io-hash/zstd-sys-2.0.10+zstd.1.5.6/src/bindings_zdict.rs",
     ],
   });
+});
+
+test.each([
+  ["", false],
+  ["git@gitlab.com:behat-chrome/chrome-mink-driver.git", false],
+  ["     git@gitlab.com:behat-chrome/chrome-mink-driver.git      ", false],
+  ["${repository.url}", false],
+  // bomLink - https://cyclonedx.org/capabilities/bomlink/]
+  ["urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1#componentA", true],
+  // http uri - https://www.ietf.org/rfc/rfc7230.txt]
+  ["https://gitlab.com/behat-chrome/chrome-mink-driver.git", true],
+  ["     https://gitlab.com/behat-chrome/chrome-mink-driver.git     ", false],
+  ["http://gitlab.com/behat-chrome/chrome-mink-driver.git", true],
+  ["git+https://github.com/Alex-D/check-disk-space.git", true],
+  ["UNKNOWN", false],
+])("isValidIriReference tests: %s", (url, isValid) => {
+  expect(isValidIriReference(url)).toBe(isValid);
 });

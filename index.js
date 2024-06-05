@@ -66,6 +66,7 @@ import {
   getSwiftPackageMetadata,
   getTimestamp,
   includeMavenTestScope,
+  isValidIriReference,
   parseBazelActionGraph,
   parseBazelSkyframe,
   parseBdistMetadata,
@@ -726,7 +727,9 @@ function addExternalReferences(opkg) {
       }
     }
   }
-  return externalReferences;
+  return externalReferences
+    .map((reference) => ({ ...reference, url: reference.url.trim() }))
+    .filter((reference) => isValidIriReference(reference.url));
 }
 
 /**
