@@ -1311,9 +1311,12 @@ export async function createJavaBom(path, options) {
       ) {
         const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
         const tempMvnTree = join(tempDir, "mvn-tree.txt");
+        // Since we have a loop running for each pom file, we need to invoke this command
+        // with non-recursive option (-N)
         let mvnTreeArgs = [
           "-fn",
           "dependency:tree",
+          "-N",
           `-DoutputFile=${tempMvnTree}`,
         ];
         if (process.env.MVN_ARGS) {
