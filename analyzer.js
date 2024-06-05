@@ -292,7 +292,7 @@ export const findJSImportsExports = async (src, deep) => {
   const errFiles = [];
   try {
     const promiseMap = await getAllSrcJSAndTSFiles(src, deep);
-    const srcFiles = promiseMap.flatMap((d) => d);
+    const srcFiles = promiseMap.flat();
     for (const file of srcFiles) {
       try {
         parseFileASTTree(src, file, allImports, allExports);

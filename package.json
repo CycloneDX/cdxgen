@@ -50,9 +50,9 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js postgen.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
-    "lint:check": "biome check *",
-    "lint": "biome check --apply *",
-    "lint:errors": "biome check * --diagnostic-level=error",
+    "lint:check": "biome check",
+    "lint": "biome check --fix",
+    "lint:errors": "biome check --diagnostic-level=error",
     "gen-types": "npx -p typescript tsc"
   },
   "engines": {
@@ -112,7 +112,7 @@
   },
   "files": ["*.js", "bin/", "data/", "types/"],
   "devDependencies": {
-    "@biomejs/biome": "1.7.3",
+    "@biomejs/biome": "1.8.0",
     "jest": "^29.7.0",
     "typescript": "^5.4.5"
   }
