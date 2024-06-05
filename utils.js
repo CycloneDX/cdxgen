@@ -10610,6 +10610,9 @@ export function isValidIriReference(iri) {
   const result = validateIri(iri, IriValidationStrategy.Strict);
 
   if (result instanceof Error) {
+    if (DEBUG_MODE) {
+      console.log(`IRI failed validation ${iri}`);
+    }
     return false;
   }
 
