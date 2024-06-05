@@ -10278,9 +10278,7 @@ async function queryNuget(p, NUGET_URL) {
     let version = `${tmpVersion.major}.${tmpVersion.minor}.${tmpVersion.patch}`;
     if (compare(version, upper) === 1) {
       if (tmpVersion.patch > 0) {
-        version = `${tmpVersion.major}.${tmpVersion.minor}.${(
-          tmpVersion.patch - 1
-        ).toString()}`;
+        version = `${tmpVersion.major}.${tmpVersion.minor}.${(tmpVersion.patch - 1).toString()}`;
       }
     }
     return version;
