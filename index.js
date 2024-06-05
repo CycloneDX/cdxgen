@@ -1257,6 +1257,7 @@ export async function createJavaBom(path, options) {
     if (options.specVersion === 1.4) {
       mvnArgs = mvnArgs.concat("-DschemaVersion=1.4");
     }
+    const firstPom = pomFiles.length ? pomFiles[0] : undefined;
     for (const f of pomFiles) {
       const basePath = dirname(f);
       const settingsXml = join(basePath, "settings.xml");
@@ -1312,13 +1313,8 @@ export async function createJavaBom(path, options) {
       ) {
         const tempDir = mkdtempSync(join(tmpdir(), "cdxmvn-"));
         const tempMvnTree = join(tempDir, "mvn-tree.txt");
-        // Since we have a loop running for each pom file, we need to invoke this command
-        // with non-recursive option (-N)
-        let mvnTreeArgs = [
-          "dependency:tree",
-          "-N",
-          `-DoutputFile=${tempMvnTree}`,
-        ];
+        const tempMvnParentTree = join(tempDir, "mvn-parent-tree.txt");
+        let mvnTreeArgs = ["dependency:tree", `-DoutputFile=${tempMvnTree}`];
         if (process.env.MVN_ARGS) {
           const addArgs = process.env.MVN_ARGS.split(" ");
           mvnTreeArgs = mvnTreeArgs.concat(addArgs);
@@ -1327,6 +1323,34 @@ export async function createJavaBom(path, options) {
         if (existsSync(settingsXml)) {
           mvnTreeArgs.push("-s");
           mvnTreeArgs.push(settingsXml);
+        }
+        // For the first pom alone, we need to execute first in non-recursive mode to capture
+        // the parent component. Then, we execute all of them in recursive mode
+        if (f === firstPom) {
+          result = spawnSync(
+            "mvn",
+            ["dependency:tree", "-N", `-DoutputFile=${tempMvnParentTree}`],
+            {
+              cwd: basePath,
+              shell: true,
+              encoding: "utf-8",
+              timeout: TIMEOUT_MS,
+              maxBuffer: MAX_BUFFER,
+            },
+          );
+          if (result.status === 0) {
+            if (existsSync(tempMvnParentTree)) {
+              const mvnTreeString = readFileSync(tempMvnParentTree, {
+                encoding: "utf-8",
+              });
+              const parsedList = parseMavenTree(mvnTreeString, f);
+              const dlist = parsedList.pkgList;
+              const tmpParentComponent = dlist.splice(0, 1)[0];
+              tmpParentComponent.type = "application";
+              parentComponent = tmpParentComponent;
+              parentComponent.components = [];
+            }
+          }
         }
         console.log(`Executing mvn ${mvnTreeArgs.join(" ")} in ${basePath}`);
         // Prefer the built-in maven
