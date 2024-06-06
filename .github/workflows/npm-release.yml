@@ -35,10 +35,7 @@ jobs:
       run: |
         corepack enable
         corepack pnpm install
-        npm config set //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
         npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-        echo "cyclonedx:registry=https://npm.pkg.github.com" > ~/.npmrc
-        corepack pnpm publish --access=public --no-git-checks
         echo "cyclonedx:registry=https://registry.npmjs.org" > ~/.npmrc
         NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --no-git-checks
       env:
