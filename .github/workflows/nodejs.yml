@@ -35,6 +35,7 @@ jobs:
           corepack enable
           corepack pnpm install
           corepack pnpm test
+          NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public --dry-run
         env:
           CI: true
       - name: check sbom for vulns

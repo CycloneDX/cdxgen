@@ -38,9 +38,9 @@ jobs:
         npm config set //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
         npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
         echo "cyclonedx:registry=https://npm.pkg.github.com" > ~/.npmrc
-        corepack pnpm publish --access=public --@cyclonedx:registry='https://npm.pkg.github.com'
+        corepack pnpm publish --access=public
         echo "cyclonedx:registry=https://registry.npmjs.org" > ~/.npmrc
-        corepack pnpm publish --provenance --access=public --@cyclonedx:registry='https://registry.npmjs.org'
+        NPM_CONFIG_PROVENANCE=true corepack pnpm publish --access=public
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
