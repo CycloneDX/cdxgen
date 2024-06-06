@@ -5235,6 +5235,14 @@ export function trimComponents(components) {
           }
         }
       }
+      // If the component is required in any of the child projects, then make it required
+      if (
+        existingComponent?.scope !== "required" &&
+        comp?.scope === "required"
+      ) {
+        existingComponent.scope = "required";
+        keyCache[key] = existingComponent;
+      }
       if (compProps.length) {
         existingComponent.properties = compProps;
         keyCache[key] = existingComponent;
