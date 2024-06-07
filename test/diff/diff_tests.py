@@ -17,7 +17,7 @@ for i in repo_data:
     bom_1 = f"/home/runner/work/samples/{bom_file}"
     bom_2 = f"/home/runner/work/cdxgen-samples/{bom_file}"
     exclude = []
-    include = []
+    include = ["properties", "evidence", "licenses"]
     options = Options(
         allow_new_versions=True,
         allow_new_data=True,

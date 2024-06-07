@@ -30,11 +30,17 @@ jobs:
         with:
           python-version: 3.12
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.2.0
+
       -  name: Atom, cdxgen, sdkman, custom-json-diff installs
+         shell: bash
+         env:
+           SHELL: bash
          run: |
-           corepack enable
-           cdxgen_version=$(corepack pnpm pack | tail -1)
-           corepack pnpm install -g "$cdxgen_version"
+           cdxgen_version=$(pnpm pack | tail -1)
+           npm install -g "$cdxgen_version"
            python -m pip install --upgrade pip
            python -m pip install pytest
            git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/samples
