@@ -9,3 +9,6 @@ contact_links:
   - name: Community slack support
     url: https://cyclonedx.slack.com/archives/C04NFFE1962
     about: Community slack channel.
+  - name: Community slack invite
+    url: https://cyclonedx.org/slack/invite
+    about: Community slack invite.
