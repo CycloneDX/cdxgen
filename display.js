@@ -371,7 +371,7 @@ export function printVulnerabilities(vulnerabilities) {
 
 export function printSponsorBanner(options) {
   if (
-    process.env.CI &&
+    process.env?.CI &&
     !options.noBanner &&
     !process.env?.GITHUB_REPOSITORY?.toLowerCase().startsWith("cyclonedx")
   ) {
