@@ -16,6 +16,7 @@ import {
   printOccurrences,
   printReachables,
   printServices,
+  printSponsorBanner,
   printTable,
 } from "../display.js";
 import { createBom, submitBom } from "../index.js";
@@ -258,6 +259,12 @@ const args = yargs(hideBin(process.argv))
       "ssaf-DRAFT-2023-11",
     ],
   })
+  .option("no-banner", {
+    type: "boolean",
+    default: false,
+    description:
+      "Do not show the donation banner. Set this attribute if you are an active sponsor for OWASP CycloneDX.",
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("filter")
   .array("only")
@@ -446,6 +453,8 @@ const checkPermissions = (filePath) => {
  * Method to start the bom creation process
  */
 (async () => {
+  // Display the sponsor banner
+  printSponsorBanner(options);
   // Start SBOM server
   if (options.server) {
     const serverModule = await import("../server.js");

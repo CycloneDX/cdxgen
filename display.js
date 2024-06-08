@@ -368,3 +368,25 @@ export function printVulnerabilities(vulnerabilities) {
   }
   console.log(`${vulnerabilities.length} vulnerabilities found.`);
 }
+
+export function printSponsorBanner(options) {
+  if (
+    process?.env?.CI &&
+    !options.noBanner &&
+    !process.env?.GITHUB_REPOSITORY?.toLowerCase().startsWith("cyclonedx")
+  ) {
+    const config = {
+      header: {
+        alignment: "center",
+        content: "\u00A4 Donate to the OWASP Foundation",
+      },
+    };
+    let message =
+      "OWASP foundation relies on donations to fund our projects.\nDonation link: https://owasp.org/donate/?reponame=www-project-cyclonedx&title=OWASP+CycloneDX";
+    if (options.serverUrl && options.apiKey) {
+      message = `${message}\nDependency Track: https://owasp.org/donate/?reponame=www-project-dependency-track&title=OWASP+Dependency-Track`;
+    }
+    const data = [[message]];
+    console.log(table(data, config));
+  }
+}
