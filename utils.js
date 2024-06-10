@@ -10674,14 +10674,26 @@ export function parseMakeDFile(dfile) {
  *
  */
 export function isValidIriReference(iri) {
-  const result = validateIri(iri, IriValidationStrategy.Strict);
-
-  if (result instanceof Error) {
-    if (DEBUG_MODE) {
-      console.log(`IRI failed validation ${iri}`);
+  let iriIsValid = true;
+  const validateIriResult = validateIri(iri, IriValidationStrategy.Strict);
+  
+  if (validateIriResult instanceof Error) {
+    iriIsValid = false;
+  } else if (iri.toLocaleLowerCase().startsWith("http")) {
+    try {
+      new URL(iri);
+    } catch (error) {
+      iriIsValid = false;
     }
-    return false;
   }
 
-  return true;
+  if (iriIsValid) {
+    return true;
+  }
+
+  if (DEBUG_MODE) {
+    console.log(`IRI failed validation ${iri}`);
+  }
+
+  return false;
 }

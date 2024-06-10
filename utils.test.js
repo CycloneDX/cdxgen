@@ -4102,6 +4102,7 @@ test.each([
   ["http://gitlab.com/behat-chrome/chrome-mink-driver.git", true],
   ["git+https://github.com/Alex-D/check-disk-space.git", true],
   ["UNKNOWN", false],
+  ["http://", false],
 ])("isValidIriReference tests: %s", (url, isValid) => {
   expect(isValidIriReference(url)).toBe(isValid);
 });
