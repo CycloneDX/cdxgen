@@ -5,6 +5,8 @@
 [![GitHub License][badge-github-license]][github-license]
 [![GitHub Contributors][badge-github-contributors]][github-contributors]
 [![SWH][badge-swh]][swh-cdxgen]
+[![Libraries.io dependency status][badge-libraries]][librariesio]
+
 
 # CycloneDX Generator (cdxgen)
 
@@ -527,6 +529,7 @@ corepack pnpm test
 [badge-github-license]: https://img.shields.io/github/license/cyclonedx/cdxgen
 [badge-github-releases]: https://img.shields.io/github/v/release/cyclonedx/cdxgen
 [badge-jsr]: https://img.shields.io/jsr/v/%40cyclonedx/cdxgen
+[badge-libraries]: (https://img.shields.io/librariesio/github/cyclonedx/cdxgen
 [badge-npm]: https://img.shields.io/npm/v/%40cyclonedx%2Fcdxgen
 [badge-npm-downloads]: https://img.shields.io/npm/dy/%40cyclonedx%2Fcdxgen
 [badge-swh]: https://archive.softwareheritage.org/badge/origin/https://github.com/CycloneDX/cdxgen/
@@ -562,6 +565,7 @@ corepack pnpm test
 [jsr-cdxgen]: https://jsr.io/@cyclonedx/cdxgen
 [jwt-homepage]: https://jwt.io
 [jwt-libraries]: https://jwt.io/libraries
+[librariesio]: https://libraries.io/npm/@cyclonedx%2Fcdxgen
 [npmjs-cdxgen]: https://www.npmjs.com/package/@cyclonedx/cdxgen
 [podman-github-rootless]: https://github.com/containers/podman/blob/master/docs/tutorials/rootless_tutorial.md
 [podman-github-remote]: https://github.com/containers/podman/blob/master/docs/tutorials/mac_win_client.md
