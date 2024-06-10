@@ -4103,6 +4103,11 @@ test.each([
   ["git+https://github.com/Alex-D/check-disk-space.git", true],
   ["UNKNOWN", false],
   ["http://", false],
+  ["http", false],
+  ["https", false],
+  ["https://", false],
+  ["http://www", true],
+  ["http://www.", true],
 ])("isValidIriReference tests: %s", (url, isValid) => {
   expect(isValidIriReference(url)).toBe(isValid);
 });
