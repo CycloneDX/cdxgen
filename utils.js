@@ -10676,7 +10676,7 @@ export function parseMakeDFile(dfile) {
 export function isValidIriReference(iri) {
   let iriIsValid = true;
   const validateIriResult = validateIri(iri, IriValidationStrategy.Strict);
-  
+
   if (validateIriResult instanceof Error) {
     iriIsValid = false;
   } else if (iri.toLocaleLowerCase().startsWith("http")) {
