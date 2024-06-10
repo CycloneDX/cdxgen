@@ -5,7 +5,7 @@
 [![GitHub License][badge-github-license]][github-license]
 [![GitHub Contributors][badge-github-contributors]][github-contributors]
 [![SWH][badge-swh]][swh-cdxgen]
-[![Libraries.io dependency status for GitHub repo][badge-libraries]][librariesio]
+[![Libraries.io dependency status][badge-libraries]][librariesio]
 
 
 # CycloneDX Generator (cdxgen)
