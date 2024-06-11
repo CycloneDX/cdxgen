@@ -684,8 +684,7 @@ const checkPermissions = (filePath) => {
   // biome-ignore lint/suspicious/noDoubleEquals: yargs passes true for empty values
   if (options.serverUrl && options.serverUrl != true && options.apiKey) {
     try {
-      const dbody = await submitBom(options, bomNSData.bomJson);
-      console.log("Response from server", dbody);
+      await submitBom(options, bomNSData.bomJson);
     } catch (err) {
       console.log(err);
     }
