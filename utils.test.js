@@ -3024,6 +3024,11 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]._integrity).toEqual(
     "sha512-U8KyMaYaRnkrOaDUO8T093a7RUKqV+4EkwZ2gC5VASgsL8iqwU5M0fESD/i1Jha2/1q1Oa0wqiJ31yZES3Fhnw==",
   );
+
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv1-fs.lock");
+  expect(parsedList.pkgList.length).toEqual(882);
+  expect(parsedList.dependenciesList.length).toEqual(882);
+  expect(parsedList.pkgList[0].purl).toEqual("pkg:npm/abbrev@1.0.9");
 });
 
 test("parseComposerLock", () => {
