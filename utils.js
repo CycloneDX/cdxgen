@@ -1154,6 +1154,7 @@ export async function parseYarnLock(yarnLockFile) {
     let version = "";
     let integrity = "";
     let depsMode = false;
+    let optionalDepsMode = false;
     let purlString = "";
     let deplist = [];
     const pkgAddedMap = {};
@@ -1236,6 +1237,7 @@ export async function parseYarnLock(yarnLockFile) {
           deplist = [];
           purlString = "";
           depsMode = false;
+          optionalDepsMode = false;
         }
         // Collect the group and the name
         l = l.replace(/["']/g, "");
@@ -1264,18 +1266,30 @@ export async function parseYarnLock(yarnLockFile) {
             }
           }
         }
-      } else if (name !== "" && l.startsWith("  dependencies:")) {
-        depsMode = true;
-      } else if (depsMode && l.startsWith("    ")) {
+      } else if (
+        name !== "" &&
+        (l.startsWith("  dependencies:") ||
+          l.startsWith("  optionalDependencies:"))
+      ) {
+        if (l.startsWith("  dependencies:")) {
+          depsMode = true;
+          optionalDepsMode = false;
+        } else {
+          depsMode = false;
+          optionalDepsMode = true;
+        }
+      } else if ((depsMode || optionalDepsMode) && l.startsWith("    ")) {
         // Given "@actions/http-client" "^1.0.11"
         // We need the resolved version from identMap
-        const tmpA = l.trim().replace(/["']/g, "").split(" ");
+        // Deal with values with space within the quotes. Eg: minimatch "2 || 3"
+        // vinyl-sourcemaps-apply ">=0.1.1 <0.2.0-0"
+        const tmpA = l.trim().split(' "');
         if (tmpA && tmpA.length === 2) {
           let dgroupname = tmpA[0];
           if (dgroupname.endsWith(":")) {
             dgroupname = dgroupname.substring(0, dgroupname.length - 1);
           }
-          let range = tmpA[1];
+          let range = tmpA[1].replace(/["']/g, "");
           // Deal with range with npm: prefix such as npm:string-width@^4.2.0, npm:@types/ioredis@^4.28.10
           if (range.startsWith("npm:")) {
             range = range.split("@").splice(-1)[0];
@@ -1294,6 +1308,7 @@ export async function parseYarnLock(yarnLockFile) {
       } else if (name !== "") {
         if (!l.startsWith("    ")) {
           depsMode = false;
+          optionalDepsMode = false;
         }
         l = l.trim();
         const parts = l.split(" ");
