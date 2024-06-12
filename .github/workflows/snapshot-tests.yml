@@ -31,21 +31,18 @@ jobs:
           python-version: 3.12
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9.2.0
 
-      -  name: Atom, cdxgen, sdkman, custom-json-diff installs
+      -  name: cdxgen, sdkman, custom-json-diff installs
          shell: bash
          env:
            SHELL: bash
          run: |
-           cdxgen_version=$(pnpm pack | tail -1)
-           npm install -g "$cdxgen_version"
+           cdxgen_tarball=$(pnpm pack | tail -1)
+           npm install -g "$cdxgen_tarball"
            python -m pip install --upgrade pip
            python -m pip install pytest
            git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/samples
            python -m pip install custom-json-diff
-           npm install -g @appthreat/atom
            curl -s "https://get.sdkman.io" | bash
            source "/home/runner/.sdkman/bin/sdkman-init.sh"
 
@@ -91,9 +88,10 @@ jobs:
         if: ${{ env.status == 'FAILED' }}
         uses: actions/upload-artifact@v4
         with:
-            path: | 
-              /home/runner/work/cdxgen-samples/diffs.json
-              /home/runner/work/cdxgen-samples/*.html
+          name: diffs
+          path: | 
+            /home/runner/work/cdxgen-samples/diffs.json
+            /home/runner/work/cdxgen-samples/*.html
 
       - name: Exit with error
         if: ${{ env.status == 'FAILED' }}
