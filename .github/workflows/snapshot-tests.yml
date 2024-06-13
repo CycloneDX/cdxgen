@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     branches:
-      - main
+      - master
 
 
 concurrency:
@@ -30,18 +30,19 @@ jobs:
         with:
           python-version: 3.12
 
-      -  name: Atom, cdxgen, sdkman, custom-json-diff installs
+      - uses: pnpm/action-setup@v4
+
+      -  name: cdxgen, sdkman, custom-json-diff installs
+         shell: bash
+         env:
+           SHELL: bash
          run: |
-           corepack enable
-           cdxgen_version=$(corepack pnpm pack | tail -1)
-           corepack pnpm install -g "$cdxgen_version"
+           cdxgen_tarball=$(pnpm pack | tail -1)
+           npm install -g "$cdxgen_tarball"
            python -m pip install --upgrade pip
            python -m pip install pytest
            git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/samples
-           git clone https://github.com/appthreat/custom-json-diff.git /home/runner/work/custom-json-diff
-           cd /home/runner/work/custom-json-diff
-           python -m pip install .
-           corepack pnpm install -g @appthreat/atom
+           python -m pip install custom-json-diff
            curl -s "https://get.sdkman.io" | bash
            source "/home/runner/.sdkman/bin/sdkman-init.sh"
 
@@ -87,8 +88,10 @@ jobs:
         if: ${{ env.status == 'FAILED' }}
         uses: actions/upload-artifact@v4
         with:
-            name: diff
-            path: /home/runner/work/cdxgen-samples/diffs.json
+          name: diffs
+          path: | 
+            /home/runner/work/cdxgen-samples/diffs.json
+            /home/runner/work/cdxgen-samples/*.html
 
       - name: Exit with error
         if: ${{ env.status == 'FAILED' }}

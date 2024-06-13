@@ -1,5 +1,5 @@
 project,link,language,pre_build_cmd,build_cmd,commit
-"netty","https://github.com/netty/netty.git","java","sdk use java 8.0.392-zulu","","7ad2b91515b3affaeadb4b2975cd6d2a8342c403"
+"netty","https://github.com/netty/netty.git","java","sdk use java 8.0.392-zulu","","ffee1746f85cb3e0d74801abe77ab30f49221185"
 "django-goat","https://github.com/red-and-black/DjangoGoat.git","python","","python -m venv venv; source venv/bin/activate && pip install -r requirements_app.txt","5e6aaa6d0497bf24abd179304e6ca51295a8091d"
 "java-sec-code","https://github.com/JoyChou93/java-sec-code.git","java","sdk use java 8.0.392-zulu","mvn -B clean compile -DskipTests=true","457d703e8f89bff657c6c51151ada71ebd09a1c6"
 "rasa","https://github.com/RasaHQ/rasa.git","python","pipx install poetry","","7807b19ad5fffab73ca1a04dc710f812115a9288"
