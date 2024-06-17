@@ -1020,6 +1020,7 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
         version: any;
         purl: string;
         "bom-ref": string;
+        scope: string;
         evidence: {
             identity: {
                 field: string;

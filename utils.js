@@ -212,6 +212,20 @@ if (process.env.SWIFT_CMD) {
   SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
+// Python components that can be excluded
+const PYTHON_EXCLUDED_COMPONENTS = [
+  "pip",
+  "setuptools",
+  "wheel",
+  "conda",
+  "conda-build",
+  "conda-index",
+  "conda-libmamba-solver",
+  "conda-package-handling",
+  "conda-package-streaming",
+  "conda-content-trust",
+];
+
 // HTTP cache
 const gotHttpCache = new Map();
 
@@ -9394,47 +9408,47 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
       }
       const name = t.name.replace(/_/g, "-").toLowerCase();
       const version = t.version;
-      const exclude = ["pip", "setuptools", "wheel"];
-      if (!exclude.includes(name)) {
-        const purlString = new PackageURL(
-          "pypi",
-          "",
-          name,
-          version,
-          null,
-          null,
-        ).toString();
-        pkgList.push({
-          name,
-          version,
-          purl: purlString,
-          "bom-ref": decodeURIComponent(purlString),
-          evidence: {
-            identity: {
-              field: "purl",
-              confidence: 1,
-              methods: [
-                {
-                  technique: "instrumentation",
-                  confidence: 1,
-                  value: env.VIRTUAL_ENV || env.CONDA_PREFIX,
-                },
-              ],
-            },
+      const purlString = new PackageURL(
+        "pypi",
+        "",
+        name,
+        version,
+        null,
+        null,
+      ).toString();
+      pkgList.push({
+        name,
+        version,
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString),
+        scope: PYTHON_EXCLUDED_COMPONENTS.includes(name)
+          ? "excluded"
+          : undefined,
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "instrumentation",
+                confidence: 1,
+                value: env.VIRTUAL_ENV || env.CONDA_PREFIX,
+              },
+            ],
           },
-          properties: [
-            {
-              name: "SrcFile",
-              value: reqOrSetupFile,
-            },
-          ],
-        });
-        rootList.push({
-          name,
-          version,
-        });
-        flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
-      }
+        },
+        properties: [
+          {
+            name: "SrcFile",
+            value: reqOrSetupFile,
+          },
+        ],
+      });
+      rootList.push({
+        name,
+        version,
+      });
+      flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
     } // end for
     for (const k of Object.keys(dependenciesMap)) {
       dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
