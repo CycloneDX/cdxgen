@@ -814,7 +814,7 @@ function addComponent(
         impPkgs.includes(`@${group}`)
       ) {
         compScope = "required";
-      } else if (impPkgs.length) {
+      } else if (impPkgs.length && compScope !== "excluded") {
         compScope = "optional";
       }
     }
