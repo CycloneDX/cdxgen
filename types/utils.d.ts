@@ -1031,6 +1031,10 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
                 }[];
             };
         };
+        properties: {
+            name: string;
+            value: string;
+        }[];
     }[];
     rootList: {
         name: any;

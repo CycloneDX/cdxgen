@@ -3326,7 +3326,17 @@ export function parsePyProjectToml(tomlFile) {
           try {
             pkg.author = JSON.parse(value)[0];
           } catch (e) {
-            pkg.author = value.replace("[", "").replace("]", "");
+            if (l.includes("authors")) {
+              const quotedAuthors = l.match(/"(.*?)"/g);
+              if (quotedAuthors) {
+                pkg.author = quotedAuthors
+                  .join(", ")
+                  .trim()
+                  .replace(/["']/g, "");
+              }
+            } else {
+              pkg.author = value.replace("[", "").replace("]", "");
+            }
           }
           break;
         case "homepage":
@@ -9363,7 +9373,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
      */
     if (DEBUG_MODE) {
       console.log(
-        "About to construct the pip dependency tree. Please wait ...",
+        `About to construct the pip dependency tree based on ${reqOrSetupFile}. Please wait ...`,
       );
     }
     // This is a slow step that ideally needs to be invoked only once per venv
@@ -9412,6 +9422,12 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
               ],
             },
           },
+          properties: [
+            {
+              name: "SrcFile",
+              value: reqOrSetupFile,
+            },
+          ],
         });
         rootList.push({
           name,
