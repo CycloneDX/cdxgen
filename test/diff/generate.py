@@ -30,7 +30,7 @@ def build_args():
         '-o',
         '--output-dir',
         type=Path,
-        default='/home/runner/work/cdxgen-samples',
+        default='/home/runner/work/new_snapshots',
         help='Path to output',
         dest='output_dir',
     )

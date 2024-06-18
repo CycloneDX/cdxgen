@@ -14,8 +14,8 @@ failed_diffs = {}
 
 for i in repo_data:
     bom_file = f'{i["project"]}-bom.json'
-    bom_1 = f"/home/runner/work/samples/{bom_file}"
-    bom_2 = f"/home/runner/work/cdxgen-samples/{bom_file}"
+    bom_1 = f"/home/runner/work/original_snapshots/{bom_file}"
+    bom_2 = f"/home/runner/work/new_snapshots/{bom_file}"
     exclude = []
     include = ["properties", "evidence", "licenses"]
     options = Options(
@@ -26,7 +26,7 @@ for i in repo_data:
         exclude=exclude,
         file_1=bom_1,
         file_2=bom_2,
-        output=f'/home/runner/work/cdxgen-samples/{i["project"]}-diff.json'
+        output=f'/home/runner/work/new_snapshots/{i["project"]}-diff.json'
     )
     if not os.path.exists(bom_1):
         print(f'{bom_file} does not exist in cdxgen-samples repository.')
@@ -41,5 +41,5 @@ for i in repo_data:
         report_results(result, result_summary, options, j1, j2)
 
 if failed_diffs:
-    with open('/home/runner/work/cdxgen-samples/diffs.json', 'w') as f:
+    with open('/home/runner/work/new_snapshots/diffs.json', 'w') as f:
         json.dump(failed_diffs, f)

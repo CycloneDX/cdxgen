@@ -41,7 +41,7 @@ jobs:
            npm install -g "$cdxgen_tarball"
            python -m pip install --upgrade pip
            python -m pip install pytest
-           git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/samples
+           git clone https://github.com/appthreat/cdxgen-samples.git /home/runner/work/original_snapshots
            python -m pip install custom-json-diff
            curl -s "https://get.sdkman.io" | bash
            source "/home/runner/.sdkman/bin/sdkman-init.sh"
@@ -57,30 +57,30 @@ jobs:
         env:
           SDKMAN_DIR: /home/runner/.sdkman
           CDXGEN_DEBUG_MODE: debug
-          CDXGEN_LOG: /home/runner/work/cdxgen-samples/generate.log
+          CDXGEN_LOG: /home/runner/work/new_snapshots/generate.log
         run: |
-          mkdir /home/runner/work/cdxgen-samples
+          mkdir /home/runner/work/new_snapshots
           python test/diff/generate.py
-          bash /home/runner/work/cdxgen-samples/sdkman_installs.sh
-          bash /home/runner/work/cdxgen-samples/cdxgen_commands.sh
+          bash /home/runner/work/new_snapshots/sdkman_installs.sh
+          bash /home/runner/work/new_snapshots/cdxgen_commands.sh
 
       - name: Upload shell scripts generated as artifact
         uses: actions/upload-artifact@v4
         with:
           name: scripts
-          path: /home/runner/work/cdxgen-samples/*.sh
+          path: /home/runner/work/new_snapshots/*.sh
 
       - name: Upload cdxgen boms
         uses: actions/upload-artifact@v4
         with:
           name: cdxgen_boms
           path: |
-            /home/runner/work/cdxgen-samples
+            /home/runner/work/new_snapshots
 
       - name: Test BOMs
         run: |
           python test/diff/diff_tests.py
-          if test -f /home/runner/work/cdxgen-samples/diffs.json; then
+          if test -f /home/runner/work/new_snapshots/diffs.json; then
             echo "status=FAILED" >> "$GITHUB_ENV"
           fi
 
@@ -90,8 +90,8 @@ jobs:
         with:
           name: diffs
           path: | 
-            /home/runner/work/cdxgen-samples/diffs.json
-            /home/runner/work/cdxgen-samples/*.html
+            /home/runner/work/new_snapshots/diffs.json
+            /home/runner/work/new_snapshots/*.html
 
       - name: Exit with error
         if: ${{ env.status == 'FAILED' }}
