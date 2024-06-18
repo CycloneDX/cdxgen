@@ -343,6 +343,10 @@ if (process.argv[1].includes("cbom")) {
 }
 if (options.standard) {
   options.specVersion = 1.6;
+  options.includeFormulation = true;
+}
+if (options.deep && options.specVersion >= 1.5) {
+  options.includeFormulation = true;
 }
 /**
  * Method to apply advanced options such as profile and lifecycles

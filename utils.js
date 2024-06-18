@@ -213,7 +213,7 @@ if (process.env.SWIFT_CMD) {
 }
 
 // Python components that can be excluded
-const PYTHON_EXCLUDED_COMPONENTS = [
+export const PYTHON_EXCLUDED_COMPONENTS = [
   "pip",
   "setuptools",
   "wheel",
@@ -9162,6 +9162,7 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
  */
 export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
   const pkgList = [];
+  const formulationList = [];
   const rootList = [];
   const dependenciesList = [];
   let result = undefined;
@@ -9201,7 +9202,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
       }
     } else {
       if (DEBUG_MODE) {
-        console.log(join("Using virtual environment in ", tempVenvDir));
+        console.log("Using the virtual environment", tempVenvDir);
       }
       env.VIRTUAL_ENV = tempVenvDir;
       env.PATH = `${join(
@@ -9399,15 +9400,18 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
     }
     const dependenciesMap = {};
     for (const t of tree) {
-      if (!t.version.length) {
+      const name = t.name.replace(/_/g, "-").toLowerCase();
+      const version = t.version;
+      const scope = PYTHON_EXCLUDED_COMPONENTS.includes(name)
+        ? "excluded"
+        : undefined;
+      if (!scope && !t.version.length) {
         // Don't leave out any local dependencies
         if (t.dependencies.length) {
           flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
         }
         continue;
       }
-      const name = t.name.replace(/_/g, "-").toLowerCase();
-      const version = t.version;
       const purlString = new PackageURL(
         "pypi",
         "",
@@ -9416,14 +9420,12 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         null,
         null,
       ).toString();
-      pkgList.push({
+      const apkg = {
         name,
         version,
         purl: purlString,
         "bom-ref": decodeURIComponent(purlString),
-        scope: PYTHON_EXCLUDED_COMPONENTS.includes(name)
-          ? "excluded"
-          : undefined,
+        scope,
         evidence: {
           identity: {
             field: "purl",
@@ -9443,12 +9445,17 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
             value: reqOrSetupFile,
           },
         ],
-      });
-      rootList.push({
-        name,
-        version,
-      });
-      flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
+      };
+      if (scope !== "excluded") {
+        pkgList.push(apkg);
+        rootList.push({
+          name,
+          version,
+        });
+        flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
+      } else {
+        formulationList.push(apkg);
+      }
     } // end for
     for (const k of Object.keys(dependenciesMap)) {
       dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
@@ -9456,6 +9463,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
   }
   return {
     pkgList,
+    formulationList,
     rootList,
     dependenciesList,
     frozen,

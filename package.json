@@ -65,7 +65,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@9.3.0",
   "dependencies": {
     "@babel/parser": "^7.24.7",
     "@babel/traverse": "^7.24.7",

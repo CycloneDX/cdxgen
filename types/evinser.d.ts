@@ -104,8 +104,8 @@ export function prepareDB(options: any): Promise<{
             count: number;
         }>;
         findAndCountAll<M_17 extends import("sequelize").Model<any, any>>(this: import("sequelize").ModelStatic<M_17>, options: {
-            type?: string;
             attributes?: import("sequelize").FindAttributeOptions;
+            type?: string;
             plain?: boolean;
             logging?: boolean | ((sql: string, timing?: number) => void);
             where?: import("sequelize").WhereOptions<import("sequelize").Attributes<M_17>>;
@@ -333,8 +333,8 @@ export function prepareDB(options: any): Promise<{
             count: number;
         }>;
         findAndCountAll<M_17 extends import("sequelize").Model<any, any>>(this: import("sequelize").ModelStatic<M_17>, options: {
-            type?: string;
             attributes?: import("sequelize").FindAttributeOptions;
+            type?: string;
             plain?: boolean;
             logging?: boolean | ((sql: string, timing?: number) => void);
             where?: import("sequelize").WhereOptions<import("sequelize").Attributes<M_17>>;
@@ -562,8 +562,8 @@ export function prepareDB(options: any): Promise<{
             count: number;
         }>;
         findAndCountAll<M_17 extends import("sequelize").Model<any, any>>(this: import("sequelize").ModelStatic<M_17>, options: {
-            type?: string;
             attributes?: import("sequelize").FindAttributeOptions;
+            type?: string;
             plain?: boolean;
             logging?: boolean | ((sql: string, timing?: number) => void);
             where?: import("sequelize").WhereOptions<import("sequelize").Attributes<M_17>>;
