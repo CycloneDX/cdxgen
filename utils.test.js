@@ -2680,8 +2680,8 @@ test("parsePnpmLock", async () => {
     },
   });
   parsedList = await parsePnpmLock("./pnpm-lock.yaml");
-  expect(parsedList.pkgList.length).toEqual(644);
-  expect(parsedList.dependenciesList.length).toEqual(644);
+  expect(parsedList.pkgList.length).toEqual(654);
+  expect(parsedList.dependenciesList.length).toEqual(654);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@ampproject",
     name: "remapping",
