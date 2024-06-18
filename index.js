@@ -797,7 +797,11 @@ function addComponent(
     if (!name) {
       return;
     }
-    if (!ptype && pkg.qualifiers && pkg.qualifiers.type === "jar") {
+    // Do we need this still?
+    if (
+      !ptype &&
+      ["jar", "war", "ear", "pom"].includes(pkg?.qualifiers?.type)
+    ) {
       ptype = "maven";
     }
     const version = pkg.version || "";
