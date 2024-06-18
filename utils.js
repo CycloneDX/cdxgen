@@ -3309,6 +3309,8 @@ export async function parsePiplockData(lockData) {
  * @param {string} tomlFile Toml file
  */
 export function parsePyProjectToml(tomlFile) {
+  let poetryMode = false;
+  let skipAll = false;
   // Do we need a toml npm package at some point?
   const tomlData = readFileSync(tomlFile, { encoding: "utf-8" });
   const pkg = {};
@@ -3317,10 +3319,16 @@ export function parsePyProjectToml(tomlFile) {
   }
   tomlData.split("\n").forEach((l) => {
     l = l.replace("\r", "");
-    if (l.indexOf("=") > -1) {
+    if (l === "[tool.poetry]") {
+      poetryMode = true;
+    }
+    if (poetryMode && l.startsWith("[") && l !== "[tool.poetry]") {
+      skipAll = true;
+    }
+    if (!skipAll && l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       const key = tmpA[0].trim();
-      let value = tmpA[1].trim().replace(/["']/g, "");
+      let value = tmpA[1].trim().replace(/["']/g, "").replace(/,]$/, "]");
       switch (key) {
         case "description":
           pkg.description = value;
@@ -3334,7 +3342,9 @@ export function parsePyProjectToml(tomlFile) {
           if (value.includes("{")) {
             value = "latest";
           }
-          pkg.version = value;
+          if (!pkg.version) {
+            pkg.version = value;
+          }
           break;
         case "authors":
           try {
