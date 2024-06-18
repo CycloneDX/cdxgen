@@ -36,6 +36,7 @@ import {
   LEIN_CMD,
   MAX_BUFFER,
   PREFER_MAVEN_DEPS_TREE,
+  PYTHON_EXCLUDED_COMPONENTS,
   SWIFT_CMD,
   TIMEOUT_MS,
   addEvidenceForDotnet,
@@ -393,6 +394,12 @@ const addFormulationSection = (options) => {
   let parentOmniborId;
   let treeOmniborId;
   let components = [];
+  const aformulation = {};
+  // Reuse any existing formulation components
+  // See: PR #1172
+  if (options?.formulationList?.length) {
+    components = components.concat(trimComponents(options.formulationList));
+  }
   if (options.specVersion >= 1.6 && Object.keys(treeHashes).length === 2) {
     parentOmniborId = `gitoid:blob:sha1:${treeHashes.parent}`;
     treeOmniborId = `gitoid:blob:sha1:${treeHashes.tree}`;
@@ -417,8 +424,8 @@ const addFormulationSection = (options) => {
       provides: [treeOmniborId],
     });
   }
+  // Collect git related components
   if (gitBranch && originUrl && gitFiles) {
-    const aformulation = {};
     const gitFileComponents = gitFiles.map((f) =>
       options.specVersion >= 1.6
         ? {
@@ -442,57 +449,65 @@ const addFormulationSection = (options) => {
         provides: gitFiles.map((f) => f.ref),
       });
     }
-    // Collect build environment details
-    const infoComponents = collectEnvInfo(options.path);
-    if (infoComponents?.length) {
-      components = components.concat(infoComponents);
-    }
-    // Should we include the OS crypto libraries
-    if (options.includeCrypto) {
-      const cryptoLibs = collectOSCryptoLibs(options);
-      if (cryptoLibs?.length) {
-        components = components.concat(cryptoLibs);
-      }
-    }
-    aformulation["bom-ref"] = uuidv4();
-    aformulation.components = components;
-    let environmentVars = [{ name: "GIT_BRANCH", value: gitBranch }];
-    for (const aevar of Object.keys(process.env)) {
-      if (
-        (aevar.startsWith("GIT") ||
-          aevar.startsWith("CI_") ||
-          aevar.startsWith("CARGO") ||
-          aevar.startsWith("RUST")) &&
-        !aevar.toLowerCase().includes("key") &&
-        !aevar.toLowerCase().includes("token") &&
-        !aevar.toLowerCase().includes("pass") &&
-        process.env[aevar] &&
-        process.env[aevar].length
-      ) {
-        environmentVars.push({
-          name: aevar,
-          value: process.env[aevar],
-        });
-      }
-    }
-    if (!environmentVars.length) {
-      environmentVars = undefined;
-    }
-    aformulation.workflows = [
-      {
-        "bom-ref": uuidv4(),
-        uid: uuidv4(),
-        inputs: [
-          {
-            source: { ref: originUrl },
-            environmentVars,
-          },
-        ],
-        taskTypes: ["build", "clone"],
-      },
-    ];
-    formulation.push(aformulation);
   }
+  // Collect build environment details
+  const infoComponents = collectEnvInfo(options.path);
+  if (infoComponents?.length) {
+    components = components.concat(infoComponents);
+  }
+  // Should we include the OS crypto libraries
+  if (options.includeCrypto) {
+    const cryptoLibs = collectOSCryptoLibs(options);
+    if (cryptoLibs?.length) {
+      components = components.concat(cryptoLibs);
+    }
+  }
+  aformulation["bom-ref"] = uuidv4();
+  aformulation.components = components;
+  let environmentVars = gitBranch?.length
+    ? [{ name: "GIT_BRANCH", value: gitBranch }]
+    : [];
+  for (const aevar of Object.keys(process.env)) {
+    if (
+      (aevar.startsWith("GIT") ||
+        aevar.startsWith("CI_") ||
+        aevar.startsWith("ANDROID") ||
+        aevar.startsWith("DENO") ||
+        aevar.startsWith("DOTNET") ||
+        aevar.startsWith("JAVA_") ||
+        aevar.startsWith("SDKMAN") ||
+        aevar.startsWith("CARGO") ||
+        aevar.startsWith("CONDA") ||
+        aevar.startsWith("RUST")) &&
+      !aevar.toLowerCase().includes("key") &&
+      !aevar.toLowerCase().includes("token") &&
+      !aevar.toLowerCase().includes("pass") &&
+      !aevar.toLowerCase().includes("secret") &&
+      process.env[aevar] &&
+      process.env[aevar].length
+    ) {
+      environmentVars.push({
+        name: aevar,
+        value: process.env[aevar],
+      });
+    }
+  }
+  if (!environmentVars.length) {
+    environmentVars = undefined;
+  }
+  const sourceInput = environmentVars ? { environmentVars } : {};
+  if (originUrl) {
+    sourceInput.source = { ref: originUrl };
+  }
+  aformulation.workflows = [
+    {
+      "bom-ref": uuidv4(),
+      uid: uuidv4(),
+      inputs: [sourceInput],
+      taskTypes: originUrl ? ["build", "clone"] : ["build"],
+    },
+  ];
+  formulation.push(aformulation);
   return { formulation, provides };
 };
 
@@ -782,7 +797,11 @@ function addComponent(
     if (!name) {
       return;
     }
-    if (!ptype && pkg.qualifiers && pkg.qualifiers.type === "jar") {
+    // Do we need this still?
+    if (
+      !ptype &&
+      ["jar", "war", "ear", "pom"].includes(pkg?.qualifiers?.type)
+    ) {
       ptype = "maven";
     }
     const version = pkg.version || "";
@@ -814,7 +833,7 @@ function addComponent(
         impPkgs.includes(`@${group}`)
       ) {
         compScope = "required";
-      } else if (impPkgs.length) {
+      } else if (impPkgs.length && compScope !== "excluded") {
         compScope = "optional";
       }
     }
@@ -2643,6 +2662,7 @@ export async function createPythonBom(path, options) {
   let metadataFilename = "";
   let dependencies = [];
   let pkgList = [];
+  let formulationList = [];
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pipenvMode = existsSync(join(path, "Pipfile"));
@@ -2737,6 +2757,9 @@ export async function createPythonBom(path, options) {
         if (retMap.pkgList?.length) {
           pkgList = pkgList.concat(retMap.pkgList);
         }
+        if (retMap.formulationList?.length) {
+          formulationList = formulationList.concat(retMap.formulationList);
+        }
         if (retMap.dependenciesList) {
           dependencies = mergeDependencies(
             dependencies,
@@ -2761,6 +2784,7 @@ export async function createPythonBom(path, options) {
       filename: poetryFiles.join(", "),
       dependencies,
       parentComponent,
+      formulationList,
     });
   }
   if (metadataFiles?.length) {
@@ -2830,6 +2854,9 @@ export async function createPythonBom(path, options) {
             if (pkgMap.pkgList?.length) {
               pkgList = pkgList.concat(pkgMap.pkgList);
               frozen = pkgMap.frozen;
+            }
+            if (pkgMap.formulationList?.length) {
+              formulationList = formulationList.concat(pkgMap.formulationList);
             }
             if (pkgMap.dependenciesList) {
               dependencies = mergeDependencies(
@@ -2939,6 +2966,9 @@ export async function createPythonBom(path, options) {
       if (pkgMap.pkgList?.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
       }
+      if (pkgMap.formulationList?.length) {
+        formulationList = formulationList.concat(pkgMap.formulationList);
+      }
       if (pkgMap.dependenciesList) {
         dependencies = mergeDependencies(
           dependencies,
@@ -2986,6 +3016,7 @@ export async function createPythonBom(path, options) {
     filename: metadataFilename,
     dependencies,
     parentComponent,
+    formulationList,
   });
 }
 

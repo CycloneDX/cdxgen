@@ -212,6 +212,20 @@ if (process.env.SWIFT_CMD) {
   SWIFT_CMD = process.env.SWIFT_CMD;
 }
 
+// Python components that can be excluded
+export const PYTHON_EXCLUDED_COMPONENTS = [
+  "pip",
+  "setuptools",
+  "wheel",
+  "conda",
+  "conda-build",
+  "conda-index",
+  "conda-libmamba-solver",
+  "conda-package-handling",
+  "conda-package-streaming",
+  "conda-content-trust",
+];
+
 // HTTP cache
 const gotHttpCache = new Map();
 
@@ -3295,6 +3309,8 @@ export async function parsePiplockData(lockData) {
  * @param {string} tomlFile Toml file
  */
 export function parsePyProjectToml(tomlFile) {
+  let poetryMode = false;
+  let skipAll = false;
   // Do we need a toml npm package at some point?
   const tomlData = readFileSync(tomlFile, { encoding: "utf-8" });
   const pkg = {};
@@ -3303,10 +3319,16 @@ export function parsePyProjectToml(tomlFile) {
   }
   tomlData.split("\n").forEach((l) => {
     l = l.replace("\r", "");
-    if (l.indexOf("=") > -1) {
+    if (l === "[tool.poetry]") {
+      poetryMode = true;
+    }
+    if (poetryMode && l.startsWith("[") && l !== "[tool.poetry]") {
+      skipAll = true;
+    }
+    if (!skipAll && l.indexOf("=") > -1) {
       const tmpA = l.split("=");
       const key = tmpA[0].trim();
-      let value = tmpA[1].trim().replace(/["']/g, "");
+      let value = tmpA[1].trim().replace(/["']/g, "").replace(/,]$/, "]");
       switch (key) {
         case "description":
           pkg.description = value;
@@ -3320,13 +3342,25 @@ export function parsePyProjectToml(tomlFile) {
           if (value.includes("{")) {
             value = "latest";
           }
-          pkg.version = value;
+          if (!pkg.version) {
+            pkg.version = value;
+          }
           break;
         case "authors":
           try {
             pkg.author = JSON.parse(value)[0];
           } catch (e) {
-            pkg.author = value.replace("[", "").replace("]", "");
+            if (l.includes("authors")) {
+              const quotedAuthors = l.match(/"(.*?)"/g);
+              if (quotedAuthors) {
+                pkg.author = quotedAuthors
+                  .join(", ")
+                  .trim()
+                  .replace(/["']/g, "");
+              }
+            } else {
+              pkg.author = value.replace("[", "").replace("]", "");
+            }
           }
           break;
         case "homepage":
@@ -9138,6 +9172,7 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
  */
 export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
   const pkgList = [];
+  const formulationList = [];
   const rootList = [];
   const dependenciesList = [];
   let result = undefined;
@@ -9177,7 +9212,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
       }
     } else {
       if (DEBUG_MODE) {
-        console.log(join("Using virtual environment in ", tempVenvDir));
+        console.log("Using the virtual environment", tempVenvDir);
       }
       env.VIRTUAL_ENV = tempVenvDir;
       env.PATH = `${join(
@@ -9363,7 +9398,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
      */
     if (DEBUG_MODE) {
       console.log(
-        "About to construct the pip dependency tree. Please wait ...",
+        `About to construct the pip dependency tree based on ${reqOrSetupFile}. Please wait ...`,
       );
     }
     // This is a slow step that ideally needs to be invoked only once per venv
@@ -9375,49 +9410,61 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
     }
     const dependenciesMap = {};
     for (const t of tree) {
-      if (!t.version.length) {
+      const name = t.name.replace(/_/g, "-").toLowerCase();
+      const version = t.version;
+      const scope = PYTHON_EXCLUDED_COMPONENTS.includes(name)
+        ? "excluded"
+        : undefined;
+      if (!scope && !t.version.length) {
         // Don't leave out any local dependencies
         if (t.dependencies.length) {
           flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
         }
         continue;
       }
-      const name = t.name.replace(/_/g, "-").toLowerCase();
-      const version = t.version;
-      const exclude = ["pip", "setuptools", "wheel"];
-      if (!exclude.includes(name)) {
-        const purlString = new PackageURL(
-          "pypi",
-          "",
-          name,
-          version,
-          null,
-          null,
-        ).toString();
-        pkgList.push({
-          name,
-          version,
-          purl: purlString,
-          "bom-ref": decodeURIComponent(purlString),
-          evidence: {
-            identity: {
-              field: "purl",
-              confidence: 1,
-              methods: [
-                {
-                  technique: "instrumentation",
-                  confidence: 1,
-                  value: env.VIRTUAL_ENV || env.CONDA_PREFIX,
-                },
-              ],
-            },
+      const purlString = new PackageURL(
+        "pypi",
+        "",
+        name,
+        version,
+        null,
+        null,
+      ).toString();
+      const apkg = {
+        name,
+        version,
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString),
+        scope,
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 1,
+            methods: [
+              {
+                technique: "instrumentation",
+                confidence: 1,
+                value: env.VIRTUAL_ENV || env.CONDA_PREFIX,
+              },
+            ],
           },
-        });
+        },
+        properties: [
+          {
+            name: "SrcFile",
+            value: reqOrSetupFile,
+          },
+        ],
+      };
+      if (scope !== "excluded") {
+        pkgList.push(apkg);
         rootList.push({
           name,
           version,
         });
         flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
+      } else {
+        formulationList.push(apkg);
       }
     } // end for
     for (const k of Object.keys(dependenciesMap)) {
@@ -9426,6 +9473,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
   }
   return {
     pkgList,
+    formulationList,
     rootList,
     dependenciesList,
     frozen,

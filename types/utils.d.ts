@@ -1020,6 +1020,7 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
         version: any;
         purl: string;
         "bom-ref": string;
+        scope: string;
         evidence: {
             identity: {
                 field: string;
@@ -1031,6 +1032,32 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
                 }[];
             };
         };
+        properties: {
+            name: string;
+            value: string;
+        }[];
+    }[];
+    formulationList: {
+        name: any;
+        version: any;
+        purl: string;
+        "bom-ref": string;
+        scope: string;
+        evidence: {
+            identity: {
+                field: string;
+                confidence: number;
+                methods: {
+                    technique: string;
+                    confidence: number;
+                    value: any;
+                }[];
+            };
+        };
+        properties: {
+            name: string;
+            value: string;
+        }[];
     }[];
     rootList: {
         name: any;
@@ -1151,6 +1178,7 @@ export let CARGO_CMD: string;
 export let CLJ_CMD: string;
 export let LEIN_CMD: string;
 export let SWIFT_CMD: string;
+export const PYTHON_EXCLUDED_COMPONENTS: string[];
 export const cdxgenAgent: any;
 export const RUBY_PLATFORM_PREFIXES: string[];
 //# sourceMappingURL=utils.d.ts.map

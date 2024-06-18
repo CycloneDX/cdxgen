@@ -2680,8 +2680,8 @@ test("parsePnpmLock", async () => {
     },
   });
   parsedList = await parsePnpmLock("./pnpm-lock.yaml");
-  expect(parsedList.pkgList.length).toEqual(644);
-  expect(parsedList.dependenciesList.length).toEqual(644);
+  expect(parsedList.pkgList.length).toEqual(654);
+  expect(parsedList.dependenciesList.length).toEqual(654);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@ampproject",
     name: "remapping",
@@ -3312,7 +3312,7 @@ test("parse requirements.txt", async () => {
 });
 
 test("parse pyproject.toml", () => {
-  const pkg = parsePyProjectToml("./test/data/pyproject.toml");
+  let pkg = parsePyProjectToml("./test/data/pyproject.toml");
   expect(pkg).toEqual({
     name: "cpggen",
     version: "1.9.0",
@@ -3321,6 +3321,16 @@ test("parse pyproject.toml", () => {
     author: "Team AppThreat <cloud@appthreat.com>",
     homepage: { url: "https://github.com/AppThreat/cpggen" },
     repository: { url: "https://github.com/AppThreat/cpggen" },
+  });
+  pkg = parsePyProjectToml("./test/data/pyproject-author-comma.toml");
+  expect(pkg).toEqual({
+    name: "rasa",
+    version: "3.7.0a1",
+    description:
+      "Open source machine learning framework to automate text- and voice-based conversations: NLU, dialogue management, connect to Slack, Facebook, and more - Create chatbots and voice assistants",
+    author: "Rasa Technologies GmbH <hi@rasa.com>",
+    homepage: { url: "https://rasa.com" },
+    repository: { url: "https://github.com/rasahq/rasa" },
   });
 });
 

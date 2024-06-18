@@ -8,7 +8,7 @@ def callback(path, modname, desc, modules=modules):
     if modname and modname[-9:] == ".__init__":
         modname = modname[:-9] + " (package)"
     if modname.find(".") < 0:
-        modules.append(modname.toLowerCase())
+        modules.append(modname.lower())
 
 
 def onerror(modname):
@@ -16,3 +16,4 @@ def onerror(modname):
 
 
 ModuleScanner().run(callback, onerror=onerror)
+print (modules)

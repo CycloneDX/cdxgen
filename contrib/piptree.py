@@ -32,15 +32,17 @@ def get_installed_distributions():
     return [d._dist for d in dists]
 
 
-def find_deps(idx, visited, reqs, traverse_count):
+def find_deps(idx, path, reqs, traverse_count):
     freqs = []
     for r in reqs:
         d = idx.get(r.key)
         if not d:
             continue
         r.project_name = d.project_name if d is not None else r.project_name
-        if len(visited) > 100 or visited.get(r.project_name, 0) > 5:
-            return freqs
+        if r.key in path:
+            print(f"Cycle detected: {' -> '.join(current_path)}")
+            continue
+        current_path = path + [r.key]
         specs = sorted(r.specs, reverse=True)
         specs_str = ",".join(["".join(sp) for sp in specs]) if specs else ""
         dreqs = d.requires()
@@ -49,10 +51,9 @@ def find_deps(idx, visited, reqs, traverse_count):
                 "name": r.project_name,
                 "version": importlib_metadata.version(r.key),
                 "versionSpecifiers": specs_str,
-                "dependencies": find_deps(idx, visited, dreqs, traverse_count + 1) if dreqs and traverse_count < 200 else [],
+                "dependencies": find_deps(idx, current_path, dreqs, traverse_count + 1) if dreqs and traverse_count < 200 else [],
             }
         )
-        visited[r.project_name] = visited.get(r.project_name, 0) + 1
     return freqs
 
 
@@ -61,7 +62,6 @@ def main(argv):
     tree = []
     pkgs = get_installed_distributions()
     idx = {p.key: p for p in pkgs}
-    visited = {}
     traverse_count = 0
     for p in pkgs:
         fr = frozen_req_from_dist(p)
@@ -80,7 +80,7 @@ def main(argv):
             {
                 "name": name.split(" ")[0],
                 "version": version,
-                "dependencies": find_deps(idx, visited, p.requires(), traverse_count + 1),
+                "dependencies": find_deps(idx, [p.key], p.requires(), traverse_count + 1),
             }
         )
     all_deps = {}
