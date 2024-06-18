@@ -382,9 +382,10 @@ const addLifecyclesSection = (options) => {
  * Method to generate the formulation section based on git metadata
  *
  * @param {Object} options
+ * @param {Object} context Context
  * @returns {Array} formulation array
  */
-const addFormulationSection = (options) => {
+const addFormulationSection = (options, context) => {
   const formulation = [];
   const provides = [];
   const gitBranch = getBranch();
@@ -397,8 +398,8 @@ const addFormulationSection = (options) => {
   const aformulation = {};
   // Reuse any existing formulation components
   // See: PR #1172
-  if (options?.formulationList?.length) {
-    components = components.concat(trimComponents(options.formulationList));
+  if (context?.formulationList?.length) {
+    components = components.concat(trimComponents(context.formulationList));
   }
   if (options.specVersion >= 1.6 && Object.keys(treeHashes).length === 2) {
     parentOmniborId = `gitoid:blob:sha1:${treeHashes.parent}`;
@@ -1076,7 +1077,7 @@ const buildBomNSData = (options, pkgInfo, ptype, context) => {
     };
     const formulationData =
       options.includeFormulation && options.specVersion >= 1.5
-        ? addFormulationSection(options)
+        ? addFormulationSection(options, context)
         : undefined;
     if (formulationData) {
       jsonTpl.formulation = formulationData.formulation;

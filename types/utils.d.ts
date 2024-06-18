@@ -1019,6 +1019,7 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
         name: any;
         version: any;
         purl: string;
+        type: string;
         "bom-ref": string;
         scope: string;
         evidence: {
@@ -1041,6 +1042,7 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
         name: any;
         version: any;
         purl: string;
+        type: string;
         "bom-ref": string;
         scope: string;
         evidence: {
