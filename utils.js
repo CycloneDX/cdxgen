@@ -9434,6 +9434,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         name,
         version,
         purl: purlString,
+        type: "library",
         "bom-ref": decodeURIComponent(purlString),
         scope,
         evidence: {
