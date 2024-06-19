@@ -9348,7 +9348,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         pipInstallArgs.push(resolve(basePath));
       }
       // Support for passing additional arguments to pip
-      // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts --ignore-requires-python
+      // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts
       if (process?.env?.PIP_INSTALL_ARGS) {
         const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
         pipInstallArgs = pipInstallArgs.concat(addArgs);
