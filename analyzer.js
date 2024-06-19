@@ -31,7 +31,7 @@ const IGNORE_DIRS = process.env.ASTGEN_IGNORE_DIRS
 
 const IGNORE_FILE_PATTERN = new RegExp(
   process.env.ASTGEN_IGNORE_FILE_PATTERN ||
-    "(conf|config|test|spec|mock|\\.d)\\.(js|ts|tsx)$",
+    "(conf|config|test|spec|mock|setup-jest|\\.d)\\.(js|ts|tsx)$",
   "i",
 );
 
