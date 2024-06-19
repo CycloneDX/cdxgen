@@ -1561,7 +1561,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
     const packages = yamlObj.packages || {};
     // snapshots is a new key under lockfile version 9
     const snapshots = yamlObj.snapshots || {};
-    const pkgKeys = Object.keys(packages);
+    const pkgKeys = { ...Object.keys(packages), ...Object.keys(snapshots) };
     for (const k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
       // In lockfileVersion 6, /@babel/code-frame@7.18.6
@@ -1571,14 +1571,20 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
         fullName = fullName.split("(")[0];
       }
       const parts = fullName.split("/");
-      const integrity = packages[pkgKeys[k]].resolution.integrity;
+      const packageNode = packages[pkgKeys[k]] || snapshots[pkgKeys[k]];
+      if (!packageNode) {
+        continue;
+      }
+      const resolution =
+        packages[pkgKeys[k]]?.resolution || snapshots[pkgKeys[k]]?.resolution;
+      const integrity = resolution?.integrity;
       // In lock file version 9, dependencies is under snapshots
       const deps =
-        packages[pkgKeys[k]].dependencies ||
+        packages[pkgKeys[k]]?.dependencies ||
         snapshots[pkgKeys[k]]?.dependencies ||
         {};
       const optionalDeps =
-        packages[pkgKeys[k]].optionalDependencies ||
+        packages[pkgKeys[k]]?.optionalDependencies ||
         snapshots[pkgKeys[k]]?.optionalDependencies ||
         {};
       // Track the explicit optional dependencies of this package
@@ -1598,13 +1604,13 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
         const obomRef = decodeURIComponent(opurlString);
         possibleOptionalDeps[obomRef] = true;
       }
-      let scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
+      let scope = packageNode.dev === true ? "optional" : undefined;
       if (parts?.length) {
         let name = "";
         let version = "";
         let group = "";
-        const hasBin = packages[pkgKeys[k]]?.hasBin;
-        const deprecatedMessage = packages[pkgKeys[k]]?.deprecated;
+        const hasBin = packageNode?.hasBin;
+        const deprecatedMessage = packageNode?.deprecated;
         if (lockfileVersion >= 9 && fullName.includes("@")) {
           group = parts.length > 1 ? parts[0] : "";
           const tmpA = parts[parts.length - 1].split("@");
