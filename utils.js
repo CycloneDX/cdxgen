@@ -9331,7 +9331,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         }
       }
     } else {
-      const pipInstallArgs = [
+      let pipInstallArgs = [
         "-m",
         "pip",
         "install",
@@ -9347,6 +9347,12 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
       } else {
         pipInstallArgs.push(resolve(basePath));
       }
+      // Support for passing additional arguments to pip
+      // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts --ignore-requires-python
+      if (process?.env?.PIP_INSTALL_ARGS) {
+        const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
+        pipInstallArgs = pipInstallArgs.concat(addArgs);
+      }
       // Attempt to perform pip install
       result = spawnSync(PYTHON_CMD, pipInstallArgs, {
         cwd: basePath,
@@ -9359,11 +9365,10 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         frozen = false;
         let versionRelatedError = false;
         if (
-          result.stderr &&
-          (result.stderr.includes(
+          result?.stderr.includes(
             "Could not find a version that satisfies the requirement",
           ) ||
-            result.stderr.includes("No matching distribution found for"))
+          result?.stderr.includes("No matching distribution found for")
         ) {
           versionRelatedError = true;
           console.log(
