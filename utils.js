@@ -1751,8 +1751,6 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
                 possibleOptionalDeps,
                 {},
               );
-            } else if (lockfileVersion >= 9) {
-              scope = undefined;
             }
           }
           if (!dependenciesMap[bomRef]) {
