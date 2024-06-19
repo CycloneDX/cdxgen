@@ -1611,7 +1611,10 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
         continue;
       }
       const resolution =
-        packages[pkgKeys[k]]?.resolution || snapshots[pkgKeys[k]]?.resolution;
+        packages[pkgKeys[k]]?.resolution ||
+        snapshots[pkgKeys[k]]?.resolution ||
+        packages[fullName]?.resolution ||
+        snapshots[fullName]?.resolution;
       const integrity = resolution?.integrity;
       // In lock file version 9, dependencies is under snapshots
       const deps =
