@@ -3145,11 +3145,11 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
           p.evidence = {
             identity: {
               field: "version",
-              confidence: 0.75,
+              confidence: 0.6,
               methods: [
                 {
                   technique: "manifest-analysis",
-                  confidence: 0.75,
+                  confidence: 0.6,
                   value: `Version specifiers: ${versionSpecifiers}`,
                 },
               ],
@@ -3499,7 +3499,7 @@ export async function parsePoetrylockData(lockData, lockFile) {
 }
 
 /**
- * Method to parse requirements.txt data
+ * Method to parse requirements.txt data. This must be replaced with atom parsedeps.
  *
  * @param {Object} reqData Requirements.txt data
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
@@ -3535,10 +3535,7 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
           l = l.split(" ")[0];
         }
         if (l.indexOf("=") > -1) {
-          let tmpA = l.split(/(==|<=|~=|>=)/);
-          if (tmpA.includes("#")) {
-            tmpA = tmpA.split("#")[0];
-          }
+          const tmpA = l.split(/(==|<=|~=|>=)/);
           let versionStr = tmpA[tmpA.length - 1].trim().replace("*", "0");
           if (versionStr.indexOf(" ") > -1) {
             versionStr = versionStr.split(" ")[0];
@@ -3548,19 +3545,31 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
           }
           if (!tmpA[0].includes("=") && !tmpA[0].trim().includes(" ")) {
             const name = tmpA[0].trim().replace(";", "");
+            const versionSpecifiers = l.replace(name, "");
             if (!PYTHON_STD_MODULES.includes(name)) {
+              const properties = [];
               const apkg = {
                 name,
                 version: versionStr,
                 scope: compScope,
               };
+              if (
+                versionSpecifiers?.length > 0 &&
+                !versionSpecifiers.startsWith("==")
+              ) {
+                properties.push({
+                  name: "cdx:pypi:versionSpecifiers",
+                  value: versionSpecifiers,
+                });
+              }
               if (markers) {
-                apkg.properties = [
-                  {
-                    name: "cdx:pip:markers",
-                    value: markers,
-                  },
-                ];
+                properties.push({
+                  name: "cdx:pip:markers",
+                  value: markers,
+                });
+              }
+              if (properties.length) {
+                apkg.properties = properties;
               }
               pkgList.push(apkg);
             }
@@ -3577,7 +3586,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
               properties: [
                 {
                   name: "cdx:pypi:versionSpecifiers",
-                  value: versionSpecifiers,
+                  value: versionSpecifiers?.length
+                    ? versionSpecifiers
+                    : undefined,
                 },
               ],
             });
@@ -3598,7 +3609,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
                 properties: [
                   {
                     name: "cdx:pypi:versionSpecifiers",
-                    value: versionSpecifiers,
+                    value: versionSpecifiers?.length
+                      ? versionSpecifiers
+                      : undefined,
                   },
                 ],
               });
@@ -3621,7 +3634,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
                 properties: [
                   {
                     name: "cdx:pypi:versionSpecifiers",
-                    value: versionSpecifiers,
+                    value: versionSpecifiers?.length
+                      ? versionSpecifiers
+                      : undefined,
                   },
                 ],
               });
@@ -3637,7 +3652,9 @@ export async function parseReqFile(reqData, fetchDepsInfo) {
                 properties: [
                   {
                     name: "cdx:pypi:versionSpecifiers",
-                    value: versionSpecifiers,
+                    value: versionSpecifiers?.length
+                      ? versionSpecifiers
+                      : undefined,
                   },
                 ],
               });
@@ -9314,7 +9331,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         }
       }
     } else {
-      const pipInstallArgs = [
+      let pipInstallArgs = [
         "-m",
         "pip",
         "install",
@@ -9330,6 +9347,12 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
       } else {
         pipInstallArgs.push(resolve(basePath));
       }
+      // Support for passing additional arguments to pip
+      // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts
+      if (process?.env?.PIP_INSTALL_ARGS) {
+        const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
+        pipInstallArgs = pipInstallArgs.concat(addArgs);
+      }
       // Attempt to perform pip install
       result = spawnSync(PYTHON_CMD, pipInstallArgs, {
         cwd: basePath,
@@ -9342,11 +9365,10 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         frozen = false;
         let versionRelatedError = false;
         if (
-          result.stderr &&
-          (result.stderr.includes(
+          result?.stderr.includes(
             "Could not find a version that satisfies the requirement",
           ) ||
-            result.stderr.includes("No matching distribution found for"))
+          result?.stderr.includes("No matching distribution found for")
         ) {
           versionRelatedError = true;
           console.log(

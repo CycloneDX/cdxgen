@@ -2463,6 +2463,45 @@ test("parseSetupPyFile", async () => {
 ]`);
   expect(deps.length).toEqual(2);
   expect(deps[0].name).toEqual("colorama");
+
+  deps = await parseSetupPyFile(
+    readFileSync("./test/data/setup-impacket.py", "utf-8"),
+  );
+  expect(deps.length).toEqual(7);
+  expect(deps).toEqual([
+    {
+      name: "pyasn1",
+      version: "0.2.3",
+      properties: [{ name: "cdx:pypi:versionSpecifiers", value: ">=0.2.3" }],
+    },
+    {
+      name: "pycryptodomex",
+      version: null,
+      properties: [{ name: "cdx:pypi:versionSpecifiers", value: undefined }],
+    },
+    {
+      name: "pyOpenSSL",
+      version: "0.13.1",
+      properties: [{ name: "cdx:pypi:versionSpecifiers", value: ">=0.13.1" }],
+    },
+    {
+      name: "six",
+      version: null,
+      properties: [{ name: "cdx:pypi:versionSpecifiers", value: undefined }],
+    },
+    { name: "ldap3", version: "2.5.1", scope: undefined },
+    {
+      name: "ldapdomaindump",
+      version: "0.9.0",
+      scope: undefined,
+      properties: [{ name: "cdx:pypi:versionSpecifiers", value: ">=0.9.0" }],
+    },
+    {
+      name: "flask",
+      version: "1.0",
+      properties: [{ name: "cdx:pypi:versionSpecifiers", value: ">=1.0" }],
+    },
+  ]);
 });
 
 test("parsePnpmLock", async () => {
