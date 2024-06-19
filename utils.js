@@ -1448,6 +1448,9 @@ export async function parseNodeShrinkwrap(swFile) {
 export async function parsePnpmLock(pnpmLock, parentComponent = null) {
   let pkgList = [];
   const dependenciesList = [];
+  // For lockfile >= 9, we need to track dev and optional packages manually
+  // See: #1163
+  const possibleOptionalDeps = {};
   let ppurl = "";
   if (parentComponent?.name) {
     ppurl =
@@ -1479,13 +1482,60 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
     // This logic matches the pnpm list command to include only direct dependencies
     if (ppurl !== "") {
       // In lock file version 9, direct dependencies is under importers
-      const ddeps =
+      const rootDirectDeps =
         lockfileVersion >= 9
           ? yamlObj.importers["."]?.dependencies || {}
           : yamlObj.dependencies || {};
+      const rootDevDeps =
+        lockfileVersion >= 9
+          ? yamlObj.importers["."]?.devDependencies || {}
+          : {};
+      const rootOptionalDeps =
+        lockfileVersion >= 9
+          ? yamlObj.importers["."]?.optionalDependencies || {}
+          : {};
       const ddeplist = [];
-      for (const dk of Object.keys(ddeps)) {
-        let version = ddeps[dk];
+      // Find the root optional dependencies
+      for (const rdk of Object.keys(rootDevDeps)) {
+        let version = rootDevDeps[rdk];
+        if (typeof version === "object" && version.version) {
+          version = version.version;
+        }
+        // version: 3.0.1(ajv@8.14.0)
+        if (version?.includes("(")) {
+          version = version.split("(")[0];
+        }
+        const dpurl = new PackageURL(
+          "npm",
+          "",
+          rdk,
+          version,
+          null,
+          null,
+        ).toString();
+        possibleOptionalDeps[decodeURIComponent(dpurl)] = true;
+      }
+      for (const rdk of Object.keys(rootOptionalDeps)) {
+        let version = rootOptionalDeps[rdk];
+        if (typeof version === "object" && version.version) {
+          version = version.version;
+        }
+        // version: 3.0.1(ajv@8.14.0)
+        if (version?.includes("(")) {
+          version = version.split("(")[0];
+        }
+        const dpurl = new PackageURL(
+          "npm",
+          "",
+          rdk,
+          version,
+          null,
+          null,
+        ).toString();
+        possibleOptionalDeps[decodeURIComponent(dpurl)] = true;
+      }
+      for (const dk of Object.keys(rootDirectDeps)) {
+        let version = rootDirectDeps[dk];
         if (typeof version === "object" && version.version) {
           version = version.version;
         }
@@ -1526,8 +1576,29 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
       const deps =
         packages[pkgKeys[k]].dependencies ||
         snapshots[pkgKeys[k]]?.dependencies ||
-        [];
-      const scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
+        {};
+      const optionalDeps =
+        packages[pkgKeys[k]].optionalDependencies ||
+        snapshots[pkgKeys[k]]?.optionalDependencies ||
+        {};
+      // Track the explicit optional dependencies of this package
+      for (const opkgName of Object.keys(optionalDeps)) {
+        let vers = optionalDeps[opkgName];
+        if (vers?.includes("(")) {
+          vers = vers.split("(")[0];
+        }
+        const opurlString = new PackageURL(
+          "npm",
+          "",
+          opkgName,
+          vers,
+          null,
+          null,
+        ).toString();
+        const obomRef = decodeURIComponent(opurlString);
+        possibleOptionalDeps[obomRef] = true;
+      }
+      let scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
       if (parts?.length) {
         let name = "";
         let version = "";
@@ -1583,6 +1654,8 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
             null,
             null,
           ).toString();
+          const bomRef = decodeURIComponent(purlString);
+          const isBaseOptional = possibleOptionalDeps[bomRef];
           const deplist = [];
           for (let dpkgName of Object.keys(deps)) {
             let vers = deps[dpkgName];
@@ -1605,10 +1678,16 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
               null,
               null,
             ).toString();
-            deplist.push(decodeURIComponent(dpurlString));
+            const dbomRef = decodeURIComponent(dpurlString);
+            deplist.push(dbomRef);
+            // If the base package is optional, make the dependencies optional too
+            // We need to repeat the optional detection down the line to find these new packages
+            if (isBaseOptional) {
+              possibleOptionalDeps[dbomRef] = true;
+            }
           }
           dependenciesList.push({
-            ref: decodeURIComponent(purlString),
+            ref: bomRef,
             dependsOn: deplist,
           });
           const properties = [
@@ -1628,6 +1707,9 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
               name: "cdx:npm:deprecation_notice",
               value: deprecatedMessage,
             });
+          }
+          if (isBaseOptional) {
+            scope = "optional";
           }
           pkgList.push({
             group: group,
@@ -1653,6 +1735,14 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
             },
           });
         }
+      }
+    }
+  }
+  // We need to repeat optional packages detection
+  if (Object.keys(possibleOptionalDeps).length) {
+    for (const apkg of pkgList) {
+      if (!apkg.scope && possibleOptionalDeps[apkg["bom-ref"]]) {
+        apkg.scope = "optional";
       }
     }
   }
