@@ -126,7 +126,7 @@ export function parsePnpmLock(pnpmLock: string, parentComponent?: object): Promi
     pkgList: any[];
     dependenciesList: {
         ref: string;
-        dependsOn: string[];
+        dependsOn: any;
     }[];
 }>;
 /**

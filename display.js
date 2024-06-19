@@ -11,8 +11,17 @@ const SYMBOLS_ANSI = {
 };
 
 const MAX_TREE_DEPTH = 6;
-
-export const printTable = (bomJson, filterTypes = undefined) => {
+const highlightStr = (s, highlight) => {
+  if (highlight && s && s.includes(highlight)) {
+    s = s.replaceAll(highlight, `\x1b[1;33m${highlight}\x1b[0m`);
+  }
+  return s;
+};
+export const printTable = (
+  bomJson,
+  filterTypes = undefined,
+  highlight = undefined,
+) => {
   if (!bomJson || !bomJson.components) {
     return;
   }
@@ -56,8 +65,8 @@ export const printTable = (bomJson, filterTypes = undefined) => {
       ]);
     } else {
       stream.write([
-        comp.group || "",
-        comp.name,
+        highlightStr(comp.group || "", highlight),
+        highlightStr(comp.name, highlight),
         `\x1b[1;35m${comp.version || ""}\x1b[0m`,
         comp.scope || "",
       ]);
@@ -67,9 +76,9 @@ export const printTable = (bomJson, filterTypes = undefined) => {
   if (!filterTypes) {
     console.log(
       "BOM includes",
-      bomJson.components.length,
+      bomJson?.components?.length || 0,
       "components and",
-      bomJson.dependencies.length,
+      bomJson?.dependencies?.length || 0,
       "dependencies",
     );
   } else {
@@ -215,7 +224,11 @@ export const printCallStack = (bomJson) => {
     console.log(table(data, config));
   }
 };
-export const printDependencyTree = (bomJson, mode = "dependsOn") => {
+export const printDependencyTree = (
+  bomJson,
+  mode = "dependsOn",
+  highlight = undefined,
+) => {
   const dependencies = bomJson.dependencies || [];
   if (!dependencies.length) {
     return;
@@ -244,9 +257,11 @@ export const printDependencyTree = (bomJson, mode = "dependsOn") => {
         content: `${treeType} Tree\nGenerated with \u2665  by cdxgen`,
       },
     };
-    console.log(table([[treeGraphics.join("\n")]], config));
+    console.log(
+      table([[highlightStr(treeGraphics.join("\n"), highlight)]], config),
+    );
   } else {
-    console.log(treeGraphics.join("\n"));
+    console.log(highlightStr(treeGraphics.join("\n"), highlight));
   }
 };
 
