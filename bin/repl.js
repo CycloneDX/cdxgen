@@ -154,15 +154,31 @@ cdxgenRepl.defineCommand("search", {
     if (sbom) {
       if (searchStr) {
         try {
+          const originalSearchString = searchStr;
+          let dependenciesSearchStr = searchStr;
           if (!searchStr.includes("~>")) {
+            dependenciesSearchStr = `dependencies[ref ~> /${searchStr}/i or dependsOn ~> /${searchStr}/i or provides ~> /${searchStr}/i]`;
             searchStr = `components[group ~> /${searchStr}/i or name ~> /${searchStr}/i or description ~> /${searchStr}/i or publisher ~> /${searchStr}/i or purl ~> /${searchStr}/i]`;
           }
           const expression = jsonata(searchStr);
           const components = await expression.evaluate(sbom);
+          const dexpression = jsonata(dependenciesSearchStr);
+          const dependencies = await dexpression.evaluate(sbom);
           if (!components) {
             console.log("No results found!");
           } else {
-            printTable({ components, dependencies: [] });
+            printTable(
+              { components, dependencies },
+              undefined,
+              originalSearchString,
+            );
+            if (dependencies?.length) {
+              printDependencyTree(
+                { components, dependencies },
+                "dependsOn",
+                originalSearchString,
+              );
+            }
           }
         } catch (e) {
           console.log(e);

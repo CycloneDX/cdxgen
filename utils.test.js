@@ -2718,6 +2718,12 @@ test("parsePnpmLock", async () => {
       },
     },
   });
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock9a.yaml");
+  expect(parsedList.pkgList.length).toEqual(1007);
+  expect(parsedList.dependenciesList.length).toEqual(1005);
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock9b.yaml");
+  expect(parsedList.pkgList.length).toEqual(1366);
+  expect(parsedList.dependenciesList.length).toEqual(1352);
   parsedList = await parsePnpmLock("./pnpm-lock.yaml");
   expect(parsedList.pkgList.length).toEqual(654);
   expect(parsedList.dependenciesList.length).toEqual(654);

@@ -1439,6 +1439,31 @@ export async function parseNodeShrinkwrap(swFile) {
   return pkgList;
 }
 
+function _markTreeOptional(
+  dbomRef,
+  dependenciesMap,
+  possibleOptionalDeps,
+  visited,
+) {
+  if (possibleOptionalDeps[dbomRef] === undefined) {
+    possibleOptionalDeps[dbomRef] = true;
+  }
+  if (dependenciesMap[dbomRef] && !visited[dbomRef]) {
+    visited[dbomRef] = true;
+    for (const eachDep of dependenciesMap[dbomRef]) {
+      if (possibleOptionalDeps[eachDep] !== false) {
+        _markTreeOptional(
+          eachDep,
+          dependenciesMap,
+          possibleOptionalDeps,
+          visited,
+        );
+      }
+      visited[eachDep] = true;
+    }
+  }
+}
+
 /**
  * Parse nodejs pnpm lock file
  *
@@ -1448,7 +1473,12 @@ export async function parseNodeShrinkwrap(swFile) {
 export async function parsePnpmLock(pnpmLock, parentComponent = null) {
   let pkgList = [];
   const dependenciesList = [];
+  // For lockfile >= 9, we need to track dev and optional packages manually
+  // See: #1163
+  const possibleOptionalDeps = {};
+  const dependenciesMap = {};
   let ppurl = "";
+  let lockfileVersion = 0;
   if (parentComponent?.name) {
     ppurl =
       parentComponent.purl ||
@@ -1470,7 +1500,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
     if (!yamlObj) {
       return {};
     }
-    let lockfileVersion = yamlObj.lockfileVersion;
+    lockfileVersion = yamlObj.lockfileVersion;
     try {
       lockfileVersion = Number.parseFloat(lockfileVersion, 10);
     } catch (e) {
@@ -1479,13 +1509,60 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
     // This logic matches the pnpm list command to include only direct dependencies
     if (ppurl !== "") {
       // In lock file version 9, direct dependencies is under importers
-      const ddeps =
+      const rootDirectDeps =
         lockfileVersion >= 9
           ? yamlObj.importers["."]?.dependencies || {}
           : yamlObj.dependencies || {};
+      const rootDevDeps =
+        lockfileVersion >= 9
+          ? yamlObj.importers["."]?.devDependencies || {}
+          : {};
+      const rootOptionalDeps =
+        lockfileVersion >= 9
+          ? yamlObj.importers["."]?.optionalDependencies || {}
+          : {};
       const ddeplist = [];
-      for (const dk of Object.keys(ddeps)) {
-        let version = ddeps[dk];
+      // Find the root optional dependencies
+      for (const rdk of Object.keys(rootDevDeps)) {
+        let version = rootDevDeps[rdk];
+        if (typeof version === "object" && version.version) {
+          version = version.version;
+        }
+        // version: 3.0.1(ajv@8.14.0)
+        if (version?.includes("(")) {
+          version = version.split("(")[0];
+        }
+        const dpurl = new PackageURL(
+          "npm",
+          "",
+          rdk,
+          version,
+          null,
+          null,
+        ).toString();
+        possibleOptionalDeps[decodeURIComponent(dpurl)] = true;
+      }
+      for (const rdk of Object.keys(rootOptionalDeps)) {
+        let version = rootOptionalDeps[rdk];
+        if (typeof version === "object" && version.version) {
+          version = version.version;
+        }
+        // version: 3.0.1(ajv@8.14.0)
+        if (version?.includes("(")) {
+          version = version.split("(")[0];
+        }
+        const dpurl = new PackageURL(
+          "npm",
+          "",
+          rdk,
+          version,
+          null,
+          null,
+        ).toString();
+        possibleOptionalDeps[decodeURIComponent(dpurl)] = true;
+      }
+      for (const dk of Object.keys(rootDirectDeps)) {
+        let version = rootDirectDeps[dk];
         if (typeof version === "object" && version.version) {
           version = version.version;
         }
@@ -1502,6 +1579,10 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
           null,
         ).toString();
         ddeplist.push(decodeURIComponent(dpurl));
+        if (lockfileVersion >= 9) {
+          // These are direct dependencies so cannot be optional
+          possibleOptionalDeps[decodeURIComponent(dpurl)] = false;
+        }
       }
       dependenciesList.push({
         ref: decodeURIComponent(ppurl),
@@ -1511,7 +1592,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
     const packages = yamlObj.packages || {};
     // snapshots is a new key under lockfile version 9
     const snapshots = yamlObj.snapshots || {};
-    const pkgKeys = Object.keys(packages);
+    const pkgKeys = { ...Object.keys(packages), ...Object.keys(snapshots) };
     for (const k in pkgKeys) {
       // Eg: @babel/code-frame/7.10.1
       // In lockfileVersion 6, /@babel/code-frame@7.18.6
@@ -1521,19 +1602,72 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
         fullName = fullName.split("(")[0];
       }
       const parts = fullName.split("/");
-      const integrity = packages[pkgKeys[k]].resolution.integrity;
+      const packageNode =
+        packages[pkgKeys[k]] ||
+        snapshots[pkgKeys[k]] ||
+        packages[fullName] ||
+        snapshots[fullName];
+      if (!packageNode) {
+        continue;
+      }
+      const resolution =
+        packages[pkgKeys[k]]?.resolution ||
+        snapshots[pkgKeys[k]]?.resolution ||
+        packages[fullName]?.resolution ||
+        snapshots[fullName]?.resolution;
+      const integrity = resolution?.integrity;
       // In lock file version 9, dependencies is under snapshots
       const deps =
-        packages[pkgKeys[k]].dependencies ||
+        packages[pkgKeys[k]]?.dependencies ||
         snapshots[pkgKeys[k]]?.dependencies ||
-        [];
-      const scope = packages[pkgKeys[k]].dev === true ? "optional" : undefined;
+        packages[fullName]?.dependencies ||
+        snapshots[fullName]?.dependencies ||
+        {};
+      const optionalDeps =
+        packages[pkgKeys[k]]?.optionalDependencies ||
+        snapshots[pkgKeys[k]]?.optionalDependencies ||
+        packages[fullName]?.optionalDependencies ||
+        snapshots[fullName]?.optionalDependencies ||
+        {};
+      // Track the explicit optional dependencies of this package
+      for (const opkgName of Object.keys(optionalDeps)) {
+        let vers = optionalDeps[opkgName];
+        if (vers?.includes("(")) {
+          vers = vers.split("(")[0];
+        }
+        const opurlString = new PackageURL(
+          "npm",
+          "",
+          opkgName,
+          vers,
+          null,
+          null,
+        ).toString();
+        const obomRef = decodeURIComponent(opurlString);
+        if (possibleOptionalDeps[obomRef] === undefined) {
+          possibleOptionalDeps[obomRef] = true;
+        }
+      }
+      let scope =
+        packageNode.dev === true || packageNode.optional === true
+          ? "optional"
+          : undefined;
+      // In v9, a package can be declared optional in more places :(
+      if (
+        lockfileVersion >= 9 &&
+        (packages[pkgKeys[k]]?.optional === true ||
+          snapshots[pkgKeys[k]]?.optional === true ||
+          packages[fullName]?.optional === true ||
+          snapshots[fullName]?.optional === true)
+      ) {
+        scope = "optional";
+      }
       if (parts?.length) {
         let name = "";
         let version = "";
         let group = "";
-        const hasBin = packages[pkgKeys[k]]?.hasBin;
-        const deprecatedMessage = packages[pkgKeys[k]]?.deprecated;
+        const hasBin = packageNode?.hasBin;
+        const deprecatedMessage = packageNode?.deprecated;
         if (lockfileVersion >= 9 && fullName.includes("@")) {
           group = parts.length > 1 ? parts[0] : "";
           const tmpA = parts[parts.length - 1].split("@");
@@ -1583,6 +1717,8 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
             null,
             null,
           ).toString();
+          const bomRef = decodeURIComponent(purlString);
+          const isBaseOptional = possibleOptionalDeps[bomRef];
           const deplist = [];
           for (let dpkgName of Object.keys(deps)) {
             let vers = deps[dpkgName];
@@ -1605,12 +1741,25 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
               null,
               null,
             ).toString();
-            deplist.push(decodeURIComponent(dpurlString));
+            const dbomRef = decodeURIComponent(dpurlString);
+            deplist.push(dbomRef);
+            // If the base package is optional, make the dependencies optional too
+            // We need to repeat the optional detection down the line to find these new packages
+            if (isBaseOptional && possibleOptionalDeps[dbomRef] === undefined) {
+              possibleOptionalDeps[dbomRef] = true;
+              scope = "optional";
+              _markTreeOptional(
+                dbomRef,
+                dependenciesMap,
+                possibleOptionalDeps,
+                {},
+              );
+            }
           }
-          dependenciesList.push({
-            ref: decodeURIComponent(purlString),
-            dependsOn: deplist,
-          });
+          if (!dependenciesMap[bomRef]) {
+            dependenciesMap[bomRef] = [];
+          }
+          dependenciesMap[bomRef] = dependenciesMap[bomRef].concat(deplist);
           const properties = [
             {
               name: "SrcFile",
@@ -1654,6 +1803,30 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
           });
         }
       }
+    }
+  }
+  // We need to repeat optional packages detection
+  if (Object.keys(possibleOptionalDeps).length) {
+    for (const apkg of pkgList) {
+      if (!apkg.scope) {
+        if (possibleOptionalDeps[apkg["bom-ref"]]) {
+          apkg.scope = "optional";
+          _markTreeOptional(
+            apkg["bom-ref"],
+            dependenciesMap,
+            possibleOptionalDeps,
+            {},
+          );
+        }
+      }
+    }
+  }
+  if (Object.keys(dependenciesMap).length) {
+    for (const aref of Object.keys(dependenciesMap)) {
+      dependenciesList.push({
+        ref: aref,
+        dependsOn: dependenciesMap[aref].sort(),
+      });
     }
   }
   if (FETCH_LICENSE && pkgList && pkgList.length) {
