@@ -397,7 +397,7 @@ export function parsePoetrylockData(lockData: any, lockFile: string): Promise<an
     }[];
 }>;
 /**
- * Method to parse requirements.txt data
+ * Method to parse requirements.txt data. This must be replaced with atom parsedeps.
  *
  * @param {Object} reqData Requirements.txt data
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
