@@ -49,6 +49,7 @@ ENV GOPATH=/opt/app-root/go \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm" \
+    TMPDIR=/tmp \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:
 
@@ -68,7 +69,7 @@ RUN set -e; \
     esac \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
     python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
-        pcre2 which tar gzip zip unzip sudo ncurses sqlite-devel dotnet-sdk-8.0 \
+        pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel dotnet-sdk-8.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
     && python${PYTHON_VERSION} --version \
     && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
