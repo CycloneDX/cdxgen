@@ -2724,12 +2724,14 @@ test("parsePnpmLock", async () => {
   });
   expect(parsedList.pkgList).toHaveLength(1007);
   expect(parsedList.dependenciesList).toHaveLength(1006);
+  expect(parsedList.pkgList.filter((pkg) => !pkg.scope)).toHaveLength(0);
   parsedList = await parsePnpmLock("./test/data/pnpm-lock9b.yaml", {
     name: "pnpm9",
     purl: "pkg:npm/pnpm9@1.0.0",
   });
   expect(parsedList.pkgList).toHaveLength(1366);
   expect(parsedList.dependenciesList).toHaveLength(1353);
+  expect(parsedList.pkgList.filter((pkg) => !pkg.scope)).toHaveLength(12);
   parsedList = await parsePnpmLock("./test/data/pnpm-lock9c.yaml", {
     name: "pnpm9",
     purl: "pkg:npm/pnpm9@1.0.0",

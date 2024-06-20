@@ -1822,9 +1822,11 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
     }
   }
 
-  const requiredDependencies = new Set();
+  // Problem: We might have over aggressively marked a package as optional even it is both required and optional
+  // The below loops ensure required packages continue to stay required
+  // See #1184
+  const requiredDependencies = {};
   const requiredDependencyStack = [];
-
   // Initialize the required dependency stack
   for (const dependency in possibleOptionalDeps) {
     if (possibleOptionalDeps[dependency] === false) {
@@ -1834,12 +1836,12 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
 
   // Walk the required dependency stack iteratively and mark it as required
   while (requiredDependencyStack.length > 0) {
-    const requiredDependency = requiredDependencyStack.pop();
-    if (!requiredDependencies.has(requiredDependency)) {
-      requiredDependencies.add(requiredDependency);
-      if (dependenciesMap[requiredDependency]) {
-        for (const subDependency of dependenciesMap[requiredDependency]) {
-          requiredDependencyStack.push(subDependency);
+    const requiredDependencyRef = requiredDependencyStack.pop();
+    if (!requiredDependencies[requiredDependencyRef]) {
+      requiredDependencies[requiredDependencyRef] = true;
+      if (dependenciesMap[requiredDependencyRef]) {
+        for (const subDependencyRef of dependenciesMap[requiredDependencyRef]) {
+          requiredDependencyStack.push(subDependencyRef);
         }
       }
     }
@@ -1847,7 +1849,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
 
   // Ensure any required dependency is not scoped optionally
   for (const apkg of pkgList) {
-    if (requiredDependencies.has(apkg["bom-ref"])) {
+    if (requiredDependencies[apkg["bom-ref"]]) {
       apkg.scope = undefined;
     }
   }
