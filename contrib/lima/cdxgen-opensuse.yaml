@@ -16,9 +16,12 @@ env:
   MAVEN_VERSION: 3.9.7
   SBT_VERSION: 1.9.8
   GRADLE_VERSION: 8.8
-  MAVEN_HOME: "/opt/maven/current"
-  GRADLE_HOME=: /opt/gradle/current"
-  SBT_HOME: "/opt/sbt/current"
+  MAVEN_HOME: /opt/maven/current
+  MAVEN_CMD: /opt/maven/current/bin/mvn
+  GRADLE_HOME: /opt/gradle/current
+  GRADLE_CMD: /opt/gradle/current/bin/gradle
+  SBT_HOME: /opt/sbt/current
+  SBT_CMD: /opt/sbt/current/bin/sbt
 provision:
 - mode: dependency
   skipDefaultDependencyResolution: false
@@ -44,7 +47,7 @@ provision:
     export MAVEN_HOME="/opt/maven/${MAVEN_VERSION}"
     export GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}"
     export SBT_HOME="/opt/sbt/${SBT_VERSION}"
-    export PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:/opt/pypi/bin:
+    export PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:
     curl -s "https://get.sdkman.io" | bash
     source "/.sdkman/bin/sdkman-init.sh"
     echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> /.sdkman/etc/config
@@ -55,23 +58,11 @@ provision:
     mkdir -p /opt
     mv /.sdkman/candidates/* /opt/
     rm -rf /.sdkman
-    mkdir -p /opt/pypi
     python -m pip install --upgrade pip virtualenv
-    python -m pip install poetry pipenv blint custom-json-diff owasp-depscan --target /opt/pypi
+    python -m pip install poetry pipenv blint custom-json-diff owasp-depscan
     node -v
     npm -v
     gcc --version
     zypper clean -a
     npm install -g @cyclonedx/cdxgen --omit=dev
     cdxgen --version
-- mode: user
-  script: |
-    #!/bin/bash
-    set -e -o pipefail
-    export MAVEN_VERSION=3.9.7
-    export SBT_VERSION=1.9.8
-    export GRADLE_VERSION=8.8
-    export MAVEN_HOME="/opt/maven/${MAVEN_VERSION}"
-    export GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}"
-    export SBT_HOME="/opt/sbt/${SBT_VERSION}"
-    export PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:/opt/pypi/bin:
