@@ -1821,6 +1821,39 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
       }
     }
   }
+
+  // Problem: We might have over aggressively marked a package as optional even it is both required and optional
+  // The below loops ensure required packages continue to stay required
+  // See #1184
+  const requiredDependencies = {};
+  const requiredDependencyStack = [];
+  // Initialize the required dependency stack
+  for (const dependency in possibleOptionalDeps) {
+    if (possibleOptionalDeps[dependency] === false) {
+      requiredDependencyStack.push(dependency);
+    }
+  }
+
+  // Walk the required dependency stack iteratively and mark it as required
+  while (requiredDependencyStack.length > 0) {
+    const requiredDependencyRef = requiredDependencyStack.pop();
+    if (!requiredDependencies[requiredDependencyRef]) {
+      requiredDependencies[requiredDependencyRef] = true;
+      if (dependenciesMap[requiredDependencyRef]) {
+        for (const subDependencyRef of dependenciesMap[requiredDependencyRef]) {
+          requiredDependencyStack.push(subDependencyRef);
+        }
+      }
+    }
+  }
+
+  // Ensure any required dependency is not scoped optionally
+  for (const apkg of pkgList) {
+    if (requiredDependencies[apkg["bom-ref"]]) {
+      apkg.scope = undefined;
+    }
+  }
+
   if (Object.keys(dependenciesMap).length) {
     for (const aref of Object.keys(dependenciesMap)) {
       dependenciesList.push({
