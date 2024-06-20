@@ -429,6 +429,10 @@ Refer to the nydus-demo.yml workflow for an example github action that demonstra
 sudo nerdctl --snapshotter nydus run --rm -v $HOME/.m2:/root/.m2 -v $(pwd):/app ghcr.io/cyclonedx/cdxgen:master-nydus -p -t java /app
 ```
 
+## Lima VM usage
+
+Refer to the dedicated [readme](../contrib/lima/README.md)
+
 ## Export as protobuf binary
 
 Pass the argument `--export-proto` to serialize and export the BOM as a protobuf binary. Only the spec version 1.5 is supported in this mode.
