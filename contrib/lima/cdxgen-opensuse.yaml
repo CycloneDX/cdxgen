@@ -1,0 +1,77 @@
+# This template requires Lima v0.7.0 or later
+images:
+- location: "https://download.opensuse.org/distribution/leap/15.6/appliances/openSUSE-Leap-15.6-Minimal-VM.x86_64-Cloud.qcow2"
+  arch: "x86_64"
+- location: "https://download.opensuse.org/distribution/leap/15.6/appliances/openSUSE-Leap-15.6-Minimal-VM.aarch64-Cloud.qcow2"
+  arch: "aarch64"
+mounts:
+- location: "~"
+  mountPoint: /home/cdxgen
+- location: "/tmp/cdxgen"
+  writable: true
+containerd:
+  system: false
+  user: true
+env:
+  MAVEN_VERSION: 3.9.7
+  SBT_VERSION: 1.9.8
+  GRADLE_VERSION: 8.8
+  MAVEN_HOME: "/opt/maven/current"
+  GRADLE_HOME=: /opt/gradle/current"
+  SBT_HOME: "/opt/sbt/current"
+provision:
+- mode: dependency
+  skipDefaultDependencyResolution: false
+  script: |
+    #!/bin/bash
+    set -e -o pipefail
+    zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 \
+      python311 python311-pip python311-devel wget zip unzip make gawk bzip2 findutils java-21-openjdk-devel libicu-devel rust1.78 cargo1.78 \
+      gcc13 gcc13-c++ gcc13-fortran \
+      clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
+      postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 10
+    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 10
+    update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-13 10
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.11 10
+- mode: system
+  script: |
+    #!/bin/bash
+    set -e -o pipefail
+    export MAVEN_VERSION=3.9.7
+    export SBT_VERSION=1.9.8
+    export GRADLE_VERSION=8.8
+    export MAVEN_HOME="/opt/maven/${MAVEN_VERSION}"
+    export GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}"
+    export SBT_HOME="/opt/sbt/${SBT_VERSION}"
+    export PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:/opt/pypi/bin:
+    curl -s "https://get.sdkman.io" | bash
+    source "/.sdkman/bin/sdkman-init.sh"
+    echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> /.sdkman/etc/config
+    sdk install maven $MAVEN_VERSION
+    sdk install gradle $GRADLE_VERSION
+    sdk install sbt $SBT_VERSION
+    sdk offline enable
+    mkdir -p /opt
+    mv /.sdkman/candidates/* /opt/
+    rm -rf /.sdkman
+    mkdir -p /opt/pypi
+    python -m pip install --upgrade pip virtualenv
+    python -m pip install poetry pipenv blint custom-json-diff owasp-depscan --target /opt/pypi
+    node -v
+    npm -v
+    gcc --version
+    zypper clean -a
+    npm install -g @cyclonedx/cdxgen --omit=dev
+    cdxgen --version
+- mode: user
+  script: |
+    #!/bin/bash
+    set -e -o pipefail
+    export MAVEN_VERSION=3.9.7
+    export SBT_VERSION=1.9.8
+    export GRADLE_VERSION=8.8
+    export MAVEN_HOME="/opt/maven/${MAVEN_VERSION}"
+    export GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}"
+    export SBT_HOME="/opt/sbt/${SBT_VERSION}"
+    export PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:/opt/pypi/bin:
