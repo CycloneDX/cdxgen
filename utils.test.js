@@ -2718,12 +2718,25 @@ test("parsePnpmLock", async () => {
       },
     },
   });
-  parsedList = await parsePnpmLock("./test/data/pnpm-lock9a.yaml");
-  expect(parsedList.pkgList.length).toEqual(1007);
-  expect(parsedList.dependenciesList.length).toEqual(1005);
-  parsedList = await parsePnpmLock("./test/data/pnpm-lock9b.yaml");
-  expect(parsedList.pkgList.length).toEqual(1366);
-  expect(parsedList.dependenciesList.length).toEqual(1352);
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock9a.yaml", {
+    name: "pnpm9",
+    purl: "pkg:npm/pnpm9@1.0.0",
+  });
+  expect(parsedList.pkgList).toHaveLength(1007);
+  expect(parsedList.dependenciesList).toHaveLength(1006);
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock9b.yaml", {
+    name: "pnpm9",
+    purl: "pkg:npm/pnpm9@1.0.0",
+  });
+  expect(parsedList.pkgList).toHaveLength(1366);
+  expect(parsedList.dependenciesList).toHaveLength(1353);
+  parsedList = await parsePnpmLock("./test/data/pnpm-lock9c.yaml", {
+    name: "pnpm9",
+    purl: "pkg:npm/pnpm9@1.0.0",
+  });
+  expect(parsedList.pkgList).toHaveLength(461);
+  expect(parsedList.dependenciesList).toHaveLength(462);
+  expect(parsedList.pkgList.filter((pkg) => !pkg.scope)).toHaveLength(3);
   parsedList = await parsePnpmLock("./pnpm-lock.yaml");
   expect(parsedList.pkgList.length).toEqual(654);
   expect(parsedList.dependenciesList.length).toEqual(654);

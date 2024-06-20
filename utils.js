@@ -1821,6 +1821,37 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
       }
     }
   }
+
+  const requiredDependencies = new Set();
+  const requiredDependencyStack = [];
+
+  // Initialize the required dependency stack
+  for (const dependency in possibleOptionalDeps) {
+    if (possibleOptionalDeps[dependency] === false) {
+      requiredDependencyStack.push(dependency);
+    }
+  }
+
+  // Walk the required dependency stack iteratively and mark it as required
+  while (requiredDependencyStack.length > 0) {
+    const requiredDependency = requiredDependencyStack.pop();
+    if (!requiredDependencies.has(requiredDependency)) {
+      requiredDependencies.add(requiredDependency);
+      if (dependenciesMap[requiredDependency]) {
+        for (const subDependency of dependenciesMap[requiredDependency]) {
+          requiredDependencyStack.push(subDependency);
+        }
+      }
+    }
+  }
+
+  // Ensure any required dependency is not scoped optionally
+  for (const apkg of pkgList) {
+    if (requiredDependencies.has(apkg["bom-ref"])) {
+      apkg.scope = undefined;
+    }
+  }
+
   if (Object.keys(dependenciesMap).length) {
     for (const aref of Object.keys(dependenciesMap)) {
       dependenciesList.push({
