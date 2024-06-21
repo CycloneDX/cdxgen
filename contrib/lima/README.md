@@ -4,13 +4,25 @@
 
 ## Getting Started
 
-Use the below command to create a cdxgen vm.
+Use the below command to install lima and create a cdxgen vm.
 
 ```shell
 brew install lima
+```
+
+on Linux
+
+```shell
+curl -LO https://github.com/lima-vm/lima/releases/download/v0.22.0/lima-0.22.0-Linux-x86_64.tar.gz
+sudo tar -C /usr/local -xf lima-0.22.0-Linux-x86_64.tar.gz
+```
+
+```shell
 git clone https://github.com/CycloneDX/cdxgen.git
 cd cdxgen
+
 # The below command might take several minutes
+
 limactl start --name=cdxgen contrib/lima/cdxgen-opensuse.yaml --tty=false
 ```
 
