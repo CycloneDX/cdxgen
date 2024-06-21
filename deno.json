@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.7.0",
+  "version": "10.7.1",
   "exports": "./index.js",
   "compilerOptions": {
     "allowJs": true,
@@ -52,7 +52,7 @@
     "cheerio": "npm:cheerio@^1.0.0-rc.12",
     "edn-data": "npm:edn-data@1.1.2",
     "find-up": "npm:find-up@7.0.0",
-    "glob": "npm:glob@^10.4.1",
+    "glob": "npm:glob@^10.4.2",
     "global-agent": "npm:global-agent@^3.0.0",
     "got": "npm:got@14.4.1",
     "iconv-lite": "npm:iconv-lite@^0.6.3",
