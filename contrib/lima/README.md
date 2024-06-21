@@ -12,6 +12,8 @@ brew install lima
 
 on Linux
 
+Install qemu, qemu-img, qemu-x86 packages.
+
 ```shell
 curl -LO https://github.com/lima-vm/lima/releases/download/v0.22.0/lima-0.22.0-Linux-x86_64.tar.gz
 sudo tar -C /usr/local -xf lima-0.22.0-Linux-x86_64.tar.gz
@@ -42,6 +44,12 @@ INFO[0001] [hostagent] Using system firmware ("/usr/local/share/qemu/edk2-x86_64
 INFO[0001] [hostagent] Starting QEMU (hint: to watch the boot progress, see "/Users/user/.lima/cdxgen/serial*.log")
 INFO[0002] SSH Local Port: 61020
 INFO[0001] [hostagent] Waiting for the essential requirement 1 of 4: "ssh"
+```
+
+Pass `--arch=aarch64` to create an arm64 version. You may need this [bios](https://gitlab.com/kraxel/qemu/-/blob/master/pc-bios/edk2-aarch64-code.fd.bz2?ref_type=heads) file under `$HOME/.local/share/qemu/` directory.
+
+```shell
+limactl start --name=cdxgen-aarch64 --arch=aarch64 contrib/lima/cdxgen-opensuse.yaml --tty=false
 ```
 
 To open a shell to the cdxgen VM:
