@@ -2678,7 +2678,7 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
       console.log(
         "2. Try running cdxgen with the unofficial JDK11-based image `ghcr.io/appthreat/cdxgen-java:v10`.",
       );
-      if (result.stderr.includes("not get unknown property")) {
+      if (result.stderr?.includes("not get unknown property")) {
         console.log(
           "3. Check if the SBOM is generated for the correct root project for your application.",
         );
@@ -2744,7 +2744,7 @@ export function executeGradleProperties(dir, rootPath, subProject) {
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
-      if (result.stderr.includes("does not exist")) {
+      if (result.stderr?.includes("does not exist")) {
         return defaultProps;
       }
       console.error(result.stdout, result.stderr);
@@ -2754,7 +2754,7 @@ export function executeGradleProperties(dir, rootPath, subProject) {
       console.log(
         "2. Try running cdxgen with the unofficial JDK11-based image `ghcr.io/appthreat/cdxgen-java:v10`.",
       );
-      if (result.stderr.includes("not get unknown property")) {
+      if (result.stderr?.includes("not get unknown property")) {
         console.log(
           "3. Check if the SBOM is generated for the correct root project for your application.",
         );
@@ -8989,7 +8989,7 @@ export async function getJarClasses(jarFile) {
         maxBuffer: 50 * 1024 * 1024,
       });
       if (
-        jarResult?.stderr.includes(
+        jarResult?.stderr?.includes(
           "is not recognized as an internal or external command",
         )
       ) {
@@ -9241,16 +9241,18 @@ export function executeAtom(src, args) {
   });
   if (result.stderr) {
     if (
-      result.stderr.includes(
+      result.stderr?.includes(
         "has been compiled by a more recent version of the Java Runtime",
       ) ||
-      result.stderr.includes("Error: Could not create the Java Virtual Machine")
+      result.stderr?.includes(
+        "Error: Could not create the Java Virtual Machine",
+      )
     ) {
       console.log(
         "Atom requires Java 21 or above. To improve the SBOM accuracy, please install a suitable version, set the JAVA_HOME environment variable, and re-run cdxgen.\nAlternatively, use the cdxgen container image.",
       );
       console.log(`Current JAVA_HOME: ${env["JAVA_HOME"] || ""}`);
-    } else if (result.stderr.includes("astgen")) {
+    } else if (result.stderr?.includes("astgen")) {
       console.warn(
         "WARN: Unable to locate astgen command. Install atom globally using sudo npm install -g @appthreat/atom to resolve this issue.",
       );
@@ -9571,10 +9573,10 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         frozen = false;
         let versionRelatedError = false;
         if (
-          result?.stderr.includes(
+          result.stderr?.includes(
             "Could not find a version that satisfies the requirement",
           ) ||
-          result?.stderr.includes("No matching distribution found for")
+          result.stderr?.includes("No matching distribution found for")
         ) {
           versionRelatedError = true;
           console.log(
