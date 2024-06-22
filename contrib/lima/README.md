@@ -49,6 +49,7 @@ INFO[0001] [hostagent] Waiting for the essential requirement 1 of 4: "ssh"
 Pass `--arch=aarch64` to create an arm64 version. You may need this [bios](https://gitlab.com/kraxel/qemu/-/blob/master/pc-bios/edk2-aarch64-code.fd.bz2?ref_type=heads) file under `$HOME/.local/share/qemu/` directory.
 
 ```shell
+# Takes a lot more time
 limactl start --name=cdxgen-aarch64 --arch=aarch64 contrib/lima/cdxgen-opensuse.yaml --tty=false
 ```
 
@@ -62,4 +63,20 @@ To stop the VM:
 
 ```shell
 limactl stop cdxgen
+```
+
+## Usage
+
+Create a command alias to use the VM version of cdxgen.
+
+```shell
+alias cdxgen="limactl shell cdxgen cdxgen"
+```
+
+## Troubleshooting
+
+Monitor the installation by tailing the `/var/log/cloud-init-output.log` file.
+
+```shell
+limactl shell cdxgen-aarch64 sudo tail -f /var/log/cloud-init-output.log
 ```

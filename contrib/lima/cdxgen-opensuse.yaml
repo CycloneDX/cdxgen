@@ -28,9 +28,21 @@ provision:
   script: |
     #!/bin/bash
     set -eux -o pipefail
-    zypper --non-interactive addrepo --gpgcheck-allow-unsigned --no-keep-packages -f https://download.opensuse.org/repositories/devel:languages:nodejs/15.6/devel:languages:nodejs.repo
-    zypper --gpg-auto-import-keys ref
-    zypper --non-interactive install -l --no-recommends nodejs22 npm22
+    ARCH_NAME="$(rpm --eval '%{_arch}')";
+    url=;
+    case "${ARCH_NAME##*-}" in
+        'x86_64')
+            OS_ARCH_SUFFIX='';
+            zypper --gpg-auto-import-keys ref
+            zypper --non-interactive addrepo --gpgcheck-allow-unsigned --no-keep-packages -f https://download.opensuse.org/repositories/devel:languages:nodejs/15.6/devel:languages:nodejs.repo;
+            zypper --non-interactive install -l --no-recommends nodejs22 npm22;
+            ;;
+        'aarch64')
+            OS_ARCH_SUFFIX='-aarch64';
+            zypper --non-interactive install -l --no-recommends nodejs20 npm20;
+            ;;
+        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;;
+    esac
     zypper --non-interactive install -l --no-recommends git-core \
       python312 python312-pip python312-devel wget zip unzip make gawk bzip2 findutils java-21-openjdk-devel libicu-devel rust1.78 cargo1.78 \
       gcc13 gcc13-c++ gcc13-fortran \
