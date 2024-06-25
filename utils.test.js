@@ -3377,14 +3377,14 @@ test("parse requirements.txt", async () => {
   );
   expect(deps.length).toEqual(375);
   expect(deps[0]).toEqual({
-    "name": "adal",
-    "scope": undefined,
-    "version": "1.2.2",
+    name: "adal",
+    scope: undefined,
+    version: "1.2.2",
   });
   expect(deps[deps.length - 1]).toEqual({
-    "name": "zipp",
-    "scope": undefined,
-    "version": "0.6.0",
+    name: "zipp",
+    scope: undefined,
+    version: "0.6.0",
   });
 });
 
