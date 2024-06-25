@@ -3369,6 +3369,23 @@ test("parse requirements.txt", async () => {
       },
     ],
   });
+  deps = await parseReqFile(
+    readFileSync("./test/data/requirements-lock.linux_py3.txt", {
+      encoding: "utf-8",
+    }),
+    false,
+  );
+  expect(deps.length).toEqual(375);
+  expect(deps[0]).toEqual({
+    "name": "adal",
+    "scope": undefined,
+    "version": "1.2.2",
+  });
+  expect(deps[deps.length - 1]).toEqual({
+    "name": "zipp",
+    "scope": undefined,
+    "version": "0.6.0",
+  });
 });
 
 test("parse pyproject.toml", () => {
