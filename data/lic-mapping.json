@@ -17,9 +17,7 @@
       "Apache Public License 2.0",
       "Apache Software License - Version 2.0",
       "The Apache License, Version 2.0",
-      "BSD or Apache License, Version 2.0",
       "Apache Software License",
-      "Apache-2.0 OR MIT",
       "Apache2.0",
       "apache-2-0",
       "APL2",
@@ -241,7 +239,8 @@
       "GNU General Public License v2.0 or later",
       "GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version",
       "GNU GPLv2 or any later version",
-      "GPLv2+"
+      "GPLv2+",
+      "GNU General Public License v2 or later (GPLv2+)"
     ]
   },
   {
@@ -286,6 +285,10 @@
       "GNU Affero General Public License v3",
       "GNU Affero General Public License v3.0"
     ]
+  },
+  {
+    "exp": "MIT-0",
+    "names": ["MIT No Attribution License (MIT-0)", "MIT No Attribution"]
   },
   {
     "exp": "MIT",
