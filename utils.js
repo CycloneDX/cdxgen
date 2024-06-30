@@ -2633,7 +2633,7 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
   for (const spstr of allProjectsStr) {
     parallelPropTaskArgs.push(`${spstr}:properties`);
   }
-  
+
   let gradlePropertiesArgs = [
     "--console",
     "plain",
@@ -9094,7 +9094,6 @@ export function splitOutputByGradleProjects(rawOutput) {
       outputSplitBySubprojects.set(currentProjectName, subProjectOut);
     }
   }
-  console.log(JSON.stringify(outputSplitBySubprojects))
   return outputSplitBySubprojects;
 }
 /**
