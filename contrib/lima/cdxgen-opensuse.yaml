@@ -44,15 +44,15 @@ provision:
         *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;;
     esac
     zypper --non-interactive install -l --no-recommends git-core \
-      python312 python312-pip python312-devel wget zip unzip make gawk bzip2 findutils java-21-openjdk-devel libicu-devel rust1.78 cargo1.78 \
-      gcc13 gcc13-c++ gcc13-fortran \
+      python311 python311-pip python311-devel wget zip unzip make gawk bzip2 findutils java-21-openjdk-devel libicu-devel rust1.78 cargo1.78 \
+      gcc13 gcc13-c++ gcc13-fortran nodejs20 nodejs20-devel \
       clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
       postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 10
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 10
     update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-13 10
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 10
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 10
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.11 10
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 10
     python -m pip install --upgrade pip virtualenv
     python -m pip install poetry pipenv blint custom-json-diff owasp-depscan
 - mode: system
@@ -76,10 +76,10 @@ provision:
     mkdir -p /opt
     mv /.sdkman/candidates/* /opt/
     rm -rf /.sdkman
+    npm install -g node-gyp @cyclonedx/cdxgen --omit=dev
+    npx node-gyp install
     node -v
     npm -v
     gcc --version
     zypper clean -a
-    npm install -g node-gyp @cyclonedx/cdxgen --omit=dev
-    npx node-gyp install
     cdxgen --version
