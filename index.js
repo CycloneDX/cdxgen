@@ -4410,7 +4410,9 @@ export async function createContainerSpecLikeBom(path, options) {
             if (imageBomData?.bomJson?.components) {
               components = components.concat(imageBomData.bomJson.components);
             }
-            const bomData = await createBom(img.image, { projectType: "oci" });
+            const bomData = await createBom(img.image, {
+              projectType: ["oci"],
+            });
             doneimages.push(img.image);
             if (bomData) {
               if (bomData.components?.length) {
