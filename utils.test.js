@@ -179,9 +179,17 @@ test("splits parallel gradle properties output correctly", () => {
   expect(
     propOutputSplitBySubProject.has("dependency-diff-check-client-starter"),
   ).toBe(true);
+
+  const retMap = parseGradleProperties(
+    propOutputSplitBySubProject.get("dependency-diff-check"),
+  );
+  expect(retMap.rootProject).toEqual("dependency-diff-check");
+  expect(retMap.projects.length).toEqual(3);
+  expect(retMap.metadata.group).toEqual("com.ajmalab");
+  expect(retMap.metadata.version).toEqual("0.0.1-SNAPSHOT");
 });
 
-test("splits parallel gradle properties output correctly", () => {
+test("splits parallel gradle dependencies output correctly", () => {
   const parallelGradleDepOutput = readFileSync(
     "./test/gradle-dep-parallel.out",
     { encoding: "utf-8" },
@@ -201,6 +209,12 @@ test("splits parallel gradle properties output correctly", () => {
   expect(
     depOutputSplitBySubProject.has("dependency-diff-check-client-starter"),
   ).toBe(true);
+
+  const retMap = parseGradleDep(
+    depOutputSplitBySubProject.get("dependency-diff-check"),
+  );
+  expect(retMap.pkgList.length).toEqual(12);
+  expect(retMap.dependenciesList.length).toEqual(13);
 });
 
 test("parse gradle dependencies", () => {
