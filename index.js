@@ -36,7 +36,7 @@ import {
   LEIN_CMD,
   MAX_BUFFER,
   PREFER_MAVEN_DEPS_TREE,
-  PYTHON_EXCLUDED_COMPONENTS,
+  PROJECT_TYPE_ALIASES,
   SWIFT_CMD,
   TIMEOUT_MS,
   addEvidenceForDotnet,
@@ -67,6 +67,7 @@ import {
   getPyModules,
   getSwiftPackageMetadata,
   getTimestamp,
+  hasAnyProjectType,
   includeMavenTestScope,
   isValidIriReference,
   parseBazelActionGraph,
@@ -75,7 +76,6 @@ import {
   parseBitbucketPipelinesFile,
   parseBowerJson,
   parseCabalData,
-  parseCargoAuditableData,
   parseCargoData,
   parseCargoDependencyData,
   parseCargoTomlData,
@@ -372,7 +372,7 @@ const addLifecyclesSection = (options) => {
   } else if (options.deep) {
     lifecycles.push({ phase: "post-build" });
   }
-  if (options.projectType === "os") {
+  if (options.projectType?.includes("os")) {
     lifecycles.push({ phase: "operations" });
   }
   return lifecycles;
@@ -1248,7 +1248,9 @@ export async function createJavaBom(path, options) {
   let bomJsonFiles = [];
   if (
     pomFiles?.length &&
-    !["scala", "sbt", "gradle"].includes(options.projectType)
+    !options.projectType.includes("scala") &&
+    !options.projectType.includes("sbt") &&
+    !options.projectType.includes("gradle")
   ) {
     let result = undefined;
     const cdxMavenPlugin =
@@ -1604,7 +1606,7 @@ export async function createJavaBom(path, options) {
     gradleRootPath = dirname(gradleFiles[0]);
   }
   // Execute gradle properties
-  if (gradleFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
+  if (gradleFiles?.length && !hasAnyProjectType(["scala", "sbt"], options)) {
     let retMap = executeGradleProperties(gradleRootPath, null, null);
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
@@ -1718,7 +1720,8 @@ export async function createJavaBom(path, options) {
   if (
     gradleFiles?.length &&
     options.installDeps &&
-    !["scala", "sbt"].includes(options.projectType)
+    !options.projectType.includes("scala") &&
+    !options.projectType.includes("sbt")
   ) {
     const gradleCmd = getGradleCommand(gradleRootPath, null);
     const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
@@ -1912,7 +1915,11 @@ export async function createJavaBom(path, options) {
   // Bazel
   // Look for the BUILD file only in the root directory
   const bazelFiles = getAllFiles(path, "BUILD", options);
-  if (bazelFiles?.length && !["scala", "sbt"].includes(options.projectType)) {
+  if (
+    bazelFiles?.length &&
+    !options.projectType.includes("scala") &&
+    !options.projectType.includes("sbt")
+  ) {
     let BAZEL_CMD = "bazel";
     if (process.env.BAZEL_HOME) {
       BAZEL_CMD = join(process.env.BAZEL_HOME, "bin", "bazel");
@@ -2209,7 +2216,7 @@ export async function createNodejsBom(path, options) {
   const parentSubComponents = [];
   let ppurl = "";
   // Docker mode requires special handling
-  if (["docker", "oci", "container", "os"].includes(options.projectType)) {
+  if (hasAnyProjectType(["docker", "oci", "container", "os"], options)) {
     const pkgJsonFiles = getAllFiles(path, "**/package.json", options);
     // Are there any package.json files in the container?
     if (pkgJsonFiles.length) {
@@ -2230,7 +2237,7 @@ export async function createNodejsBom(path, options) {
   let allImports = {};
   let allExports = {};
   if (
-    !["docker", "oci", "container", "os"].includes(options.projectType) &&
+    !hasAnyProjectType(["docker", "oci", "container", "os"], options) &&
     !options.noBabel
   ) {
     if (DEBUG_MODE) {
@@ -3181,7 +3188,7 @@ export async function createGoBom(path, options) {
   if (gomodFiles.length) {
     let shouldManuallyParse = false;
     // Use the go list -deps and go mod why commands to generate a good quality BOM for non-docker invocations
-    if (!["docker", "oci", "container", "os"].includes(options.projectType)) {
+    if (!hasAnyProjectType(["docker", "oci", "container", "os"], options)) {
       for (const f of gomodFiles) {
         const basePath = dirname(f);
         // Ignore vendor packages
@@ -3306,7 +3313,7 @@ export async function createGoBom(path, options) {
       }
     }
     // Parse the gomod files manually. The resultant BOM would be incomplete
-    if (!["docker", "oci", "container", "os"].includes(options.projectType)) {
+    if (!hasAnyProjectType(["docker", "oci", "container", "os"], options)) {
       console.log(
         "Manually parsing go.mod files. The resultant BOM would be incomplete.",
       );
@@ -3661,7 +3668,7 @@ export function createCppBom(path, options) {
   // inside of other project types. So we currently limit this analyis only when -t argument
   // is used.
   if (
-    !["docker", "oci", "container", "os"].includes(options.projectType) &&
+    !hasAnyProjectType(["docker", "oci", "container", "os"], options) &&
     (!options.createMultiXBom || options.deep)
   ) {
     let osPkgsList = [];
@@ -4013,7 +4020,7 @@ export function createOSBom(path, options) {
   options.installDeps = false;
   options.parentComponent = parentComponent;
   // Force the project type to os
-  options.projectType = "os";
+  options.projectType = ["os"];
   options.lastWorkingDir = undefined;
   options.allLayersExplodedDir = isWin ? "C:\\" : "";
   const exportData = {
@@ -4837,20 +4844,20 @@ export async function createCsharpBom(path, options) {
   ) {
     const filesToRestore = slnFiles.concat(csProjFiles);
     for (const f of filesToRestore) {
-      const buildCmd =
-        options.projectType === "dotnet-framework" ? "nuget" : "dotnet";
-      const buildArgs =
-        options.projectType === "dotnet-framework"
-          ? [
-              "restore",
-              "-NonInteractive",
-              "-Recursive",
-              "-PackageSaveMode",
-              "nuspec;nupkg",
-              "-Verbosity",
-              "quiet",
-            ]
-          : ["restore", "--force", "--ignore-failed-sources", f];
+      const buildCmd = options.projectType?.includes("dotnet-framework")
+        ? "nuget"
+        : "dotnet";
+      const buildArgs = options.projectType?.includes("dotnet-framework")
+        ? [
+            "restore",
+            "-NonInteractive",
+            "-Recursive",
+            "-PackageSaveMode",
+            "nuspec;nupkg",
+            "-Verbosity",
+            "quiet",
+          ]
+        : ["restore", "--force", "--ignore-failed-sources", f];
       if (DEBUG_MODE) {
         const basePath = dirname(f);
         console.log(
@@ -5038,7 +5045,7 @@ export async function createCsharpBom(path, options) {
     }
   }
   if (
-    options.projectType === "dotnet-framework" ||
+    options.projectType?.includes("dotnet-framework") ||
     (!pkgList.length && csProjFiles.length && !nupkgFiles.length)
   ) {
     manifestFiles = manifestFiles.concat(csProjFiles);
@@ -5084,7 +5091,7 @@ export async function createCsharpBom(path, options) {
         );
       }
     }
-    if (pkgList.length && options.projectType !== "dotnet-framework") {
+    if (pkgList.length && !options.projectType?.includes("dotnet-framework")) {
       console.log(
         `Found ${pkgList.length} components by parsing the ${csProjFiles.length} csproj files. The resulting SBOM will be incomplete.`,
       );
@@ -5349,7 +5356,8 @@ export async function createMultiXBom(pathList, options) {
   let parentSubComponents = [];
   options.createMultiXBom = true;
   if (
-    ["docker", "oci", "container"].includes(options.projectType) &&
+    options.projectType &&
+    hasAnyProjectType(["oci"], options) &&
     options.allLayersExplodedDir
   ) {
     const { osPackages, dependenciesList, allTypes } = getOSPackages(
@@ -5376,7 +5384,7 @@ export async function createMultiXBom(pathList, options) {
       });
     }
   }
-  if (options.projectType === "os" && options.bomData) {
+  if (hasAnyProjectType(["os"], options) && options.bomData) {
     bomData = options.bomData;
     if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
@@ -5389,282 +5397,316 @@ export async function createMultiXBom(pathList, options) {
     if (DEBUG_MODE) {
       console.log("Scanning", path);
     }
-    bomData = await createNodejsBom(path, options);
-    if (bomData?.bomJson?.components?.length) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} npm packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-      // Retain metadata.component.components
-      if (bomData.parentComponent.components?.length) {
-        parentSubComponents = parentSubComponents.concat(
-          bomData.parentComponent.components,
-        );
-      }
-    }
-    bomData = await createJavaBom(path, options);
-    if (bomData?.bomJson?.components?.length) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} java packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-      // Retain metadata.component.components
-      if (bomData.parentComponent.components?.length) {
-        parentSubComponents = parentSubComponents.concat(
-          bomData.parentComponent.components,
-        );
+    // Node.js
+    if (hasAnyProjectType(["js"], options)) {
+      bomData = await createNodejsBom(path, options);
+      if (bomData?.bomJson?.components?.length) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} npm packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+        // Retain metadata.component.components
+        if (bomData.parentComponent.components?.length) {
+          parentSubComponents = parentSubComponents.concat(
+            bomData.parentComponent.components,
+          );
+        }
       }
     }
-    bomData = await createPythonBom(path, options);
-    if (bomData?.bomJson?.components?.length) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} python packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-    }
-    bomData = await createGoBom(path, options);
-    if (bomData?.bomJson?.components?.length) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} go packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+    // Java
+    if (hasAnyProjectType(["java"], options)) {
+      bomData = await createJavaBom(path, options);
+      if (bomData?.bomJson?.components?.length) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} java packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+        // Retain metadata.component.components
+        if (bomData.parentComponent.components?.length) {
+          parentSubComponents = parentSubComponents.concat(
+            bomData.parentComponent.components,
+          );
+        }
       }
     }
-    bomData = await createRustBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} rust packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-      // Retain metadata.component.components
-      if (bomData.parentComponent?.components?.length) {
-        parentSubComponents = parentSubComponents.concat(
-          bomData.parentComponent.components,
-        );
+    if (hasAnyProjectType(["py"], options)) {
+      bomData = await createPythonBom(path, options);
+      if (bomData?.bomJson?.components?.length) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} python packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
     }
-    bomData = createPHPBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} php packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-    }
-    bomData = await createRubyBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} ruby packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = mergeDependencies(
-        dependencies,
-        bomData.bomJson.dependencies,
-        bomData.parentComponent,
-      );
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+    if (hasAnyProjectType(["go"], options)) {
+      bomData = await createGoBom(path, options);
+      if (bomData?.bomJson?.components?.length) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} go packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
     }
-    bomData = await createCsharpBom(path, options);
-    if (bomData?.bomJson?.components?.length) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} csharp packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-    }
-    bomData = await createDartBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} pub packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+    if (hasAnyProjectType(["rust"], options)) {
+      bomData = await createRustBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} rust packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+        // Retain metadata.component.components
+        if (bomData.parentComponent?.components?.length) {
+          parentSubComponents = parentSubComponents.concat(
+            bomData.parentComponent.components,
+          );
+        }
       }
     }
-    bomData = createHaskellBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} hackage packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-    }
-    bomData = createElixirBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} mix packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+    if (hasAnyProjectType(["php"], options)) {
+      bomData = createPHPBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} php packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
     }
-    bomData = createCppBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} cpp packages at ${path}`,
+    if (hasAnyProjectType(["ruby"], options)) {
+      bomData = await createRubyBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} ruby packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = mergeDependencies(
+          dependencies,
+          bomData.bomJson.dependencies,
+          bomData.parentComponent,
         );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
     }
-    bomData = createClojureBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} clojure packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
-      }
-    }
-    bomData = createGitHubBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} GitHub action packages at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+    if (hasAnyProjectType(["csharp"], options)) {
+      bomData = await createCsharpBom(path, options);
+      if (bomData?.bomJson?.components?.length) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} csharp packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
     }
-    bomData = createCloudBuildBom(path, options);
-    if (bomData?.bomJson?.components) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} CloudBuild configuration at ${path}`,
-        );
-      }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+    if (hasAnyProjectType(["dart"], options)) {
+      bomData = await createDartBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} pub packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
     }
-    bomData = await createSwiftBom(path, options);
-    if (bomData?.bomJson?.components?.length) {
-      if (DEBUG_MODE) {
-        console.log(
-          `Found ${bomData.bomJson.components.length} Swift packages at ${path}`,
-        );
+    if (hasAnyProjectType(["haskell"], options)) {
+      bomData = createHaskellBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} hackage packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
-      components = components.concat(bomData.bomJson.components);
-      dependencies = dependencies.concat(bomData.bomJson.dependencies);
-      if (
-        bomData.parentComponent &&
-        Object.keys(bomData.parentComponent).length
-      ) {
-        parentSubComponents.push(bomData.parentComponent);
+    }
+    if (hasAnyProjectType(["elixir"], options)) {
+      bomData = createElixirBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} mix packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+      }
+    }
+    if (hasAnyProjectType(["c"], options)) {
+      bomData = createCppBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} cpp packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+      }
+    }
+    if (hasAnyProjectType(["clojure"], options)) {
+      bomData = createClojureBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} clojure packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+      }
+    }
+    if (hasAnyProjectType(["github"], options)) {
+      bomData = createGitHubBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} GitHub action packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+      }
+    }
+    if (hasAnyProjectType(["cloudbuild"], options)) {
+      bomData = createCloudBuildBom(path, options);
+      if (bomData?.bomJson?.components) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} CloudBuild configuration at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
+      }
+    }
+    if (hasAnyProjectType(["swift"], options)) {
+      bomData = await createSwiftBom(path, options);
+      if (bomData?.bomJson?.components?.length) {
+        if (DEBUG_MODE) {
+          console.log(
+            `Found ${bomData.bomJson.components.length} Swift packages at ${path}`,
+          );
+        }
+        components = components.concat(bomData.bomJson.components);
+        dependencies = dependencies.concat(bomData.bomJson.dependencies);
+        if (
+          bomData.parentComponent &&
+          Object.keys(bomData.parentComponent).length
+        ) {
+          parentSubComponents.push(bomData.parentComponent);
+        }
       }
     }
     // Jar scanning is enabled by default
@@ -6080,9 +6122,8 @@ export async function createXBom(path, options) {
 export async function createBom(path, options) {
   let { projectType } = options;
   if (!projectType) {
-    projectType = "";
+    projectType = [];
   }
-  projectType = projectType.toLowerCase();
   let exportData = undefined;
   let isContainerMode = false;
   // Docker and image archive support
@@ -6097,10 +6138,7 @@ export async function createBom(path, options) {
     }
     isContainerMode = true;
   } else if (
-    projectType === "docker" ||
-    projectType === "podman" ||
-    projectType === "oci" ||
-    projectType === "container" ||
+    (options.projectType && hasAnyProjectType(["oci"], options)) ||
     path.startsWith("docker.io") ||
     path.startsWith("quay.io") ||
     path.startsWith("ghcr.io") ||
@@ -6133,8 +6171,8 @@ export async function createBom(path, options) {
   if (isContainerMode) {
     options.multiProject = true;
     options.installDeps = false;
-    // Force the project type to docker
-    options.projectType = "docker";
+    // Force the project type to oci
+    options.projectType = ["oci"];
     // Pass the original path
     options.path = path;
     options.parentComponent = {};
@@ -6198,23 +6236,86 @@ export async function createBom(path, options) {
     return bomData;
   }
   if (path.endsWith(".war")) {
-    projectType = "java";
+    projectType = ["java"];
   }
-  switch (projectType) {
-    case "java":
-    case "groovy":
-    case "kotlin":
-    case "scala":
-    case "jvm":
-    case "gradle":
-    case "mvn":
-    case "maven":
-    case "sbt":
-      return await createJavaBom(path, options);
-    case "android":
-    case "apk":
-    case "aab":
-      return createAndroidBom(path, options);
+  if (projectType.length > 1) {
+    console.log("Generate BOM for project types:", projectType.join(", "));
+    return await createMultiXBom([path], options);
+  }
+  // Use the project type alias to return any singular BOM
+  if (PROJECT_TYPE_ALIASES["java"].includes(projectType[0])) {
+    return await createJavaBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["android"].includes(projectType[0])) {
+    return createAndroidBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["js"].includes(projectType[0])) {
+    return await createNodejsBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["py"].includes(projectType[0])) {
+    return await createPythonBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["go"].includes(projectType[0])) {
+    return await createGoBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["rust"].includes(projectType[0])) {
+    return await createRustBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["php"].includes(projectType[0])) {
+    return createPHPBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["ruby"].includes(projectType[0])) {
+    return await createRubyBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["csharp"].includes(projectType[0])) {
+    return await createCsharpBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["dart"].includes(projectType[0])) {
+    return await createDartBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["haskell"].includes(projectType[0])) {
+    return createHaskellBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["elixir"].includes(projectType[0])) {
+    return createElixirBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["c"].includes(projectType[0])) {
+    return createCppBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["clojure"].includes(projectType[0])) {
+    return createClojureBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["github"].includes(projectType[0])) {
+    return createGitHubBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["os"].includes(projectType[0])) {
+    return await createOSBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["jenkins"].includes(projectType[0])) {
+    return await createJenkinsBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["helm"].includes(projectType[0])) {
+    return createHelmBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["helm-index"].includes(projectType[0])) {
+    return createHelmBom(
+      join(homedir(), ".cache", "helm", "repository"),
+      options,
+    );
+  }
+  if (PROJECT_TYPE_ALIASES["universal"].includes(projectType[0])) {
+    return await createContainerSpecLikeBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["cloudbuild"].includes(projectType[0])) {
+    return createCloudBuildBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["swift"].includes(projectType[0])) {
+    return await createSwiftBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["binary"].includes(projectType[0])) {
+    return createBinaryBom(path, options);
+  }
+  switch (projectType[0]) {
     case "jar":
       return createJarBom(path, options);
     case "gradle-index":
@@ -6233,102 +6334,6 @@ export async function createBom(path, options) {
         process.env.MAVEN_CACHE_DIR || join(homedir(), ".m2", "repository"),
         options,
       );
-    case "npm":
-    case "pnpm":
-    case "nodejs":
-    case "js":
-    case "javascript":
-    case "typescript":
-    case "ts":
-    case "tsx":
-      return await createNodejsBom(path, options);
-    case "python":
-    case "py":
-    case "pypi":
-      return await createPythonBom(path, options);
-    case "go":
-    case "golang":
-      return await createGoBom(path, options);
-    case "rust":
-    case "rust-lang":
-    case "cargo":
-      return await createRustBom(path, options);
-    case "php":
-    case "composer":
-      return createPHPBom(path, options);
-    case "ruby":
-    case "gems":
-      return await createRubyBom(path, options);
-    case "csharp":
-    case "netcore":
-    case "dotnet":
-    case "dotnet-framework":
-    case "vb":
-      return await createCsharpBom(path, options);
-    case "dart":
-    case "flutter":
-    case "pub":
-      return await createDartBom(path, options);
-    case "haskell":
-    case "hackage":
-    case "cabal":
-      return createHaskellBom(path, options);
-    case "elixir":
-    case "hex":
-    case "mix":
-      return createElixirBom(path, options);
-    case "c":
-    case "cpp":
-    case "c++":
-    case "conan":
-      return createCppBom(path, options);
-    case "clojure":
-    case "edn":
-    case "clj":
-    case "leiningen":
-      return createClojureBom(path, options);
-    case "github":
-    case "actions":
-      return createGitHubBom(path, options);
-    case "os":
-    case "osquery":
-    case "windows":
-    case "linux":
-    case "mac":
-    case "macos":
-    case "darwin":
-      return await createOSBom(path, options);
-    case "jenkins":
-      return await createJenkinsBom(path, options);
-    case "helm":
-    case "charts":
-      return createHelmBom(path, options);
-    case "helm-index":
-    case "helm-repo":
-      return createHelmBom(
-        join(homedir(), ".cache", "helm", "repository"),
-        options,
-      );
-    case "universal":
-    case "containerfile":
-    case "docker-compose":
-    case "dockerfile":
-    case "swarm":
-    case "tekton":
-    case "kustomize":
-    case "operator":
-    case "skaffold":
-    case "kubernetes":
-    case "openshift":
-    case "yaml-manifest":
-      return await createContainerSpecLikeBom(path, options);
-    case "cloudbuild":
-      return createCloudBuildBom(path, options);
-    case "swift":
-      return await createSwiftBom(path, options);
-    case "binary":
-    case "blint":
-      return await createBinaryBom(path, options);
     default:
       // In recurse mode return multi-language Bom
       // https://github.com/cyclonedx/cdxgen/issues/95

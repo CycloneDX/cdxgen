@@ -13,6 +13,7 @@ import {
   getNugetMetadata,
   getPyMetadata,
   guessPypiMatchingVersion,
+  hasAnyProjectType,
   isValidIriReference,
   parseBazelActionGraph,
   parseBazelBuild,
@@ -4202,4 +4203,98 @@ test.each([
   ["http://www.", true],
 ])("isValidIriReference tests: %s", (url, isValid) => {
   expect(isValidIriReference(url)).toBe(isValid);
+});
+
+test("hasAnyProjectType tests", () => {
+  expect(
+    hasAnyProjectType(["docker"], {
+      projectType: [],
+      excludeType: ["oci"],
+    }),
+  ).toBeFalsy();
+  expect(hasAnyProjectType([], {})).toBeTruthy();
+  expect(hasAnyProjectType(["java"], { projectType: ["java"] })).toBeTruthy();
+  expect(
+    hasAnyProjectType(["java"], { projectType: ["java"], excludeType: [] }),
+  ).toBeTruthy();
+  expect(hasAnyProjectType(["java"], { projectType: ["csharp"] })).toBeFalsy();
+  expect(
+    hasAnyProjectType(["java"], { projectType: ["csharp", "rust"] }),
+  ).toBeFalsy();
+  expect(
+    hasAnyProjectType(["rust"], { projectType: ["csharp", "rust"] }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["rust"], {
+      projectType: ["csharp", "rust"],
+      excludeType: [],
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["rust"], {
+      projectType: ["csharp", "rust"],
+      excludeType: ["rust"],
+    }),
+  ).toBeFalsy();
+  expect(
+    hasAnyProjectType(["oci"], {
+      projectType: ["java", "docker"],
+      excludeType: ["dotnet"],
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["oci"], {
+      projectType: ["docker"],
+      excludeType: undefined,
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["docker"], {
+      projectType: ["oci"],
+      excludeType: undefined,
+    }),
+  ).toBeTruthy();
+
+  expect(
+    hasAnyProjectType(["js"], {
+      projectType: [],
+      excludeType: ["rust"],
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["js"], {
+      projectType: undefined,
+      excludeType: ["csharp"],
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["js", "docker"], {
+      projectType: ["universal"],
+      excludeType: ["csharp"],
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["rust"], {
+      projectType: ["universal"],
+      excludeType: ["docker"],
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["js", "docker"], {
+      projectType: ["universal"],
+      excludeType: ["csharp", "javascript"],
+    }),
+  ).toBeFalsy();
+  expect(
+    hasAnyProjectType(["js", "docker"], {
+      projectType: ["js", "docker"],
+      excludeType: ["js", "docker"],
+    }),
+  ).toBeFalsy();
+  expect(
+    hasAnyProjectType(["js"], {
+      projectType: ["js"],
+      excludeType: ["js"],
+    }),
+  ).toBeFalsy();
 });

@@ -1,6 +1,22 @@
 # Advanced Usage
 
-## Exclude files and directories
+## Exclude project types, files, and directories
+
+To exclude specific [project types](https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES) from the BOM, use the `--exclude-type` argument. Multiple values are allowed.
+
+Example:
+
+Generate an SBOM for all types except js
+
+```shell
+--exclude-type js
+```
+
+Generate an SBOM for all types except github and dotnet
+
+```shell
+--exclude-type github --exclude-type dotnet
+```
 
 Use the argument `--exclude` to provide a glob pattern for files and directories to exclude from the BOM. Multiple values are allowed.
 
