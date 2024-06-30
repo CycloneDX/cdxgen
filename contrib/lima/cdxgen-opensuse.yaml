@@ -81,4 +81,5 @@ provision:
     gcc --version
     zypper clean -a
     npm install -g node-gyp @cyclonedx/cdxgen --omit=dev
+    npx node-gyp install
     cdxgen --version
