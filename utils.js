@@ -2629,16 +2629,15 @@ export function parseGradleProperties(rawOutput) {
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
-  let parallelPropTaskArgs = [];
+  let parallelPropTaskArgs = ['properties'];
   for (const spstr of allProjectsStr) {
     parallelPropTaskArgs.push(`${spstr}:properties`);
   }
-
+  
   let gradlePropertiesArgs = [
     "--console",
     "plain",
     "--build-cache",
-    "--parallel",
   ];
   const gradleCmd = getGradleCommand(dir, rootPath);
 
@@ -9095,7 +9094,7 @@ export function splitOutputByGradleProjects(rawOutput) {
       outputSplitBySubprojects.set(currentProjectName, subProjectOut);
     }
   }
-
+  console.log(JSON.stringify(outputSplitBySubprojects))
   return outputSplitBySubprojects;
 }
 /**
