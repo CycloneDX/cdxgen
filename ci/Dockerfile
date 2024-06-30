@@ -71,6 +71,7 @@ RUN set -e; \
     python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
         pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel dotnet-sdk-8.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
+    && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 1 \
     && python${PYTHON_VERSION} --version \
     && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
     && python${PYTHON_VERSION} -m pip install --user pipenv poetry blint \
@@ -124,7 +125,8 @@ RUN set -e; \
     && chmod +x linux-install.sh \
     && sudo ./linux-install.sh \
     && useradd -ms /bin/bash cyclonedx \
-    && npm install --unsafe-perm -g @microsoft/rush --omit=dev \
+    && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
+    && npx node-gyp install \
     && pecl channel-update pecl.php.net \
     && pecl install timezonedb \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
