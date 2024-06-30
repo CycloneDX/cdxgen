@@ -2334,12 +2334,19 @@ export async function createNodejsBom(path, options) {
     const result = spawnSync(pkgMgr, ["install"], {
       cwd: path,
       encoding: "utf-8",
+      timeout: TIMEOUT_MS,
+      maxBuffer: MAX_BUFFER,
     });
     if (result.status !== 0 || result.error) {
       console.error(
         `${pkgMgr} install has failed. Check if ${pkgMgr} is installed and available in PATH.`,
       );
-      console.log(result.error, result.stderr);
+      if (DEBUG_MODE && result.stdout) {
+        console.log(result.stdout);
+      }
+      if (result.stderr) {
+        console.log(result.stderr);
+      }
       options.failOnError && process.exit(1);
     }
     pkgLockFiles = getAllFiles(
