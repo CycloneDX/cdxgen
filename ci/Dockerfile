@@ -124,7 +124,7 @@ RUN set -e; \
     && chmod +x linux-install.sh \
     && sudo ./linux-install.sh \
     && useradd -ms /bin/bash cyclonedx \
-    && npm install --unsafe-perm -g @microsoft/rush --omit=dev \
+    && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
     && pecl channel-update pecl.php.net \
     && pecl install timezonedb \
     && echo 'extension=timezonedb.so' >> /etc/php.ini \
