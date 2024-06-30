@@ -2629,16 +2629,12 @@ export function parseGradleProperties(rawOutput) {
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
-  let parallelPropTaskArgs = ['properties'];
+  let parallelPropTaskArgs = ["properties"];
   for (const spstr of allProjectsStr) {
     parallelPropTaskArgs.push(`${spstr}:properties`);
   }
 
-  let gradlePropertiesArgs = [
-    "--console",
-    "plain",
-    "--build-cache",
-  ];
+  let gradlePropertiesArgs = ["--console", "plain", "--build-cache"];
   const gradleCmd = getGradleCommand(dir, rootPath);
 
   // common gradle args, used for all tasks
