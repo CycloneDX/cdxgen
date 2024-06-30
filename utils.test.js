@@ -84,6 +84,7 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
+  splitOutputByGradleProjects,
   yarnLockToIdentMap,
 } from "./utils.js";
 
@@ -156,6 +157,50 @@ test("finds license id from name", () => {
   expect(findLicenseId("GNU General Public License (GPL) version 2.0")).toEqual(
     "GPL-2.0-only",
   );
+});
+
+test("splits parallel gradle properties output correctly", () => {
+  const parallelGradlePropertiesOutput = readFileSync(
+    "./test/gradle-prop-parallel.out",
+    { encoding: "utf-8" },
+  );
+  const propOutputSplitBySubProject = splitOutputByGradleProjects(
+    parallelGradlePropertiesOutput,
+  );
+
+  expect(propOutputSplitBySubProject.size).toEqual(4);
+  expect(propOutputSplitBySubProject.has("dependency-diff-check")).toBe(true);
+  expect(propOutputSplitBySubProject.has("dependency-diff-check-service")).toBe(
+    true,
+  );
+  expect(
+    propOutputSplitBySubProject.has("dependency-diff-check-common-core"),
+  ).toBe(true);
+  expect(
+    propOutputSplitBySubProject.has("dependency-diff-check-client-starter"),
+  ).toBe(true);
+});
+
+test("splits parallel gradle properties output correctly", () => {
+  const parallelGradleDepOutput = readFileSync(
+    "./test/gradle-dep-parallel.out",
+    { encoding: "utf-8" },
+  );
+  const depOutputSplitBySubProject = splitOutputByGradleProjects(
+    parallelGradleDepOutput,
+  );
+
+  expect(depOutputSplitBySubProject.size).toEqual(4);
+  expect(depOutputSplitBySubProject.has("dependency-diff-check")).toBe(true);
+  expect(depOutputSplitBySubProject.has("dependency-diff-check-service")).toBe(
+    true,
+  );
+  expect(
+    depOutputSplitBySubProject.has("dependency-diff-check-common-core"),
+  ).toBe(true);
+  expect(
+    depOutputSplitBySubProject.has("dependency-diff-check-client-starter"),
+  ).toBe(true);
 });
 
 test("parse gradle dependencies", () => {
