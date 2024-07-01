@@ -1248,9 +1248,9 @@ export async function createJavaBom(path, options) {
   let bomJsonFiles = [];
   if (
     pomFiles?.length &&
-    !options.projectType.includes("scala") &&
-    !options.projectType.includes("sbt") &&
-    !options.projectType.includes("gradle")
+    !options.projectType?.includes("scala") &&
+    !options.projectType?.includes("sbt") &&
+    !options.projectType?.includes("gradle")
   ) {
     let result = undefined;
     const cdxMavenPlugin =
@@ -1720,8 +1720,8 @@ export async function createJavaBom(path, options) {
   if (
     gradleFiles?.length &&
     options.installDeps &&
-    !options.projectType.includes("scala") &&
-    !options.projectType.includes("sbt")
+    !options.projectType?.includes("scala") &&
+    !options.projectType?.includes("sbt")
   ) {
     const gradleCmd = getGradleCommand(gradleRootPath, null);
     const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
@@ -1917,8 +1917,8 @@ export async function createJavaBom(path, options) {
   const bazelFiles = getAllFiles(path, "BUILD", options);
   if (
     bazelFiles?.length &&
-    !options.projectType.includes("scala") &&
-    !options.projectType.includes("sbt")
+    !options.projectType?.includes("scala") &&
+    !options.projectType?.includes("sbt")
   ) {
     let BAZEL_CMD = "bazel";
     if (process.env.BAZEL_HOME) {
