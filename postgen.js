@@ -35,7 +35,7 @@ export const postProcess = (bomNSData, options) => {
  * @returns {Object} Filtered BOM JSON
  */
 export const applyMetadata = (bomJson, options) => {
-  if (!bomJson.components) {
+  if (!bomJson?.components) {
     return bomJson;
   }
   const bomPkgTypes = new Set();
@@ -125,7 +125,7 @@ export const applyStandards = (bomJson, options) => {
 export const filterBom = (bomJson, options) => {
   const newPkgMap = {};
   let filtered = false;
-  if (!bomJson.components) {
+  if (!bomJson?.components) {
     return bomJson;
   }
   for (const comp of bomJson.components) {
