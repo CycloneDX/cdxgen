@@ -9094,7 +9094,6 @@ export function splitOutputByGradleProjects(rawOutput) {
       outputSplitBySubprojects.set(currentProjectName, subProjectOut);
     }
   }
-  console.log(JSON.stringify(outputSplitBySubprojects))
   return outputSplitBySubprojects;
 }
 /**
