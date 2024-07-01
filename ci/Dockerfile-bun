@@ -64,8 +64,8 @@ RUN set -e; \
         pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel dotnet-sdk-8.0 \
     && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
     && python${PYTHON_VERSION} --version \
-    && python${PYTHON_VERSION} -m pip install --upgrade pip virtualenv \
-    && python${PYTHON_VERSION} -m pip install --user pipenv poetry blint \
+    && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && python${PYTHON_VERSION} -m pip install --no-cache-dir --user pipenv poetry blint \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && cargo --version \
     && rustc --version \
