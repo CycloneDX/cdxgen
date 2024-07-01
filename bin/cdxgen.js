@@ -17,6 +17,7 @@ import {
   printReachables,
   printServices,
   printSponsorBanner,
+  printSummary,
   printTable,
 } from "../display.js";
 import { createBom, submitBom } from "../index.js";
@@ -493,14 +494,8 @@ const checkPermissions = (filePath) => {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   let bomNSData = (await createBom(filePath, options)) || {};
-  if (
-    options.requiredOnly ||
-    options["filter"] ||
-    options["only"] ||
-    options.standard
-  ) {
-    bomNSData = postProcess(bomNSData, options);
-  }
+  // Add extra metadata and annotations with post processing
+  bomNSData = postProcess(bomNSData, options);
   if (
     options.output &&
     (typeof options.output === "string" || options.output instanceof String)
@@ -716,6 +711,7 @@ const checkPermissions = (filePath) => {
     protobomModule.writeBinary(bomNSData.bomJson, options.protoBinFile);
   }
   if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
+    printSummary(bomNSData.bomJson);
     printDependencyTree(bomNSData.bomJson);
     printTable(bomNSData.bomJson);
     // CBOM related print

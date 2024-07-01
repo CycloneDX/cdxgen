@@ -405,3 +405,32 @@ export function printSponsorBanner(options) {
     console.log(table(data, config));
   }
 }
+
+export const printSummary = (bomJson) => {
+  const config = {
+    header: {
+      alignment: "center",
+      content: "BOM summary",
+    },
+  };
+  const metadataProperties = bomJson?.metadata?.properties;
+  if (!metadataProperties) {
+    return;
+  }
+  let bomPkgTypes = [];
+  let bomPkgNamespaces = [];
+  for (const aprop of metadataProperties) {
+    if (aprop.name === "cdx:bom:componentTypes") {
+      bomPkgTypes = aprop?.value.split("\\n");
+    }
+    if (aprop.name === "cdx:bom:componentNamespaces") {
+      bomPkgNamespaces = aprop?.value.split("\\n");
+    }
+  }
+  if (!bomPkgTypes && !bomPkgNamespaces) {
+    return;
+  }
+  const message = `** Package Types (${bomPkgTypes.length}) **\n${bomPkgTypes.join("\n")}\n\n** Namespaces (${bomPkgNamespaces.length}) **\n${bomPkgNamespaces.join("\n")}`;
+  const data = [[message]];
+  console.log(table(data, config));
+};

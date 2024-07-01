@@ -7,4 +7,5 @@ export function printOccurrences(bomJson: any): void;
 export function printCallStack(bomJson: any): void;
 export function printDependencyTree(bomJson: any, mode?: string, highlight?: any): void;
 export function printReachables(sliceArtefacts: any): void;
+export function printSummary(bomJson: any): void;
 //# sourceMappingURL=display.d.ts.map

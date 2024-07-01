@@ -303,7 +303,7 @@ const addToolsSection = (options, context = {}) => {
   } else if (tools && Object.keys(tools).length && tools.components) {
     components = components.concat(tools.components);
   }
-  components.push({
+  const cdxToolComponent = {
     group: "@cyclonedx",
     name: "cdxgen",
     version: _version,
@@ -312,7 +312,12 @@ const addToolsSection = (options, context = {}) => {
     "bom-ref": `pkg:npm/@cyclonedx/cdxgen@${_version}`,
     author: "OWASP Foundation",
     publisher: "OWASP Foundation",
-  });
+  };
+  if (options.specVersion >= 1.6) {
+    cdxToolComponent.authors = [{ name: "OWASP Foundation" }];
+    delete cdxToolComponent.author;
+  }
+  components.push(cdxToolComponent);
   return { components };
 };
 
@@ -689,7 +694,7 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
     if (options.allOSComponentTypes?.length) {
       mproperties.push({
         name: "oci:image:componentTypes",
-        value: options.allOSComponentTypes.join("\\n"),
+        value: options.allOSComponentTypes.sort().join("\\n"),
       });
     }
 
@@ -881,6 +886,15 @@ function addComponent(
       ) {
         component.evidence.identity = [pkg.evidence.identity];
       }
+    }
+    // Upgrade authors section
+    if (options.specVersion >= 1.6 && component.author) {
+      const authorsList = [];
+      for (const aauthor of component.author.split(",")) {
+        authorsList.push({ name: aauthor });
+      }
+      component.authors = authorsList;
+      delete component.author;
     }
     // Retain any tags
     if (
