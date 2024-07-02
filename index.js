@@ -1651,8 +1651,22 @@ export async function createJavaBom(path, options) {
         );
         const splitPropTaskOut =
           splitOutputByGradleProjects(parallelPropTaskOut);
+
         for (const [key, propTaskOut] of splitPropTaskOut.entries()) {
-          const retMap = parseGradleProperties(propTaskOut);
+          let retMap = {};
+          // To optimize performance and reduce errors do not query for properties
+          // beyond the first level. Replicating behaviour from single-threaded Gradle generation.
+          if (key.includes(":")) {
+            retMap = {
+              rootProject: key,
+              projects: [],
+              metadata: {
+                version: "latest",
+              },
+            };
+          } else {
+            retMap = parseGradleProperties(propTaskOut);
+          }
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");
@@ -1767,7 +1781,6 @@ export async function createJavaBom(path, options) {
           gradleDepArgs.push(`:${sp.name}:${depTaskWithArgs[0]}`);
         }
       }
-      gradleDepArgs.push("--parallel"); //flag to enable multi-threading
       console.log(
         "Executing",
         gradleCmd,
