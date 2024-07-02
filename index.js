@@ -1620,7 +1620,11 @@ export async function createJavaBom(path, options) {
     gradleRootPath = dirname(gradleFiles[0]);
   }
   // Execute gradle properties
-  if (gradleFiles?.length && !hasAnyProjectType(["scala", "sbt"], options)) {
+  if (
+    gradleFiles?.length &&
+    !options.projectType?.includes("scala") &&
+    !options.projectType?.includes("sbt")
+  ) {
     let retMap = executeGradleProperties(gradleRootPath, null, null);
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
