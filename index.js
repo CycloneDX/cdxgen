@@ -1620,7 +1620,11 @@ export async function createJavaBom(path, options) {
     gradleRootPath = dirname(gradleFiles[0]);
   }
   // Execute gradle properties
-  if (gradleFiles?.length && !hasAnyProjectType(["scala", "sbt"], options)) {
+  if (
+    gradleFiles?.length &&
+    !options.projectType?.includes("scala") &&
+    !options.projectType?.includes("sbt")
+  ) {
     let retMap = executeGradleProperties(gradleRootPath, null, null);
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
@@ -2243,7 +2247,7 @@ export async function createNodejsBom(path, options) {
   const parentSubComponents = [];
   let ppurl = "";
   // Docker mode requires special handling
-  if (hasAnyProjectType(["docker", "oci", "container", "os"], options)) {
+  if (hasAnyProjectType(["docker", "oci", "container", "os"], options, false)) {
     const pkgJsonFiles = getAllFiles(path, "**/package.json", options);
     // Are there any package.json files in the container?
     if (pkgJsonFiles.length) {
@@ -2264,7 +2268,7 @@ export async function createNodejsBom(path, options) {
   let allImports = {};
   let allExports = {};
   if (
-    !hasAnyProjectType(["docker", "oci", "container", "os"], options) &&
+    !hasAnyProjectType(["docker", "oci", "container", "os"], options, false) &&
     !options.noBabel
   ) {
     if (DEBUG_MODE) {
@@ -3215,7 +3219,9 @@ export async function createGoBom(path, options) {
   if (gomodFiles.length) {
     let shouldManuallyParse = false;
     // Use the go list -deps and go mod why commands to generate a good quality BOM for non-docker invocations
-    if (!hasAnyProjectType(["docker", "oci", "container", "os"], options)) {
+    if (
+      !hasAnyProjectType(["docker", "oci", "container", "os"], options, false)
+    ) {
       for (const f of gomodFiles) {
         const basePath = dirname(f);
         // Ignore vendor packages
@@ -3340,7 +3346,9 @@ export async function createGoBom(path, options) {
       }
     }
     // Parse the gomod files manually. The resultant BOM would be incomplete
-    if (!hasAnyProjectType(["docker", "oci", "container", "os"], options)) {
+    if (
+      !hasAnyProjectType(["docker", "oci", "container", "os"], options, false)
+    ) {
       console.log(
         "Manually parsing go.mod files. The resultant BOM would be incomplete.",
       );
@@ -3695,7 +3703,7 @@ export function createCppBom(path, options) {
   // inside of other project types. So we currently limit this analyis only when -t argument
   // is used.
   if (
-    !hasAnyProjectType(["docker", "oci", "container", "os"], options) &&
+    !hasAnyProjectType(["docker", "oci", "container", "os"], options, false) &&
     (!options.createMultiXBom || options.deep)
   ) {
     let osPkgsList = [];
@@ -5386,7 +5394,7 @@ export async function createMultiXBom(pathList, options) {
   options.createMultiXBom = true;
   if (
     options.projectType &&
-    hasAnyProjectType(["oci"], options) &&
+    hasAnyProjectType(["oci"], options, false) &&
     options.allLayersExplodedDir
   ) {
     const { osPackages, dependenciesList, allTypes } = getOSPackages(
@@ -5413,7 +5421,7 @@ export async function createMultiXBom(pathList, options) {
       });
     }
   }
-  if (hasAnyProjectType(["os"], options) && options.bomData) {
+  if (hasAnyProjectType(["os"], options, false) && options.bomData) {
     bomData = options.bomData;
     if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
@@ -6167,7 +6175,7 @@ export async function createBom(path, options) {
     }
     isContainerMode = true;
   } else if (
-    (options.projectType && hasAnyProjectType(["oci"], options)) ||
+    (options.projectType && hasAnyProjectType(["oci"], options, false)) ||
     path.startsWith("docker.io") ||
     path.startsWith("quay.io") ||
     path.startsWith("ghcr.io") ||
