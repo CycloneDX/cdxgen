@@ -3,8 +3,9 @@
  *
  * @param {Array} projectTypes project types to check
  * @param {Object} options CLI options
+ * @param {Boolean} defaultStatus Default return value if there are no types provided
  */
-export function hasAnyProjectType(projectTypes: any[], options: any): any;
+export function hasAnyProjectType(projectTypes: any[], options: any, defaultStatus?: boolean): any;
 /**
  * Method to get files matching a pattern
  *

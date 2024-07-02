@@ -4297,4 +4297,24 @@ test("hasAnyProjectType tests", () => {
       excludeType: ["js"],
     }),
   ).toBeFalsy();
+  expect(
+    hasAnyProjectType(
+      ["oci"],
+      {
+        projectType: [],
+        excludeType: [],
+      },
+      false,
+    ),
+  ).toBeFalsy();
+  expect(
+    hasAnyProjectType(
+      ["oci", "docker"],
+      {
+        projectType: undefined,
+        excludeType: undefined,
+      },
+      false,
+    ),
+  ).toBeFalsy();
 });

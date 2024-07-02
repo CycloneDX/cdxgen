@@ -297,11 +297,15 @@ export const PROJECT_TYPE_ALIASES = {
  *
  * @param {Array} projectTypes project types to check
  * @param {Object} options CLI options
+ * @param {Boolean} defaultStatus Default return value if there are no types provided
  */
-export function hasAnyProjectType(projectTypes, options) {
+export function hasAnyProjectType(projectTypes, options, defaultStatus = true) {
   // If no project type is specified, then consider it as yes
-  if (!projectTypes || (!options.projectType && !options.excludeType)) {
-    return true;
+  if (
+    !projectTypes ||
+    (!options.projectType?.length && !options.excludeType?.length)
+  ) {
+    return defaultStatus;
   }
   const allProjectTypes = [...projectTypes];
   // Convert the project types into base types
