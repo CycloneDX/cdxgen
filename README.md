@@ -7,7 +7,6 @@
 [![SWH][badge-swh]][swh-cdxgen]
 [![Libraries.io dependency status][badge-libraries]][librariesio]
 
-
 # CycloneDX Generator (cdxgen)
 
 ![cdxgen logo](./docs/_media/cdxgen.png)
@@ -50,16 +49,6 @@ Sections include:
 - [Advanced Usage][docs-advanced-usage]
 - [Permissions][docs-permissions]
 - [Support (Enterprise & Community)][docs-support]
-
-### Automatic usage detection
-
-For node.js projects, lock files are parsed initially, so the SBOM would include all dependencies, including dev ones. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically set their scope property to `required` in the resulting SBOM. You can turn off this analysis by passing the argument `--no-babel`. Scope property would then be set based on the `dev` attribute in the lock file.
-
-This attribute can be later used for various purposes. For example, [dep-scan][depscan-github] uses this attribute to prioritize vulnerabilities. Unfortunately, tools such as dependency track, do not include this feature and might over-report the CVEs.
-
-With the argument `--required-only`, you can limit the SBOM only to include packages with the scope "required", commonly called production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
-
-For go, `go mod why` command is used to identify required packages. For php, composer lock file is parsed to distinguish required (packages) from optional (packages-dev).
 
 ## Usage
 
@@ -451,6 +440,16 @@ if (validationResult) {
   console.log("SBOM signature is invalid :(");
 }
 ```
+
+## Automatic usage detection
+
+For node.js projects, lock files are parsed initially, so the SBOM would include all dependencies, including dev ones. An AST parser powered by babel-parser is then used to detect packages that are imported and used by non-test code. Such imported packages would automatically set their scope property to `required` in the resulting SBOM. You can turn off this analysis by passing the argument `--no-babel`. Scope property would then be set based on the `dev` attribute in the lock file.
+
+This attribute can be later used for various purposes. For example, [dep-scan][depscan-github] uses this attribute to prioritize vulnerabilities. Unfortunately, tools such as dependency track, do not include this feature and might over-report the CVEs.
+
+With the argument `--required-only`, you can limit the SBOM only to include packages with the scope "required", commonly called production or non-dev dependencies. Combine with `--no-babel` to limit this list to only non-dev dependencies based on the `dev` attribute being false in the lock files.
+
+For go, `go mod why` command is used to identify required packages. For php, composer lock file is parsed to distinguish required (packages) from optional (packages-dev).
 
 ## Automatic services detection
 
