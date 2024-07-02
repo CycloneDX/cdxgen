@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.7.2",
+  "version": "10.8.0",
   "description": "Creates CycloneDX Software Bill of Materials (SBOM) from source or container image",
   "homepage": "http://github.com/cyclonedx/cdxgen",
   "author": "Prabhu Subramanian <prabhu@appthreat.com>",
@@ -113,8 +113,8 @@
   },
   "files": ["*.js", "bin/", "data/", "types/"],
   "devDependencies": {
-    "@biomejs/biome": "1.8.2",
+    "@biomejs/biome": "1.8.3",
     "jest": "^29.7.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   }
 }

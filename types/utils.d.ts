@@ -1,4 +1,11 @@
 /**
+ * Method to check if the given project types are allowed by checking against include and exclude types passed from the CLI arguments.
+ *
+ * @param {Array} projectTypes project types to check
+ * @param {Object} options CLI options
+ */
+export function hasAnyProjectType(projectTypes: any[], options: any): any;
+/**
  * Method to get files matching a pattern
  *
  * @param {string} dirPath Root directory for search
@@ -1181,6 +1188,36 @@ export let CLJ_CMD: string;
 export let LEIN_CMD: string;
 export let SWIFT_CMD: string;
 export const PYTHON_EXCLUDED_COMPONENTS: string[];
+export const PROJECT_TYPE_ALIASES: {
+    java: string[];
+    android: string[];
+    jar: string[];
+    "gradle-index": string[];
+    "sbt-index": string[];
+    "maven-index": string[];
+    js: string[];
+    py: string[];
+    go: string[];
+    rust: string[];
+    php: string[];
+    ruby: string[];
+    csharp: string[];
+    dart: string[];
+    haskell: string[];
+    elixir: string[];
+    c: string[];
+    clojure: string[];
+    github: string[];
+    os: string[];
+    jenkins: string[];
+    helm: string[];
+    "helm-index": string[];
+    universal: string[];
+    cloudbuild: string[];
+    swift: string[];
+    binary: string[];
+    oci: string[];
+};
 export const cdxgenAgent: any;
 export const RUBY_PLATFORM_PREFIXES: string[];
 //# sourceMappingURL=utils.d.ts.map

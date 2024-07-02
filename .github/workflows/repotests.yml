@@ -39,8 +39,9 @@ jobs:
       - name: Install bazelisk - linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.15.0/bazelisk-linux-amd64"
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.20.0/bazelisk-linux-amd64"
           sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          chmod +x /usr/local/bin/bazel
       - name: Install bazelisk - windows
         if: matrix.os == 'windows-latest'
         run: choco install -y bazel
@@ -227,6 +228,8 @@ jobs:
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-6.json --deep --evidence
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-7.json --profile research --export-proto
           PREFER_MAVEN_DEPS_TREE=true bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-8.json --profile license-compliance
+          bin/cdxgen.js -p -t java -t github repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json
+          bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
       - name: repotests evidence
         run: |

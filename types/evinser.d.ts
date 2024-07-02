@@ -553,7 +553,7 @@ export function prepareDB(options: any): Promise<{
 export function catalogMavenDeps(dirPath: any, purlsJars: any, Namespaces: any, options?: {}): Promise<void>;
 export function catalogGradleDeps(dirPath: any, purlsJars: any, Namespaces: any): Promise<void>;
 export function createAndStoreSlice(purl: any, purlsJars: any, Usages: any, options?: {}): Promise<any>;
-export function createSlice(purlOrLanguage: any, filePath: any, sliceType?: string, options?: {}): {
+export function createSlice(purlOrLanguages: any, filePath: any, sliceType?: string, options?: {}): {
     tempDir: any;
     slicesFile: any;
     atomFile: any;

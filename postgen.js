@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { PackageURL } from "packageurl-js";
 import { dirNameStr } from "./utils.js";
 
 /**
@@ -21,7 +22,55 @@ export const postProcess = (bomNSData, options) => {
 
   bomNSData.bomJson = filterBom(jsonPayload, options);
   bomNSData.bomJson = applyStandards(bomNSData.bomJson, options);
+  bomNSData.bomJson = applyMetadata(bomNSData.bomJson, options);
   return bomNSData;
+};
+
+/**
+ * Apply additional metadata based on components
+ *
+ * @param {Object} bomJson BOM JSON Object
+ * @param {Object} options CLI options
+ *
+ * @returns {Object} Filtered BOM JSON
+ */
+export const applyMetadata = (bomJson, options) => {
+  if (!bomJson?.components) {
+    return bomJson;
+  }
+  const bomPkgTypes = new Set();
+  const bomPkgNamespaces = new Set();
+  for (const comp of bomJson.components) {
+    if (comp.purl) {
+      try {
+        const purlObj = PackageURL.fromString(comp.purl);
+        if (purlObj?.type) {
+          bomPkgTypes.add(purlObj.type);
+        }
+        if (purlObj?.namespace) {
+          bomPkgNamespaces.add(purlObj.namespace);
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  }
+  if (!bomJson.metadata.properties) {
+    bomJson.metadata.properties = [];
+  }
+  if (bomPkgTypes.size) {
+    bomJson.metadata.properties.push({
+      name: "cdx:bom:componentTypes",
+      value: Array.from(bomPkgTypes).sort().join("\\n"),
+    });
+  }
+  if (bomPkgNamespaces.size) {
+    bomJson.metadata.properties.push({
+      name: "cdx:bom:componentNamespaces",
+      value: Array.from(bomPkgNamespaces).sort().join("\\n"),
+    });
+  }
+  return bomJson;
 };
 
 /**
@@ -76,6 +125,9 @@ export const applyStandards = (bomJson, options) => {
 export const filterBom = (bomJson, options) => {
   const newPkgMap = {};
   let filtered = false;
+  if (!bomJson?.components) {
+    return bomJson;
+  }
   for (const comp of bomJson.components) {
     if (
       options.requiredOnly &&

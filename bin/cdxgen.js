@@ -17,6 +17,7 @@ import {
   printReachables,
   printServices,
   printSponsorBanner,
+  printSummary,
   printTable,
 } from "../display.js";
 import { createBom, submitBom } from "../index.js";
@@ -55,6 +56,10 @@ import { hideBin } from "yargs/helpers";
 
 const args = yargs(hideBin(process.argv))
   .env("CDXGEN")
+  .parserConfiguration({
+    "greedy-arrays": false,
+    "short-option-groups": false,
+  })
   .option("output", {
     alias: "o",
     description: "Output file. Default bom.json",
@@ -63,13 +68,16 @@ const args = yargs(hideBin(process.argv))
   .option("evinse-output", {
     description:
       "Create bom with evidence as a separate file. Default bom.json",
-    default: "bom.json",
     hidden: true,
   })
   .option("type", {
     alias: "t",
     description:
       "Project type. Please refer to https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES for supported languages/platforms.",
+  })
+  .option("exclude-type", {
+    description:
+      "Project types to exclude. Please refer to https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES for supported languages/platforms.",
   })
   .option("recurse", {
     alias: "r",
@@ -262,10 +270,13 @@ const args = yargs(hideBin(process.argv))
   .option("no-banner", {
     type: "boolean",
     default: false,
+    hidden: true,
     description:
       "Do not show the donation banner. Set this attribute if you are an active sponsor for OWASP CycloneDX.",
   })
   .completion("completion", "Generate bash/zsh completion")
+  .array("type")
+  .array("excludeType")
   .array("filter")
   .array("only")
   .array("author")
@@ -279,6 +290,10 @@ const args = yargs(hideBin(process.argv))
   })
   .example([
     ["$0 -t java .", "Generate a Java SBOM for the current directory"],
+    [
+      "$0 -t java -t js .",
+      "Generate a SBOM for Java and JavaScript in the current directory",
+    ],
     ["$0 --server", "Run cdxgen as a server"],
   ])
   .epilogue("for documentation, visit https://cyclonedx.github.io/cdxgen")
@@ -369,7 +384,11 @@ const applyAdvancedOptions = (options) => {
       process.env.ASTGEN_IGNORE_FILE_PATTERN = "";
       break;
     case "operational":
-      options.projectType = options.projectType || "os";
+      if (options?.projectType) {
+        options.projectType.push("os");
+      } else {
+        options.projectType = ["os"];
+      }
       break;
     case "threat-modeling":
       options.deep = true;
@@ -388,6 +407,8 @@ const applyAdvancedOptions = (options) => {
     case "post-build":
       if (
         !options.projectType ||
+        (Array.isArray(options.projectType) &&
+          options.projectType.length > 1) ||
         ![
           "csharp",
           "dotnet",
@@ -403,7 +424,7 @@ const applyAdvancedOptions = (options) => {
           "rust",
           "rust-lang",
           "cargo",
-        ].includes(options.projectType)
+        ].includes(options.projectType[0])
       ) {
         console.log(
           "PREVIEW: post-build lifecycle SBOM generation is supported only for android, dotnet, go, and Rust projects. Please specify the type using the -t argument.",
@@ -473,14 +494,8 @@ const checkPermissions = (filePath) => {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
   let bomNSData = (await createBom(filePath, options)) || {};
-  if (
-    options.requiredOnly ||
-    options["filter"] ||
-    options["only"] ||
-    options.standard
-  ) {
-    bomNSData = postProcess(bomNSData, options);
-  }
+  // Add extra metadata and annotations with post processing
+  bomNSData = postProcess(bomNSData, options);
   if (
     options.output &&
     (typeof options.output === "string" || options.output instanceof String)
@@ -496,15 +511,7 @@ const checkPermissions = (filePath) => {
         fs.writeFileSync(jsonFile, bomNSData.bomJson);
         jsonPayload = bomNSData.bomJson;
       } else {
-        jsonPayload = JSON.stringify(
-          bomNSData.bomJson,
-          null,
-          options.deep ||
-            ["os", "docker", "universal"].includes(options.projectType) ||
-            process.env.CI
-            ? null
-            : 2,
-        );
+        jsonPayload = JSON.stringify(bomNSData.bomJson, null, null);
         fs.writeFileSync(jsonFile, jsonPayload);
       }
       if (
@@ -643,12 +650,17 @@ const checkPermissions = (filePath) => {
   }
   // Evidence generation
   if (options.evidence || options.includeCrypto) {
+    // Set the evinse output file to be the same as output file
+    if (!options.evinseOutput) {
+      options.evinseOutput = options.output;
+    }
     const evinserModule = await import("../evinser.js");
+    options.projectType = options.projectType || ["java"];
     const evinseOptions = {
       _: args._,
       input: options.output,
       output: options.evinseOutput,
-      language: options.projectType || "java",
+      language: options.projectType,
       dbPath: process.env.ATOM_DB || ATOM_DB,
       skipMavenCollector: false,
       force: false,
@@ -699,6 +711,7 @@ const checkPermissions = (filePath) => {
     protobomModule.writeBinary(bomNSData.bomJson, options.protoBinFile);
   }
   if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
+    printSummary(bomNSData.bomJson);
     printDependencyTree(bomNSData.bomJson);
     printTable(bomNSData.bomJson);
     // CBOM related print

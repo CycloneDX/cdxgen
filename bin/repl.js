@@ -13,6 +13,7 @@ import {
   printOSTable,
   printOccurrences,
   printServices,
+  printSummary,
   printTable,
   printVulnerabilities,
 } from "../display.js";
@@ -67,6 +68,7 @@ export const importSbom = (sbomOrPath) => {
         bomType = "VDR";
       }
       console.log(`✅ ${bomType} imported successfully from ${sbomOrPath}`);
+      printSummary(sbom);
     } catch (e) {
       console.log(`⚠ Unable to import the BOM from ${sbomOrPath} due to ${e}`);
     }

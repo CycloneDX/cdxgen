@@ -202,7 +202,7 @@ export const createAndStoreSlice = async (
 };
 
 export const createSlice = (
-  purlOrLanguage,
+  purlOrLanguages,
   filePath,
   sliceType = "usages",
   options = {},
@@ -215,9 +215,12 @@ export const createSlice = (
       filePath,
     )}. Please wait ...`,
   );
-  const language = purlOrLanguage.startsWith("pkg:")
-    ? purlToLanguage(purlOrLanguage, filePath)
-    : purlOrLanguage;
+  const firstLanguage = Array.isArray(purlOrLanguages)
+    ? purlOrLanguages[0]
+    : purlOrLanguages;
+  const language = firstLanguage.startsWith("pkg:")
+    ? purlToLanguage(firstLanguage, filePath)
+    : firstLanguage;
   if (!language) {
     return undefined;
   }

@@ -226,6 +226,127 @@ export const PYTHON_EXCLUDED_COMPONENTS = [
   "conda-content-trust",
 ];
 
+// Project type aliases
+export const PROJECT_TYPE_ALIASES = {
+  java: [
+    "java",
+    "groovy",
+    "kotlin",
+    "kt",
+    "scala",
+    "jvm",
+    "gradle",
+    "mvn",
+    "maven",
+    "sbt",
+  ],
+  android: ["android", "apk", "aab"],
+  jar: ["jar", "war", "ear"],
+  "gradle-index": ["gradle-index", "gradle-cache"],
+  "sbt-index": ["sbt-index", "sbt-cache"],
+  "maven-index": ["maven-index", "maven-cache", "maven-core"],
+  js: [
+    "npm",
+    "pnpm",
+    "nodejs",
+    "js",
+    "javascript",
+    "typescript",
+    "ts",
+    "tsx",
+    "vsix",
+  ],
+  py: ["py", "python", "pypi"],
+  go: ["go", "golang", "gomod", "gopkg"],
+  rust: ["rust", "rust-lang", "cargo"],
+  php: ["php", "composer", "wordpress"],
+  ruby: ["ruby", "gems", "rubygems"],
+  csharp: ["csharp", "netcore", "dotnet", "dotnet-framework", "vb", "fsharp"],
+  dart: ["dart", "flutter", "pub"],
+  haskell: ["haskell", "hackage", "cabal"],
+  elixir: ["elixir", "hex", "mix"],
+  c: ["c", "cpp", "c++", "conan"],
+  clojure: ["clojure", "edn", "clj", "leiningen"],
+  github: ["github", "actions"],
+  os: ["os", "osquery", "windows", "linux", "mac", "macos", "darwin"],
+  jenkins: ["jenkins", "hpi"],
+  helm: ["helm", "charts"],
+  "helm-index": ["helm-index", "helm-repo"],
+  universal: [
+    "universal",
+    "containerfile",
+    "docker-compose",
+    "dockerfile",
+    "swarm",
+    "tekton",
+    "kustomize",
+    "operator",
+    "skaffold",
+    "kubernetes",
+    "openshift",
+    "yaml-manifest",
+  ],
+  cloudbuild: ["cloudbuild"],
+  swift: ["swift"],
+  binary: ["binary", "blint"],
+  oci: ["docker", "oci", "container", "podman"],
+};
+
+/**
+ * Method to check if the given project types are allowed by checking against include and exclude types passed from the CLI arguments.
+ *
+ * @param {Array} projectTypes project types to check
+ * @param {Object} options CLI options
+ */
+export function hasAnyProjectType(projectTypes, options) {
+  // If no project type is specified, then consider it as yes
+  if (!projectTypes || (!options.projectType && !options.excludeType)) {
+    return true;
+  }
+  const allProjectTypes = [...projectTypes];
+  // Convert the project types into base types
+  const baseProjectTypes = [];
+  const baseExcludeTypes = [];
+  for (const abt of Object.keys(PROJECT_TYPE_ALIASES)) {
+    if (
+      PROJECT_TYPE_ALIASES[abt].filter((pt) =>
+        new Set(options?.projectType).has(pt),
+      ).length
+    ) {
+      baseProjectTypes.push(abt);
+    }
+    if (
+      PROJECT_TYPE_ALIASES[abt].filter((pt) => new Set(projectTypes).has(pt))
+        .length
+    ) {
+      allProjectTypes.push(abt);
+    }
+    if (
+      PROJECT_TYPE_ALIASES[abt].filter((pt) =>
+        new Set(options?.excludeType).has(pt),
+      ).length
+    ) {
+      baseExcludeTypes.push(abt);
+    }
+  }
+  const shouldInclude =
+    !options.projectType?.length ||
+    options.projectType?.includes("universal") ||
+    options.projectType?.filter((pt) => new Set(allProjectTypes).has(pt))
+      .length > 0 ||
+    baseProjectTypes.filter((pt) => new Set(allProjectTypes).has(pt)).length >
+      0;
+  if (shouldInclude && options.excludeType) {
+    return (
+      !baseExcludeTypes.filter((pt) => pt && new Set(baseProjectTypes).has(pt))
+        .length &&
+      !baseExcludeTypes.filter((pt) => pt && new Set(allProjectTypes).has(pt))
+        .length
+    );
+  }
+  return shouldInclude;
+}
+
 // HTTP cache
 const gotHttpCache = new Map();
 

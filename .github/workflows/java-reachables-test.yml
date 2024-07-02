@@ -36,10 +36,6 @@ jobs:
           repository: 'DependencyTrack/dependency-track'
           path: 'repotests/dependency-track'
           ref: '4.11.1'
-      - uses: actions/checkout@v4
-        with:
-          repository: 'drogonframework/drogon'
-          path: 'repotests/drogon'
       - name: compile
         run: |
           cd repotests/dependency-track
@@ -47,10 +43,10 @@ jobs:
       - name: repotests
         run: |
           node bin/cdxgen.js -p -t java --profile research -o repotests/dependency-track/bom.json repotests/dependency-track
-          cp -rf repotests/dependency-track/*.json *.slices.json bomresults/
-          cd repotests/drogon/examples
-          node ../../../bin/cdxgen.js -p -t c --profile research -o bom.json .
-          cd ../../..
+          ls -ltr repotests/dependency-track/
+          cp -rf repotests/dependency-track/*.json bomresults/
+        env:
+          CDXGEN_DEBUG_MODE: debug
       - uses: actions/upload-artifact@v4
         with:
           name: bomresults
