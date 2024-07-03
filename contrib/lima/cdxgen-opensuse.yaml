@@ -47,7 +47,7 @@ provision:
       python311 python311-pip python311-devel wget zip unzip make gawk bzip2 findutils java-21-openjdk-devel libicu-devel rust1.78 cargo1.78 \
       gcc13 gcc13-c++ gcc13-fortran nodejs20 nodejs20-devel \
       clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
-      postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel
+      postgresql-devel postgresql-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 10
     update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 10
     update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-13 10
