@@ -3423,7 +3423,10 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
       ) {
         p.author = body.info.author_email.trim();
       }
-      if (p.name !== body.info.name) {
+      if (
+        p.name !== body.info?.name &&
+        p.name.toLowerCase() === body.info?.name.toLowerCase()
+      ) {
         p.name = body.info.name;
       }
       p.description = body.info.summary;
