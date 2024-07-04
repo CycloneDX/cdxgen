@@ -3348,7 +3348,13 @@ export function parsePyRequiresDist(dist_string) {
 export function guessPypiMatchingVersion(versionsList, versionSpecifiers) {
   versionSpecifiers = versionSpecifiers.replace(/,/g, " ").split(";")[0];
   const comparator = (a, b) => {
-    let c = coerce(a).compare(coerce(b));
+    if (!a && !b) {
+      return 0;
+    }
+    if (!a || !coerce(a, { loose: true })) {
+      return -1;
+    }
+    let c = coerce(a, { loose: true }).compare(coerce(b, { loose: true }));
     // if coerced versions are "equal", compare them as strings
     if (c === 0) {
       c = a < b ? -1 : 1;
@@ -3357,7 +3363,7 @@ export function guessPypiMatchingVersion(versionsList, versionSpecifiers) {
   };
   // Iterate in the "reverse" order
   for (const rv of versionsList.sort(comparator)) {
-    if (satisfies(coerce(rv), versionSpecifiers, true)) {
+    if (satisfies(coerce(rv, { loose: true }), versionSpecifiers, true)) {
       return rv;
     }
   }
@@ -3416,6 +3422,12 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
         body.info.author_email.trim() !== ""
       ) {
         p.author = body.info.author_email.trim();
+      }
+      if (
+        p.name !== body.info?.name &&
+        p.name.toLowerCase() === body.info?.name.toLowerCase()
+      ) {
+        p.name = body.info.name;
       }
       p.description = body.info.summary;
       p.license = [];
@@ -3525,7 +3537,7 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
       const purlString = new PackageURL(
         "pypi",
         "",
-        p.name,
+        p.name.toLowerCase(),
         p.version,
         null,
         null,
@@ -3568,7 +3580,7 @@ export async function getPyMetadata(pkgList, fetchDepsInfo) {
       const purlString = new PackageURL(
         "pypi",
         "",
-        p.name,
+        p.name.toLowerCase(),
         p.version,
         null,
         null,
@@ -10765,7 +10777,9 @@ async function queryNuget(p, NUGET_URL) {
   }
   // Coerce only when missing patch/minor version
   function coerceUp(version) {
-    return version.split(".").length < 3 ? coerce(version).version : version;
+    return version.split(".").length < 3
+      ? coerce(version, { loose: true }).version
+      : version;
   }
   if (DEBUG_MODE) {
     console.log(`Querying nuget for ${p.name}`);
@@ -10788,8 +10802,14 @@ async function queryNuget(p, NUGET_URL) {
     }
     for (const item of items) {
       if (np.version) {
-        const lower = compare(coerce(item.lower), coerce(np.version));
-        const upper = compare(coerce(item.upper), coerce(np.version));
+        const lower = compare(
+          coerce(item.lower, { loose: true }),
+          coerce(np.version, { loose: true }),
+        );
+        const upper = compare(
+          coerce(item.upper, { loose: true }),
+          coerce(np.version, { loose: true }),
+        );
         if (lower !== 1 && upper !== -1) {
           res = await cdxgenAgent.get(item["@id"], { responseType: "json" });
           for (const i of res.body.items.reverse()) {
@@ -10811,8 +10831,14 @@ async function queryNuget(p, NUGET_URL) {
     }
     if (np.version) {
       for (const item of items) {
-        const lower = compare(coerce(item.lower), coerce(np.version));
-        const upper = compare(coerce(item.upper), coerce(np.version));
+        const lower = compare(
+          coerce(item.lower, { loose: true }),
+          coerce(np.version, { loose: true }),
+        );
+        const upper = compare(
+          coerce(item.upper, { loose: true }),
+          coerce(np.version, { loose: true }),
+        );
         if (lower !== 1 && upper !== -1) {
           for (const i of item.items.reverse()) {
             if (
