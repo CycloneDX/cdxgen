@@ -37,6 +37,7 @@ let isDockerRootless = false;
 let isContainerd = !!process.env.CONTAINERD_ADDRESS;
 const WIN_LOCAL_TLS = "http://localhost:2375";
 let isWinLocalTLS = false;
+let isNerdctl = undefined;
 
 if (
   !process.env.DOCKER_HOST &&
@@ -47,6 +48,56 @@ if (
       )))
 ) {
   isContainerd = true;
+}
+
+/**
+ * Detect if Rancher desktop is running on a mac.
+ */
+export function detectRancherDesktop() {
+  // Detect Rancher desktop and nerdctl on a mac
+  if (_platform() === "darwin") {
+    const limaHome = join(
+      homedir(),
+      "Library",
+      "Application Support",
+      "rancher-desktop",
+      "lima",
+    );
+    const limactl = join(
+      "/Applications",
+      "Rancher Desktop.app",
+      "Contents",
+      "Resources",
+      "resources",
+      "darwin",
+      "lima",
+      "bin",
+      "limactl",
+    );
+    // Is Rancher Desktop running
+    if (existsSync(limactl) || existsSync(limaHome)) {
+      const result = spawnSync("rdctl", ["list-settings"], {
+        encoding: "utf-8",
+      });
+      if (result.status !== 0 || result.error) {
+        if (
+          isNerdctl === undefined &&
+          result.stderr?.includes("connection refused")
+        ) {
+          console.warn(
+            "Ensure Rancher Desktop is running prior to invoking cdxgen. To start from the command line, type the command 'rdctl start'",
+          );
+          isNerdctl = false;
+        }
+      } else {
+        if (DEBUG_MODE) {
+          console.log("Rancher Desktop found!");
+        }
+        isNerdctl = true;
+      }
+    }
+  }
+  return isNerdctl;
 }
 
 // Cache the registry auth keys
@@ -288,7 +339,7 @@ const getDefaultOptions = (forRegistry) => {
 };
 
 export const getConnection = async (options, forRegistry) => {
-  if (isContainerd) {
+  if (isContainerd || isNerdctl) {
     return undefined;
   }
   if (!dockerConn) {
@@ -368,10 +419,15 @@ export const getConnection = async (options, forRegistry) => {
               "Ensure Docker for Desktop is running as an administrator with 'Exposing daemon on TCP without TLS' setting turned on.",
               opts,
             );
-          } else if (_platform() === "darwin") {
-            console.warn(
-              "Ensure Podman Desktop (open-source) or Docker for Desktop (May require subscription) is running.",
-            );
+          } else if (_platform() === "darwin" && !isNerdctl) {
+            if (detectRancherDesktop()) {
+              return undefined;
+            }
+            if (isNerdctl === undefined) {
+              console.warn(
+                "Ensure Podman Desktop (open-source) or Docker for Desktop (May require subscription) is running.",
+              );
+            }
           } else {
             console.warn(
               "Ensure docker/podman service or Docker for Desktop is running.",
@@ -497,11 +553,14 @@ export const parseImageName = (fullImageName) => {
 };
 
 /**
- * Prefer cli on windows or when using tcp/ssh based host.
+ * Prefer cli on windows, nerdctl on mac, or when using tcp/ssh based host.
  *
  * @returns boolean true if we should use the cli. false otherwise
  */
 const needsCliFallback = () => {
+  if (_platform() === "darwin" && detectRancherDesktop()) {
+    return true;
+  }
   return (
     isWin ||
     (process.env.DOCKER_HOST &&
@@ -532,7 +591,10 @@ export const getImage = async (fullImageName) => {
     return undefined;
   }
   if (needsCliFallback()) {
-    const dockerCmd = process.env.DOCKER_CMD || "docker";
+    let dockerCmd = process.env.DOCKER_CMD || "docker";
+    if (!process.env.DOCKER_CMD && detectRancherDesktop()) {
+      dockerCmd = "nerdctl";
+    }
     let result = spawnSync(dockerCmd, ["pull", fullImageName], {
       encoding: "utf-8",
     });
@@ -956,14 +1018,18 @@ export const exportImage = async (fullImageName) => {
   let manifestFile = join(tempDir, "manifest.json");
   // Windows containers use index.json
   const manifestIndexFile = join(tempDir, "index.json");
-  // On Windows, fallback to invoking cli
+  // On Windows or on mac with Rancher Desktop, fallback to invoking cli
   if (needsCliFallback()) {
     const imageTarFile = join(tempDir, "image.tar");
+    let dockerCmd = process.env.DOCKER_CMD || "docker";
+    if (!process.env.DOCKER_CMD && detectRancherDesktop()) {
+      dockerCmd = "nerdctl";
+    }
     console.log(
-      `About to export image ${fullImageName} to ${imageTarFile} using docker cli`,
+      `About to export image ${fullImageName} to ${imageTarFile} using ${dockerCmd} cli`,
     );
     const result = spawnSync(
-      "docker",
+      dockerCmd,
       ["save", "-o", imageTarFile, fullImageName],
       {
         encoding: "utf-8",

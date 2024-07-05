@@ -249,6 +249,7 @@ const OS_DISTRO_ALIAS = {
   "debian-13.5": "trixie",
   "debian-12": "bookworm",
   "debian-12.5": "bookworm",
+  "debian-12.6": "bookworm",
   "debian-11": "bullseye",
   "debian-11.5": "bullseye",
   "debian-10": "buster",

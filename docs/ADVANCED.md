@@ -447,7 +447,7 @@ sudo nerdctl --snapshotter nydus run --rm -v $HOME/.m2:/root/.m2 -v $(pwd):/app 
 
 ## Lima VM usage
 
-Refer to the dedicated [readme](../contrib/lima/README.md)
+Refer to the dedicated [readme](../contrib/lima/README.md). Rancher Desktop on macOS with nerdctl is supported by default.
 
 ## Export as protobuf binary
 

@@ -4376,4 +4376,16 @@ test("hasAnyProjectType tests", () => {
       false,
     ),
   ).toBeFalsy();
+  expect(
+    hasAnyProjectType(["js", "docker"], {
+      projectType: ["universal"],
+      excludeType: [],
+    }),
+  ).toBeTruthy();
+  expect(
+    hasAnyProjectType(["js"], {
+      projectType: ["universal"],
+      excludeType: ["js"],
+    }),
+  ).toBeFalsy();
 });
