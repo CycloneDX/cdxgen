@@ -2878,6 +2878,10 @@ export function executeGradleProperties(dir, rootPath, subProject) {
         console.log(
           "3. Check if the SBOM is generated for the correct root project for your application.",
         );
+      } else if (result.stderr?.includes("Unable to find Git repository")) {
+        console.log(
+          "3. A plugin might be requiring a valid git repository. Retry by cloning this repo or performing 'git init' as a workaround.",
+        );
       }
     }
   }

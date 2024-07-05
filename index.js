@@ -1577,26 +1577,6 @@ export async function createJavaBom(path, options) {
         );
       }
     }
-    if (pkgList) {
-      pkgList = trimComponents(pkgList);
-      pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-      return buildBomNSData(options, pkgList, "maven", {
-        src: path,
-        filename: pomFiles.join(", "),
-        nsMapping: jarNSMapping,
-        dependencies,
-        parentComponent,
-        tools,
-      });
-    }
-    if (bomJsonFiles.length) {
-      const bomNSData = {};
-      bomNSData.bomJsonFiles = bomJsonFiles;
-      bomNSData.nsMapping = jarNSMapping;
-      bomNSData.dependencies = dependencies;
-      bomNSData.parentComponent = parentComponent;
-      return bomNSData;
-    }
   }
   // gradle
   const gradleFiles = getAllFiles(
@@ -1933,14 +1913,6 @@ export async function createJavaBom(path, options) {
         jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
       }
     }
-    pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-    return buildBomNSData(options, pkgList, "maven", {
-      src: gradleRootPath,
-      filename: gradleFiles.join(", "),
-      nsMapping: jarNSMapping,
-      dependencies,
-      parentComponent,
-    });
   }
 
   // Bazel
@@ -2017,15 +1989,6 @@ export async function createJavaBom(path, options) {
           console.log("Bazel unexpectedly didn't produce any output");
           options.failOnError && process.exit(1);
         }
-        // FIXME: How do we retrieve jarNSMapping for bazel projects?
-        pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-        return buildBomNSData(options, pkgList, "maven", {
-          src: path,
-          filename: "BUILD",
-          nsMapping: {},
-          dependencies,
-          parentComponent,
-        });
       }
     }
   }
@@ -2222,15 +2185,16 @@ export async function createJavaBom(path, options) {
         jarNSMapping = { ...jarNSMapping, ...tmpjarNSMapping };
       }
     }
-    pkgList = await getMvnMetadata(pkgList, jarNSMapping);
-    return buildBomNSData(options, pkgList, "maven", {
-      src: path,
-      filename: sbtProjects.join(", "),
-      nsMapping: jarNSMapping,
-      dependencies,
-      parentComponent,
-    });
   }
+  pkgList = trimComponents(pkgList);
+  pkgList = await getMvnMetadata(pkgList, jarNSMapping);
+  return buildBomNSData(options, pkgList, "maven", {
+    src: path,
+    nsMapping: jarNSMapping,
+    dependencies,
+    parentComponent,
+    tools,
+  });
 }
 
 /**
