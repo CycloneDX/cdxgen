@@ -2193,6 +2193,7 @@ export async function createJavaBom(path, options) {
     nsMapping: jarNSMapping,
     dependencies,
     parentComponent,
+    tools,
   });
 }
 
