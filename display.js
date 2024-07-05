@@ -427,7 +427,7 @@ export const printSummary = (bomJson) => {
       bomPkgNamespaces = aprop?.value.split("\\n");
     }
   }
-  if (!bomPkgTypes && !bomPkgNamespaces) {
+  if (!bomPkgTypes.length && !bomPkgNamespaces.length) {
     return;
   }
   const message = `** Package Types (${bomPkgTypes.length}) **\n${bomPkgTypes.join("\n")}\n\n** Namespaces (${bomPkgNamespaces.length}) **\n${bomPkgNamespaces.join("\n")}`;

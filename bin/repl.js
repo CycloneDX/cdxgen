@@ -163,9 +163,15 @@ cdxgenRepl.defineCommand("search", {
             searchStr = `components[group ~> /${searchStr}/i or name ~> /${searchStr}/i or description ~> /${searchStr}/i or publisher ~> /${searchStr}/i or purl ~> /${searchStr}/i]`;
           }
           const expression = jsonata(searchStr);
-          const components = await expression.evaluate(sbom);
+          let components = await expression.evaluate(sbom);
           const dexpression = jsonata(dependenciesSearchStr);
-          const dependencies = await dexpression.evaluate(sbom);
+          let dependencies = await dexpression.evaluate(sbom);
+          if (components && !Array.isArray(components)) {
+            components = [components];
+          }
+          if (dependencies && !Array.isArray(dependencies)) {
+            dependencies = [dependencies];
+          }
           if (!components) {
             console.log("No results found!");
           } else {
