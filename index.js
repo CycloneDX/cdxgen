@@ -1317,6 +1317,14 @@ export async function createJavaBom(path, options) {
       }
       // Use the cyclonedx maven plugin if there is no preference for maven deps tree
       if (!PREFER_MAVEN_DEPS_TREE) {
+        if (DEBUG_MODE) {
+          console.log(
+            "cdxgen now supports generating SBOM with only the maven cli without the need for the cyclonedx-maven plugin. This mode works better in enterprise environments and in multi-module projects.",
+          );
+          console.log(
+            "Set the environment variable PREFER_MAVEN_DEPS_TREE to true to enable this.",
+          );
+        }
         console.log(
           `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
           basePath,
@@ -1826,6 +1834,11 @@ export async function createJavaBom(path, options) {
         }
       }
     } else {
+      if (DEBUG_MODE) {
+        console.log(
+          "Try the new multi-threaded mode for gradle. Set the environment variable GRADLE_MULTI_THREADED to true to enable this.",
+        );
+      }
       for (const sp of allProjects) {
         let gradleSubProjectDepArgs = [
           sp.purl === parentComponent.purl

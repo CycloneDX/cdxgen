@@ -33,8 +33,8 @@ importers:
         specifier: 7.0.0
         version: 7.0.0
       glob:
-        specifier: ^10.4.2
-        version: 10.4.2
+        specifier: ^10.4.3
+        version: 10.4.3
       global-agent:
         specifier: ^3.0.0
         version: 3.0.0
@@ -88,8 +88,8 @@ importers:
         version: 17.7.2
     optionalDependencies:
       '@appthreat/atom':
-        specifier: 2.0.15
-        version: 2.0.15
+        specifier: 2.0.16
+        version: 2.0.16
       '@appthreat/cdx-proto':
         specifier: 1.0.1
         version: 1.0.1
@@ -149,8 +149,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@appthreat/atom@2.0.15':
-    resolution: {integrity: sha512-IpJu5XkwCcgQiG9xgWVm9to+gWZ4hHSGu8J/IybnRE1HJCTaxEORyY6eJq61Rphk65FLbpEX8RBbWGMQVl3UQQ==}
+  '@appthreat/atom@2.0.16':
+    resolution: {integrity: sha512-KB4NcBWCxIgeFl+93KqbVhDIKv6v7JjbgoyH+ywmP9yLlRPKgvQJEyfYEZqjatsFjLnBOFgwGaWorJGjdkOKJg==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -1343,9 +1343,9 @@ packages:
   github-from-package@0.0.0:
     resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}
 
-  glob@10.4.2:
-    resolution: {integrity: sha512-GwMlUF6PkPo3Gk21UxkCohOv0PLcIXVtKyLlpEI28R/cO/4eNOdmLk3CMW1wROV/WR/EsZOWAfBbBOqYvs88/w==}
-    engines: {node: '>=16 || 14 >=14.18'}
+  glob@10.4.3:
+    resolution: {integrity: sha512-Q38SGlYRpVtDBPSWEylRyctn7uDeTp4NQERTLiCT1FqA9JXPYWqAVmQU6qh4r/zMM5ehxTcbaO8EjhWnvEhmyg==}
+    engines: {node: '>=18'}
     hasBin: true
 
   glob@7.2.3:
@@ -2748,7 +2748,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@appthreat/atom@2.0.15':
+  '@appthreat/atom@2.0.16':
     dependencies:
       '@babel/parser': 7.24.7
       typescript: 5.5.3
@@ -3344,7 +3344,7 @@ snapshots:
   '@npmcli/map-workspaces@3.0.6':
     dependencies:
       '@npmcli/name-from-folder': 2.0.0
-      glob: 10.4.2
+      glob: 10.4.3
       minimatch: 9.0.4
       read-package-json-fast: 3.0.2
 
@@ -3372,7 +3372,7 @@ snapshots:
   '@npmcli/package-json@5.2.0':
     dependencies:
       '@npmcli/git': 5.0.7
-      glob: 10.4.2
+      glob: 10.4.3
       hosted-git-info: 7.0.2
       json-parse-even-better-errors: 3.0.2
       normalize-package-data: 6.0.1
@@ -3779,7 +3779,7 @@ snapshots:
     dependencies:
       '@npmcli/fs': 3.1.1
       fs-minipass: 3.0.3
-      glob: 10.4.2
+      glob: 10.4.3
       lru-cache: 10.2.2
       minipass: 7.1.2
       minipass-collect: 2.0.1
@@ -4227,7 +4227,7 @@ snapshots:
   github-from-package@0.0.0:
     optional: true
 
-  glob@10.4.2:
+  glob@10.4.3:
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 3.2.0
@@ -5059,7 +5059,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       exponential-backoff: 3.1.1
-      glob: 10.4.2
+      glob: 10.4.3
       graceful-fs: 4.2.11
       make-fetch-happen: 13.0.1
       nopt: 7.2.1
