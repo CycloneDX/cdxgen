@@ -51,7 +51,9 @@ ENV GOPATH=/opt/app-root/go \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm" \
     TMPDIR=/tmp \
-    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
+    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
+    PYTHONPATH=/opt/pypi \
+    npm_config_python=/usr/bin/python${PYTHON_VERSION}
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:
 
 COPY . /opt/cdxgen
@@ -77,7 +79,10 @@ RUN set -e; \
     && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
     && python3 --version \
     && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
-    && python3 -m pip install --no-cache-dir pipenv poetry blint --target /opt/pypi \
+    && python3 -m pip install --no-cache-dir --upgrade pipenv poetry blint --target /opt/pypi \
+    && /opt/pypi/bin/poetry --version \
+    && /opt/pypi/bin/pipenv --version \
+    && /opt/pypi/bin/blint --help \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && cargo --version \
     && rustc --version \
