@@ -149,7 +149,8 @@ Options:
   [choices: "appsec", "research", "operational", "threat-modeling", "license-compliance", "generic"] [default: "generic"
                                                                                                                        ]
       --exclude                Additional glob pattern(s) to ignore                                              [array]
-      --include-formulation    Generate formulation section using git metadata.               [boolean] [default: false]
+      --include-formulation    Generate formulation section with git metadata and build tools. Defaults to true. Invoke
+                               with --no-include-formulation to disable.                       [boolean] [default: true]
       --include-crypto         Include crypto libraries found under formulation.              [boolean] [default: false]
       --standard               The list of standards which may consist of regulations, industry or organizational-specif
                                ic standards, maturity models, best practices, or any other requirements which can be eva

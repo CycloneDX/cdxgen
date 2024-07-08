@@ -151,7 +151,6 @@ cdxgen -t java -o bom.json --server-url https://deptrack.server.com --api-key "t
 
 See our [Supported Project Types](https://cyclonedx.github.io/cdxgen/#/PROJECT_TYPES) documentation
 
-
 # Advanced Usage
 
 cdxgen supports advanced use cases as a library and in REPL mode.

@@ -325,6 +325,7 @@ def run_cdxgen(repo, output_dir):
     """
     cdxgen_cmd = [
         'cdxgen',
+        "--no-include-formulation",
         '-t',
         repo['language'],
         '-o',

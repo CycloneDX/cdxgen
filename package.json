@@ -65,7 +65,7 @@
   "bugs": {
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@9.5.0",
   "dependencies": {
     "@babel/parser": "^7.24.7",
     "@babel/traverse": "^7.24.7",
@@ -75,7 +75,7 @@
     "cheerio": "^1.0.0-rc.12",
     "edn-data": "1.1.2",
     "find-up": "7.0.0",
-    "glob": "^10.4.2",
+    "glob": "^10.4.3",
     "global-agent": "^3.0.0",
     "got": "14.4.1",
     "iconv-lite": "^0.6.3",
@@ -95,7 +95,7 @@
     "validate-iri": "^1.0.1"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.0.15",
+    "@appthreat/atom": "2.0.16",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.0",
     "@cyclonedx/cdxgen-plugins-bin-arm64": "1.6.0",

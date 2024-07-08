@@ -9579,6 +9579,14 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         tempVenvDir,
         platform() === "win32" ? "Scripts" : "bin",
       )}${_delimiter}${process.env.PATH || ""}`;
+      // When cdxgen is invoked with the container image, we seem to be including unnecessary packages from the image.
+      // This workaround, unsets PYTHONPATH to suppress the pre-installed packages
+      if (
+        env?.PYTHONPATH === "/opt/pypi" &&
+        env?.CDXGEN_IN_CONTAINER === "true"
+      ) {
+        env.PYTHONPATH = undefined;
+      }
     }
   }
   /**

@@ -430,7 +430,10 @@ export const printSummary = (bomJson) => {
   if (!bomPkgTypes.length && !bomPkgNamespaces.length) {
     return;
   }
-  const message = `** Package Types (${bomPkgTypes.length}) **\n${bomPkgTypes.join("\n")}\n\n** Namespaces (${bomPkgNamespaces.length}) **\n${bomPkgNamespaces.join("\n")}`;
+  let message = `** Package Types (${bomPkgTypes.length}) **\n${bomPkgTypes.join("\n")}`;
+  if (bomPkgNamespaces.length) {
+    message = `${message}\n\n** Namespaces (${bomPkgNamespaces.length}) **\n${bomPkgNamespaces.join("\n")}`;
+  }
   const data = [[message]];
   console.log(table(data, config));
 };

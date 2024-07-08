@@ -13,8 +13,8 @@ LABEL maintainer="cyclonedx" \
 
 ARG SWIFT_SIGNING_KEY=A62AE125BBBFBB96A6E042EC925CC1CCED3D1561
 ARG SWIFT_PLATFORM=ubi9
-ARG SWIFT_BRANCH=swift-5.8-release
-ARG SWIFT_VERSION=swift-5.8-RELEASE
+ARG SWIFT_BRANCH=swift-5.10.1-release
+ARG SWIFT_VERSION=swift-5.10.1-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=22.0.1-tem
 ARG SBT_VERSION=1.9.9
@@ -35,7 +35,7 @@ ENV GOPATH=/opt/app-root/go \
     GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
     PYTHON_VERSION=3.12 \
-    PYTHON_CMD=/usr/bin/python${PYTHON_VERSION} \
+    PYTHON_CMD=/usr/bin/python3.12 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING="utf-8" \
     COMPOSER_ALLOW_SUPERUSER=1 \
@@ -51,8 +51,13 @@ ENV GOPATH=/opt/app-root/go \
     LANGUAGE=en_US.UTF-8 \
     NVM_DIR="/root/.nvm" \
     TMPDIR=/tmp \
-    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache"
-ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:
+    NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
+    PYTHONPATH=/opt/pypi \
+    CDXGEN_IN_CONTAINER=true \
+    npm_config_python=/usr/bin/python3.12
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:
+
+COPY . /opt/cdxgen
 
 RUN set -e; \
     ARCH_NAME="$(rpm --eval '%{_arch}')"; \
@@ -71,11 +76,14 @@ RUN set -e; \
     && microdnf install -y php php-curl php-zip php-bcmath php-json php-pear php-mbstring php-devel make gcc git-core \
     python${PYTHON_VERSION} python${PYTHON_VERSION}-devel python${PYTHON_VERSION}-pip ruby ruby-devel glibc-common glibc-all-langpacks \
         pcre2 which tar gzip zip unzip bzip2 sudo ncurses sqlite-devel dotnet-sdk-8.0 \
-    && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 1 \
-    && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 1 \
-    && python${PYTHON_VERSION} --version \
-    && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pip virtualenv \
-    && python${PYTHON_VERSION} -m pip install --no-cache-dir --user pipenv poetry blint \
+    && alternatives --install /usr/bin/python3 python /usr/bin/python${PYTHON_VERSION} 10 \
+    && alternatives --install /usr/bin/python3 python3 /usr/bin/python${PYTHON_VERSION} 10 \
+    && /usr/bin/python${PYTHON_VERSION} --version \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && /usr/bin/python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry blint --target /opt/pypi \
+    && /opt/pypi/bin/poetry --version \
+    && /opt/pypi/bin/pipenv --version \
+    && /opt/pypi/bin/blint --help \
     && curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
     && cargo --version \
     && rustc --version \
@@ -135,14 +143,13 @@ RUN set -e; \
     && mv composer.phar /usr/local/bin/composer \
     && gem install bundler \
     && gem --version \
-    && bundler --version
-COPY . /opt/cdxgen
-RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod \
+    && bundler --version \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
     && node /opt/cdxgen/bin/cdxgen.js --help \
-    && rm -rf /var/cache/yum \
+    && rm -rf /var/cache/yum /root/.cache/pypoetry \
     && microdnf clean all
 
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
