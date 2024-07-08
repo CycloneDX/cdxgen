@@ -246,8 +246,9 @@ const args = yargs(hideBin(process.argv))
   })
   .option("include-formulation", {
     type: "boolean",
-    default: false,
-    description: "Generate formulation section using git metadata.",
+    default: true,
+    description:
+      "Generate formulation section with git metadata and build tools. Defaults to true. Invoke with --no-include-formulation to disable.",
   })
   .option("include-crypto", {
     type: "boolean",
