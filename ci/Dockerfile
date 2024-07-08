@@ -34,7 +34,7 @@ ENV GOPATH=/opt/app-root/go \
     MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
     GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
     SBT_HOME="/opt/sbt/${SBT_VERSION}" \
-    PYTHON_VERSION=$PYTHON_VERSION \
+    PYTHON_VERSION=3.12 \
     PYTHON_CMD=/usr/bin/python3.12 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING="utf-8" \
@@ -53,7 +53,8 @@ ENV GOPATH=/opt/app-root/go \
     TMPDIR=/tmp \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PYTHONPATH=/opt/pypi \
-    npm_config_python=/usr/bin/python${PYTHON_VERSION}
+    CDXGEN_IN_CONTAINER=true \
+    npm_config_python=/usr/bin/python3.12
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:
 
 COPY . /opt/cdxgen
@@ -148,7 +149,7 @@ RUN set -e; \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
     && node /opt/cdxgen/bin/cdxgen.js --help \
-    && rm -rf /var/cache/yum \
+    && rm -rf /var/cache/yum /root/.cache/pypoetry \
     && microdnf clean all
 
 ENTRYPOINT ["node", "/opt/cdxgen/bin/cdxgen.js"]
