@@ -6163,8 +6163,14 @@ export async function createBom(path, options) {
     exportData = await exportImage(path);
     if (exportData) {
       isContainerMode = true;
-    } else if (DEBUG_MODE) {
-      console.log(path, "doesn't appear to be a valid container image");
+    } else {
+      if (DEBUG_MODE) {
+        console.log(
+          path,
+          "doesn't appear to be a valid container image. Looking for application pacakges.",
+        );
+      }
+      return await createMultiXBom([path], options);
     }
   } else if (projectType === "oci-dir") {
     isContainerMode = true;
