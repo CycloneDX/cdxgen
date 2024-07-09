@@ -323,7 +323,7 @@ jobs:
         run: |
           bin/cdxgen.js -p --no-recurse repotests/microservices-demo -o bomresults/bom-msd-1.json --validate
           bin/cdxgen.js -p -r repotests/microservices-demo -o bomresults/bom-msd-2.json --validate
-          bin/cdxgen.js -p -r -t yaml-manifest repotests/microservices-demo -o bomresults/bom-yaml.json --validate
+          bin/cdxgen.js -p -r -t universal repotests/microservices-demo -o bomresults/bom-yaml.json
         shell: bash
       - name: repotests openpbs
         run: |

@@ -6161,14 +6161,17 @@ export async function createBom(path, options) {
     path.includes(":latest")
   ) {
     exportData = await exportImage(path);
-    if (!exportData) {
-      console.log(
-        "BOM generation has failed due to problems with exporting the image",
-      );
-      options.failOnError && process.exit(1);
-      return {};
+    if (exportData) {
+      isContainerMode = true;
+    } else {
+      if (DEBUG_MODE) {
+        console.log(
+          path,
+          "doesn't appear to be a valid container image. Looking for application pacakges.",
+        );
+      }
+      return await createMultiXBom([path], options);
     }
-    isContainerMode = true;
   } else if (projectType === "oci-dir") {
     isContainerMode = true;
     exportData = {
