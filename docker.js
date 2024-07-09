@@ -17,7 +17,7 @@ import {
   homedir,
   tmpdir,
 } from "node:os";
-import { basename, join } from "node:path";
+import { basename, join, resolve } from "node:path";
 import process from "node:process";
 import stream from "node:stream/promises";
 import { parse } from "node:url";
@@ -1003,6 +1003,14 @@ export const extractFromManifest = async (
  * Returns the location of the layers with additional packages related metadata
  */
 export const exportImage = async (fullImageName) => {
+  // Safely ignore local directories
+  if (
+    !fullImageName ||
+    fullImageName === "." ||
+    existsSync(resolve(fullImageName))
+  ) {
+    return undefined;
+  }
   // Try to get the data locally first
   const localData = await getImage(fullImageName);
   if (!localData) {
