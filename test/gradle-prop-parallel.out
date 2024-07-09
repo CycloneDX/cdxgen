@@ -1,4 +1,7 @@
-
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+> Task :buildSrc:check UP-TO-DATE
+> Task :buildSrc:build UP-TO-DATE
 > Task :properties
 
 ------------------------------------------------------------
