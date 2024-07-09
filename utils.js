@@ -9219,8 +9219,6 @@ export function splitOutputByGradleProjects(rawOutput) {
     if (
       line.startsWith("> Task :") &&
       !regexForPropertiesOrDependencies.test(line)
-      // !line.includes(":properties") &&
-      // !line.includes(":dependencies")
     ) {
       continue;
     }
