@@ -9214,9 +9214,11 @@ export function splitOutputByGradleProjects(rawOutput) {
     }
 
     //ignore output of irrelevant tasks
-    if (line.startsWith("> Task :") 
-      && !line.includes(":properties") 
-      && !line.includes(":dependencies")) {
+    if (
+      line.startsWith("> Task :") &&
+      !line.includes(":properties") &&
+      !line.includes(":dependencies")
+    ) {
       continue;
     }
 
@@ -9226,7 +9228,7 @@ export function splitOutputByGradleProjects(rawOutput) {
       outputSplitBySubprojects.set(currentProjectName, "");
     }
     // if previous subProject has ended, push to array and reset subProject string
-    if (line.startsWith("> Task :") && subProjectOut !== "") {   
+    if (line.startsWith("> Task :") && subProjectOut !== "") {
       outputSplitBySubprojects.set(currentProjectName, subProjectOut);
       subProjectOut = "";
     }
