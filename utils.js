@@ -9207,7 +9207,8 @@ export function splitOutputByGradleProjects(rawOutput) {
   let subProjectOut = "";
   const outSplitByLine = rawOutput.split("\n");
   let currentProjectName = "";
-  const regexForPropertiesOrDependencies = /.*:(dependencies|properties)(?=\s|$)/;
+  const regexForPropertiesOrDependencies =
+    /.*:(dependencies|properties)(?=\s|$)/;
   for (const [i, line] of outSplitByLine.entries()) {
     //filter out everything before first task output
     if (!line.startsWith("> Task :") && subProjectOut === "") {
@@ -9227,21 +9228,21 @@ export function splitOutputByGradleProjects(rawOutput) {
     if (line.startsWith("Root project '") || line.startsWith("Project ':")) {
       currentProjectName = line.split("'")[1];
       currentProjectName = currentProjectName.replace(":", "");
-     outputSplitBySubprojects.set(currentProjectName, "");
-   }
-   // if previous subProject has ended, push to array and reset subProject string
-   if (line.startsWith("> Task :") && subProjectOut !== "") {
-     outputSplitBySubprojects.set(currentProjectName, subProjectOut);
-     subProjectOut = "";
-   }
-   //if in subproject block, keep appending to string
-   subProjectOut += `${line}\n`;
-   //if end of last dependencies output block, push to array
-   if (i === outSplitByLine.length - 1) {
-     outputSplitBySubprojects.set(currentProjectName, subProjectOut);
-   }
- }
- return outputSplitBySubprojects;
+      outputSplitBySubprojects.set(currentProjectName, "");
+    }
+    // if previous subProject has ended, push to array and reset subProject string
+    if (line.startsWith("> Task :") && subProjectOut !== "") {
+      outputSplitBySubprojects.set(currentProjectName, subProjectOut);
+      subProjectOut = "";
+    }
+    //if in subproject block, keep appending to string
+    subProjectOut += `${line}\n`;
+    //if end of last dependencies output block, push to array
+    if (i === outSplitByLine.length - 1) {
+      outputSplitBySubprojects.set(currentProjectName, subProjectOut);
+    }
+  }
+  return outputSplitBySubprojects;
 }
 /**
  * Method to return the maven command to use.
