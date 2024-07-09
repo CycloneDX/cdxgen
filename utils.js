@@ -9208,8 +9208,15 @@ export function splitOutputByGradleProjects(rawOutput) {
   const outSplitByLine = rawOutput.split("\n");
   let currentProjectName = "";
   for (const [i, line] of outSplitByLine.entries()) {
-    //filter out everything before first dependencies task output
+    //filter out everything before first task output
     if (!line.startsWith("> Task :") && subProjectOut === "") {
+      continue;
+    }
+
+    //ignore output of irrelevant tasks
+    if (line.startsWith("> Task :") 
+      && !line.includes(":properties") 
+      && !line.includes(":dependencies")) {
       continue;
     }
 
@@ -9219,7 +9226,7 @@ export function splitOutputByGradleProjects(rawOutput) {
       outputSplitBySubprojects.set(currentProjectName, "");
     }
     // if previous subProject has ended, push to array and reset subProject string
-    if (line.startsWith("> Task :") && subProjectOut !== "") {
+    if (line.startsWith("> Task :") && subProjectOut !== "") {   
       outputSplitBySubprojects.set(currentProjectName, subProjectOut);
       subProjectOut = "";
     }
