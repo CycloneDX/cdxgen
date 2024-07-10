@@ -168,7 +168,7 @@ test("splits parallel gradle properties output correctly", () => {
   const relevantTasks = ["properties"];
   const propOutputSplitBySubProject = splitOutputByGradleProjects(
     parallelGradlePropertiesOutput,
-    relevantTasks
+    relevantTasks,
   );
 
   expect(propOutputSplitBySubProject.size).toEqual(4);
@@ -200,7 +200,7 @@ test("splits parallel gradle dependencies output correctly", () => {
   const relevantTasks = ["dependencies"];
   const depOutputSplitBySubProject = splitOutputByGradleProjects(
     parallelGradleDepOutput,
-    relevantTasks
+    relevantTasks,
   );
 
   expect(depOutputSplitBySubProject.size).toEqual(4);
@@ -222,31 +222,39 @@ test("splits parallel gradle dependencies output correctly", () => {
   expect(retMap.dependenciesList.length).toEqual(13);
 });
 
-test('splits parallel custom gradle task outputs correctly', () => {
+test("splits parallel custom gradle task outputs correctly", () => {
   const parallelGradleOutputWithOverridenTask = readFileSync(
     "./test/gradle-build-env-dep.out",
-    { encoding: "utf-8" }
+    { encoding: "utf-8" },
   );
-  const overridenTasks = ["buildEnvironment"]
-  const customDepTaskOuputSplitByProject = splitOutputByGradleProjects(parallelGradleOutputWithOverridenTask, overridenTasks)
+  const overridenTasks = ["buildEnvironment"];
+  const customDepTaskOuputSplitByProject = splitOutputByGradleProjects(
+    parallelGradleOutputWithOverridenTask,
+    overridenTasks,
+  );
   expect(customDepTaskOuputSplitByProject.size).toEqual(4);
-  expect(customDepTaskOuputSplitByProject.has("dependency-diff-check")).toBe(true);
-  expect(customDepTaskOuputSplitByProject.has("dependency-diff-check-service")).toBe(
+  expect(customDepTaskOuputSplitByProject.has("dependency-diff-check")).toBe(
     true,
   );
+  expect(
+    customDepTaskOuputSplitByProject.has("dependency-diff-check-service"),
+  ).toBe(true);
   expect(
     customDepTaskOuputSplitByProject.has("dependency-diff-check-common-core"),
   ).toBe(true);
   expect(
-    customDepTaskOuputSplitByProject.has("dependency-diff-check-client-starter"),
+    customDepTaskOuputSplitByProject.has(
+      "dependency-diff-check-client-starter",
+    ),
   ).toBe(true);
 
   const retMap = parseGradleDep(
-    customDepTaskOuputSplitByProject.get("dependency-diff-check-client-starter"),
+    customDepTaskOuputSplitByProject.get(
+      "dependency-diff-check-client-starter",
+    ),
   );
   expect(retMap.pkgList.length).toEqual(22);
   expect(retMap.dependenciesList.length).toEqual(23);
-
 });
 
 test("parse gradle dependencies", () => {

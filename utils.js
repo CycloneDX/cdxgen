@@ -9199,7 +9199,7 @@ export function getGradleCommand(srcPath, rootPath) {
  * Method to split the output produced by Gradle using parallel processing by project
  *
  * @param {string} rawOutput Full output produced by Gradle using parallel processing
- * @param {string[]} relevantTasks The list of gradle tasks whose output need to be considered. 
+ * @param {string[]} relevantTasks The list of gradle tasks whose output need to be considered.
  * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
  */
 
@@ -9209,7 +9209,7 @@ export function splitOutputByGradleProjects(rawOutput, relevantTasks) {
   const outSplitByLine = rawOutput.split("\n");
   let currentProjectName = "";
   const regexPatternForRelevantTasks = `.*:(${relevantTasks.join("|")})(?=\s|$)`;
-  const regexForRelevantTasks = new RegExp(regexPatternForRelevantTasks); 
+  const regexForRelevantTasks = new RegExp(regexPatternForRelevantTasks);
   for (const [i, line] of outSplitByLine.entries()) {
     //filter out everything before first task output
     if (!line.startsWith("> Task :") && subProjectOut === "") {
@@ -9217,10 +9217,7 @@ export function splitOutputByGradleProjects(rawOutput, relevantTasks) {
     }
 
     //ignore output of irrelevant tasks
-    if (
-      line.startsWith("> Task :") &&
-      !regexForRelevantTasks.test(line)
-    ) {
+    if (line.startsWith("> Task :") && !regexForRelevantTasks.test(line)) {
       continue;
     }
 
