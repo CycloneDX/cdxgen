@@ -9210,7 +9210,6 @@ export function splitOutputByGradleProjects(rawOutput, relevantTasks) {
   let currentProjectName = "";
   const regexPatternForRelevantTasks = `.*:(${relevantTasks.join("|")})(?=\s|$)`;
   const regexForRelevantTasks = new RegExp(regexPatternForRelevantTasks); 
-    // /.*:(dependencies|properties)(?=\s|$)/;
   for (const [i, line] of outSplitByLine.entries()) {
     //filter out everything before first task output
     if (!line.startsWith("> Task :") && subProjectOut === "") {
