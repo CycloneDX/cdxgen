@@ -4514,8 +4514,8 @@ export async function createContainerSpecLikeBom(path, options) {
   }
   if (origProjectType.includes("universal")) {
     // In case of universal, repeat to collect multiX Boms
-    const mbomData = await createMultiXBom([path], {
-      projectType: origProjectType,
+    const mbomData = await createMultiXBom(path, {
+      projectType: [],
       multiProject: true,
       excludeType: options.excludeType,
     });
@@ -5364,7 +5364,7 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
 /**
  * Function to create bom string for all languages
  *
- * @param {string} pathList list of to the project
+ * @param {string[]} pathList list of to the project
  * @param {Object} options Parse options from the cli
  */
 export async function createMultiXBom(pathList, options) {
@@ -5374,9 +5374,12 @@ export async function createMultiXBom(pathList, options) {
   let parentComponent = determineParentComponent(options) || {};
   let parentSubComponents = [];
   options.createMultiXBom = true;
+  // Convert single path to an array
+  if (!Array.isArray(pathList)) {
+    pathList = pathList.split(",");
+  }
   if (
     options.projectType &&
-    !options.projectType.includes("universal") &&
     hasAnyProjectType(["oci"], options, false) &&
     options.allLayersExplodedDir
   ) {
@@ -5404,11 +5407,7 @@ export async function createMultiXBom(pathList, options) {
       });
     }
   }
-  if (
-    !options.projectType.includes("universal") &&
-    hasAnyProjectType(["os"], options, false) &&
-    options.bomData
-  ) {
+  if (hasAnyProjectType(["os"], options, false) && options.bomData) {
     bomData = options.bomData;
     if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
@@ -6176,12 +6175,8 @@ export async function createBom(path, options) {
       isContainerMode = true;
     } else {
       if (DEBUG_MODE) {
-        console.log(
-          path,
-          "doesn't appear to be a valid container image. Looking for application packages.",
-        );
+        console.log(path, "doesn't appear to be a valid container image.");
       }
-      return {};
     }
   } else if (
     !options.projectType.includes("universal") &&
@@ -6271,7 +6266,7 @@ export async function createBom(path, options) {
   }
   if (projectType.length > 1) {
     console.log("Generate BOM for project types:", projectType.join(", "));
-    return await createMultiXBom([path], options);
+    return await createMultiXBom(path, options);
   }
   // Use the project type alias to return any singular BOM
   if (PROJECT_TYPE_ALIASES["java"].includes(projectType[0])) {
@@ -6369,7 +6364,7 @@ export async function createBom(path, options) {
       // In recurse mode return multi-language Bom
       // https://github.com/cyclonedx/cdxgen/issues/95
       if (options.multiProject) {
-        return await createMultiXBom([path], options);
+        return await createMultiXBom(path, options);
       }
       return await createXBom(path, options);
   }

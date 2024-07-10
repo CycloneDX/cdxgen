@@ -237,10 +237,10 @@ export function dedupeBom(options: any, components: any[], parentComponent: any,
 /**
  * Function to create bom string for all languages
  *
- * @param {string} pathList list of to the project
+ * @param {string[]} pathList list of to the project
  * @param {Object} options Parse options from the cli
  */
-export function createMultiXBom(pathList: string, options: any): Promise<any>;
+export function createMultiXBom(pathList: string[], options: any): Promise<any>;
 /**
  * Function to create bom string for various languages
  *

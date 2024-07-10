@@ -6012,7 +6012,8 @@ export function parseContainerFile(fileContents) {
     }
 
     if (line.startsWith("FROM")) {
-      const fromStatement = line.split("FROM")[1].split("AS");
+      // The alias could be called AS or as
+      const fromStatement = line.split("FROM ")[1].split(/\s(as|AS)\s/);
 
       const imageStatement = fromStatement[0].trim();
       const buildStageName = fromStatement[1]?.trim();
@@ -6031,7 +6032,7 @@ export function parseContainerFile(fileContents) {
       });
 
       if (buildStageName) {
-        buildStageNames.push(buildStageName);
+        buildStageNames.push(imageStatement);
       }
     }
   }

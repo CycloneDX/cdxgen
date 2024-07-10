@@ -686,10 +686,6 @@ export const getImage = async (fullImageName) => {
         return undefined;
       }
     } catch (err) {
-      // This style of retry is timing out with gcr so disabled for now.
-      if (registry?.startsWith("gcr.io")) {
-        return undefined;
-      }
       try {
         if (DEBUG_MODE) {
           console.log(`Re-trying the pull with the name ${repoWithTag}.`);
