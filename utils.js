@@ -8953,7 +8953,9 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
     } // for
   } // if
   if (jarFiles.length !== pkgList.length) {
-    console.log(`Obtained only ${pkgList.length} from ${jarFiles.length} jars`);
+    console.log(
+      `Obtained only ${pkgList.length} components from ${jarFiles.length} jars.`,
+    );
   }
   return pkgList;
 }

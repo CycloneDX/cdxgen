@@ -4512,7 +4512,7 @@ export async function createContainerSpecLikeBom(path, options) {
       }
     }
   }
-  if (origProjectType === "universal") {
+  if (origProjectType.includes("universal")) {
     // In case of universal, repeat to collect multiX Boms
     const mbomData = await createMultiXBom([path], {
       projectType: origProjectType,
@@ -4540,7 +4540,7 @@ export async function createContainerSpecLikeBom(path, options) {
       }
       if (DEBUG_MODE) {
         console.log(
-          `BOM includes ${components.length} unfiltered components ${dependencies.length} dependencies so far`,
+          `Received ${components.length} unfiltered components ${dependencies.length} dependencies so far.`,
         );
       }
     }
@@ -5339,7 +5339,7 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
   components = trimComponents(components);
   if (DEBUG_MODE) {
     console.log(
-      `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`,
+      `Obtained ${components.length} components and ${dependencies.length} dependencies after dedupe.`,
     );
   }
   const serialNum = `urn:uuid:${uuidv4()}`;
@@ -5814,8 +5814,7 @@ export async function createXBom(path, options) {
   try {
     accessSync(path, constants.R_OK);
   } catch (err) {
-    console.error(path, "is invalid");
-    process.exit(1);
+    return undefined;
   }
   // node.js - package.json
   if (
@@ -6156,7 +6155,9 @@ export async function createBom(path, options) {
     }
     isContainerMode = true;
   } else if (
-    (options.projectType && hasAnyProjectType(["oci"], options, false)) ||
+    (options.projectType &&
+      !options.projectType.includes("universal") &&
+      hasAnyProjectType(["oci"], options, false)) ||
     path.startsWith("docker.io") ||
     path.startsWith("quay.io") ||
     path.startsWith("ghcr.io") ||
@@ -6171,12 +6172,15 @@ export async function createBom(path, options) {
       if (DEBUG_MODE) {
         console.log(
           path,
-          "doesn't appear to be a valid container image. Looking for application pacakges.",
+          "doesn't appear to be a valid container image. Looking for application packages.",
         );
       }
-      return await createMultiXBom([path], options);
+      return {};
     }
-  } else if (projectType === "oci-dir") {
+  } else if (
+    !options.projectType.includes("universal") &&
+    hasAnyProjectType(["oci-dir"], options, false)
+  ) {
     isContainerMode = true;
     exportData = {
       inspectData: undefined,
