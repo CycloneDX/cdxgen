@@ -4517,6 +4517,7 @@ export async function createContainerSpecLikeBom(path, options) {
     const mbomData = await createMultiXBom([path], {
       projectType: origProjectType,
       multiProject: true,
+      excludeType: options.excludeType,
     });
     if (mbomData) {
       if (mbomData.components?.length) {
@@ -5375,6 +5376,7 @@ export async function createMultiXBom(pathList, options) {
   options.createMultiXBom = true;
   if (
     options.projectType &&
+    !options.projectType.includes("universal") &&
     hasAnyProjectType(["oci"], options, false) &&
     options.allLayersExplodedDir
   ) {
@@ -5402,7 +5404,11 @@ export async function createMultiXBom(pathList, options) {
       });
     }
   }
-  if (hasAnyProjectType(["os"], options, false) && options.bomData) {
+  if (
+    !options.projectType.includes("universal") &&
+    hasAnyProjectType(["os"], options, false) &&
+    options.bomData
+  ) {
     bomData = options.bomData;
     if (bomData?.bomJson?.components) {
       if (DEBUG_MODE) {
