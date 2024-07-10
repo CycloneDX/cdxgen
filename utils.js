@@ -9208,7 +9208,7 @@ export function splitOutputByGradleProjects(rawOutput, relevantTasks) {
   let subProjectOut = "";
   const outSplitByLine = rawOutput.split("\n");
   let currentProjectName = "";
-  const regexPatternForRelevantTasks = `.*:(${relevantTasks.join("|")})(?=\s|$)`;
+  const regexPatternForRelevantTasks = `.*:(${relevantTasks.join("|")})(?=\s|\r|$)`;
   const regexForRelevantTasks = new RegExp(regexPatternForRelevantTasks);
   for (const [i, line] of outSplitByLine.entries()) {
     //filter out everything before first task output
