@@ -989,9 +989,10 @@ export function getGradleCommand(srcPath: string, rootPath: string): string;
  * Method to split the output produced by Gradle using parallel processing by project
  *
  * @param {string} rawOutput Full output produced by Gradle using parallel processing
+ * @param {string[]} relevantTasks The list of gradle tasks whose output need to be considered.
  * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
  */
-export function splitOutputByGradleProjects(rawOutput: string): map;
+export function splitOutputByGradleProjects(rawOutput: string, relevantTasks: string[]): map;
 /**
  * Method to return the maven command to use.
  *

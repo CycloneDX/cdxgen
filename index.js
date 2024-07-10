@@ -1641,8 +1641,10 @@ export async function createJavaBom(path, options) {
           null,
           allProjectsStr,
         );
-        const splitPropTaskOut =
-          splitOutputByGradleProjects(parallelPropTaskOut);
+        const splitPropTaskOut = splitOutputByGradleProjects(
+          parallelPropTaskOut,
+          ["properties"],
+        );
 
         for (const [key, propTaskOut] of splitPropTaskOut.entries()) {
           let retMap = {};
@@ -1747,8 +1749,10 @@ export async function createJavaBom(path, options) {
     const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
     allProjects.push(parentComponent);
     let depTaskWithArgs = ["dependencies"];
+    let relevantTasks = ["dependencies"];
     if (process.env.GRADLE_DEPENDENCY_TASK) {
       depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
+      relevantTasks = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
     }
     let gradleDepArgs = [];
     gradleDepArgs = gradleDepArgs
@@ -1798,7 +1802,7 @@ export async function createJavaBom(path, options) {
         const cmdOutput = Buffer.from(sstdout).toString();
         const perProjectOutput = splitOutputByGradleProjects(
           cmdOutput,
-          allProjects,
+          relevantTasks,
         );
         for (const [key, singleProjectDepOut] of perProjectOutput.entries()) {
           const sp = allProjects

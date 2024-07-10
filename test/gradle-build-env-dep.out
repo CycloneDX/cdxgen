@@ -1,0 +1,198 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+> Task :buildEnvironment
+
+------------------------------------------------------------
+Root project 'dependency-diff-check'
+------------------------------------------------------------
+
+classpath
+\--- org.cyclonedx.bom:org.cyclonedx.bom.gradle.plugin:1.7.4
+     \--- org.cyclonedx:cyclonedx-gradle-plugin:1.7.4
+          +--- org.cyclonedx:cyclonedx-core-java:7.3.1
+          |    +--- commons-codec:commons-codec:1.15
+          |    +--- commons-io:commons-io:2.11.0
+          |    +--- org.apache.commons:commons-lang3:3.12.0
+          |    +--- com.github.package-url:packageurl-java:1.4.1
+          |    +--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.1
+          |    |    +--- com.fasterxml.jackson.core:jackson-core:2.14.1
+          |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1
+          |    |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.14.1 (c)
+          |    |    |         +--- com.fasterxml.jackson.core:jackson-core:2.14.1 (c)
+          |    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.14.1 (c)
+          |    |    |         \--- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.1 (c)
+          |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.14.1
+          |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1 (*)
+          |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.14.1
+          |    |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.14.1 (*)
+          |    |    |    +--- com.fasterxml.jackson.core:jackson-core:2.14.1 (*)
+          |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1 (*)
+          |    |    +--- org.codehaus.woodstox:stax2-api:4.2.1
+          |    |    +--- com.fasterxml.woodstox:woodstox-core:6.4.0
+          |    |    |    \--- org.codehaus.woodstox:stax2-api:4.2.1
+          |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1 (*)
+          |    \--- com.networknt:json-schema-validator:1.0.76
+          |         +--- com.fasterxml.jackson.core:jackson-databind:2.14.0 -> 2.14.1 (*)
+          |         +--- org.slf4j:slf4j-api:1.7.36
+          |         +--- org.apache.commons:commons-lang3:3.12.0
+          |         \--- com.ethlo.time:itu:1.7.0
+          +--- commons-codec:commons-codec:1.15
+          +--- commons-io:commons-io:2.11.0
+          \--- org.apache.maven:maven-core:3.9.0
+               +--- org.apache.maven:maven-model:3.9.0
+               |    \--- org.codehaus.plexus:plexus-utils:3.4.2
+               +--- org.apache.maven:maven-settings:3.9.0
+               |    \--- org.codehaus.plexus:plexus-utils:3.4.2
+               +--- org.apache.maven:maven-settings-builder:3.9.0
+               |    +--- org.apache.maven:maven-builder-support:3.9.0
+               |    +--- javax.inject:javax.inject:1
+               |    +--- org.codehaus.plexus:plexus-interpolation:1.26
+               |    +--- org.codehaus.plexus:plexus-utils:3.4.2
+               |    +--- org.apache.maven:maven-settings:3.9.0 (*)
+               |    \--- org.codehaus.plexus:plexus-sec-dispatcher:2.0
+               |         +--- org.codehaus.plexus:plexus-utils:3.4.1 -> 3.4.2
+               |         +--- org.codehaus.plexus:plexus-cipher:2.0
+               |         |    \--- javax.inject:javax.inject:1
+               |         \--- javax.inject:javax.inject:1
+               +--- org.apache.maven:maven-builder-support:3.9.0
+               +--- org.apache.maven:maven-repository-metadata:3.9.0
+               |    \--- org.codehaus.plexus:plexus-utils:3.4.2
+               +--- org.apache.maven:maven-artifact:3.9.0
+               |    +--- org.codehaus.plexus:plexus-utils:3.4.2
+               |    \--- org.apache.commons:commons-lang3:3.8.1 -> 3.12.0
+               +--- org.apache.maven:maven-plugin-api:3.9.0
+               |    +--- org.apache.maven:maven-model:3.9.0 (*)
+               |    +--- org.apache.maven:maven-artifact:3.9.0 (*)
+               |    +--- org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.5
+               |    |    +--- javax.annotation:javax.annotation-api:1.2
+               |    |    +--- org.eclipse.sisu:org.eclipse.sisu.inject:0.3.5
+               |    |    +--- org.codehaus.plexus:plexus-component-annotations:1.5.5 -> 2.1.0
+               |    |    +--- org.codehaus.plexus:plexus-classworlds:2.5.2 -> 2.6.0
+               |    |    \--- org.codehaus.plexus:plexus-utils:3.0.24 -> 3.4.2
+               |    +--- org.codehaus.plexus:plexus-utils:3.4.2
+               |    \--- org.codehaus.plexus:plexus-classworlds:2.6.0
+               +--- org.apache.maven:maven-model-builder:3.9.0
+               |    +--- org.codehaus.plexus:plexus-utils:3.4.2
+               |    +--- org.codehaus.plexus:plexus-interpolation:1.26
+               |    +--- javax.inject:javax.inject:1
+               |    +--- org.apache.maven:maven-model:3.9.0 (*)
+               |    +--- org.apache.maven:maven-artifact:3.9.0 (*)
+               |    +--- org.apache.maven:maven-builder-support:3.9.0
+               |    \--- org.eclipse.sisu:org.eclipse.sisu.inject:0.3.5
+               +--- org.apache.maven:maven-resolver-provider:3.9.0
+               |    +--- org.apache.maven:maven-model:3.9.0 (*)
+               |    +--- org.apache.maven:maven-model-builder:3.9.0 (*)
+               |    +--- org.apache.maven:maven-repository-metadata:3.9.0 (*)
+               |    +--- org.apache.maven.resolver:maven-resolver-api:1.9.4
+               |    +--- org.apache.maven.resolver:maven-resolver-spi:1.9.4
+               |    |    \--- org.apache.maven.resolver:maven-resolver-api:1.9.4
+               |    +--- org.apache.maven.resolver:maven-resolver-util:1.9.4
+               |    |    \--- org.apache.maven.resolver:maven-resolver-api:1.9.4
+               |    +--- org.apache.maven.resolver:maven-resolver-impl:1.9.4
+               |    |    +--- org.apache.maven.resolver:maven-resolver-api:1.9.4
+               |    |    +--- org.apache.maven.resolver:maven-resolver-spi:1.9.4 (*)
+               |    |    +--- org.apache.maven.resolver:maven-resolver-named-locks:1.9.4
+               |    |    |    \--- org.slf4j:slf4j-api:1.7.36
+               |    |    +--- org.apache.maven.resolver:maven-resolver-util:1.9.4 (*)
+               |    |    +--- org.apache.commons:commons-lang3:3.12.0
+               |    |    \--- org.slf4j:slf4j-api:1.7.36
+               |    +--- org.codehaus.plexus:plexus-utils:3.4.2
+               |    \--- javax.inject:javax.inject:1
+               +--- org.apache.maven.resolver:maven-resolver-impl:1.9.4 (*)
+               +--- org.apache.maven.resolver:maven-resolver-api:1.9.4
+               +--- org.apache.maven.resolver:maven-resolver-spi:1.9.4 (*)
+               +--- org.apache.maven.resolver:maven-resolver-util:1.9.4 (*)
+               +--- org.apache.maven.shared:maven-shared-utils:3.3.4
+               +--- org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.5 (*)
+               +--- org.eclipse.sisu:org.eclipse.sisu.inject:0.3.5
+               +--- com.google.inject:guice:5.1.0
+               |    +--- javax.inject:javax.inject:1
+               |    \--- aopalliance:aopalliance:1.0
+               +--- com.google.guava:guava:30.1-jre
+               +--- com.google.guava:failureaccess:1.0.1
+               +--- javax.inject:javax.inject:1
+               +--- org.codehaus.plexus:plexus-utils:3.4.2
+               +--- org.codehaus.plexus:plexus-classworlds:2.6.0
+               +--- org.codehaus.plexus:plexus-interpolation:1.26
+               +--- org.codehaus.plexus:plexus-component-annotations:2.1.0
+               +--- org.apache.commons:commons-lang3:3.8.1 -> 3.12.0
+               \--- org.slf4j:slf4j-api:1.7.36
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+> Task :dependency-diff-check-client-starter:buildEnvironment
+
+------------------------------------------------------------
+Project ':dependency-diff-check-client-starter'
+------------------------------------------------------------
+
+classpath
++--- org.springframework.boot:org.springframework.boot.gradle.plugin:3.0.1
+|    \--- org.springframework.boot:spring-boot-gradle-plugin:3.0.1
+|         +--- org.springframework.boot:spring-boot-buildpack-platform:3.0.1
+|         |    +--- com.fasterxml.jackson.core:jackson-databind:2.14.1
+|         |    |    +--- com.fasterxml.jackson.core:jackson-annotations:2.14.1
+|         |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1
+|         |    |    |         +--- com.fasterxml.jackson.core:jackson-annotations:2.14.1 (c)
+|         |    |    |         +--- com.fasterxml.jackson.core:jackson-core:2.14.1 (c)
+|         |    |    |         +--- com.fasterxml.jackson.core:jackson-databind:2.14.1 (c)
+|         |    |    |         \--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.1 (c)
+|         |    |    +--- com.fasterxml.jackson.core:jackson-core:2.14.1
+|         |    |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1 (*)
+|         |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1 (*)
+|         |    +--- com.fasterxml.jackson.module:jackson-module-parameter-names:2.14.1
+|         |    |    +--- com.fasterxml.jackson.core:jackson-core:2.14.1 (*)
+|         |    |    +--- com.fasterxml.jackson.core:jackson-databind:2.14.1 (*)
+|         |    |    \--- com.fasterxml.jackson:jackson-bom:2.14.1 (*)
+|         |    +--- net.java.dev.jna:jna-platform:5.7.0
+|         |    |    \--- net.java.dev.jna:jna:5.7.0
+|         |    +--- org.apache.commons:commons-compress:1.21
+|         |    +--- org.apache.httpcomponents:httpclient:4.5.14
+|         |    |    +--- org.apache.httpcomponents:httpcore:4.4.16
+|         |    |    \--- commons-codec:commons-codec:1.11
+|         |    +--- org.springframework:spring-core:6.0.3
+|         |    |    \--- org.springframework:spring-jcl:6.0.3
+|         |    \--- org.tomlj:tomlj:1.0.0
+|         |         +--- org.antlr:antlr4-runtime:4.7.2
+|         |         \--- com.google.code.findbugs:jsr305:3.0.2
+|         +--- org.springframework.boot:spring-boot-loader-tools:3.0.1
+|         |    +--- org.apache.commons:commons-compress:1.21
+|         |    \--- org.springframework:spring-core:6.0.3 (*)
+|         +--- io.spring.gradle:dependency-management-plugin:1.1.0
+|         +--- org.apache.commons:commons-compress:1.21
+|         \--- org.springframework:spring-core:6.0.3 (*)
+\--- io.spring.dependency-management:io.spring.dependency-management.gradle.plugin:1.1.0
+     \--- io.spring.gradle:dependency-management-plugin:1.1.0
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+> Task :dependency-diff-check-common-core:buildEnvironment
+
+------------------------------------------------------------
+Project ':dependency-diff-check-common-core'
+------------------------------------------------------------
+
+classpath
+No dependencies
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+> Task :dependency-diff-check-service:buildEnvironment
+
+------------------------------------------------------------
+Project ':dependency-diff-check-service'
+------------------------------------------------------------
+
+classpath
+No dependencies
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+BUILD SUCCESSFUL in 9s
+4 actionable tasks: 4 executed
