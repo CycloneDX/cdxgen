@@ -686,7 +686,8 @@ export const getImage = async (fullImageName) => {
         return undefined;
       }
     } catch (err) {
-      if (registry.startsWith("gcr.io")) {
+      // This style of retry is timing out with gcr so disabled for now.
+      if (registry?.startsWith("gcr.io")) {
         return undefined;
       }
       try {
