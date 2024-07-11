@@ -6001,8 +6001,7 @@ export function recurseImageNameLookup(keyValueObj, pkgList, imgList) {
 }
 
 export function parseContainerFile(fileContents) {
-  const imgList = [];
-
+  const imagesSet = new Set();
   const buildStageNames = [];
   for (let line of fileContents.split("\n")) {
     line = line.trim();
@@ -6026,18 +6025,17 @@ export function parseContainerFile(fileContents) {
         }
         continue;
       }
-
-      imgList.push({
-        image: imageStatement,
-      });
+      imagesSet.add(imageStatement);
 
       if (buildStageName) {
-        buildStageNames.push(imageStatement);
+        buildStageNames.push(buildStageName);
       }
     }
   }
 
-  return imgList;
+  return Array.from(imagesSet).map((i) => {
+    return { image: i };
+  });
 }
 
 export function parseBitbucketPipelinesFile(fileContents) {

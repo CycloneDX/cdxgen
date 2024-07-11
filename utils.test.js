@@ -3807,19 +3807,13 @@ test("parse containerfiles / dockerfiles", () => {
   expect(dep_list[0]).toEqual({
     image: "hello-world",
   });
-  expect(dep_list[0]).toEqual({
-    image: "hello-world",
-  });
   expect(dep_list[1]).toEqual({
-    image: "hello-world",
-  });
-  expect(dep_list[2]).toEqual({
     image: "hello-world:latest",
   });
-  expect(dep_list[3]).toEqual({
+  expect(dep_list[2]).toEqual({
     image: "hello-world@sha256:1234567890abcdef",
   });
-  expect(dep_list[4]).toEqual({
+  expect(dep_list[3]).toEqual({
     image: "hello-world:latest@sha256:1234567890abcdef",
   });
 });

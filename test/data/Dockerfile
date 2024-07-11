@@ -14,7 +14,7 @@ FROM hello-world@sha256:1234567890abcdef
 FROM hello-world:latest@sha256:1234567890abcdef
 
 # reusing previous build stage as new stage
-FROM HELLO AS WORLD
+FROM HELLO as WORLD
 
 # Commented out image statement
 # FROM hello-world
