@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
+import process from "node:process";
 import { createStream, table } from "table";
 
 // https://github.com/yangshun/tree-node-cli/blob/master/src/index.js
