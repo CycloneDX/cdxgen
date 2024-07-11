@@ -3803,23 +3803,17 @@ test("parse containerfiles / dockerfiles", () => {
   const dep_list = parseContainerFile(
     readFileSync("./test/data/Dockerfile", { encoding: "utf-8" }),
   );
-  expect(dep_list.length).toEqual(5);
-  expect(dep_list[0]).toEqual({
-    image: "hello-world",
-  });
+  expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
     image: "hello-world",
   });
   expect(dep_list[1]).toEqual({
-    image: "hello-world",
-  });
-  expect(dep_list[2]).toEqual({
     image: "hello-world:latest",
   });
-  expect(dep_list[3]).toEqual({
+  expect(dep_list[2]).toEqual({
     image: "hello-world@sha256:1234567890abcdef",
   });
-  expect(dep_list[4]).toEqual({
+  expect(dep_list[3]).toEqual({
     image: "hello-world:latest@sha256:1234567890abcdef",
   });
 });

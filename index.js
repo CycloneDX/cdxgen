@@ -4512,11 +4512,12 @@ export async function createContainerSpecLikeBom(path, options) {
       }
     }
   }
-  if (origProjectType === "universal") {
+  if (origProjectType?.includes("universal")) {
     // In case of universal, repeat to collect multiX Boms
-    const mbomData = await createMultiXBom([path], {
-      projectType: origProjectType,
+    const mbomData = await createMultiXBom(path, {
+      projectType: [],
       multiProject: true,
+      excludeType: options.excludeType,
     });
     if (mbomData) {
       if (mbomData.components?.length) {
@@ -4540,7 +4541,7 @@ export async function createContainerSpecLikeBom(path, options) {
       }
       if (DEBUG_MODE) {
         console.log(
-          `BOM includes ${components.length} unfiltered components ${dependencies.length} dependencies so far`,
+          `Received ${components.length} unfiltered components ${dependencies.length} dependencies so far.`,
         );
       }
     }
@@ -5339,7 +5340,7 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
   components = trimComponents(components);
   if (DEBUG_MODE) {
     console.log(
-      `BOM includes ${components.length} components and ${dependencies.length} dependencies after dedupe`,
+      `Obtained ${components.length} components and ${dependencies.length} dependencies after dedupe.`,
     );
   }
   const serialNum = `urn:uuid:${uuidv4()}`;
@@ -5363,7 +5364,7 @@ export function dedupeBom(options, components, parentComponent, dependencies) {
 /**
  * Function to create bom string for all languages
  *
- * @param {string} pathList list of to the project
+ * @param {string[]} pathList list of to the project
  * @param {Object} options Parse options from the cli
  */
 export async function createMultiXBom(pathList, options) {
@@ -5373,6 +5374,10 @@ export async function createMultiXBom(pathList, options) {
   let parentComponent = determineParentComponent(options) || {};
   let parentSubComponents = [];
   options.createMultiXBom = true;
+  // Convert single path to an array
+  if (!Array.isArray(pathList)) {
+    pathList = pathList.split(",");
+  }
   if (
     options.projectType &&
     hasAnyProjectType(["oci"], options, false) &&
@@ -5416,7 +5421,7 @@ export async function createMultiXBom(pathList, options) {
       console.log("Scanning", path);
     }
     // Node.js
-    if (hasAnyProjectType(["js"], options)) {
+    if (hasAnyProjectType(["oci", "js"], options)) {
       bomData = await createNodejsBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5441,7 +5446,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     // Java
-    if (hasAnyProjectType(["java"], options)) {
+    if (hasAnyProjectType(["oci", "java"], options)) {
       bomData = await createJavaBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5465,7 +5470,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["py"], options)) {
+    if (hasAnyProjectType(["oci", "py"], options)) {
       bomData = await createPythonBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5483,7 +5488,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["go"], options)) {
+    if (hasAnyProjectType(["oci", "go"], options)) {
       bomData = await createGoBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5501,7 +5506,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["rust"], options)) {
+    if (hasAnyProjectType(["oci", "rust"], options)) {
       bomData = await createRustBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5525,7 +5530,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["php"], options)) {
+    if (hasAnyProjectType(["oci", "php"], options)) {
       bomData = createPHPBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5543,7 +5548,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["ruby"], options)) {
+    if (hasAnyProjectType(["oci", "ruby"], options)) {
       bomData = await createRubyBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5565,7 +5570,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["csharp"], options)) {
+    if (hasAnyProjectType(["oci", "csharp"], options)) {
       bomData = await createCsharpBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5583,7 +5588,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["dart"], options)) {
+    if (hasAnyProjectType(["oci", "dart"], options)) {
       bomData = await createDartBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5601,7 +5606,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["haskell"], options)) {
+    if (hasAnyProjectType(["oci", "haskell"], options)) {
       bomData = createHaskellBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5619,7 +5624,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["elixir"], options)) {
+    if (hasAnyProjectType(["oci", "elixir"], options)) {
       bomData = createElixirBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5637,7 +5642,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["c"], options)) {
+    if (hasAnyProjectType(["oci", "c"], options)) {
       bomData = createCppBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5655,7 +5660,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["clojure"], options)) {
+    if (hasAnyProjectType(["oci", "clojure"], options)) {
       bomData = createClojureBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5673,7 +5678,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["github"], options)) {
+    if (hasAnyProjectType(["oci", "github"], options)) {
       bomData = createGitHubBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5691,7 +5696,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["cloudbuild"], options)) {
+    if (hasAnyProjectType(["oci", "cloudbuild"], options)) {
       bomData = createCloudBuildBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5709,7 +5714,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["swift"], options)) {
+    if (hasAnyProjectType(["oci", "swift"], options)) {
       bomData = await createSwiftBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5801,6 +5806,14 @@ export async function createMultiXBom(pathList, options) {
       delete parentComponent.components;
     }
   }
+  // some cleanup, but not complete
+  for (const path of pathList) {
+    if (path.startsWith(join(tmpdir(), "docker-images-"))) {
+      if (rmSync) {
+        rmSync(path, { recursive: true, force: true });
+      }
+    }
+  }
   return dedupeBom(options, components, parentComponent, dependencies);
 }
 
@@ -5814,8 +5827,7 @@ export async function createXBom(path, options) {
   try {
     accessSync(path, constants.R_OK);
   } catch (err) {
-    console.error(path, "is invalid");
-    process.exit(1);
+    return undefined;
   }
   // node.js - package.json
   if (
@@ -6156,7 +6168,9 @@ export async function createBom(path, options) {
     }
     isContainerMode = true;
   } else if (
-    (options.projectType && hasAnyProjectType(["oci"], options, false)) ||
+    (options.projectType &&
+      !options.projectType?.includes("universal") &&
+      hasAnyProjectType(["oci"], options, false)) ||
     path.startsWith("docker.io") ||
     path.startsWith("quay.io") ||
     path.startsWith("ghcr.io") ||
@@ -6169,14 +6183,13 @@ export async function createBom(path, options) {
       isContainerMode = true;
     } else {
       if (DEBUG_MODE) {
-        console.log(
-          path,
-          "doesn't appear to be a valid container image. Looking for application pacakges.",
-        );
+        console.log(path, "doesn't appear to be a valid container image.");
       }
-      return await createMultiXBom([path], options);
     }
-  } else if (projectType === "oci-dir") {
+  } else if (
+    !options.projectType?.includes("universal") &&
+    hasAnyProjectType(["oci-dir"], options, false)
+  ) {
     isContainerMode = true;
     exportData = {
       inspectData: undefined,
@@ -6261,7 +6274,7 @@ export async function createBom(path, options) {
   }
   if (projectType.length > 1) {
     console.log("Generate BOM for project types:", projectType.join(", "));
-    return await createMultiXBom([path], options);
+    return await createMultiXBom(path, options);
   }
   // Use the project type alias to return any singular BOM
   if (PROJECT_TYPE_ALIASES["java"].includes(projectType[0])) {
@@ -6359,7 +6372,7 @@ export async function createBom(path, options) {
       // In recurse mode return multi-language Bom
       // https://github.com/cyclonedx/cdxgen/issues/95
       if (options.multiProject) {
-        return await createMultiXBom([path], options);
+        return await createMultiXBom(path, options);
       }
       return await createXBom(path, options);
   }

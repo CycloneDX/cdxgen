@@ -6001,8 +6001,7 @@ export function recurseImageNameLookup(keyValueObj, pkgList, imgList) {
 }
 
 export function parseContainerFile(fileContents) {
-  const imgList = [];
-
+  const imagesSet = new Set();
   const buildStageNames = [];
   for (let line of fileContents.split("\n")) {
     line = line.trim();
@@ -6012,11 +6011,14 @@ export function parseContainerFile(fileContents) {
     }
 
     if (line.startsWith("FROM")) {
-      const fromStatement = line.split("FROM")[1].split("AS");
+      // The alias could be called AS or as
+      const fromStatement = line.split("FROM ")[1].split(/\s(as|AS)\s/);
 
       const imageStatement = fromStatement[0].trim();
-      const buildStageName = fromStatement[1]?.trim();
-
+      const buildStageName =
+        fromStatement.length > 1
+          ? fromStatement[fromStatement.length - 1].trim()
+          : undefined;
       if (buildStageNames.includes(imageStatement)) {
         if (DEBUG_MODE) {
           console.log(
@@ -6025,10 +6027,7 @@ export function parseContainerFile(fileContents) {
         }
         continue;
       }
-
-      imgList.push({
-        image: imageStatement,
-      });
+      imagesSet.add(imageStatement);
 
       if (buildStageName) {
         buildStageNames.push(buildStageName);
@@ -6036,7 +6035,9 @@ export function parseContainerFile(fileContents) {
     }
   }
 
-  return imgList;
+  return Array.from(imagesSet).map((i) => {
+    return { image: i };
+  });
 }
 
 export function parseBitbucketPipelinesFile(fileContents) {
@@ -8953,7 +8954,9 @@ export async function extractJarArchive(jarFile, tempDir, jarNSMapping = {}) {
     } // for
   } // if
   if (jarFiles.length !== pkgList.length) {
-    console.log(`Obtained only ${pkgList.length} from ${jarFiles.length} jars`);
+    console.log(
+      `Obtained only ${pkgList.length} components from ${jarFiles.length} jars.`,
+    );
   }
   return pkgList;
 }
