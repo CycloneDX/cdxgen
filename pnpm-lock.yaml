@@ -94,26 +94,26 @@ importers:
         specifier: 1.0.1
         version: 1.0.1
       '@cyclonedx/cdxgen-plugins-bin':
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@cyclonedx/cdxgen-plugins-bin-arm64':
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@cyclonedx/cdxgen-plugins-bin-darwin-amd64':
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@cyclonedx/cdxgen-plugins-bin-darwin-arm64':
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@cyclonedx/cdxgen-plugins-bin-ppc64':
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@cyclonedx/cdxgen-plugins-bin-windows-amd64':
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.6.2
+        version: 1.6.2
       '@cyclonedx/cdxgen-plugins-bin-windows-arm64':
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.6.2
+        version: 1.6.2
       body-parser:
         specifier: ^1.20.2
         version: 1.20.2
@@ -417,38 +417,38 @@ packages:
   '@bufbuild/protobuf@1.7.2':
     resolution: {integrity: sha512-i5GE2Dk5ekdlK1TR7SugY4LWRrKSfb5T1Qn4unpIMbfxoeGKERKQ59HG3iYewacGD10SR7UzevfPnh6my4tNmQ==}
 
-  '@cyclonedx/cdxgen-plugins-bin-arm64@1.6.0':
-    resolution: {integrity: sha512-4o4gj9xUJbZTWjO1W0bm+sW4Ao7YCwHpbheS37oFsmL0mnGnqq4Znp4alo7sYuAz1r3cj33jPTZqR/tc7BXCoQ==}
+  '@cyclonedx/cdxgen-plugins-bin-arm64@1.6.2':
+    resolution: {integrity: sha512-U0Q8S0Cagt0HC9jpdPW8otLMeQ4pjt/tlgBh1ZQglPCD4asRBBycQmAKVWK2Vm67QhXBLr0SHn08pqi8OC9cBg==}
     cpu: [arm64]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.0':
-    resolution: {integrity: sha512-2LsxvWTM+pEquyyNEQ2GS01BM6o0EX5hXhrG+rwCJV0juk3bcdQsDNdIGKvfm5uab9IzwEUl6gYJpjUSR859xQ==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.2':
+    resolution: {integrity: sha512-Zw71TDfdrHJlNgADrDNf3RYObL3fsvB/O6Cs1tFwsQAN3dFfUunCAx7YstaMO+ShoNLCGwbYtDFyEOOUVPwYUw==}
     cpu: [x64]
     os: [darwin]
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.0':
-    resolution: {integrity: sha512-6DwVoY4HFfRKERHkqcDzTV/1xZp9V1w1b0R7kFrxfVUyKEJp0GnjdlRH216YUBzSOsTaOzs4hxIZSqiT1luDLA==}
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.2':
+    resolution: {integrity: sha512-+O6eO1Mq6Eme+wvprlKpmd2UYeIGS3RCLrisMNo487WjOLCVARIbsgGL8HeCJ5CpG3R+jyjAry6dtq5uQHxfzg==}
     cpu: [arm64]
     os: [darwin]
 
-  '@cyclonedx/cdxgen-plugins-bin-ppc64@1.6.0':
-    resolution: {integrity: sha512-6kOfL5cQeDjHguEI2/Or7L4D7er3UYYWrNvi+F8kQ3P1tOcz4Nf0H9J3AeCUTNtMa3PahAM214O6qBM8W5oR6A==}
+  '@cyclonedx/cdxgen-plugins-bin-ppc64@1.6.2':
+    resolution: {integrity: sha512-Pu/jfkr9jZ7ICd+ZkEeZll3eDjLK0ce/9JPgcVhHBtYblbN3n9lpafMZhIGjm2X/RODpLV3YuIVXqhZp8YkC7A==}
     cpu: [ppc64]
     os: [linux]
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.0':
-    resolution: {integrity: sha512-IyY8UIi+ayE956gVCoYqg40ONfxY7+PiAQ5ZOzC9x1qPakU/qCOdm93Z5aW1NLKZ66ihyWRZ+YIUlXT5dGwkEg==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.2':
+    resolution: {integrity: sha512-A91Y8hvXtzujWcCkhrp1ILYCiemqTlzS6yQbFSye5dsr2P9PwSV4aYCH8mzJT9DvrPNSeA0fAI0JN+HdbE3yGQ==}
     cpu: [x64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.0':
-    resolution: {integrity: sha512-n5R0dboT9aqqhojGIUVGSef2KgKuBXIcaocpmhzIVaapFDd9lh1LU/wyxQEDNf29n9hjCDHUJpXgdYgpFkuawg==}
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.2':
+    resolution: {integrity: sha512-V3W1iMcl2hzWNxUCxfbTkcvL0/JzYhJNKA6JTuRRUOMKxCyM/hBAB+Zm5r5ne5e1C6GH9FXMtpzRaQZrFXXavw==}
     cpu: [arm64]
     os: [win32]
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.0':
-    resolution: {integrity: sha512-FhvjIOfMNV//k2iBDcpAGooONFe59+MGE65E0KQe8DoKM+gSY//ZcRrxcTLShcCpLiRJUzRq+rlPsr0BEe99DA==}
+  '@cyclonedx/cdxgen-plugins-bin@1.6.2':
+    resolution: {integrity: sha512-F3GTdPfpimxxxJZyasgPczFkoXTULJdpx3eI/gJKAegJCutNMKi67c0GVyHeuoB83L/cotu1LY4fxRbQgdDlsA==}
     cpu: [x64]
 
   '@gar/promisify@1.1.3':
@@ -3038,25 +3038,25 @@ snapshots:
   '@bufbuild/protobuf@1.7.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-arm64@1.6.0':
+  '@cyclonedx/cdxgen-plugins-bin-arm64@1.6.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.0':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-amd64@1.6.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.0':
+  '@cyclonedx/cdxgen-plugins-bin-darwin-arm64@1.6.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-ppc64@1.6.0':
+  '@cyclonedx/cdxgen-plugins-bin-ppc64@1.6.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.0':
+  '@cyclonedx/cdxgen-plugins-bin-windows-amd64@1.6.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.0':
+  '@cyclonedx/cdxgen-plugins-bin-windows-arm64@1.6.2':
     optional: true
 
-  '@cyclonedx/cdxgen-plugins-bin@1.6.0':
+  '@cyclonedx/cdxgen-plugins-bin@1.6.2':
     optional: true
 
   '@gar/promisify@1.1.3':
