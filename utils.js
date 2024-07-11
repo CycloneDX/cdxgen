@@ -9532,6 +9532,23 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
     .sort();
 }
 
+function get_python_command_from_env(env) {
+  // Virtual environments needs special treatment to use the correct python executable
+  // Without this step, the default python is always used resulting in false positives
+  let python_cmd_to_use = PYTHON_CMD;
+  if (env.VIRTUAL_ENV && existsSync(join(env.VIRTUAL_ENV, "bin", "python"))) {
+    python_cmd_to_use = join(env.VIRTUAL_ENV, "bin", "python");
+  } else if (
+    env.CONDA_PREFIX &&
+    existsSync(join(env.CONDA_PREFIX, "bin", "python"))
+  ) {
+    python_cmd_to_use = join(env.CONDA_PREFIX, "bin", "python");
+  } else if (env.CONDA_PYTHON_EXE) {
+    python_cmd_to_use = env.CONDA_PYTHON_EXE;
+  }
+  return python_cmd_to_use;
+}
+
 /**
  * Execute pip freeze by creating a virtual env in a temp directory and construct the dependency tree
  *
@@ -9692,6 +9709,9 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         }
       }
     } else {
+      // We are about to do a pip install with the right python command from the virtual environment
+      // This step can fail if the correct OS packages and development libraries are not installed
+      const python_cmd_for_tree = get_python_command_from_env(env);
       let pipInstallArgs = [
         "-m",
         "pip",
@@ -9714,8 +9734,11 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
         pipInstallArgs = pipInstallArgs.concat(addArgs);
       }
+      if (DEBUG_MODE) {
+        console.log("Executing", python_cmd_for_tree, pipInstallArgs);
+      }
       // Attempt to perform pip install
-      result = spawnSync(PYTHON_CMD, pipInstallArgs, {
+      result = spawnSync(python_cmd_for_tree, pipInstallArgs, {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
@@ -9784,8 +9807,12 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         `About to construct the pip dependency tree based on ${reqOrSetupFile}. Please wait ...`,
       );
     }
+    const python_cmd_for_tree = get_python_command_from_env(env);
+    if (DEBUG_MODE) {
+      console.log(`Using the python executable ${python_cmd_for_tree}`);
+    }
     // This is a slow step that ideally needs to be invoked only once per venv
-    const tree = getTreeWithPlugin(env, PYTHON_CMD, basePath);
+    const tree = getTreeWithPlugin(env, python_cmd_for_tree, basePath);
     if (DEBUG_MODE && !tree.length) {
       console.log(
         "Dependency tree generation has failed. Please check for any errors or version incompatibilities reported in the logs.",
