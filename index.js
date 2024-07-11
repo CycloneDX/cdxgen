@@ -4512,7 +4512,7 @@ export async function createContainerSpecLikeBom(path, options) {
       }
     }
   }
-  if (origProjectType.includes("universal")) {
+  if (origProjectType?.includes("universal")) {
     // In case of universal, repeat to collect multiX Boms
     const mbomData = await createMultiXBom(path, {
       projectType: [],
