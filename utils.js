@@ -9840,7 +9840,7 @@ export function getPipFrozenTree(
       if (
         parentComponent &&
         parentComponent.name === t.name &&
-        parentComponent?.version.length &&
+        parentComponent.version &&
         parentComponent?.version !== "latest" &&
         t.version === "latest"
       ) {
