@@ -6187,7 +6187,7 @@ export async function createBom(path, options) {
       }
     }
   } else if (
-    !options.projectType.includes("universal") &&
+    !options.projectType?.includes("universal") &&
     hasAnyProjectType(["oci-dir"], options, false)
   ) {
     isContainerMode = true;
