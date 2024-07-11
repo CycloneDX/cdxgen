@@ -5421,7 +5421,7 @@ export async function createMultiXBom(pathList, options) {
       console.log("Scanning", path);
     }
     // Node.js
-    if (hasAnyProjectType(["js"], options)) {
+    if (hasAnyProjectType(["oci", "js"], options)) {
       bomData = await createNodejsBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5446,7 +5446,7 @@ export async function createMultiXBom(pathList, options) {
       }
     }
     // Java
-    if (hasAnyProjectType(["java"], options)) {
+    if (hasAnyProjectType(["oci", "java"], options)) {
       bomData = await createJavaBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5470,7 +5470,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["py"], options)) {
+    if (hasAnyProjectType(["oci", "py"], options)) {
       bomData = await createPythonBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5488,7 +5488,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["go"], options)) {
+    if (hasAnyProjectType(["oci", "go"], options)) {
       bomData = await createGoBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5506,7 +5506,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["rust"], options)) {
+    if (hasAnyProjectType(["oci", "rust"], options)) {
       bomData = await createRustBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5530,7 +5530,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["php"], options)) {
+    if (hasAnyProjectType(["oci", "php"], options)) {
       bomData = createPHPBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5548,7 +5548,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["ruby"], options)) {
+    if (hasAnyProjectType(["oci", "ruby"], options)) {
       bomData = await createRubyBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5570,7 +5570,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["csharp"], options)) {
+    if (hasAnyProjectType(["oci", "csharp"], options)) {
       bomData = await createCsharpBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -5588,7 +5588,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["dart"], options)) {
+    if (hasAnyProjectType(["oci", "dart"], options)) {
       bomData = await createDartBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5606,7 +5606,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["haskell"], options)) {
+    if (hasAnyProjectType(["oci", "haskell"], options)) {
       bomData = createHaskellBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5624,7 +5624,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["elixir"], options)) {
+    if (hasAnyProjectType(["oci", "elixir"], options)) {
       bomData = createElixirBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5642,7 +5642,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["c"], options)) {
+    if (hasAnyProjectType(["oci", "c"], options)) {
       bomData = createCppBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5660,7 +5660,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["clojure"], options)) {
+    if (hasAnyProjectType(["oci", "clojure"], options)) {
       bomData = createClojureBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5678,7 +5678,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["github"], options)) {
+    if (hasAnyProjectType(["oci", "github"], options)) {
       bomData = createGitHubBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5696,7 +5696,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["cloudbuild"], options)) {
+    if (hasAnyProjectType(["oci", "cloudbuild"], options)) {
       bomData = createCloudBuildBom(path, options);
       if (bomData?.bomJson?.components) {
         if (DEBUG_MODE) {
@@ -5714,7 +5714,7 @@ export async function createMultiXBom(pathList, options) {
         }
       }
     }
-    if (hasAnyProjectType(["swift"], options)) {
+    if (hasAnyProjectType(["oci", "swift"], options)) {
       bomData = await createSwiftBom(path, options);
       if (bomData?.bomJson?.components?.length) {
         if (DEBUG_MODE) {
@@ -6161,7 +6161,7 @@ export async function createBom(path, options) {
     isContainerMode = true;
   } else if (
     (options.projectType &&
-      !options.projectType.includes("universal") &&
+      !options.projectType?.includes("universal") &&
       hasAnyProjectType(["oci"], options, false)) ||
     path.startsWith("docker.io") ||
     path.startsWith("quay.io") ||
