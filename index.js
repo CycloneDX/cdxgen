@@ -5806,6 +5806,14 @@ export async function createMultiXBom(pathList, options) {
       delete parentComponent.components;
     }
   }
+  // some cleanup, but not complete
+  for (const path of pathList) {
+    if (path.startsWith(join(tmpdir(), "docker-images-"))) {
+      if (rmSync) {
+        rmSync(path, { force: true });
+      }
+    }
+  }
   return dedupeBom(options, components, parentComponent, dependencies);
 }
 
