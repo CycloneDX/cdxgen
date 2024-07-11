@@ -1021,9 +1021,11 @@ export function findAppModules(src: string, language: string, methodology?: stri
  * @param {string} basePath Base path
  * @param {string} reqOrSetupFile Requirements or setup.py file
  * @param {string} tempVenvDir Temp venv dir
+ * @param {Object} parentComponent Parent component
+ *
  * @returns List of packages from the virtual env
  */
-export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempVenvDir: string): {
+export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempVenvDir: string, parentComponent: any): {
     pkgList: {
         name: any;
         version: any;

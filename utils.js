@@ -9535,14 +9535,21 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
 function get_python_command_from_env(env) {
   // Virtual environments needs special treatment to use the correct python executable
   // Without this step, the default python is always used resulting in false positives
+  const python_exe_name = isWin ? "python.exe" : "python";
+  const python3_exe_name = isWin ? "python3.exe" : "python3";
   let python_cmd_to_use = PYTHON_CMD;
-  if (env.VIRTUAL_ENV && existsSync(join(env.VIRTUAL_ENV, "bin", "python"))) {
-    python_cmd_to_use = join(env.VIRTUAL_ENV, "bin", "python");
-  } else if (
-    env.CONDA_PREFIX &&
-    existsSync(join(env.CONDA_PREFIX, "bin", "python"))
-  ) {
-    python_cmd_to_use = join(env.CONDA_PREFIX, "bin", "python");
+  if (env.VIRTUAL_ENV) {
+    if (existsSync(join(env.VIRTUAL_ENV, "bin", python_exe_name))) {
+      python_cmd_to_use = join(env.VIRTUAL_ENV, "bin", python_exe_name);
+    } else if (existsSync(join(env.VIRTUAL_ENV, "bin", python3_exe_name))) {
+      python_cmd_to_use = join(env.VIRTUAL_ENV, "bin", python3_exe_name);
+    }
+  } else if (env.CONDA_PREFIX) {
+    if (existsSync(join(env.CONDA_PREFIX, "bin", python_exe_name))) {
+      python_cmd_to_use = join(env.CONDA_PREFIX, "bin", python_exe_name);
+    } else if (existsSync(join(env.CONDA_PREFIX, "bin", python3_exe_name))) {
+      python_cmd_to_use = join(env.CONDA_PREFIX, "bin", python3_exe_name);
+    }
   } else if (env.CONDA_PYTHON_EXE) {
     python_cmd_to_use = env.CONDA_PYTHON_EXE;
   }
@@ -9555,9 +9562,16 @@ function get_python_command_from_env(env) {
  * @param {string} basePath Base path
  * @param {string} reqOrSetupFile Requirements or setup.py file
  * @param {string} tempVenvDir Temp venv dir
+ * @param {Object} parentComponent Parent component
+ *
  * @returns List of packages from the virtual env
  */
-export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
+export function getPipFrozenTree(
+  basePath,
+  reqOrSetupFile,
+  tempVenvDir,
+  parentComponent,
+) {
   const pkgList = [];
   const formulationList = [];
   const rootList = [];
@@ -9735,7 +9749,7 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         pipInstallArgs = pipInstallArgs.concat(addArgs);
       }
       if (DEBUG_MODE) {
-        console.log("Executing", python_cmd_for_tree, pipInstallArgs);
+        console.log("Executing", python_cmd_for_tree, pipInstallArgs.join(" "));
       }
       // Attempt to perform pip install
       result = spawnSync(python_cmd_for_tree, pipInstallArgs, {
@@ -9821,6 +9835,17 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
     const dependenciesMap = {};
     for (const t of tree) {
       const name = t.name.replace(/_/g, "-").toLowerCase();
+      // Bug #1232 - the root package might lack a version resulting in duplicate tree
+      // So we make use of the existing parent component to try and patch the version
+      if (
+        parentComponent &&
+        parentComponent.name === t.name &&
+        parentComponent?.version.length &&
+        parentComponent?.version !== "latest" &&
+        t.version === "latest"
+      ) {
+        t.version = parentComponent.version;
+      }
       const version = t.version;
       const scope = PYTHON_EXCLUDED_COMPONENTS.includes(name)
         ? "excluded"

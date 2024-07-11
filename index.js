@@ -2780,7 +2780,7 @@ export async function createPythonBom(path, options) {
       // Retrieve the tree using virtualenv in deep mode and as a fallback
       // This is a slow operation
       if (options.deep || !dependencies.length) {
-        retMap = getPipFrozenTree(basePath, f, tempDir);
+        retMap = getPipFrozenTree(basePath, f, tempDir, parentComponent);
         if (retMap.pkgList?.length) {
           pkgList = pkgList.concat(retMap.pkgList);
         }
@@ -2877,7 +2877,12 @@ export async function createPythonBom(path, options) {
           if (options.installDeps) {
             // If there are multiple requirements files then the tree is getting constructed for each one
             // adding to the delay.
-            const pkgMap = getPipFrozenTree(basePath, f, tempDir);
+            const pkgMap = getPipFrozenTree(
+              basePath,
+              f,
+              tempDir,
+              parentComponent,
+            );
             if (pkgMap.pkgList?.length) {
               pkgList = pkgList.concat(pkgMap.pkgList);
               frozen = pkgMap.frozen;
@@ -2929,11 +2934,16 @@ export async function createPythonBom(path, options) {
     if (options.installDeps) {
       let pkgMap = undefined;
       if (pyProjectMode) {
-        pkgMap = getPipFrozenTree(path, pyProjectFile, tempDir);
+        pkgMap = getPipFrozenTree(
+          path,
+          pyProjectFile,
+          tempDir,
+          parentComponent,
+        );
       } else if (setupPyMode) {
-        pkgMap = getPipFrozenTree(path, setupPy, tempDir);
+        pkgMap = getPipFrozenTree(path, setupPy, tempDir, parentComponent);
       } else {
-        pkgMap = getPipFrozenTree(path, undefined, tempDir);
+        pkgMap = getPipFrozenTree(path, undefined, tempDir, parentComponent);
       }
       // Get the imported modules and a dedupe list of packages
       const parentDependsOn = new Set();
