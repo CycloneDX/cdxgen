@@ -5810,7 +5810,7 @@ export async function createMultiXBom(pathList, options) {
   for (const path of pathList) {
     if (path.startsWith(join(tmpdir(), "docker-images-"))) {
       if (rmSync) {
-        rmSync(path, { force: true });
+        rmSync(path, { recursive: true, force: true });
       }
     }
   }
