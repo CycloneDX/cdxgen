@@ -6015,8 +6015,10 @@ export function parseContainerFile(fileContents) {
       const fromStatement = line.split("FROM ")[1].split(/\s(as|AS)\s/);
 
       const imageStatement = fromStatement[0].trim();
-      const buildStageName = fromStatement[1]?.trim();
-
+      const buildStageName =
+        fromStatement.length > 1
+          ? fromStatement[fromStatement.length - 1].trim()
+          : undefined;
       if (buildStageNames.includes(imageStatement)) {
         if (DEBUG_MODE) {
           console.log(
