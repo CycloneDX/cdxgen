@@ -501,18 +501,22 @@ const addFormulationSection = (options, context) => {
   if (!environmentVars.length) {
     environmentVars = undefined;
   }
-  const sourceInput = environmentVars ? { environmentVars } : {};
-  if (originUrl) {
-    sourceInput.source = { ref: originUrl };
+  let sourceInput = undefined;
+  if (environmentVars) {
+    sourceInput = { environmentVars };
+    if (originUrl) {
+      sourceInput.source = { ref: originUrl };
+    }
   }
-  aformulation.workflows = [
-    {
-      "bom-ref": uuidv4(),
-      uid: uuidv4(),
-      inputs: [sourceInput],
-      taskTypes: originUrl ? ["build", "clone"] : ["build"],
-    },
-  ];
+  const sourceWorkflow = {
+    "bom-ref": uuidv4(),
+    uid: uuidv4(),
+    taskTypes: originUrl ? ["build", "clone"] : ["build"],
+  };
+  if (sourceInput) {
+    sourceWorkflow.inputs = [sourceInput];
+  }
+  aformulation.workflows = [sourceWorkflow];
   formulation.push(aformulation);
   return { formulation, provides };
 };
