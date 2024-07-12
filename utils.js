@@ -9532,15 +9532,46 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
     .sort();
 }
 
+function get_python_command_from_env(env) {
+  // Virtual environments needs special treatment to use the correct python executable
+  // Without this step, the default python is always used resulting in false positives
+  const python_exe_name = isWin ? "python.exe" : "python";
+  const python3_exe_name = isWin ? "python3.exe" : "python3";
+  let python_cmd_to_use = PYTHON_CMD;
+  if (env.VIRTUAL_ENV) {
+    if (existsSync(join(env.VIRTUAL_ENV, "bin", python_exe_name))) {
+      python_cmd_to_use = join(env.VIRTUAL_ENV, "bin", python_exe_name);
+    } else if (existsSync(join(env.VIRTUAL_ENV, "bin", python3_exe_name))) {
+      python_cmd_to_use = join(env.VIRTUAL_ENV, "bin", python3_exe_name);
+    }
+  } else if (env.CONDA_PREFIX) {
+    if (existsSync(join(env.CONDA_PREFIX, "bin", python_exe_name))) {
+      python_cmd_to_use = join(env.CONDA_PREFIX, "bin", python_exe_name);
+    } else if (existsSync(join(env.CONDA_PREFIX, "bin", python3_exe_name))) {
+      python_cmd_to_use = join(env.CONDA_PREFIX, "bin", python3_exe_name);
+    }
+  } else if (env.CONDA_PYTHON_EXE) {
+    python_cmd_to_use = env.CONDA_PYTHON_EXE;
+  }
+  return python_cmd_to_use;
+}
+
 /**
  * Execute pip freeze by creating a virtual env in a temp directory and construct the dependency tree
  *
  * @param {string} basePath Base path
  * @param {string} reqOrSetupFile Requirements or setup.py file
  * @param {string} tempVenvDir Temp venv dir
+ * @param {Object} parentComponent Parent component
+ *
  * @returns List of packages from the virtual env
  */
-export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
+export function getPipFrozenTree(
+  basePath,
+  reqOrSetupFile,
+  tempVenvDir,
+  parentComponent,
+) {
   const pkgList = [];
   const formulationList = [];
   const rootList = [];
@@ -9692,6 +9723,9 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         }
       }
     } else {
+      // We are about to do a pip install with the right python command from the virtual environment
+      // This step can fail if the correct OS packages and development libraries are not installed
+      const python_cmd_for_tree = get_python_command_from_env(env);
       let pipInstallArgs = [
         "-m",
         "pip",
@@ -9714,8 +9748,11 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
         pipInstallArgs = pipInstallArgs.concat(addArgs);
       }
+      if (DEBUG_MODE) {
+        console.log("Executing", python_cmd_for_tree, pipInstallArgs.join(" "));
+      }
       // Attempt to perform pip install
-      result = spawnSync(PYTHON_CMD, pipInstallArgs, {
+      result = spawnSync(python_cmd_for_tree, pipInstallArgs, {
         cwd: basePath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
@@ -9784,8 +9821,12 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
         `About to construct the pip dependency tree based on ${reqOrSetupFile}. Please wait ...`,
       );
     }
+    const python_cmd_for_tree = get_python_command_from_env(env);
+    if (DEBUG_MODE) {
+      console.log(`Using the python executable ${python_cmd_for_tree}`);
+    }
     // This is a slow step that ideally needs to be invoked only once per venv
-    const tree = getTreeWithPlugin(env, PYTHON_CMD, basePath);
+    const tree = getTreeWithPlugin(env, python_cmd_for_tree, basePath);
     if (DEBUG_MODE && !tree.length) {
       console.log(
         "Dependency tree generation has failed. Please check for any errors or version incompatibilities reported in the logs.",
@@ -9794,6 +9835,17 @@ export function getPipFrozenTree(basePath, reqOrSetupFile, tempVenvDir) {
     const dependenciesMap = {};
     for (const t of tree) {
       const name = t.name.replace(/_/g, "-").toLowerCase();
+      // Bug #1232 - the root package might lack a version resulting in duplicate tree
+      // So we make use of the existing parent component to try and patch the version
+      if (
+        parentComponent &&
+        parentComponent.name === t.name &&
+        parentComponent.version &&
+        parentComponent?.version !== "latest" &&
+        t.version === "latest"
+      ) {
+        t.version = parentComponent.version;
+      }
       const version = t.version;
       const scope = PYTHON_EXCLUDED_COMPONENTS.includes(name)
         ? "excluded"
