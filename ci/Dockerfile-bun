@@ -74,6 +74,7 @@ RUN set -e; \
     && cargo --version \
     && rustc --version \
     && curl -fsSL https://bun.sh/install | bash \
+    && ln -s $(which bun) /usr/bin/node \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \
@@ -133,7 +134,6 @@ COPY . /opt/cdxgen
 RUN cd /opt/cdxgen && bun install --no-cache --production \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen \
     && chmod a-w -R /opt \
-    && atom --help \
     && rm -rf /var/cache/yum \
     && microdnf clean all
 
