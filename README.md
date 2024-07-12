@@ -460,6 +460,19 @@ cdxgen can automatically detect names of services from YAML manifests such as do
 
 Use the [CycloneDX CLI][cyclonedx-cli-github] tool for advanced use cases such as conversion, diff and merging.
 
+## Including .NET Global Assembly Cache dependencies in the results
+
+Global Assembly Cache (GAC) dependencies must be made available in the build output of the project for cdxgen in order for it to inspect and include in the results. A cdxgen scan with the `--deep` flag will look for additional dependencies in the form of dll files. A simple way to have the dotnet build copy the GAC dependencies into the build directory is to place the file `Directory.Build.props` into the root of the project and ensure the contents include the following:
+```
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<ItemDefinitionGroup>
+  <Reference>
+    <Private>True</Private>
+  </Reference>
+</ItemDefinitionGroup>
+</Project>
+```
+
 ## License
 
 Permission to modify and redistribute is granted under the terms of the Apache 2.0 license. See the [LICENSE][github-license] file for the full license.

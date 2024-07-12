@@ -11115,6 +11115,17 @@ export function addEvidenceForDotnet(pkgList, slicesFile) {
         }
       }
     }
+    if (slicesData.AssemblyInformation) {
+      for (const apkg of pkgList) {
+        if (!apkg.version) {
+          for (const assemblyInfo of slicesData.AssemblyInformation) {
+            if (apkg.name === assemblyInfo.Name) {
+              apkg.version = assemblyInfo.Version;
+            }
+          }
+        }
+      }
+    }
   }
   if (Object.keys(purlLocationMap).length) {
     for (const apkg of pkgList) {
