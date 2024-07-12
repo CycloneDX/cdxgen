@@ -145,6 +145,7 @@ RUN set -e; \
     && gem --version \
     && bundler --version \
     && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod \
+    && atom --help \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \

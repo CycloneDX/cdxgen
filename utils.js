@@ -9465,9 +9465,6 @@ export function findAppModules(
     console.log(
       "Slicing was not successful. For large projects (> 1 million lines of code), try running atom cli externally in Java mode. Please refer to the instructions in https://github.com/CycloneDX/cdxgen/blob/master/ADVANCED.md.",
     );
-    console.log(
-      "NOTE: Atom is in detached mode and will continue to run in the background with max CPU and memory unless it's killed.",
-    );
   }
   // Clean up
   if (tempDir?.startsWith(tmpdir()) && rmSync) {
