@@ -335,7 +335,8 @@ export const initFromSbom = (components, language) => {
  */
 export const analyzeProject = async (dbObjMap, options) => {
   const dirPath = options._[0] || ".";
-  const language = options.language;
+  const languages = options.language;
+  const language = Array.isArray(languages) ? languages[0] : languages;
   let usageSlice = undefined;
   let dataFlowSlice = undefined;
   let reachablesSlice = undefined;
@@ -764,7 +765,8 @@ export const isFilterableType = (
     if (
       typeFullName.startsWith("tmp") ||
       typeFullName.startsWith("self.") ||
-      typeFullName.startsWith("_")
+      typeFullName.startsWith("_") ||
+      typeFullName.startsWith("def ")
     ) {
       return true;
     }
@@ -1403,6 +1405,9 @@ export const getClassTypeFromSignature = (language, typeFullName) => {
       typeFullName = tmpA.join("/");
     }
   } else if (["python", "py"].includes(language)) {
+    if (typeFullName.includes("/")) {
+      typeFullName = typeFullName.split("/").pop();
+    }
     typeFullName = typeFullName
       .replace(".py:<module>", "")
       .replace(/\//g, ".")
