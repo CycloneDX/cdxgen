@@ -74,7 +74,7 @@ RUN set -e; \
     && cargo --version \
     && rustc --version \
     && curl -fsSL https://bun.sh/install | bash \
-    && ln -s $(which bun) /usr/bin/node \
+    && ln -s /root/.bun/bin/bun /usr/bin/node \
     && curl -s "https://get.sdkman.io" | bash \
     && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \
