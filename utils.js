@@ -710,7 +710,7 @@ export async function getSwiftPackageMetadata(pkgList) {
  * @param {Array} pkgList Package list
  */
 export async function getNpmMetadata(pkgList) {
-  const NPM_URL = "https://registry.npmjs.org/";
+  const NPM_URL = process.env.NPM_URL || "https://registry.npmjs.org/";
   const cdepList = [];
   for (const p of pkgList) {
     try {
@@ -4246,7 +4246,7 @@ export async function getRepoLicense(repoUrl, repoMetadata) {
 export async function getGoPkgLicense(repoMetadata) {
   const group = repoMetadata.group;
   const name = repoMetadata.name;
-  let pkgUrlPrefix = "https://pkg.go.dev/";
+  let pkgUrlPrefix = process.env.GO_PKG_URL || "https://pkg.go.dev/";
   if (group && group !== "." && group !== name) {
     pkgUrlPrefix = `${pkgUrlPrefix + group}/`;
   }
@@ -5152,7 +5152,7 @@ export async function parseGemfileLockData(gemLockData, lockFile) {
  * @param {Array} pkgList Package list
  */
 export async function getCratesMetadata(pkgList) {
-  const CRATES_URL = "https://crates.io/api/v1/crates/";
+  const CRATES_URL = process.env.RUST_CRATES_URL || "https://crates.io/api/v1/crates/";
   const cdepList = [];
   for (const p of pkgList) {
     try {
@@ -10933,7 +10933,7 @@ async function queryNuget(p, NUGET_URL) {
  * @param {Array} pkgList Package list
  */
 export async function getNugetMetadata(pkgList, dependencies = undefined) {
-  const NUGET_URL = await getNugetUrl();
+  const NUGET_URL = process.env.NUGET_URL || await getNugetUrl();
   const cdepList = [];
   const depRepList = {};
   for (const p of pkgList) {
