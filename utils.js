@@ -5152,7 +5152,8 @@ export async function parseGemfileLockData(gemLockData, lockFile) {
  * @param {Array} pkgList Package list
  */
 export async function getCratesMetadata(pkgList) {
-  const CRATES_URL = process.env.RUST_CRATES_URL || "https://crates.io/api/v1/crates/";
+  const CRATES_URL =
+    process.env.RUST_CRATES_URL || "https://crates.io/api/v1/crates/";
   const cdepList = [];
   for (const p of pkgList) {
     try {
@@ -10933,7 +10934,7 @@ async function queryNuget(p, NUGET_URL) {
  * @param {Array} pkgList Package list
  */
 export async function getNugetMetadata(pkgList, dependencies = undefined) {
-  const NUGET_URL = process.env.NUGET_URL || await getNugetUrl();
+  const NUGET_URL = process.env.NUGET_URL || (await getNugetUrl());
   const cdepList = [];
   const depRepList = {};
   for (const p of pkgList) {
