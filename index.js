@@ -431,7 +431,7 @@ const addFormulationSection = (options, context) => {
     });
   }
   // Collect git related components
-  if (gitBranch && originUrl && gitFiles) {
+  if (gitBranch && gitFiles) {
     const gitFileComponents = gitFiles.map((f) =>
       options.specVersion >= 1.6
         ? {
@@ -469,14 +469,13 @@ const addFormulationSection = (options, context) => {
     }
   }
   aformulation["bom-ref"] = uuidv4();
-  aformulation.components = components;
+  aformulation.components = trimComponents(components);
   let environmentVars = gitBranch?.length
     ? [{ name: "GIT_BRANCH", value: gitBranch }]
     : [];
   for (const aevar of Object.keys(process.env)) {
     if (
       (aevar.startsWith("GIT") ||
-        aevar.startsWith("CI_") ||
         aevar.startsWith("ANDROID") ||
         aevar.startsWith("DENO") ||
         aevar.startsWith("DOTNET") ||
@@ -489,6 +488,8 @@ const addFormulationSection = (options, context) => {
       !aevar.toLowerCase().includes("token") &&
       !aevar.toLowerCase().includes("pass") &&
       !aevar.toLowerCase().includes("secret") &&
+      !aevar.toLowerCase().includes("user") &&
+      !aevar.toLowerCase().includes("email") &&
       process.env[aevar] &&
       process.env[aevar].length
     ) {
@@ -504,9 +505,6 @@ const addFormulationSection = (options, context) => {
   let sourceInput = undefined;
   if (environmentVars) {
     sourceInput = { environmentVars };
-    if (originUrl) {
-      sourceInput.source = { ref: originUrl };
-    }
   }
   const sourceWorkflow = {
     "bom-ref": uuidv4(),

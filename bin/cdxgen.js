@@ -246,9 +246,9 @@ const args = yargs(hideBin(process.argv))
   })
   .option("include-formulation", {
     type: "boolean",
-    default: true,
+    default: false,
     description:
-      "Generate formulation section with git metadata and build tools. Defaults to true. Invoke with --no-include-formulation to disable.",
+      "Generate formulation section with git metadata and build tools. Defaults to false.",
   })
   .option("include-crypto", {
     type: "boolean",
@@ -352,17 +352,17 @@ const options = Object.assign({}, args, {
 
 if (process.argv[1].includes("cbom")) {
   options.includeCrypto = true;
-  options.includeFormulation = true;
   options.evidence = true;
   options.specVersion = 1.6;
   options.deep = true;
 }
 if (options.standard) {
   options.specVersion = 1.6;
-  options.includeFormulation = true;
 }
-if (options.deep && options.specVersion >= 1.5) {
-  options.includeFormulation = true;
+if (options.includeFormulation) {
+  console.log(
+    "NOTE: Formulation section could include sensitive data such as emails and secrets.\nPlease review the generated SBOM before distribution.\n",
+  );
 }
 /**
  * Method to apply advanced options such as profile and lifecycles
@@ -373,12 +373,10 @@ const applyAdvancedOptions = (options) => {
   switch (options.profile) {
     case "appsec":
       options.deep = true;
-      options.includeFormulation = true;
       break;
     case "research":
       options.deep = true;
       options.evidence = true;
-      options.includeFormulation = true;
       options.includeCrypto = true;
       process.env.CDX_MAVEN_INCLUDE_TEST_SCOPE = "true";
       process.env.ASTGEN_IGNORE_DIRS = "";
