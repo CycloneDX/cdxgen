@@ -94,7 +94,7 @@ const parseQueryString = (q, body, options = {}) => {
     }
   }
 
-  options.projectType = options.type.split(",");
+  options.projectType = options.type?.split(",");
   delete options.type;
 
   return options;
