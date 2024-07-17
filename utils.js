@@ -464,7 +464,8 @@ export function isSpdxLicenseExpression(license) {
  * Convert the array of licenses to a CycloneDX 1.5 compliant license array.
  * This should return an array containing:
  * - one or more SPDX license if no expression is present
- * - the first license expression if at least one is present
+ * - the license of the expression if one expression is present
+ * - a unified conditional 'OR' license expression if more then one expression is present
  *
  * @param {Array} licenses Array of licenses
  * @returns {Array} CycloneDX 1.5 compliant license array
@@ -479,7 +480,14 @@ export function adjustLicenseInformation(licenses) {
   });
   if (expressions.length >= 1) {
     if (expressions.length > 1) {
-      console.warn("multiple license expressions found", expressions);
+      return [
+        {
+          expression: expressions
+            .map((e) => e.expression || "")
+            .filter(Boolean)
+            .join(" OR "),
+        },
+      ];
     }
     return [{ expression: expressions[0].expression }];
   }
