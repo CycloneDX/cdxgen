@@ -2785,7 +2785,7 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
     cwd: dir,
     encoding: "utf-8",
     shell: isWin,
-    maxBuffer: 10 * 1024 * 1024,
+    maxBuffer: 10 * 1024 * 1024
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
