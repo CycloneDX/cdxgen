@@ -8,10 +8,12 @@ import {
   findLicenseId,
   getCratesMetadata,
   getDartMetadata,
+  getGoPkgLicense,
   getLicenses,
   getMvnMetadata,
   getNugetMetadata,
   getPyMetadata,
+  getRepoLicense,
   guessPypiMatchingVersion,
   hasAnyProjectType,
   isValidIriReference,
@@ -87,8 +89,6 @@ import {
   readZipEntry,
   splitOutputByGradleProjects,
   yarnLockToIdentMap,
-  getGoPkgLicense,
-  getRepoLicense,
 } from "./utils.js";
 
 test("SSRI test", () => {
@@ -2251,22 +2251,24 @@ test("parsePomMetadata", async () => {
 
 test("get repo license", async () => {
   let license = await getRepoLicense(
-    "https://github.com/ShiftLeftSecurity/sast-scan", {
-    group: "ShiftLeftSecurity",
-    name: "sast-scan"
-  });
+    "https://github.com/ShiftLeftSecurity/sast-scan",
+    {
+      group: "ShiftLeftSecurity",
+      name: "sast-scan",
+    },
+  );
   expect(license).toEqual({
     id: "Apache-2.0",
-    url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE"
+    url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE",
   });
 
   license = await getRepoLicense("https://github.com/cyclonedx/cdxgen", {
     group: "cyclonedx",
-    name: "cdxgen"
+    name: "cdxgen",
   });
   expect(license).toEqual({
     id: "Apache-2.0",
-    url: "https://github.com/CycloneDX/cdxgen/blob/master/LICENSE"
+    url: "https://github.com/CycloneDX/cdxgen/blob/master/LICENSE",
   });
 
   // These tests are disabled because they are returning undefined
@@ -2291,35 +2293,35 @@ test("get repo license", async () => {
 test("get go pkg license", async () => {
   let license = await getGoPkgLicense({
     group: "github.com/Azure/azure-amqp-common-go",
-    name: "v2"
+    name: "v2",
   });
   expect(license).toEqual([
     {
       id: "MIT",
-      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses"
-    }
+      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
+    },
   ]);
 
   license = await getGoPkgLicense({
     group: "go.opencensus.io",
-    name: "go.opencensus.io"
+    name: "go.opencensus.io",
   });
   expect(license).toEqual([
     {
       id: "Apache-2.0",
-      url: "https://pkg.go.dev/go.opencensus.io?tab=licenses"
-    }
+      url: "https://pkg.go.dev/go.opencensus.io?tab=licenses",
+    },
   ]);
 
   license = await getGoPkgLicense({
     group: "github.com/DataDog",
-    name: "zstd"
+    name: "zstd",
   });
   expect(license).toEqual([
     {
       id: "BSD-3-Clause",
-      url: "https://pkg.go.dev/github.com/DataDog/zstd?tab=licenses"
-    }
+      url: "https://pkg.go.dev/github.com/DataDog/zstd?tab=licenses",
+    },
   ]);
 });
 
