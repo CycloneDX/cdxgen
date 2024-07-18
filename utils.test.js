@@ -86,7 +86,9 @@ import {
   parseYarnLock,
   readZipEntry,
   splitOutputByGradleProjects,
-  yarnLockToIdentMap, getGoPkgLicense, getRepoLicense,
+  yarnLockToIdentMap,
+  getGoPkgLicense,
+  getRepoLicense,
 } from "./utils.js";
 
 test("SSRI test", () => {
