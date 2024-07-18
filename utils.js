@@ -512,7 +512,7 @@ export function getLicenses(pkg) {
       license = [license];
     }
     return adjustLicenseInformation(
-      license.map((l) => {
+        license.filter((l) => l !== undefined).map((l) => {
         let licenseContent = {};
         if (typeof l === "string" || l instanceof String) {
           if (

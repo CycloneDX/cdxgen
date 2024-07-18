@@ -2398,6 +2398,26 @@ test("get licenses", () => {
       expression: "GPL-3.0-only WITH Classpath-exception-2.0",
     },
   ]);
+
+  licenses = getLicenses({
+    license: [
+      "GPL-3.0-only WITH Classpath-exception-2.0",
+      "NOT-GPL-2.1+"
+    ]
+  });
+  expect(licenses).toEqual([
+    {
+      expression: "GPL-3.0-only WITH Classpath-exception-2.0",
+    },
+    {
+      expression: "NOT-GPL-2.1+",
+    }
+  ]);
+
+  licenses = getLicenses({
+    license: undefined,
+  });
+  expect(licenses).toEqual(undefined);
 });
 
 test("parsePkgJson", async () => {

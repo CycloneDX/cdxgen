@@ -125,3 +125,6 @@ roots/
 .python-version
 build/
 .mise.toml
+
+# Ignore IntelliJ IDEA module file
+cdxgen.iml
