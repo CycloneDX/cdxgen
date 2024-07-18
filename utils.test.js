@@ -8,10 +8,12 @@ import {
   findLicenseId,
   getCratesMetadata,
   getDartMetadata,
+  getGoPkgLicense,
   getLicenses,
   getMvnMetadata,
   getNugetMetadata,
   getPyMetadata,
+  getRepoLicense,
   guessPypiMatchingVersion,
   hasAnyProjectType,
   isValidIriReference,
@@ -2246,32 +2248,38 @@ test("parsePomMetadata", async () => {
   const data = await getMvnMetadata(deps);
   expect(data.length).toEqual(deps.length);
 });
-/*
+
 test("get repo license", async () => {
-  let license = await utils.getRepoLicense(
-    "https://github.com/ShiftLeftSecurity/sast-scan"
+  let license = await getRepoLicense(
+    "https://github.com/ShiftLeftSecurity/sast-scan",
+    {
+      group: "ShiftLeftSecurity",
+      name: "sast-scan",
+    },
   );
   expect(license).toEqual({
-    id: "GPL-3.0-or-later",
-    url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE"
+    id: "Apache-2.0",
+    url: "https://github.com/ShiftLeftSecurity/sast-scan/blob/master/LICENSE",
   });
 
-  license = await utils.getRepoLicense("https://github.com/cyclonedx/cdxgen", {
-    group: "",
-    name: "cdxgen"
+  license = await getRepoLicense("https://github.com/cyclonedx/cdxgen", {
+    group: "cyclonedx",
+    name: "cdxgen",
   });
   expect(license).toEqual({
     id: "Apache-2.0",
-    url: "https://github.com/cyclonedx/cdxgen/blob/master/LICENSE"
+    url: "https://github.com/CycloneDX/cdxgen/blob/master/LICENSE",
   });
 
-  license = await utils.getRepoLicense("https://cloud.google.com/go", {
+  // These tests are disabled because they are returning undefined
+  /*
+  license = await getRepoLicense("https://cloud.google.com/go", {
     group: "cloud.google.com",
     name: "go"
   });
   expect(license).toEqual("Apache-2.0");
 
-  license = await utils.getRepoLicense(undefined, {
+  license = await getRepoLicense(undefined, {
     group: "github.com/ugorji",
     name: "go"
   });
@@ -2279,43 +2287,43 @@ test("get repo license", async () => {
     id: "MIT",
     url: "https://github.com/ugorji/go/blob/master/LICENSE"
   });
+  */
 });
+
 test("get go pkg license", async () => {
-  jest.setTimeout(120000);
-  let license = await utils.getGoPkgLicense({
+  let license = await getGoPkgLicense({
     group: "github.com/Azure/azure-amqp-common-go",
-    name: "v2"
+    name: "v2",
   });
   expect(license).toEqual([
     {
       id: "MIT",
-      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses"
-    }
+      url: "https://pkg.go.dev/github.com/Azure/azure-amqp-common-go/v2?tab=licenses",
+    },
   ]);
 
-  license = await utils.getGoPkgLicense({
+  license = await getGoPkgLicense({
     group: "go.opencensus.io",
-    name: "go.opencensus.io"
+    name: "go.opencensus.io",
   });
   expect(license).toEqual([
     {
       id: "Apache-2.0",
-      url: "https://pkg.go.dev/go.opencensus.io?tab=licenses"
-    }
+      url: "https://pkg.go.dev/go.opencensus.io?tab=licenses",
+    },
   ]);
 
-  license = await utils.getGoPkgLicense({
+  license = await getGoPkgLicense({
     group: "github.com/DataDog",
-    name: "zstd"
+    name: "zstd",
   });
   expect(license).toEqual([
     {
       id: "BSD-3-Clause",
-      url: "https://pkg.go.dev/github.com/DataDog/zstd?tab=licenses"
-    }
+      url: "https://pkg.go.dev/github.com/DataDog/zstd?tab=licenses",
+    },
   ]);
 });
-*/
 
 test("get licenses", () => {
   let licenses = getLicenses({ license: "MIT" });
@@ -2398,6 +2406,11 @@ test("get licenses", () => {
       expression: "GPL-3.0-only WITH Classpath-exception-2.0",
     },
   ]);
+
+  licenses = getLicenses({
+    license: undefined,
+  });
+  expect(licenses).toEqual(undefined);
 });
 
 test("parsePkgJson", async () => {

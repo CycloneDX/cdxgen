@@ -39,7 +39,8 @@ export function isSpdxLicenseExpression(license: string): boolean;
  * Convert the array of licenses to a CycloneDX 1.5 compliant license array.
  * This should return an array containing:
  * - one or more SPDX license if no expression is present
- * - the first license expression if at least one is present
+ * - the license of the expression if one expression is present
+ * - a unified conditional 'OR' license expression if more then one expression is present
  *
  * @param {Array} licenses Array of licenses
  * @returns {Array} CycloneDX 1.5 compliant license array

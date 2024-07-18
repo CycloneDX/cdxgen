@@ -512,43 +512,45 @@ export function getLicenses(pkg) {
       license = [license];
     }
     return adjustLicenseInformation(
-      license.map((l) => {
-        let licenseContent = {};
-        if (typeof l === "string" || l instanceof String) {
-          if (
-            spdxLicenses.some((v) => {
-              return l === v;
-            })
-          ) {
-            licenseContent.id = l;
-            licenseContent.url = `https://opensource.org/licenses/${l}`;
-          } else if (l.startsWith("http")) {
-            const knownLicense = getKnownLicense(l, pkg);
-            if (knownLicense) {
-              licenseContent.id = knownLicense.id;
-              licenseContent.name = knownLicense.name;
+      license
+        .filter((l) => l !== undefined)
+        .map((l) => {
+          let licenseContent = {};
+          if (typeof l === "string" || l instanceof String) {
+            if (
+              spdxLicenses.some((v) => {
+                return l === v;
+              })
+            ) {
+              licenseContent.id = l;
+              licenseContent.url = `https://opensource.org/licenses/${l}`;
+            } else if (l.startsWith("http")) {
+              const knownLicense = getKnownLicense(l, pkg);
+              if (knownLicense) {
+                licenseContent.id = knownLicense.id;
+                licenseContent.name = knownLicense.name;
+              }
+              // We always need a name to avoid validation errors
+              // Issue: #469
+              if (!licenseContent.name && !licenseContent.id) {
+                licenseContent.name = "CUSTOM";
+              }
+              licenseContent.url = l;
+            } else if (isSpdxLicenseExpression(l)) {
+              licenseContent.expression = l;
+            } else {
+              licenseContent.name = l;
             }
-            // We always need a name to avoid validation errors
-            // Issue: #469
-            if (!licenseContent.name && !licenseContent.id) {
-              licenseContent.name = "CUSTOM";
-            }
-            licenseContent.url = l;
-          } else if (isSpdxLicenseExpression(l)) {
-            licenseContent.expression = l;
+          } else if (Object.keys(l).length) {
+            licenseContent = l;
           } else {
-            licenseContent.name = l;
+            return undefined;
           }
-        } else if (Object.keys(l).length) {
-          licenseContent = l;
-        } else {
-          return undefined;
-        }
-        if (!licenseContent.id) {
-          addLicenseText(pkg, l, licenseContent);
-        }
-        return licenseContent;
-      }),
+          if (!licenseContent.id) {
+            addLicenseText(pkg, l, licenseContent);
+          }
+          return licenseContent;
+        }),
     );
   }
   const knownLicense = getKnownLicense(undefined, pkg);
