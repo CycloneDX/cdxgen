@@ -2090,7 +2090,7 @@ export async function createJavaBom(path, options) {
         sbtVersion != null &&
         gte(sbtVersion, "1.3.4") &&
         lte(sbtVersion, "1.4.0");
-      const useSlashSyntax = gte(sbtVersion, "1.5.0");
+      const useSlashSyntax = !sbtVersion || gte(sbtVersion, "1.5.0");
       const isDependencyTreeBuiltIn =
         sbtVersion != null && gte(sbtVersion, "1.4.0");
       const tempDir = mkdtempSync(join(tmpdir(), "cdxsbt-"));

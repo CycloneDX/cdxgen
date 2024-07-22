@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.8.7",
+  "version": "10.8.8",
   "exports": "./index.js",
   "compilerOptions": {
     "allowJs": true,
@@ -62,7 +62,7 @@
     "packageurl-js": "npm:packageurl-js@1.0.2",
     "prettify-xml": "npm:prettify-xml@^1.2.0",
     "properties-reader": "npm:properties-reader@^2.3.0",
-    "semver": "npm:semver@^7.6.2",
+    "semver": "npm:semver@^7.6.3",
     "ssri": "npm:ssri@^10.0.6",
     "table": "npm:table@^6.8.2",
     "tar": "npm:tar@^6.2.1",
