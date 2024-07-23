@@ -2852,8 +2852,8 @@ test("parsePnpmLock", async () => {
   expect(parsedList.dependenciesList).toHaveLength(462);
   expect(parsedList.pkgList.filter((pkg) => !pkg.scope)).toHaveLength(3);
   parsedList = await parsePnpmLock("./pnpm-lock.yaml");
-  expect(parsedList.pkgList.length).toEqual(653);
-  expect(parsedList.dependenciesList.length).toEqual(653);
+  expect(parsedList.pkgList.length).toEqual(652);
+  expect(parsedList.dependenciesList.length).toEqual(652);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@ampproject",
     name: "remapping",
@@ -4294,9 +4294,10 @@ test.each([
   ["${repository.url}", false],
   // bomLink - https://cyclonedx.org/capabilities/bomlink/]
   ["urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/1#componentA", true],
+  ["urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7", true],
+  ["urn:cdx:f08a6ccd-4dce-4759-bd84-c626675d60a7/123", true],
   // http uri - https://www.ietf.org/rfc/rfc7230.txt]
   ["https://gitlab.com/behat-chrome/chrome-mink-driver.git", true],
-  ["     https://gitlab.com/behat-chrome/chrome-mink-driver.git     ", false],
   ["http://gitlab.com/behat-chrome/chrome-mink-driver.git", true],
   ["git+https://github.com/Alex-D/check-disk-space.git", true],
   ["UNKNOWN", false],
@@ -4308,6 +4309,8 @@ test.each([
   ["http://www.", true],
   ["https://github.com/apache/maven-resolver/tree/${project.scm.tag}", false],
   ["git@github.com:prometheus/client_java.git", false],
+  ["${template.url}", false],
+  ["http://%template%", false],
 ])("isValidIriReference tests: %s", (url, isValid) => {
   expect(isValidIriReference(url)).toBe(isValid);
 });

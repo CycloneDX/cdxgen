@@ -46,7 +46,6 @@ import {
   satisfies,
   valid,
 } from "semver";
-import { IriValidationStrategy, validateIri } from "validate-iri";
 import { xml2js } from "xml-js";
 import { getTreeWithPlugin } from "./piptree.js";
 
@@ -11215,24 +11214,9 @@ export function parseMakeDFile(dfile) {
  *
  */
 export function isValidIriReference(iri) {
-  let iriIsValid = true;
   // See issue #1264
-  if (iri && /[${}]/.test(iri)) {
+  if (iri && /[${}%]/.test(iri)) {
     return false;
   }
-  const validateIriResult = validateIri(iri, IriValidationStrategy.Strict);
-
-  if (validateIriResult instanceof Error) {
-    iriIsValid = false;
-  } else if (iri.toLocaleLowerCase().startsWith("http")) {
-    try {
-      new URL(iri);
-    } catch (error) {
-      iriIsValid = false;
-    }
-  }
-  if (iriIsValid) {
-    return true;
-  }
-  return false;
+  return URL.canParse(iri);
 }
