@@ -4306,6 +4306,8 @@ test.each([
   ["https://", false],
   ["http://www", true],
   ["http://www.", true],
+  ["https://github.com/apache/maven-resolver/tree/${project.scm.tag}", false],
+  ["git@github.com:prometheus/client_java.git", false],
 ])("isValidIriReference tests: %s", (url, isValid) => {
   expect(isValidIriReference(url)).toBe(isValid);
 });

@@ -3182,12 +3182,15 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
     try {
       if (DEBUG_MODE) {
         console.log(
-          `Querying ${pomMetadata.urlPrefix} from ${composePomXmlUrl(
+          `Querying ${pomMetadata.urlPrefix} for '${group}/${p.name}@${p.version}' ${composePomXmlUrl(
             pomMetadata,
           )}`,
         );
       }
       const bodyJson = await fetchPomXmlAsJson(pomMetadata);
+      if (!bodyJson) {
+        continue;
+      }
       p.publisher = bodyJson.organization?.name
         ? bodyJson.organization.name._
         : "";
@@ -3243,6 +3246,9 @@ export function composePomXmlUrl({ urlPrefix, group, name, version }) {
  */
 export async function fetchPomXmlAsJson({ urlPrefix, group, name, version }) {
   const pomXml = await fetchPomXml({ urlPrefix, group, name, version });
+  if (!pomXml) {
+    return undefined;
+  }
   const options = {
     compact: true,
     spaces: 4,
@@ -3258,6 +3264,9 @@ export async function fetchPomXmlAsJson({ urlPrefix, group, name, version }) {
       name: pomJson.parent.artifactId?._,
       version: pomJson.parent.version?._,
     });
+    if (!parentXml) {
+      return undefined;
+    }
     const parentJson = xml2js(parentXml, options).project;
     const result = { ...parentJson, ...pomJson };
     return result;
@@ -11208,6 +11217,10 @@ export function parseMakeDFile(dfile) {
  */
 export function isValidIriReference(iri) {
   let iriIsValid = true;
+  // See issue #1264
+  if (iri && /[${}]/.test(iri)) {
+    return false;
+  }
   const validateIriResult = validateIri(iri, IriValidationStrategy.Strict);
 
   if (validateIriResult instanceof Error) {
@@ -11219,14 +11232,8 @@ export function isValidIriReference(iri) {
       iriIsValid = false;
     }
   }
-
   if (iriIsValid) {
     return true;
   }
-
-  if (DEBUG_MODE) {
-    console.log(`IRI failed validation ${iri}`);
-  }
-
   return false;
 }
