@@ -11223,14 +11223,8 @@ export function isValidIriReference(iri) {
       iriIsValid = false;
     }
   }
-
   if (iriIsValid) {
     return true;
   }
-
-  if (DEBUG_MODE) {
-    console.log(`IRI failed validation ${iri}`);
-  }
-
   return false;
 }

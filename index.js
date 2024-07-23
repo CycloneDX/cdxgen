@@ -1264,6 +1264,7 @@ export async function createJavaBom(path, options) {
   let bomJsonFiles = [];
   if (
     pomFiles?.length &&
+    !options.projectType?.includes("bazel") &&
     !options.projectType?.includes("scala") &&
     !options.projectType?.includes("sbt") &&
     !options.projectType?.includes("gradle")
@@ -1612,6 +1613,8 @@ export async function createJavaBom(path, options) {
   // Execute gradle properties
   if (
     gradleFiles?.length &&
+    !options.projectType?.includes("maven") &&
+    !options.projectType?.includes("bazel") &&
     !options.projectType?.includes("scala") &&
     !options.projectType?.includes("sbt")
   ) {
@@ -1744,6 +1747,8 @@ export async function createJavaBom(path, options) {
   if (
     gradleFiles?.length &&
     options.installDeps &&
+    !options.projectType?.includes("maven") &&
+    !options.projectType?.includes("bazel") &&
     !options.projectType?.includes("scala") &&
     !options.projectType?.includes("sbt")
   ) {
@@ -1939,6 +1944,8 @@ export async function createJavaBom(path, options) {
   const bazelFiles = getAllFiles(path, "BUILD", options);
   if (
     bazelFiles?.length &&
+    !options.projectType?.includes("maven") &&
+    !options.projectType?.includes("gradle") &&
     !options.projectType?.includes("scala") &&
     !options.projectType?.includes("sbt")
   ) {
