@@ -3182,7 +3182,7 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
     try {
       if (DEBUG_MODE) {
         console.log(
-          `Querying ${pomMetadata.urlPrefix} from ${composePomXmlUrl(
+          `Querying ${pomMetadata.urlPrefix} for '${group}/${p.name}@${p.version}' ${composePomXmlUrl(
             pomMetadata,
           )}`,
         );
@@ -11208,6 +11208,10 @@ export function parseMakeDFile(dfile) {
  */
 export function isValidIriReference(iri) {
   let iriIsValid = true;
+  // See issue #1264
+  if (iri && /[${}]/.test(iri)) {
+    return false;
+  }
   const validateIriResult = validateIri(iri, IriValidationStrategy.Strict);
 
   if (validateIriResult instanceof Error) {
