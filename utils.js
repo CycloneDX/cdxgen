@@ -11214,8 +11214,16 @@ export function parseMakeDFile(dfile) {
  *
  */
 export function isValidIriReference(iri) {
+  if (!iri) {
+    return false;
+  }
+  try {
+    iri = decodeURIComponent(iri);
+  } catch (e) {
+    // pass
+  }
   // See issue #1264
-  if (iri && /[${}%]/.test(iri)) {
+  if (iri && /[${}%]/.test(iri) && !iri.includes("u{")) {
     return false;
   }
   return URL.canParse(iri);
