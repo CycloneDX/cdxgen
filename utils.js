@@ -3188,20 +3188,19 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
         );
       }
       const bodyJson = await fetchPomXmlAsJson(pomMetadata);
-      if (!bodyJson) {
-        continue;
+      if (bodyJson) {
+        p.publisher = bodyJson?.organization?.name
+          ? bodyJson?.organization.name._
+          : "";
+        p.description = bodyJson?.description ? bodyJson.description._ : "";
+        if (bodyJson?.scm?.url) {
+          p.repository = { url: bodyJson.scm.url._ };
+        }
+        p.license =
+          parseLicenseEntryOrArrayFromPomXml(bodyJson?.licenses?.license) ||
+          (await extractLicenseCommentFromPomXml(pomMetadata)) ||
+          (await getRepoLicense(p.repository?.url, undefined));
       }
-      p.publisher = bodyJson.organization?.name
-        ? bodyJson.organization.name._
-        : "";
-      p.description = bodyJson.description ? bodyJson.description._ : "";
-      if (bodyJson.scm?.url) {
-        p.repository = { url: bodyJson.scm.url._ };
-      }
-      p.license =
-        parseLicenseEntryOrArrayFromPomXml(bodyJson?.licenses?.license) ||
-        (await extractLicenseCommentFromPomXml(pomMetadata)) ||
-        (await getRepoLicense(p.repository?.url, undefined));
     } catch (err) {
       if (DEBUG_MODE) {
         console.log(
