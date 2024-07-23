@@ -3188,6 +3188,9 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
         );
       }
       const bodyJson = await fetchPomXmlAsJson(pomMetadata);
+      if (!bodyJson) {
+        continue;
+      }
       p.publisher = bodyJson.organization?.name
         ? bodyJson.organization.name._
         : "";
@@ -3243,6 +3246,9 @@ export function composePomXmlUrl({ urlPrefix, group, name, version }) {
  */
 export async function fetchPomXmlAsJson({ urlPrefix, group, name, version }) {
   const pomXml = await fetchPomXml({ urlPrefix, group, name, version });
+  if (!pomXml) {
+    return undefined;
+  }
   const options = {
     compact: true,
     spaces: 4,
@@ -3258,6 +3264,9 @@ export async function fetchPomXmlAsJson({ urlPrefix, group, name, version }) {
       name: pomJson.parent.artifactId?._,
       version: pomJson.parent.version?._,
     });
+    if (!parentXml) {
+      return undefined;
+    }
     const parentJson = xml2js(parentXml, options).project;
     const result = { ...parentJson, ...pomJson };
     return result;
