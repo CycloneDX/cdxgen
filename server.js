@@ -123,7 +123,6 @@ const applyProfileOptions = (options) => {
     case "appsec":
       options.deep = true;
       break;
-    case "threat-modeling":
     case "research":
       options.deep = true;
       options.evidence = true;

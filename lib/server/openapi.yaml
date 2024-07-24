@@ -286,7 +286,7 @@ components:
           default: false
         profile:
           type: string
-          description: BOM profile to use for generation. Default generic. Choices are appsec, research, license-compliance
+          description: BOM profile to use for generation. Default generic. Choices are appsec, research.
           default: generic
         exclude:
           type: array
