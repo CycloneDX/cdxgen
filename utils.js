@@ -11226,5 +11226,26 @@ export function isValidIriReference(iri) {
   if (iri && /[${}%]/.test(iri) && !iri.includes("u{")) {
     return false;
   }
-  return URL.canParse(iri);
+  if (!URL.canParse(iri)) {
+    return false;
+  }
+  try {
+    const urlObj = URL.parse(iri);
+    if (urlObj?.hash.includes("%")) {
+      return false;
+    }
+    if (urlObj?.pathname.includes("[") || urlObj?.hash.includes("[")) {
+      return false;
+    }
+    if (
+      urlObj?.pathname.startsWith("/%F") ||
+      (urlObj?.pathname.includes("%EE") &&
+        decodeURI(urlObj?.pathname) !== urlObj.pathname)
+    ) {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+  return true;
 }

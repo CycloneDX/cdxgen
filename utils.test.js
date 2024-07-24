@@ -4316,6 +4316,7 @@ test.each([
 });
 
 test.each([
+  // Tests from https://github.com/comunica/validate-iri.js/blob/master/test/Validate-test.ts
   "file://foo",
   "ftp://ftp.is.co.za/rfc/rfc1808.txt",
   "http://www.ietf.org/rfc/rfc2396.txt",
@@ -4413,14 +4414,30 @@ test.each([
 });
 
 test.each([
+  // Tests from https://github.com/comunica/validate-iri.js/blob/master/test/Validate-test.ts
+  // "::", // not OK, per Roy Fielding on the W3C uri list on 2004-04-01
+  //
+  // the following test cases are from a Perl script by David A. Wheeler
+  // at http://www.dwheeler.com/secure-programs/url.pl
+  "http://www yahoo.com",
+  'http://www.yahoo.com/yelp.html#"',
   //
   // the following test cases are from a Haskell program by Graham Klyne
   // at http://www.ninebynine.org/Software/HaskellUtils/Network/URITest.hs
   // 'http://[2010:836B:4179::836B:4179]',
   "http://example.com/%",
-  "http://example.com/A%Z",
-  "http://example.com/%ZZ",
-  "http://example.com/%AZ",
+  "http://[xyz]/",
+  "http://]/",
+  "http://example.org/[2010:836B:4179::836B:4179]",
+  "http://example.org/abc#[2010:836B:4179::836B:4179]",
+  "http://example.org/xxx/[qwerty]#a[b]",
+  // From a post to the W3C uri list on 2004-02-17
+  // 'http://w3c.org:80path1/path2',
+  // Iprivate characters are not allowed in path not in fragment
+  "http://example.com/\u{E000}",
+  "http://example.com/\u{E000}",
+  "http://example.com/#\u{E000}",
+  "http://example.com/#\u{E000}",
   // Bad host
   "http://[/",
   "http://[::1]a/",
