@@ -115,7 +115,7 @@ Options:
       --exclude                Additional glob pattern(s) to ignore                                              [array]
       --include-formulation    Generate formulation section with git metadata and build tools. Defaults to true. Invoke
                                with --no-include-formulation to disable.                       [boolean] [default: true]
-      --include-crypto         Include crypto libraries found under formulation.              [boolean] [default: false]
+      --include-crypto         Include crypto libraries as components.                        [boolean] [default: false]
       --standard               The list of standards which may consist of regulations, industry or organizational-specif
                                ic standards, maturity models, best practices, or any other requirements which can be eva
                                luated against or attested to.

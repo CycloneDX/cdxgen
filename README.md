@@ -151,7 +151,7 @@ Options:
       --exclude                Additional glob pattern(s) to ignore                                              [array]
       --include-formulation    Generate formulation section with git metadata and build tools. Defaults to true. Invoke
                                with --no-include-formulation to disable.                       [boolean] [default: true]
-      --include-crypto         Include crypto libraries found under formulation.              [boolean] [default: false]
+      --include-crypto         Include crypto libraries as components.                        [boolean] [default: false]
       --standard               The list of standards which may consist of regulations, industry or organizational-specif
                                ic standards, maturity models, best practices, or any other requirements which can be eva
                                luated against or attested to.
@@ -463,6 +463,7 @@ Use the [CycloneDX CLI][cyclonedx-cli-github] tool for advanced use cases such a
 ## Including .NET Global Assembly Cache dependencies in the results
 
 Global Assembly Cache (GAC) dependencies must be made available in the build output of the project for cdxgen in order for it to inspect and include in the results. A cdxgen scan with the `--deep` flag will look for additional dependencies in the form of dll files. A simple way to have the dotnet build copy the GAC dependencies into the build directory is to place the file `Directory.Build.props` into the root of the project and ensure the contents include the following:
+
 ```
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 <ItemDefinitionGroup>

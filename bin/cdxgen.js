@@ -253,7 +253,7 @@ const args = yargs(hideBin(process.argv))
   .option("include-crypto", {
     type: "boolean",
     default: false,
-    description: "Include crypto libraries found under formulation.",
+    description: "Include crypto libraries as components.",
   })
   .option("standard", {
     description:

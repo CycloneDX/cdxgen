@@ -134,6 +134,41 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/CDXGEN/properties/gitBranch'
+        - name: lifecycle
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/lifecycle'
+        - name: deep
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/deep'
+        - name: profile
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/profile'
+        - name: exclude
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/exclude'
+        - name: includeFormulation
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/includeFormulation'
+        - name: includeCrypto
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/includeCrypto'
+        - name: standard
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CDXGEN/properties/standard'
       responses:
         '200':
           description: Successful operation
@@ -242,8 +277,33 @@ components:
         gitBranch:
           type: string
           description: Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository
-
-
+        lifecycle:
+          type: string
+          description: Product lifecycle for the generated BOM. Choices are pre-build, build, post-build.
+        deep:
+          type: boolean
+          description: Perform deep searches for components. Useful while scanning C/C++ apps, live OS and oci images.
+          default: false
+        profile:
+          type: string
+          description: BOM profile to use for generation. Default generic. Choices are appsec, research.
+          default: generic
+        exclude:
+          type: array
+          items:
+            type: string
+          description: Additional glob pattern(s) to ignore
+        includeFormulation:
+          type: boolean
+          description: Generate formulation section with git metadata and build tools. Use with caution, since there is a risk of exposure of sensitive data such as secrets.
+          default: false
+        includeCrypto:
+          type: boolean
+          description: Include crypto libraries as components.
+          default: false
+        standard:
+          type: string
+          description: The list of standards which may consist of regulations, industry or organizational-specific standards, maturity models, best practices, or any other requirements which can be evaluated against or attested to. Choices are asvs-4.0.3, bsimm-v13, masvs-2.0.0, nist_ssdf-1.1, pcissc-secure-slc-1.1, scvs-1.0.0, ssaf-DRAFT-2023-11
     CycloneDXSBOM:
       type: object
       externalDocs:

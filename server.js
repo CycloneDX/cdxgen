@@ -85,19 +85,52 @@ const parseQueryString = (q, body, options = {}) => {
     "only",
     "autoCompositions",
     "gitBranch",
-    "active",
+    "lifecycle",
+    "deep",
+    "profile",
+    "exclude",
+    "includeFormulation",
+    "includeCrypto",
+    "standard",
   ];
 
   for (const param of queryParams) {
     if (q[param]) {
-      options[param] = q[param];
+      let value = q[param];
+      // Convert string to boolean
+      if (value === "true") {
+        value = true;
+      } else if (value === "false") {
+        value = false;
+      }
+      options[param] = value;
     }
   }
 
   options.projectType = options.type?.split(",");
   delete options.type;
-
+  if (options.lifecycle === "pre-build") {
+    options.installDeps = false;
+  }
+  if (options.profile) {
+    applyProfileOptions(options);
+  }
   return options;
+};
+
+const applyProfileOptions = (options) => {
+  switch (options.profile) {
+    case "appsec":
+      options.deep = true;
+      break;
+    case "research":
+      options.deep = true;
+      options.evidence = true;
+      options.includeCrypto = true;
+      break;
+    default:
+      break;
+  }
 };
 
 const configureServer = (cdxgenServer) => {
@@ -143,9 +176,7 @@ const start = (options) => {
     }
     console.log("Generating SBOM for", srcDir);
     let bomNSData = (await createBom(srcDir, reqOptions)) || {};
-    if (reqOptions.requiredOnly || reqOptions["filter"] || reqOptions["only"]) {
-      bomNSData = postProcess(bomNSData, reqOptions);
-    }
+    bomNSData = postProcess(bomNSData, reqOptions);
     if (reqOptions.serverUrl && reqOptions.apiKey) {
       console.log("Publishing SBOM to Dependency Track");
       const response = await submitBom(reqOptions, bomNSData.bomJson);
