@@ -1,0 +1,9 @@
+{
+  "git.alwaysSignOff": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports.biome": "explicit",
+    "quickfix.biome": "explicit"
+  },
+  "editor.defaultFormatter": "biomejs.biome",
+}
