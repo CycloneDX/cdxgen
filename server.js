@@ -178,7 +178,10 @@ const start = (options) => {
     let bomNSData = (await createBom(srcDir, reqOptions)) || {};
     bomNSData = postProcess(bomNSData, reqOptions);
     if (reqOptions.serverUrl && reqOptions.apiKey) {
-      console.log(`Publishing SBOM ${reqOptions.projectName} to Dependency Track`, reqOptions.serverUrl);
+      console.log(
+        `Publishing SBOM ${reqOptions.projectName} to Dependency Track`,
+        reqOptions.serverUrl,
+      );
       const response = await submitBom(reqOptions, bomNSData.bomJson);
       const errorMessages = response?.errors;
       if (errorMessages) {
