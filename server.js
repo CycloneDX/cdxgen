@@ -178,14 +178,14 @@ const start = (options) => {
     let bomNSData = (await createBom(srcDir, reqOptions)) || {};
     bomNSData = postProcess(bomNSData, reqOptions);
     if (reqOptions.serverUrl && reqOptions.apiKey) {
-      console.log("Publishing SBOM to Dependency Track");
+      console.log(`Publishing SBOM ${reqOptions.projectName} to Dependency Track`, reqOptions.serverUrl);
       const response = await submitBom(reqOptions, bomNSData.bomJson);
       const errorMessages = response?.errors;
       if (errorMessages) {
         res.writeHead(500, { "Content-Type": "application/json" });
         return res.end(
           JSON.stringify({
-            error: "Unable to submit the SBOM to the Dependency-Track server",
+            error: `Unable to submit the SBOM ${reqOptions.projectName} to the Dependency Track server ${reqOptions.serverUrl}`,
             details: errorMessages,
           }),
         );
