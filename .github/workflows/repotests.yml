@@ -237,6 +237,7 @@ jobs:
         shell: bash
       - name: repotests django-DefectDojo
         run: |
+          bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-safe.json --feature-flags safe-pip-install
           bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo.json --deep --include-crypto --spec-version 1.6
         shell: bash
       - name: repotests dbt-oracle

@@ -3058,6 +3058,8 @@ export async function createPythonBom(path, options) {
     pkgList.length &&
     isPartialTree(dependencies)
   ) {
+    // Trim the current package list first
+    pkgList = trimComponents(pkgList);
     console.log(
       `Attempting to recover the pip dependency tree from ${pkgList.length} packages. Please wait ...`,
     );
@@ -3070,12 +3072,13 @@ export async function createPythonBom(path, options) {
     if (DEBUG_MODE && newPkgMap.failedPkgList.length) {
       if (newPkgMap.failedPkgList.length < pkgList.length) {
         console.log(
-          `${newPkgMap.failedPkgList.length} out of ${pkgList.length} failed to install.`,
+          `${newPkgMap.failedPkgList.length} packages failed to install.`,
         );
       }
     }
     if (newPkgMap?.pkgList?.length) {
       pkgList = pkgList.concat(newPkgMap.pkgList);
+      pkgList = trimComponents(pkgList);
     }
     if (newPkgMap.dependenciesList) {
       dependencies = mergeDependencies(
