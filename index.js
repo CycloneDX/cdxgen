@@ -71,6 +71,7 @@ import {
   hasAnyProjectType,
   includeMavenTestScope,
   isFeatureEnabled,
+  isPartialTree,
   isValidIriReference,
   parseBazelActionGraph,
   parseBazelSkyframe,
@@ -3055,7 +3056,7 @@ export async function createPythonBom(path, options) {
   if (
     isFeatureEnabled(options, "safe-pip-install") &&
     pkgList.length &&
-    dependencies.length <= 1
+    isPartialTree(dependencies)
   ) {
     console.log(
       `Attempting to recover the pip dependency tree from ${pkgList.length} packages. Please wait ...`,

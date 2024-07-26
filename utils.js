@@ -11569,3 +11569,22 @@ export function isValidIriReference(iri) {
   }
   return false;
 }
+
+/**
+ * Method to check if a given dependency tree is partial or not.
+ *
+ * @param {Array} dependencies List of dependencies
+ * @returns {Boolean} True if the dependency tree lacks any non-root parents without children. False otherwise.
+ */
+export function isPartialTree(dependencies) {
+  if (dependencies?.length <= 1) {
+    return true;
+  }
+  let parentsWithChildsCount = 0;
+  for (const adep of dependencies) {
+    if (adep?.dependsOn.length > 0) {
+      parentsWithChildsCount++;
+    }
+  }
+  return parentsWithChildsCount <= 1;
+}

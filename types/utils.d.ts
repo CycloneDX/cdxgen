@@ -1206,6 +1206,13 @@ export function parseMakeDFile(dfile: string): any;
  *
  */
 export function isValidIriReference(iri: string): boolean;
+/**
+ * Method to check if a given dependency tree is partial or not.
+ *
+ * @param {Array} dependencies List of dependencies
+ * @returns {Boolean} True if the dependency tree lacks any non-root parents without children. False otherwise.
+ */
+export function isPartialTree(dependencies: any[]): boolean;
 export const dirNameStr: string;
 export const isWin: boolean;
 export const isMac: boolean;
