@@ -1,0 +1,8 @@
+[requires]
+libcurl/8.1.2@internal/stable
+
+[build_requires]
+fmt/10.0.0@internal/stable
+
+[generators]
+cmake
