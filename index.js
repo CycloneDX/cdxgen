@@ -69,6 +69,7 @@ import {
   getTimestamp,
   hasAnyProjectType,
   includeMavenTestScope,
+  isFeatureEnabled,
   isValidIriReference,
   parseBazelActionGraph,
   parseBazelSkyframe,
@@ -3048,6 +3049,16 @@ export async function createPythonBom(path, options) {
     if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
     }
+  }
+  // Check and complete the dependency tree
+  if (
+    isFeatureEnabled(options, "safe-pip-install") &&
+    pkgList.length &&
+    dependencies.length <= 1
+  ) {
+    console.log(
+      `Attempting to recover the pip dependency tree from ${pkgList.length} packages.`,
+    );
   }
   // Clean up
   if (tempDir?.startsWith(tmpdir()) && rmSync) {

@@ -293,6 +293,27 @@ export const PROJECT_TYPE_ALIASES = {
 };
 
 /**
+ * Method to check if a given feature flag is enabled.
+ *
+ * @param {Object} cliOptions CLI options
+ * @param {String} feature Feature flag
+ *
+ * @returns {Boolean} True if the feature is enabled
+ */
+export function isFeatureEnabled(cliOptions, feature) {
+  if (cliOptions?.featureFlags?.includes(feature)) {
+    return true;
+  }
+  if (
+    process.env[feature.toUpperCase()] &&
+    ["true", "1"].includes(process.env[feature.toUpperCase()])
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Method to check if the given project types are allowed by checking against include and exclude types passed from the CLI arguments.
  *
  * @param {Array} projectTypes project types to check

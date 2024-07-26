@@ -1,4 +1,13 @@
 /**
+ * Method to check if a given feature flag is enabled.
+ *
+ * @param {Object} cliOptions CLI options
+ * @param {String} feature Feature flag
+ *
+ * @returns {Boolean} True if the feature is enabled
+ */
+export function isFeatureEnabled(cliOptions: any, feature: string): boolean;
+/**
  * Method to check if the given project types are allowed by checking against include and exclude types passed from the CLI arguments.
  *
  * @param {Array} projectTypes project types to check
