@@ -10164,7 +10164,21 @@ export function getPipTreeForPackages(
     let pkgSpecifier = apkg.name;
     if (apkg.version && apkg.version !== "latest") {
       pkgSpecifier = `${apkg.name}==${apkg.version}`;
+    } else if (apkg.properties) {
+      let versionSpecifierFound = false;
+      for (const aprop of apkg.properties) {
+        if (aprop.name === "cdx:pypi:versionSpecifiers") {
+          pkgSpecifier = `${apkg.name}${aprop.value}`;
+          versionSpecifierFound = true;
+          break;
+        }
+      }
+      if (!versionSpecifierFound) {
+        failedPkgList.push(apkg);
+        continue;
+      }
     } else {
+      failedPkgList.push(apkg);
       continue;
     }
     if (DEBUG_MODE) {

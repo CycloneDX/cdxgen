@@ -3069,12 +3069,12 @@ export async function createPythonBom(path, options) {
     if (DEBUG_MODE && newPkgMap.failedPkgList.length) {
       if (newPkgMap.failedPkgList.length < pkgList.length) {
         console.log(
-          `${failedPkgList.length} out of ${pkgList.length} failed to install.`,
+          `${newPkgMap.failedPkgList.length} out of ${pkgList.length} failed to install.`,
         );
       }
     }
     if (newPkgMap?.pkgList?.length) {
-      pkgList = pkgList.concat(pkgMap.pkgList);
+      pkgList = pkgList.concat(newPkgMap.pkgList);
     }
     if (newPkgMap.dependenciesList) {
       dependencies = mergeDependencies(
