@@ -46,7 +46,6 @@ import {
   satisfies,
   valid,
 } from "semver";
-import { IriValidationStrategy, validateIri } from "validate-iri";
 import { xml2js } from "xml-js";
 import { getTreeWithPlugin } from "./piptree.js";
 
@@ -11340,24 +11339,38 @@ export function parseMakeDFile(dfile) {
  *
  */
 export function isValidIriReference(iri) {
-  let iriIsValid = true;
-  // See issue #1264
-  if (iri && /[${}]/.test(iri)) {
+  if (!iri) {
     return false;
   }
-  const validateIriResult = validateIri(iri, IriValidationStrategy.Strict);
-
-  if (validateIriResult instanceof Error) {
-    iriIsValid = false;
-  } else if (iri.toLocaleLowerCase().startsWith("http")) {
-    try {
-      new URL(iri);
-    } catch (error) {
-      iriIsValid = false;
+  try {
+    iri = decodeURIComponent(iri);
+  } catch (e) {
+    // pass
+  }
+  // See issue #1264
+  if (iri && /[${}%]/.test(iri) && !iri.includes("u{")) {
+    return false;
+  }
+  if (!URL.canParse(iri)) {
+    return false;
+  }
+  try {
+    const urlObj = URL.parse(iri);
+    if (urlObj?.hash.includes("%")) {
+      return false;
     }
+    if (urlObj?.pathname.includes("[") || urlObj?.hash.includes("[")) {
+      return false;
+    }
+    if (
+      urlObj?.pathname.startsWith("/%F") ||
+      (urlObj?.pathname.includes("%EE") &&
+        decodeURI(urlObj?.pathname) !== urlObj.pathname)
+    ) {
+      return false;
+    }
+  } catch (e) {
+    return false;
   }
-  if (iriIsValid) {
-    return true;
-  }
-  return false;
+  return true;
 }
