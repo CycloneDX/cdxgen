@@ -6512,16 +6512,12 @@ export function parseCloudBuildData(cbwData) {
 function createConanPurlString(name, version, user, channel, rrev, prev) {
   // https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst#conan
 
-  let qualifiers = {};
+  const qualifiers = {};
 
-  if (user)
-    qualifiers["user"] = user;
-  if (channel)
-    qualifiers["channel"] = channel;
-  if (rrev)
-    qualifiers["rrev"] = rrev;
-  if (prev)
-    qualifiers["prev"] = prev;
+  if (user) qualifiers["user"] = user;
+  if (channel) qualifiers["channel"] = channel;
+  if (rrev) qualifiers["rrev"] = rrev;
+  if (prev) qualifiers["prev"] = prev;
 
   return new PackageURL(
     "conan",
@@ -6532,12 +6528,12 @@ function createConanPurlString(name, version, user, channel, rrev, prev) {
     null,
   ).toString();
 }
-  
+
 function untilFirst(separator, inputStr) {
   // untilFirst("/", "a/b") -> ["/", "a", "b"]
   // untilFirst("/", "abc") -> ["/", "abc", null]
 
-  if (!inputStr || inputStr.length == 0) {
+  if (!inputStr || inputStr.length === 0) {
     return [null, null, null];
   }
 
@@ -6545,11 +6541,13 @@ function untilFirst(separator, inputStr) {
   if (separatorIndex === -1) {
     return ["", inputStr, null];
   }
-  else {
-    return [inputStr[separatorIndex], inputStr.substring(0, separatorIndex), inputStr.substring(separatorIndex + 1)];
-  }
+  return [
+    inputStr[separatorIndex],
+    inputStr.substring(0, separatorIndex),
+    inputStr.substring(separatorIndex + 1),
+  ];
 }
-  
+
 export function mapConanPkgRefToPurlStringAndNameAndVersion(conanPkgRef) {
   // A full Conan package reference may be composed of the following segments:
   // conanPkgRef = "name/version@user/channel#recipe_revision:package_id#package_revision"
@@ -6564,14 +6562,16 @@ export function mapConanPkgRefToPurlStringAndNameAndVersion(conanPkgRef) {
 
   if (!conanPkgRef) {
     if (DEBUG_MODE)
-      console.warn(`Could not parse Conan package reference '${conanPkgRef}', input does not seem valid.`);
-    
+      console.warn(
+        `Could not parse Conan package reference '${conanPkgRef}', input does not seem valid.`,
+      );
+
     return UNABLE_TO_PARSE_CONAN_PKG_REF;
   }
 
   const separatorRegex = /[@#:\/]/;
 
-  let info = {
+  const info = {
     name: null,
     version: null,
     user: null,
@@ -6579,84 +6579,95 @@ export function mapConanPkgRefToPurlStringAndNameAndVersion(conanPkgRef) {
     recipe_revision: null,
     package_id: null,
     package_revision: null,
-    phase_history: []
+    phase_history: [],
   };
 
   const transitions = {
     ["name"]: {
       "/": "version",
       "#": "recipe_revision",
-      "": "end"
+      "": "end",
     },
     ["version"]: {
       "@": "user",
       "#": "recipe_revision",
-      "": "end"
+      "": "end",
     },
     ["user"]: {
-      "/": "channel"
+      "/": "channel",
     },
     ["channel"]: {
       "#": "recipe_revision",
-      "": "end"
+      "": "end",
     },
     ["recipe_revision"]: {
       ":": "package_id",
       "": "end",
     },
     ["package_id"]: {
-      "#": "package_revision"
+      "#": "package_revision",
     },
     ["package_revision"]: {
-      "": "end"
-    }
+      "": "end",
+    },
   };
 
   let phase = "name";
   let remainder = conanPkgRef;
-  let separator, item;
+  let separator;
+  let item;
 
   while (remainder) {
     [separator, item, remainder] = untilFirst(separatorRegex, remainder);
 
     if (!item) {
       if (DEBUG_MODE)
-        console.warn(`Could not parse Conan package reference '${conanPkgRef}', empty item in phase '${phase}', separator=${separator}, remainder=${remainder}, info=${JSON.stringify(info)}`);
+        console.warn(
+          `Could not parse Conan package reference '${conanPkgRef}', empty item in phase '${phase}', separator=${separator}, remainder=${remainder}, info=${JSON.stringify(info)}`,
+        );
       return UNABLE_TO_PARSE_CONAN_PKG_REF;
     }
 
     info[phase] = item;
     info.phase_history.push(phase);
-    
+
     if (!(phase in transitions)) {
       if (DEBUG_MODE)
-        console.warn(`Could not parse Conan package reference '${conanPkgRef}', no transition from '${phase}', separator=${separator}, item=${item}, remainder=${remainder}, info=${JSON.stringify(info)}`);
+        console.warn(
+          `Could not parse Conan package reference '${conanPkgRef}', no transition from '${phase}', separator=${separator}, item=${item}, remainder=${remainder}, info=${JSON.stringify(info)}`,
+        );
       return UNABLE_TO_PARSE_CONAN_PKG_REF;
     }
 
     const possibleTransitions = transitions[phase];
     if (!(separator in possibleTransitions)) {
       if (DEBUG_MODE)
-        console.warn(`Could not parse Conan package reference '${conanPkgRef}', transition '${separator}' not allowed from '${phase}', item=${item}, remainder=${remainder}, info=${JSON.stringify(info)}`);
+        console.warn(
+          `Could not parse Conan package reference '${conanPkgRef}', transition '${separator}' not allowed from '${phase}', item=${item}, remainder=${remainder}, info=${JSON.stringify(info)}`,
+        );
       return UNABLE_TO_PARSE_CONAN_PKG_REF;
     }
 
     phase = possibleTransitions[separator];
   }
 
-  if (phase !== "end")
-  {
+  if (phase !== "end") {
     if (DEBUG_MODE)
-      console.warn(`Could not parse Conan package reference '${conanPkgRef}', end of input string reached unexpectedly in phase '${phase}', info=${JSON.stringify(info)}.`);
+      console.warn(
+        `Could not parse Conan package reference '${conanPkgRef}', end of input string reached unexpectedly in phase '${phase}', info=${JSON.stringify(info)}.`,
+      );
     return UNABLE_TO_PARSE_CONAN_PKG_REF;
   }
-  
-  if (!info.version)
-    info.version = "latest";
+
+  if (!info.version) info.version = "latest";
 
   const purl = createConanPurlString(
-    info.name, info.version, info.user, info.channel,
-    info.recipe_revision, info.package_revision
+    info.name,
+    info.version,
+    info.user,
+    info.channel,
+    info.recipe_revision,
+    info.package_revision,
   );
 
   return [purl, info.name, info.version];
@@ -6674,7 +6685,9 @@ export function parseConanLockData(conanLockData) {
   const nodes = graphLock.graph_lock.nodes;
   for (const nk of Object.keys(nodes)) {
     if (nodes[nk].ref) {
-      const [purl, name, version] = mapConanPkgRefToPurlStringAndNameAndVersion(nodes[nk].ref);
+      const [purl, name, version] = mapConanPkgRefToPurlStringAndNameAndVersion(
+        nodes[nk].ref,
+      );
       if (purl !== null) {
         pkgList.push({
           name,
@@ -6707,7 +6720,8 @@ export function parseConanData(conanData) {
     // followed by at least one more non-whitespace character.
     // Provides a heuristic for locating Conan package references inside conanfile.txt files.
     if (l.match(/^[^\s\/]+\/\S+/)) {
-      const [purl, name, version] = mapConanPkgRefToPurlStringAndNameAndVersion(l);
+      const [purl, name, version] =
+        mapConanPkgRefToPurlStringAndNameAndVersion(l);
       if (purl !== null) {
         pkgList.push({
           name,

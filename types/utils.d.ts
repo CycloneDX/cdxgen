@@ -616,6 +616,7 @@ export function parseCabalData(cabalData: any): any[];
 export function parseMixLockData(mixData: any): any[];
 export function parseGitHubWorkflowData(ghwData: any): any[];
 export function parseCloudBuildData(cbwData: any): any[];
+export function mapConanPkgRefToPurlStringAndNameAndVersion(conanPkgRef: any): any[];
 export function parseConanLockData(conanLockData: any): any[];
 export function parseConanData(conanData: any): any[];
 export function parseLeiningenData(leinData: any): any[];

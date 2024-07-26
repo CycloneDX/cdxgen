@@ -17,6 +17,7 @@ import {
   guessPypiMatchingVersion,
   hasAnyProjectType,
   isValidIriReference,
+  mapConanPkgRefToPurlStringAndNameAndVersion,
   parseBazelActionGraph,
   parseBazelBuild,
   parseBazelSkyframe,
@@ -33,7 +34,6 @@ import {
   parseCmakeDotFile,
   parseCmakeLikeFile,
   parseComposerLock,
-  mapConanPkgRefToPurlStringAndNameAndVersion,
   parseConanData,
   parseConanLockData,
   parseContainerFile,
@@ -1555,7 +1555,8 @@ test("parse conan data", () => {
   );
   expect(dep_list.length).toEqual(43);
   expect(dep_list[0]).toEqual({
-    "bom-ref": "pkg:conan/7-Zip@19.00?channel=stable&rrev=bb67aa9bc0da3feddc68ca9f334f4c8b&user=iw",
+    "bom-ref":
+      "pkg:conan/7-Zip@19.00?channel=stable&rrev=bb67aa9bc0da3feddc68ca9f334f4c8b&user=iw",
     name: "7-Zip",
     purl: "pkg:conan/7-Zip@19.00?channel=stable&rrev=bb67aa9bc0da3feddc68ca9f334f4c8b&user=iw",
     scope: "required",
@@ -1564,37 +1565,34 @@ test("parse conan data", () => {
 });
 
 test("conan package reference mapper to pURL", () => {
-  const checkParseResult = function(inputPkgRef, expectedPurl) {
-    const [purl, name, version] = mapConanPkgRefToPurlStringAndNameAndVersion(inputPkgRef);
+  const checkParseResult = (inputPkgRef, expectedPurl) => {
+    const [purl, name, version] =
+      mapConanPkgRefToPurlStringAndNameAndVersion(inputPkgRef);
     expect(purl).toEqual(expectedPurl);
-    
+
     const expectedPurlPrefix = `pkg:conan/${name}@${version}`;
-    expect(purl.substring(0, expectedPurlPrefix.length)).toEqual(expectedPurlPrefix);
+    expect(purl.substring(0, expectedPurlPrefix.length)).toEqual(
+      expectedPurlPrefix,
+    );
   };
 
-  checkParseResult(
-    "testpkg",
-    "pkg:conan/testpkg@latest"
-  );
+  checkParseResult("testpkg", "pkg:conan/testpkg@latest");
 
-  checkParseResult(
-    "testpkg/1.2.3",
-    "pkg:conan/testpkg@1.2.3"
-  );
+  checkParseResult("testpkg/1.2.3", "pkg:conan/testpkg@1.2.3");
 
   checkParseResult(
     "testpkg/1.2.3#recipe_revision",
-    "pkg:conan/testpkg@1.2.3?rrev=recipe_revision"
+    "pkg:conan/testpkg@1.2.3?rrev=recipe_revision",
   );
 
   checkParseResult(
     "testpkg/1.2.3@someuser/somechannel",
-    "pkg:conan/testpkg@1.2.3?channel=somechannel&user=someuser"
+    "pkg:conan/testpkg@1.2.3?channel=somechannel&user=someuser",
   );
 
   checkParseResult(
     "testpkg/1.2.3@someuser/somechannel#recipe_revision",
-    "pkg:conan/testpkg@1.2.3?channel=somechannel&rrev=recipe_revision&user=someuser"
+    "pkg:conan/testpkg@1.2.3?channel=somechannel&rrev=recipe_revision&user=someuser",
   );
 
   checkParseResult(
@@ -1603,15 +1601,15 @@ test("conan package reference mapper to pURL", () => {
       "?channel=somechannel" +
       "&prev=package_revision" +
       "&rrev=recipe_revision" +
-      "&user=someuser"
+      "&user=someuser",
   );
 
-  const expectParseError = function(pkgRef) {
+  const expectParseError = (pkgRef) => {
     const result = mapConanPkgRefToPurlStringAndNameAndVersion(pkgRef);
     expect(result[0]).toBe(null);
     expect(result[1]).toBe(null);
     expect(result[2]).toBe(null);
-  }
+  };
 
   expectParseError("testpkg/"); // empty version
   expectParseError("testpkg/1.2.3@"); // empty user
@@ -1619,47 +1617,65 @@ test("conan package reference mapper to pURL", () => {
   expectParseError("testpkg/1.2.3@someuser/"); // empty channel
   expectParseError("testpkg/1.2.3@someuser/somechannel#"); // empty recipe revision
   expectParseError("testpkg/1.2.3@someuser/somechannel#recipe_revision:"); // empty package id
-  expectParseError("testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id"); // pkg ref is not allowed to stop here
-  expectParseError("testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id#"); // empty package revision
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id",
+  ); // pkg ref is not allowed to stop here
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id#",
+  ); // empty package revision
   expectParseError("testpkg/1.2.3/unexpected"); // unexpected pkg ref segment separator
   expectParseError("testpkg/1.2.3@someuser/somechannel/unexpected"); // unexpected pkg ref segment separator
-  expectParseError("testpkg/1.2.3@someuser/somechannel#recipe_revision/unexpected"); // unexpected pkg ref segment separator
-  expectParseError("testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id/unexpected"); // unexpected pkg ref segment separator
-  expectParseError("testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id#package_revision/unexpected");   // unexpected pkg ref segment separator
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision/unexpected",
+  ); // unexpected pkg ref segment separator
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id/unexpected",
+  ); // unexpected pkg ref segment separator
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id#package_revision/unexpected",
+  ); // unexpected pkg ref segment separator
 });
 
 test("parse conan data where packages use custom user/channel", () => {
   let dep_list = parseConanLockData(
-    readFileSync("./test/data/conan.with_custom_pkg_user_channel.lock", { encoding: "utf-8" }),
+    readFileSync("./test/data/conan.with_custom_pkg_user_channel.lock", {
+      encoding: "utf-8",
+    }),
   );
   expect(dep_list.length).toEqual(4);
   expect(dep_list[0]).toEqual({
     name: "libcurl",
     version: "8.1.2",
-    "bom-ref": "pkg:conan/libcurl@8.1.2?channel=stable&rrev=25215c550633ef0224152bc2c0556698&user=internal",
-    purl: "pkg:conan/libcurl@8.1.2?channel=stable&rrev=25215c550633ef0224152bc2c0556698&user=internal"
+    "bom-ref":
+      "pkg:conan/libcurl@8.1.2?channel=stable&rrev=25215c550633ef0224152bc2c0556698&user=internal",
+    purl: "pkg:conan/libcurl@8.1.2?channel=stable&rrev=25215c550633ef0224152bc2c0556698&user=internal",
   });
   expect(dep_list[1]).toEqual({
     name: "openssl",
     version: "3.1.0",
-    "bom-ref": "pkg:conan/openssl@3.1.0?channel=stable&rrev=c9c6ab43aa40bafacf8b37c5948cdb1f&user=internal",
-    purl: "pkg:conan/openssl@3.1.0?channel=stable&rrev=c9c6ab43aa40bafacf8b37c5948cdb1f&user=internal"
+    "bom-ref":
+      "pkg:conan/openssl@3.1.0?channel=stable&rrev=c9c6ab43aa40bafacf8b37c5948cdb1f&user=internal",
+    purl: "pkg:conan/openssl@3.1.0?channel=stable&rrev=c9c6ab43aa40bafacf8b37c5948cdb1f&user=internal",
   });
   expect(dep_list[2]).toEqual({
     name: "zlib",
     version: "1.2.13",
-    "bom-ref": "pkg:conan/zlib@1.2.13?channel=stable&rrev=aee6a56ff7927dc7261c55eb2db4fc5b&user=internal",
-    purl: "pkg:conan/zlib@1.2.13?channel=stable&rrev=aee6a56ff7927dc7261c55eb2db4fc5b&user=internal"
+    "bom-ref":
+      "pkg:conan/zlib@1.2.13?channel=stable&rrev=aee6a56ff7927dc7261c55eb2db4fc5b&user=internal",
+    purl: "pkg:conan/zlib@1.2.13?channel=stable&rrev=aee6a56ff7927dc7261c55eb2db4fc5b&user=internal",
   });
   expect(dep_list[3]).toEqual({
     name: "fmt",
     version: "10.0.0",
     purl: "pkg:conan/fmt@10.0.0?channel=stable&rrev=79e7cc169695bc058fb606f20df6bb10&user=internal",
-    "bom-ref": "pkg:conan/fmt@10.0.0?channel=stable&rrev=79e7cc169695bc058fb606f20df6bb10&user=internal"
+    "bom-ref":
+      "pkg:conan/fmt@10.0.0?channel=stable&rrev=79e7cc169695bc058fb606f20df6bb10&user=internal",
   });
 
   dep_list = parseConanData(
-    readFileSync("./test/data/conanfile.with_custom_pkg_user_channel.txt", { encoding: "utf-8" }),
+    readFileSync("./test/data/conanfile.with_custom_pkg_user_channel.txt", {
+      encoding: "utf-8",
+    }),
   );
   expect(dep_list.length).toEqual(2);
   expect(dep_list[0]).toEqual({
@@ -1667,14 +1683,14 @@ test("parse conan data where packages use custom user/channel", () => {
     version: "8.1.2",
     "bom-ref": "pkg:conan/libcurl@8.1.2?channel=stable&user=internal",
     purl: "pkg:conan/libcurl@8.1.2?channel=stable&user=internal",
-    scope: "required"
+    scope: "required",
   });
   expect(dep_list[1]).toEqual({
     name: "fmt",
     version: "10.0.0",
     purl: "pkg:conan/fmt@10.0.0?channel=stable&user=internal",
     "bom-ref": "pkg:conan/fmt@10.0.0?channel=stable&user=internal",
-    scope: "optional"
+    scope: "optional",
   });
 });
 
