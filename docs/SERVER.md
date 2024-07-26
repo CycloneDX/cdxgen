@@ -35,7 +35,7 @@ Arguments can be passed either via the query string or as a JSON body. The follo
 
 | Argument         | Description                                                                                                                                      |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type             | Project type                                                                                                                                     |
+| type             | Project type. Supports passing mutliple types seperated by `,`. For example, "dotnet,java"                                                                                                                                    |
 | multiProject     | [boolean]                                                                                                                                        |
 | requiredOnly     | Include only the packages with required scope on the SBOM. [boolean]                                                                             |
 | noBabel          | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                         |
