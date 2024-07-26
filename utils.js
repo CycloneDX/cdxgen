@@ -2764,6 +2764,13 @@ export function parseGradleProperties(rawOutput) {
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
+  const defaultProps = {
+    rootProject: subProject,
+    projects: [],
+    metadata: {
+      version: "latest",
+    },
+  };
   let parallelPropTaskArgs = ["properties"];
   for (const spstr of allProjectsStr) {
     parallelPropTaskArgs.push(`${spstr}:properties`);
