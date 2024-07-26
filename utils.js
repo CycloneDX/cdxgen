@@ -10229,6 +10229,8 @@ export function getPipTreeForPackages(
       }
       if (parentComponent && parentComponent.name === t.name) {
         t.version = parentComponent.version;
+      } else if (t.version && t.version === "latest") {
+        continue;
       }
       const version = t.version;
       const purlString = new PackageURL(
