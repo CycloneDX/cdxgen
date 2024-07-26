@@ -275,6 +275,11 @@ const args = yargs(hideBin(process.argv))
     description:
       "Do not show the donation banner. Set this attribute if you are an active sponsor for OWASP CycloneDX.",
   })
+  .option("feature-flags", {
+    description: "Experimental feature flags to enable. Advanced users only.",
+    hidden: true,
+    choices: ["safe-pip-install"],
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")
   .array("excludeType")
@@ -283,6 +288,7 @@ const args = yargs(hideBin(process.argv))
   .array("author")
   .array("exclude")
   .array("standard")
+  .array("feature-flags")
   .option("auto-compositions", {
     type: "boolean",
     default: true,
@@ -438,7 +444,6 @@ const applyAdvancedOptions = (options) => {
   }
   return options;
 };
-
 applyAdvancedOptions(options);
 
 /**

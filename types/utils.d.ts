@@ -1,4 +1,13 @@
 /**
+ * Method to check if a given feature flag is enabled.
+ *
+ * @param {Object} cliOptions CLI options
+ * @param {String} feature Feature flag
+ *
+ * @returns {Boolean} True if the feature is enabled
+ */
+export function isFeatureEnabled(cliOptions: any, feature: string): boolean;
+/**
  * Method to check if the given project types are allowed by checking against include and exclude types passed from the CLI arguments.
  *
  * @param {Array} projectTypes project types to check
@@ -607,6 +616,7 @@ export function parseCabalData(cabalData: any): any[];
 export function parseMixLockData(mixData: any): any[];
 export function parseGitHubWorkflowData(ghwData: any): any[];
 export function parseCloudBuildData(cbwData: any): any[];
+export function mapConanPkgRefToPurlStringAndNameAndVersion(conanPkgRef: any): any[];
 export function parseConanLockData(conanLockData: any): any[];
 export function parseConanData(conanData: any): any[];
 export function parseLeiningenData(leinData: any): any[];
@@ -1076,12 +1086,43 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
     rootList: {
         name: any;
         version: any;
+        purl: string;
+        "bom-ref": string;
     }[];
     dependenciesList: {
         ref: string;
         dependsOn: any;
     }[];
     frozen: boolean;
+};
+/**
+ * The problem: pip installation can fail for a number of reasons such as missing OS dependencies and devel packages.
+ * When it fails, we don't get any dependency tree. As a workaroud, this method would attempt to install one package at a time to the same virtual environment and then attempts to obtain a dependency tree.
+ * Such a tree could be incorrect or quite approximate, but some users might still find it useful to know the names of the indirect dependencies.
+ *
+ * @param {string} basePath Base path
+ * @param {Array} pkgList Existing package list
+ * @param {string} tempVenvDir Temp venv dir
+ * @param {Object} parentComponent Parent component
+ *
+ * @returns List of packages from the virtual env
+ */
+export function getPipTreeForPackages(basePath: string, pkgList: any[], tempVenvDir: string, parentComponent: any): {
+    failedPkgList?: undefined;
+    rootList?: undefined;
+    dependenciesList?: undefined;
+} | {
+    failedPkgList: any[];
+    rootList: {
+        name: any;
+        version: any;
+        purl: string;
+        "bom-ref": string;
+    }[];
+    dependenciesList: {
+        ref: string;
+        dependsOn: any;
+    }[];
 };
 export function parsePackageJsonName(name: any): {
     scope: any;
@@ -1166,6 +1207,13 @@ export function parseMakeDFile(dfile: string): any;
  *
  */
 export function isValidIriReference(iri: string): boolean;
+/**
+ * Method to check if a given dependency tree is partial or not.
+ *
+ * @param {Array} dependencies List of dependencies
+ * @returns {Boolean} True if the dependency tree lacks any non-root parents without children. False otherwise.
+ */
+export function isPartialTree(dependencies: any[]): boolean;
 export const dirNameStr: string;
 export const isWin: boolean;
 export const isMac: boolean;

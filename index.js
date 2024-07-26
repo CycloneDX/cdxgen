@@ -63,12 +63,15 @@ import {
   getMvnMetadata,
   getNugetMetadata,
   getPipFrozenTree,
+  getPipTreeForPackages,
   getPyMetadata,
   getPyModules,
   getSwiftPackageMetadata,
   getTimestamp,
   hasAnyProjectType,
   includeMavenTestScope,
+  isFeatureEnabled,
+  isPartialTree,
   isValidIriReference,
   parseBazelActionGraph,
   parseBazelSkyframe,
@@ -2749,6 +2752,10 @@ export async function createPythonBom(path, options) {
   if (pyProjectMode) {
     const tmpParentComponent = parsePyProjectToml(pyProjectFile);
     if (tmpParentComponent?.name) {
+      // Bug fix. Version could be missing in pyproject.toml
+      if (!tmpParentComponent.version && parentComponent.version) {
+        tmpParentComponent.version = parentComponent.version;
+      }
       parentComponent = tmpParentComponent;
       delete parentComponent.homepage;
       delete parentComponent.repository;
@@ -2815,6 +2822,7 @@ export async function createPythonBom(path, options) {
       };
       dependencies.splice(0, 0, pdependencies);
     }
+    options.parentComponent = parentComponent;
     return buildBomNSData(options, pkgList, "pypi", {
       src: path,
       filename: poetryFiles.join(", "),
@@ -2822,7 +2830,7 @@ export async function createPythonBom(path, options) {
       parentComponent,
       formulationList,
     });
-  }
+  } // poetryMode
   if (metadataFiles?.length) {
     // dist-info directories
     for (const mf of metadataFiles) {
@@ -3047,6 +3055,45 @@ export async function createPythonBom(path, options) {
     const dlist = await parseSetupPyFile(setupPyData);
     if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
+    }
+  }
+  // Check and complete the dependency tree
+  if (
+    isFeatureEnabled(options, "safe-pip-install") &&
+    pkgList.length &&
+    isPartialTree(dependencies)
+  ) {
+    // Trim the current package list first
+    pkgList = trimComponents(pkgList);
+    console.log(
+      `Attempting to recover the pip dependency tree from ${pkgList.length} packages. Please wait ...`,
+    );
+    const newPkgMap = getPipTreeForPackages(
+      path,
+      pkgList,
+      tempDir,
+      parentComponent,
+    );
+    if (DEBUG_MODE && newPkgMap.failedPkgList.length) {
+      if (newPkgMap.failedPkgList.length < pkgList.length) {
+        console.log(
+          `${newPkgMap.failedPkgList.length} packages failed to install.`,
+        );
+      }
+    }
+    if (newPkgMap?.pkgList?.length) {
+      pkgList = pkgList.concat(newPkgMap.pkgList);
+      pkgList = trimComponents(pkgList);
+    }
+    if (newPkgMap.dependenciesList) {
+      dependencies = mergeDependencies(
+        dependencies,
+        newPkgMap.dependenciesList,
+        parentComponent,
+      );
+      if (DEBUG_MODE && dependencies.length > 1) {
+        console.log("Recovered", dependencies.length, "dependencies.");
+      }
     }
   }
   // Clean up
