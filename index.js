@@ -2752,6 +2752,10 @@ export async function createPythonBom(path, options) {
   if (pyProjectMode) {
     const tmpParentComponent = parsePyProjectToml(pyProjectFile);
     if (tmpParentComponent?.name) {
+      // Bug fix. Version could be missing in pyproject.toml
+      if (!tmpParentComponent.version && parentComponent.version) {
+        tmpParentComponent.version = parentComponent.version;
+      }
       parentComponent = tmpParentComponent;
       delete parentComponent.homepage;
       delete parentComponent.repository;
@@ -2818,6 +2822,7 @@ export async function createPythonBom(path, options) {
       };
       dependencies.splice(0, 0, pdependencies);
     }
+    options.parentComponent = parentComponent;
     return buildBomNSData(options, pkgList, "pypi", {
       src: path,
       filename: poetryFiles.join(", "),
@@ -2825,7 +2830,7 @@ export async function createPythonBom(path, options) {
       parentComponent,
       formulationList,
     });
-  }
+  } // poetryMode
   if (metadataFiles?.length) {
     // dist-info directories
     for (const mf of metadataFiles) {
