@@ -444,7 +444,6 @@ const applyAdvancedOptions = (options) => {
   }
   return options;
 };
-
 applyAdvancedOptions(options);
 
 /**

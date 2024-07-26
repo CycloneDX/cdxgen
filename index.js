@@ -63,6 +63,7 @@ import {
   getMvnMetadata,
   getNugetMetadata,
   getPipFrozenTree,
+  getPipTreeForPackages,
   getPyMetadata,
   getPyModules,
   getSwiftPackageMetadata,
@@ -3057,8 +3058,34 @@ export async function createPythonBom(path, options) {
     dependencies.length <= 1
   ) {
     console.log(
-      `Attempting to recover the pip dependency tree from ${pkgList.length} packages.`,
+      `Attempting to recover the pip dependency tree from ${pkgList.length} packages. Please wait ...`,
     );
+    const newPkgMap = getPipTreeForPackages(
+      path,
+      pkgList,
+      tempDir,
+      parentComponent,
+    );
+    if (DEBUG_MODE && newPkgMap.failedPkgList.length) {
+      if (newPkgMap.failedPkgList.length < pkgList.length) {
+        console.log(
+          `${failedPkgList.length} out of ${pkgList.length} failed to install.`,
+        );
+      }
+    }
+    if (newPkgMap?.pkgList?.length) {
+      pkgList = pkgList.concat(pkgMap.pkgList);
+    }
+    if (newPkgMap.dependenciesList) {
+      dependencies = mergeDependencies(
+        dependencies,
+        newPkgMap.dependenciesList,
+        parentComponent,
+      );
+      if (DEBUG_MODE && dependencies.length > 1) {
+        console.log("Recovered", dependencies.length, "dependencies.");
+      }
+    }
   }
   // Clean up
   if (tempDir?.startsWith(tmpdir()) && rmSync) {

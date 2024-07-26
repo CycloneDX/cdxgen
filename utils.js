@@ -9660,18 +9660,20 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
       null,
       null,
     ).toString();
-    pkgList.push({
+    const apkg = {
       name: d.name,
       version: d.version,
       purl: purlString,
       "bom-ref": decodeURIComponent(purlString),
-      properties: [
+    };
+    if (reqOrSetupFile) {
+      apkg.properties = [
         {
           name: "SrcFile",
           value: reqOrSetupFile,
         },
-      ],
-      evidence: {
+      ];
+      apkg.evidence = {
         identity: {
           field: "purl",
           confidence: 0.8,
@@ -9683,8 +9685,9 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
             },
           ],
         },
-      },
-    });
+      };
+    }
+    pkgList.push(apkg);
     // Recurse and flatten
     if (d.dependencies && d.dependencies) {
       flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, d);
@@ -10060,6 +10063,8 @@ export function getPipFrozenTree(
         rootList.push({
           name,
           version,
+          purl: purlString,
+          "bom-ref": decodeURIComponent(purlString),
         });
         flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
       } else {
@@ -10076,6 +10081,174 @@ export function getPipFrozenTree(
     rootList,
     dependenciesList,
     frozen,
+  };
+}
+
+/**
+ * The problem: pip installation can fail for a number of reasons such as missing OS dependencies and devel packages.
+ * When it fails, we don't get any dependency tree. As a workaroud, this method would attempt to install one package at a time to the same virtual environment and then attempts to obtain a dependency tree.
+ * Such a tree could be incorrect or quite approximate, but some users might still find it useful to know the names of the indirect dependencies.
+ *
+ * @param {string} basePath Base path
+ * @param {Array} pkgList Existing package list
+ * @param {string} tempVenvDir Temp venv dir
+ * @param {Object} parentComponent Parent component
+ *
+ * @returns List of packages from the virtual env
+ */
+export function getPipTreeForPackages(
+  basePath,
+  pkgList,
+  tempVenvDir,
+  parentComponent,
+) {
+  const failedPkgList = [];
+  const rootList = [];
+  const dependenciesList = [];
+  let result = undefined;
+  const env = {
+    ...process.env,
+  };
+  if (!process.env.VIRTUAL_ENV && !process.env.CONDA_PREFIX) {
+    // Create a virtual environment
+    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
+      encoding: "utf-8",
+      shell: isWin,
+    });
+    if (result.status !== 0 || result.error) {
+      console.log("Virtual env creation has failed. Unable to continue.");
+      return {};
+    }
+    if (DEBUG_MODE) {
+      console.log("Using the virtual environment", tempVenvDir);
+    }
+    env.VIRTUAL_ENV = tempVenvDir;
+    env.PATH = `${join(
+      tempVenvDir,
+      platform() === "win32" ? "Scripts" : "bin",
+    )}${_delimiter}${process.env.PATH || ""}`;
+    // When cdxgen is invoked with the container image, we seem to be including unnecessary packages from the image.
+    // This workaround, unsets PYTHONPATH to suppress the pre-installed packages
+    if (
+      env?.PYTHONPATH === "/opt/pypi" &&
+      env?.CDXGEN_IN_CONTAINER === "true"
+    ) {
+      env.PYTHONPATH = undefined;
+    }
+  }
+  const python_cmd_for_tree = get_python_command_from_env(env);
+  let pipInstallArgs = ["-m", "pip", "install", "--disable-pip-version-check"];
+  // Support for passing additional arguments to pip
+  // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts
+  if (process?.env?.PIP_INSTALL_ARGS) {
+    const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
+    pipInstallArgs = pipInstallArgs.concat(addArgs);
+  } else {
+    pipInstallArgs = pipInstallArgs.concat([
+      "--ignore-requires-python",
+      "--no-compile",
+      "--no-warn-script-location",
+      "--no-warn-conflicts",
+    ]);
+  }
+  if (DEBUG_MODE) {
+    console.log(
+      "Installing",
+      pkgList.length,
+      "using the command",
+      python_cmd_for_tree,
+      pipInstallArgs.join(" "),
+    );
+  }
+  for (const apkg of pkgList) {
+    let pkgSpecifier = apkg.name;
+    if (apkg.version && apkg.version !== "latest") {
+      pkgSpecifier = `${apkg.name}==${apkg.version}`;
+    } else {
+      continue;
+    }
+    if (DEBUG_MODE) {
+      console.log("Installing", pkgSpecifier);
+    }
+    // Attempt to perform pip install for pkgSpecifier
+    const result = spawnSync(
+      python_cmd_for_tree,
+      [...pipInstallArgs, pkgSpecifier],
+      {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        shell: isWin,
+        env,
+      },
+    );
+    if (result.status !== 0 || result.error) {
+      failedPkgList.push(apkg);
+      if (DEBUG_MODE) {
+        console.log(apkg.name, "failed to install.");
+      }
+    }
+  }
+  // Did any package get installed successfully?
+  if (failedPkgList.length < pkgList.length) {
+    const dependenciesMap = {};
+    const tree = getTreeWithPlugin(env, python_cmd_for_tree, basePath);
+    for (const t of tree) {
+      const name = t.name.replace(/_/g, "-").toLowerCase();
+      // We can ignore excluded components such as build tools
+      if (PYTHON_EXCLUDED_COMPONENTS.includes(name)) {
+        continue;
+      }
+      if (parentComponent && parentComponent.name === t.name) {
+        t.version = parentComponent.version;
+      }
+      const version = t.version;
+      const purlString = new PackageURL(
+        "pypi",
+        "",
+        name,
+        version,
+        null,
+        null,
+      ).toString();
+      const apkg = {
+        name,
+        version,
+        purl: purlString,
+        type: "library",
+        "bom-ref": decodeURIComponent(purlString),
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 0.5,
+            methods: [
+              {
+                technique: "instrumentation",
+                confidence: 0.5,
+                value: env.VIRTUAL_ENV,
+              },
+            ],
+          },
+        },
+      };
+      // These packages have lower confidence
+      pkgList.push(apkg);
+      rootList.push({
+        name,
+        version,
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString),
+      });
+      flattenDeps(dependenciesMap, pkgList, undefined, t);
+    } // end for
+    for (const k of Object.keys(dependenciesMap)) {
+      dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
+    }
+  } // end if
+  return {
+    failedPkgList,
+    rootList,
+    dependenciesList,
   };
 }
 
