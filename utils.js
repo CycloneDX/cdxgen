@@ -310,6 +310,15 @@ export function isFeatureEnabled(cliOptions, feature) {
   ) {
     return true;
   }
+  // Retry by replacing hyphens with underscore
+  if (
+    process.env[feature.replaceAll("-", "_").toUpperCase()] &&
+    ["true", "1"].includes(
+      process.env[feature.replaceAll("-", "_").toUpperCase()],
+    )
+  ) {
+    return true;
+  }
   return false;
 }
 
