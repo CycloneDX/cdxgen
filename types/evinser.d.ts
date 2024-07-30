@@ -30,7 +30,7 @@ export function prepareDB(options: any): Promise<{
             changed<K extends keyof any>(key: K, dirty: boolean): void;
             changed(): false | string[];
             previous(): Partial<any>;
-            previous<K extends string | number | symbol>(key: K): any;
+            previous<K extends string | number | symbol>(key: K): any | undefined;
             save(options?: import("sequelize").SaveOptions<any>): Promise<any>;
             reload(options?: import("sequelize").FindOptions<any>): Promise<any>;
             validate(options?: import("sequelize/types/instance-validator.js").ValidationOptions): Promise<void>;
@@ -213,7 +213,7 @@ export function prepareDB(options: any): Promise<{
             changed<K extends keyof any>(key: K, dirty: boolean): void;
             changed(): false | string[];
             previous(): Partial<any>;
-            previous<K extends string | number | symbol>(key: K): any;
+            previous<K extends string | number | symbol>(key: K): any | undefined;
             save(options?: import("sequelize").SaveOptions<any>): Promise<any>;
             reload(options?: import("sequelize").FindOptions<any>): Promise<any>;
             validate(options?: import("sequelize/types/instance-validator.js").ValidationOptions): Promise<void>;
@@ -396,7 +396,7 @@ export function prepareDB(options: any): Promise<{
             changed<K extends keyof any>(key: K, dirty: boolean): void;
             changed(): false | string[];
             previous(): Partial<any>;
-            previous<K extends string | number | symbol>(key: K): any;
+            previous<K extends string | number | symbol>(key: K): any | undefined;
             save(options?: import("sequelize").SaveOptions<any>): Promise<any>;
             reload(options?: import("sequelize").FindOptions<any>): Promise<any>;
             validate(options?: import("sequelize/types/instance-validator.js").ValidationOptions): Promise<void>;

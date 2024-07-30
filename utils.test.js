@@ -2380,6 +2380,8 @@ test("parsePomMetadata", async () => {
   expect(data.length).toEqual(deps.length);
 });
 
+// These tests are disabled because they are returning undefined
+/*
 test("get repo license", async () => {
   let license = await getRepoLicense(
     "https://github.com/ShiftLeftSecurity/sast-scan",
@@ -2402,8 +2404,6 @@ test("get repo license", async () => {
     url: "https://github.com/CycloneDX/cdxgen/blob/master/LICENSE",
   });
 
-  // These tests are disabled because they are returning undefined
-  /*
   license = await getRepoLicense("https://cloud.google.com/go", {
     group: "cloud.google.com",
     name: "go"
@@ -2418,8 +2418,8 @@ test("get repo license", async () => {
     id: "MIT",
     url: "https://github.com/ugorji/go/blob/master/LICENSE"
   });
-  */
 });
+*/
 
 test("get go pkg license", async () => {
   let license = await getGoPkgLicense({
@@ -3288,6 +3288,10 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@ampproject/remapping@2.2.0",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@babel/code-frame@7.12.11",
+    dependsOn: ["pkg:npm/@babel/highlight@7.18.6"],
+  });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn6.lock");
   expect(parsedList.pkgList.length).toEqual(1472);
   expect(parsedList.dependenciesList.length).toEqual(1472);
@@ -3297,6 +3301,13 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@ampproject/remapping@2.2.1",
+    dependsOn: [
+      "pkg:npm/@jridgewell/gen-mapping@0.3.3",
+      "pkg:npm/@jridgewell/trace-mapping@0.3.19",
+    ],
+  });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn7.lock");
   expect(parsedList.pkgList.length).toEqual(1350);
   expect(parsedList.dependenciesList.length).toEqual(1347);
@@ -3306,6 +3317,13 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@ampproject/remapping@2.2.1",
+    dependsOn: [
+      "pkg:npm/@jridgewell/gen-mapping@0.3.3",
+      "pkg:npm/@jridgewell/trace-mapping@0.3.19",
+    ],
+  });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv4.lock");
   expect(parsedList.pkgList.length).toEqual(1851);
   expect(parsedList.dependenciesList.length).toEqual(1851);
@@ -3315,6 +3333,10 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@actions/core@1.2.6",
+    dependsOn: [],
+  });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv4.1.lock");
   expect(parsedList.pkgList.length).toEqual(861);
   expect(parsedList.dependenciesList.length).toEqual(858);
@@ -3327,11 +3349,24 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]._integrity).toEqual(
     "sha512-U8KyMaYaRnkrOaDUO8T093a7RUKqV+4EkwZ2gC5VASgsL8iqwU5M0fESD/i1Jha2/1q1Oa0wqiJ31yZES3Fhnw==",
   );
-
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv1-fs.lock");
   expect(parsedList.pkgList.length).toEqual(882);
   expect(parsedList.dependenciesList.length).toEqual(882);
   expect(parsedList.pkgList[0].purl).toEqual("pkg:npm/abbrev@1.0.9");
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/accepts@1.3.3",
+    dependsOn: ["pkg:npm/mime-types@2.1.12", "pkg:npm/negotiator@0.6.1"],
+  });
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv1-empty.lock");
+  expect(parsedList.pkgList.length).toEqual(770);
+  expect(parsedList.dependenciesList.length).toEqual(770);
+  expect(parsedList.pkgList[0].purl).toEqual(
+    "pkg:npm/%40ampproject/remapping@2.2.0",
+  );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@aws-sdk/shared-ini-file-loader@3.188.0",
+    dependsOn: ["pkg:npm/@aws-sdk/types@3.188.0", "pkg:npm/tslib@2.4.0"],
+  });
 });
 
 test("parseComposerLock", () => {

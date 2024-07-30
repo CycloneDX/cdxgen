@@ -1273,8 +1273,11 @@ export function yarnLockToIdentMap(lockData) {
           }
         }
       }
-    } else if (l.startsWith("  version") && currentIdents.length) {
-      const tmpA = l.replace(/["']/g, "").split(" ");
+    } else if (
+      (l.startsWith("  version") || l.startsWith('  "version')) &&
+      currentIdents.length
+    ) {
+      const tmpA = l.replace(/"/g, "").split(" ");
       const version = tmpA[tmpA.length - 1].trim();
       for (const id of currentIdents) {
         identMap[id] = version;
@@ -1439,9 +1442,14 @@ export async function parseYarnLock(yarnLockFile) {
       } else if (
         name !== "" &&
         (l.startsWith("  dependencies:") ||
-          l.startsWith("  optionalDependencies:"))
+          l.startsWith('  "dependencies:') ||
+          l.startsWith("  optionalDependencies:") ||
+          l.startsWith('  "optionalDependencies:'))
       ) {
-        if (l.startsWith("  dependencies:")) {
+        if (
+          l.startsWith("  dependencies:") ||
+          l.startsWith('  "dependencies:')
+        ) {
           depsMode = true;
           optionalDepsMode = false;
         } else {
@@ -1453,9 +1461,15 @@ export async function parseYarnLock(yarnLockFile) {
         // We need the resolved version from identMap
         // Deal with values with space within the quotes. Eg: minimatch "2 || 3"
         // vinyl-sourcemaps-apply ">=0.1.1 <0.2.0-0"
-        const tmpA = l.trim().split(' "');
+        l = l.trim();
+        let splitPattern = ' "';
+        // yarn v7 has a different split pattern
+        if (l.includes('": ')) {
+          splitPattern = '": ';
+        }
+        const tmpA = l.trim().split(splitPattern);
         if (tmpA && tmpA.length === 2) {
-          let dgroupname = tmpA[0];
+          let dgroupname = tmpA[0].replace(/"/g, "");
           if (dgroupname.endsWith(":")) {
             dgroupname = dgroupname.substring(0, dgroupname.length - 1);
           }
@@ -1480,7 +1494,7 @@ export async function parseYarnLock(yarnLockFile) {
           depsMode = false;
           optionalDepsMode = false;
         }
-        l = l.trim();
+        l = l.replace(/"/g, "").trim();
         const parts = l.split(" ");
         if (l.startsWith("version")) {
           version = parts[1].replace(/"/g, "");
