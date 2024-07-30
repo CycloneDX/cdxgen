@@ -1466,6 +1466,8 @@ export async function parseYarnLock(yarnLockFile) {
         // yarn v7 has a different split pattern
         if (l.includes('": ')) {
           splitPattern = '": ';
+        } else if (l.includes(": ")) {
+          splitPattern = ": ";
         }
         const tmpA = l.trim().split(splitPattern);
         if (tmpA && tmpA.length === 2) {
