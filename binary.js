@@ -350,7 +350,7 @@ export function getOSPackages(src) {
       "--skip-java-db-update",
       "--offline-scan",
       "--skip-files",
-      "**/*.jar",
+      "**/*.jar,**/*.war,**/*.par,**/*.ear",
       "--no-progress",
       "--exit-code",
       "0",
