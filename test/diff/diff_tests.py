@@ -1,10 +1,14 @@
 import argparse
 import csv
 import json
+import logging
 import os
 
 from custom_json_diff.custom_diff import compare_dicts, perform_bom_diff, report_results
 from custom_json_diff.custom_diff_classes import Options
+
+
+logging.disable(logging.INFO)
 
 
 def build_args():
@@ -12,7 +16,7 @@ def build_args():
     parser.add_argument(
         '--directories',
         '-d',
-        default=['/home/runner/work/original_snapshots','/home/runner/work/new_snapshots'],
+        default=['/home/runner/work/original_snapshots', '/home/runner/work/new_snapshots'],
         help='Directories containing the snapshots to compare',
         nargs=2
     )
@@ -20,20 +24,21 @@ def build_args():
 
 
 def compare_snapshot(dir1, dir2, options, repo):
-    bom_1 = f"{dir1}/{repo["project"]}-bom.json"
-    bom_2 = f"{dir2}/{repo["project"]}-bom.json"
+    bom_1 = f"{dir1}/{repo['project']}-bom.json"
+    bom_2 = f"{dir2}/{repo['project']}-bom.json"
     options.file_1 = bom_1
     options.file_2 = bom_2
     options.output = f'{dir2}/{repo["project"]}-diff.json'
     if not os.path.exists(bom_1):
         print(f'{bom_1} not found.')
         return f'{bom_1} not found.', f'{bom_1} not found.'
-    result, j1, j2 = compare_dicts(options)
-    if result != 0:
-        result_summary = perform_bom_diff(j1, j2)
-        report_results(result, result_summary, options, j1, j2)
-        return f"{repo['project']} failed.", result_summary
-    return None, None
+    status, j1, j2 = compare_dicts(options)
+    if status != 0:
+        status, result_summary = perform_bom_diff(j1, j2)
+        if status != 0:
+            report_results(status, result_summary, options, j1, j2)
+            return status, f"{repo['project']} failed.", result_summary
+    return status, None, None
 
 
 def perform_snapshot_tests(dir1, dir2):
@@ -48,9 +53,10 @@ def perform_snapshot_tests(dir1, dir2):
 
     failed_diffs = {}
     for repo in repo_data:
-        result, summary = compare_snapshot(dir1, dir2, options, repo)
+        status, result, summary = compare_snapshot(dir1, dir2, options, repo)
         if result:
             print(result)
+        if status != 0:
             failed_diffs[repo["project"]] = summary
 
     if failed_diffs:
