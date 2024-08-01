@@ -128,9 +128,9 @@ export const PREFER_MAVEN_DEPS_TREE =
   ["true", "1"].includes(process.env.PREFER_MAVEN_DEPS_TREE);
 
 // Whether license information should be fetched
-export const FETCH_LICENSE =
-  process.env.FETCH_LICENSE &&
-  ["true", "1"].includes(process.env.FETCH_LICENSE);
+export function shouldFetchLicense() {
+    return process.env.FETCH_LICENSE && ["true", "1"].includes(process.env.FETCH_LICENSE);
+}
 
 // Whether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
 export const SEARCH_MAVEN_ORG =
@@ -765,12 +765,18 @@ export async function getNpmMetadata(pkgList) {
       let body = {};
       if (metadata_cache[key]) {
         body = metadata_cache[key];
+        if (DEBUG_MODE) {
+          console.log(`npm metadata: using ${key} metadata from local cache`);
+        }
       } else {
         const res = await cdxgenAgent.get(NPM_URL + key, {
           responseType: "json",
         });
         body = res.body;
         metadata_cache[key] = body;
+        if (DEBUG_MODE) {
+          console.log(`npm metadata: looking up ${key} metadata on npm`);
+        }
       }
       p.description =
         body.versions?.[p.version]?.description || body.description;
@@ -785,6 +791,7 @@ export async function getNpmMetadata(pkgList) {
         p.homepage = { url: body.homepage };
       }
       cdepList.push(p);
+      
     } catch (err) {
       cdepList.push(p);
       if (DEBUG_MODE) {
@@ -872,7 +879,7 @@ export async function parsePkgJson(pkgJsonFile, simple = false) {
       // continue regardless of error
     }
   }
-  if (!simple && FETCH_LICENSE && pkgList && pkgList.length) {
+  if (!simple && shouldFetchLicense() && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePkgJson`,
@@ -1215,7 +1222,7 @@ export async function parsePkgLock(pkgLockFile, options = {}) {
     options,
   ));
 
-  if (FETCH_LICENSE && pkgList && pkgList.length) {
+  if (shouldFetchLicense() && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePkgLock`,
@@ -1532,7 +1539,7 @@ export async function parseYarnLock(yarnLockFile) {
       }
     });
   }
-  if (FETCH_LICENSE && pkgList && pkgList.length) {
+  if (shouldFetchLicense() && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseYarnLock`,
@@ -1609,7 +1616,7 @@ export async function parseNodeShrinkwrap(swFile) {
       }
     }
   }
-  if (FETCH_LICENSE && pkgList && pkgList.length) {
+  if (shouldFetchLicense() && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseNodeShrinkwrap`,
@@ -2043,7 +2050,7 @@ export async function parsePnpmLock(pnpmLock, parentComponent = null) {
       });
     }
   }
-  if (FETCH_LICENSE && pkgList && pkgList.length) {
+  if (shouldFetchLicense() && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parsePnpmLock`,
@@ -2102,7 +2109,7 @@ export async function parseBowerJson(bowerJsonFile) {
       // continue regardless of error
     }
   }
-  if (FETCH_LICENSE && pkgList && pkgList.length) {
+  if (shouldFetchLicense() && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseBowerJson`,
@@ -2187,7 +2194,7 @@ export async function parseMinJs(minJsFile) {
       // continue regardless of error
     }
   }
-  if (FETCH_LICENSE && pkgList && pkgList.length) {
+  if (shouldFetchLicense() && pkgList && pkgList.length) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch license information for ${pkgList.length} packages in parseMinJs`,
@@ -3176,7 +3183,7 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
   if (!pkgList || !pkgList.length) {
     return pkgList;
   }
-  if (DEBUG_MODE && FETCH_LICENSE) {
+  if (DEBUG_MODE && shouldFetchLicense()) {
     console.log(`About to query maven for ${pkgList.length} packages`);
   }
   for (const p of pkgList) {
@@ -3212,7 +3219,7 @@ export async function getMvnMetadata(pkgList, jarNSMapping = {}) {
     }
     const group = p.group || "";
     // If the package already has key metadata skip querying maven
-    if (group && p.name && p.version && !FETCH_LICENSE) {
+    if (group && p.name && p.version && !shouldFetchLicense()) {
       cdepList.push(p);
       continue;
     }
@@ -3454,7 +3461,7 @@ export function guessPypiMatchingVersion(versionsList, versionSpecifiers) {
  * @param {Boolean} fetchDepsInfo Fetch dependencies info from pypi
  */
 export async function getPyMetadata(pkgList, fetchDepsInfo) {
-  if (!FETCH_LICENSE && !fetchDepsInfo) {
+  if (!shouldFetchLicense() && !fetchDepsInfo) {
     return pkgList;
   }
   const PYPI_URL = process.env.PYPI_URL || "https://pypi.org/pypi/";
@@ -4368,7 +4375,7 @@ export async function getGoPkgLicense(repoMetadata) {
 export async function getGoPkgComponent(group, name, version, hash) {
   let pkg = {};
   let license = undefined;
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     if (DEBUG_MODE) {
       console.log(
         `About to fetch go package license information for ${group}:${name}`,
@@ -4697,7 +4704,7 @@ export async function parseGosumData(gosumData) {
       const version = tmpA[1].replace("/go.mod", "");
       const hash = tmpA[tmpA.length - 1].replace("h1:", "sha256-");
       let license = undefined;
-      if (FETCH_LICENSE) {
+      if (shouldFetchLicense()) {
         if (DEBUG_MODE) {
           console.log(
             `About to fetch go package license information for ${name}`,
@@ -4749,7 +4756,7 @@ export async function parseGopkgData(gopkgData) {
         case "name":
           pkg.group = "";
           pkg.name = value;
-          if (FETCH_LICENSE) {
+          if (shouldFetchLicense()) {
             pkg.license = await getGoPkgLicense({
               group: pkg.group,
               name: pkg.name,
@@ -4959,7 +4966,7 @@ export async function parseGemspecData(gemspecData) {
     }
   });
   pkgList = [pkg];
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     return await getRubyGemsMetadata(pkgList);
   }
   return pkgList;
@@ -5211,7 +5218,7 @@ export async function parseGemfileLockData(gemLockData, lockFile) {
       dependsOn: Array.from(dependenciesMap[k]),
     });
   }
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     pkgList = await getRubyGemsMetadata(pkgList);
     return { pkgList, dependenciesList };
   }
@@ -5569,7 +5576,7 @@ export async function parseCargoTomlData(
   if (pkg) {
     addPackageToList(pkgList, pkg, { packageMode, simple });
   }
-  if (!simple && FETCH_LICENSE) {
+  if (!simple && shouldFetchLicense()) {
     return await getCratesMetadata(pkgList);
   }
   return pkgList;
@@ -5709,7 +5716,7 @@ export async function parseCargoData(
   if (pkg) {
     addPackageToList(pkgList, pkg, { simple });
   }
-  if (FETCH_LICENSE && !simple) {
+  if (!simple && shouldFetchLicense()) {
     return await getCratesMetadata(pkgList);
   }
   return pkgList;
@@ -5875,7 +5882,7 @@ export async function parseCargoAuditableData(cargoData) {
       });
     }
   });
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     return await getCratesMetadata(pkgList);
   }
   return pkgList;
@@ -5914,7 +5921,7 @@ export async function parsePubLockData(pubLockData) {
       }
     }
   });
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     return await getDartMetadata(pkgList);
   }
   return pkgList;

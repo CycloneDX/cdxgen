@@ -32,7 +32,6 @@ import {
   CARGO_CMD,
   CLJ_CMD,
   DEBUG_MODE,
-  FETCH_LICENSE,
   LEIN_CMD,
   MAX_BUFFER,
   PREFER_MAVEN_DEPS_TREE,
@@ -136,6 +135,7 @@ import {
   parseYarnLock,
   readZipEntry,
   splitOutputByGradleProjects,
+  shouldFetchLicense
 } from "./utils.js";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
@@ -3100,7 +3100,7 @@ export async function createPythonBom(path, options) {
   if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     pkgList = await getPyMetadata(pkgList, false);
   }
   return buildBomNSData(options, pkgList, "pypi", {
@@ -4280,7 +4280,7 @@ export async function createSwiftBom(path, options) {
       }
     }
   }
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     pkgList = await getSwiftPackageMetadata(pkgList);
   }
   return buildBomNSData(options, pkgList, "swift", {
@@ -5209,7 +5209,7 @@ export async function createCsharpBom(path, options) {
       dependsOn: Array.from(parentDependsOn),
     });
   }
-  if (FETCH_LICENSE) {
+  if (shouldFetchLicense()) {
     const retMap = await getNugetMetadata(pkgList, dependencies);
     if (retMap.dependencies?.length) {
       dependencies = mergeDependencies(
