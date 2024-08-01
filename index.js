@@ -134,8 +134,8 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
+  shouldFetchLicense,
   splitOutputByGradleProjects,
-  shouldFetchLicense
 } from "./utils.js";
 let url = import.meta.url;
 if (!url.startsWith("file://")) {

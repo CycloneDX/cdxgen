@@ -129,7 +129,10 @@ export const PREFER_MAVEN_DEPS_TREE =
 
 // Whether license information should be fetched
 export function shouldFetchLicense() {
-    return process.env.FETCH_LICENSE && ["true", "1"].includes(process.env.FETCH_LICENSE);
+  return (
+    process.env.FETCH_LICENSE &&
+    ["true", "1"].includes(process.env.FETCH_LICENSE)
+  );
 }
 
 // Whether search.maven.org will be used to identify jars without maven metadata; default, if unset shall be 'true'
@@ -791,7 +794,6 @@ export async function getNpmMetadata(pkgList) {
         p.homepage = { url: body.homepage };
       }
       cdepList.push(p);
-      
     } catch (err) {
       cdepList.push(p);
       if (DEBUG_MODE) {

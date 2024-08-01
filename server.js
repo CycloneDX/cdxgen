@@ -92,7 +92,7 @@ const parseQueryString = (q, body, options = {}) => {
     "includeFormulation",
     "includeCrypto",
     "standard",
-    "fetchLicense"
+    "fetchLicense",
   ];
 
   for (const param of queryParams) {
@@ -117,7 +117,7 @@ const parseQueryString = (q, body, options = {}) => {
     applyProfileOptions(options);
   }
   if (options.fetchLicense) {
-    process.env.FETCH_LICENSE = options.fetchLicense
+    process.env.FETCH_LICENSE = options.fetchLicense;
   }
   return options;
 };
