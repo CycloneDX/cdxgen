@@ -104,6 +104,11 @@ const args = yargs(hideBin(process.argv))
   .option("server-url", {
     description: "Dependency track url. Eg: https://deptrack.cyclonedx.io",
   })
+  .option("skip-dt-tls-check", {
+    type: "boolean",
+    default: false,
+    description: "Skip TLS certificate check when calling Dependency-Track. ",
+  })
   .option("api-key", {
     description: "Dependency track api key",
   })
