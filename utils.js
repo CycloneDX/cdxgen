@@ -7079,6 +7079,17 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         });
       }
       if (
+        apg?.RootNamespace &&
+        Array.isArray(apg.RootNamespace) &&
+        apg.RootNamespace[0]._ &&
+        Array.isArray(apg.RootNamespace[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "Namespaces",
+          value: apg.RootNamespace[0]._[0],
+        });
+      }
+      if (
         apg?.TargetFrameworkVersion &&
         Array.isArray(apg.TargetFrameworkVersion) &&
         apg.TargetFrameworkVersion[0]._ &&
@@ -7088,6 +7099,25 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           name: "cdx:dotnet:target_framework",
           value: apg.TargetFrameworkVersion[0]._[0],
         });
+      } else if (
+        apg?.TargetFrameworks &&
+        Array.isArray(apg.TargetFrameworks) &&
+        apg.TargetFrameworks[0]._ &&
+        Array.isArray(apg.TargetFrameworks[0]._) &&
+        !apg?.TargetFrameworks[0]._[0].includes("$(")
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:target_framework",
+          value: apg.TargetFrameworks[0]._[0],
+        });
+      }
+      if (
+        apg?.Description &&
+        Array.isArray(apg.Description) &&
+        apg.Description[0]._ &&
+        Array.isArray(apg.Description[0]._)
+      ) {
+        parentComponent.description = apg.Description[0]._[0];
       }
     }
   }

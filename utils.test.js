@@ -1876,6 +1876,10 @@ test("parse cs proj", () => {
         name: "cdx:dotnet:project_guid",
         value: "{3336A23A-6F2C-46D4-89FA-93C726CEB23D}",
       },
+      {
+        name: "Namespaces",
+        value: "WindowsFormsApplication1",
+      },
       { name: "cdx:dotnet:target_framework", value: "v4.8" },
     ],
     name: "WindowsFormsApplication1",
@@ -1969,6 +1973,7 @@ test("parse cs proj", () => {
         name: "cdx:dotnet:project_guid",
         value: "{6BA9F9E1-E43C-489D-A3B4-8916CA2D4C5F}",
       },
+      { name: "Namespaces", value: "OutputMgr.Server" },
       { name: "cdx:dotnet:target_framework", value: "v4.8" },
     ],
     name: "Server",
@@ -1977,6 +1982,12 @@ test("parse cs proj", () => {
     "bom-ref": "pkg:nuget/Server@9.0.21022",
   });
   expect(retMap.pkgList.length).toEqual(34);
+  retMap = parseCsProjData(
+    readFileSync("./test/data/Logging.csproj", {
+      encoding: "utf-8",
+    }),
+  );
+  expect(retMap.parentComponent).toBeUndefined();
 });
 
 test("parse project.assets.json", () => {
@@ -2194,7 +2205,10 @@ test("parse .net cs proj", () => {
   );
   expect(retMap.parentComponent).toEqual({
     type: "library",
-    properties: [{ name: "cdx:dotnet:target_framework", value: "v4.6.2" }],
+    properties: [
+      { name: "Namespaces", value: "Calculator" },
+      { name: "cdx:dotnet:target_framework", value: "v4.6.2" },
+    ],
     name: "Calculator",
     purl: "pkg:nuget/Calculator@latest",
     "bom-ref": "pkg:nuget/Calculator@latest",
