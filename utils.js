@@ -7118,6 +7118,13 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         Array.isArray(apg.Description[0]._)
       ) {
         parentComponent.description = apg.Description[0]._[0];
+      } else if (
+        apg?.PackageDescription &&
+        Array.isArray(apg.PackageDescription) &&
+        apg.PackageDescription[0]._ &&
+        Array.isArray(apg.PackageDescription[0]._)
+      ) {
+        parentComponent.description = apg.PackageDescription[0]._[0];
       }
     }
   }

@@ -7,6 +7,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageDescription>Includes latest versions of Seedwork packages and versions of packages used by Seedwork. Includes project validation's checks. Includes mechanism to attach Seedwork locally</PackageDescription>
+    <PackageTags>MSBuild Tasks Seedwork</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Sample.Web" />
     <InternalsVisibleTo Include="Sample.Web.ServiceBus" />
