@@ -278,7 +278,7 @@ const args = yargs(hideBin(process.argv))
   .option("feature-flags", {
     description: "Experimental feature flags to enable. Advanced users only.",
     hidden: true,
-    choices: ["safe-pip-install"],
+    choices: ["safe-pip-install", "suggest-build-tools"],
   })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")

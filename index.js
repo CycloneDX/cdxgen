@@ -4920,6 +4920,33 @@ export async function createCsharpBom(path, options) {
     `${options.multiProject ? "**/" : ""}*.nupkg`,
     options,
   );
+  // Support for detecting and suggesting build tools for this project
+  // We parse all the .csproj files to collect the target framework strings
+  // We then use a mapping table to suggest the build tools needed
+  if (isFeatureEnabled(options, "suggest-build-tools")) {
+    const targetFrameworks = new Set();
+    for (const f of csProjFiles) {
+      const csProjData = readFileSync(f, { encoding: "utf-8" });
+      const retMap = parseCsProjData(csProjData, f, {});
+      if (retMap?.parentComponent?.properties) {
+        const parentProperties = retMap.parentComponent.properties;
+        retMap.parentComponent.properties
+          .filter(
+            (p) =>
+              p.name === "cdx:dotnet:target_framework" && p.value.trim().length,
+          )
+          .forEach((p) => {
+            const frameworkValues = p.value
+              .split(";")
+              .filter((v) => v.trim().length && !v.startsWith("$("))
+              .forEach((v) => {
+                targetFrameworks.add(v);
+              });
+          });
+      }
+    }
+    console.log(targetFrameworks);
+  }
   // Support for automatic restore for .Net projects
   if (
     options.installDeps &&
@@ -4969,9 +4996,11 @@ export async function createCsharpBom(path, options) {
           console.log(
             "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
           );
-          console.log(
-            "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
-          );
+          if (process.env?.CDXGEN_IN_CONTAINER !== "true") {
+            console.log(
+              "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
+            );
+          }
         }
         console.log(result.stdout, result.stderr);
         options.failOnError && process.exit(1);
@@ -5097,10 +5126,6 @@ export async function createCsharpBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       pkgData = readFileSync(f, { encoding: "utf-8" });
-      // Remove byte order mark
-      if (pkgData.charCodeAt(0) === 0xfeff) {
-        pkgData = pkgData.slice(1);
-      }
       const dlist = parseCsPkgData(pkgData, f);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
@@ -5147,13 +5172,9 @@ export async function createCsharpBom(path, options) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      let csProjData = readFileSync(f, { encoding: "utf-8" });
-      // Remove byte order mark
-      if (csProjData.charCodeAt(0) === 0xfeff) {
-        csProjData = csProjData.slice(1);
-      }
+      const csProjData = readFileSync(f, { encoding: "utf-8" });
       const retMap = parseCsProjData(csProjData, f, pkgNameVersions);
-      if (retMap?.parentComponent) {
+      if (retMap?.parentComponent?.purl) {
         // If there are multiple project files, track the parent components using nested components
         if (csProjFiles.length > 1) {
           if (!parentComponent.components) {
