@@ -1529,7 +1529,6 @@ export async function createJavaBom(path, options) {
             ) {
               parentComponent = bomJsonObj.metadata.component;
               options.parentComponent = parentComponent;
-              pkgList = [];
             }
             if (bomJsonObj.components) {
               // Inject evidence into the components. #994
@@ -1963,7 +1962,7 @@ export async function createJavaBom(path, options) {
     for (const f of bazelFiles) {
       const basePath = dirname(f);
       // Invoke bazel build first
-      const bazelTarget = process.env.BAZEL_TARGET || ":all";
+      const bazelTarget = process.env.BAZEL_TARGET || "//...";
       let bArgs = [
         ...(process.env?.BAZEL_ARGS?.split(" ") || []),
         "build",
@@ -2093,7 +2092,6 @@ export async function createJavaBom(path, options) {
     !options.projectType?.includes("gradle") &&
     !options.projectType?.includes("maven")
   ) {
-    let pkgList = [];
     // If the project use sbt lock files
     if (sbtLockFiles?.length) {
       for (const f of sbtLockFiles) {
