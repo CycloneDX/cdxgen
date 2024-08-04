@@ -239,6 +239,7 @@ export const PROJECT_TYPE_ALIASES = {
     "mvn",
     "maven",
     "sbt",
+    "bazel",
   ],
   android: ["android", "apk", "aab"],
   jar: ["jar", "war", "ear"],
@@ -6954,6 +6955,10 @@ export function parseCsPkgData(pkgData, pkgFile) {
   if (!pkgData) {
     return pkgList;
   }
+  // Remove byte order mark
+  if (pkgData.charCodeAt(0) === 0xfeff) {
+    pkgData = pkgData.slice(1);
+  }
   let packages = xml2js(pkgData, {
     compact: true,
     alwaysArray: true,
@@ -7010,9 +7015,13 @@ export function parseCsPkgData(pkgData, pkgFile) {
  */
 export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   const pkgList = [];
-  let parentComponent = { type: "application", properties: [] };
+  const parentComponent = { type: "application", properties: [] };
   if (!csProjData) {
     return pkgList;
+  }
+  // Remove byte order mark
+  if (csProjData.charCodeAt(0) === 0xfeff) {
+    csProjData = csProjData.slice(1);
   }
   let projects = undefined;
   try {
@@ -7079,6 +7088,27 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         });
       }
       if (
+        apg?.RootNamespace &&
+        Array.isArray(apg.RootNamespace) &&
+        apg.RootNamespace[0]._ &&
+        Array.isArray(apg.RootNamespace[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "Namespaces",
+          value: apg.RootNamespace[0]._[0],
+        });
+      }
+      if (
+        apg?.TargetFramework &&
+        Array.isArray(apg.TargetFramework) &&
+        apg.TargetFramework[0]._ &&
+        Array.isArray(apg.TargetFramework[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:target_framework",
+          value: apg.TargetFramework[0]._[0],
+        });
+      } else if (
         apg?.TargetFrameworkVersion &&
         Array.isArray(apg.TargetFrameworkVersion) &&
         apg.TargetFrameworkVersion[0]._ &&
@@ -7088,12 +7118,33 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           name: "cdx:dotnet:target_framework",
           value: apg.TargetFrameworkVersion[0]._[0],
         });
+      } else if (
+        apg?.TargetFrameworks &&
+        Array.isArray(apg.TargetFrameworks) &&
+        apg.TargetFrameworks[0]._ &&
+        Array.isArray(apg.TargetFrameworks[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:target_framework",
+          value: apg.TargetFrameworks[0]._[0],
+        });
+      }
+      if (
+        apg?.Description &&
+        Array.isArray(apg.Description) &&
+        apg.Description[0]._ &&
+        Array.isArray(apg.Description[0]._)
+      ) {
+        parentComponent.description = apg.Description[0]._[0];
+      } else if (
+        apg?.PackageDescription &&
+        Array.isArray(apg.PackageDescription) &&
+        apg.PackageDescription[0]._ &&
+        Array.isArray(apg.PackageDescription[0]._)
+      ) {
+        parentComponent.description = apg.PackageDescription[0]._[0];
       }
     }
-  }
-  // If we are unable to determine the name of the parent component, clear the object
-  if (!parentComponent.purl) {
-    parentComponent = undefined;
   }
   if (project.ItemGroup?.length) {
     for (const i in project.ItemGroup) {
