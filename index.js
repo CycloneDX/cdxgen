@@ -1944,7 +1944,11 @@ export async function createJavaBom(path, options) {
 
   // Bazel
   // Look for the BUILD file only in the root directory
-  const bazelFiles = getAllFiles(path, "BUILD", options);
+  const bazelFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}BUILD*`,
+    options,
+  );
   if (
     bazelFiles?.length &&
     !options.projectType?.includes("maven") &&
@@ -1960,8 +1964,17 @@ export async function createJavaBom(path, options) {
       const basePath = dirname(f);
       // Invoke bazel build first
       const bazelTarget = process.env.BAZEL_TARGET || ":all";
-      console.log("Executing", BAZEL_CMD, "build", bazelTarget, "in", basePath);
-      let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
+      let bArgs = [
+        ...(process.env?.BAZEL_ARGS?.split(" ") || []),
+        "build",
+        bazelTarget,
+      ];
+      // Automatically load any bazelrc file
+      if (!process.env.BAZEL_ARGS && existsSync(join(basePath, ".bazelrc"))) {
+        bArgs = ["--bazelrc=.bazelrc", "build", bazelTarget];
+      }
+      console.log("Executing", BAZEL_CMD, bArgs.join(" "), "in", basePath);
+      let result = spawnSync(BAZEL_CMD, bArgs, {
         cwd: basePath,
         shell: true,
         encoding: "utf-8",
@@ -1978,16 +1991,23 @@ export async function createJavaBom(path, options) {
         options.failOnError && process.exit(1);
       } else {
         const target = process.env.BAZEL_TARGET || "//...";
-        let query;
+        let query = [...(process.env?.BAZEL_ARGS?.split(" ") || [])];
         let bazelParser;
+        // Automatically load any bazelrc file
+        if (!process.env.BAZEL_ARGS && existsSync(join(basePath, ".bazelrc"))) {
+          query = ["--bazelrc=.bazelrc"];
+        }
         if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
-          query = ["aquery", `outputs('.*.jar',deps(${target}))`];
+          query = query.concat(["aquery", `outputs('.*.jar',deps(${target}))`]);
           bazelParser = parseBazelActionGraph;
         } else {
-          query = ["aquery", "--output=textproto", "--skyframe_state"];
+          query = query.concat([
+            "aquery",
+            "--output=textproto",
+            "--skyframe_state",
+          ]);
           bazelParser = parseBazelSkyframe;
         }
-
         console.log("Executing", BAZEL_CMD, `${query.join(" ")} in`, basePath);
         result = spawnSync(BAZEL_CMD, query, {
           cwd: basePath,
@@ -2067,7 +2087,12 @@ export async function createJavaBom(path, options) {
     options,
   );
 
-  if (sbtProjects?.length) {
+  if (
+    sbtProjects?.length &&
+    !options.projectType?.includes("bazel") &&
+    !options.projectType?.includes("gradle") &&
+    !options.projectType?.includes("maven")
+  ) {
     let pkgList = [];
     // If the project use sbt lock files
     if (sbtLockFiles?.length) {
@@ -4945,7 +4970,7 @@ export async function createCsharpBom(path, options) {
           });
       }
     }
-    console.log(targetFrameworks);
+    console.log("Target frameworks found:", Array.from(targetFrameworks));
   }
   // Support for automatic restore for .Net projects
   if (

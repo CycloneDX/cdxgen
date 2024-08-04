@@ -239,6 +239,7 @@ export const PROJECT_TYPE_ALIASES = {
     "mvn",
     "maven",
     "sbt",
+    "bazel",
   ],
   android: ["android", "apk", "aab"],
   jar: ["jar", "war", "ear"],
