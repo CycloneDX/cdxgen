@@ -4945,7 +4945,6 @@ export async function createCsharpBom(path, options) {
   );
   // Support for detecting and suggesting build tools for this project
   // We parse all the .csproj files to collect the target framework strings
-  // We then use a mapping table to suggest the build tools needed
   if (isFeatureEnabled(options, "suggest-build-tools")) {
     const targetFrameworks = new Set();
     for (const f of csProjFiles) {
