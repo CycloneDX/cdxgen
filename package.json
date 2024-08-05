@@ -66,6 +66,9 @@
     "url": "https://github.com/cyclonedx/cdxgen/issues"
   },
   "packageManager": "pnpm@9.6.0",
+  "lint-staged": {
+    "*": "biome check --fix --no-errors-on-unmatched"
+  },
   "dependencies": {
     "@babel/parser": "^7.24.8",
     "@babel/traverse": "^7.24.8",
