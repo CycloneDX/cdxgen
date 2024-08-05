@@ -16,7 +16,9 @@ import {
   getRepoLicense,
   guessPypiMatchingVersion,
   hasAnyProjectType,
+  isPartialTree,
   isValidIriReference,
+  mapConanPkgRefToPurlStringAndNameAndVersion,
   parseBazelActionGraph,
   parseBazelBuild,
   parseBazelSkyframe,
@@ -1552,14 +1554,144 @@ test("parse conan data", () => {
   dep_list = parseConanData(
     readFileSync("./test/data/cmakes/conanfile1.txt", { encoding: "utf-8" }),
   );
-  expect(dep_list.length).toEqual(42);
+  expect(dep_list.length).toEqual(43);
   expect(dep_list[0]).toEqual({
     "bom-ref":
-      "pkg:conan/7-Zip@19.00?revision=bb67aa9bc0da3feddc68ca9f334f4c8b",
+      "pkg:conan/7-Zip@19.00?channel=stable&rrev=bb67aa9bc0da3feddc68ca9f334f4c8b&user=iw",
     name: "7-Zip",
-    purl: "pkg:conan/7-Zip@19.00?revision=bb67aa9bc0da3feddc68ca9f334f4c8b",
+    purl: "pkg:conan/7-Zip@19.00?channel=stable&rrev=bb67aa9bc0da3feddc68ca9f334f4c8b&user=iw",
     scope: "required",
     version: "19.00",
+  });
+});
+
+test("conan package reference mapper to pURL", () => {
+  const checkParseResult = (inputPkgRef, expectedPurl) => {
+    const [purl, name, version] =
+      mapConanPkgRefToPurlStringAndNameAndVersion(inputPkgRef);
+    expect(purl).toEqual(expectedPurl);
+
+    const expectedPurlPrefix = `pkg:conan/${name}@${version}`;
+    expect(purl.substring(0, expectedPurlPrefix.length)).toEqual(
+      expectedPurlPrefix,
+    );
+  };
+
+  checkParseResult("testpkg", "pkg:conan/testpkg@latest");
+
+  checkParseResult("testpkg/1.2.3", "pkg:conan/testpkg@1.2.3");
+
+  checkParseResult(
+    "testpkg/1.2.3#recipe_revision",
+    "pkg:conan/testpkg@1.2.3?rrev=recipe_revision",
+  );
+
+  checkParseResult(
+    "testpkg/1.2.3@someuser/somechannel",
+    "pkg:conan/testpkg@1.2.3?channel=somechannel&user=someuser",
+  );
+
+  checkParseResult(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision",
+    "pkg:conan/testpkg@1.2.3?channel=somechannel&rrev=recipe_revision&user=someuser",
+  );
+
+  checkParseResult(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id#package_revision",
+    "pkg:conan/testpkg@1.2.3" +
+      "?channel=somechannel" +
+      "&prev=package_revision" +
+      "&rrev=recipe_revision" +
+      "&user=someuser",
+  );
+
+  const expectParseError = (pkgRef) => {
+    const result = mapConanPkgRefToPurlStringAndNameAndVersion(pkgRef);
+    expect(result[0]).toBe(null);
+    expect(result[1]).toBe(null);
+    expect(result[2]).toBe(null);
+  };
+
+  expectParseError("testpkg/"); // empty version
+  expectParseError("testpkg/1.2.3@"); // empty user
+  expectParseError("testpkg/1.2.3@someuser"); // pkg ref is not allowed to stop here
+  expectParseError("testpkg/1.2.3@someuser/"); // empty channel
+  expectParseError("testpkg/1.2.3@someuser/somechannel#"); // empty recipe revision
+  expectParseError("testpkg/1.2.3@someuser/somechannel#recipe_revision:"); // empty package id
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id",
+  ); // pkg ref is not allowed to stop here
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id#",
+  ); // empty package revision
+  expectParseError("testpkg/1.2.3/unexpected"); // unexpected pkg ref segment separator
+  expectParseError("testpkg/1.2.3@someuser/somechannel/unexpected"); // unexpected pkg ref segment separator
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision/unexpected",
+  ); // unexpected pkg ref segment separator
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id/unexpected",
+  ); // unexpected pkg ref segment separator
+  expectParseError(
+    "testpkg/1.2.3@someuser/somechannel#recipe_revision:package_id#package_revision/unexpected",
+  ); // unexpected pkg ref segment separator
+});
+
+test("parse conan data where packages use custom user/channel", () => {
+  let dep_list = parseConanLockData(
+    readFileSync("./test/data/conan.with_custom_pkg_user_channel.lock", {
+      encoding: "utf-8",
+    }),
+  );
+  expect(dep_list.length).toEqual(4);
+  expect(dep_list[0]).toEqual({
+    name: "libcurl",
+    version: "8.1.2",
+    "bom-ref":
+      "pkg:conan/libcurl@8.1.2?channel=stable&rrev=25215c550633ef0224152bc2c0556698&user=internal",
+    purl: "pkg:conan/libcurl@8.1.2?channel=stable&rrev=25215c550633ef0224152bc2c0556698&user=internal",
+  });
+  expect(dep_list[1]).toEqual({
+    name: "openssl",
+    version: "3.1.0",
+    "bom-ref":
+      "pkg:conan/openssl@3.1.0?channel=stable&rrev=c9c6ab43aa40bafacf8b37c5948cdb1f&user=internal",
+    purl: "pkg:conan/openssl@3.1.0?channel=stable&rrev=c9c6ab43aa40bafacf8b37c5948cdb1f&user=internal",
+  });
+  expect(dep_list[2]).toEqual({
+    name: "zlib",
+    version: "1.2.13",
+    "bom-ref":
+      "pkg:conan/zlib@1.2.13?channel=stable&rrev=aee6a56ff7927dc7261c55eb2db4fc5b&user=internal",
+    purl: "pkg:conan/zlib@1.2.13?channel=stable&rrev=aee6a56ff7927dc7261c55eb2db4fc5b&user=internal",
+  });
+  expect(dep_list[3]).toEqual({
+    name: "fmt",
+    version: "10.0.0",
+    purl: "pkg:conan/fmt@10.0.0?channel=stable&rrev=79e7cc169695bc058fb606f20df6bb10&user=internal",
+    "bom-ref":
+      "pkg:conan/fmt@10.0.0?channel=stable&rrev=79e7cc169695bc058fb606f20df6bb10&user=internal",
+  });
+
+  dep_list = parseConanData(
+    readFileSync("./test/data/conanfile.with_custom_pkg_user_channel.txt", {
+      encoding: "utf-8",
+    }),
+  );
+  expect(dep_list.length).toEqual(2);
+  expect(dep_list[0]).toEqual({
+    name: "libcurl",
+    version: "8.1.2",
+    "bom-ref": "pkg:conan/libcurl@8.1.2?channel=stable&user=internal",
+    purl: "pkg:conan/libcurl@8.1.2?channel=stable&user=internal",
+    scope: "required",
+  });
+  expect(dep_list[1]).toEqual({
+    name: "fmt",
+    version: "10.0.0",
+    purl: "pkg:conan/fmt@10.0.0?channel=stable&user=internal",
+    "bom-ref": "pkg:conan/fmt@10.0.0?channel=stable&user=internal",
+    scope: "optional",
   });
 });
 
@@ -1723,7 +1855,7 @@ test("parse cs proj", () => {
   let retMap = parseCsProjData(
     readFileSync("./test/sample.csproj", { encoding: "utf-8" }),
   );
-  expect(retMap.parentComponent).toBeUndefined();
+  expect(retMap?.parentComponent["bom-ref"]).toBeUndefined();
   expect(retMap.pkgList.length).toEqual(5);
   expect(retMap.pkgList[0]).toEqual({
     "bom-ref": "pkg:nuget/Microsoft.AspNetCore.Mvc.NewtonsoftJson@3.1.1",
@@ -1732,6 +1864,9 @@ test("parse cs proj", () => {
     version: "3.1.1",
     purl: "pkg:nuget/Microsoft.AspNetCore.Mvc.NewtonsoftJson@3.1.1",
   });
+  expect(retMap?.parentComponent.properties).toEqual([
+    { name: "cdx:dotnet:target_framework", value: "netcoreapp3.1" },
+  ]);
   retMap = parseCsProjData(
     readFileSync("./test/data/WindowsFormsApplication1.csproj", {
       encoding: "utf-8",
@@ -1743,6 +1878,10 @@ test("parse cs proj", () => {
       {
         name: "cdx:dotnet:project_guid",
         value: "{3336A23A-6F2C-46D4-89FA-93C726CEB23D}",
+      },
+      {
+        name: "Namespaces",
+        value: "WindowsFormsApplication1",
       },
       { name: "cdx:dotnet:target_framework", value: "v4.8" },
     ],
@@ -1825,6 +1964,20 @@ test("parse cs proj", () => {
       ],
     },
   ]);
+  expect(retMap?.parentComponent.properties).toEqual([
+    {
+      name: "cdx:dotnet:project_guid",
+      value: "{3336A23A-6F2C-46D4-89FA-93C726CEB23D}",
+    },
+    {
+      name: "Namespaces",
+      value: "WindowsFormsApplication1",
+    },
+    {
+      name: "cdx:dotnet:target_framework",
+      value: "v4.8",
+    },
+  ]);
   retMap = parseCsProjData(
     readFileSync("./test/data/Server.csproj", {
       encoding: "utf-8",
@@ -1837,6 +1990,7 @@ test("parse cs proj", () => {
         name: "cdx:dotnet:project_guid",
         value: "{6BA9F9E1-E43C-489D-A3B4-8916CA2D4C5F}",
       },
+      { name: "Namespaces", value: "OutputMgr.Server" },
       { name: "cdx:dotnet:target_framework", value: "v4.8" },
     ],
     name: "Server",
@@ -1845,6 +1999,30 @@ test("parse cs proj", () => {
     "bom-ref": "pkg:nuget/Server@9.0.21022",
   });
   expect(retMap.pkgList.length).toEqual(34);
+  expect(retMap?.parentComponent.properties).toEqual([
+    {
+      name: "cdx:dotnet:project_guid",
+      value: "{6BA9F9E1-E43C-489D-A3B4-8916CA2D4C5F}",
+    },
+    {
+      name: "Namespaces",
+      value: "OutputMgr.Server",
+    },
+    {
+      name: "cdx:dotnet:target_framework",
+      value: "v4.8",
+    },
+  ]);
+  retMap = parseCsProjData(
+    readFileSync("./test/data/Logging.csproj", {
+      encoding: "utf-8",
+    }),
+  );
+  expect(retMap?.parentComponent["bom-ref"]).toBeUndefined();
+  expect(retMap?.parentComponent.properties).toEqual([
+    { name: "Namespaces", value: "Sample.OData" },
+    { name: "cdx:dotnet:target_framework", value: "$(TargetFrameworks);" },
+  ]);
 });
 
 test("parse project.assets.json", () => {
@@ -2062,7 +2240,10 @@ test("parse .net cs proj", () => {
   );
   expect(retMap.parentComponent).toEqual({
     type: "library",
-    properties: [{ name: "cdx:dotnet:target_framework", value: "v4.6.2" }],
+    properties: [
+      { name: "Namespaces", value: "Calculator" },
+      { name: "cdx:dotnet:target_framework", value: "v4.6.2" },
+    ],
     name: "Calculator",
     purl: "pkg:nuget/Calculator@latest",
     "bom-ref": "pkg:nuget/Calculator@latest",
@@ -2249,6 +2430,8 @@ test("parsePomMetadata", async () => {
   expect(data.length).toEqual(deps.length);
 });
 
+// These tests are disabled because they are returning undefined
+/*
 test("get repo license", async () => {
   let license = await getRepoLicense(
     "https://github.com/ShiftLeftSecurity/sast-scan",
@@ -2271,8 +2454,6 @@ test("get repo license", async () => {
     url: "https://github.com/CycloneDX/cdxgen/blob/master/LICENSE",
   });
 
-  // These tests are disabled because they are returning undefined
-  /*
   license = await getRepoLicense("https://cloud.google.com/go", {
     group: "cloud.google.com",
     name: "go"
@@ -2287,8 +2468,8 @@ test("get repo license", async () => {
     id: "MIT",
     url: "https://github.com/ugorji/go/blob/master/LICENSE"
   });
-  */
 });
+*/
 
 test("get go pkg license", async () => {
   let license = await getGoPkgLicense({
@@ -2852,8 +3033,8 @@ test("parsePnpmLock", async () => {
   expect(parsedList.dependenciesList).toHaveLength(462);
   expect(parsedList.pkgList.filter((pkg) => !pkg.scope)).toHaveLength(3);
   parsedList = await parsePnpmLock("./pnpm-lock.yaml");
-  expect(parsedList.pkgList.length).toEqual(653);
-  expect(parsedList.dependenciesList.length).toEqual(653);
+  expect(parsedList.pkgList.length).toEqual(652);
+  expect(parsedList.dependenciesList.length).toEqual(652);
   expect(parsedList.pkgList[0]).toEqual({
     group: "@ampproject",
     name: "remapping",
@@ -2919,6 +3100,7 @@ test("parseYarnLock", async () => {
     },
   });
   expect(parsedList.dependenciesList.length).toEqual(56);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   identMap = yarnLockToIdentMap(
     readFileSync("./test/data/yarn_locks/yarn.lock", "utf8"),
   );
@@ -2962,6 +3144,7 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-multi.lock");
   expect(parsedList.pkgList.length).toEqual(1909);
   expect(parsedList.dependenciesList.length).toEqual(1909);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-zpruxnFMz6K94gs2pqc3sidzFDbQpKT5D6P/J/I9s8ekHZ5eczgnRp6pqXC86Bh7+44j/btpmOT0kwiboyqTnA==",
@@ -2994,6 +3177,7 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-light.lock");
   expect(parsedList.pkgList.length).toEqual(315);
   expect(parsedList.dependenciesList.length).toEqual(315);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-rZ1k9kQvJX21Vwgx1L6kSQ6yeXo9cCMyqURSnjG+MRoJn+Mr3LblxmVdzScHXRzv0N9yzy49oG7Bqxp9Knyv/g==",
@@ -3026,6 +3210,7 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn3.lock");
   expect(parsedList.pkgList.length).toEqual(5);
   expect(parsedList.dependenciesList.length).toEqual(5);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[1]).toEqual({
     _integrity:
       "sha512-+X9Jn4mPI+RYV0ITiiLyJSYlT9um111BocJSaztsxXR+9ZxWErpzdfQqyk+EYZUOklugjJkerQZRtJGLfJeClw==",
@@ -3058,6 +3243,7 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
   expect(parsedList.pkgList.length).toEqual(1088);
   expect(parsedList.dependenciesList.length).toEqual(1088);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-G0U5NjBUYIs39l1J1ckgpVfVX2IxpzRAIT4/2An86O2Mcri3k5xNu7/RRkfObo12wN9s7BmnREAMhH7252oZiA==",
@@ -3089,6 +3275,7 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
   expect(parsedList.pkgList.length).toEqual(363);
   expect(parsedList.dependenciesList.length).toEqual(363);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
@@ -3120,6 +3307,7 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn4.lock");
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.dependenciesList.length).toEqual(1);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeTruthy();
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-at.lock");
   expect(parsedList.pkgList.length).toEqual(4);
   expect(parsedList.dependenciesList.length).toEqual(4);
@@ -3151,30 +3339,51 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn5.lock");
   expect(parsedList.pkgList.length).toEqual(1962);
   expect(parsedList.dependenciesList.length).toEqual(1962);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40ampproject/remapping@2.2.0",
   );
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@ampproject/remapping@2.2.0",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@babel/code-frame@7.12.11",
+    dependsOn: ["pkg:npm/@babel/highlight@7.18.6"],
+  });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn6.lock");
   expect(parsedList.pkgList.length).toEqual(1472);
   expect(parsedList.dependenciesList.length).toEqual(1472);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6",
   );
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@ampproject/remapping@2.2.1",
+    dependsOn: [
+      "pkg:npm/@jridgewell/gen-mapping@0.3.3",
+      "pkg:npm/@jridgewell/trace-mapping@0.3.19",
+    ],
+  });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn7.lock");
   expect(parsedList.pkgList.length).toEqual(1350);
   expect(parsedList.dependenciesList.length).toEqual(1347);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6",
   );
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@ampproject/remapping@2.2.1",
+    dependsOn: [
+      "pkg:npm/@jridgewell/gen-mapping@0.3.3",
+      "pkg:npm/@jridgewell/trace-mapping@0.3.19",
+    ],
+  });
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv4.lock");
   expect(parsedList.pkgList.length).toEqual(1851);
   expect(parsedList.dependenciesList.length).toEqual(1851);
@@ -3184,6 +3393,11 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]["bom-ref"]).toEqual(
     "pkg:npm/@aashutoshrathi/word-wrap@1.2.6",
   );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@actions/core@1.2.6",
+    dependsOn: [],
+  });
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv4.1.lock");
   expect(parsedList.pkgList.length).toEqual(861);
   expect(parsedList.dependenciesList.length).toEqual(858);
@@ -3196,11 +3410,27 @@ test("parseYarnLock", async () => {
   expect(parsedList.pkgList[0]._integrity).toEqual(
     "sha512-U8KyMaYaRnkrOaDUO8T093a7RUKqV+4EkwZ2gC5VASgsL8iqwU5M0fESD/i1Jha2/1q1Oa0wqiJ31yZES3Fhnw==",
   );
-
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv1-fs.lock");
   expect(parsedList.pkgList.length).toEqual(882);
   expect(parsedList.dependenciesList.length).toEqual(882);
   expect(parsedList.pkgList[0].purl).toEqual("pkg:npm/abbrev@1.0.9");
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/accepts@1.3.3",
+    dependsOn: ["pkg:npm/mime-types@2.1.12", "pkg:npm/negotiator@0.6.1"],
+  });
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv1-empty.lock");
+  expect(parsedList.pkgList.length).toEqual(770);
+  expect(parsedList.dependenciesList.length).toEqual(770);
+  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(parsedList.pkgList[0].purl).toEqual(
+    "pkg:npm/%40ampproject/remapping@2.2.0",
+  );
+  expect(parsedList.dependenciesList[1]).toEqual({
+    ref: "pkg:npm/@aws-sdk/shared-ini-file-loader@3.188.0",
+    dependsOn: ["pkg:npm/@aws-sdk/types@3.188.0", "pkg:npm/tslib@2.4.0"],
+  });
 });
 
 test("parseComposerLock", () => {

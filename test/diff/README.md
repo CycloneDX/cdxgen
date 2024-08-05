@@ -12,7 +12,7 @@ before doing a bulk copy/paste. The html reports or the json diff can be used fo
 2. Download the zip of cdxgen boms generated for your PR from the [Test BOM Snapshots workflow](https://github.com/CycloneDX/cdxgen/actions/workflows/snapshot-tests.yml).
 3. Extract zips into separate directories.
 4. Create a python 3.10+ virtual environment.
-5. Install custom-json-diff with pip.
+5. Install custom-json-diff `pip install -r requirements.txt`
 6. Run diff_tests.py specifying the paths to the extracted snapshot directories.
    `diff_tests.py -d path/to/snapshots/from/step/1 path/to/snapshots/from/step/2`
 

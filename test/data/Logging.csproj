@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>$(TargetFrameworks);</TargetFrameworks>
+    <Description>Sample OData extensions for OData v8</Description>
+    <RootNamespace>Sample.OData</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageDescription>Includes latest versions of Seedwork packages and versions of packages used by Seedwork. Includes project validation's checks. Includes mechanism to attach Seedwork locally</PackageDescription>
+    <PackageTags>MSBuild Tasks Seedwork</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sample.Web" />
+    <InternalsVisibleTo Include="Sample.Web.ServiceBus" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.Sinks.ApplicationInsights" />
+    <PackageReference Include="Serilog.Sinks.ElasticSearch" />
+    <PackageReference Include="Serilog.Sinks.Trace" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sample.Configuration\Sample.Configuration.csproj" />
+    <ProjectReference Include="..\Sample.DependencyInjection.Netcore\Sample.DependencyInjection.Netcore.csproj" />
+    <ProjectReference Include="..\Sample.Contracts\Sample.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

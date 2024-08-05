@@ -271,6 +271,9 @@ const OS_DISTRO_ALIAS = {
   "debian-1.3": "bo",
   "debian-1.2": "rex",
   "debian-1.1": "buzz",
+  "red hat enterprise linux": "rhel",
+  "red hat enterprise linux 8": "rhel-8",
+  "red hat enterprise linux 9": "rhel-9",
 };
 
 export function getGoBuildInfo(src) {
@@ -350,7 +353,7 @@ export function getOSPackages(src) {
       "--skip-java-db-update",
       "--offline-scan",
       "--skip-files",
-      "**/*.jar",
+      "**/*.jar,**/*.war,**/*.par,**/*.ear",
       "--no-progress",
       "--exit-code",
       "0",
@@ -421,9 +424,13 @@ export function getOSPackages(src) {
       let distro_codename =
         osReleaseData["VERSION_CODENAME"] ||
         osReleaseData["CENTOS_MANTISBT_PROJECT"] ||
+        osReleaseData["REDHAT_BUGZILLA_PRODUCT"] ||
         osReleaseData["REDHAT_SUPPORT_PRODUCT"] ||
         "";
       distro_codename = distro_codename.toLowerCase();
+      if (distro_codename.includes(" ") && OS_DISTRO_ALIAS[distro_codename]) {
+        distro_codename = OS_DISTRO_ALIAS[distro_codename];
+      }
       let distro_id = osReleaseData["ID"] || "";
       const distro_id_like = osReleaseData["ID_LIKE"] || "";
       let purl_type = "rpm";

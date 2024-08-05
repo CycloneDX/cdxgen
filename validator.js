@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { PackageURL } from "packageurl-js";
-import { DEBUG_MODE } from "./utils.js";
+import { DEBUG_MODE, isPartialTree } from "./utils.js";
 
 import { URL, fileURLToPath } from "node:url";
 let url = import.meta.url;
@@ -217,6 +217,9 @@ export const validateRefs = (bomJson) => {
   const warningsList = [];
   const refMap = buildRefs(bomJson);
   if (bomJson?.dependencies) {
+    if (isPartialTree(bomJson.dependencies)) {
+      warningsList.push("Dependency tree is partial lacking child nodes.");
+    }
     for (const dep of bomJson.dependencies) {
       if (
         dep.ref.includes("%40") ||

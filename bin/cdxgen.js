@@ -104,6 +104,11 @@ const args = yargs(hideBin(process.argv))
   .option("server-url", {
     description: "Dependency track url. Eg: https://deptrack.cyclonedx.io",
   })
+  .option("skip-dt-tls-check", {
+    type: "boolean",
+    default: false,
+    description: "Skip TLS certificate check when calling Dependency-Track. ",
+  })
   .option("api-key", {
     description: "Dependency track api key",
   })
@@ -275,6 +280,11 @@ const args = yargs(hideBin(process.argv))
     description:
       "Do not show the donation banner. Set this attribute if you are an active sponsor for OWASP CycloneDX.",
   })
+  .option("feature-flags", {
+    description: "Experimental feature flags to enable. Advanced users only.",
+    hidden: true,
+    choices: ["safe-pip-install", "suggest-build-tools"],
+  })
   .completion("completion", "Generate bash/zsh completion")
   .array("type")
   .array("excludeType")
@@ -283,6 +293,7 @@ const args = yargs(hideBin(process.argv))
   .array("author")
   .array("exclude")
   .array("standard")
+  .array("feature-flags")
   .option("auto-compositions", {
     type: "boolean",
     default: true,
@@ -438,7 +449,6 @@ const applyAdvancedOptions = (options) => {
   }
   return options;
 };
-
 applyAdvancedOptions(options);
 
 /**

@@ -239,6 +239,7 @@ export const PROJECT_TYPE_ALIASES = {
     "mvn",
     "maven",
     "sbt",
+    "bazel",
   ],
   android: ["android", "apk", "aab"],
   jar: ["jar", "war", "ear"],
@@ -291,6 +292,36 @@ export const PROJECT_TYPE_ALIASES = {
   binary: ["binary", "blint"],
   oci: ["docker", "oci", "container", "podman"],
 };
+
+/**
+ * Method to check if a given feature flag is enabled.
+ *
+ * @param {Object} cliOptions CLI options
+ * @param {String} feature Feature flag
+ *
+ * @returns {Boolean} True if the feature is enabled
+ */
+export function isFeatureEnabled(cliOptions, feature) {
+  if (cliOptions?.featureFlags?.includes(feature)) {
+    return true;
+  }
+  if (
+    process.env[feature.toUpperCase()] &&
+    ["true", "1"].includes(process.env[feature.toUpperCase()])
+  ) {
+    return true;
+  }
+  // Retry by replacing hyphens with underscore
+  if (
+    process.env[feature.replaceAll("-", "_").toUpperCase()] &&
+    ["true", "1"].includes(
+      process.env[feature.replaceAll("-", "_").toUpperCase()],
+    )
+  ) {
+    return true;
+  }
+  return false;
+}
 
 /**
  * Method to check if the given project types are allowed by checking against include and exclude types passed from the CLI arguments.
@@ -1252,8 +1283,11 @@ export function yarnLockToIdentMap(lockData) {
           }
         }
       }
-    } else if (l.startsWith("  version") && currentIdents.length) {
-      const tmpA = l.replace(/["']/g, "").split(" ");
+    } else if (
+      (l.startsWith("  version") || l.startsWith('  "version')) &&
+      currentIdents.length
+    ) {
+      const tmpA = l.replace(/"/g, "").split(" ");
       const version = tmpA[tmpA.length - 1].trim();
       for (const id of currentIdents) {
         identMap[id] = version;
@@ -1418,9 +1452,14 @@ export async function parseYarnLock(yarnLockFile) {
       } else if (
         name !== "" &&
         (l.startsWith("  dependencies:") ||
-          l.startsWith("  optionalDependencies:"))
+          l.startsWith('  "dependencies:') ||
+          l.startsWith("  optionalDependencies:") ||
+          l.startsWith('  "optionalDependencies:'))
       ) {
-        if (l.startsWith("  dependencies:")) {
+        if (
+          l.startsWith("  dependencies:") ||
+          l.startsWith('  "dependencies:')
+        ) {
           depsMode = true;
           optionalDepsMode = false;
         } else {
@@ -1432,9 +1471,17 @@ export async function parseYarnLock(yarnLockFile) {
         // We need the resolved version from identMap
         // Deal with values with space within the quotes. Eg: minimatch "2 || 3"
         // vinyl-sourcemaps-apply ">=0.1.1 <0.2.0-0"
-        const tmpA = l.trim().split(' "');
+        l = l.trim();
+        let splitPattern = ' "';
+        // yarn v7 has a different split pattern
+        if (l.includes('": ')) {
+          splitPattern = '": ';
+        } else if (l.includes(": ")) {
+          splitPattern = ": ";
+        }
+        const tmpA = l.trim().split(splitPattern);
         if (tmpA && tmpA.length === 2) {
-          let dgroupname = tmpA[0];
+          let dgroupname = tmpA[0].replace(/"/g, "");
           if (dgroupname.endsWith(":")) {
             dgroupname = dgroupname.substring(0, dgroupname.length - 1);
           }
@@ -1459,7 +1506,7 @@ export async function parseYarnLock(yarnLockFile) {
           depsMode = false;
           optionalDepsMode = false;
         }
-        l = l.trim();
+        l = l.replace(/"/g, "").trim();
         const parts = l.split(" ");
         if (l.startsWith("version")) {
           version = parts[1].replace(/"/g, "");
@@ -2764,6 +2811,13 @@ export function parseGradleProperties(rawOutput) {
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
+  const defaultProps = {
+    rootProject: subProject,
+    projects: [],
+    metadata: {
+      version: "latest",
+    },
+  };
   let parallelPropTaskArgs = ["properties"];
   for (const spstr of allProjectsStr) {
     parallelPropTaskArgs.push(`${spstr}:properties`);
@@ -6481,6 +6535,170 @@ export function parseCloudBuildData(cbwData) {
   return pkgList;
 }
 
+function createConanPurlString(name, version, user, channel, rrev, prev) {
+  // https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst#conan
+
+  const qualifiers = {};
+
+  if (user) qualifiers["user"] = user;
+  if (channel) qualifiers["channel"] = channel;
+  if (rrev) qualifiers["rrev"] = rrev;
+  if (prev) qualifiers["prev"] = prev;
+
+  return new PackageURL(
+    "conan",
+    "",
+    name,
+    version,
+    Object.keys(qualifiers).length ? qualifiers : null,
+    null,
+  ).toString();
+}
+
+function untilFirst(separator, inputStr) {
+  // untilFirst("/", "a/b") -> ["/", "a", "b"]
+  // untilFirst("/", "abc") -> ["/", "abc", null]
+
+  if (!inputStr || inputStr.length === 0) {
+    return [null, null, null];
+  }
+
+  const separatorIndex = inputStr.search(separator);
+  if (separatorIndex === -1) {
+    return ["", inputStr, null];
+  }
+  return [
+    inputStr[separatorIndex],
+    inputStr.substring(0, separatorIndex),
+    inputStr.substring(separatorIndex + 1),
+  ];
+}
+
+export function mapConanPkgRefToPurlStringAndNameAndVersion(conanPkgRef) {
+  // A full Conan package reference may be composed of the following segments:
+  // conanPkgRef = "name/version@user/channel#recipe_revision:package_id#package_revision"
+  // See also https://docs.conan.io/1/cheatsheet.html#package-terminology
+
+  // The components 'package_id' and 'package_revision' do not appear in any files processed by cdxgen.
+  // The components 'user' and 'channel' are not mandatory.
+  // 'name/version' is a valid Conan package reference, so is 'name/version@user/channel' or 'name/version@user/channel#recipe_revision'.
+  // pURL for Conan does not recognize 'package_id'.
+
+  const UNABLE_TO_PARSE_CONAN_PKG_REF = [null, null, null];
+
+  if (!conanPkgRef) {
+    if (DEBUG_MODE)
+      console.warn(
+        `Could not parse Conan package reference '${conanPkgRef}', input does not seem valid.`,
+      );
+
+    return UNABLE_TO_PARSE_CONAN_PKG_REF;
+  }
+
+  const separatorRegex = /[@#:\/]/;
+
+  const info = {
+    name: null,
+    version: null,
+    user: null,
+    channel: null,
+    recipe_revision: null,
+    package_id: null,
+    package_revision: null,
+    phase_history: [],
+  };
+
+  const transitions = {
+    ["name"]: {
+      "/": "version",
+      "#": "recipe_revision",
+      "": "end",
+    },
+    ["version"]: {
+      "@": "user",
+      "#": "recipe_revision",
+      "": "end",
+    },
+    ["user"]: {
+      "/": "channel",
+    },
+    ["channel"]: {
+      "#": "recipe_revision",
+      "": "end",
+    },
+    ["recipe_revision"]: {
+      ":": "package_id",
+      "": "end",
+    },
+    ["package_id"]: {
+      "#": "package_revision",
+    },
+    ["package_revision"]: {
+      "": "end",
+    },
+  };
+
+  let phase = "name";
+  let remainder = conanPkgRef;
+  let separator;
+  let item;
+
+  while (remainder) {
+    [separator, item, remainder] = untilFirst(separatorRegex, remainder);
+
+    if (!item) {
+      if (DEBUG_MODE)
+        console.warn(
+          `Could not parse Conan package reference '${conanPkgRef}', empty item in phase '${phase}', separator=${separator}, remainder=${remainder}, info=${JSON.stringify(info)}`,
+        );
+      return UNABLE_TO_PARSE_CONAN_PKG_REF;
+    }
+
+    info[phase] = item;
+    info.phase_history.push(phase);
+
+    if (!(phase in transitions)) {
+      if (DEBUG_MODE)
+        console.warn(
+          `Could not parse Conan package reference '${conanPkgRef}', no transition from '${phase}', separator=${separator}, item=${item}, remainder=${remainder}, info=${JSON.stringify(info)}`,
+        );
+      return UNABLE_TO_PARSE_CONAN_PKG_REF;
+    }
+
+    const possibleTransitions = transitions[phase];
+    if (!(separator in possibleTransitions)) {
+      if (DEBUG_MODE)
+        console.warn(
+          `Could not parse Conan package reference '${conanPkgRef}', transition '${separator}' not allowed from '${phase}', item=${item}, remainder=${remainder}, info=${JSON.stringify(info)}`,
+        );
+      return UNABLE_TO_PARSE_CONAN_PKG_REF;
+    }
+
+    phase = possibleTransitions[separator];
+  }
+
+  if (phase !== "end") {
+    if (DEBUG_MODE)
+      console.warn(
+        `Could not parse Conan package reference '${conanPkgRef}', end of input string reached unexpectedly in phase '${phase}', info=${JSON.stringify(info)}.`,
+      );
+    return UNABLE_TO_PARSE_CONAN_PKG_REF;
+  }
+
+  if (!info.version) info.version = "latest";
+
+  const purl = createConanPurlString(
+    info.name,
+    info.version,
+    info.user,
+    info.channel,
+    info.recipe_revision,
+    info.package_revision,
+  );
+
+  return [purl, info.name, info.version];
+}
+
 export function parseConanLockData(conanLockData) {
   const pkgList = [];
   if (!conanLockData) {
@@ -6493,27 +6711,15 @@ export function parseConanLockData(conanLockData) {
   const nodes = graphLock.graph_lock.nodes;
   for (const nk of Object.keys(nodes)) {
     if (nodes[nk].ref) {
-      const tmpA = nodes[nk].ref.split("/");
-      if (tmpA.length === 2) {
-        let version = tmpA[1] || "latest";
-        if (tmpA[1].includes("@")) {
-          version = version.split("@")[0];
-        } else if (tmpA[1].includes("#")) {
-          version = version.split("#")[0];
-        }
-        const purlString = new PackageURL(
-          "conan",
-          "",
-          tmpA[0],
-          version,
-          null,
-          null,
-        ).toString();
+      const [purl, name, version] = mapConanPkgRefToPurlStringAndNameAndVersion(
+        nodes[nk].ref,
+      );
+      if (purl !== null) {
         pkgList.push({
-          name: tmpA[0],
+          name,
           version,
-          purl: purlString,
-          "bom-ref": decodeURIComponent(purlString),
+          purl,
+          "bom-ref": decodeURIComponent(purl),
         });
       }
     }
@@ -6535,39 +6741,19 @@ export function parseConanData(conanData) {
     if (l.includes("[requires]")) {
       scope = "required";
     }
-    if (!l.includes("/")) {
-      return;
-    }
-    if (l.includes("/")) {
-      const tmpA = l.trim().split("#")[0].split("/");
-      if (tmpA.length >= 2 && /^\d+/.test(tmpA[1])) {
-        let version = tmpA[1] || "latest";
-        let qualifiers = undefined;
-        if (tmpA[1].includes("#")) {
-          const tmpB = version.split("#");
-          version = tmpB[0];
-          qualifiers = { revision: tmpB[1] };
-        }
-        if (l.includes("#")) {
-          const tmpB = l.split("#");
-          qualifiers = { revision: tmpB[1] };
-        }
-        if (tmpA[1].includes("@")) {
-          version = version.split("@")[0];
-        }
-        const purlString = new PackageURL(
-          "conan",
-          "",
-          tmpA[0],
-          version,
-          qualifiers,
-          null,
-        ).toString();
+
+    // The line must start with sequence non-whitespace characters, followed by a slash,
+    // followed by at least one more non-whitespace character.
+    // Provides a heuristic for locating Conan package references inside conanfile.txt files.
+    if (l.match(/^[^\s\/]+\/\S+/)) {
+      const [purl, name, version] =
+        mapConanPkgRefToPurlStringAndNameAndVersion(l);
+      if (purl !== null) {
         pkgList.push({
-          name: tmpA[0],
+          name,
           version,
-          purl: purlString,
-          "bom-ref": decodeURIComponent(purlString),
+          purl,
+          "bom-ref": decodeURIComponent(purl),
           scope,
         });
       }
@@ -6769,6 +6955,10 @@ export function parseCsPkgData(pkgData, pkgFile) {
   if (!pkgData) {
     return pkgList;
   }
+  // Remove byte order mark
+  if (pkgData.charCodeAt(0) === 0xfeff) {
+    pkgData = pkgData.slice(1);
+  }
   let packages = xml2js(pkgData, {
     compact: true,
     alwaysArray: true,
@@ -6825,9 +7015,13 @@ export function parseCsPkgData(pkgData, pkgFile) {
  */
 export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   const pkgList = [];
-  let parentComponent = { type: "application", properties: [] };
+  const parentComponent = { type: "application", properties: [] };
   if (!csProjData) {
     return pkgList;
+  }
+  // Remove byte order mark
+  if (csProjData.charCodeAt(0) === 0xfeff) {
+    csProjData = csProjData.slice(1);
   }
   let projects = undefined;
   try {
@@ -6894,6 +7088,27 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         });
       }
       if (
+        apg?.RootNamespace &&
+        Array.isArray(apg.RootNamespace) &&
+        apg.RootNamespace[0]._ &&
+        Array.isArray(apg.RootNamespace[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "Namespaces",
+          value: apg.RootNamespace[0]._[0],
+        });
+      }
+      if (
+        apg?.TargetFramework &&
+        Array.isArray(apg.TargetFramework) &&
+        apg.TargetFramework[0]._ &&
+        Array.isArray(apg.TargetFramework[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:target_framework",
+          value: apg.TargetFramework[0]._[0],
+        });
+      } else if (
         apg?.TargetFrameworkVersion &&
         Array.isArray(apg.TargetFrameworkVersion) &&
         apg.TargetFrameworkVersion[0]._ &&
@@ -6903,12 +7118,33 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           name: "cdx:dotnet:target_framework",
           value: apg.TargetFrameworkVersion[0]._[0],
         });
+      } else if (
+        apg?.TargetFrameworks &&
+        Array.isArray(apg.TargetFrameworks) &&
+        apg.TargetFrameworks[0]._ &&
+        Array.isArray(apg.TargetFrameworks[0]._)
+      ) {
+        parentComponent.properties.push({
+          name: "cdx:dotnet:target_framework",
+          value: apg.TargetFrameworks[0]._[0],
+        });
+      }
+      if (
+        apg?.Description &&
+        Array.isArray(apg.Description) &&
+        apg.Description[0]._ &&
+        Array.isArray(apg.Description[0]._)
+      ) {
+        parentComponent.description = apg.Description[0]._[0];
+      } else if (
+        apg?.PackageDescription &&
+        Array.isArray(apg.PackageDescription) &&
+        apg.PackageDescription[0]._ &&
+        Array.isArray(apg.PackageDescription[0]._)
+      ) {
+        parentComponent.description = apg.PackageDescription[0]._[0];
       }
     }
-  }
-  // If we are unable to determine the name of the parent component, clear the object
-  if (!parentComponent.purl) {
-    parentComponent = undefined;
   }
   if (project.ItemGroup?.length) {
     for (const i in project.ItemGroup) {
@@ -9514,18 +9750,20 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
       null,
       null,
     ).toString();
-    pkgList.push({
+    const apkg = {
       name: d.name,
       version: d.version,
       purl: purlString,
       "bom-ref": decodeURIComponent(purlString),
-      properties: [
+    };
+    if (reqOrSetupFile) {
+      apkg.properties = [
         {
           name: "SrcFile",
           value: reqOrSetupFile,
         },
-      ],
-      evidence: {
+      ];
+      apkg.evidence = {
         identity: {
           field: "purl",
           confidence: 0.8,
@@ -9537,8 +9775,9 @@ function flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t) {
             },
           ],
         },
-      },
-    });
+      };
+    }
+    pkgList.push(apkg);
     // Recurse and flatten
     if (d.dependencies && d.dependencies) {
       flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, d);
@@ -9914,6 +10153,8 @@ export function getPipFrozenTree(
         rootList.push({
           name,
           version,
+          purl: purlString,
+          "bom-ref": decodeURIComponent(purlString),
         });
         flattenDeps(dependenciesMap, pkgList, reqOrSetupFile, t);
       } else {
@@ -9930,6 +10171,190 @@ export function getPipFrozenTree(
     rootList,
     dependenciesList,
     frozen,
+  };
+}
+
+/**
+ * The problem: pip installation can fail for a number of reasons such as missing OS dependencies and devel packages.
+ * When it fails, we don't get any dependency tree. As a workaroud, this method would attempt to install one package at a time to the same virtual environment and then attempts to obtain a dependency tree.
+ * Such a tree could be incorrect or quite approximate, but some users might still find it useful to know the names of the indirect dependencies.
+ *
+ * @param {string} basePath Base path
+ * @param {Array} pkgList Existing package list
+ * @param {string} tempVenvDir Temp venv dir
+ * @param {Object} parentComponent Parent component
+ *
+ * @returns List of packages from the virtual env
+ */
+export function getPipTreeForPackages(
+  basePath,
+  pkgList,
+  tempVenvDir,
+  parentComponent,
+) {
+  const failedPkgList = [];
+  const rootList = [];
+  const dependenciesList = [];
+  let result = undefined;
+  const env = {
+    ...process.env,
+  };
+  if (!process.env.VIRTUAL_ENV && !process.env.CONDA_PREFIX) {
+    // Create a virtual environment
+    result = spawnSync(PYTHON_CMD, ["-m", "venv", tempVenvDir], {
+      encoding: "utf-8",
+      shell: isWin,
+    });
+    if (result.status !== 0 || result.error) {
+      console.log("Virtual env creation has failed. Unable to continue.");
+      return {};
+    }
+    if (DEBUG_MODE) {
+      console.log("Using the virtual environment", tempVenvDir);
+    }
+    env.VIRTUAL_ENV = tempVenvDir;
+    env.PATH = `${join(
+      tempVenvDir,
+      platform() === "win32" ? "Scripts" : "bin",
+    )}${_delimiter}${process.env.PATH || ""}`;
+    // When cdxgen is invoked with the container image, we seem to be including unnecessary packages from the image.
+    // This workaround, unsets PYTHONPATH to suppress the pre-installed packages
+    if (
+      env?.PYTHONPATH === "/opt/pypi" &&
+      env?.CDXGEN_IN_CONTAINER === "true"
+    ) {
+      env.PYTHONPATH = undefined;
+    }
+  }
+  const python_cmd_for_tree = get_python_command_from_env(env);
+  let pipInstallArgs = ["-m", "pip", "install", "--disable-pip-version-check"];
+  // Support for passing additional arguments to pip
+  // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts
+  if (process?.env?.PIP_INSTALL_ARGS) {
+    const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
+    pipInstallArgs = pipInstallArgs.concat(addArgs);
+  } else {
+    pipInstallArgs = pipInstallArgs.concat([
+      "--ignore-requires-python",
+      "--no-compile",
+      "--no-warn-script-location",
+      "--no-warn-conflicts",
+    ]);
+  }
+  if (DEBUG_MODE) {
+    console.log(
+      "Installing",
+      pkgList.length,
+      "using the command",
+      python_cmd_for_tree,
+      pipInstallArgs.join(" "),
+    );
+  }
+  for (const apkg of pkgList) {
+    let pkgSpecifier = apkg.name;
+    if (apkg.version && apkg.version !== "latest") {
+      pkgSpecifier = `${apkg.name}==${apkg.version}`;
+    } else if (apkg.properties) {
+      let versionSpecifierFound = false;
+      for (const aprop of apkg.properties) {
+        if (aprop.name === "cdx:pypi:versionSpecifiers") {
+          pkgSpecifier = `${apkg.name}${aprop.value}`;
+          versionSpecifierFound = true;
+          break;
+        }
+      }
+      if (!versionSpecifierFound) {
+        failedPkgList.push(apkg);
+        continue;
+      }
+    } else {
+      failedPkgList.push(apkg);
+      continue;
+    }
+    if (DEBUG_MODE) {
+      console.log("Installing", pkgSpecifier);
+    }
+    // Attempt to perform pip install for pkgSpecifier
+    const result = spawnSync(
+      python_cmd_for_tree,
+      [...pipInstallArgs, pkgSpecifier],
+      {
+        cwd: basePath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        shell: isWin,
+        env,
+      },
+    );
+    if (result.status !== 0 || result.error) {
+      failedPkgList.push(apkg);
+      if (DEBUG_MODE) {
+        console.log(apkg.name, "failed to install.");
+      }
+    }
+  }
+  // Did any package get installed successfully?
+  if (failedPkgList.length < pkgList.length) {
+    const dependenciesMap = {};
+    const tree = getTreeWithPlugin(env, python_cmd_for_tree, basePath);
+    for (const t of tree) {
+      const name = t.name.replace(/_/g, "-").toLowerCase();
+      // We can ignore excluded components such as build tools
+      if (PYTHON_EXCLUDED_COMPONENTS.includes(name)) {
+        continue;
+      }
+      if (parentComponent && parentComponent.name === t.name) {
+        t.version = parentComponent.version;
+      } else if (t.version && t.version === "latest") {
+        continue;
+      }
+      const version = t.version;
+      const purlString = new PackageURL(
+        "pypi",
+        "",
+        name,
+        version,
+        null,
+        null,
+      ).toString();
+      const apkg = {
+        name,
+        version,
+        purl: purlString,
+        type: "library",
+        "bom-ref": decodeURIComponent(purlString),
+        evidence: {
+          identity: {
+            field: "purl",
+            confidence: 0.5,
+            methods: [
+              {
+                technique: "instrumentation",
+                confidence: 0.5,
+                value: env.VIRTUAL_ENV,
+              },
+            ],
+          },
+        },
+      };
+      // These packages have lower confidence
+      pkgList.push(apkg);
+      rootList.push({
+        name,
+        version,
+        purl: purlString,
+        "bom-ref": decodeURIComponent(purlString),
+      });
+      flattenDeps(dependenciesMap, pkgList, undefined, t);
+    } // end for
+    for (const k of Object.keys(dependenciesMap)) {
+      dependenciesList.push({ ref: k, dependsOn: dependenciesMap[k] });
+    }
+  } // end if
+  return {
+    failedPkgList,
+    rootList,
+    dependenciesList,
   };
 }
 
@@ -11235,4 +11660,23 @@ export function isValidIriReference(iri) {
     return true;
   }
   return false;
+}
+
+/**
+ * Method to check if a given dependency tree is partial or not.
+ *
+ * @param {Array} dependencies List of dependencies
+ * @returns {Boolean} True if the dependency tree lacks any non-root parents without children. False otherwise.
+ */
+export function isPartialTree(dependencies) {
+  if (dependencies?.length <= 1) {
+    return true;
+  }
+  let parentsWithChildsCount = 0;
+  for (const adep of dependencies) {
+    if (adep?.dependsOn.length > 0) {
+      parentsWithChildsCount++;
+    }
+  }
+  return parentsWithChildsCount <= 1;
 }

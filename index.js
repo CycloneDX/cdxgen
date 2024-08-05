@@ -63,12 +63,15 @@ import {
   getMvnMetadata,
   getNugetMetadata,
   getPipFrozenTree,
+  getPipTreeForPackages,
   getPyMetadata,
   getPyModules,
   getSwiftPackageMetadata,
   getTimestamp,
   hasAnyProjectType,
   includeMavenTestScope,
+  isFeatureEnabled,
+  isPartialTree,
   isValidIriReference,
   parseBazelActionGraph,
   parseBazelSkyframe,
@@ -1526,7 +1529,6 @@ export async function createJavaBom(path, options) {
             ) {
               parentComponent = bomJsonObj.metadata.component;
               options.parentComponent = parentComponent;
-              pkgList = [];
             }
             if (bomJsonObj.components) {
               // Inject evidence into the components. #994
@@ -1941,9 +1943,15 @@ export async function createJavaBom(path, options) {
 
   // Bazel
   // Look for the BUILD file only in the root directory
-  const bazelFiles = getAllFiles(path, "BUILD", options);
+  // NOTE: This can match BUILD files used by perl, so could lead to errors in some projects
+  const bazelFiles = getAllFiles(
+    path,
+    `${options.multiProject ? "**/" : ""}BUILD*`,
+    options,
+  );
   if (
     bazelFiles?.length &&
+    !hasAnyProjectType(["docker", "oci", "container", "os"], options, false) &&
     !options.projectType?.includes("maven") &&
     !options.projectType?.includes("gradle") &&
     !options.projectType?.includes("scala") &&
@@ -1956,9 +1964,18 @@ export async function createJavaBom(path, options) {
     for (const f of bazelFiles) {
       const basePath = dirname(f);
       // Invoke bazel build first
-      const bazelTarget = process.env.BAZEL_TARGET || ":all";
-      console.log("Executing", BAZEL_CMD, "build", bazelTarget, "in", basePath);
-      let result = spawnSync(BAZEL_CMD, ["build", bazelTarget], {
+      const bazelTarget = process.env.BAZEL_TARGET || "//...";
+      let bArgs = [
+        ...(process.env?.BAZEL_ARGS?.split(" ") || []),
+        "build",
+        bazelTarget,
+      ];
+      // Automatically load any bazelrc file
+      if (!process.env.BAZEL_ARGS && existsSync(join(basePath, ".bazelrc"))) {
+        bArgs = ["--bazelrc=.bazelrc", "build", bazelTarget];
+      }
+      console.log("Executing", BAZEL_CMD, bArgs.join(" "), "in", basePath);
+      let result = spawnSync(BAZEL_CMD, bArgs, {
         cwd: basePath,
         shell: true,
         encoding: "utf-8",
@@ -1975,16 +1992,23 @@ export async function createJavaBom(path, options) {
         options.failOnError && process.exit(1);
       } else {
         const target = process.env.BAZEL_TARGET || "//...";
-        let query;
+        let query = [...(process.env?.BAZEL_ARGS?.split(" ") || [])];
         let bazelParser;
+        // Automatically load any bazelrc file
+        if (!process.env.BAZEL_ARGS && existsSync(join(basePath, ".bazelrc"))) {
+          query = ["--bazelrc=.bazelrc"];
+        }
         if (["true", "1"].includes(process.env.BAZEL_USE_ACTION_GRAPH)) {
-          query = ["aquery", `outputs('.*.jar',deps(${target}))`];
+          query = query.concat(["aquery", `outputs('.*.jar',deps(${target}))`]);
           bazelParser = parseBazelActionGraph;
         } else {
-          query = ["aquery", "--output=textproto", "--skyframe_state"];
+          query = query.concat([
+            "aquery",
+            "--output=textproto",
+            "--skyframe_state",
+          ]);
           bazelParser = parseBazelSkyframe;
         }
-
         console.log("Executing", BAZEL_CMD, `${query.join(" ")} in`, basePath);
         result = spawnSync(BAZEL_CMD, query, {
           cwd: basePath,
@@ -2064,8 +2088,12 @@ export async function createJavaBom(path, options) {
     options,
   );
 
-  if (sbtProjects?.length) {
-    let pkgList = [];
+  if (
+    sbtProjects?.length &&
+    !options.projectType?.includes("bazel") &&
+    !options.projectType?.includes("gradle") &&
+    !options.projectType?.includes("maven")
+  ) {
     // If the project use sbt lock files
     if (sbtLockFiles?.length) {
       for (const f of sbtLockFiles) {
@@ -2749,6 +2777,10 @@ export async function createPythonBom(path, options) {
   if (pyProjectMode) {
     const tmpParentComponent = parsePyProjectToml(pyProjectFile);
     if (tmpParentComponent?.name) {
+      // Bug fix. Version could be missing in pyproject.toml
+      if (!tmpParentComponent.version && parentComponent.version) {
+        tmpParentComponent.version = parentComponent.version;
+      }
       parentComponent = tmpParentComponent;
       delete parentComponent.homepage;
       delete parentComponent.repository;
@@ -2807,7 +2839,7 @@ export async function createPythonBom(path, options) {
       const parentDependsOn = [];
       // Complete the dependency tree by making parent component depend on the first level
       for (const p of retMap.rootList) {
-        parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
+        parentDependsOn.push(`pkg:pypi/${p.name.toLowerCase()}@${p.version}`);
       }
       const pdependencies = {
         ref: parentComponent["bom-ref"],
@@ -2815,6 +2847,7 @@ export async function createPythonBom(path, options) {
       };
       dependencies.splice(0, 0, pdependencies);
     }
+    options.parentComponent = parentComponent;
     return buildBomNSData(options, pkgList, "pypi", {
       src: path,
       filename: poetryFiles.join(", "),
@@ -2822,7 +2855,7 @@ export async function createPythonBom(path, options) {
       parentComponent,
       formulationList,
     });
-  }
+  } // poetryMode
   if (metadataFiles?.length) {
     // dist-info directories
     for (const mf of metadataFiles) {
@@ -2954,50 +2987,63 @@ export async function createPythonBom(path, options) {
       } else {
         pkgMap = getPipFrozenTree(path, undefined, tempDir, parentComponent);
       }
+
       // Get the imported modules and a dedupe list of packages
       const parentDependsOn = new Set();
-      const retMap = await getPyModules(path, pkgList, options);
-      // We need to patch the existing package list to add ImportedModules for evinse to work
-      if (retMap.modList?.length) {
-        const iSymbolsMap = {};
-        retMap.modList.forEach((v) => {
-          iSymbolsMap[v.name] = v.importedSymbols;
-          iSymbolsMap[v.name.replace(/_/g, "-")] = v.importedSymbols;
-        });
-        for (const apkg of pkgList) {
-          if (iSymbolsMap[apkg.name]) {
-            apkg.properties = apkg.properties || [];
-            apkg.properties.push({
-              name: "ImportedModules",
-              value: iSymbolsMap[apkg.name],
-            });
+
+      // ATOM parsedeps block
+      // Atom parsedeps slices can be used to identify packages that are not declared in manifests
+      // Since it is a slow operation, we only use it as a fallback or in deep mode
+      // This change was made in 10.9.2 release onwards
+      if (options.deep || !pkgList.length) {
+        const retMap = await getPyModules(path, pkgList, options);
+        // We need to patch the existing package list to add ImportedModules for evinse to work
+        if (retMap.modList?.length) {
+          const iSymbolsMap = {};
+          retMap.modList.forEach((v) => {
+            iSymbolsMap[v.name] = v.importedSymbols;
+            iSymbolsMap[v.name.replace(/_/g, "-")] = v.importedSymbols;
+          });
+          for (const apkg of pkgList) {
+            if (iSymbolsMap[apkg.name]) {
+              apkg.properties = apkg.properties || [];
+              apkg.properties.push({
+                name: "ImportedModules",
+                value: iSymbolsMap[apkg.name],
+              });
+            }
           }
         }
-      }
-      if (retMap.pkgList?.length) {
-        pkgList = pkgList.concat(retMap.pkgList);
-        for (const p of retMap.pkgList) {
-          if (
-            !p.version ||
-            (parentComponent &&
-              p.name === parentComponent.name &&
-              (p.version === parentComponent.version || p.version === "latest"))
-          ) {
-            continue;
+        if (retMap.pkgList?.length) {
+          pkgList = pkgList.concat(retMap.pkgList);
+          for (const p of retMap.pkgList) {
+            if (
+              !p.version ||
+              (parentComponent &&
+                p.name === parentComponent.name &&
+                (p.version === parentComponent.version ||
+                  p.version === "latest"))
+            ) {
+              continue;
+            }
+            parentDependsOn.add(
+              `pkg:pypi/${p.name.toLowerCase()}@${p.version}`,
+            );
           }
-          parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
+        }
+        if (retMap.dependenciesList) {
+          dependencies = mergeDependencies(
+            dependencies,
+            retMap.dependenciesList,
+            parentComponent,
+          );
+        }
+        if (retMap.allImports) {
+          allImports = { ...allImports, ...retMap.allImports };
         }
       }
-      if (retMap.dependenciesList) {
-        dependencies = mergeDependencies(
-          dependencies,
-          retMap.dependenciesList,
-          parentComponent,
-        );
-      }
-      if (retMap.allImports) {
-        allImports = { ...allImports, ...retMap.allImports };
-      }
+      // ATOM parsedeps block
+
       // Complete the dependency tree by making parent component depend on the first level
       for (const p of pkgMap.rootList) {
         if (
@@ -3007,7 +3053,7 @@ export async function createPythonBom(path, options) {
         ) {
           continue;
         }
-        parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
+        parentDependsOn.add(`pkg:pypi/${p.name.toLowerCase()}@${p.version}`);
       }
       if (pkgMap.pkgList?.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
@@ -3047,6 +3093,45 @@ export async function createPythonBom(path, options) {
     const dlist = await parseSetupPyFile(setupPyData);
     if (dlist?.length) {
       pkgList = pkgList.concat(dlist);
+    }
+  }
+  // Check and complete the dependency tree
+  if (
+    isFeatureEnabled(options, "safe-pip-install") &&
+    pkgList.length &&
+    isPartialTree(dependencies)
+  ) {
+    // Trim the current package list first
+    pkgList = trimComponents(pkgList);
+    console.log(
+      `Attempting to recover the pip dependency tree from ${pkgList.length} packages. Please wait ...`,
+    );
+    const newPkgMap = getPipTreeForPackages(
+      path,
+      pkgList,
+      tempDir,
+      parentComponent,
+    );
+    if (DEBUG_MODE && newPkgMap.failedPkgList.length) {
+      if (newPkgMap.failedPkgList.length < pkgList.length) {
+        console.log(
+          `${newPkgMap.failedPkgList.length} packages failed to install.`,
+        );
+      }
+    }
+    if (newPkgMap?.pkgList?.length) {
+      pkgList = pkgList.concat(newPkgMap.pkgList);
+      pkgList = trimComponents(pkgList);
+    }
+    if (newPkgMap.dependenciesList) {
+      dependencies = mergeDependencies(
+        dependencies,
+        newPkgMap.dependenciesList,
+        parentComponent,
+      );
+      if (DEBUG_MODE && dependencies.length > 1) {
+        console.log("Recovered", dependencies.length, "dependencies.");
+      }
     }
   }
   // Clean up
@@ -4873,6 +4958,32 @@ export async function createCsharpBom(path, options) {
     `${options.multiProject ? "**/" : ""}*.nupkg`,
     options,
   );
+  // Support for detecting and suggesting build tools for this project
+  // We parse all the .csproj files to collect the target framework strings
+  if (isFeatureEnabled(options, "suggest-build-tools")) {
+    const targetFrameworks = new Set();
+    for (const f of csProjFiles) {
+      const csProjData = readFileSync(f, { encoding: "utf-8" });
+      const retMap = parseCsProjData(csProjData, f, {});
+      if (retMap?.parentComponent?.properties) {
+        const parentProperties = retMap.parentComponent.properties;
+        retMap.parentComponent.properties
+          .filter(
+            (p) =>
+              p.name === "cdx:dotnet:target_framework" && p.value.trim().length,
+          )
+          .forEach((p) => {
+            const frameworkValues = p.value
+              .split(";")
+              .filter((v) => v.trim().length && !v.startsWith("$("))
+              .forEach((v) => {
+                targetFrameworks.add(v);
+              });
+          });
+      }
+    }
+    console.log("Target frameworks found:", Array.from(targetFrameworks));
+  }
   // Support for automatic restore for .Net projects
   if (
     options.installDeps &&
@@ -4922,9 +5033,11 @@ export async function createCsharpBom(path, options) {
           console.log(
             "Authenticate with any private registries such as Azure Artifacts feed before running cdxgen.",
           );
-          console.log(
-            "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
-          );
+          if (process.env?.CDXGEN_IN_CONTAINER !== "true") {
+            console.log(
+              "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-dotnet6:v10` container image, which bundles nuget (mono) and a range of dotnet SDKs.",
+            );
+          }
         }
         console.log(result.stdout, result.stderr);
         options.failOnError && process.exit(1);
@@ -5050,10 +5163,6 @@ export async function createCsharpBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       pkgData = readFileSync(f, { encoding: "utf-8" });
-      // Remove byte order mark
-      if (pkgData.charCodeAt(0) === 0xfeff) {
-        pkgData = pkgData.slice(1);
-      }
       const dlist = parseCsPkgData(pkgData, f);
       if (dlist?.length) {
         pkgList = pkgList.concat(dlist);
@@ -5100,13 +5209,9 @@ export async function createCsharpBom(path, options) {
       if (DEBUG_MODE) {
         console.log(`Parsing ${f}`);
       }
-      let csProjData = readFileSync(f, { encoding: "utf-8" });
-      // Remove byte order mark
-      if (csProjData.charCodeAt(0) === 0xfeff) {
-        csProjData = csProjData.slice(1);
-      }
+      const csProjData = readFileSync(f, { encoding: "utf-8" });
       const retMap = parseCsProjData(csProjData, f, pkgNameVersions);
-      if (retMap?.parentComponent) {
+      if (retMap?.parentComponent?.purl) {
         // If there are multiple project files, track the parent components using nested components
         if (csProjFiles.length > 1) {
           if (!parentComponent.components) {
@@ -6453,8 +6558,18 @@ export async function submitBom(args, bomContents) {
     );
   }
   try {
+    if (DEBUG_MODE && args.skipDtTlsCheck) {
+      console.log(
+        "Calling ",
+        serverUrl,
+        "with --skip-dt-tls-check argument: Skip DT TLS check.",
+      );
+    }
     return await got(serverUrl, {
       method: "PUT",
+      https: {
+        rejectUnauthorized: !args.skipDtTlsCheck,
+      },
       headers: {
         "X-Api-Key": args.apiKey,
         "Content-Type": "application/json",
@@ -6470,10 +6585,16 @@ export async function submitBom(args, bomContents) {
         "Received Unauthorized error. Check the API key used is valid and has necessary permissions to create projects and upload bom.",
       );
     } else if (error.response && error.response.statusCode === 405) {
+      console.log(
+        "Method PUT not allowed on Dependency-Track server. Trying with POST ...",
+      );
       // Method not allowed errors
       try {
         return await got(serverUrl, {
           method: "POST",
+          https: {
+            rejectUnauthorized: !args.skipDtTlsCheck,
+          },
           headers: {
             "X-Api-Key": args.apiKey,
             "Content-Type": "application/json",
@@ -6483,14 +6604,27 @@ export async function submitBom(args, bomContents) {
           responseType: "json",
         }).json();
       } catch (error) {
-        console.log(
-          "Unable to submit the SBOM to the Dependency-Track server using POST method",
-        );
+        if (DEBUG_MODE) {
+          console.log(
+            "Unable to submit the SBOM to the Dependency-Track server using POST method",
+            error,
+          );
+        } else {
+          console.log(
+            "Unable to submit the SBOM to the Dependency-Track server using POST method",
+          );
+        }
       }
     } else {
-      console.log("Unable to submit the SBOM to the Dependency-Track server");
+      if (DEBUG_MODE) {
+        console.log(
+          "Unable to submit the SBOM to the Dependency-Track server using POST method",
+          error,
+        );
+      } else {
+        console.log("Unable to submit the SBOM to the Dependency-Track server");
+      }
     }
-    console.log(error.response?.body);
     return error.response?.body;
   }
 }
