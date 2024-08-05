@@ -2837,7 +2837,7 @@ export async function createPythonBom(path, options) {
       const parentDependsOn = [];
       // Complete the dependency tree by making parent component depend on the first level
       for (const p of retMap.rootList) {
-        parentDependsOn.push(`pkg:pypi/${p.name}@${p.version}`);
+        parentDependsOn.push(`pkg:pypi/${p.name.toLowerCase()}@${p.version}`);
       }
       const pdependencies = {
         ref: parentComponent["bom-ref"],
@@ -3024,7 +3024,9 @@ export async function createPythonBom(path, options) {
             ) {
               continue;
             }
-            parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
+            parentDependsOn.add(
+              `pkg:pypi/${p.name.toLowerCase()}@${p.version}`,
+            );
           }
         }
         if (retMap.dependenciesList) {
@@ -3049,7 +3051,7 @@ export async function createPythonBom(path, options) {
         ) {
           continue;
         }
-        parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
+        parentDependsOn.add(`pkg:pypi/${p.name.toLowerCase()}@${p.version}`);
       }
       if (pkgMap.pkgList?.length) {
         pkgList = pkgList.concat(pkgMap.pkgList);
