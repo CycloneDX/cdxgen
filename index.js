@@ -1943,6 +1943,7 @@ export async function createJavaBom(path, options) {
 
   // Bazel
   // Look for the BUILD file only in the root directory
+  // NOTE: This can match BUILD files used by perl, so could lead to errors in some projects
   const bazelFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}BUILD*`,
@@ -1950,6 +1951,7 @@ export async function createJavaBom(path, options) {
   );
   if (
     bazelFiles?.length &&
+    !hasAnyProjectType(["docker", "oci", "container", "os"], options, false) &&
     !options.projectType?.includes("maven") &&
     !options.projectType?.includes("gradle") &&
     !options.projectType?.includes("scala") &&
