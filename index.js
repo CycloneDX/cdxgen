@@ -6543,8 +6543,18 @@ export async function submitBom(args, bomContents) {
     );
   }
   try {
+    if (DEBUG_MODE && args.skipDtTlsCheck) {
+      console.log(
+        "Calling ",
+        serverUrl,
+        "with --skip-dt-tls-check argument: Skip DT TLS check.",
+      );
+    }
     return await got(serverUrl, {
       method: "PUT",
+      https: {
+        rejectUnauthorized: !args.skipDtTlsCheck,
+      },
       headers: {
         "X-Api-Key": args.apiKey,
         "Content-Type": "application/json",
@@ -6560,10 +6570,16 @@ export async function submitBom(args, bomContents) {
         "Received Unauthorized error. Check the API key used is valid and has necessary permissions to create projects and upload bom.",
       );
     } else if (error.response && error.response.statusCode === 405) {
+      console.log(
+        "Method PUT not allowed on Dependency-Track server. Trying with POST ...",
+      );
       // Method not allowed errors
       try {
         return await got(serverUrl, {
           method: "POST",
+          https: {
+            rejectUnauthorized: !args.skipDtTlsCheck,
+          },
           headers: {
             "X-Api-Key": args.apiKey,
             "Content-Type": "application/json",
@@ -6573,14 +6589,27 @@ export async function submitBom(args, bomContents) {
           responseType: "json",
         }).json();
       } catch (error) {
-        console.log(
-          "Unable to submit the SBOM to the Dependency-Track server using POST method",
-        );
+        if (DEBUG_MODE) {
+          console.log(
+            "Unable to submit the SBOM to the Dependency-Track server using POST method",
+            error,
+          );
+        } else {
+          console.log(
+            "Unable to submit the SBOM to the Dependency-Track server using POST method",
+          );
+        }
       }
     } else {
-      console.log("Unable to submit the SBOM to the Dependency-Track server");
+      if (DEBUG_MODE) {
+        console.log(
+          "Unable to submit the SBOM to the Dependency-Track server using POST method",
+          error,
+        );
+      } else {
+        console.log("Unable to submit the SBOM to the Dependency-Track server");
+      }
     }
-    console.log(error.response?.body);
     return error.response?.body;
   }
 }
