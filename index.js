@@ -2985,50 +2985,61 @@ export async function createPythonBom(path, options) {
       } else {
         pkgMap = getPipFrozenTree(path, undefined, tempDir, parentComponent);
       }
+
       // Get the imported modules and a dedupe list of packages
       const parentDependsOn = new Set();
-      const retMap = await getPyModules(path, pkgList, options);
-      // We need to patch the existing package list to add ImportedModules for evinse to work
-      if (retMap.modList?.length) {
-        const iSymbolsMap = {};
-        retMap.modList.forEach((v) => {
-          iSymbolsMap[v.name] = v.importedSymbols;
-          iSymbolsMap[v.name.replace(/_/g, "-")] = v.importedSymbols;
-        });
-        for (const apkg of pkgList) {
-          if (iSymbolsMap[apkg.name]) {
-            apkg.properties = apkg.properties || [];
-            apkg.properties.push({
-              name: "ImportedModules",
-              value: iSymbolsMap[apkg.name],
-            });
+
+      // ATOM parsedeps block
+      // Atom parsedeps slices can be used to identify packages that are not declared in manifests
+      // Since it is a slow operation, we only use it as a fallback or in deep mode
+      // This change was made in 10.9.2 release onwards
+      if (options.deep || !pkgList.length) {
+        const retMap = await getPyModules(path, pkgList, options);
+        // We need to patch the existing package list to add ImportedModules for evinse to work
+        if (retMap.modList?.length) {
+          const iSymbolsMap = {};
+          retMap.modList.forEach((v) => {
+            iSymbolsMap[v.name] = v.importedSymbols;
+            iSymbolsMap[v.name.replace(/_/g, "-")] = v.importedSymbols;
+          });
+          for (const apkg of pkgList) {
+            if (iSymbolsMap[apkg.name]) {
+              apkg.properties = apkg.properties || [];
+              apkg.properties.push({
+                name: "ImportedModules",
+                value: iSymbolsMap[apkg.name],
+              });
+            }
           }
         }
-      }
-      if (retMap.pkgList?.length) {
-        pkgList = pkgList.concat(retMap.pkgList);
-        for (const p of retMap.pkgList) {
-          if (
-            !p.version ||
-            (parentComponent &&
-              p.name === parentComponent.name &&
-              (p.version === parentComponent.version || p.version === "latest"))
-          ) {
-            continue;
+        if (retMap.pkgList?.length) {
+          pkgList = pkgList.concat(retMap.pkgList);
+          for (const p of retMap.pkgList) {
+            if (
+              !p.version ||
+              (parentComponent &&
+                p.name === parentComponent.name &&
+                (p.version === parentComponent.version ||
+                  p.version === "latest"))
+            ) {
+              continue;
+            }
+            parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
           }
-          parentDependsOn.add(`pkg:pypi/${p.name}@${p.version}`);
+        }
+        if (retMap.dependenciesList) {
+          dependencies = mergeDependencies(
+            dependencies,
+            retMap.dependenciesList,
+            parentComponent,
+          );
+        }
+        if (retMap.allImports) {
+          allImports = { ...allImports, ...retMap.allImports };
         }
       }
-      if (retMap.dependenciesList) {
-        dependencies = mergeDependencies(
-          dependencies,
-          retMap.dependenciesList,
-          parentComponent,
-        );
-      }
-      if (retMap.allImports) {
-        allImports = { ...allImports, ...retMap.allImports };
-      }
+      // ATOM parsedeps block
+
       // Complete the dependency tree by making parent component depend on the first level
       for (const p of pkgMap.rootList) {
         if (
