@@ -10089,7 +10089,7 @@ export function getPipFrozenTree(
           versionRelatedError = true;
           if (process.env.PIP_INSTALL_ARGS) {
             console.log(
-              "1. Try invoking cdxgen with a different python version type. Example: `-t python`, `-t python310`, or `-t python39`\n",
+              "1. Try invoking cdxgen with a different python type. Example: `-t python`, `-t python310`, or `-t python39`\n",
             );
           } else {
             console.log(
@@ -10115,6 +10115,9 @@ export function getPipFrozenTree(
         }
         if (!versionRelatedError) {
           if (DEBUG_MODE) {
+            console.info(
+              "\nEXPERIMENTAL: Invoke cdxgen with '--feature-flags safe-pip-install' to recover a partial dependency tree for projects with build errors.\n",
+            );
             console.log("args used:", pipInstallArgs);
             if (result.stderr) {
               console.log(result.stderr);
@@ -10128,7 +10131,7 @@ export function getPipFrozenTree(
               );
             } else {
               console.log(
-                "- For example, you may have to install gcc, gcc-c++ compiler, make tools, and additional development libraries using apt-get or yum package manager.",
+                "- For example, you may have to install gcc, gcc-c++ compiler, postgresql or mysql devel packages and additional development libraries using apt-get or yum package manager.",
               );
             }
             console.log(
@@ -10152,6 +10155,9 @@ export function getPipFrozenTree(
             ) {
               console.log(
                 "1. Try invoking cdxgen with a different python version type. Example: `-t python`, `-t python39`, or `-t python311`",
+              );
+              console.log(
+                "2. Try with the experimental flag '--feature-flags safe-pip-install'",
               );
             }
           } else {

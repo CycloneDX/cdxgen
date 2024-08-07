@@ -6,7 +6,7 @@ import {
   installSdkmanTool,
   isSdkmanAvailable,
 } from "./envcontext.js";
-import { hasAnyProjectType } from "./utils.js";
+import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
 
 /**
  * Method to prepare the build environment for BOM generation purposes.
@@ -79,8 +79,13 @@ export function preparePythonEnv(filePath, options) {
           .replace("3", "3.");
         process.env.PIP_INSTALL_ARGS = `--python-version ${py_version_number} --ignore-requires-python --no-warn-conflicts --only-binary=:all:`;
         process.env.PIP_TARGET = tempDir;
-        console.log("PIP_INSTALL_ARGS set to", process.env.PIP_INSTALL_ARGS);
-        console.log("PIP_TARGET set to", process.env.PIP_TARGET);
+        if (DEBUG_MODE) {
+          console.log("PIP_INSTALL_ARGS set to", process.env.PIP_INSTALL_ARGS);
+          console.log("PIP_TARGET set to", process.env.PIP_TARGET);
+        }
+        console.warn(
+          "Dependency tree will not be available when using python version type. This is due to a design limitation with pip.",
+        );
         break;
       }
     }
