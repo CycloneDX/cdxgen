@@ -217,6 +217,11 @@ jobs:
           repository: 'fortra/impacket'
           path: 'repotests/impacket'
           ref: 'impacket_0_9_20'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'wix/greyhound'
+          path: 'repotests/greyhound'
+          ref: '385bb84a6f712ee18064a3b5ecb8d9dcbc1c75f3'
       - uses: dtolnay/rust-toolchain@stable
       - name: repotests java-sec-code
         run: |
@@ -307,6 +312,22 @@ jobs:
         run: |
           bin/cdxgen.js -p -r -t java repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json --validate
         shell: bash
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: repotests greyhound
+        run: |
+          bin/cdxgen.js -p -r -t java repotests/greyhound -o bomresults/bom-greyhound-java.json
+          bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
+          bin/cdxgen.js -p -r -t java --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
+        shell: bash
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - name: repotests gallery
         run: |
           bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --validate
