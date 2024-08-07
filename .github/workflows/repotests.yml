@@ -226,6 +226,7 @@ jobs:
       - name: setup sdkman
         run: |
           curl -s "https://get.sdkman.io" | bash
+        if: runner.os != 'Windows'
       - name: repotests java-sec-code
         run: |
           bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-1.json --include-formulation --include-crypto
