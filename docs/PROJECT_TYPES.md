@@ -51,6 +51,7 @@ _*NOTE:*_
 > - sbt is required for parsing scala sbt projects. Only scala 2.10 + sbt 0.13.6+ and 2.12 + sbt 1.0+ are currently supported.
 >   - Alternatively, create a lock file using sbt-dependency-lock [plugin](https://github.com/stringbean/sbt-dependency-lock)
 > - sdkman must be installed and setup to use the new Java with version types such as java8, java11.
+> - While python3.6 is supported (-t python36), dependency tree construction requires python >= 3.9
 
 Use of the container image is recommended in all these cases, since it has the build tools pre-installed.
 
