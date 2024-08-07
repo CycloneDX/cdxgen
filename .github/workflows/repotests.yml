@@ -240,6 +240,14 @@ jobs:
           bin/cdxgen.js -p -t java -t github repotests/java-sec-code -o bomresults/bom-java-sec-code-9.json
           bin/cdxgen.js -p -t java -exclude-type js repotests/java-sec-code -o bomresults/bom-java-sec-code-10.json
         shell: bash
+      - name: repotests greyhound
+        run: |
+          bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
+          bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
+          bin/cdxgen.js -p -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
+        shell: bash
+        env:
+          JAVA_HOME: ""
       - name: repotests evidence
         run: |
           bin/cdxgen.js -p -t js --no-recurse -o bomresults/bom.json --evidence .
@@ -253,16 +261,10 @@ jobs:
         run: |
           bin/cdxgen.js -t python repotests/dbt-oracle -o bomresults/dbt-oracle.json --deep --spec-version 1.6
         shell: bash
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
       - name: repotests impacket
         run: |
           bin/cdxgen.js -t python repotests/impacket -o bomresults/impacket.json
         shell: bash
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
       - name: repotests shiftleft-java-example
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign
@@ -316,22 +318,6 @@ jobs:
         run: |
           bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json --validate
         shell: bash
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-      - name: repotests greyhound
-        run: |
-          bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
-          bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
-          bin/cdxgen.js -p -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
-        shell: bash
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
       - name: repotests gallery
         run: |
           bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --validate

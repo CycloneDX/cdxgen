@@ -13,7 +13,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 
 const PIP_TREE_PLUGIN_CONTENT = `
 import importlib.metadata as importlib_metadata
@@ -133,6 +133,14 @@ export const getTreeWithPlugin = (env, python_cmd, basePath) => {
   const pipTreeJson = join(tempDir, "piptree.json");
   const pipPluginArgs = [pipPlugin, pipTreeJson];
   writeFileSync(pipPlugin, PIP_TREE_PLUGIN_CONTENT);
+  if (env.PIP_TARGET) {
+    if (!env.PYTHONPATH) {
+      env.PYTHONPATH = "";
+    }
+    if (!env.PYTHONPATH.includes(env.PIP_TARGET)) {
+      env.PYTHONPATH = `${env.PYTHONPATH}${delimiter}${env.PIP_TARGET}`;
+    }
+  }
   const result = spawnSync(python_cmd, pipPluginArgs, {
     cwd: basePath,
     encoding: "utf-8",

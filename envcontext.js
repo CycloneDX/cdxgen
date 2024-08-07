@@ -418,6 +418,12 @@ export function installSdkmanTool(toolType, toolName) {
       },
     );
     if (result.status === 1 || result.error) {
+      console.log(
+        "Unable to install",
+        toolType,
+        toolName,
+        "due to below errors.",
+      );
       if (console.stdout) {
         console.log(result.stdout);
       }
@@ -429,16 +435,29 @@ export function installSdkmanTool(toolType, toolName) {
   }
   const toolUpper = toolType.toUpperCase();
   // Set process env variables
-  if (process.env[`${toolUpper}_HOME`]) {
+  if (
+    process.env[`${toolUpper}_HOME`] &&
+    process.env[`${toolUpper}_HOME`].includes("current")
+  ) {
     process.env[`${toolUpper}_HOME`] = process.env[`${toolUpper}_HOME`].replace(
       "current",
       toolName,
+    );
+    console.log(
+      `${toolUpper}_HOME`,
+      "set to",
+      process.env[`${toolUpper}_HOME`],
     );
   } else if (process.env.SDKMAN_CANDIDATES_DIR) {
     process.env[`${toolUpper}_HOME`] = join(
       process.env.SDKMAN_CANDIDATES_DIR,
       toolType,
       toolName,
+    );
+    console.log(
+      `${toolUpper}_HOME`,
+      "set to",
+      process.env[`${toolUpper}_HOME`],
     );
   }
   const toolCurrentBin = join(toolType, "current", "bin");

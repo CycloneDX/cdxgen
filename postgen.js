@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PackageURL } from "packageurl-js";
 import { dirNameStr } from "./utils.js";
@@ -23,6 +24,7 @@ export function postProcess(bomNSData, options) {
   bomNSData.bomJson = filterBom(jsonPayload, options);
   bomNSData.bomJson = applyStandards(bomNSData.bomJson, options);
   bomNSData.bomJson = applyMetadata(bomNSData.bomJson, options);
+  cleanupEnv(options);
   return bomNSData;
 }
 
@@ -227,4 +229,13 @@ export function filterBom(bomJson, options) {
     }
   }
   return bomJson;
+}
+
+/**
+ * Clean up
+ */
+export function cleanupEnv(options) {
+  if (process.env?.PIP_TARGET?.startsWith(tmpdir())) {
+    rmSync(process.env.PIP_TARGET, { recursive: true, force: true });
+  }
 }

@@ -34,4 +34,8 @@ export function applyStandards(bomJson: any, options: any): any;
  * @returns {Object} Filtered BOM JSON
  */
 export function filterBom(bomJson: any, options: any): any;
+/**
+ * Clean up
+ */
+export function cleanupEnv(options: any): void;
 //# sourceMappingURL=postgen.d.ts.map

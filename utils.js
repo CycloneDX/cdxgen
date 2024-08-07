@@ -274,6 +274,8 @@ export const PROJECT_TYPE_ALIASES = {
     "py",
     "python",
     "pypi",
+    "python36",
+    "python38",
     "python39",
     "python310",
     "python311",
@@ -283,7 +285,21 @@ export const PROJECT_TYPE_ALIASES = {
   rust: ["rust", "rust-lang", "cargo"],
   php: ["php", "composer", "wordpress"],
   ruby: ["ruby", "gems", "rubygems"],
-  csharp: ["csharp", "netcore", "dotnet", "dotnet-framework", "vb", "fsharp"],
+  csharp: [
+    "csharp",
+    "netcore",
+    "netcore2.1",
+    "netcore3.1",
+    "dotnet",
+    "dotnet6",
+    "dotnet7",
+    "dotnet8",
+    "dotnet-framework",
+    "dotnet-framework47",
+    "dotnet-framework48",
+    "vb",
+    "fsharp",
+  ],
   dart: ["dart", "flutter", "pub"],
   haskell: ["haskell", "hackage", "cabal"],
   elixir: ["elixir", "hex", "mix"],
@@ -10045,7 +10061,7 @@ export function getPipFrozenTree(
         pipInstallArgs.push(resolve(basePath));
       }
       // Support for passing additional arguments to pip
-      // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts
+      // Eg: --python-version 3.10 --ignore-requires-python --no-warn-conflicts --only-binary=:all:
       if (process?.env?.PIP_INSTALL_ARGS) {
         const addArgs = process.env.PIP_INSTALL_ARGS.split(" ");
         pipInstallArgs = pipInstallArgs.concat(addArgs);
@@ -10071,13 +10087,37 @@ export function getPipFrozenTree(
           result.stderr?.includes("No matching distribution found for")
         ) {
           versionRelatedError = true;
-          console.log(
-            "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBOM accuracy.",
-          );
+          if (process.env.PIP_INSTALL_ARGS) {
+            console.log(
+              "1. Try invoking cdxgen with a different python type. Example: `-t python`, `-t python310`, or `-t python39`\n",
+            );
+          } else {
+            console.log(
+              "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBOM accuracy.\n",
+            );
+          }
           console.log(result.stderr);
+        } else if (
+          process.env.PIP_INSTALL_ARGS &&
+          result.stderr?.includes("Cannot set --home and --prefix together")
+        ) {
+          versionRelatedError = true;
+          if (DEBUG_MODE) {
+            console.log(result.stderr);
+          } else {
+            console.log(
+              "Possible build errors detected. Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot.",
+            );
+          }
+          console.warn(
+            "This project does not support python with version types. Use an appropriate container image such as `ghcr.io/appthreat/cdxgen-python39:v10` or `ghcr.io/appthreat/cdxgen-python311:v10` and invoke cdxgen with `-t python` instead.\n",
+          );
         }
         if (!versionRelatedError) {
           if (DEBUG_MODE) {
+            console.info(
+              "\nEXPERIMENTAL: Invoke cdxgen with '--feature-flags safe-pip-install' to recover a partial dependency tree for projects with build errors.\n",
+            );
             console.log("args used:", pipInstallArgs);
             if (result.stderr) {
               console.log(result.stderr);
@@ -10091,7 +10131,7 @@ export function getPipFrozenTree(
               );
             } else {
               console.log(
-                "- For example, you may have to install gcc, gcc-c++ compiler, make tools, and additional development libraries using apt-get or yum package manager.",
+                "- For example, you may have to install gcc, gcc-c++ compiler, postgresql or mysql devel packages and additional development libraries using apt-get or yum package manager.",
               );
             }
             console.log(
@@ -10100,9 +10140,24 @@ export function getPipFrozenTree(
             console.log(
               "- Check if any git submodules have to be initialized.\n- If the application has its own Dockerfile, look for any clues for build dependencies.",
             );
-            if (process.env?.CDXGEN_IN_CONTAINER !== "true") {
+            if (
+              process.env?.CDXGEN_IN_CONTAINER !== "true" &&
+              !process.env.PIP_INSTALL_ARGS
+            ) {
               console.log(
-                "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-python39:v10` or `ghcr.io/appthreat/cdxgen-python311:v10` container images, which bundles a range of build tools and development libraries.",
+                "1. Try invoking cdxgen with a specific python version type. Example: `-t python36` or `-t python39`",
+              );
+              console.log(
+                "2. Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-python39:v10` or `ghcr.io/appthreat/cdxgen-python311:v10` container images, which bundles a range of build tools and development libraries.",
+              );
+            } else if (
+              process.env?.PIP_INSTALL_ARGS?.includes("--python-version")
+            ) {
+              console.log(
+                "1. Try invoking cdxgen with a different python version type. Example: `-t python`, `-t python39`, or `-t python311`",
+              );
+              console.log(
+                "2. Try with the experimental flag '--feature-flags safe-pip-install'",
               );
             }
           } else {
