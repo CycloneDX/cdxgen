@@ -35,6 +35,9 @@ export function prepareEnv(filePath, options) {
  */
 export function prepareSdkmanBuild(projectType) {
   if (!isSdkmanAvailable()) {
+    console.log(
+      "Install sdkman by following the instructions at https://sdkman.io/install",
+    );
     return;
   }
   const toolType = "java";
