@@ -16,6 +16,16 @@ export function isFeatureEnabled(cliOptions: any, feature: string): boolean;
  */
 export function hasAnyProjectType(projectTypes: any[], options: any, defaultStatus?: boolean): any;
 /**
+ * Convenient method to check if the given package manager is allowed.
+ *
+ * @param {String} name Package manager name
+ * @param {Array} conflictingManagers List of package managers
+ * @param {Object} options CLI options
+ *
+ * @returns {Boolean} True if the package manager is allowed
+ */
+export function isPackageManagerAllowed(name: string, conflictingManagers: any[], options: any): boolean;
+/**
  * Method to get files matching a pattern
  *
  * @param {string} dirPath Root directory for search
@@ -1271,6 +1281,9 @@ export const PROJECT_TYPE_ALIASES: {
     binary: string[];
     oci: string[];
 };
+export namespace PACKAGE_MANAGER_ALIASES {
+    let scala: string[];
+}
 export const cdxgenAgent: any;
 export const RUBY_PLATFORM_PREFIXES: string[];
 //# sourceMappingURL=utils.d.ts.map

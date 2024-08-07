@@ -293,6 +293,11 @@ export const PROJECT_TYPE_ALIASES = {
   oci: ["docker", "oci", "container", "podman"],
 };
 
+// Package manager aliases
+export const PACKAGE_MANAGER_ALIASES = {
+  scala: ["sbt"],
+};
+
 /**
  * Method to check if a given feature flag is enabled.
  *
@@ -380,6 +385,26 @@ export function hasAnyProjectType(projectTypes, options, defaultStatus = true) {
     );
   }
   return shouldInclude;
+}
+
+/**
+ * Convenient method to check if the given package manager is allowed.
+ *
+ * @param {String} name Package manager name
+ * @param {Array} conflictingManagers List of package managers
+ * @param {Object} options CLI options
+ *
+ * @returns {Boolean} True if the package manager is allowed
+ */
+export function isPackageManagerAllowed(name, conflictingManagers, options) {
+  for (const apm of conflictingManagers) {
+    if (options?.projectType?.includes(apm)) {
+      return false;
+    }
+  }
+  return !options.excludeType?.filter(
+    (p) => p === name || PACKAGE_MANAGER_ALIASES[p]?.includes(name),
+  ).length;
 }
 
 // HTTP cache
@@ -10052,11 +10077,13 @@ export function getPipFrozenTree(
               "- Certain projects would only build with specific versions of Python. Data science and ML related projects might require a conda/anaconda distribution.",
             );
             console.log(
-              "- Check if any git submodules have to be initialized.",
+              "- Check if any git submodules have to be initialized.\n- If the application has its own Dockerfile, look for any clues for build dependencies.",
             );
-            console.log(
-              "- If the application has its own Dockerfile, look for any clues for build dependencies. Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-python:v10` container image, which bundles a range of build tools and development libraries.",
-            );
+            if (process.env?.CDXGEN_IN_CONTAINER !== "true") {
+              console.log(
+                "Alternatively, try using the unofficial `ghcr.io/appthreat/cdxgen-python39:v10` or `ghcr.io/appthreat/cdxgen-python311:v10` container images, which bundles a range of build tools and development libraries.",
+              );
+            }
           } else {
             console.log(
               "Possible build errors detected. Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot.",
@@ -10078,9 +10105,6 @@ export function getPipFrozenTree(
       );
     }
     const python_cmd_for_tree = get_python_command_from_env(env);
-    if (DEBUG_MODE) {
-      console.log(`Using the python executable ${python_cmd_for_tree}`);
-    }
     // This is a slow step that ideally needs to be invoked only once per venv
     const tree = getTreeWithPlugin(env, python_cmd_for_tree, basePath);
     if (DEBUG_MODE && !tree.length) {
@@ -10208,9 +10232,6 @@ export function getPipTreeForPackages(
     if (result.status !== 0 || result.error) {
       console.log("Virtual env creation has failed. Unable to continue.");
       return {};
-    }
-    if (DEBUG_MODE) {
-      console.log("Using the virtual environment", tempVenvDir);
     }
     env.VIRTUAL_ENV = tempVenvDir;
     env.PATH = `${join(

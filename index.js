@@ -71,6 +71,7 @@ import {
   hasAnyProjectType,
   includeMavenTestScope,
   isFeatureEnabled,
+  isPackageManagerAllowed,
   isPartialTree,
   isValidIriReference,
   parseBazelActionGraph,
@@ -1267,10 +1268,7 @@ export async function createJavaBom(path, options) {
   let bomJsonFiles = [];
   if (
     pomFiles?.length &&
-    !options.projectType?.includes("bazel") &&
-    !options.projectType?.includes("scala") &&
-    !options.projectType?.includes("sbt") &&
-    !options.projectType?.includes("gradle")
+    isPackageManagerAllowed("maven", ["bazel", "sbt", "gradle"], options)
   ) {
     let result = undefined;
     const cdxMavenPlugin =
@@ -1615,10 +1613,7 @@ export async function createJavaBom(path, options) {
   // Execute gradle properties
   if (
     gradleFiles?.length &&
-    !options.projectType?.includes("maven") &&
-    !options.projectType?.includes("bazel") &&
-    !options.projectType?.includes("scala") &&
-    !options.projectType?.includes("sbt")
+    isPackageManagerAllowed("gradle", ["maven", "bazel", "sbt"], options)
   ) {
     let retMap = executeGradleProperties(gradleRootPath, null, null);
     const allProjectsStr = retMap.projects || [];
@@ -1749,10 +1744,7 @@ export async function createJavaBom(path, options) {
   if (
     gradleFiles?.length &&
     options.installDeps &&
-    !options.projectType?.includes("maven") &&
-    !options.projectType?.includes("bazel") &&
-    !options.projectType?.includes("scala") &&
-    !options.projectType?.includes("sbt")
+    isPackageManagerAllowed("gradle", ["maven", "bazel", "sbt"], options)
   ) {
     const gradleCmd = getGradleCommand(gradleRootPath, null);
     const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
@@ -1952,10 +1944,7 @@ export async function createJavaBom(path, options) {
   if (
     bazelFiles?.length &&
     !hasAnyProjectType(["docker", "oci", "container", "os"], options, false) &&
-    !options.projectType?.includes("maven") &&
-    !options.projectType?.includes("gradle") &&
-    !options.projectType?.includes("scala") &&
-    !options.projectType?.includes("sbt")
+    isPackageManagerAllowed("bazel", ["maven", "gradle", "sbt"], options)
   ) {
     let BAZEL_CMD = "bazel";
     if (process.env.BAZEL_HOME) {
@@ -2090,9 +2079,7 @@ export async function createJavaBom(path, options) {
 
   if (
     sbtProjects?.length &&
-    !options.projectType?.includes("bazel") &&
-    !options.projectType?.includes("gradle") &&
-    !options.projectType?.includes("maven")
+    isPackageManagerAllowed("sbt", ["bazel", "maven", "gradle"], options)
   ) {
     // If the project use sbt lock files
     if (sbtLockFiles?.length) {
