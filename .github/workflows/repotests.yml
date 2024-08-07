@@ -316,13 +316,22 @@ jobs:
         run: |
           bin/cdxgen.js -p -r -t java17 repotests/bazel-examples/java-maven -o bomresults/bom-bazel.json --validate
         shell: bash
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - name: repotests greyhound
         run: |
-          source "/home/runner/.sdkman/bin/sdkman-init.sh"
           bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
           bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
           bin/cdxgen.js -p -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
         shell: bash
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - name: repotests gallery
         run: |
           bin/cdxgen.js -p -r -t dart repotests/gallery -o bomresults/bom-pub.json --validate
