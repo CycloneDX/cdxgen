@@ -261,16 +261,10 @@ jobs:
         run: |
           bin/cdxgen.js -t python repotests/dbt-oracle -o bomresults/dbt-oracle.json --deep --spec-version 1.6
         shell: bash
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
       - name: repotests impacket
         run: |
           bin/cdxgen.js -t python repotests/impacket -o bomresults/impacket.json
         shell: bash
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
       - name: repotests shiftleft-java-example
         run: |
           bin/cdxgen.js -p -r -t java repotests/shiftleft-java-example -o bomresults/bom-java.json --generate-key-and-sign

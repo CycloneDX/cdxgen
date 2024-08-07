@@ -11,4 +11,11 @@ export function prepareEnv(filePath: string, options: any): void;
  * @param {String} projectType Project type
  */
 export function prepareSdkmanBuild(projectType: string): boolean;
+/**
+ * Method to check and prepare the environment for python
+ *
+ * @param {String} filePath Path
+ * @param {Object} options CLI Options
+ */
+export function preparePythonEnv(filePath: string, options: any): void;
 //# sourceMappingURL=pregen.d.ts.map
