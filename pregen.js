@@ -86,9 +86,6 @@ export function preparePythonEnv(filePath, options) {
           console.log("PIP_INSTALL_ARGS set to", process.env.PIP_INSTALL_ARGS);
           console.log("PIP_TARGET set to", process.env.PIP_TARGET);
         }
-        console.warn(
-          "Dependency tree will not be available when using python version type. This is due to a design limitation with pip.",
-        );
         break;
       }
     }
