@@ -1,9 +1,9 @@
 import { Buffer } from "node:buffer";
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { homedir } from "node:os";
+import { delimiter, join } from "node:path";
 import process from "node:process";
-
 import {
   CARGO_CMD,
   DOTNET_CMD,
@@ -345,12 +345,21 @@ const getCommandOutput = (cmd, dir, args) => {
  * Method to check if sdkman is available.
  */
 export function isSdkmanAvailable() {
-  return (
+  let isSdkmanSetup =
     process.env?.SDKMAN_VERSION &&
     ["SDKMAN_DIR", "SDKMAN_CANDIDATES_DIR"].filter(
       (v) => process.env[v] && existsSync(process.env[v]),
-    ).length === 2
-  );
+    ).length === 2;
+  if (!isSdkmanSetup && existsSync(join(homedir(), ".sdkman", "bin"))) {
+    process.env.SDKMAN_DIR = join(homedir(), ".sdkman");
+    process.env.SDKMAN_CANDIDATES_DIR = join(
+      homedir(),
+      ".sdkman",
+      "candidates",
+    );
+    isSdkmanSetup = true;
+  }
+  return isSdkmanSetup;
 }
 
 /**
@@ -363,12 +372,25 @@ export function isSdkmanAvailable() {
  */
 export function isSdkmanToolAvailable(toolType, toolName) {
   toolName = getSdkmanToolFullname(toolName);
-  return (
+  let isToolAvailable =
     process.env.SDKMAN_CANDIDATES_DIR &&
     existsSync(
       join(process.env.SDKMAN_CANDIDATES_DIR, toolType, toolName, "bin"),
+    );
+  if (
+    !isToolAvailable &&
+    existsSync(
+      join(homedir(), ".sdkman", "candidates", toolType, toolName, "bin"),
     )
-  );
+  ) {
+    process.env.SDKMAN_CANDIDATES_DIR = join(
+      homedir(),
+      ".sdkman",
+      "candidates",
+    );
+    isToolAvailable = true;
+  }
+  return isToolAvailable;
 }
 
 /**
@@ -405,14 +427,29 @@ export function installSdkmanTool(toolType, toolName) {
       return false;
     }
   }
+  const toolUpper = toolType.toUpperCase();
   // Set process env variables
-  if (process.env.JAVA_HOME) {
-    process.env.JAVA_HOME = process.env.JAVA_HOME.replace("current", toolName);
+  if (process.env[`${toolUpper}_HOME`]) {
+    process.env[`${toolUpper}_HOME`] = process.env[`${toolUpper}_HOME`].replace(
+      "current",
+      toolName,
+    );
+  } else if (process.env.SDKMAN_CANDIDATES_DIR) {
+    process.env[`${toolUpper}_HOME`] = join(
+      process.env.SDKMAN_CANDIDATES_DIR,
+      toolType,
+      toolName,
+    );
   }
-  process.env.PATH = process.env.PATH.replace(
-    join("java", "current", "bin"),
-    join("java", toolName, "bin"),
-  );
+  const toolCurrentBin = join(toolType, "current", "bin");
+  if (process.env?.PATH.includes(toolCurrentBin)) {
+    process.env.PATH = process.env.PATH.replace(
+      toolCurrentBin,
+      join(toolType, toolName, "bin"),
+    );
+  } else if (process.env.SDKMAN_CANDIDATES_DIR) {
+    process.env.PATH = `${process.env.PATH}${delimiter}${join(process.env.SDKMAN_CANDIDATES_DIR, toolType, toolName, "bin")}`;
+  }
   return true;
 }
 
