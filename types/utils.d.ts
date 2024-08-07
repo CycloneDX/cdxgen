@@ -1,3 +1,5 @@
+export function getJavaCommand(): string;
+export function getPythonCommand(): string;
 /**
  * Method to check if a given feature flag is enabled.
  *
@@ -1237,8 +1239,8 @@ export const includeMavenTestScope: boolean;
 export const PREFER_MAVEN_DEPS_TREE: boolean;
 export const FETCH_LICENSE: boolean;
 export const SEARCH_MAVEN_ORG: boolean;
-export let JAVA_CMD: string;
-export let PYTHON_CMD: string;
+export const JAVA_CMD: string;
+export const PYTHON_CMD: string;
 export let DOTNET_CMD: string;
 export let NODE_CMD: string;
 export let NPM_CMD: string;

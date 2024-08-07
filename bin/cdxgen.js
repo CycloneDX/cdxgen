@@ -22,6 +22,7 @@ import {
 } from "../display.js";
 import { createBom, submitBom } from "../index.js";
 import { postProcess } from "../postgen.js";
+import { prepareEnv } from "../pregen.js";
 import { ATOM_DB } from "../utils.js";
 import { validateBom } from "../validator.js";
 
@@ -502,6 +503,7 @@ const checkPermissions = (filePath) => {
   if (!options.usagesSlicesFile) {
     options.usagesSlicesFile = `${options.projectName}-usages.json`;
   }
+  prepareEnv(filePath, options);
   let bomNSData = (await createBom(filePath, options)) || {};
   // Add extra metadata and annotations with post processing
   bomNSData = postProcess(bomNSData, options);
