@@ -337,7 +337,7 @@ const getCommandOutput = (cmd, dir, args) => {
   const stdout = result.stdout;
   if (stdout) {
     const cmdOutput = Buffer.from(stdout).toString();
-    return cmdOutput.trim();
+    return cmdOutput.trim().replaceAll("\r", "");
   }
 };
 

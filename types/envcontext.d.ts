@@ -5,14 +5,14 @@
  *
  * @returns Output from git config or undefined
  */
-export function getGitConfig(configKey: string, dir: string): string;
+export function getGitConfig(configKey: string, dir: string): any;
 /**
  * Retrieves the git origin url
  * @param {string} dir repo directory
  *
  * @returns Output from git config or undefined
  */
-export function getOriginUrl(dir: string): string;
+export function getOriginUrl(dir: string): any;
 /**
  * Retrieves the git branch name
  * @param {string} configKey Git config key
@@ -20,7 +20,7 @@ export function getOriginUrl(dir: string): string;
  *
  * @returns Output from git config or undefined
  */
-export function getBranch(configKey: string, dir: string): string;
+export function getBranch(configKey: string, dir: string): any;
 /**
  * Retrieves the tree and parent hash for a git repo
  * @param {string} dir repo directory
@@ -43,7 +43,7 @@ export function listFiles(dir: string): any[];
  *
  * @returns Output from the git command
  */
-export function execGitCommand(dir: string, args: any[]): string;
+export function execGitCommand(dir: string, args: any[]): any;
 /**
  * Collect Java version and installed modules
  *
@@ -53,8 +53,8 @@ export function execGitCommand(dir: string, args: any[]): string;
 export function collectJavaInfo(dir: string): {
     type: string;
     name: string;
-    version: string;
-    description: string;
+    version: any;
+    description: any;
     properties: {
         name: string;
         value: any;
@@ -69,7 +69,7 @@ export function collectJavaInfo(dir: string): {
 export function collectDotnetInfo(dir: string): {
     type: string;
     name: string;
-    version: string;
+    version: any;
     description: any;
 };
 /**
@@ -81,7 +81,7 @@ export function collectDotnetInfo(dir: string): {
 export function collectPythonInfo(dir: string): {
     type: string;
     name: string;
-    version: string;
+    version: any;
     description: any;
 };
 /**
@@ -93,8 +93,8 @@ export function collectPythonInfo(dir: string): {
 export function collectNodeInfo(dir: string): {
     type: string;
     name: string;
-    version: string;
-    description: string;
+    version: any;
+    description: any;
 };
 /**
  * Collect gcc version
@@ -105,7 +105,7 @@ export function collectNodeInfo(dir: string): {
 export function collectGccInfo(dir: string): {
     type: string;
     name: string;
-    version: string;
+    version: any;
     description: any;
 };
 /**
@@ -117,8 +117,8 @@ export function collectGccInfo(dir: string): {
 export function collectRustInfo(dir: string): {
     type: string;
     name: string;
-    version: string;
-    description: string;
+    version: any;
+    description: any;
 };
 /**
  * Collect go version
@@ -129,13 +129,13 @@ export function collectRustInfo(dir: string): {
 export function collectGoInfo(dir: string): {
     type: string;
     name: string;
-    version: string;
+    version: any;
 };
 export function collectEnvInfo(dir: any): {
     type: string;
     name: string;
-    version: string;
-    description: string;
+    version: any;
+    description: any;
     properties: {
         name: string;
         value: any;
