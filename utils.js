@@ -10102,9 +10102,6 @@ export function getPipFrozenTree(
           result.stderr?.includes("Cannot set --home and --prefix together")
         ) {
           versionRelatedError = true;
-          console.warn(
-            "This project does not support python with version types. Use an appropriate container image such as `ghcr.io/appthreat/cdxgen-python39:v10` or `ghcr.io/appthreat/cdxgen-python311:v10` and invoke cdxgen with `-t python` instead.\n",
-          );
           if (DEBUG_MODE) {
             console.log(result.stderr);
           } else {
@@ -10112,6 +10109,9 @@ export function getPipFrozenTree(
               "Possible build errors detected. Set the environment variable CDXGEN_DEBUG_MODE=debug to troubleshoot.",
             );
           }
+          console.warn(
+            "This project does not support python with version types. Use an appropriate container image such as `ghcr.io/appthreat/cdxgen-python39:v10` or `ghcr.io/appthreat/cdxgen-python311:v10` and invoke cdxgen with `-t python` instead.\n",
+          );
         }
         if (!versionRelatedError) {
           if (DEBUG_MODE) {
