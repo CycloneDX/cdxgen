@@ -392,7 +392,6 @@ export function installSdkmanTool(toolType, toolName) {
       ["-i", "-c", `"echo -e "no" | sdk install ${toolType} ${toolName}"`],
       {
         encoding: "utf-8",
-        stdio: "inherit",
         shell: process.env.SHELL || true,
       },
     );
