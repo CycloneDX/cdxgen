@@ -1,6 +1,6 @@
 {
   "name": "@cyclonedx/cdxgen",
-  "version": "10.9.2",
+  "version": "10.9.3",
   "exports": "./index.js",
   "compilerOptions": {
     "allowJs": true,

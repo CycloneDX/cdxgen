@@ -147,21 +147,29 @@ const MAX_GET_REPO_LICENSE_ERRORS = 5;
 
 const MAX_LICENSE_ID_LENGTH = 100;
 
-export let JAVA_CMD = "java";
-if (process.env.JAVA_CMD) {
-  JAVA_CMD = process.env.JAVA_CMD;
-} else if (
-  process.env.JAVA_HOME &&
-  existsSync(process.env.JAVA_HOME) &&
-  existsSync(join(process.env.JAVA_HOME, "bin", "java"))
-) {
-  JAVA_CMD = join(process.env.JAVA_HOME, "bin", "java");
+export const JAVA_CMD = getJavaCommand();
+export function getJavaCommand() {
+  let javaCmd = "java";
+  if (process.env.JAVA_CMD) {
+    javaCmd = process.env.JAVA_CMD;
+  } else if (
+    process.env.JAVA_HOME &&
+    existsSync(process.env.JAVA_HOME) &&
+    existsSync(join(process.env.JAVA_HOME, "bin", "java"))
+  ) {
+    javaCmd = join(process.env.JAVA_HOME, "bin", "java");
+  }
+  return javaCmd;
 }
-export let PYTHON_CMD = "python";
-if (process.env.PYTHON_CMD) {
-  PYTHON_CMD = process.env.PYTHON_CMD;
-} else if (process.env.CONDA_PYTHON_EXE) {
-  PYTHON_CMD = process.env.CONDA_PYTHON_EXE;
+export const PYTHON_CMD = getPythonCommand();
+export function getPythonCommand() {
+  let pythonCmd = "python";
+  if (process.env.PYTHON_CMD) {
+    pythonCmd = process.env.PYTHON_CMD;
+  } else if (process.env.CONDA_PYTHON_EXE) {
+    pythonCmd = process.env.CONDA_PYTHON_EXE;
+  }
+  return pythonCmd;
 }
 export let DOTNET_CMD = "dotnet";
 if (process.env.DOTNET_CMD) {
@@ -230,6 +238,11 @@ export const PYTHON_EXCLUDED_COMPONENTS = [
 export const PROJECT_TYPE_ALIASES = {
   java: [
     "java",
+    "java8",
+    "java11",
+    "java17",
+    "java21",
+    "java22",
     "groovy",
     "kotlin",
     "kt",
@@ -257,7 +270,15 @@ export const PROJECT_TYPE_ALIASES = {
     "tsx",
     "vsix",
   ],
-  py: ["py", "python", "pypi"],
+  py: [
+    "py",
+    "python",
+    "pypi",
+    "python39",
+    "python310",
+    "python311",
+    "python312",
+  ],
   go: ["go", "golang", "gomod", "gopkg"],
   rust: ["rust", "rust-lang", "cargo"],
   php: ["php", "composer", "wordpress"],

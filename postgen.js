@@ -11,7 +11,7 @@ import { dirNameStr } from "./utils.js";
  *
  * @returns {Object} Modified bomNSData
  */
-export const postProcess = (bomNSData, options) => {
+export function postProcess(bomNSData, options) {
   let jsonPayload = bomNSData.bomJson;
   if (
     typeof bomNSData.bomJson === "string" ||
@@ -24,7 +24,7 @@ export const postProcess = (bomNSData, options) => {
   bomNSData.bomJson = applyStandards(bomNSData.bomJson, options);
   bomNSData.bomJson = applyMetadata(bomNSData.bomJson, options);
   return bomNSData;
-};
+}
 
 /**
  * Apply additional metadata based on components
@@ -34,7 +34,7 @@ export const postProcess = (bomNSData, options) => {
  *
  * @returns {Object} Filtered BOM JSON
  */
-export const applyMetadata = (bomJson, options) => {
+export function applyMetadata(bomJson, options) {
   if (!bomJson?.components) {
     return bomJson;
   }
@@ -71,7 +71,7 @@ export const applyMetadata = (bomJson, options) => {
     });
   }
   return bomJson;
-};
+}
 
 /**
  * Apply definitions.standards based on options
@@ -81,7 +81,7 @@ export const applyMetadata = (bomJson, options) => {
  *
  * @returns {Object} Filtered BOM JSON
  */
-export const applyStandards = (bomJson, options) => {
+export function applyStandards(bomJson, options) {
   if (options.standard && Array.isArray(options.standard)) {
     for (const astandard of options.standard) {
       const templateFile = join(
@@ -112,7 +112,7 @@ export const applyStandards = (bomJson, options) => {
     }
   }
   return bomJson;
-};
+}
 
 /**
  * Filter BOM based on options
@@ -122,7 +122,7 @@ export const applyStandards = (bomJson, options) => {
  *
  * @returns {Object} Filtered BOM JSON
  */
-export const filterBom = (bomJson, options) => {
+export function filterBom(bomJson, options) {
   const newPkgMap = {};
   let filtered = false;
   if (!bomJson?.components) {
@@ -227,4 +227,4 @@ export const filterBom = (bomJson, options) => {
     }
   }
   return bomJson;
-};
+}
