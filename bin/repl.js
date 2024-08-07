@@ -10,6 +10,7 @@ import jsonata from "jsonata";
 import {
   printCallStack,
   printDependencyTree,
+  printFormulation,
   printOSTable,
   printOccurrences,
   printServices,
@@ -496,6 +497,32 @@ cdxgenRepl.defineCommand("vulnerabilities", {
       }
     } else {
       console.log("⚠ No BOM is loaded. Use .import command to import a VDR");
+    }
+    this.displayPrompt();
+  },
+});
+cdxgenRepl.defineCommand("formulation", {
+  help: "view formulation",
+  async action() {
+    if (sbom) {
+      try {
+        const expression = jsonata("formulation");
+        let formulation = await expression.evaluate(sbom);
+        if (!formulation) {
+          console.log(
+            "No formulation found. Pass the argument --include-formulation to generate SBOM with formulation details.",
+          );
+        } else {
+          if (!Array.isArray(formulation)) {
+            formulation = [formulation];
+          }
+          printFormulation({ formulation });
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log("⚠ No SBOM is loaded. Use .import command to import an SBOM");
     }
     this.displayPrompt();
   },

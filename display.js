@@ -18,11 +18,11 @@ const highlightStr = (s, highlight) => {
   }
   return s;
 };
-export const printTable = (
+export function printTable(
   bomJson,
   filterTypes = undefined,
   highlight = undefined,
-) => {
+) {
   if (!bomJson || !bomJson.components) {
     return;
   }
@@ -85,7 +85,7 @@ export const printTable = (
   } else {
     console.log(`Components filtered based on type: ${filterTypes.join(", ")}`);
   }
-};
+}
 const formatProps = (props) => {
   const retList = [];
   for (const p of props) {
@@ -93,7 +93,7 @@ const formatProps = (props) => {
   }
   return retList.join("\n");
 };
-export const printOSTable = (bomJson) => {
+export function printOSTable(bomJson) {
   const config = {
     columnDefault: {
       width: 50,
@@ -111,8 +111,8 @@ export const printOSTable = (bomJson) => {
     ]);
   }
   console.log();
-};
-export const printServices = (bomJson) => {
+}
+export function printServices(bomJson) {
   const data = [["Name", "Endpoints", "Authenticated", "X Trust Boundary"]];
   if (!bomJson || !bomJson.services) {
     return;
@@ -134,7 +134,30 @@ export const printServices = (bomJson) => {
   if (data.length > 1) {
     console.log(table(data, config));
   }
-};
+}
+
+export function printFormulation(bomJson) {
+  const data = [["Tyoe", "Name", "Version"]];
+  if (!bomJson || !bomJson.formulation) {
+    return;
+  }
+  for (const aform of bomJson.formulation) {
+    if (aform.components) {
+      for (const acomp of aform.components) {
+        data.push([acomp.type || "", acomp.name || "", acomp.version || ""]);
+      }
+    }
+  }
+  const config = {
+    header: {
+      alignment: "center",
+      content: "Formulation\nGenerated with \u2665  by cdxgen",
+    },
+  };
+  if (data.length > 1) {
+    console.log(table(data, config));
+  }
+}
 
 const locationComparator = (a, b) => {
   if (a && b && a.includes("#") && b.includes("#")) {
@@ -149,7 +172,7 @@ const locationComparator = (a, b) => {
   return a.localeCompare(b);
 };
 
-export const printOccurrences = (bomJson) => {
+export function printOccurrences(bomJson) {
   const data = [["Group", "Name", "Version", "Occurrences"]];
   if (!bomJson || !bomJson.components) {
     return;
@@ -177,8 +200,8 @@ export const printOccurrences = (bomJson) => {
   if (data.length > 1) {
     console.log(table(data, config));
   }
-};
-export const printCallStack = (bomJson) => {
+}
+export function printCallStack(bomJson) {
   const data = [["Group", "Name", "Version", "Call Stack"]];
   if (!bomJson || !bomJson.components) {
     return;
@@ -224,12 +247,12 @@ export const printCallStack = (bomJson) => {
   if (data.length > 1) {
     console.log(table(data, config));
   }
-};
-export const printDependencyTree = (
+}
+export function printDependencyTree(
   bomJson,
   mode = "dependsOn",
   highlight = undefined,
-) => {
+) {
   const dependencies = bomJson.dependencies || [];
   if (!dependencies.length) {
     return;
@@ -264,7 +287,7 @@ export const printDependencyTree = (
   } else {
     console.log(highlightStr(treeGraphics.join("\n"), highlight));
   }
-};
+}
 
 const levelPrefix = (level, isLast) => {
   if (level === 0) {
@@ -324,7 +347,7 @@ const recursePrint = (depMap, subtree, level, shownList, treeGraphics) => {
   }
 };
 
-export const printReachables = (sliceArtefacts) => {
+export function printReachables(sliceArtefacts) {
   const reachablesSlicesFile = sliceArtefacts.reachablesSlicesFile;
   if (!existsSync(reachablesSlicesFile)) {
     return;
@@ -355,7 +378,7 @@ export const printReachables = (sliceArtefacts) => {
   if (data.length > 1) {
     console.log(table(data, config));
   }
-};
+}
 
 export function printVulnerabilities(vulnerabilities) {
   if (!vulnerabilities) {
@@ -407,7 +430,7 @@ export function printSponsorBanner(options) {
   }
 }
 
-export const printSummary = (bomJson) => {
+export function printSummary(bomJson) {
   const config = {
     header: {
       alignment: "center",
@@ -418,8 +441,18 @@ export const printSummary = (bomJson) => {
   if (!metadataProperties) {
     return;
   }
+  const tools = bomJson?.metadata?.tools?.components;
+  let message = "";
   let bomPkgTypes = [];
   let bomPkgNamespaces = [];
+  if (tools) {
+    message = "** Generator Tools **";
+    for (const atool of tools) {
+      if (atool.name && atool.version) {
+        message = `${message}\n${atool.name} (${atool.version})`;
+      }
+    }
+  }
   for (const aprop of metadataProperties) {
     if (aprop.name === "cdx:bom:componentTypes") {
       bomPkgTypes = aprop?.value.split("\\n");
@@ -431,10 +464,10 @@ export const printSummary = (bomJson) => {
   if (!bomPkgTypes.length && !bomPkgNamespaces.length) {
     return;
   }
-  let message = `** Package Types (${bomPkgTypes.length}) **\n${bomPkgTypes.join("\n")}`;
+  message = `${message}\n\n** Package Types (${bomPkgTypes.length}) **\n${bomPkgTypes.join("\n")}`;
   if (bomPkgNamespaces.length) {
     message = `${message}\n\n** Namespaces (${bomPkgNamespaces.length}) **\n${bomPkgNamespaces.join("\n")}`;
   }
   const data = [[message]];
   console.log(table(data, config));
-};
+}

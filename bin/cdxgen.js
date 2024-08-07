@@ -13,6 +13,7 @@ import jws from "jws";
 import {
   printCallStack,
   printDependencyTree,
+  printFormulation,
   printOccurrences,
   printReachables,
   printServices,
@@ -723,6 +724,9 @@ const checkPermissions = (filePath) => {
   }
   if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
     printSummary(bomNSData.bomJson);
+    if (options.includeFormulation) {
+      printFormulation(bomNSData.bomJson);
+    }
     printDependencyTree(bomNSData.bomJson);
     printTable(bomNSData.bomJson);
     // CBOM related print

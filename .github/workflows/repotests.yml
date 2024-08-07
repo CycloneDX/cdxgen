@@ -318,9 +318,9 @@ jobs:
         shell: bash
       - name: repotests greyhound
         run: |
-          bin/cdxgen.js -p -r -t java11 repotests/greyhound -o bomresults/bom-greyhound-java.json
+          bin/cdxgen.js -p -r -t java17 repotests/greyhound -o bomresults/bom-greyhound-java.json
           bin/cdxgen.js -p -r -t gradle repotests/greyhound -o bomresults/bom-greyhound-gradle.json
-          bin/cdxgen.js -p -r -t java11 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
+          bin/cdxgen.js -p -r -t java17 --exclude-type bazel --exclude-type sbt repotests/greyhound -o bomresults/bom-greyhound-wobazel.json
         shell: bash
       - name: repotests gallery
         run: |
