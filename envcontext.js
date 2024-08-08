@@ -6,6 +6,7 @@ import { delimiter, join } from "node:path";
 import process from "node:process";
 import {
   CARGO_CMD,
+  DEBUG_MODE,
   DOTNET_CMD,
   GCC_CMD,
   GO_CMD,
@@ -346,10 +347,9 @@ const getCommandOutput = (cmd, dir, args) => {
  */
 export function isSdkmanAvailable() {
   let isSdkmanSetup =
-    process.env?.SDKMAN_VERSION &&
     ["SDKMAN_DIR", "SDKMAN_CANDIDATES_DIR"].filter(
       (v) => process.env[v] && existsSync(process.env[v]),
-    ).length === 2;
+    ).length >= 1;
   if (!isSdkmanSetup && existsSync(join(homedir(), ".sdkman", "bin"))) {
     process.env.SDKMAN_DIR = join(homedir(), ".sdkman");
     process.env.SDKMAN_CANDIDATES_DIR = join(
@@ -417,6 +417,14 @@ export function installSdkmanTool(toolType, toolName) {
         shell: process.env.SHELL || true,
       },
     );
+    if (DEBUG_MODE) {
+      if (console.stdout) {
+        console.log(result.stdout);
+      }
+      if (console.stderr) {
+        console.log(result.stderr);
+      }
+    }
     if (result.status === 1 || result.error) {
       console.log(
         "Unable to install",
@@ -424,12 +432,6 @@ export function installSdkmanTool(toolType, toolName) {
         toolName,
         "due to below errors.",
       );
-      if (console.stdout) {
-        console.log(result.stdout);
-      }
-      if (console.stderr) {
-        console.log(result.stderr);
-      }
       return false;
     }
   }
@@ -448,7 +450,10 @@ export function installSdkmanTool(toolType, toolName) {
       "set to",
       process.env[`${toolUpper}_HOME`],
     );
-  } else if (process.env.SDKMAN_CANDIDATES_DIR) {
+  } else if (
+    process.env.SDKMAN_CANDIDATES_DIR &&
+    existsSync(join(process.env.SDKMAN_CANDIDATES_DIR, toolType, toolName))
+  ) {
     process.env[`${toolUpper}_HOME`] = join(
       process.env.SDKMAN_CANDIDATES_DIR,
       toolType,
@@ -458,6 +463,12 @@ export function installSdkmanTool(toolType, toolName) {
       `${toolUpper}_HOME`,
       "set to",
       process.env[`${toolUpper}_HOME`],
+    );
+  } else {
+    console.log(
+      "Directory",
+      join(process.env.SDKMAN_CANDIDATES_DIR, toolType, toolName),
+      "is not found",
     );
   }
   const toolCurrentBin = join(toolType, "current", "bin");

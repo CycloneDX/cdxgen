@@ -17,11 +17,11 @@ ARG SWIFT_BRANCH=swift-5.10.1-release
 ARG SWIFT_VERSION=swift-5.10.1-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=22.0.2-tem
-ARG SBT_VERSION=1.9.9
+ARG SBT_VERSION=1.10.1
 ARG MAVEN_VERSION=3.9.8
 ARG GRADLE_VERSION=8.8
-ARG GO_VERSION=1.22.4
-ARG NODE_VERSION=22.4.0
+ARG GO_VERSION=1.22.6
+ARG NODE_VERSION=22.6.0
 ARG PYTHON_VERSION=3.12
 
 ENV GOPATH=/opt/app-root/go \
@@ -30,10 +30,10 @@ ENV GOPATH=/opt/app-root/go \
     MAVEN_VERSION=$MAVEN_VERSION \
     GRADLE_VERSION=$GRADLE_VERSION \
     GRADLE_OPTS="-Dorg.gradle.daemon=false" \
-    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
-    MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
-    GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}" \
-    SBT_HOME="/opt/sbt/${SBT_VERSION}" \
+    JAVA_HOME="/root/.sdkman/candidates/java/${JAVA_VERSION}" \
+    MAVEN_HOME="/root/.sdkman/candidates/maven/${MAVEN_VERSION}" \
+    GRADLE_HOME="/root/.sdkman/candidates/gradle/${GRADLE_VERSION}" \
+    SBT_HOME="/root/.sdkman/candidates/sbt/${SBT_VERSION}" \
     PYTHON_VERSION=3.12 \
     PYTHON_CMD=/usr/bin/python3.12 \
     PYTHONUNBUFFERED=1 \
@@ -54,6 +54,8 @@ ENV GOPATH=/opt/app-root/go \
     NODE_COMPILE_CACHE="/opt/cdxgen-node-cache" \
     PYTHONPATH=/opt/pypi \
     CDXGEN_IN_CONTAINER=true \
+    SDKMAN_DIR=/root/.sdkman \
+    SDKMAN_CANDIDATES_DIR=/root/.sdkman/candidates \
     npm_config_python=/usr/bin/python3.12
 ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:${GOPATH}/bin:/usr/local/go/bin:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:/root/.cargo/bin:/opt/pypi/bin:
 
@@ -98,9 +100,6 @@ RUN set -e; \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
     && sdk install sbt $SBT_VERSION \
-    && sdk offline enable \
-    && mv /root/.sdkman/candidates/* /opt/ \
-    && rm -rf /root/.sdkman \
     && SWIFT_WEBDIR="$SWIFT_WEBROOT/$SWIFT_BRANCH/$(echo $SWIFT_PLATFORM | tr -d .)$OS_ARCH_SUFFIX" \
     && SWIFT_BIN_URL="$SWIFT_WEBDIR/$SWIFT_VERSION/$SWIFT_VERSION-$SWIFT_PLATFORM$OS_ARCH_SUFFIX.tar.gz" \
     && SWIFT_SIG_URL="$SWIFT_BIN_URL.sig" \
