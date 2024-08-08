@@ -478,7 +478,15 @@ export function installSdkmanTool(toolType, toolName) {
       join(toolType, toolName, "bin"),
     );
   } else if (process.env.SDKMAN_CANDIDATES_DIR) {
-    process.env.PATH = `${process.env.PATH}${delimiter}${join(process.env.SDKMAN_CANDIDATES_DIR, toolType, toolName, "bin")}`;
+    const fullToolBinDir = join(
+      process.env.SDKMAN_CANDIDATES_DIR,
+      toolType,
+      toolName,
+      "bin",
+    );
+    if (!process.env?.PATH?.includes(fullToolBinDir)) {
+      process.env.PATH = `${fullToolBinDir}${delimiter}${process.env.PATH}`;
+    }
   }
   return true;
 }
