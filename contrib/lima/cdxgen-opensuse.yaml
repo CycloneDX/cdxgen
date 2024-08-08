@@ -60,11 +60,13 @@ provision:
     #!/bin/bash
     set -e -o pipefail
     export MAVEN_VERSION=3.9.8
-    export SBT_VERSION=1.9.9
+    export SBT_VERSION=1.10.1
     export GRADLE_VERSION=8.8
     export MAVEN_HOME="/opt/maven/${MAVEN_VERSION}"
     export GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}"
     export SBT_HOME="/opt/sbt/${SBT_VERSION}"
+    export SDKMAN_DIR=/.sdkman
+    export SDKMAN_CANDIDATES_DIR=/opt
     export PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:
     curl -s "https://get.sdkman.io" | bash
     source "/.sdkman/bin/sdkman-init.sh"
