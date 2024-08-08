@@ -13,39 +13,28 @@ containerd:
   system: false
   user: true
 env:
-  MAVEN_VERSION: 3.9.7
-  SBT_VERSION: 1.9.8
+  MAVEN_VERSION: 3.9.8
+  SBT_VERSION: 1.10.1
   GRADLE_VERSION: 8.8
-  MAVEN_HOME: /opt/maven/current
-  MAVEN_CMD: /opt/maven/current/bin/mvn
-  GRADLE_HOME: /opt/gradle/current
-  GRADLE_CMD: /opt/gradle/current/bin/gradle
-  SBT_HOME: /opt/sbt/current
-  SBT_CMD: /opt/sbt/current/bin/sbt
+  MAVEN_HOME: /.sdkman/candidates/maven/current
+  MAVEN_CMD: /.sdkman/candidates/maven/current/bin/mvn
+  GRADLE_HOME: /.sdkman/candidates/gradle/current
+  GRADLE_CMD: /.sdkman/candidates/gradle/current/bin/gradle
+  SBT_HOME: /.sdkman/candidates/sbt/current
+  SBT_CMD: /.sdkman/candidates/sbt/current/bin/sbt
+  SDKMAN_DIR: /.sdkman
+  SDKMAN_CANDIDATES_DIR: /.sdkman/candidates
 provision:
 - mode: dependency
   skipDefaultDependencyResolution: false
   script: |
     #!/bin/bash
     set -eux -o pipefail
-    ARCH_NAME="$(rpm --eval '%{_arch}')";
-    url=;
-    case "${ARCH_NAME##*-}" in
-        'x86_64')
-            OS_ARCH_SUFFIX='';
-            zypper --gpg-auto-import-keys ref
-            zypper --non-interactive addrepo --gpgcheck-allow-unsigned --no-keep-packages -f https://download.opensuse.org/repositories/devel:languages:nodejs/15.6/devel:languages:nodejs.repo;
-            zypper --non-interactive install -l --no-recommends nodejs22 npm22;
-            ;;
-        'aarch64')
-            OS_ARCH_SUFFIX='-aarch64';
-            zypper --non-interactive install -l --no-recommends nodejs20 npm20;
-            ;;
-        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;;
-    esac
+    zypper refresh
+    zypper --non-interactive update
     zypper --non-interactive install -l --no-recommends git-core \
       python311 python311-pip python311-devel wget zip unzip make gawk bzip2 findutils java-21-openjdk-devel libicu-devel rust1.78 cargo1.78 \
-      gcc13 gcc13-c++ gcc13-fortran nodejs20 nodejs20-devel \
+      gcc13 gcc13-c++ gcc13-fortran nodejs20 nodejs20-devel npm20 corepack20 \
       clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
       postgresql-devel postgresql-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 10
@@ -62,22 +51,19 @@ provision:
     export MAVEN_VERSION=3.9.8
     export SBT_VERSION=1.10.1
     export GRADLE_VERSION=8.8
-    export MAVEN_HOME="/opt/maven/${MAVEN_VERSION}"
-    export GRADLE_HOME="/opt/gradle/${GRADLE_VERSION}"
-    export SBT_HOME="/opt/sbt/${SBT_VERSION}"
+    export MAVEN_HOME="/.sdkman/candidates/maven/${MAVEN_VERSION}"
+    export GRADLE_HOME="/.sdkman/candidates/gradle/${GRADLE_VERSION}"
+    export SBT_HOME="/.sdkman/candidates/sbt/${SBT_VERSION}"
     export SDKMAN_DIR=/.sdkman
-    export SDKMAN_CANDIDATES_DIR=/opt
+    export SDKMAN_CANDIDATES_DIR=/.sdkman/candidates
     export PATH=${PATH}:${MAVEN_HOME}/bin:${GRADLE_HOME}/bin:${SBT_HOME}/bin:/usr/local/bin:
     curl -s "https://get.sdkman.io" | bash
+    echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=60\nsdkman_curl_max_time=0" >> /.sdkman/etc/config
     source "/.sdkman/bin/sdkman-init.sh"
-    echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> /.sdkman/etc/config
     sdk install maven $MAVEN_VERSION
     sdk install gradle $GRADLE_VERSION
     sdk install sbt $SBT_VERSION
-    sdk offline enable
     mkdir -p /opt
-    mv /.sdkman/candidates/* /opt/
-    rm -rf /.sdkman
     npm install -g node-gyp @cyclonedx/cdxgen --omit=dev
     npx node-gyp install
     node -v

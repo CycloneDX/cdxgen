@@ -69,8 +69,8 @@ RUN set -e; \
     && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pip virtualenv \
     && python${PYTHON_VERSION} -m pip install --no-cache-dir --upgrade pipenv poetry --target /opt/pypi \
     && curl -s "https://get.sdkman.io" | bash \
-    && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true" >> $HOME/.sdkman/etc/config \
+    && source "$HOME/.sdkman/bin/sdkman-init.sh" \
     && sdk install maven $MAVEN_VERSION \
     && sdk install gradle $GRADLE_VERSION \
     && sdk install sbt $SBT_VERSION \
