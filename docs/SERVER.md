@@ -52,6 +52,7 @@ Arguments can be passed either via the query string or as a JSON body. The follo
 | only             | Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed. [array] |
 | autoCompositions | Automatically set compositions when the BOM was filtered. [boolean] [default: true]                                                              |
 | gitBranch        | Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository.                            |
+| fetchLicense     | Automatically query public registries such as maven, npm, or nuget to resolve the package licenses. This is a time-consuming operation and is disabled by default.              |
 
 ## Ways to use server mode
 
