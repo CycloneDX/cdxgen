@@ -197,7 +197,10 @@ export function filterBom(bomJson, options) {
       newcomponents.push(newPkgMap[aref]);
     }
     for (const adep of bomJson.dependencies) {
-      if (newPkgMap[adep.ref]) {
+      if (
+        newPkgMap[adep.ref] ||
+        adep.ref === bomJson.metadata.component["bom-ref"]
+      ) {
         const newdepson = (adep.dependsOn || []).filter((d) => newPkgMap[d]);
         const obj = {
           ref: adep.ref,
