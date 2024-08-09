@@ -658,7 +658,7 @@ export const parseSliceUsages = async (
     if (purlImportsMap && Object.keys(purlImportsMap).length) {
       for (const apurl of Object.keys(purlImportsMap)) {
         const apurlImports = purlImportsMap[apurl];
-        if (language === "php") {
+        if (["php", "python"].includes(language)) {
           for (const aimp of apurlImports) {
             if (atype.startsWith(aimp)) {
               if (!purlLocationMap[apurl]) {

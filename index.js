@@ -136,6 +136,7 @@ import {
   parseSwiftResolved,
   parseYarnLock,
   readZipEntry,
+  recomputeScope,
   splitOutputByGradleProjects,
 } from "./utils.js";
 let url = import.meta.url;
@@ -2835,13 +2836,6 @@ export async function createPythonBom(path, options) {
       dependencies.splice(0, 0, pdependencies);
     }
     options.parentComponent = parentComponent;
-    return buildBomNSData(options, pkgList, "pypi", {
-      src: path,
-      filename: poetryFiles.join(", "),
-      dependencies,
-      parentComponent,
-      formulationList,
-    });
   } // poetryMode
   if (metadataFiles?.length) {
     // dist-info directories
@@ -2956,13 +2950,13 @@ export async function createPythonBom(path, options) {
     }
   }
   // Use atom in requirements, setup.py and pyproject.toml mode
-  if (requirementsMode || setupPyMode || pyProjectMode) {
+  if (requirementsMode || setupPyMode || pyProjectMode || options.deep) {
     /**
      * The order of preference is pyproject.toml (newer) and then setup.py
      */
     if (options.installDeps) {
       let pkgMap = undefined;
-      if (pyProjectMode) {
+      if (pyProjectMode && !poetryMode) {
         pkgMap = getPipFrozenTree(
           path,
           pyProjectFile,
@@ -2971,7 +2965,7 @@ export async function createPythonBom(path, options) {
         );
       } else if (setupPyMode) {
         pkgMap = getPipFrozenTree(path, setupPy, tempDir, parentComponent);
-      } else {
+      } else if (!poetryMode) {
         pkgMap = getPipFrozenTree(path, undefined, tempDir, parentComponent);
       }
 
@@ -2993,6 +2987,7 @@ export async function createPythonBom(path, options) {
           });
           for (const apkg of pkgList) {
             if (iSymbolsMap[apkg.name]) {
+              apkg.scope = "required";
               apkg.properties = apkg.properties || [];
               apkg.properties.push({
                 name: "ImportedModules",
@@ -3030,30 +3025,31 @@ export async function createPythonBom(path, options) {
         }
       }
       // ATOM parsedeps block
-
-      // Complete the dependency tree by making parent component depend on the first level
-      for (const p of pkgMap.rootList) {
-        if (
-          parentComponent &&
-          p.name === parentComponent.name &&
-          (p.version === parentComponent.version || p.version === "latest")
-        ) {
-          continue;
+      if (pkgMap) {
+        // Complete the dependency tree by making parent component depend on the first level
+        for (const p of pkgMap.rootList) {
+          if (
+            parentComponent &&
+            p.name === parentComponent.name &&
+            (p.version === parentComponent.version || p.version === "latest")
+          ) {
+            continue;
+          }
+          parentDependsOn.add(`pkg:pypi/${p.name.toLowerCase()}@${p.version}`);
         }
-        parentDependsOn.add(`pkg:pypi/${p.name.toLowerCase()}@${p.version}`);
-      }
-      if (pkgMap.pkgList?.length) {
-        pkgList = pkgList.concat(pkgMap.pkgList);
-      }
-      if (pkgMap.formulationList?.length) {
-        formulationList = formulationList.concat(pkgMap.formulationList);
-      }
-      if (pkgMap.dependenciesList) {
-        dependencies = mergeDependencies(
-          dependencies,
-          pkgMap.dependenciesList,
-          parentComponent,
-        );
+        if (pkgMap?.pkgList?.length) {
+          pkgList = pkgList.concat(pkgMap.pkgList);
+        }
+        if (pkgMap?.formulationList?.length) {
+          formulationList = formulationList.concat(pkgMap.formulationList);
+        }
+        if (pkgMap?.dependenciesList) {
+          dependencies = mergeDependencies(
+            dependencies,
+            pkgMap.dependenciesList,
+            parentComponent,
+          );
+        }
       }
       let parentPresent = false;
       for (const d of dependencies) {
@@ -3125,6 +3121,8 @@ export async function createPythonBom(path, options) {
   if (tempDir?.startsWith(tmpdir()) && rmSync) {
     rmSync(tempDir, { recursive: true, force: true });
   }
+  // Re-compute the component scope
+  pkgList = recomputeScope(pkgList, dependencies);
   if (FETCH_LICENSE) {
     pkgList = await getPyMetadata(pkgList, false);
   }
