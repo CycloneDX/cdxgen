@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import process from "node:process";
 import { PackageURL } from "packageurl-js";
 import { dirNameStr } from "./utils.js";
 

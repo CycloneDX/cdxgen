@@ -11777,3 +11777,41 @@ export function isPartialTree(dependencies) {
   }
   return parentsWithChildsCount <= 1;
 }
+
+/**
+ * Re-compute and set the scope based on the dependency tree
+ *
+ * @param {Array} pkgList List of components
+ * @param {Array} dependencies List of dependencies
+ *
+ * @returns {Array} Updated list
+ */
+export function recomputeScope(pkgList, dependencies) {
+  const requiredPkgs = {};
+  if (!pkgList || !dependencies) {
+    return pkgList;
+  }
+  for (const pkg of pkgList) {
+    if (!pkg.scope || !pkg["bom-ref"]) {
+      continue;
+    }
+    if (pkg.scope === "required") {
+      requiredPkgs[pkg["bom-ref"]] = true;
+    }
+  }
+  for (const adep of dependencies) {
+    if (requiredPkgs[adep.ref]) {
+      for (const ado of adep.dependsOn) {
+        requiredPkgs[ado] = true;
+      }
+    }
+  }
+  for (const pkg of pkgList) {
+    if (requiredPkgs[pkg["bom-ref"]]) {
+      pkg.scope = "required";
+    } else if (!pkg.scope) {
+      pkg.scope = "optional";
+    }
+  }
+  return pkgList;
+}

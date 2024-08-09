@@ -1226,6 +1226,15 @@ export function isValidIriReference(iri: string): boolean;
  * @returns {Boolean} True if the dependency tree lacks any non-root parents without children. False otherwise.
  */
 export function isPartialTree(dependencies: any[]): boolean;
+/**
+ * Re-compute and set the scope based on the dependency tree
+ *
+ * @param {Array} pkgList List of components
+ * @param {Array} dependencies List of dependencies
+ *
+ * @returns {Array} Updated list
+ */
+export function recomputeScope(pkgList: any[], dependencies: any[]): any[];
 export const dirNameStr: string;
 export const isWin: boolean;
 export const isMac: boolean;
