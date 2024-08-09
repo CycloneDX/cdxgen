@@ -3774,6 +3774,7 @@ test("parse poetry.lock", async () => {
     "./test/data/poetry.lock",
   );
   expect(retMap.pkgList.length).toEqual(32);
+  expect(retMap.pkgList[2].scope).toEqual("optional");
   expect(retMap.dependenciesList.length).toEqual(32);
   retMap = await parsePoetrylockData(
     readFileSync("./test/data/poetry1.lock", { encoding: "utf-8" }),
