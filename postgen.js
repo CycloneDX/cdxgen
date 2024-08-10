@@ -197,6 +197,13 @@ export function filterBom(bomJson, options) {
     for (const aref of Object.keys(newPkgMap).sort()) {
       newcomponents.push(newPkgMap[aref]);
     }
+    newPkgMap[bomJson.metadata.component["bom-ref"]] =
+      bomJson.metadata.component;
+    if (bomJson.metadata.component.components) {
+      for (const comp of bomJson.metadata.component.components) {
+        newPkgMap[comp["bom-ref"]] = comp;
+      }
+    }
     for (const adep of bomJson.dependencies) {
       if (newPkgMap[adep.ref]) {
         const newdepson = (adep.dependsOn || []).filter((d) => newPkgMap[d]);
