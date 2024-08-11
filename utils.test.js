@@ -4047,7 +4047,7 @@ test("parse containerfiles / dockerfiles", () => {
   const dep_list = parseContainerFile(
     readFileSync("./test/data/Dockerfile", { encoding: "utf-8" }),
   );
-  expect(dep_list.length).toEqual(4);
+  expect(dep_list.length).toEqual(7);
   expect(dep_list[0]).toEqual({
     image: "hello-world",
   });
@@ -4059,6 +4059,15 @@ test("parse containerfiles / dockerfiles", () => {
   });
   expect(dep_list[3]).toEqual({
     image: "hello-world:latest@sha256:1234567890abcdef",
+  });
+  expect(dep_list[4]).toEqual({
+    image: "docker.io/hello-world@sha256:1234567890abcdef",
+  });
+  expect(dep_list[5]).toEqual({
+    image: "docker.io/hello-world:latest@sha256:1234567890abcdef",
+  });
+  expect(dep_list[6]).toEqual({
+    image: "docker.io/hello-world:latest",
   });
 });
 

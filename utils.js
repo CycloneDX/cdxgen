@@ -6136,7 +6136,29 @@ export function recurseImageNameLookup(keyValueObj, pkgList, imgList) {
   return imgList;
 }
 
+function substituteBuildArgs(statement, buildArgs) {
+  for (const argMatch of [
+    ...statement.matchAll(/\${?([^:\/\\}]+)}?/g),
+  ].reverse()) {
+    const fullArgName = argMatch[0];
+    const argName = argMatch[1];
+    const argIndex = argMatch.index;
+    if (buildArgs.has(argName)) {
+      statement =
+        statement.slice(0, argIndex) +
+        buildArgs.get(argName) +
+        statement.slice(argIndex + fullArgName.length);
+    } else {
+      console.warn(
+        `Unable to substitute build argument '${fullArgName}' in '${statement}'.`,
+      );
+    }
+  }
+  return statement;
+}
+
 export function parseContainerFile(fileContents) {
+  const buildArgs = new Map();
   const imagesSet = new Set();
   const buildStageNames = [];
   for (let line of fileContents.split("\n")) {
@@ -6146,11 +6168,26 @@ export function parseContainerFile(fileContents) {
       continue; // skip commented out lines
     }
 
+    if (line.startsWith("ARG")) {
+      const argStatement = line.split("ARG ")[1].split("=");
+
+      if (argStatement.length < 2) {
+        continue; // skip ARG statements without default value
+      }
+
+      const argName = argStatement[0].trim();
+      let argValue = argStatement[1].trim().replace(/['"]+/g, "");
+      if (argValue.includes("$")) {
+        argValue = substituteBuildArgs(argValue, buildArgs);
+      }
+      buildArgs.set(argName, argValue);
+    }
+
     if (line.startsWith("FROM")) {
       // The alias could be called AS or as
       const fromStatement = line.split("FROM ")[1].split(/\s(as|AS)\s/);
 
-      const imageStatement = fromStatement[0].trim();
+      let imageStatement = fromStatement[0].trim();
       const buildStageName =
         fromStatement.length > 1
           ? fromStatement[fromStatement.length - 1].trim()
@@ -6162,6 +6199,15 @@ export function parseContainerFile(fileContents) {
           );
         }
         continue;
+      }
+      if (imageStatement.includes("$")) {
+        imageStatement = substituteBuildArgs(imageStatement, buildArgs);
+        if (imageStatement.includes("$")) {
+          console.warn(
+            `Unable to substitute build arguments in '${line}' statement.`,
+          );
+          continue;
+        }
       }
       imagesSet.add(imageStatement);
 
