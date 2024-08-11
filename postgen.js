@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 import { PackageURL } from "packageurl-js";
-import { dirNameStr } from "./utils.js";
+import { DEBUG_MODE, dirNameStr } from "./utils.js";
 
 /**
  * Filter and enhance BOM post generation.
@@ -128,6 +128,7 @@ export function applyStandards(bomJson, options) {
 export function filterBom(bomJson, options) {
   const newPkgMap = {};
   let filtered = false;
+  let anyFiltered = false;
   if (!bomJson?.components) {
     return bomJson;
   }
@@ -192,6 +193,9 @@ export function filterBom(bomJson, options) {
     }
   }
   if (filtered) {
+    if (!anyFiltered) {
+      anyFiltered = true;
+    }
     const newcomponents = [];
     const newdependencies = [];
     for (const aref of Object.keys(newPkgMap).sort()) {
@@ -235,6 +239,9 @@ export function filterBom(bomJson, options) {
         aggregate: options.only ? "incomplete_first_party_only" : "incomplete",
       });
     }
+  }
+  if (!anyFiltered && DEBUG_MODE) {
+    console.log("No components got filtered with the given criteria.");
   }
   return bomJson;
 }

@@ -222,6 +222,11 @@ jobs:
           repository: 'wix/greyhound'
           path: 'repotests/greyhound'
           ref: '385bb84a6f712ee18064a3b5ecb8d9dcbc1c75f3'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'owasp-dep-scan/blint'
+          path: 'repotests/blint'
+          ref: 'v2.2.2'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -256,6 +261,11 @@ jobs:
         run: |
           bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo-safe.json --feature-flags safe-pip-install
           bin/cdxgen.js -t python repotests/django-DefectDojo -o bomresults/django-DefectDojo.json --deep --include-crypto --spec-version 1.6
+        shell: bash
+      - name: repotests blint
+        run: |
+          bin/cdxgen.js -t python repotests/blint -o bomresults/blint-req.json --required-only -p
+          bin/cdxgen.js -t python repotests/blint -o bomresults/blint-research.json --profile research -p
         shell: bash
       - name: repotests dbt-oracle
         run: |

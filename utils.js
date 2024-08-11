@@ -11806,11 +11806,12 @@ export function recomputeScope(pkgList, dependencies) {
       }
     }
   }
+  if (!Object.keys(requiredPkgs).length) {
+    return pkgList;
+  }
   for (const pkg of pkgList) {
     if (requiredPkgs[pkg["bom-ref"]]) {
       pkg.scope = "required";
-    } else if (!pkg.scope) {
-      pkg.scope = "optional";
     }
   }
   return pkgList;
