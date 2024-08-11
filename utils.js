@@ -11806,6 +11806,7 @@ export function recomputeScope(pkgList, dependencies) {
       }
     }
   }
+  // Prevent marking every component as optional
   if (!Object.keys(requiredPkgs).length) {
     return pkgList;
   }

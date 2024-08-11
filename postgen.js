@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import process from "node:process";
 import { PackageURL } from "packageurl-js";
-import { DEBUG_MODE, dirNameStr } from "./utils.js";
+import { DEBUG_MODE, dirNameStr, hasAnyProjectType } from "./utils.js";
 
 /**
  * Filter and enhance BOM post generation.
@@ -242,6 +242,23 @@ export function filterBom(bomJson, options) {
   }
   if (!anyFiltered && DEBUG_MODE) {
     console.log("No components got filtered with the given criteria.");
+    if (
+      options.requiredOnly &&
+      !options.deep &&
+      hasAnyProjectType(["python"], options, false)
+    ) {
+      console.log(
+        "Try running cdxgen with --deep argument to identify component usages with atom.",
+      );
+    } else if (
+      options.requiredOnly &&
+      options.noBabel &&
+      hasAnyProjectType(["js"], options, false)
+    ) {
+      console.log(
+        "Enable babel by removing --no-babel argument to improve usage detection.",
+      );
+    }
   }
   return bomJson;
 }
