@@ -2703,6 +2703,61 @@ export async function createNodejsBom(path, options) {
   });
 }
 
+
+/**
+ * Function to create bom string for Projects that use Pixi package manager.
+ * createPixiBom is based on createPythonBom.
+ * Pixi package manager utilizes many languages like python, rust, C/C++, ruby, etc.
+ * It produces a Lockfile which help produce reproducible envs across operating systems.
+ * This code will look at the operating system of our machine and create a BOM specific to that machine.
+ * 
+ * TODO: make sure pixi.lock package information compiled for all operating systems is actually accurate.
+ * TODO: measure difference between current pixi.lock package version vs actuall
+ * 
+ * @param {String} path 
+ * @param {Object} options 
+ */
+export async function createPixiBom(path, options){
+  let allImports = {};
+  let metadataFilename = "";
+  let dependencies = [];
+  let pkgList = [];
+  let formulationList = [];
+  let parentComponent = createDefaultParentComponent(path, "pypi", options);
+  const pixiLockFile = join(path, "pixi.lock");
+
+  const pixiToml = join(path, "pixi.toml");
+
+  // if pixi.lock file found then we 
+  // Add parentComponent Details
+  const pixiTomlMode = existsSync(pixiToml);
+  if (pixiTomlMode){
+    const tmpParentComponent = parsePixiProjectToml(pixitoml);
+    parentComponent = tmpParentComponent;
+    // TODO: clarify whether I should use github here or something else
+    // const parentPurl = new PackageURL(
+    //   ""
+    // )
+  }
+
+  const pixiFilesMode = existsSync(pixiLockFile);
+  if (pixiFilesMode){
+
+  } else {
+    // TODO: generate pixi.lock incase it does not exist
+  }
+  
+  
+  return buildBomNSData(options, pkgList, "pypi", {
+    allImports,
+    src: path,
+    filename: metadataFilename,
+    dependencies,
+    parentComponent,
+    formulationList,
+  });
+}
+
 /**
  * Function to create bom string for Python projects
  *
@@ -2759,7 +2814,7 @@ export async function createPythonBom(path, options) {
     `${options.multiProject ? "**/" : ""}*.egg-info`,
     options,
   );
-  const setupPy = join(path, "setup.py");
+  
   const pyProjectFile = join(path, "pyproject.toml");
   const pyProjectMode = existsSync(pyProjectFile);
   if (pyProjectMode) {
@@ -2787,6 +2842,7 @@ export async function createPythonBom(path, options) {
   }
   const requirementsMode = reqFiles?.length || reqDirFiles?.length;
   const poetryMode = poetryFiles?.length;
+  const setupPy = join(path, "setup.py");
   const setupPyMode = existsSync(setupPy);
   // Poetry sets up its own virtual env containing site-packages so
   // we give preference to poetry lock file. Issue# 129
@@ -3069,6 +3125,7 @@ export async function createPythonBom(path, options) {
       }
     }
   }
+
   // Final fallback is to manually parse setup.py if we still
   // have an empty list
   if (!pkgList.length && setupPyMode) {

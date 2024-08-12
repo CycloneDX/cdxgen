@@ -4256,6 +4256,96 @@ export async function parseSetupPyFile(setupPyData) {
 }
 
 /**
+* pixiMapper used with a map on pixi packages list.
+* the pixi list contains the following information e.g.
+* {kind: conda
+*  name: _libgcc_mutex
+*  version: '0.1'
+*  build: conda_forge
+*  subdir: linux-64
+*  url: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
+*  sha256: fe51de6107f9edc7aa4f786a70f4a883943bc9d39b3bb7307c04c41410990726
+*  md5: d7c89558ba9fa0495403155b64376d81
+*  license: None
+*  size: 2562
+*  timestamp: 1578324546067
+* }
+* We create the purl using the following logic:
+* "purl": "pkg:{kind}/{name}@{version}"
+* type would be "library" and evidence would be 
+* {
+*  "identity": {
+*                    "field": "purl",
+*                    "confidence": 1,
+*                    "methods": [
+*                        {
+*                            "technique": "instrumentation",
+*                            "confidence": 1,
+*                            "value": "pixi.lock"
+*                        }
+*                    ]
+*                }
+* }
+*
+* TODO: where to put OSX information
+*/
+function pixiMapper(packageData) {
+  var purlTemplate = `pkg:${packageData["kind"]}/${packageData["name"]}@${packageData["version"]}`
+  return {
+    "group": "",
+    "name": packageData['name'],
+    "version": packageData['version'],
+    "purl": purlTemplate,
+    "type": "library",
+    "bom-ref": purlTemplate,
+    "licenses": [
+      packageData["license"]
+    ],
+    "supplier": {
+      "name": packageData['build'],
+      "url": packageData["url"]
+    },
+    "hashes": [
+      {"md5": packageData["md5"]},
+      {"sha256": packageData["sha256"]}
+    ],
+    "evidence": {
+      "field": purl,
+      "confidence": 1,
+      "methods": [
+        {
+          "technique": "instrumentation",
+          "confidence": 1,
+          "value": `${basePath}/.pixi/envs/default`
+        }
+      ]
+    },
+    "properties": [
+      {"operatingSystem": packageData['subdir'],},
+      {"build_number": packageData['build_number']},
+      {"build": packageData['build']}
+    ]
+  }
+}
+
+/**
+ * Method to parse pixi.lock data
+ *
+ * @param {Object} pixiData Contents of pixi.lock file
+ */
+export async function parsePixiLockFile(pixiData){
+  
+}
+
+/**
+ * 
+ * @param {String} pixiToml 
+ */
+export async function parsePixiTomlFile(pixiToml) {
+
+}
+
+/**
  * Method to construct a GitHub API url for the given repo metadata
  * @param {Object} repoMetadata Repo metadata with group and name
  * @return {String|undefined} github api url (or undefined - if not enough data)
