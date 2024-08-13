@@ -92,6 +92,7 @@ const parseQueryString = (q, body, options = {}) => {
     "includeFormulation",
     "includeCrypto",
     "standard",
+    "includeLicenses"
   ];
 
   for (const param of queryParams) {
@@ -176,6 +177,11 @@ const start = (options) => {
     }
     console.log("Generating SBOM for", srcDir);
     let bomNSData = (await createBom(srcDir, reqOptions)) || {};
+    if (reqOptions?.includeLicenses === false) {
+      bomNSData.bomJson.components.forEach((component) => {
+        delete component.licenses;
+      });
+    }
     bomNSData = postProcess(bomNSData, reqOptions);
     if (reqOptions.serverUrl && reqOptions.apiKey) {
       console.log(

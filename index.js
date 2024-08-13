@@ -1267,6 +1267,56 @@ export async function createJavaBom(path, options) {
     options,
   );
   let bomJsonFiles = [];
+  const gradleToMavenOptionName = 'gradleToMaven'
+  console.log(options?.projectType)
+  const index = options?.projectType.indexOf(gradleToMavenOptionName);
+  if (index !== -1) {
+    options.projectType[index] = 'maven'
+    try {
+      spawnSync(
+          'grep -roP --include=\'*.gradle\' --no-filename \'group:\\s.*\\"\' . | ' +
+          'awk \'length($0) < 500 { gsub("\\"",""); gsub("(name:\\\\s?+)|(group:\\\\s?+)|(version:\\\\s?+))","");} 1\' ' +
+          'awk \'!a[$0]++\' > deps.deps',
+          "",
+          {
+              cwd: path,
+              shell: true,
+              encoding: "utf-8",
+              timeout: TIMEOUT_MS,
+              maxBuffer: MAX_BUFFER,
+          },
+      );
+      const data = readFileSync(join(path, 'deps.deps'),'utf-8')
+
+      const dependenciesXml = data.trim().split('\n')
+          .map(line => {
+        const [groupId, artifactId, version] = line.split(', ');
+        return `<dependency>
+                  <groupId>${groupId}</groupId>
+                  <artifactId>${artifactId}</artifactId>
+                  <version>${version}</version>
+                </dependency>`;
+      }).join('');
+
+      const pomData =
+          `<project>
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>com.mycompany.app</groupId>
+              <artifactId>my-app</artifactId>
+              <version>1</version>
+           </project>`
+
+      const updatedPom = pomData.replace(
+          '</project>',
+            `<dependencies>
+                            ${dependenciesXml}
+                        </dependencies>
+                      </project>`);
+      writeFileSync(join(path, 'pom.xml'), updatedPom)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
   if (
     pomFiles?.length &&
     isPackageManagerAllowed("maven", ["bazel", "sbt", "gradle"], options)
