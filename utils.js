@@ -11201,7 +11201,7 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
     // Logic here if name matches the standard library of cpp
     // we skip it
     // Load the glibc-stdlib.json file, which contains std lib for cpp
-    if (CPP_STD_MODULES.includes(name)){
+    if (CPP_STD_MODULES.includes(name)) {
       continue;
     }
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
