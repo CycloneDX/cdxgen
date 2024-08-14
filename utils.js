@@ -85,6 +85,10 @@ export const frameworksList = JSON.parse(
 const selfPJson = JSON.parse(
   readFileSync(join(dirNameStr, "package.json"), "utf-8"),
 );
+
+const CPP_STD_MODULES = JSON.parse(
+  readFileSync(join(dirNameStr, "data", "glibc-stdlib.json"), "utf-8"),
+);
 const _version = selfPJson.version;
 
 // Refer to contrib/py-modules.py for a script to generate this list
@@ -11045,6 +11049,7 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
   const epkgMap = {};
   let parentComponent = undefined;
   const dependsOn = [];
+
   (epkgList || []).forEach((p) => {
     epkgMap[`${p.group}/${p.name}`] = p;
   });
@@ -11193,6 +11198,12 @@ export function getCppModules(src, options, osPkgsList, epkgList) {
     const version = "";
     // We need to resolve the name to an os package here
     const name = fileName.replace(extn, "");
+    // Logic here if name matches the standard library of cpp
+    // we skip it
+    // Load the glibc-stdlib.json file, which contains std lib for cpp
+    if (!CPP_STD_MODULES.includes(name)){
+      continue;
+    }
     let apkg = getOSPackageForFile(afile, osPkgsList) ||
       epkgMap[`${group}/${name}`] || {
         name,
