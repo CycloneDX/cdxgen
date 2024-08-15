@@ -241,7 +241,6 @@ export function filterBom(bomJson, options) {
     }
   }
   if (!anyFiltered && DEBUG_MODE) {
-    console.log("No components got filtered with the given criteria.");
     if (
       options.requiredOnly &&
       !options.deep &&
