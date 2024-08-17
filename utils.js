@@ -31,6 +31,7 @@ import Arborist from "@npmcli/arborist";
 import { load } from "cheerio";
 import { parseEDNString } from "edn-data";
 import { globSync } from "glob";
+import {toml} from "toml";
 import got from "got";
 import iconv from "iconv-lite";
 import { load as _load } from "js-yaml";
@@ -4338,11 +4339,24 @@ export async function parsePixiLockFile(pixiData){
 }
 
 /**
+ * Method to parse pixi.toml file
  * 
  * @param {String} pixiToml 
  */
 export async function parsePixiTomlFile(pixiToml) {
-
+  const pixiTomlFile = readFileSync(pixiToml, { encoding: "utf-8" });
+  const tomlData = toml.parse(pixiTomlFile);
+  const pkg = {};
+  if (!tomlData){
+    return pkg;
+  }
+  pkg.description = tomlData['project']['description'];
+  pkg.name = tomlData['project']['name'];
+  pkg.version = tomlData['project']['version'];
+  pkg.authors = tomlData['project']['authors'];
+  pkg.homepage = tomlData['project']['homepage'];
+  pkg.repository = tomlData['project']['repository'];
+  return pkg;
 }
 
 /**

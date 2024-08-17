@@ -2718,11 +2718,11 @@ export async function createNodejsBom(path, options) {
  * @param {Object} options 
  */
 export async function createPixiBom(path, options){
-  let allImports = {};
-  let metadataFilename = "";
-  let dependencies = [];
-  let pkgList = [];
-  let formulationList = [];
+  const allImports = {};
+  const metadataFilename = "";
+  const dependencies = [];
+  const pkgList = [];
+  const formulationList = [];
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pixiLockFile = join(path, "pixi.lock");
 
@@ -2738,10 +2738,21 @@ export async function createPixiBom(path, options){
     // const parentPurl = new PackageURL(
     //   ""
     // )
+    ppurl = new PackageURL(
+      "pixi",
+      parentComponent.group || "",
+      parentComponent.name,
+      parentComponent.version || "latest",
+      null,
+      null,
+    ).toString();
+    parentComponent["bom-ref"] = decodeURIComponent(ppurl);
+    parentComponent["purl"] = ppurl;
   }
 
   const pixiFilesMode = existsSync(pixiLockFile);
   if (pixiFilesMode){
+    
 
   } else {
     // TODO: generate pixi.lock incase it does not exist
