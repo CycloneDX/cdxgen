@@ -5843,7 +5843,7 @@ export async function createMultiXBom(pathList, options) {
     }
     // Jar scanning is enabled by default
     // See #330
-    bomData = createJarBom(path, options);
+    bomData = await createJarBom(path, options);
     if (bomData?.bomJson?.components?.length) {
       if (DEBUG_MODE) {
         console.log(
