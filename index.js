@@ -119,6 +119,8 @@ import {
   parsePackageJsonName,
   parsePaketLockData,
   parsePiplockData,
+  parsePixiLockFile,
+  parsePixiTomlFile,
   parsePkgJson,
   parsePkgLock,
   parsePnpmLock,
@@ -2738,6 +2740,9 @@ export async function createPixiBom(path, options){
     // const parentPurl = new PackageURL(
     //   ""
     // )
+    // TODO: where does build channel urls go into the BOM
+    // TODO: similarly for platforms (which OS the software supports), readme
+    parentComponent.type = "application";
     ppurl = new PackageURL(
       "pixi",
       parentComponent.group || "",
@@ -2752,8 +2757,15 @@ export async function createPixiBom(path, options){
 
   const pixiFilesMode = existsSync(pixiLockFile);
   if (pixiFilesMode){
+    // Instead of what we do in createPythonBOM
+    // where we install packages and run `getPipFrozenTree` 
+    // here I assume `pixi.lock` file to contain the accuracte version information
+    // Also we assume this for all platforms
+    // TODO: investigate this claim
+    const PixiLockData = parsePixiLockFile(pixiLockFile, path);
     
 
+    
   } else {
     // TODO: generate pixi.lock incase it does not exist
   }
