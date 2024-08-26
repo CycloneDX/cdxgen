@@ -232,19 +232,7 @@ Use curl or your favorite tool to pass arguments to the `/sbom` route.
 
 ### Server arguments
 
-Arguments can be passed either via the query string or as a JSON body. The following arguments are supported.
-
-| Argument       | Description                                                                                                                                 |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| type           | Project type. Please refer to [Supported Project Types][docs-project-types].                                                                |
-| multiProject   | [boolean]                                                                                                                                   |
-| requiredOnly   | Include only the packages with required scope on the SBOM. [boolean]                                                                        |
-| noBabel        | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                    |
-| installDeps    | Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. [boolean] [default: true] |
-| project        |                                                                                                                                             |
-| projectName    | Dependency track project name. Default use the directory name                                                                               |
-| projectGroup   | Dependency track project group                                                                                                              |
-| projectVersion | Dependency track project version [default: ""]                                                                                              |
+Arguments can be passed either via the query string or as a JSON body. Please refer to [Server Usage][docs-server]
 
 ### Health endpoint
 
