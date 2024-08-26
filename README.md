@@ -232,7 +232,7 @@ Use curl or your favorite tool to pass arguments to the `/sbom` route.
 
 ### Server arguments
 
-Arguments can be passed either via the query string or as a JSON body. Please refer to [Server Usage](docs/SERVER.md)
+Arguments can be passed either via the query string or as a JSON body. Please refer to [Server Usage][docs-server]
 
 ### Health endpoint
 
