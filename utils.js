@@ -7874,7 +7874,7 @@ export function parseComposerLock(pkgLockFile, rootRequires) {
             "composer",
             group,
             name,
-            pkg.version,
+            pkg.version?.toString(),
             null,
             null,
           ).toString();
@@ -7883,7 +7883,7 @@ export function parseComposerLock(pkgLockFile, rootRequires) {
             name: name,
             purl,
             "bom-ref": decodeURIComponent(purl),
-            version: pkg.version,
+            version: pkg.version?.toString(),
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,
