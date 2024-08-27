@@ -4493,31 +4493,6 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
  *
  */
 export function generatePixiLockFile(path) {
-  // const { spawnSync } = require('child_process');
-  // const fs = require('fs');
-
-  // // Check if pixi.lock exists
-  // if (!fs.existsSync('pixi.lock')) {
-  //   console.log('pixi.lock not found. Installing dependencies...');
-
-  //   // Attempt to run pixi install using spawnSync
-  //   const result = spawnSync('pixi', ['install'], { stdio: 'inherit' }); // Inherit stdio for live output
-
-  //   if (result.status !== 0) {
-  //     // Handle errors
-  //     if (result.error && result.error.code === 'ENOENT') {
-  //       console.error('Error: pixi command not found. Make sure pixi.js is installed globally.');
-  //     } else {
-  //       console.error(`Error executing pixi install: ${result.error || result.stderr.toString()}`);
-  //     }
-  //     process.exit(1);
-  //   } else {
-  //     console.log('Dependencies installed successfully.');
-  //   }
-  // } else {
-  //   console.log('pixi.lock found. Dependencies are already installed.');
-  // }
-
   const result = spawnSync("pixi", ["install"]);
 
   if (result.status !== 0) {
