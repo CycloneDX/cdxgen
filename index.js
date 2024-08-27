@@ -2771,7 +2771,7 @@ export async function createPixiBom(path, options){
   }
   
   
-  return buildBomNSData(options, pkgList, "pypi", {
+  return buildBomNSData(options, pkgList, "pixi", {
     allImports,
     src: path,
     filename: metadataFilename,

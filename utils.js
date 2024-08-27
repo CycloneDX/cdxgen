@@ -4257,7 +4257,7 @@ export async function parseSetupPyFile(setupPyData) {
 }
 
 function createPurlTemplate(packageData){
-  const purlTemplate = `pkg:${packageData["kind"]}/${packageData["name"]}@${packageData["version"]}`;
+  const purlTemplate = `pkg:${packageData["kind"]}/${packageData["name"]}@${packageData["version"]}-${packageData["build"]}?os=${packageData["subdir"]}`;
   return purlTemplate;
 }
 
@@ -4273,6 +4273,15 @@ export async function parsePixiLockFile(pixiLockFileName, path){
   // TODO: sort based on feature flags like required only, etc.
   pkgMap = {}
   // TODO: user will specify which environment to use using a flag
+
+  // this function returns
+  let pkgList = [];
+  const formulationList = [];
+  const rootList = [];
+  let dependenciesList = [];
+  
+  const frozen = true;
+
 
   /**
 * pixiMapper used with a map on pixi packages list.
@@ -4294,7 +4303,8 @@ export async function parsePixiLockFile(pixiLockFileName, path){
 *  timestamp: 1709396718705
 * }
 * We create the purl using the following logic:
-* "purl": "pkg:{kind}/{name}@{version}"
+* TODO: purl spec has optional field for OS and architecture.
+* "purl": "pkg:{kind}/{name}@{version}-{build}"
 * type would be "library" and evidence would be 
 * {
 *  "identity": {
@@ -4405,10 +4415,11 @@ function pixiMapper(packageData) {
     }
   
     purltemplate = createPurlTemplate(packageList);
+    subdir = packageIter['subdir'];
     dependsOn = []
     for (const depends_package of depends){
       depends_package_name = depends_package.split(" ");
-      depends_package_information = dictionary_packages[depends_package_name[0]];
+      depends_package_information = dictionary_packages[depends_package_name[0] + subdir];
       if (!depends_package_information){
         continue;
       }
@@ -4421,7 +4432,15 @@ function pixiMapper(packageData) {
     }
     );
   
-}
+  }
+
+  return {
+    pkgList,
+    formulationList,
+    rootList,
+    dependenciesList,
+    frozen,
+  };
 }
 
 /**
