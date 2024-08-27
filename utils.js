@@ -46,7 +46,7 @@ import {
   satisfies,
   valid,
 } from "semver";
-import {toml} from "toml";
+import toml from "toml";
 import { IriValidationStrategy, validateIri } from "validate-iri";
 import { xml2js } from "xml-js";
 import { getTreeWithPlugin } from "./piptree.js";
@@ -4269,12 +4269,11 @@ function createPurlTemplate(packageData){
  *
  * @param {Object} pixiData Contents of pixi.lock file
  */
-export async function parsePixiLockFile(pixiLockFileName, path){
+export function parsePixiLockFile(pixiLockFileName, path){
   const pixiFileData = readFileSync(pixiLockFileName, { encoding: "utf-8" });
   const pixiLockData = _load(pixiFileData);
   // TODO: add atom slices, for allImports
   // TODO: sort based on feature flags like required only, etc.
-  pkgMap = {}
   // TODO: user will specify which environment to use using a flag
 
   // this function returns
@@ -4324,8 +4323,8 @@ export async function parsePixiLockFile(pixiLockFileName, path){
 *
 */
 function pixiMapper(packageData) {
-  // return formulationLists 
-  /** E.g. of what a formulationList element looks like
+  // return pkgList 
+  /** E.g. of what a pkgList element looks like
   * {
   *      name: "conda-content-trust",
   *      version: "latest",
@@ -4354,7 +4353,8 @@ function pixiMapper(packageData) {
   *      ],
   *    }
   */
-  // TODO: add scope in this 
+  // TODO: find a way to seperate necessary runtime packages from formulation packages
+  // TODO: seperate licenses
   const purlTemplate = createPurlTemplate(packageData);
   return {
     "name": packageData['name'],
@@ -4362,30 +4362,34 @@ function pixiMapper(packageData) {
     "purl": purlTemplate,
     "type": "library",
     "bom-ref": purlTemplate,
-    "licenses": [
-      packageData["license"]
-    ],
+    // "licenses": [
+    //   [{
+    //       "id": packageData["license"]
+    //   }]
+    // ],
     "supplier": {
       "name": packageData['build'],
       "url": packageData["url"]
     },
-    "hashes": [
-      {"md5": packageData["md5"]},
-      {"sha256": packageData["sha256"]}
-    ],
+    // "hashes": [
+    //   {"md5": packageData["md5"]},
+    //   {"sha256": packageData["sha256"]}
+    // ],
     "evidence": {
-      "field": purl,
-      "confidence": 1,
-      "methods": [
-        {
-          "technique": "instrumentation",
-          "confidence": 1,
-          // "value": `${path}/.pixi/envs/default`
-        }
-      ]
+      "identity": {
+        "field": "purl",
+        "confidence": 1,
+        "methods": [
+          {
+            "technique": "instrumentation",
+            "confidence": 1,
+            // "value": `${path}/.pixi/envs/default`
+          }
+        ]
+      }
     },
     "properties": [
-      {"operatingSystem": packageData['subdir'],},
+      {"operatingSystem": packageData['subdir']},
       {"build_number": packageData['build_number']},
       {"build": packageData['build']},
     ]
@@ -4394,7 +4398,7 @@ function pixiMapper(packageData) {
 
   function mapAddEvidenceValue(p) {
     // TODO: get pixi environment variable
-    p['evidence']['methods']['value'] = `${path}/.pixi/envs/default`;
+    p['evidence']['identity']['methods']['value'] = `${path}/.pixi/envs/default`;
     return p;
   }
   // create the pkgList
@@ -4402,25 +4406,25 @@ function pixiMapper(packageData) {
   pkgList = pkgList.map(mapAddEvidenceValue);
 
   // create dependencies
-  const dictionary_packages = x.reduce((accumulator, currentObject) => {
+  const dictionary_packages = pixiLockData['packages'].reduce((accumulator, currentObject) => {
     accumulator[currentObject['name']] = currentObject;
     return accumulator;
   }, {});
   
-  d = dictionary_packages
+  
   dependenciesList = []
-  for (const package_iter of y['packages']) {
-    depends = packageList['depends'];
+  for (const package_iter of pixiLockData['packages']) {
+    const depends = package_iter['depends'];
     if (!depends){
       continue;
     }
   
-    purltemplate = createPurlTemplate(packageList);
-    subdir = packageIter['subdir'];
-    dependsOn = []
+    const purltemplate = createPurlTemplate(package_iter);
+    const subdir = package_iter['subdir'];
+    const dependsOn = []
     for (const depends_package of depends){
-      depends_package_name = depends_package.split(" ");
-      depends_package_information = dictionary_packages[depends_package_name[0] + subdir];
+      const depends_package_name = depends_package.split(" ");
+      const depends_package_information = dictionary_packages[depends_package_name[0] + subdir];
       if (!depends_package_information){
         continue;
       }
@@ -4449,7 +4453,7 @@ function pixiMapper(packageData) {
  * 
  * @param {String} pixiToml 
  */
-export async function parsePixiTomlFile(pixiToml) {
+export function parsePixiTomlFile(pixiToml) {
   const pixiTomlFile = readFileSync(pixiToml, { encoding: "utf-8" });
   const tomlData = toml.parse(pixiTomlFile);
   const pkg = {};
@@ -4459,7 +4463,7 @@ export async function parsePixiTomlFile(pixiToml) {
   pkg.description = tomlData['project']['description'];
   pkg.name = tomlData['project']['name'];
   pkg.version = tomlData['project']['version'];
-  pkg.authors = tomlData['project']['authors'];
+  // pkg.authors = tomlData['project']['authors'];
   pkg.homepage = tomlData['project']['homepage'];
   pkg.repository = tomlData['project']['repository'];
   return pkg;
@@ -4482,6 +4486,53 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
     return ghUrl;
   }
   return undefined;
+}
+
+/**
+ * Method to run cli command `pixi install`
+ * 
+ * 
+ */
+export function generatePixiLockFile(path){
+
+  // const { spawnSync } = require('child_process');
+  // const fs = require('fs');
+  
+  // // Check if pixi.lock exists
+  // if (!fs.existsSync('pixi.lock')) {
+  //   console.log('pixi.lock not found. Installing dependencies...');
+  
+  //   // Attempt to run pixi install using spawnSync
+  //   const result = spawnSync('pixi', ['install'], { stdio: 'inherit' }); // Inherit stdio for live output
+  
+  //   if (result.status !== 0) {
+  //     // Handle errors 
+  //     if (result.error && result.error.code === 'ENOENT') {
+  //       console.error('Error: pixi command not found. Make sure pixi.js is installed globally.');
+  //     } else {
+  //       console.error(`Error executing pixi install: ${result.error || result.stderr.toString()}`);
+  //     }
+  //     process.exit(1); 
+  //   } else {
+  //     console.log('Dependencies installed successfully.');
+  //   }
+  // } else {
+  //   console.log('pixi.lock found. Dependencies are already installed.');
+  // }
+
+  const result = spawnSync('pixi', ['install']);
+
+  if (result.status !== 0) {
+    // Handle errors 
+    if (result.error && result.error.code === 'ENOENT') {
+      console.error('Error: pixi command not found. Make sure pixi.js is installed globally.');
+    } else {
+      console.error(`Error executing pixi install: ${result.error || result.stderr.toString()}`);
+    }
+    process.exit(1); 
+  } else {
+    console.log('Dependencies installed successfully.');
+  }
 }
 
 /**

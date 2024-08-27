@@ -2725,8 +2725,10 @@ export async function createPixiBom(path, options){
   let dependencies = [];
   let pkgList = [];
   let formulationList = [];
+  let frozen = true;
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pixiLockFile = join(path, "pixi.lock");
+  let PixiLockData = {};
 
   const pixiToml = join(path, "pixi.toml");
 
@@ -2734,10 +2736,10 @@ export async function createPixiBom(path, options){
   // Add parentComponent Details
   const pixiTomlMode = existsSync(pixiToml);
   if (pixiTomlMode){
-    const tmpParentComponent = parsePixiProjectToml(pixitoml);
+    const tmpParentComponent = parsePixiTomlFile(pixiToml);
     parentComponent = tmpParentComponent;
     parentComponent.type = "application";
-    ppurl = new PackageURL(
+    const ppurl = new PackageURL(
       "pixi",
       parentComponent.group || "",
       parentComponent.name,
@@ -2754,22 +2756,17 @@ export async function createPixiBom(path, options){
     // Instead of what we do in createPythonBOM
     // where we install packages and run `getPipFrozenTree` 
     // here I assume `pixi.lock` file to contain the accuracte version information
-    // Also we assume this for all platforms
-    // TODO: investigate this claim
-    const PixiLockData = parsePixiLockFile(pixiLockFile, path);
+    // across all platforms
+    PixiLockData = parsePixiLockFile(pixiLockFile, path);
     metadataFilename = "pixi.lock";
-    
-
-    
   } else {
-    // TODO: generate pixi.lock incase it does not exist
     generatePixiLockFile(path);
     const pixiLockFile = join(path, "pixi.lock");
     if (!existsSync(pixiLockFile) && DEBUG_MODE){
       console.log("Unexpected Error tried to generate pixi.lock file but failed.")
       console.log("This will result in creations of empty BOM.")
     }
-    const PixiLockData = parsePixiLockFile(pixiLockFile);
+    PixiLockData = parsePixiLockFile(pixiLockFile);
     metadataFilename = "pixi.lock";
   }
   
