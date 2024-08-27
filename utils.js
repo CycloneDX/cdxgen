@@ -7589,6 +7589,9 @@ export function parseCsProjAssetsData(csProjData, assetsJsonFile) {
   // extract name, operator, version from .NET package representation
   // like "NLog >= 4.5.0"
   function extractNameOperatorVersion(inputStr) {
+    if (!inputStr) {
+      return null;
+    }
     const extractNameOperatorVersion = /([\w.-]+)\s*([><=!]+)\s*([\d.]+)/;
     const match = inputStr.match(extractNameOperatorVersion);
 
@@ -8081,7 +8084,7 @@ export function parseComposerLock(pkgLockFile, rootRequires) {
             "composer",
             group,
             name,
-            pkg.version,
+            pkg.version?.toString(),
             null,
             null,
           ).toString();
@@ -8090,7 +8093,7 @@ export function parseComposerLock(pkgLockFile, rootRequires) {
             name: name,
             purl,
             "bom-ref": decodeURIComponent(purl),
-            version: pkg.version,
+            version: pkg.version?.toString(),
             repository: pkg.source,
             license: pkg.license,
             description: pkg.description,

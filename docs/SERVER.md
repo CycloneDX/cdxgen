@@ -33,25 +33,32 @@ View the latest [cdxgen server API specification](https://github.com/CycloneDX/c
 
 Arguments can be passed either via the query string or as a JSON body. The following arguments are supported.
 
-| Argument         | Description                                                                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| type             | Project type. Supports passing mutliple types seperated by `,`. For example, "dotnet,java"                                                                                                                                    |
-| multiProject     | [boolean]                                                                                                                                        |
-| requiredOnly     | Include only the packages with required scope on the SBOM. [boolean]                                                                             |
-| noBabel          | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                         |
-| installDeps      | Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. [boolean] [default: true]      |
-| projectId        | The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three).                                         |
-| projectName      | Dependency Track project name. Default use the directory name                                                                                    |
-| projectGroup     | Dependency Track project group                                                                                                                   |
-| projectVersion   | Dependency Track project version [default: ""]                                                                                                   |
-| parentUUID       | UUID of the parent project.                                                                                                                      |
-| serverUrl        | URL to the Dependency Track API server.                                                                                                          |
-| apiKey           | API key for the Dependency Track API server.                                                                                                     |
-| specVersion      | CycloneDX Specification version to use. [default: 1.5]                                                                                           |
-| filter           | Filter components containing this word in purl. Multiple values allowed. [array]                                                                 |
-| only             | Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed. [array] |
-| autoCompositions | Automatically set compositions when the BOM was filtered. [boolean] [default: true]                                                              |
-| gitBranch        | Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository.                            |
+| Argument           | Description                                                                                                                                    |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| type               | Project type. Supports passing mutliple types seperated by `,`. For example, "dotnet java"                                                     |
+| multiProject       | [boolean]                                                                                                                                      |
+| requiredOnly       | Include only the packages with required scope on the SBOM. [boolean]                                                                           |
+| noBabel            | Do not use babel to perform usage analysis for JavaScript/TypeScript projects. [boolean]                                                       |
+| installDeps        | Install dependencies automatically for some projects. Defaults to true but disabled for containers and oci scans. [boolean] [default: true]    |
+| projectId          | The UUID of the project. You must provide the UUID or the projectName and projectVersion (or all three).                                       |
+| projectName        | Dependency Track project name. Default use the directory name.                                                                                 |
+| projectGroup       | Dependency Track project group.                                                                                                                |
+| projectVersion     | Dependency Track project version [default: ""]                                                                                                 |
+| parentUUID         | UUID of the parent project.                                                                                                                    |
+| serverUrl          | URL to the Dependency Track API server.                                                                                                        |
+| apiKey             | API key for the Dependency Track API server.                                                                                                   |
+| specVersion        | CycloneDX Specification version to use. [default: 1.5]                                                                                         |
+| filter             | Filter components containing this word in purl. Multiple values allowed. [array]                                                               |
+| only               | Include components only containing this word in purl. Useful to generate BOM with first party components alone. Multiple values allowed.[array]|
+| autoCompositions   | Automatically set compositions when the BOM was filtered. [boolean] [default: true]                                                            |
+| gitBranch          | Git branch used when cloning the repository. If not specified will use the default branch assigned to the repository.                          |
+| lifecycle          | Product lifecycle for the generated BOM. Choices are pre-build, build, post-build.                                                             |
+| deep               | Perform deep searches for components. Useful while scanning C/C++ apps, live OS and oci images.  [boolean] [default: false]                    |
+| profile            | BOM profile to use for generation. Default generic. Choices are appsec, research.                                                              |
+| exclude            | Additional global pattern(s) to ignore. [array]                                                                                                |
+| includeFormulation | Generate formulation section with git metadata and build tools. Use with caution, since there is a risk of exposure of sensitive data such as secrets. [boolean] [default: false]  |                                           
+| includeCrypto      | Include crypto libraries as components. Useful for generating CBOM. [boolean] [default: false]                                                 |
+| standard           | The list of standards which may consist of regulations, industry or organizational-specific standards, maturity models, best practices, or any other requirements which can be evaluated against or attested to. Choices are asvs-4.0.3, bsimm-v13, masvs-2.0.0, nist_ssdf-1.1,pcissc-secure-slc-1.1, scvs-1.0.0, ssaf-DRAFT-2023-11.|
 
 ## Ways to use server mode
 
