@@ -2705,21 +2705,20 @@ export async function createNodejsBom(path, options) {
   });
 }
 
-
 /**
  * Function to create bom string for Projects that use Pixi package manager.
  * createPixiBom is based on createPythonBom.
  * Pixi package manager utilizes many languages like python, rust, C/C++, ruby, etc.
  * It produces a Lockfile which help produce reproducible envs across operating systems.
  * This code will look at the operating system of our machine and create a BOM specific to that machine.
- * 
+ *
  * TODO: make sure pixi.lock package information compiled for all operating systems is actually accurate.
  * TODO: measure difference between current pixi.lock package version vs actuall
- * 
- * @param {String} path 
- * @param {Object} options 
+ *
+ * @param {String} path
+ * @param {Object} options
  */
-export async function createPixiBom(path, options){
+export async function createPixiBom(path, options) {
   const allImports = {};
   let metadataFilename = "";
   let dependencies = [];
@@ -2732,10 +2731,10 @@ export async function createPixiBom(path, options){
 
   const pixiToml = join(path, "pixi.toml");
 
-  // if pixi.lock file found then we 
+  // if pixi.lock file found then we
   // Add parentComponent Details
   const pixiTomlMode = existsSync(pixiToml);
-  if (pixiTomlMode){
+  if (pixiTomlMode) {
     const tmpParentComponent = parsePixiTomlFile(pixiToml);
     parentComponent = tmpParentComponent;
     parentComponent.type = "application";
@@ -2752,9 +2751,9 @@ export async function createPixiBom(path, options){
   }
 
   const pixiFilesMode = existsSync(pixiLockFile);
-  if (pixiFilesMode){
+  if (pixiFilesMode) {
     // Instead of what we do in createPythonBOM
-    // where we install packages and run `getPipFrozenTree` 
+    // where we install packages and run `getPipFrozenTree`
     // here I assume `pixi.lock` file to contain the accuracte version information
     // across all platforms
     PixiLockData = parsePixiLockFile(pixiLockFile, path);
@@ -2762,19 +2761,21 @@ export async function createPixiBom(path, options){
   } else {
     generatePixiLockFile(path);
     const pixiLockFile = join(path, "pixi.lock");
-    if (!existsSync(pixiLockFile) && DEBUG_MODE){
-      console.log("Unexpected Error tried to generate pixi.lock file but failed.")
-      console.log("This will result in creations of empty BOM.")
+    if (!existsSync(pixiLockFile) && DEBUG_MODE) {
+      console.log(
+        "Unexpected Error tried to generate pixi.lock file but failed.",
+      );
+      console.log("This will result in creations of empty BOM.");
     }
     PixiLockData = parsePixiLockFile(pixiLockFile);
     metadataFilename = "pixi.lock";
   }
-  
+
   pkgList = PixiLockData.pkgList;
   frozen = PixiLockData.frozen;
   formulationList = PixiLockData.formulationList;
   dependencies = PixiLockData.dependencies;
-  
+
   return buildBomNSData(options, pkgList, "pixi", {
     allImports,
     src: path,
@@ -2841,7 +2842,7 @@ export async function createPythonBom(path, options) {
     `${options.multiProject ? "**/" : ""}*.egg-info`,
     options,
   );
-  
+
   const pyProjectFile = join(path, "pyproject.toml");
   const pyProjectMode = existsSync(pyProjectFile);
   if (pyProjectMode) {

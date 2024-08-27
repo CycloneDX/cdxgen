@@ -286,9 +286,7 @@ export const PROJECT_TYPE_ALIASES = {
     "python311",
     "python312",
   ],
-  pixi: [
-    "pixi",
-  ],
+  pixi: ["pixi"],
   go: ["go", "golang", "gomod", "gopkg"],
   rust: ["rust", "rust-lang", "cargo"],
   php: ["php", "composer", "wordpress"],
@@ -4259,7 +4257,7 @@ export async function parseSetupPyFile(setupPyData) {
   return await parseReqFile(lines.join("\n"), false);
 }
 
-function createPurlTemplate(packageData){
+function createPurlTemplate(packageData) {
   const purlTemplate = `pkg:${packageData["kind"]}/${packageData["name"]}@${packageData["version"]}-${packageData["build"]}?os=${packageData["subdir"]}`;
   return purlTemplate;
 }
@@ -4269,7 +4267,7 @@ function createPurlTemplate(packageData){
  *
  * @param {Object} pixiData Contents of pixi.lock file
  */
-export function parsePixiLockFile(pixiLockFileName, path){
+export function parsePixiLockFile(pixiLockFileName, path) {
   const pixiFileData = readFileSync(pixiLockFileName, { encoding: "utf-8" });
   const pixiLockData = _load(pixiFileData);
   // TODO: add atom slices, for allImports
@@ -4284,159 +4282,160 @@ export function parsePixiLockFile(pixiLockFileName, path){
   // we do not set false because we have assumed that pixi lock is accurate
   const frozen = true;
 
-
   /**
-* pixiMapper used with a map on pixi packages list.
-* the pixi list contains the following information e.g.
-* {kind: conda
-*  name: alsa-lib
-*  version: 1.2.11
-*  build: h31becfc_1
-*  build_number: 1
-*  subdir: linux-aarch64
-*  url: https://conda.anaconda.org/conda-forge/linux-aarch64/alsa-lib-1.2.11-h31becfc_1.conda
-*  sha256: d062bc712dd307714dfdb0f7da095a510c138c5db76321494a516ac127f9e5cf
-*  md5: 76bf292a85a0556cef4f500420cabe6c
-*  depends:
-*  - libgcc-ng >=12
-*  license: LGPL-2.1-or-later
-*  license_family: GPL
-*  size: 584152
-*  timestamp: 1709396718705
-* }
-* We create the purl using the following logic:
-* "purl": "pkg:{kind}/{name}@{version}-{build}?os={os}"
-* type would be "library" and evidence would be 
-* {
-*  "identity": {
-*                    "field": "purl",
-*                    "confidence": 1,
-*                    "methods": [
-*                        {
-*                            "technique": "instrumentation",
-*                            "confidence": 1,
-*                            "value": "pixi.lock"
-*                        }
-*                    ]
-*                }
-* }
-*
-*/
-function pixiMapper(packageData) {
-  // return pkgList 
-  /** E.g. of what a pkgList element looks like
-  * {
-  *      name: "conda-content-trust",
-  *      version: "latest",
-  *      purl: "pkg:pypi/conda-content-trust@latest",
-  *      type: "library",
-  *      "bom-ref": "pkg:pypi/conda-content-trust@latest",
-  *      scope: "excluded",
-  *      evidence: {
-  *        identity: {
-  *          field: "purl",
-  *          confidence: 1,
-  *          methods: [
-  *            {
-  *              technique: "instrumentation",
-  *              confidence: 1,
-  *              value: "/home/greatsage/miniconda3",
-  *            },
-  *          ],
-  *        },
-  *      },
-  *      properties: [
-  *        {
-  *          name: "SrcFile",
-  *          value: "/home/greatsage/projects/supplyChain/trials/pythonprojs/fastapi/requirements.txt",
-  *        },
-  *      ],
-  *    }
-  */
-  // TODO: find a way to seperate necessary runtime packages from formulation packages
-  // TODO: seperate licenses
-  const purlTemplate = createPurlTemplate(packageData);
-  return {
-    "name": packageData['name'],
-    "version": packageData['version'],
-    "purl": purlTemplate,
-    "type": "library",
-    "bom-ref": purlTemplate,
-    // "licenses": [
-    //   [{
-    //       "id": packageData["license"]
-    //   }]
-    // ],
-    "supplier": {
-      "name": packageData['build'],
-      "url": packageData["url"]
-    },
-    // "hashes": [
-    //   {"md5": packageData["md5"]},
-    //   {"sha256": packageData["sha256"]}
-    // ],
-    "evidence": {
-      "identity": {
-        "field": "purl",
-        "confidence": 1,
-        "methods": [
-          {
-            "technique": "instrumentation",
-            "confidence": 1,
-            // "value": `${path}/.pixi/envs/default`
-          }
-        ]
-      }
-    },
-    "properties": [
-      {"operatingSystem": packageData['subdir']},
-      {"build_number": packageData['build_number']},
-      {"build": packageData['build']},
-    ]
+   * pixiMapper used with a map on pixi packages list.
+   * the pixi list contains the following information e.g.
+   * {kind: conda
+   *  name: alsa-lib
+   *  version: 1.2.11
+   *  build: h31becfc_1
+   *  build_number: 1
+   *  subdir: linux-aarch64
+   *  url: https://conda.anaconda.org/conda-forge/linux-aarch64/alsa-lib-1.2.11-h31becfc_1.conda
+   *  sha256: d062bc712dd307714dfdb0f7da095a510c138c5db76321494a516ac127f9e5cf
+   *  md5: 76bf292a85a0556cef4f500420cabe6c
+   *  depends:
+   *  - libgcc-ng >=12
+   *  license: LGPL-2.1-or-later
+   *  license_family: GPL
+   *  size: 584152
+   *  timestamp: 1709396718705
+   * }
+   * We create the purl using the following logic:
+   * "purl": "pkg:{kind}/{name}@{version}-{build}?os={os}"
+   * type would be "library" and evidence would be
+   * {
+   *  "identity": {
+   *                    "field": "purl",
+   *                    "confidence": 1,
+   *                    "methods": [
+   *                        {
+   *                            "technique": "instrumentation",
+   *                            "confidence": 1,
+   *                            "value": "pixi.lock"
+   *                        }
+   *                    ]
+   *                }
+   * }
+   *
+   */
+  function pixiMapper(packageData) {
+    // return pkgList
+    /** E.g. of what a pkgList element looks like
+     * {
+     *      name: "conda-content-trust",
+     *      version: "latest",
+     *      purl: "pkg:pypi/conda-content-trust@latest",
+     *      type: "library",
+     *      "bom-ref": "pkg:pypi/conda-content-trust@latest",
+     *      scope: "excluded",
+     *      evidence: {
+     *        identity: {
+     *          field: "purl",
+     *          confidence: 1,
+     *          methods: [
+     *            {
+     *              technique: "instrumentation",
+     *              confidence: 1,
+     *              value: "/home/greatsage/miniconda3",
+     *            },
+     *          ],
+     *        },
+     *      },
+     *      properties: [
+     *        {
+     *          name: "SrcFile",
+     *          value: "/home/greatsage/projects/supplyChain/trials/pythonprojs/fastapi/requirements.txt",
+     *        },
+     *      ],
+     *    }
+     */
+    // TODO: find a way to seperate necessary runtime packages from formulation packages
+    // TODO: seperate licenses
+    const purlTemplate = createPurlTemplate(packageData);
+    return {
+      name: packageData["name"],
+      version: packageData["version"],
+      purl: purlTemplate,
+      type: "library",
+      "bom-ref": purlTemplate,
+      // "licenses": [
+      //   [{
+      //       "id": packageData["license"]
+      //   }]
+      // ],
+      supplier: {
+        name: packageData["build"],
+        url: packageData["url"],
+      },
+      // "hashes": [
+      //   {"md5": packageData["md5"]},
+      //   {"sha256": packageData["sha256"]}
+      // ],
+      evidence: {
+        identity: {
+          field: "purl",
+          confidence: 1,
+          methods: [
+            {
+              technique: "instrumentation",
+              confidence: 1,
+              // "value": `${path}/.pixi/envs/default`
+            },
+          ],
+        },
+      },
+      properties: [
+        { operatingSystem: packageData["subdir"] },
+        { build_number: packageData["build_number"] },
+        { build: packageData["build"] },
+      ],
+    };
   }
-}
 
   function mapAddEvidenceValue(p) {
     // TODO: get pixi environment variable
-    p['evidence']['identity']['methods']['value'] = `${path}/.pixi/envs/default`;
+    p["evidence"]["identity"]["methods"]["value"] =
+      `${path}/.pixi/envs/default`;
     return p;
   }
   // create the pkgList
-  pkgList = pixiLockData['packages'].map(pixiMapper);
+  pkgList = pixiLockData["packages"].map(pixiMapper);
   pkgList = pkgList.map(mapAddEvidenceValue);
 
   // create dependencies
-  const dictionary_packages = pixiLockData['packages'].reduce((accumulator, currentObject) => {
-    accumulator[currentObject['name']] = currentObject;
-    return accumulator;
-  }, {});
-  
-  
-  dependenciesList = []
-  for (const package_iter of pixiLockData['packages']) {
-    const depends = package_iter['depends'];
-    if (!depends){
+  const dictionary_packages = pixiLockData["packages"].reduce(
+    (accumulator, currentObject) => {
+      accumulator[currentObject["name"]] = currentObject;
+      return accumulator;
+    },
+    {},
+  );
+
+  dependenciesList = [];
+  for (const package_iter of pixiLockData["packages"]) {
+    const depends = package_iter["depends"];
+    if (!depends) {
       continue;
     }
-  
+
     const purltemplate = createPurlTemplate(package_iter);
-    const subdir = package_iter['subdir'];
-    const dependsOn = []
-    for (const depends_package of depends){
+    const subdir = package_iter["subdir"];
+    const dependsOn = [];
+    for (const depends_package of depends) {
       const depends_package_name = depends_package.split(" ");
-      const depends_package_information = dictionary_packages[depends_package_name[0] + subdir];
-      if (!depends_package_information){
+      const depends_package_information =
+        dictionary_packages[depends_package_name[0] + subdir];
+      if (!depends_package_information) {
         continue;
       }
       dependsOn.push(createPurlTemplate(depends_package_information));
     }
-  
+
     dependenciesList.push({
-      'ref': purltemplate,
-      'dependsOn': dependsOn,
-    }
-    );
-  
+      ref: purltemplate,
+      dependsOn: dependsOn,
+    });
   }
 
   return {
@@ -4450,22 +4449,22 @@ function pixiMapper(packageData) {
 
 /**
  * Method to parse pixi.toml file
- * 
- * @param {String} pixiToml 
+ *
+ * @param {String} pixiToml
  */
 export function parsePixiTomlFile(pixiToml) {
   const pixiTomlFile = readFileSync(pixiToml, { encoding: "utf-8" });
   const tomlData = toml.parse(pixiTomlFile);
   const pkg = {};
-  if (!tomlData){
+  if (!tomlData) {
     return pkg;
   }
-  pkg.description = tomlData['project']['description'];
-  pkg.name = tomlData['project']['name'];
-  pkg.version = tomlData['project']['version'];
+  pkg.description = tomlData["project"]["description"];
+  pkg.name = tomlData["project"]["name"];
+  pkg.version = tomlData["project"]["version"];
   // pkg.authors = tomlData['project']['authors'];
-  pkg.homepage = tomlData['project']['homepage'];
-  pkg.repository = tomlData['project']['repository'];
+  pkg.homepage = tomlData["project"]["homepage"];
+  pkg.repository = tomlData["project"]["repository"];
   return pkg;
 }
 
@@ -4490,29 +4489,28 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
 
 /**
  * Method to run cli command `pixi install`
- * 
- * 
+ *
+ *
  */
-export function generatePixiLockFile(path){
-
+export function generatePixiLockFile(path) {
   // const { spawnSync } = require('child_process');
   // const fs = require('fs');
-  
+
   // // Check if pixi.lock exists
   // if (!fs.existsSync('pixi.lock')) {
   //   console.log('pixi.lock not found. Installing dependencies...');
-  
+
   //   // Attempt to run pixi install using spawnSync
   //   const result = spawnSync('pixi', ['install'], { stdio: 'inherit' }); // Inherit stdio for live output
-  
+
   //   if (result.status !== 0) {
-  //     // Handle errors 
+  //     // Handle errors
   //     if (result.error && result.error.code === 'ENOENT') {
   //       console.error('Error: pixi command not found. Make sure pixi.js is installed globally.');
   //     } else {
   //       console.error(`Error executing pixi install: ${result.error || result.stderr.toString()}`);
   //     }
-  //     process.exit(1); 
+  //     process.exit(1);
   //   } else {
   //     console.log('Dependencies installed successfully.');
   //   }
@@ -4520,18 +4518,22 @@ export function generatePixiLockFile(path){
   //   console.log('pixi.lock found. Dependencies are already installed.');
   // }
 
-  const result = spawnSync('pixi', ['install']);
+  const result = spawnSync("pixi", ["install"]);
 
   if (result.status !== 0) {
-    // Handle errors 
-    if (result.error && result.error.code === 'ENOENT') {
-      console.error('Error: pixi command not found. Make sure pixi.js is installed globally.');
+    // Handle errors
+    if (result.error && result.error.code === "ENOENT") {
+      console.error(
+        "Error: pixi command not found. Make sure pixi.js is installed globally.",
+      );
     } else {
-      console.error(`Error executing pixi install: ${result.error || result.stderr.toString()}`);
+      console.error(
+        `Error executing pixi install: ${result.error || result.stderr.toString()}`,
+      );
     }
-    process.exit(1); 
+    process.exit(1);
   } else {
-    console.log('Dependencies installed successfully.');
+    console.log("Dependencies installed successfully.");
   }
 }
 
