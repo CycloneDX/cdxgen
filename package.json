@@ -92,10 +92,11 @@
     "ssri": "^10.0.6",
     "table": "^6.8.2",
     "tar": "^6.2.1",
+    "toml": "^3.0.0",
     "uuid": "^10.0.0",
+    "validate-iri": "^1.0.1",
     "xml-js": "^1.6.11",
-    "yargs": "^17.7.2",
-    "validate-iri": "^1.0.1"
+    "yargs": "^17.7.2"
   },
   "optionalDependencies": {
     "@appthreat/atom": "2.0.17",
@@ -114,7 +115,12 @@
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
   },
-  "files": ["*.js", "bin/", "data/", "types/"],
+  "files": [
+    "*.js",
+    "bin/",
+    "data/",
+    "types/"
+  ],
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "jest": "^29.7.0",
