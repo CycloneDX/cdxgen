@@ -286,6 +286,9 @@ export const PROJECT_TYPE_ALIASES = {
     "python311",
     "python312",
   ],
+  pixi: [
+    "pixi",
+  ],
   go: ["go", "golang", "gomod", "gopkg"],
   rust: ["rust", "rust-lang", "cargo"],
   php: ["php", "composer", "wordpress"],
@@ -4279,7 +4282,7 @@ export async function parsePixiLockFile(pixiLockFileName, path){
   const formulationList = [];
   const rootList = [];
   let dependenciesList = [];
-  
+  // we do not set false because we have assumed that pixi lock is accurate
   const frozen = true;
 
 
@@ -4303,8 +4306,7 @@ export async function parsePixiLockFile(pixiLockFileName, path){
 *  timestamp: 1709396718705
 * }
 * We create the purl using the following logic:
-* TODO: purl spec has optional field for OS and architecture.
-* "purl": "pkg:{kind}/{name}@{version}-{build}"
+* "purl": "pkg:{kind}/{name}@{version}-{build}?os={os}"
 * type would be "library" and evidence would be 
 * {
 *  "identity": {
@@ -4320,7 +4322,6 @@ export async function parsePixiLockFile(pixiLockFileName, path){
 *                }
 * }
 *
-* TODO: where to put OSX information
 */
 function pixiMapper(packageData) {
   // return formulationLists 

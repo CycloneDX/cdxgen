@@ -2721,10 +2721,10 @@ export async function createNodejsBom(path, options) {
  */
 export async function createPixiBom(path, options){
   const allImports = {};
-  const metadataFilename = "";
-  const dependencies = [];
-  const pkgList = [];
-  const formulationList = [];
+  let metadataFilename = "";
+  let dependencies = [];
+  let pkgList = [];
+  let formulationList = [];
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pixiLockFile = join(path, "pixi.lock");
 
@@ -2736,12 +2736,6 @@ export async function createPixiBom(path, options){
   if (pixiTomlMode){
     const tmpParentComponent = parsePixiProjectToml(pixitoml);
     parentComponent = tmpParentComponent;
-    // TODO: clarify whether I should use github here or something else
-    // const parentPurl = new PackageURL(
-    //   ""
-    // )
-    // TODO: where does build channel urls go into the BOM
-    // TODO: similarly for platforms (which OS the software supports), readme
     parentComponent.type = "application";
     ppurl = new PackageURL(
       "pixi",
@@ -2763,13 +2757,26 @@ export async function createPixiBom(path, options){
     // Also we assume this for all platforms
     // TODO: investigate this claim
     const PixiLockData = parsePixiLockFile(pixiLockFile, path);
+    metadataFilename = "pixi.lock";
     
 
     
   } else {
     // TODO: generate pixi.lock incase it does not exist
+    generatePixiLockFile(path);
+    const pixiLockFile = join(path, "pixi.lock");
+    if (!existsSync(pixiLockFile) && DEBUG_MODE){
+      console.log("Unexpected Error tried to generate pixi.lock file but failed.")
+      console.log("This will result in creations of empty BOM.")
+    }
+    const PixiLockData = parsePixiLockFile(pixiLockFile);
+    metadataFilename = "pixi.lock";
   }
   
+  pkgList = PixiLockData.pkgList;
+  frozen = PixiLockData.frozen;
+  formulationList = PixiLockData.formulationList;
+  dependencies = PixiLockData.dependencies;
   
   return buildBomNSData(options, pkgList, "pixi", {
     allImports,
@@ -6477,6 +6484,9 @@ export async function createBom(path, options) {
   }
   if (PROJECT_TYPE_ALIASES["py"].includes(projectType[0])) {
     return await createPythonBom(path, options);
+  }
+  if (PROJECT_TYPE_ALIASES["pixi"].includes(projectType[0])) {
+    return await createPixiBom(path, options);
   }
   if (PROJECT_TYPE_ALIASES["go"].includes(projectType[0])) {
     return await createGoBom(path, options);
