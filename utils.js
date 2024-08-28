@@ -285,8 +285,8 @@ export const PROJECT_TYPE_ALIASES = {
     "python310",
     "python311",
     "python312",
+    "pixi",
   ],
-  pixi: ["pixi"],
   go: ["go", "golang", "gomod", "gopkg"],
   rust: ["rust", "rust-lang", "cargo"],
   php: ["php", "composer", "wordpress"],
@@ -4257,6 +4257,15 @@ export async function parseSetupPyFile(setupPyData) {
   return await parseReqFile(lines.join("\n"), false);
 }
 
+/**
+ * Method to create purl using information in pixi.lock file.
+ * According to pixi lock file satisfiability (https://pixi.sh/latest/features/lockfile/#lockfile-satisfiability)
+ *
+ *
+ *
+ * @param {*} packageData
+ * @returns
+ */
 function createPurlTemplate(packageData) {
   const purlTemplate = `pkg:${packageData["kind"]}/${packageData["name"]}@${packageData["version"]}-${packageData["build"]}?os=${packageData["subdir"]}`;
   return purlTemplate;
@@ -4479,7 +4488,7 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
     const name = repoMetadata.name;
     let ghUrl = "https://api.github.com/repos";
     if (group && group !== "." && group !== "") {
-      ghUrl = `$ghUrl/${group.replace("github.com/", "")}`;
+      ghUrl = `${ghUrl}/${group.replace("github.com/", "")}`;
     }
     ghUrl = `${ghUrl}/${name}`;
     return ghUrl;
@@ -4493,7 +4502,9 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
  *
  */
 export function generatePixiLockFile(path) {
-  const result = spawnSync("pixi", ["install"]);
+  const result = spawnSync("pixi", ["install"], {
+    encoding: "utf-8",
+  });
 
   if (result.status !== 0) {
     // Handle errors

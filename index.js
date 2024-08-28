@@ -2726,12 +2726,11 @@ export async function createPixiBom(path, options) {
   let formulationList = [];
   let frozen = true;
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
-  const pixiLockFile = join(path, "pixi.lock");
   let PixiLockData = {};
 
   const pixiToml = join(path, "pixi.toml");
 
-  // if pixi.lock file found then we
+  // if pixi.toml file found then we
   // Add parentComponent Details
   const pixiTomlMode = existsSync(pixiToml);
   if (pixiTomlMode) {
@@ -2750,6 +2749,7 @@ export async function createPixiBom(path, options) {
     parentComponent["purl"] = ppurl;
   }
 
+  const pixiLockFile = join(path, "pixi.lock");
   const pixiFilesMode = existsSync(pixiLockFile);
   if (pixiFilesMode) {
     // Instead of what we do in createPythonBOM
@@ -2759,16 +2759,23 @@ export async function createPixiBom(path, options) {
     PixiLockData = parsePixiLockFile(pixiLockFile, path);
     metadataFilename = "pixi.lock";
   } else {
-    generatePixiLockFile(path);
-    const pixiLockFile = join(path, "pixi.lock");
-    if (!existsSync(pixiLockFile) && DEBUG_MODE) {
-      console.log(
-        "Unexpected Error tried to generate pixi.lock file but failed.",
-      );
-      console.log("This will result in creations of empty BOM.");
+    if (options.installDeps) {
+      generatePixiLockFile(path);
+
+      const pixiLockFile = join(path, "pixi.lock");
+      if (!existsSync(pixiLockFile) && DEBUG_MODE) {
+        console.log(
+          "Unexpected Error tried to generate pixi.lock file but failed.",
+        );
+        console.log("This will result in creations of empty BOM.");
+      }
+      PixiLockData = parsePixiLockFile(pixiLockFile);
+      metadataFilename = "pixi.lock";
+    } else {
+      // If no pixi.lock and installDeps is false
+      // then return None and let `createPythonBOM()` handle generation of BOM.
+      return null;
     }
-    PixiLockData = parsePixiLockFile(pixiLockFile);
-    metadataFilename = "pixi.lock";
   }
 
   pkgList = PixiLockData.pkgList;
@@ -2776,7 +2783,7 @@ export async function createPixiBom(path, options) {
   formulationList = PixiLockData.formulationList;
   dependencies = PixiLockData.dependencies;
 
-  return buildBomNSData(options, pkgList, "pixi", {
+  return buildBomNSData(options, pkgList, "pypi", {
     allImports,
     src: path,
     filename: metadataFilename,
@@ -2801,6 +2808,19 @@ export async function createPythonBom(path, options) {
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pipenvMode = existsSync(join(path, "Pipfile"));
+
+  // If pixi is used then just return that as output instead
+  const pixiLockFile = join(path, "pixi.lock");
+  const pixiFilesMode = existsSync(pixiLockFile);
+  const pixiToml = join(path, "pixi.toml");
+  const pixiTomlMode = existsSync(pixiToml);
+  if (pixiTomlMode || pixiFilesMode) {
+    const BomNSData = createPixiBom(path, options);
+    if (BomNSData) {
+      return BomNSData;
+    }
+  }
+
   let poetryFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}poetry.lock`,
@@ -6482,9 +6502,6 @@ export async function createBom(path, options) {
   }
   if (PROJECT_TYPE_ALIASES["py"].includes(projectType[0])) {
     return await createPythonBom(path, options);
-  }
-  if (PROJECT_TYPE_ALIASES["pixi"].includes(projectType[0])) {
-    return await createPixiBom(path, options);
   }
   if (PROJECT_TYPE_ALIASES["go"].includes(projectType[0])) {
     return await createGoBom(path, options);
