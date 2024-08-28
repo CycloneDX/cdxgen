@@ -1753,7 +1753,7 @@ export async function createJavaBom(path, options) {
     isPackageManagerAllowed("gradle", ["maven", "bazel", "sbt"], options)
   ) {
     const gradleCmd = getGradleCommand(gradleRootPath, null);
-    const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
+    const defaultTaskArgs = ["--console", "plain", "--build-cache"];
     allProjects.push(parentComponent);
     let depTaskWithArgs = ["dependencies"];
     let relevantTasks = ["dependencies"];
@@ -1761,42 +1761,58 @@ export async function createJavaBom(path, options) {
       depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
       relevantTasks = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
     }
-    let gradleDepArgs = [];
-    gradleDepArgs = gradleDepArgs
-      .concat(depTaskWithArgs.slice(1))
-      .concat(defaultDepTaskArgs);
+    let gradleArgs = [];
+    gradleArgs = gradleArgs.concat(defaultTaskArgs);
     // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
     if (process.env.GRADLE_ARGS) {
       const addArgs = process.env.GRADLE_ARGS.split(" ");
-      gradleDepArgs = gradleDepArgs.concat(addArgs);
+      gradleArgs = gradleArgs.concat(addArgs);
     }
     // gradle args only for the dependencies task
+    let gradleDepArgs = [];
+    gradleDepArgs = gradleDepArgs.concat(depTaskWithArgs.slice(1));
     if (process.env.GRADLE_ARGS_DEPENDENCIES) {
       const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
       gradleDepArgs = gradleDepArgs.concat(addArgs);
     }
 
     if (process.env.GRADLE_MULTI_THREADED) {
-      gradleDepArgs.push(depTaskWithArgs[0]);
+      const modulesToSkip = process.env.GRADLE_SKIP_MODULES
+        ? process.env.GRADLE_SKIP_MODULES.split(",")
+        : [];
+      let gradleSubProjectDepArgs = [];
+      if (!modulesToSkip.includes("root")) {
+        gradleSubProjectDepArgs.push(depTaskWithArgs[0]);
+        gradleSubProjectDepArgs = gradleSubProjectDepArgs.concat(gradleDepArgs);
+      }
       for (const sp of allProjects) {
         //create single command for dependencies tasks on all subprojects
-        if (sp.purl !== parentComponent.purl) {
-          gradleDepArgs.push(`:${sp.name}:${depTaskWithArgs[0]}`);
+        if (
+          sp.purl !== parentComponent.purl &&
+          !modulesToSkip.includes(sp.name)
+        ) {
+          gradleSubProjectDepArgs.push(`:${sp.name}:${depTaskWithArgs[0]}`);
+          gradleSubProjectDepArgs =
+            gradleSubProjectDepArgs.concat(gradleDepArgs);
         }
       }
       console.log(
         "Executing",
         gradleCmd,
-        gradleDepArgs.join(" "),
+        gradleArgs.concat(gradleSubProjectDepArgs).join(" "),
         "in",
         gradleRootPath,
       );
-      const sresult = spawnSync(gradleCmd, gradleDepArgs, {
-        cwd: gradleRootPath,
-        encoding: "utf-8",
-        timeout: TIMEOUT_MS,
-        maxBuffer: MAX_BUFFER,
-      });
+      const sresult = spawnSync(
+        gradleCmd,
+        gradleArgs.concat(gradleSubProjectDepArgs),
+        {
+          cwd: gradleRootPath,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        },
+      );
 
       if (sresult.status !== 0 || sresult.error) {
         if (options.failOnError || DEBUG_MODE) {
@@ -1862,16 +1878,20 @@ export async function createJavaBom(path, options) {
         console.log(
           "Executing",
           gradleCmd,
-          gradleSubProjectDepArgs.join(" "),
+          gradleArgs.concat(gradleSubProjectDepArgs).join(" "),
           "in",
           gradleRootPath,
         );
-        const sresult = spawnSync(gradleCmd, gradleSubProjectDepArgs, {
-          cwd: gradleRootPath,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER,
-        });
+        const sresult = spawnSync(
+          gradleCmd,
+          gradleArgs.concat(gradleSubProjectDepArgs),
+          {
+            cwd: gradleRootPath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER,
+          },
+        );
         if (sresult.status !== 0 || sresult.error) {
           if (options.failOnError || DEBUG_MODE) {
             console.error(sresult.stdout, sresult.stderr);

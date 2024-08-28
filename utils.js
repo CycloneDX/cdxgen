@@ -2894,34 +2894,31 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
       version: "latest",
     },
   };
-  let parallelPropTaskArgs = ["properties"];
-  for (const spstr of allProjectsStr) {
-    parallelPropTaskArgs.push(`${spstr}:properties`);
-  }
-
-  let gradlePropertiesArgs = ["--console", "plain", "--build-cache"];
   const gradleCmd = getGradleCommand(dir, rootPath);
 
   // common gradle args, used for all tasks
+  let gradleArgs = ["--console", "plain", "--build-cache"];
   if (process.env.GRADLE_ARGS) {
     const addArgs = process.env.GRADLE_ARGS.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
+    gradleArgs = gradleArgs.concat(addArgs);
   }
+
   // gradle args only for the properties task
+  let gradlePropertiesArgs = [];
   if (process.env.GRADLE_ARGS_PROPERTIES) {
     const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
     gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
   }
-  parallelPropTaskArgs = parallelPropTaskArgs.concat(gradlePropertiesArgs);
 
-  console.log(
-    "Executing",
-    gradleCmd,
-    parallelPropTaskArgs.join(" "),
-    "in",
-    dir,
-  );
-  const result = spawnSync(gradleCmd, parallelPropTaskArgs, {
+  gradleArgs.push("properties");
+  gradleArgs = gradleArgs.concat(gradlePropertiesArgs);
+  for (const spstr of allProjectsStr) {
+    gradleArgs.push(`${spstr}:properties`);
+    gradleArgs = gradleArgs.concat(gradlePropertiesArgs);
+  }
+
+  console.log("Executing", gradleCmd, gradleArgs.join(" "), "in", dir);
+  const result = spawnSync(gradleCmd, gradleArgs, {
     cwd: dir,
     encoding: "utf-8",
     shell: isWin,
