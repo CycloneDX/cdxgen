@@ -1686,11 +1686,11 @@ export async function createJavaBom(path, options) {
               null,
             ).toString();
             rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] =
-              decodeURIComponent(rootSubProjectPurl);
+            const rootSubProjectBomRef = decodeURIComponent(rootSubProjectPurl);
+            rootSubProjectObj["bom-ref"] = rootSubProjectBomRef;
             if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
               allProjects.push(rootSubProjectObj);
-              rootDependsOn.push(rootSubProjectPurl);
+              rootDependsOn.push(rootSubProjectBomRef);
               allProjectsAddedPurls.push(rootSubProjectPurl);
             }
           }
@@ -1720,11 +1720,11 @@ export async function createJavaBom(path, options) {
               null,
             ).toString();
             rootSubProjectObj["purl"] = rootSubProjectPurl;
-            rootSubProjectObj["bom-ref"] =
-              decodeURIComponent(rootSubProjectPurl);
+            const rootSubProjectBomRef = decodeURIComponent(rootSubProjectPurl);
+            rootSubProjectObj["bom-ref"] = rootSubProjectBomRef;
             if (!allProjectsAddedPurls.includes(rootSubProjectPurl)) {
               allProjects.push(rootSubProjectObj);
-              rootDependsOn.push(rootSubProjectPurl);
+              rootDependsOn.push(rootSubProjectBomRef);
               allProjectsAddedPurls.push(rootSubProjectPurl);
             }
           }
