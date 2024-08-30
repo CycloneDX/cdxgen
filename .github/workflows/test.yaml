@@ -6,6 +6,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "$EVENT"
+      - run: |
+          echo "$EVENT"
+          cat .npmignore
         env:
           EVENT: ${{toJSON(github)}}
