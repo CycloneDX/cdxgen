@@ -4355,7 +4355,7 @@ export function parsePixiLockFile(pixiLockFileName, path) {
      *        },
      *      ],
      *    }
-     * 
+     *
      */
     const purlTemplate = createPurlTemplate(packageData);
     return {
