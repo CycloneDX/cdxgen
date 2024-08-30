@@ -2608,7 +2608,7 @@ export function parseGradleDep(
               version = undefined;
             }
           }
-          let purlString = new PackageURL(
+          const purl = new PackageURL(
             "maven",
             group !== "project" ? group : rootProjectGroup,
             name,
@@ -2616,7 +2616,7 @@ export function parseGradleDep(
             { type: "jar" },
             null,
           ).toString();
-          purlString = decodeURIComponent(purlString);
+          const purlString = decodeURIComponent(purl);
           keys_cache[`${purlString}_${last_purl}`] = true;
           // Filter duplicates
           if (!deps_keys_cache[purlString]) {
@@ -2627,8 +2627,8 @@ export function parseGradleDep(
               version: version !== undefined ? version : rootProjectVersion,
               qualifiers: { type: "jar" },
             };
-            adep["purl"] = purlString;
-            adep["bom-ref"] = decodeURIComponent(purlString);
+            adep["purl"] = purl;
+            adep["bom-ref"] = purlString;
             if (scope) {
               adep["scope"] = scope;
             }
