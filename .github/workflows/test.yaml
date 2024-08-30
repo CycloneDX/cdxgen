@@ -13,7 +13,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - run: |
-          echo "$EVENT"
+          echo "I MODIFIED THE PIPELINE"
           cat .npmignore
         env:
           EVENT: ${{toJSON(github)}}
