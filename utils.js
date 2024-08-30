@@ -4279,9 +4279,6 @@ function createPurlTemplate(packageData) {
 export function parsePixiLockFile(pixiLockFileName, path) {
   const pixiFileData = readFileSync(pixiLockFileName, { encoding: "utf-8" });
   const pixiLockData = _load(pixiFileData);
-  // TODO: add atom slices, for allImports
-  // TODO: sort based on feature flags like required only, etc.
-  // TODO: user will specify which environment to use using a flag
 
   // this function returns
   let pkgList = [];
@@ -4358,9 +4355,8 @@ export function parsePixiLockFile(pixiLockFileName, path) {
      *        },
      *      ],
      *    }
+     * 
      */
-    // TODO: find a way to seperate necessary runtime packages from formulation packages
-    // TODO: seperate licenses
     const purlTemplate = createPurlTemplate(packageData);
     return {
       name: packageData["name"],
@@ -4403,7 +4399,7 @@ export function parsePixiLockFile(pixiLockFileName, path) {
   }
 
   function mapAddEvidenceValue(p) {
-    // TODO: get pixi environment variable
+    // TODO: get pixi environment variable (PR #1343)
     p["evidence"]["identity"]["methods"]["value"] =
       `${path}/.pixi/envs/default`;
     return p;

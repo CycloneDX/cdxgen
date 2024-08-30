@@ -2712,8 +2712,6 @@ export async function createNodejsBom(path, options) {
  * It produces a Lockfile which help produce reproducible envs across operating systems.
  * This code will look at the operating system of our machine and create a BOM specific to that machine.
  *
- * TODO: make sure pixi.lock package information compiled for all operating systems is actually accurate.
- * TODO: measure difference between current pixi.lock package version vs actuall
  *
  * @param {String} path
  * @param {Object} options
