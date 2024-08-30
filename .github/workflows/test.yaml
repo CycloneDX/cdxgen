@@ -1,6 +1,6 @@
 name: test
 on:
-  pull_request_target: # Use pull_request_target
+  pull_request: # Use pull_request_target
     branches: [master]
 jobs:
   test:
