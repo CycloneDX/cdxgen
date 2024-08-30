@@ -119,8 +119,6 @@ import {
   parsePackageJsonName,
   parsePaketLockData,
   parsePiplockData,
-  parsePixiLockFile,
-  parsePixiTomlFile,
   parsePkgJson,
   parsePkgLock,
   parsePnpmLock,
@@ -2706,92 +2704,6 @@ export async function createNodejsBom(path, options) {
 }
 
 /**
- * Function to create bom string for Projects that use Pixi package manager.
- * createPixiBom is based on createPythonBom.
- * Pixi package manager utilizes many languages like python, rust, C/C++, ruby, etc.
- * It produces a Lockfile which help produce reproducible envs across operating systems.
- * This code will look at the operating system of our machine and create a BOM specific to that machine.
- *
- *
- * @param {String} path
- * @param {Object} options
- */
-export async function createPixiBom(path, options) {
-  const allImports = {};
-  let metadataFilename = "";
-  let dependencies = [];
-  let pkgList = [];
-  let formulationList = [];
-  let frozen = true;
-  let parentComponent = createDefaultParentComponent(path, "pypi", options);
-  let PixiLockData = {};
-
-  const pixiToml = join(path, "pixi.toml");
-
-  // if pixi.toml file found then we
-  // Add parentComponent Details
-  const pixiTomlMode = existsSync(pixiToml);
-  if (pixiTomlMode) {
-    const tmpParentComponent = parsePixiTomlFile(pixiToml);
-    parentComponent = tmpParentComponent;
-    parentComponent.type = "application";
-    const ppurl = new PackageURL(
-      "pixi",
-      parentComponent.group || "",
-      parentComponent.name,
-      parentComponent.version || "latest",
-      null,
-      null,
-    ).toString();
-    parentComponent["bom-ref"] = decodeURIComponent(ppurl);
-    parentComponent["purl"] = ppurl;
-  }
-
-  const pixiLockFile = join(path, "pixi.lock");
-  const pixiFilesMode = existsSync(pixiLockFile);
-  if (pixiFilesMode) {
-    // Instead of what we do in createPythonBOM
-    // where we install packages and run `getPipFrozenTree`
-    // here I assume `pixi.lock` file to contain the accuracte version information
-    // across all platforms
-    PixiLockData = parsePixiLockFile(pixiLockFile, path);
-    metadataFilename = "pixi.lock";
-  } else {
-    if (options.installDeps) {
-      generatePixiLockFile(path);
-
-      const pixiLockFile = join(path, "pixi.lock");
-      if (!existsSync(pixiLockFile) && DEBUG_MODE) {
-        console.log(
-          "Unexpected Error tried to generate pixi.lock file but failed.",
-        );
-        console.log("This will result in creations of empty BOM.");
-      }
-      PixiLockData = parsePixiLockFile(pixiLockFile);
-      metadataFilename = "pixi.lock";
-    } else {
-      // If no pixi.lock and installDeps is false
-      // then return None and let `createPythonBOM()` handle generation of BOM.
-      return null;
-    }
-  }
-
-  pkgList = PixiLockData.pkgList;
-  frozen = PixiLockData.frozen;
-  formulationList = PixiLockData.formulationList;
-  dependencies = PixiLockData.dependencies;
-
-  return buildBomNSData(options, pkgList, "pypi", {
-    allImports,
-    src: path,
-    filename: metadataFilename,
-    dependencies,
-    parentComponent,
-    formulationList,
-  });
-}
-
-/**
  * Function to create bom string for Python projects
  *
  * @param {string} path to the project
@@ -2806,19 +2718,6 @@ export async function createPythonBom(path, options) {
   const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-venv-"));
   let parentComponent = createDefaultParentComponent(path, "pypi", options);
   const pipenvMode = existsSync(join(path, "Pipfile"));
-
-  // If pixi is used then just return that as output instead
-  const pixiLockFile = join(path, "pixi.lock");
-  const pixiFilesMode = existsSync(pixiLockFile);
-  const pixiToml = join(path, "pixi.toml");
-  const pixiTomlMode = existsSync(pixiToml);
-  if (pixiTomlMode || pixiFilesMode) {
-    const BomNSData = createPixiBom(path, options);
-    if (BomNSData) {
-      return BomNSData;
-    }
-  }
-
   let poetryFiles = getAllFiles(
     path,
     `${options.multiProject ? "**/" : ""}poetry.lock`,
@@ -2860,7 +2759,7 @@ export async function createPythonBom(path, options) {
     `${options.multiProject ? "**/" : ""}*.egg-info`,
     options,
   );
-
+  const setupPy = join(path, "setup.py");
   const pyProjectFile = join(path, "pyproject.toml");
   const pyProjectMode = existsSync(pyProjectFile);
   if (pyProjectMode) {
@@ -2888,7 +2787,6 @@ export async function createPythonBom(path, options) {
   }
   const requirementsMode = reqFiles?.length || reqDirFiles?.length;
   const poetryMode = poetryFiles?.length;
-  const setupPy = join(path, "setup.py");
   const setupPyMode = existsSync(setupPy);
   // Poetry sets up its own virtual env containing site-packages so
   // we give preference to poetry lock file. Issue# 129
@@ -3171,7 +3069,6 @@ export async function createPythonBom(path, options) {
       }
     }
   }
-
   // Final fallback is to manually parse setup.py if we still
   // have an empty list
   if (!pkgList.length && setupPyMode) {

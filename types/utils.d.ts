@@ -456,44 +456,11 @@ export function getPyModules(src: string, epkgList: any[], options: any): Promis
  */
 export function parseSetupPyFile(setupPyData: any): Promise<any[]>;
 /**
- * Method to parse pixi.lock data
- *
- * @param {Object} pixiData Contents of pixi.lock file
- */
-export function parsePixiLockFile(pixiLockFileName: any, path: any): {
-    pkgList: any;
-    formulationList: any[];
-    rootList: any[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: string[];
-    }[];
-    frozen: boolean;
-};
-/**
- * Method to parse pixi.toml file
- *
- * @param {String} pixiToml
- */
-export function parsePixiTomlFile(pixiToml: string): {
-    description: any;
-    name: any;
-    version: any;
-    homepage: any;
-    repository: any;
-};
-/**
  * Method to construct a GitHub API url for the given repo metadata
  * @param {Object} repoMetadata Repo metadata with group and name
  * @return {String|undefined} github api url (or undefined - if not enough data)
  */
 export function repoMetadataToGitHubApiUrl(repoMetadata: any): string | undefined;
-/**
- * Method to run cli command `pixi install`
- *
- *
- */
-export function generatePixiLockFile(path: any): void;
 /**
  * Method to split GitHub url into its parts
  * @param {String} repoUrl Repository url

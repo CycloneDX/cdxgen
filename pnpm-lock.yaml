@@ -77,9 +77,6 @@ importers:
       tar:
         specifier: ^6.2.1
         version: 6.2.1
-      toml:
-        specifier: ^3.0.0
-        version: 3.0.0
       uuid:
         specifier: ^10.0.0
         version: 10.0.0
@@ -2554,9 +2551,6 @@ packages:
   toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
-
-  toml@3.0.0:
-    resolution: {integrity: sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==}
 
   toposort-class@1.0.1:
     resolution: {integrity: sha512-OsLcGGbYF3rMjPUf8oKktyvCiUxSbqMMS39m33MAjLTC1DVIH6x3WSt63/M77ihI09+Sdfk1AXvfhCEeUmC7mg==}
@@ -5733,8 +5727,6 @@ snapshots:
 
   toidentifier@1.0.1:
     optional: true
-
-  toml@3.0.0: {}
 
   toposort-class@1.0.1:
     optional: true
