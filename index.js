@@ -1826,12 +1826,9 @@ export async function createJavaBom(path, options) {
           cmdOutput,
           relevantTasks,
         );
-        for (const [key, singleProjectDepOut] of perProjectOutput.entries()) {
-          const sp = allProjects
-            .filter((project) => project.name === key)
-            .pop();
+        for (const sp of allProjects) {
           const parsedList = parseGradleDep(
-            singleProjectDepOut,
+            perProjectOutput.has(sp.name) ? perProjectOutput.get(sp.name) : "",
             sp.group || parentComponent.group,
             sp.name,
             sp.version?.length && sp.version !== "latest"
