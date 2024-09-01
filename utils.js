@@ -2524,7 +2524,7 @@ export function parseGradleDep(
     const keys_cache = {};
     const deps_keys_cache = {};
     let last_level = 0;
-    let last_purl = decodeURIComponent(
+    let last_bomref = decodeURIComponent(
       new PackageURL(
         "maven",
         rootProject.group,
@@ -2534,10 +2534,10 @@ export function parseGradleDep(
         null,
       ).toString(),
     );
-    const first_purl = last_purl;
-    let last_project_purl = first_purl;
+    const first_bomref = last_bomref;
+    let last_project_bomref = first_bomref;
     const level_trees = {};
-    level_trees[last_purl] = [];
+    level_trees[last_bomref] = [];
     let scope = undefined;
     let profileName = undefined;
     if (retMap?.projects) {
@@ -2556,9 +2556,9 @@ export function parseGradleDep(
           ),
         );
       }
-      level_trees[last_purl] = subDependsOn;
+      level_trees[last_bomref] = subDependsOn;
     }
-    let stack = [last_purl];
+    let stack = [last_bomref];
     const depRegex =
       /^.*?--- +(?<groupspecified>[^\s:]+) ?:(?<namespecified>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?:(?<groupoverride>[^\s:]+):(?<nameoverride>[^\s:]+):)?(?<versionoverride>[^\s:]+))?/gm;
     for (let rline of rawOutput.split("\n")) {
@@ -2579,9 +2579,9 @@ export function parseGradleDep(
         rline.startsWith("\\--- ")
       ) {
         last_level = 1;
-        last_project_purl = first_purl;
-        last_purl = last_project_purl;
-        stack = [first_purl];
+        last_project_bomref = first_bomref;
+        last_bomref = last_project_bomref;
+        stack = [first_bomref];
       }
       if (rline.includes(" - ")) {
         profileName = rline.split(" - ")[0];
@@ -2626,11 +2626,11 @@ export function parseGradleDep(
             { type: "jar" },
             null,
           ).toString();
-          const purlString = decodeURIComponent(purl);
-          keys_cache[`${purlString}_${last_purl}`] = true;
+          const bomRef = decodeURIComponent(purl);
+          keys_cache[`${bomRef}_${last_bomref}`] = true;
           // Filter duplicates
-          if (!deps_keys_cache[purlString]) {
-            deps_keys_cache[purlString] = true;
+          if (!deps_keys_cache[bomRef]) {
+            deps_keys_cache[bomRef] = true;
             const adep = {
               group: group !== "project" ? group : rootProjectGroup,
               name: name,
@@ -2638,7 +2638,7 @@ export function parseGradleDep(
               qualifiers: { type: "jar" },
             };
             adep["purl"] = purl;
-            adep["bom-ref"] = purlString;
+            adep["bom-ref"] = bomRef;
             if (scope) {
               adep["scope"] = scope;
             }
@@ -2652,38 +2652,38 @@ export function parseGradleDep(
             }
             deps.push(adep);
           }
-          if (!level_trees[purlString]) {
-            level_trees[purlString] = [];
+          if (!level_trees[bomRef]) {
+            level_trees[bomRef] = [];
           }
           if (level === 0) {
-            stack = [first_purl];
-            stack.push(purlString);
-          } else if (last_purl === "") {
-            stack.push(purlString);
+            stack = [first_bomref];
+            stack.push(bomRef);
+          } else if (last_bomref === "") {
+            stack.push(bomRef);
           } else if (level > last_level) {
-            const cnodes = level_trees[last_purl] || [];
-            if (!cnodes.includes(purlString)) {
-              cnodes.push(purlString);
+            const cnodes = level_trees[last_bomref] || [];
+            if (!cnodes.includes(bomRef)) {
+              cnodes.push(bomRef);
             }
-            level_trees[last_purl] = cnodes;
-            if (stack[stack.length - 1] !== purlString) {
-              stack.push(purlString);
+            level_trees[last_bomref] = cnodes;
+            if (stack[stack.length - 1] !== bomRef) {
+              stack.push(bomRef);
             }
           } else {
             for (let i = level; i <= last_level; i++) {
               stack.pop();
             }
             const last_stack =
-              stack.length > 0 ? stack[stack.length - 1] : last_project_purl;
+              stack.length > 0 ? stack[stack.length - 1] : last_project_bomref;
             const cnodes = level_trees[last_stack] || [];
-            if (!cnodes.includes(purlString)) {
-              cnodes.push(purlString);
+            if (!cnodes.includes(bomRef)) {
+              cnodes.push(bomRef);
             }
             level_trees[last_stack] = cnodes;
-            stack.push(purlString);
+            stack.push(bomRef);
           }
           last_level = level;
-          last_purl = purlString;
+          last_bomref = bomRef;
         }
       }
     }
