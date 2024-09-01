@@ -2902,8 +2902,6 @@ export function executeParallelGradleProperties(dir, allProjectsStr) {
     gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
   }
 
-  gradleArgs.push("properties");
-  gradleArgs = gradleArgs.concat(gradlePropertiesArgs);
   for (const spstr of allProjectsStr) {
     gradleArgs.push(`${spstr}:properties`);
     gradleArgs = gradleArgs.concat(gradlePropertiesArgs);
