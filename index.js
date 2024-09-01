@@ -3397,6 +3397,7 @@ export async function createGoBom(path, options) {
     ) {
       for (const f of gomodFiles) {
         const basePath = dirname(f);
+        let forceGoModGraph = false;
         // Ignore vendor packages
         if (basePath.includes("/vendor/") || basePath.includes("/build/")) {
           continue;
@@ -3421,7 +3422,16 @@ export async function createGoBom(path, options) {
             maxBuffer: MAX_BUFFER,
           },
         );
+        if (
+          result?.stderr?.includes("matched no packages") ||
+          result?.stderr?.includes("no required module provides package") ||
+          result?.stderr?.includes("no Go files in")
+        ) {
+          forceGoModGraph = true;
+        }
         if (result.status !== 0 || result.error) {
+          // go list -deps command may not work when private packages are involved
+          // So we support a fallback to only operate with go mod graph command output in such instances
           console.log("go list -deps command has failed.");
           shouldManuallyParse = true;
           if (DEBUG_MODE && result.stdout) {
@@ -3481,6 +3491,39 @@ export async function createGoBom(path, options) {
               gosumMap,
               pkgList,
               parentComponent,
+            );
+            if (retMap.pkgList?.length) {
+              pkgList = pkgList.concat(retMap.pkgList);
+              pkgList = trimComponents(pkgList);
+            }
+            if (retMap.dependenciesList?.length) {
+              dependencies = mergeDependencies(
+                dependencies,
+                retMap.dependenciesList,
+                parentComponent,
+              );
+            }
+          }
+        } else if (forceGoModGraph) {
+          if (DEBUG_MODE) {
+            console.log("Executing go mod graph in", basePath);
+          }
+          // Next we use the go mod graph command to construct the dependency tree
+          result = spawnSync("go", ["mod", "graph"], {
+            cwd: basePath,
+            encoding: "utf-8",
+            timeout: TIMEOUT_MS,
+            maxBuffer: MAX_BUFFER,
+          });
+          if (result.stdout) {
+            const cmdOutput = Buffer.from(result.stdout).toString();
+            // The arguments to parseGoModGraph are slightly different to force inclusion of all packages
+            const retMap = await parseGoModGraph(
+              cmdOutput,
+              f,
+              gosumMap,
+              [],
+              {},
             );
             if (retMap.pkgList?.length) {
               pkgList = pkgList.concat(retMap.pkgList);
