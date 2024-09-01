@@ -1621,7 +1621,7 @@ export async function createJavaBom(path, options) {
     gradleFiles?.length &&
     isPackageManagerAllowed("gradle", ["maven", "bazel", "sbt"], options)
   ) {
-    let retMap = executeGradleProperties(gradleRootPath, null, null);
+    let retMap = executeGradleProperties(gradleRootPath, null);
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
     if (rootProject) {
@@ -1646,7 +1646,6 @@ export async function createJavaBom(path, options) {
       if (process.env.GRADLE_MULTI_THREADED) {
         const parallelPropTaskOut = executeParallelGradleProperties(
           gradleRootPath,
-          null,
           allProjectsStr,
         );
         const splitPropTaskOut = splitOutputByGradleProjects(
@@ -1702,7 +1701,7 @@ export async function createJavaBom(path, options) {
         }
       } else {
         for (const spstr of allProjectsStr) {
-          retMap = executeGradleProperties(gradleRootPath, null, spstr);
+          retMap = executeGradleProperties(gradleRootPath, spstr);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");

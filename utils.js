@@ -2881,13 +2881,12 @@ export function parseGradleProperties(rawOutput) {
  * Execute gradle properties command using multi-threading and return parsed output
  *
  * @param {string} dir Directory to execute the command
- * @param {string} rootPath Root directory
  * @param {array} allProjectsStr List of all sub-projects (including the preceding `:`)
  *
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
-export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
-  const gradleCmd = getGradleCommand(dir, rootPath);
+export function executeParallelGradleProperties(dir, allProjectsStr) {
+  const gradleCmd = getGradleCommand(dir, null);
 
   // common gradle args, used for all tasks
   let gradleArgs = ["--console", "plain", "--build-cache"];
@@ -2946,10 +2945,9 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
  * Execute gradle properties command and return parsed output
  *
  * @param {string} dir Directory to execute the command
- * @param {string} rootPath Root directory
  * @param {string} subProject Sub project name
  */
-export function executeGradleProperties(dir, rootPath, subProject) {
+export function executeGradleProperties(dir, subProject) {
   const defaultProps = {
     rootProject: subProject,
     projects: [],
@@ -2969,7 +2967,7 @@ export function executeGradleProperties(dir, rootPath, subProject) {
     "plain",
     "--build-cache",
   ];
-  const gradleCmd = getGradleCommand(dir, rootPath);
+  const gradleCmd = getGradleCommand(dir, null);
   // common gradle args, used for all tasks
   if (process.env.GRADLE_ARGS) {
     const addArgs = process.env.GRADLE_ARGS.split(" ");
