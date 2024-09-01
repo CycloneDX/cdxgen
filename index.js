@@ -3397,7 +3397,6 @@ export async function createGoBom(path, options) {
     ) {
       for (const f of gomodFiles) {
         const basePath = dirname(f);
-        let forceGoModGraph = false;
         // Ignore vendor packages
         if (basePath.includes("/vendor/") || basePath.includes("/build/")) {
           continue;
@@ -3422,13 +3421,6 @@ export async function createGoBom(path, options) {
             maxBuffer: MAX_BUFFER,
           },
         );
-        if (
-          result?.stderr?.includes("matched no packages") ||
-          result?.stderr?.includes("no required module provides package") ||
-          result?.stderr?.includes("no Go files in")
-        ) {
-          forceGoModGraph = true;
-        }
         if (result.status !== 0 || result.error) {
           // go list -deps command may not work when private packages are involved
           // So we support a fallback to only operate with go mod graph command output in such instances
@@ -3504,7 +3496,7 @@ export async function createGoBom(path, options) {
               );
             }
           }
-        } else if (forceGoModGraph) {
+        } else {
           if (DEBUG_MODE) {
             console.log("Executing go mod graph in", basePath);
           }
@@ -3536,19 +3528,19 @@ export async function createGoBom(path, options) {
                 parentComponent,
               );
             }
+          } else {
+            shouldManuallyParse = true;
+            console.log(
+              "1. Check if the correct version of golang is installed. Try building the application using go build or make command to troubleshoot.",
+            );
+            console.log(
+              "2. If the application uses private go modules, ensure the environment variable GOPRIVATE is set with the comma-separated repo names.\nEnsure $HOME/.netrc file contains a valid username and password for the private repos.",
+            );
+            console.log(
+              "3. Alternatively, consider generating a post-build SBOM from the built binary using blint. Use the official container image and invoke cdxgen with the arguments `-t binary --lifecycle post-build`.",
+            );
+            options.failOnError && process.exit(1);
           }
-        } else {
-          shouldManuallyParse = true;
-          console.log(
-            "1. Check if the correct version of golang is installed. Try building the application using go build or make command to troubleshoot.",
-          );
-          console.log(
-            "2. If the application uses private go modules, ensure the environment variable GOPRIVATE is set with the comma-separated repo names.\nEnsure $HOME/.netrc file contains a valid username and password for the private repos.",
-          );
-          console.log(
-            "3. Alternatively, consider generating a post-build SBOM from the built binary using blint. Use the official container image and invoke cdxgen with the arguments `-t binary --lifecycle post-build`.",
-          );
-          options.failOnError && process.exit(1);
         }
       }
       if (pkgList.length && !shouldManuallyParse) {
