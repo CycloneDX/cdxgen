@@ -2887,13 +2887,6 @@ export function parseGradleProperties(rawOutput) {
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
-  const defaultProps = {
-    rootProject: "root",
-    projects: [],
-    metadata: {
-      version: "latest",
-    },
-  };
   const gradleCmd = getGradleCommand(dir, rootPath);
 
   // common gradle args, used for all tasks
@@ -2925,9 +2918,6 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
-      if (result.stderr.includes("does not exist")) {
-        return defaultProps;
-      }
       console.error(result.stdout, result.stderr);
       console.log(
         "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
@@ -2939,6 +2929,9 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
         console.log(
           "3. Check if the SBOM is generated for the correct root project for your application.",
         );
+      }
+      if (result.stderr.includes("does not exist")) {
+        return "";
       }
     }
   }
