@@ -1233,6 +1233,7 @@ export async function createJavaBom(path, options) {
   // For java, this would correctly include the cyclonedx maven plugin.
   let tools = undefined;
   let possible_misses = false;
+  let mavenDepsTreeInfoShown = false;
   // war/ear mode
   if (path.endsWith(".war") || path.endsWith(".jar")) {
     // Check if the file exists
@@ -1324,13 +1325,14 @@ export async function createJavaBom(path, options) {
       }
       // Use the cyclonedx maven plugin if there is no preference for maven deps tree
       if (!PREFER_MAVEN_DEPS_TREE) {
-        if (DEBUG_MODE) {
+        if (!mavenDepsTreeInfoShown && DEBUG_MODE) {
           console.log(
             "cdxgen now supports generating SBOM with only the maven cli without the need for the cyclonedx-maven plugin. This mode works better in enterprise environments and in multi-module projects.",
           );
           console.log(
             "Set the environment variable PREFER_MAVEN_DEPS_TREE to true to enable this.",
           );
+          mavenDepsTreeInfoShown = true;
         }
         console.log(
           `Executing '${mavenCmd} ${mvnArgs.join(" ")}' in`,
