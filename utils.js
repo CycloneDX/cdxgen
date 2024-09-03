@@ -6397,10 +6397,6 @@ function substituteBuildArgs(statement, buildArgs) {
         statement.slice(0, argIndex) +
         buildArgs.get(argName) +
         statement.slice(argIndex + fullArgName.length);
-    } else {
-      console.warn(
-        `Unable to substitute build argument '${fullArgName}' in '${statement}'.`,
-      );
     }
   }
   return statement;
@@ -6452,9 +6448,11 @@ export function parseContainerFile(fileContents) {
       if (imageStatement.includes("$")) {
         imageStatement = substituteBuildArgs(imageStatement, buildArgs);
         if (imageStatement.includes("$")) {
-          console.warn(
-            `Unable to substitute build arguments in '${line}' statement.`,
-          );
+          if (DEBUG_MODE) {
+            console.log(
+              `Unable to substitute build arguments in '${line}' statement.`,
+            );
+          }
           continue;
         }
       }
