@@ -4918,10 +4918,30 @@ export async function parseGoModGraph(
   const depsMap = {};
   // Useful for filtering out invalid components
   const existingPkgMap = {};
-  // Direct dependencies for the root module
-  const rootList = [];
-  // Parent component based on the given go mod graph data
-  const modParent = {};
+  // Package map by manually parsing the go.mod data
+  let goModPkgMap = {};
+  // Direct dependencies by manually parsing the go.mod data
+  const goModDirectDepsMap = {};
+  // Indirect dependencies by manually parsing the go.mod data
+  const goModOptionalDepsMap = {};
+  if (goModFile) {
+    goModPkgMap = await parseGoModData(
+      readFileSync(goModFile, { encoding: "utf-8" }),
+      gosumMap,
+    );
+    if (goModPkgMap?.rootList) {
+      for (const epkg of goModPkgMap.rootList) {
+        goModDirectDepsMap[epkg["bom-ref"]] = true;
+      }
+    }
+    if (goModPkgMap?.pkgList) {
+      for (const epkg of goModPkgMap.pkgList) {
+        if (epkg?.scope === "optional") {
+          goModOptionalDepsMap[epkg["bom-ref"]] = true;
+        }
+      }
+    }
+  }
   for (const epkg of epkgList) {
     existingPkgMap[epkg["bom-ref"]] = true;
   }
@@ -4962,6 +4982,11 @@ export async function parseGoModGraph(
               sourcePurl.version,
               gosumMap[tmpA[0]],
             );
+            if (goModOptionalDepsMap[component["bom-ref"]]) {
+              component.scope = "optional";
+            } else if (goModDirectDepsMap[component["bom-ref"]]) {
+              component.scope = "required";
+            }
             pkgList.push(_addGoComponentEvidence(component, goModFile));
             addedPkgs[tmpA[0]] = true;
           }
@@ -4974,6 +4999,15 @@ export async function parseGoModGraph(
               dependsPurl.version,
               gosumMap[tmpA[1]],
             );
+            if (goModOptionalDepsMap[component["bom-ref"]]) {
+              component.scope = "optional";
+            } else if (
+              goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
+              goModDirectDepsMap[sourceRefString]
+            ) {
+              // If the parent is required, so is the child
+              component.scope = "required";
+            }
             pkgList.push(component);
             addedPkgs[tmpA[1]] = true;
           }
@@ -4983,7 +5017,16 @@ export async function parseGoModGraph(
           if (!depsMap[dependsRefString]) {
             depsMap[dependsRefString] = new Set();
           }
-          depsMap[sourceRefString].add(dependsRefString);
+          // Check if the root is really dependent on this component
+          if (
+            goModPkgMap?.parentComponent?.["bom-ref"] === sourceRefString &&
+            Object.keys(goModDirectDepsMap).length &&
+            !goModDirectDepsMap[dependsRefString]
+          ) {
+            // ignore
+          } else {
+            depsMap[sourceRefString].add(dependsRefString);
+          }
         } catch (_e) {
           // pass
         }
@@ -4996,7 +5039,12 @@ export async function parseGoModGraph(
       dependsOn: Array.from(depsMap[adep]).sort(),
     });
   }
-  return { pkgList, dependenciesList };
+  return {
+    pkgList,
+    dependenciesList,
+    parentComponent: goModPkgMap?.parentComponent,
+    rootList: goModPkgMap?.rootList,
+  };
 }
 
 /**

@@ -558,6 +558,8 @@ export function parseGoModGraph(rawOutput: string, goModFile: string, gosumMap: 
         ref: string;
         dependsOn: any[];
     }[];
+    parentComponent: any;
+    rootList: any;
 }>;
 /**
  * Parse go mod why output
