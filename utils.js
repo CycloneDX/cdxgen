@@ -4707,19 +4707,40 @@ export async function getGoPkgComponent(group, name, version, hash) {
   return pkg;
 }
 
+/**
+ * Method to parse go.mod files
+ *
+ * @param {String} goModData Contents of go.mod file
+ * @param {Object} gosumMap Data from go.sum files
+ *
+ * @returns {Object} Object containing parent component, rootList and packages list
+ */
 export async function parseGoModData(goModData, gosumMap) {
   const pkgComponentsList = [];
+  const parentComponent = {};
+  const rootList = [];
   let isModReplacement = false;
 
   if (!goModData) {
-    return pkgComponentsList;
+    return {};
   }
 
   const pkgs = goModData.split("\n");
   for (let l of pkgs) {
+    // Windows of course
+    l = l.replace("\r", "");
+    // Capture the parent component name from the module
+    if (l.startsWith("module ")) {
+      parentComponent.name = l.split(" ").pop().trim();
+      parentComponent.type = "application";
+      parentComponent["purl"] = PackageURL.fromString(
+        `pkg:golang/${parentComponent.name}`,
+      ).toString();
+      parentComponent["bom-ref"] = decodeURIComponent(parentComponent["purl"]);
+      continue;
+    }
     // Skip go.mod file headers, whitespace, and/or comments
     if (
-      l.startsWith("module ") ||
       l.startsWith("go ") ||
       l.includes(")") ||
       l.trim() === "" ||
@@ -4745,31 +4766,26 @@ export async function parseGoModData(goModData, gosumMap) {
     }
 
     const tmpA = l.trim().split(" ");
-
     if (!isModReplacement) {
       // Add group, name and version component properties for required modules
       const version = tmpA[1];
       const gosumHash = gosumMap[`${tmpA[0]}@${version}`];
-      // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
-      if (gosumHash === undefined) {
-        continue;
-      }
       const component = await getGoPkgComponent(
         "",
         tmpA[0],
         version,
         gosumHash,
       );
+      if (l.endsWith("// indirect")) {
+        component.scope = "optional";
+      } else {
+        rootList.push(component);
+      }
       pkgComponentsList.push(component);
     } else {
       // Add group, name and version component properties for replacement modules
       const version = tmpA[3];
-
       const gosumHash = gosumMap[`${tmpA[2]}@${version}`];
-      // The hash for this version was not found in go.sum, so skip.
-      if (gosumHash === undefined) {
-        continue;
-      }
       const component = await getGoPkgComponent(
         "",
         tmpA[2],
@@ -4777,11 +4793,16 @@ export async function parseGoModData(goModData, gosumMap) {
         gosumHash,
       );
       pkgComponentsList.push(component);
+      rootList.push(component);
     }
   }
   // Clear the cache
   metadata_cache = {};
-  return pkgComponentsList;
+  return {
+    parentComponent,
+    pkgList: pkgComponentsList,
+    rootList,
+  };
 }
 
 /**
@@ -4848,26 +4869,28 @@ export async function parseGoListDep(rawOutput, gosumMap) {
 }
 
 function _addGoComponentEvidence(component, goModFile) {
-  component.evidence = {
-    identity: {
-      field: "purl",
-      confidence: 1,
-      methods: [
-        {
-          technique: "manifest-analysis",
-          confidence: 1,
-          value: goModFile,
-        },
-      ],
-    },
-  };
-  if (!component.properties) {
-    component.properties = [];
+  if (goModFile) {
+    component.evidence = {
+      identity: {
+        field: "purl",
+        confidence: 1,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence: 1,
+            value: goModFile,
+          },
+        ],
+      },
+    };
+    if (!component.properties) {
+      component.properties = [];
+    }
+    component.properties.push({
+      name: "SrcFile",
+      value: goModFile,
+    });
   }
-  component.properties.push({
-    name: "SrcFile",
-    value: goModFile,
-  });
   return component;
 }
 
@@ -4878,6 +4901,7 @@ function _addGoComponentEvidence(component, goModFile) {
  * @param {string} goModFile go.mod file
  * @param {Object} goSumMap Hashes from gosum for lookups
  * @param {Array} epkgList Existing package list
+ * @param {Object} parentComponent Current parent component
  *
  * @returns Object containing List of packages and dependencies
  */
@@ -4892,7 +4916,12 @@ export async function parseGoModGraph(
   const dependenciesList = [];
   const addedPkgs = {};
   const depsMap = {};
+  // Useful for filtering out invalid components
   const existingPkgMap = {};
+  // Direct dependencies for the root module
+  const rootList = [];
+  // Parent component based on the given go mod graph data
+  const modParent = {};
   for (const epkg of epkgList) {
     existingPkgMap[epkg["bom-ref"]] = true;
   }

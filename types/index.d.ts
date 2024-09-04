@@ -64,7 +64,7 @@ export function createNodejsBom(path: string, options: any): Promise<any>;
  * @param {String} path
  * @param {Object} options
  */
-export function createPixiBom(path: string, options: any): Promise<any>;
+export function createPixiBom(path: string, options: any): any;
 /**
  * Function to create bom string for Python projects
  *
