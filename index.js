@@ -3503,12 +3503,8 @@ export async function createGoBom(path, options) {
             }
             // Retain the parent component hierarchy
             if (Object.keys(retMap.parentComponent).length) {
-              if (gomodFiles.length === 1) {
-                parentComponent = retMap.parentComponent;
-              } else {
-                parentComponent.components = parentComponent.components || [];
-                parentComponent.components.push(retMap.parentComponent);
-              }
+              parentComponent.components = parentComponent.components || [];
+              parentComponent.components.push(retMap.parentComponent);
             }
           }
         } else {
@@ -3542,6 +3538,15 @@ export async function createGoBom(path, options) {
                 retMap.dependenciesList,
                 parentComponent,
               );
+            }
+            // Retain the parent component hierarchy
+            if (Object.keys(retMap.parentComponent).length) {
+              if (gomodFiles.length === 1) {
+                parentComponent = retMap.parentComponent;
+              } else {
+                parentComponent.components = parentComponent.components || [];
+                parentComponent.components.push(retMap.parentComponent);
+              }
             }
           } else {
             shouldManuallyParse = true;
