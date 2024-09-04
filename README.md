@@ -55,7 +55,7 @@ Sections include:
 ## Installing
 
 ```shell
-npm install -g @cyclonedx/cdxgen
+npm install -g @cyclonedx/cdxgen@10.9.6
 ```
 
 If you are a [Homebrew][homebrew-homepage] user, you can also install [cdxgen][homebrew-cdxgen] via:
@@ -72,28 +72,28 @@ deno install --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryIn
 
 You can also use the cdxgen container image with node, deno, or bun runtime versions.
 
-The default version uses Node.js 20
+The default version uses Node.js 22
 
 ```bash
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app -o /app/bom.json
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:master -r /app -o /app/bom.json
 ```
 
 To use the deno version, use `ghcr.io/cyclonedx/cdxgen-deno` as the image name.
 
 ```bash
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-deno -r /app -o /app/bom.json
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-deno:master -r /app -o /app/bom.json
 ```
 
 For the bun version, use `ghcr.io/cyclonedx/cdxgen-bun` as the image name.
 
 ```bash
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-bun -r /app -o /app/bom.json
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-bun:master -r /app -o /app/bom.json
 ```
 
 In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as a library](#integration-as-library)
 
 ```ts
-import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^9.0.1";
+import { createBom, submitBom } from "npm:@cyclonedx/cdxgen@^10.9.6";
 ```
 
 ## Getting Help
@@ -403,7 +403,7 @@ To generate test public/private key pairs, you can run cdxgen by passing the arg
 Use the bundled `cdx-verify` command, which supports verifying a single signature added at the bom level.
 
 ```shell
-npm install -g @cyclonedx/cdxgen
+npm install -g @cyclonedx/cdxgen@10.9.6
 cdx-verify -i bom.json --public-key public.key
 ```
 

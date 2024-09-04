@@ -75,7 +75,9 @@ export const validateMetadata = (bomJson) => {
       !bomJson.metadata.component ||
       !Object.keys(bomJson.metadata.component).length
     ) {
-      warningsList.push("metadata.component is missing.");
+      warningsList.push(
+        "metadata.component is missing. Run cdxgen with both --project-name and --project-version argument.",
+      );
     }
     if (bomJson.metadata.component) {
       // Do we have a purl and bom-ref for metadata.component
@@ -87,7 +89,9 @@ export const validateMetadata = (bomJson) => {
       }
       // Do we have a version for metadata.component
       if (!bomJson.metadata.component.version) {
-        warningsList.push("Version is missing for metadata.component");
+        warningsList.push(
+          "Version is missing for metadata.component. Pass the version using --project-version argument.",
+        );
       }
       // Is the same component getting repeated inside the components block
       if (bomJson.metadata.component.components?.length) {

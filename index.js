@@ -2718,7 +2718,7 @@ export async function createNodejsBom(path, options) {
  * @param {String} path
  * @param {Object} options
  */
-export async function createPixiBom(path, options) {
+export function createPixiBom(path, options) {
   const allImports = {};
   let metadataFilename = "";
   let dependencies = [];
@@ -3400,7 +3400,11 @@ export async function createGoBom(path, options) {
       for (const f of gomodFiles) {
         const basePath = dirname(f);
         // Ignore vendor packages
-        if (basePath.includes("/vendor/") || basePath.includes("/build/")) {
+        if (
+          basePath.includes("/vendor/") ||
+          basePath.includes("/build/") ||
+          basePath.includes("/test-fixtures/")
+        ) {
           continue;
         }
         // First we execute the go list -deps command which gives the correct list of dependencies
@@ -3426,7 +3430,7 @@ export async function createGoBom(path, options) {
         if (result.status !== 0 || result.error) {
           // go list -deps command may not work when private packages are involved
           // So we support a fallback to only operate with go mod graph command output in such instances
-          console.log("go list -deps command has failed.");
+          console.log("go list -deps command has failed for", basePath);
           shouldManuallyParse = true;
           if (DEBUG_MODE && result.stdout) {
             console.log(result.stdout);
@@ -3497,6 +3501,11 @@ export async function createGoBom(path, options) {
                 parentComponent,
               );
             }
+            // Retain the parent component hierarchy
+            if (Object.keys(retMap.parentComponent).length) {
+              parentComponent.components = parentComponent.components || [];
+              parentComponent.components.push(retMap.parentComponent);
+            }
           }
         } else {
           if (DEBUG_MODE) {
@@ -3529,6 +3538,15 @@ export async function createGoBom(path, options) {
                 retMap.dependenciesList,
                 parentComponent,
               );
+            }
+            // Retain the parent component hierarchy
+            if (Object.keys(retMap.parentComponent).length) {
+              if (gomodFiles.length === 1) {
+                parentComponent = retMap.parentComponent;
+              } else {
+                parentComponent.components = parentComponent.components || [];
+                parentComponent.components.push(retMap.parentComponent);
+              }
             }
           } else {
             shouldManuallyParse = true;
@@ -3568,9 +3586,31 @@ export async function createGoBom(path, options) {
         console.log(`Parsing ${f}`);
       }
       const gomodData = readFileSync(f, { encoding: "utf-8" });
-      const dlist = await parseGoModData(gomodData, gosumMap);
-      if (dlist?.length) {
-        pkgList = pkgList.concat(dlist);
+      const retMap = await parseGoModData(gomodData, gosumMap);
+      if (retMap?.pkgList?.length) {
+        pkgList = pkgList.concat(retMap.pkgList);
+      }
+      // Retain the parent component hierarchy
+      if (Object.keys(retMap.parentComponent).length) {
+        if (gomodFiles.length === 1) {
+          parentComponent = retMap.parentComponent;
+        } else {
+          parentComponent.components = parentComponent.components || [];
+          parentComponent.components.push(retMap.parentComponent);
+        }
+        if (retMap?.rootList?.length) {
+          const thisParentDependsOn = [
+            {
+              ref: retMap.parentComponent["bom-ref"],
+              dependsOn: retMap.rootList.map((c) => c["bom-ref"]),
+            },
+          ];
+          dependencies = mergeDependencies(
+            dependencies,
+            thisParentDependsOn,
+            parentComponent,
+          );
+        }
       }
     }
     return buildBomNSData(options, pkgList, "golang", {

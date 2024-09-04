@@ -4707,19 +4707,40 @@ export async function getGoPkgComponent(group, name, version, hash) {
   return pkg;
 }
 
+/**
+ * Method to parse go.mod files
+ *
+ * @param {String} goModData Contents of go.mod file
+ * @param {Object} gosumMap Data from go.sum files
+ *
+ * @returns {Object} Object containing parent component, rootList and packages list
+ */
 export async function parseGoModData(goModData, gosumMap) {
   const pkgComponentsList = [];
+  const parentComponent = {};
+  const rootList = [];
   let isModReplacement = false;
 
   if (!goModData) {
-    return pkgComponentsList;
+    return {};
   }
 
   const pkgs = goModData.split("\n");
   for (let l of pkgs) {
+    // Windows of course
+    l = l.replace("\r", "");
+    // Capture the parent component name from the module
+    if (l.startsWith("module ")) {
+      parentComponent.name = l.split(" ").pop().trim();
+      parentComponent.type = "application";
+      parentComponent["purl"] = PackageURL.fromString(
+        `pkg:golang/${parentComponent.name}`,
+      ).toString();
+      parentComponent["bom-ref"] = decodeURIComponent(parentComponent["purl"]);
+      continue;
+    }
     // Skip go.mod file headers, whitespace, and/or comments
     if (
-      l.startsWith("module ") ||
       l.startsWith("go ") ||
       l.includes(")") ||
       l.trim() === "" ||
@@ -4743,33 +4764,32 @@ export async function parseGoModData(goModData, gosumMap) {
       l = l.replace("replace", "");
       isModReplacement = true;
     }
-
+    // require google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17
+    if (l.startsWith("require ")) {
+      l = l.replace("require ", "");
+      isModReplacement = false;
+    }
     const tmpA = l.trim().split(" ");
-
     if (!isModReplacement) {
       // Add group, name and version component properties for required modules
       const version = tmpA[1];
       const gosumHash = gosumMap[`${tmpA[0]}@${version}`];
-      // The hash for this version was not found in go.sum, so skip as it is most likely being replaced.
-      if (gosumHash === undefined) {
-        continue;
-      }
       const component = await getGoPkgComponent(
         "",
         tmpA[0],
         version,
         gosumHash,
       );
+      if (l.endsWith("// indirect")) {
+        component.scope = "optional";
+      } else {
+        rootList.push(component);
+      }
       pkgComponentsList.push(component);
     } else {
       // Add group, name and version component properties for replacement modules
       const version = tmpA[3];
-
       const gosumHash = gosumMap[`${tmpA[2]}@${version}`];
-      // The hash for this version was not found in go.sum, so skip.
-      if (gosumHash === undefined) {
-        continue;
-      }
       const component = await getGoPkgComponent(
         "",
         tmpA[2],
@@ -4777,11 +4797,16 @@ export async function parseGoModData(goModData, gosumMap) {
         gosumHash,
       );
       pkgComponentsList.push(component);
+      rootList.push(component);
     }
   }
   // Clear the cache
   metadata_cache = {};
-  return pkgComponentsList;
+  return {
+    parentComponent,
+    pkgList: pkgComponentsList.sort((a, b) => a.purl.localeCompare(b.purl)),
+    rootList,
+  };
 }
 
 /**
@@ -4843,31 +4868,33 @@ export async function parseGoListDep(rawOutput, gosumMap) {
   }
   return {
     parentComponent,
-    pkgList: deps,
+    pkgList: deps.sort((a, b) => a.purl.localeCompare(b.purl)),
   };
 }
 
-function _addGoComponentEvidence(component, goModFile) {
-  component.evidence = {
-    identity: {
-      field: "purl",
-      confidence: 1,
-      methods: [
-        {
-          technique: "manifest-analysis",
-          confidence: 1,
-          value: goModFile,
-        },
-      ],
-    },
-  };
-  if (!component.properties) {
-    component.properties = [];
+function _addGoComponentEvidence(component, goModFile, confidence = 0.8) {
+  if (goModFile) {
+    component.evidence = {
+      identity: {
+        field: "purl",
+        confidence,
+        methods: [
+          {
+            technique: "manifest-analysis",
+            confidence,
+            value: goModFile,
+          },
+        ],
+      },
+    };
+    if (!component.properties) {
+      component.properties = [];
+    }
+    component.properties.push({
+      name: "SrcFile",
+      value: goModFile,
+    });
   }
-  component.properties.push({
-    name: "SrcFile",
-    value: goModFile,
-  });
   return component;
 }
 
@@ -4878,6 +4905,7 @@ function _addGoComponentEvidence(component, goModFile) {
  * @param {string} goModFile go.mod file
  * @param {Object} goSumMap Hashes from gosum for lookups
  * @param {Array} epkgList Existing package list
+ * @param {Object} parentComponent Current parent component
  *
  * @returns Object containing List of packages and dependencies
  */
@@ -4892,7 +4920,33 @@ export async function parseGoModGraph(
   const dependenciesList = [];
   const addedPkgs = {};
   const depsMap = {};
+  // Useful for filtering out invalid components
   const existingPkgMap = {};
+  // Package map by manually parsing the go.mod data
+  let goModPkgMap = {};
+  // Direct dependencies by manually parsing the go.mod data
+  const goModDirectDepsMap = {};
+  // Indirect dependencies by manually parsing the go.mod data
+  const goModOptionalDepsMap = {};
+  const excludedRefs = [];
+  if (goModFile) {
+    goModPkgMap = await parseGoModData(
+      readFileSync(goModFile, { encoding: "utf-8" }),
+      gosumMap,
+    );
+    if (goModPkgMap?.rootList) {
+      for (const epkg of goModPkgMap.rootList) {
+        goModDirectDepsMap[epkg["bom-ref"]] = true;
+      }
+    }
+    if (goModPkgMap?.pkgList) {
+      for (const epkg of goModPkgMap.pkgList) {
+        if (epkg?.scope === "optional") {
+          goModOptionalDepsMap[epkg["bom-ref"]] = true;
+        }
+      }
+    }
+  }
   for (const epkg of epkgList) {
     existingPkgMap[epkg["bom-ref"]] = true;
   }
@@ -4924,7 +4978,7 @@ export async function parseGoModGraph(
             continue;
           }
           // Add the source and depends to the pkgList
-          if (!addedPkgs[tmpA[0]]) {
+          if (!addedPkgs[tmpA[0]] && !excludedRefs.includes(sourceRefString)) {
             const component = await getGoPkgComponent(
               "",
               `${sourcePurl.namespace ? `${sourcePurl.namespace}/` : ""}${
@@ -4933,7 +4987,28 @@ export async function parseGoModGraph(
               sourcePurl.version,
               gosumMap[tmpA[0]],
             );
-            pkgList.push(_addGoComponentEvidence(component, goModFile));
+            let confidence = 0.7;
+            if (goModOptionalDepsMap[component["bom-ref"]]) {
+              component.scope = "optional";
+              confidence = 0.5;
+            } else if (goModDirectDepsMap[component["bom-ref"]]) {
+              component.scope = "required";
+            }
+            // These are likely false positives
+            if (
+              goModFile &&
+              !Object.keys(existingPkgMap).length &&
+              goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
+              !component.scope
+            ) {
+              continue;
+            }
+            // Don't add the parent component to the package list
+            if (goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString) {
+              pkgList.push(
+                _addGoComponentEvidence(component, goModFile, confidence),
+              );
+            }
             addedPkgs[tmpA[0]] = true;
           }
           if (!addedPkgs[tmpA[1]]) {
@@ -4945,7 +5020,46 @@ export async function parseGoModGraph(
               dependsPurl.version,
               gosumMap[tmpA[1]],
             );
-            pkgList.push(component);
+            let confidence = 0.7;
+            if (goModDirectDepsMap[component["bom-ref"]]) {
+              component.scope = "required";
+            }
+            if (goModOptionalDepsMap[component["bom-ref"]]) {
+              component.scope = "optional";
+              confidence = 0.5;
+            }
+            if (
+              goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
+              goModDirectDepsMap[sourceRefString] &&
+              component?.scope !== "required"
+            ) {
+              // If the parent is required, then ensure the child doesn't accidentally become optional or excluded
+              component.scope = undefined;
+            }
+            // Mark the go toolchain components as excluded
+            if (
+              dependsRefString.startsWith("pkg:golang/toolchain@") ||
+              dependsRefString.startsWith("pkg:golang/go@")
+            ) {
+              excludedRefs.push(dependsRefString);
+              continue;
+            }
+            // These are likely false positives
+            if (
+              goModFile &&
+              goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
+              !Object.keys(existingPkgMap).length &&
+              !component.scope
+            ) {
+              excludedRefs.push(dependsRefString);
+              continue;
+            }
+            // The confidence for the indirect dependencies is lower
+            // This is because go mod graph emits module requirements graph, which could be different to module compile graph
+            // See https://go.dev/ref/mod#glos-module-graph
+            pkgList.push(
+              _addGoComponentEvidence(component, goModFile, confidence),
+            );
             addedPkgs[tmpA[1]] = true;
           }
           if (!depsMap[sourceRefString]) {
@@ -4954,7 +5068,16 @@ export async function parseGoModGraph(
           if (!depsMap[dependsRefString]) {
             depsMap[dependsRefString] = new Set();
           }
-          depsMap[sourceRefString].add(dependsRefString);
+          // Check if the root is really dependent on this component
+          if (
+            goModPkgMap?.parentComponent?.["bom-ref"] === sourceRefString &&
+            Object.keys(goModDirectDepsMap).length &&
+            !goModDirectDepsMap[dependsRefString]
+          ) {
+            // ignore
+          } else if (!excludedRefs.includes(dependsRefString)) {
+            depsMap[sourceRefString].add(dependsRefString);
+          }
         } catch (_e) {
           // pass
         }
@@ -4967,7 +5090,12 @@ export async function parseGoModGraph(
       dependsOn: Array.from(depsMap[adep]).sort(),
     });
   }
-  return { pkgList, dependenciesList };
+  return {
+    pkgList: pkgList.sort((a, b) => a.purl.localeCompare(b.purl)),
+    dependenciesList,
+    parentComponent: goModPkgMap?.parentComponent,
+    rootList: goModPkgMap?.rootList,
+  };
 }
 
 /**

@@ -21,10 +21,7 @@ flowchart LR
 ## Installing
 
 ```shell
-sudo npm install -g @cyclonedx/cdxgen
-
-# For CycloneDX 1.4 compatibility use version 8.6.0 or pass the argument `--spec-version 1.4`
-sudo npm install -g @cyclonedx/cdxgen@8.6.0
+sudo npm install -g @cyclonedx/cdxgen@10.9.6
 ```
 
 If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:

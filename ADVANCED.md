@@ -138,6 +138,7 @@ Below are some example commands to create an SBOM for a spring application and p
 .print
 .search spring
 .query components[name ~> /spring/ and scope = "required"]
+.query components[scope='required'].purl
 // Supplier names
 .query $distinct(components.supplier.name)
 .sort name

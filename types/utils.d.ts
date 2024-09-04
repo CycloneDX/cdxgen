@@ -522,7 +522,15 @@ export function getRepoLicense(repoUrl: string, repoMetadata: any): Promise<stri
  */
 export function getGoPkgLicense(repoMetadata: any): Promise<any>;
 export function getGoPkgComponent(group: any, name: any, version: any, hash: any): Promise<{}>;
-export function parseGoModData(goModData: any, gosumMap: any): Promise<any[]>;
+/**
+ * Method to parse go.mod files
+ *
+ * @param {String} goModData Contents of go.mod file
+ * @param {Object} gosumMap Data from go.sum files
+ *
+ * @returns {Object} Object containing parent component, rootList and packages list
+ */
+export function parseGoModData(goModData: string, gosumMap: any): any;
 /**
  * Parse go list output
  *
@@ -540,15 +548,18 @@ export function parseGoListDep(rawOutput: string, gosumMap: any): Promise<{
  * @param {string} goModFile go.mod file
  * @param {Object} goSumMap Hashes from gosum for lookups
  * @param {Array} epkgList Existing package list
+ * @param {Object} parentComponent Current parent component
  *
  * @returns Object containing List of packages and dependencies
  */
-export function parseGoModGraph(rawOutput: string, goModFile: string, gosumMap: any, epkgList?: any[], parentComponent?: {}): Promise<{
+export function parseGoModGraph(rawOutput: string, goModFile: string, gosumMap: any, epkgList?: any[], parentComponent?: any): Promise<{
     pkgList: any[];
     dependenciesList: {
         ref: string;
         dependsOn: any[];
     }[];
+    parentComponent: any;
+    rootList: any;
 }>;
 /**
  * Parse go mod why output
