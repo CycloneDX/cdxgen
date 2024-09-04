@@ -826,42 +826,55 @@ test("parseGoModData", async () => {
     gosumMap,
   );
   expect(retMap.pkgList.length).toEqual(6);
-  expect(retMap.pkgList[1]).toEqual({
-    group: "",
-    name: "github.com/aws/aws-sdk-go",
-    license: undefined,
-    version: "v1.38.47",
-    _integrity: "sha256-fake-sha-for-aws-go-sdk=",
-    "bom-ref": "pkg:golang/github.com/aws/aws-sdk-go@v1.38.47",
-    purl: "pkg:golang/github.com/aws/aws-sdk-go@v1.38.47",
-  });
-  expect(retMap.pkgList[3]).toEqual({
-    group: "",
-    name: "github.com/spf13/cobra",
-    "bom-ref": "pkg:golang/github.com/spf13/cobra@v1.0.0",
-    purl: "pkg:golang/github.com/spf13/cobra@v1.0.0",
-    license: undefined,
-    version: "v1.0.0",
-    _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
-  });
-  expect(retMap.pkgList[4]).toEqual({
-    group: "",
-    name: "google.golang.org/grpc",
-    "bom-ref": "pkg:golang/google.golang.org/grpc@v1.21.0",
-    purl: "pkg:golang/google.golang.org/grpc@v1.21.0",
-    license: undefined,
-    version: "v1.21.0",
-    _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
-  });
-  expect(retMap.pkgList[2]).toEqual({
-    group: "",
-    name: "github.com/spf13/viper",
-    "bom-ref": "pkg:golang/github.com/spf13/viper@v1.3.0",
-    purl: "pkg:golang/github.com/spf13/viper@v1.3.0",
-    license: undefined,
-    version: "v1.3.0",
-    _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
-  });
+  expect(retMap.pkgList).toEqual([
+    {
+      group: "",
+      name: "github.com/aws/aws-sdk-go",
+      version: "v1.38.47",
+      _integrity: "sha256-fake-sha-for-aws-go-sdk=",
+      purl: "pkg:golang/github.com/aws/aws-sdk-go@v1.38.47",
+      "bom-ref": "pkg:golang/github.com/aws/aws-sdk-go@v1.38.47",
+    },
+    {
+      group: "",
+      name: "github.com/spf13/cobra",
+      version: "v1.0.0",
+      _integrity: "sha256-/6GTrnGXV9HjY+aR4k0oJ5tcvakLuG6EuKReYlHNrgE=",
+      purl: "pkg:golang/github.com/spf13/cobra@v1.0.0",
+      "bom-ref": "pkg:golang/github.com/spf13/cobra@v1.0.0",
+    },
+    {
+      group: "",
+      name: "github.com/spf13/viper",
+      version: "v1.0.2",
+      purl: "pkg:golang/github.com/spf13/viper@v1.0.2",
+      "bom-ref": "pkg:golang/github.com/spf13/viper@v1.0.2",
+    },
+    {
+      group: "",
+      name: "github.com/spf13/viper",
+      version: "v1.3.0",
+      _integrity: "sha256-A8kyI5cUJhb8N+3pkfONlcEcZbueH6nhAm0Fq7SrnBM=",
+      purl: "pkg:golang/github.com/spf13/viper@v1.3.0",
+      "bom-ref": "pkg:golang/github.com/spf13/viper@v1.3.0",
+    },
+    {
+      group: "",
+      name: "google.golang.org/grpc",
+      version: "v1.21.0",
+      _integrity: "sha256-oYelfM1adQP15Ek0mdvEgi9Df8B9CZIaU1084ijfRaM=",
+      purl: "pkg:golang/google.golang.org/grpc@v1.21.0",
+      "bom-ref": "pkg:golang/google.golang.org/grpc@v1.21.0",
+    },
+    {
+      group: "",
+      name: "google.golang.org/grpc",
+      version: "v1.32.0",
+      purl: "pkg:golang/google.golang.org/grpc@v1.32.0",
+      "bom-ref": "pkg:golang/google.golang.org/grpc@v1.32.0",
+    },
+  ]);
+
   retMap.pkgList.forEach((d) => {
     expect(d.license);
   });
@@ -971,11 +984,13 @@ test("parse go mod graph", async () => {
   );
   expect(retMap.pkgList.length).toEqual(537);
   expect(retMap.pkgList[0]).toEqual({
+    _integrity: undefined,
+    "bom-ref": "pkg:golang/cloud.google.com/go@v0.26.0",
     group: "",
-    name: "github.com/sqreen/go-dvwa",
-    version: null,
-    purl: "pkg:golang/github.com/sqreen/go-dvwa",
-    "bom-ref": "pkg:golang/github.com/sqreen/go-dvwa",
+    license: undefined,
+    name: "cloud.google.com/go",
+    purl: "pkg:golang/cloud.google.com/go@v0.26.0",
+    version: "v0.26.0",
   });
   retMap = await parseGoModGraph(
     readFileSync("./test/data/gomod-dvwa-graph.txt", { encoding: "utf-8" }),
@@ -984,7 +999,14 @@ test("parse go mod graph", async () => {
     [],
     {},
   );
-  // expect(retMap.pkgList.length).toEqual(10);
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:golang/github.com/sqreen/go-dvwa",
+    name: "github.com/sqreen/go-dvwa",
+    purl: "pkg:golang/github.com/sqreen/go-dvwa",
+    type: "application",
+  });
+  expect(retMap.pkgList.length).toEqual(536);
+  expect(retMap.rootList.length).toEqual(4);
   retMap = await parseGoModGraph(
     readFileSync("./test/data/gomod-syft-graph.txt", { encoding: "utf-8" }),
     "./test/data/go-syft.mod",
@@ -992,7 +1014,14 @@ test("parse go mod graph", async () => {
     [],
     {},
   );
-  // expect(retMap.pkgList.length).toEqual(10);
+  expect(retMap.parentComponent).toEqual({
+    "bom-ref": "pkg:golang/github.com/anchore/syft",
+    name: "github.com/anchore/syft",
+    purl: "pkg:golang/github.com/anchore/syft",
+    type: "application",
+  });
+  expect(retMap.pkgList.length).toEqual(1571);
+  expect(retMap.rootList.length).toEqual(84);
 });
 
 test("parse go mod why dependencies", () => {

@@ -4800,7 +4800,7 @@ export async function parseGoModData(goModData, gosumMap) {
   metadata_cache = {};
   return {
     parentComponent,
-    pkgList: pkgComponentsList,
+    pkgList: pkgComponentsList.sort((a, b) => a.purl.localeCompare(b.purl)),
     rootList,
   };
 }
@@ -4864,20 +4864,20 @@ export async function parseGoListDep(rawOutput, gosumMap) {
   }
   return {
     parentComponent,
-    pkgList: deps,
+    pkgList: deps.sort((a, b) => a.purl.localeCompare(b.purl)),
   };
 }
 
-function _addGoComponentEvidence(component, goModFile) {
+function _addGoComponentEvidence(component, goModFile, confidence = 0.8) {
   if (goModFile) {
     component.evidence = {
       identity: {
         field: "purl",
-        confidence: 1,
+        confidence,
         methods: [
           {
             technique: "manifest-analysis",
-            confidence: 1,
+            confidence,
             value: goModFile,
           },
         ],
@@ -4988,7 +4988,10 @@ export async function parseGoModGraph(
             } else if (goModDirectDepsMap[component["bom-ref"]]) {
               component.scope = "required";
             }
-            pkgList.push(_addGoComponentEvidence(component, goModFile));
+            // Don't add the parent component to the package list
+            if (goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString) {
+              pkgList.push(_addGoComponentEvidence(component, goModFile));
+            }
             addedPkgs[tmpA[0]] = true;
           }
           if (!addedPkgs[tmpA[1]]) {
@@ -5017,7 +5020,16 @@ export async function parseGoModGraph(
               component.scope = "excluded";
               excludedRefs.push(dependsRefString);
             }
-            pkgList.push(component);
+            // The confidence for the indirect dependencies is lower
+            // This is because go mod graph emits module requirements graph, which could be different to module compile graph
+            // See https://go.dev/ref/mod#glos-module-graph
+            pkgList.push(
+              _addGoComponentEvidence(
+                component,
+                goModFile,
+                component?.scope === "required" ? 0.7 : 0.5,
+              ),
+            );
             addedPkgs[tmpA[1]] = true;
           }
           if (!depsMap[sourceRefString]) {
@@ -5049,7 +5061,7 @@ export async function parseGoModGraph(
     });
   }
   return {
-    pkgList,
+    pkgList: pkgList.sort((a, b) => a.purl.localeCompare(b.purl)),
     dependenciesList,
     parentComponent: goModPkgMap?.parentComponent,
     rootList: goModPkgMap?.rootList,
