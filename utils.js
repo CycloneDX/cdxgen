@@ -4983,18 +4983,23 @@ export async function parseGoModGraph(
               sourcePurl.version,
               gosumMap[tmpA[0]],
             );
+            let confidence = 0.7;
             if (goModOptionalDepsMap[component["bom-ref"]]) {
               component.scope = "optional";
+              confidence = 0.5;
             } else if (goModDirectDepsMap[component["bom-ref"]]) {
               component.scope = "required";
             }
             // These are likely false positives
             if (!Object.keys(existingPkgMap).length && !component.scope) {
               component.scope = "excluded";
+              confidence = 0.3;
             }
             // Don't add the parent component to the package list
             if (goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString) {
-              pkgList.push(_addGoComponentEvidence(component, goModFile));
+              pkgList.push(
+                _addGoComponentEvidence(component, goModFile, confidence),
+              );
             }
             addedPkgs[tmpA[0]] = true;
           }
@@ -5007,8 +5012,10 @@ export async function parseGoModGraph(
               dependsPurl.version,
               gosumMap[tmpA[1]],
             );
+            let confidence = 0.7;
             if (goModOptionalDepsMap[component["bom-ref"]]) {
               component.scope = "optional";
+              confidence = 0.5;
             }
             if (
               goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
@@ -5025,6 +5032,7 @@ export async function parseGoModGraph(
             ) {
               component.scope = "excluded";
               excludedRefs.push(dependsRefString);
+              confidence = 0.3;
             }
             // These are likely false positives
             if (!Object.keys(existingPkgMap).length && !component.scope) {
@@ -5034,11 +5042,7 @@ export async function parseGoModGraph(
             // This is because go mod graph emits module requirements graph, which could be different to module compile graph
             // See https://go.dev/ref/mod#glos-module-graph
             pkgList.push(
-              _addGoComponentEvidence(
-                component,
-                goModFile,
-                component?.scope === "required" ? 0.7 : 0.5,
-              ),
+              _addGoComponentEvidence(component, goModFile, confidence),
             );
             addedPkgs[tmpA[1]] = true;
           }
