@@ -4924,6 +4924,7 @@ export async function parseGoModGraph(
   const goModDirectDepsMap = {};
   // Indirect dependencies by manually parsing the go.mod data
   const goModOptionalDepsMap = {};
+  const excludedRefs = [];
   if (goModFile) {
     goModPkgMap = await parseGoModData(
       readFileSync(goModFile, { encoding: "utf-8" }),
@@ -5008,6 +5009,14 @@ export async function parseGoModGraph(
               // If the parent is required, so is the child
               component.scope = "required";
             }
+            // Mark the go toolchain components as excluded
+            if (
+              dependsRefString.startsWith("pkg:golang/toolchain@") ||
+              dependsRefString.startsWith("pkg:golang/go@")
+            ) {
+              component.scope = "excluded";
+              excludedRefs.push(dependsRefString);
+            }
             pkgList.push(component);
             addedPkgs[tmpA[1]] = true;
           }
@@ -5024,7 +5033,7 @@ export async function parseGoModGraph(
             !goModDirectDepsMap[dependsRefString]
           ) {
             // ignore
-          } else {
+          } else if (!excludedRefs.includes(dependsRefString)) {
             depsMap[sourceRefString].add(dependsRefString);
           }
         } catch (_e) {
