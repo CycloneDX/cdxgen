@@ -4991,7 +4991,11 @@ export async function parseGoModGraph(
               component.scope = "required";
             }
             // These are likely false positives
-            if (!Object.keys(existingPkgMap).length && !component.scope) {
+            if (
+              goModFile &&
+              !Object.keys(existingPkgMap).length &&
+              !component.scope
+            ) {
               component.scope = "excluded";
               confidence = 0.3;
             }
@@ -5036,6 +5040,7 @@ export async function parseGoModGraph(
             }
             // These are likely false positives
             if (
+              goModFile &&
               goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
               !Object.keys(existingPkgMap).length &&
               !component.scope

@@ -982,16 +982,15 @@ test("parse go mod graph", async () => {
     [],
     {},
   );
-  expect(retMap.pkgList.length).toEqual(254);
+  expect(retMap.pkgList.length).toEqual(537);
   expect(retMap.pkgList[0]).toEqual({
     _integrity: undefined,
-    "bom-ref": "pkg:golang/cloud.google.com/go@v0.38.0",
+    "bom-ref": "pkg:golang/cloud.google.com/go@v0.26.0",
     group: "",
     license: undefined,
     name: "cloud.google.com/go",
-    purl: "pkg:golang/cloud.google.com/go@v0.38.0",
-    version: "v0.38.0",
-    scope: "excluded",
+    purl: "pkg:golang/cloud.google.com/go@v0.26.0",
+    version: "v0.26.0",
   });
   retMap = await parseGoModGraph(
     readFileSync("./test/data/gomod-dvwa-graph.txt", { encoding: "utf-8" }),
