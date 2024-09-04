@@ -4764,7 +4764,11 @@ export async function parseGoModData(goModData, gosumMap) {
       l = l.replace("replace", "");
       isModReplacement = true;
     }
-
+    // require google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17
+    if (l.startsWith("require ")) {
+      l = l.replace("require ", "");
+      isModReplacement = false;
+    }
     const tmpA = l.trim().split(" ");
     if (!isModReplacement) {
       // Add group, name and version component properties for required modules
