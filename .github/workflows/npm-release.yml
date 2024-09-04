@@ -113,7 +113,7 @@ jobs:
         corepack pnpm install
         node bin/cdxgen.js -t docker -o cdxgen-oci-image.cdx.json ghcr.io/cyclonedx/cdxgen:latest
         oras attach --artifact-type sbom/cyclonedx ghcr.io/cyclonedx/cdxgen:latest ./cdxgen-oci-image.cdx.json:application/json
-        oras discover -o tree ghcr.io/cyclonedx/cdxgen:latest
+        oras discover --format tree ghcr.io/cyclonedx/cdxgen:latest
       continue-on-error: true
       if: startsWith(github.ref, 'refs/tags/')
     - name: Attach cdx sbom to release
