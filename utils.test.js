@@ -982,15 +982,16 @@ test("parse go mod graph", async () => {
     [],
     {},
   );
-  expect(retMap.pkgList.length).toEqual(537);
+  expect(retMap.pkgList.length).toEqual(254);
   expect(retMap.pkgList[0]).toEqual({
     _integrity: undefined,
-    "bom-ref": "pkg:golang/cloud.google.com/go@v0.26.0",
+    "bom-ref": "pkg:golang/cloud.google.com/go@v0.38.0",
     group: "",
     license: undefined,
     name: "cloud.google.com/go",
-    purl: "pkg:golang/cloud.google.com/go@v0.26.0",
-    version: "v0.26.0",
+    purl: "pkg:golang/cloud.google.com/go@v0.38.0",
+    version: "v0.38.0",
+    scope: "excluded",
   });
   retMap = await parseGoModGraph(
     readFileSync("./test/data/gomod-dvwa-graph.txt", { encoding: "utf-8" }),
@@ -1005,7 +1006,7 @@ test("parse go mod graph", async () => {
     purl: "pkg:golang/github.com/sqreen/go-dvwa",
     type: "application",
   });
-  expect(retMap.pkgList.length).toEqual(536);
+  expect(retMap.pkgList.length).toEqual(259);
   expect(retMap.rootList.length).toEqual(4);
   retMap = await parseGoModGraph(
     readFileSync("./test/data/gomod-syft-graph.txt", { encoding: "utf-8" }),
@@ -1020,7 +1021,7 @@ test("parse go mod graph", async () => {
     purl: "pkg:golang/github.com/anchore/syft",
     type: "application",
   });
-  expect(retMap.pkgList.length).toEqual(1571);
+  expect(retMap.pkgList.length).toEqual(768);
   expect(retMap.rootList.length).toEqual(84);
 });
 

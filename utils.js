@@ -4983,14 +4983,14 @@ export async function parseGoModGraph(
               sourcePurl.version,
               gosumMap[tmpA[0]],
             );
-            if (
-              existingPkgMap &&
-              Object.keys(existingPkgMap).length &&
-              goModOptionalDepsMap[component["bom-ref"]]
-            ) {
+            if (goModOptionalDepsMap[component["bom-ref"]]) {
               component.scope = "optional";
             } else if (goModDirectDepsMap[component["bom-ref"]]) {
               component.scope = "required";
+            }
+            // These are likely false positives
+            if (!Object.keys(existingPkgMap).length && !component.scope) {
+              component.scope = "excluded";
             }
             // Don't add the parent component to the package list
             if (goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString) {
@@ -5025,6 +5025,10 @@ export async function parseGoModGraph(
             ) {
               component.scope = "excluded";
               excludedRefs.push(dependsRefString);
+            }
+            // These are likely false positives
+            if (!Object.keys(existingPkgMap).length && !component.scope) {
+              continue;
             }
             // The confidence for the indirect dependencies is lower
             // This is because go mod graph emits module requirements graph, which could be different to module compile graph
