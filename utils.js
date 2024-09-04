@@ -4974,7 +4974,7 @@ export async function parseGoModGraph(
             continue;
           }
           // Add the source and depends to the pkgList
-          if (!addedPkgs[tmpA[0]]) {
+          if (!addedPkgs[tmpA[0]] && !excludedRefs.includes(sourceRefString)) {
             const component = await getGoPkgComponent(
               "",
               `${sourcePurl.namespace ? `${sourcePurl.namespace}/` : ""}${
@@ -4994,10 +4994,10 @@ export async function parseGoModGraph(
             if (
               goModFile &&
               !Object.keys(existingPkgMap).length &&
+              goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
               !component.scope
             ) {
-              component.scope = "excluded";
-              confidence = 0.3;
+              continue;
             }
             // Don't add the parent component to the package list
             if (goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString) {
@@ -5017,6 +5017,9 @@ export async function parseGoModGraph(
               gosumMap[tmpA[1]],
             );
             let confidence = 0.7;
+            if (goModDirectDepsMap[component["bom-ref"]]) {
+              component.scope = "required";
+            }
             if (goModOptionalDepsMap[component["bom-ref"]]) {
               component.scope = "optional";
               confidence = 0.5;
@@ -5034,9 +5037,8 @@ export async function parseGoModGraph(
               dependsRefString.startsWith("pkg:golang/toolchain@") ||
               dependsRefString.startsWith("pkg:golang/go@")
             ) {
-              component.scope = "excluded";
               excludedRefs.push(dependsRefString);
-              confidence = 0.3;
+              continue;
             }
             // These are likely false positives
             if (
@@ -5045,6 +5047,7 @@ export async function parseGoModGraph(
               !Object.keys(existingPkgMap).length &&
               !component.scope
             ) {
+              excludedRefs.push(dependsRefString);
               continue;
             }
             // The confidence for the indirect dependencies is lower
