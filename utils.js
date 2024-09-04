@@ -4983,7 +4983,11 @@ export async function parseGoModGraph(
               sourcePurl.version,
               gosumMap[tmpA[0]],
             );
-            if (goModOptionalDepsMap[component["bom-ref"]]) {
+            if (
+              existingPkgMap &&
+              Object.keys(existingPkgMap).length &&
+              goModOptionalDepsMap[component["bom-ref"]]
+            ) {
               component.scope = "optional";
             } else if (goModDirectDepsMap[component["bom-ref"]]) {
               component.scope = "required";
@@ -5005,12 +5009,14 @@ export async function parseGoModGraph(
             );
             if (goModOptionalDepsMap[component["bom-ref"]]) {
               component.scope = "optional";
-            } else if (
+            }
+            if (
               goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
-              goModDirectDepsMap[sourceRefString]
+              goModDirectDepsMap[sourceRefString] &&
+              component?.scope !== "required"
             ) {
-              // If the parent is required, so is the child
-              component.scope = "required";
+              // If the parent is required, then ensure the child doesn't accidentally become optional or excluded
+              component.scope = undefined;
             }
             // Mark the go toolchain components as excluded
             if (
