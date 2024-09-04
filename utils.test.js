@@ -1006,7 +1006,7 @@ test("parse go mod graph", async () => {
     purl: "pkg:golang/github.com/sqreen/go-dvwa",
     type: "application",
   });
-  expect(retMap.pkgList.length).toEqual(259);
+  expect(retMap.pkgList.length).toEqual(261);
   expect(retMap.rootList.length).toEqual(4);
   retMap = await parseGoModGraph(
     readFileSync("./test/data/gomod-syft-graph.txt", { encoding: "utf-8" }),
@@ -1021,7 +1021,7 @@ test("parse go mod graph", async () => {
     purl: "pkg:golang/github.com/anchore/syft",
     type: "application",
   });
-  expect(retMap.pkgList.length).toEqual(768);
+  expect(retMap.pkgList.length).toEqual(795);
   expect(retMap.rootList.length).toEqual(84);
 });
 

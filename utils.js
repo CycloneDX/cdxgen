@@ -5035,7 +5035,11 @@ export async function parseGoModGraph(
               confidence = 0.3;
             }
             // These are likely false positives
-            if (!Object.keys(existingPkgMap).length && !component.scope) {
+            if (
+              goModPkgMap?.parentComponent?.["bom-ref"] !== sourceRefString &&
+              !Object.keys(existingPkgMap).length &&
+              !component.scope
+            ) {
               continue;
             }
             // The confidence for the indirect dependencies is lower
