@@ -274,6 +274,8 @@ export const PROJECT_TYPE_ALIASES = {
     "nodejs14",
     "nodejs16",
     "nodejs18",
+    "nodejs20",
+    "nodejs22",
     "js",
     "javascript",
     "typescript",

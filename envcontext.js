@@ -2,7 +2,7 @@ import { Buffer } from "node:buffer";
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { homedir } from "node:os";
-import { delimiter, join } from "node:path";
+import { delimiter, dirname, join } from "node:path";
 import process from "node:process";
 import {
   CARGO_CMD,
@@ -509,15 +509,14 @@ export function installSdkmanTool(toolType, toolName) {
 /**
  * Method to check if a given nvm tool is installed and available.
  *
- * @param {String} toolType Tool type such as java, gradle, maven etc.
  * @param {String} toolName Tool name with version. Eg: 22.0.2-tem
  *
- * @returns {Boolean} true if the tool is available. false otherwise.
+ * @returns {String} path of nvm if present, other Null
  */
-export function isNvmToolAvailable(toolName) {
-  const resultUse = spawnSync(
+export function ifNvmToolAvailable(toolName) {
+  const resultWhichNode = spawnSync(
     process.env.SHELL || "bash",
-    ["-i", "-c", `"nvm use ${toolName}"`],
+    ["-i", "-c", `"nvm which ${toolName}"`],
     {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
@@ -525,29 +524,29 @@ export function isNvmToolAvailable(toolName) {
   );
   if (DEBUG_MODE) {
     if (console.stdout) {
-      console.log(resultUse.stdout);
+      console.log(resultWhichNode.stdout);
     }
     if (console.stderr) {
-      console.log(resultUse.stderr);
+      console.log(resultWhichNode.stderr);
     }
   }
-  if (resultUse.status !== 0 || resultUse.stderr) {
-    return false;
+  if (resultWhichNode.status !== 0 || resultWhichNode.stderr) {
+    return;
   }
 
-  return true;
+  return dirname(resultWhichNode.stdout.trim());
 }
 
 /**
  * Method to install and use a given sdkman tool.
  *
- * @param {String} toolType Tool type such as java, gradle, maven etc.
  * @param {String} toolVersion Tool name with version. Eg: 22.0.2-tem
  *
  * @returns {Boolean} true if the tool is available. false otherwise.
  */
-export function installNvmTool(toolVersion) {
-  if (!isNvmToolAvailable(toolVersion)) {
+export function getNvmToolPath(toolVersion) {
+  const nvmNodePath = ifNvmToolAvailable(toolVersion);
+  if (!nvmNodePath) {
     // nvm couldn't directly use toolName so maybe needs to be installed
     const resultInstall = spawnSync(
       process.env.SHELL || "bash",
@@ -567,18 +566,18 @@ export function installNvmTool(toolVersion) {
       }
     }
 
-    if (resultInstall.status !== 0 || resultInstall.stderr) {
+    if (resultInstall.status !== 0) {
       // There was some problem install the tool
-      if (DEBUG_MODE) {
-        if (console.stdout) {
-          console.log(result.stdout);
-        }
-        if (console.stderr) {
-          console.log(result.stderr);
-        }
-      }
+      // output has already been printed out
+      return false;
     }
+    const nvmNodePath = ifNvmToolAvailable(toolVersion);
+    if (nvmNodePath) {
+      return nvmNodePath;
+    }
+    return false;
   }
+  return nvmNodePath;
 }
 
 /**

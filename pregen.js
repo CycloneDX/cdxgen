@@ -1,13 +1,13 @@
 import { spawnSync } from "node:child_process";
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readdirSync } from "node:fs";
 import { arch, platform, tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import {
   SDKMAN_TOOL_ALIASES,
-  installNvmTool,
+  getNvmToolPath,
+  ifNvmToolAvailable,
   installSdkmanTool,
   isNvmAvailable,
-  isNvmToolAvailable,
   isSdkmanAvailable,
 } from "./envcontext.js";
 import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
@@ -104,59 +104,118 @@ export function preparePythonEnv(filePath, options) {
  * @param {Object} options CLI Options
  */
 export function prepareNodeEnv(filePath, options) {
-  // if (hasAnyProjectType("node", options, false)) {
-  //   if (arch() !== "x64") {
-  //     console.log(
-  //       `INFO: Many pypi packages have poor support for ${arch()} architecture.\nRun the cdxgen container image with --platform=linux/amd64 for best experience.`,
-  //     );
-  //   }
-  //   if (platform() === "win32") {
-  //     console.log(
-  //       "Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers",
-  //     );
-  //   }
-  // }
-
+  // check tool for windows
   for (const pt of options.projectType) {
-    if (pt.startsWith("node") && !process.env.NODE_INSTALL_ARGS) {
+    const nodeVersion = pt.replace(/\D/g, "");
+    if (
+      pt.startsWith("nodejs") &&
+      nodeVersion &&
+      !process.env.NODE_INSTALL_ARGS
+    ) {
       if (!isNvmAvailable()) {
-        console.log(
-          "Install nvm by following the instructions at https://github.com/nvm-sh/nvm",
-        );
-        return;
+        if (process.env.NVM_DIR) {
+          // for scenarios where nvm is not present, but
+          // we have $NVM_DIR
+          // custom logic to find nvmNodePath
+          let nvmNodePath;
+          const possibleNodeDir = join(process.env.NVM_DIR, "versions", "node");
+          const nodeVersionArray = readdirSync(directoryPath, {
+            withFileTypes: true,
+          });
+          const nodeRe = new RegExp(`^v${nodeVersion}\.`);
+          for (const nodeVersionsIter of nodeVersionArray) {
+            const fullPath = path.join(possibleNodeDir, nodeVersionsIter.name);
+            if (
+              nodeVersionsIter.isDirectory() &&
+              nodeRe.test(nodeVersionsIter.name)
+            ) {
+              nvmNodePath = path.join(fullPath, "bin");
+            }
+          }
+          if (nvmNodePath) {
+            doNpmInstall(filePath, nvmNodePath);
+          }
+        } else {
+          console.log(
+            "Install nvm by following the instructions at https://github.com/nvm-sh/nvm",
+          );
+          return;
+        }
       }
-      const nodeVersion = pt.replace(/\D/g, "");
-      installNvmTool(nodeVersion);
-      doNpmInstall(filePath, nodeVersion);
+      // set path instead of nvm use
+      const nvmNodePath = getNvmToolPath(nodeVersion);
+      doNpmInstall(filePath, nvmNodePath);
     }
   }
 }
+
+// /**
+//  * This method installs and create package-lock.json
+//  *
+//  * @param {String} filePath Path
+//  * @param {String} nodeVersion number
+//  */
+// export function doNpmInstall(filePath, nodeVersion) {
+//   // we do not install if INSTALL_ARGS set false
+//   if (process.env.NODE_INSTALL_ARGS === false) {
+//     return;
+//   }
+//   const currentDir = process.cwd();
+//   // change to project dir
+//   process.chdir(filePath);
+
+//   const resultNpmInstall = spawnSync(
+//     process.env.SHELL || "bash",
+//     ["-i", "-c", `'nvm use ${nodeVersion} && npm install --package-lock-only'`],
+//     {
+//       encoding: "utf-8",
+//       shell: process.env.SHELL || true,
+//     },
+//   );
+//   // change back to our directory
+//   process.chdir(currentDir);
+//   if (resultNpmInstall.status !== 0 || resultNpmInstall.stderr) {
+//     // There was some problem with NpmInstall
+//     if (DEBUG_MODE) {
+//       if (console.stdout) {
+//         console.log(result.stdout);
+//       }
+//       if (console.stderr) {
+//         console.log(result.stderr);
+//       }
+//     }
+//   }
+// }
 
 /**
  * This method installs and create package-lock.json
  *
  * @param {String} filePath Path
- * @param {String} nodeVersion number
+ * @param {String} nvmNodePath Path to node version in nvm
  */
-export function doNpmInstall(filePath, nodeVersion) {
+export function doNpmInstall(filePath, nvmNodePath) {
   // we do not install if INSTALL_ARGS set false
   if (process.env.NODE_INSTALL_ARGS === false) {
     return;
   }
-  const currentDir = process.cwd();
-  // change to project dir
-  process.chdir(filePath);
+
+  // const newPath =
+  // `${nvmNodePath}${delimiter}${process.env.PATH}`;
 
   const resultNpmInstall = spawnSync(
     process.env.SHELL || "bash",
-    ["-i", "-c", `'nvm use ${nodeVersion} && npm install --package-lock-only'`],
+    [
+      "-i",
+      "-c",
+      `export PATH='${nvmNodePath}${delimiter}$PATH' && npm install --package-lock-only`,
+    ],
     {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
+      cwd: filePath,
     },
   );
-  // change back to our directory
-  process.chdir(currentDir);
+
   if (resultNpmInstall.status !== 0 || resultNpmInstall.stderr) {
     // There was some problem with NpmInstall
     if (DEBUG_MODE) {

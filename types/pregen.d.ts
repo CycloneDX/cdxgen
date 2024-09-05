@@ -29,7 +29,7 @@ export function prepareNodeEnv(filePath: string, options: any): void;
  * This method installs and create package-lock.json
  *
  * @param {String} filePath Path
- * @param {String} nodeVersion number
+ * @param {String} nvmNodePath Path to node version in nvm
  */
-export function doNpmInstall(filePath: string, nodeVersion: string): void;
+export function doNpmInstall(filePath: string, nvmNodePath: string): void;
 //# sourceMappingURL=pregen.d.ts.map
