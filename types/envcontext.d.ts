@@ -146,6 +146,10 @@ export function collectEnvInfo(dir: any): {
  */
 export function isSdkmanAvailable(): boolean;
 /**
+ * Method to check if nvm is available.
+ */
+export function isNvmAvailable(): boolean;
+/**
  * Method to check if a given sdkman tool is installed and available.
  *
  * @param {String} toolType Tool type such as java, gradle, maven etc.
@@ -163,6 +167,24 @@ export function isSdkmanToolAvailable(toolType: string, toolName: string): boole
  * @returns {Boolean} true if the tool is available. false otherwise.
  */
 export function installSdkmanTool(toolType: string, toolName: string): boolean;
+/**
+ * Method to check if a given nvm tool is installed and available.
+ *
+ * @param {String} toolType Tool type such as java, gradle, maven etc.
+ * @param {String} toolName Tool name with version. Eg: 22.0.2-tem
+ *
+ * @returns {Boolean} true if the tool is available. false otherwise.
+ */
+export function isNvmToolAvailable(toolName: string): boolean;
+/**
+ * Method to install and use a given sdkman tool.
+ *
+ * @param {String} toolType Tool type such as java, gradle, maven etc.
+ * @param {String} toolVersion Tool name with version. Eg: 22.0.2-tem
+ *
+ * @returns {Boolean} true if the tool is available. false otherwise.
+ */
+export function installNvmTool(toolVersion: string): boolean;
 export const GIT_COMMAND: any;
 export namespace SDKMAN_TOOL_ALIASES {
     let java8: string;

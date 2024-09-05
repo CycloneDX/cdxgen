@@ -18,4 +18,18 @@ export function prepareSdkmanBuild(projectType: string): boolean;
  * @param {Object} options CLI Options
  */
 export function preparePythonEnv(filePath: string, options: any): void;
+/**
+ * Method to check and prepare the environment for node
+ *
+ * @param {String} filePath Path
+ * @param {Object} options CLI Options
+ */
+export function prepareNodeEnv(filePath: string, options: any): void;
+/**
+ * This method installs and create package-lock.json
+ *
+ * @param {String} filePath Path
+ * @param {String} nodeVersion number
+ */
+export function doNpmInstall(filePath: string, nodeVersion: string): void;
 //# sourceMappingURL=pregen.d.ts.map
