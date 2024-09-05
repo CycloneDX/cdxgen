@@ -369,7 +369,7 @@ export function isNvmAvailable() {
   let isNvmSetup = false;
   const result = spawnSync(
     process.env.SHELL || "bash",
-    ["-i", "-c", `"echo -e "no" | nvm use ${toolName}"`],
+    ["-i", "-c", "nvm"],
     {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
@@ -518,7 +518,7 @@ export function installSdkmanTool(toolType, toolName) {
  *
  * @returns {Boolean} true if the tool is available. false otherwise.
  */
-export function isNvmToolAvailable(toolType, toolName) {
+export function isNvmToolAvailable(toolName) {
   
   const resultUse = spawnSync(
     process.env.SHELL || "bash",
@@ -553,11 +553,11 @@ export function isNvmToolAvailable(toolType, toolName) {
  */
 export function installNvmTool(toolVersion) {
 
-  if (!isNvmToolAvailable){
+  if (!isNvmToolAvailable(toolVersion)){
     // nvm couldn't directly use toolName so maybe needs to be installed
     const resultInstall = spawnSync(
       process.env.SHELL || "bash",
-      ["-i", "-c", `"nvm install ${toolName}"`],
+      ["-i", "-c", `"nvm install ${toolVersion}"`],
       {
         encoding: "utf-8",
         shell: process.env.SHELL || true,

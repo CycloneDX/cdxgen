@@ -1,4 +1,5 @@
 import { mkdtempSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { arch, platform, tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -126,7 +127,7 @@ export function prepareNodeEnv(filePath, options) {
       }
       const nodeVersion = pt.replace(/\D/g, '');
       installNvmTool(nodeVersion);
-      doNpmInstall(nodeVersion);
+      doNpmInstall(filePath, nodeVersion);
     }
   }
 }
@@ -140,7 +141,7 @@ export function prepareNodeEnv(filePath, options) {
 export function doNpmInstall(filePath, nodeVersion){
   const resultNpmInstall = spawnSync(
     process.env.SHELL || "bash",
-    ["-i", "-c", `"nvm use ${nodeVersion}; cd ${filePath}; npm install"`],
+    ["-i", "-c", `'nvm use ${nodeVersion} && cd ${filePath} && npm install --package-lock-only'`],
     {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
