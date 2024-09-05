@@ -55,7 +55,7 @@ Sections include:
 ## Installing
 
 ```shell
-npm install -g @cyclonedx/cdxgen@10.9.6
+npm install -g @cyclonedx/cdxgen@10.9.8
 ```
 
 If you are a [Homebrew][homebrew-homepage] user, you can also install [cdxgen][homebrew-cdxgen] via:
@@ -75,19 +75,19 @@ You can also use the cdxgen container image with node, deno, or bun runtime vers
 The default version uses Node.js 22
 
 ```bash
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:master -r /app -o /app/bom.json
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen:master -r /app -o /app/bom.json
 ```
 
 To use the deno version, use `ghcr.io/cyclonedx/cdxgen-deno` as the image name.
 
 ```bash
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-deno:master -r /app -o /app/bom.json
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-deno:master -r /app -o /app/bom.json
 ```
 
 For the bun version, use `ghcr.io/cyclonedx/cdxgen-bun` as the image name.
 
 ```bash
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-bun:master -r /app -o /app/bom.json
+docker run --rm -e CDXGEN_DEBUG_MODE=debug -v /tmp:/tmp -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-bun:master -r /app -o /app/bom.json
 ```
 
 In deno applications, cdxgen could be directly imported without any conversion. Please see the section on [integration as a library](#integration-as-library)
@@ -403,7 +403,7 @@ To generate test public/private key pairs, you can run cdxgen by passing the arg
 Use the bundled `cdx-verify` command, which supports verifying a single signature added at the bom level.
 
 ```shell
-npm install -g @cyclonedx/cdxgen@10.9.6
+npm install -g @cyclonedx/cdxgen@10.9.8
 cdx-verify -i bom.json --public-key public.key
 ```
 

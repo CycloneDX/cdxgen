@@ -21,7 +21,7 @@ flowchart LR
 ## Installing
 
 ```shell
-sudo npm install -g @cyclonedx/cdxgen@10.9.6
+sudo npm install -g @cyclonedx/cdxgen@10.9.8
 ```
 
 If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:
