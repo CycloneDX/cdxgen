@@ -122,7 +122,7 @@ export function prepareNodeEnv(filePath, options) {
           const nodeVersionArray = readdirSync(directoryPath, {
             withFileTypes: true,
           });
-          const nodeRe = new RegExp(`^v${nodeVersion}\.`);
+          const nodeRe = new RegExp(`^v${nodeVersion}.`);
           for (const nodeVersionsIter of nodeVersionArray) {
             const fullPath = path.join(possibleNodeDir, nodeVersionsIter.name);
             if (
@@ -134,6 +134,12 @@ export function prepareNodeEnv(filePath, options) {
           }
           if (nvmNodePath) {
             doNpmInstall(filePath, nvmNodePath);
+          }
+          else {
+            console.log(
+              `"node version ${nodeVersion} was not found. Please install it with 'nvm install ${nodeVersion}"`,
+            );
+            return;
           }
         } else {
           console.log(
