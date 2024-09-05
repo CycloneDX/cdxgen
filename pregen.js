@@ -1,13 +1,13 @@
-import { mkdtempSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { mkdtempSync } from "node:fs";
 import { arch, platform, tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   SDKMAN_TOOL_ALIASES,
-  installSdkmanTool,
-  isNvmToolAvailable,
-  isNvmAvailable,
   installNvmTool,
+  installSdkmanTool,
+  isNvmAvailable,
+  isNvmToolAvailable,
   isSdkmanAvailable,
 } from "./envcontext.js";
 import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
@@ -116,16 +116,16 @@ export function prepareNodeEnv(filePath, options) {
   //     );
   //   }
   // }
-  
+
   for (const pt of options.projectType) {
-    if (pt.startsWith('node') && !process.env.NODE_INSTALL_ARGS){
-      if (!isNvmAvailable()){
+    if (pt.startsWith("node") && !process.env.NODE_INSTALL_ARGS) {
+      if (!isNvmAvailable()) {
         console.log(
           "Install nvm by following the instructions at https://github.com/nvm-sh/nvm",
         );
         return;
       }
-      const nodeVersion = pt.replace(/\D/g, '');
+      const nodeVersion = pt.replace(/\D/g, "");
       installNvmTool(nodeVersion);
       doNpmInstall(filePath, nodeVersion);
     }
@@ -134,13 +134,13 @@ export function prepareNodeEnv(filePath, options) {
 
 /**
  * This method installs and create package-lock.json
- * 
+ *
  * @param {String} filePath Path
  * @param {String} nodeVersion number
  */
-export function doNpmInstall(filePath, nodeVersion){
+export function doNpmInstall(filePath, nodeVersion) {
   // we do not install if INSTALL_ARGS set false
-  if(process.env.NODE_INSTALL_ARGS === false){
+  if (process.env.NODE_INSTALL_ARGS === false) {
     return;
   }
   const currentDir = process.cwd();
@@ -153,11 +153,11 @@ export function doNpmInstall(filePath, nodeVersion){
     {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
-    }
+    },
   );
   // change back to our directory
   process.chdir(currentDir);
-  if (resultNpmInstall.status !==0 || resultNpmInstall.stderr){
+  if (resultNpmInstall.status !== 0 || resultNpmInstall.stderr) {
     // There was some problem with NpmInstall
     if (DEBUG_MODE) {
       if (console.stdout) {

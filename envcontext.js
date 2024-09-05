@@ -367,16 +367,12 @@ export function isSdkmanAvailable() {
  */
 export function isNvmAvailable() {
   let isNvmSetup = false;
-  const result = spawnSync(
-    process.env.SHELL || "bash",
-    ["-i", "-c", "nvm"],
-    {
-      encoding: "utf-8",
-      shell: process.env.SHELL || true,
-    }
-  );
+  const result = spawnSync(process.env.SHELL || "bash", ["-i", "-c", "nvm"], {
+    encoding: "utf-8",
+    shell: process.env.SHELL || true,
+  });
   if (result.status === 0) {
-    isNvmSetup=true;
+    isNvmSetup = true;
   }
   return isNvmSetup;
 }
@@ -519,16 +515,15 @@ export function installSdkmanTool(toolType, toolName) {
  * @returns {Boolean} true if the tool is available. false otherwise.
  */
 export function isNvmToolAvailable(toolName) {
-  
   const resultUse = spawnSync(
     process.env.SHELL || "bash",
     ["-i", "-c", `"nvm use ${toolName}"`],
     {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
-    }
+    },
   );
-  if (DEBUG_MODE){
+  if (DEBUG_MODE) {
     if (console.stdout) {
       console.log(resultUse.stdout);
     }
@@ -536,10 +531,10 @@ export function isNvmToolAvailable(toolName) {
       console.log(resultUse.stderr);
     }
   }
-  if (resultUse.status !== 0 || resultUse.stderr){
+  if (resultUse.status !== 0 || resultUse.stderr) {
     return false;
   }
-  
+
   return true;
 }
 
@@ -552,8 +547,7 @@ export function isNvmToolAvailable(toolName) {
  * @returns {Boolean} true if the tool is available. false otherwise.
  */
 export function installNvmTool(toolVersion) {
-
-  if (!isNvmToolAvailable(toolVersion)){
+  if (!isNvmToolAvailable(toolVersion)) {
     // nvm couldn't directly use toolName so maybe needs to be installed
     const resultInstall = spawnSync(
       process.env.SHELL || "bash",
@@ -561,10 +555,10 @@ export function installNvmTool(toolVersion) {
       {
         encoding: "utf-8",
         shell: process.env.SHELL || true,
-      }
+      },
     );
 
-    if (DEBUG_MODE){
+    if (DEBUG_MODE) {
       if (console.stdout) {
         console.log(resultInstall.stdout);
       }
@@ -573,7 +567,7 @@ export function installNvmTool(toolVersion) {
       }
     }
 
-    if (resultInstall.status !== 0 || resultInstall.stderr){
+    if (resultInstall.status !== 0 || resultInstall.stderr) {
       // There was some problem install the tool
       if (DEBUG_MODE) {
         if (console.stdout) {
@@ -585,7 +579,6 @@ export function installNvmTool(toolVersion) {
       }
     }
   }
-  
 }
 
 /**
