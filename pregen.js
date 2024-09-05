@@ -134,8 +134,7 @@ export function prepareNodeEnv(filePath, options) {
           }
           if (nvmNodePath) {
             doNpmInstall(filePath, nvmNodePath);
-          }
-          else {
+          } else {
             console.log(
               `"node version ${nodeVersion} was not found. Please install it with 'nvm install ${nodeVersion}"`,
             );
