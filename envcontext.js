@@ -520,9 +520,9 @@ export function installSdkmanTool(toolType, toolName) {
  */
 export function isNvmToolAvailable(toolType, toolName) {
   
-  const result = spawnSync(
+  const resultUse = spawnSync(
     process.env.SHELL || "bash",
-    ["-i", "-c", `"echo -e "no" | nvm use ${toolName}"`],
+    ["-i", "-c", `"nvm use ${toolName}"`],
     {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
@@ -530,47 +530,59 @@ export function isNvmToolAvailable(toolType, toolName) {
   );
   if (DEBUG_MODE){
     if (console.stdout) {
-      console.log(result.stdout);
+      console.log(resultUse.stdout);
     }
     if (console.stderr) {
-      console.log(result.stderr);
+      console.log(resultUse.stderr);
     }
   }
-  if (result.status !== 0 || result.stderr){
-    // nvm couldn't directly use toolName so maybe needs to be installed
-    
-
+  if (resultUse.status !== 0 || resultUse.stderr){
+    return false;
   }
   
   return true;
-
-  
 }
 
 /**
  * Method to install and use a given sdkman tool.
  *
  * @param {String} toolType Tool type such as java, gradle, maven etc.
- * @param {String} toolName Tool name with version. Eg: 22.0.2-tem
+ * @param {String} toolVersion Tool name with version. Eg: 22.0.2-tem
  *
  * @returns {Boolean} true if the tool is available. false otherwise.
  */
-export function installNvmTool(toolType, toolName) {
+export function installNvmTool(toolVersion) {
 
-  const result = spawnSync(
-    process.env.SHELL || "bash",
-    ["-i", "-c", `"echo -e "no" | nvm use ${toolName}"`],
-    {
-      encoding: "utf-8",
-      shell: process.env.SHELL || true,
+  if (!isNvmToolAvailable){
+    // nvm couldn't directly use toolName so maybe needs to be installed
+    const resultInstall = spawnSync(
+      process.env.SHELL || "bash",
+      ["-i", "-c", `"nvm install ${toolName}"`],
+      {
+        encoding: "utf-8",
+        shell: process.env.SHELL || true,
+      }
+    );
+
+    if (DEBUG_MODE){
+      if (console.stdout) {
+        console.log(resultInstall.stdout);
+      }
+      if (console.stderr) {
+        console.log(resultInstall.stderr);
+      }
     }
-  );
-  if (DEBUG_MODE){
-    if (console.stdout) {
-      console.log(result.stdout);
-    }
-    if (console.stderr) {
-      console.log(result.stderr);
+
+    if (resultInstall.status !== 0 || resultInstall.stderr){
+      // There was some problem install the tool
+      if (DEBUG_MODE) {
+        if (console.stdout) {
+          console.log(result.stdout);
+        }
+        if (console.stderr) {
+          console.log(result.stderr);
+        }
+      }
     }
   }
   

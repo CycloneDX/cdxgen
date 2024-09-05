@@ -6,6 +6,7 @@ import {
   installSdkmanTool,
   isNvmToolAvailable,
   isNvmAvailable,
+  installNvmTool,
   isSdkmanAvailable,
 } from "./envcontext.js";
 import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
@@ -28,7 +29,7 @@ export function prepareEnv(filePath, options) {
   }
   // Check the pre-requisites for python
   preparePythonEnv(filePath, options);
-  prepareNodeEnv(filePath, options)
+  prepareNodeEnv(filePath, options);
 }
 
 /**
@@ -114,29 +115,46 @@ export function prepareNodeEnv(filePath, options) {
   //     );
   //   }
   // }
-  if (!isNvmAvailable()){
-    console.log(
-      "Install nvm by following the instructions at https://github.com/nvm-sh/nvm",
-    );
-    return;
-  }
+  
   for (const pt of options.projectType) {
     if (pt.startsWith('node') && !process.env.NODE_INSTALL_ARGS){
+      if (!isNvmAvailable()){
+        console.log(
+          "Install nvm by following the instructions at https://github.com/nvm-sh/nvm",
+        );
+        return;
+      }
       const nodeVersion = pt.replace(/\D/g, '');
-      
+      installNvmTool(nodeVersion);
+      doNpmInstall(nodeVersion);
     }
   }
-  {
-    const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-pip-"));
-    const py_version_number = nodeVersion
-      .replace("python", "")
-      .replace("3", "3.");
-    process.env.PIP_INSTALL_ARGS = `--python-version ${py_version_number} --ignore-requires-python --no-warn-conflicts --only-binary=:all:`;
-    process.env.PIP_TARGET = tempDir;
-    if (DEBUG_MODE) {
-      console.log("PIP_INSTALL_ARGS set to", process.env.PIP_INSTALL_ARGS);
-      console.log("PIP_TARGET set to", process.env.PIP_TARGET);
+}
+
+/**
+ * This method installs and create package-lock.json
+ * 
+ * @param {String} filePath Path
+ * @param {String} nodeVersion number
+ */
+export function doNpmInstall(filePath, nodeVersion){
+  const resultNpmInstall = spawnSync(
+    process.env.SHELL || "bash",
+    ["-i", "-c", `"nvm use ${nodeVersion}; cd ${filePath}; npm install"`],
+    {
+      encoding: "utf-8",
+      shell: process.env.SHELL || true,
     }
-    break;
+  );
+  if (resultNpmInstall.status !==0 || resultNpmInstall.stderr){
+    // There was some problem with NpmInstall
+    if (DEBUG_MODE) {
+      if (console.stdout) {
+        console.log(result.stdout);
+      }
+      if (console.stderr) {
+        console.log(result.stderr);
+      }
+    }
   }
 }
