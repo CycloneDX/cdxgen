@@ -363,6 +363,25 @@ export function isSdkmanAvailable() {
 }
 
 /**
+ * Method to check if nvm is available.
+ */
+export function isNvmAvailable() {
+  let isNvmSetup = false;
+  const result = spawnSync(
+    process.env.SHELL || "bash",
+    ["-i", "-c", `"echo -e "no" | nvm use ${toolName}"`],
+    {
+      encoding: "utf-8",
+      shell: process.env.SHELL || true,
+    }
+  );
+  if (result.status === 0) {
+    isNvmSetup=true;
+  }
+  return isNvmSetup;
+}
+
+/**
  * Method to check if a given sdkman tool is installed and available.
  *
  * @param {String} toolType Tool type such as java, gradle, maven etc.
@@ -489,6 +508,72 @@ export function installSdkmanTool(toolType, toolName) {
     }
   }
   return true;
+}
+
+/**
+ * Method to check if a given nvm tool is installed and available.
+ *
+ * @param {String} toolType Tool type such as java, gradle, maven etc.
+ * @param {String} toolName Tool name with version. Eg: 22.0.2-tem
+ *
+ * @returns {Boolean} true if the tool is available. false otherwise.
+ */
+export function isNvmToolAvailable(toolType, toolName) {
+  
+  const result = spawnSync(
+    process.env.SHELL || "bash",
+    ["-i", "-c", `"echo -e "no" | nvm use ${toolName}"`],
+    {
+      encoding: "utf-8",
+      shell: process.env.SHELL || true,
+    }
+  );
+  if (DEBUG_MODE){
+    if (console.stdout) {
+      console.log(result.stdout);
+    }
+    if (console.stderr) {
+      console.log(result.stderr);
+    }
+  }
+  if (result.status !== 0 || result.stderr){
+    // nvm couldn't directly use toolName so maybe needs to be installed
+    
+
+  }
+  
+  return true;
+
+  
+}
+
+/**
+ * Method to install and use a given sdkman tool.
+ *
+ * @param {String} toolType Tool type such as java, gradle, maven etc.
+ * @param {String} toolName Tool name with version. Eg: 22.0.2-tem
+ *
+ * @returns {Boolean} true if the tool is available. false otherwise.
+ */
+export function installNvmTool(toolType, toolName) {
+
+  const result = spawnSync(
+    process.env.SHELL || "bash",
+    ["-i", "-c", `"echo -e "no" | nvm use ${toolName}"`],
+    {
+      encoding: "utf-8",
+      shell: process.env.SHELL || true,
+    }
+  );
+  if (DEBUG_MODE){
+    if (console.stdout) {
+      console.log(result.stdout);
+    }
+    if (console.stderr) {
+      console.log(result.stderr);
+    }
+  }
+  
 }
 
 /**

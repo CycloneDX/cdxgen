@@ -4,6 +4,8 @@ import { join } from "node:path";
 import {
   SDKMAN_TOOL_ALIASES,
   installSdkmanTool,
+  isNvmToolAvailable,
+  isNvmAvailable,
   isSdkmanAvailable,
 } from "./envcontext.js";
 import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
@@ -26,6 +28,7 @@ export function prepareEnv(filePath, options) {
   }
   // Check the pre-requisites for python
   preparePythonEnv(filePath, options);
+  prepareNodeEnv(filePath, options)
 }
 
 /**
@@ -89,5 +92,51 @@ export function preparePythonEnv(filePath, options) {
         break;
       }
     }
+  }
+}
+
+/**
+ * Method to check and prepare the environment for node
+ *
+ * @param {String} filePath Path
+ * @param {Object} options CLI Options
+ */
+export function prepareNodeEnv(filePath, options) {
+  // if (hasAnyProjectType("node", options, false)) {
+  //   if (arch() !== "x64") {
+  //     console.log(
+  //       `INFO: Many pypi packages have poor support for ${arch()} architecture.\nRun the cdxgen container image with --platform=linux/amd64 for best experience.`,
+  //     );
+  //   }
+  //   if (platform() === "win32") {
+  //     console.log(
+  //       "Install the appropriate compilers and build tools on Windows by following this documentation - https://wiki.python.org/moin/WindowsCompilers",
+  //     );
+  //   }
+  // }
+  if (!isNvmAvailable()){
+    console.log(
+      "Install nvm by following the instructions at https://github.com/nvm-sh/nvm",
+    );
+    return;
+  }
+  for (const pt of options.projectType) {
+    if (pt.startsWith('node') && !process.env.NODE_INSTALL_ARGS){
+      const nodeVersion = pt.replace(/\D/g, '');
+      
+    }
+  }
+  {
+    const tempDir = mkdtempSync(join(tmpdir(), "cdxgen-pip-"));
+    const py_version_number = nodeVersion
+      .replace("python", "")
+      .replace("3", "3.");
+    process.env.PIP_INSTALL_ARGS = `--python-version ${py_version_number} --ignore-requires-python --no-warn-conflicts --only-binary=:all:`;
+    process.env.PIP_TARGET = tempDir;
+    if (DEBUG_MODE) {
+      console.log("PIP_INSTALL_ARGS set to", process.env.PIP_INSTALL_ARGS);
+      console.log("PIP_TARGET set to", process.env.PIP_TARGET);
+    }
+    break;
   }
 }
