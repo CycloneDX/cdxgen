@@ -450,8 +450,8 @@ jobs:
       - name: repotests expo
         run: |
           cd repotests/expo-test && npm ci && cd ../..
-          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo.json
-          GRADLE_MULTI_THREADED=true GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root,expo-modules-core\$android-annotation,expo-modules-core\$android-annotation-processor bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo-multi.json
+          CDXGEN_DEBUG_MODE=debug GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo.json
+          CDXGEN_DEBUG_MODE=debug GRADLE_MULTI_THREADED=true GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root,expo-modules-core\$android-annotation,expo-modules-core\$android-annotation-processor bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo-multi.json
           custom-json-diff -i bomresults/bom-expo.json bomresults/bom-expo-multi.json -o bomresults/diff-expo
         shell: bash
       - name: jenkins plugins
