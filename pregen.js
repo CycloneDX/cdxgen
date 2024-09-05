@@ -154,44 +154,6 @@ export function prepareNodeEnv(filePath, options) {
   }
 }
 
-// /**
-//  * This method installs and create package-lock.json
-//  *
-//  * @param {String} filePath Path
-//  * @param {String} nodeVersion number
-//  */
-// export function doNpmInstall(filePath, nodeVersion) {
-//   // we do not install if INSTALL_ARGS set false
-//   if (process.env.NODE_INSTALL_ARGS === false) {
-//     return;
-//   }
-//   const currentDir = process.cwd();
-//   // change to project dir
-//   process.chdir(filePath);
-
-//   const resultNpmInstall = spawnSync(
-//     process.env.SHELL || "bash",
-//     ["-i", "-c", `'nvm use ${nodeVersion} && npm install --package-lock-only'`],
-//     {
-//       encoding: "utf-8",
-//       shell: process.env.SHELL || true,
-//     },
-//   );
-//   // change back to our directory
-//   process.chdir(currentDir);
-//   if (resultNpmInstall.status !== 0 || resultNpmInstall.stderr) {
-//     // There was some problem with NpmInstall
-//     if (DEBUG_MODE) {
-//       if (console.stdout) {
-//         console.log(result.stdout);
-//       }
-//       if (console.stderr) {
-//         console.log(result.stderr);
-//       }
-//     }
-//   }
-// }
-
 /**
  * This method installs and create package-lock.json
  *
