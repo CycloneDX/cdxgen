@@ -221,7 +221,7 @@ export const validateRefs = (bomJson) => {
   const warningsList = [];
   const refMap = buildRefs(bomJson);
   if (bomJson?.dependencies) {
-    if (isPartialTree(bomJson.dependencies)) {
+    if (isPartialTree(bomJson.dependencies, bomJson?.components?.length)) {
       warningsList.push("Dependency tree is partial lacking child nodes.");
     }
     for (const dep of bomJson.dependencies) {
