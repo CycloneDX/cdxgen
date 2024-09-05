@@ -130,6 +130,23 @@ jobs:
           path: 'repotests/meetingsdk-vuejs-sample'
       - uses: actions/checkout@v4
         with:
+          repository: 'kriasoft/react-app'
+          path: 'repotests/react-app'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'patrickjuchli/basic-ftp'
+          path: 'repotests/basic-ftp'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'Atome-FE/llama-node'
+          path: 'repotests/llama-node'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DIYgod/RSSHub'
+          ref: 'v2.18.0'
+          path: 'repotests/RSSHub'
+      - uses: actions/checkout@v4
+        with:
           repository: 'sveltejs/examples'
           path: 'repotests/sveltejs-examples'
       - uses: actions/checkout@v4
@@ -292,6 +309,26 @@ jobs:
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t js repotests/meetingsdk-vuejs-sample -o bomresults/bom-vue.json
           node bin/evinse.js -i bomresults/bom-vue.json -o bomresults/bom-vue.evinse.json -l javascript --with-data-flow -p repotests/meetingsdk-vuejs-sample
+        shell: bash
+      - name: repotests react-app
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs8 repotests/react-app -o bomresults/react-app.json
+          node bin/evinse.js -i bomresults/react-app.json -o bomresults/react-app.evinse.json -l javascript --with-data-flow -p repotests/react-app
+        shell: bash
+        - name: repotests basic-ftp
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs10 repotests/basic-ftp -o bomresults/basic-ftp.json
+          node bin/evinse.js -i bomresults/basic-ftp.json -o bomresults/basic-ftp.evinse.json -l javascript --with-data-flow -p repotests/basic-ftp
+        shell: bash
+        - name: repotests llama-node
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs16 repotests/llama-node -o bomresults/llama-node.json
+          node bin/evinse.js -i bomresults/llama-node.json -o bomresults/llama-node.evinse.json -l javascript --with-data-flow -p repotests/llama-node
+        shell: bash
+        - name: repotests RSSHub
+        run: |
+          FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs22 repotests/RSSHub -o bomresults/RSSHub.json
+          node bin/evinse.js -i bomresults/RSSHub.json -o bomresults/RSSHub.evinse.json -l javascript --with-data-flow -p repotests/RSSHub
         shell: bash
       - name: repotests sveltejs-examples
         run: |
