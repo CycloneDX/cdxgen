@@ -1267,9 +1267,10 @@ export function isValidIriReference(iri: string): boolean;
  * Method to check if a given dependency tree is partial or not.
  *
  * @param {Array} dependencies List of dependencies
+ * @param {Number} componentsCount Number of components
  * @returns {Boolean} True if the dependency tree lacks any non-root parents without children. False otherwise.
  */
-export function isPartialTree(dependencies: any[]): boolean;
+export function isPartialTree(dependencies: any[], componentsCount?: number): boolean;
 /**
  * Re-compute and set the scope based on the dependency tree
  *

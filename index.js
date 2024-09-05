@@ -3187,7 +3187,7 @@ export async function createPythonBom(path, options) {
   if (
     isFeatureEnabled(options, "safe-pip-install") &&
     pkgList.length &&
-    isPartialTree(dependencies)
+    isPartialTree(dependencies, pkgList.length)
   ) {
     // Trim the current package list first
     pkgList = trimComponents(pkgList);

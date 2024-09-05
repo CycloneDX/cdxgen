@@ -3199,7 +3199,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-multi.lock");
   expect(parsedList.pkgList.length).toEqual(1909);
   expect(parsedList.dependenciesList.length).toEqual(1909);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-zpruxnFMz6K94gs2pqc3sidzFDbQpKT5D6P/J/I9s8ekHZ5eczgnRp6pqXC86Bh7+44j/btpmOT0kwiboyqTnA==",
@@ -3232,7 +3234,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-light.lock");
   expect(parsedList.pkgList.length).toEqual(315);
   expect(parsedList.dependenciesList.length).toEqual(315);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-rZ1k9kQvJX21Vwgx1L6kSQ6yeXo9cCMyqURSnjG+MRoJn+Mr3LblxmVdzScHXRzv0N9yzy49oG7Bqxp9Knyv/g==",
@@ -3265,7 +3269,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn3.lock");
   expect(parsedList.pkgList.length).toEqual(5);
   expect(parsedList.dependenciesList.length).toEqual(5);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[1]).toEqual({
     _integrity:
       "sha512-+X9Jn4mPI+RYV0ITiiLyJSYlT9um111BocJSaztsxXR+9ZxWErpzdfQqyk+EYZUOklugjJkerQZRtJGLfJeClw==",
@@ -3298,7 +3304,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv2.lock");
   expect(parsedList.pkgList.length).toEqual(1088);
   expect(parsedList.dependenciesList.length).toEqual(1088);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-G0U5NjBUYIs39l1J1ckgpVfVX2IxpzRAIT4/2An86O2Mcri3k5xNu7/RRkfObo12wN9s7BmnREAMhH7252oZiA==",
@@ -3330,7 +3338,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv3.lock");
   expect(parsedList.pkgList.length).toEqual(363);
   expect(parsedList.dependenciesList.length).toEqual(363);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0]).toEqual({
     _integrity:
       "sha512-vtU+q0TmdIDmezU7lKub73vObN6nmd3lkcKWz7R9hyNI8gz5o7grDb+FML9nykOLW+09gGIup2xyJ86j5vBKpg==",
@@ -3362,7 +3372,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn4.lock");
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.dependenciesList.length).toEqual(1);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeTruthy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeTruthy();
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn-at.lock");
   expect(parsedList.pkgList.length).toEqual(4);
   expect(parsedList.dependenciesList.length).toEqual(4);
@@ -3394,7 +3406,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn5.lock");
   expect(parsedList.pkgList.length).toEqual(1962);
   expect(parsedList.dependenciesList.length).toEqual(1962);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40ampproject/remapping@2.2.0",
   );
@@ -3408,7 +3422,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn6.lock");
   expect(parsedList.pkgList.length).toEqual(1472);
   expect(parsedList.dependenciesList.length).toEqual(1472);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6",
   );
@@ -3425,7 +3441,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarn7.lock");
   expect(parsedList.pkgList.length).toEqual(1350);
   expect(parsedList.dependenciesList.length).toEqual(1347);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40aashutoshrathi/word-wrap@1.2.6",
   );
@@ -3478,7 +3496,9 @@ test("parseYarnLock", async () => {
   parsedList = await parseYarnLock("./test/data/yarn_locks/yarnv1-empty.lock");
   expect(parsedList.pkgList.length).toEqual(770);
   expect(parsedList.dependenciesList.length).toEqual(770);
-  expect(isPartialTree(parsedList.dependenciesList)).toBeFalsy();
+  expect(
+    isPartialTree(parsedList.dependenciesList, parsedList.pkgList.length),
+  ).toBeFalsy();
   expect(parsedList.pkgList[0].purl).toEqual(
     "pkg:npm/%40ampproject/remapping@2.2.0",
   );

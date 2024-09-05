@@ -10517,7 +10517,7 @@ export function getPipFrozenTree(
             );
           } else {
             console.log(
-              "The version or the version specifiers used for a dependency is invalid. Resolve the below error to improve SBOM accuracy.\n",
+              "The version or the version specifiers used for a dependency is invalid. Try with a different python type such as -t python310 or -t python39.\nOriginal error from pip:\n",
             );
           }
           console.log(result.stderr);
@@ -12194,9 +12194,10 @@ export function isValidIriReference(iri) {
  * Method to check if a given dependency tree is partial or not.
  *
  * @param {Array} dependencies List of dependencies
+ * @param {Number} componentsCount Number of components
  * @returns {Boolean} True if the dependency tree lacks any non-root parents without children. False otherwise.
  */
-export function isPartialTree(dependencies) {
+export function isPartialTree(dependencies, componentsCount = 1) {
   if (dependencies?.length <= 1) {
     return true;
   }
@@ -12206,7 +12207,7 @@ export function isPartialTree(dependencies) {
       parentsWithChildsCount++;
     }
   }
-  return parentsWithChildsCount <= 1;
+  return parentsWithChildsCount <= Math.max(Math.round(componentsCount / 3), 1);
 }
 
 /**
