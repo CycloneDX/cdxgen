@@ -6572,7 +6572,7 @@ export async function createBom(path, options) {
   if (PROJECT_TYPE_ALIASES["android"].includes(projectType[0])) {
     return createAndroidBom(path, options);
   }
-  if (PROJECT_TYPE_ALIASES["js"].includes(projectType[0])) {
+  if (PROJECT_TYPE_ALIASES["js"].includes(projectType[0].replace(/\d/g, ''))) {
     return await createNodejsBom(path, options);
   }
   if (PROJECT_TYPE_ALIASES["py"].includes(projectType[0])) {
