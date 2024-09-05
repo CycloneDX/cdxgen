@@ -2887,25 +2887,13 @@ export function parseGradleProperties(rawOutput) {
  */
 export function executeParallelGradleProperties(dir, allProjectsStr) {
   const gradleCmd = getGradleCommand(dir, null);
-
-  // common gradle args, used for all tasks
-  let gradleArgs = ["--console", "plain", "--build-cache"];
-  if (process.env.GRADLE_ARGS) {
-    const addArgs = process.env.GRADLE_ARGS.split(" ");
-    gradleArgs = gradleArgs.concat(addArgs);
-  }
-
-  // gradle args only for the properties task
-  let gradlePropertiesArgs = [];
-  if (process.env.GRADLE_ARGS_PROPERTIES) {
-    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
-
-  for (const spstr of allProjectsStr) {
-    gradleArgs.push(`${spstr}:properties`);
-    gradleArgs = gradleArgs.concat(gradlePropertiesArgs);
-  }
+  const gradleArgs = buildGradleCommandArguments(
+    process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+    allProjectsStr.map((project) => `${project}:properties`),
+    process.env.GRADLE_ARGS_PROPERTIES
+      ? process.env.GRADLE_ARGS_PROPERTIES.split(" ")
+      : [],
+  );
 
   console.log("Executing", gradleCmd, gradleArgs.join(" "), "in", dir);
   const result = spawnSync(gradleCmd, gradleArgs, {
@@ -2958,32 +2946,16 @@ export function executeGradleProperties(dir, subProject) {
   if (subProject && subProject.match(/:/g).length >= 2) {
     return defaultProps;
   }
-  let gradlePropertiesArgs = [
-    subProject ? `${subProject}:properties` : "properties",
-    "-q",
-    "--console",
-    "plain",
-    "--build-cache",
-  ];
   const gradleCmd = getGradleCommand(dir, null);
-  // common gradle args, used for all tasks
-  if (process.env.GRADLE_ARGS) {
-    const addArgs = process.env.GRADLE_ARGS.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
-  // gradle args only for the properties task
-  if (process.env.GRADLE_ARGS_PROPERTIES) {
-    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
-  console.log(
-    "Executing",
-    gradleCmd,
-    gradlePropertiesArgs.join(" "),
-    "in",
-    dir,
+  const gradleArguments = buildGradleCommandArguments(
+    process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+    [subProject ? `${subProject}:properties` : "properties"],
+    process.env.GRADLE_ARGS_PROPERTIES
+      ? process.env.GRADLE_ARGS_PROPERTIES.split(" ")
+      : [],
   );
-  const result = spawnSync(gradleCmd, gradlePropertiesArgs, {
+  console.log("Executing", gradleCmd, gradleArguments.join(" "), "in", dir);
+  const result = spawnSync(gradleCmd, gradleArguments, {
     cwd: dir,
     encoding: "utf-8",
     shell: isWin,
@@ -9933,6 +9905,31 @@ export function getGradleCommand(srcPath, rootPath) {
   }
   return gradleCmd;
 }
+
+/**
+ * Method to combine the general gradle arguments, the sub-commands and the sub-commands' arguments in the correct way
+ *
+ * @param {string[]} gradleArguments The general gradle arguments, which must only be added once
+ * @param {string[]} gradleSubCommands The sub-commands that are to be executed by gradle
+ * @param {string[]} gradleSubCommandArguments The arguments specific to the sub-command(s), which much be added PER sub-command
+ *
+ * @returns {string[]} Array of arguments to be added to the gradle command
+ */
+export function buildGradleCommandArguments(
+  gradleArguments,
+  gradleSubCommands,
+  gradleSubCommandArguments,
+) {
+  let allGradleArguments = ["--console", "plain", "--build-cache"].concat(
+    gradleArguments,
+  );
+  for (const gradleSubCommand of gradleSubCommands) {
+    allGradleArguments.push(gradleSubCommand);
+    allGradleArguments = allGradleArguments.concat(gradleSubCommandArguments);
+  }
+  return allGradleArguments;
+}
+
 /**
  * Method to split the output produced by Gradle using parallel processing by project
  *

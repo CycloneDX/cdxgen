@@ -42,6 +42,7 @@ import {
   addEvidenceForDotnet,
   addEvidenceForImports,
   addPlugin,
+  buildGradleCommandArguments,
   checksumFile,
   cleanupPlugin,
   collectGradleDependencies,
@@ -1751,38 +1752,19 @@ export async function createJavaBom(path, options) {
     options.installDeps &&
     isPackageManagerAllowed("gradle", ["maven", "bazel", "sbt"], options)
   ) {
-    const gradleCmd = getGradleCommand(gradleRootPath, null);
-    const defaultTaskArgs = ["--console", "plain", "--build-cache"];
     allProjects.push(parentComponent);
-    let depTaskWithArgs = ["dependencies"];
-    let relevantTasks = ["dependencies"];
-    if (process.env.GRADLE_DEPENDENCY_TASK) {
-      depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
-      relevantTasks = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
-    }
-    let gradleArgs = [];
-    gradleArgs = gradleArgs.concat(defaultTaskArgs);
-    // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
-    if (process.env.GRADLE_ARGS) {
-      const addArgs = process.env.GRADLE_ARGS.split(" ");
-      gradleArgs = gradleArgs.concat(addArgs);
-    }
-    // gradle args only for the dependencies task
-    let gradleDepArgs = [];
-    gradleDepArgs = gradleDepArgs.concat(depTaskWithArgs.slice(1));
-    if (process.env.GRADLE_ARGS_DEPENDENCIES) {
-      const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
-      gradleDepArgs = gradleDepArgs.concat(addArgs);
-    }
+    const gradleCmd = getGradleCommand(gradleRootPath, null);
+    const gradleDepTask = process.env.GRADLE_DEPENDENCY_TASK
+      ? process.env.GRADLE_DEPENDENCY_TASK
+      : "dependencies";
 
     if (process.env.GRADLE_MULTI_THREADED) {
+      const gradleSubCommands = [];
       const modulesToSkip = process.env.GRADLE_SKIP_MODULES
         ? process.env.GRADLE_SKIP_MODULES.split(",")
         : [];
-      let gradleSubProjectDepArgs = [];
       if (!modulesToSkip.includes("root")) {
-        gradleSubProjectDepArgs.push(depTaskWithArgs[0]);
-        gradleSubProjectDepArgs = gradleSubProjectDepArgs.concat(gradleDepArgs);
+        gradleSubCommands.push(gradleDepTask);
       }
       for (const sp of allProjects) {
         //create single command for dependencies tasks on all subprojects
@@ -1790,28 +1772,29 @@ export async function createJavaBom(path, options) {
           sp.purl !== parentComponent.purl &&
           !modulesToSkip.includes(sp.name)
         ) {
-          gradleSubProjectDepArgs.push(`:${sp.name}:${depTaskWithArgs[0]}`);
-          gradleSubProjectDepArgs =
-            gradleSubProjectDepArgs.concat(gradleDepArgs);
+          gradleSubCommands.push(`:${sp.name}:${gradleDepTask}`);
         }
       }
+      const gradleArguments = buildGradleCommandArguments(
+        process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+        gradleSubCommands,
+        process.env.GRADLE_ARGS_DEPENDENCIES
+          ? process.env.GRADLE_ARGS_DEPENDENCIES.split(" ")
+          : [],
+      );
       console.log(
         "Executing",
         gradleCmd,
-        gradleArgs.concat(gradleSubProjectDepArgs).join(" "),
+        gradleArguments.join(" "),
         "in",
         gradleRootPath,
       );
-      const sresult = spawnSync(
-        gradleCmd,
-        gradleArgs.concat(gradleSubProjectDepArgs),
-        {
-          cwd: gradleRootPath,
-          encoding: "utf-8",
-          timeout: TIMEOUT_MS,
-          maxBuffer: MAX_BUFFER,
-        },
-      );
+      const sresult = spawnSync(gradleCmd, gradleArguments, {
+        cwd: gradleRootPath,
+        encoding: "utf-8",
+        timeout: TIMEOUT_MS,
+        maxBuffer: MAX_BUFFER,
+      });
 
       if (sresult.status !== 0 || sresult.error) {
         if (options.failOnError || DEBUG_MODE) {
@@ -1822,10 +1805,9 @@ export async function createJavaBom(path, options) {
       const sstdout = sresult.stdout;
       if (sstdout) {
         const cmdOutput = Buffer.from(sstdout).toString();
-        const perProjectOutput = splitOutputByGradleProjects(
-          cmdOutput,
-          relevantTasks,
-        );
+        const perProjectOutput = splitOutputByGradleProjects(cmdOutput, [
+          gradleDepTask,
+        ]);
         for (const sp of allProjects) {
           const parsedList = parseGradleDep(
             perProjectOutput.has(sp.name) ? perProjectOutput.get(sp.name) : "",
@@ -1863,31 +1845,31 @@ export async function createJavaBom(path, options) {
         );
       }
       for (const sp of allProjects) {
-        let gradleSubProjectDepArgs = [
-          sp.purl === parentComponent.purl
-            ? depTaskWithArgs[0]
-            : `:${sp.name}:${depTaskWithArgs[0]}`,
-        ];
-        gradleSubProjectDepArgs = gradleSubProjectDepArgs.concat(gradleDepArgs);
+        const gradleArguments = buildGradleCommandArguments(
+          process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+          [
+            sp.purl === parentComponent.purl
+              ? gradleDepTask
+              : `:${sp.name}:${gradleDepTask}`,
+          ],
+          process.env.GRADLE_ARGS_DEPENDENCIES
+            ? process.env.GRADLE_ARGS_DEPENDENCIES.split(" ")
+            : [],
+        );
 
-        gradleSubProjectDepArgs.push("-q");
         console.log(
           "Executing",
           gradleCmd,
-          gradleArgs.concat(gradleSubProjectDepArgs).join(" "),
+          gradleArguments.join(" "),
           "in",
           gradleRootPath,
         );
-        const sresult = spawnSync(
-          gradleCmd,
-          gradleArgs.concat(gradleSubProjectDepArgs),
-          {
-            cwd: gradleRootPath,
-            encoding: "utf-8",
-            timeout: TIMEOUT_MS,
-            maxBuffer: MAX_BUFFER,
-          },
-        );
+        const sresult = spawnSync(gradleCmd, gradleArguments, {
+          cwd: gradleRootPath,
+          encoding: "utf-8",
+          timeout: TIMEOUT_MS,
+          maxBuffer: MAX_BUFFER,
+        });
         if (sresult.status !== 0 || sresult.error) {
           if (options.failOnError || DEBUG_MODE) {
             console.error(sresult.stdout, sresult.stderr);
