@@ -315,17 +315,17 @@ jobs:
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs8 repotests/react-app -o bomresults/react-app.json
           node bin/evinse.js -i bomresults/react-app.json -o bomresults/react-app.evinse.json -l javascript --with-data-flow -p repotests/react-app
         shell: bash
-        - name: repotests basic-ftp
+      - name: repotests basic-ftp
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs10 repotests/basic-ftp -o bomresults/basic-ftp.json
           node bin/evinse.js -i bomresults/basic-ftp.json -o bomresults/basic-ftp.evinse.json -l javascript --with-data-flow -p repotests/basic-ftp
         shell: bash
-        - name: repotests llama-node
+      - name: repotests llama-node
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs16 repotests/llama-node -o bomresults/llama-node.json
           node bin/evinse.js -i bomresults/llama-node.json -o bomresults/llama-node.evinse.json -l javascript --with-data-flow -p repotests/llama-node
         shell: bash
-        - name: repotests RSSHub
+      - name: repotests RSSHub
         run: |
           FETCH_LICENSE=false bin/cdxgen.js -p -t nodejs22 repotests/RSSHub -o bomresults/RSSHub.json
           node bin/evinse.js -i bomresults/RSSHub.json -o bomresults/RSSHub.evinse.json -l javascript --with-data-flow -p repotests/RSSHub
