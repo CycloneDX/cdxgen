@@ -131,22 +131,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: 'kriasoft/react-app'
-          ref: d9c9a1f
           path: 'repotests/react-app'
       - uses: actions/checkout@v4
         with:
           repository: 'patrickjuchli/basic-ftp'
-          ref: 22e4bf0
           path: 'repotests/basic-ftp'
       - uses: actions/checkout@v4
         with:
           repository: 'Atome-FE/llama-node'
-          ref: 3ad64d0
           path: 'repotests/llama-node'
       - uses: actions/checkout@v4
         with:
           repository: 'DIYgod/RSSHub'
-          ref: e6d53dc
           path: 'repotests/RSSHub'
       - uses: actions/checkout@v4
         with:
