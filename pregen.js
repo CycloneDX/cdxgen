@@ -129,12 +129,12 @@ export function prepareNodeEnv(filePath, options) {
           });
           const nodeRe = new RegExp(`^v${nodeVersion}.`);
           for (const nodeVersionsIter of nodeVersionArray) {
-            const fullPath = path.join(possibleNodeDir, nodeVersionsIter.name);
+            const fullPath = join(possibleNodeDir, nodeVersionsIter.name);
             if (
               nodeVersionsIter.isDirectory() &&
               nodeRe.test(nodeVersionsIter.name)
             ) {
-              nvmNodePath = path.join(fullPath, "bin");
+              nvmNodePath = join(fullPath, "bin");
             }
           }
           if (nvmNodePath) {
@@ -217,12 +217,12 @@ function createDirectoryTree(directoryPath, maxDepth = 3, currentDepth = 0) {
   }
 
   try {
-    const entries = fs.readdirSync(directoryPath, { withFileTypes: true });
+    const entries = readdirSync(directoryPath, { withFileTypes: true });
     const tree = {};
 
     entries.forEach(entry => {
       if (entry.isDirectory()) {
-        const subDirPath = path.join(directoryPath, entry.name);
+        const subDirPath = join(directoryPath, entry.name);
         tree[entry.name] = createDirectoryTree(subDirPath, maxDepth, currentDepth + 1);
       }
     });
