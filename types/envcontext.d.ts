@@ -174,7 +174,7 @@ export function installSdkmanTool(toolType: string, toolName: string): boolean;
  *
  * @returns {String} path of nvm if present, otherwise false
  */
-export function ifNvmToolAvailable(toolName: string): string;
+export function getNvmToolDirectory(toolName: string): string;
 /**
  * Method to return nvm tool path
  *
@@ -182,7 +182,7 @@ export function ifNvmToolAvailable(toolName: string): string;
  *
  * @returns {String} path of the tool if not found installs and then returns paths. false if encounters an error.
  */
-export function getNvmToolPath(toolVersion: string): string;
+export function getOrInstallNvmTool(toolVersion: string): string;
 export const GIT_COMMAND: any;
 export namespace SDKMAN_TOOL_ALIASES {
     let java8: string;

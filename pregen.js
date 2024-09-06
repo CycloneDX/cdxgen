@@ -4,8 +4,8 @@ import { arch, platform, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import {
   SDKMAN_TOOL_ALIASES,
-  getNvmToolPath,
-  ifNvmToolAvailable,
+  getNvmToolDirectory,
+  getOrInstallNvmTool,
   installSdkmanTool,
   isNvmAvailable,
   isSdkmanAvailable,
@@ -156,7 +156,7 @@ export function prepareNodeEnv(filePath, options) {
         }
       }
       // set path instead of nvm use
-      const nvmNodePath = getNvmToolPath(nodeVersion);
+      const nvmNodePath = getOrInstallNvmTool(nodeVersion);
       doNpmInstall(filePath, nvmNodePath);
     }
   }
@@ -188,11 +188,8 @@ export function tryLoadNvmAndInstallTool(nodeVersion) {
     encoding: "utf-8",
     shell: process.env.SHELL || true,
   });
-  if (spawnedShell.status === 0) {
-    return true;
-  }
 
-  return false;
+  return result.status === 0;
 }
 
 /**

@@ -513,7 +513,7 @@ export function installSdkmanTool(toolType, toolName) {
  *
  * @returns {String} path of nvm if present, otherwise false
  */
-export function ifNvmToolAvailable(toolName) {
+export function getNvmToolDirectory(toolName) {
   const resultWhichNode = spawnSync(
     process.env.SHELL || "bash",
     ["-i", "-c", `"nvm which ${toolName}"`],
@@ -544,8 +544,8 @@ export function ifNvmToolAvailable(toolName) {
  *
  * @returns {String} path of the tool if not found installs and then returns paths. false if encounters an error.
  */
-export function getNvmToolPath(toolVersion) {
-  const nvmNodePath = ifNvmToolAvailable(toolVersion);
+export function getOrInstallNvmTool(toolVersion) {
+  const nvmNodePath = getNvmToolDirectory(toolVersion);
   if (!nvmNodePath) {
     // nvm couldn't directly use toolName so maybe needs to be installed
     const resultInstall = spawnSync(
@@ -571,7 +571,7 @@ export function getNvmToolPath(toolVersion) {
       // output has already been printed out
       return false;
     }
-    const nvmNodePath = ifNvmToolAvailable(toolVersion);
+    const nvmNodePath = getNvmToolDirectory(toolVersion);
     if (nvmNodePath) {
       return nvmNodePath;
     }
