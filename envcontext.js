@@ -511,7 +511,7 @@ export function installSdkmanTool(toolType, toolName) {
  *
  * @param {String} toolName Tool name with version. Eg: 22.0.2-tem
  *
- * @returns {String} path of nvm if present, other Null
+ * @returns {String} path of nvm if present, otherwise false
  */
 export function ifNvmToolAvailable(toolName) {
   const resultWhichNode = spawnSync(
@@ -538,11 +538,11 @@ export function ifNvmToolAvailable(toolName) {
 }
 
 /**
- * Method to install and use a given sdkman tool.
+ * Method to return nvm tool path
  *
  * @param {String} toolVersion Tool name with version. Eg: 22.0.2-tem
  *
- * @returns {Boolean} true if the tool is available. false otherwise.
+ * @returns {String} path of the tool if not found installs and then returns paths. false if encounters an error.
  */
 export function getNvmToolPath(toolVersion) {
   const nvmNodePath = ifNvmToolAvailable(toolVersion);

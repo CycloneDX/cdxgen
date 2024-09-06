@@ -119,7 +119,7 @@ export function prepareNodeEnv(filePath, options) {
           // custom logic to find nvmNodePath
           let nvmNodePath;
           const possibleNodeDir = join(process.env.NVM_DIR, "versions", "node");
-          const nodeVersionArray = readdirSync(directoryPath, {
+          const nodeVersionArray = readdirSync(possibleNodeDir, {
             withFileTypes: true,
           });
           const nodeRe = new RegExp(`^v${nodeVersion}.`);
@@ -166,8 +166,8 @@ export function doNpmInstall(filePath, nvmNodePath) {
     return;
   }
 
-  // const newPath =
-  // `${nvmNodePath}${delimiter}${process.env.PATH}`;
+  const newPath =
+  `${nvmNodePath}${delimiter}${process.env.PATH}`;
 
   const resultNpmInstall = spawnSync(
     process.env.SHELL || "bash",
@@ -180,6 +180,10 @@ export function doNpmInstall(filePath, nvmNodePath) {
       encoding: "utf-8",
       shell: process.env.SHELL || true,
       cwd: filePath,
+      env: {
+        ...process.env,
+        PATH: newPath
+      }
     },
   );
 
