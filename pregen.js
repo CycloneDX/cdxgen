@@ -11,7 +11,6 @@ import {
   isSdkmanAvailable,
 } from "./envcontext.js";
 import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
-import { pseudoRandomBytes } from "node:crypto";
 
 /**
  * Method to prepare the build environment for BOM generation purposes.
