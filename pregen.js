@@ -124,6 +124,7 @@ export function prepareNodeEnv(filePath, options) {
             console.log(
               `Could not install Nodejs${nodeVersion}. There is a problem with loading nvm from ${process.env.NVM_DIR}`,
             );
+            return;
           }
 
           const nodeVersionArray = readdirSync(possibleNodeDir, {
