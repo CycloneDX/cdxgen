@@ -166,8 +166,7 @@ export function doNpmInstall(filePath, nvmNodePath) {
     return;
   }
 
-  const newPath =
-  `${nvmNodePath}${delimiter}${process.env.PATH}`;
+  const newPath = `${nvmNodePath}${delimiter}${process.env.PATH}`;
 
   const resultNpmInstall = spawnSync(
     process.env.SHELL || "bash",
@@ -182,8 +181,8 @@ export function doNpmInstall(filePath, nvmNodePath) {
       cwd: filePath,
       env: {
         ...process.env,
-        PATH: newPath
-      }
+        PATH: newPath,
+      },
     },
   );
 
