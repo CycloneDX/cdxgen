@@ -11,6 +11,8 @@ import {
   collectRustInfo,
   getBranch,
   getOriginUrl,
+  isNvmAvailable,
+  isNvmToolAvailable,
   isSdkmanAvailable,
   isSdkmanToolAvailable,
   listFiles,
@@ -37,5 +39,12 @@ test("sdkman tests", () => {
   if (process.env?.SDKMAN_VERSION) {
     expect(isSdkmanAvailable()).toBeTruthy();
     expect(isSdkmanToolAvailable("java", "22.0.1-tem")).toBeTruthy();
+  }
+});
+
+test("nvm tests", () => {
+  if (process.env?.SDKMAN_VERSION) {
+    expect(isNvmAvailable()).toBeTruthy();
+    expect(isNvmToolAvailable("22")).toBeTruthy();
   }
 });

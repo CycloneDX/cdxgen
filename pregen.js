@@ -1,9 +1,13 @@
-import { mkdtempSync } from "node:fs";
+import { spawn, spawnSync } from "node:child_process";
+import { mkdtempSync, readdirSync } from "node:fs";
 import { arch, platform, tmpdir } from "node:os";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import {
   SDKMAN_TOOL_ALIASES,
+  getNvmToolDirectory,
+  getOrInstallNvmTool,
   installSdkmanTool,
+  isNvmAvailable,
   isSdkmanAvailable,
 } from "./envcontext.js";
 import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
@@ -26,6 +30,7 @@ export function prepareEnv(filePath, options) {
   }
   // Check the pre-requisites for python
   preparePythonEnv(filePath, options);
+  prepareNodeEnv(filePath, options);
 }
 
 /**
@@ -87,6 +92,146 @@ export function preparePythonEnv(filePath, options) {
           console.log("PIP_TARGET set to", process.env.PIP_TARGET);
         }
         break;
+      }
+    }
+  }
+}
+
+/**
+ * Method to check and prepare the environment for node
+ *
+ * @param {String} filePath Path
+ * @param {Object} options CLI Options
+ */
+export function prepareNodeEnv(filePath, options) {
+  // check tool for windows
+  for (const pt of options.projectType) {
+    const nodeVersion = pt.replace(/\D/g, "");
+    if (
+      pt.startsWith("nodejs") &&
+      nodeVersion &&
+      !process.env.NODE_INSTALL_ARGS
+    ) {
+      if (!isNvmAvailable()) {
+        if (process.env.NVM_DIR) {
+          // for scenarios where nvm is not present, but
+          // we have $NVM_DIR
+          // custom logic to find nvmNodePath
+          let nvmNodePath;
+          const possibleNodeDir = join(process.env.NVM_DIR, "versions", "node");
+
+          if (!tryLoadNvmAndInstallTool(nodeVersion)) {
+            console.log(
+              `Could not install Nodejs${nodeVersion}. There is a problem with loading nvm from ${process.env.NVM_DIR}`,
+            );
+            return;
+          }
+
+          const nodeVersionArray = readdirSync(possibleNodeDir, {
+            withFileTypes: true,
+          });
+          const nodeRe = new RegExp(`^v${nodeVersion}.`);
+          for (const nodeVersionsIter of nodeVersionArray) {
+            const fullPath = join(possibleNodeDir, nodeVersionsIter.name);
+            if (
+              nodeVersionsIter.isDirectory() &&
+              nodeRe.test(nodeVersionsIter.name)
+            ) {
+              nvmNodePath = join(fullPath, "bin");
+            }
+          }
+          if (nvmNodePath) {
+            doNpmInstall(filePath, nvmNodePath);
+          } else {
+            console.log(
+              `"node version ${nodeVersion} was not found. Please install it with 'nvm install ${nodeVersion}"`,
+            );
+            return;
+          }
+        } else {
+          console.log(
+            "Install nvm by following the instructions at https://github.com/nvm-sh/nvm",
+          );
+          return;
+        }
+      }
+      // set path instead of nvm use
+      const nvmNodePath = getOrInstallNvmTool(nodeVersion);
+      doNpmInstall(filePath, nvmNodePath);
+    }
+  }
+}
+
+/**
+ * If NVM_DIR is in path, however nvm command is not loaded.
+ * it is possible that required nodeVersion is not installed.
+ * This function loads nvm and install the nodeVersion
+ *
+ * @param {String} nodeVersion required version number
+ *
+ * @returns {Boolean} true if successful, otherwise false
+ */
+export function tryLoadNvmAndInstallTool(nodeVersion) {
+  const NVM_DIR = process.env.NVM_DIR;
+
+  const command = `
+      if [ -f ${NVM_DIR}/nvm.sh ]; then
+        . ${NVM_DIR}/nvm.sh
+        nvm install ${nodeVersion}
+      else
+        echo "NVM script not found at ${NVM_DIR}/nvm.sh"
+        exit 1
+      fi
+      `;
+
+  const spawnedShell = spawnSync(process.env.SHELL || "bash", ["-c", command], {
+    encoding: "utf-8",
+    shell: process.env.SHELL || true,
+  });
+
+  return result.status === 0;
+}
+
+/**
+ * This method installs and create package-lock.json
+ *
+ * @param {String} filePath Path
+ * @param {String} nvmNodePath Path to node version in nvm
+ */
+export function doNpmInstall(filePath, nvmNodePath) {
+  // we do not install if INSTALL_ARGS set false
+  if (process.env.NODE_INSTALL_ARGS === false) {
+    return;
+  }
+
+  const newPath = `${nvmNodePath}${delimiter}${process.env.PATH}`;
+
+  const resultNpmInstall = spawnSync(
+    process.env.SHELL || "bash",
+    [
+      "-i",
+      "-c",
+      `export PATH='${nvmNodePath}${delimiter}$PATH' && npm install --package-lock-only`,
+    ],
+    {
+      encoding: "utf-8",
+      shell: process.env.SHELL || true,
+      cwd: filePath,
+      env: {
+        ...process.env,
+        PATH: newPath,
+      },
+    },
+  );
+
+  if (resultNpmInstall.status !== 0 || resultNpmInstall.stderr) {
+    // There was some problem with NpmInstall
+    if (DEBUG_MODE) {
+      if (console.stdout) {
+        console.log(result.stdout);
+      }
+      if (console.stderr) {
+        console.log(result.stderr);
       }
     }
   }
