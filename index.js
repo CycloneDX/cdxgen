@@ -6051,6 +6051,31 @@ export async function createMultiXBom(pathList, options) {
         components = components.concat(bomData.bomJson.components);
       }
     }
+    bomData = await createContainerSpecLikeBom(path, options);
+    if (
+      bomData &&
+      bomData.bomJson &&
+      bomData.bomJson.components &&
+      bomData.bomJson.components.length
+    ) {
+      if (DEBUG_MODE) {
+        console.log(
+          `Found ${bomData.bomJson.components.length} docker dependencies at ${path}`
+        );
+      }
+      components = components.concat(bomData.bomJson.components);
+      dependencies = dependencies.concat(bomData.bomJson.dependencies);
+      if (
+        bomData.parentComponent &&
+        Object.keys(bomData.parentComponent).length
+      ) {
+        parentSubComponents.push(bomData.parentComponent);
+      }
+      componentsXmls = componentsXmls.concat(
+        // COPIED FROM SECTION ABOVE BUT NO IDEA OF PARAMETERS VALUES TO PUT
+        listComponents(options, {}, bomData.bomJson.components, "docker", "tar")
+      );
+    }
   } // for
   if (
     options.lastWorkingDir &&
