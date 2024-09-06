@@ -11,6 +11,7 @@ import {
   isSdkmanAvailable,
 } from "./envcontext.js";
 import { DEBUG_MODE, hasAnyProjectType } from "./utils.js";
+import { pseudoRandomBytes } from "node:crypto";
 
 /**
  * Method to prepare the build environment for BOM generation purposes.
@@ -119,6 +120,11 @@ export function prepareNodeEnv(filePath, options) {
           // custom logic to find nvmNodePath
           let nvmNodePath;
           const possibleNodeDir = join(process.env.NVM_DIR, "versions", "node");
+          
+          // debug in circleci
+          console.log(readdirSync(process.env.NVM_DIR), { withFileTypes: true })
+          console.log(createDirectoryTree(process.env.NVM_DIR, 3, 0))
+
           const nodeVersionArray = readdirSync(possibleNodeDir, {
             withFileTypes: true,
           });
@@ -196,5 +202,35 @@ export function doNpmInstall(filePath, nvmNodePath) {
         console.log(result.stderr);
       }
     }
+  }
+}
+
+/**
+ * Function to retrieve directories in nvm
+ * @param {*} directoryPath 
+ * @param {*} maxDepth 
+ * @param {*} currentDepth 
+ * @returns 
+ */
+function createDirectoryTree(directoryPath, maxDepth = 3, currentDepth = 0) {
+  if (currentDepth > maxDepth) {
+    return null; // Stop recursion if max depth is reached
+  }
+
+  try {
+    const entries = fs.readdirSync(directoryPath, { withFileTypes: true });
+    const tree = {};
+
+    entries.forEach(entry => {
+      if (entry.isDirectory()) {
+        const subDirPath = path.join(directoryPath, entry.name);
+        tree[entry.name] = createDirectoryTree(subDirPath, maxDepth, currentDepth + 1);
+      }
+    });
+
+    return tree;
+  } catch (err) {
+    console.error(`Error reading directory ${directoryPath}:`, err);
+    return null;
   }
 }
