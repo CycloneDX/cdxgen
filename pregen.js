@@ -239,37 +239,3 @@ export function doNpmInstall(filePath, nvmNodePath) {
     }
   }
 }
-
-/**
- * Function to retrieve directories in nvm
- * @param {*} directoryPath
- * @param {*} maxDepth
- * @param {*} currentDepth
- * @returns
- */
-function createDirectoryTree(directoryPath, maxDepth = 3, currentDepth = 0) {
-  if (currentDepth > maxDepth) {
-    return null; // Stop recursion if max depth is reached
-  }
-
-  try {
-    const entries = readdirSync(directoryPath, { withFileTypes: true });
-    const tree = {};
-
-    entries.forEach((entry) => {
-      if (entry.isDirectory()) {
-        const subDirPath = join(directoryPath, entry.name);
-        tree[entry.name] = createDirectoryTree(
-          subDirPath,
-          maxDepth,
-          currentDepth + 1,
-        );
-      }
-    });
-
-    return tree;
-  } catch (err) {
-    console.error(`Error reading directory ${directoryPath}:`, err);
-    return null;
-  }
-}
