@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { mkdtempSync, readdirSync } from "node:fs";
 import { arch, platform, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
@@ -119,10 +119,12 @@ export function prepareNodeEnv(filePath, options) {
           // custom logic to find nvmNodePath
           let nvmNodePath;
           const possibleNodeDir = join(process.env.NVM_DIR, "versions", "node");
-          
-          // debug in circleci
-          console.log(readdirSync(process.env.NVM_DIR), { withFileTypes: true })
-          console.log(createDirectoryTree(process.env.NVM_DIR, 3, 0))
+
+          if (!tryLoadNvmAndInstallTool(nodeVersion)) {
+            console.log(
+              `Could not install Nodejs${nodeVersion}. There is a problem with loading nvm from ${process.env.NVM_DIR}`,
+            );
+          }
 
           const nodeVersionArray = readdirSync(possibleNodeDir, {
             withFileTypes: true,
@@ -157,6 +159,39 @@ export function prepareNodeEnv(filePath, options) {
       doNpmInstall(filePath, nvmNodePath);
     }
   }
+}
+
+/**
+ * If NVM_DIR is in path, however nvm command is not loaded.
+ * it is possible that required nodeVersion is not installed.
+ * This function loads nvm and install the nodeVersion
+ *
+ * @param {String} nodeVersion required version number
+ *
+ * @returns {Boolean} true if successful, otherwise false
+ */
+export function tryLoadNvmAndInstallTool(nodeVersion) {
+  const NVM_DIR = process.env.NVM_DIR;
+
+  const command = `
+      if [ -f ${NVM_DIR}/nvm.sh ]; then
+        . ${NVM_DIR}/nvm.sh
+        nvm install ${nodeVersion}
+      else
+        echo "NVM script not found at ${NVM_DIR}/nvm.sh"
+        exit 1
+      fi
+      `;
+
+  const spawnedShell = spawnSync(process.env.SHELL || "bash", ["-c", command], {
+    encoding: "utf-8",
+    shell: process.env.SHELL || true,
+  });
+  if (spawnedShell.status === 0) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -206,10 +241,10 @@ export function doNpmInstall(filePath, nvmNodePath) {
 
 /**
  * Function to retrieve directories in nvm
- * @param {*} directoryPath 
- * @param {*} maxDepth 
- * @param {*} currentDepth 
- * @returns 
+ * @param {*} directoryPath
+ * @param {*} maxDepth
+ * @param {*} currentDepth
+ * @returns
  */
 function createDirectoryTree(directoryPath, maxDepth = 3, currentDepth = 0) {
   if (currentDepth > maxDepth) {
@@ -220,10 +255,14 @@ function createDirectoryTree(directoryPath, maxDepth = 3, currentDepth = 0) {
     const entries = readdirSync(directoryPath, { withFileTypes: true });
     const tree = {};
 
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isDirectory()) {
         const subDirPath = join(directoryPath, entry.name);
-        tree[entry.name] = createDirectoryTree(subDirPath, maxDepth, currentDepth + 1);
+        tree[entry.name] = createDirectoryTree(
+          subDirPath,
+          maxDepth,
+          currentDepth + 1,
+        );
       }
     });
 
