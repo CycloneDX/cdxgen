@@ -11,8 +11,6 @@ import {
   collectRustInfo,
   getBranch,
   getOriginUrl,
-  isNvmAvailable,
-  isNvmToolAvailable,
   isSdkmanAvailable,
   isSdkmanToolAvailable,
   listFiles,
