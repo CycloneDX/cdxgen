@@ -776,6 +776,7 @@ export function listComponents(options, allImports, pkg, ptype = "npm") {
   const compMap = {};
   const isRootPkg = ptype === "npm";
   if (Array.isArray(pkg)) {
+    pkg.sort((a, b) => a.name.localeCompare(b.name));
     pkg.forEach((p) => {
       addComponent(options, allImports, p, ptype, compMap, false);
     });
