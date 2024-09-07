@@ -7,6 +7,7 @@ import process from "node:process";
 import repl from "node:repl";
 import jsonata from "jsonata";
 
+import { createBom } from "../lib/cli/index.js";
 import {
   printCallStack,
   printDependencyTree,
@@ -17,9 +18,8 @@ import {
   printSummary,
   printTable,
   printVulnerabilities,
-} from "../display.js";
-import { createBom } from "../index.js";
-import { validateBom } from "../validator.js";
+} from "../lib/helpers/display.js";
+import { validateBom } from "../lib/helpers/validator.js";
 
 const options = {
   useColors: true,
