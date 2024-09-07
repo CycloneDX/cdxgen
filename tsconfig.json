@@ -1,6 +1,6 @@
 {
-  "include": ["*.js"],
-  "exclude": ["*.test.js", "./types/**/*"],
+  "include": ["./bin/**/*.js", "./lib/**/*.js"],
+  "exclude": ["./lib/**/*.test.js", "./types/**/*"],
   "compilerOptions": {
     "allowJs": true,
     // Generate d.ts files
