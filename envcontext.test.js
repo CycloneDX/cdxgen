@@ -55,7 +55,6 @@ test("nvm tests", () => {
           shell: process.env.SHELL || true,
         },
       );
-      console.log(removeNode14.stdout);
 
       // expected to be run in CircleCi, where node version is 22.8.0
       // as defined in our Dockerfile
