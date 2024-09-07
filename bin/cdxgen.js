@@ -10,7 +10,7 @@ import { findUpSync } from "find-up";
 import globalAgent from "global-agent";
 import { load as _load } from "js-yaml";
 import jws from "jws";
-import { createBom, submitBom } from "../index.js";
+import { createBom, submitBom } from "../lib/cli/index.js";
 import {
   printCallStack,
   printDependencyTree,
