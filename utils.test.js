@@ -2,6 +2,7 @@ import { Buffer } from "node:buffer";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@jest/globals";
+import { PackageURL } from "packageurl-js";
 import { parse } from "ssri";
 import {
   encodeForPurl,
@@ -221,6 +222,24 @@ test("splits parallel gradle dependencies output correctly", () => {
 
   const retMap = parseGradleDep(
     depOutputSplitBySubProject.get("dependency-diff-check"),
+    "dependency-diff-check",
+    new Map().set("dependency-diff-check", {
+      group: "",
+      name: "dependency-diff-check",
+      version: "latest",
+      type: "maven",
+      qualifiers: { type: "jar" },
+      "bom-ref": decodeURIComponent(
+        new PackageURL(
+          "maven",
+          "",
+          "dependency-diff-check",
+          "latest",
+          { type: "jar" },
+          null,
+        ).toString(),
+      ),
+    }),
   );
   expect(retMap.pkgList.length).toEqual(12);
   expect(retMap.dependenciesList.length).toEqual(13);
@@ -256,15 +275,104 @@ test("splits parallel custom gradle task outputs correctly", () => {
     customDepTaskOuputSplitByProject.get(
       "dependency-diff-check-client-starter",
     ),
+    "dependency-diff-check",
+    new Map().set("dependency-diff-check", {
+      group: "",
+      name: "dependency-diff-check",
+      version: "latest",
+      type: "maven",
+      qualifiers: { type: "jar" },
+      "bom-ref": decodeURIComponent(
+        new PackageURL(
+          "maven",
+          "",
+          "dependency-diff-check",
+          "latest",
+          { type: "jar" },
+          null,
+        ).toString(),
+      ),
+    }),
   );
   expect(retMap.pkgList.length).toEqual(22);
   expect(retMap.dependenciesList.length).toEqual(23);
 });
 
 test("parse gradle dependencies", () => {
+  const modulesMap = new Map();
+  modulesMap.set("test-project", {
+    group: "",
+    name: "test-project",
+    version: "latest",
+    type: "maven",
+    qualifiers: { type: "jar" },
+    "bom-ref": decodeURIComponent(
+      new PackageURL(
+        "maven",
+        "",
+        "test-project",
+        "latest",
+        { type: "jar" },
+        null,
+      ).toString(),
+    ),
+  });
+  modulesMap.set("dependency-diff-check-common-core", {
+    group: "",
+    name: "dependency-diff-check-common-core",
+    version: "latest",
+    type: "maven",
+    qualifiers: { type: "jar" },
+    "bom-ref": decodeURIComponent(
+      new PackageURL(
+        "maven",
+        "",
+        "dependency-diff-check-common-core",
+        "latest",
+        { type: "jar" },
+        null,
+      ).toString(),
+    ),
+  });
+  modulesMap.set("app", {
+    group: "",
+    name: "app",
+    version: "latest",
+    type: "maven",
+    qualifiers: { type: "jar" },
+    "bom-ref": decodeURIComponent(
+      new PackageURL(
+        "maven",
+        "",
+        "app",
+        "latest",
+        { type: "jar" },
+        null,
+      ).toString(),
+    ),
+  });
+  modulesMap.set("failing-project", {
+    group: "",
+    name: "failing-project",
+    version: "latest",
+    type: "maven",
+    qualifiers: { type: "jar" },
+    "bom-ref": decodeURIComponent(
+      new PackageURL(
+        "maven",
+        "",
+        "failing-project",
+        "latest",
+        { type: "jar" },
+        null,
+      ).toString(),
+    ),
+  });
   expect(parseGradleDep(null)).toEqual({});
   let parsedList = parseGradleDep(
     readFileSync("./test/gradle-dep.out", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(33);
   expect(parsedList.dependenciesList.length).toEqual(34);
@@ -281,6 +389,8 @@ test("parse gradle dependencies", () => {
 
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-android-dep.out", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(104);
   expect(parsedList.dependenciesList.length).toEqual(105);
@@ -320,6 +430,8 @@ test("parse gradle dependencies", () => {
   });
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-out1.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(89);
   expect(parsedList.dependenciesList.length).toEqual(90);
@@ -341,6 +453,8 @@ test("parse gradle dependencies", () => {
 
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-rich1.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(4);
   expect(parsedList.pkgList[parsedList.pkgList.length - 1]).toEqual({
@@ -353,6 +467,8 @@ test("parse gradle dependencies", () => {
   });
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-rich2.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(2);
   expect(parsedList.pkgList).toEqual([
@@ -376,6 +492,8 @@ test("parse gradle dependencies", () => {
   ]);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-rich3.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.pkgList).toEqual([
@@ -391,6 +509,8 @@ test("parse gradle dependencies", () => {
   ]);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-rich4.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.pkgList).toEqual([
@@ -406,42 +526,58 @@ test("parse gradle dependencies", () => {
   ]);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-rich5.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(67);
   expect(parsedList.dependenciesList.length).toEqual(68);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-out-249.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(21);
   expect(parsedList.dependenciesList.length).toEqual(22);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-service.out", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(35);
   expect(parsedList.dependenciesList.length).toEqual(36);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-s.out", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(28);
   expect(parsedList.dependenciesList.length).toEqual(29);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-core.out", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(18);
   expect(parsedList.dependenciesList.length).toEqual(19);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-single.out", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(152);
   expect(parsedList.dependenciesList.length).toEqual(153);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-android-app.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(102);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-android-jetify.dep", {
       encoding: "utf-8",
     }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(1);
   expect(parsedList.pkgList).toEqual([
@@ -456,6 +592,8 @@ test("parse gradle dependencies", () => {
   ]);
   parsedList = parseGradleDep(
     readFileSync("./test/data/gradle-sm.dep", { encoding: "utf-8" }),
+    "test-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(6);
   expect(parsedList.dependenciesList.length).toEqual(7);
@@ -463,6 +601,8 @@ test("parse gradle dependencies", () => {
     readFileSync("./test/data/gradle-dependencies-559.txt", {
       encoding: "utf-8",
     }),
+    "failing-project",
+    modulesMap,
   );
   expect(parsedList.pkgList.length).toEqual(372);
 });
