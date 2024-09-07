@@ -25,7 +25,7 @@ import {
 import { ATOM_DB } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/index.js";
-import { prepareEnv } from "../lib/stages/pregren/index.js";
+import { prepareEnv } from "../lib/stages/pregen/index.js";
 
 // Support for config files
 const configPath = findUpSync([
