@@ -1,6 +1,6 @@
+import { spawnSync } from "node:child_process";
 import process from "node:process";
 import { expect, test } from "@jest/globals";
-
 import {
   collectDotnetInfo,
   collectGccInfo,
@@ -10,7 +10,10 @@ import {
   collectPythonInfo,
   collectRustInfo,
   getBranch,
+  getNvmToolDirectory,
+  getOrInstallNvmTool,
   getOriginUrl,
+  isNvmAvailable,
   isSdkmanAvailable,
   isSdkmanToolAvailable,
   listFiles,
@@ -37,5 +40,35 @@ test("sdkman tests", () => {
   if (process.env?.SDKMAN_VERSION) {
     expect(isSdkmanAvailable()).toBeTruthy();
     expect(isSdkmanToolAvailable("java", "22.0.1-tem")).toBeTruthy();
+  }
+});
+
+test("nvm tests", () => {
+  if (process.env?.NVM_DIR) {
+    if (isNvmAvailable()) {
+      // try to remove nodejs 14 before testing below
+      const removeNode14 = spawnSync(
+        process.env.SHELL || "bash",
+        ["-i", "-c", `"nvm uninstall 14"`],
+        {
+          encoding: "utf-8",
+          shell: process.env.SHELL || true,
+        },
+      );
+      console.log(removeNode14.stdout);
+
+      // expected to be run in CircleCi, where node version is 22.8.0
+      // as defined in our Dockerfile
+      expect(getNvmToolDirectory(22)).toBeTruthy();
+      expect(getNvmToolDirectory(14)).toBeFalsy();
+
+      // now we install nvm tool for a specific verison
+      expect(getOrInstallNvmTool(14)).toBeTruthy();
+      expect(getNvmToolDirectory(14)).toBeTruthy();
+    } else {
+      // if this test is failing it would be due to isNvmAvailable()
+      expect(getNvmToolDirectory(22)).toBeFalsy();
+      expect(getOrInstallNvmTool(14)).toBeFalsy();
+    }
   }
 });
