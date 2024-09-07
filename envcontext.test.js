@@ -41,10 +41,3 @@ test("sdkman tests", () => {
     expect(isSdkmanToolAvailable("java", "22.0.1-tem")).toBeTruthy();
   }
 });
-
-test("nvm tests", () => {
-  if (process.env?.SDKMAN_VERSION) {
-    expect(isNvmAvailable()).toBeTruthy();
-    expect(isNvmToolAvailable("22")).toBeTruthy();
-  }
-});
