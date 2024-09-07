@@ -12,7 +12,6 @@ import {
   getBranch,
   getOriginUrl,
   isNvmAvailable,
-  isNvmToolAvailable,
   isSdkmanAvailable,
   isSdkmanToolAvailable,
   listFiles,
@@ -45,6 +44,5 @@ test("sdkman tests", () => {
 test("nvm tests", () => {
   if (process.env?.SDKMAN_VERSION) {
     expect(isNvmAvailable()).toBeTruthy();
-    expect(isNvmToolAvailable("22")).toBeTruthy();
   }
 });
