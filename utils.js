@@ -2558,30 +2558,10 @@ export function parseGradleDep(
             const rootSubProject = propMap.rootProject;
             if (rootSubProject) {
               const rspName = rootSubProject.replace(/^:/, "");
-              const rootSubProjectObj = {
-                name: rspName,
-                type: "application",
-                qualifiers: { type: "jar" },
-                ...propMap.metadata,
-              };
-              const rootSubProjectPurl = new PackageURL(
-                "maven",
-                rootSubProjectObj.group?.length
-                  ? rootSubProjectObj.group
-                  : rootProject.group,
-                rootSubProjectObj.name,
-                propMap.metadata.version &&
-                  propMap.metadata.version !== "latest"
-                  ? propMap.metadata.version
-                  : rootProject.version,
-                rootSubProjectObj.qualifiers,
-                null,
-              ).toString();
-              rootSubProjectObj["purl"] = rootSubProjectPurl;
-              const rootSubProjectBomRef =
-                decodeURIComponent(rootSubProjectPurl);
-              rootSubProjectObj["bom-ref"] = rootSubProjectBomRef;
-              gradleModules.set(rspName, rootSubProjectObj);
+              gradleModules.set(
+                rspName,
+                buildObjectForGradleModule(rspName, propMap.metadata),
+              );
             }
           }
         }
@@ -2594,28 +2574,10 @@ export function parseGradleDep(
           const rootSubProject = propMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");
-            const rootSubProjectObj = {
-              name: rspName,
-              type: "application",
-              qualifiers: { type: "jar" },
-              ...propMap.metadata,
-            };
-            const rootSubProjectPurl = new PackageURL(
-              "maven",
-              rootSubProjectObj.group?.length
-                ? rootSubProjectObj.group
-                : rootProject.group,
-              rootSubProjectObj.name,
-              propMap.metadata.version && propMap.metadata.version !== "latest"
-                ? propMap.metadata.version
-                : rootProject.version,
-              rootSubProjectObj.qualifiers,
-              null,
-            ).toString();
-            rootSubProjectObj["purl"] = rootSubProjectPurl;
-            const rootSubProjectBomRef = decodeURIComponent(rootSubProjectPurl);
-            rootSubProjectObj["bom-ref"] = rootSubProjectBomRef;
-            gradleModules.set(moduleName, rootSubProjectObj);
+            gradleModules.set(
+              rspName,
+              buildObjectForGradleModule(rspName, propMap.metadata),
+            );
           }
         }
         if (gradleModules.has(moduleName)) {
@@ -10053,6 +10015,33 @@ export function splitOutputByGradleProjects(rawOutput, relevantTasks) {
   }
   return outputSplitBySubprojects;
 }
+
+/**
+ * Method that handles object creation for gradle modules.
+ *
+ * @param {string} name The simple name of the module
+ * @param {object} metadata Object with all other parsed data for the gradle module
+ * @returns {object} An object representing the gradle module in SBOM-format
+ */
+export function buildObjectForGradleModule(name, metadata) {
+  const component = {
+    name: name,
+    type: "application",
+    ...metadata,
+  };
+  const purl = new PackageURL(
+    "maven",
+    component.group,
+    component.name,
+    component.version,
+    { type: "jar" },
+    null,
+  ).toString();
+  component["purl"] = purl;
+  component["bom-ref"] = decodeURIComponent(purl);
+  return component;
+}
+
 /**
  * Method to return the maven command to use.
  *

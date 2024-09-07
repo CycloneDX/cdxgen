@@ -2,9 +2,9 @@ import { Buffer } from "node:buffer";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@jest/globals";
-import { PackageURL } from "packageurl-js";
 import { parse } from "ssri";
 import {
+  buildObjectForGradleModule,
   encodeForPurl,
   findLicenseId,
   getCratesMetadata,
@@ -223,23 +223,12 @@ test("splits parallel gradle dependencies output correctly", () => {
   const retMap = parseGradleDep(
     depOutputSplitBySubProject.get("dependency-diff-check"),
     "dependency-diff-check",
-    new Map().set("dependency-diff-check", {
-      group: "",
-      name: "dependency-diff-check",
-      version: "latest",
-      type: "maven",
-      qualifiers: { type: "jar" },
-      "bom-ref": decodeURIComponent(
-        new PackageURL(
-          "maven",
-          "",
-          "dependency-diff-check",
-          "latest",
-          { type: "jar" },
-          null,
-        ).toString(),
-      ),
-    }),
+    new Map().set(
+      "dependency-diff-check",
+      buildObjectForGradleModule("dependency-diff-check", {
+        version: "latest",
+      }),
+    ),
   );
   expect(retMap.pkgList.length).toEqual(12);
   expect(retMap.dependenciesList.length).toEqual(13);
@@ -276,23 +265,12 @@ test("splits parallel custom gradle task outputs correctly", () => {
       "dependency-diff-check-client-starter",
     ),
     "dependency-diff-check",
-    new Map().set("dependency-diff-check", {
-      group: "",
-      name: "dependency-diff-check",
-      version: "latest",
-      type: "maven",
-      qualifiers: { type: "jar" },
-      "bom-ref": decodeURIComponent(
-        new PackageURL(
-          "maven",
-          "",
-          "dependency-diff-check",
-          "latest",
-          { type: "jar" },
-          null,
-        ).toString(),
-      ),
-    }),
+    new Map().set(
+      "dependency-diff-check",
+      buildObjectForGradleModule("dependency-diff-check", {
+        version: "latest",
+      }),
+    ),
   );
   expect(retMap.pkgList.length).toEqual(22);
   expect(retMap.dependenciesList.length).toEqual(23);
@@ -300,74 +278,30 @@ test("splits parallel custom gradle task outputs correctly", () => {
 
 test("parse gradle dependencies", () => {
   const modulesMap = new Map();
-  modulesMap.set("test-project", {
-    group: "",
-    name: "test-project",
-    version: "latest",
-    type: "maven",
-    qualifiers: { type: "jar" },
-    "bom-ref": decodeURIComponent(
-      new PackageURL(
-        "maven",
-        "",
-        "test-project",
-        "latest",
-        { type: "jar" },
-        null,
-      ).toString(),
-    ),
-  });
-  modulesMap.set("dependency-diff-check-common-core", {
-    group: "",
-    name: "dependency-diff-check-common-core",
-    version: "latest",
-    type: "maven",
-    qualifiers: { type: "jar" },
-    "bom-ref": decodeURIComponent(
-      new PackageURL(
-        "maven",
-        "",
-        "dependency-diff-check-common-core",
-        "latest",
-        { type: "jar" },
-        null,
-      ).toString(),
-    ),
-  });
-  modulesMap.set("app", {
-    group: "",
-    name: "app",
-    version: "latest",
-    type: "maven",
-    qualifiers: { type: "jar" },
-    "bom-ref": decodeURIComponent(
-      new PackageURL(
-        "maven",
-        "",
-        "app",
-        "latest",
-        { type: "jar" },
-        null,
-      ).toString(),
-    ),
-  });
-  modulesMap.set("failing-project", {
-    group: "",
-    name: "failing-project",
-    version: "latest",
-    type: "maven",
-    qualifiers: { type: "jar" },
-    "bom-ref": decodeURIComponent(
-      new PackageURL(
-        "maven",
-        "",
-        "failing-project",
-        "latest",
-        { type: "jar" },
-        null,
-      ).toString(),
-    ),
-  });
+  modulesMap.set(
+    "test-project",
+    buildObjectForGradleModule("test-project", {
+      version: "latest",
+    }),
+  );
+  modulesMap.set(
+    "dependency-diff-check-common-core",
+    buildObjectForGradleModule("dependency-diff-check-common-core", {
+      version: "latest",
+    }),
+  );
+  modulesMap.set(
+    "app",
+    buildObjectForGradleModule("app", {
+      version: "latest",
+    }),
+  );
+  modulesMap.set(
+    "failing-project",
+    buildObjectForGradleModule("failing-project", {
+      version: "latest",
+    }),
+  );
   expect(parseGradleDep(null)).toEqual({});
   let parsedList = parseGradleDep(
     readFileSync("./test/gradle-dep.out", { encoding: "utf-8" }),
