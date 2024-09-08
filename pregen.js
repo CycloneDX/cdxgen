@@ -1,10 +1,9 @@
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { mkdtempSync, readdirSync } from "node:fs";
 import { arch, platform, tmpdir } from "node:os";
 import { delimiter, join } from "node:path";
 import {
   SDKMAN_TOOL_ALIASES,
-  getNvmToolDirectory,
   getOrInstallNvmTool,
   installSdkmanTool,
   isNvmAvailable,
@@ -184,7 +183,7 @@ export function tryLoadNvmAndInstallTool(nodeVersion) {
       fi
       `;
 
-  const spawnedShell = spawnSync(process.env.SHELL || "bash", ["-c", command], {
+  const result = spawnSync(process.env.SHELL || "bash", ["-c", command], {
     encoding: "utf-8",
     shell: process.env.SHELL || true,
   });
@@ -228,10 +227,10 @@ export function doNpmInstall(filePath, nvmNodePath) {
     // There was some problem with NpmInstall
     if (DEBUG_MODE) {
       if (console.stdout) {
-        console.log(result.stdout);
+        console.log(resultNpmInstall.stdout);
       }
       if (console.stderr) {
-        console.log(result.stderr);
+        console.log(resultNpmInstall.stderr);
       }
     }
   }
