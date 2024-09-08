@@ -1628,7 +1628,7 @@ export async function createJavaBom(path, options) {
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
     if (rootProject) {
-      parentComponent = buildObjectForGradleModule(
+      parentComponent = await buildObjectForGradleModule(
         rootProject,
         retMap.metadata,
       );
@@ -1664,7 +1664,7 @@ export async function createJavaBom(path, options) {
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");
-            const rootSubProjectObj = buildObjectForGradleModule(
+            const rootSubProjectObj = await buildObjectForGradleModule(
               rspName,
               retMap.metadata,
             );
@@ -1682,7 +1682,7 @@ export async function createJavaBom(path, options) {
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");
-            const rootSubProjectObj = buildObjectForGradleModule(
+            const rootSubProjectObj = await buildObjectForGradleModule(
               rspName,
               retMap.metadata,
             );
@@ -1769,7 +1769,7 @@ export async function createJavaBom(path, options) {
           gradleDepTask,
         ]);
         for (const sp of allProjects) {
-          const parsedList = parseGradleDep(
+          const parsedList = await parseGradleDep(
             perProjectOutput.has(sp.name) ? perProjectOutput.get(sp.name) : "",
             sp.name,
             gradleModules,
@@ -1837,7 +1837,7 @@ export async function createJavaBom(path, options) {
         const sstdout = sresult.stdout;
         if (sstdout) {
           const cmdOutput = Buffer.from(sstdout).toString();
-          const parsedList = parseGradleDep(
+          const parsedList = await parseGradleDep(
             cmdOutput,
             sp.name,
             gradleModules,

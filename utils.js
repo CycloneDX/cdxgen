@@ -2491,7 +2491,7 @@ export function parseMavenTree(rawOutput, pomFile) {
  * @param {map} gradleModules Cache with all gradle modules that have already been read
  * @param {string} gradleRootPath Root path where Gradle is to be run when getting module information
  */
-export function parseGradleDep(
+export async function parseGradleDep(
   rawOutput,
   rootProjectName = "root",
   gradleModules = new Map(),
@@ -2560,7 +2560,7 @@ export function parseGradleDep(
               const rspName = rootSubProject.replace(/^:/, "");
               gradleModules.set(
                 rspName,
-                buildObjectForGradleModule(rspName, propMap.metadata),
+                await buildObjectForGradleModule(rspName, propMap.metadata),
               );
             }
           }
@@ -2576,7 +2576,7 @@ export function parseGradleDep(
             const rspName = rootSubProject.replace(/^:/, "");
             gradleModules.set(
               rspName,
-              buildObjectForGradleModule(rspName, propMap.metadata),
+              await buildObjectForGradleModule(rspName, propMap.metadata),
             );
           }
         }
@@ -10023,22 +10023,46 @@ export function splitOutputByGradleProjects(rawOutput, relevantTasks) {
  * @param {object} metadata Object with all other parsed data for the gradle module
  * @returns {object} An object representing the gradle module in SBOM-format
  */
-export function buildObjectForGradleModule(name, metadata) {
-  const component = {
-    name: name,
-    type: "application",
-    ...metadata,
-  };
-  const purl = new PackageURL(
-    "maven",
-    component.group,
-    component.name,
-    component.version,
-    { type: "jar" },
-    null,
-  ).toString();
-  component["purl"] = purl;
-  component["bom-ref"] = decodeURIComponent(purl);
+export async function buildObjectForGradleModule(name, metadata) {
+  let component;
+  if (["true", "1"].includes(process.env.GRADLE_RESOLVE_FROM_NODE)) {
+    let tmpDir = metadata.properties.find(
+      ({ name }) => name === "projectDir",
+    ).value;
+    if (tmpDir.indexOf("node_modules") !== -1) {
+      do {
+        const npmPackages = await parsePkgJson(join(tmpDir, "package.json"));
+        if (npmPackages.length === 1) {
+          component = npmPackages[0];
+          component.type = "library";
+          component.properties = component.properties.concat(
+            metadata.properties,
+          );
+          component.properties.push({ name: "GradleProjectName", value: name });
+          tmpDir = undefined;
+        } else {
+          tmpDir = tmpDir.substring(0, tmpDir.lastIndexOf("/"));
+        }
+      } while (tmpDir && tmpDir.indexOf("node_modules") !== -1);
+    }
+  }
+  if (!component) {
+    component = {
+      name: name,
+      type: "application",
+      ...metadata,
+    };
+    const purl = new PackageURL(
+      "maven",
+      component.group,
+      component.name,
+      component.version,
+      { type: "jar" },
+      null,
+    ).toString();
+    component["purl"] = purl;
+    component["bom-ref"] = decodeURIComponent(purl);
+  }
   return component;
 }
 
