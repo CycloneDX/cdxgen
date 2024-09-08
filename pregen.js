@@ -54,7 +54,7 @@ export function prepareSdkmanBuild(projectType) {
  * @param {String} filePath Path
  * @param {Object} options CLI Options
  */
-export function preparePythonEnv(filePath, options) {
+export function preparePythonEnv(_filePath, options) {
   if (hasAnyProjectType("python", options, false)) {
     if (arch() !== "x64") {
       console.log(

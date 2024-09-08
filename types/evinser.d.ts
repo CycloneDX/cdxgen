@@ -581,11 +581,11 @@ export function parseSliceUsages(language: string, userDefinedTypesMap: any, sli
 export function isFilterableType(language: any, userDefinedTypesMap: any, typeFullName: any): boolean;
 export function detectServicesFromUsages(language: string, slice: any, servicesMap?: any): any[];
 export function detectServicesFromUDT(language: string, userDefinedTypes: any[], servicesMap: any): void;
-export function constructServiceName(language: any, slice: any): string;
+export function constructServiceName(_language: any, slice: any): string;
 export function extractEndpoints(language: any, code: any): any;
 export function createEvinseFile(sliceArtefacts: any, options: any): any;
-export function collectDataFlowFrames(language: string, userDefinedTypesMap: any, dataFlowSlice: any, dbObjMap: any, purlLocationMap: any, purlImportsMap: any): Promise<{}>;
-export function collectReachableFrames(language: string, reachablesSlice: any): {
+export function collectDataFlowFrames(language: string, userDefinedTypesMap: any, dataFlowSlice: any, dbObjMap: any, _purlLocationMap: any, purlImportsMap: any): Promise<{}>;
+export function collectReachableFrames(_language: any, reachablesSlice: any): {
     dataFlowFrames: {};
     cryptoComponents: {
         type: string;

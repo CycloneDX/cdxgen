@@ -915,7 +915,7 @@ export const detectServicesFromUDT = (
   }
 };
 
-export const constructServiceName = (language, slice) => {
+export const constructServiceName = (_language, slice) => {
   let serviceName = "service";
   if (slice?.fullName) {
     serviceName = slice.fullName.split(":")[0].replace(/\./g, "-");
@@ -1149,7 +1149,7 @@ export const collectDataFlowFrames = async (
   userDefinedTypesMap,
   dataFlowSlice,
   dbObjMap,
-  purlLocationMap,
+  _purlLocationMap,
   purlImportsMap,
 ) => {
   const nodes = dataFlowSlice?.graph?.nodes || [];
@@ -1268,7 +1268,7 @@ export const collectDataFlowFrames = async (
  * @param {string} language Application language
  * @param {Object} reachablesSlice Reachables slice object from atom
  */
-export const collectReachableFrames = (language, reachablesSlice) => {
+export const collectReachableFrames = (_language, reachablesSlice) => {
   const reachableNodes = reachablesSlice?.reachables || [];
   // purl key and an array of frames array
   // CycloneDX 1.5 currently accepts only 1 frame as evidence

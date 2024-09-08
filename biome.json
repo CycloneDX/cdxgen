@@ -5,21 +5,40 @@
   },
   "linter": {
     "enabled": true,
-    "ignore": ["types/**"],
+    "ignore": ["types/**", "contrib/**"],
     "rules": {
       "recommended": true,
       "complexity": {
         "noForEach": "off",
-        "useLiteralKeys": "off"
+        "useLiteralKeys": "off",
+        "noUselessTernary": "warn"
+      },
+      "correctness": {
+        "noUndeclaredVariables": "error",
+        "noUnnecessaryContinue": "warn",
+        "noConstAssign": "error",
+        "noConstantCondition": "error",
+        "noUnreachable": "info"
       },
       "performance": {
         "noDelete": "off"
       },
       "style": {
-        "noParameterAssign": "off"
+        "noParameterAssign": "off",
+        "noShoutyConstants": "warn",
+        "noUselessElse": "warn"
       },
       "suspicious": {
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noDoubleEquals": "warn",
+        "noAsyncPromiseExecutor": "warn",
+        "noControlCharactersInRegex": "warn",
+        "noDebugger": "error",
+        "noEmptyBlockStatements": "warn"
+      },
+      "nursery": {
+        "noUnusedFunctionParameters": "warn",
+        "noDuplicateElseIf": "warn"
       }
     }
   },

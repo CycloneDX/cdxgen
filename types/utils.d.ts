@@ -493,7 +493,7 @@ export function repoMetadataToGitHubApiUrl(repoMetadata: any): string | undefine
  *
  *
  */
-export function generatePixiLockFile(path: any): void;
+export function generatePixiLockFile(_path: any): void;
 /**
  * Method to split GitHub url into its parts
  * @param {String} repoUrl Repository url
@@ -921,7 +921,7 @@ export function parseSwiftResolved(resolvedFile: string): {
  * @param {boolean} includeCacheDir Include maven and gradle cache directories
  */
 export function collectMvnDependencies(mavenCmd: string, basePath: string, cleanup?: boolean, includeCacheDir?: boolean): Promise<{}>;
-export function collectGradleDependencies(gradleCmd: any, basePath: any, cleanup?: boolean, includeCacheDir?: boolean): Promise<{}>;
+export function collectGradleDependencies(_gradleCmd: any, _basePath: any, _cleanup?: boolean, _includeCacheDir?: boolean): Promise<{}>;
 /**
  * Method to collect class names from all jars in a directory
  *

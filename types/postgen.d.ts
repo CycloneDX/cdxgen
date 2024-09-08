@@ -15,7 +15,7 @@ export function postProcess(bomNSData: any, options: any): any;
  *
  * @returns {Object} Filtered BOM JSON
  */
-export function applyMetadata(bomJson: any, options: any): any;
+export function applyMetadata(bomJson: any, _options: any): any;
 /**
  * Apply definitions.standards based on options
  *
@@ -37,5 +37,5 @@ export function filterBom(bomJson: any, options: any): any;
 /**
  * Clean up
  */
-export function cleanupEnv(options: any): void;
+export function cleanupEnv(_options: any): void;
 //# sourceMappingURL=postgen.d.ts.map

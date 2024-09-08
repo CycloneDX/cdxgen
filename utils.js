@@ -2888,7 +2888,7 @@ export function parseGradleProperties(rawOutput) {
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
   const defaultProps = {
-    rootProject: subProject,
+    rootProject: "root",
     projects: [],
     metadata: {
       version: "latest",
@@ -4505,7 +4505,7 @@ export function repoMetadataToGitHubApiUrl(repoMetadata) {
  *
  *
  */
-export function generatePixiLockFile(path) {
+export function generatePixiLockFile(_path) {
   const result = spawnSync("pixi", ["install"], {
     encoding: "utf-8",
   });
@@ -9026,10 +9026,10 @@ export async function collectMvnDependencies(
 }
 
 export async function collectGradleDependencies(
-  gradleCmd,
-  basePath,
-  cleanup = true, // eslint-disable-line no-unused-vars
-  includeCacheDir = false, // eslint-disable-line no-unused-vars
+  _gradleCmd,
+  _basePath,
+  _cleanup = true, // eslint-disable-line no-unused-vars
+  _includeCacheDir = false, // eslint-disable-line no-unused-vars
 ) {
   // HELP WANTED: We need an init script that mimics maven copy-dependencies that only collects the project specific jars and poms
   // Construct gradle cache directory
@@ -9882,7 +9882,6 @@ export async function getJarClasses(jarFile) {
           "is not recognized as an internal or external command",
         )
       ) {
-        jarCommandAvailable = false;
         return retList;
       }
       const consolelines = (jarResult.stdout || "").split("\n");

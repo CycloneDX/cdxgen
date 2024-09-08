@@ -20,7 +20,7 @@ export function getOriginUrl(dir: string): any;
  *
  * @returns Output from git config or undefined
  */
-export function getBranch(configKey: string, dir: string): any;
+export function getBranch(_configKey: any, dir: string): any;
 /**
  * Retrieves the tree and parent hash for a git repo
  * @param {string} dir repo directory

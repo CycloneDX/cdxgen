@@ -760,7 +760,9 @@ export const extractTar = async (fullImageName, dir) => {
         strict: true,
         C: dir,
         portable: true,
-        onwarn: () => {},
+        onwarn: () => {
+          // ignore
+        },
         filter: (path, entry) => {
           // Some files are known to cause issues with extract
           if (
@@ -1078,7 +1080,9 @@ export const exportImage = async (fullImageName) => {
           strict: true,
           C: tempDir,
           portable: true,
-          onwarn: () => {},
+          onwarn: () => {
+            // ignore
+          },
         }),
       );
     } catch (err) {
@@ -1095,7 +1099,9 @@ export const exportImage = async (fullImageName) => {
               strict: true,
               C: tempDir,
               portable: true,
-              onwarn: () => {},
+              onwarn: () => {
+                // ignore
+              },
             }),
           );
         } catch (err) {
