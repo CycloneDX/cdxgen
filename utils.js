@@ -2888,7 +2888,7 @@ export function parseGradleProperties(rawOutput) {
  */
 export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
   const defaultProps = {
-    rootProject: subProject,
+    rootProject: "root",
     projects: [],
     metadata: {
       version: "latest",
@@ -9882,7 +9882,6 @@ export async function getJarClasses(jarFile) {
           "is not recognized as an internal or external command",
         )
       ) {
-        jarCommandAvailable = false;
         return retList;
       }
       const consolelines = (jarResult.stdout || "").split("\n");

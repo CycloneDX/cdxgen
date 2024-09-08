@@ -55,6 +55,7 @@ import {
   executeParallelGradleProperties,
   extractJarArchive,
   frameworksList,
+  generatePixiLockFile,
   getAllFiles,
   getCppModules,
   getGradleCommand,

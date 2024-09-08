@@ -5,12 +5,15 @@
   },
   "linter": {
     "enabled": true,
-    "ignore": ["types/**"],
+    "ignore": ["types/**", "contrib/**"],
     "rules": {
       "recommended": true,
       "complexity": {
         "noForEach": "off",
         "useLiteralKeys": "off"
+      },
+      "correctness": {
+        "noUndeclaredVariables": "error"
       },
       "performance": {
         "noDelete": "off"
