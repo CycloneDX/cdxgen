@@ -73,7 +73,9 @@ const getAllFiles = (deep, dir, extn, files, result, regex) => {
           result,
           regex,
         );
-      } catch (error) {}
+      } catch (error) {
+        // ignore
+      }
     } else {
       if (regex.test(file)) {
         result.push(file);
@@ -197,16 +199,16 @@ const fileToParseableCode = (file) => {
       )
       .replace(
         vueBindRegex,
-        (match, grA, grB, grC) =>
+        (_match, grA, grB, grC) =>
           grA.replaceAll(/\S/g, " ") + grB + grC.replaceAll(/\S/g, " "),
       )
       .replace(
         vuePropRegex,
-        (match, grA, grB) => ` ${grA.replace(/[.:@]/g, " ")}${grB}`,
+        (_match, grA, grB) => ` ${grA.replace(/[.:@]/g, " ")}${grB}`,
       )
       .replace(
         vueTemplateRegex,
-        (match, grA, grB, grC) =>
+        (_match, grA, grB, grC) =>
           grA + grB.replaceAll("{{", "{ ").replaceAll("}}", " }") + grC,
       );
   }

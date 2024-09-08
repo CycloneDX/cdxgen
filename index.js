@@ -4269,7 +4269,7 @@ export function createCloudBuildBom(path, options) {
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export function createOSBom(path, options) {
+export function createOSBom(_path, options) {
   console.warn(
     "About to generate OBOM for the current OS installation. This will take several minutes ...",
   );

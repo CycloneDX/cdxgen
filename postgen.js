@@ -37,7 +37,7 @@ export function postProcess(bomNSData, options) {
  *
  * @returns {Object} Filtered BOM JSON
  */
-export function applyMetadata(bomJson, options) {
+export function applyMetadata(bomJson, _options) {
   if (!bomJson?.components) {
     return bomJson;
   }
@@ -265,7 +265,7 @@ export function filterBom(bomJson, options) {
 /**
  * Clean up
  */
-export function cleanupEnv(options) {
+export function cleanupEnv(_options) {
   if (process.env?.PIP_TARGET?.startsWith(tmpdir())) {
     rmSync(process.env.PIP_TARGET, { recursive: true, force: true });
   }

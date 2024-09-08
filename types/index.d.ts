@@ -141,7 +141,7 @@ export function createCloudBuildBom(path: string, options: any): any;
  * @param {string} path to the project
  * @param {Object} options Parse options from the cli
  */
-export function createOSBom(path: string, options: any): Promise<any>;
+export function createOSBom(_path: any, options: any): Promise<any>;
 /**
  * Function to create bom string for Jenkins plugins
  *

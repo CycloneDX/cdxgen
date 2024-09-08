@@ -57,7 +57,7 @@ export function getOriginUrl(dir) {
  *
  * @returns Output from git config or undefined
  */
-export function getBranch(configKey, dir) {
+export function getBranch(_configKey, dir) {
   return execGitCommand(dir, ["rev-parse", "--abbrev-ref", "HEAD"]);
 }
 

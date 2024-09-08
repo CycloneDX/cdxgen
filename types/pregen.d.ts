@@ -17,7 +17,7 @@ export function prepareSdkmanBuild(projectType: string): boolean;
  * @param {String} filePath Path
  * @param {Object} options CLI Options
  */
-export function preparePythonEnv(filePath: string, options: any): void;
+export function preparePythonEnv(_filePath: any, options: any): void;
 /**
  * Method to check and prepare the environment for node
  *
