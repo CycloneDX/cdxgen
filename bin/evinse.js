@@ -11,7 +11,7 @@ import {
   analyzeProject,
   createEvinseFile,
   prepareDB,
-} from "../lib/enviser/index.js";
+} from "../lib/evinser/index.js";
 import {
   printCallStack,
   printOccurrences,
