@@ -184,7 +184,7 @@ export function tryLoadNvmAndInstallTool(nodeVersion) {
       fi
       `;
 
-  const spawnedShell = spawnSync(process.env.SHELL || "bash", ["-c", command], {
+  const result = spawnSync(process.env.SHELL || "bash", ["-c", command], {
     encoding: "utf-8",
     shell: process.env.SHELL || true,
   });

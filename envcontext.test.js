@@ -65,7 +65,7 @@ test("nvm tests", () => {
       expect(getOrInstallNvmTool(14)).toBeTruthy();
       expect(getNvmToolDirectory(14)).toBeTruthy();
     } else {
-      // if this test is failing it would be due to isNvmAvailable()
+      // if this test is failing it would be due to an error in isNvmAvailable()
       expect(getNvmToolDirectory(22)).toBeFalsy();
       expect(getOrInstallNvmTool(14)).toBeFalsy();
     }
