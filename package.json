@@ -48,7 +48,7 @@
     "cdx-verify": "./bin/verify.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false ./lib/managers/docker.test.js ./lib/helpers/utils.test.js ./lib/helpers/display.test.js ./lib/stages/postgen/index.test.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false ./lib/helpers/cbomutils.test.js ./lib/helpers/display.test.js ./lib/helpers/utils.test.js ./lib/managers/docker.test.js ./lib/stages/postgen/index.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint:check": "biome check",
     "lint": "biome check --fix",
