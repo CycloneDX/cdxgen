@@ -37,9 +37,7 @@ const gitClone = (repoUrl, branch = null) => {
   }
 
   console.log(
-    `Cloning Repo${branch ? " with branch $branch` : ""}`,
-    "to",
-    tempDir,
+    `Cloning Repo${branch ? ` with branch ${branch}` : ""} to ${tempDir}`,
   );
 
   const result = spawnSync("git", gitArgs, {
