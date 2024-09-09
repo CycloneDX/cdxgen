@@ -1605,6 +1605,7 @@ export async function createJavaBom(path, options) {
   const allProjects = [];
   const allProjectsAddedPurls = [];
   const rootDependsOn = [];
+  const gradleModules = new Map();
   // Determine the root path for gradle
   // Fixes gradle invocation for microservices-demo
   let gradleRootPath = path;
@@ -1641,6 +1642,7 @@ export async function createJavaBom(path, options) {
       ).toString();
       parentComponent["purl"] = parentPurl;
       parentComponent["bom-ref"] = decodeURIComponent(parentPurl);
+      gradleModules.set(rootProject, parentComponent);
     }
     // Get the sub-project properties and set the root dependencies
     if (allProjectsStr?.length) {
@@ -1698,6 +1700,7 @@ export async function createJavaBom(path, options) {
               rootDependsOn.push(rootSubProjectBomRef);
               allProjectsAddedPurls.push(rootSubProjectPurl);
             }
+            gradleModules.set(rspName, rootSubProjectObj);
           }
         }
       } else {
@@ -1732,6 +1735,7 @@ export async function createJavaBom(path, options) {
               rootDependsOn.push(rootSubProjectBomRef);
               allProjectsAddedPurls.push(rootSubProjectPurl);
             }
+            gradleModules.set(rspName, rootSubProjectObj);
           }
         }
       } //end else
@@ -1811,11 +1815,9 @@ export async function createJavaBom(path, options) {
         for (const sp of allProjects) {
           const parsedList = parseGradleDep(
             perProjectOutput.has(sp.name) ? perProjectOutput.get(sp.name) : "",
-            sp.group || parentComponent.group,
             sp.name,
-            sp.version?.length && sp.version !== "latest"
-              ? sp.version
-              : parentComponent.version,
+            gradleModules,
+            gradleRootPath,
           );
           const dlist = parsedList.pkgList;
           if (parsedList.dependenciesList && parsedList.dependenciesList) {
@@ -1881,11 +1883,9 @@ export async function createJavaBom(path, options) {
           const cmdOutput = Buffer.from(sstdout).toString();
           const parsedList = parseGradleDep(
             cmdOutput,
-            sp.group || parentComponent.group,
             sp.name,
-            sp.version?.length && sp.version !== "latest"
-              ? sp.version
-              : parentComponent.version,
+            gradleModules,
+            gradleRootPath,
           );
           const dlist = parsedList.pkgList;
           if (parsedList.dependenciesList && parsedList.dependenciesList) {

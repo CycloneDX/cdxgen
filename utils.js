@@ -2487,15 +2487,15 @@ export function parseMavenTree(rawOutput, pomFile) {
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
- * @param {string} rootProjectGroup Root project group
  * @param {string} rootProjectName Root project name
- * @param {string} rootProjectVersion Root project version
+ * @param {map} gradleModules Cache with all gradle modules that have already been read
+ * @param {string} gradleRootPath Root path where Gradle is to be run when getting module information
  */
 export function parseGradleDep(
   rawOutput,
-  rootProjectGroup = "",
   rootProjectName = "root",
-  rootProjectVersion = "latest",
+  gradleModules = new Map(),
+  gradleRootPath = "",
 ) {
   if (typeof rawOutput === "string") {
     // Bug: 249. Get any sub-projects refered here
@@ -2512,28 +2512,13 @@ export function parseGradleDep(
     }
     let match = "";
     // To render dependency tree we need a root project
-    const rootProject = {
-      group: rootProjectGroup || "",
-      name: rootProjectName,
-      version: rootProjectVersion,
-      type: "maven",
-      qualifiers: { type: "jar" },
-    };
+    const rootProject = gradleModules.get(rootProjectName);
     const deps = [];
     const dependenciesList = [];
     const keys_cache = {};
     const deps_keys_cache = {};
     let last_level = 0;
-    let last_bomref = decodeURIComponent(
-      new PackageURL(
-        "maven",
-        rootProject.group,
-        rootProject.name,
-        rootProject.version,
-        rootProject.qualifiers,
-        null,
-      ).toString(),
-    );
+    let last_bomref = rootProject["bom-ref"];
     const first_bomref = last_bomref;
     let last_project_bomref = first_bomref;
     const level_trees = {};
@@ -2541,20 +2526,101 @@ export function parseGradleDep(
     let scope = undefined;
     let profileName = undefined;
     if (retMap?.projects) {
+      if (process.env.GRADLE_MULTI_THREADED) {
+        const modulesToScan = retMap.projects.filter(
+          (module) => !gradleModules.has(module.replace(/^:/, "")),
+        );
+        if (modulesToScan.length > 0) {
+          const parallelPropTaskOut = executeParallelGradleProperties(
+            gradleRootPath,
+            modulesToScan,
+          );
+          const splitPropTaskOut = splitOutputByGradleProjects(
+            parallelPropTaskOut,
+            ["properties"],
+          );
+
+          for (const [key, propTaskOut] of splitPropTaskOut.entries()) {
+            let propMap = {};
+            // To optimize performance and reduce errors do not query for properties
+            // beyond the first level. Replicating behaviour from single-threaded Gradle generation.
+            if (key.includes(":")) {
+              propMap = {
+                rootProject: key,
+                projects: [],
+                metadata: {
+                  version: "latest",
+                },
+              };
+            } else {
+              propMap = parseGradleProperties(propTaskOut);
+            }
+            const rootSubProject = propMap.rootProject;
+            if (rootSubProject) {
+              const rspName = rootSubProject.replace(/^:/, "");
+              const rootSubProjectObj = {
+                name: rspName,
+                type: "application",
+                qualifiers: { type: "jar" },
+                ...propMap.metadata,
+              };
+              const rootSubProjectPurl = new PackageURL(
+                "maven",
+                rootSubProjectObj.group?.length
+                  ? rootSubProjectObj.group
+                  : rootProject.group,
+                rootSubProjectObj.name,
+                propMap.metadata.version &&
+                  propMap.metadata.version !== "latest"
+                  ? propMap.metadata.version
+                  : rootProject.version,
+                rootSubProjectObj.qualifiers,
+                null,
+              ).toString();
+              rootSubProjectObj["purl"] = rootSubProjectPurl;
+              const rootSubProjectBomRef =
+                decodeURIComponent(rootSubProjectPurl);
+              rootSubProjectObj["bom-ref"] = rootSubProjectBomRef;
+              gradleModules.set(rspName, rootSubProjectObj);
+            }
+          }
+        }
+      }
       const subDependsOn = [];
       for (const sd of retMap.projects) {
-        subDependsOn.push(
-          decodeURIComponent(
-            new PackageURL(
+        const moduleName = sd.replace(":", "");
+        if (!gradleModules.has(moduleName)) {
+          const propMap = executeGradleProperties(gradleRootPath, sd);
+          const rootSubProject = propMap.rootProject;
+          if (rootSubProject) {
+            const rspName = rootSubProject.replace(/^:/, "");
+            const rootSubProjectObj = {
+              name: rspName,
+              type: "application",
+              qualifiers: { type: "jar" },
+              ...propMap.metadata,
+            };
+            const rootSubProjectPurl = new PackageURL(
               "maven",
-              rootProjectGroup,
-              sd.replace(":", ""),
-              rootProject.version,
-              rootProject.qualifiers,
+              rootSubProjectObj.group?.length
+                ? rootSubProjectObj.group
+                : rootProject.group,
+              rootSubProjectObj.name,
+              propMap.metadata.version && propMap.metadata.version !== "latest"
+                ? propMap.metadata.version
+                : rootProject.version,
+              rootSubProjectObj.qualifiers,
               null,
-            ).toString(),
-          ),
-        );
+            ).toString();
+            rootSubProjectObj["purl"] = rootSubProjectPurl;
+            const rootSubProjectBomRef = decodeURIComponent(rootSubProjectPurl);
+            rootSubProjectObj["bom-ref"] = rootSubProjectBomRef;
+            gradleModules.set(moduleName, rootSubProjectObj);
+          }
+        }
+        if (gradleModules.has(moduleName)) {
+          subDependsOn.push(gradleModules.get(moduleName)["bom-ref"]);
+        }
       }
       level_trees[last_bomref] = subDependsOn;
     }
@@ -2613,42 +2679,54 @@ export function parseGradleDep(
           if (rline.includes("project ")) {
             const tmpA = rline.split("project ");
             if (tmpA && tmpA.length > 1) {
-              group = rootProjectGroup;
+              group = rootProject.group;
               name = tmpA[1].split(" ")[0].replace(/^:/, "");
               version = undefined;
             }
           }
-          const purl = new PackageURL(
-            "maven",
-            group !== "project" ? group : rootProjectGroup,
-            name,
-            version !== undefined ? version : rootProjectVersion,
-            { type: "jar" },
-            null,
-          ).toString();
-          const bomRef = decodeURIComponent(purl);
+          let purl;
+          let bomRef;
+          if (gradleModules.has(name)) {
+            purl = gradleModules.get(name)["purl"];
+            bomRef = gradleModules.get(name)["bom-ref"];
+          } else {
+            purl = new PackageURL(
+              "maven",
+              group !== "project" ? group : rootProject.group,
+              name,
+              version !== undefined ? version : rootProject.version,
+              { type: "jar" },
+              null,
+            ).toString();
+            bomRef = decodeURIComponent(purl);
+          }
           keys_cache[`${bomRef}_${last_bomref}`] = true;
           // Filter duplicates
           if (!deps_keys_cache[bomRef]) {
             deps_keys_cache[bomRef] = true;
-            const adep = {
-              group: group !== "project" ? group : rootProjectGroup,
-              name: name,
-              version: version !== undefined ? version : rootProjectVersion,
-              qualifiers: { type: "jar" },
-            };
-            adep["purl"] = purl;
-            adep["bom-ref"] = bomRef;
-            if (scope) {
-              adep["scope"] = scope;
-            }
-            if (profileName) {
-              adep.properties = [
-                {
-                  name: "GradleProfileName",
-                  value: profileName,
-                },
-              ];
+            let adep;
+            if (gradleModules.has(name)) {
+              adep = gradleModules.get(name);
+            } else {
+              adep = {
+                group: group !== "project" ? group : rootProject.group,
+                name: name,
+                version: version !== undefined ? version : rootProject.version,
+                qualifiers: { type: "jar" },
+              };
+              adep["purl"] = purl;
+              adep["bom-ref"] = bomRef;
+              if (scope) {
+                adep["scope"] = scope;
+              }
+              if (profileName) {
+                adep.properties = [
+                  {
+                    name: "GradleProfileName",
+                    value: profileName,
+                  },
+                ];
+              }
             }
             deps.push(adep);
           }
