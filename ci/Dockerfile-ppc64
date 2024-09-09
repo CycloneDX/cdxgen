@@ -106,7 +106,7 @@ RUN set -e; \
     && gem --version \
     && bundler --version
 COPY . /opt/cdxgen
-RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method clone \
+RUN cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen \
     && chmod a-w -R /opt \
     && rm -rf /root/.cache /var/cache/yum /root/.cargo \

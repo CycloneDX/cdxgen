@@ -2,3 +2,6 @@
 .github/
 .vscode/
 .deno/
+test/
+docs/
+contrib/

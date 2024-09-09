@@ -48,7 +48,7 @@ jobs:
       - name: npm install, build and test
         run: |
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --package-import-method copy
           corepack pnpm test
           mkdir -p repotests
           mkdir -p bomresults
@@ -531,7 +531,6 @@ jobs:
         shell: bash
       - name: denotests
         run: |
-          rm -rf node_modules
           deno info bin/cdxgen.js
           deno info bin/evinse.js
           deno run --allow-read --allow-env --allow-run --allow-sys=uid,systemMemoryInfo,gid,homedir --allow-write --allow-net bin/cdxgen.js -p -t java repotests/java-sec-code -o bomresults/bom-java-sec-code-deno.json --deep
