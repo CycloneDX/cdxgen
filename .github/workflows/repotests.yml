@@ -450,10 +450,10 @@ jobs:
       - name: repotests expo
         run: |
           cd repotests/expo-test && npm ci && cd ../..
-          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath"                                                                                   bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo.json
-          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_MULTI_THREADED=true GRADLE_SKIP_MODULES=root                               bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo-multi.json
+          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath"                                                                                   bin/cdxgen.js -p -t gradle repotests/expo-test -o bomresults/bom-expo.json
+          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_MULTI_THREADED=true GRADLE_SKIP_MODULES=root                               bin/cdxgen.js -p -t gradle repotests/expo-test -o bomresults/bom-expo-multi.json
           custom-json-diff -i bomresults/bom-expo.json bomresults/bom-expo-multi.json -o bomresults/diff-expo
-          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_MULTI_THREADED=true GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo-npm.json
+          GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_MULTI_THREADED=true GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle repotests/expo-test -o bomresults/bom-expo-npm.json
         shell: bash
       - name: jenkins plugins
         run: |
