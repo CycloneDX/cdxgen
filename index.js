@@ -42,6 +42,7 @@ import {
   addEvidenceForDotnet,
   addEvidenceForImports,
   addPlugin,
+  buildGradleCommandArguments,
   checksumFile,
   cleanupPlugin,
   collectGradleDependencies,
@@ -1621,7 +1622,7 @@ export async function createJavaBom(path, options) {
     gradleFiles?.length &&
     isPackageManagerAllowed("gradle", ["maven", "bazel", "sbt"], options)
   ) {
-    let retMap = executeGradleProperties(gradleRootPath, null, null);
+    let retMap = executeGradleProperties(gradleRootPath, null);
     const allProjectsStr = retMap.projects || [];
     const rootProject = retMap.rootProject;
     if (rootProject) {
@@ -1646,7 +1647,6 @@ export async function createJavaBom(path, options) {
       if (process.env.GRADLE_MULTI_THREADED) {
         const parallelPropTaskOut = executeParallelGradleProperties(
           gradleRootPath,
-          null,
           allProjectsStr,
         );
         const splitPropTaskOut = splitOutputByGradleProjects(
@@ -1702,7 +1702,7 @@ export async function createJavaBom(path, options) {
         }
       } else {
         for (const spstr of allProjectsStr) {
-          retMap = executeGradleProperties(gradleRootPath, null, spstr);
+          retMap = executeGradleProperties(gradleRootPath, spstr);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rspName = rootSubProject.replace(/^:/, "");
@@ -1752,46 +1752,44 @@ export async function createJavaBom(path, options) {
     options.installDeps &&
     isPackageManagerAllowed("gradle", ["maven", "bazel", "sbt"], options)
   ) {
-    const gradleCmd = getGradleCommand(gradleRootPath, null);
-    const defaultDepTaskArgs = ["--console", "plain", "--build-cache"];
     allProjects.push(parentComponent);
-    let depTaskWithArgs = ["dependencies"];
-    let relevantTasks = ["dependencies"];
-    if (process.env.GRADLE_DEPENDENCY_TASK) {
-      depTaskWithArgs = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
-      relevantTasks = process.env.GRADLE_DEPENDENCY_TASK.split(" ");
-    }
-    let gradleDepArgs = [];
-    gradleDepArgs = gradleDepArgs
-      .concat(depTaskWithArgs.slice(1))
-      .concat(defaultDepTaskArgs);
-    // Support custom GRADLE_ARGS such as --configuration runtimeClassPath (used for all tasks)
-    if (process.env.GRADLE_ARGS) {
-      const addArgs = process.env.GRADLE_ARGS.split(" ");
-      gradleDepArgs = gradleDepArgs.concat(addArgs);
-    }
-    // gradle args only for the dependencies task
-    if (process.env.GRADLE_ARGS_DEPENDENCIES) {
-      const addArgs = process.env.GRADLE_ARGS_DEPENDENCIES.split(" ");
-      gradleDepArgs = gradleDepArgs.concat(addArgs);
-    }
+    const gradleCmd = getGradleCommand(gradleRootPath, null);
+    const gradleDepTask = process.env.GRADLE_DEPENDENCY_TASK
+      ? process.env.GRADLE_DEPENDENCY_TASK
+      : "dependencies";
 
     if (process.env.GRADLE_MULTI_THREADED) {
-      gradleDepArgs.push(depTaskWithArgs[0]);
+      const gradleSubCommands = [];
+      const modulesToSkip = process.env.GRADLE_SKIP_MODULES
+        ? process.env.GRADLE_SKIP_MODULES.split(",")
+        : [];
+      if (!modulesToSkip.includes("root")) {
+        gradleSubCommands.push(gradleDepTask);
+      }
       for (const sp of allProjects) {
         //create single command for dependencies tasks on all subprojects
-        if (sp.purl !== parentComponent.purl) {
-          gradleDepArgs.push(`:${sp.name}:${depTaskWithArgs[0]}`);
+        if (
+          sp.purl !== parentComponent.purl &&
+          !modulesToSkip.includes(sp.name)
+        ) {
+          gradleSubCommands.push(`:${sp.name}:${gradleDepTask}`);
         }
       }
+      const gradleArguments = buildGradleCommandArguments(
+        process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+        gradleSubCommands,
+        process.env.GRADLE_ARGS_DEPENDENCIES
+          ? process.env.GRADLE_ARGS_DEPENDENCIES.split(" ")
+          : [],
+      );
       console.log(
         "Executing",
         gradleCmd,
-        gradleDepArgs.join(" "),
+        gradleArguments.join(" "),
         "in",
         gradleRootPath,
       );
-      const sresult = spawnSync(gradleCmd, gradleDepArgs, {
+      const sresult = spawnSync(gradleCmd, gradleArguments, {
         cwd: gradleRootPath,
         encoding: "utf-8",
         timeout: TIMEOUT_MS,
@@ -1807,16 +1805,12 @@ export async function createJavaBom(path, options) {
       const sstdout = sresult.stdout;
       if (sstdout) {
         const cmdOutput = Buffer.from(sstdout).toString();
-        const perProjectOutput = splitOutputByGradleProjects(
-          cmdOutput,
-          relevantTasks,
-        );
-        for (const [key, singleProjectDepOut] of perProjectOutput.entries()) {
-          const sp = allProjects
-            .filter((project) => project.name === key)
-            .pop();
+        const perProjectOutput = splitOutputByGradleProjects(cmdOutput, [
+          gradleDepTask,
+        ]);
+        for (const sp of allProjects) {
           const parsedList = parseGradleDep(
-            singleProjectDepOut,
+            perProjectOutput.has(sp.name) ? perProjectOutput.get(sp.name) : "",
             sp.group || parentComponent.group,
             sp.name,
             sp.version?.length && sp.version !== "latest"
@@ -1851,22 +1845,26 @@ export async function createJavaBom(path, options) {
         );
       }
       for (const sp of allProjects) {
-        let gradleSubProjectDepArgs = [
-          sp.purl === parentComponent.purl
-            ? depTaskWithArgs[0]
-            : `:${sp.name}:${depTaskWithArgs[0]}`,
-        ];
-        gradleSubProjectDepArgs = gradleSubProjectDepArgs.concat(gradleDepArgs);
+        const gradleArguments = buildGradleCommandArguments(
+          process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+          [
+            sp.purl === parentComponent.purl
+              ? gradleDepTask
+              : `:${sp.name}:${gradleDepTask}`,
+          ],
+          process.env.GRADLE_ARGS_DEPENDENCIES
+            ? process.env.GRADLE_ARGS_DEPENDENCIES.split(" ")
+            : [],
+        );
 
-        gradleSubProjectDepArgs.push("-q");
         console.log(
           "Executing",
           gradleCmd,
-          gradleSubProjectDepArgs.join(" "),
+          gradleArguments.join(" "),
           "in",
           gradleRootPath,
         );
-        const sresult = spawnSync(gradleCmd, gradleSubProjectDepArgs, {
+        const sresult = spawnSync(gradleCmd, gradleArguments, {
           cwd: gradleRootPath,
           encoding: "utf-8",
           timeout: TIMEOUT_MS,

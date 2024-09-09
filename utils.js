@@ -2524,7 +2524,7 @@ export function parseGradleDep(
     const keys_cache = {};
     const deps_keys_cache = {};
     let last_level = 0;
-    let last_purl = decodeURIComponent(
+    let last_bomref = decodeURIComponent(
       new PackageURL(
         "maven",
         rootProject.group,
@@ -2534,10 +2534,10 @@ export function parseGradleDep(
         null,
       ).toString(),
     );
-    const first_purl = last_purl;
-    let last_project_purl = first_purl;
+    const first_bomref = last_bomref;
+    let last_project_bomref = first_bomref;
     const level_trees = {};
-    level_trees[last_purl] = [];
+    level_trees[last_bomref] = [];
     let scope = undefined;
     let profileName = undefined;
     if (retMap?.projects) {
@@ -2556,9 +2556,9 @@ export function parseGradleDep(
           ),
         );
       }
-      level_trees[last_purl] = subDependsOn;
+      level_trees[last_bomref] = subDependsOn;
     }
-    let stack = [last_purl];
+    let stack = [last_bomref];
     const depRegex =
       /^.*?--- +(?<groupspecified>[^\s:]+) ?:(?<namespecified>[^\s:]+)(?::(?:{strictly [[]?)?(?<versionspecified>[^,\s:}]+))?(?:})?(?:[^->]* +-> +(?:(?<groupoverride>[^\s:]+):(?<nameoverride>[^\s:]+):)?(?<versionoverride>[^\s:]+))?/gm;
     for (let rline of rawOutput.split("\n")) {
@@ -2579,9 +2579,9 @@ export function parseGradleDep(
         rline.startsWith("\\--- ")
       ) {
         last_level = 1;
-        last_project_purl = first_purl;
-        last_purl = last_project_purl;
-        stack = [first_purl];
+        last_project_bomref = first_bomref;
+        last_bomref = last_project_bomref;
+        stack = [first_bomref];
       }
       if (rline.includes(" - ")) {
         profileName = rline.split(" - ")[0];
@@ -2626,11 +2626,11 @@ export function parseGradleDep(
             { type: "jar" },
             null,
           ).toString();
-          const purlString = decodeURIComponent(purl);
-          keys_cache[`${purlString}_${last_purl}`] = true;
+          const bomRef = decodeURIComponent(purl);
+          keys_cache[`${bomRef}_${last_bomref}`] = true;
           // Filter duplicates
-          if (!deps_keys_cache[purlString]) {
-            deps_keys_cache[purlString] = true;
+          if (!deps_keys_cache[bomRef]) {
+            deps_keys_cache[bomRef] = true;
             const adep = {
               group: group !== "project" ? group : rootProjectGroup,
               name: name,
@@ -2638,7 +2638,7 @@ export function parseGradleDep(
               qualifiers: { type: "jar" },
             };
             adep["purl"] = purl;
-            adep["bom-ref"] = purlString;
+            adep["bom-ref"] = bomRef;
             if (scope) {
               adep["scope"] = scope;
             }
@@ -2652,38 +2652,38 @@ export function parseGradleDep(
             }
             deps.push(adep);
           }
-          if (!level_trees[purlString]) {
-            level_trees[purlString] = [];
+          if (!level_trees[bomRef]) {
+            level_trees[bomRef] = [];
           }
           if (level === 0) {
-            stack = [first_purl];
-            stack.push(purlString);
-          } else if (last_purl === "") {
-            stack.push(purlString);
+            stack = [first_bomref];
+            stack.push(bomRef);
+          } else if (last_bomref === "") {
+            stack.push(bomRef);
           } else if (level > last_level) {
-            const cnodes = level_trees[last_purl] || [];
-            if (!cnodes.includes(purlString)) {
-              cnodes.push(purlString);
+            const cnodes = level_trees[last_bomref] || [];
+            if (!cnodes.includes(bomRef)) {
+              cnodes.push(bomRef);
             }
-            level_trees[last_purl] = cnodes;
-            if (stack[stack.length - 1] !== purlString) {
-              stack.push(purlString);
+            level_trees[last_bomref] = cnodes;
+            if (stack[stack.length - 1] !== bomRef) {
+              stack.push(bomRef);
             }
           } else {
             for (let i = level; i <= last_level; i++) {
               stack.pop();
             }
             const last_stack =
-              stack.length > 0 ? stack[stack.length - 1] : last_project_purl;
+              stack.length > 0 ? stack[stack.length - 1] : last_project_bomref;
             const cnodes = level_trees[last_stack] || [];
-            if (!cnodes.includes(purlString)) {
-              cnodes.push(purlString);
+            if (!cnodes.includes(bomRef)) {
+              cnodes.push(bomRef);
             }
             level_trees[last_stack] = cnodes;
-            stack.push(purlString);
+            stack.push(bomRef);
           }
           last_level = level;
-          last_purl = purlString;
+          last_bomref = bomRef;
         }
       }
     }
@@ -2881,56 +2881,28 @@ export function parseGradleProperties(rawOutput) {
  * Execute gradle properties command using multi-threading and return parsed output
  *
  * @param {string} dir Directory to execute the command
- * @param {string} rootPath Root directory
  * @param {array} allProjectsStr List of all sub-projects (including the preceding `:`)
  *
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
-export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
-  const defaultProps = {
-    rootProject: "root",
-    projects: [],
-    metadata: {
-      version: "latest",
-    },
-  };
-  let parallelPropTaskArgs = ["properties"];
-  for (const spstr of allProjectsStr) {
-    parallelPropTaskArgs.push(`${spstr}:properties`);
-  }
-
-  let gradlePropertiesArgs = ["--console", "plain", "--build-cache"];
-  const gradleCmd = getGradleCommand(dir, rootPath);
-
-  // common gradle args, used for all tasks
-  if (process.env.GRADLE_ARGS) {
-    const addArgs = process.env.GRADLE_ARGS.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
-  // gradle args only for the properties task
-  if (process.env.GRADLE_ARGS_PROPERTIES) {
-    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
-  parallelPropTaskArgs = parallelPropTaskArgs.concat(gradlePropertiesArgs);
-
-  console.log(
-    "Executing",
-    gradleCmd,
-    parallelPropTaskArgs.join(" "),
-    "in",
-    dir,
+export function executeParallelGradleProperties(dir, allProjectsStr) {
+  const gradleCmd = getGradleCommand(dir, null);
+  const gradleArgs = buildGradleCommandArguments(
+    process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+    allProjectsStr.map((project) => `${project}:properties`),
+    process.env.GRADLE_ARGS_PROPERTIES
+      ? process.env.GRADLE_ARGS_PROPERTIES.split(" ")
+      : [],
   );
-  const result = spawnSync(gradleCmd, parallelPropTaskArgs, {
+
+  console.log("Executing", gradleCmd, gradleArgs.join(" "), "in", dir);
+  const result = spawnSync(gradleCmd, gradleArgs, {
     cwd: dir,
     encoding: "utf-8",
     shell: isWin,
   });
   if (result.status !== 0 || result.error) {
     if (result.stderr) {
-      if (result.stderr.includes("does not exist")) {
-        return defaultProps;
-      }
       console.error(result.stdout, result.stderr);
       console.log(
         "1. Check if the correct version of java and gradle are installed and available in PATH. For example, some project might require Java 11 with gradle 7.\n cdxgen container image bundles Java 21 with gradle 8 which might be incompatible.",
@@ -2942,6 +2914,9 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
         console.log(
           "3. Check if the SBOM is generated for the correct root project for your application.",
         );
+      }
+      if (result.stderr.includes("does not exist")) {
+        return "";
       }
     }
   }
@@ -2956,10 +2931,9 @@ export function executeParallelGradleProperties(dir, rootPath, allProjectsStr) {
  * Execute gradle properties command and return parsed output
  *
  * @param {string} dir Directory to execute the command
- * @param {string} rootPath Root directory
  * @param {string} subProject Sub project name
  */
-export function executeGradleProperties(dir, rootPath, subProject) {
+export function executeGradleProperties(dir, subProject) {
   const defaultProps = {
     rootProject: subProject,
     projects: [],
@@ -2972,32 +2946,16 @@ export function executeGradleProperties(dir, rootPath, subProject) {
   if (subProject && subProject.match(/:/g).length >= 2) {
     return defaultProps;
   }
-  let gradlePropertiesArgs = [
-    subProject ? `${subProject}:properties` : "properties",
-    "-q",
-    "--console",
-    "plain",
-    "--build-cache",
-  ];
-  const gradleCmd = getGradleCommand(dir, rootPath);
-  // common gradle args, used for all tasks
-  if (process.env.GRADLE_ARGS) {
-    const addArgs = process.env.GRADLE_ARGS.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
-  // gradle args only for the properties task
-  if (process.env.GRADLE_ARGS_PROPERTIES) {
-    const addArgs = process.env.GRADLE_ARGS_PROPERTIES.split(" ");
-    gradlePropertiesArgs = gradlePropertiesArgs.concat(addArgs);
-  }
-  console.log(
-    "Executing",
-    gradleCmd,
-    gradlePropertiesArgs.join(" "),
-    "in",
-    dir,
+  const gradleCmd = getGradleCommand(dir, null);
+  const gradleArguments = buildGradleCommandArguments(
+    process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
+    [subProject ? `${subProject}:properties` : "properties"],
+    process.env.GRADLE_ARGS_PROPERTIES
+      ? process.env.GRADLE_ARGS_PROPERTIES.split(" ")
+      : [],
   );
-  const result = spawnSync(gradleCmd, gradlePropertiesArgs, {
+  console.log("Executing", gradleCmd, gradleArguments.join(" "), "in", dir);
+  const result = spawnSync(gradleCmd, gradleArguments, {
     cwd: dir,
     encoding: "utf-8",
     shell: isWin,
@@ -9947,6 +9905,31 @@ export function getGradleCommand(srcPath, rootPath) {
   }
   return gradleCmd;
 }
+
+/**
+ * Method to combine the general gradle arguments, the sub-commands and the sub-commands' arguments in the correct way
+ *
+ * @param {string[]} gradleArguments The general gradle arguments, which must only be added once
+ * @param {string[]} gradleSubCommands The sub-commands that are to be executed by gradle
+ * @param {string[]} gradleSubCommandArguments The arguments specific to the sub-command(s), which much be added PER sub-command
+ *
+ * @returns {string[]} Array of arguments to be added to the gradle command
+ */
+export function buildGradleCommandArguments(
+  gradleArguments,
+  gradleSubCommands,
+  gradleSubCommandArguments,
+) {
+  let allGradleArguments = ["--console", "plain", "--build-cache"].concat(
+    gradleArguments,
+  );
+  for (const gradleSubCommand of gradleSubCommands) {
+    allGradleArguments.push(gradleSubCommand);
+    allGradleArguments = allGradleArguments.concat(gradleSubCommandArguments);
+  }
+  return allGradleArguments;
+}
+
 /**
  * Method to split the output produced by Gradle using parallel processing by project
  *

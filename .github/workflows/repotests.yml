@@ -63,6 +63,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: pip install custom-json-diff
+        run: |
+          pip install custom-json-diff
       - uses: actions/checkout@v4
         with:
           repository: 'ShiftLeftSecurity/shiftleft-java-example'
@@ -243,6 +246,10 @@ jobs:
           repository: 'owasp-dep-scan/blint'
           path: 'repotests/blint'
           ref: 'v2.2.2'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'malice00/cdxgen-expo-test'
+          path: 'repotests/expo-test'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -439,6 +446,13 @@ jobs:
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint.json
           bin/cdxgen.js -p -t python repotests/blint -o bomresults/bom-blint-deep.json --deep
           bin/cdxgen.js -p -t java repotests/broken-mvn-wrapper -o bomresults/bom-broken-mvn-wrapper.json
+        shell: bash
+      - name: repotests expo
+        run: |
+          cd repotests/expo-test && npm ci && cd ../..
+          CDXGEN_DEBUG_MODE=debug GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo.json
+          CDXGEN_DEBUG_MODE=debug GRADLE_MULTI_THREADED=true GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_SKIP_MODULES=root,expo-modules-core\$android-annotation,expo-modules-core\$android-annotation-processor bin/cdxgen.js -p -t gradle repostests/expo-test -o bomresults/bom-expo-multi.json
+          custom-json-diff -i bomresults/bom-expo.json bomresults/bom-expo-multi.json -o bomresults/diff-expo
         shell: bash
       - name: jenkins plugins
         run: |
