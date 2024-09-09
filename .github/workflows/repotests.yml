@@ -48,7 +48,7 @@ jobs:
       - name: npm install, build and test
         run: |
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --package-import-method clone
           corepack pnpm test
           mkdir -p repotests
           mkdir -p bomresults

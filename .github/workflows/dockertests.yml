@@ -39,7 +39,7 @@ jobs:
       - name: npm install, build and test
         run: |
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --package-import-method clone
           corepack pnpm test
           mkdir -p bomresults repotests
         env:
@@ -105,7 +105,7 @@ jobs:
       - name: npm install, build and test
         run: |
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --package-import-method clone
           corepack pnpm test
           mkdir -p bomresults repotests
         env:
@@ -152,7 +152,7 @@ jobs:
       - name: npm install, build and test
         run: |
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --package-import-method clone
           mkdir -p bomresults
         env:
           CI: true
@@ -191,7 +191,7 @@ jobs:
       - name: npm install, build
         run: |
           corepack enable
-          corepack pnpm install
+          corepack pnpm install --package-import-method clone
           mkdir bomresults
         env:
           CI: true
