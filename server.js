@@ -31,32 +31,21 @@ const gitClone = (repoUrl, branch = null) => {
     path.join(os.tmpdir(), path.basename(repoUrl)),
   );
 
-  if (branch == null) {
-    console.log("Cloning Repo", "to", tempDir);
-    const result = spawnSync(
-      "git",
-      ["clone", repoUrl, "--depth", "1", tempDir],
-      {
-        encoding: "utf-8",
-        shell: false,
-      },
-    );
-    if (result.status !== 0 || result.error) {
-      console.log(result.error);
-    }
-  } else {
-    console.log("Cloning repo with optional branch", "to", tempDir);
-    const result = spawnSync(
-      "git",
-      ["clone", repoUrl, "--branch", branch, "--depth", "1", tempDir],
-      {
-        encoding: "utf-8",
-        shell: false,
-      },
-    );
-    if (result.status !== 0 || result.error) {
-      console.log(result.error);
-    }
+  const gitArgs = ["clone", repoUrl, "--depth", "1", tempDir];
+  if (branch) {
+    gitArgs.splice(2, 0, "--branch", branch);
+  }
+
+  console.log(
+    `Cloning Repo${branch ? ` with branch ${branch}` : ""} to ${tempDir}`,
+  );
+
+  const result = spawnSync("git", gitArgs, {
+    encoding: "utf-8",
+    shell: false,
+  });
+  if (result.status !== 0) {
+    console.log(result.stderr);
   }
 
   return tempDir;

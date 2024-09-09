@@ -269,20 +269,18 @@ export function parseGradleProperties(rawOutput: string): {
  * Execute gradle properties command using multi-threading and return parsed output
  *
  * @param {string} dir Directory to execute the command
- * @param {string} rootPath Root directory
  * @param {array} allProjectsStr List of all sub-projects (including the preceding `:`)
  *
  * @returns {string} The combined output for all subprojects of the Gradle properties task
  */
-export function executeParallelGradleProperties(dir: string, rootPath: string, allProjectsStr: any[]): string;
+export function executeParallelGradleProperties(dir: string, allProjectsStr: any[]): string;
 /**
  * Execute gradle properties command and return parsed output
  *
  * @param {string} dir Directory to execute the command
- * @param {string} rootPath Root directory
  * @param {string} subProject Sub project name
  */
-export function executeGradleProperties(dir: string, rootPath: string, subProject: string): {};
+export function executeGradleProperties(dir: string, subProject: string): {};
 /**
  * Parse bazel action graph output
  * @param {string} rawOutput Raw string output
@@ -1052,6 +1050,16 @@ export function getJarClasses(jarFile: string): Promise<any[]>;
  * @param {string} rootPath Root directory to look for gradlew wrapper
  */
 export function getGradleCommand(srcPath: string, rootPath: string): string;
+/**
+ * Method to combine the general gradle arguments, the sub-commands and the sub-commands' arguments in the correct way
+ *
+ * @param {string[]} gradleArguments The general gradle arguments, which must only be added once
+ * @param {string[]} gradleSubCommands The sub-commands that are to be executed by gradle
+ * @param {string[]} gradleSubCommandArguments The arguments specific to the sub-command(s), which much be added PER sub-command
+ *
+ * @returns {string[]} Array of arguments to be added to the gradle command
+ */
+export function buildGradleCommandArguments(gradleArguments: string[], gradleSubCommands: string[], gradleSubCommandArguments: string[]): string[];
 /**
  * Method to split the output produced by Gradle using parallel processing by project
  *
