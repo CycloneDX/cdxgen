@@ -210,19 +210,12 @@ export function parseMavenTree(rawOutput: string, pomFile: string): any;
 /**
  * Parse gradle dependencies output
  * @param {string} rawOutput Raw string output
- * @param {string} rootProjectGroup Root project group
  * @param {string} rootProjectName Root project name
- * @param {string} rootProjectVersion Root project version
+ * @param {map} gradleModules Cache with all gradle modules that have already been read
+ * @param {string} gradleRootPath Root path where Gradle is to be run when getting module information
  */
-export function parseGradleDep(rawOutput: string, rootProjectGroup?: string, rootProjectName?: string, rootProjectVersion?: string): {
-    pkgList: {
-        group: any;
-        name: any;
-        version: any;
-        qualifiers: {
-            type: string;
-        };
-    }[];
+export function parseGradleDep(rawOutput: string, rootProjectName?: string, gradleModules?: map, gradleRootPath?: string): {
+    pkgList: any[];
     dependenciesList: {
         ref: string;
         dependsOn: any;
