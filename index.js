@@ -1898,7 +1898,7 @@ export async function createJavaBom(path, options) {
   // NOTE: This can match BUILD files used by perl, so could lead to errors in some projects
   const bazelFiles = getAllFiles(
     path,
-    `${options.multiProject ? "**/" : ""}BUILD*`,
+    `${options.multiProject ? "**/" : ""}BUILD{,.bazel}`,
     options,
   );
   if (
