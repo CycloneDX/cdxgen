@@ -10072,9 +10072,12 @@ export function buildGradleCommandArguments(
   gradleSubCommands,
   gradleSubCommandArguments,
 ) {
-  let allGradleArguments = ["--console", "plain", "--build-cache"].concat(
-    gradleArguments,
-  );
+  let allGradleArguments = [
+    "--build-cache",
+    "--console",
+    "plain",
+    "--no-parallel",
+  ].concat(gradleArguments);
   for (const gradleSubCommand of gradleSubCommands) {
     allGradleArguments.push(gradleSubCommand);
     allGradleArguments = allGradleArguments.concat(gradleSubCommandArguments);
