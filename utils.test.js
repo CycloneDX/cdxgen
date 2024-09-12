@@ -4053,7 +4053,7 @@ test("parse nupkg file", async () => {
     "./test/data/xunit.nuspec",
     readFileSync("./test/data/xunit.runner.utility.nuspec", "utf-8"),
   );
-  expect(retMap.pkgList.length).toEqual(5);
+  expect(retMap.pkgList.length).toEqual(8);
   expect(retMap.pkgList[1].properties).toEqual([
     { name: "SrcFile", value: "./test/data/xunit.nuspec" },
     { name: "cdx:dotnet:target_framework", value: ".NETFramework3.5" },

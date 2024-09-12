@@ -7420,6 +7420,7 @@ export function parseNuspecData(nupkgFile, nuspecData) {
       ],
     },
   };
+  pkg.scope = "required";
   pkgList.push(pkg);
   if (m?.dependencies?.dependency) {
     const dependsOn = [];
@@ -7473,6 +7474,7 @@ export function parseNuspecData(nupkgFile, nuspecData) {
             groupPkg.purl = `pkg:nuget/${groupPkg.name}`;
           }
           groupPkg["bom-ref"] = groupPkg.purl;
+          groupPkg.scope = "optional";
           groupPkg.properties = [
             {
               name: "SrcFile",
@@ -7498,9 +7500,9 @@ export function parseNuspecData(nupkgFile, nuspecData) {
               ],
             },
           };
+          pkgList.push(groupPkg);
           if (!addedMap[groupPkg.purl]) {
             dependsOn.push(groupPkg.name);
-            pkgList.push(groupPkg);
             addedMap[groupPkg.purl] = true;
           }
         } // for
