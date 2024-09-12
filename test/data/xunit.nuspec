@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata minClientVersion="2.12">
+    <id>xunit</id>
+    <version>2.2.0</version>
+    <title>xUnit.net</title>
+    <authors>James Newkirk,Brad Wilson</authors>
+    <owners>James Newkirk,Brad Wilson</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://raw.githubusercontent.com/xunit/xunit/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/xunit/xunit</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/xunit/media/master/logo-512-transparent.png</iconUrl>
+    <description>xUnit.net is a developer testing framework, built to support Test Driven Development, with a design goal of extreme simplicity and alignment with framework features.
+
+Installing this package installs xunit.core and xunit.assert.</description>
+    <summary>xUnit.net is a developer testing framework, built to support Test Driven Development.</summary>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="xunit.core" version="[2.2.0]" />
+      <dependency id="xunit.assert" version="[2.2.0]" />
+    </dependencies>
+  </metadata>
+</package>

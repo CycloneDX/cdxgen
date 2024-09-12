@@ -2028,6 +2028,10 @@ test("parse cs proj", () => {
     "bom-ref": "pkg:nuget/activeup.net.common",
     properties: [
       {
+        name: "cdx:dotnet:hint_path",
+        value: "..\\activeup.net.common.dll",
+      },
+      {
         name: "PackageFiles",
         value: "activeup.net.common.dll",
       },
@@ -2386,11 +2390,26 @@ test("parse .net cs proj", () => {
     "bom-ref": "pkg:nuget/Antlr3.Runtime@3.5.0.2",
     properties: [
       {
+        name: "cdx:dotnet:hint_path",
+        value: "..\\packages\\Antlr.3.5.0.2\\lib\\Antlr3.Runtime.dll",
+      },
+      {
         name: "PackageFiles",
         value: "Antlr3.Runtime.dll",
       },
     ],
   });
+  for (const apkg of retMap.pkgList) {
+    if (
+      (apkg.name.startsWith("System.") ||
+        apkg.name.startsWith("Mono.") ||
+        apkg.name.startsWith("Microsoft.")) &&
+      !apkg.version
+    ) {
+      expect(apkg.properties.length).toBeGreaterThanOrEqual(1);
+      expect(apkg.properties[0].name).toEqual("cdx:dotnet:target_framework");
+    }
+  }
   expect(retMap.dependencies).toEqual([
     {
       ref: "pkg:nuget/Calculator@latest",
@@ -4026,6 +4045,7 @@ test("parse nupkg file", async () => {
   );
   expect(retMap.pkgList.length).toEqual(1);
   expect(retMap.pkgList[0].name).toEqual("Microsoft.Web.Infrastructure");
+  expect(retMap.dependenciesMap).toEqual({});
   retMap = parseNuspecData(
     "./test/data/Microsoft.Web.Infrastructure.1.0.0.0.nuspec",
     readFileSync(
@@ -4035,9 +4055,36 @@ test("parse nupkg file", async () => {
   );
   expect(retMap.pkgList.length).toEqual(1);
   expect(retMap.pkgList[0].name).toEqual("Microsoft.Web.Infrastructure");
+  expect(retMap.dependenciesMap).toEqual({});
   retMap = await parseNupkg("./test/data/jquery.3.6.0.nupkg");
   expect(retMap.pkgList.length).toEqual(1);
   expect(retMap.pkgList[0].name).toEqual("jQuery");
+  expect(retMap.dependenciesMap).toEqual({});
+  retMap = parseNuspecData(
+    "./test/data/xunit.nuspec",
+    readFileSync("./test/data/xunit.nuspec", "utf-8"),
+  );
+  expect(retMap.pkgList.length).toEqual(1);
+  expect(retMap.dependenciesMap).toEqual({
+    "pkg:nuget/xunit@2.2.0": ["xunit.core", "xunit.assert"],
+  });
+  retMap = parseNuspecData(
+    "./test/data/xunit.nuspec",
+    readFileSync("./test/data/xunit.runner.utility.nuspec", "utf-8"),
+  );
+  expect(retMap.pkgList.length).toEqual(8);
+  expect(retMap.pkgList[1].properties).toEqual([
+    { name: "SrcFile", value: "./test/data/xunit.nuspec" },
+    { name: "cdx:dotnet:target_framework", value: ".NETFramework3.5" },
+  ]);
+  expect(retMap.dependenciesMap).toEqual({
+    "pkg:nuget/xunit.runner.utility@2.2.0": [
+      "xunit.abstractions",
+      "NETStandard.Library",
+      "xunit.extensibility.core",
+      "System.Reflection.TypeExtensions",
+    ],
+  });
 });
 
 test("parse bazel skyframe", () => {

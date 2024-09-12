@@ -214,7 +214,7 @@ export function parseMavenTree(rawOutput: string, pomFile: string): any;
  * @param {map} gradleModules Cache with all gradle modules that have already been read
  * @param {string} gradleRootPath Root path where Gradle is to be run when getting module information
  */
-export function parseGradleDep(rawOutput: string, rootProjectName?: string, gradleModules?: map, gradleRootPath?: string): {
+export function parseGradleDep(rawOutput: string, rootProjectName?: string, gradleModules?: map, gradleRootPath?: string): Promise<{
     pkgList: any[];
     dependenciesList: {
         ref: string;
@@ -223,7 +223,7 @@ export function parseGradleDep(rawOutput: string, rootProjectName?: string, grad
 } | {
     pkgList?: undefined;
     dependenciesList?: undefined;
-};
+}>;
 /**
  * Parse clojure cli dependencies output
  * @param {string} rawOutput Raw string output
@@ -1061,6 +1061,14 @@ export function buildGradleCommandArguments(gradleArguments: string[], gradleSub
  * @returns {map} Map with subProject names as keys and corresponding dependency task outputs as values.
  */
 export function splitOutputByGradleProjects(rawOutput: string, relevantTasks: string[]): map;
+/**
+ * Method that handles object creation for gradle modules.
+ *
+ * @param {string} name The simple name of the module
+ * @param {object} metadata Object with all other parsed data for the gradle module
+ * @returns {object} An object representing the gradle module in SBOM-format
+ */
+export function buildObjectForGradleModule(name: string, metadata: object): object;
 /**
  * Method to return the maven command to use.
  *

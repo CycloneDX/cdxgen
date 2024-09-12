@@ -7365,7 +7365,8 @@ export function parseNuspecData(nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
   let npkg = undefined;
-  const dependenciesMap = [];
+  const dependenciesMap = {};
+  const addedMap = {};
   try {
     npkg = xml2js(nuspecData, {
       compact: true,
@@ -7419,6 +7420,7 @@ export function parseNuspecData(nupkgFile, nuspecData) {
       ],
     },
   };
+  pkg.scope = "required";
   pkgList.push(pkg);
   if (m?.dependencies?.dependency) {
     const dependsOn = [];
@@ -7432,6 +7434,81 @@ export function parseNuspecData(nupkgFile, nuspecData) {
       dependsOn.push(d.id);
     }
     dependenciesMap[pkg["bom-ref"]] = dependsOn;
+  } else if (m?.dependencies?.group) {
+    let dependencyGroups = [];
+    if (Array.isArray(m.dependencies.group)) {
+      dependencyGroups = m.dependencies.group;
+    } else {
+      dependencyGroups = [m.dependencies.group];
+    }
+    const dependsOn = [];
+    for (const agroup of dependencyGroups) {
+      let targetFramework = undefined;
+      if (agroup?.$?.targetFramework) {
+        targetFramework = agroup.$.targetFramework;
+      }
+      if (agroup?.dependency) {
+        let groupDependencies = [];
+        // This dependency can be an array or object
+        if (Array.isArray(agroup.dependency)) {
+          groupDependencies = agroup.dependency;
+        } else if (agroup?.dependency?.$) {
+          groupDependencies = [agroup.dependency];
+        }
+        for (let agroupdep of groupDependencies) {
+          agroupdep = agroupdep.$;
+          const groupPkg = {};
+          if (!agroupdep.id) {
+            continue;
+          }
+          groupPkg.name = agroupdep.id;
+          if (agroupdep?.version) {
+            let versionStr = agroupdep.version;
+            // version could have square brackets around them
+            if (versionStr.startsWith("[") && versionStr.endsWith("]")) {
+              versionStr = versionStr.replace(/[\[\]]/g, "");
+            }
+            groupPkg.version = versionStr;
+            groupPkg.purl = `pkg:nuget/${groupPkg.name}@${versionStr}`;
+          } else {
+            groupPkg.purl = `pkg:nuget/${groupPkg.name}`;
+          }
+          groupPkg["bom-ref"] = groupPkg.purl;
+          groupPkg.scope = "optional";
+          groupPkg.properties = [
+            {
+              name: "SrcFile",
+              value: nupkgFile,
+            },
+          ];
+          if (targetFramework) {
+            groupPkg.properties.push({
+              name: "cdx:dotnet:target_framework",
+              value: targetFramework,
+            });
+          }
+          groupPkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "binary-analysis",
+                  confidence: 1,
+                  value: nupkgFile,
+                },
+              ],
+            },
+          };
+          pkgList.push(groupPkg);
+          if (!addedMap[groupPkg.purl]) {
+            dependsOn.push(groupPkg.name);
+            addedMap[groupPkg.purl] = true;
+          }
+        } // for
+      } // group dependency block
+      dependenciesMap[pkg["bom-ref"]] = dependsOn;
+    } // for
   }
   return {
     pkgList,
@@ -7512,6 +7589,7 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   if (csProjData.charCodeAt(0) === 0xfeff) {
     csProjData = csProjData.slice(1);
   }
+  const projectTargetFrameworks = [];
   let projects = undefined;
   try {
     projects = xml2js(csProjData, {
@@ -7593,30 +7671,39 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         apg.TargetFramework[0]._ &&
         Array.isArray(apg.TargetFramework[0]._)
       ) {
-        parentComponent.properties.push({
-          name: "cdx:dotnet:target_framework",
-          value: apg.TargetFramework[0]._[0],
-        });
+        for (const apgtf of apg.TargetFramework[0]._) {
+          projectTargetFrameworks.push(apgtf);
+          parentComponent.properties.push({
+            name: "cdx:dotnet:target_framework",
+            value: apgtf,
+          });
+        }
       } else if (
         apg?.TargetFrameworkVersion &&
         Array.isArray(apg.TargetFrameworkVersion) &&
         apg.TargetFrameworkVersion[0]._ &&
         Array.isArray(apg.TargetFrameworkVersion[0]._)
       ) {
-        parentComponent.properties.push({
-          name: "cdx:dotnet:target_framework",
-          value: apg.TargetFrameworkVersion[0]._[0],
-        });
+        for (const apgtf of apg.TargetFrameworkVersion[0]._) {
+          projectTargetFrameworks.push(apgtf);
+          parentComponent.properties.push({
+            name: "cdx:dotnet:target_framework",
+            value: apgtf,
+          });
+        }
       } else if (
         apg?.TargetFrameworks &&
         Array.isArray(apg.TargetFrameworks) &&
         apg.TargetFrameworks[0]._ &&
         Array.isArray(apg.TargetFrameworks[0]._)
       ) {
-        parentComponent.properties.push({
-          name: "cdx:dotnet:target_framework",
-          value: apg.TargetFrameworks[0]._[0],
-        });
+        for (const apgtf of apg.TargetFrameworks[0]._) {
+          projectTargetFrameworks.push(apgtf);
+          parentComponent.properties.push({
+            name: "cdx:dotnet:target_framework",
+            value: apgtf,
+          });
+        }
       }
       if (
         apg?.Description &&
@@ -7681,6 +7768,7 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         }
         const incParts = pref.Include.split(",");
         pkg.name = incParts[0];
+        pkg.properties = [];
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
@@ -7689,9 +7777,21 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           pkg.purl = `pkg:nuget/${pkg.name}@${version}`;
         } else {
           pkg.purl = `pkg:nuget/${pkg.name}`;
+          if (
+            pkg.name.startsWith("System.") ||
+            pkg.name.startsWith("Mono.") ||
+            pkg.name.startsWith("Microsoft.")
+          ) {
+            // If this is a System package, then track the target frameworks
+            for (const tf of projectTargetFrameworks) {
+              pkg.properties.push({
+                name: "cdx:dotnet:target_framework",
+                value: tf,
+              });
+            }
+          }
         }
         pkg["bom-ref"] = pkg.purl;
-        pkg.properties = [];
         if (projFile) {
           pkg.properties.push({
             name: "SrcFile",
@@ -7717,6 +7817,18 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           Array.isArray(item.Reference[j].HintPath[0]._)
         ) {
           let packageFileName = basename(item.Reference[j].HintPath[0]._[0]);
+          // The same component could be referred by a slightly different name.
+          // Use the hint_path to figure out the aliases in such cases.
+          // Example:
+          // <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+          //   <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+          // </Reference>
+          // cdxgen would create two components Microsoft.AI.Agent.Intercept@2.0.6.0 and Microsoft.ApplicationInsights.Agent.Intercept@2.0.6
+          // They're The Same Picture meme goes here
+          pkg.properties.push({
+            name: "cdx:dotnet:hint_path",
+            value: item.Reference[j].HintPath[0]._[0],
+          });
           if (packageFileName.includes("\\")) {
             packageFileName = packageFileName.split("\\").pop();
           }
