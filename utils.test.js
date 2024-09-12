@@ -2391,6 +2391,15 @@ test("parse .net cs proj", () => {
       },
     ],
   });
+  for (const apkg of retMap.pkgList) {
+    if (
+      (apkg.name.startsWith("System.") || apkg.name.startsWith("Microsoft.")) &&
+      !apkg.version
+    ) {
+      expect(apkg.properties.length).toBeGreaterThanOrEqual(1);
+      expect(apkg.properties[0].name).toEqual("cdx:dotnet:target_framework");
+    }
+  }
   expect(retMap.dependencies).toEqual([
     {
       ref: "pkg:nuget/Calculator@latest",

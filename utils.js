@@ -7589,6 +7589,7 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
   if (csProjData.charCodeAt(0) === 0xfeff) {
     csProjData = csProjData.slice(1);
   }
+  const projectTargetFrameworks = [];
   let projects = undefined;
   try {
     projects = xml2js(csProjData, {
@@ -7670,30 +7671,39 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         apg.TargetFramework[0]._ &&
         Array.isArray(apg.TargetFramework[0]._)
       ) {
-        parentComponent.properties.push({
-          name: "cdx:dotnet:target_framework",
-          value: apg.TargetFramework[0]._[0],
-        });
+        for (const apgtf of apg.TargetFramework[0]._) {
+          projectTargetFrameworks.push(apgtf);
+          parentComponent.properties.push({
+            name: "cdx:dotnet:target_framework",
+            value: apgtf,
+          });
+        }
       } else if (
         apg?.TargetFrameworkVersion &&
         Array.isArray(apg.TargetFrameworkVersion) &&
         apg.TargetFrameworkVersion[0]._ &&
         Array.isArray(apg.TargetFrameworkVersion[0]._)
       ) {
-        parentComponent.properties.push({
-          name: "cdx:dotnet:target_framework",
-          value: apg.TargetFrameworkVersion[0]._[0],
-        });
+        for (const apgtf of apg.TargetFrameworkVersion[0]._) {
+          projectTargetFrameworks.push(apgtf);
+          parentComponent.properties.push({
+            name: "cdx:dotnet:target_framework",
+            value: apgtf,
+          });
+        }
       } else if (
         apg?.TargetFrameworks &&
         Array.isArray(apg.TargetFrameworks) &&
         apg.TargetFrameworks[0]._ &&
         Array.isArray(apg.TargetFrameworks[0]._)
       ) {
-        parentComponent.properties.push({
-          name: "cdx:dotnet:target_framework",
-          value: apg.TargetFrameworks[0]._[0],
-        });
+        for (const apgtf of apg.TargetFrameworks[0]._) {
+          projectTargetFrameworks.push(apgtf);
+          parentComponent.properties.push({
+            name: "cdx:dotnet:target_framework",
+            value: apgtf,
+          });
+        }
       }
       if (
         apg?.Description &&
@@ -7758,6 +7768,7 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
         }
         const incParts = pref.Include.split(",");
         pkg.name = incParts[0];
+        pkg.properties = [];
         if (incParts.length > 1 && incParts[1].includes("Version")) {
           pkg.version = incParts[1].replace("Version=", "").trim();
         }
@@ -7766,9 +7777,20 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           pkg.purl = `pkg:nuget/${pkg.name}@${version}`;
         } else {
           pkg.purl = `pkg:nuget/${pkg.name}`;
+          if (
+            pkg.name.startsWith("System.") ||
+            pkg.name.startsWith("Microsoft.")
+          ) {
+            // If this is a System package, then track the target frameworks
+            for (const tf of projectTargetFrameworks) {
+              pkg.properties.push({
+                name: "cdx:dotnet:target_framework",
+                value: tf,
+              });
+            }
+          }
         }
         pkg["bom-ref"] = pkg.purl;
-        pkg.properties = [];
         if (projFile) {
           pkg.properties.push({
             name: "SrcFile",
