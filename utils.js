@@ -7365,7 +7365,8 @@ export function parseNuspecData(nupkgFile, nuspecData) {
   const pkgList = [];
   const pkg = { group: "" };
   let npkg = undefined;
-  const dependenciesMap = [];
+  const dependenciesMap = {};
+  const addedMap = {};
   try {
     npkg = xml2js(nuspecData, {
       compact: true,
@@ -7432,6 +7433,80 @@ export function parseNuspecData(nupkgFile, nuspecData) {
       dependsOn.push(d.id);
     }
     dependenciesMap[pkg["bom-ref"]] = dependsOn;
+  } else if (m?.dependencies?.group) {
+    let dependencyGroups = [];
+    if (Array.isArray(m.dependencies.group)) {
+      dependencyGroups = m.dependencies.group;
+    } else {
+      dependencyGroups = [m.dependencies.group];
+    }
+    const dependsOn = [];
+    for (const agroup of dependencyGroups) {
+      let targetFramework = undefined;
+      if (agroup?.$?.targetFramework) {
+        targetFramework = agroup.$.targetFramework;
+      }
+      if (agroup?.dependency) {
+        let groupDependencies = [];
+        // This dependency can be an array or object
+        if (Array.isArray(agroup.dependency)) {
+          groupDependencies = agroup.dependency;
+        } else if (agroup?.dependency?.$) {
+          groupDependencies = [agroup.dependency];
+        }
+        for (let agroupdep of groupDependencies) {
+          agroupdep = agroupdep.$;
+          const groupPkg = {};
+          if (!agroupdep.id) {
+            continue;
+          }
+          groupPkg.name = agroupdep.id;
+          if (agroupdep?.version) {
+            let versionStr = agroupdep.version;
+            // version could have square brackets around them
+            if (versionStr.startsWith("[") && versionStr.endsWith("]")) {
+              versionStr = versionStr.replace(/[\[\]]/g, "");
+            }
+            groupPkg.version = versionStr;
+            groupPkg.purl = `pkg:nuget/${groupPkg.name}@${versionStr}`;
+          } else {
+            groupPkg.purl = `pkg:nuget/${groupPkg.name}`;
+          }
+          groupPkg["bom-ref"] = groupPkg.purl;
+          groupPkg.properties = [
+            {
+              name: "SrcFile",
+              value: nupkgFile,
+            },
+          ];
+          if (targetFramework) {
+            groupPkg.properties.push({
+              name: "cdx:dotnet:target_framework",
+              value: targetFramework,
+            });
+          }
+          groupPkg.evidence = {
+            identity: {
+              field: "purl",
+              confidence: 0.7,
+              methods: [
+                {
+                  technique: "binary-analysis",
+                  confidence: 1,
+                  value: nupkgFile,
+                },
+              ],
+            },
+          };
+          if (!addedMap[groupPkg.purl]) {
+            dependsOn.push(groupPkg.name);
+            pkgList.push(groupPkg);
+            addedMap[groupPkg.purl] = true;
+          }
+        } // for
+      } // group dependency block
+      dependenciesMap[pkg["bom-ref"]] = dependsOn;
+    } // for
   }
   return {
     pkgList,
