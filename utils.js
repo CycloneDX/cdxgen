@@ -7779,6 +7779,7 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           pkg.purl = `pkg:nuget/${pkg.name}`;
           if (
             pkg.name.startsWith("System.") ||
+            pkg.name.startsWith("Mono.") ||
             pkg.name.startsWith("Microsoft.")
           ) {
             // If this is a System package, then track the target frameworks

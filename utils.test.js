@@ -2393,7 +2393,9 @@ test("parse .net cs proj", () => {
   });
   for (const apkg of retMap.pkgList) {
     if (
-      (apkg.name.startsWith("System.") || apkg.name.startsWith("Microsoft.")) &&
+      (apkg.name.startsWith("System.") ||
+        apkg.name.startsWith("Mono.") ||
+        apkg.name.startsWith("Microsoft.")) &&
       !apkg.version
     ) {
       expect(apkg.properties.length).toBeGreaterThanOrEqual(1);
