@@ -7817,6 +7817,18 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           Array.isArray(item.Reference[j].HintPath[0]._)
         ) {
           let packageFileName = basename(item.Reference[j].HintPath[0]._[0]);
+          // The same component could be referred by a slightly different name.
+          // Use the hint_path to figure out the aliases in such cases.
+          // Example:
+          // <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+          //   <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+          // </Reference>
+          // cdxgen would create two components Microsoft.AI.Agent.Intercept@2.0.6.0 and Microsoft.ApplicationInsights.Agent.Intercept@2.0.6
+          // They're The Same Picture meme goes here
+          pkg.properties.push({
+            name: "cdx:dotnet:hint_path",
+            value: packageFileName,
+          });
           if (packageFileName.includes("\\")) {
             packageFileName = packageFileName.split("\\").pop();
           }
