@@ -4054,6 +4054,10 @@ test("parse nupkg file", async () => {
     readFileSync("./test/data/xunit.runner.utility.nuspec", "utf-8"),
   );
   expect(retMap.pkgList.length).toEqual(5);
+  expect(retMap.pkgList[1].properties).toEqual([
+    { name: "SrcFile", value: "./test/data/xunit.nuspec" },
+    { name: "cdx:dotnet:target_framework", value: ".NETFramework3.5" },
+  ]);
   expect(retMap.dependenciesMap).toEqual({
     "pkg:nuget/xunit.runner.utility@2.2.0": [
       "xunit.abstractions",
