@@ -7827,7 +7827,7 @@ export function parseCsProjData(csProjData, projFile, pkgNameVersions = {}) {
           // They're The Same Picture meme goes here
           pkg.properties.push({
             name: "cdx:dotnet:hint_path",
-            value: packageFileName,
+            value: item.Reference[j].HintPath[0]._[0],
           });
           if (packageFileName.includes("\\")) {
             packageFileName = packageFileName.split("\\").pop();
