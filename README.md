@@ -55,7 +55,7 @@ Sections include:
 ## Installing
 
 ```shell
-npm install -g @cyclonedx/cdxgen@10.9.10
+npm install -g @cyclonedx/cdxgen@10.9.11
 ```
 
 If you are a [Homebrew][homebrew-homepage] user, you can also install [cdxgen][homebrew-cdxgen] via:
@@ -403,7 +403,7 @@ To generate test public/private key pairs, you can run cdxgen by passing the arg
 Use the bundled `cdx-verify` command, which supports verifying a single signature added at the bom level.
 
 ```shell
-npm install -g @cyclonedx/cdxgen@10.9.10
+npm install -g @cyclonedx/cdxgen@10.9.11
 cdx-verify -i bom.json --public-key public.key
 ```
 
