@@ -9,7 +9,7 @@ cdxgen is available as an npm package, container image, and single application e
 ## Installation
 
 ```shell
-sudo npm install -g @cyclonedx/cdxgen@10.9.10
+sudo npm install -g @cyclonedx/cdxgen@10.9.11
 ```
 
 If you are a [Homebrew](https://brew.sh/) user, you can also install [cdxgen](https://formulae.brew.sh/formula/cdxgen) via:
@@ -63,7 +63,7 @@ cdxgen -t c -o bom.json
 ## Installation
 
 ```shell
-sudo npm install -g @cyclonedx/cdxgen@10.9.10
+sudo npm install -g @cyclonedx/cdxgen@10.9.11
 ```
 
 ## Usage
@@ -237,7 +237,7 @@ To generate test public/private key pairs, you can run cdxgen by passing the arg
 Use the bundled `cdx-verify` command, which supports verifying a single signature added at the bom level.
 
 ```shell
-npm install -g @cyclonedx/cdxgen@10.9.10
+npm install -g @cyclonedx/cdxgen@10.9.11
 cdx-verify -i bom.json --public-key public.key
 ```
 
