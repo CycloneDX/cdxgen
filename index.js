@@ -591,7 +591,12 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
           }
         }
       } // for
-      parentComponent.components = subComponents;
+      // Avoid creating empty component.components attribute
+      if (subComponents.length) {
+        parentComponent.components = subComponents;
+      } else {
+        parentComponent.components = undefined;
+      }
     }
     metadata.component = parentComponent;
   }

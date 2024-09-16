@@ -24,7 +24,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 21.x
+        node-version: '22.x'
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -61,7 +61,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 21.x
+        node-version: '22.x'
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -135,7 +135,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 21.x
+        node-version: '22.x'
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -186,7 +186,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 21.x
+        node-version: '22.x'
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |
@@ -237,7 +237,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 21.x
+        node-version: '22.x'
         registry-url: https://registry.npmjs.org/
     - name: Trim CI agent
       run: |

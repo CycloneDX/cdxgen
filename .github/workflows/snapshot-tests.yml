@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4.0.1
         with:
-          node-version: 21
+          node-version: '22.x'
 
       - name: Setup Python
         uses: actions/setup-python@v5
