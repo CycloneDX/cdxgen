@@ -1657,20 +1657,7 @@ export async function createJavaBom(path, options) {
         );
 
         for (const [key, propTaskOut] of splitPropTaskOut.entries()) {
-          let retMap = {};
-          // To optimize performance and reduce errors do not query for properties
-          // beyond the first level. Replicating behaviour from single-threaded Gradle generation.
-          if (key.includes(":")) {
-            retMap = {
-              rootProject: key,
-              projects: [],
-              metadata: {
-                version: "latest",
-              },
-            };
-          } else {
-            retMap = parseGradleProperties(propTaskOut);
-          }
+          const retMap = parseGradleProperties(propTaskOut);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
             const rootSubProjectObj = await buildObjectForGradleModule(

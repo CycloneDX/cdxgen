@@ -2981,11 +2981,6 @@ export function executeGradleProperties(dir, subProject) {
       version: "latest",
     },
   };
-  // To optimize performance and reduce errors do not query for properties
-  // beyond the first level
-  if (subProject && subProject.match(/:/g).length >= 2) {
-    return defaultProps;
-  }
   const gradleCmd = getGradleCommand(dir, null);
   const gradleArguments = buildGradleCommandArguments(
     process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
