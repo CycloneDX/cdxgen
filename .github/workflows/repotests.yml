@@ -249,6 +249,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: 'malice00/cdxgen-expo-test'
+          ref: 'android'
           path: 'repotests/expo-test'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman

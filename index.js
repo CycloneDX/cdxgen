@@ -1668,9 +1668,8 @@ export async function createJavaBom(path, options) {
           }
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
-            const rspName = rootSubProject.replace(/^:/, "");
             const rootSubProjectObj = await buildObjectForGradleModule(
-              rspName,
+              rootSubProject.replace(/^:/, ""),
               retMap.metadata,
             );
             if (!allProjectsAddedPurls.includes(rootSubProjectObj["purl"])) {
@@ -1678,7 +1677,7 @@ export async function createJavaBom(path, options) {
               rootDependsOn.push(rootSubProjectObj["bom-ref"]);
               allProjectsAddedPurls.push(rootSubProjectObj["purl"]);
             }
-            gradleModules.set(rspName, rootSubProjectObj);
+            gradleModules.set(key.replace(/^:/, ""), rootSubProjectObj);
           }
         }
       } else {
@@ -1686,9 +1685,8 @@ export async function createJavaBom(path, options) {
           retMap = executeGradleProperties(gradleRootPath, spstr);
           const rootSubProject = retMap.rootProject;
           if (rootSubProject) {
-            const rspName = rootSubProject.replace(/^:/, "");
             const rootSubProjectObj = await buildObjectForGradleModule(
-              rspName,
+              rootSubProject.replace(/^:/, ""),
               retMap.metadata,
             );
             if (!allProjectsAddedPurls.includes(rootSubProjectObj["purl"])) {
@@ -1696,7 +1694,7 @@ export async function createJavaBom(path, options) {
               rootDependsOn.push(rootSubProjectObj["bom-ref"]);
               allProjectsAddedPurls.push(rootSubProjectObj["purl"]);
             }
-            gradleModules.set(rspName, rootSubProjectObj);
+            gradleModules.set(spstr.replace(/^:/, ""), rootSubProjectObj);
           }
         }
       } //end else
@@ -1731,13 +1729,10 @@ export async function createJavaBom(path, options) {
       if (!modulesToSkip.includes("root")) {
         gradleSubCommands.push(gradleDepTask);
       }
-      for (const sp of allProjects) {
+      for (const [key, sp] of gradleModules) {
         //create single command for dependencies tasks on all subprojects
-        if (
-          sp.purl !== parentComponent.purl &&
-          !modulesToSkip.includes(sp.name)
-        ) {
-          gradleSubCommands.push(`:${sp.name}:${gradleDepTask}`);
+        if (sp.purl !== parentComponent.purl && !modulesToSkip.includes(key)) {
+          gradleSubCommands.push(`:${key}:${gradleDepTask}`);
         }
       }
       const gradleArguments = buildGradleCommandArguments(
@@ -1773,10 +1768,10 @@ export async function createJavaBom(path, options) {
         const perProjectOutput = splitOutputByGradleProjects(cmdOutput, [
           gradleDepTask,
         ]);
-        for (const sp of allProjects) {
+        for (const [key, sp] of gradleModules) {
           const parsedList = await parseGradleDep(
-            perProjectOutput.has(sp.name) ? perProjectOutput.get(sp.name) : "",
-            sp.name,
+            perProjectOutput.has(key) ? perProjectOutput.get(key) : "",
+            key,
             gradleModules,
             gradleRootPath,
           );
@@ -1794,7 +1789,7 @@ export async function createJavaBom(path, options) {
                 "Found",
                 dlist.length,
                 "packages in gradle project",
-                sp.name,
+                key,
               );
             }
             pkgList = pkgList.concat(dlist);
@@ -1807,13 +1802,13 @@ export async function createJavaBom(path, options) {
           "Try the new multi-threaded mode for gradle. Set the environment variable GRADLE_MULTI_THREADED to true to enable this.",
         );
       }
-      for (const sp of allProjects) {
+      for (const [key, sp] of gradleModules) {
         const gradleArguments = buildGradleCommandArguments(
           process.env.GRADLE_ARGS ? process.env.GRADLE_ARGS.split(" ") : [],
           [
             sp.purl === parentComponent.purl
               ? gradleDepTask
-              : `:${sp.name}:${gradleDepTask}`,
+              : `:${key}:${gradleDepTask}`,
           ],
           process.env.GRADLE_ARGS_DEPENDENCIES
             ? process.env.GRADLE_ARGS_DEPENDENCIES.split(" ")
@@ -1844,7 +1839,7 @@ export async function createJavaBom(path, options) {
           const cmdOutput = Buffer.from(sstdout).toString();
           const parsedList = await parseGradleDep(
             cmdOutput,
-            sp.name,
+            key,
             gradleModules,
             gradleRootPath,
           );
@@ -1862,7 +1857,7 @@ export async function createJavaBom(path, options) {
                 "Found",
                 dlist.length,
                 "packages in gradle project",
-                sp.name,
+                key,
               );
             }
             pkgList = pkgList.concat(dlist);
