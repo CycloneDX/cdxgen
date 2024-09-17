@@ -557,6 +557,11 @@ function addMetadata(parentComponent = {}, options = {}, context = {}) {
       }
     }
     if (parentComponent?.components) {
+      parentComponent.components = listComponents(
+        options,
+        {},
+        parentComponent.components,
+      );
       const parentFullName = componentToSimpleFullName(parentComponent);
       const subComponents = [];
       const addedSubComponents = {};
