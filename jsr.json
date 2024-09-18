@@ -1,7 +1,7 @@
 {
   "name": "@cyclonedx/cdxgen",
   "version": "10.10.0",
-  "exports": "./index.js",
+  "exports": "./lib/cli/index.js",
   "include": [
     "*.js",
     "lib/cli/",
