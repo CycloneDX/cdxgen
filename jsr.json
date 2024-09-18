@@ -2,6 +2,18 @@
   "name": "@cyclonedx/cdxgen",
   "version": "10.10.0",
   "exports": "./index.js",
-  "include": ["*.js", "bin/**", "data/**", "types/**"],
+  "include": [
+    "*.js",
+    "lib/cli/",
+    "lib/evinser/",
+    "lib/helpers/",
+    "lib/managers/",
+    "lib/server/",
+    "lib/stages/postgen/",
+    "lib/stages/pregen/",
+    "bin/**",
+    "data/**",
+    "types/**"
+  ],
   "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"]
 }

@@ -8,7 +8,18 @@
     "exclude": ["*.test.js", "./types/**/*"],
     "strict": true
   },
-  "include": ["*.js", "data/", "bin/"],
+  "include": [
+    "*.js",
+    "data/",
+    "bin/",
+    "lib/cli/",
+    "lib/evinser/",
+    "lib/helpers/",
+    "lib/managers/",
+    "lib/server/",
+    "lib/stages/postgen/",
+    "lib/stages/pregen/"
+  ],
   "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"],
   "lint": {
     "include": ["bin/", "*.js"],
