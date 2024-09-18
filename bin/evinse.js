@@ -12,10 +12,10 @@ import {
   printOccurrences,
   printReachables,
   printServices,
-} from "../display.js";
-import { analyzeProject, createEvinseFile, prepareDB } from "../evinser.js";
-import { ATOM_DB } from "../utils.js";
-import { validateBom } from "../validator.js";
+} from "../lib/helpers/display.js";
+import { analyzeProject, createEvinseFile, prepareDB } from "../lib/evinser/evinser.js";
+import { ATOM_DB } from "../lib/helpers/utils.js";
+import { validateBom } from "../lib/helpers/validator.js";
 
 // Support for config files
 const configPath = findUpSync([

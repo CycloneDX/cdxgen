@@ -20,12 +20,12 @@ import {
   printSponsorBanner,
   printSummary,
   printTable,
-} from "../display.js";
-import { createBom, submitBom } from "../index.js";
-import { postProcess } from "../postgen.js";
-import { prepareEnv } from "../pregen.js";
-import { ATOM_DB } from "../utils.js";
-import { validateBom } from "../validator.js";
+} from "../lib/helpers/display.js";
+import { createBom, submitBom } from "../lib/cli/index.js";
+import { postProcess } from "../lib/stages/postgen/postgen.js";
+import { prepareEnv } from "../lib/stages/pregen/pregen.js";
+import { ATOM_DB } from "../lib/helpers/utils.js";
+import { validateBom } from "../lib/helpers/validator.js";
 
 // Support for config files
 const configPath = findUpSync([
@@ -493,7 +493,7 @@ const checkPermissions = (filePath) => {
   printSponsorBanner(options);
   // Start SBOM server
   if (options.server) {
-    const serverModule = await import("../server.js");
+    const serverModule = await import("../lib/server/server.js");
     return serverModule.start(options);
   }
   // Check if cdxgen has the required permissions
@@ -666,7 +666,7 @@ const checkPermissions = (filePath) => {
     if (!options.evinseOutput) {
       options.evinseOutput = options.output;
     }
-    const evinserModule = await import("../evinser.js");
+    const evinserModule = await import("../lib/evinser/evinser.js");
     options.projectType = options.projectType || ["java"];
     const evinseOptions = {
       _: args._,
@@ -719,7 +719,7 @@ const checkPermissions = (filePath) => {
   }
   // Protobuf serialization
   if (options.exportProto) {
-    const protobomModule = await import("../protobom.js");
+    const protobomModule = await import("../lib/helpers/protobom.js");
     protobomModule.writeBinary(bomNSData.bomJson, options.protoBinFile);
   }
   if (options.print && bomNSData.bomJson && bomNSData.bomJson.components) {
