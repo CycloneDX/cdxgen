@@ -37,7 +37,7 @@
     }
   ],
   "type": "module",
-  "exports": "./index.js",
+  "exports": "./lib/cli/index.js",
   "types": "./types/index.d.ts",
   "bin": {
     "cdxgen": "bin/cdxgen.js",
