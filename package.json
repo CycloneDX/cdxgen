@@ -115,7 +115,19 @@
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
   },
-  "files": ["*.js", "bin/", "data/", "types/"],
+  "files": [
+    "*.js",
+    "lib/cli/",
+    "lib/evinser/",
+    "lib/helpers/",
+    "lib/managers/",
+    "lib/server/",
+    "lib/stages/postgen/",
+    "lib/stages/pregen/",
+    "bin/",
+    "data/",
+    "types/"
+  ],
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "jest": "^29.7.0",
