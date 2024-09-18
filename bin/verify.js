@@ -7,12 +7,13 @@ import { URL, fileURLToPath } from "node:url";
 import jws from "jws";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { dirNameStr } from "../lib/helpers/utils.js";
 
 let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+const dirName = dirNameStr;
 
 const args = yargs(hideBin(process.argv))
   .option("input", {

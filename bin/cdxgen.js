@@ -22,7 +22,7 @@ import {
   printSummary,
   printTable,
 } from "../lib/helpers/display.js";
-import { ATOM_DB } from "../lib/helpers/utils.js";
+import { ATOM_DB, dirNameStr } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 import { postProcess } from "../lib/stages/postgen/postgen.js";
 import { prepareEnv } from "../lib/stages/pregen/pregen.js";
@@ -51,7 +51,7 @@ let url = import.meta.url;
 if (!url.startsWith("file://")) {
   url = new URL(`file://${import.meta.url}`).toString();
 }
-const dirName = import.meta ? dirname(fileURLToPath(url)) : __dirname;
+const dirName = dirNameStr;
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
