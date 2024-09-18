@@ -22,7 +22,17 @@
   ],
   "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"],
   "lint": {
-    "include": ["bin/", "*.js"],
+    "include": [
+      "bin/",
+      "*.js",
+      "lib/cli/",
+      "lib/evinser/",
+      "lib/helpers/",
+      "lib/managers/",
+      "lib/server/",
+      "lib/stages/postgen/",
+      "lib/stages/pregen/"
+    ],
     "exclude": ["test/", "data/", "contrib/"],
     "rules": {
       "tags": ["recommended", "no-self-compare"],
