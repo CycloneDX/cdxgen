@@ -4,13 +4,7 @@
   "exports": "./lib/cli/index.js",
   "include": [
     "*.js",
-    "lib/cli/",
-    "lib/evinser/",
-    "lib/helpers/",
-    "lib/managers/",
-    "lib/server/",
-    "lib/stages/postgen/",
-    "lib/stages/pregen/",
+    "lib/**",
     "bin/**",
     "data/**",
     "types/**"
