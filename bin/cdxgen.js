@@ -10,6 +10,7 @@ import { findUpSync } from "find-up";
 import globalAgent from "global-agent";
 import { load as _load } from "js-yaml";
 import jws from "jws";
+import { createBom, submitBom } from "../lib/cli/index.js";
 import {
   printCallStack,
   printDependencyTree,
@@ -21,11 +22,10 @@ import {
   printSummary,
   printTable,
 } from "../lib/helpers/display.js";
-import { createBom, submitBom } from "../lib/cli/index.js";
-import { postProcess } from "../lib/stages/postgen/postgen.js";
-import { prepareEnv } from "../lib/stages/pregen/pregen.js";
 import { ATOM_DB } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
+import { postProcess } from "../lib/stages/postgen/postgen.js";
+import { prepareEnv } from "../lib/stages/pregen/pregen.js";
 
 // Support for config files
 const configPath = findUpSync([

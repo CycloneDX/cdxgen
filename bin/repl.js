@@ -7,6 +7,7 @@ import process from "node:process";
 import repl from "node:repl";
 import jsonata from "jsonata";
 
+import { createBom } from "../lib/cli/index.js";
 import {
   printCallStack,
   printDependencyTree,
@@ -18,7 +19,6 @@ import {
   printTable,
   printVulnerabilities,
 } from "../lib/helpers/display.js";
-import { createBom } from "../lib/cli/index.js";
 import { validateBom } from "../lib/helpers/validator.js";
 
 const options = {

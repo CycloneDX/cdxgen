@@ -8,12 +8,16 @@ import { load as _load } from "js-yaml";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import {
+  analyzeProject,
+  createEvinseFile,
+  prepareDB,
+} from "../lib/evinser/evinser.js";
+import {
   printCallStack,
   printOccurrences,
   printReachables,
   printServices,
 } from "../lib/helpers/display.js";
-import { analyzeProject, createEvinseFile, prepareDB } from "../lib/evinser/evinser.js";
 import { ATOM_DB } from "../lib/helpers/utils.js";
 import { validateBom } from "../lib/helpers/validator.js";
 
