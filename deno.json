@@ -8,19 +8,10 @@
     "exclude": ["*.test.js", "./types/**/*"],
     "strict": true
   },
-  "include": [
-    "*.js",
-    "data/",
-    "bin/",
-    "lib/**"
-  ],
+  "include": ["*.js", "data/", "bin/", "lib/**"],
   "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"],
   "lint": {
-    "include": [
-      "bin/",
-      "*.js",
-      "lib/**"
-    ],
+    "include": ["bin/", "*.js", "lib/**"],
     "exclude": ["test/", "data/", "contrib/"],
     "rules": {
       "tags": ["recommended", "no-self-compare"],
