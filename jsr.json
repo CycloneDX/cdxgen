@@ -1,7 +1,15 @@
 {
   "name": "@cyclonedx/cdxgen",
   "version": "10.10.0",
-  "exports": "./index.js",
-  "include": ["*.js", "bin/**", "data/**", "types/**"],
-  "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"]
+  "exports": "./lib/cli/index.js",
+  "include": ["*.js", "lib/**", "bin/**", "data/**", "types/**"],
+  "exclude": [
+    "test/",
+    "docs/",
+    "contrib/",
+    "ci/",
+    "tools_config/",
+    ".github/",
+    ".*"
+  ]
 }

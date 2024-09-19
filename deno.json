@@ -1,17 +1,25 @@
 {
   "name": "@cyclonedx/cdxgen",
   "version": "10.10.0",
-  "exports": "./index.js",
+  "exports": "./lib/cli/index.js",
   "compilerOptions": {
     "allowJs": true,
     "lib": ["deno.window"],
     "exclude": ["*.test.js", "./types/**/*"],
     "strict": true
   },
-  "include": ["*.js", "data/", "bin/"],
-  "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"],
+  "include": ["*.js", "data/", "bin/", "lib/**"],
+  "exclude": [
+    "test/",
+    "docs/",
+    "contrib/",
+    "ci/",
+    "tools_config/",
+    ".github/",
+    ".*"
+  ],
   "lint": {
-    "include": ["bin/", "*.js"],
+    "include": ["bin/", "*.js", "lib/**"],
     "exclude": ["test/", "data/", "contrib/"],
     "rules": {
       "tags": ["recommended", "no-self-compare"],

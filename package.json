@@ -37,7 +37,7 @@
     }
   ],
   "type": "module",
-  "exports": "./index.js",
+  "exports": "./lib/cli/index.js",
   "types": "./types/index.d.ts",
   "bin": {
     "cdxgen": "bin/cdxgen.js",
@@ -48,7 +48,7 @@
     "cdx-verify": "bin/verify.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false docker.test.js utils.test.js display.test.js postgen.test.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --inject-globals false lib/managers/docker.test.js lib/helpers/utils.test.js lib/helpers/display.test.js lib/stages/postgen/postgen.test.js",
     "watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --inject-globals false",
     "lint:check": "biome check",
     "lint": "biome check --fix",
@@ -115,7 +115,7 @@
     "sequelize": "^6.37.3",
     "sqlite3": "^5.1.7"
   },
-  "files": ["*.js", "bin/", "data/", "types/"],
+  "files": ["*.js", "lib/**", "bin/", "data/", "types/"],
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "jest": "^29.7.0",
