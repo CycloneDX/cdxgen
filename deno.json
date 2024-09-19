@@ -16,7 +16,7 @@
     "ci/",
     "tools_config/",
     ".github/",
-    "*"
+    ".*"
   ],
   "lint": {
     "include": ["bin/", "*.js", "lib/**"],
