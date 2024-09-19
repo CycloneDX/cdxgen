@@ -9,7 +9,15 @@
     "strict": true
   },
   "include": ["*.js", "data/", "bin/", "lib/**"],
-  "exclude": ["test/", "docs/", "contrib/", "ci/", "tools_config/"],
+  "exclude": [
+    "test/",
+    "docs/",
+    "contrib/",
+    "ci/",
+    "tools_config/",
+    ".github/",
+    "*"
+  ],
   "lint": {
     "include": ["bin/", "*.js", "lib/**"],
     "exclude": ["test/", "data/", "contrib/"],
