@@ -5,7 +5,7 @@
   },
   "linter": {
     "enabled": true,
-    "ignore": ["types/**", "contrib/**"],
+    "ignore": ["types/**", "contrib/**", "data/**"],
     "rules": {
       "recommended": true,
       "complexity": {
@@ -18,7 +18,8 @@
         "noUnnecessaryContinue": "warn",
         "noConstAssign": "error",
         "noConstantCondition": "error",
-        "noUnreachable": "info"
+        "noUnreachable": "info",
+        "noUnusedFunctionParameters": "warn"
       },
       "performance": {
         "noDelete": "off"
@@ -37,7 +38,6 @@
         "noEmptyBlockStatements": "warn"
       },
       "nursery": {
-        "noUnusedFunctionParameters": "warn",
         "noDuplicateElseIf": "warn"
       }
     }
