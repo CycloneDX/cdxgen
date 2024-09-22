@@ -251,6 +251,10 @@ jobs:
           repository: 'malice00/cdxgen-expo-test'
           ref: 'android'
           path: 'repotests/expo-test'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'elastic/elasticsearch'
+          path: 'repotests/elasticsearch'
       - uses: dtolnay/rust-toolchain@stable
       - name: setup sdkman
         run: |
@@ -455,6 +459,10 @@ jobs:
           GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_MULTI_THREADED=true GRADLE_SKIP_MODULES=root                               bin/cdxgen.js -p -t gradle repotests/expo-test -o bomresults/bom-expo-multi.json
           custom-json-diff -i bomresults/bom-expo.json bomresults/bom-expo-multi.json -o bomresults/diff-expo
           GRADLE_ARGS_DEPENDENCIES="--configuration releaseRuntimeClasspath" GRADLE_MULTI_THREADED=true GRADLE_SKIP_MODULES=root GRADLE_RESOLVE_FROM_NODE=true bin/cdxgen.js -p -t gradle repotests/expo-test -o bomresults/bom-expo-npm.json
+        shell: bash
+      - name: repotests elasticsearch
+        run: |
+          GRADLE_MULTI_THREADED=true bin/cdxgen.js -p -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
         shell: bash
       - name: jenkins plugins
         run: |
