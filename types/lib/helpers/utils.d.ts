@@ -248,8 +248,9 @@ export function parseGradleProjects(rawOutput: string): {
  * Parse gradle properties output
  *
  * @param {string} rawOutput Raw string output
+ * @param {string} gradleModuleName The name (or 'path') of the module as seen from the root of the project
  */
-export function parseGradleProperties(rawOutput: string): {
+export function parseGradleProperties(rawOutput: string, gradleModuleName?: string): {
     rootProject: string;
     projects: any[];
     metadata: {
