@@ -89,7 +89,7 @@
     "prettify-xml": "^1.2.0",
     "properties-reader": "^2.3.0",
     "semver": "^7.6.3",
-    "ssri": "^10.0.6",
+    "ssri": "^11.0.0",
     "table": "^6.8.2",
     "tar": "^6.2.1",
     "toml": "^3.0.0",
