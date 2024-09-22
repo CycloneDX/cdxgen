@@ -190,5 +190,6 @@ export namespace SDKMAN_TOOL_ALIASES {
     let java17: string;
     let java21: string;
     let java22: string;
+    let java23: string;
 }
 //# sourceMappingURL=envcontext.d.ts.map
