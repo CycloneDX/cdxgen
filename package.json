@@ -99,7 +99,7 @@
     "yargs": "^17.7.2"
   },
   "optionalDependencies": {
-    "@appthreat/atom": "2.0.20",
+    "@appthreat/atom": "2.0.21",
     "@appthreat/cdx-proto": "1.0.1",
     "@cyclonedx/cdxgen-plugins-bin": "1.6.3",
     "@cyclonedx/cdxgen-plugins-bin-arm64": "1.6.3",
@@ -108,7 +108,7 @@
     "@cyclonedx/cdxgen-plugins-bin-ppc64": "1.6.3",
     "@cyclonedx/cdxgen-plugins-bin-windows-amd64": "1.6.3",
     "@cyclonedx/cdxgen-plugins-bin-windows-arm64": "1.6.3",
-    "body-parser": "^1.20.2",
+    "body-parser": "^2.0.1",
     "compression": "^1.7.4",
     "connect": "^3.7.0",
     "jsonata": "^2.0.5",
