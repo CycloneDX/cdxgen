@@ -408,8 +408,13 @@ export function parsePyProjectToml(tomlFile: string): {};
  *
  * @param {Object} lockData JSON data from poetry.lock
  * @param {string} lockFile Lock file name for evidence
+ * @param {string} pyProjectFile pyproject.toml file
  */
-export function parsePoetrylockData(lockData: any, lockFile: string): Promise<any[] | {
+export function parsePoetrylockData(lockData: any, lockFile: string, pyProjectFile: string): Promise<{
+    pkgList: any[];
+    dependenciesList: any[];
+    rootList?: undefined;
+} | {
     pkgList: any[];
     rootList: any[];
     dependenciesList: {
