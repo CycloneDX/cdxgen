@@ -460,7 +460,7 @@ jobs:
         shell: bash
       - name: repotests elasticsearch
         run: |
-          bin/cdxgen.js -p -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
+          bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
         shell: bash
       - name: jenkins plugins
         run: |
