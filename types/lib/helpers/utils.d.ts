@@ -269,13 +269,6 @@ export function parseGradleProperties(rawOutput: string, gradleModuleName?: stri
  */
 export function executeParallelGradleProperties(dir: string, allProjectsStr: any[]): string;
 /**
- * Execute gradle properties command and return parsed output
- *
- * @param {string} dir Directory to execute the command
- * @param {string} subProject Sub project name
- */
-export function executeGradleProperties(dir: string, subProject: string): {};
-/**
  * Parse bazel action graph output
  * @param {string} rawOutput Raw string output
  */
