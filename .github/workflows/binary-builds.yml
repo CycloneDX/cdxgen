@@ -42,7 +42,7 @@ jobs:
             vartifact: cdx-verify.exe
     runs-on: ${{ matrix.os }}
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - uses: actions/checkout@v4
