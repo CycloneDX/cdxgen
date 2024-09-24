@@ -31,6 +31,7 @@ Create SBOM with the research profile
 
 ```shell
 cd frontend
+npm install
 # Takes around 5 mins
 cdxgen -o bom.json -t js --profile research . -p
 ```
