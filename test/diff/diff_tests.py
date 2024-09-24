@@ -4,8 +4,8 @@ import json
 import logging
 import os
 
-from custom_json_diff.custom_diff import compare_dicts, perform_bom_diff, report_results
-from custom_json_diff.custom_diff_classes import Options
+from custom_json_diff.lib.custom_diff import compare_dicts, perform_bom_diff, report_results
+from custom_json_diff.lib.custom_diff_classes import Options
 
 
 logging.disable(logging.INFO)
@@ -46,7 +46,7 @@ def perform_snapshot_tests(dir1, dir2):
     options = Options(
         allow_new_versions=True,
         allow_new_data=True,
-        bom_diff=True,
+        preconfig_type="bom",
         include=["properties", "evidence", "licenses"],
     )
 

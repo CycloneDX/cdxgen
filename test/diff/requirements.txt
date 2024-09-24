@@ -1,1 +1,1 @@
-custom-json-diff~=1.5.5
+custom-json-diff~=2.0.0
