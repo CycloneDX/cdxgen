@@ -11,16 +11,16 @@ LABEL maintainer="cyclonedx" \
       org.opencontainers.image.description="Container image for cdxgen SBOM generator packing latest build tools." \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen -r /app --server"
 
-ARG SWIFT_SIGNING_KEY=A62AE125BBBFBB96A6E042EC925CC1CCED3D1561
+ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
 ARG SWIFT_PLATFORM=ubi9
-ARG SWIFT_BRANCH=swift-5.10.1-release
-ARG SWIFT_VERSION=swift-5.10.1-RELEASE
+ARG SWIFT_BRANCH=swift-6.0-release
+ARG SWIFT_VERSION=swift-6.0-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=23-tem
 ARG SBT_VERSION=1.10.2
 ARG MAVEN_VERSION=3.9.9
 ARG GRADLE_VERSION=8.10
-ARG GO_VERSION=1.23.0
+ARG GO_VERSION=1.23.1
 ARG NODE_VERSION=22.8.0
 ARG PYTHON_VERSION=3.12
 
