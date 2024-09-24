@@ -1,0 +1,80 @@
+name: Binary builds
+
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+    tags:
+      - 'v*'
+  workflow_dispatch:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  sae-builds:
+    strategy:
+      matrix:
+        os: [windows-latest]
+        include:
+          - os: windows-latest
+            build: |
+              Remove-Item ci -Recurse -Force
+              Remove-Item contrib -Recurse -Force
+              Remove-Item tools_config -Recurse -Force
+              npx @appthreat/caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              .\cdxgen.exe --version
+              (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
+              Remove-Item node_modules -Recurse -Force
+              npm install --omit=optional --omit=dev --no-package-lock --no-audit --no-fund
+              npx @appthreat/caxa --input . --output "cdxgen-slim.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+              .\cdxgen-slim.exe --version
+              (Get-FileHash .\cdxgen-slim.exe).hash | Out-File -FilePath .\cdxgen-slim.exe.sha256
+              npx @appthreat/caxa --input . --output "cdx-verify.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/verify.js"
+              .\cdx-verify.exe --version
+              (Get-FileHash .\cdx-verify.exe).hash | Out-File -FilePath .\cdx-verify.exe.sha256
+              .\cdxgen.exe --help
+              .\cdxgen-slim.exe --help
+            artifact: cdxgen.exe
+            sartifact: cdxgen-slim.exe
+            vartifact: cdx-verify.exe
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - name: Produce sae
+        run: |
+          npm install --omit=dev --no-package-lock --no-audit --no-fund
+          ${{ matrix.build }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.sartifact }}
+          path: ${{ matrix.sartifact }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.vartifact }}
+          path: ${{ matrix.vartifact }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ${{ matrix.artifact }}
+            ${{ matrix.artifact }}.sha256
+            ${{ matrix.sartifact }}
+            ${{ matrix.sartifact }}.sha256
+            ${{ matrix.vartifact }}
+            ${{ matrix.vartifact }}.sha256
