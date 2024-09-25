@@ -42,4 +42,11 @@ export function tryLoadNvmAndInstallTool(nodeVersion: string): boolean;
  * @param {String} nvmNodePath Path to node version in nvm
  */
 export function doNpmInstall(filePath: string, nvmNodePath: string): void;
+/**
+ * Method to check and build the swift project
+ *
+ * @param {String} filePath Path
+ * @param {Object} options CLI Options
+ */
+export function prepareSwiftEnv(filePath: string, options: any): void;
 //# sourceMappingURL=pregen.d.ts.map

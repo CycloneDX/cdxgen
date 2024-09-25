@@ -1306,7 +1306,7 @@ export let GO_CMD: string;
 export let CARGO_CMD: string;
 export let CLJ_CMD: string;
 export let LEIN_CMD: string;
-export let SWIFT_CMD: string;
+export const SWIFT_CMD: "xcrun swift" | "swift";
 export const PYTHON_EXCLUDED_COMPONENTS: string[];
 export const PROJECT_TYPE_ALIASES: {
     java: string[];
