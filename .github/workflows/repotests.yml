@@ -462,7 +462,7 @@ jobs:
         run: |
           bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch.json
           GRADLE_INCLUDED_BUILDS=:build-conventions,:build-tools,:build-tools-internal bin/cdxgen.js -t gradle repotests/elasticsearch -o bomresults/bom-elasticsearch-with-included-builds.json
-          custom-json-diff -i bomresults/bom-elasticsearch.json bomresults/bom-elasticsearch-with-included-builds.json -o bomresults/diff-elasticsearch
+          custom-json-diff -i bomresults/bom-elasticsearch.json bomresults/bom-elasticsearch-with-included-builds.json -o bomresults/diff-elasticsearch preset-diff
         shell: bash
       - name: jenkins plugins
         run: |
