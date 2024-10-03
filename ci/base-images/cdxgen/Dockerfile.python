@@ -1,0 +1,38 @@
+FROM ghcr.io/cyclonedx/bci-lang:main
+
+LABEL maintainer="AppThreat" \
+      org.opencontainers.image.authors="Team AppThreat <cloud@appthreat.com>" \
+      org.opencontainers.image.source="https://github.com/AppThreat/base-images" \
+      org.opencontainers.image.url="https://github.com/AppThreat/base-images" \
+      org.opencontainers.image.version="rolling" \
+      org.opencontainers.image.vendor="AppThreat" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opencontainers.image.title="cdxgen" \
+      org.opencontainers.image.description="Rolling image with cdxgen SBOM generator for Python 3.12 apps" \
+      org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python:v10 -r /app --server"
+
+ARG NODE_VERSION=22.9.0
+ARG CDXGEN_VERSION=10.10.2
+
+ENV NVM_DIR="/root/.nvm" \
+    PYTHON_CMD=python3 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONIOENCODING="utf-8" \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    CDXGEN_NO_BANNER=true \
+    FETCH_LICENSE=true \
+    CDXGEN_IN_CONTAINER=true \
+    SAFE_PIP_INSTALL=true \
+    PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:
+
+RUN source /root/.nvm/nvm.sh \
+    && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
+        postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel \
+    && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry blint \
+    && npm install -g @cyclonedx/cdxgen@${CDXGEN_VERSION} --omit=dev \
+    && zypper clean -a
+
+ENTRYPOINT ["cdxgen"]

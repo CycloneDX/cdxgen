@@ -1,0 +1,14 @@
+FROM registry.suse.com/bci/dotnet-sdk:8.0
+
+ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
+    DOTNET_NOLOGO=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=true \
+    NUGET_XMLDOC_MODE=skip \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+RUN zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 python311 python311-pip wget zip unzip make gawk java-21-openjdk-devel \
+    && dotnet --list-sdks \
+    && zypper clean -a
+
+CMD /bin/bash

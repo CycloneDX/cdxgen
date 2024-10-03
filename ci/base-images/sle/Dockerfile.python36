@@ -1,0 +1,57 @@
+FROM registry.suse.com/bci/python:3.6
+
+ARG JAVA_VERSION=23-tem
+ARG MAVEN_VERSION=3.9.9
+ARG GCC_VERSION=13
+ARG NODE_VERSION=20.17.0
+
+ENV JAVA_VERSION=$JAVA_VERSION \
+    MAVEN_VERSION=$MAVEN_VERSION \
+    JAVA_HOME="/opt/java/${JAVA_VERSION}" \
+    MAVEN_HOME="/opt/maven/${MAVEN_VERSION}" \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    NVM_DIR="/root/.nvm"
+ENV PATH=${PATH}:/root/.nvm/versions/node/v${NODE_VERSION}/bin:${JAVA_HOME}/bin:${MAVEN_HOME}/bin:/usr/local/bin:
+RUN set -e; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    url=; \
+    case "${ARCH_NAME##*-}" in \
+        'x86_64') \
+            OS_ARCH_SUFFIX=''; \
+            GOBIN_VERSION='amd64'; \
+            ;; \
+        'aarch64') \
+            OS_ARCH_SUFFIX='-aarch64'; \
+            GOBIN_VERSION='arm64'; \
+            ;; \
+        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
+    esac \
+    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc${GCC_VERSION} gcc${GCC_VERSION}-c++ gcc${GCC_VERSION}-fortran \
+        bzip2 git-core wget zip unzip make gawk \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_VERSION} 10 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_VERSION} 10 \
+    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-${GCC_VERSION} 10 \
+    && curl -s "https://get.sdkman.io" | bash \
+    && echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=20\nsdkman_curl_max_time=0" >> $HOME/.sdkman/etc/config \
+    && source "$HOME/.sdkman/bin/sdkman-init.sh" \
+    && sdk install java $JAVA_VERSION \
+    && sdk install maven $MAVEN_VERSION \
+    && sdk offline enable \
+    && mv /root/.sdkman/candidates/* /opt/ \
+    && rm -rf /root/.sdkman \
+    && python3 -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && python3 -m pip install --no-cache-dir --upgrade --user pipenv poetry \
+    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
+    && source /root/.nvm/nvm.sh \
+    && nvm install ${NODE_VERSION} \
+    && node -v \
+    && npm -v \
+    && gcc --version \
+    && curl -L --output /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
+    && chmod +x /usr/bin/bazel \
+    && bazel --version \
+    && zypper clean -a
+
+CMD /bin/bash
