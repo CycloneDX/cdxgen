@@ -1,0 +1,46 @@
+FROM registry.opensuse.org/opensuse/bci/python:3.9
+
+ENV LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8 \
+    npm_config_python=/usr/bin/python3.9 \
+    PYTHONPATH=/opt/pypi
+
+ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:
+RUN set -e; \
+    ARCH_NAME="$(rpm --eval '%{_arch}')"; \
+    url=; \
+    case "${ARCH_NAME##*-}" in \
+        'x86_64') \
+            OS_ARCH_SUFFIX=''; \
+            GOBIN_VERSION='amd64'; \
+            ;; \
+        'aarch64') \
+            OS_ARCH_SUFFIX='-aarch64'; \
+            GOBIN_VERSION='arm64'; \
+            ;; \
+        *) echo >&2 "error: unsupported architecture: '$ARCH_NAME'"; exit 1 ;; \
+    esac \
+    && zypper refresh && zypper --non-interactive update && zypper --non-interactive install -l --no-recommends gcc12 gcc12-c++ gcc12-fortran \
+        python39 python39-devel python39-pip findutils java-22-openjdk-devel \
+        bzip2 git-core wget zip unzip make gawk nodejs20 npm20 nodejs20-devel gdal-devel libxml2-devel libxslt-devel \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 10 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 10 \
+    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-12 10 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.9 10 \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 10 \
+    && mkdir /opt/pypi \
+    && python -m pip install --no-cache-dir --upgrade pip virtualenv \
+    && python -m pip install --no-cache-dir --upgrade poetry pipenv --target /opt/pypi \
+    && npm install -g npm \
+    && node -v \
+    && npm -v \
+    && poetry --version \
+    && pipenv --version \
+    && gcc --version \
+    && curl -L --output /usr/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
+    && chmod +x /usr/bin/bazel \
+    && bazel --version \
+    && zypper clean -a
+
+CMD /bin/bash

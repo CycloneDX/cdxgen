@@ -1,0 +1,1253 @@
+name: Upload base images
+
+on:
+  schedule:
+  - cron: "0 8 * * *"
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  sle-lang-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-lang
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-lang
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.lang
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-lang.outputs.tags }}
+          labels: ${{ steps.meta-bci-lang.outputs.labels }}
+
+  sle-dotnet-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-dotnet
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-dotnet
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.dotnet6
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-dotnet.outputs.tags }}
+          labels: ${{ steps.meta-bci-dotnet.outputs.labels }}
+
+  cdxgen-dotnet-image:
+    runs-on: ubuntu-latest
+    needs: sle-dotnet-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-dotnet
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-dotnet
+            ghcr.io/cyclonedx/cdxgen-dotnet6
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.dotnet6
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-dotnet:v10,ghcr.io/cyclonedx/cdxgen-dotnet6:v10
+          labels: ${{ steps.meta-cdxgen-dotnet.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.dotnet6
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-dotnet.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-dotnet.outputs.labels }}
+
+  sle-dotnet7-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-dotnet7
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-dotnet7
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.dotnet7
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-dotnet7.outputs.tags }}
+          labels: ${{ steps.meta-bci-dotnet7.outputs.labels }}
+
+  cdxgen-dotnet7-image:
+    runs-on: ubuntu-latest
+    needs: sle-dotnet7-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-dotnet7
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-dotnet7
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.dotnet7
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-dotnet7:v10
+          labels: ${{ steps.meta-cdxgen-dotnet7.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.dotnet7
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-dotnet7.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-dotnet7.outputs.labels }}
+
+  sle-dotnet8-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-dotnet8
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-dotnet8
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.dotnet8
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-dotnet8.outputs.tags }}
+          labels: ${{ steps.meta-bci-dotnet8.outputs.labels }}
+
+  cdxgen-dotnet8-image:
+    runs-on: ubuntu-latest
+    needs: sle-dotnet8-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-dotnet8
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-dotnet8
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.dotnet8
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-dotnet8:v10
+          labels: ${{ steps.meta-cdxgen-dotnet8.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.dotnet8
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-dotnet8.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-dotnet8.outputs.labels }}
+
+  sle-java-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-java
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-java
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.java
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-java.outputs.tags }}
+          labels: ${{ steps.meta-bci-java.outputs.labels }}
+
+  sle-java-slim-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-java-slim
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-java-slim
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.java-slim
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-java-slim.outputs.tags }}
+          labels: ${{ steps.meta-bci-java-slim.outputs.labels }}
+
+  cdxgen-java-image:
+    runs-on: ubuntu-latest
+    needs: sle-java-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-java
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-java
+            ghcr.io/cyclonedx/cdxgen-java11
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-java:v10,ghcr.io/cyclonedx/cdxgen-java11:v10
+          labels: ${{ steps.meta-cdxgen-java.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-java.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-java.outputs.labels }}
+
+  cdxgen-java-slim-image:
+    runs-on: ubuntu-latest
+    needs: sle-java-slim-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-java-slim
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-java-slim
+            ghcr.io/cyclonedx/cdxgen-java11-slim
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java-slim
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-java-slim:v10,ghcr.io/cyclonedx/cdxgen-java11-slim:v10
+          labels: ${{ steps.meta-cdxgen-java-slim.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java-slim
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-java-slim.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-java-slim.outputs.labels }}
+
+  sle-node20-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-node20
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-node20
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.node20
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-node20.outputs.tags }}
+          labels: ${{ steps.meta-bci-node20.outputs.labels }}
+
+  cdxgen-node20-image:
+    runs-on: ubuntu-latest
+    needs: sle-node20-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-node20
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-node
+            ghcr.io/cyclonedx/cdxgen-node20
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.node20
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-node:v10,ghcr.io/cyclonedx/cdxgen-node20:v10
+          labels: ${{ steps.meta-cdxgen-node20.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.node20
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-node20.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-node20.outputs.labels }}
+
+  sle-java17-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-java17
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-java17
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.java17
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-java17.outputs.tags }}
+          labels: ${{ steps.meta-bci-java17.outputs.labels }}
+
+  sle-java17-slim-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-java17-slim
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-java17-slim
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.java17-slim
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-java17-slim.outputs.tags }}
+          labels: ${{ steps.meta-bci-java17-slim.outputs.labels }}
+
+  cdxgen-java17-image:
+    runs-on: ubuntu-latest
+    needs: sle-java17-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-java17
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-java17
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java17
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-java17:v10
+          labels: ${{ steps.meta-cdxgen-java17.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java17
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-java17.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-java17.outputs.labels }}
+
+  cdxgen-java17-slim-image:
+    runs-on: ubuntu-latest
+    needs: sle-java17-slim-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-java17-slim
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-java17-slim
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java17-slim
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-java17-slim:v10
+          labels: ${{ steps.meta-cdxgen-java17-slim.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.java17-slim
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-java17-slim.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-java17-slim.outputs.labels }}
+
+  cdxgen-python-image:
+    runs-on: ubuntu-latest
+    needs: sle-lang-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-python
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-python
+            ghcr.io/cyclonedx/cdxgen-python312
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-python:v10,ghcr.io/cyclonedx/cdxgen-python312:v10
+          labels: ${{ steps.meta-cdxgen-python.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-python.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-python.outputs.labels }}
+
+  sle-python311-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-python311
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-python311
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.python311
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-python311.outputs.tags }}
+          labels: ${{ steps.meta-bci-python311.outputs.labels }}
+
+  cdxgen-python311-image:
+    runs-on: ubuntu-latest
+    needs: sle-python311-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-python311
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-python311
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python311
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-python311:v10
+          labels: ${{ steps.meta-cdxgen-python311.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python311
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-python311.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-python311.outputs.labels }}
+
+  sle-python36-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-bci-python36
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/bci-python36
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/sle/Dockerfile.python36
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-bci-python36.outputs.tags }}
+          labels: ${{ steps.meta-bci-python36.outputs.labels }}
+
+  cdxgen-python36-image:
+    runs-on: ubuntu-latest
+    needs: sle-python36-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-python36
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-python36
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python36
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-python36:v10
+          labels: ${{ steps.meta-cdxgen-python36.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python36
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-python36.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-python36.outputs.labels }}
+
+  opensuse-lang-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-opensuse-lang
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/opensuse-lang
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/opensuse/Dockerfile.lang
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-opensuse-lang.outputs.tags }}
+          labels: ${{ steps.meta-opensuse-lang.outputs.labels }}
+
+  cdxgen-rolling-image:
+    runs-on: ubuntu-latest
+    needs: opensuse-lang-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-rolling
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-rolling
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.rolling
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-rolling:v10
+          labels: ${{ steps.meta-cdxgen-rolling.outputs.labels }}
+
+  depscan-rolling-image:
+    runs-on: ubuntu-latest
+    needs: cdxgen-rolling-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-depscan-rolling
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/depscan-rolling
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: depscan/Dockerfile.rolling
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/depscan-rolling:v5
+          labels: ${{ steps.meta-depscan-rolling.outputs.labels }}
+
+  opensuse-python310-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-opensuse-python310
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/opensuse-python310
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/opensuse/Dockerfile.python310
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-opensuse-python310.outputs.tags }}
+          labels: ${{ steps.meta-opensuse-python310.outputs.labels }}
+
+  cdxgen-python310-image:
+    runs-on: ubuntu-latest
+    needs: opensuse-python310-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-python310
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-python310
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python310
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-python310:v10
+          labels: ${{ steps.meta-cdxgen-python310.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python310
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-python310.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-python310.outputs.labels }}
+
+  opensuse-python39-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-opensuse-python39
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/opensuse-python39
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ci/base-images/opensuse/Dockerfile.python39
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-opensuse-python39.outputs.tags }}
+          labels: ${{ steps.meta-opensuse-python39.outputs.labels }}
+
+  cdxgen-python39-image:
+    runs-on: ubuntu-latest
+    needs: opensuse-python39-image
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta-cdxgen-python39
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/cyclonedx/cdxgen-python39
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: github.ref == 'refs/heads/main'
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python39
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/cyclonedx/cdxgen-python39:v10
+          labels: ${{ steps.meta-cdxgen-python39.outputs.labels }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          context: .
+          file: ci/base-images/cdxgen/Dockerfile.python39
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-cdxgen-python39.outputs.tags }}
+          labels: ${{ steps.meta-cdxgen-python39.outputs.labels }}

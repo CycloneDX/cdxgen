@@ -1,0 +1,24 @@
+FROM registry.suse.com/bci/dotnet-sdk:6.0
+
+ENV DOTNET_GENERATE_ASPNET_CERTIFICATE=false \
+    DOTNET_NOLOGO=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=true \
+    NUGET_XMLDOC_MODE=skip \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV PATH=${PATH}:/usr/local/bin:
+
+RUN zypper --non-interactive install -l --no-recommends git-core nodejs20 npm20 \
+        python311 python311-pip wget zip unzip make gawk java-21-openjdk-devel \
+    && rpm -Uvh https://packages.microsoft.com/config/sles/15/packages-microsoft-prod.rpm \
+    && zypper --non-interactive install -l --no-recommends dotnet-sdk-3.1 \
+    && zypper --non-interactive addrepo -G -f -K https://download.opensuse.org/repositories/Mono/SLE_15_SP1/Mono.repo \
+    && zypper --non-interactive addrepo -G -f -K  https://download.opensuse.org/repositories/graphics/openSUSE_Factory/graphics.repo \
+    && zypper --non-interactive install --allow-unsigned-rpm -l --no-recommends mono-complete libexif12 libexif-devel \
+    && echo -e '#!/bin/sh\nexec /usr/bin/mono /usr/lib/mono/nuget/nuget.exe "$@"\n' > /usr/bin/nuget \
+    && chmod +x /usr/bin/nuget \
+    && rm -rf /usr/lib/mono/nuget \
+    && dotnet --list-sdks \
+    && zypper clean -a
+COPY ci/base-images/nuget /usr/lib/mono/nuget
+CMD /bin/bash
