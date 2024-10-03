@@ -2,8 +2,8 @@ FROM ghcr.io/cyclonedx/bci-python36:main
 
 LABEL maintainer="AppThreat" \
       org.opencontainers.image.authors="Team AppThreat <cloud@appthreat.com>" \
-      org.opencontainers.image.source="https://github.com/AppThreat/base-images" \
-      org.opencontainers.image.url="https://github.com/AppThreat/base-images" \
+      org.opencontainers.image.source="https://github.com/CycloneDX/cdxgen" \
+      org.opencontainers.image.url="https://github.com/CycloneDX/cdxgen" \
       org.opencontainers.image.version="rolling" \
       org.opencontainers.image.vendor="AppThreat" \
       org.opencontainers.image.licenses="Apache-2.0" \
