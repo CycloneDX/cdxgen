@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 concurrency:
@@ -120,7 +122,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet6
@@ -206,7 +208,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet7
@@ -292,7 +294,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.dotnet8
@@ -416,7 +418,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.java
@@ -466,7 +468,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.java-slim
@@ -553,7 +555,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.node20
@@ -676,7 +678,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.java17
@@ -725,7 +727,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.java17-slim
@@ -775,7 +777,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.python
@@ -861,7 +863,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.python311
@@ -947,7 +949,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.python36
@@ -1033,7 +1035,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.rolling
@@ -1108,7 +1110,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.python310
@@ -1194,7 +1196,7 @@ jobs:
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: ci/base-images/cdxgen/Dockerfile.python39

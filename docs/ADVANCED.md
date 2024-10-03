@@ -419,15 +419,22 @@ This, however, requires the correct version of dotnet SDK to be installed. The o
 docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -it ghcr.io/cyclonedx/cdxgen -r /app -o bom.json -t dotnet
 ```
 
-If the project requires a different version of the SDK, such as .Net core 3.1 or dotnet 6.0, then try with the below unofficial [image](https://github.com/AppThreat/base-images) from AppThreat.
+If the project requires a different version of the SDK, such as .Net core 3.1 or dotnet 6.0, then try with the below custom [images](https://github.com/CycloneDX/cdxgen/ci/base-images).
 
 ```shell
-docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -it ghcr.io/appthreat/cdxgen-dotnet:v10 -r /app -o bom.json -t dotnet
+docker run --rm -v /tmp:/tmp -v $(pwd):/app:rw -it ghcr.io/cyclonedx/cdxgen-dotnet:v10 -r /app -o bom.json -t dotnet
 ```
 
 If the project requires legacy frameworks such as .Net Framework 4.6/4.7, then a Windows operating system or container is required to generate the SBOM correctly. A workaround is to commit the project.assets.json and the lock files to the repository from Windows and run cdxgen from Linux as normal.
 
-For legacy Java projects, use the unofficial image `ghcr.io/appthreat/cdxgen-java:v10` (Java 11) or `ghcr.io/appthreat/cdxgen-java17:v10` (Java 17).
+For legacy Java projects, use the custom images `ghcr.io/cyclonedx/cdxgen-java:v10` (Java 11) or `ghcr.io/cyclonedx/cdxgen-java17:v10` (Java 17). Alternatively, use the CLI arguments as shown.
+
+```shell
+cdxgen -t java11
+cdxgen -t java17
+```
+
+[sdkman](https://sdkman.io) must be installed and setup for these arguments to work.
 
 ## Nydus - next-generation container image
 

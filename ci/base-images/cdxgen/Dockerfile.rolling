@@ -1,4 +1,4 @@
-FROM ghcr.io/cyclonedx/opensuse-lang:main
+FROM ghcr.io/cyclonedx/opensuse-lang:master
 
 ENV PREFER_MAVEN_DEPS_TREE=true \
     CDXGEN_DEBUG_MODE=debug \
@@ -7,7 +7,7 @@ ENV PREFER_MAVEN_DEPS_TREE=true \
     PYTHONPATH=/opt/pypi
 ENV PATH=${PATH}:/usr/local/bin:/opt/pypi/bin:
 
-LABEL maintainer="AppThreat" \
+LABEL maintainer="CycloneDX" \
       org.opencontainers.image.authors="Team AppThreat <cloud@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/CycloneDX/cdxgen" \
       org.opencontainers.image.url="https://github.com/CycloneDX/cdxgen" \
