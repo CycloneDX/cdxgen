@@ -1,6 +1,6 @@
-FROM ghcr.io/cyclonedx/bci-python36:main
+FROM ghcr.io/cyclonedx/bci-python36:master
 
-LABEL maintainer="AppThreat" \
+LABEL maintainer="CycloneDX" \
       org.opencontainers.image.authors="Team AppThreat <cloud@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/CycloneDX/cdxgen" \
       org.opencontainers.image.url="https://github.com/CycloneDX/cdxgen" \
@@ -12,7 +12,6 @@ LABEL maintainer="AppThreat" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-python36:v10 -r /app --server"
 
 ARG NODE_VERSION=20.17.0
-ARG CDXGEN_VERSION=10.10.2
 
 ENV NVM_DIR="/root/.nvm" \
     PYTHON_CMD=python3 \
@@ -21,8 +20,6 @@ ENV NVM_DIR="/root/.nvm" \
     LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
-    CDXGEN_NO_BANNER=true \
-    FETCH_LICENSE=true \
     CDXGEN_IN_CONTAINER=true \
     SAFE_PIP_INSTALL=true \
     CRYPTOGRAPHY_DONT_BUILD_RUST=1 \
@@ -31,7 +28,7 @@ ENV NVM_DIR="/root/.nvm" \
 RUN source /root/.nvm/nvm.sh \
     && zypper --non-interactive install -l --no-recommends clang7 llvm7 llvm7-devel libcurl-devel libjpeg62-devel libmariadb-devel \
         postgresql-devel postgresql16-server-devel libopenssl-devel libopenblas_pthreads-devel lapacke-devel \
-    && npm install -g @cyclonedx/cdxgen@${CDXGEN_VERSION} --omit=dev \
+    && npm install -g @cyclonedx/cdxgen --omit=dev \
     && zypper clean -a
 
 ENTRYPOINT ["cdxgen"]

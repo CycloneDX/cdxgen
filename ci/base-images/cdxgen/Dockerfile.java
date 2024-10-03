@@ -1,6 +1,6 @@
-FROM ghcr.io/cyclonedx/bci-java:main
+FROM ghcr.io/cyclonedx/bci-java:master
 
-LABEL maintainer="AppThreat" \
+LABEL maintainer="CycloneDX" \
       org.opencontainers.image.authors="Team AppThreat <cloud@appthreat.com>" \
       org.opencontainers.image.source="https://github.com/CycloneDX/cdxgen" \
       org.opencontainers.image.url="https://github.com/CycloneDX/cdxgen" \
@@ -11,11 +11,8 @@ LABEL maintainer="AppThreat" \
       org.opencontainers.image.description="Rolling image with cdxgen SBOM generator for Java 11 and android apps" \
       org.opencontainers.docker.cmd="docker run --rm -v /tmp:/tmp -p 9090:9090 -v $(pwd):/app:rw -t ghcr.io/cyclonedx/cdxgen-java:v10 -r /app --server"
 
-ARG CDXGEN_VERSION=10.10.2
+ENV CDXGEN_IN_CONTAINER=true
 
-ENV CDXGEN_NO_BANNER=true \
-    CDXGEN_IN_CONTAINER=true
-
-RUN npm install -g @cyclonedx/cdxgen@${CDXGEN_VERSION} --omit=dev
+RUN npm install -g @cyclonedx/cdxgen --omit=dev
 
 ENTRYPOINT ["cdxgen"]
