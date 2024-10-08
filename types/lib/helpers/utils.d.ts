@@ -589,13 +589,6 @@ export function parseGemfileLockData(gemLockData: object, lockFile: string): Pro
         ref: string;
         dependsOn: any[];
     }[];
-    rootList?: undefined;
-} | {
-    pkgList: any[];
-    dependenciesList: {
-        ref: string;
-        dependsOn: any[];
-    }[];
     rootList: any[];
 }>;
 /**
