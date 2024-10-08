@@ -69,7 +69,7 @@ jobs:
           bin/cdxgen.js zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6 -o bomresults/bom-zoo.json --validate
           docker rmi zookeeper@sha256:5bf00616677db5ef57d8a2da7c5dadf67f1a6be54b0c33a79be3332c9c80aeb6
           docker pull shiftleft/scan-slim:latest
-          docker save -o /tmp/scanslim.tar shiftleft/scan-slim:latest
+          docker save shiftleft/scan-slim:latest -o /tmp/scanslim.tar
           docker rmi shiftleft/scan-slim:latest
           bin/cdxgen.js /tmp/scanslim.tar -o bomresults/bom-scanarch.json --validate
           bin/cdxgen.js -t docker-compose test/data -o bomresults/bom-dc.json --validate
@@ -116,7 +116,6 @@ jobs:
           path: 'repotests/grafana-operator'
       - name: dockertests
         run: |
-          echo "Test docker container image using a `.tar` file"
           docker pull elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
           docker save -o /tmp/elastic.tar elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
           docker rmi elasticsearch@sha256:3686a5757ed46c9dbcf00f6f71fce48ffc5413b193a80d1c46a21e7aad4c53ad
