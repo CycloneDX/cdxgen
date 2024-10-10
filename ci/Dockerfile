@@ -143,7 +143,6 @@ RUN set -e; \
     && sudo ./linux-install.sh \
     && curl -L --output /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/local/bin/bazel \
-    && bazel --version \
     && useradd -ms /bin/bash cyclonedx \
     && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
     && npx node-gyp install \
@@ -155,7 +154,7 @@ RUN set -e; \
     && gem install bundler \
     && gem --version \
     && bundler --version \
-    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy \
+    && cd /opt/cdxgen && corepack enable && corepack pnpm install --prod --package-import-method copy && corepack pnpm cache delete \
     && mkdir -p /opt/cdxgen-node-cache \
     && chown -R cyclonedx:cyclonedx /opt/cdxgen /opt/cdxgen-node-cache \
     && chmod a-w -R /opt \
