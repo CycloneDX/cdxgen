@@ -50,6 +50,7 @@ jobs:
     strategy:
       matrix:
         os: [windows, macos, ubuntu]
+        deno_version: [1.x, 2.x]
         include:
           - os: windows
             build: |
@@ -75,11 +76,13 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
+      - uses: denoland/setup-deno@v2
         with:
-          deno-version: v1.x
+          deno-version: v${{ matrix.deno_version }}
       - name: deno compile
         run: |
+          deno info bin/cdxgen.js
+          deno info bin/evinse.js
           mkdir build
           ${{ matrix.build }}
         continue-on-error: true
