@@ -37,7 +37,7 @@
     "exclude": ["test/", "data/", "contrib/"]
   },
   "lock": false,
-  "nodeModulesDir": true,
+  "nodeModulesDir": "auto",
   "unstable": [],
   "test": {
     "include": ["*.test.js"]
