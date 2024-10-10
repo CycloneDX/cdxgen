@@ -13,8 +13,8 @@ LABEL maintainer="cyclonedx" \
 
 ARG SWIFT_SIGNING_KEY=52BB7E3DE28A71BE22EC05FFEF80A866B47A981F
 ARG SWIFT_PLATFORM=ubi9
-ARG SWIFT_BRANCH=swift-6.0-release
-ARG SWIFT_VERSION=swift-6.0-RELEASE
+ARG SWIFT_BRANCH=swift-6.0.1-release
+ARG SWIFT_VERSION=swift-6.0.1-RELEASE
 ARG SWIFT_WEBROOT=https://download.swift.org
 ARG JAVA_VERSION=23-tem
 ARG SBT_VERSION=1.10.2
@@ -23,6 +23,7 @@ ARG GRADLE_VERSION=8.10
 ARG GO_VERSION=1.23.1
 ARG NODE_VERSION=22.9.0
 ARG PYTHON_VERSION=3.12
+ARG SOURCEKITTEN_VERSION=0.36.0
 
 ENV GOPATH=/opt/app-root/go \
     JAVA_VERSION=$JAVA_VERSION \
@@ -112,6 +113,14 @@ RUN set -e; \
     && chmod +x /usr/bin/swift \
     && rm -rf "$GNUPGHOME" swift.tar.gz.sig swift.tar.gz \
     && swift --version \
+    && mkdir -p /opt/kitten \
+    && curl -L https://github.com/jpsim/SourceKitten/releases/download/${SOURCEKITTEN_VERSION}/SourceKitten-${SOURCEKITTEN_VERSION}.tar.gz -o /opt/kitten/SourceKitten.tar.gz \
+    && cd /opt/kitten/ && tar -xvf SourceKitten.tar.gz \
+    && cd /opt/kitten/SourceKitten-${SOURCEKITTEN_VERSION} \
+    && swift build -c release \
+    && cp /opt/kitten/SourceKitten-${SOURCEKITTEN_VERSION}/.build/release/sourcekitten /usr/local/bin/sourcekitten \
+    && cd /root && rm -rf /opt/kitten \
+    && sourcekitten --help \
     && microdnf install -y epel-release \
     && mkdir -p ${ANDROID_HOME}/cmdline-tools \
     && curl -L https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o ${ANDROID_HOME}/cmdline-tools/android_tools.zip \

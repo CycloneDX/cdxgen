@@ -131,6 +131,24 @@ export function collectGoInfo(dir: string): {
     name: string;
     version: any;
 };
+/**
+ * Collect swift version
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing swift details
+ */
+export function collectSwiftInfo(dir: string): {
+    type: string;
+    name: string;
+    version: any;
+};
+/**
+ * Method to run a swift command
+ *
+ * @param {string} dir Working directory
+ * @returns Object containing swift details
+ */
+export function runSwiftCommand(dir: string, args: any): any;
 export function collectEnvInfo(dir: any): {
     type: string;
     name: string;
@@ -184,12 +202,12 @@ export function getNvmToolDirectory(toolName: string): string;
  */
 export function getOrInstallNvmTool(toolVersion: string): string;
 export const GIT_COMMAND: any;
-export namespace SDKMAN_TOOL_ALIASES {
-    let java8: string;
-    let java11: string;
-    let java17: string;
-    let java21: string;
-    let java22: string;
-    let java23: string;
+export namespace SDKMAN_JAVA_TOOL_ALIASES {
+    let java8: any;
+    let java11: any;
+    let java17: any;
+    let java21: any;
+    let java22: any;
+    let java23: any;
 }
 //# sourceMappingURL=envcontext.d.ts.map
