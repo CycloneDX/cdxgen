@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import fs from "node:fs";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import process from "node:process";
-import { URL, fileURLToPath } from "node:url";
+import { URL } from "node:url";
 import jws from "jws";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
