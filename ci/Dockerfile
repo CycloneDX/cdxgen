@@ -143,7 +143,6 @@ RUN set -e; \
     && sudo ./linux-install.sh \
     && curl -L --output /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-${GOBIN_VERSION} \
     && chmod +x /usr/local/bin/bazel \
-    && bazel --version \
     && useradd -ms /bin/bash cyclonedx \
     && npm install --unsafe-perm -g node-gyp @microsoft/rush --omit=dev \
     && npx node-gyp install \
