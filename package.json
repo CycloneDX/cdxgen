@@ -70,8 +70,8 @@
     "*": "biome check --fix --no-errors-on-unmatched"
   },
   "dependencies": {
-    "@babel/parser": "^7.25.6",
-    "@babel/traverse": "^7.25.6",
+    "@babel/parser": "^7.25.8",
+    "@babel/traverse": "^7.25.7",
     "@npmcli/arborist": "8.0.0",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
@@ -80,7 +80,7 @@
     "find-up": "7.0.0",
     "glob": "^11.0.0",
     "global-agent": "^3.0.0",
-    "got": "14.4.2",
+    "got": "^14.4.3",
     "iconv-lite": "^0.6.3",
     "js-yaml": "^4.1.0",
     "jws": "^4.0.0",
@@ -127,5 +127,10 @@
       "node-gyp": "^10.2.0",
       "prebuild": "^13.0.0"
     }
+  },
+  "overrides": {
+    "glob": "^11.0.0",
+    "node-gyp": "^10.2.0",
+    "prebuild": "^13.0.0"
   }
 }

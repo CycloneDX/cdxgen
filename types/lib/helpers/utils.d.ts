@@ -152,11 +152,20 @@ export function parseNodeShrinkwrap(swFile: string): Promise<any[]>;
 export function parsePnpmLock(pnpmLock: string, parentComponent?: object): Promise<{
     pkgList?: undefined;
     dependenciesList?: undefined;
+    parentSubComponents?: undefined;
 } | {
     pkgList: any[];
     dependenciesList: {
         ref: string;
         dependsOn: any;
+    }[];
+    parentSubComponents: {
+        group: any;
+        name: any;
+        version: any;
+        type: string;
+        purl: string;
+        "bom-ref": string;
     }[];
 }>;
 /**

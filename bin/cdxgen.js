@@ -5,7 +5,7 @@ import fs from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import process from "node:process";
-import { URL, fileURLToPath } from "node:url";
+import { URL } from "node:url";
 import { findUpSync } from "find-up";
 import globalAgent from "global-agent";
 import { load as _load } from "js-yaml";
