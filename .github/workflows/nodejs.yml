@@ -50,7 +50,7 @@ jobs:
     strategy:
       matrix:
         os: [windows, macos, ubuntu]
-        deno_version: [1.x, 2.x]
+        deno_version: [2.x]
         include:
           - os: windows
             build: |
