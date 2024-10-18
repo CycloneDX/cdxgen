@@ -157,7 +157,7 @@ export function parsePnpmLock(pnpmLock: string, parentComponent?: object): Promi
     pkgList: any[];
     dependenciesList: {
         ref: string;
-        dependsOn: any;
+        dependsOn: any[];
     }[];
     parentSubComponents: {
         group: any;
@@ -227,7 +227,7 @@ export function parseGradleDep(rawOutput: string, rootProjectName?: string, grad
     pkgList: any[];
     dependenciesList: {
         ref: string;
-        dependsOn: any;
+        dependsOn: any[];
     }[];
 } | {
     pkgList?: undefined;
@@ -465,7 +465,7 @@ export function parsePixiLockFile(pixiLockFileName: any, path: any): {
     rootList: any[];
     dependenciesList: {
         ref: string;
-        dependsOn: string[];
+        dependsOn: any[];
     }[];
     frozen: boolean;
 };
@@ -643,7 +643,7 @@ export function parseCargoTomlData(cargoTomlFile: string, simple?: boolean, pkgF
 export function parseCargoData(cargoLockFile: string, simple?: boolean, pkgFilesMap?: any): any[];
 export function parseCargoDependencyData(cargoLockData: any): {
     ref: string;
-    dependsOn: any;
+    dependsOn: any[];
 }[];
 export function parseCargoAuditableData(cargoData: any): Promise<any[]>;
 export function parsePubLockData(pubLockData: any): Promise<any[]>;
@@ -776,7 +776,7 @@ export function parseSbtTree(sbtTreeFile: any): {
     pkgList: any[];
     dependenciesList: {
         ref: string;
-        dependsOn: any;
+        dependsOn: any[];
     }[];
 };
 /**
@@ -1157,7 +1157,7 @@ export function getPipFrozenTree(basePath: string, reqOrSetupFile: string, tempV
     }[];
     dependenciesList: {
         ref: string;
-        dependsOn: any;
+        dependsOn: any[];
     }[];
     frozen: boolean;
 };
@@ -1187,7 +1187,7 @@ export function getPipTreeForPackages(basePath: string, pkgList: any[], tempVenv
     }[];
     dependenciesList: {
         ref: string;
-        dependsOn: any;
+        dependsOn: any[];
     }[];
 };
 export function parsePackageJsonName(name: any): {
