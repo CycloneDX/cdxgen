@@ -5,8 +5,6 @@ images:
 - location: "https://download.opensuse.org/distribution/leap/15.6/appliances/openSUSE-Leap-15.6-Minimal-VM.aarch64-Cloud.qcow2"
   arch: "aarch64"
 mounts:
-- location: "~"
-  mountPoint: /home/cdxgen
 - location: "/tmp/cdxgen"
   writable: true
 containerd:
@@ -24,6 +22,7 @@ env:
   SBT_CMD: /.sdkman/candidates/sbt/current/bin/sbt
   SDKMAN_DIR: /.sdkman
   SDKMAN_CANDIDATES_DIR: /.sdkman/candidates
+  NVM_DIR: /.nvm
 provision:
 - mode: dependency
   skipDefaultDependencyResolution: false
@@ -60,9 +59,9 @@ provision:
     curl -s "https://get.sdkman.io" | bash
     echo -e "sdkman_auto_answer=true\nsdkman_selfupdate_feature=false\nsdkman_auto_env=true\nsdkman_curl_connect_timeout=60\nsdkman_curl_max_time=0" >> /.sdkman/etc/config
     source "/.sdkman/bin/sdkman-init.sh"
-    sdk install maven $MAVEN_VERSION
-    sdk install gradle $GRADLE_VERSION
-    sdk install sbt $SBT_VERSION
+    sdk install maven $MAVEN_VERSION || true
+    sdk install gradle $GRADLE_VERSION || true
+    sdk install sbt $SBT_VERSION || true
     mkdir -p /opt
     npm install -g node-gyp @cyclonedx/cdxgen --omit=dev
     npx node-gyp install
@@ -71,3 +70,4 @@ provision:
     gcc --version
     zypper clean -a
     cdxgen --version
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
